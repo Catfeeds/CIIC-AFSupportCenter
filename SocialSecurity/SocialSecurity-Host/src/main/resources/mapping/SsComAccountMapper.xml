@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.SsComAccountMapper">
+  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsComAccount">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ComAccountId" jdbcType="VARCHAR" property="comAccountId" />
+    <result column="CustomerId" jdbcType="VARCHAR" property="customerId" />
+    <result column="SupplierId" jdbcType="VARCHAR" property="supplierId" />
+    <result column="SSAccountType" jdbcType="BIT" property="SSAccountType" />
+    <result column="SSAccount" jdbcType="VARCHAR" property="SSAccount" />
+    <result column="BankAccount" jdbcType="VARCHAR" property="bankAccount" />
+    <result column="ComAccountName" jdbcType="VARCHAR" property="comAccountName" />
+    <result column="SettlementArea" jdbcType="VARCHAR" property="settlementArea" />
+    <result column="PaymentBank" jdbcType="VARCHAR" property="paymentBank" />
+    <result column="PaymenWay" jdbcType="BIT" property="paymenWay" />
+    <result column="ExpireDate" jdbcType="DATE" property="expireDate" />
+    <result column="SSUserName" jdbcType="VARCHAR" property="SSUserName" />
+    <result column="SSPwd" jdbcType="VARCHAR" property="SSPwd" />
+    <result column="InitialBalance" jdbcType="DECIMAL" property="initialBalance" />
+    <result column="InitialDebt" jdbcType="DECIMAL" property="initialDebt" />
+    <result column="OriginPlace" jdbcType="BIT" property="originPlace" />
+    <result column="OriginPlaceRemark" jdbcType="VARCHAR" property="originPlaceRemark" />
+    <result column="QueryAccount" jdbcType="VARCHAR" property="queryAccount" />
+    <result column="DeliverWay" jdbcType="VARCHAR" property="deliverWay" />
+    <result column="DeliverWayRemark" jdbcType="VARCHAR" property="deliverWayRemark" />
+    <result column="ProvideCertificateTime" jdbcType="DATE" property="provideCertificateTime" />
+    <result column="ChangeTime" jdbcType="TIMESTAMP" property="changeTime" />
+    <result column="ReceiveDate" jdbcType="DATE" property="receiveDate" />
+    <result column="IntoDate" jdbcType="DATE" property="intoDate" />
+    <result column="DispatchMaterial" jdbcType="CHAR" property="dispatchMaterial" />
+    <result column="IsActive" jdbcType="BIT" property="isActive" />
+    <result column="DataChange_CreateTime" jdbcType="TIMESTAMP" property="dataChangeCreateTime" />
+    <result column="DataChange_LastTime" jdbcType="TIMESTAMP" property="dataChangeLastTime" />
+    <result column="CreatedBy" jdbcType="VARCHAR" property="createdBy" />
+    <result column="ModifiedBy" jdbcType="VARCHAR" property="modifiedBy" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    ComAccountId, CustomerId, SupplierId, SSAccountType, SSAccount, BankAccount, ComAccountName, 
+    SettlementArea, PaymentBank, PaymenWay, ExpireDate, SSUserName, SSPwd, InitialBalance, 
+    InitialDebt, OriginPlace, OriginPlaceRemark, QueryAccount, DeliverWay, DeliverWayRemark, 
+    ProvideCertificateTime, ChangeTime, ReceiveDate, IntoDate, DispatchMaterial, IsActive, 
+    DataChange_CreateTime, DataChange_LastTime, CreatedBy, ModifiedBy
+  </sql>
+</mapper>

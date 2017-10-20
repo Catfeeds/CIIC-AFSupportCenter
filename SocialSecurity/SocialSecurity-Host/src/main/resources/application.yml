@@ -1,0 +1,37 @@
+###################  项目启动端口  ###################
+server:
+  port: 8082
+  context-path: /
+###################  spring 配置  ###################
+spring:
+  application:
+    name: service-socialsecurity
+  profiles:
+    active: develop
+  datasource:
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://172.16.9.15:3306/gtobackdb?useUnicode=true&amp;characterEncoding=UTF-8
+      username: root
+      password: a111111
+      max-active: 20
+      min-idle: 8
+      initial-size: 10
+      validation-query: SELECT 'x'
+      filter:
+        stat:
+          enabled: true
+  jmx:
+    enabled: false
+
+###################  mybatis 配置  ###################
+mybatis:
+  type-aliases-package: com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model
+  mapper-locations: classpath:mapping*/*.xml
+# https://github.com/abel533/Mapper/tree/master/wiki/mapper3
+mapper:
+  mappers: tk.mybatis.mapper.common.Mapper
+# https://github.com/pagehelper/Mybatis-PageHelper/blob/master/wikis/zh/HowToUse.md
+pagehelper:
+  helper-dialect: mysql
+

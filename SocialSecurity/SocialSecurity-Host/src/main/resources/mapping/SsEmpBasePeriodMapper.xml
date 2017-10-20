@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.SsEmpBasePeriodMapper">
+  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsEmpBasePeriod">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="EmpBasePeriodId" jdbcType="BIGINT" property="empBasePeriodId" />
+    <result column="EmpArchiveId" jdbcType="VARCHAR" property="empArchiveId" />
+    <result column="EmployeeTaskId" jdbcType="VARCHAR" property="employeeTaskId" />
+    <result column="BaseAmount" jdbcType="DECIMAL" property="baseAmount" />
+    <result column="StartMonth" jdbcType="VARCHAR" property="startMonth" />
+    <result column="EndMonth" jdbcType="VARCHAR" property="endMonth" />
+    <result column="SOCMonth" jdbcType="VARCHAR" property="SOCMonth" />
+    <result column="RemitWay" jdbcType="BIT" property="remitWay" />
+    <result column="IsActive" jdbcType="BIT" property="isActive" />
+    <result column="DataChange_CreateTime" jdbcType="TIMESTAMP" property="dataChangeCreateTime" />
+    <result column="DataChange_LastTime" jdbcType="TIMESTAMP" property="dataChangeLastTime" />
+    <result column="CreatedBy" jdbcType="VARCHAR" property="createdBy" />
+    <result column="ModifiedBy" jdbcType="VARCHAR" property="modifiedBy" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    EmpBasePeriodId, EmpArchiveId, EmployeeTaskId, BaseAmount, StartMonth, EndMonth, 
+    SOCMonth, RemitWay, IsActive, DataChange_CreateTime, DataChange_LastTime, CreatedBy, 
+    ModifiedBy
+  </sql>
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.SsComMaterialMapper">
+  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsComMaterial">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ComMaterialId" jdbcType="BIGINT" property="comMaterialId" />
+    <result column="CompanyTaskId" jdbcType="VARCHAR" property="companyTaskId" />
+    <result column="MaterialType" jdbcType="INTEGER" property="materialType" />
+    <result column="MaterialName" jdbcType="VARCHAR" property="materialName" />
+    <result column="SubmitTime" jdbcType="TIMESTAMP" property="submitTime" />
+    <result column="ReceiveTime" jdbcType="TIMESTAMP" property="receiveTime" />
+    <result column="Remark" jdbcType="VARCHAR" property="remark" />
+    <result column="Status" jdbcType="INTEGER" property="status" />
+    <result column="IsActive" jdbcType="BIT" property="isActive" />
+    <result column="DataChange_CreateTime" jdbcType="TIMESTAMP" property="dataChangeCreateTime" />
+    <result column="DataChange_LastTime" jdbcType="TIMESTAMP" property="dataChangeLastTime" />
+    <result column="CreatedBy" jdbcType="VARCHAR" property="createdBy" />
+    <result column="ModifiedBy" jdbcType="VARCHAR" property="modifiedBy" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    ComMaterialId, CompanyTaskId, MaterialType, MaterialName, SubmitTime, ReceiveTime, 
+    Remark, Status, IsActive, DataChange_CreateTime, DataChange_LastTime, CreatedBy, 
+    ModifiedBy
+  </sql>
+</mapper>

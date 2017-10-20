@@ -8,8 +8,17 @@
         <version>1.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
+    <artifactId>gt1.afsupportcenter.healthmedical</artifactId>
+    <packaging>pom</packaging>
 
-    <artifactId>gt1.afsupportcenter.util</artifactId>
-
+    <modules>
+        <module>HealthMedical-Business</module>
+        <module>HealthMedical-Client</module>
+        <module>HealthMedical-Dao</module>
+        <module>HealthMedical-Entity</module>
+        <module>HealthMedical-Host</module>
+    </modules>
 </project>
+

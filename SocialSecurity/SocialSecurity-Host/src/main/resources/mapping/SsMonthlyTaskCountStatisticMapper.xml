@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.SsMonthlyTaskCountStatisticMapper">
+  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsMonthlyTaskCountStatistic">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="RecId" jdbcType="BIGINT" property="recId" />
+    <result column="CustomerId" jdbcType="VARCHAR" property="customerId" />
+    <result column="DepartmentId" jdbcType="VARCHAR" property="departmentId" />
+    <result column="SOCYear" jdbcType="SMALLINT" property="SOCYear" />
+    <result column="SOCQuarter" jdbcType="TINYINT" property="SOCQuarter" />
+    <result column="SOCMonth" jdbcType="TINYINT" property="SOCMonth" />
+    <result column="SysUserId" jdbcType="VARCHAR" property="sysUserId" />
+    <result column="SysUserName" jdbcType="VARCHAR" property="sysUserName" />
+    <result column="VsLastMonth" jdbcType="VARCHAR" property="vsLastMonth" />
+    <result column="TaskCount" jdbcType="SMALLINT" property="taskCount" />
+    <result column="TaskCategory" jdbcType="SMALLINT" property="taskCategory" />
+    <result column="IsActive" jdbcType="BIT" property="isActive" />
+    <result column="DataChange_CreateTime" jdbcType="TIMESTAMP" property="dataChangeCreateTime" />
+    <result column="DataChange_LastTime" jdbcType="TIMESTAMP" property="dataChangeLastTime" />
+    <result column="CreatedBy" jdbcType="VARCHAR" property="createdBy" />
+    <result column="ModifiedBy" jdbcType="VARCHAR" property="modifiedBy" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    RecId, CustomerId, DepartmentId, SOCYear, SOCQuarter, SOCMonth, SysUserId, SysUserName, 
+    VsLastMonth, TaskCount, TaskCategory, IsActive, DataChange_CreateTime, DataChange_LastTime, 
+    CreatedBy, ModifiedBy
+  </sql>
+</mapper>

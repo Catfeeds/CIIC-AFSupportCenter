@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.SsCompanyTaskMapper">
+  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsCompanyTask">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="CompanyTaskId" jdbcType="VARCHAR" property="companyTaskId" />
+    <result column="CustomerId" jdbcType="VARCHAR" property="customerId" />
+    <result column="ComAccountId" jdbcType="VARCHAR" property="comAccountId" />
+    <result column="CompanyId" jdbcType="VARCHAR" property="companyId" />
+    <result column="TaskCategory" jdbcType="VARCHAR" property="taskCategory" />
+    <result column="TaskName" jdbcType="VARCHAR" property="taskName" />
+    <result column="ExpireDate" jdbcType="DATE" property="expireDate" />
+    <result column="SubmitterId" jdbcType="VARCHAR" property="submitterId" />
+    <result column="SubmitterDeptId" jdbcType="VARCHAR" property="submitterDeptId" />
+    <result column="SubmitTime" jdbcType="TIMESTAMP" property="submitTime" />
+    <result column="SubmitRemark" jdbcType="VARCHAR" property="submitRemark" />
+    <result column="TaskFormContent" jdbcType="CHAR" property="taskFormContent" />
+    <result column="ChatHistroy" jdbcType="CHAR" property="chatHistroy" />
+    <result column="TaskStatus" jdbcType="TINYINT" property="taskStatus" />
+    <result column="AgentUserId" jdbcType="VARCHAR" property="agentUserId" />
+    <result column="ProcessTime" jdbcType="TIMESTAMP" property="processTime" />
+    <result column="WFId" jdbcType="INTEGER" property="WFId" />
+    <result column="NodeId" jdbcType="INTEGER" property="nodeId" />
+    <result column="StrartHandleDate" jdbcType="DATE" property="strartHandleDate" />
+    <result column="SendCheckDate" jdbcType="DATE" property="sendCheckDate" />
+    <result column="FinishDate" jdbcType="DATE" property="finishDate" />
+    <result column="IsActive" jdbcType="BIT" property="isActive" />
+    <result column="DataChange_CreateTime" jdbcType="TIMESTAMP" property="dataChangeCreateTime" />
+    <result column="DataChange_LastTime" jdbcType="TIMESTAMP" property="dataChangeLastTime" />
+    <result column="CreatedBy" jdbcType="VARCHAR" property="createdBy" />
+    <result column="ModifiedBy" jdbcType="VARCHAR" property="modifiedBy" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    CompanyTaskId, CustomerId, ComAccountId, CompanyId, TaskCategory, TaskName, ExpireDate, 
+    SubmitterId, SubmitterDeptId, SubmitTime, SubmitRemark, TaskFormContent, ChatHistroy, 
+    TaskStatus, AgentUserId, ProcessTime, WFId, NodeId, StrartHandleDate, SendCheckDate, 
+    FinishDate, IsActive, DataChange_CreateTime, DataChange_LastTime, CreatedBy, ModifiedBy
+  </sql>
+</mapper>
