@@ -6,7 +6,13 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   modules : {
-    leftNaviModule : index.leftNaviStore
+    leftNaviModule : index.leftNaviStore,
+
+    employeeSocialSecuritySearch: index.employeeSocialSecuritySearch,
+    employeeSocialSecurityInfo: index.employeeSocialSecurityInfo,
+    employeeSocialSecurityNew: index.companySocialSecurityNew,
+
+    employeeOperatorView: index.employeeOperatorView
   }
 });
 

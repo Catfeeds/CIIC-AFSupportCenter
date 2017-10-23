@@ -18,7 +18,7 @@
     </Row>
     <Row>
       <Col :xs="{span: 22, offset: 1}" :lg="{span: 22, offset: 1}">
-        <Table highlight-row :columns="sSocialSecurityTypeColumns" :data="filterUser"></Table>
+        <Table border highlight-row :columns="sSocialSecurityTypeColumns" :data="filterUser"></Table>
       </Col>
     </Row>
   </Form>
@@ -26,19 +26,31 @@
 <script>
   export default {
     name:"companyAccountSearchModal",
+    props: {
+      sSocialSecurityTypeData: {
+        require: true,
+        type: Array
+      }
+    },
     data() {
       return {
         mUserNumber: '', //参保户登记码
         mCompanyName: '', //养老金用公司名称
-        sSocialSecurityTypeData: [
-          {eid: '34235329', name: '中智大库'},
-          {eid: '23434324', name: '中智外包'},
-          {eid: '56565659', name: '独立户-欧莱雅'},
-          {eid: '34543543', name: '独立户-迅达电梯'}
-        ],
         sSocialSecurityTypeColumns: [
-          {title: '参保户登记码', key: 'eid'},
-          {title: '养老金用公司名称', key: 'name'}
+          {title: '参保户登记码', key: 'id', align: 'center',
+            render: (h, params) => {
+              return h('div', {style: {textAlign: 'right'}}, [
+                h('span', params.row.id),
+              ]);
+            }
+          },
+          {title: '养老金用公司名称', key: 'name', align: 'center',
+            render: (h, params) => {
+              return h('div', {style: {textAlign: 'left'}}, [
+                h('span', params.row.name),
+              ]);
+            }
+          }
         ]
       }
     },

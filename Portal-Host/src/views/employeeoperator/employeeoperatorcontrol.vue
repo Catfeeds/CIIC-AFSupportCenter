@@ -1,63 +1,53 @@
 <template>
   <div>
-    <Form :label-width=120>
-      <Collapse v-model="collapseInfo">
-        <Panel name="1">
-          雇员日常操作
-          <div slot="content" >
-            <operator-search></operator-search>
-          </div>
-        </Panel>
-      </Collapse>
-    </Form>
+    <Collapse v-model="collapseInfo">
+      <Panel name="1">
+        雇员日常操作
+        <div slot="content" >
+          <operator-search :customerData="customerData" :sSocialSecurityTypeData="sSocialSecurityTypeData"></operator-search>
+        </div>
+      </Panel>
+    </Collapse>
 
-    <Form>
-      <Row style="margin-top: 40px;" v-show="isCperator === 1 || isCperator === 2">
-        <Col :xs="{span: 2}" :lg="{span: 2}">
-          <Form-item>
-            <Dropdown @on-click="routerToCommcialOperator" style="width: 100%;">
-              <Button type="primary" long>
-                办理
-                <Icon type="arrow-down-b"></Icon>
-              </Button>
-              <DropdownMenu slot="list">
-                <DropdownItem name="1">雇员新进、转入</DropdownItem>
-                <DropdownItem name="2">雇员补缴</DropdownItem>
-                <DropdownItem name="3">雇员调整</DropdownItem>
-                <DropdownItem name="4">雇员转出</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </Form-item>
-        </Col>
-        <Col :xs="{span: 1}" :lg="{span: 1}">
-          <Form-item class="ml10">
-            <Button type="error" @click="isRefuseReason = true">批退</Button>
-          </Form-item>
-        </Col>
-        <Col :xs="{span: 1}" :lg="{span: 1}">
-          <Form-item class="ml10">
-            <Button type="default" @click="">导出</Button>
-          </Form-item>
-        </Col>
-      </Row>
+    <Row v-show="isCperator === 1 || isCperator === 2" class="mt20">
+      <Col :xs="{span: 4}" :lg="{span: 4}">
+        <Dropdown @on-click="routerToCommcialOperator">
+          <Button type="primary" style="width: 100px;">
+            办理
+            <Icon type="arrow-down-b"></Icon>
+          </Button>
+          <DropdownMenu slot="list">
+            <DropdownItem name="1">雇员新进、转入</DropdownItem>
+            <DropdownItem name="2">雇员补缴</DropdownItem>
+            <DropdownItem name="3">雇员调整</DropdownItem>
+            <DropdownItem name="4">雇员转出</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+        <Button type="error" @click="isRefuseReason = true">批退</Button>
+        <Button type="default" @click="">导出</Button>
+      </Col>
+    </Row>
 
-      <Row style="margin-top: 20px;">
-        <Col :xs="{span: 24}" :lg="{span: 24}">
-          <Table border :columns="employeeResultColumns" :data="employeeResultData" ref="employeeSocialSecurityData"></Table>
-          <Page :total="4" :page-size="5" :page-size-opts="[5, 10]" show-sizer show-total  class="pageSize"></Page>
-        </Col>
-      </Row>
+    <Row class="mt20">
+      <Col :xs="{span: 24}" :lg="{span: 24}">
+        <Table border :columns="employeeResultColumns" :data="employeeResultData"></Table>
+        <Page :total="4" :page-size="5" :page-size-opts="[5, 10]" show-sizer show-total  class="pageSize"></Page>
+      </Col>
+    </Row>
 
-      <!-- 批退理由 -->
-      <Modal
-        v-model="isRefuseReason"
-        @on-ok="ok"
-        @on-cancel="cancel">
+    <!-- 批退理由 -->
+    <Modal
+      v-model="isRefuseReason"
+      @on-ok="ok"
+      @on-cancel="cancel">
+      <Form>
         <p>
-          <Input v-model="refuseReason" type="textarea" :rows=4 placeholder="请填写批退备注..."></Input>
+          <Form-item>
+            <Input v-model="refuseReason" type="textarea" :rows=4 placeholder="请填写批退备注..."></Input>
+          </Form-item>
         </p>
-      </Modal>
-    </Form>
+      </Form>
+    </Modal>
   </div>
 </template>
 <script>
@@ -68,6 +58,15 @@
     props:{
       isCperator:{
         index: Number
+      },
+      customerData: {
+        type: Array
+      },
+      sSocialSecurityTypeData: {
+        type: Array
+      },
+      employeeResultData: {
+        type: Array
       }
     },
     components: {operatorSearch},
@@ -95,9 +94,7 @@
             align: 'center',
             render: (h, params) => {
               return h('div', [
-                h('Button', {
-                  props: {type: 'primary', size: 'small'},
-                  style: {margin: '0 auto'},
+                h('Button', {props: {type: 'primary', size: 'small'}, style: {margin: '0 auto'},
                   on: {
                     click: () => {
                       switch(params.row.type) {
@@ -232,17 +229,6 @@
               ]);
             }
           }
-        ],
-        employeeResultData: [
-          {action: '', tid: 'SS_KH_0001', type: '新进转入', emergency: '是', employee: '雇员9', employeeId: 'GY009', employeeCardNumber: '', companySocialSecurityAccount: '', uKey: '', doDate: '', customerId: '', customerName: '客户1', finishDate: '', sponsor: '中智上海', initiator: '前客服1', sponsorTime: '2017/06/01 10:05:29', notes: ''},
-          {action: '', tid: 'SS_ZC_0001', type: '新进转入', emergency: '', employee: '雇员0', employeeId: 'GY000', employeeCardNumber: '', companySocialSecurityAccount: '', uKey: '', doDate: '', customerId: '', customerName: '客户1', finishDate: '', sponsor: '', initiator: '', sponsorTime: '', notes: ''},
-          {action: '', tid: 'SS_XJ_0001', type: '新进转入', emergency: '是', employee: '雇员1', employeeId: 'GY001', employeeCardNumber: '', companySocialSecurityAccount: '', uKey: '', doDate: '', customerId: '', customerName: '客户3', finishDate: '', sponsor: '', initiator: '', sponsorTime: '', notes: ''},
-          {action: '', tid: 'SS_ZC_0001', type: '调整', emergency: '', employee: '雇员2', employeeId: 'GY002', employeeCardNumber: '', companySocialSecurityAccount: '', uKey: '', doDate: '', customerId: '', customerName: '客户3', finishDate: '', sponsor: '', initiator: '', sponsorTime: '', notes: ''},
-          {action: '', tid: 'SS_BJ_0001', type: '补缴', emergency: '是', employee: '雇员3', employeeId: 'GY003', employeeCardNumber: '', companySocialSecurityAccount: '', uKey: '', doDate: '', customerId: '', customerName: '客户3', finishDate: '', sponsor: '', initiator: '', sponsorTime: '', notes: ''},
-          {action: '', tid: 'SS_ZZ_0001', type: '转出', emergency: '', employee: '雇员4', employeeId: 'GY004', employeeCardNumber: '', companySocialSecurityAccount: '', uKey: '', doDate: '', customerId: '', customerName: '客户3', finishDate: '', sponsor: '', initiator: '', sponsorTime: '', notes: ''},
-          {action: '', tid: 'SS_TZ_0001', type: '转出', emergency: '', employee: '雇员5', employeeId: 'GY005', employeeCardNumber: '', companySocialSecurityAccount: '', uKey: '', doDate: '', customerId: '', customerName: '客户3', finishDate: '', sponsor: '', initiator: '', sponsorTime: '', notes: ''},
-          {action: '', tid: 'SS_TZ_0001', type: '转出', emergency: '是', employee: '雇员6', employeeId: 'GY006', employeeCardNumber: '', companySocialSecurityAccount: '', uKey: '', doDate: '', customerId: '', customerName: '客户3', finishDate: '', sponsor: '', initiator: '', sponsorTime: '', notes: ''},
-          {action: '', tid: 'SS_TQ_0001', type: '转出', emergency: '', employee: '雇员8', employeeId: 'GY008', employeeCardNumber: '', companySocialSecurityAccount: '', uKey: '', doDate: '', customerId: '', customerName: '客户3', finishDate: '', sponsor: '', initiator: '', sponsorTime: '', notes: ''}
         ]
       }
     },
@@ -257,14 +243,14 @@
         });
       },
       ok () {
-        this.$Message.info('点击了确定');
+
       },
       cancel () {
-        this.$Message.info('点击了取消');
+
       }
     }
   }
 </script>
 <style scoped>
-  .ml10 {margin-left: 10px;}
+  .mt20 {margin-top: 20px;}
 </style>

@@ -4,19 +4,19 @@
       <Panel name="1">
         企业社保账户信息
         <div slot="content">
-          <company-social-security-info></company-social-security-info>
+          <company-social-security-info :company="companysocialsecuritynew.company"></company-social-security-info>
         </div>
       </Panel>
       <Panel name="2">
         雇员信息
         <div slot="content">
-          <employee-info :operatorType='operatorType'></employee-info>
+          <employee-info :operatorType='operatorType' :employee="companysocialsecuritynew.employee"></employee-info>
         </div>
       </Panel>
       <Panel name="3">
         任务单参考信息
         <div slot="content">
-          <task-refrence-info :operatorType='operatorType'></task-refrence-info>
+          <task-refrence-info :operatorType='operatorType' :taskNewInfo="companysocialsecuritynew.taskNewInfo" :taskNewInfoData="companysocialsecuritynew.taskNewInfoData" :taskChangeInfo="companysocialsecuritynew.taskChangeInfo" :taskOutInfo="companysocialsecuritynew.taskOutInfo"></task-refrence-info>
         </div>
       </Panel>
       <Panel name="4">
@@ -51,6 +51,7 @@
   import employeeInfo from '../commoncontrol/employeeinfo.vue'
   import taskRefrenceInfo from './taskrefrenceinfo.vue'
   import socialSecurityOperator from '../commoncontrol/socialsecurityoperator.vue'
+  import * as eventType from '../../store/EventTypes/shsocialsecurity/CompanySocialSecurityNewType'
 
   export default {
     name:"companysocialsecuritynew",
@@ -63,12 +64,17 @@
       }
     },
     mounted() {
-
+      this.setCompanySocialSecurityNew()
     },
     computed: {
-
+      ...mapGetters([
+        'companysocialsecuritynew'
+      ])
     },
     methods: {
+      ...mapActions({
+        setCompanySocialSecurityNew: eventType.COMPANYSOCIALSECURITYNEWTYPE
+      }),
       goBack() {
         this.sourceFrom !== 'search' ? this.$router.push({name:'employeeoperatorview'}) : this.$router.push({name: 'employeesocialsecurityinfo'});
       },

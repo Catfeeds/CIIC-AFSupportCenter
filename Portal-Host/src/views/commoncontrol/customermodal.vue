@@ -14,34 +14,59 @@
       </Col>
     </Row>
     <Row>
-      <Col :xs="{span: 22, offset: 1}" :lg="{span: 22, offset: 1}">
-        <Table :columns="customerColumns" :data="customerData"></Table>
-        <Page :current="2" :total="50" simple></Page>
+      <Col :xs="{span: 1, offset: 20}" :lg="{span: 1, offset: 20}">
+        <Button type="primary" @click="" icon="ios-search">查询</Button>
       </Col>
+    </Row>
+    <Row>
+      <Table border="" :columns="customerColumns" :data="customerData" class="mt20"></Table>
+      <Page :current="2" :total="50" simple></Page>
     </Row>
   </Form>
 </template>
 <script>
 export default {
     name:"customerModal",
+    props: {
+      customerData: {
+        require: true,
+        type: Array
+      }
+    },
     data() {
       return {
         mCustomerNumber: '', //客户编号
         mCustomerName: '', //客户姓名
-        customerData: [
-          {cid: '1', name: '客户1', code: 'KH001', nature: '企业', type: '国家'},
-          {cid: '2', name: '客户2', code: 'KH002', nature: '代表处', type: '集体'},
-          {cid: '3', name: '客户3', code: 'KH003', nature: '', type: '民营'},
-          {cid: '4', name: '客户4', code: 'KH004', nature: '', type: '合资'},
-          {cid: '5', name: '客户5', code: 'KH005', nature: '', type: '其他'},
-          {cid: '6', name: '客户6', code: 'KH006', nature: '其他', type: '其他'}
-        ],
         customerColumns: [
-          {title: '操作', key: 'cid', type: 'selection'},
-          {title: '客户名称', key: 'name'},
-          {title: '公司编号', key: 'code'},
-          {title: '企业性质', key: 'nature'},
-          {title: '企业类型', key: 'type'}
+          {title: '操作', key: 'id', type: 'selection', width: 60, align: 'center'},
+          {title: '客户名称', key: 'name', align: 'center',
+            render: (h, params) => {
+              return h('div', {style: {textAlign: 'left'}}, [
+                h('span', params.row.name),
+              ]);
+            }
+          },
+          {title: '公司编号', key: 'code', align: 'center',
+            render: (h, params) => {
+              return h('div', {style: {textAlign: 'left'}}, [
+                h('span', params.row.code),
+              ]);
+            }
+          },
+          {title: '企业性质', key: 'nature', align: 'center',
+            render: (h, params) => {
+              return h('div', {style: {textAlign: 'left'}}, [
+                h('span', params.row.nature),
+              ]);
+            }
+          },
+          {title: '企业类型', key: 'type', align: 'center',
+            render: (h, params) => {
+              return h('div', {style: {textAlign: 'left'}}, [
+                h('span', params.row.type),
+              ]);
+            }
+          },
         ]
       }
     },
@@ -56,3 +81,6 @@ export default {
     }
   }
 </script>
+<style scoped>
+  .mt20 {margin-top: 20px;}
+</style>

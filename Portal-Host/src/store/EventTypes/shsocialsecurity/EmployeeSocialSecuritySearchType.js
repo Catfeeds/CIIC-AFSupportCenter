@@ -1,0 +1,4 @@
+/**
+ * Created by huangye on 2017/10/20.
+ */
+export const EMPLOYEESOCIALSECURITYSEARCH = 'EMPLOYEESOCIALSECURITYSEARCH'
