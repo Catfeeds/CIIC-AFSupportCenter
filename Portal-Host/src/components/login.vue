@@ -4,7 +4,7 @@
       <div class="logo">
         <!-- <img src="static/img/cutie.jpg"> -->
       </div>
-      <Form ref="formValidate" :model="formValidate" :label-width=80 :rules="ruleValidate" v-focus>
+      <Form ref="formValidate" :model="formValidate" :label-width=80 :rules="ruleValidate">
         <Form-item label="用户名" prop="name">
           <Input v-model.trim="formValidate.name" placeholder="请输入" autofocus></Input>
         </Form-item>

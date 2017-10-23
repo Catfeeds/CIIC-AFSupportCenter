@@ -1,25 +1,21 @@
-/**
- * Created by huangye on 2017/10/23.
- */
 import mock from '../../../data/shsocialsecurity/CompanySocialSecurityNewData'
-import * as CompanySocialSecurityNewType from '../../EventTypes/shsocialsecurity/CompanySocialSecurityNewType'
-import axios from 'axios'
+import EventTypes from '../../EventTypes'
 
 const state = {
   companysocialsecuritynew: []
 }
 
 const mutations = {
-  [CompanySocialSecurityNewType.COMPANYSOCIALSECURITYNEWTYPE](state, payload) {
+  [EventTypes.COMPANYSOCIALSECURITYNEWTYPE](state, payload) {
     console.log(payload)
     state.companysocialsecuritynew = payload.list.data;
   }
 }
 
 const actions = {
-  [CompanySocialSecurityNewType.COMPANYSOCIALSECURITYNEWTYPE]({commit}, payload) {
+  [EventTypes.COMPANYSOCIALSECURITYNEWTYPE]({commit}, payload) {
     mock.companySocialSecurityNew.then(response => {
-      commit(CompanySocialSecurityNewType.COMPANYSOCIALSECURITYNEWTYPE, {list: response.data})
+      commit(EventTypes.COMPANYSOCIALSECURITYNEWTYPE, {list: response.data})
     })
   }
 }
@@ -30,9 +26,13 @@ const getters = {
   }
 }
 
-export const companySocialSecurityNew = {
+const namespaced = true;
+
+export default {
+  namespaced: namespaced,
   state,
   mutations,
   actions,
   getters
 }
+

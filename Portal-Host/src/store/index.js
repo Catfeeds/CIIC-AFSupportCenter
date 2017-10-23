@@ -1,19 +1,24 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import * as index from './modules/index'
+import leftNavigation from './modules/leftNavigation'
+
+import EmployeeSocialSecuritySearch from './modules/shsocialsecurity/EmployeeSocialSecuritySearch'
+import EmployeeSocialSecurityInfo from './modules/shsocialsecurity/EmployeeSocialSecurityInfo'
+import CompanySocialSecurityNew from './modules/shsocialsecurity/CompanySocialSecurityNew'
+
+import EmployeeOperatorView from './modules/employeeoperator/EmployeeOperatorView'
+
 Vue.use(Vuex)
 
-const store = new Vuex.Store({
+export default new Vuex.Store({
   modules : {
-    leftNaviModule : index.leftNaviStore,
+    leftNaviModule : leftNavigation,
 
-    employeeSocialSecuritySearch: index.employeeSocialSecuritySearch,
-    employeeSocialSecurityInfo: index.employeeSocialSecurityInfo,
-    employeeSocialSecurityNew: index.companySocialSecurityNew,
+    employeeSocialSecuritySearch: EmployeeSocialSecuritySearch,
+    employeeSocialSecurityInfo: EmployeeSocialSecurityInfo,
+    companySocialSecurityNew: CompanySocialSecurityNew,
 
-    employeeOperatorView: index.employeeOperatorView
+    employeeOperatorView: EmployeeOperatorView,
   }
 });
-
-export default store;
