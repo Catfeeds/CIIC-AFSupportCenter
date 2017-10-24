@@ -1,28 +1,21 @@
-/**
- * Created by huangye on 2017/10/23.
- */
-/**
- * Created by huangye on 2017/10/20.
- */
 import mock from '../../../data/shsocialsecurity/EmployeeSocialSecurityInfoData'
-import * as EmployeeSocialSecurityInfoType from '../../EventTypes/shsocialsecurity/EmployeeSocialSecurityInfoType'
-import axios from 'axios'
+import EventTypes from '../../EventTypes'
 
 const state = {
   employeesocialsecurityinfo: []
 }
 
 const mutations = {
-  [EmployeeSocialSecurityInfoType.EMPLOYEESOCIALSECURITYINFO](state, payload) {
+  [EventTypes.EMPLOYEESOCIALSECURITYINFO](state, payload) {
     console.log(payload)
     state.employeesocialsecurityinfo = payload.list.data;
   }
 }
 
 const actions = {
-  [EmployeeSocialSecurityInfoType.EMPLOYEESOCIALSECURITYINFO]({commit}, payload) {
+  [EventTypes.EMPLOYEESOCIALSECURITYINFO]({commit}, payload) {
     mock.employeeSocialSecurityInfo.then(response => {
-      commit(EmployeeSocialSecurityInfoType.EMPLOYEESOCIALSECURITYINFO, {list: response.data})
+      commit(EventTypes.EMPLOYEESOCIALSECURITYINFO, {list: response.data})
   })
   }
 }
@@ -33,7 +26,10 @@ const getters = {
   }
 }
 
-export const employeeSocialSecurityInfo = {
+const namespaced = true;
+
+export default {
+  namespaced: namespaced,
   state,
   mutations,
   actions,

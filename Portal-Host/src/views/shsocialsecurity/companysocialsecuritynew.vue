@@ -51,7 +51,7 @@
   import employeeInfo from '../commoncontrol/employeeinfo.vue'
   import taskRefrenceInfo from './taskrefrenceinfo.vue'
   import socialSecurityOperator from '../commoncontrol/socialsecurityoperator.vue'
-  import * as eventType from '../../store/EventTypes/shsocialsecurity/CompanySocialSecurityNewType'
+  import EventTypes from '../../store/EventTypes'
 
   export default {
     name:"companysocialsecuritynew",
@@ -67,13 +67,13 @@
       this.setCompanySocialSecurityNew()
     },
     computed: {
-      ...mapGetters([
+      ...mapGetters('companySocialSecurityNew',[
         'companysocialsecuritynew'
       ])
     },
     methods: {
-      ...mapActions({
-        setCompanySocialSecurityNew: eventType.COMPANYSOCIALSECURITYNEWTYPE
+      ...mapActions('companySocialSecurityNew',{
+        setCompanySocialSecurityNew: EventTypes.COMPANYSOCIALSECURITYNEWTYPE
       }),
       goBack() {
         this.sourceFrom !== 'search' ? this.$router.push({name:'employeeoperatorview'}) : this.$router.push({name: 'employeesocialsecurityinfo'});

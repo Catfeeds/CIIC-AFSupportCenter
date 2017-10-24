@@ -19,7 +19,7 @@
 <script>
   import {mapActions,mapGetters} from 'vuex'
   import employeeoperatorcontrol from "./employeeoperatorcontrol.vue";
-  import * as eventType from '../../store/EventTypes/employeeoperator/EmployeeOperatorViewType'
+  import EventTypes from '../../store/EventTypes'
 
   export default {
     components: {employeeoperatorcontrol},
@@ -33,13 +33,13 @@
       this.setEmployeeOperatorView()
     },
     computed: {
-      ...mapGetters([
+      ...mapGetters('employeeOperatorView',[
         'employeeoperatorview'
       ])
     },
     methods: {
-      ...mapActions({
-        setEmployeeOperatorView: eventType.EMPLOYEEOPERATORVIEW
+      ...mapActions('employeeOperatorView',{
+        setEmployeeOperatorView: EventTypes.EMPLOYEEOPERATORVIEW
       })
     }
   }

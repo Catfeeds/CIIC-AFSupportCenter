@@ -2,24 +2,23 @@
  * Created by huangye on 2017/10/23.
  */
 import mock from '../../../data/employeeoperator/EmployeeOperatorViewData'
-import * as EmployeeOperatorViewType from '../../EventTypes/employeeoperator/EmployeeOperatorViewType'
-import axios from 'axios'
+import EventTypes from '../../EventTypes'
 
 const state = {
   employeeoperatorview: []
 }
 
 const mutations = {
-  [EmployeeOperatorViewType.EMPLOYEEOPERATORVIEW](state, payload) {
+  [EventTypes.EMPLOYEEOPERATORVIEW](state, payload) {
     console.log(payload)
     state.employeeoperatorview = payload.list.data;
   }
 }
 
 const actions = {
-  [EmployeeOperatorViewType.EMPLOYEEOPERATORVIEW]({commit}, payload) {
+  [EventTypes.EMPLOYEEOPERATORVIEW]({commit}, payload) {
     mock.employeeOperatorView.then(response => {
-      commit(EmployeeOperatorViewType.EMPLOYEEOPERATORVIEW, {list: response.data})
+      commit(EventTypes.EMPLOYEEOPERATORVIEW, {list: response.data})
     })
   }
 }
@@ -30,7 +29,10 @@ const getters = {
   }
 }
 
-export const employeeOperatorView = {
+const namespaced = true;
+
+export default {
+  namespaced: namespaced,
   state,
   mutations,
   actions,

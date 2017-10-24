@@ -1,13 +1,12 @@
 import mock from '../../data/LeftNavigationData'
-import * as LeftNavigationType from '../EventTypes/LeftNavigationType'
-import axios from 'axios'
+import EventTypes from '../EventTypes'
 
 const state = {
 	leftnavigationlist: []
 }
 
 const mutations = {
-	[LeftNavigationType.LEFTNAVIGATION_SETLIST](state,payload){
+	[EventTypes.LEFTNAVIGATION_SETLIST](state,payload){
     console.log(payload)
 		state.leftnavigationlist = payload.list.data;
 		// console.log(state.leftnavigationlist);
@@ -15,9 +14,9 @@ const mutations = {
 }
 
 const actions = {
-	[LeftNavigationType.LEFTNAVIGATION_SETLIST]({commit},payload){
+	[EventTypes.LEFTNAVIGATION_SETLIST]({commit},payload){
 		mock.leftNavigationList.then(response =>{
-		    commit(LeftNavigationType.LEFTNAVIGATION_SETLIST, { list: response.data })
+		    commit(EventTypes.LEFTNAVIGATION_SETLIST, { list: response.data })
 	      }
     	)
 	}
@@ -30,9 +29,13 @@ const getters = {
 	}
 }
 
-export const leftNaviStore = {
+const namespaced = true;
+
+export default {
+  namespaced: namespaced,
   state,
   mutations,
   actions,
   getters
 }
+

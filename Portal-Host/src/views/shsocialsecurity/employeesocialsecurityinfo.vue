@@ -152,7 +152,7 @@
 </template>
 <script>
   import {mapActions,mapGetters} from 'vuex'
-  import * as eventType from '../../store/EventTypes/shsocialsecurity/EmployeeSocialSecurityInfoType'
+  import EventTypes from '../../store/EventTypes'
 
   export default {
     name:"employeesocialsecurityinfo",
@@ -250,13 +250,13 @@
       this.setEmployeeSocialSecurityInfo()
     },
     computed: {
-      ...mapGetters([
+      ...mapGetters('employeeSocialSecurityInfo',[
         'employeesocialsecurityinfo'
       ])
     },
     methods: {
-      ...mapActions({
-        setEmployeeSocialSecurityInfo: eventType.EMPLOYEESOCIALSECURITYINFO
+      ...mapActions('employeeSocialSecurityInfo',{
+        setEmployeeSocialSecurityInfo: EventTypes.EMPLOYEESOCIALSECURITYINFO
       }),
       goBack() {
         this.$router.push({name:'employeesocialsecuritysearch'});

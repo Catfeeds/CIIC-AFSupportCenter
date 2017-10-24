@@ -126,7 +126,7 @@
   import customerModal from "../commoncontrol/customermodal.vue"
   import companyAccountSearchModal from "../commoncontrol/companyaccountsearchmodal.vue"
   import ICol from "../../../node_modules/iview/src/components/grid/col";
-  import * as eventType from '../../store/EventTypes/shsocialsecurity/EmployeeSocialSecuritySearchType'
+  import EventTypes from '../../store/EventTypes'
 
   export default {
     name:"employeesocialsecuritysearch",
@@ -278,13 +278,13 @@
       this.setEmployeeSocialSecuritySearch()
     },
     computed: {
-      ...mapGetters([
+      ...mapGetters('employeeSocialSecuritySearch',[
         'employeesocialsecuritysearch'
       ])
     },
     methods: {
-      ...mapActions({
-        setEmployeeSocialSecuritySearch: eventType.EMPLOYEESOCIALSECURITYSEARCH
+      ...mapActions('employeeSocialSecuritySearch',{
+        setEmployeeSocialSecuritySearch: EventTypes.EMPLOYEESOCIALSECURITYSEARCH
       }),
       exportData() {
         this.$refs.employeeSocialSecurityData.exportCsv({

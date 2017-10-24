@@ -108,9 +108,7 @@
 <script>
 
 import {mapActions,mapGetters} from 'vuex'
-import * as eventType from '../store/EventTypes/LeftNavigationType'
-
-
+import EventTypes from '../store/EventTypes'
 
   export default {
     name:"leftnavigation",
@@ -152,16 +150,13 @@ import * as eventType from '../store/EventTypes/LeftNavigationType'
       iconSize() {
         return this.spanLeft === 4 ? 24 : 24;
       },
-      ...mapGetters([
+      ...mapGetters('leftNaviModule',[
         'leftNavigationList'
       ]),
     },
     methods: {
-      // ...mapGetters([
-      //   'leftNavigationList'
-      // ]),
-      ...mapActions({
-        setList:eventType.LEFTNAVIGATION_SETLIST
+      ...mapActions('leftNaviModule',{
+        setList:EventTypes.LEFTNAVIGATION_SETLIST
       }),
 
       toggleClick() {
