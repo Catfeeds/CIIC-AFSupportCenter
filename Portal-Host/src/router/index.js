@@ -12,6 +12,12 @@ const employeesocialsecurityinfo = r => require.ensure([], () => r(require('@/vi
 const companysocialsecuritynew = r => require.ensure([], () => r(require('@/views/shsocialsecurity/companysocialsecuritynew')), 'companysocialsecuritynew') //企业社保基本信息
 
 const employeeoperatorview = r => require.ensure([], () => r(require('@/views/employeeoperator/employeeoperatorview')), 'employeeoperatorview') //雇员日常操作
+const thismonthhandle = r => require.ensure([], () => r(require('@/views/employeeoperator/employeeoperatortab/thismonthhandle')), 'thismonthhandle') //雇员日常操作 -- 本月处理
+const nextmonthhandle = r => require.ensure([], () => r(require('@/views/employeeoperator/employeeoperatortab/nextmonthhandle')), 'nextmonthhandle') //雇员日常操作 -- 下月处理
+const finishhandle = r => require.ensure([], () => r(require('@/views/employeeoperator/employeeoperatortab/finishhandle')), 'finishhandle') //雇员日常操作 -- 已完成
+const refusehandle = r => require.ensure([], () => r(require('@/views/employeeoperator/employeeoperatortab/refusehandle')), 'refusehandle') //雇员日常操作 -- 批退
+
+
 const employeecommcialoperator = r => require.ensure([], () => r(require('@/views/employeeoperator/employeecommcialoperator')), 'employeecommcialoperator') //雇员日常操作办理页面
 
 const employeespecialoperatorview = r => require.ensure([], () => r(require('@/views/employeespecialoperator/employeespecialoperatorview')), 'employeespecialoperatorview') //雇员特殊操作
@@ -104,7 +110,29 @@ let router = new Router({
             level2:"上海社保",
             level3:"雇员日常操作",
             openNames:['1']
-          }
+          },
+          children: [
+            {
+              path: '/thismonthhandle',
+              name:'thismonthhandle',
+              component: thismonthhandle
+            },
+            {
+              path: '/nextmonthhandle',
+              name:'nextmonthhandle',
+              component: nextmonthhandle
+            },
+            {
+              path: '/finishhandle',
+              name:'finishhandle',
+              component: finishhandle
+            },
+            {
+              path: '/refusehandle',
+              name:'refusehandle',
+              component: refusehandle
+            },
+          ]
         },
         {
           path: '/employeecommcialoperator',

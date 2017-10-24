@@ -5,6 +5,10 @@ import EmployeeSocialSecurityInfoType from "./shsocialsecurity/EmployeeSocialSec
 import CompanySocialSecurityNewType from "./shsocialsecurity/CompanySocialSecurityNewType";
 
 import EmployeeOperatorViewType from "./employeeoperator/EmployeeOperatorViewType";
+import ThisMonthHandleType from "./employeeoperator/employeeoperatortab/ThisMonthHandleType"
+import NextMonthHandleType from "./employeeoperator/employeeoperatortab/NextMonthHandleType"
+import FinishHandleType from "./employeeoperator/employeeoperatortab/FinishHandleType"
+import RefuseHandleType from "./employeeoperator/employeeoperatortab/RefuseHandleType"
 import EmployeeCommcialOperatorType from './employeeoperator/EmployeeCommcialOperatorType'
 
 import EmployeeSpecialOperatorViewType from "./employeespecialoperator/EmployeeSpecialOperatorViewType"
@@ -21,6 +25,10 @@ export default {
   ...CompanySocialSecurityNewType,
 
   ...EmployeeOperatorViewType,
+  ...ThisMonthHandleType,
+  ...NextMonthHandleType,
+  ...FinishHandleType,
+  ...RefuseHandleType,
   ...EmployeeCommcialOperatorType,
 
   ...EmployeeSpecialOperatorViewType,

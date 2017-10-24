@@ -1,46 +1,43 @@
 <template>
   <div class="smList">
-    <Tabs>
-      <TabPane label="本月处理">
-        <employeeoperatorcontrol :isCperator="1" :customerData="employeeoperatorview.customerData" :sSocialSecurityTypeData="employeeoperatorview.sSocialSecurityTypeData" :employeeResultData="employeeoperatorview.employeeResultData"></employeeoperatorcontrol>
-      </TabPane>
-      <TabPane label="下月处理">
-        <employeeoperatorcontrol :isCperator="2" :customerData="employeeoperatorview.customerData" :sSocialSecurityTypeData="employeeoperatorview.sSocialSecurityTypeData" :employeeResultData="employeeoperatorview.employeeResultData"></employeeoperatorcontrol>
-      </TabPane>
-      <TabPane label="已完成">
-        <employeeoperatorcontrol :isCperator="3" :customerData="employeeoperatorview.customerData" :sSocialSecurityTypeData="employeeoperatorview.sSocialSecurityTypeData" :employeeResultData="employeeoperatorview.employeeResultData"></employeeoperatorcontrol>
-      </TabPane>
-      <TabPane label="批退">
-        <employeeoperatorcontrol :isCperator="4" :customerData="employeeoperatorview.customerData" :sSocialSecurityTypeData="employeeoperatorview.sSocialSecurityTypeData" :employeeResultData="employeeoperatorview.employeeResultData"></employeeoperatorcontrol>
-      </TabPane>
-    </Tabs>
+    <tabs :data="tabPans" :value="currentValue" @on-click="selectTabPan"></tabs>
   </div>
 </template>
 <script>
   import {mapActions,mapGetters} from 'vuex'
-  import employeeoperatorcontrol from "./employeeoperatorcontrol.vue";
   import EventTypes from '../../store/EventTypes'
+  import tabs from '../../components/tabs.vue'
 
   export default {
-    components: {employeeoperatorcontrol},
-    name:"employeeoperatorview",
+    components: {tabs},
+    props: {
+      data: {
+        require: true,
+        type: Array
+      }
+    },
     data() {
       return {
-
+        currentValue: 'thismonthhandle',
+        tabPans:
+          [
+            {name: 'thismonthhandle', label: '本月处理'},
+            {name: 'nextmonthhandle', label: '下月处理'},
+            {name: 'finishhandle', label: '已完成'},
+            {name: 'refusehandle', label: '批退'},
+          ]
       }
     },
     mounted() {
-      this.setEmployeeOperatorView()
+
     },
     computed: {
-      ...mapGetters('employeeOperatorView',[
-        'employeeoperatorview'
-      ])
+
     },
     methods: {
-      ...mapActions('employeeOperatorView',{
-        setEmployeeOperatorView: EventTypes.EMPLOYEEOPERATORVIEW
-      })
+      selectTabPan(name) {
+
+      }
     }
   }
 </script>

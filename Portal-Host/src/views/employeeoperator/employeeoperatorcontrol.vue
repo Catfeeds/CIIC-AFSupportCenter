@@ -229,7 +229,8 @@
               ]);
             }
           }
-        ]
+        ],
+        employeeResultData: []
       }
     },
     computed: {

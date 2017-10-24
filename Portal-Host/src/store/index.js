@@ -8,6 +8,10 @@ import EmployeeSocialSecurityInfo from './modules/shsocialsecurity/EmployeeSocia
 import CompanySocialSecurityNew from './modules/shsocialsecurity/CompanySocialSecurityNew'
 
 import EmployeeOperatorView from './modules/employeeoperator/EmployeeOperatorView'
+import ThisMonthHandle from './modules/employeeoperator/employeeoperatortab/ThisMonthHandle'
+import NextMonthHandle from './modules/employeeoperator/employeeoperatortab/NextMonthHandle'
+import FinishHandle from './modules/employeeoperator/employeeoperatortab/FinishHandle'
+import RefuseHandle from './modules/employeeoperator/employeeoperatortab/RefuseHandle'
 import EmployeeCommcialOperator from './modules/employeeoperator/EmployeeCommcialOperator'
 
 import EmployeeSpecialOperatorView from './modules/employeespecialoperator/EmployeeSpecialOperatorView'
@@ -27,6 +31,10 @@ export default new Vuex.Store({
     employeeSocialSecurityNew: CompanySocialSecurityNew,
 
     employeeOperatorView: EmployeeOperatorView,
+    thisMonthHandle: ThisMonthHandle,
+    nextMonthHandle: NextMonthHandle,
+    finishHandle: FinishHandle,
+    refuseHandle: RefuseHandle,
     employeeCommcialOperator: EmployeeCommcialOperator,
 
     employeeSpecialOperatorView: EmployeeSpecialOperatorView,
