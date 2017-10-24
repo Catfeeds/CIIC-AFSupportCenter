@@ -10,13 +10,13 @@
       <Panel name="1">
         企业社保账户信息
         <div slot="content">
-          <company-social-security-info></company-social-security-info>
+          <company-social-security-info :company="employeespecialprogress3.company"></company-social-security-info>
         </div>
       </Panel>
       <Panel name="2">
         雇员信息
         <div slot="content">
-          <employee-info :operatorType="'1'"></employee-info>
+          <employee-info :operatorType="'1'" :employee="employeespecialprogress3.employee"></employee-info>
         </div>
       </Panel>
       <Panel name="3">
@@ -41,10 +41,13 @@
   </Form>
 </template>
 <script>
+  import {mapActions,mapGetters} from 'vuex'
   import chat from '../commoncontrol/chathistory/chat.vue'
   import companySocialSecurityInfo from '../commoncontrol/companysocialsecurityinfo.vue'
   import employeeInfo from '../commoncontrol/employeeinfo.vue'
   import socialSecurityEndOperator from '../commoncontrol/socialsecurityendoperator.vue'
+  import * as eventType from '../../store/EventTypes/employeespecialoperator/EmployeeSpecialProgress3Type'
+
   export default {
     name:"employeespecialprogress3",
     components: {chat, companySocialSecurityInfo, employeeInfo, socialSecurityEndOperator},
@@ -121,11 +124,17 @@
       this.$refs['st1'].onclick = function() {
           alert(123)
       }
+      this.setEmployeeSpecialProgress3()
     },
     computed: {
-
+      ...mapGetters([
+        'employeespecialprogress3'
+      ])
     },
     methods: {
+      ...mapActions({
+        setEmployeeSpecialProgress3: eventType.EMPLOYEESPECIALPROGRESS3
+      }),
       goBack() {
         this.$router.push({name:'employeespecialoperatorview'});
       }

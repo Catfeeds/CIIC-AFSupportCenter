@@ -2,16 +2,16 @@
   <div>
     <Tabs>
       <TabPane :label="tabInfo.tab1">
-        <company-task-control :isCperator="1"></company-task-control>
+        <company-task-control :isCperator="1" :taskData="companytasklist.taskData"></company-task-control>
       </TabPane>
       <TabPane :label="tabInfo.tab2">
-        <company-task-control :isCperator="2"></company-task-control>
+        <company-task-control :isCperator="2" :taskData="companytasklist.taskData"></company-task-control>
       </TabPane>
       <TabPane :label="tabInfo.tab3">
-        <company-task-control :isCperator="3"></company-task-control>
+        <company-task-control :isCperator="3" :taskData="companytasklist.taskData"></company-task-control>
       </TabPane>
       <TabPane :label="tabInfo.tab4">
-        <company-task-control :isCperator="4"></company-task-control>
+        <company-task-control :isCperator="4" :taskData="companytasklist.taskData"></company-task-control>
       </TabPane>
     </Tabs>
   </div>
@@ -19,6 +19,7 @@
 <script>
   import {mapActions,mapGetters} from 'vuex'
   import companyTaskControl from "./companytaskcontrol.vue";
+  import * as eventType from '../../store/EventTypes/companytasklist/CompanyTaskListType'
 
   export default {
     components: {companyTaskControl},
@@ -52,13 +53,17 @@
       }
     },
     mounted() {
-
+      this.setCompanyTaskList()
     },
     computed: {
-
+      ...mapGetters([
+        'companytasklist'
+      ])
     },
     methods: {
-
+      ...mapActions({
+        setCompanyTaskList: eventType.COMPANYTASKLIST
+      })
     }
   }
 </script>

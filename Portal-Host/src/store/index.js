@@ -12,7 +12,14 @@ const store = new Vuex.Store({
     employeeSocialSecurityInfo: index.employeeSocialSecurityInfo,
     employeeSocialSecurityNew: index.companySocialSecurityNew,
 
-    employeeOperatorView: index.employeeOperatorView
+    employeeOperatorView: index.employeeOperatorView,
+    employeeCommcialOperator: index.employeeCommcialOperator,
+
+    employeeSpecialOperatorView: index.employeeSpecialOperatorView,
+    employeeSpecialProgress2: index.employeeSpecialProgress2,
+    employeeSpecialProgress3: index.employeeSpecialProgress3,
+
+    companyTaskList: index.companyTaskList
   }
 });
 

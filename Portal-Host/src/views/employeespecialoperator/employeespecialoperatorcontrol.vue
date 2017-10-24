@@ -4,24 +4,24 @@
       <Panel name="1">
         雇员特殊操作
         <div slot="content">
-          <operator-search></operator-search>
+          <operator-search :customerData="customerData" :sSocialSecurityTypeData="sSocialSecurityTypeData"></operator-search>
         </div>
       </Panel>
     </Collapse>
 
     <Form>
-      <Row style="margin-top: 40px;" v-show="isCperator === 1 || isCperator === 2">
+      <Row class="mt20" v-show="isCperator === 1 || isCperator === 2">
         <Col :xs="{span: 1}" :lg="{span: 1}">
-        <Form-item class="ml10">
-          <Button type="error" @click="isRefuseReason = true">批退</Button>
-        </Form-item>
+          <Form-item>
+            <Button type="error" @click="isRefuseReason = true">批退</Button>
+          </Form-item>
         </Col>
       </Row>
 
-      <Row style="margin-top: 20px;">
+      <Row>
         <Col :xs="{span: 24}" :lg="{span: 24}">
-        <Table border :columns="employeeResultColumns" :data="employeeResultData" ref="employeeSocialSecurityData"></Table>
-        <Page :total="4" :page-size="5" :page-size-opts="[5, 10]" show-sizer show-total  class="pageSize"></Page>
+          <Table border :columns="employeeResultColumns" :data="employeeResultData" ref="employeeSocialSecurityData"></Table>
+          <Page :total="4" :page-size="5" :page-size-opts="[5, 10]" show-sizer show-total  class="pageSize"></Page>
         </Col>
       </Row>
 
@@ -30,9 +30,9 @@
         v-model="isRefuseReason"
         @on-ok="ok"
         @on-cancel="cancel">
-        <p>
+        <Form-item>
           <Input v-model="refuseReason" type="textarea" :rows=4 placeholder="请填写批退备注..."></Input>
-        </p>
+        </Form-item>
       </Modal>
     </Form>
   </div>
@@ -45,6 +45,15 @@
     props:{
       isCperator:{
         index: Number
+      },
+      customerData: {
+        type: Array
+      },
+      sSocialSecurityTypeData: {
+        type: Array
+      },
+      employeeResultData: {
+        type: Array
       }
     },
     components: {operatorSearch},
@@ -223,15 +232,6 @@
               ]);
             }
           }
-        ],
-        employeeResultData: [
-          {action: '', tid: 'SS_KH_0001', type: '终止', emergency: '', employee: '雇员9', employeeId: 'GY009', employeeCardNumber: '', companySocialSecurityAccount: '', uKey: '', doDate: '', customerId: 'KH001', companyCustomer: '客户1', finishDate: '', serviceCenter: '大客户', serviceManager: '', employeeType: '本地', accountType: '独立户客户1', region: '徐汇', sponsor: '中智上海', initiator: '前客服1', sponsorTime: '2017/06/01 10:05:29', notes: ''},
-          {action: '', tid: 'SS_KH_0001', type: '终止', emergency: '', employee: '雇员0', employeeId: 'GY000', employeeCardNumber: '', companySocialSecurityAccount: '', uKey: '', doDate: '', customerId: 'KH001', companyCustomer: '客户1', finishDate: '', serviceCenter: '日本', serviceManager: '', employeeType: '外地', accountType: '独立户客户1', region: '长宁', sponsor: '', initiator: '', sponsorTime: '', notes: ''},
-          {action: '', tid: 'SS_XJ_0001', type: '退账', emergency: '是', employee: '雇员1', employeeId: 'GY001', employeeCardNumber: '', companySocialSecurityAccount: '', uKey: '', doDate: '', customerId: 'KH003', companyCustomer: '客户3', finishDate: '', serviceCenter: '虹桥', serviceManager: '', employeeType: '外籍三险', accountType: '中智外包', region: '徐汇', sponsor: '', initiator: '', sponsorTime: '', notes: ''},
-          {action: '', tid: 'SS_ZC_0001', type: '退账', emergency: '', employee: '雇员2', employeeId: 'GY002', employeeCardNumber: '', companySocialSecurityAccount: '', uKey: '', doDate: '', customerId: 'KH003', companyCustomer: '客户3', finishDate: '', serviceCenter: '浦东', serviceManager: '', employeeType: '外籍五险', accountType: '中智大库', region: '徐汇', sponsor: '', initiator: '', sponsorTime: '', notes: ''},
-          {action: '', tid: 'SS_BJ_0001', type: '退账', emergency: '', employee: '雇员3', employeeId: 'GY003', employeeCardNumber: '', companySocialSecurityAccount: '', uKey: '', doDate: '', customerId: 'KH003', companyCustomer: '客户3', finishDate: '', serviceCenter: '浦东', serviceManager: '', employeeType: '本地', accountType: '中智大库', region: '徐汇', sponsor: '', initiator: '', sponsorTime: '', notes: ''},
-          {action: '', tid: 'SS_ZZ_0001', type: '外籍人提取', emergency: '', employee: '雇员4', employeeId: 'GY004', employeeCardNumber: '', companySocialSecurityAccount: '', uKey: '', doDate: '', customerId: 'KH003', companyCustomer: '客户3', finishDate: '', serviceCenter: '虹桥', serviceManager: '', employeeType: '外地', accountType: '中智外包', region: '徐汇', sponsor: '', initiator: '', sponsorTime: '', notes: ''},
-          {action: '', tid: 'SS_TQ_0001', type: '特殊操作', emergency: '', employee: '雇员8', employeeId: 'GY008', employeeCardNumber: '', companySocialSecurityAccount: '', uKey: '', doDate: '', customerId: 'KH003', companyCustomer: '客户3', finishDate: '', serviceCenter: '虹桥', serviceManager: '', employeeType: '外地', accountType: '中智外包', region: '徐汇', sponsor: '', initiator: '', sponsorTime: '', notes: ''}
         ]
       }
     },
@@ -246,14 +246,15 @@
         });
       },
       ok () {
-        this.$Message.info('点击了确定');
+
       },
       cancel () {
-        this.$Message.info('点击了取消');
+
       }
     }
   }
 </script>
 <style scoped>
+  .mt20 {margin-top: 20px;}
   .ml10 {margin-left: 10px;}
 </style>

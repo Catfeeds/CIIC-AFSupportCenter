@@ -9,115 +9,116 @@
       </Col>
     </Row>
 
-    <Table class="mt20" border :columns="operatorTableNewColumns" :data="operatorTableNewData" ref="employeeSocialSecurityData" v-if="operatorType === '1'"></Table>
-    <Table class="mt20" border :columns="operatorTableRepairColumns" :data="operatorTableRepairData" ref="employeeSocialSecurityData" v-else-if="operatorType === '2'"></Table>
-    <Table class="mt20" border :columns="operatorTableChangeColumns" :data="operatorTableChangeData" ref="employeeSocialSecurityData" v-else-if="operatorType === '3'"></Table>
-    <Table class="mt20" width="1271" border :columns="operatorTableOutColumns" :data="operatorTableOutData" ref="employeeSocialSecurityData" v-else></Table>
+    <Table class="mt20" border :columns="operatorTableNewColumns" :data="employeecommcialoperator.operatorTableNewData" ref="employeeSocialSecurityData" v-if="operatorType === '1'"></Table>
+    <Table class="mt20" border :columns="operatorTableRepairColumns" :data="employeecommcialoperator.operatorTableRepairData" ref="employeeSocialSecurityData" v-else-if="operatorType === '2'"></Table>
+    <Table class="mt20" border :columns="operatorTableChangeColumns" :data="employeecommcialoperator.operatorTableChangeData" ref="employeeSocialSecurityData" v-else-if="operatorType === '3'"></Table>
+    <Table class="mt20" width="1271" border :columns="operatorTableOutColumns" :data="employeecommcialoperator.operatorTableOutData" ref="employeeSocialSecurityData" v-else></Table>
 
     <Row class="mt20">
-      <Col :xs="{span: 5}" :lg="{span: 5}">
+      <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
         <Form-item label="办理方式：">
           <Select v-model="handleValue" style="width: 100%;">
             <Option v-for="item in handleList" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
         </Form-item>
       </Col>
-      <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}" v-if="operatorType === '4'">
+      <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}" v-if="operatorType === '4'">
         <Form-item label="截止月份：">
           <DatePicker v-model="socialSecurityEndMonth" placement="bottom-end" placeholder="选择日期" style="width: 100%;"></DatePicker>
         </Form-item>
       </Col>
-      <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}" v-if="operatorType === '1'">
+      <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}" v-if="operatorType === '1'">
         <Form-item label="社保账号分类：">
           <Select v-model="socialSecurityAccountTypeValue" style="width: 100%;">
             <Option v-for="item in socialSecurityAccountTypeList" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
         </Form-item>
       </Col>
-      <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}" v-else-if="operatorType === '2'">
+      <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}" v-else-if="operatorType === '2'">
         <Form-item label="补缴基数：">
           <Input v-model="socialSecurityRepairBase" placeholder="请输入..."></Input>
         </Form-item>
       </Col>
-      <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}" v-else-if="operatorType === '3'">
+      <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}" v-else-if="operatorType === '3'">
         <Form-item label="新社保缴费基数:">
           <Input v-model="socialSecurityChangeBase" placeholder="请输入..."></Input>
         </Form-item>
       </Col>
-      <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}" v-if="operatorType === '1'">
+    </Row>
+    <Row>
+      <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}" v-if="operatorType === '1'">
         <Form-item label="任务：">
           <Select v-model="taskValue" style="width: 100%;">
             <Option v-for="item in taskList" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
         </Form-item>
       </Col>
-      <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}" v-else-if="operatorType === '2'">
+      <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}" v-else-if="operatorType === '2'">
         <Form-item label="补缴起始月份：">
           <DatePicker v-model="socialSecurityRepairStartMonth" placement="bottom-end" placeholder="选择日期" style="width: 100%;"></DatePicker>
         </Form-item>
       </Col>
-      <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}" v-else-if="operatorType === '3'">
+      <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}" v-else-if="operatorType === '3'">
         <Form-item label="调整起始月份：">
           <DatePicker v-model="socialSecurityChangeStartMonth" placement="bottom-end" placeholder="选择日期" style="width: 100%;"></DatePicker>
         </Form-item>
       </Col>
-      <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}" v-if="operatorType === '1'">
+      <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}" v-if="operatorType === '1'">
         <Form-item label="社保序号：">
           <Input v-model="socialSecurityIndex" placeholder="请输入..."></Input>
         </Form-item>
       </Col>
-      <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}" v-else-if="operatorType === '2'">
+      <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}" v-else-if="operatorType === '2'">
         <Form-item label="补缴截止月份：">
           <DatePicker v-model="socialSecurityRepairEndMonth" placement="bottom-end" placeholder="选择日期" style="width: 100%;"></DatePicker>
         </Form-item>
       </Col>
-      <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}" v-else-if="operatorType === '3'">
+      <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}" v-else-if="operatorType === '3'">
         <Form-item label="调整截止月份：">
           <DatePicker v-model="socialSecurityChangeEndMonth" placement="bottom-end" placeholder="选择日期" style="width: 100%;"></DatePicker>
         </Form-item>
       </Col>
     </Row>
     <Row>
-      <Col :xs="{span: 5}" :lg="{span: 5}" v-if="operatorType === '1'">
+      <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}" v-if="operatorType === '1'">
         <Form-item label="起缴月份：">
           <DatePicker v-model="socialSecurityStartMonth" placement="bottom-end" placeholder="选择日期" style="width: 100%;"></DatePicker>
         </Form-item>
       </Col>
-      <Col :xs="{span: 5}" :lg="{span: 5}" v-else-if="operatorType === '2'">
+      <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}" v-else-if="operatorType === '2'">
         <Form-item label="补缴办理月份：">
           <DatePicker v-model="socialSecurityRepairDoMonth" placement="bottom-end" placeholder="选择日期" style="width: 100%;"></DatePicker>
         </Form-item>
       </Col>
-      <Col :xs="{span: 5}" :lg="{span: 5}" v-else-if="operatorType === '3'">
+      <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}" v-else-if="operatorType === '3'">
         <Form-item label="调整办理月份：">
           <DatePicker v-model="socialSecurityChangeDoMonth" placement="bottom-end" placeholder="选择日期" style="width: 100%;"></DatePicker>
         </Form-item>
       </Col>
-      <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}" v-if="operatorType === '1'">
+      <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}" v-if="operatorType === '1'">
         <Form-item label="截止月份：">
           <DatePicker v-model="socialSecurityEndMonth" placement="bottom-end" placeholder="选择日期" style="width: 100%;"></DatePicker>
         </Form-item>
       </Col>
     </Row>
     <Row>
-      <Col :xs="{span: 11}" :lg="{span: 11}">
+      <Col :xs="{span: 17, offset: 1}" :lg="{span: 17, offset: 1}">
         <Form-item label="批退原因：">
           <Input v-model="refuseReason" type="textarea" :rows=4 placeholder="请输入..."></Input>
         </Form-item>
       </Col>
     </Row>
     <Row>
-      <Col :xs="{span: 2, offset: 20}" :lg="{span: 2, offset: 20}">
+      <Col :xs="{span: 4, offset: 16}" :lg="{span: 4, offset: 16}">
         <Button type="primary" @click="">批量提交</Button>
-      </Col>
-      <Col :xs="{span: 1}" :lg="{span: 1}">
-        <Button type="ghost" @click="goback" long>返回</Button>
+        <Button type="ghost" @click="goback">返回</Button>
       </Col>
     </Row>
   </Form>
 </template>
 <script>
   import {mapActions,mapGetters} from 'vuex'
+  import * as eventType from '../../store/EventTypes/employeeoperator/EmployeeCommcialOperatorType'
 
   export default {
     name:"employeecommcialoperator",
@@ -260,13 +261,6 @@
             }
           }
         ],
-        operatorTableNewData: [
-          {action: '移出', tid: 'SOC_XJ_000001', customerNumber: '1001', customerName: '客户1', employeeName: '雇员1', checkDate: '2017-01-06', personType: '本地', handleMethod: '', socialSecurityAccountType: '', task: '', socialSecurityIndex: '', base: '', socialSecurityStartMonth: '', socialSecurityEndMonth: '', notes: ''},
-          {action: '移出', tid: 'SOC_XJ_000002', customerNumber: '1002', customerName: '客户2', employeeName: '雇员2', checkDate: '2017-01-06', personType: '外地', handleMethod: '', socialSecurityAccountType: '', task: '', socialSecurityIndex: '', base: '', socialSecurityStartMonth: '', socialSecurityEndMonth: '', notes: ''},
-          {action: '移出', tid: 'SOC_XJ_000003', customerNumber: '1003', customerName: '客户1', employeeName: '雇员3', checkDate: '2017-01-06', personType: '外籍五险', handleMethod: '', socialSecurityAccountType: '', task: '', socialSecurityIndex: '', base: '', socialSecurityStartMonth: '', socialSecurityEndMonth: '', notes: ''},
-          {action: '移出', tid: 'SOC_XJ_000003', customerNumber: '1004', customerName: '客户1', employeeName: '雇员4', checkDate: '2017-01-06', personType: '外籍三险', handleMethod: '', socialSecurityAccountType: '', task: '', socialSecurityIndex: '', base: '', socialSecurityStartMonth: '', socialSecurityEndMonth: '', notes: ''},
-          {action: '移出', tid: 'SOC_XJ_000003', customerNumber: '1005', customerName: '客户1', employeeName: '雇员5', checkDate: '2017-01-06', personType: '本地', handleMethod: '', socialSecurityAccountType: '', task: '', socialSecurityIndex: '', base: '', socialSecurityStartMonth: '', socialSecurityEndMonth: '', notes: ''}
-        ],
 
         operatorTableRepairColumns: [
           {type: 'selection', align: 'center', width: 60, fixed: 'left'},
@@ -375,13 +369,6 @@
             }
           }
         ],
-        operatorTableRepairData: [
-          {action: '移出', tid: 'SOC_XJ_000001', customerNumber: '1001', customerName: '客户1', employeeName: '雇员1', checkDate: '2017-01-06', personType: '本地', handleMethod: '', repairDoMonth: '', repairBase: '', repairStartMonth: '', repairEndMonth: '', notes: ''},
-          {action: '移出', tid: 'SOC_XJ_000002', customerNumber: '1002', customerName: '客户2', employeeName: '雇员2', checkDate: '2017-01-06', personType: '外地', handleMethod: '', repairDoMonth: '', repairBase: '', repairStartMonth: '', repairEndMonth: '', notes: ''},
-          {action: '移出', tid: 'SOC_XJ_000003', customerNumber: '1003', customerName: '客户1', employeeName: '雇员3', checkDate: '2017-01-06', personType: '外籍五险', handleMethod: '', repairDoMonth: '', repairBase: '', repairStartMonth: '', repairEndMonth: '', notes: ''},
-          {action: '移出', tid: 'SOC_XJ_000003', customerNumber: '1004', customerName: '客户1', employeeName: '雇员4', checkDate: '2017-01-06', personType: '外籍三险', handleMethod: '', repairDoMonth: '', repairBase: '', repairStartMonth: '', repairEndMonth: '', notes: ''},
-          {action: '移出', tid: 'SOC_XJ_000003', customerNumber: '1005', customerName: '客户1', employeeName: '雇员5', checkDate: '2017-01-06', personType: '本地', handleMethod: '', repairDoMonth: '', repairBase: '', repairStartMonth: '', repairEndMonth: '', notes: ''}
-        ],
 
         operatorTableChangeColumns: [
           {type: 'selection', align: 'center', width: 60, fixed: 'left'},
@@ -489,13 +476,6 @@
             }
           }
         ],
-        operatorTableChangeData: [
-          {action: '移出', tid: 'SOC_XJ_000001', customerNumber: '1001', customerName: '客户1', employeeName: '雇员1', checkDate: '2017-01-06', personType: '本地', handleMethod: '', changeMonth: '', changeBase: '', changeStartMonth: '', changeEndMonth: '', notes: ''},
-          {action: '移出', tid: 'SOC_XJ_000002', customerNumber: '1002', customerName: '客户2', employeeName: '雇员2', checkDate: '2017-01-06', personType: '外地', handleMethod: '', changeMonth: '', changeBase: '', changeStartMonth: '', changeEndMonth: '', notes: ''},
-          {action: '移出', tid: 'SOC_XJ_000003', customerNumber: '1003', customerName: '客户1', employeeName: '雇员3', checkDate: '2017-01-06', personType: '外籍五险', handleMethod: '', changeMonth: '', changeBase: '', changeStartMonth: '', changeEndMonth: '', notes: ''},
-          {action: '移出', tid: 'SOC_XJ_000003', customerNumber: '1004', customerName: '客户1', employeeName: '雇员4', checkDate: '2017-01-06', personType: '外籍三险', handleMethod: '', changeMonth: '', changeBase: '', changeStartMonth: '', changeEndMonth: '', notes: ''},
-          {action: '移出', tid: 'SOC_XJ_000003', customerNumber: '1005', customerName: '客户1', employeeName: '雇员5', checkDate: '2017-01-06', personType: '本地', handleMethod: '', changeMonth: '', changeBase: '', changeStartMonth: '', changeEndMonth: '', notes: ''}
-        ],
 
         operatorTableOutColumns: [
           {type: 'selection', align: 'center', width: 60},
@@ -568,13 +548,6 @@
             }
           }
         ],
-        operatorTableOutData: [
-          {action: '移出', tid: 'SOC_XJ_000001', companyName: '1001', employeeName: '雇员1', checkOutDate: '2017-01-06', handleMethod: '', endMonth: '', notes: ''},
-          {action: '移出', tid: 'SOC_XJ_000002', companyName: '1002', employeeName: '雇员2', checkOutDate: '2017-01-06', handleMethod: '', endMonth: '', notes: ''},
-          {action: '移出', tid: 'SOC_XJ_000003', companyName: '1003', employeeName: '雇员3', checkOutDate: '2017-01-06', handleMethod: '', endMonth: '', notes: ''},
-          {action: '移出', tid: 'SOC_XJ_000003', companyName: '1004', employeeName: '雇员4', checkOutDate: '2017-01-06', handleMethod: '', endMonth: '', notes: ''},
-          {action: '移出', tid: 'SOC_XJ_000003', companyName: '1005', employeeName: '雇员5', checkOutDate: '2017-01-06', handleMethod: '', endMonth: '', notes: ''}
-        ],
 
 
         handleValue: '',
@@ -616,12 +589,17 @@
       }
     },
     mounted() {
-
+      this.setEmployeeCommcialOperator()
     },
     computed: {
-
+      ...mapGetters([
+        'employeecommcialoperator'
+      ])
     },
     methods: {
+      ...mapActions({
+        setEmployeeCommcialOperator: eventType.EMPLOYEECOMMCIALOPERATOR
+      }),
       goback () {
         this.$router.push({name:'employeeoperatorview'});
       }
