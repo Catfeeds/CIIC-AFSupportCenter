@@ -390,7 +390,7 @@ let router = new Router({
 
 router.beforeEach((to,from,next)=>{
   // console.log(router.app.$local);
-    window.document.title="社保";
+    window.document.title="社保中心";
     localStorage.setItem('level1',to.meta.level1);
     localStorage.setItem('level2',to.meta.level2);
     localStorage.setItem('level3',to.meta.level3);

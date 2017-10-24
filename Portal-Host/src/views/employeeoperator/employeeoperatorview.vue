@@ -1,10 +1,9 @@
 <template>
   <div class="smList">
-    <tabs :data="tabPans" :value="currentValue" @on-click="selectTabPan"></tabs>
+    <tabs :data="tabPans" @on-click="selectTabPan"></tabs>
   </div>
 </template>
 <script>
-  import {mapActions,mapGetters} from 'vuex'
   import EventTypes from '../../store/EventTypes'
   import tabs from '../../components/tabs.vue'
 
@@ -18,7 +17,6 @@
     },
     data() {
       return {
-        currentValue: 'thismonthhandle',
         tabPans:
           [
             {name: 'thismonthhandle', label: '本月处理'},

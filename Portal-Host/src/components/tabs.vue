@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Tabs @on-click="selectTab" :value="value" :animated="false">
+    <Tabs @on-click="selectTab" :value="currentValue" :animated="false">
       <TabPane :label="item.label" :name="item.name" v-for="item in tabPans" :key="item.name"></TabPane>
     </Tabs>
     <transition name="fade" mode="out-in">
@@ -15,19 +15,16 @@
       data: {
         require: true,
         type: Array
-      },
-      value: {
-        require: true,
-        type: String
       }
     },
     data() {
       return {
         tabPans: this.data,
+        currentValue: this.$route.params.tabpan || this.data[0].name
       }
     },
     mounted() {
-
+      this.selectTab(this.currentValue)
     },
     computed: {
 
@@ -35,17 +32,9 @@
     methods: {
       selectTab(name) {
         this.$router.push({name: name, params: {tabpan: name}})
+        this.$emit('on-click', name)
       }
-    },
-    watch: {
-//      value(newValue) {
-//        console.log("newValue = " + newValue)
-//        this.currentValue = newValue
-//      },
-//      currentValue(newValue) {
-//        this.$emit('input', newValue)
-//      }
-    },
+    }
   }
 </script>
 
