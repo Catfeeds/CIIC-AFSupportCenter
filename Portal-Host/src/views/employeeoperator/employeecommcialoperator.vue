@@ -118,7 +118,7 @@
 </template>
 <script>
   import {mapActions,mapGetters} from 'vuex'
-  import * as eventType from '../../store/EventTypes/employeeoperator/EmployeeCommcialOperatorType'
+  import eventType from '../../store/EventTypes'
 
   export default {
     name:"employeecommcialoperator",

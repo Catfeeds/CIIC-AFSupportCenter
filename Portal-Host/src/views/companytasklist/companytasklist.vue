@@ -19,7 +19,7 @@
 <script>
   import {mapActions,mapGetters} from 'vuex'
   import companyTaskControl from "./companytaskcontrol.vue";
-  import * as eventType from '../../store/EventTypes/companytasklist/CompanyTaskListType'
+  import eventType from '../../store/EventTypes'
 
   export default {
     components: {companyTaskControl},

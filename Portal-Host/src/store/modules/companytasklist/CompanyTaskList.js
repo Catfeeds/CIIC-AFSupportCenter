@@ -2,24 +2,23 @@
  * Created by huangye on 2017/10/24.
  */
 import mock from '../../../data/companytasklist/CompanyTaskListData'
-import * as CompanyTaskListType from '../../EventTypes/companytasklist/CompanyTaskListType'
-import axios from 'axios'
+import EventTypes from '../../EventTypes'
 
 const state = {
   companytasklist: []
 }
 
 const mutations = {
-  [CompanyTaskListType.COMPANYTASKLIST](state, payload) {
+  [EventTypes.COMPANYTASKLIST](state, payload) {
     console.log(payload)
     state.companytasklist = payload.list.data;
   }
 }
 
 const actions = {
-  [CompanyTaskListType.COMPANYTASKLIST]({commit}, payload) {
+  [EventTypes.COMPANYTASKLIST]({commit}, payload) {
     mock.companyTaskList.then(response => {
-      commit(CompanyTaskListType.COMPANYTASKLIST, {list: response.data})
+      commit(EventTypes.COMPANYTASKLIST, {list: response.data})
     })
   }
 }
@@ -30,7 +29,10 @@ const getters = {
   }
 }
 
-export const companyTaskList = {
+const namespaced = true;
+
+export default {
+  namespaced: namespaced,
   state,
   mutations,
   actions,

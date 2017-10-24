@@ -2,24 +2,23 @@
  * Created by huangye on 2017/10/23.
  */
 import mock from '../../../data/employeespecialoperator/EmployeeSpecialProgress2Data'
-import * as EmployeeSpecialProgress2Type from '../../EventTypes/employeespecialoperator/EmployeeSpecialProgress2Type'
-import axios from 'axios'
+import EventTypes from '../../EventTypes'
 
 const state = {
   employeespecialprogress2: []
 }
 
 const mutations = {
-  [EmployeeSpecialProgress2Type.EMPLOYEESPECIALPROGRESS2](state, payload) {
+  [EventTypes.EMPLOYEESPECIALPROGRESS2](state, payload) {
     console.log(payload)
     state.employeespecialprogress2 = payload.list.data;
   }
 }
 
 const actions = {
-  [EmployeeSpecialProgress2Type.EMPLOYEESPECIALPROGRESS2]({commit}, payload) {
+  [EventTypes.EMPLOYEESPECIALPROGRESS2]({commit}, payload) {
     mock.employeeSpecialProgress2.then(response => {
-      commit(EmployeeSpecialProgress2Type.EMPLOYEESPECIALPROGRESS2, {list: response.data})
+      commit(EventTypes.EMPLOYEESPECIALPROGRESS2, {list: response.data})
     })
   }
 }
@@ -30,7 +29,10 @@ const getters = {
   }
 }
 
-export const employeeSpecialProgress2 = {
+const namespaced = true;
+
+export default {
+  namespaced: namespaced,
   state,
   mutations,
   actions,

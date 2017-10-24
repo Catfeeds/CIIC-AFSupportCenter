@@ -19,7 +19,7 @@
 <script>
   import {mapActions,mapGetters} from 'vuex'
   import employeespecialoperatorcontrol from "./employeespecialoperatorcontrol.vue";
-  import * as eventType from '../../store/EventTypes/employeespecialoperator/EmployeeSpecialOperatorViewType'
+  import eventType from '../../store/EventTypes'
 
   export default {
     components: {employeespecialoperatorcontrol},

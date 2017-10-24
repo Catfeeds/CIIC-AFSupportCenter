@@ -8,6 +8,13 @@ import EmployeeSocialSecurityInfo from './modules/shsocialsecurity/EmployeeSocia
 import CompanySocialSecurityNew from './modules/shsocialsecurity/CompanySocialSecurityNew'
 
 import EmployeeOperatorView from './modules/employeeoperator/EmployeeOperatorView'
+import EmployeeCommcialOperator from './modules/employeeoperator/EmployeeCommcialOperator'
+
+import EmployeeSpecialOperatorView from './modules/employeespecialoperator/EmployeeSpecialOperatorView'
+import EmployeeSpecialProgress2 from './modules/employeespecialoperator/EmployeeSpecialProgress2'
+import EmployeeSpecialProgress3 from './modules/employeespecialoperator/EmployeeSpecialProgress3'
+
+import CompanyTaskList from './modules/companytasklist/CompanyTaskList'
 
 Vue.use(Vuex)
 
@@ -17,8 +24,15 @@ export default new Vuex.Store({
 
     employeeSocialSecuritySearch: EmployeeSocialSecuritySearch,
     employeeSocialSecurityInfo: EmployeeSocialSecurityInfo,
-    companySocialSecurityNew: CompanySocialSecurityNew,
+    employeeSocialSecurityNew: CompanySocialSecurityNew,
 
     employeeOperatorView: EmployeeOperatorView,
+    employeeCommcialOperator: EmployeeCommcialOperator,
+
+    employeeSpecialOperatorView: EmployeeSpecialOperatorView,
+    employeeSpecialProgress2: EmployeeSpecialProgress2,
+    employeeSpecialProgress3: EmployeeSpecialProgress3,
+
+    companyTaskList: CompanyTaskList
   }
 });

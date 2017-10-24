@@ -46,7 +46,7 @@
   import companySocialSecurityInfo from '../commoncontrol/companysocialsecurityinfo.vue'
   import employeeInfo from '../commoncontrol/employeeinfo.vue'
   import socialSecurityEndOperator from '../commoncontrol/socialsecurityendoperator.vue'
-  import * as eventType from '../../store/EventTypes/employeespecialoperator/EmployeeSpecialProgress3Type'
+  import eventType from '../../store/EventTypes'
 
   export default {
     name:"employeespecialprogress3",

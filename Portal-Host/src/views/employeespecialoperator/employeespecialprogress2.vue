@@ -68,7 +68,7 @@
   import chat from '../commoncontrol/chathistory/chat.vue'
   import companySocialSecurityInfo from '../commoncontrol/companysocialsecurityinfo.vue'
   import employeeInfo from '../commoncontrol/employeeinfo.vue'
-  import * as eventType from '../../store/EventTypes/employeespecialoperator/EmployeeSpecialProgress2Type'
+  import eventType from '../../store/EventTypes'
 
   export default {
     name:"employeespecialprogress2",
