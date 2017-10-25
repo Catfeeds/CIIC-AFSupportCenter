@@ -16,15 +16,23 @@ const thismonthhandle = r => require.ensure([], () => r(require('@/views/employe
 const nextmonthhandle = r => require.ensure([], () => r(require('@/views/employeeoperator/employeeoperatortab/nextmonthhandle')), 'nextmonthhandle') //雇员日常操作 -- 下月处理
 const finishhandle = r => require.ensure([], () => r(require('@/views/employeeoperator/employeeoperatortab/finishhandle')), 'finishhandle') //雇员日常操作 -- 已完成
 const refusehandle = r => require.ensure([], () => r(require('@/views/employeeoperator/employeeoperatortab/refusehandle')), 'refusehandle') //雇员日常操作 -- 批退
-
-
 const employeecommcialoperator = r => require.ensure([], () => r(require('@/views/employeeoperator/employeecommcialoperator')), 'employeecommcialoperator') //雇员日常操作办理页面
 
 const employeespecialoperatorview = r => require.ensure([], () => r(require('@/views/employeespecialoperator/employeespecialoperatorview')), 'employeespecialoperatorview') //雇员特殊操作
+const noprogress = r => require.ensure([], () => r(require('@/views/employeespecialoperator/employeespecialoperatortab/noprogress')), 'noprogress') //未处理
+const progressing = r => require.ensure([], () => r(require('@/views/employeespecialoperator/employeespecialoperatortab/progressing')), 'progressing') //处理中
+const finished = r => require.ensure([], () => r(require('@/views/employeespecialoperator/employeespecialoperatortab/finished')), 'finished') //已完成
+const refused = r => require.ensure([], () => r(require('@/views/employeespecialoperator/employeespecialoperatortab/refused')), 'refused') //已批退
+
 const employeespecialprogress2  = r => require.ensure([], () => r(require('@/views/employeespecialoperator/employeespecialprogress2')), 'employeespecialprogress2') //雇员特殊操作查看进度
 const employeespecialprogress3  = r => require.ensure([], () => r(require('@/views/employeespecialoperator/employeespecialprogress3')), 'employeespecialprogress3') //雇员特殊操作查看进度
 
 const companytasklist = r => require.ensure([], () => r(require('@/views/companytasklist/companytasklist')), 'companytasklist') //企业任务单
+const cthismonthhandle = r => require.ensure([], () => r(require('@/views/companytasklist/companytasklisttab/cthismonthhandle')), 'cthismonthhandle') //本月处理
+const cnextmonthhandle = r => require.ensure([], () => r(require('@/views/companytasklist/companytasklisttab/cnextmonthhandle')), 'cnextmonthhandle') //下月处理
+const cfinished = r => require.ensure([], () => r(require('@/views/companytasklist/companytasklisttab/cfinished')), 'cfinished') //完成
+const crefused = r => require.ensure([], () => r(require('@/views/companytasklist/companytasklisttab/crefused')), 'crefused') //批退
+
 const companytaskprogress2 = r => require.ensure([], () => r(require('@/views/companytasklist/companytaskprogress2')), 'companytaskprogress2') //企业任务单2
 const companytaskprogresstypeinfo = r => require.ensure([], () => r(require('@/views/companytasklist/companytaskprogresstypeinfo')), 'companytaskprogresstypeinfo') //企业任务单输入信息
 const companytaskprogresstransferinfo = r => require.ensure([], () => r(require('@/views/companytasklist/companytaskprogresstransferinfo')), 'companytaskprogresstransferinfo') //企业任务单转移操作
@@ -155,7 +163,29 @@ let router = new Router({
             level2:"上海社保",
             level3:"雇员特殊操作",
             openNames:['1']
-          }
+          },
+          children: [
+            {
+              path: '/noprogress',
+              name:'noprogress',
+              component: noprogress
+            },
+            {
+              path: '/progressing',
+              name:'progressing',
+              component: progressing
+            },
+            {
+              path: '/finished',
+              name:'finished',
+              component: finished
+            },
+            {
+              path: '/refused',
+              name:'refused',
+              component: refused
+            },
+          ]
         },
         {
           path: '/employeespecialprogress2',
@@ -189,7 +219,53 @@ let router = new Router({
             level2:"上海社保",
             level3:"企业任务单",
             openNames:['1']
-          }
+          },
+          children: [
+            {
+              path: '/cthismonthhandle',
+              name: 'cthismonthhandle',
+              component: cthismonthhandle,
+              meta:{
+                level1:'全国社保',
+                level2:"上海社保",
+                level3:"企业任务单",
+                openNames:['1']
+              }
+            },
+            {
+              path: '/cnextmonthhandle',
+              name: 'cnextmonthhandle',
+              component: cnextmonthhandle,
+              meta:{
+                level1:'全国社保',
+                level2:"上海社保",
+                level3:"企业任务单",
+                openNames:['1']
+              }
+            },
+            {
+              path: '/cfinished',
+              name: 'cfinished',
+              component: cfinished,
+              meta:{
+                level1:'全国社保',
+                level2:"上海社保",
+                level3:"企业任务单",
+                openNames:['1']
+              }
+            },
+            {
+              path: '/crefused',
+              name: 'crefused',
+              component: crefused,
+              meta:{
+                level1:'全国社保',
+                level2:"上海社保",
+                level3:"企业任务单",
+                openNames:['1']
+              }
+            },
+          ]
         },
         {
           path: '/companytaskprogress2',

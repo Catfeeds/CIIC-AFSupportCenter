@@ -9,12 +9,6 @@
 
   export default {
     components: {tabs},
-    props: {
-      data: {
-        require: true,
-        type: Array
-      }
-    },
     data() {
       return {
         tabPans:

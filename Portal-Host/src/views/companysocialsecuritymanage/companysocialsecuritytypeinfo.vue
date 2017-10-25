@@ -4,7 +4,6 @@
 <script>
   import approvalStepTypeInfo from '../commoncontrol/approvalsteptypeinfo.vue'
   export default {
-    name: 'companysocialsecuritytypeinfo',
     components: {approvalStepTypeInfo},
     data() {
       return {

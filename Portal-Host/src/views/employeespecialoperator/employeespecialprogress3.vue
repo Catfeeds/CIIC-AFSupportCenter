@@ -28,14 +28,10 @@
     </Collapse>
 
     <Row class="mt20">
-      <Col :xs="{span: 1}" :lg="{span: 1}">
+      <Col :xs="{span: 4, offset: 20}" :lg="{span: 4, offset: 20}">
         <Button type="primary" @click="goBack">确定终止</Button>
-      </Col>
-      <Col :xs="{span: 1}" :lg="{span: 1}">
-        <Button type="error" @click="goBack" class="ml30">批退</Button>
-      </Col>
-      <Col :xs="{span: 1}" :lg="{span: 1}">
-        <Button type="ghost" @click="goBack" class="ml30">返回</Button>
+        <Button type="error" @click="goBack">批退</Button>
+        <Button type="ghost" @click="goBack">返回</Button>
       </Col>
     </Row>
   </Form>
@@ -49,7 +45,6 @@
   import eventType from '../../store/EventTypes'
 
   export default {
-    name:"employeespecialprogress3",
     components: {chat, companySocialSecurityInfo, employeeInfo, socialSecurityEndOperator},
     data() {
       return {
@@ -127,12 +122,12 @@
       this.setEmployeeSpecialProgress3()
     },
     computed: {
-      ...mapGetters([
+      ...mapGetters('employeeSpecialProgress3', [
         'employeespecialprogress3'
       ])
     },
     methods: {
-      ...mapActions({
+      ...mapActions('employeeSpecialProgress3', {
         setEmployeeSpecialProgress3: eventType.EMPLOYEESPECIALPROGRESS3
       }),
       goBack() {

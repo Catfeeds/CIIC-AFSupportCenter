@@ -250,12 +250,12 @@
       this.setEmployeeSocialSecurityInfo()
     },
     computed: {
-      ...mapGetters('employeeSocialSecurityInfo',[
+      ...mapGetters('employeeSocialSecurityInfo', [
         'employeesocialsecurityinfo'
       ])
     },
     methods: {
-      ...mapActions('employeeSocialSecurityInfo',{
+      ...mapActions('employeeSocialSecurityInfo', {
         setEmployeeSocialSecurityInfo: EventTypes.EMPLOYEESOCIALSECURITYINFO
       }),
       goBack() {

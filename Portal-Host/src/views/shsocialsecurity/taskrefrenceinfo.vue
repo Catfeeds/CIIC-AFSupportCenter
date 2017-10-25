@@ -81,10 +81,16 @@
         type: String
       },
       taskNewInfo: {
-        type: Object
+        type: Object,
+        default() {
+          return {}
+        }
       },
       taskChangeInfo: {
-        type: Object
+        type: Object,
+        default() {
+          return {}
+        }
       },
       taskOutInfo: {
         type: Object

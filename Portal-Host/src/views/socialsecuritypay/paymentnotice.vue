@@ -8,49 +8,49 @@
             <Row>
               <Col :xs="{span: 8}" :lg="{span: 8}">
                 <Form-item label="公司名称：">
-                  <label>{{noticeInfo.companyName}}</label>
+                  <label>{{paymentnotice.companyName}}</label>
                 </Form-item>
               </Col>
               <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="公司名称：">
-                  <label>{{noticeInfo.companySocialSecurityAccount}}</label>
+                  <label>{{paymentnotice.companySocialSecurityAccount}}</label>
                 </Form-item>
               </Col>
             </Row>
-            <Table border :columns="noticeInfo.noticeColumns" :data="noticeInfo.noticeData"></Table>
+            <Table border :columns="noticeInfo.noticeColumns" :data="paymentnotice.noticeData"></Table>
             <Row class="mt20">
               <Col :xs="{span: 8}" :lg="{span: 8}">
                 <Form-item label="应缴纳合计（小写）：">
-                  <label>{{noticeInfo.shouldPayAmount}}</label>
+                  <label>{{paymentnotice.shouldPayAmount}}</label>
                 </Form-item>
               </Col>
               <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="调整金额（小写）：">
-                  <label>{{noticeInfo.changeAmount}}</label>
+                  <label>{{paymentnotice.changeAmount}}</label>
                 </Form-item>
               </Col>
             </Row>
             <Row>
               <Col :xs="{span: 8}" :lg="{span: 8}">
                 <Form-item label="申请支付金额合计（小写）：">
-                  <label>{{noticeInfo.applyAmountLower}}</label>
+                  <label>{{paymentnotice.applyAmountLower}}</label>
                 </Form-item>
               </Col>
               <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="调整金额（小写）：">
-                  <label>{{noticeInfo.applyAmountUpper}}</label>
+                  <label>{{paymentnotice.applyAmountUpper}}</label>
                 </Form-item>
               </Col>
             </Row>
             <Row>
               <Col :xs="{span: 8}" :lg="{span: 8}">
                 <Form-item label="申请支付金额合计（小写）：">
-                  <label>{{noticeInfo.notes}}</label>
+                  <label>{{paymentnotice.notes}}</label>
                 </Form-item>
               </Col>
             </Row>
             <Row>
-              <Col :xs="{span: 4, offset: 20}" :lg="{span: 4, offset: 20}">
+              <Col :xs="{span: 3, offset: 21}" :lg="{span: 3, offset: 21}">
                 <Button type="primary" @click="" >重新汇总</Button>
                 <Button type="default" @click="goBack" >返回</Button>
               </Col>
@@ -62,19 +62,14 @@
   </div>
 </template>
 <script>
-  import customerModal from '../commoncontrol/customermodal.vue'
-  import progressBar from '../commoncontrol/progress/progressbar.vue'
-  const progressStop = 33.3;
+  import {mapActions,mapGetters} from 'vuex'
+  import eventType from '../../store/EventTypes'
 
   export default {
-    name: 'socialsecuritypay',
-    components: {customerModal, progressBar},
     data() {
       return{
         collapseInfo: [1], //展开栏
         noticeInfo: {
-          companyName: '欧莱雅分公司1',
-          companySocialSecurityAccount: '1144513312',
           noticeColumns: [
             {title: '序号', key: 'index', align: 'center', width: 100,
               render: (h, params) => {
@@ -133,29 +128,21 @@
               }
             },
           ],
-          noticeData: [
-            {index: '1', project: '单位应缴纳社保费', basePensionInsurance: '', baseMedicalInsurance: '', areaAddMedicalInsurance: '', unemploymentInsurance: '', injuryInsurance: '', fertilityInsurance: ''},
-            {index: '2', project: '单位应补缴历年社保费', basePensionInsurance: '', baseMedicalInsurance: '', areaAddMedicalInsurance: '', unemploymentInsurance: '', injuryInsurance: '', fertilityInsurance: ''},
-            {index: '3', project: '个人应缴纳社会保险费', basePensionInsurance: '', baseMedicalInsurance: '', areaAddMedicalInsurance: '', unemploymentInsurance: '', injuryInsurance: '', fertilityInsurance: ''},
-            {index: '4', project: '个人应补缴历月社会保险费', basePensionInsurance: '', baseMedicalInsurance: '', areaAddMedicalInsurance: '', unemploymentInsurance: '', injuryInsurance: '', fertilityInsurance: ''},
-            {index: '5', project: '其他应缴纳社会保险费', basePensionInsurance: '', baseMedicalInsurance: '', areaAddMedicalInsurance: '', unemploymentInsurance: '', injuryInsurance: '', fertilityInsurance: ''},
-            {index: '6', project: '预缴社保保险费', basePensionInsurance: '', baseMedicalInsurance: '', areaAddMedicalInsurance: '', unemploymentInsurance: '', injuryInsurance: '', fertilityInsurance: ''},
-            {index: '7', project: '', basePensionInsurance: '', baseMedicalInsurance: '', areaAddMedicalInsurance: '', unemploymentInsurance: '', injuryInsurance: '', fertilityInsurance: ''},
-            {index: '8', project: '单位缓缴社保保险费', basePensionInsurance: '', baseMedicalInsurance: '', areaAddMedicalInsurance: '', unemploymentInsurance: '', injuryInsurance: '', fertilityInsurance: ''},
-            {index: '9', project: '缴纳合计（1+2+3+4+5+6-8）', basePensionInsurance: '', baseMedicalInsurance: '', areaAddMedicalInsurance: '', unemploymentInsurance: '', injuryInsurance: '', fertilityInsurance: ''}
-          ],
-          shouldPayAmount: '',
-          changeAmount: '',
-          applyAmountLower: '',
-          applyAmountUpper: '',
-          notes: '滞纳金 232.99元'
         }
       }
     },
+    mounted() {
+      this.setPaymentNotice()
+    },
     computed: {
-
+      ...mapGetters('paymentNotice', [
+        'paymentnotice'
+      ])
     },
     methods: {
+      ...mapActions('paymentNotice', {
+        setPaymentNotice: eventType.PAYMENTNOTICETYPE
+      }),
       goBack() {
         this.$router.push({name: 'socialsecuritypay'})
       },
@@ -170,5 +157,4 @@
 </script>
 <style scoped>
   .mt20 {margin-top: 20px;}
-  .ml10 {margin-left: 10px;}
 </style>

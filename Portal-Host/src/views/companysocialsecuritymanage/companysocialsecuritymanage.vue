@@ -4,34 +4,36 @@
       <Panel name="1">
         企业社保账户管理
         <div slot="content">
-          <Form :label-width=120>
+          <Form ref="accountManageInfo" :model="accountManageInfo" :label-width=120>
             <Row>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
-                <Form-item label="养老金用公司名称：">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
+                <Form-item label="养老金用公司名称：" prop="pensionCompanyName">
                   <Input v-model="accountManageInfo.pensionCompanyName" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
-                <Form-item label="账户类型：">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
+                <Form-item label="账户类型：" prop="accountTypeValue">
                   <Select v-model="accountManageInfo.accountTypeValue" style="width: 100%;">
                     <Option v-for="item in accountManageInfo.accountTypeList" :value="item.value" :key="item.value">{{item.label}}</Option>
                   </Select>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
-                <Form-item label="开户日期：">
-                  <DatePicker v-model="accountManageInfo.taskStartTime" type="daterange" placement="bottom" placeholder="选择日期"></DatePicker>
+            </Row>
+            <Row>
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
+                <Form-item label="开户日期：" prop="taskStartTime">
+                  <DatePicker v-model="accountManageInfo.taskStartTime" type="daterange" placement="bottom" placeholder="选择日期" style="width: 100%"></DatePicker>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
-                <Form-item label="企业社保账号：">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
+                <Form-item label="企业社保账号：" prop="taskNumber">
                   <Input v-model="accountManageInfo.taskNumber" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
             </Row>
             <Row>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
-                <Form-item label="状态：">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
+                <Form-item label="状态：" prop="stateValue">
                   <Select v-model="accountManageInfo.stateValue" style="width: 100%;">
                     <Option v-for="item in accountManageInfo.stateList" :value="item.value" :key="item.value">{{item.label}}</Option>
                   </Select>
@@ -39,7 +41,7 @@
               </Col>
             </Row>
             <Row>
-              <Col :xs="{span: 2, offset: 19}" :lg="{span: 2, offset: 19}">
+              <Col :xs="{span: 1, offset: 17}" :lg="{span: 1, offset: 17}">
                 <Button type="primary" @click="" icon="ios-search">查询</Button>
               </Col>
             </Row>
@@ -49,7 +51,7 @@
     </Collapse>
 
     <Form>
-      <Row style="margin-top: 40px;">
+      <Row class="mt20">
         <Col :xs="{span: 1}" :lg="{span: 1}">
           <Form-item class="ml10">
             <Button type="info" @click="">导出</Button>
@@ -57,31 +59,20 @@
         </Col>
       </Row>
 
-      <Row style="margin-top: 20px;">
+      <Row>
         <Col :xs="{span: 24}" :lg="{span: 24}">
-          <Table border :columns="accountManageColumns" :data="accountManageData"></Table>
+          <Table border :columns="accountManageColumns" :data="companysocialsecuritymanage.accountManageData"></Table>
           <Page :total="4" :page-size="5" :page-size-opts="[5, 10]" show-sizer show-total  class="pageSize"></Page>
         </Col>
       </Row>
     </Form>
-
-    <!-- 批退理由 -->
-    <Modal
-      v-model="isRefuseReason"
-      @on-ok="ok"
-      @on-cancel="cancel">
-      <p>
-        <Input v-model="refuseReason" type="textarea" :rows=4 placeholder="请填写批退备注..."></Input>
-      </p>
-    </Modal>
   </div>
 </template>
 <script>
-  import operatorSearch from "../commoncontrol/operatorsearch.vue"
+  import {mapActions,mapGetters} from 'vuex'
+  import eventType from '../../store/EventTypes'
 
   export default {
-    name: 'companysocialsecuritymanage',
-    components: {operatorSearch},
     data() {
       return{
         collapseInfo: [1], //展开栏
@@ -102,9 +93,6 @@
             {value: '3', label: '终止'},
           ]
         },
-
-        isRefuseReason: false,
-        refuseReason: '',
 
         accountManageColumns: [
           {title: '操作', key: 'action', fixed: 'left', width: 80, align: 'center',
@@ -186,21 +174,23 @@
             }
           }
         ],
-        accountManageData: [
-          {action: '', pensionCompanyName: '中智上海经济技术合作公司', accountType: '中智大库', state: '有效', companySocialSecurityAccount: '', checkInDate: '2017-06-30', endDate: '2017-09-30', openHandler: '', openHandleDate: '', notes: ''},
-          {action: '', pensionCompanyName: '上海中智项目外包咨询服务有限公司', accountType: '中智外包', state: '有效', companySocialSecurityAccount: '', checkInDate: '', endDate: '', openHandler: '', openHandleDate: '', notes: ''},
-          {action: '', pensionCompanyName: 'xx有限公司1', accountType: '独立户', state: '有效', companySocialSecurityAccount: '', checkInDate: '', endDate: '', openHandler: '', openHandleDate: '', notes: ''},
-          {action: '', pensionCompanyName: 'xx有限公司2', accountType: '独立户', state: '有效', companySocialSecurityAccount: '', checkInDate: '', endDate: '', openHandler: '', openHandleDate: '', notes: ''},
-          {action: '', pensionCompanyName: 'xx有限公司3', accountType: '独立户', state: '有效', companySocialSecurityAccount: '', checkInDate: '', endDate: '', openHandler: '', openHandleDate: '', notes: ''},
-          {action: '', pensionCompanyName: 'xx有限公司4', accountType: '独立户', state: '有效', companySocialSecurityAccount: '', checkInDate: '', endDate: '', openHandler: '', openHandleDate: '', notes: ''},
-          {action: '', pensionCompanyName: 'xx有限公司5', accountType: '独立户', state: '有效', companySocialSecurityAccount: '', checkInDate: '', endDate: '', openHandler: '', openHandleDate: '', notes: ''}
-        ]
       }
     },
+    mounted() {
+      this.setCompanySocialSecurityManage()
+    },
     computed: {
-
+      ...mapGetters('companySocialSecurityManage',[
+        'companysocialsecuritymanage'
+      ])
     },
     methods: {
+      ...mapActions('companySocialSecurityManage', {
+        setCompanySocialSecurityManage: eventType.COMPANYSOCIALSECURITYMANAGETYPE
+      }),
+      resetSearchCondition(name) {
+        this.$refs[name].resetFields()
+      },
       ok () {
 
       },
@@ -211,5 +201,6 @@
   }
 </script>
 <style scoped>
+  .mt20 {margin-top: 20px;}
   .ml10 {margin-left: 10px;}
 </style>

@@ -28,22 +28,14 @@
     </Collapse>
 
     <Row class="mt20">
-      <Col :xs="{span: 1}" :lg="{span: 1}">
+      <Col :xs="{span: 5}" :lg="{span: 5}">
         <Button type="error" @click="goBack">批退</Button>
-      </Col>
-      <Col :xs="{span: 1}" :lg="{span: 1}">
         <Button type="primary" @click="nextStep">下一步</Button>
-      </Col>
-      <Col :xs="{span: 1}" :lg="{span: 1}">
         <Button type="ghost" @click="goBack" class="ml10">关闭/返回</Button>
       </Col>
-      <Col :xs="{span: 2, offset: 15}" :lg="{span: 2, offset: 15}">
+      <Col :xs="{span: 5, offset: 14}" :lg="{span: 5, offset: 14}">
         <Button type="primary" @click="isUpload = true">上传扫描件</Button>
-      </Col>
-      <Col :xs="{span: 2}" :lg="{span: 2}">
         <Button type="primary" @click="goBack">反馈未签收</Button>
-      </Col>
-      <Col :xs="{span: 2}" :lg="{span: 2}">
         <Button type="primary" @click="nextStep">签收全部材料</Button>
       </Col>
     </Row>
@@ -71,7 +63,6 @@
   import eventType from '../../store/EventTypes'
 
   export default {
-    name:"employeespecialprogress2",
     components: {chat, companySocialSecurityInfo, employeeInfo},
     data() {
       return {
@@ -169,12 +160,12 @@
       this.setEmployeeSpecialProgress2()
     },
     computed: {
-      ...mapGetters([
+      ...mapGetters('employeeSpecialProgress2', [
         'employeespecialprogress2'
       ])
     },
     methods: {
-      ...mapActions({
+      ...mapActions('employeeSpecialProgress2', {
         setEmployeeSpecialProgress2: eventType.EMPLOYEESPECIALPROGRESS2
       }),
       nextStep() {

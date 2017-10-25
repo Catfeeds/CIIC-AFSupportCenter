@@ -67,12 +67,12 @@
       this.setCompanySocialSecurityNew()
     },
     computed: {
-      ...mapGetters('companySocialSecurityNew',[
+      ...mapGetters('companySocialSecurityNew', [
         'companysocialsecuritynew'
       ])
     },
     methods: {
-      ...mapActions('companySocialSecurityNew',{
+      ...mapActions('companySocialSecurityNew', {
         setCompanySocialSecurityNew: EventTypes.COMPANYSOCIALSECURITYNEWTYPE
       }),
       goBack() {

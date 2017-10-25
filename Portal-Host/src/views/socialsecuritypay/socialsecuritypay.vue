@@ -4,27 +4,29 @@
       <Panel name="1">
         社保支付
         <div slot="content">
-          <Form :label-width=120>
+          <Form ref="payInfo" :model="payInfo" :label-width=120>
             <Row>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
-                <Form-item label="企业社保账户分类：">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
+                <Form-item label="企业社保账户分类：" prop="companySocialSecurityCategoryValue">
                   <Select v-model="payInfo.companySocialSecurityCategoryValue" style="width: 100%;">
                     <Option v-for="item in payInfo.companySocialSecurityCategoryList" :value="item.value" :key="item.value">{{item.label}}</Option>
                   </Select>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
-                <Form-item label="企业社保账户：">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
+                <Form-item label="企业社保账户：" prop="companySocialSecurityAccount">
                   <Input v-model="payInfo.companySocialSecurityAccount" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
-                <Form-item label="支付年月：">
-                  <DatePicker v-model="payInfo.payDate" type="daterange" placement="bottom" placeholder="选择日期"></DatePicker>
+            </Row>
+            <Row>
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
+                <Form-item label="支付年月：" prop="payDate">
+                  <DatePicker v-model="payInfo.payDate" type="daterange" placement="bottom" placeholder="选择日期" style="width: 100%;"></DatePicker>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
-                <Form-item label="支付状态：">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
+                <Form-item label="支付状态：" prop="payStateValue">
                   <Select v-model="payInfo.payStateValue" style="width: 100%;">
                     <Option v-for="item in payInfo.payStateList" :value="item.value" :key="item.value">{{item.label}}</Option>
                   </Select>
@@ -32,23 +34,21 @@
               </Col>
             </Row>
             <Row>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
-                <Form-item label="客户编号：">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
+                <Form-item label="客户编号：" prop="customerNumber">
                   <Input v-model="payInfo.customerNumber" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
-                <Form-item label="客户名称：">
-                  <Button type="ghost" @click="isShowCustomerName = true" long>&nbsp;</Button>
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
+                <Form-item label="客户名称：" prop="customerName">
+                  <Input v-model="payInfo.customerName" @on-focus="isShowCustomerName = true" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
             </Row>
             <Row>
-              <Col :xs="{span: 1, offset: 19}" :lg="{span: 1, offset: 17}">
+              <Col :xs="{span: 3, offset: 16}" :lg="{span: 3, offset: 16}">
                 <Button type="primary" @click="" icon="ios-search">查询</Button>
-              </Col>
-              <Col :xs="{span: 1, offset: 1}" :lg="{span: 1, offset: 1}">
-                <Button type="ghost" @click="">重置</Button>
+                <Button type="ghost" @click="resetSearchCondition('payInfo')">重置</Button>
               </Col>
             </Row>
           </Form>
@@ -57,7 +57,7 @@
     </Collapse>
 
     <Form>
-      <Row style="margin-top: 40px;">
+      <Row class="mt20">
         <Col :xs="{span: 10}" :lg="{span: 10}">
           <Button type="default" @click="gotoPay">申请支付</Button>
           <Button type="default" @click="goPaymentNotice">查看付款通知书</Button>
@@ -65,9 +65,9 @@
         </Col>
       </Row>
 
-      <Row style="margin-top: 20px;">
+      <Row class="mt20">
         <Col :xs="{span: 24}" :lg="{span: 24}">
-          <Table border :columns="payColumns" :data="payData"></Table>
+          <Table border :columns="payColumns" :data="socialsecuritypay.payData"></Table>
           <Page :total="4" :page-size="5" :page-size-opts="[5, 10]" show-sizer show-total  class="pageSize"></Page>
         </Col>
       </Row>
@@ -79,7 +79,7 @@
       title="选择客户"
       @on-ok="ok"
       @on-cancel="cancel">
-      <customer-modal></customer-modal>
+      <customer-modal :customerData="socialsecuritypay.customerData"></customer-modal>
     </Modal>
 
     <!-- 进度 -->
@@ -97,7 +97,7 @@
       v-model="changeInfo.isShowChange"
       @on-ok="ok"
       @on-cancel="cancel">
-      <Table border :columns="changeInfo.changeColumns" :data="changeInfo.changeData"></Table>
+      <Table border :columns="changeInfo.changeColumns" :data="socialsecuritypay.changeData"></Table>
       <Form :label-width=180>
         <Row class="mt20">
           <Col :xs="{span: 2}" :lg="{span: 2}">
@@ -167,12 +167,14 @@
   </div>
 </template>
 <script>
+  import {mapActions,mapGetters} from 'vuex'
   import customerModal from '../commoncontrol/customermodal.vue'
   import progressBar from '../commoncontrol/progress/progressbar.vue'
+  import eventType from '../../store/EventTypes'
+
   const progressStop = 33.3;
 
   export default {
-    name: 'socialsecuritypay',
     components: {customerModal, progressBar},
     data() {
       return{
@@ -220,9 +222,6 @@
                 ]);
               }
             }
-          ],
-          changeData: [
-            {shouldPayAmount: '80012.00', deductibleFee: '323.3'}
           ],
 
           changeAmount: '',
@@ -365,19 +364,23 @@
             }
           }
         ],
-        payData: [
-          {id: '', customerNumber: '1001', customerName: '欧莱雅分公司1', companySocialSecurityAccount: '9910001', payDate: '201706', payState: '申请中(财务审批中)', operator: '', shouldPayAmount: '20000.20', applyPayAmount: '20500.00', changeAmount: '500', deductibleFee: '', companyPart: '', employeePart: '', applier: '后道1', applyTime: '2017/06/01 10:05:29', payDate: '', applyNotes: ''},
-          {id: '', customerNumber: '1002', customerName: '欧莱雅分公司2', companySocialSecurityAccount: '9910001', payDate: '201706', payState: '批退', operator: '', shouldPayAmount: '', applyPayAmount: '', changeAmount: '', deductibleFee: '', companyPart: '', employeePart: '', applier: '后道1', applyTime: '2017/06/01 10:05:29', payDate: '', applyNotes: ''},
-          {id: '', customerNumber: '1003', customerName: '欧莱雅分公司3', companySocialSecurityAccount: '9910001', payDate: '201706', payState: '支付成功', operator: '', shouldPayAmount: '5000.30', applyPayAmount: '4700.30', changeAmount: '-300', deductibleFee: '', companyPart: '', employeePart: '', applier: '后道1', applyTime: '2017/06/01 10:05:29', payDate: '', applyNotes: ''},
-          {id: '', customerNumber: '', customerName: '', companySocialSecurityAccount: '中智大库账号', payDate: '201706', payState: '申请中(内部审批中)', operator: '', shouldPayAmount: '', applyPayAmount: '', changeAmount: '', deductibleFee: '', companyPart: '', employeePart: '', applier: '后道1', applyTime: '2017/06/01 10:05:29', payDate: '', applyNotes: ''},
-          {id: '', customerNumber: '1005', customerName: '独立户客户', companySocialSecurityAccount: '910003', payDate: '201706', payState: '申请中(内部审批中)', operator: '', shouldPayAmount: '', applyPayAmount: '', changeAmount: '', deductibleFee: '', companyPart: '', employeePart: '', applier: '后道1', applyTime: '2017/06/01 10:05:29', payDate: '', applyNotes: ''},
-        ]
       }
     },
+    mounted() {
+      this.setSocialSecurityPay()
+    },
     computed: {
-
+      ...mapGetters('socialSecurityPay', [
+        'socialsecuritypay'
+      ])
     },
     methods: {
+      ...mapActions('socialSecurityPay', {
+        setSocialSecurityPay: eventType.SOCIALSECURITYPAYTYPE
+      }),
+      resetSearchCondition(name) {
+        this.$refs[name].resetFields()
+      },
       gotoPay() {
         this.$Notice.success({
           title: '支付申请操作成功！'
@@ -397,5 +400,4 @@
 </script>
 <style scoped>
   .mt20 {margin-top: 20px;}
-  .ml10 {margin-left: 10px;}
 </style>

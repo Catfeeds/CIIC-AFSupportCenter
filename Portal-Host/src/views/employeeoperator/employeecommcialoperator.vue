@@ -592,12 +592,12 @@
       this.setEmployeeCommcialOperator()
     },
     computed: {
-      ...mapGetters([
+      ...mapGetters('employeeCommcialOperator',[
         'employeecommcialoperator'
       ])
     },
     methods: {
-      ...mapActions({
+      ...mapActions('employeeCommcialOperator',{
         setEmployeeCommcialOperator: eventType.EMPLOYEECOMMCIALOPERATOR
       }),
       goback () {

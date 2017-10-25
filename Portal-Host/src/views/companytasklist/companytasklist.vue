@@ -1,75 +1,34 @@
 <template>
-  <div>
-    <Tabs>
-      <TabPane :label="tabInfo.tab1">
-        <company-task-control :isCperator="1" :taskData="companytasklist.taskData"></company-task-control>
-      </TabPane>
-      <TabPane :label="tabInfo.tab2">
-        <company-task-control :isCperator="2" :taskData="companytasklist.taskData"></company-task-control>
-      </TabPane>
-      <TabPane :label="tabInfo.tab3">
-        <company-task-control :isCperator="3" :taskData="companytasklist.taskData"></company-task-control>
-      </TabPane>
-      <TabPane :label="tabInfo.tab4">
-        <company-task-control :isCperator="4" :taskData="companytasklist.taskData"></company-task-control>
-      </TabPane>
-    </Tabs>
+  <div class="smList">
+    <tabs :data="tabPans" @on-click="selectTabPan"></tabs>
   </div>
 </template>
 <script>
-  import {mapActions,mapGetters} from 'vuex'
-  import companyTaskControl from "./companytaskcontrol.vue";
-  import eventType from '../../store/EventTypes'
+  import tabs from '../../components/tabs.vue'
 
   export default {
-    components: {companyTaskControl},
-    name:"companytasklist",
+    components: {tabs},
     data() {
       return {
-        tabInfo: {
-          tab1: (h) => {
-            return h('div', [
-              h('span', '本月处理 '),
-              h('Badge', {props: {count: 3}})
-            ])
-          },
-          tab2: (h) => {
-            return h('div', [
-              h('span', '下月处理 '),
-              h('Badge', {props: {count: 3}})
-            ])
-          },
-          tab3: (h) => {
-            return h('div', [
-              h('span', '已完成')
-            ])
-          },
-          tab4: (h) => {
-            return h('div', [
-              h('span', '批退')
-            ])
-          },
-        },
+        tabPans:
+          [
+            {name: 'cthismonthhandle', label: '本月处理'},
+            {name: 'cnextmonthhandle', label: '下月处理'},
+            {name: 'cfinished', label: '已完成'},
+            {name: 'crefused', label: '批退'},
+          ]
       }
     },
     mounted() {
-      this.setCompanyTaskList()
+
     },
     computed: {
-      ...mapGetters([
-        'companytasklist'
-      ])
+
     },
     methods: {
-      ...mapActions({
-        setCompanyTaskList: eventType.COMPANYTASKLIST
-      })
+      selectTabPan(name) {
+
+      }
     }
   }
 </script>
-
-<style scoped>
-  .mt20 {
-    margin-top: 20px;
-  }
-</style>

@@ -6,118 +6,120 @@
         <div slot="content">
           <Form :label-width=120>
             <Row class="mt20">
-              <Col :xs="{span: 3, offset: 1}" :lg="{span: 3, offset: 1}">
+              <Col :xs="{span: 7, offset: 1}" :lg="{span: 7, offset: 1}">
                 <Form-item label="参保户登记码：" class="">
                   <label>{{companySocialSecurityInfo.participantRegistrationCode}}</label>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
+              <Col :xs="{span: 7, offset: 1}" :lg="{span: 7, offset: 1}">
                 <Form-item label="牡丹卡号：" class="">
                   <label>{{companySocialSecurityInfo.ICBCNumber}}</label>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
+              <Col :xs="{span: 7, offset: 1}" :lg="{span: 7, offset: 1}">
                 <Form-item label="养老金用公司名称：" class="">
                   <label>{{companySocialSecurityInfo.pensionCompanyName}}</label>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 9, offset: 1}" :lg="{span: 9, offset: 1}">
+            </Row>
+            <Row>
+              <Col :xs="{span: 7, offset: 1}" :lg="{span: 7, offset: 1}">
                 <Form-item label="结算区县：" class="">
                   <label>{{companySocialSecurityInfo.region}}</label>
                 </Form-item>
               </Col>
-            </Row>
-            <Row class="mt20">
-              <Col :xs="{span: 3, offset: 1}" :lg="{span: 3, offset: 1}">
+              <Col :xs="{span: 7, offset: 1}" :lg="{span: 7, offset: 1}">
                 <Form-item label="付款行：" class="">
                   <label>{{companySocialSecurityInfo.paymentBank}}</label>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
+              <Col :xs="{span: 7, offset: 1}" :lg="{span: 7, offset: 1}">
                 <Form-item label="付款方式：" class="">
-                  <Select v-model="companySocialSecurityInfo.payMethodValue" disabled style="width: 100%;">
-                    <Option v-for="item in companySocialSecurityInfo.payMethodList" :value="item.value" :key="item.value">{{item.label}}</Option>
-                  </Select>
+                  <label>{{companySocialSecurityInfo.payMethodValue}}</label>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
+            </Row>
+            <Row>
+              <Col :xs="{span: 7, offset: 1}" :lg="{span: 7, offset: 1}">
                 <Form-item label="工行查询账号：" class="">
                   <label>{{companySocialSecurityInfo.ICBCSearchAccount}}</label>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 9, offset: 1}" :lg="{span: 9, offset: 1}">
+              <Col :xs="{span: 7, offset: 1}" :lg="{span: 7, offset: 1}">
                 <Form-item label="客户社保截至日：" class="">
                   <label>{{companySocialSecurityInfo.companySocialSecurityEndDate}}</label>
                 </Form-item>
               </Col>
-            </Row>
-            <Row class="mt20">
-              <Col :xs="{span: 3, offset: 1}" :lg="{span: 3, offset: 1}">
+              <Col :xs="{span: 7, offset: 1}" :lg="{span: 7, offset: 1}">
                 <Form-item label="养老金独立开户用户名：" class="">
                   <label>{{companySocialSecurityInfo.pensionUsername}}</label>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
+            </Row>
+            <Row>
+              <Col :xs="{span: 7, offset: 1}" :lg="{span: 7, offset: 1}">
                 <Form-item label="养老金独立开户密码：" class="">
                   <label>{{companySocialSecurityInfo.pensionPassword}}</label>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
+              <Col :xs="{span: 7, offset: 1}" :lg="{span: 7, offset: 1}">
                 <Form-item label="初期余额：" class="">
                   <label>{{companySocialSecurityInfo.originalMoney}}</label>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 9, offset: 1}" :lg="{span: 9, offset: 1}">
+              <Col :xs="{span: 7, offset: 1}" :lg="{span: 7, offset: 1}">
                 <Form-item label="初期欠费：" class="">
                   <label>{{companySocialSecurityInfo.originalArrears}}</label>
                 </Form-item>
               </Col>
             </Row>
-            <Row class="mt20">
-              <Col :xs="{span: 3, offset: 1}" :lg="{span: 3, offset: 1}">
+            <Row>
+              <Col :xs="{span: 7, offset: 1}" :lg="{span: 7, offset: 1}">
                 <Form-item label="来源地：" class="">
                   <label>{{companySocialSecurityInfo.resource}}</label>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
+              <Col :xs="{span: 7, offset: 1}" :lg="{span: 7, offset: 1}">
                 <Form-item label="来源地备注：" class="">
                   <label>{{companySocialSecurityInfo.resourceNotes}}</label>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
+              <Col :xs="{span: 7, offset: 1}" :lg="{span: 7, offset: 1}">
                 <Form-item label="交予方式：" class="">
                   <label>{{companySocialSecurityInfo.toMethod}}</label>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 9, offset: 1}" :lg="{span: 9, offset: 1}">
+            </Row>
+            <Row>
+              <Col :xs="{span: 7, offset: 1}" :lg="{span: 7, offset: 1}">
                 <Form-item label="交予方式备注：" class="">
                   <label>{{companySocialSecurityInfo.toMethodNotes}}</label>
                 </Form-item>
               </Col>
-            </Row>
-            <Row class="mt20">
-              <Col :xs="{span: 3, offset: 1}" :lg="{span: 3, offset: 1}">
+              <Col :xs="{span: 7, offset: 1}" :lg="{span: 7, offset: 1}">
                 <Form-item label="给凭证时间：" class="">
                   <label>{{companySocialSecurityInfo.toProofTime}}</label>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
+              <Col :xs="{span: 7, offset: 1}" :lg="{span: 7, offset: 1}">
                 <Form-item label="变更时间：" class="">
                   <label>{{companySocialSecurityInfo.changeTime}}</label>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
+            </Row>
+            <Row>
+              <Col :xs="{span: 7, offset: 1}" :lg="{span: 7, offset: 1}">
                 <Form-item label="收到日期：" class="">
                   <label>{{companySocialSecurityInfo.accpetDate}}</label>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 9, offset: 1}" :lg="{span: 9, offset: 1}">
+              <Col :xs="{span: 7, offset: 1}" :lg="{span: 7, offset: 1}">
                 <Form-item label="转入日期：" class="">
                   <label>{{companySocialSecurityInfo.turnInDate}}</label>
                 </Form-item>
               </Col>
             </Row>
-            <Row class="mt20">
+            <Row>
               <Col :xs="{span: 20, offset: 1}" :lg="{span: 20, offset: 1}">
                 <Form-item label="发出材料：" class="">
                   <CheckboxGroup v-model="companySocialSecurityInfo.sendMaterialValue">
@@ -128,8 +130,8 @@
                 </Form-item>
               </Col>
             </Row>
-            <Row class="mt20">
-              <Col :xs="{span: 3, offset: 1}" :lg="{span: 3, offset: 1}">
+            <Row>
+              <Col :xs="{span: 20, offset: 1}" :lg="{span: 20, offset: 1}">
                 <Form-item label="终止日期：" class="">
                   <label>{{companySocialSecurityInfo.endDate}}</label>
                 </Form-item>
@@ -142,26 +144,26 @@
       <Panel name="2">
         子公司信息
         <div slot="content">
-          <Table width="841" border :columns="childCompanyColumns" :data="childCompanyData"></Table>
+          <Table width="841" border :columns="childCompanyColumns" :data="companysocialsecurity.childCompanyData"></Table>
         </div>
       </Panel>
 
       <Panel name="3">
         历史任务单
         <div slot="content">
-          <Table width="841" border :columns="historyTaskColumns" :data="historyTaskData"></Table>
+          <Table width="841" border :columns="historyTaskColumns" :data="companysocialsecurity.historyTaskData"></Table>
         </div>
       </Panel>
 
       <Panel name="4">
         工伤比例变更历史
         <div slot="content">
-          <Table width="841" border :columns="workInjuryColumns" :data="workInjuryData"></Table>
+          <Table width="841" border :columns="workInjuryColumns" :data="companysocialsecurity.workInjuryData"></Table>
         </div>
       </Panel>
     </Collapse>
     <Row class="mt20">
-      <Col :xs="{span: 2, offset: 10}" :lg="{span: 2, offset: 10}">
+      <Col :xs="{span: 1, offset: 23}" :lg="{span: 1, offset: 23}">
         <Button type="default" @click="goBack">返回</Button>
       </Col>
     </Row>
@@ -171,16 +173,16 @@
       v-model="isShowNotes"
       @on-ok="ok"
       @on-cancel="cancel">
-      <chat :chatList="chatList"></chat>
+      <chat :chatList="companysocialsecurity.chatList"></chat>
     </Modal>
   </div>
 </template>
 <script>
   import {mapActions,mapGetters} from 'vuex'
   import chat from '../commoncontrol/chathistory/chat.vue'
+  import eventType from '../../store/EventTypes'
 
   export default {
-    name:"companysocialsecurity",
     components: {chat},
     data() {
       return {
@@ -250,10 +252,6 @@
             }
           }
         ],
-        childCompanyData: [
-          {companyCode: 'KH00001', companyName: '上海XX信息技术有限公司', serviceCenter: '大客户2', serviceTeam: '龚艳社保组'},
-          {companyCode: 'KH00002', companyName: '广州XX信息技术有限公司', serviceCenter: '大客户2', serviceTeam: '龚艳社保组'}
-        ],
 
         historyTaskColumns: [
           {title: '任务单编号', key: 'tid', align: 'center',
@@ -309,11 +307,6 @@
             }
           }
         ],
-        historyTaskData: [
-          {tid: 'XK00001', taskType: '开户', operator: '龚艳', operatorTime: '2015-06-01', notes: ''},
-          {tid: 'BG00001', taskType: '变更', operator: '龚艳', operatorTime: '2016-06-01', notes: ''},
-          {tid: 'BG00002', taskType: '终止', operator: '龚艳', operatorTime: '2015-06-01', notes: ''}
-        ], //变动历史
 
         workInjuryColumns: [
           {title: '行业类别', key: 'industryCategory', align: 'center',
@@ -345,23 +338,22 @@
             }
           },
         ],
-        workInjuryData: [
-          {industryCategory: '一', companyWorkInjuryPercentage: '0.02', startMonth: '201406', endMonth: '201704'},
-          {industryCategory: '二', companyWorkInjuryPercentage: '0.03', startMonth: '201705', endMonth: ''}
-        ],
+
         isShowNotes: false,
-        chatList: [
-          {icon: '', name: '客服', date: '2017-03-02 14:14:32', content: '【发起】该客户要求本月所有员工都缴纳社保。'}
-        ]
       }
     },
     mounted() {
-
+      this.setCompanySocialSecurity()
     },
     computed: {
-
+      ...mapGetters('companySocialSecurity',[
+        'companysocialsecurity'
+      ])
     },
     methods: {
+      ...mapActions('companySocialSecurity', {
+        setCompanySocialSecurity: eventType.COMPANYSOCIALSECURITYTYPE
+      }),
       goBack() {
         this.$router.push({name: 'companysocialsecuritymanage'})
       },

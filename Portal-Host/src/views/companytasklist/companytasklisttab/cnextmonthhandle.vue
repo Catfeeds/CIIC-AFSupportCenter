@@ -4,29 +4,29 @@
       <Panel name="1">
         企业任务单
         <div slot="content">
-          <Form :label-width=120>
+          <Form ref="companyTaskInfo" :model="companyTaskInfo" :label-width=120>
             <Row>
               <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
-                <Form-item label="服务中心：">
+                <Form-item label="服务中心：" prop="serviceCenterValue">
                   <Select v-model="companyTaskInfo.serviceCenterValue" style="width: 100%;" disabled>
                     <Option v-for="item in companyTaskInfo.serviceCenterList" :value="item.value" :key="item.value">{{item.label}}</Option>
                   </Select>
                 </Form-item>
               </Col>
               <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
-                <Form-item label="客户编号：">
+                <Form-item label="客户编号：" prop="customerNumber">
                   <Input v-model="companyTaskInfo.customerNumber" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
             </Row>
             <Row>
               <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
-                <Form-item label="客户名称：">
-                  <Button type="ghost" @click="companyTaskInfo.customerName = true" long>&nbsp;</Button>
+                <Form-item label="客户名称：" prop="customerName">
+                  <Input v-model="companyTaskInfo.customerName" @on-focus="companyTaskInfo.isShowCustomerName = true" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
               <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
-                <Form-item label="账户类型：">
+                <Form-item label="账户类型：" prop="accountTypeValue">
                   <Select v-model="companyTaskInfo.accountTypeValue" style="width: 100%;">
                     <Option v-for="item in companyTaskInfo.accountTypeList" :value="item.value" :key="item.value">{{item.label}}</Option>
                   </Select>
@@ -35,35 +35,35 @@
             </Row>
             <Row>
               <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
-                <Form-item label="结算区县：">
+                <Form-item label="结算区县：" prop="regionValue">
                   <Select v-model="companyTaskInfo.regionValue" style="width: 100%;">
                     <Option v-for="item in companyTaskInfo.regionList" :value="item.value" :key="item.value">{{item.label}}</Option>
                   </Select>
                 </Form-item>
               </Col>
               <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
-                <Form-item label="任务单编号：">
+                <Form-item label="任务单编号：" prop="taskNumber">
                   <Input v-model="companyTaskInfo.taskNumber" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
             </Row>
             <Row>
               <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
-                <Form-item label="任务单类型：">
+                <Form-item label="任务单类型：" prop="taskTypeValue">
                   <Select v-model="companyTaskInfo.taskTypeValue" style="width: 100%;">
                     <Option v-for="item in companyTaskInfo.taskTypeList" :value="item.value" :key="item.value">{{item.label}}</Option>
                   </Select>
                 </Form-item>
               </Col>
               <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
-                <Form-item label="任务发起时间：">
+                <Form-item label="任务发起时间：" prop="taskStartTime">
                   <DatePicker v-model="companyTaskInfo.taskStartTime" type="daterange" placement="bottom" placeholder="选择日期" style="width: 100%"></DatePicker>
                 </Form-item>
               </Col>
             </Row>
             <Row>
               <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
-                <Form-item label="处理状态：">
+                <Form-item label="处理状态：" prop="handleStateValue">
                   <Select v-model="companyTaskInfo.handleStateValue" style="width: 100%;">
                     <Option v-for="item in companyTaskInfo.handleStateList" :value="item.value" :key="item.value">{{item.label}}</Option>
                   </Select>
@@ -71,12 +71,10 @@
               </Col>
             </Row>
             <Row>
-              <Row>
-                <Col :xs="{span: 4, offset: 16}" :lg="{span: 4, offset: 16}">
-                  <Button type="primary" @click="" icon="ios-search">查询</Button>
-                  <Button type="default" @click="">重置</Button>
-                </Col>
-              </Row>
+              <Col :xs="{span: 4, offset: 16}" :lg="{span: 4, offset: 16}">
+                <Button type="primary" @click="" icon="ios-search">查询</Button>
+                <Button type="default" @click="resetSearchCondition('companyTaskInfo')">重置</Button>
+              </Col>
             </Row>
           </Form>
         </div>
@@ -84,7 +82,7 @@
     </Collapse>
 
     <Form>
-      <Row v-show="isCperator === 1 || isCperator === 2" class="mt20">
+      <Row class="mt20">
         <Col :xs="{span: 2}" :lg="{span: 2}">
           <Button type="error" @click="isRefuseReason = true">批退</Button>
           <Button type="info" @click="">导出</Button>
@@ -93,7 +91,7 @@
 
       <Row class="mt20">
         <Col :xs="{span: 24}" :lg="{span: 24}">
-          <Table border :columns="taskColumns" :data="taskData"></Table>
+          <Table border :columns="taskColumns" :data="cnextmonthhandle.taskData"></Table>
           <Page :total="4" :page-size="5" :page-size-opts="[5, 10]" show-sizer show-total  class="pageSize"></Page>
         </Col>
       </Row>
@@ -111,23 +109,25 @@
           </p>
         </Form>
       </Modal>
+
+      <!-- 客户名称 模态框 -->
+      <Modal
+        v-model="companyTaskInfo.isShowCustomerName"
+        title="选择客户"
+        @on-ok="ok"
+        @on-cancel="cancel">
+        <customer-modal :customerData="cnextmonthhandle.customerData"></customer-modal>
+      </Modal>
     </Form>
   </div>
 </template>
 <script>
-  import operatorSearch from "../commoncontrol/operatorsearch.vue"
+  import {mapActions,mapGetters} from 'vuex'
+  import customerModal from '../../commoncontrol/customermodal.vue'
+  import eventType from '../../../store/EventTypes'
 
   export default {
-    name: 'companytaskcontrol',
-    props:{
-      isCperator: {
-        index: Number
-      },
-      taskData: {
-        type: Array
-      }
-    },
-    components: {operatorSearch},
+    components: {customerModal},
     data() {
       return{
         collapseInfo: [1], //展开栏
@@ -136,6 +136,7 @@
           serviceCenterList: [],
           customerNumber: '',
           customerName: '',
+          isShowCustomerName: false,
           accountTypeValue: '',
           accountTypeList: [
             {value: '1', label: '独立库'},
@@ -176,8 +177,7 @@
             render: (h, params) => {
               return h('div', [
                 h('Button', {
-                  props: {type: 'primary', size: 'small'},
-                  style: {margin: '0 auto'},
+                  props: {type: 'primary', size: 'small'}, style: {margin: '0 auto'},
                   on: {
                     click: () => {
                       switch(params.row.type) {
@@ -198,7 +198,7 @@
                       }
                     }
                   }
-                }, this.isCperator === 1 || this.isCperator === 2 ? '办理' : this.isCperator === 4 ? '查看' : params.row.emergency === '是' ? '查看' : '修改'),
+                }, '办理'),
               ]);
             }
           },
@@ -268,10 +268,21 @@
         ]
       }
     },
+    mounted() {
+      this.setCNextMonthHandle()
+    },
     computed: {
-
+      ...mapGetters('cNextMonthHandle',[
+        'cnextmonthhandle'
+      ])
     },
     methods: {
+      ...mapActions('cNextMonthHandle',{
+        setCNextMonthHandle: eventType.CNEXTMONTHHANDLETYPE
+      }),
+      resetSearchCondition(name) {
+        this.$refs[name].resetFields()
+      },
       routerToCommcialOperator: function(name) {
         this.$router.push({
           name: 'employeecommcialoperator',
@@ -279,10 +290,10 @@
         });
       },
       ok () {
-        this.$Message.info('点击了确定');
+
       },
       cancel () {
-        this.$Message.info('点击了取消');
+
       }
     }
   }

@@ -10,7 +10,7 @@
       <Panel name="1">
         企业社保账户信息
         <div slot="content">
-          <company-social-security-info></company-social-security-info>
+          <company-social-security-info :company="companytaskprogresssendinfo.company"></company-social-security-info>
         </div>
       </Panel>
       <Panel name="2">
@@ -18,8 +18,8 @@
         <div slot="content">
           <Row>
             <Col :xs="{span: 10, offset: 1}" :lg="{span: 10, offset: 1}">
-              <label>共{{chatList.length}}条历史备注</label>
-              <chat :chatList="chatList" class="mt20"></chat>
+              <label>共{{companytaskprogresssendinfo.chatList.length}}条历史备注</label>
+              <chat :chatList="companytaskprogresssendinfo.chatList" class="mt20"></chat>
             </Col>
           </Row>
         </div>
@@ -76,18 +76,17 @@
   </Form>
 </template>
 <script>
+  import {mapActions,mapGetters} from 'vuex'
   import chat from '../commoncontrol/chathistory/chat.vue'
   import companySocialSecurityInfo from '../commoncontrol/companysocialsecurityinfo.vue'
+  import eventType from '../../store/EventTypes'
+
   export default {
-    name:"companytaskprogressendinfo",
     components: {chat, companySocialSecurityInfo},
     data() {
       return {
         collapseInfo: [1, 2, 3], //展开栏
         currentStep: 2,
-        chatList: [
-          {icon: '#', name: '客服', date: '2017-03-02 14:14:32', content: '【发起】该客户要求本月所有员工都缴纳社保。'},
-        ],
         endOperator: {
           accpetDate: '',
           approvalDate: '',
@@ -98,12 +97,17 @@
       }
     },
     mounted() {
-
+      this.setCompanyTaskProgressSendInfo()
     },
     computed: {
-
+      ...mapGetters('companyTaskProgressSendInfo',[
+        'companytaskprogresssendinfo'
+      ])
     },
     methods: {
+      ...mapActions('companyTaskProgressSendInfo', {
+        setCompanyTaskProgressSendInfo: eventType.COMPANYTASKPROGRESSSENDINFOTYPE
+      }),
       goBack() {
         this.$router.push({name: 'companytasklist'})
       },

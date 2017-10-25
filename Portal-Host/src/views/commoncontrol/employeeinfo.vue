@@ -79,7 +79,10 @@
       },
       employee: {
         require: true,
-        type: Object
+        type: Object,
+        default() {
+          return {}
+        }
       }
     },
     data() {

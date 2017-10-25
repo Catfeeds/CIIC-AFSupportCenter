@@ -68,7 +68,10 @@
     props: {
       company: {
         require: true,
-        Type: Object
+        Type: Object,
+        default() {
+          return {}
+        }
       }
     },
     data() {

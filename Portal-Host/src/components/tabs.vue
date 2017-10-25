@@ -13,14 +13,16 @@
     name: 'tabs',
     props: {
       data: {
-        require: true,
-        type: Array
+        type: Array,
+        default() {
+          return []
+        }
       }
     },
     data() {
       return {
         tabPans: this.data,
-        currentValue: this.$route.params.tabpan || this.data[0].name
+        currentValue: this.$route.params.tabpan || this.data[0]['name']
       }
     },
     mounted() {

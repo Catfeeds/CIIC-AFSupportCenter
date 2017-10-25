@@ -18,12 +18,12 @@
         <div slot="content">
           <Form :label-width=120>
             <Row class="mt20">
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="客户社保截至日：">
                   <Input v-model="beforeSendInfo.customerSocialSecurityEndDate" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="付款方式：">
                   <Select v-model="beforeSendInfo.payMethodValue" style="width: 100%;">
                     <Option v-for="item in beforeSendInfo.payMethodList" :value="item.value" :key="item.value">{{item.label}}</Option>
@@ -39,70 +39,76 @@
         <div slot="content">
           <Form :label-width=120>
             <Row class="mt20">
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="任务：">
                   <Select v-model="companyOpenAccountOperator.taskValue" style="width: 100%;">
                     <Option v-for="item in companyOpenAccountOperator.taskList" :value="item.value" :key="item.value">{{item.label}}</Option>
                   </Select>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="参保户登记码：">
                   <Input v-model="companyOpenAccountOperator.joinSafeguardRegister" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+            </Row>
+            <Row>
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="牡丹卡号：">
                   <Input v-model="companyOpenAccountOperator.bankCardNumber" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="养老金用公司名称：">
                   <Input v-model="companyOpenAccountOperator.pensionMoneyUseCompanyName" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
             </Row>
             <Row>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="社保中心(结算区县)：">
                   <Select v-model="companyOpenAccountOperator.socialSecurityCenterValue" style="width: 100%;">
                     <Option v-for="item in companyOpenAccountOperator.socialSecurityCenterList" :value="item.value" :key="item.value">{{item.label}}</Option>
                   </Select>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="付款行：">
                   <Input v-model="companyOpenAccountOperator.payBank" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+            </Row>
+            <Row>
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="工行查询账号：">
                   <Input v-model="companyOpenAccountOperator.icbcSearchAccount" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="养老金独立开户用户名：">
                   <Input v-model="companyOpenAccountOperator.pensionMoneySingleUserName" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
             </Row>
             <Row>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="养老金独立开户密码：">
                   <Input v-model="companyOpenAccountOperator.pensionMoneySinglePassWord" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="初期余额：">
                   <Input v-model="companyOpenAccountOperator.originalSum" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+            </Row>
+            <Row>
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="初期欠费：">
                   <Input v-model="companyOpenAccountOperator.originalArrears" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="来源地：">
                   <Select v-model="companyOpenAccountOperator.resourceValue" style="width: 100%;">
                     <Option v-for="item in companyOpenAccountOperator.resourceList" :value="item.value" :key="item.value">{{item.label}}</Option>
@@ -111,58 +117,62 @@
               </Col>
             </Row>
             <Row>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="来源地备注：">
                   <Input v-model="companyOpenAccountOperator.resourceNotes" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="交予方式：">
                   <Select v-model="companyOpenAccountOperator.giveMethodValue" style="width: 100%;">
                     <Option v-for="item in companyOpenAccountOperator.giveMethodList" :value="item.value" :key="item.value">{{item.label}}</Option>
                   </Select>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+            </Row>
+            <Row>
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="交予方式备注：">
                   <Input v-model="companyOpenAccountOperator.giveMethodNotes" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="给凭证时间：">
                   <DatePicker v-model="companyOpenAccountOperator.giveProofDate" placement="bottom-end" placeholder="选择日期" style="width: 100%;"></DatePicker>
                 </Form-item>
               </Col>
             </Row>
             <Row>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="变更时间：">
                   <DatePicker v-model="companyOpenAccountOperator.changeDate" placement="bottom-end" placeholder="选择日期" style="width: 100%;"></DatePicker>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="收到日期：">
                   <DatePicker v-model="companyOpenAccountOperator.recieveDate" placement="bottom-end" placeholder="选择日期" style="width: 100%;"></DatePicker>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+            </Row>
+            <Row>
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="转入日期：">
                   <DatePicker v-model="companyOpenAccountOperator.moveInDate" placement="bottom-end" placeholder="选择日期" style="width: 100%;"></DatePicker>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="所属行业：">
                   <Input v-model="companyOpenAccountOperator.belongToIndustries" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
             </Row>
             <Row>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="企业工伤比例：">
                   <Input v-model="companyOpenAccountOperator.sufferedOnTheJobPercentage" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 10, offset: 1}" :lg="{span: 5, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="企业工伤比例开始调整月份：">
                   <DatePicker v-model="companyOpenAccountOperator.sufferedOnTheJobPercentageChangeStartMonth" placement="bottom-end" placeholder="选择日期" style="width: 100%;"></DatePicker>
                 </Form-item>
@@ -195,38 +205,36 @@
               </Col>
             </Row>
             <Row>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="受理日期：">
                   <Input v-model="companyOpenAccountOperator.acceptanceDate" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="送审日期：">
                   <DatePicker v-model="companyOpenAccountOperator.sendCheckDate" placement="bottom-end" placeholder="选择日期" style="width: 100%;"></DatePicker>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 5, offset: 1}" :lg="{span: 5, offset: 1}">
+            </Row>
+            <Row>
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="完成日期：">
                   <DatePicker v-model="companyOpenAccountOperator.finishedDate" placement="bottom-end" placeholder="选择日期" style="width: 100%;"></DatePicker>
                 </Form-item>
               </Col>
             </Row>
             <Row>
-              <Col :xs="{span: 11, offset: 1}" :lg="{span: 11, offset: 1}">
+              <Col :xs="{span: 17, offset: 1}" :lg="{span: 17, offset: 1}">
                 <Form-item label="受理日期：">
                   <Input v-model="companyOpenAccountOperator.refuseReason" type="textarea" :rows="4" placeholder="请输入..."></Input>
                 </Form-item>
               </Col>
             </Row>
             <Row>
-              <Col :xs="{span: 1, offset: 20}" :lg="{span: 1, offset: 20}">
+              <Col :xs="{span: 5, offset: 14}" :lg="{span: 5, offset: 14}">
                 <Button type="primary" @click="">确认开户</Button>
-              </Col>
-              <Col :xs="{span: 1}" :lg="{span: 1}">
-                <Button type="error" @click="goBack" class="ml20">批退</Button>
-              </Col>
-              <Col :xs="{span: 2}" :lg="{span: 2}">
-                <Button type="ghost" @click="goBack" class="ml20">关闭/返回</Button>
+                <Button type="error" @click="goBack">批退</Button>
+                <Button type="ghost" @click="goBack">关闭/返回</Button>
               </Col>
             </Row>
           </Form>

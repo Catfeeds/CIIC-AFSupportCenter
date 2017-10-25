@@ -10,7 +10,7 @@
       <Panel name="1">
         企业社保账户信息
         <div slot="content">
-          <company-social-security-info></company-social-security-info>
+          <company-social-security-info :company="companytaskprogresstransferinfo.company"></company-social-security-info>
         </div>
       </Panel>
       <Panel name="2">
@@ -18,8 +18,8 @@
         <div slot="content">
           <Row>
             <Col :xs="{span: 10, offset: 1}" :lg="{span: 10, offset: 1}">
-              <label>共{{chatList.length}}条历史备注</label>
-              <chat :chatList="chatList" class="mt20"></chat>
+              <label>共{{companytaskprogresstransferinfo.chatList.length}}条历史备注</label>
+              <chat :chatList="companytaskprogresstransferinfo.chatList" class="mt20"></chat>
             </Col>
           </Row>
         </div>
@@ -27,40 +27,42 @@
       <Panel name="3">
         企业转移操作
         <div slot="content">
-          <Form :label-width=100>
+          <Form :label-width=120>
             <Row class="mt20">
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="社保中心(结算区县)：" class="">
                   <Select v-model="transferOperator.regionValue" style="width: 100%;">
                     <Option v-for="item in transferOperator.regionList" :value="item.value" :key="item.value">{{item.label}}</Option>
                   </Select>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="转移日期：" class="">
                   <DatePicker v-model="transferOperator.transferDate" placement="bottom-end" placeholder="选择日期" style="width: 100%;"></DatePicker>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
+            </Row>
+            <Row>
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="受理日期：" class="">
                   <DatePicker v-model="transferOperator.accpetDate" placement="bottom-end" placeholder="选择日期" style="width: 100%;"></DatePicker>
                 </Form-item>
               </Col>
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="送审日期：" class="">
                   <DatePicker v-model="transferOperator.approvalDate" placement="bottom-end" placeholder="选择日期" style="width: 100%;"></DatePicker>
                 </Form-item>
               </Col>
             </Row>
             <Row class="mt20">
-              <Col :xs="{span: 4, offset: 1}" :lg="{span: 4, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="完成日期：" class="">
                   <DatePicker v-model="transferOperator.finishDate" placement="bottom-end" placeholder="选择日期" style="width: 100%;"></DatePicker>
                 </Form-item>
               </Col>
             </Row>
             <Row class="mt20">
-              <Col :xs="{span: 9, offset: 1}" :lg="{span: 9, offset: 1}">
+              <Col :xs="{span: 8, offset: 1}" :lg="{span: 8, offset: 1}">
                 <Form-item label="批退原因：" class="">
                   <Input v-model="transferOperator.refuseReason" type="textarea" :rows=4 placeholder="请填写批退原因..."></Input>
                 </Form-item>
@@ -72,31 +74,26 @@
     </Collapse>
 
     <Row class="mt20">
-      <Col :xs="{span: 1}" :lg="{span: 1}">
+      <Col :xs="{span: 3, offset: 21}" :lg="{span: 3, offset: 21}">
         <Button type="primary" @click="goBack">办理</Button>
-      </Col>
-      <Col :xs="{span: 1}" :lg="{span: 1}">
         <Button type="error" @click="goBack">批退</Button>
-      </Col>
-      <Col :xs="{span: 1}" :lg="{span: 1}">
-        <Button type="ghost" @click="goBack" class="ml10">返回</Button>
+        <Button type="ghost" @click="goBack">返回</Button>
       </Col>
     </Row>
   </Form>
 </template>
 <script>
+  import {mapActions,mapGetters} from 'vuex'
   import chat from '../commoncontrol/chathistory/chat.vue'
   import companySocialSecurityInfo from '../commoncontrol/companysocialsecurityinfo.vue'
+  import eventType from "../../store/EventTypes"
+
   export default {
-    name:"companytaskprogresstransferinfo",
     components: {chat, companySocialSecurityInfo},
     data() {
       return {
         collapseInfo: [1, 2, 3], //展开栏
         currentStep: 2,
-        chatList: [
-          {icon: '#', name: '客服', date: '2017-03-02 14:14:32', content: '【发起】该客户要求本月所有员工都缴纳社保。'},
-        ],
         transferOperator: {
           regionValue: '',
           regionList: [
@@ -113,12 +110,17 @@
       }
     },
     mounted() {
-
+      this.setCompanyTaskProgressTransferInfo()
     },
     computed: {
-
+      ...mapGetters('companyTaskProgressTransferInfo',[
+        'companytaskprogresstransferinfo'
+      ])
     },
     methods: {
+      ...mapActions('companyTaskProgressTransferInfo', {
+        setCompanyTaskProgressTransferInfo: eventType.COMPANYTASKPROGRESSTRANSFERINFOTYPE
+      }),
       goBack() {
         this.$router.push({name: 'companytasklist'})
       },

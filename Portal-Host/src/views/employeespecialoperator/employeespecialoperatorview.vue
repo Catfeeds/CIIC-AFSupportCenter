@@ -1,46 +1,34 @@
 <template>
-  <div>
-    <Tabs>
-      <TabPane label="未处理">
-        <employeespecialoperatorcontrol :isCperator="1" :customerData="employeespecialoperatorview.customerData" :sSocialSecurityTypeData="employeespecialoperatorview.sSocialSecurityTypeData" :employeeResultData="employeespecialoperatorview.employeeResultData"></employeespecialoperatorcontrol>
-      </TabPane>
-      <TabPane label="处理中">
-        <employeespecialoperatorcontrol :isCperator="2" :customerData="employeespecialoperatorview.customerData" :sSocialSecurityTypeData="employeespecialoperatorview.sSocialSecurityTypeData" :employeeResultData="employeespecialoperatorview.employeeResultData"></employeespecialoperatorcontrol>
-      </TabPane>
-      <TabPane label="已完成">
-        <employeespecialoperatorcontrol :isCperator="3" :customerData="employeespecialoperatorview.customerData" :sSocialSecurityTypeData="employeespecialoperatorview.sSocialSecurityTypeData" :employeeResultData="employeespecialoperatorview.employeeResultData"></employeespecialoperatorcontrol>
-      </TabPane>
-      <TabPane label="已批退">
-        <employeespecialoperatorcontrol :isCperator="4" :customerData="employeespecialoperatorview.customerData" :sSocialSecurityTypeData="employeespecialoperatorview.sSocialSecurityTypeData" :employeeResultData="employeespecialoperatorview.employeeResultData"></employeespecialoperatorcontrol>
-      </TabPane>
-    </Tabs>
+  <div class="smList">
+    <tabs :data="tabPans" @on-click="selectTabPan"></tabs>
   </div>
 </template>
 <script>
-  import {mapActions,mapGetters} from 'vuex'
-  import employeespecialoperatorcontrol from "./employeespecialoperatorcontrol.vue";
-  import eventType from '../../store/EventTypes'
+  import tabs from '../../components/tabs.vue'
 
   export default {
-    components: {employeespecialoperatorcontrol},
-    name:"employeespecialoperatorview",
+    components: {tabs},
     data() {
       return {
-
+        tabPans:
+          [
+            {name: 'noprogress', label: '未处理'},
+            {name: 'progressing', label: '处理中'},
+            {name: 'finished', label: '已完成'},
+            {name: 'refused', label: '已批退'},
+          ]
       }
     },
     mounted() {
-      this.setEmployeeSpecialOperatorView()
+
     },
     computed: {
-      ...mapGetters([
-        'employeespecialoperatorview'
-      ])
+
     },
     methods: {
-      ...mapActions({
-        setEmployeeSpecialOperatorView: eventType.EMPLOYEESPECIALOPERATORVIEW
-      })
+      selectTabPan(name) {
+
+      }
     }
   }
 </script>

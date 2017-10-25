@@ -11,39 +11,31 @@
         {{operatorType !== '1' ? '企业社保账户信息' : '公司信息'}}
         <div slot="content">
           <company-social-security-info v-if="operatorType !== '1'"></company-social-security-info>
-          <company-info :companyInfo="companyInfo" v-else></company-info>
+          <company-info :companyInfo="companysocialsecurityprogress2.companyInfo" v-else></company-info>
         </div>
       </Panel>
       <Panel name="2">
         办理所需材料清单
         <div slot="content">
-          <Table class="mt20" border :columns="operatorMaterials.operatorMaterialListColumns" :data="operatorMaterials.operatorMaterialListData" ref="employeeSocialSecurityData"></Table>
+          <Table class="mt20" border :columns="operatorMaterials.operatorMaterialListColumns" :data="companysocialsecurityprogress2.operatorMaterialListData" ref="employeeSocialSecurityData"></Table>
         </div>
       </Panel>
     </Collapse>
 
     <Row class="mt20">
-      <Col :xs="{span: 1}" :lg="{span: 1}">
+      <Col :xs="{span: 5}" :lg="{span: 5}">
         <Button type="error" @click="goBack">批退</Button>
-      </Col>
-      <Col :xs="{span: 1}" :lg="{span: 1}">
         <Button type="primary" @click="nextStep">下一步</Button>
+        <Button type="ghost" @click="goBack">关闭/返回</Button>
       </Col>
-      <Col :xs="{span: 1}" :lg="{span: 1}">
-        <Button type="ghost" @click="goBack" class="ml10">关闭/返回</Button>
-      </Col>
-      <Col :xs="{span: 2, offset: 15}" :lg="{span: 2, offset: 15}">
+      <Col :xs="{span: 5, offset: 14}" :lg="{span: 5, offset: 14}">
         <Button type="primary" @click="isUpload = true">上传扫描件</Button>
-      </Col>
-      <Col :xs="{span: 2}" :lg="{span: 2}">
         <Button type="primary" @click="goBack">反馈未签收</Button>
-      </Col>
-      <Col :xs="{span: 2}" :lg="{span: 2}">
         <Button type="primary" @click="nextStep">签收全部材料</Button>
       </Col>
     </Row>
 
-    <chat :chatList="chatList" class="mt20"></chat>
+    <chat :chatList="companysocialsecurityprogress2.chatList" class="mt20"></chat>
 
     <!-- 批退理由 -->
     <Modal
@@ -59,23 +51,20 @@
   </Form>
 </template>
 <script>
+  import {mapActions,mapGetters} from 'vuex'
   import chat from '../commoncontrol/chathistory/chat.vue'
   import companySocialSecurityInfo from '../commoncontrol/companysocialsecurityinfo.vue'
   import companyInfo from '../commoncontrol/companyinfo.vue'
+  import eventType from '../../store/EventTypes'
+
   export default {
-    name:"companysocialsecurityprogress2",
     components: {chat, companySocialSecurityInfo, companyInfo},
     data() {
       return {
         collapseInfo: [1, 2], //展开栏
         operatorType: this.$route.query.operatorType,
         currentStep: 2,
-        companyInfo: {
-          customerNumber: 'KH0001',
-          customerName: '上海XX信息技术有限公司',
-          serviceCenter: '大客户2',
-          serviceManager: '王XX'
-        },
+
         operatorMaterials: {
           operatorMaterialListColumns: [
             {title: '材料名称', key: 'material', align: 'center', width: 150,
@@ -154,35 +143,28 @@
               }
             }
           ],
-          operatorMaterialListData: [
-            {isLink: false, material: '材料1', materialCommitDate: '2017-7-3 12:33:33', materialType: '原件', materialReciveDate: '2017-7-5 12:33:33', state: '1', operator: '', notes: ''},
-            {isLink: false, material: '材料2', materialCommitDate: '2017-7-3 12:33:33', materialType: '复印件', materialReciveDate: '', state: '1', operator: '', notes: ''},
-            {isLink: true, material: '材料3', materialCommitDate: '2017-7-3 12:33:33', materialType: '扫描件', materialReciveDate: '', state: '1', operator: '', notes: ''},
-            {isLink: false, material: '材料4', materialCommitDate: '2017-7-3 12:33:33', materialType: '', materialReciveDate: '2017-7-5 12:33:33', state: '1', operator: '', notes: ''}
-          ]
+
         },
         isUpload: false,
-
-        chatList: [
-          {icon: '#', name: '社保专员', date: '2017-03-02 14:14:32', content: '材料不齐全：材料1(备注内容)； 未签收：材料2(备注内容)'},
-          {icon: '#', name: '客服专员', date: '2017-03-05 13:16:52', content: '已阅'},
-          {icon: '#', name: '社保专员', date: '2017-03-06 13:16:52', content: '材料1'}
-        ]
       }
     },
     mounted() {
-
+      this.setCompanySocialSecurityProgress2()
     },
     computed: {
-
+      ...mapGetters('companySocialSecurityProgress2',[
+        'companysocialsecurityprogress2'
+      ])
     },
     methods: {
+      ...mapActions('companySocialSecurityProgress2', {
+        setCompanySocialSecurityProgress2: eventType.COMPANYSOCIALSECURITYPROGRESS2TYPE
+      }),
       nextStep() {
         if(this.operatorType === '1') {
           this.$router.push({name: 'companysocialsecuritytypeinfo'})
         } else {
           this.operatorType === '2' ? this.$router.push({name: 'companysocialsecuritychangeinfo'}) : this.$router.push({name: 'companysocialsecurityendinfo'})
-
         }
       },
       goBack() {
@@ -199,5 +181,4 @@
 </script>
 <style scoped>
   .mt20 {margin-top: 20px;}
-  .ml10 {margin-left: 10px}
 </style>

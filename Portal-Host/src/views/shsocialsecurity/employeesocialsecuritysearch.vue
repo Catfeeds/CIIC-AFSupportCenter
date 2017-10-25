@@ -278,12 +278,12 @@
       this.setEmployeeSocialSecuritySearch()
     },
     computed: {
-      ...mapGetters('employeeSocialSecuritySearch',[
+      ...mapGetters('employeeSocialSecuritySearch', [
         'employeesocialsecuritysearch'
       ])
     },
     methods: {
-      ...mapActions('employeeSocialSecuritySearch',{
+      ...mapActions('employeeSocialSecuritySearch', {
         setEmployeeSocialSecuritySearch: EventTypes.EMPLOYEESOCIALSECURITYSEARCH
       }),
       exportData() {
