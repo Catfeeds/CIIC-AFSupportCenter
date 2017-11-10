@@ -1,4 +1,3 @@
-1.  Portal-Host: 外企支持中心门户站点Host
 2.  AFSupportCenter-Util: 外企支持中心公共库
 
 3.  HealthMedical-Host: 健康医疗Host
