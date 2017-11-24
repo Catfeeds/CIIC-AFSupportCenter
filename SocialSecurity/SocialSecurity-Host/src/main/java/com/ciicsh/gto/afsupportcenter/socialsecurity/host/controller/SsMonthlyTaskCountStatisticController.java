@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.business.ISsMonthlyTaskCountStatisticBusiness;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsMonthlyTaskCountStatistic;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.business.SsMonthlyTaskCountStatisticBusiness;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsMonthlyTaskCountStatistic;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/socialsecurity/ssmonthlytaskcountstatistic")
 @Log("首页中，系统用户执行的任务单数的月度分类统计")
-public class SsMonthlyTaskCountStatisticController extends BasicController<ISsMonthlyTaskCountStatisticBusiness> {
+public class SsMonthlyTaskCountStatisticController extends BasicController<SsMonthlyTaskCountStatisticBusiness> {
 
 
   @RequestMapping(value = "/finds", method = {RequestMethod.GET, RequestMethod.POST})

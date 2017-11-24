@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.business.ISsStatementResultBusiness;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsStatementResult;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.business.SsStatementResultBusiness;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsStatementResult;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/socialsecurity/ssstatementresult")
 @Log("对账差异结果表")
-public class SsStatementResultController extends BasicController<ISsStatementResultBusiness> {
+public class SsStatementResultController extends BasicController<SsStatementResultBusiness> {
 
 
   @RequestMapping(value = "/finds", method = {RequestMethod.GET, RequestMethod.POST})

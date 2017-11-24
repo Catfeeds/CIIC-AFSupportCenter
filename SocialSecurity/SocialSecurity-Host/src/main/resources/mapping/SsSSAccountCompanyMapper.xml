@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.SsSSAccountCompanyMapper">
-  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsSSAccountCompany">
+  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsSSAccountCompany">
     <!--
       WARNING - @mbg.generated
     -->
     <id column="SSAccountCompanyId" jdbcType="BIGINT" property="SSAccountCompanyId" />
-    <result column="CompanyId" jdbcType="VARCHAR" property="companyId" />
     <result column="ComAccountId" jdbcType="VARCHAR" property="comAccountId" />
+    <result column="CompanyId" jdbcType="VARCHAR" property="companyId" />
     <result column="IsActive" jdbcType="BIT" property="isActive" />
     <result column="DataChange_CreateTime" jdbcType="TIMESTAMP" property="dataChangeCreateTime" />
     <result column="DataChange_LastTime" jdbcType="TIMESTAMP" property="dataChangeLastTime" />
@@ -18,7 +18,7 @@
     <!--
       WARNING - @mbg.generated
     -->
-    SSAccountCompanyId, CompanyId, ComAccountId, IsActive, DataChange_CreateTime, DataChange_LastTime, 
+    SSAccountCompanyId, ComAccountId, CompanyId, IsActive, DataChange_CreateTime, DataChange_LastTime, 
     CreatedBy, ModifiedBy
   </sql>
 </mapper>

@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.business.ISsEmpWithdrawBusiness;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsEmpWithdraw;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.business.SsEmpWithdrawBusiness;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsEmpWithdraw;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/socialsecurity/ssempwithdraw")
 @Log("记录本地社保和全国委托社保中，向社保局提取雇员社保金额的业务记录")
-public class SsEmpWithdrawController extends BasicController<ISsEmpWithdrawBusiness> {
+public class SsEmpWithdrawController extends BasicController<SsEmpWithdrawBusiness> {
 
 
   @RequestMapping(value = "/finds", method = {RequestMethod.GET, RequestMethod.POST})

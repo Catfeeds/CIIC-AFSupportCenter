@@ -1,34 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.SsEmployeeTaskMapper">
-  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsEmployeeTask">
+  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsEmployeeTask">
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="EmployeeTaskId" jdbcType="VARCHAR" property="employeeTaskId" />
+    <id column="EmployeeTaskId" jdbcType="BIGINT" property="employeeTaskId" />
+    <result column="EntityId" jdbcType="VARCHAR" property="entityId" />
     <result column="CustomerId" jdbcType="VARCHAR" property="customerId" />
     <result column="EmpArchiveId" jdbcType="VARCHAR" property="empArchiveId" />
-    <result column="EmployeeID" jdbcType="VARCHAR" property="employeeID" />
-    <result column="CompanyID" jdbcType="VARCHAR" property="companyID" />
     <result column="TaskCategory" jdbcType="TINYINT" property="taskCategory" />
-    <result column="TaskName" jdbcType="VARCHAR" property="taskName" />
     <result column="ExpireDate" jdbcType="DATE" property="expireDate" />
     <result column="SubmitterId" jdbcType="VARCHAR" property="submitterId" />
     <result column="SubmitterDeptId" jdbcType="VARCHAR" property="submitterDeptId" />
+    <result column="Urgent" jdbcType="TINYINT" property="urgent" />
     <result column="SubmitTime" jdbcType="TIMESTAMP" property="submitTime" />
     <result column="SubmitterRemark" jdbcType="VARCHAR" property="submitterRemark" />
     <result column="TaskFormContent" jdbcType="CHAR" property="taskFormContent" />
     <result column="ChatHistory" jdbcType="CHAR" property="chatHistory" />
     <result column="TaskStatus" jdbcType="INTEGER" property="taskStatus" />
-    <result column="AgentUserId" jdbcType="VARCHAR" property="agentUserId" />
-    <result column="ProcessTime" jdbcType="TIMESTAMP" property="processTime" />
-    <result column="WFId" jdbcType="INTEGER" property="WFId" />
-    <result column="NodeId" jdbcType="INTEGER" property="nodeId" />
-    <result column="SOCSerial" jdbcType="VARCHAR" property="SOCSerial" />
-    <result column="ProcessWay" jdbcType="TINYINT" property="processWay" />
-    <result column="ProcessMonth" jdbcType="VARCHAR" property="processMonth" />
-    <result column="ProcessRemark" jdbcType="VARCHAR" property="processRemark" />
+    <result column="HandleUserId" jdbcType="VARCHAR" property="handleUserId" />
+    <result column="HandleTime" jdbcType="TIMESTAMP" property="handleTime" />
+    <result column="EmpSOCSerial" jdbcType="VARCHAR" property="empSOCSerial" />
+    <result column="HandleWay" jdbcType="TINYINT" property="handleWay" />
+    <result column="HandleMonth" jdbcType="VARCHAR" property="handleMonth" />
+    <result column="HandleRemark" jdbcType="VARCHAR" property="handleRemark" />
     <result column="RejectionRemark" jdbcType="VARCHAR" property="rejectionRemark" />
+    <result column="HandleStatus" jdbcType="TINYINT" property="handleStatus" />
     <result column="StrartHandleDate" jdbcType="DATE" property="strartHandleDate" />
     <result column="SendCheckDate" jdbcType="DATE" property="sendCheckDate" />
     <result column="FinishDate" jdbcType="DATE" property="finishDate" />
@@ -42,10 +40,10 @@
     <!--
       WARNING - @mbg.generated
     -->
-    EmployeeTaskId, CustomerId, EmpArchiveId, EmployeeID, CompanyID, TaskCategory, TaskName, 
-    ExpireDate, SubmitterId, SubmitterDeptId, SubmitTime, SubmitterRemark, TaskFormContent, 
-    ChatHistory, TaskStatus, AgentUserId, ProcessTime, WFId, NodeId, SOCSerial, ProcessWay, 
-    ProcessMonth, ProcessRemark, RejectionRemark, StrartHandleDate, SendCheckDate, FinishDate, 
-    IsActive, DataChange_CreateTime, DataChange_LastTime, CreatedBy, ModifiedBy
+    EmployeeTaskId, EntityId, CustomerId, EmpArchiveId, TaskCategory, ExpireDate, SubmitterId, 
+    SubmitterDeptId, Urgent, SubmitTime, SubmitterRemark, TaskFormContent, ChatHistory, 
+    TaskStatus, HandleUserId, HandleTime, EmpSOCSerial, HandleWay, HandleMonth, HandleRemark, 
+    RejectionRemark, HandleStatus, StrartHandleDate, SendCheckDate, FinishDate, IsActive, 
+    DataChange_CreateTime, DataChange_LastTime, CreatedBy, ModifiedBy
   </sql>
 </mapper>

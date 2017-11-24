@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.business.ISsStatementImpBusiness;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsStatementImp;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.business.SsStatementImpBusiness;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsStatementImp;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/socialsecurity/ssstatementimp")
 @Log("对账导入文件")
-public class SsStatementImpController extends BasicController<ISsStatementImpBusiness> {
+public class SsStatementImpController extends BasicController<SsStatementImpBusiness> {
 
 
   @RequestMapping(value = "/finds", method = {RequestMethod.GET, RequestMethod.POST})

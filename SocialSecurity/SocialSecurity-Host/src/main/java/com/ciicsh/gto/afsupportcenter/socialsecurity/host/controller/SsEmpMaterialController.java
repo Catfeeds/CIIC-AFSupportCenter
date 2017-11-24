@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.business.ISsEmpMaterialBusiness;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsEmpMaterial;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.business.SsEmpMaterialBusiness;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsEmpMaterial;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/socialsecurity/ssempmaterial")
 @Log("雇员材料收缴")
-public class SsEmpMaterialController extends BasicController<ISsEmpMaterialBusiness> {
+public class SsEmpMaterialController extends BasicController<SsEmpMaterialBusiness> {
 
 
   @RequestMapping(value = "/finds", method = {RequestMethod.GET, RequestMethod.POST})

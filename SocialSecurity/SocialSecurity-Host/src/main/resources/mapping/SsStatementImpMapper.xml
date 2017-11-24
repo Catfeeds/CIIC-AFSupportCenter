@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.SsStatementImpMapper">
-  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsStatementImp">
+  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsStatementImp">
     <!--
       WARNING - @mbg.generated
     -->
     <id column="StatementImpId" jdbcType="BIGINT" property="statementImpId" />
     <result column="StatementId" jdbcType="BIGINT" property="statementId" />
+    <result column="EmpNum" jdbcType="VARCHAR" property="empNum" />
+    <result column="EmpName" jdbcType="VARCHAR" property="empName" />
+    <result column="ChangeName" jdbcType="VARCHAR" property="changeName" />
+    <result column="BaseAmount" jdbcType="DECIMAL" property="baseAmount" />
+    <result column="SSType" jdbcType="TINYINT" property="SSType" />
+    <result column="SSTypeName" jdbcType="VARCHAR" property="SSTypeName" />
+    <result column="ComAmount" jdbcType="DECIMAL" property="comAmount" />
+    <result column="EmpAmount" jdbcType="DECIMAL" property="empAmount" />
+    <result column="ComCompensateAmount" jdbcType="DECIMAL" property="comCompensateAmount" />
+    <result column="EmpCompensateAmount" jdbcType="DECIMAL" property="empCompensateAmount" />
+    <result column="OnePayment" jdbcType="DECIMAL" property="onePayment" />
     <result column="IsActive" jdbcType="BIT" property="isActive" />
     <result column="DataChange_CreateTime" jdbcType="TIMESTAMP" property="dataChangeCreateTime" />
     <result column="DataChange_lastTime" jdbcType="TIMESTAMP" property="dataChangelastTime" />
@@ -17,7 +28,8 @@
     <!--
       WARNING - @mbg.generated
     -->
-    StatementImpId, StatementId, IsActive, DataChange_CreateTime, DataChange_lastTime, 
-    CreatedBy, ModifiedBy
+    StatementImpId, StatementId, EmpNum, EmpName, ChangeName, BaseAmount, SSType, SSTypeName, 
+    ComAmount, EmpAmount, ComCompensateAmount, EmpCompensateAmount, OnePayment, IsActive, 
+    DataChange_CreateTime, DataChange_lastTime, CreatedBy, ModifiedBy
   </sql>
 </mapper>

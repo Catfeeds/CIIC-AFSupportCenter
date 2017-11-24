@@ -1,11 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.host.controller;
 
-import java.util.List;
-
-import com.ciicsh.gto.afsupportcenter.socialsecurity.business.ISsEmployeeTaskBusiness;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsEmployeeTask;
-import org.springframework.web.bind.annotation.*;
-
+import com.ciicsh.gto.afsupportcenter.socialsecurity.business.SsEmployeeTaskBusiness;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsEmployeeTask;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -14,6 +10,12 @@ import com.ciicsh.gto.afsupportcenter.util.tips.PageTip;
 import com.ciicsh.gto.afsupportcenter.util.tips.Tip;
 import com.ciicsh.gto.afsupportcenter.util.tips.TipKit;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 《本地社保的雇员任务单》微服务控制器
@@ -21,7 +23,7 @@ import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 @RestController
 @RequestMapping("/api/socialsecurity/ssemployeetask")
 @Log("本地社保的雇员任务单")
-public class SsEmployeeTaskController extends BasicController<ISsEmployeeTaskBusiness> {
+public class SsEmployeeTaskController extends BasicController<SsEmployeeTaskBusiness> {
 
 
   @RequestMapping(value = "/finds", method = {RequestMethod.GET, RequestMethod.POST})

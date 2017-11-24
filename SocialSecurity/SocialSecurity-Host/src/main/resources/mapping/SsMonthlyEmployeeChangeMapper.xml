@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.SsMonthlyEmployeeChangeMapper">
-  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsMonthlyEmployeeChange">
+  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsMonthlyEmployeeChange">
     <!--
       WARNING - @mbg.generated
     -->
     <id column="MonthlyEmployeeChangeId" jdbcType="BIGINT" property="monthlyEmployeeChangeId" />
-    <result column="SOCMonth" jdbcType="VARCHAR" property="SOCMonth" />
+    <result column="SSMonth" jdbcType="VARCHAR" property="SSMonth" />
     <result column="LastComputeTime" jdbcType="TIMESTAMP" property="lastComputeTime" />
     <result column="ComputeUserId" jdbcType="VARCHAR" property="computeUserId" />
     <result column="ComAccountId" jdbcType="VARCHAR" property="comAccountId" />
@@ -20,7 +20,7 @@
     <!--
       WARNING - @mbg.generated
     -->
-    MonthlyEmployeeChangeId, SOCMonth, LastComputeTime, ComputeUserId, ComAccountId, 
-    IsActive, DataChange_CreateTime, DataChange_LastTime, CreatedBy, ModifiedBy
+    MonthlyEmployeeChangeId, SSMonth, LastComputeTime, ComputeUserId, ComAccountId, IsActive, 
+    DataChange_CreateTime, DataChange_LastTime, CreatedBy, ModifiedBy
   </sql>
 </mapper>

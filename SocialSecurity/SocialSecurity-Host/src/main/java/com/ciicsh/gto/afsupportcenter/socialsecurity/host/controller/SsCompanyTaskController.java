@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.business.ISsCompanyTaskBusiness;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsCompanyTask;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.business.SsCompanyTaskBusiness;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsCompanyTask;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/socialsecurity/sscompanytask")
 @Log("独立库客户任务单")
-public class SsCompanyTaskController extends BasicController<ISsCompanyTaskBusiness> {
+public class SsCompanyTaskController extends BasicController<SsCompanyTaskBusiness> {
 
 
   @RequestMapping(value = "/finds", method = {RequestMethod.GET, RequestMethod.POST})

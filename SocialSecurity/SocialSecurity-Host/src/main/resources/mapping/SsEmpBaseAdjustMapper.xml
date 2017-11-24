@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.SsEmpBaseAdjustMapper">
-  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsEmpBaseAdjust">
+  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsEmpBaseAdjust">
     <!--
       WARNING - @mbg.generated
     -->
@@ -15,7 +15,7 @@
     <result column="EndMonth" jdbcType="VARCHAR" property="endMonth" />
     <result column="ComDiffSumAmount" jdbcType="DECIMAL" property="comDiffSumAmount" />
     <result column="EmpDiffSumAmount" jdbcType="DECIMAL" property="empDiffSumAmount" />
-    <result column="ComEmpSumDiffAmount" jdbcType="DECIMAL" property="comEmpSumDiffAmount" />
+    <result column="ComEmpSumDiffAmount1" jdbcType="DECIMAL" property="comEmpSumDiffAmount1" />
     <result column="IsActive" jdbcType="BIT" property="isActive" />
     <result column="DataChange_CreateTime" jdbcType="TIMESTAMP" property="dataChangeCreateTime" />
     <result column="DataChange_LastTime" jdbcType="TIMESTAMP" property="dataChangeLastTime" />
@@ -27,7 +27,7 @@
       WARNING - @mbg.generated
     -->
     EmpBaseAdjustId, EmpArchivedId, EmployeeTaskId, ProcessWay, NewBaseAmount, SOCMonth, 
-    StartMonth, EndMonth, ComDiffSumAmount, EmpDiffSumAmount, ComEmpSumDiffAmount, IsActive, 
+    StartMonth, EndMonth, ComDiffSumAmount, EmpDiffSumAmount, ComEmpSumDiffAmount1, IsActive, 
     DataChange_CreateTime, DataChange_LastTime, CreatedBy, ModifiedBy
   </sql>
 </mapper>

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.SsEmpMaterialMapper">
-  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsEmpMaterial">
+  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsEmpMaterial">
     <!--
       WARNING - @mbg.generated
     -->
     <id column="EmpMaterialId" jdbcType="BIGINT" property="empMaterialId" />
     <result column="EmployeeTaskId" jdbcType="VARCHAR" property="employeeTaskId" />
-    <result column="材料类型" jdbcType="TINYINT" property="材料类型" />
-    <result column="材料名称" jdbcType="VARCHAR" property="材料名称" />
-    <result column="材料提交时间" jdbcType="TIMESTAMP" property="材料提交时间" />
-    <result column="材料收到时间" jdbcType="TIMESTAMP" property="材料收到时间" />
-    <result column="备注说明" jdbcType="VARCHAR" property="备注说明" />
-    <result column="材料收到状态" jdbcType="TINYINT" property="材料收到状态" />
+    <result column="MaterialType" jdbcType="TINYINT" property="materialType" />
+    <result column="MaterialName" jdbcType="VARCHAR" property="materialName" />
+    <result column="SubmitTime" jdbcType="TIMESTAMP" property="submitTime" />
+    <result column="ReceiveTime" jdbcType="TIMESTAMP" property="receiveTime" />
+    <result column="Remark" jdbcType="VARCHAR" property="remark" />
+    <result column="Status" jdbcType="TINYINT" property="status" />
     <result column="IsActive" jdbcType="BIT" property="isActive" />
     <result column="DataChange_CreateTime" jdbcType="TIMESTAMP" property="dataChangeCreateTime" />
     <result column="DataChange_LastTime" jdbcType="TIMESTAMP" property="dataChangeLastTime" />
@@ -23,7 +23,8 @@
     <!--
       WARNING - @mbg.generated
     -->
-    EmpMaterialId, EmployeeTaskId, 材料类型, 材料名称, 材料提交时间, 材料收到时间, 备注说明, 材料收到状态, IsActive, 
-    DataChange_CreateTime, DataChange_LastTime, CreatedBy, ModifiedBy
+    EmpMaterialId, EmployeeTaskId, MaterialType, MaterialName, SubmitTime, ReceiveTime, 
+    Remark, Status, IsActive, DataChange_CreateTime, DataChange_LastTime, CreatedBy, 
+    ModifiedBy
   </sql>
 </mapper>

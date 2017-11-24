@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.business.ISsEmpRefundBusiness;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsEmpRefund;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.business.SsEmpRefundBusiness;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsEmpRefund;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/socialsecurity/ssemprefund")
 @Log("雇员社保退账受理表")
-public class SsEmpRefundController extends BasicController<ISsEmpRefundBusiness> {
+public class SsEmpRefundController extends BasicController<SsEmpRefundBusiness> {
 
 
   @RequestMapping(value = "/finds", method = {RequestMethod.GET, RequestMethod.POST})

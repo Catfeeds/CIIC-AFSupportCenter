@@ -1,17 +1,17 @@
 ###################  项目启动端口  ###################
 server:
-  port: 8082
+  port: 8063
   context-path: /
 ###################  spring 配置  ###################
 spring:
   application:
-    name: service-socialsecurity
+    name: support-center-social-security
   profiles:
     active: develop
   datasource:
     druid:
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://172.16.9.15:3306/gtobackdb?useUnicode=true&amp;characterEncoding=UTF-8
+      url: jdbc:mysql://172.16.9.15:3306/gtobusinessdb?useUnicode=true&amp;characterEncoding=UTF-8
       username: root
       password: a111111
       max-active: 20
@@ -26,7 +26,7 @@ spring:
 
 ###################  mybatis 配置  ###################
 mybatis:
-  type-aliases-package: com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model
+  type-aliases-package: com.ciicsh.gto.afsupportcenter.socialsecurity.entity
   mapper-locations: classpath:mapping*/*.xml
 # https://github.com/abel533/Mapper/tree/master/wiki/mapper3
 mapper:

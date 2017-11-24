@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.dao;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsStatementImp;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsStatementImp;
 import tk.mybatis.mapper.common.Mapper;
 
 public interface SsStatementImpMapper extends Mapper<SsStatementImp> {

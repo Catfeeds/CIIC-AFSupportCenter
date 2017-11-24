@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.business.ISsMonthlyEmployeeChangeBusiness;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsMonthlyEmployeeChange;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.business.SsMonthlyEmployeeChangeBusiness;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsMonthlyEmployeeChange;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/socialsecurity/ssmonthlyemployeechange")
 @Log("雇员月度变更主表")
-public class SsMonthlyEmployeeChangeController extends BasicController<ISsMonthlyEmployeeChangeBusiness> {
+public class SsMonthlyEmployeeChangeController extends BasicController<SsMonthlyEmployeeChangeBusiness> {
 
 
   @RequestMapping(value = "/finds", method = {RequestMethod.GET, RequestMethod.POST})

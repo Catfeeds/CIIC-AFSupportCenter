@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.business.ISsEmpTaskPeriodBusiness;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsEmpTaskPeriod;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.business.SsEmpTaskPeriodBusiness;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsEmpTaskPeriod;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/socialsecurity/ssemptaskperiod")
 @Log("任务单费用段表")
-public class SsEmpTaskPeriodController extends BasicController<ISsEmpTaskPeriodBusiness> {
+public class SsEmpTaskPeriodController extends BasicController<SsEmpTaskPeriodBusiness> {
 
 
   @RequestMapping(value = "/finds", method = {RequestMethod.GET, RequestMethod.POST})

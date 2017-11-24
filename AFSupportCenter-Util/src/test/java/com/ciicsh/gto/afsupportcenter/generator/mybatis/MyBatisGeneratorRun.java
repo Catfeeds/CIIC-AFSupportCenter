@@ -33,9 +33,9 @@ public class MyBatisGeneratorRun {
     }
 
     enum Modal {
-        HealtHmedical("config/generatorConfig-gtobackdb-healthmedical.xml"), // 健康医疗
-        HouseFund("config/generatorConfig-gtobackdb-housefund.xml"), // 公积金
-        SocialSecurity("config/generatorConfig-gtobackdb-socialsecurity.xml"), // 社保
+        HealtHmedical("config/generatorConfig-gtobusinessdb-healthmedical.xml"), // 健康医疗
+        HouseFund("config/generatorConfig-gtobusinessdb-housefund.xml"), // 公积金
+        SocialSecurity("config/generatorConfig-gtobusinessdb-socialsecurity.xml"), // 社保
         ;
 
         public final String config;

@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.business.ISsAdditionalFeeBusiness;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsAdditionalFee;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.business.SsAdditionalFeeBusiness;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsAdditionalFee;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/socialsecurity/ssadditionalfee")
 @Log("一次性社保")
-public class SsAdditionalFeeController extends BasicController<ISsAdditionalFeeBusiness> {
+public class SsAdditionalFeeController extends BasicController<SsAdditionalFeeBusiness> {
 
 
   @RequestMapping(value = "/finds", method = {RequestMethod.GET, RequestMethod.POST})

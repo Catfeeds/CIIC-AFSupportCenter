@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.business.ISsPaymentBusiness;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsPayment;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.business.SsPaymentBusiness;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsPayment;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/socialsecurity/sspayment")
 @Log("本地社保应付金额交易记录主表,每月1号生成此表记录，用户也可以人工生成此表记录")
-public class SsPaymentController extends BasicController<ISsPaymentBusiness> {
+public class SsPaymentController extends BasicController<SsPaymentBusiness> {
 
 
   @RequestMapping(value = "/finds", method = {RequestMethod.GET, RequestMethod.POST})

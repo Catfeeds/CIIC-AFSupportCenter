@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.business.ISsMonthlyCompanyPayBusiness;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsMonthlyCompanyPay;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.business.SsMonthlyCompanyPayBusiness;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsMonthlyCompanyPay;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/socialsecurity/ssmonthlycompanypay")
 @Log("月度缴费明细报表")
-public class SsMonthlyCompanyPayController extends BasicController<ISsMonthlyCompanyPayBusiness> {
+public class SsMonthlyCompanyPayController extends BasicController<SsMonthlyCompanyPayBusiness> {
 
 
   @RequestMapping(value = "/finds", method = {RequestMethod.GET, RequestMethod.POST})

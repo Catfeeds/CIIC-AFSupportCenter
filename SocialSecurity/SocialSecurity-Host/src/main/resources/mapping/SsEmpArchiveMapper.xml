@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.SsEmpArchiveMapper">
-  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsEmpArchive">
+  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsEmpArchive">
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="EmpArchiveId" jdbcType="VARCHAR" property="empArchiveId" />
+    <id column="EmpArchiveId" jdbcType="BIGINT" property="empArchiveId" />
+    <result column="EntityId" jdbcType="VARCHAR" property="entityId" />
     <result column="CustomerId" jdbcType="VARCHAR" property="customerId" />
     <result column="EmployeeId" jdbcType="VARCHAR" property="employeeId" />
     <result column="CompanyId" jdbcType="VARCHAR" property="companyId" />
     <result column="ComAccountId" jdbcType="VARCHAR" property="comAccountId" />
     <result column="SOCSerial" jdbcType="VARCHAR" property="SOCSerial" />
+    <result column="Salary" jdbcType="DECIMAL" property="salary" />
     <result column="CreateAFDate" jdbcType="DATE" property="createAFDate" />
     <result column="ArchivePlace" jdbcType="VARCHAR" property="archivePlace" />
     <result column="EmploymentStatus" jdbcType="BIT" property="employmentStatus" />
     <result column="OnboardDate" jdbcType="DATE" property="onboardDate" />
     <result column="ExitDate" jdbcType="DATE" property="exitDate" />
-    <result column="PersonalPropertyId" jdbcType="VARCHAR" property="personalPropertyId" />
+    <result column="EmployeeClassify" jdbcType="TINYINT" property="employeeClassify" />
     <result column="ArchiveStatus" jdbcType="BIT" property="archiveStatus" />
     <result column="ArchiveTaskStatus" jdbcType="BIT" property="archiveTaskStatus" />
     <result column="StartMonth" jdbcType="VARCHAR" property="startMonth" />
@@ -32,9 +34,9 @@
     <!--
       WARNING - @mbg.generated
     -->
-    EmpArchiveId, CustomerId, EmployeeId, CompanyId, ComAccountId, SOCSerial, CreateAFDate, 
-    ArchivePlace, EmploymentStatus, OnboardDate, ExitDate, PersonalPropertyId, ArchiveStatus, 
-    ArchiveTaskStatus, StartMonth, EndMonth, SOCMonth, IsActive, DataChange_CreateTime, 
+    EmpArchiveId, EntityId, CustomerId, EmployeeId, CompanyId, ComAccountId, SOCSerial, 
+    Salary, CreateAFDate, ArchivePlace, EmploymentStatus, OnboardDate, ExitDate, EmployeeClassify, 
+    ArchiveStatus, ArchiveTaskStatus, StartMonth, EndMonth, SOCMonth, IsActive, DataChange_CreateTime, 
     DataChange_LastTime, CreatedBy, ModifiedBy
   </sql>
 </mapper>

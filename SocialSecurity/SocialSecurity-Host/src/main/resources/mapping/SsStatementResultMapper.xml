@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.SsStatementResultMapper">
-  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.dao.model.SsStatementResult">
+  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.entity.SsStatementResult">
     <!--
       WARNING - @mbg.generated
     -->
     <id column="StatementDetailId" jdbcType="BIGINT" property="statementDetailId" />
     <result column="StatementId" jdbcType="BIGINT" property="statementId" />
     <result column="EmployeeId" jdbcType="VARCHAR" property="employeeId" />
-    <result column="SocialSecurityType" jdbcType="TINYINT" property="socialSecurityType" />
     <result column="ProjectName" jdbcType="VARCHAR" property="projectName" />
+    <result column="SSType" jdbcType="TINYINT" property="SSType" />
     <result column="ImpAmount" jdbcType="DECIMAL" property="impAmount" />
     <result column="SOCAmount" jdbcType="DECIMAL" property="SOCAmount" />
     <result column="DiffAmount" jdbcType="DECIMAL" property="diffAmount" />
@@ -23,8 +23,7 @@
     <!--
       WARNING - @mbg.generated
     -->
-    StatementDetailId, StatementId, EmployeeId, SocialSecurityType, ProjectName, ImpAmount, 
-    SOCAmount, DiffAmount, IsActive, DataChange_CreateTime, DataChange_lastTime, CreatedBy, 
-    ModifiedBy
+    StatementDetailId, StatementId, EmployeeId, ProjectName, SSType, ImpAmount, SOCAmount, 
+    DiffAmount, IsActive, DataChange_CreateTime, DataChange_lastTime, CreatedBy, ModifiedBy
   </sql>
 </mapper>
