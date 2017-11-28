@@ -16,16 +16,10 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-            <version>3.4.4</version>
-        </dependency>
-    </dependencies>
+
 
     <build>
-        <finalName>AFSupportCenter-Util</finalName>
+        <finalName>gt1.afsupportcenter.afsupportcenter-util</finalName>
     </build>
 
 
