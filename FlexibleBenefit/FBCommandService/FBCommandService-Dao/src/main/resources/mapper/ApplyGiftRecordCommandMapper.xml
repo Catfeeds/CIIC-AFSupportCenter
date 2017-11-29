@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.dao.ApplyGiftRecordCommandMapper">
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.ApplyGiftRecordPO">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="apply_record_detail_id" jdbcType="INTEGER" property="applyRecordDetailId"/>
+        <result column="gift_id" jdbcType="INTEGER" property="giftId"/>
+        <result column="apply_num" jdbcType="INTEGER" property="applyNum"/>
+        <result column="is_active" jdbcType="BIT" property="isActive"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime"/>
+        <result column="created_by" jdbcType="VARCHAR" property="createdBy"/>
+        <result column="modified_by" jdbcType="VARCHAR" property="modifiedBy"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, apply_record_detail_id, gift_id, apply_num, is_active, create_time, modified_time, 
+    created_by, modified_by
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from fb_apply_gift_record
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fb_apply_gift_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.ApplyGiftRecordPO">
+    insert into fb_apply_gift_record (id, apply_record_detail_id, gift_id, 
+      apply_num, is_active, create_time, 
+      modified_time, created_by, modified_by
+      )
+    values (#{id,jdbcType=INTEGER}, #{applyRecordDetailId,jdbcType=INTEGER}, #{giftId,jdbcType=INTEGER}, 
+      #{applyNum,jdbcType=INTEGER}, #{isActive,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifiedTime,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=VARCHAR}, #{modifiedBy,jdbcType=VARCHAR}
+      )
+  </insert>
+
+    <insert id="insertSelective"
+            parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.ApplyGiftRecordPO">
+        insert into fb_apply_gift_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="applyRecordDetailId != null">
+                apply_record_detail_id,
+            </if>
+            <if test="giftId != null">
+                gift_id,
+            </if>
+            <if test="applyNum != null">
+                apply_num,
+            </if>
+            <if test="isActive != null">
+                is_active,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="modifiedTime != null">
+                modified_time,
+            </if>
+            <if test="createdBy != null">
+                created_by,
+            </if>
+            <if test="modifiedBy != null">
+                modified_by,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="applyRecordDetailId != null">
+                #{applyRecordDetailId,jdbcType=INTEGER},
+            </if>
+            <if test="giftId != null">
+                #{giftId,jdbcType=INTEGER},
+            </if>
+            <if test="applyNum != null">
+                #{applyNum,jdbcType=INTEGER},
+            </if>
+            <if test="isActive != null">
+                #{isActive,jdbcType=BIT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifiedTime != null">
+                #{modifiedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdBy != null">
+                #{createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="modifiedBy != null">
+                #{modifiedBy,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.ApplyGiftRecordPO">
+        update fb_apply_gift_record
+        <set>
+            <if test="applyRecordDetailId != null">
+                apply_record_detail_id = #{applyRecordDetailId,jdbcType=INTEGER},
+            </if>
+            <if test="giftId != null">
+                gift_id = #{giftId,jdbcType=INTEGER},
+            </if>
+            <if test="applyNum != null">
+                apply_num = #{applyNum,jdbcType=INTEGER},
+            </if>
+            <if test="isActive != null">
+                is_active = #{isActive,jdbcType=BIT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifiedTime != null">
+                modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdBy != null">
+                created_by = #{createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="modifiedBy != null">
+                modified_by = #{modifiedBy,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.ApplyGiftRecordPO">
+    update fb_apply_gift_record
+    set apply_record_detail_id = #{applyRecordDetailId,jdbcType=INTEGER},
+      gift_id = #{giftId,jdbcType=INTEGER},
+      apply_num = #{applyNum,jdbcType=INTEGER},
+      is_active = #{isActive,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+      created_by = #{createdBy,jdbcType=VARCHAR},
+      modified_by = #{modifiedBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

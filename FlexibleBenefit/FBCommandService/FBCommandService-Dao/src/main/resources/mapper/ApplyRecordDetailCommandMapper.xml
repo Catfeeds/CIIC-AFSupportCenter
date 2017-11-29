@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.dao.ApplyRecordDetailCommandMapper">
+  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.ApplyRecordDetailPO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="apply_record_id" jdbcType="INTEGER" property="applyRecordId" />
+    <result column="presenting_object_type" jdbcType="TINYINT" property="presentingObjectType" />
+    <result column="applicant_type" jdbcType="TINYINT" property="applicantType" />
+    <result column="applicant" jdbcType="VARCHAR" property="applicant" />
+    <result column="applicant_extension" jdbcType="VARCHAR" property="applicantExtension" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    <result column="company_address" jdbcType="VARCHAR" property="companyAddress" />
+    <result column="company_telephone" jdbcType="INTEGER" property="companyTelephone" />
+    <result column="company_fax" jdbcType="INTEGER" property="companyFax" />
+    <result column="contact_name" jdbcType="VARCHAR" property="contactName" />
+    <result column="contact_deptname" jdbcType="VARCHAR" property="contactDeptname" />
+    <result column="contact_position" jdbcType="VARCHAR" property="contactPosition" />
+    <result column="contact_brithday" jdbcType="DATE" property="contactBrithday" />
+    <result column="contact_phonenum" jdbcType="INTEGER" property="contactPhonenum" />
+    <result column="contact_email" jdbcType="VARCHAR" property="contactEmail" />
+    <result column="contact_home_postcode" jdbcType="INTEGER" property="contactHomePostcode" />
+    <result column="contact_home_telephone" jdbcType="INTEGER" property="contactHomeTelephone" />
+    <result column="contact_home_address" jdbcType="VARCHAR" property="contactHomeAddress" />
+    <result column="extension_number" jdbcType="INTEGER" property="extensionNumber" />
+    <result column="apply_reason" jdbcType="VARCHAR" property="applyReason" />
+    <result column="approval_status" jdbcType="TINYINT" property="approvalStatus" />
+    <result column="send_status" jdbcType="TINYINT" property="sendStatus" />
+    <result column="send_time" jdbcType="TIMESTAMP" property="sendTime" />
+    <result column="is_active" jdbcType="BIT" property="isActive" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime" />
+    <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+    <result column="modified_by" jdbcType="VARCHAR" property="modifiedBy" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, apply_record_id, presenting_object_type, applicant_type, applicant, applicant_extension, 
+    company_name, company_address, company_telephone, company_fax, contact_name, contact_deptname, 
+    contact_position, contact_brithday, contact_phonenum, contact_email, contact_home_postcode, 
+    contact_home_telephone, contact_home_address, extension_number, apply_reason, approval_status, 
+    send_status, send_time, is_active, create_time, modified_time, created_by, modified_by
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fb_apply_record_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fb_apply_record_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.ApplyRecordDetailPO">
+    insert into fb_apply_record_detail (id, apply_record_id, presenting_object_type, 
+      applicant_type, applicant, applicant_extension, 
+      company_name, company_address, company_telephone, 
+      company_fax, contact_name, contact_deptname, 
+      contact_position, contact_brithday, contact_phonenum, 
+      contact_email, contact_home_postcode, contact_home_telephone, 
+      contact_home_address, extension_number, apply_reason, 
+      approval_status, send_status, send_time, 
+      is_active, create_time, modified_time, 
+      created_by, modified_by)
+    values (#{id,jdbcType=INTEGER}, #{applyRecordId,jdbcType=INTEGER}, #{presentingObjectType,jdbcType=TINYINT}, 
+      #{applicantType,jdbcType=TINYINT}, #{applicant,jdbcType=VARCHAR}, #{applicantExtension,jdbcType=VARCHAR}, 
+      #{companyName,jdbcType=VARCHAR}, #{companyAddress,jdbcType=VARCHAR}, #{companyTelephone,jdbcType=INTEGER}, 
+      #{companyFax,jdbcType=INTEGER}, #{contactName,jdbcType=VARCHAR}, #{contactDeptname,jdbcType=VARCHAR}, 
+      #{contactPosition,jdbcType=VARCHAR}, #{contactBrithday,jdbcType=DATE}, #{contactPhonenum,jdbcType=INTEGER}, 
+      #{contactEmail,jdbcType=VARCHAR}, #{contactHomePostcode,jdbcType=INTEGER}, #{contactHomeTelephone,jdbcType=INTEGER}, 
+      #{contactHomeAddress,jdbcType=VARCHAR}, #{extensionNumber,jdbcType=INTEGER}, #{applyReason,jdbcType=VARCHAR}, 
+      #{approvalStatus,jdbcType=TINYINT}, #{sendStatus,jdbcType=TINYINT}, #{sendTime,jdbcType=TIMESTAMP}, 
+      #{isActive,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{modifiedTime,jdbcType=TIMESTAMP}, 
+      #{createdBy,jdbcType=VARCHAR}, #{modifiedBy,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.ApplyRecordDetailPO">
+    insert into fb_apply_record_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="applyRecordId != null">
+        apply_record_id,
+      </if>
+      <if test="presentingObjectType != null">
+        presenting_object_type,
+      </if>
+      <if test="applicantType != null">
+        applicant_type,
+      </if>
+      <if test="applicant != null">
+        applicant,
+      </if>
+      <if test="applicantExtension != null">
+        applicant_extension,
+      </if>
+      <if test="companyName != null">
+        company_name,
+      </if>
+      <if test="companyAddress != null">
+        company_address,
+      </if>
+      <if test="companyTelephone != null">
+        company_telephone,
+      </if>
+      <if test="companyFax != null">
+        company_fax,
+      </if>
+      <if test="contactName != null">
+        contact_name,
+      </if>
+      <if test="contactDeptname != null">
+        contact_deptname,
+      </if>
+      <if test="contactPosition != null">
+        contact_position,
+      </if>
+      <if test="contactBrithday != null">
+        contact_brithday,
+      </if>
+      <if test="contactPhonenum != null">
+        contact_phonenum,
+      </if>
+      <if test="contactEmail != null">
+        contact_email,
+      </if>
+      <if test="contactHomePostcode != null">
+        contact_home_postcode,
+      </if>
+      <if test="contactHomeTelephone != null">
+        contact_home_telephone,
+      </if>
+      <if test="contactHomeAddress != null">
+        contact_home_address,
+      </if>
+      <if test="extensionNumber != null">
+        extension_number,
+      </if>
+      <if test="applyReason != null">
+        apply_reason,
+      </if>
+      <if test="approvalStatus != null">
+        approval_status,
+      </if>
+      <if test="sendStatus != null">
+        send_status,
+      </if>
+      <if test="sendTime != null">
+        send_time,
+      </if>
+      <if test="isActive != null">
+        is_active,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifiedTime != null">
+        modified_time,
+      </if>
+      <if test="createdBy != null">
+        created_by,
+      </if>
+      <if test="modifiedBy != null">
+        modified_by,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="applyRecordId != null">
+        #{applyRecordId,jdbcType=INTEGER},
+      </if>
+      <if test="presentingObjectType != null">
+        #{presentingObjectType,jdbcType=TINYINT},
+      </if>
+      <if test="applicantType != null">
+        #{applicantType,jdbcType=TINYINT},
+      </if>
+      <if test="applicant != null">
+        #{applicant,jdbcType=VARCHAR},
+      </if>
+      <if test="applicantExtension != null">
+        #{applicantExtension,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null">
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyAddress != null">
+        #{companyAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="companyTelephone != null">
+        #{companyTelephone,jdbcType=INTEGER},
+      </if>
+      <if test="companyFax != null">
+        #{companyFax,jdbcType=INTEGER},
+      </if>
+      <if test="contactName != null">
+        #{contactName,jdbcType=VARCHAR},
+      </if>
+      <if test="contactDeptname != null">
+        #{contactDeptname,jdbcType=VARCHAR},
+      </if>
+      <if test="contactPosition != null">
+        #{contactPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="contactBrithday != null">
+        #{contactBrithday,jdbcType=DATE},
+      </if>
+      <if test="contactPhonenum != null">
+        #{contactPhonenum,jdbcType=INTEGER},
+      </if>
+      <if test="contactEmail != null">
+        #{contactEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="contactHomePostcode != null">
+        #{contactHomePostcode,jdbcType=INTEGER},
+      </if>
+      <if test="contactHomeTelephone != null">
+        #{contactHomeTelephone,jdbcType=INTEGER},
+      </if>
+      <if test="contactHomeAddress != null">
+        #{contactHomeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="extensionNumber != null">
+        #{extensionNumber,jdbcType=INTEGER},
+      </if>
+      <if test="applyReason != null">
+        #{applyReason,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalStatus != null">
+        #{approvalStatus,jdbcType=TINYINT},
+      </if>
+      <if test="sendStatus != null">
+        #{sendStatus,jdbcType=TINYINT},
+      </if>
+      <if test="sendTime != null">
+        #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isActive != null">
+        #{isActive,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedTime != null">
+        #{modifiedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdBy != null">
+        #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedBy != null">
+        #{modifiedBy,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.ApplyRecordDetailPO">
+    update fb_apply_record_detail
+    <set>
+      <if test="applyRecordId != null">
+        apply_record_id = #{applyRecordId,jdbcType=INTEGER},
+      </if>
+      <if test="presentingObjectType != null">
+        presenting_object_type = #{presentingObjectType,jdbcType=TINYINT},
+      </if>
+      <if test="applicantType != null">
+        applicant_type = #{applicantType,jdbcType=TINYINT},
+      </if>
+      <if test="applicant != null">
+        applicant = #{applicant,jdbcType=VARCHAR},
+      </if>
+      <if test="applicantExtension != null">
+        applicant_extension = #{applicantExtension,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null">
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyAddress != null">
+        company_address = #{companyAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="companyTelephone != null">
+        company_telephone = #{companyTelephone,jdbcType=INTEGER},
+      </if>
+      <if test="companyFax != null">
+        company_fax = #{companyFax,jdbcType=INTEGER},
+      </if>
+      <if test="contactName != null">
+        contact_name = #{contactName,jdbcType=VARCHAR},
+      </if>
+      <if test="contactDeptname != null">
+        contact_deptname = #{contactDeptname,jdbcType=VARCHAR},
+      </if>
+      <if test="contactPosition != null">
+        contact_position = #{contactPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="contactBrithday != null">
+        contact_brithday = #{contactBrithday,jdbcType=DATE},
+      </if>
+      <if test="contactPhonenum != null">
+        contact_phonenum = #{contactPhonenum,jdbcType=INTEGER},
+      </if>
+      <if test="contactEmail != null">
+        contact_email = #{contactEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="contactHomePostcode != null">
+        contact_home_postcode = #{contactHomePostcode,jdbcType=INTEGER},
+      </if>
+      <if test="contactHomeTelephone != null">
+        contact_home_telephone = #{contactHomeTelephone,jdbcType=INTEGER},
+      </if>
+      <if test="contactHomeAddress != null">
+        contact_home_address = #{contactHomeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="extensionNumber != null">
+        extension_number = #{extensionNumber,jdbcType=INTEGER},
+      </if>
+      <if test="applyReason != null">
+        apply_reason = #{applyReason,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalStatus != null">
+        approval_status = #{approvalStatus,jdbcType=TINYINT},
+      </if>
+      <if test="sendStatus != null">
+        send_status = #{sendStatus,jdbcType=TINYINT},
+      </if>
+      <if test="sendTime != null">
+        send_time = #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isActive != null">
+        is_active = #{isActive,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedTime != null">
+        modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdBy != null">
+        created_by = #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedBy != null">
+        modified_by = #{modifiedBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.ApplyRecordDetailPO">
+    update fb_apply_record_detail
+    set apply_record_id = #{applyRecordId,jdbcType=INTEGER},
+      presenting_object_type = #{presentingObjectType,jdbcType=TINYINT},
+      applicant_type = #{applicantType,jdbcType=TINYINT},
+      applicant = #{applicant,jdbcType=VARCHAR},
+      applicant_extension = #{applicantExtension,jdbcType=VARCHAR},
+      company_name = #{companyName,jdbcType=VARCHAR},
+      company_address = #{companyAddress,jdbcType=VARCHAR},
+      company_telephone = #{companyTelephone,jdbcType=INTEGER},
+      company_fax = #{companyFax,jdbcType=INTEGER},
+      contact_name = #{contactName,jdbcType=VARCHAR},
+      contact_deptname = #{contactDeptname,jdbcType=VARCHAR},
+      contact_position = #{contactPosition,jdbcType=VARCHAR},
+      contact_brithday = #{contactBrithday,jdbcType=DATE},
+      contact_phonenum = #{contactPhonenum,jdbcType=INTEGER},
+      contact_email = #{contactEmail,jdbcType=VARCHAR},
+      contact_home_postcode = #{contactHomePostcode,jdbcType=INTEGER},
+      contact_home_telephone = #{contactHomeTelephone,jdbcType=INTEGER},
+      contact_home_address = #{contactHomeAddress,jdbcType=VARCHAR},
+      extension_number = #{extensionNumber,jdbcType=INTEGER},
+      apply_reason = #{applyReason,jdbcType=VARCHAR},
+      approval_status = #{approvalStatus,jdbcType=TINYINT},
+      send_status = #{sendStatus,jdbcType=TINYINT},
+      send_time = #{sendTime,jdbcType=TIMESTAMP},
+      is_active = #{isActive,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+      created_by = #{createdBy,jdbcType=VARCHAR},
+      modified_by = #{modifiedBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
