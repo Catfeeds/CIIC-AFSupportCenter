@@ -4,13 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
-        <artifactId>gt1-afsupportcenter</artifactId>
+        <artifactId>parent</artifactId>
         <version>1.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>gt1-afsupportcenter-util</artifactId>
+    <groupId>com.ciicsh</groupId>
+    <artifactId>afsupportcenter-util</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
 
     <dependencies>
         <!--eureka server -->
