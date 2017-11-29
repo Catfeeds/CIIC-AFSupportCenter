@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
-        <artifactId>parent</artifactId>
+        <artifactId>afsupportcenter-parent</artifactId>
         <version>1.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
