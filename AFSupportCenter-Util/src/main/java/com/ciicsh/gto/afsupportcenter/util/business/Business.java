@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 import tk.mybatis.mapper.common.BaseMapper;
 import tk.mybatis.mapper.entity.EntityColumn;
@@ -86,6 +87,7 @@ public class Business<T, M extends BaseMapper<T>> {
      *
      * @param entity
      */
+    @Transactional
     public int save(T entity) {
         handleInsert(entity);
         return baseMapper.insertSelective(entity);
@@ -96,6 +98,7 @@ public class Business<T, M extends BaseMapper<T>> {
      *
      * @param entity
      */
+    @Transactional
     public int delete(T entity) {
         handleDelete(entity);
         return update(entity);
@@ -106,6 +109,7 @@ public class Business<T, M extends BaseMapper<T>> {
      *
      * @param id （复合主键类型 Map 或当前 bean，非复合主键直接传值）
      */
+    @Transactional
     public int deleteById(Object id) {
         T entity = handleEntityPK(id);
         return delete(entity);
@@ -116,6 +120,7 @@ public class Business<T, M extends BaseMapper<T>> {
      *
      * @param entity
      */
+    @Transactional
     public int update(T entity) {
         handleUpdate(entity);
         return baseMapper.updateByPrimaryKeySelective(entity);
@@ -127,6 +132,7 @@ public class Business<T, M extends BaseMapper<T>> {
      * @param entity
      * @return
      */
+    @Transactional
     public int saveOrUpdate(T entity) {
         // 先根据 id 查询数据库，没有就保存
         if (findById(entity) == null) {

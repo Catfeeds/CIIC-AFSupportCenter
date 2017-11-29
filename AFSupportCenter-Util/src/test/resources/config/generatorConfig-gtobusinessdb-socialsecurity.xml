@@ -4,7 +4,6 @@
 <generatorConfiguration>
     <properties resource="gen-jdbc.properties"/>
     <!-- 数据库驱动包位置 -->
-    <!--<classPathEntry location="${classPathEntry}"/>-->
 
     <!-- SocialSecurity -->
     <context id="DB2Tables" targetRuntime="MyBatis3" defaultModelType="flat"
@@ -21,10 +20,7 @@
             <property name="suppressDate" value="true"/>
         </commentGenerator>
         <!-- 数据库链接URL、用户名、密码 -->
-        <jdbcConnection driverClass="${driverClassName}"
-                        connectionURL="${url}"
-                        userId="${username}"
-                        password="${password}"/>
+        <jdbcConnection driverClass="${driverClassName}" connectionURL="${url}" userId="${username}" password="${password}"/>
         <javaTypeResolver type="${javaTypeResolver}">
             <property name="forceBigDecimals" value="false"/>
             <property name="useJava8Time" value="true"/>
@@ -34,6 +30,13 @@
                 targetPackage="${package}.socialsecurity.entity" targetProject="${projectPath}">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
+            <!--
+                设置一个根对象，
+                如果设置了这个根对象，那么生成的keyClass或者recordClass会继承这个类；在Table的rootClass属性中可以覆盖该选项
+                注意：如果在key class或者record class中有root class相同的属性，MBG就不会重新生成这些属性了，
+                包括：属性名相同，类型相同，有相同的getter/setter方法；
+             -->
+            <!--<property name="rootClass" value="${rootClass}"/>-->
         </javaModelGenerator>
         <!-- 生成的映射文件包名和位置 -->
         <sqlMapGenerator

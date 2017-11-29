@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * 《本地社保中，中智公司与社保局的对账单》微服务控制器
+ * 《本地社保对账单》微服务控制器
  */
 @RestController
 @RequestMapping("/api/socialsecurity/ssstatement")
-@Log("本地社保中，中智公司与社保局的对账单")
+@Log("本地社保对账单")
 public class SsStatementController extends BasicController<SsStatementBusiness> {
 
 

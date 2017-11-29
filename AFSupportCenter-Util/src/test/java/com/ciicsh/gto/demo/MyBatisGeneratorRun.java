@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.generator.mybatis;
+package com.ciicsh.gto.demo;
 
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.Configuration;

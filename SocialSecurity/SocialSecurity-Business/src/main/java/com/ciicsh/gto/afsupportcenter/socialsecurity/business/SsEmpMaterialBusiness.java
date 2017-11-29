@@ -6,6 +6,9 @@ import com.ciicsh.gto.afsupportcenter.util.business.Business;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 《雇员材料收缴》业务
+ */
 @Service
 @Transactional
 public class SsEmpMaterialBusiness extends Business<SsEmpMaterial, SsEmpMaterialMapper>{

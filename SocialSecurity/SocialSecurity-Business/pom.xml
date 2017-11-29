@@ -4,22 +4,23 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
-        <artifactId>gt1.afsupportcenter</artifactId>
+        <artifactId>gt1-afsupportcenter</artifactId>
         <version>1.0.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
     <artifactId>gt1-afsupportcenter-socialsecurity-business</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
+            <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
             <artifactId>gt1-afsupportcenter-socialsecurity-dao</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
+            <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
             <artifactId>gt1-afsupportcenter-socialsecurity-entity</artifactId>
             <version>${project.version}</version>
         </dependency>

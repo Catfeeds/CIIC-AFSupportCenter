@@ -6,6 +6,9 @@ import com.ciicsh.gto.afsupportcenter.util.business.Business;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 《雇员社保退账受理》业务
+ */
 @Service
 @Transactional
 public class SsEmpRefundBusiness extends Business<SsEmpRefund, SsEmpRefundMapper>{

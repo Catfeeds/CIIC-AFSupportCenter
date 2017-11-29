@@ -6,6 +6,9 @@ import com.ciicsh.gto.afsupportcenter.util.business.Business;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 《雇员社保基数调整历史月差异》业务
+ */
 @Service
 @Transactional
 public class SsEmpBaseAdjustBusiness extends Business<SsEmpBaseAdjust, SsEmpBaseAdjustMapper>{

@@ -6,6 +6,9 @@ import com.ciicsh.gto.afsupportcenter.util.business.Business;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 《任务单费用段》业务
+ */
 @Service
 @Transactional
 public class SsEmpTaskPeriodBusiness extends Business<SsEmpTaskPeriod, SsEmpTaskPeriodMapper>{

@@ -6,6 +6,9 @@ import com.ciicsh.gto.afsupportcenter.util.business.Business;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 《月度缴费明细报》业务
+ */
 @Service
 @Transactional
 public class SsMonthlyCompanyPayBusiness extends Business<SsMonthlyCompanyPay, SsMonthlyCompanyPayMapper> {

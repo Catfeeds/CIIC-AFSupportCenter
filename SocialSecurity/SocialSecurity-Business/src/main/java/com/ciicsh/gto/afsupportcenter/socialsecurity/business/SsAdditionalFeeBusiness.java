@@ -6,6 +6,9 @@ import com.ciicsh.gto.afsupportcenter.util.business.Business;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 《产品险种》业务
+ */
 @Service
 @Transactional
 public class SsAdditionalFeeBusiness extends Business<SsAdditionalFee, SsAdditionalFeeMapper> {

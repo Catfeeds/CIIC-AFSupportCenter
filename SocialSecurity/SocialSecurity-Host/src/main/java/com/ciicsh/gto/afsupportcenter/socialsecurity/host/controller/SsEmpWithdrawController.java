@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * 《记录本地社保和全国委托社保中，向社保局提取雇员社保金额的业务记录》微服务控制器
+ * 《本地社保记录》微服务控制器
  */
 @RestController
 @RequestMapping("/api/socialsecurity/ssempwithdraw")
-@Log("记录本地社保和全国委托社保中，向社保局提取雇员社保金额的业务记录")
+@Log("本地社保记录")
 public class SsEmpWithdrawController extends BasicController<SsEmpWithdrawBusiness> {
 
 
