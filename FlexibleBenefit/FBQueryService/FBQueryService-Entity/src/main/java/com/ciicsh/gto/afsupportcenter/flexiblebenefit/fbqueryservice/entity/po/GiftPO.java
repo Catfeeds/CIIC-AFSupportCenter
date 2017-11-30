@@ -41,10 +41,6 @@ public class GiftPO {
 
     private Map<String, Object> page;
 
-    public Map<String, Object> getPage() {
-        return page;
-    }
-
     @Override
     public String toString() {
         return "GiftPO{" +
@@ -67,6 +63,10 @@ public class GiftPO {
                 ", modifiedBy='" + modifiedBy + '\'' +
                 ", page=" + page +
                 '}';
+    }
+
+    public Map<String, Object> getPage() {
+        return page;
     }
 
     public void setPage(Map<String, Object> page) {

@@ -35,14 +35,14 @@ public class GiftQueryController {
      */
     @RequestMapping("/giftList")
     public JsonResult giftList(GiftPO entity) {
-       /* int page = Integer.parseInt((String) entity.getPage().get("current"));
-        int pageSize = Integer.parseInt((String) entity.getPage().get("pageSize"));*/
-        PageHelper.startPage(1, 10);
+        int page = Integer.parseInt((String) entity.getPage().get("current"));
+        int pageSize = Integer.parseInt((String) entity.getPage().get("pageSize"));
+        PageHelper.startPage(page, pageSize);
         PageInfo<GiftPO> pageData = new PageInfo<>(giftService.findByEntity(entity));
+        logger.info("query服务-查询礼品分页列表");
         JsonResult jr = new JsonResult();
         jr.setCode("200");
         jr.setData(pageData);
-        logger.info("query服务-查询礼品分页列表");
         return jr;
     }
 
