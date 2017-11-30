@@ -38,7 +38,7 @@
     <select id="findByEntity" parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.GiftPO" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from EW_Gift
+        from fb_gift
         <where>
             <if test="giftName != null">
                 AND gift_name = #{giftName,jdbcType=VARCHAR}

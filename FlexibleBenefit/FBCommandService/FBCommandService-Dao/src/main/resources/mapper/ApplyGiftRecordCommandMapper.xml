@@ -37,8 +37,7 @@
       )
   </insert>
 
-    <insert id="insertSelective"
-            parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.ApplyGiftRecordPO">
+    <insert id="insertSelective" parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.ApplyGiftRecordPO">
         insert into fb_apply_gift_record
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -99,8 +98,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective"
-            parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.ApplyGiftRecordPO">
+    <update id="updateByPrimaryKeySelective" parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.ApplyGiftRecordPO">
         update fb_apply_gift_record
         <set>
             <if test="applyRecordDetailId != null">

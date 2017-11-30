@@ -109,6 +109,11 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.connector.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -140,7 +145,7 @@
     <modules>
         <module>AFSupportCenter-Util</module>
 
-        <module>./SocialSecurity/SocQueryService/SocQueryService-Host</module>
+        <!--<module>./SocialSecurity/SocQueryService/SocQueryService-Host</module>
         <module>./SocialSecurity/SocQueryService/SocQueryService-Api</module>
         <module>./SocialSecurity/SocQueryService/SocQueryService-Dao</module>
         <module>./SocialSecurity/SocQueryService/SocQueryService-Business</module>
@@ -195,7 +200,7 @@
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Api</module>
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Dao</module>
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Business</module>
-        <module>./FlexibleBenefit/FBQueryService/FBQueryService-Entity</module>
+        <module>./FlexibleBenefit/FBQueryService/FBQueryService-Entity</module>-->
 
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Host</module>
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Api</module>
@@ -203,7 +208,7 @@
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Business</module>
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Entity</module>
 
-        <module>./Job/FundJob/FundJob-Host</module>
+        <!--<module>./Job/FundJob/FundJob-Host</module>
         <module>./Job/FundJob/FundJob-Dao</module>
         <module>./Job/FundJob/FundJob-Business</module>
         <module>./Job/FundJob/FundJob-Entity</module>
@@ -216,7 +221,7 @@
         <module>./Job/ZYJob/ZYJob-Host</module>
         <module>./Job/ZYJob/ZYJob-Dao</module>
         <module>./Job/ZYJob/ZYJob-Business</module>
-        <module>./Job/ZYJob/ZYJob-Entity</module>
+        <module>./Job/ZYJob/ZYJob-Entity</module>-->
 
     </modules>
 

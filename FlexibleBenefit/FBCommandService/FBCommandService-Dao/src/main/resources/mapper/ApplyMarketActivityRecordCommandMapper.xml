@@ -22,15 +22,15 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from fb_apply_marketactivity_record
+    from fb_apply_market_activity_record
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from fb_apply_marketactivity_record
+    delete from fb_apply_market_activity_record
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.ApplyMarketActivityRecordPO">
-    insert into fb_apply_marketactivity_record (id, apply_record_detail_id, activity_id, 
+    insert into fb_apply_market_activity_record (id, apply_record_detail_id, activity_id,
       number, gift_form, send_way, 
       delivery_address, is_active, create_time, 
       modified_time, created_by, modified_by
@@ -42,7 +42,7 @@
       )
   </insert>
   <insert id="insertSelective" parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.ApplyMarketActivityRecordPO">
-    insert into fb_apply_marketactivity_record
+    insert into fb_apply_market_activity_record
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -121,7 +121,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.ApplyMarketActivityRecordPO">
-    update fb_apply_marketactivity_record
+    update fb_apply_market_activity_record
     <set>
       <if test="applyRecordDetailId != null">
         apply_record_detail_id = #{applyRecordDetailId,jdbcType=INTEGER},
@@ -160,7 +160,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.ApplyMarketActivityRecordPO">
-    update fb_apply_marketactivity_record
+    update fb_apply_market_activity_record
     set apply_record_detail_id = #{applyRecordDetailId,jdbcType=INTEGER},
       activity_id = #{activityId,jdbcType=INTEGER},
       number = #{number,jdbcType=INTEGER},

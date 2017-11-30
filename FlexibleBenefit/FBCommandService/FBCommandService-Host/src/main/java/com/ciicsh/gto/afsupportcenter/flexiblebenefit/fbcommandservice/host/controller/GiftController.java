@@ -35,9 +35,9 @@ public class GiftController {
      */
     @RequestMapping("/giftList")
     public JsonResult giftList(GiftPO entity) {
-        int page = Integer.parseInt((String) entity.getPage().get("current"));
-        int pageSize = Integer.parseInt((String) entity.getPage().get("pageSize"));
-        PageHelper.startPage(page, pageSize);
+//        int page = Integer.parseInt((String) entity.getPage().get("current"));
+//        int pageSize = Integer.parseInt((String) entity.getPage().get("pageSize"));
+        PageHelper.startPage(1, 10);
         PageInfo<GiftPO> pageData = new PageInfo<>(giftServiceImpl.findByEntity(entity));
         JsonResult jr = new JsonResult();
         jr.setCode("200");
