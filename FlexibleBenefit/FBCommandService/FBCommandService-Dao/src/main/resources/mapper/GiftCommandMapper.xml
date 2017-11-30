@@ -40,7 +40,7 @@
         <include refid="Base_Column_List"/>
         from fb_gift
         <where>
-            <if test="giftName != null">
+            <if test="giftName != null and giftName != '' ">
                 AND gift_name = #{giftName,jdbcType=VARCHAR}
             </if>
             <if test="price != null">
