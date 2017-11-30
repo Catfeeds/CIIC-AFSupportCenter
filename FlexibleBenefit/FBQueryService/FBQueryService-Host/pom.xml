@@ -11,33 +11,33 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
-    <artifactId>insurancequeryservice-host</artifactId>
+    <artifactId>fbqueryservice-host</artifactId>
     <version>1.0.0</version>
 
     <dependencies>
         <dependency>
             <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
-            <artifactId>insurancequeryservice-business</artifactId>
+            <artifactId>fbqueryservice-business</artifactId>
             <version>1.0.0</version>
         </dependency>
 
         <dependency>
             <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
-            <artifactId>insurancequeryservice-api</artifactId>
+            <artifactId>fbqueryservice-api</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>
 
     <build>
-        <finalName>gt1.afsupportcenter.insurancequeryservice-host</finalName>
+        <finalName>gt1.afsupportcenter.fbqueryservice-host</finalName>
         <resources>
-            <resource>
+            <!--<resource>
                 <directory>../FBQueryService-Dao/src/main/resources/</directory>
                 <filtering>true</filtering>
                 <includes>
                     <include>**/mapper/*.xml</include>
                 </includes>
-            </resource>
+            </resource>-->
             <resource>
                 <directory>src/main/resources/</directory>
                 <filtering>true</filtering>

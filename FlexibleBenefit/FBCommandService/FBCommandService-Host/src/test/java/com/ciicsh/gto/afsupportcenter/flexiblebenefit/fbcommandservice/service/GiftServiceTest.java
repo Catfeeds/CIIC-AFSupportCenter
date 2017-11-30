@@ -52,6 +52,7 @@ public class GiftServiceTest {
     public void findById() throws Exception {
         GiftPO entity = giftService.findById(1);
         int t = entity.getId();
+        System.out.println(entity.toString());
         Assert.assertEquals(t, 1);
     }
 

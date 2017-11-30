@@ -194,13 +194,13 @@
         <module>./EmployManagement/EmployCommandService/EmployCommandService-Api</module>
         <module>./EmployManagement/EmployCommandService/EmployCommandService-Dao</module>
         <module>./EmployManagement/EmployCommandService/EmployCommandService-Business</module>
-        <module>./EmployManagement/EmployCommandService/EmployCommandService-Entity</module>
+        <module>./EmployManagement/EmployCommandService/EmployCommandService-Entity</module>-->
 
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Host</module>
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Api</module>
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Dao</module>
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Business</module>
-        <module>./FlexibleBenefit/FBQueryService/FBQueryService-Entity</module>-->
+        <module>./FlexibleBenefit/FBQueryService/FBQueryService-Entity</module>
 
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Host</module>
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Api</module>

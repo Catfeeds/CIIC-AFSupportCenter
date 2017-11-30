@@ -1,11 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.bo.JsonResult;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.GiftService;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.GiftPO;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.impl.GiftServiceImpl;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author xiweizhen
  */
 @RestController
-@RequestMapping("/gift")
+@RequestMapping("/giftCommandService")
 public class GiftController {
     /**
      * 记录日志
@@ -25,25 +22,7 @@ public class GiftController {
     private static Logger logger = LoggerFactory.getLogger(GiftController.class);
 
     @Autowired
-    private GiftServiceImpl giftServiceImpl;
-
-    /**
-     * 礼品分页列表查询
-     *
-     * @param entity
-     * @return
-     */
-    @RequestMapping("/giftList")
-    public JsonResult giftList(GiftPO entity) {
-//        int page = Integer.parseInt((String) entity.getPage().get("current"));
-//        int pageSize = Integer.parseInt((String) entity.getPage().get("pageSize"));
-        PageHelper.startPage(1, 10);
-        PageInfo<GiftPO> pageData = new PageInfo<>(giftServiceImpl.findByEntity(entity));
-        JsonResult jr = new JsonResult();
-        jr.setCode("200");
-        jr.setData(pageData);
-        return jr;
-    }
+    private GiftService giftService;
 
     /**
      * 礼品新增功能
@@ -53,7 +32,7 @@ public class GiftController {
      */
     @PostMapping("/giftInsert")
     public int giftInsert(GiftPO entity) {
-        int t = giftServiceImpl.insertGift(entity);
+        int t = giftService.insertGift(entity);
         if (t == 1) {
             logger.info("礼品添加成功");
         } else {
@@ -61,5 +40,6 @@ public class GiftController {
         }
         return t;
     }
+
 
 }

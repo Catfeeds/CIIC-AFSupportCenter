@@ -15,7 +15,7 @@ import java.util.List;
  * @author xiweizhen
  */
 @RestController
-@RequestMapping("/market")
+@RequestMapping("/marketCommandService")
 public class MarketController {
     /**
      * 记录日志

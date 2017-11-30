@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.dao.GiftQueryMapper">
+  <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.entity.po.GiftPO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="gift_name" jdbcType="VARCHAR" property="giftName" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="right_person" jdbcType="TINYINT" property="rightPerson" />
+    <result column="gift_type" jdbcType="TINYINT" property="giftType" />
+    <result column="color" jdbcType="VARCHAR" property="color" />
+    <result column="number" jdbcType="INTEGER" property="number" />
+    <result column="apply_maxnum" jdbcType="INTEGER" property="applyMaxnum" />
+    <result column="picture_url" jdbcType="VARCHAR" property="pictureUrl" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="is_new" jdbcType="BIT" property="isNew" />
+    <result column="is_active" jdbcType="BIT" property="isActive" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime" />
+    <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+    <result column="modified_by" jdbcType="VARCHAR" property="modifiedBy" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, gift_name, price, right_person, gift_type, color, number, apply_maxnum, picture_url, 
+    remarks, status, is_new, is_active, create_time, modified_time, created_by, modified_by
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fb_gift
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fb_gift
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <select id="findByEntity" parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.entity.po.GiftPO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from fb_gift
+        <where>
+            <if test="giftName != null">
+                AND gift_name = #{giftName,jdbcType=VARCHAR}
+            </if>
+            <if test="price != null">
+                AND price = #{price,jdbcType=DECIMAL}
+            </if>
+            <if test="rightPerson != null">
+                AND right_person = #{rightPerson,jdbcType=TINYINT}
+            </if>
+            <if test="giftType != null">
+                AND gift_type = #{giftType,jdbcType=TINYINT}
+            </if>
+            <if test="color != null">
+                AND color = #{color,jdbcType=VARCHAR}
+            </if>
+            <if test="number != null">
+                AND number = #{number,jdbcType=INTEGER}
+            </if>
+            <if test="applyMaxnum != null">
+                AND apply_maxnum = #{applyMaxnum,jdbcType=INTEGER}
+            </if>
+            <if test="pictureUrl != null">
+                AND picture_url = #{pictureUrl,jdbcType=VARCHAR}
+            </if>
+            <if test="remarks != null">
+                AND remarks = #{remarks,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null">
+                AND status = #{status,jdbcType=TINYINT}
+            </if>
+            <if test="isNew != null">
+                AND is_new = #{isNew,jdbcType=BIT}
+            </if>
+            <if test="isActive != null">
+                AND is_active = #{isActive,jdbcType=BIT}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="modifiedTime != null">
+                AND modified_time = #{modifiedTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="createdBy != null">
+                AND created_by = #{createdBy,jdbcType=VARCHAR}
+            </if>
+            <if test="modifiedBy != null">
+                AND modified_by = #{modifiedBy,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+  <insert id="insertSelective" parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.entity.po.GiftPO">
+    insert into fb_gift
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="giftName != null">
+        gift_name,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="rightPerson != null">
+        right_person,
+      </if>
+      <if test="giftType != null">
+        gift_type,
+      </if>
+      <if test="color != null">
+        color,
+      </if>
+      <if test="number != null">
+        number,
+      </if>
+      <if test="applyMaxnum != null">
+        apply_maxnum,
+      </if>
+      <if test="pictureUrl != null">
+        picture_url,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="isNew != null">
+        is_new,
+      </if>
+      <if test="isActive != null">
+        is_active,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifiedTime != null">
+        modified_time,
+      </if>
+      <if test="createdBy != null">
+        created_by,
+      </if>
+      <if test="modifiedBy != null">
+        modified_by,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="giftName != null">
+        #{giftName,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="rightPerson != null">
+        #{rightPerson,jdbcType=TINYINT},
+      </if>
+      <if test="giftType != null">
+        #{giftType,jdbcType=TINYINT},
+      </if>
+      <if test="color != null">
+        #{color,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null">
+        #{number,jdbcType=INTEGER},
+      </if>
+      <if test="applyMaxnum != null">
+        #{applyMaxnum,jdbcType=INTEGER},
+      </if>
+      <if test="pictureUrl != null">
+        #{pictureUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isNew != null">
+        #{isNew,jdbcType=BIT},
+      </if>
+      <if test="isActive != null">
+        #{isActive,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedTime != null">
+        #{modifiedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdBy != null">
+        #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedBy != null">
+        #{modifiedBy,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.entity.po.GiftPO">
+    update fb_gift
+    <set>
+      <if test="giftName != null">
+        gift_name = #{giftName,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="rightPerson != null">
+        right_person = #{rightPerson,jdbcType=TINYINT},
+      </if>
+      <if test="giftType != null">
+        gift_type = #{giftType,jdbcType=TINYINT},
+      </if>
+      <if test="color != null">
+        color = #{color,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null">
+        number = #{number,jdbcType=INTEGER},
+      </if>
+      <if test="applyMaxnum != null">
+        apply_maxnum = #{applyMaxnum,jdbcType=INTEGER},
+      </if>
+      <if test="pictureUrl != null">
+        picture_url = #{pictureUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isNew != null">
+        is_new = #{isNew,jdbcType=BIT},
+      </if>
+      <if test="isActive != null">
+        is_active = #{isActive,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedTime != null">
+        modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdBy != null">
+        created_by = #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedBy != null">
+        modified_by = #{modifiedBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
