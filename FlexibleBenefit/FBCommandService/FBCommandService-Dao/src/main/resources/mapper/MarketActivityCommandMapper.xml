@@ -34,7 +34,7 @@
     <select id="findByEntity" parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.MarketActivityPO" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
-        from EW_MarketActivity
+        from fb_market_activity
         <where>
             <if test="activityTitle != null">
                 AND activity_title = #{activityTitle,jdbcType=VARCHAR}

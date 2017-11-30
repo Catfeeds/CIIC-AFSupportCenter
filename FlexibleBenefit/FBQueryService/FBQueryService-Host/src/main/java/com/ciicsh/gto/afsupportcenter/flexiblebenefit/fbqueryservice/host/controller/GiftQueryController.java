@@ -42,24 +42,8 @@ public class GiftQueryController {
         JsonResult jr = new JsonResult();
         jr.setCode("200");
         jr.setData(pageData);
+        logger.info("query服务-查询礼品分页列表");
         return jr;
-    }
-
-    /**
-     * 礼品新增功能
-     *
-     * @param entity
-     * @return
-     */
-    @PostMapping("/giftInsert")
-    public int giftInsert(GiftPO entity) {
-        int t = giftService.insertGift(entity);
-        if (t == 1) {
-            logger.info("礼品添加成功");
-        } else {
-            logger.info("礼品添加失败");
-        }
-        return t;
     }
 
 }

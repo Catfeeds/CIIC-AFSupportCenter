@@ -20,7 +20,7 @@ public class GiftControllerTest {
 
     @Test
     public void giftListTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/gift/giftList").param("giftid", "1"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/giftCommandService/findById/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 

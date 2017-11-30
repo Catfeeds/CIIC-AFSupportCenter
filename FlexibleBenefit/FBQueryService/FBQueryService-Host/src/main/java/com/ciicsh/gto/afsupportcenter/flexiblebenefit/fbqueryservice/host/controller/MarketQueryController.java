@@ -28,7 +28,7 @@ public class MarketQueryController {
     @PostMapping("/marketList")
     public List<MarketActivityPO> marketList(MarketActivityPO entity) {
         List<MarketActivityPO> list = marketActivityService.findByEntity(entity);
-        logger.info("command服务--活动列表查询");
+        logger.info("query服务--活动列表查询");
         return list;
     }
 }

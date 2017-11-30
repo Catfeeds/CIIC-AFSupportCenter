@@ -31,6 +31,26 @@ public class MarketActivityPO {
 
     private String modifiedBy;
 
+    @Override
+    public String toString() {
+        return "MarketActivityPO{" +
+                "id=" + id +
+                ", activityTitle='" + activityTitle + '\'' +
+                ", publisher='" + publisher + '\'' +
+                ", beginTime=" + beginTime +
+                ", endTime=" + endTime +
+                ", status=" + status +
+                ", content='" + content + '\'' +
+                ", giftForm='" + giftForm + '\'' +
+                ", sendWay=" + sendWay +
+                ", isActive=" + isActive +
+                ", createTime=" + createTime +
+                ", modifiedTime=" + modifiedTime +
+                ", createdBy='" + createdBy + '\'' +
+                ", modifiedBy='" + modifiedBy + '\'' +
+                '}';
+    }
+
     public Integer getId() {
         return id;
     }
