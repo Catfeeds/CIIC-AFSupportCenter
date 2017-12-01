@@ -1,5 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
@@ -30,9 +32,9 @@ public class GiftPO {
     private Boolean isNew;
 
     private Boolean isActive;
-
+    @DateTimeFormat(pattern = "yyyy-MM-ddHH:mm:ss")
     private Date createTime;
-
+    @DateTimeFormat(pattern = "yyyy-MM-ddHH:mm:ss")
     private Date modifiedTime;
 
     private String createdBy;

@@ -35,62 +35,6 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
 
-    <select id="findByEntity" parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.GiftPO" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from fb_gift
-        <where>
-            <if test="giftName != null and giftName != '' ">
-                AND gift_name = #{giftName,jdbcType=VARCHAR}
-            </if>
-            <if test="price != null">
-                AND price = #{price,jdbcType=DECIMAL}
-            </if>
-            <if test="rightPerson != null">
-                AND right_person = #{rightPerson,jdbcType=TINYINT}
-            </if>
-            <if test="giftType != null">
-                AND gift_type = #{giftType,jdbcType=TINYINT}
-            </if>
-            <if test="color != null">
-                AND color = #{color,jdbcType=VARCHAR}
-            </if>
-            <if test="number != null">
-                AND number = #{number,jdbcType=INTEGER}
-            </if>
-            <if test="applyMaxnum != null">
-                AND apply_maxnum = #{applyMaxnum,jdbcType=INTEGER}
-            </if>
-            <if test="pictureUrl != null">
-                AND picture_url = #{pictureUrl,jdbcType=VARCHAR}
-            </if>
-            <if test="remarks != null">
-                AND remarks = #{remarks,jdbcType=VARCHAR}
-            </if>
-            <if test="status != null">
-                AND status = #{status,jdbcType=TINYINT}
-            </if>
-            <if test="isNew != null">
-                AND is_new = #{isNew,jdbcType=BIT}
-            </if>
-            <if test="isActive != null">
-                AND is_active = #{isActive,jdbcType=BIT}
-            </if>
-            <if test="createTime != null">
-                AND create_time = #{createTime,jdbcType=TIMESTAMP}
-            </if>
-            <if test="modifiedTime != null">
-                AND modified_time = #{modifiedTime,jdbcType=TIMESTAMP}
-            </if>
-            <if test="createdBy != null">
-                AND created_by = #{createdBy,jdbcType=VARCHAR}
-            </if>
-            <if test="modifiedBy != null">
-                AND modified_by = #{modifiedBy,jdbcType=VARCHAR}
-            </if>
-        </where>
-    </select>
-
   <insert id="insertSelective" parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.GiftPO">
     insert into fb_gift
     <trim prefix="(" suffix=")" suffixOverrides=",">
