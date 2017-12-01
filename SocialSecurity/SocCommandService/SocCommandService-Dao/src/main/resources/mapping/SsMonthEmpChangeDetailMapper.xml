@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsMonthEmpChangeDetailMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthEmpChangeDetail">
+        <id column="month_emp_change_detail_id" property="monthEmpChangeDetailId" />
+        <result column="month_emp_change_id" property="monthEmpChangeId" />
+        <result column="employee_id" property="employeeId" />
+        <result column="cost_category" property="costCategory" />
+        <result column="base_amount" property="baseAmount" />
+        <result column="ss_type" property="ssType" />
+        <result column="ss_name" property="ssName" />
+        <result column="com_amount" property="comAmount" />
+        <result column="emp_amount" property="empAmount" />
+        <result column="com_compensated_amount" property="comCompensatedAmount" />
+        <result column="emp_compensated_amount" property="empCompensatedAmount" />
+        <result column="one_payment" property="onePayment" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
+
+</mapper>
