@@ -10,9 +10,14 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
-    <artifactId>soccommandservice-dao</artifactId>
-    <version>1.0.0</version>
+    <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
+    <artifactId>gt1-afsupportcenter-socialsecurity-soccommandservice-dao</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
+            <artifactId>gt1-afsupportcenter-socialsecurity-soccommandservice-entity</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
 </project>

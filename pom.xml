@@ -37,9 +37,8 @@
         <spring.cloud.version>Dalston.SR4</spring.cloud.version>
 
         <!-- mybatis -->
-        <mybatis-generator-core.version>1.3.5</mybatis-generator-core.version>
-        <mybatis-spring-boot-starter.version>1.3.1</mybatis-spring-boot-starter.version>
-        <mapper-spring-boot-starter.version>1.1.4</mapper-spring-boot-starter.version>
+        <mybatisplus-spring-boot-starter.version>1.0.5</mybatisplus-spring-boot-starter.version>
+        <mybatisplus.version>2.1.6</mybatisplus.version>
         <pagehelper-spring-boot-starter.version>1.2.2</pagehelper-spring-boot-starter.version>
 
         <!-- alibaba datasource druid -->
@@ -136,22 +135,18 @@
         </dependency>
 
         <!-- mybatis -->
+        <!-- mybatis-plus begin -->
         <dependency>
-            <groupId>org.mybatis.generator</groupId>
-            <artifactId>mybatis-generator-core</artifactId>
-            <version>${mybatis-generator-core.version}</version>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatisplus-spring-boot-starter</artifactId>
+            <version>${mybatisplus-spring-boot-starter.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>${mybatis-spring-boot-starter.version}</version>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus</artifactId>
+            <version>${mybatisplus.version}</version>
         </dependency>
-        <!--通用Mapper-->
-        <dependency>
-            <groupId>tk.mybatis</groupId>
-            <artifactId>mapper-spring-boot-starter</artifactId>
-            <version>${mapper-spring-boot-starter.version}</version>
-        </dependency>
+        <!-- mybatis-plus end -->
         <!--分页插件-->
         <dependency>
             <groupId>com.github.pagehelper</groupId>
@@ -246,17 +241,18 @@
 
     <modules>
         <module>AFSupportCenter-Util</module>
+
         <module>./SocialSecurity/SocCommandService/SocCommandService-Host</module>
-        <module>./SocialSecurity/SocCommandService/SocCommandService-Client</module>
+        <module>./SocialSecurity/SocCommandService/SocCommandService-Api</module>
         <module>./SocialSecurity/SocCommandService/SocCommandService-Dao</module>
         <module>./SocialSecurity/SocCommandService/SocCommandService-Business</module>
         <module>./SocialSecurity/SocCommandService/SocCommandService-Entity</module>
-
-        <module>./SocialSecurity/SocialSecurity-Host</module>
-        <module>./SocialSecurity/SocialSecurity-Client</module>
-        <module>./SocialSecurity/SocialSecurity-Dao</module>
-        <module>./SocialSecurity/SocialSecurity-Business</module>
-        <module>./SocialSecurity/SocialSecurity-Entity</module>
+<!--
+        <module>./SocialSecurity/SocQueryService/SocQueryService-Host</module>
+        <module>./SocialSecurity/SocQueryService/SocQueryService-Api</module>
+        <module>./SocialSecurity/SocQueryService/SocQueryService-Dao</module>
+        <module>./SocialSecurity/SocQueryService/SocQueryService-Business</module>
+        <module>./SocialSecurity/SocQueryService/SocQueryService-Entity</module>-->
     </modules>
 
 </project>
