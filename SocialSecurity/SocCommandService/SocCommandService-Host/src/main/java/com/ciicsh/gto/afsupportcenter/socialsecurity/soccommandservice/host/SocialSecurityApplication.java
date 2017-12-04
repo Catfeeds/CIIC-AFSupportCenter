@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * SpringBoot 方式启动类
  */
-@SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice"})
+@SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice","com.ciicsh.gto.afsupportcenter.util"})
 //@EnableDiscoveryClient
 public class SocialSecurityApplication {
 
