@@ -1,9 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -13,9 +14,9 @@ import org.springframework.stereotype.Controller;
  * @author HuangXing
  * @since 2017-12-01
  */
-@Controller
-@RequestMapping("/soccommandservice/ssEmpTask")
-public class SsEmpTaskController {
+@RestController
+@RequestMapping("/api/soccommandservice/ssEmpTask")
+public class SsEmpTaskController  extends BasicController<ISsEmpTaskService> {
 
 }
 
