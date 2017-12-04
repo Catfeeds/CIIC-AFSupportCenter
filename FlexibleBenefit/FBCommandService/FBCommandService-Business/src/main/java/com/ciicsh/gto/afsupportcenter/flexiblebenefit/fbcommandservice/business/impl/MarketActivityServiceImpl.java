@@ -27,6 +27,10 @@ public class MarketActivityServiceImpl implements MarketActivityService {
 
     @Override
     public int addMarketActivity(MarketActivityPO entity) {
-        return marketActivityMapper.insertSelective(entity);
+        if (entity.getId() == null) {
+            return marketActivityMapper.insertSelective(entity);
+        } else {
+            return marketActivityMapper.updateByPrimaryKeySelective(entity);
+        }
     }
 }

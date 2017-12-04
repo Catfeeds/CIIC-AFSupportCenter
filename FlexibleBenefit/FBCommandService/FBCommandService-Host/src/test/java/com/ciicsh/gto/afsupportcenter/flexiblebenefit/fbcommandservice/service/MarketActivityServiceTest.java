@@ -45,4 +45,14 @@ public class MarketActivityServiceTest {
         System.out.printf("添加" + t + "条数据");
         Assert.assertEquals(1, t);
     }
+
+    @Test
+    public void updateMarketActivityTest() {
+        MarketActivityPO entity = new MarketActivityPO();
+        entity.setId(10);
+        entity.setContent("测试");
+        int t = marketActivityService.addMarketActivity(entity);
+        System.out.printf("更新第" + t + "条数据成功");
+        Assert.assertEquals(1, t);
+    }
 }

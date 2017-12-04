@@ -19,32 +19,16 @@
         <result column="modified_by" jdbcType="VARCHAR" property="modifiedBy"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, activity_title, publisher, begin_time, end_time, status, content, gift_form, 
-    send_way, is_active, create_time, modified_time, created_by, modified_by
-  </sql>
+        id, activity_title, publisher, begin_time, end_time, status, content, gift_form,
+        send_way, is_active, create_time, modified_time, created_by, modified_by
+      </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from fb_market_activity
         where id = #{id,jdbcType=INTEGER}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from fb_market_activity
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-    <insert id="insert"
-            parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.MarketActivityPO">
-    insert into fb_market_activity (id, activity_title, publisher, 
-      begin_time, end_time, status, 
-      content, gift_form, send_way, 
-      is_active, create_time, modified_time, 
-      created_by, modified_by)
-    values (#{id,jdbcType=INTEGER}, #{activityTitle,jdbcType=VARCHAR}, #{publisher,jdbcType=VARCHAR}, 
-      #{beginTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{status,jdbcType=TINYINT}, 
-      #{content,jdbcType=VARCHAR}, #{giftForm,jdbcType=VARCHAR}, #{sendWay,jdbcType=VARCHAR},
-      #{isActive,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{modifiedTime,jdbcType=TIMESTAMP}, 
-      #{createdBy,jdbcType=VARCHAR}, #{modifiedBy,jdbcType=VARCHAR})
-  </insert>
+
     <insert id="insertSelective"
             parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.MarketActivityPO">
         insert into fb_market_activity
@@ -183,22 +167,4 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey"
-            parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.MarketActivityPO">
-    update fb_market_activity
-    set activity_title = #{activityTitle,jdbcType=VARCHAR},
-      publisher = #{publisher,jdbcType=VARCHAR},
-      begin_time = #{beginTime,jdbcType=TIMESTAMP},
-      end_time = #{endTime,jdbcType=TIMESTAMP},
-      status = #{status,jdbcType=TINYINT},
-      content = #{content,jdbcType=VARCHAR},
-      gift_form = #{giftForm,jdbcType=VARCHAR},
-      send_way = #{sendWay,jdbcType=VARCHAR},
-      is_active = #{isActive,jdbcType=BIT},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
-      created_by = #{createdBy,jdbcType=VARCHAR},
-      modified_by = #{modifiedBy,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
 </mapper>
