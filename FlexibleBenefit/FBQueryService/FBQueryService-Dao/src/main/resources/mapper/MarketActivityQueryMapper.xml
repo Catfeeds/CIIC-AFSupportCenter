@@ -10,7 +10,7 @@
     <result column="status" jdbcType="TINYINT" property="status" />
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="gift_form" jdbcType="VARCHAR" property="giftForm" />
-    <result column="send_way" jdbcType="TINYINT" property="sendWay" />
+    <result column="send_way" jdbcType="VARCHAR" property="sendWay" />
     <result column="is_active" jdbcType="BIT" property="isActive" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime" />
@@ -48,7 +48,7 @@
             <if test="endTime != null">
                 AND end_time = #{endTime,jdbcType=TIMESTAMP}
             </if>
-            <if test="status != null">
+            <if test="status != null and status > -1">
                 AND status = #{status,jdbcType=TINYINT}
             </if>
             <if test="content != null">
@@ -58,7 +58,7 @@
                 AND gift_form = #{giftForm,jdbcType=VARCHAR}
             </if>
             <if test="sendWay != null">
-                AND send_way = #{sendWay,jdbcType=TINYINT}
+                AND send_way = #{sendWay,jdbcType=VARCHAR}
             </if>
             <if test="isActive != null">
                 AND is_active = #{isActive,jdbcType=BIT}
@@ -85,7 +85,7 @@
       created_by, modified_by)
     values (#{id,jdbcType=INTEGER}, #{activityTitle,jdbcType=VARCHAR}, #{publisher,jdbcType=VARCHAR}, 
       #{beginTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{status,jdbcType=TINYINT}, 
-      #{content,jdbcType=VARCHAR}, #{giftForm,jdbcType=VARCHAR}, #{sendWay,jdbcType=TINYINT}, 
+      #{content,jdbcType=VARCHAR}, #{giftForm,jdbcType=VARCHAR}, #{sendWay,jdbcType=VARCHAR},
       #{isActive,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{modifiedTime,jdbcType=TIMESTAMP}, 
       #{createdBy,jdbcType=VARCHAR}, #{modifiedBy,jdbcType=VARCHAR})
   </insert>
@@ -161,7 +161,7 @@
         #{giftForm,jdbcType=VARCHAR},
       </if>
       <if test="sendWay != null">
-        #{sendWay,jdbcType=TINYINT},
+        #{sendWay,jdbcType=VARCHAR},
       </if>
       <if test="isActive != null">
         #{isActive,jdbcType=BIT},
@@ -205,7 +205,7 @@
         gift_form = #{giftForm,jdbcType=VARCHAR},
       </if>
       <if test="sendWay != null">
-        send_way = #{sendWay,jdbcType=TINYINT},
+        send_way = #{sendWay,jdbcType=VARCHAR},
       </if>
       <if test="isActive != null">
         is_active = #{isActive,jdbcType=BIT},
@@ -234,7 +234,7 @@
       status = #{status,jdbcType=TINYINT},
       content = #{content,jdbcType=VARCHAR},
       gift_form = #{giftForm,jdbcType=VARCHAR},
-      send_way = #{sendWay,jdbcType=TINYINT},
+      send_way = #{sendWay,jdbcType=VARCHAR},
       is_active = #{isActive,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       modified_time = #{modifiedTime,jdbcType=TIMESTAMP},

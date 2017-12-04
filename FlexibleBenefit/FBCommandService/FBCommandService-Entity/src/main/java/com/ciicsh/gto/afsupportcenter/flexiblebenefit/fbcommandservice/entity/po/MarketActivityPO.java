@@ -1,5 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class MarketActivityPO {
@@ -8,9 +10,9 @@ public class MarketActivityPO {
     private String activityTitle;
 
     private String publisher;
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date beginTime;
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
 
     private Byte status;
@@ -19,17 +21,37 @@ public class MarketActivityPO {
 
     private String giftForm;
 
-    private Byte sendWay;
+    private String sendWay;
 
     private Boolean isActive;
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date modifiedTime;
 
     private String createdBy;
 
     private String modifiedBy;
+
+    @Override
+    public String toString() {
+        return "MarketActivityPO{" +
+                "id=" + id +
+                ", activityTitle='" + activityTitle + '\'' +
+                ", publisher='" + publisher + '\'' +
+                ", beginTime=" + beginTime +
+                ", endTime=" + endTime +
+                ", status=" + status +
+                ", content='" + content + '\'' +
+                ", giftForm='" + giftForm + '\'' +
+                ", sendWay='" + sendWay + '\'' +
+                ", isActive=" + isActive +
+                ", createTime=" + createTime +
+                ", modifiedTime=" + modifiedTime +
+                ", createdBy='" + createdBy + '\'' +
+                ", modifiedBy='" + modifiedBy + '\'' +
+                '}';
+    }
 
     public Integer getId() {
         return id;
@@ -95,11 +117,11 @@ public class MarketActivityPO {
         this.giftForm = giftForm == null ? null : giftForm.trim();
     }
 
-    public Byte getSendWay() {
+    public String getSendWay() {
         return sendWay;
     }
 
-    public void setSendWay(Byte sendWay) {
+    public void setSendWay(String sendWay) {
         this.sendWay = sendWay;
     }
 

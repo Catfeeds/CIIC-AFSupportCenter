@@ -19,7 +19,7 @@ public class MarketActivityPO {
 
     private String giftForm;
 
-    private Byte sendWay;
+    private String sendWay;
 
     private Boolean isActive;
 
@@ -42,7 +42,7 @@ public class MarketActivityPO {
                 ", status=" + status +
                 ", content='" + content + '\'' +
                 ", giftForm='" + giftForm + '\'' +
-                ", sendWay=" + sendWay +
+                ", sendWay='" + sendWay + '\'' +
                 ", isActive=" + isActive +
                 ", createTime=" + createTime +
                 ", modifiedTime=" + modifiedTime +
@@ -115,11 +115,11 @@ public class MarketActivityPO {
         this.giftForm = giftForm == null ? null : giftForm.trim();
     }
 
-    public Byte getSendWay() {
+    public String getSendWay() {
         return sendWay;
     }
 
-    public void setSendWay(Byte sendWay) {
+    public void setSendWay(String sendWay) {
         this.sendWay = sendWay;
     }
 
