@@ -36,7 +36,7 @@
         <include refid="Base_Column_List" />
         from fb_market_activity
         <where>
-            <if test="activityTitle != null">
+            <if test="activityTitle != null and activityTitle != ''">
                 AND activity_title = #{activityTitle,jdbcType=VARCHAR}
             </if>
             <if test="publisher != null">
