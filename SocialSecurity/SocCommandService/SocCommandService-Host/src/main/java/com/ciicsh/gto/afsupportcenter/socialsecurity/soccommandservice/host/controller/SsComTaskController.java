@@ -4,6 +4,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComTaskService;
+import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
@@ -12,6 +14,7 @@ import com.ciicsh.gto.afsupportcenter.util.tips.PageTip;
 import com.ciicsh.gto.afsupportcenter.util.tips.TipKit;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
@@ -25,9 +28,9 @@ import java.util.List;
  * @author HuangXing
  * @since 2017-12-01
  */
-@Controller
-@RequestMapping("/soccommandservice/ssComTask")
-public class SsComTaskController {
+@RestController
+@RequestMapping("/api/soccommandservice/ssComTask")
+public class SsComTaskController  extends BasicController<ISsComTaskService> {
     @Resource
     ISsComTaskService iSsComTaskService;
 
