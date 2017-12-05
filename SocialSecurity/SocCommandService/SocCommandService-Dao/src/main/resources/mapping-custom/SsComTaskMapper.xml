@@ -33,10 +33,10 @@
                 AND sct.customer_id = #{companyId}
             </if>
             <if test="submitTimeStrat!= null">
-                AND sct.submit_time >#{submitTimeStrat}
+                AND sct.submit_time >=#{submitTimeStrat}
             </if>
             <if test="submitTimeEnd!= null ">
-                AND sct.submit_time <![CDATA[< ]]> #{submitTimeEnd}
+                AND sct.submit_time <![CDATA[<= ]]> #{submitTimeEnd}
             </if>
         </where>
     </select>

@@ -14,9 +14,6 @@ public class SsComTaskDTO extends SsComTask{
     //任务发起时间的 尾段
     private LocalDate submitTimeEnd;
 
-    private Integer pageSize;
-
-    private Integer currentPage;
 
     public String getCompanyName() {
         return companyName;
@@ -42,19 +39,5 @@ public class SsComTaskDTO extends SsComTask{
         this.submitTimeEnd = submitTimeEnd;
     }
 
-    public Integer getPageSize() {
-        return pageSize;
-    }
 
-    public Integer getCurrentPage() {
-        return currentPage;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public void setCurrentPage(Integer currentPage) {
-        this.currentPage = currentPage;
-    }
 }
