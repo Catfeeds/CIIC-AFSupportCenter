@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity;
 
 import com.baomidou.mybatisplus.enums.IdType;
 import com.baomidou.mybatisplus.annotations.TableId;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
@@ -13,7 +13,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-01
+ * @since 2017-12-05
  */
 @TableName("ss_month_emp_change")
 public class SsMonthEmpChange implements Serializable {
@@ -34,7 +34,7 @@ public class SsMonthEmpChange implements Serializable {
      * 上次计算时间
      */
 	@TableField("last_compute_time")
-	private LocalTime lastComputeTime;
+	private LocalDateTime lastComputeTime;
     /**
      * 计算用户Id
      */
@@ -54,12 +54,12 @@ public class SsMonthEmpChange implements Serializable {
      * 创建时间
      */
 	@TableField("created_time")
-	private LocalTime createdTime;
+	private LocalDateTime createdTime;
     /**
      * 最后更新时间
      */
 	@TableField("modified_time")
-	private LocalTime modifiedTime;
+	private LocalDateTime modifiedTime;
     /**
      * 创建者登录名
      */
@@ -88,11 +88,11 @@ public class SsMonthEmpChange implements Serializable {
 		this.ssMonth = ssMonth;
 	}
 
-	public LocalTime getLastComputeTime() {
+	public LocalDateTime getLastComputeTime() {
 		return lastComputeTime;
 	}
 
-	public void setLastComputeTime(LocalTime lastComputeTime) {
+	public void setLastComputeTime(LocalDateTime lastComputeTime) {
 		this.lastComputeTime = lastComputeTime;
 	}
 
@@ -120,19 +120,19 @@ public class SsMonthEmpChange implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public LocalTime getCreatedTime() {
+	public LocalDateTime getCreatedTime() {
 		return createdTime;
 	}
 
-	public void setCreatedTime(LocalTime createdTime) {
+	public void setCreatedTime(LocalDateTime createdTime) {
 		this.createdTime = createdTime;
 	}
 
-	public LocalTime getModifiedTime() {
+	public LocalDateTime getModifiedTime() {
 		return modifiedTime;
 	}
 
-	public void setModifiedTime(LocalTime modifiedTime) {
+	public void setModifiedTime(LocalDateTime modifiedTime) {
 		this.modifiedTime = modifiedTime;
 	}
 

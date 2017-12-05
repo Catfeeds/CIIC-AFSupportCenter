@@ -26,7 +26,7 @@
         <result column="handle_remark" property="handleRemark" />
         <result column="rejection_remark" property="rejectionRemark" />
         <result column="handle_status" property="handleStatus" />
-        <result column="strart_handle_date" property="strartHandleDate" />
+        <result column="start_handle_date" property="startHandleDate" />
         <result column="send_check_date" property="sendCheckDate" />
         <result column="finish_date" property="finishDate" />
         <result column="is_active" property="isActive" />

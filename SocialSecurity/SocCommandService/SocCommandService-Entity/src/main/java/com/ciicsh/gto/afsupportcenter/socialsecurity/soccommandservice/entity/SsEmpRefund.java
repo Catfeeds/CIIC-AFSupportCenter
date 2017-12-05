@@ -3,7 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity;
 import com.baomidou.mybatisplus.enums.IdType;
 import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotations.TableId;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
@@ -16,7 +16,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-01
+ * @since 2017-12-05
  */
 @TableName("ss_emp_refund")
 public class SsEmpRefund implements Serializable {
@@ -51,7 +51,7 @@ public class SsEmpRefund implements Serializable {
      * 处理完成的时间
      */
 	@TableField("process_time")
-	private LocalTime processTime;
+	private LocalDateTime processTime;
     /**
      * 处理方式 1 -网上申报 2 柜面办理
      */
@@ -81,12 +81,12 @@ public class SsEmpRefund implements Serializable {
      * 创建时间
      */
 	@TableField("created_time")
-	private LocalTime createdTime;
+	private LocalDateTime createdTime;
     /**
      * 最后更新时间
      */
 	@TableField("modified_time")
-	private LocalTime modifiedTime;
+	private LocalDateTime modifiedTime;
     /**
      * 创建者登录名
      */
@@ -139,11 +139,11 @@ public class SsEmpRefund implements Serializable {
 		this.amount = amount;
 	}
 
-	public LocalTime getProcessTime() {
+	public LocalDateTime getProcessTime() {
 		return processTime;
 	}
 
-	public void setProcessTime(LocalTime processTime) {
+	public void setProcessTime(LocalDateTime processTime) {
 		this.processTime = processTime;
 	}
 
@@ -187,19 +187,19 @@ public class SsEmpRefund implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public LocalTime getCreatedTime() {
+	public LocalDateTime getCreatedTime() {
 		return createdTime;
 	}
 
-	public void setCreatedTime(LocalTime createdTime) {
+	public void setCreatedTime(LocalDateTime createdTime) {
 		this.createdTime = createdTime;
 	}
 
-	public LocalTime getModifiedTime() {
+	public LocalDateTime getModifiedTime() {
 		return modifiedTime;
 	}
 
-	public void setModifiedTime(LocalTime modifiedTime) {
+	public void setModifiedTime(LocalDateTime modifiedTime) {
 		this.modifiedTime = modifiedTime;
 	}
 

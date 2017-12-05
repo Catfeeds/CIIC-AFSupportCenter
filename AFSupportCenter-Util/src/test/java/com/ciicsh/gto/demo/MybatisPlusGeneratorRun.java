@@ -104,12 +104,12 @@ public class MybatisPlusGeneratorRun {
                 String t = fieldType.toLowerCase();
                 // jdk8 日期
                 switch (t) {
-                    case "year":
                     case "time":
+                        return DbColumnType.LOCAL_TIME;
+                    case "year":
                     case "date":
                         return DbColumnType.LOCAL_DATE;
                     case "datetime":
-                        return DbColumnType.LOCAL_TIME;
                     case "timestamp":
                         return DbColumnType.LOCAL_DATE_TIME;
                     default:

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.enums.IdType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotations.TableId;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
@@ -15,7 +15,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-01
+ * @since 2017-12-05
  */
 @TableName("ss_payment_com")
 public class SsPaymentCom implements Serializable {
@@ -51,8 +51,8 @@ public class SsPaymentCom implements Serializable {
     /**
      * 申请支付的公司部分的总金额
      */
-	@TableField("total_compay_amount")
-	private BigDecimal totalCompayAmount;
+	@TableField("total_com_pay_amount")
+	private BigDecimal totalComPayAmount;
     /**
      * 申请支付的雇员部分的总金额
      */
@@ -101,12 +101,12 @@ public class SsPaymentCom implements Serializable {
      * 创建时间
      */
 	@TableField("created_time")
-	private LocalTime createdTime;
+	private LocalDateTime createdTime;
     /**
      * 最后更新时间
      */
 	@TableField("modified_time")
-	private LocalTime modifiedTime;
+	private LocalDateTime modifiedTime;
     /**
      * 创建者登录名
      */
@@ -159,12 +159,12 @@ public class SsPaymentCom implements Serializable {
 		this.totalPayAmount = totalPayAmount;
 	}
 
-	public BigDecimal getTotalCompayAmount() {
-		return totalCompayAmount;
+	public BigDecimal getTotalComPayAmount() {
+		return totalComPayAmount;
 	}
 
-	public void setTotalCompayAmount(BigDecimal totalCompayAmount) {
-		this.totalCompayAmount = totalCompayAmount;
+	public void setTotalComPayAmount(BigDecimal totalComPayAmount) {
+		this.totalComPayAmount = totalComPayAmount;
 	}
 
 	public BigDecimal getTotalEmpPayAmount() {
@@ -239,19 +239,19 @@ public class SsPaymentCom implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public LocalTime getCreatedTime() {
+	public LocalDateTime getCreatedTime() {
 		return createdTime;
 	}
 
-	public void setCreatedTime(LocalTime createdTime) {
+	public void setCreatedTime(LocalDateTime createdTime) {
 		this.createdTime = createdTime;
 	}
 
-	public LocalTime getModifiedTime() {
+	public LocalDateTime getModifiedTime() {
 		return modifiedTime;
 	}
 
-	public void setModifiedTime(LocalTime modifiedTime) {
+	public void setModifiedTime(LocalDateTime modifiedTime) {
 		this.modifiedTime = modifiedTime;
 	}
 
@@ -279,7 +279,7 @@ public class SsPaymentCom implements Serializable {
 			", companyId=" + companyId +
 			", paymentMonth=" + paymentMonth +
 			", totalPayAmount=" + totalPayAmount +
-			", totalCompayAmount=" + totalCompayAmount +
+			", totalComPayAmount=" + totalComPayAmount +
 			", totalEmpPayAmount=" + totalEmpPayAmount +
 			", extraAmount=" + extraAmount +
 			", applierId=" + applierId +
