@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.entity.po;
 
 import java.util.Date;
+import java.util.Map;
 
 public class MarketActivityPO {
     private Integer id;
@@ -30,6 +31,16 @@ public class MarketActivityPO {
     private String createdBy;
 
     private String modifiedBy;
+
+    private Map<String, Object> page;
+
+    public Map<String, Object> getPage() {
+        return page;
+    }
+
+    public void setPage(Map<String, Object> page) {
+        this.page = page;
+    }
 
     @Override
     public String toString() {
