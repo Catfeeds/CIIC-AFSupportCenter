@@ -1,7 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +14,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @since 2017-12-01
  */
 public interface SsComTaskMapper extends BaseMapper<SsComTask> {
-
+    public List queryCompanyTask();
 }

@@ -32,4 +32,9 @@
         <result column="entity_id" property="entityId" />
     </resultMap>
 
+    <!--查询企业任务单 会涉及到 结算区县-->
+    <select id="queryCompanyTask">
+
+
+    </select>
 </mapper>
