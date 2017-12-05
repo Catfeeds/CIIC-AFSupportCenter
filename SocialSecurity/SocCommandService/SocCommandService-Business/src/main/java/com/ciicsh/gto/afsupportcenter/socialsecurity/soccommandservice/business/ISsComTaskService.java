@@ -1,7 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask;
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dta.SsComTaskDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask;
+import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
+import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 
 /**
  * <p>
@@ -12,5 +15,10 @@ import com.baomidou.mybatisplus.service.IService;
  * @since 2017-12-01
  */
 public interface ISsComTaskService extends IService<SsComTask> {
-
+    /**
+     * 获得企业任务单
+     * xsj
+     * @return
+     */
+    public PageRows<SsComTaskDTO> queryCompanyTask(PageInfo pageInfo);
 }

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsComTaskMapper">
+
+    <resultMap id="ModelResultMap"
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dta.SsComTaskDTO"
+               extends="BaseResultMap">
+
+    </resultMap>
+    <!--查询企业任务单 会涉及到 结算区县-->
+    <select id="queryCompanyTask" resultMap="ModelResultMap">
+        <![CDATA[
+        SELECT
+        sct.company_id,
+        sct.task_category,
+        sct.customer_id,
+        sct.expire_date,
+        sct.submitter_id,
+        sct.submit_time,
+        sct.submit_remark,
+        cc.title
+        FROM
+        ss_com_task sct
+        LEFT JOIN
+        ss_com_account sca
+        ON sct.com_account_id = sca.com_account_id
+        LEFT JOIN
+        cmy_company cc
+        ON
+        sct.company_id = cc.company_id
+        WHERE 1 = 1
+        AND is_active = 1
+        <if test="companyName!= null &&companyName!='' ">
+             AND cc.title = LIKE CONCAT(CONCAT('%', #{companyName}), '%')
+        </if>
+      <if test="companyName!= null &&companyName!='' ">
+        AND sct.task_category = #{taskCategory}
+      </if>
+      <if test="companyName!= null &&companyName!='' ">
+        AND sct.customer_id = #{companyId}
+      </if>
+      <if test="companyName!= null &&companyName!='' ">
+        AND sct.submit_time >#{submitTimeStrat}
+        AND sct.submit_time <#{submitTimeEnd}
+      </if>
+        ]]>
+        LIMIT #{index},#{pageSize}
+    </select>
+</mapper>
