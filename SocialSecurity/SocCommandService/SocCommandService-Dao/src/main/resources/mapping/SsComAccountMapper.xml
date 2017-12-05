@@ -14,7 +14,7 @@
         <result column="com_account_name" property="comAccountName" />
         <result column="settlement_area" property="settlementArea" />
         <result column="payment_bank" property="paymentBank" />
-        <result column="paymen_way" property="paymenWay" />
+        <result column="payment_way" property="paymentWay" />
         <result column="expire_date" property="expireDate" />
         <result column="ss_username" property="ssUsername" />
         <result column="ss_pwd" property="ssPwd" />

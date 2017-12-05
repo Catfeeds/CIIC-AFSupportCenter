@@ -3,7 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity;
 import com.baomidou.mybatisplus.enums.IdType;
 import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotations.TableId;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
@@ -14,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-01
+ * @since 2017-12-05
  */
 @TableName("ss_com_task")
 public class SsComTask implements Serializable {
@@ -70,7 +70,7 @@ public class SsComTask implements Serializable {
      * 发起时间
      */
 	@TableField("submit_time")
-	private LocalTime submitTime;
+	private LocalDateTime submitTime;
     /**
      * 发起时间备注
      */
@@ -86,8 +86,8 @@ public class SsComTask implements Serializable {
      * 对话记录, Json,
             格式：部门名称 姓名 时间 内容
      */
-	@TableField("chat_histroy")
-	private String chatHistroy;
+	@TableField("chat_history")
+	private String chatHistory;
     /**
      * 任务单处理状态
      */
@@ -102,7 +102,7 @@ public class SsComTask implements Serializable {
      * 任务处理时间
      */
 	@TableField("process_time")
-	private LocalTime processTime;
+	private LocalDateTime processTime;
     /**
      * 办理状态：1、材料收缴  2 、受理中  3、送审中  4 已完成
      */
@@ -111,8 +111,8 @@ public class SsComTask implements Serializable {
     /**
      * 受理日期
      */
-	@TableField("strart_handle_date")
-	private LocalDate strartHandleDate;
+	@TableField("start_handle_date")
+	private LocalDate startHandleDate;
     /**
      * 送审日期
      */
@@ -132,12 +132,12 @@ public class SsComTask implements Serializable {
      * 创建时间
      */
 	@TableField("created_time")
-	private LocalTime createdTime;
+	private LocalDateTime createdTime;
     /**
      * 最后更新时间
      */
 	@TableField("modified_time")
-	private LocalTime modifiedTime;
+	private LocalDateTime modifiedTime;
     /**
      * 创建者登录名
      */
@@ -227,11 +227,11 @@ public class SsComTask implements Serializable {
 		this.submitterDeptId = submitterDeptId;
 	}
 
-	public LocalTime getSubmitTime() {
+	public LocalDateTime getSubmitTime() {
 		return submitTime;
 	}
 
-	public void setSubmitTime(LocalTime submitTime) {
+	public void setSubmitTime(LocalDateTime submitTime) {
 		this.submitTime = submitTime;
 	}
 
@@ -251,12 +251,12 @@ public class SsComTask implements Serializable {
 		this.taskFormContent = taskFormContent;
 	}
 
-	public String getChatHistroy() {
-		return chatHistroy;
+	public String getChatHistory() {
+		return chatHistory;
 	}
 
-	public void setChatHistroy(String chatHistroy) {
-		this.chatHistroy = chatHistroy;
+	public void setChatHistory(String chatHistory) {
+		this.chatHistory = chatHistory;
 	}
 
 	public Integer getTaskStatus() {
@@ -275,11 +275,11 @@ public class SsComTask implements Serializable {
 		this.agentUserId = agentUserId;
 	}
 
-	public LocalTime getProcessTime() {
+	public LocalDateTime getProcessTime() {
 		return processTime;
 	}
 
-	public void setProcessTime(LocalTime processTime) {
+	public void setProcessTime(LocalDateTime processTime) {
 		this.processTime = processTime;
 	}
 
@@ -291,12 +291,12 @@ public class SsComTask implements Serializable {
 		this.handleStatus = handleStatus;
 	}
 
-	public LocalDate getStrartHandleDate() {
-		return strartHandleDate;
+	public LocalDate getStartHandleDate() {
+		return startHandleDate;
 	}
 
-	public void setStrartHandleDate(LocalDate strartHandleDate) {
-		this.strartHandleDate = strartHandleDate;
+	public void setStartHandleDate(LocalDate startHandleDate) {
+		this.startHandleDate = startHandleDate;
 	}
 
 	public LocalDate getSendCheckDate() {
@@ -323,19 +323,19 @@ public class SsComTask implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public LocalTime getCreatedTime() {
+	public LocalDateTime getCreatedTime() {
 		return createdTime;
 	}
 
-	public void setCreatedTime(LocalTime createdTime) {
+	public void setCreatedTime(LocalDateTime createdTime) {
 		this.createdTime = createdTime;
 	}
 
-	public LocalTime getModifiedTime() {
+	public LocalDateTime getModifiedTime() {
 		return modifiedTime;
 	}
 
-	public void setModifiedTime(LocalTime modifiedTime) {
+	public void setModifiedTime(LocalDateTime modifiedTime) {
 		this.modifiedTime = modifiedTime;
 	}
 
@@ -378,12 +378,12 @@ public class SsComTask implements Serializable {
 			", submitTime=" + submitTime +
 			", submitRemark=" + submitRemark +
 			", taskFormContent=" + taskFormContent +
-			", chatHistroy=" + chatHistroy +
+			", chatHistory=" + chatHistory +
 			", taskStatus=" + taskStatus +
 			", agentUserId=" + agentUserId +
 			", processTime=" + processTime +
 			", handleStatus=" + handleStatus +
-			", strartHandleDate=" + strartHandleDate +
+			", startHandleDate=" + startHandleDate +
 			", sendCheckDate=" + sendCheckDate +
 			", finishDate=" + finishDate +
 			", isActive=" + isActive +

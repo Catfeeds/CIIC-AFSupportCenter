@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity;
 
 import com.baomidou.mybatisplus.enums.IdType;
 import com.baomidou.mybatisplus.annotations.TableId;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
@@ -13,7 +13,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-01
+ * @since 2017-12-05
  */
 @TableName("ss_emp_material")
 public class SsEmpMaterial implements Serializable {
@@ -44,12 +44,12 @@ public class SsEmpMaterial implements Serializable {
      * 发起时间
      */
 	@TableField("submit_time")
-	private LocalTime submitTime;
+	private LocalDateTime submitTime;
     /**
      * 任务发起人备注
      */
 	@TableField("receive_time")
-	private LocalTime receiveTime;
+	private LocalDateTime receiveTime;
     /**
      * 
             {
@@ -74,12 +74,12 @@ public class SsEmpMaterial implements Serializable {
      * 创建时间
      */
 	@TableField("created_time")
-	private LocalTime createdTime;
+	private LocalDateTime createdTime;
     /**
      * 最后更新时间
      */
 	@TableField("modified_time")
-	private LocalTime modifiedTime;
+	private LocalDateTime modifiedTime;
     /**
      * 创建者登录名
      */
@@ -124,19 +124,19 @@ public class SsEmpMaterial implements Serializable {
 		this.materialName = materialName;
 	}
 
-	public LocalTime getSubmitTime() {
+	public LocalDateTime getSubmitTime() {
 		return submitTime;
 	}
 
-	public void setSubmitTime(LocalTime submitTime) {
+	public void setSubmitTime(LocalDateTime submitTime) {
 		this.submitTime = submitTime;
 	}
 
-	public LocalTime getReceiveTime() {
+	public LocalDateTime getReceiveTime() {
 		return receiveTime;
 	}
 
-	public void setReceiveTime(LocalTime receiveTime) {
+	public void setReceiveTime(LocalDateTime receiveTime) {
 		this.receiveTime = receiveTime;
 	}
 
@@ -164,19 +164,19 @@ public class SsEmpMaterial implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public LocalTime getCreatedTime() {
+	public LocalDateTime getCreatedTime() {
 		return createdTime;
 	}
 
-	public void setCreatedTime(LocalTime createdTime) {
+	public void setCreatedTime(LocalDateTime createdTime) {
 		this.createdTime = createdTime;
 	}
 
-	public LocalTime getModifiedTime() {
+	public LocalDateTime getModifiedTime() {
 		return modifiedTime;
 	}
 
-	public void setModifiedTime(LocalTime modifiedTime) {
+	public void setModifiedTime(LocalDateTime modifiedTime) {
 		this.modifiedTime = modifiedTime;
 	}
 

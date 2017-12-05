@@ -9,7 +9,7 @@
         <result column="company_id" property="companyId" />
         <result column="payment_month" property="paymentMonth" />
         <result column="total_pay_amount" property="totalPayAmount" />
-        <result column="total_compay_amount" property="totalCompayAmount" />
+        <result column="total_com_pay_amount" property="totalComPayAmount" />
         <result column="total_emp_pay_amount" property="totalEmpPayAmount" />
         <result column="extra_amount" property="extraAmount" />
         <result column="applier_id" property="applierId" />
