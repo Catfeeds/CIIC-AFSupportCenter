@@ -10,7 +10,7 @@ import com.alibaba.fastjson.JSON;
 import com.ciicsh.gto.afsupportcenter.util.aspect.BasicAspect;
 
 /**
- * 日志记录 Pointcut execution (* com.ciicsh.gto.afsupportcenter.*.host.controller..*.*(..))
+ * 日志记录
  *
  * @interface Log
  */
@@ -18,7 +18,7 @@ import com.ciicsh.gto.afsupportcenter.util.aspect.BasicAspect;
 public class LogAspect extends BasicAspect {
 
   // 配置controller环绕通知,使用在方法aspect()上注册的切入点
-  @Around("execution (* com.ciicsh.gto.afsupportcenter.*.host.controller..*.*(..))")
+  @Around("execution (* com.ciicsh.gto.afsupportcenter.*.*.host.controller..*.*(..))")
   public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
     Method method = getMethod(joinPoint);
 

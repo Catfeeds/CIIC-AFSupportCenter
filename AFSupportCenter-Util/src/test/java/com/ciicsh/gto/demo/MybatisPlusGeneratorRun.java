@@ -68,11 +68,6 @@ public class MybatisPlusGeneratorRun {
                 });
                 return list;
             }
-
-            protected TableField handleTableField(TableField tableField) {
-
-                return tableField;
-            }
         };
         return mpg;
     }
@@ -193,7 +188,7 @@ public class MybatisPlusGeneratorRun {
         // TemplateConfig tc = new TemplateConfig();
         // tc.setController("...");
         // tc.setEntity("...");
-         tc.setMapper("...");
+        // tc.setMapper("...");
         // tc.setXml("...");
         // tc.setService("...");
         // tc.setServiceImpl("...");
