@@ -26,8 +26,9 @@ spring:
 
 ###################  mybatis 配置  ###################
 mybatis:
-  type-aliases-package: com.ciicsh.gto.afsupportcenter.socialsecurity.entity
-  mapper-locations: classpath:mapping*/*.xml
+  mapper-locations: classpath*:/mapping*/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.ciicsh.gto.afsupportcenter.socialsecurity.socqueryservice.entity
 # https://github.com/abel533/Mapper/tree/master/wiki/mapper3
 mapper:
   mappers: tk.mybatis.mapper.common.Mapper
