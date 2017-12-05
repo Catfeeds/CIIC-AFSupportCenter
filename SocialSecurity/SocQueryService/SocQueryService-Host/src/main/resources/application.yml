@@ -24,6 +24,12 @@ spring:
   jmx:
     enabled: false
 
+###################  spring cloud eureka  ###################
+eureka:
+  client:
+    service-url:
+        defaultZone: http://172.16.9.21:9602/eureka/,http://172.16.9.20:9601/eureka/,http://172.16.9.19:9600/eureka/ #注册中心eureka地址
+
 ###################  mybatis 配置  ###################
 mybatis:
   mapper-locations: classpath*:/mapping*/*Mapper.xml
