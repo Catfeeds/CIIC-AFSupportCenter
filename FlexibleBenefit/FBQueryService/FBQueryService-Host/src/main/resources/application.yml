@@ -1,0 +1,73 @@
+app:
+    id: 10006009
+endpoints:
+    shutdown:
+        enabled: true
+        sensitive: false
+eureka:
+    client:
+        serviceUrl:
+            defaultZone: http://172.16.9.21:9602/eureka
+log4j:
+    appender:
+        ServerDailyRollingFile: org.apache.log4j.DailyRollingFileAppender
+        ServerDailyRollingFile.Append: true
+        ServerDailyRollingFile.DatePattern: '''.''yyyy-MM-dd'
+        ServerDailyRollingFile.File: D://test/test.log
+        ServerDailyRollingFile.layout: org.apache.log4j.PatternLayout
+        ServerDailyRollingFile.layout.ConversionPattern: '%d{yyyy-MM-dd HH:mm:ss}
+            [%t] %-5p [%c] - %m%n'
+        stdout: org.apache.log4j.ConsoleAppender
+        stdout.layout: org.apache.log4j.PatternLayout
+        stdout.layout.ConversionPattern: '%d yyyy-MM-dd HH:mm:ss %p [%c] %m%n'
+    logger:
+        Java:
+            sql:
+                Connection: DEBUG
+        com:
+            ibatis: DEBUG
+            ibatis.common.jdbc.ScriptRunner: DEBUG
+            ibatis.common.jdbc.SimpleDataSource: DEBUG
+            ibatis.sqlmap.engine.impl.SqlMapClientDelegate: DEBUG
+        java:
+            sql:
+                PreparedStatement: DEBUG
+                Statement: DEBUG
+    rootLogger: DEBUG,ServerDailyRollingFile,stdout
+management:
+    context-path: /admin
+    port: 6018
+    security:
+        enabled: false
+mybatis:
+    config-location: classpath:mybatis-config.xml
+    mapperLocations: classpath:mapper/*.xml
+    type-handlers-package: com.ciicsh.gto.afsupportcenter.util.typehandler
+pagehelper:
+    reasonable: true
+server:
+    port: 6017
+    session-timeout: '# session timeout in seconds'
+    tomcat:
+        background-processor-delay: 30
+        basedir: '/tmp '
+        max-threads: 0
+        protocol-header: 'x-forwarded-proto '
+        remote-ip-header: x-forwarded-for
+spring:
+    application:
+        name: afsupportcenter-center-query-service
+    datasource:
+        driver-class-name: com.mysql.jdbc.Driver
+        initial-size: 10
+        max-active: 20
+        max-idle: 8
+        min-idle: 8
+        password: a111111
+        url: jdbc:mysql://172.16.9.15:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
+        username: root
+    jpa:
+        database: MYSQL
+        hibernate:
+            ddl-auto: update
+        show-sql: true
