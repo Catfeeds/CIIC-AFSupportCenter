@@ -7,6 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author xiweizhen
@@ -49,6 +53,29 @@ public class GiftController {
             logger.info("command服务--礼品添加失败");
         }
         return t;
+    }
+
+    /**
+     * 礼品新增功能
+     *
+     * @param file
+     * @return
+     */
+    @PostMapping("/updateFile")
+    public String updateFile(MultipartFile file) {
+        File f = new File("c://test");
+        try {
+            file.transferTo(f);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String filepath = giftService.fileUpdate(f);
+        if ("".equals(filepath)) {
+            logger.info("command服务--礼品图片添加失败");
+        } else {
+            logger.info("command服务--礼品图片添加成功");
+        }
+        return filepath;
     }
 
 

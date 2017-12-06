@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.impl;
 
+import com.ciicsh.gt1.FileHandler;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.GiftService;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.dao.GiftCommandMapper;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.GiftPO;
@@ -7,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author xiweizhen
@@ -33,4 +36,18 @@ public class GiftServiceImpl implements GiftService {
             return giftMapper.insertSelective(entity);
         }
     }
+
+    @Override
+    public String fileUpdate(File file) {
+        String filepath = "";
+        try {
+            filepath = FileHandler.uploadFile(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(filepath);
+        return filepath;
+    }
+
+
 }

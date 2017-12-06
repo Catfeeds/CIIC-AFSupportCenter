@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.service;
 
+import com.ciicsh.gt1.FileHandler;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.GiftService;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.GiftPO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.host.Luncher;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 
 @RunWith(SpringRunner.class)
@@ -53,6 +56,18 @@ public class GiftServiceTest {
         int t = giftService.insertGift(entity);
         System.out.printf("更新第" + t + "条数据成功");
         Assert.assertEquals(1, t);
+    }
+
+    @Test
+    public void testFileUpdate() {
+        File f = new File("C:\\Users\\xiweizhen.CIIC\\Downloads\\河流.jpg");
+        try {
+            String filepath = FileHandler.uploadFile(f);
+            System.out.printf(filepath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

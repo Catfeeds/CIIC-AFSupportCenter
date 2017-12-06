@@ -37,6 +37,4 @@ public class MarketController {
         return t;
     }
 
-
-
 }

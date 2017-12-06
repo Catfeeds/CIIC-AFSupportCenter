@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po;
+package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.dto;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -9,7 +9,7 @@ import java.util.Date;
  * @author xiweizhen
  * @date 2017/12/6 10:47
  */
-public class GiftPO {
+public class GiftDTO {
     private Integer id;
 
     private String giftName;

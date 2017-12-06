@@ -2,6 +2,8 @@ package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business
 
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.GiftPO;
 
+import java.io.File;
+
 /**
  * @author created by xiweizhen 2017-11-16 14:02:26
  */
@@ -22,4 +24,11 @@ public interface GiftService {
      * @return int
      */
     int insertGift(GiftPO entity);
+
+    /**
+     * 上传文件方法
+     * @param file
+     * @return String
+     */
+    String fileUpdate(File file);
 }
