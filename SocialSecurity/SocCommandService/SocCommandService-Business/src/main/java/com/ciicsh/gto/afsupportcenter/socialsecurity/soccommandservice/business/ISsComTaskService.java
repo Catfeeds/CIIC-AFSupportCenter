@@ -16,9 +16,18 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
  */
 public interface ISsComTaskService extends IService<SsComTask> {
     /**
-     * 获得企业任务单
+     * 获得企业任务单 未处理
      * xsj
      * @return
      */
-    public PageRows<SsComTaskDTO> queryCompanyTask(PageInfo pageInfo);
+    public PageRows<SsComTaskDTO> queryNoProgressCompanyTask(PageInfo pageInfo);
+
+    /**
+     * 获得企业任务单 处理中
+     * @param pageInfo
+     * @return
+     */
+    public PageRows<SsComTaskDTO> queryProgressingCompanyTask(PageInfo pageInfo);
+
+
 }

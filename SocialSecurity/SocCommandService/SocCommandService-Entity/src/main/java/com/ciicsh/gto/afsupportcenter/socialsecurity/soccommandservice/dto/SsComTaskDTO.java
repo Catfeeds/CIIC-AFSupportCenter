@@ -17,6 +17,12 @@ public class SsComTaskDTO extends SsComTask{
     @JSONField(format="yyyy-MM-dd")
     private Date submitTimeEnd;
 
+    //账户类型
+    private String accountType;
+
+    //结算区县
+    private String regionValue;
+
 
     public String getCompanyName() {
         return companyName;
@@ -40,5 +46,21 @@ public class SsComTaskDTO extends SsComTask{
 
     public void setSubmitTimeEnd(Date submitTimeEnd) {
         this.submitTimeEnd = submitTimeEnd;
+    }
+
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
+    }
+
+    public String getRegionValue() {
+        return regionValue;
+    }
+
+    public void setRegionValue(String regionValue) {
+        this.regionValue = regionValue;
     }
 }

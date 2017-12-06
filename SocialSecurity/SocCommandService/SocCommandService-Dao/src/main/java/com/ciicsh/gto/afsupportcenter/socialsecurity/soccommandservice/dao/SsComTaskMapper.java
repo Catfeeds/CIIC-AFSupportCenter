@@ -15,5 +15,7 @@ import java.util.List;
  * @since 2017-12-01
  */
 public interface SsComTaskMapper extends BaseMapper<SsComTask> {
-    public List<SsComTaskDTO> queryCompanyTask(SsComTaskDTO ssComTaskDTO);
+    public List<SsComTaskDTO> queryNoProgressCompanyTask(SsComTaskDTO ssComTaskDTO);
+    public List<SsComTaskDTO> queryProgressingCompanyTask(SsComTaskDTO ssComTaskDTO);
+
 }

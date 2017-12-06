@@ -27,13 +27,36 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
     @Resource
     ISsComTaskService iSsComTaskService;
 
-    @Log("查询企业任务单")
-    @RequestMapping(value = "getTask")
-    public PageTip<SsComTaskDTO> getCompanyTask(PageInfo pageInfo) {
+    @Log("查询未处理企业任务单")
+    @RequestMapping(value = "getNoProgressTask")
+    public PageTip<SsComTaskDTO> getNoProgressCompanyTask(PageInfo pageInfo) {
         //mybatis 分页插件
-        PageRows<SsComTaskDTO> pageRows = iSsComTaskService.queryCompanyTask(pageInfo);
+        PageRows<SsComTaskDTO> pageRows = iSsComTaskService.queryNoProgressCompanyTask(pageInfo);
         return TipKit.ofPage(pageRows);
 
+    }
+    @Log("查询处理中企业任务单")
+    @RequestMapping(value = "getProgressingTask")
+    public PageTip<SsComTaskDTO> getNoProgressingCompanyTask(PageInfo pageInfo) {
+        //mybatis 分页插件
+        PageRows<SsComTaskDTO> pageRows = iSsComTaskService.queryProgressingCompanyTask(pageInfo);
+        return TipKit.ofPage(pageRows);
+    }
+
+    @Log("查询已完成企业任务单")
+    @RequestMapping(value = "getFinshedTask")
+    public PageTip<SsComTaskDTO> getFinshedCompanyTask(PageInfo pageInfo) {
+        //mybatis 分页插件
+        PageRows<SsComTaskDTO> pageRows = iSsComTaskService.queryNoProgressCompanyTask(pageInfo);
+        return TipKit.ofPage(pageRows);
+    }
+
+    @Log("查询批退企业任务单")
+    @RequestMapping(value = "getRefusedTask")
+    public PageTip<SsComTaskDTO> getRefusedCompanyTask(PageInfo pageInfo) {
+        //mybatis 分页插件
+        PageRows<SsComTaskDTO> pageRows = iSsComTaskService.queryNoProgressCompanyTask(pageInfo);
+        return TipKit.ofPage(pageRows);
     }
 
 

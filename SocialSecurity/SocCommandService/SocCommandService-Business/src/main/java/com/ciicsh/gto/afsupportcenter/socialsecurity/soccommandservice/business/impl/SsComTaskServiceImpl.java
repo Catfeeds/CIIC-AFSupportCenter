@@ -22,13 +22,26 @@ import org.springframework.stereotype.Service;
 public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask> implements ISsComTaskService {
 
     /**
-     * 获得企业任务单
+     * 获得企业任务单 未处理
      * xsj
      * @return
      */
     @Override
-    public PageRows<SsComTaskDTO> queryCompanyTask(PageInfo pageInfo){
+    public PageRows<SsComTaskDTO> queryNoProgressCompanyTask(PageInfo pageInfo){
+        //将json对象转 DTO对象
         SsComTaskDTO  ssComTaskDTO= pageInfo.toJavaObject(SsComTaskDTO.class);
-        return PageKit.doSelectPage(pageInfo,()-> baseMapper.queryCompanyTask(ssComTaskDTO));
+        return PageKit.doSelectPage(pageInfo,()-> baseMapper.queryNoProgressCompanyTask(ssComTaskDTO));
     }
+    /**
+     * 获得企业任务单 处理中
+     * xsj
+     * @return
+     */
+    @Override
+    public PageRows<SsComTaskDTO> queryProgressingCompanyTask(PageInfo pageInfo){
+        //将json对象转 DTO对象
+        SsComTaskDTO  ssComTaskDTO= pageInfo.toJavaObject(SsComTaskDTO.class);
+        return PageKit.doSelectPage(pageInfo,()-> baseMapper.queryProgressingCompanyTask(ssComTaskDTO));
+    }
+
 }
