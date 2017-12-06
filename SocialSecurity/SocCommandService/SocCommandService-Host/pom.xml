@@ -20,6 +20,11 @@
             <artifactId>gt1-afsupportcenter-socialsecurity-soccommandservice-business</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
+            <artifactId>gt1-afsupportcenter-socialsecurity-soccommandservice-entity</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 
         <dependency>
             <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
@@ -56,6 +61,13 @@
             </testResource>
         </testResources>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>

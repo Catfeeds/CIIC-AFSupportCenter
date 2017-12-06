@@ -1,18 +1,17 @@
 package com.ciicsh.gto.afsupportcenter.util.config;
 
+import com.ciicsh.gto.afsupportcenter.util.aspect.json.JsonResultAspect;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.LogAspect;
-import com.ciicsh.gto.afsupportcenter.util.aspect.tip.TipAspect;
 import com.ciicsh.gto.afsupportcenter.util.context.SpringContextHolder;
 import com.ciicsh.gto.afsupportcenter.util.context.annotation.CustomByNameCondition;
 import com.ciicsh.gto.afsupportcenter.util.context.annotation.CustomByTypeCondition;
 import com.ciicsh.gto.afsupportcenter.util.json.jackson2.*;
-import com.ciicsh.gto.afsupportcenter.util.tips.PageTip;
-import com.ciicsh.gto.afsupportcenter.util.tips.Tip;
 import com.ciicsh.gto.afsupportcenter.util.web.convert.EmptyToNullConverter;
 import com.ciicsh.gto.afsupportcenter.util.web.convert.StringToLocalDateConverter;
 import com.ciicsh.gto.afsupportcenter.util.web.convert.StringToLocalDateTimeConverter;
 import com.ciicsh.gto.afsupportcenter.util.web.convert.StringToLocalTimeConverter;
 import com.ciicsh.gto.afsupportcenter.util.web.filter.WafFilter;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -85,8 +84,7 @@ public class CustomConfiguration {
         simpleModule.addSerializer(LocalDate.class, new LocalDateSerializer());
         simpleModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer());
         simpleModule.addSerializer(LocalTime.class, new LocalTimeSerializer());
-        simpleModule.addSerializer(PageTip.class, new PageTipSerializer());
-        simpleModule.addSerializer(Tip.class, new TipSerializer());
+        simpleModule.addSerializer(JsonResult.class, new JsonResultSerializer());
         objectMapper.registerModule(simpleModule);
 
         jackson2HttpMessageConverter.setObjectMapper(objectMapper);
@@ -138,8 +136,8 @@ public class CustomConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @Conditional(CustomByTypeCondition.class)
-    public TipAspect tipAspect() {
-        return new TipAspect();
+    public JsonResultAspect jsonResultAspect() {
+        return new JsonResultAspect();
     }
 
     @Bean

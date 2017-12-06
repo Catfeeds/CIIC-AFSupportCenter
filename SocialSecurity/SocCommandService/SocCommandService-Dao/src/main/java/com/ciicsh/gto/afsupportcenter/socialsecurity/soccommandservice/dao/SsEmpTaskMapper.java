@@ -1,7 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsEmpTaskDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,11 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface SsEmpTaskMapper extends BaseMapper<SsEmpTask> {
 
+    /**
+     * 雇员日常操作查询
+     *
+     * @param ssComTaskDTO
+     * @return
+     */
+    List<SsEmpTaskDTO> employeeOperatorQuery(SsEmpTaskDTO ssComTaskDTO);
 }
