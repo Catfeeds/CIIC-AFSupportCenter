@@ -3,7 +3,7 @@
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsComTaskMapper">
 
     <resultMap id="ModelResultMap"
-               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dta.SsComTaskDTO"
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComTaskDTO"
                extends="BaseResultMap">
 
     </resultMap>
@@ -24,7 +24,7 @@
         <where>
             AND sct.is_active = 1
             <if test="companyName!= null">
-                AND cc.title = LIKE CONCAT(CONCAT('%', #{companyName}), '%')
+                AND cc.title LIKE CONCAT('%', #{companyName}, '%')
             </if>
             <if test="taskCategory!= null">
                 AND sct.task_category = #{taskCategory}
@@ -33,10 +33,10 @@
                 AND sct.customer_id = #{companyId}
             </if>
             <if test="submitTimeStrat!= null">
-                AND sct.submit_time >=#{submitTimeStrat}
+                AND sct.submit_time <![CDATA[ >= ]]> #{submitTimeStart}
             </if>
             <if test="submitTimeEnd!= null ">
-                AND sct.submit_time <![CDATA[<= ]]> #{submitTimeEnd}
+                AND sct.submit_time <![CDATA[ <= ]]> #{submitTimeEnd}
             </if>
         </where>
     </select>

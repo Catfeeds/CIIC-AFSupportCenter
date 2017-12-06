@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComTaskService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dta.SsComTaskDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComTaskDTO;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -30,9 +30,9 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
     @Log("查询企业任务单")
     @RequestMapping(value = "getTask")
     public PageTip<SsComTaskDTO> getCompanyTask(PageInfo pageInfo) {
-            //mybatis 分页插件
-         PageRows<SsComTaskDTO> pageRows = iSsComTaskService.queryCompanyTask(pageInfo);
-            return TipKit.ofPage(pageRows);
+        //mybatis 分页插件
+        PageRows<SsComTaskDTO> pageRows = iSsComTaskService.queryCompanyTask(pageInfo);
+        return TipKit.ofPage(pageRows);
 
     }
 

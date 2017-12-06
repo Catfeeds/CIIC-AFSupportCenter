@@ -3,7 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsComTaskMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dta.SsComTaskDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
@@ -28,6 +28,7 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
      */
     @Override
     public PageRows<SsComTaskDTO> queryCompanyTask(PageInfo pageInfo){
-        return PageKit.doSelectPage(pageInfo,()-> baseMapper.queryCompanyTask(pageInfo.toJavaObject(SsComTaskDTO.class)));
+        SsComTaskDTO  ssComTaskDTO= pageInfo.toJavaObject(SsComTaskDTO.class);
+        return PageKit.doSelectPage(pageInfo,()-> baseMapper.queryCompanyTask(ssComTaskDTO));
     }
 }
