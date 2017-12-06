@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2017-12-01
  */
 @RestController
-@RequestMapping("/api/api/soccommandservice/ssAccountComTie")
+@RequestMapping("/api/soccommandservice/ssAccountComTie")
 public class SsAccountComTieController extends BasicController<ISsAccountComTieService> {
 
 }

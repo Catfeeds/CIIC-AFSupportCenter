@@ -28,7 +28,7 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
      */
     @Override
     public PageRows<SsComTaskDTO> queryCompanyTask(PageInfo pageInfo){
-        SsComTaskDTO  ssComTaskDTO= pageInfo.toJavaObject(SsComTaskDTO.class);
+        SsComTaskDTO  ssComTaskDTO = pageInfo.toJavaObject(SsComTaskDTO.class);
         return PageKit.doSelectPage(pageInfo,()-> baseMapper.queryCompanyTask(ssComTaskDTO));
     }
 }

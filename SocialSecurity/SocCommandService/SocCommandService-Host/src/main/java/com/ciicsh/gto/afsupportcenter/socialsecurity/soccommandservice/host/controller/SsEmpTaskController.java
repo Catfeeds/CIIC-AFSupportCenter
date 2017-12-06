@@ -2,9 +2,18 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsEmpTaskDTO;
+import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
+import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
+import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * <p>
@@ -16,7 +25,17 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssEmpTask")
-public class SsEmpTaskController  extends BasicController<ISsEmpTaskService> {
+@Log("本地社保的雇员任务单")
+public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
 
+    /**
+     * 雇员日常操作查询
+     */
+    @Log("雇员日常操作查询")
+    @PostMapping("/employeeOperatorQuery")
+    public JsonResult<List<SsEmpTaskDTO>> employeeOperatorQuery(PageInfo pageInfo) {
+        PageRows<SsEmpTaskDTO> pageRows = business.employeeOperatorQuery(pageInfo);
+        return JsonResultKit.ofPage(pageRows);
+    }
 }
 
