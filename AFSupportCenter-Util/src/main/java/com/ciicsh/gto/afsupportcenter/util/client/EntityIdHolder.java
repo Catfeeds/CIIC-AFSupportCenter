@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.util.client;
 
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
-import com.ciicsh.gto.afsupportcenter.util.tips.ListTip;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -42,7 +42,7 @@ public class EntityIdHolder implements ApplicationContextAware {
         request.put("categoryId", id);
         request.put("number", 1);
 
-        ListTip<String> tip = restTemplate.getForObject(url + "?categoryId={categoryId}&number={number}", ListTip.class, request);
+        JsonResult<List<String>> tip = restTemplate.getForObject(url + "?categoryId={categoryId}&number={number}", JsonResult.class, request);
 
         if (tip.getCode() == 200) {
             List<String> data = tip.getData();
