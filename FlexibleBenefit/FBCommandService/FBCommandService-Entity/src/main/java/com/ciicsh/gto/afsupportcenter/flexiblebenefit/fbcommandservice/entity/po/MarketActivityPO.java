@@ -4,6 +4,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
+/**
+ * @author xiweizhen
+ * @date 2017/12/6 10:47
+ */
 public class MarketActivityPO {
     private Integer id;
 

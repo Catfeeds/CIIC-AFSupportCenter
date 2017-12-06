@@ -17,19 +17,4 @@ public interface GiftService {
      */
     List<GiftPO> findByEntity(GiftPO entity);
 
-    /**
-     * 根据主键查询礼品数据
-     *
-     * @param id
-     * @return GiftDTO
-     */
-    GiftPO findById(Integer id);
-
-    /**
-     * 新增礼品
-     *
-     * @param entity
-     * @return int
-     */
-    int insertGift(GiftPO entity);
 }

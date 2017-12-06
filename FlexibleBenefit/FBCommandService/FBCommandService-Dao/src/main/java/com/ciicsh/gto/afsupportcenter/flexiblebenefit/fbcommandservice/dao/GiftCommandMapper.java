@@ -7,14 +7,6 @@ import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po
  */
 public interface GiftCommandMapper {
     /**
-     * 删除数据
-     *
-     * @param id
-     * @return int
-     */
-    int deleteByPrimaryKey(Integer id);
-
-    /**
      * 新增数据
      *
      * @param record

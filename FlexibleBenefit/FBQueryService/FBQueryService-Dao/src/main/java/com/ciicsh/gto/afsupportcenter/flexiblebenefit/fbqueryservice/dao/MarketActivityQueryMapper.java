@@ -4,18 +4,16 @@ import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.entity.po.M
 
 import java.util.List;
 
+/**
+ * @author xiweizhen
+ * @date 2017/12/6 10:55
+ */
 public interface MarketActivityQueryMapper {
-    int deleteByPrimaryKey(Integer id);
-
-    int insert(MarketActivityPO record);
-
-    int insertSelective(MarketActivityPO record);
-
-    MarketActivityPO selectByPrimaryKey(Integer id);
-
+    /**
+     * @return List
+     * @author xiweizhen
+     * @date 2017/12/6 10:54
+     */
     List<MarketActivityPO> findByEntity(MarketActivityPO entity);
 
-    int updateByPrimaryKeySelective(MarketActivityPO record);
-
-    int updateByPrimaryKey(MarketActivityPO record);
 }

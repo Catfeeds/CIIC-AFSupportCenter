@@ -1,8 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.service;
 
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business.GiftService;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business.MarketActivityService;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.entity.po.GiftPO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.entity.po.MarketActivityPO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.host.MainApplication;
 import org.junit.Assert;
@@ -16,7 +14,6 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MainApplication.class)
-@SuppressWarnings("SpringJavaAutowiringInspection")
 public class MarketServiceQueryTest {
 
     @Autowired

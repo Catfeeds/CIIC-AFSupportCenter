@@ -13,23 +13,11 @@ import java.util.List;
  * @author xiweizhen
  */
 @Service
-@SuppressWarnings("SpringJavaAutowiringInspection")
+@Transactional(rollbackFor = Exception.class)
 public class GiftServiceImpl implements GiftService {
 
     @Resource
     private GiftQueryMapper giftMapper;
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public GiftPO findById(Integer id) {
-        return giftMapper.selectByPrimaryKey(id);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public int insertGift(GiftPO entity) {
-        return giftMapper.insertSelective(entity);
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)

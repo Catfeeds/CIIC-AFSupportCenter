@@ -12,7 +12,6 @@ import javax.annotation.Resource;
  * @author xiweizhen
  */
 @Service
-@SuppressWarnings("SpringJavaAutowiringInspection")
 public class GiftServiceImpl implements GiftService {
 
     @Resource

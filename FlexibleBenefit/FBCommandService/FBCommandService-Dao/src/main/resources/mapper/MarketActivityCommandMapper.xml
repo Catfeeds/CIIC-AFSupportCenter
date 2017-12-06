@@ -18,10 +18,12 @@
         <result column="created_by" jdbcType="VARCHAR" property="createdBy"/>
         <result column="modified_by" jdbcType="VARCHAR" property="modifiedBy"/>
     </resultMap>
+
     <sql id="Base_Column_List">
         id, activity_title, publisher, begin_time, end_time, status, content, gift_form,
         send_way, is_active, create_time, modified_time, created_by, modified_by
       </sql>
+
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -121,6 +123,7 @@
             </if>
         </trim>
     </insert>
+    
     <update id="updateByPrimaryKeySelective"
             parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.MarketActivityPO">
         update fb_market_activity

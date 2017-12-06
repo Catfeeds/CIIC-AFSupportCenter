@@ -10,15 +10,10 @@ import java.util.List;
 public interface MarketActivityService {
     /**
      * 根据实体查询礼品集合列表
+     *
      * @param entity
      * @return List<GiftDTO>
      */
     List<MarketActivityPO> findByEntity(MarketActivityPO entity);
 
-    /**
-     * 根据主键查询礼品数据
-     * @param id
-     * @return GiftDTO
-     */
-    MarketActivityPO findById(Integer id);
 }

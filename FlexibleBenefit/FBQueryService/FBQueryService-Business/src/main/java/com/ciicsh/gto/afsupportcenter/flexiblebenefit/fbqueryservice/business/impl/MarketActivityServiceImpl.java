@@ -14,7 +14,7 @@ import java.util.List;
  * @author xwz on 2017年11月29日19:29:03
  */
 @Service
-//@SuppressWarnings("SpringJavaAutowiringInspection")
+@Transactional(rollbackFor = Exception.class)
 public class MarketActivityServiceImpl implements MarketActivityService {
 
     @Resource
@@ -26,9 +26,4 @@ public class MarketActivityServiceImpl implements MarketActivityService {
         return marketActivityMapper.findByEntity(entity);
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public MarketActivityPO findById(Integer id) {
-        return null;
-    }
 }

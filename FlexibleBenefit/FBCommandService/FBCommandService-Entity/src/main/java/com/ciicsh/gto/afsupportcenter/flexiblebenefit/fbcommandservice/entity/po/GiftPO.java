@@ -6,6 +6,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 
+/**
+ * @author xiweizhen
+ * @date 2017/12/6 10:47
+ */
 public class GiftPO {
     private Integer id;
 

@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.service;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business.GiftService;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.entity.po.GiftPO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.host.MainApplication;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MainApplication.class)
-@SuppressWarnings("SpringJavaAutowiringInspection")
 public class GiftServiceQueryTest {
 
     @Autowired
@@ -25,8 +25,8 @@ public class GiftServiceQueryTest {
         entity.setId(1);
         List<GiftPO> list = giftService.findByEntity(entity);
         System.out.println(list.toString());
-//        int t = list.get(0).getId();
-//        Assert.assertEquals(t, 1);
+        int t = list.get(0).getId();
+        Assert.assertEquals(t, 1);
     }
 
 }
