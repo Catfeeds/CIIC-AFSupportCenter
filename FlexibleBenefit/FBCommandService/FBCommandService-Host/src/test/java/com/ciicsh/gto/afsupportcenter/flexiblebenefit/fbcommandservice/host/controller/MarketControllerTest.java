@@ -11,6 +11,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+/**
+ * @author xiweizhen
+ * @date 2017/12/6 11:08
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Luncher.class)
 @AutoConfigureMockMvc

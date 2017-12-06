@@ -31,7 +31,7 @@
         from fb_market_activity
         <where>
             <if test="activityTitle != null and activityTitle != ''">
-                AND activity_title = #{activityTitle,jdbcType=VARCHAR}
+                AND activity_title REGEXP #{activityTitle,jdbcType=VARCHAR}
             </if>
             <if test="publisher != null">
                 AND publisher = #{publisher,jdbcType=VARCHAR}

@@ -35,7 +35,7 @@
         from fb_gift
         <where>
             <if test="giftName != null and giftName != '' ">
-                AND gift_name = #{giftName,jdbcType=VARCHAR}
+                AND gift_name REGEXP #{giftName,jdbcType=VARCHAR}
             </if>
             <if test="price != null">
                 AND price = #{price,jdbcType=DECIMAL}
