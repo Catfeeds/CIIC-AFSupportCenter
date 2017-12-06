@@ -21,6 +21,11 @@ public class MarketController {
     @Autowired
     private MarketActivityService marketActivityService;
 
+    @GetMapping("/findById/{id}")
+    public MarketActivityPO findById(@PathVariable Integer id) {
+        return marketActivityService.findById(id);
+    }
+
     @PostMapping("/addMarketActivity")
     public int addMarketActivity(MarketActivityPO entity) {
         int t = marketActivityService.addMarketActivity(entity);
@@ -32,9 +37,6 @@ public class MarketController {
         return t;
     }
 
-    @GetMapping("/findById/{id}")
-    public MarketActivityPO findById(@PathVariable Integer id) {
-        return marketActivityService.findById(id);
-    }
+
 
 }

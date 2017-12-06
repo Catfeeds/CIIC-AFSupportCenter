@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Luncher.class)
-@SuppressWarnings("SpringJavaAutowiringInspection")
 public class GiftServiceTest {
 
     @Autowired
@@ -44,6 +43,16 @@ public class GiftServiceTest {
         int t = entity.getId();
         System.out.println(entity.toString());
         Assert.assertEquals(t, 1);
+    }
+
+    @Test
+    public void updateMarketActivityTest() {
+        GiftPO entity = new GiftPO();
+        entity.setId(7);
+        entity.setGiftName("测试2017年12月6日11:02:25");
+        int t = giftService.insertGift(entity);
+        System.out.printf("更新第" + t + "条数据成功");
+        Assert.assertEquals(1, t);
     }
 
 }

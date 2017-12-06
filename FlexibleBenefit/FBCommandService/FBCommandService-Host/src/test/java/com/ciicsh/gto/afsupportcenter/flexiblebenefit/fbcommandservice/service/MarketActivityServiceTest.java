@@ -18,7 +18,6 @@ import java.util.Date;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Luncher.class)
-@SuppressWarnings("SpringJavaAutowiringInspection")
 public class MarketActivityServiceTest {
     @Autowired
     private MarketActivityService marketActivityService;
