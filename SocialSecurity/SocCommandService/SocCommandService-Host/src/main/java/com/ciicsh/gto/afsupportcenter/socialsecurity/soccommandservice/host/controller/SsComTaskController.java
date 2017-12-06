@@ -5,13 +5,14 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsCom
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
-import com.ciicsh.gto.afsupportcenter.util.tips.PageTip;
-import com.ciicsh.gto.afsupportcenter.util.tips.TipKit;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * <p>
@@ -29,34 +30,34 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
 
     @Log("查询未处理企业任务单")
     @RequestMapping(value = "getNoProgressTask")
-    public PageTip<SsComTaskDTO> getNoProgressCompanyTask(PageInfo pageInfo) {
+    public JsonResult<List<SsComTaskDTO>> getNoProgressCompanyTask(PageInfo pageInfo) {
         //mybatis 分页插件
         PageRows<SsComTaskDTO> pageRows = iSsComTaskService.queryNoProgressCompanyTask(pageInfo);
-        return TipKit.ofPage(pageRows);
+        return JsonResultKit.ofPage(pageRows);
 
     }
     @Log("查询处理中企业任务单")
     @RequestMapping(value = "getProgressingTask")
-    public PageTip<SsComTaskDTO> getNoProgressingCompanyTask(PageInfo pageInfo) {
+    public JsonResult<List<SsComTaskDTO>> getNoProgressingCompanyTask(PageInfo pageInfo) {
         //mybatis 分页插件
         PageRows<SsComTaskDTO> pageRows = iSsComTaskService.queryProgressingCompanyTask(pageInfo);
-        return TipKit.ofPage(pageRows);
+        return JsonResultKit.ofPage(pageRows);
     }
 
     @Log("查询已完成企业任务单")
     @RequestMapping(value = "getFinshedTask")
-    public PageTip<SsComTaskDTO> getFinshedCompanyTask(PageInfo pageInfo) {
+    public JsonResult<List<SsComTaskDTO>> getFinshedCompanyTask(PageInfo pageInfo) {
         //mybatis 分页插件
         PageRows<SsComTaskDTO> pageRows = iSsComTaskService.queryNoProgressCompanyTask(pageInfo);
-        return TipKit.ofPage(pageRows);
+        return JsonResultKit.ofPage(pageRows);
     }
 
     @Log("查询批退企业任务单")
     @RequestMapping(value = "getRefusedTask")
-    public PageTip<SsComTaskDTO> getRefusedCompanyTask(PageInfo pageInfo) {
+    public JsonResult<List<SsComTaskDTO>> getRefusedCompanyTask(PageInfo pageInfo) {
         //mybatis 分页插件
         PageRows<SsComTaskDTO> pageRows = iSsComTaskService.queryNoProgressCompanyTask(pageInfo);
-        return TipKit.ofPage(pageRows);
+        return JsonResultKit.ofPage(pageRows);
     }
 
 
