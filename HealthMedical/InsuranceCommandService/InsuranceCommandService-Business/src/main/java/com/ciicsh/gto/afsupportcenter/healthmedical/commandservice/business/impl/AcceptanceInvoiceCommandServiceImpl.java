@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.business.impl;
 
 import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po.AcceptanceInvoicePO;
-import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.dao.HmAcceptanceInvoiceMapper;
+import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.dao.AcceptanceInvoiceMapper;
 import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.business.AcceptanceInvoiceCommandService;
 import org.springframework.stereotype.Service;
 
