@@ -6,7 +6,7 @@ package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.dto;
 public class JsonResult {
 
     public enum ErrorCode {
-        SUCCESS("0", "SUCCESS"),
+        SUCCESS("200", "SUCCESS"),
         REMOTEINVOCATIONERROR("300", "远程服务接口调用异常"),
         ILLEGAL_ARGUMENT("400", "非法的请求参数")
         ;
@@ -59,7 +59,7 @@ public class JsonResult {
         this.data = data;
     }
 
-    private String errorcode = "0";
+    private String errorcode = "200";
     private String errormsg = "";
     private Object data = "";
 

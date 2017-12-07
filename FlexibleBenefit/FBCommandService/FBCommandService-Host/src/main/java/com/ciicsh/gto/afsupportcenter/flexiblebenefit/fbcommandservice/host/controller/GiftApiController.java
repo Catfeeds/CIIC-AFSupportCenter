@@ -28,6 +28,10 @@ public class GiftApiController implements GiftCommandProxy {
     public JsonResult findById(@PathVariable Integer id) {
         JsonResult result = new JsonResult();
         GiftPO entity = giftService.findById(id);
+        if (entity == null || entity.getId() == null) {
+            result.setErrorcode("400");
+            result.setErrormsg("没有相应数据");
+        }
         result.setData(entity);
         return result;
     }
@@ -39,10 +43,9 @@ public class GiftApiController implements GiftCommandProxy {
         entity.setId(id);
         entity.setNumber(num);
         int t = giftService.insertGift(entity);
-        if (t == 1) {
-            result.setErrorcode("200");
-        } else {
+        if (t != 1) {
             result.setErrorcode("400");
+            result.setErrormsg("数据没有更新");
         }
         return result;
     }
