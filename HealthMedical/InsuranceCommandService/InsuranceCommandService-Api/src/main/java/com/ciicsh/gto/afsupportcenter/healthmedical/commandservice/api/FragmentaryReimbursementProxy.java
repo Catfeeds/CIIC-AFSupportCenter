@@ -17,6 +17,6 @@ public interface FragmentaryReimbursementProxy {
      * @return
      */
     @PostMapping("")
-    JsonResult saveFragmentaryReimbursement(@RequestBody Map<String, Object> param);
+    void saveFragmentaryReimbursement(@RequestBody Map<String, Object> param);
 
 }

@@ -13,4 +13,8 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po.Fra
  */
 public interface FragmentaryReimbursementMapper{
 
+    void save(FragmentaryReimbursementPO fragmentaryReimbursement);
+
+    void edit(FragmentaryReimbursementPO fragmentaryReimbursement);
+
 }

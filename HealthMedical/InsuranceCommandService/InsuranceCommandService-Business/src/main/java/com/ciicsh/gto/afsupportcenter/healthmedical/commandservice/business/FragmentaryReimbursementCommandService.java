@@ -12,5 +12,6 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po.Fra
  * @since 2017-12-04
  */
 public interface FragmentaryReimbursementCommandService {
-	
+    void save(FragmentaryReimbursementPO fragmentaryReimbursement);
+    void edit(FragmentaryReimbursementPO fragmentaryReimbursement);
 }

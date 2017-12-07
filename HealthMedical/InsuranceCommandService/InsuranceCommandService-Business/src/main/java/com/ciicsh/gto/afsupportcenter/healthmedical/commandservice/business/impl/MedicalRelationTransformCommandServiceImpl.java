@@ -4,6 +4,7 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po.Med
 import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.dao.MedicalRelationTransformMapper;
 import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.business.MedicalRelationTransformCommandService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.remoting.RemoteInvocationFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 2017-12-04
  */
 @Service
+@Transactional
 public class MedicalRelationTransformCommandServiceImpl implements MedicalRelationTransformCommandService {
 
     @Autowired

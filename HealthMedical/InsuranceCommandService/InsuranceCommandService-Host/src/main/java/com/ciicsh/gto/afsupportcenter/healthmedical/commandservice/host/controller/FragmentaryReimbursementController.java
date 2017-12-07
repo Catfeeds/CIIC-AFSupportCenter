@@ -23,20 +23,28 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/CommandService/FragmentaryReimbursement")
-public class FragmentaryReimbursementController implements FragmentaryReimbursementProxy{
-
+//public class FragmentaryReimbursementController implements FragmentaryReimbursementProxy{
+   public class FragmentaryReimbursementController {
     @Autowired
     private FragmentaryReimbursementCommandService fragmentaryReimbursementCommandService;
 
-    @Override
+
     @RequestMapping(value = "/saveFragmentaryReimbursement", method = { RequestMethod.POST})
-    public JsonResult saveFragmentaryReimbursement(@RequestBody Map<String, Object> param) {
-        JsonResult jr = new JsonResult();
+ //   public void saveFragmentaryReimbursement(@RequestBody Map<String, Object> param)
+    public void saveFragmentaryReimbursement()
+    {
 
-        Object fragmentaryReimbursementObj = param.get("fragmentaryReimbursement");
-     //   FragmentaryReimbursementPO fragmentaryReimbursementPO = JSONConverter
+      //  Object fragmentaryReimbursementObj = param.get("fragmentaryReimbursement");
+      //  FragmentaryReimbursementPO fragmentaryReimbursementPO = JSONConverter.convertToEntity(fragmentaryReimbursementObj,FragmentaryReimbursementPO.class);
+        FragmentaryReimbursementPO fragmentaryReimbursementPO= new FragmentaryReimbursementPO();
+        fragmentaryReimbursementCommandService.save(fragmentaryReimbursementPO);
 
+    }
 
-        return jr;
+    @RequestMapping(value = "/editFragmentaryReimbursement", method = { RequestMethod.POST})
+    public void editFragmentaryReimbursement()
+    {
+        FragmentaryReimbursementPO fragmentaryReimbursementPO= new FragmentaryReimbursementPO();
+        fragmentaryReimbursementCommandService.edit(fragmentaryReimbursementPO);
     }
 }
