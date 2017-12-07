@@ -47,7 +47,7 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
      */
     @Log("雇员任务批退")
     @PostMapping("/rejection")
-    public JsonResult<Boolean> rejection(RejectionRequestParam param, String aaa) {
+    public JsonResult<Boolean> rejection(RejectionRequestParam param) {
         List<Long> ids = Optional.ofNullable(param.getIds()).orElse(Collections.emptyList());
         int length = ids.size();
         String remark = param.getRemark();
