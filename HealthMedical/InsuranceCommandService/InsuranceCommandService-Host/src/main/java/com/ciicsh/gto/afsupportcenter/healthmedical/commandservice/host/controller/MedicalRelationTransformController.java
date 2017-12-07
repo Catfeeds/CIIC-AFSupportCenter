@@ -8,15 +8,14 @@ import org.springframework.stereotype.Controller;
 
 /**
  * <p>
- * 中智中盈产品对应表
-包含中盈和中智的自己承包的产品 前端控制器
+ * 医疗关系转移表 前端控制器
  * </p>
  *
  * @author zhaogang
  * @since 2017-12-02
  */
 @Controller
-@RequestMapping("/CommandService/hmProductCorrespond")
-public class HmProductCorrespondController {
+@RequestMapping("/CommandService/MedicalRelationTransform")
+public class MedicalRelationTransformController {
 	
 }

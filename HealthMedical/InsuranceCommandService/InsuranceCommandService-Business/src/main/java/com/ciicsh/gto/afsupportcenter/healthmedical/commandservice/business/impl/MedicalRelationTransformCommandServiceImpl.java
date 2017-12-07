@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.business.imp
 
 import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po.MedicalRelationTransformPO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.dao.MedicalRelationTransformMapper;
-import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.business.MedicalRelationTransformService;
+import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.business.MedicalRelationTransformCommandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 2017-12-04
  */
 @Service
-public class MedicalRelationTransformServiceImpl implements MedicalRelationTransformService {
+public class MedicalRelationTransformCommandServiceImpl implements MedicalRelationTransformCommandService {
 
     @Autowired
     private MedicalRelationTransformMapper medicalRelationTransformMapper;

@@ -11,6 +11,6 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po.Fra
  * @author zhaogang
  * @since 2017-12-04
  */
-public interface FragmentaryReimbursementService {
+public interface FragmentaryReimbursementCommandService {
 	
 }

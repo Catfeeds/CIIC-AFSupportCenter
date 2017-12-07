@@ -2,7 +2,6 @@ package com.ciicsh.gto.afsupportcenter.util.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 /**
  * Json序列化工具
  * 

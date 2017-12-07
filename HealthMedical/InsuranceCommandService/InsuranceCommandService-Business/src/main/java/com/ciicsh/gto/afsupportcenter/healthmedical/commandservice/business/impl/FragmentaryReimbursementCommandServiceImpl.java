@@ -1,8 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.business.impl;
 
+import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.business.FragmentaryReimbursementCommandService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po.FragmentaryReimbursementPO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.dao.FragmentaryReimbursementMapper;
-import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.business.FragmentaryReimbursementService;
+import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.business.FragmentaryReimbursementCommandService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2017-12-04
  */
 @Service
-public class FragmentaryReimbursementServiceImpl implements FragmentaryReimbursementService {
+public class FragmentaryReimbursementCommandServiceImpl implements FragmentaryReimbursementCommandService {
 	
 }
