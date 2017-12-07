@@ -15,15 +15,11 @@ log4j:
         ServerDailyRollingFile.DatePattern: '''.''yyyy-MM-dd'
         ServerDailyRollingFile.File: D://test/test.log
         ServerDailyRollingFile.layout: org.apache.log4j.PatternLayout
-        ServerDailyRollingFile.layout.ConversionPattern: '%d{yyyy-MM-dd HH:mm:ss}
-            [%t] %-5p [%c] - %m%n'
+        ServerDailyRollingFile.layout.ConversionPattern: '%d{yyyy-MM-dd HH:mm:ss} [%t] %-5p [%c] - %m%n'
         stdout: org.apache.log4j.ConsoleAppender
         stdout.layout: org.apache.log4j.PatternLayout
         stdout.layout.ConversionPattern: '%d yyyy-MM-dd HH:mm:ss %p [%c] %m%n'
     logger:
-        Java:
-            sql:
-                Connection: DEBUG
         com:
             ibatis: DEBUG
             ibatis.common.jdbc.ScriptRunner: DEBUG
@@ -31,6 +27,7 @@ log4j:
             ibatis.sqlmap.engine.impl.SqlMapClientDelegate: DEBUG
         java:
             sql:
+                Connection: DEBUG
                 PreparedStatement: DEBUG
                 Statement: DEBUG
     rootLogger: DEBUG,ServerDailyRollingFile,stdout
