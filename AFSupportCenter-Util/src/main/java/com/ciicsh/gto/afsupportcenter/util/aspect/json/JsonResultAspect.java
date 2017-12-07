@@ -2,8 +2,8 @@ package com.ciicsh.gto.afsupportcenter.util.aspect.json;
 
 import com.ciicsh.gto.afsupportcenter.util.aspect.BasicAspect;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
+import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
-import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -11,6 +11,7 @@ import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -41,16 +42,33 @@ public class JsonResultAspect extends BasicAspect {
             long time = System.currentTimeMillis() - start;
             String name = joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName();
             logger.error("API method:{} , time:{}ms , error:{}", name, time, e.getMessage());
-            return ofError(e);
+            return JsonResultFactory.createErrorJsonResult(method, e);
         }
     }
 
-    private JsonResult<String> ofError(Throwable e) {
-        String message = "服务器错误";
-        if (e instanceof BusinessException) {
-            message = e.getMessage();
+    /**
+     * JsonResult 工厂
+     */
+    private static class JsonResultFactory {
+
+        /**
+         * 创建错误 JsonResult
+         *
+         * @param method
+         * @param e
+         * @return
+         */
+        public static Object createErrorJsonResult(Method method, Throwable e) {
+            String message = "服务器错误";
+            if (e instanceof BusinessException) {
+                message = e.getMessage();
+            }
+            Map<String, Object> jsonResult = new HashMap<>(2);
+            jsonResult.put("message", message);
+            jsonResult.put("code", 500);
+
+            return JsonKit.castToObject(jsonResult, method.getReturnType());
         }
-        return JsonResultKit.of(500, message);
     }
 
     /**
@@ -60,23 +78,24 @@ public class JsonResultAspect extends BasicAspect {
      * @return
      */
     private boolean isJsonResult(Method method) {
-        return JsonResult.class.isAssignableFrom(method.getReturnType());
-/*
         Class<?> clazz = method.getReturnType();
         Boolean hasJsonResult = Optional.ofNullable(declaredClassCache.get(clazz)).orElse(false);
 
-        if (!hasJsonResult) {
-            // 判断返回结构是否是 JsonResult
-            if ("JsonResult".equals(clazz.getSimpleName())
-                && ReflectionUtils.findField(clazz, "code", int.class) != null
-                && ReflectionUtils.findField(clazz, "message", String.class) != null
-                && ReflectionUtils.findField(clazz, "data") != null
-                ) {
-                declaredClassCache.put(clazz, hasJsonResult = true);
-            }
+        if (hasJsonResult) {
+            return true;
         }
 
-        return hasJsonResult;*/
+        // 判断返回结构是否是 JsonResult
+        if (JsonResult.class.isAssignableFrom(clazz)
+            || (JsonResult.class.getSimpleName().equals(clazz.getSimpleName())
+            && ReflectionUtils.findField(clazz, "code") != null
+            && ReflectionUtils.findField(clazz, "message") != null
+            && ReflectionUtils.findField(clazz, "data") != null)
+            ) {
+            declaredClassCache.put(clazz, hasJsonResult = true);
+        }
+
+        return hasJsonResult;
     }
 
 }

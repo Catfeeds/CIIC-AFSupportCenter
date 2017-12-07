@@ -14,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-05
+ * @since 2017-12-07
  */
 @TableName("ss_com_task")
 public class SsComTask implements Serializable {
@@ -42,7 +42,7 @@ public class SsComTask implements Serializable {
 	@TableField("company_id")
 	private String companyId;
     /**
-     * 引用：DicItem.DicItemValue 1:开户：2：终止
+     * 引用：DicItem.DicItemValue 1:开户：2：转移 3：变更 4：终止
      */
 	@TableField("task_category")
 	private String taskCategory;
@@ -89,7 +89,7 @@ public class SsComTask implements Serializable {
 	@TableField("chat_history")
 	private String chatHistory;
     /**
-     * 任务单处理状态
+     * 任务单处理状态：0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
      */
 	@TableField("task_status")
 	private Integer taskStatus;
@@ -98,16 +98,6 @@ public class SsComTask implements Serializable {
      */
 	@TableField("agent_user_id")
 	private String agentUserId;
-    /**
-     * 任务处理时间
-     */
-	@TableField("process_time")
-	private LocalDateTime processTime;
-    /**
-     * 办理状态：1、材料收缴  2 、受理中  3、送审中  4 已完成
-     */
-	@TableField("handle_status")
-	private Integer handleStatus;
     /**
      * 受理日期
      */
@@ -123,6 +113,16 @@ public class SsComTask implements Serializable {
      */
 	@TableField("finish_date")
 	private LocalDate finishDate;
+    /**
+     * 办理备注
+     */
+	@TableField("handle_remark")
+	private String handleRemark;
+    /**
+     * 批退备注
+     */
+	@TableField("rejection_remark")
+	private String rejectionRemark;
     /**
      * 是否可用
      */
@@ -275,22 +275,6 @@ public class SsComTask implements Serializable {
 		this.agentUserId = agentUserId;
 	}
 
-	public LocalDateTime getProcessTime() {
-		return processTime;
-	}
-
-	public void setProcessTime(LocalDateTime processTime) {
-		this.processTime = processTime;
-	}
-
-	public Integer getHandleStatus() {
-		return handleStatus;
-	}
-
-	public void setHandleStatus(Integer handleStatus) {
-		this.handleStatus = handleStatus;
-	}
-
 	public LocalDate getStartHandleDate() {
 		return startHandleDate;
 	}
@@ -313,6 +297,22 @@ public class SsComTask implements Serializable {
 
 	public void setFinishDate(LocalDate finishDate) {
 		this.finishDate = finishDate;
+	}
+
+	public String getHandleRemark() {
+		return handleRemark;
+	}
+
+	public void setHandleRemark(String handleRemark) {
+		this.handleRemark = handleRemark;
+	}
+
+	public String getRejectionRemark() {
+		return rejectionRemark;
+	}
+
+	public void setRejectionRemark(String rejectionRemark) {
+		this.rejectionRemark = rejectionRemark;
 	}
 
 	public Boolean getActive() {
@@ -381,11 +381,11 @@ public class SsComTask implements Serializable {
 			", chatHistory=" + chatHistory +
 			", taskStatus=" + taskStatus +
 			", agentUserId=" + agentUserId +
-			", processTime=" + processTime +
-			", handleStatus=" + handleStatus +
 			", startHandleDate=" + startHandleDate +
 			", sendCheckDate=" + sendCheckDate +
 			", finishDate=" + finishDate +
+			", handleRemark=" + handleRemark +
+			", rejectionRemark=" + rejectionRemark +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

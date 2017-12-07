@@ -5,26 +5,27 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMapDto" extends="BaseResultMap"
                type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsEmpTaskDTO">
-        <result column="emp_name" property="empName" />
-        <result column="employee_id" property="employeeId" />
-        <result column="id_Num" property="idNum" />
+        <result column="emp_name" property="empName"/>
+        <result column="employee_id" property="employeeId"/>
+        <result column="id_num" property="idNum"/>
 
-        <result column="company_id" property="companyId" />
-        <result column="title" property="title" />
+        <result column="company_id" property="companyId"/>
+        <result column="title" property="title"/>
 
-        <result column="企业社保账号com_account_id" property="comAccountId" />
-        <result column="ss_pwd" property="ssPwd" />
-        <result column="settlement_area" property="settlementArea" />
-        <result column="ss_account_type" property="ssAccountType" />
+        <result column="com_account_id" property="comAccountId"/>
+        <result column="ss_pwd" property="ssPwd"/>
+        <result column="settlement_area" property="settlementArea"/>
+        <result column="ss_account_type" property="ssAccountType"/>
+        <result column="ss_account" property="ssAccount"/>
 
-        <result column="emp_classify" property="empClassify" />
-        <result column="start_month" property="startMonth" />
+        <result column="emp_classify" property="empClassify"/>
+        <result column="start_month" property="startMonth"/>
     </resultMap>
 
     <select id="employeeOperatorQuery" resultMap="BaseResultMapDto">
-      select et.*
+        select et.*
         ,e.emp_name , e.employee_id , e.id_num
-        ,ca.com_account_id,ca.ss_pwd,ca.settlement_area,ca.ss_account_type
+        ,ca.com_account_id,ca.ss_pwd,ca.settlement_area,ca.ss_account_type,ca.ss_account
         ,c.company_id,c.title
         ,ea.emp_classify,ea.start_month
         from ss_emp_task et
@@ -33,6 +34,50 @@
         LEFT JOIN cmy_employee e on ea.employee_id = e.employee_id
         LEFT JOIN ss_account_com_tie ssac on ssac.company_id = c.company_id
         LEFT JOIN ss_com_account ca on ca.com_account_id = ssac.com_account_id
-
+        <where>
+            and et.is_active = 1
+            and ea.is_active = 1
+            and ssac.is_active = 1
+            and ca.is_active = 1
+            <if test="taskStatus != null">
+                and et.task_status = #{taskStatus}
+            </if>
+            <if test="empName != null">
+                and e.emp_name LIKE CONCAT('%',#{empName},'%')
+            </if>
+            <if test="settlementArea != null">
+                and ca.settlement_area = #{settlementArea}
+            </if>
+            <if test="ssAccountType != null">
+                and ca.ss_account_type = #{ssAccountType}
+            </if>
+            <if test="empClassify != null">
+                and ea.emp_classify = #{empClassify}
+            </if>
+            <if test="ssAccount != null">
+                and ca.ss_account = #{ssAccount}
+            </if>
+            <if test="companyId != null">
+                and c.company_id LIKE CONCAT('%',#{companyId},'%')
+            </if>
+            <if test="idNum != null">
+                and e.id_num LIKE CONCAT('%',#{idNum},'%')
+            </if>
+            <if test="taskCategory != null">
+                and et.task_category = #{taskCategory}
+            </if>
+            <if test="title != null">
+                and c.title = #{title}
+            </if>
+            <if test="employeeId != null">
+                and e.employee_id LIKE CONCAT('%',#{employeeId},'%')
+            </if>
+            <if test="urgent != null">
+                and et.urgent = #{urgent}
+            </if>
+            <if test="startMonth != null">
+                and ea.start_month = #{startMonth}
+            </if>
+        </where>
     </select>
 </mapper>

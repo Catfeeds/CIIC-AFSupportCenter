@@ -13,10 +13,10 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-05
+ * @since 2017-12-07
  */
-@TableName("ss_monthly_task_count_statistic")
-public class SsMonthlyTaskCountStatistic implements Serializable {
+@TableName("ss_month_task_count_stat")
+public class SsMonthTaskCountStat implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -220,7 +220,7 @@ public class SsMonthlyTaskCountStatistic implements Serializable {
 
 	@Override
 	public String toString() {
-		return "SsMonthlyTaskCountStatistic{" +
+		return "SsMonthTaskCountStat{" +
 			", recordId=" + recordId +
 			", customerId=" + customerId +
 			", departmentId=" + departmentId +

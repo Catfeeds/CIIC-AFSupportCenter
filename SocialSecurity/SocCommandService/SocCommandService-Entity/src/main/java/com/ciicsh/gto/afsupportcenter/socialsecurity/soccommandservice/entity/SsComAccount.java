@@ -16,7 +16,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-05
+ * @since 2017-12-07
  */
 @TableName("ss_com_account")
 public class SsComAccount implements Serializable {
@@ -153,6 +153,11 @@ public class SsComAccount implements Serializable {
      */
 	@TableField("into_date")
 	private LocalDate intoDate;
+    /**
+     * 终止日期
+     */
+	@TableField("end_date")
+	private LocalDate endDate;
     /**
      * 发出材料:正式通知书、预生成通知书、收据、银行对账单、汇总表、实时表
      */
@@ -385,6 +390,14 @@ public class SsComAccount implements Serializable {
 		this.intoDate = intoDate;
 	}
 
+	public LocalDate getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(LocalDate endDate) {
+		this.endDate = endDate;
+	}
+
 	public String getDispatchMaterial() {
 		return dispatchMaterial;
 	}
@@ -461,6 +474,7 @@ public class SsComAccount implements Serializable {
 			", changeTime=" + changeTime +
 			", receiveDate=" + receiveDate +
 			", intoDate=" + intoDate +
+			", endDate=" + endDate +
 			", dispatchMaterial=" + dispatchMaterial +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +

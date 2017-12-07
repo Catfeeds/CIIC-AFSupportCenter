@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthlyComPay;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthComPay;
 import com.baomidou.mybatisplus.service.IService;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.service.IService;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-01
+ * @since 2017-12-07
  */
-public interface ISsMonthlyComPayService extends IService<SsMonthlyComPay> {
+public interface ISsMonthComPayService extends IService<SsMonthComPay> {
 
 }

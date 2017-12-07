@@ -15,7 +15,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-05
+ * @since 2017-12-07
  */
 @TableName("ss_month_emp_change_detail")
 public class SsMonthEmpChangeDetail implements Serializable {
@@ -40,8 +40,8 @@ public class SsMonthEmpChangeDetail implements Serializable {
     /**
      * 变更类型
      */
-	@TableField("cost_category")
-	private String costCategory;
+	@TableField("change_type")
+	private String changeType;
     /**
      * 基数
      */
@@ -133,12 +133,12 @@ public class SsMonthEmpChangeDetail implements Serializable {
 		this.employeeId = employeeId;
 	}
 
-	public String getCostCategory() {
-		return costCategory;
+	public String getChangeType() {
+		return changeType;
 	}
 
-	public void setCostCategory(String costCategory) {
-		this.costCategory = costCategory;
+	public void setChangeType(String changeType) {
+		this.changeType = changeType;
 	}
 
 	public BigDecimal getBaseAmount() {
@@ -251,7 +251,7 @@ public class SsMonthEmpChangeDetail implements Serializable {
 			", monthEmpChangeDetailId=" + monthEmpChangeDetailId +
 			", monthEmpChangeId=" + monthEmpChangeId +
 			", employeeId=" + employeeId +
-			", costCategory=" + costCategory +
+			", changeType=" + changeType +
 			", baseAmount=" + baseAmount +
 			", ssType=" + ssType +
 			", ssName=" + ssName +

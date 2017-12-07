@@ -20,7 +20,7 @@ public class SsEmpTaskDTO extends SsEmpTask {
     // 客户名称
     private String title;
 
-    // 来源表 ss_emp_archive
+    // 来源表 ss_com_account
     // 企业社保账户Id
     private Long comAccountId;
     // 养老金独立开户密码（使用U盾登陆的密码）
@@ -29,6 +29,8 @@ public class SsEmpTaskDTO extends SsEmpTask {
     private String settlementArea;
     // 账户类型：1:中智大库 2中智外包 3独立户
     private Integer ssAccountType;
+    // 参保户登记码（账号）
+    private String ssAccount;
 
     // 来源表 ss_emp_archive
     // 人员属性

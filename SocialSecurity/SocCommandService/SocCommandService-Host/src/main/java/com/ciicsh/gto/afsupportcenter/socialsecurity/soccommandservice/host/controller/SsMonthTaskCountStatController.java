@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsMonthlyTaskCountStatisticService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsMonthTaskCountStatService;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-01
+ * @since 2017-12-07
  */
 @RestController
-@RequestMapping("/api/soccommandservice/ssMonthlyTaskCountStatistic")
-public class SsMonthlyTaskCountStatisticController  extends BasicController<ISsMonthlyTaskCountStatisticService> {
+@RequestMapping("/api/soccommandservice/ssMonthTaskCountStat")
+public class SsMonthTaskCountStatController  extends BasicController<ISsMonthTaskCountStatService> {
 
 }
 

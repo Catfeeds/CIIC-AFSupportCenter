@@ -14,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-05
+ * @since 2017-12-07
  */
 @TableName("ss_statement_imp")
 public class SsStatementImp implements Serializable {
@@ -42,10 +42,10 @@ public class SsStatementImp implements Serializable {
 	@TableField("emp_name")
 	private String empName;
     /**
-     * 变更名称
+     * 变更类型名称
      */
-	@TableField("change_name")
-	private String changeName;
+	@TableField("change_type")
+	private String changeType;
     /**
      * 基数
      */
@@ -145,12 +145,12 @@ public class SsStatementImp implements Serializable {
 		this.empName = empName;
 	}
 
-	public String getChangeName() {
-		return changeName;
+	public String getChangeType() {
+		return changeType;
 	}
 
-	public void setChangeName(String changeName) {
-		this.changeName = changeName;
+	public void setChangeType(String changeType) {
+		this.changeType = changeType;
 	}
 
 	public BigDecimal getBaseAmount() {
@@ -264,7 +264,7 @@ public class SsStatementImp implements Serializable {
 			", statementId=" + statementId +
 			", empNum=" + empNum +
 			", empName=" + empName +
-			", changeName=" + changeName +
+			", changeType=" + changeType +
 			", baseAmount=" + baseAmount +
 			", ssType=" + ssType +
 			", ssTypeName=" + ssTypeName +

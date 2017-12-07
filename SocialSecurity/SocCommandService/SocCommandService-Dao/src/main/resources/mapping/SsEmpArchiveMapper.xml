@@ -7,7 +7,8 @@
         <id column="emp_archived_id" property="empArchivedId" />
         <result column="entity_id" property="entityId" />
         <result column="customer_id" property="customerId" />
-        <result column="empcom_id" property="empcomId" />
+        <result column="company_id" property="companyId" />
+        <result column="employee_id" property="employeeId" />
         <result column="com_account_id" property="comAccountId" />
         <result column="ss_serial" property="ssSerial" />
         <result column="salary" property="salary" />
