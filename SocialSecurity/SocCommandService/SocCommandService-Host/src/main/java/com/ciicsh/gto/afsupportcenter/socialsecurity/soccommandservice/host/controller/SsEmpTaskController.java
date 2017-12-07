@@ -12,7 +12,6 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -48,7 +47,7 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
      */
     @Log("雇员任务批退")
     @PostMapping("/rejection")
-    public JsonResult<Boolean> rejection(RejectionRequestParam param,String aaa) {
+    public JsonResult<Boolean> rejection(RejectionRequestParam param, String aaa) {
         List<Long> ids = Optional.ofNullable(param.getIds()).orElse(Collections.emptyList());
         int length = ids.size();
         String remark = param.getRemark();

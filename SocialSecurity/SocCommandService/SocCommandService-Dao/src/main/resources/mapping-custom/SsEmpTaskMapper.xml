@@ -39,6 +39,9 @@
             and ea.is_active = 1
             and ssac.is_active = 1
             and ca.is_active = 1
+            <if test="taskStatus == null">
+                and et.task_status in (1,2)
+            </if>
             <if test="taskStatus != null">
                 and et.task_status = #{taskStatus}
             </if>
@@ -65,6 +68,9 @@
             </if>
             <if test="taskCategory != null">
                 and et.task_category = #{taskCategory}
+            </if>
+            <if test="taskCategory == null">
+                and et.task_category in(1,2,3,4,5)
             </if>
             <if test="title != null">
                 and c.title = #{title}

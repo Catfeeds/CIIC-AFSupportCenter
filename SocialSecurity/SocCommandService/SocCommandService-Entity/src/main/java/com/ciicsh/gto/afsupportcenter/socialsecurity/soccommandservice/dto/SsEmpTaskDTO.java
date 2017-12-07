@@ -6,6 +6,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.Ss
  * SsEmpTask DTO
  */
 public class SsEmpTaskDTO extends SsEmpTask {
+
     // 来源表 cmy_employee
     // 雇员姓名
     private String empName;
@@ -124,5 +125,13 @@ public class SsEmpTaskDTO extends SsEmpTask {
 
     public void setStartMonth(String startMonth) {
         this.startMonth = startMonth;
+    }
+
+    public String getSsAccount() {
+        return ssAccount;
+    }
+
+    public void setSsAccount(String ssAccount) {
+        this.ssAccount = ssAccount;
     }
 }
