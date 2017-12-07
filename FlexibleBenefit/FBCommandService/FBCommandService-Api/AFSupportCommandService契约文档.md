@@ -4,11 +4,11 @@
 
 **http方法:** get  
 **api地址:**  
-开发环境: http://localhost:6019/api/gift/findById/1
-本地联调环境：http://10.17.2.236:6019/api/gift/findById/1
-SIT环境: http://172.16.9.25:6019/api/gift/findById/1
-UAT环境：  
-生产环境：
+* 开发环境: http://localhost:6019/api/gift/findById/1
+* 本地联调环境：http://10.17.2.236:6019/api/gift/findById/1
+* SIT环境: http://172.16.9.25:6019/api/gift/findById/1
+* UAT环境：  
+* 生产环境：
 
 响应报文--成功
 ```json
@@ -46,23 +46,15 @@ UAT环境：
 }
 ```
 
-
-
-
-
-
-
-
-
 1.2 更新礼品数量
 
 **http方法:** post  
 **api地址:**  
-开发环境: http://localhost:6019/api/gift/updateById
-本地联调环境：http://10.17.2.236:6019/api/gift/updateById
-SIT环境: http://172.16.9.25:6019/api/gift/updateById
-UAT环境：  
-生产环境：
+* 开发环境: http://localhost:6019/api/gift/updateById
+* 本地联调环境：http://10.17.2.236:6019/api/gift/updateById
+* SIT环境: http://172.16.9.25:6019/api/gift/updateById
+* UAT环境：
+* 生产环境：
 
 请求报文
 ```json
@@ -96,11 +88,11 @@ UAT环境：
 
 **http方法:** get  
 **api地址:**  
-开发环境: http://localhost:6019/api/market/findById/1
-本地联调环境：http://10.17.2.236:6019/api/market/findById/1
-SIT环境: http://172.16.9.25:6019/api/market/findById/1
-UAT环境：  
-生产环境：
+* 开发环境: http://localhost:6019/api/market/findById/1
+* 本地联调环境：http://10.17.2.236:6019/api/market/findById/1
+* SIT环境: http://172.16.9.25:6019/api/market/findById/1
+* UAT环境：  
+* 生产环境：
 
 响应报文
 ```json
