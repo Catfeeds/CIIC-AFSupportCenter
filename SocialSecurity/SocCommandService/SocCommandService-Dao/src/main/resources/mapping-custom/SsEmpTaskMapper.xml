@@ -85,6 +85,9 @@
             -->
             <choose>
                 <when test="operatorType == 2">
+                    <if test="taskStatus != null">
+                        and et.task_status = #{taskStatus}
+                    </if>
                     <if test="beginSubmitTime != null and endSubmitTime != null">
                         and date_format(et.submit_time,'%Y-%m-%d') BETWEEN #{beginSubmitTime} AND #{endSubmitTime}
                     </if>
