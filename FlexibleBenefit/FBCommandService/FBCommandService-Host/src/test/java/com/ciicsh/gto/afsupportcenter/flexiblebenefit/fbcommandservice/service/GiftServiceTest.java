@@ -67,7 +67,17 @@ public class GiftServiceTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    @Test
+    public void testDeleteFile() {
+        try {
+            String filepath = "http://172.16.9.28:9100/3,bc763cfaa6";
+            FileHandler.deleteFile(filepath);
+            System.out.printf(filepath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

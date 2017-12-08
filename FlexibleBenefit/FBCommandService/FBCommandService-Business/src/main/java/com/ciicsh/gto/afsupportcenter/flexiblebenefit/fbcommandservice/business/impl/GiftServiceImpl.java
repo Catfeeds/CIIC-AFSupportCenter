@@ -45,9 +45,16 @@ public class GiftServiceImpl implements GiftService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(filepath);
         return filepath;
     }
 
+    @Override
+    public void deletePicture(String filePath) {
+        try {
+            FileHandler.deleteFile(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

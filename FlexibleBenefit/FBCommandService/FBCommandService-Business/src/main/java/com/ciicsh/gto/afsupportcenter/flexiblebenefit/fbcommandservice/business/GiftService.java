@@ -27,8 +27,17 @@ public interface GiftService {
 
     /**
      * 上传文件方法
+     *
      * @param file
      * @return String
      */
     String fileUpdate(File file);
+
+    /**
+     * 删除服务器文件
+     *
+     * @param filePath
+     */
+    public void deletePicture(String filePath);
+
 }

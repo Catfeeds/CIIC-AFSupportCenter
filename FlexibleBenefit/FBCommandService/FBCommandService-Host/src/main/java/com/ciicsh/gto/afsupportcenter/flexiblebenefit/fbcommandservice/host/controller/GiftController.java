@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 
@@ -41,11 +42,29 @@ public class GiftController {
     /**
      * 礼品新增功能
      *
-     * @param entity
+     * @param
      * @return
      */
     @PostMapping("/giftInsert")
-    public int giftInsert(GiftPO entity) {
+    public int giftInsert(GiftPO entity, MultipartFile file, HttpServletRequest request) {
+        try {
+            if (file != null && !file.isEmpty()) {
+                String filePath = request.getSession().getServletContext().getRealPath("/") + file.getOriginalFilename();
+                // 转存文件
+                file.transferTo(new File(filePath));
+                File f = new File(filePath);
+                /**上传图片*/
+                String filePathUrl = giftService.fileUpdate(f);
+
+                /**如果修改图片，清除原图片，再保存新图片*/
+                if (entity.getPictureUrl() != null && !"".equals(entity.getPictureUrl())) {
+                    giftService.deletePicture(entity.getPictureUrl());
+                }
+                entity.setPictureUrl(filePathUrl);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         int t = giftService.insertGift(entity);
         if (t == 1) {
             logger.info("command服务--礼品添加成功");
