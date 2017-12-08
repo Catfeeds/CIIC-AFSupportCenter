@@ -2,6 +2,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 
+import java.time.LocalDateTime;
+
 /**
  * SsEmpTask DTO
  */
@@ -11,6 +13,10 @@ public class SsEmpTaskDTO extends SsEmpTask {
     private Integer operatorType;
     // 任务类型
     private Integer[] taskCategories;
+    // 任务发起开始时间
+    private LocalDateTime beginSubmitTime;
+    // 任务发起结束时间
+    private LocalDateTime endSubmitTime;
 
     // 来源表 cmy_employee
     // 雇员姓名
@@ -154,5 +160,21 @@ public class SsEmpTaskDTO extends SsEmpTask {
 
     public void setTaskCategories(Integer[] taskCategories) {
         this.taskCategories = taskCategories;
+    }
+
+    public LocalDateTime getBeginSubmitTime() {
+        return beginSubmitTime;
+    }
+
+    public void setBeginSubmitTime(LocalDateTime beginSubmitTime) {
+        this.beginSubmitTime = beginSubmitTime;
+    }
+
+    public LocalDateTime getEndSubmitTime() {
+        return endSubmitTime;
+    }
+
+    public void setEndSubmitTime(LocalDateTime endSubmitTime) {
+        this.endSubmitTime = endSubmitTime;
     }
 }

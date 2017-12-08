@@ -40,6 +40,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     private void handleTaskCategory(SsEmpTaskDTO dto) {
         // 操作类型，用于区分操作。1 日常操作、2 特殊操作， 默认日常操作
         Integer operatorType = Optional.ofNullable(dto.getOperatorType()).orElse(1);
+        dto.setOperatorType(operatorType);
 
         // 任务类型，DicItem.DicItemValue 1:新进：2：转入 3调整 4 补缴 5 转出 6终止 7退账 8 提取
         {

@@ -1,9 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.util.kit;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.parser.DefaultJSONParser;
-import com.alibaba.fastjson.parser.ParserConfig;
+import com.alibaba.fastjson.TypeReference;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -21,26 +21,43 @@ public class JsonKit {
         return JSON.toJSONString(object);
     }
 
+    /**
+     * 将 JSON 字符串反序列化为对象 Object
+     *
+     * @return JSON字符串
+     */
+    public static <T> T parseObject(String json, Class<T> clazz) {
+        return parseObject(json, (Type) clazz);
+    }
 
     /**
      * 将 JSON 字符串反序列化为对象 Object
      *
      * @return JSON字符串
      */
-    public static <T> T parseObject(String json, Class<T> typeRef) {
-        return jsonParser(json).parseObject(typeRef);
+    public static <T> T parseObject(String json, TypeReference<T> typeReference) {
+        return parseObject(json, typeReference.getType());
+    }
+
+    /**
+     * 将 JSON 字符串反序列化为对象 Object
+     *
+     * @return JSON字符串
+     */
+    public static <T> T parseObject(String json, Type type) {
+        return JSON.parseObject(json, type);
     }
 
     /**
      * 将 JSON 字符串反序列化为 List
      *
      * @param json
-     * @param typeRef
+     * @param clazz
      * @param <T>
      * @return
      */
-    public static <T> List<T> parseList(String json, Class<T> typeRef) {
-        return jsonParser(json).parseArray(typeRef);
+    public static <T> List<T> parseList(String json, Class<T> clazz) {
+        return JSON.parseArray(json, clazz);
     }
 
     /**
@@ -65,15 +82,5 @@ public class JsonKit {
      */
     public static <T> T castToObject(Object jsonObj, Class<T> clazz) {
         return parseObject(toStr(jsonObj), clazz);
-    }
-
-    /**
-     * json 解析器
-     *
-     * @param text
-     * @return
-     */
-    private static DefaultJSONParser jsonParser(String text) {
-        return new DefaultJSONParser(text, ParserConfig.getGlobalInstance());
     }
 }

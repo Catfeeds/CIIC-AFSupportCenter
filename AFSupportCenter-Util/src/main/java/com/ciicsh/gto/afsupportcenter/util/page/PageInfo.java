@@ -1,8 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.util.page;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.serializer.ValueFilter;
+import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
@@ -73,31 +75,11 @@ public class PageInfo implements Serializable {
     /**
      * 自定函数，方便替换算法
      *
-     * @return
-     */
-    public JSONObject toMap() {
-        return filter(params, filterEmpty);
-    }
-
-    /**
-     * 自定函数，方便替换算法
-     *
      * @param clazz
      * @return
      */
     public <T> T toJavaObject(Class<T> clazz) {
-        return toMap().toJavaObject(clazz);
-    }
-
-    /**
-     * 自定函数，方便替换算法
-     *
-     * @param type
-     * @param <T>
-     * @return
-     */
-    public <T> T toJavaObject(Type type) {
-        return toMap().toJavaObject(type);
+        return toJavaObject((Type) clazz);
     }
 
     /**
@@ -111,8 +93,16 @@ public class PageInfo implements Serializable {
         return toJavaObject(typeReference.getType());
     }
 
-    protected JSONObject filter(JSONObject params, boolean filterEmpty) {
-        return JSON.parseObject(JSON.toJSONString(params, new EmptyValueFilter(filterEmpty)));
+    /**
+     * 自定函数，方便替换算法
+     *
+     * @param type
+     * @param <T>
+     * @return
+     */
+    public <T> T toJavaObject(Type type) {
+        String text = JSON.toJSONString(params, new EmptyValueFilter(filterEmpty));
+        return JsonKit.parseObject(text, type);
     }
 
     private static class EmptyValueFilter implements ValueFilter {
@@ -126,7 +116,7 @@ public class PageInfo implements Serializable {
 
         @Override
         public Object process(Object object, String propertyName, Object propertyValue) {
-            if ("".equals(propertyValue)) {
+            if (filterEmpty && "".equals(propertyValue)) {
                 return null;
             }
             return propertyValue;
