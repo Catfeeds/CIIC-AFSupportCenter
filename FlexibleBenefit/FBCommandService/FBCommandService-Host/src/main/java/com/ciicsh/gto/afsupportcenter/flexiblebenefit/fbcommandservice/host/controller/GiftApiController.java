@@ -40,6 +40,10 @@ public class GiftApiController implements GiftCommandProxy {
         GiftPO entity = new GiftPO();
         entity.setId(id);
         entity.setNumber(num);
+        /**判定礼品状态,库存为0，礼品自动下架*/
+        if (entity.getNumber() == 0) {
+            entity.setStatus((byte) 1);
+        }
         int t = giftService.insertGift(entity);
         if (t != 1) {
             result.setErrorcode("400");

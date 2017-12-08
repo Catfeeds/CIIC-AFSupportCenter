@@ -42,7 +42,7 @@
             <if test="endTime != null">
                 AND end_time = #{endTime,jdbcType=TIMESTAMP}
             </if>
-            <if test="status != null and status > -1">
+            <if test="status != null">
                 AND status = #{status,jdbcType=TINYINT}
             </if>
             <if test="content != null">

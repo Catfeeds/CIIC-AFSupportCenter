@@ -29,10 +29,11 @@ public class GiftServiceImpl implements GiftService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int insertGift(GiftPO entity) {
-        //修改方法
         if (entity.getId() != null) {
+            //更新礼品
             return giftMapper.updateByPrimaryKeySelective(entity);
         } else {
+            //新增礼品
             return giftMapper.insertSelective(entity);
         }
     }
