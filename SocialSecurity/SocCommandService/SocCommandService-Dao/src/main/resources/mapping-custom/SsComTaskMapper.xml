@@ -5,11 +5,45 @@
                type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComTaskDTO"
                extends="BaseResultMap">
         <result column="title" property="companyName"/>
-
+        <collection property="materialList"
+                    ofType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComMaterial">
+            <id column="com_material_id" property="comMaterialId"/>
+            <result column="company_task_id" property="companyTaskId"/>
+            <result column="material_type" property="materialType"/>
+            <result column="material_name" property="materialName"/>
+            <result column="submit_time" property="submitTime"/>
+            <result column="receive_time" property="receiveTime"/>
+            <result column="remark" property="remark"/>
+            <result column="status" property="status"/>
+            <result column="is_active" property="isActive"/>
+            <result column="created_time" property="createdTime"/>
+            <result column="modified_time" property="modifiedTime"/>
+            <result column="created_by" property="createdBy"/>
+            <result column="modified_by" property="modifiedBy"/>
+        </collection>
     </resultMap>
-    <!--查询企业任务单 会涉及到 结算区县-->
+    <resultMap id="getMaterialResultMap"
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComTaskDTO"
+               extends="ModelResultMap">
+        <collection property="materialList"
+                    ofType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComMaterial">
+            <id column="com_material_id" property="comMaterialId"/>
+            <result column="company_task_id_m" property="companyTaskId"/>
+            <result column="material_type" property="materialType"/>
+            <result column="material_name" property="materialName"/>
+            <result column="submit_time_m" property="submitTime"/>
+            <result column="receive_time" property="receiveTime"/>
+            <result column="remark" property="remark"/>
+            <result column="status" property="status"/>
+            <result column="is_active" property="isActive"/>
+            <result column="created_time" property="createdTime"/>
+            <result column="modified_time" property="modifiedTime"/>
+            <result column="created_by" property="createdBy"/>
+            <result column="modified_by" property="modifiedBy"/>
+        </collection>
+    </resultMap>
+    <!--查询企业任务单 未处理状态-->
     <select id="queryNoProgressCompanyTask" resultMap="ModelResultMap">
-
         SELECT
         sct.company_id,
         sct.company_task_id,
@@ -41,13 +75,11 @@
                 AND sct.submit_time <![CDATA[ <= ]]> #{submitTimeEnd}
             </if>
         </where>
-
-
     </select>
 
-
+    <!--查询企业任务单 处理中状态-->
     <select id="queryProgressingCompanyTask" resultMap="ModelResultMap">
-    SELECT * FROM(
+        SELECT * FROM(
         SELECT
         sct.task_status,
         sct.company_id,
@@ -91,10 +123,132 @@
             </if>
         </where>
         )x
-       <where>
+        <where>
             <if test="taskStatus== null ">
                 AND x.task_status = 1 OR x.task_status = 2
             </if>
-       </where>
+        </where>
     </select>
+    <!--查询企业任务单 已完成状态-->
+    <select id="queryFinshedCompanyTask" resultMap="ModelResultMap">
+        SELECT
+        sct.company_id,
+        sct.company_task_id,
+        sct.task_category,
+        sct.customer_id,
+        sct.expire_date,
+        sct.submitter_id,
+        sct.submit_time,
+        sct.submit_remark,
+        cc.title
+        FROM ss_com_task sct
+        LEFT JOIN ss_com_account sca ON sct.com_account_id = sca.com_account_id
+        LEFT JOIN cmy_company cc ON sct.company_id = cc.company_id
+        <where>
+            AND sct.is_active = 1
+            AND sct.task_status =3
+            <if test="accountType!= null ">
+                AND sca.ss_account_type = #{accountType}
+            </if>
+            <if test="regionValue!= null ">
+                AND sca.settlement_area LIKE CONCAT('%',#{regionValue}, '%')
+            </if>
+            <if test="companyName!= null">
+                AND cc.title LIKE CONCAT('%', #{companyName}, '%')
+            </if>
+            <if test="taskCategory!= null">
+                AND sct.task_category = #{taskCategory}
+            </if>
+            <if test="companyId!= null">
+                AND sct.company_id = #{companyId}
+            </if>
+            <if test="submitTimeStart!= null">
+                AND sct.submit_time <![CDATA[ >= ]]> #{submitTimeStart}
+            </if>
+            <if test="submitTimeEnd!= null ">
+                AND sct.submit_time <![CDATA[ <= ]]> #{submitTimeEnd}
+            </if>
+        </where>
+    </select>
+
+    <!--查询企业任务单 批退状态-->
+    <select id="queryRefusedCompanyTask" resultMap="ModelResultMap">
+        SELECT
+        sct.company_id,
+        sct.company_task_id,
+        sct.task_category,
+        sct.customer_id,
+        sct.expire_date,
+        sct.submitter_id,
+        sct.submit_time,
+        sct.submit_remark,
+        cc.title
+        FROM ss_com_task sct
+        LEFT JOIN cmy_company cc ON sct.company_id = cc.company_id
+        <where>
+            AND sct.is_active = 1
+            AND sct.task_status = 4
+            <if test="companyName!= null">
+                AND cc.title LIKE CONCAT('%', #{companyName}, '%')
+            </if>
+            <if test="taskCategory!= null">
+                AND sct.task_category = #{taskCategory}
+            </if>
+            <if test="companyId!= null">
+                AND sct.company_id = #{companyId}
+            </if>
+            <if test="submitTimeStart!= null">
+                AND sct.submit_time <![CDATA[ >= ]]> #{submitTimeStart}
+            </if>
+            <if test="submitTimeEnd!= null ">
+                AND sct.submit_time <![CDATA[ <= ]]> #{submitTimeEnd}
+            </if>
+        </where>
+    </select>
+
+    <!-- 批量修改 修改任务单状态-->
+    <update id="updatePatchRefuseTask" parameterType="java.util.List">
+
+        UPDATE ss_com_task sct SET sct.task_status = 4
+
+        WHERE company_task_id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.companyTaskId}
+        </foreach>
+    </update>
+
+    <!-- 查询企业信息和材料 -->
+    <select id="queryComInfoAndMaterial" resultMap="getMaterialResultMap">
+        SELECT
+        sct.company_id,
+        sct.company_task_id,
+        sct.task_category,
+        sct.customer_id,
+        sct.expire_date,
+        sct.submitter_id,
+        sct.submit_time,
+        sct.submit_remark,
+        cc.title,
+		scm.*
+        FROM ss_com_task sct
+        LEFT JOIN (SELECT company_id, title FROM 	cmy_company  WHERE is_active = 1)cc ON sct.company_id = cc.company_id
+				LEFT JOIN
+				(SELECT
+                com_material_id,
+                company_task_id AS company_task_id_m,
+                material_type,
+                material_name,
+                submit_time AS submit_time_m,
+                receive_time,
+                remark,
+                `status`
+                FROM
+                ss_com_material  WHERE is_active = 1
+				)
+				scm ON sct.company_task_id = scm.company_task_id_m
+				WHERE
+				sct.is_active =1
+                AND sct.company_task_id = #{companyTaskId}
+    </select>
+
 </mapper>
