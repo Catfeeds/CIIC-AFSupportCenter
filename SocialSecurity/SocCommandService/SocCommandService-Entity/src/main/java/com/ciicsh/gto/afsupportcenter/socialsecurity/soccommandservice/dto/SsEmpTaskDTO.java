@@ -18,9 +18,9 @@ public class SsEmpTaskDTO extends SsEmpTask {
     // 任务发起结束时间
     private LocalDateTime endSubmitTime;
 
-    // 来源表 cmy_employee
+    // 来源表 emp_employee
     // 雇员姓名
-    private String empName;
+    private String employeeName;
     // 雇员编号
     private String employeeId;
     // 雇员证件号
@@ -43,6 +43,8 @@ public class SsEmpTaskDTO extends SsEmpTask {
     private Integer ssAccountType;
     // 参保户登记码（账号）
     private String ssAccount;
+    // 供应商Id
+    private String supplierId;
 
     // 来源表 ss_emp_archive
     // 人员属性
@@ -50,12 +52,12 @@ public class SsEmpTaskDTO extends SsEmpTask {
     // 社保起缴月份
     private String startMonth;
 
-    public String getEmpName() {
-        return empName;
+    public String getEmployeeName() {
+        return employeeName;
     }
 
-    public void setEmpName(String empName) {
-        this.empName = empName;
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
     }
 
     public String getEmployeeId() {
@@ -176,5 +178,13 @@ public class SsEmpTaskDTO extends SsEmpTask {
 
     public void setEndSubmitTime(LocalDateTime endSubmitTime) {
         this.endSubmitTime = endSubmitTime;
+    }
+
+    public String getSupplierId() {
+        return supplierId;
+    }
+
+    public void setSupplierId(String supplierId) {
+        this.supplierId = supplierId;
     }
 }

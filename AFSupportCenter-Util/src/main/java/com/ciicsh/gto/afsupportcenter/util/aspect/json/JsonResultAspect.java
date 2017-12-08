@@ -31,7 +31,7 @@ public class JsonResultAspect extends BasicAspect {
         try {
             return joinPoint.proceed();
         } catch (Throwable e) {
-            // 处理返回数据结构是 JsonResult 异常
+            // 处理返回数据结构是 JsonResult 包装异常信息
             if (isJsonResult(method)) {
                 long time = System.currentTimeMillis() - start;
                 String name = joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName();
