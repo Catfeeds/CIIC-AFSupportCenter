@@ -16,7 +16,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-05
+ * @since 2017-12-07
  */
 @TableName("ss_emp_archive")
 public class SsEmpArchive implements Serializable {
@@ -38,11 +38,13 @@ public class SsEmpArchive implements Serializable {
      */
 	@TableField("customer_id")
 	private String customerId;
+	@TableField("company_id")
+	private String companyId;
     /**
      * 外键,雇员上下岗Id
      */
-	@TableField("empcom_id")
-	private String empcomId;
+	@TableField("employee_id")
+	private String employeeId;
     /**
      * 企业社保账户Id, 关联至SOC_SSAccount
      */
@@ -169,12 +171,20 @@ public class SsEmpArchive implements Serializable {
 		this.customerId = customerId;
 	}
 
-	public String getEmpcomId() {
-		return empcomId;
+	public String getCompanyId() {
+		return companyId;
 	}
 
-	public void setEmpcomId(String empcomId) {
-		this.empcomId = empcomId;
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
+
+	public String getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
 	}
 
 	public String getComAccountId() {
@@ -335,7 +345,8 @@ public class SsEmpArchive implements Serializable {
 			", empArchivedId=" + empArchivedId +
 			", entityId=" + entityId +
 			", customerId=" + customerId +
-			", empcomId=" + empcomId +
+			", companyId=" + companyId +
+			", employeeId=" + employeeId +
 			", comAccountId=" + comAccountId +
 			", ssSerial=" + ssSerial +
 			", salary=" + salary +

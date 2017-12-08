@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthlyTaskCountStatistic;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthTaskCountStat;
 import com.baomidou.mybatisplus.service.IService;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.service.IService;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-01
+ * @since 2017-12-07
  */
-public interface ISsMonthlyTaskCountStatisticService extends IService<SsMonthlyTaskCountStatistic> {
+public interface ISsMonthTaskCountStatService extends IService<SsMonthTaskCountStat> {
 
 }

@@ -7,7 +7,7 @@
         <id column="month_emp_change_detail_id" property="monthEmpChangeDetailId" />
         <result column="month_emp_change_id" property="monthEmpChangeId" />
         <result column="employee_id" property="employeeId" />
-        <result column="cost_category" property="costCategory" />
+        <result column="change_type" property="changeType" />
         <result column="base_amount" property="baseAmount" />
         <result column="ss_type" property="ssType" />
         <result column="ss_name" property="ssName" />

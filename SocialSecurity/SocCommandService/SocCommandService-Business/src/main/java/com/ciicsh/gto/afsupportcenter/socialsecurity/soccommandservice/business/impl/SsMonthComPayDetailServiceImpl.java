@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-01
+ * @since 2017-12-07
  */
 @Service
 public class SsMonthComPayDetailServiceImpl extends ServiceImpl<SsMonthComPayDetailMapper, SsMonthComPayDetail> implements ISsMonthComPayDetailService {

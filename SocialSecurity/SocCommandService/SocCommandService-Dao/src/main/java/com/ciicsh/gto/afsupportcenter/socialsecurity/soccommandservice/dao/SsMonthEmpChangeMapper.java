@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-01
+ * @since 2017-12-07
  */
 public interface SsMonthEmpChangeMapper extends BaseMapper<SsMonthEmpChange> {
 

@@ -8,7 +8,7 @@
         <result column="statement_id" property="statementId" />
         <result column="emp_num" property="empNum" />
         <result column="emp_name" property="empName" />
-        <result column="change_name" property="changeName" />
+        <result column="change_type" property="changeType" />
         <result column="base_amount" property="baseAmount" />
         <result column="ss_type" property="ssType" />
         <result column="ss_type_name" property="ssTypeName" />
