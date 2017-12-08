@@ -1,12 +1,13 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import java.time.LocalDate;
-import com.baomidou.mybatisplus.annotations.TableId;
-import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -113,15 +114,15 @@ public class SsComTask implements Serializable {
 	@TableField("finish_date")
 	private LocalDate finishDate;
     /**
-     * 办理备注
+     * 办理原因
      */
-	@TableField("handle_remark")
-	private String handleRemark;
+    @TableField("handle_remark")
+    private String handleRemark;
     /**
-     * 批退备注
+     * 批退原因
      */
-	@TableField("rejection_remark")
-	private String rejectionRemark;
+    @TableField("rejection_remark")
+    private String rejectionRemark;
     /**
      * 是否可用
      */
@@ -362,7 +363,7 @@ public class SsComTask implements Serializable {
 		this.entityId = entityId;
 	}
 
-	@Override
+    @Override
 	public String toString() {
 		return "SsComTask{" +
 			", companyTaskId=" + companyTaskId +
