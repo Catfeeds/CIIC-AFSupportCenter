@@ -16,7 +16,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-07
+ * @since 2017-12-08
  */
 @TableName("ss_com_account")
 public class SsComAccount implements Serializable {
@@ -163,6 +163,10 @@ public class SsComAccount implements Serializable {
      */
 	@TableField("dispatch_material")
 	private String dispatchMaterial;
+    /**
+     * 备注
+     */
+	private String remark;
     /**
      * 是否可用
      */
@@ -406,6 +410,14 @@ public class SsComAccount implements Serializable {
 		this.dispatchMaterial = dispatchMaterial;
 	}
 
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
 	public Boolean getActive() {
 		return isActive;
 	}
@@ -476,6 +488,7 @@ public class SsComAccount implements Serializable {
 			", intoDate=" + intoDate +
 			", endDate=" + endDate +
 			", dispatchMaterial=" + dispatchMaterial +
+			", remark=" + remark +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

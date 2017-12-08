@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity;
 
 import com.baomidou.mybatisplus.enums.IdType;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalDateTime;
@@ -14,7 +15,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-07
+ * @since 2017-12-08
  */
 @TableName("ss_emp_task")
 public class SsEmpTask implements Serializable {
@@ -27,59 +28,59 @@ public class SsEmpTask implements Serializable {
 	@TableId(value="emp_task_id", type= IdType.AUTO)
 	private Long empTaskId;
     /**
-     * EntityId
-     */
-	@TableField("entity_id")
-	private String entityId;
-    /**
      * 多租户ID
      */
 	@TableField("customer_id")
 	private String customerId;
     /**
-     * 外键，雇员社保档案Id
+     * 外键，雇员社保档案主表Id
      */
 	@TableField("emp_archived_id")
 	private String empArchivedId;
     /**
-     * 任务类型，DicItem.DicItemValue 1:新进：2：转入 3调整 4 补缴 5 转出 6终止 7退账 8 提取
+     * 任务类型，DicItem.DicItemValue 1:新进：2：转入 3调整 4 补缴 5 转出 6终止 7退账 8 提取 9特殊操作
      */
 	@TableField("task_category")
 	private Integer taskCategory;
     /**
-     * 任务截止日期
+     * 是否加急 1 加急 0 空
      */
-	@TableField("expire_date")
-	private LocalDate expireDate;
+	private Integer urgent;
     /**
      * 任务单提交人SysUserId
      */
 	@TableField("submitter_id")
 	private String submitterId;
     /**
+     * 发起人姓名
+     */
+	@TableField("submitter_name")
+	private String submitterName;
+    /**
      * 任务单提交人所属部门Id
      */
 	@TableField("submitter_dept_id")
 	private String submitterDeptId;
     /**
-     * 是否加急
-     */
-	private Integer urgent;
-    /**
-     * 发起时间
+     * 任务发起时间，通过该日期和客户社保截至日判断本月下月处理
      */
 	@TableField("submit_time")
 	private LocalDateTime submitTime;
+    /**
+     * 任务截止日期
+     */
+	@TableField("expire_date")
+	private LocalDate expireDate;
     /**
      * 任务发起人备注
      */
 	@TableField("submitter_remark")
 	private String submitterRemark;
     /**
-     * 任务单内容，Json格式描述
+     * 任务单扩展字段，Json格式描述
             {
-            "新进":{"开AF单日期":"2017-05-06","存档地":"外来从业人员","用工状态":"","用工日期":"","任务执行日期":"","基数段":[{"社保备注":"","基数":"","执行日期":""}]},
-            "转入":{"开AF单日期":"2017-05-06","存档地":"外来从业人员","用工状态":"","用工日期":"","任务执行日期":"","基数段":[{"社保备注":"","基数":"","执行日期":""}]},
+            "新进":{"工资":"","基数段":[{"社保备注":"","基数":"","执行日期":""}]},
+            "转入":{"工资":"","基数段":[{"社保备注":"","基数":"","执行日期":""}]},
             "补缴":{"社保补缴基数":"","社保起缴月份":"201706","任务执行日期":""},
             "调整":{"新社保基数":"","调整月份":"201706","任务执行日期":""},
             "转出":{"转出月份":"201706","任务执行日期":""},
@@ -91,11 +92,17 @@ public class SsEmpTask implements Serializable {
 	@TableField("task_form_content")
 	private String taskFormContent;
     /**
-     * 聊天历史记录, 
-            格式：序号、部门名称、 用户姓名、 时间、 内容
+     * 实际工资
      */
-	@TableField("chat_history")
-	private String chatHistory;
+	private BigDecimal salary;
+    /**
+     * 人员属性：本地、外地、外籍三险、外籍五险、延迟退休人员
+            本地、外地、外籍五险：有五个险种
+            外籍三险、延迟退休人员：有三个险种
+            
+     */
+	@TableField("emp_classify")
+	private Integer empClassify;
     /**
      * 任务处理状态:
             1 本月未处理
@@ -112,12 +119,17 @@ public class SsEmpTask implements Serializable {
 	@TableField("handle_user_id")
 	private String handleUserId;
     /**
+     * 经办人姓名
+     */
+	@TableField("handle_user_name")
+	private String handleUserName;
+    /**
      * 办理时间
      */
 	@TableField("handle_time")
 	private LocalDateTime handleTime;
     /**
-     * 社保序号 8 位数字，不足8位按实际位数显示
+     * 社保序号 10 位数字，不足10位按实际位数显示
      */
 	@TableField("emp_ss_serial")
 	private String empSsSerial;
@@ -127,7 +139,7 @@ public class SsEmpTask implements Serializable {
 	@TableField("handle_way")
 	private Integer handleWay;
     /**
-     * 办理月份
+     * 办理月份YYYYMM
      */
 	@TableField("handle_month")
 	private String handleMonth;
@@ -161,6 +173,12 @@ public class SsEmpTask implements Serializable {
      */
 	@TableField("finish_date")
 	private LocalDate finishDate;
+    /**
+     * 站内信历史记录, 
+            格式：序号、部门名称、 用户姓名、 时间、 内容
+     */
+	@TableField("chat_history")
+	private String chatHistory;
     /**
      * 是否可用
      */
@@ -196,14 +214,6 @@ public class SsEmpTask implements Serializable {
 		this.empTaskId = empTaskId;
 	}
 
-	public String getEntityId() {
-		return entityId;
-	}
-
-	public void setEntityId(String entityId) {
-		this.entityId = entityId;
-	}
-
 	public String getCustomerId() {
 		return customerId;
 	}
@@ -228,12 +238,12 @@ public class SsEmpTask implements Serializable {
 		this.taskCategory = taskCategory;
 	}
 
-	public LocalDate getExpireDate() {
-		return expireDate;
+	public Integer getUrgent() {
+		return urgent;
 	}
 
-	public void setExpireDate(LocalDate expireDate) {
-		this.expireDate = expireDate;
+	public void setUrgent(Integer urgent) {
+		this.urgent = urgent;
 	}
 
 	public String getSubmitterId() {
@@ -244,6 +254,14 @@ public class SsEmpTask implements Serializable {
 		this.submitterId = submitterId;
 	}
 
+	public String getSubmitterName() {
+		return submitterName;
+	}
+
+	public void setSubmitterName(String submitterName) {
+		this.submitterName = submitterName;
+	}
+
 	public String getSubmitterDeptId() {
 		return submitterDeptId;
 	}
@@ -252,20 +270,20 @@ public class SsEmpTask implements Serializable {
 		this.submitterDeptId = submitterDeptId;
 	}
 
-	public Integer getUrgent() {
-		return urgent;
-	}
-
-	public void setUrgent(Integer urgent) {
-		this.urgent = urgent;
-	}
-
 	public LocalDateTime getSubmitTime() {
 		return submitTime;
 	}
 
 	public void setSubmitTime(LocalDateTime submitTime) {
 		this.submitTime = submitTime;
+	}
+
+	public LocalDate getExpireDate() {
+		return expireDate;
+	}
+
+	public void setExpireDate(LocalDate expireDate) {
+		this.expireDate = expireDate;
 	}
 
 	public String getSubmitterRemark() {
@@ -284,12 +302,20 @@ public class SsEmpTask implements Serializable {
 		this.taskFormContent = taskFormContent;
 	}
 
-	public String getChatHistory() {
-		return chatHistory;
+	public BigDecimal getSalary() {
+		return salary;
 	}
 
-	public void setChatHistory(String chatHistory) {
-		this.chatHistory = chatHistory;
+	public void setSalary(BigDecimal salary) {
+		this.salary = salary;
+	}
+
+	public Integer getEmpClassify() {
+		return empClassify;
+	}
+
+	public void setEmpClassify(Integer empClassify) {
+		this.empClassify = empClassify;
 	}
 
 	public Integer getTaskStatus() {
@@ -306,6 +332,14 @@ public class SsEmpTask implements Serializable {
 
 	public void setHandleUserId(String handleUserId) {
 		this.handleUserId = handleUserId;
+	}
+
+	public String getHandleUserName() {
+		return handleUserName;
+	}
+
+	public void setHandleUserName(String handleUserName) {
+		this.handleUserName = handleUserName;
 	}
 
 	public LocalDateTime getHandleTime() {
@@ -388,6 +422,14 @@ public class SsEmpTask implements Serializable {
 		this.finishDate = finishDate;
 	}
 
+	public String getChatHistory() {
+		return chatHistory;
+	}
+
+	public void setChatHistory(String chatHistory) {
+		this.chatHistory = chatHistory;
+	}
+
 	public Boolean getActive() {
 		return isActive;
 	}
@@ -432,20 +474,22 @@ public class SsEmpTask implements Serializable {
 	public String toString() {
 		return "SsEmpTask{" +
 			", empTaskId=" + empTaskId +
-			", entityId=" + entityId +
 			", customerId=" + customerId +
 			", empArchivedId=" + empArchivedId +
 			", taskCategory=" + taskCategory +
-			", expireDate=" + expireDate +
-			", submitterId=" + submitterId +
-			", submitterDeptId=" + submitterDeptId +
 			", urgent=" + urgent +
+			", submitterId=" + submitterId +
+			", submitterName=" + submitterName +
+			", submitterDeptId=" + submitterDeptId +
 			", submitTime=" + submitTime +
+			", expireDate=" + expireDate +
 			", submitterRemark=" + submitterRemark +
 			", taskFormContent=" + taskFormContent +
-			", chatHistory=" + chatHistory +
+			", salary=" + salary +
+			", empClassify=" + empClassify +
 			", taskStatus=" + taskStatus +
 			", handleUserId=" + handleUserId +
+			", handleUserName=" + handleUserName +
 			", handleTime=" + handleTime +
 			", empSsSerial=" + empSsSerial +
 			", handleWay=" + handleWay +
@@ -456,6 +500,7 @@ public class SsEmpTask implements Serializable {
 			", startHandleDate=" + startHandleDate +
 			", sendCheckDate=" + sendCheckDate +
 			", finishDate=" + finishDate +
+			", chatHistory=" + chatHistory +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

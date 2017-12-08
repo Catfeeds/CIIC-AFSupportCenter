@@ -2,7 +2,6 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity;
 
 import com.baomidou.mybatisplus.enums.IdType;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
@@ -16,7 +15,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-07
+ * @since 2017-12-08
  */
 @TableName("ss_emp_archive")
 public class SsEmpArchive implements Serializable {
@@ -29,19 +28,17 @@ public class SsEmpArchive implements Serializable {
 	@TableId(value="emp_archived_id", type= IdType.AUTO)
 	private Long empArchivedId;
     /**
-     * EntityId
-     */
-	@TableField("entity_id")
-	private String entityId;
-    /**
      * 多租户
      */
 	@TableField("customer_id")
 	private String customerId;
+    /**
+     * 客户编号ID
+     */
 	@TableField("company_id")
 	private String companyId;
     /**
-     * 外键,雇员上下岗Id
+     * 雇员编号ID
      */
 	@TableField("employee_id")
 	private String employeeId;
@@ -63,31 +60,6 @@ public class SsEmpArchive implements Serializable {
      */
 	private BigDecimal salary;
     /**
-     * 开AF单日期 (档案部办理日期)
-     */
-	@TableField("create_afdate")
-	private LocalDate createAfdate;
-    /**
-     * 存档地
-     */
-	@TableField("archive_place")
-	private String archivePlace;
-    /**
-     * 用工状态:1 已用工 2 已退工
-     */
-	@TableField("employment_status")
-	private Integer employmentStatus;
-    /**
-     * 用工日期
-     */
-	@TableField("onboard_date")
-	private LocalDate onboardDate;
-    /**
-     * 退工日期
-     */
-	@TableField("exit_date")
-	private LocalDate exitDate;
-    /**
      * 人员属性：本地、外地、外籍三险、外籍五险、延迟退休人员
             本地、外地、外籍五险：有五个险种
             外籍三险、延迟退休人员：有三个险种
@@ -101,22 +73,22 @@ public class SsEmpArchive implements Serializable {
 	@TableField("archive_status")
 	private Integer archiveStatus;
     /**
-     * 社保档案状态 : 1-已办  2-已做 3-转出
+     * 社保档案任务状态 : 1-已办  2-已做 3-转出
      */
 	@TableField("archive_task_status")
 	private Integer archiveTaskStatus;
     /**
-     * 社保起缴月份
+     * 社保起缴月份YYYYMM
      */
 	@TableField("start_month")
 	private String startMonth;
     /**
-     * 社保结束（转出）月份
+     * 社保结束（转出）月份YYYYMM
      */
 	@TableField("end_month")
 	private String endMonth;
     /**
-     * 正常汇缴月份（办理月份）
+     * 正常汇缴月份（办理月份）YYYYMM
      */
 	@TableField("ss_month")
 	private String ssMonth;
@@ -153,14 +125,6 @@ public class SsEmpArchive implements Serializable {
 
 	public void setEmpArchivedId(Long empArchivedId) {
 		this.empArchivedId = empArchivedId;
-	}
-
-	public String getEntityId() {
-		return entityId;
-	}
-
-	public void setEntityId(String entityId) {
-		this.entityId = entityId;
 	}
 
 	public String getCustomerId() {
@@ -209,46 +173,6 @@ public class SsEmpArchive implements Serializable {
 
 	public void setSalary(BigDecimal salary) {
 		this.salary = salary;
-	}
-
-	public LocalDate getCreateAfdate() {
-		return createAfdate;
-	}
-
-	public void setCreateAfdate(LocalDate createAfdate) {
-		this.createAfdate = createAfdate;
-	}
-
-	public String getArchivePlace() {
-		return archivePlace;
-	}
-
-	public void setArchivePlace(String archivePlace) {
-		this.archivePlace = archivePlace;
-	}
-
-	public Integer getEmploymentStatus() {
-		return employmentStatus;
-	}
-
-	public void setEmploymentStatus(Integer employmentStatus) {
-		this.employmentStatus = employmentStatus;
-	}
-
-	public LocalDate getOnboardDate() {
-		return onboardDate;
-	}
-
-	public void setOnboardDate(LocalDate onboardDate) {
-		this.onboardDate = onboardDate;
-	}
-
-	public LocalDate getExitDate() {
-		return exitDate;
-	}
-
-	public void setExitDate(LocalDate exitDate) {
-		this.exitDate = exitDate;
 	}
 
 	public Integer getEmpClassify() {
@@ -343,18 +267,12 @@ public class SsEmpArchive implements Serializable {
 	public String toString() {
 		return "SsEmpArchive{" +
 			", empArchivedId=" + empArchivedId +
-			", entityId=" + entityId +
 			", customerId=" + customerId +
 			", companyId=" + companyId +
 			", employeeId=" + employeeId +
 			", comAccountId=" + comAccountId +
 			", ssSerial=" + ssSerial +
 			", salary=" + salary +
-			", createAfdate=" + createAfdate +
-			", archivePlace=" + archivePlace +
-			", employmentStatus=" + employmentStatus +
-			", onboardDate=" + onboardDate +
-			", exitDate=" + exitDate +
 			", empClassify=" + empClassify +
 			", archiveStatus=" + archiveStatus +
 			", archiveTaskStatus=" + archiveTaskStatus +

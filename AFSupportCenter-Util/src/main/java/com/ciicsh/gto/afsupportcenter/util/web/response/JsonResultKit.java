@@ -55,4 +55,8 @@ public class JsonResultKit {
         return of(200, "操作成功", list);
     }
 
+    public static <T> JsonResult<T> ofError(String message) {
+        return of(500, message);
+    }
+
 }

@@ -14,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-07
+ * @since 2017-12-08
  */
 @TableName("ss_emp_base_adjust")
 public class SsEmpBaseAdjust implements Serializable {

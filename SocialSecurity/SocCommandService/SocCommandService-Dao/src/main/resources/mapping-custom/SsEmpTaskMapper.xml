@@ -39,12 +39,6 @@
             and ea.is_active = 1
             and ssac.is_active = 1
             and ca.is_active = 1
-            <if test="taskStatus == null">
-                and et.task_status in (1,2)
-            </if>
-            <if test="taskStatus != null">
-                and et.task_status = #{taskStatus}
-            </if>
             <if test="empName != null">
                 and e.emp_name LIKE CONCAT('%',#{empName},'%')
             </if>
@@ -66,12 +60,6 @@
             <if test="idNum != null">
                 and e.id_num LIKE CONCAT('%',#{idNum},'%')
             </if>
-            <if test="taskCategory != null">
-                and et.task_category = #{taskCategory}
-            </if>
-            <if test="taskCategory == null">
-                and et.task_category in(1,2,3,4,5)
-            </if>
             <if test="title != null">
                 and c.title = #{title}
             </if>
@@ -83,6 +71,43 @@
             </if>
             <if test="startMonth != null">
                 and ea.start_month = #{startMonth}
+            </if>
+            <if test="taskCategory != null">
+                and et.task_category = #{taskCategory}
+            </if>
+
+            <!--
+                任务处理状态:、1 本月未处理、2 下月未处理、3 处理中、4 已完成、5 批退，其中未处理需要特别处理
+            -->
+            <choose>
+                <when test="taskStatus == 1">
+                    and et.task_status not in (3,4,5)
+                </when>
+                <when test="taskStatus == 2">
+                    and et.task_status not in (3,4,5)
+                </when>
+                <when test="taskStatus == 3 or taskStatus == 4 or taskStatus == 5">
+                    and et.task_status = #{taskStatus}
+                </when>
+                <otherwise>
+                    and et.task_status not in (3,4,5)
+                </otherwise>
+            </choose>
+
+            <!--
+                任务类型，DicItem.DicItemValue 1:新进：2：转入 3调整 4 补缴 5 转出 6终止 7退账 8 提取
+            -->
+            <if test="taskCategory == null">
+                <choose>
+                    <when test="ohtOperatorType = 2">
+                        <!-- 特殊操作 -->
+                        and et.task_category in(6,8,9)
+                    </when>
+                    <otherwise>
+                        <!-- 常规操作 -->
+                        and et.task_category in(1,2,3,4,5,7)
+                    </otherwise>
+                </choose>
             </if>
         </where>
     </select>

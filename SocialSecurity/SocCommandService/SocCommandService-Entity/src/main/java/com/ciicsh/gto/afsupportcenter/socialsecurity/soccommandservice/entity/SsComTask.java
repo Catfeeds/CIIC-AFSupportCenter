@@ -14,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-07
+ * @since 2017-12-08
  */
 @TableName("ss_com_task")
 public class SsComTask implements Serializable {
@@ -77,8 +77,7 @@ public class SsComTask implements Serializable {
 	@TableField("submit_remark")
 	private String submitRemark;
     /**
-     * 任务单上前道系统传递过来的内容，Json格式，如
-            {材料名称，收到状态，备注说明}
+     * 任务单上前道系统传递过来的内容，Json格式
      */
 	@TableField("task_form_content")
 	private String taskFormContent;

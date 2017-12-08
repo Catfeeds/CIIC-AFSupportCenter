@@ -6,6 +6,13 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.Ss
  * SsEmpTask DTO
  */
 public class SsEmpTaskDTO extends SsEmpTask {
+    // ohter
+    // 操作类型，用于区分操作
+    private Integer operatorType;
+    // 任务状态
+    private Integer[] taskStatuses;
+    // 任务类型
+    private Integer[] taskCategories;
 
     // 来源表 cmy_employee
     // 雇员姓名
@@ -133,5 +140,29 @@ public class SsEmpTaskDTO extends SsEmpTask {
 
     public void setSsAccount(String ssAccount) {
         this.ssAccount = ssAccount;
+    }
+
+    public Integer getOperatorType() {
+        return operatorType;
+    }
+
+    public void setOperatorType(Integer operatorType) {
+        this.operatorType = operatorType;
+    }
+
+    public Integer[] getTaskStatuses() {
+        return taskStatuses;
+    }
+
+    public void setTaskStatuses(Integer[] taskStatuses) {
+        this.taskStatuses = taskStatuses;
+    }
+
+    public Integer[] getTaskCategories() {
+        return taskCategories;
+    }
+
+    public void setTaskCategories(Integer[] taskCategories) {
+        this.taskCategories = taskCategories;
     }
 }

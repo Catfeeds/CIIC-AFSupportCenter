@@ -10,11 +10,10 @@ import java.util.Map;
 public class TestOGNL {
     public static void main(String[] args) {
 //        ExpressionEvaluator evaluator = null;
-        ExpressionEvaluator evaluator = null;
-        Map<String, String> params = new HashMap<>();
-        params.put("ids", "1,2,3");
-//        Object value = OgnlCache.getValue("ids.split(',')", params);
-        Object value = OgnlCache.getValue("ids.indexOf(',') > 0", params);
-        System.out.println(JSON.toJSONString(value));
+        Map<String, Object> params = new HashMap<>();
+        params.put("taskStatus", 3);
+        String expression = "taskStatus == 3 or taskStatus == 4 or taskStatus == 5";
+        Object root = params;
+        System.out.println(JSON.toJSONString(OgnlCache.getValue(expression, root)));
     }
 }

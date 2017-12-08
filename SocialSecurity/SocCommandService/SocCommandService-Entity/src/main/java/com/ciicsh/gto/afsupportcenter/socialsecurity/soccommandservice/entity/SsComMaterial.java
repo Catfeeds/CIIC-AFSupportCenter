@@ -13,7 +13,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-07
+ * @since 2017-12-08
  */
 @TableName("ss_com_material")
 public class SsComMaterial implements Serializable {
@@ -31,7 +31,7 @@ public class SsComMaterial implements Serializable {
 	@TableField("company_task_id")
 	private Long companyTaskId;
     /**
-     * 材料类型：原件、复印件、扫描件
+     * 材料类型：1 原件、2  复印件、3 扫描件
      */
 	@TableField("material_type")
 	private Integer materialType;
@@ -51,6 +51,9 @@ public class SsComMaterial implements Serializable {
 	@TableField("receive_time")
 	private LocalDateTime receiveTime;
 	private String remark;
+    /**
+     * 0： 未签收 1： 已签收 2： 材料不齐全
+     */
 	private Integer status;
     /**
      * 是否可用
