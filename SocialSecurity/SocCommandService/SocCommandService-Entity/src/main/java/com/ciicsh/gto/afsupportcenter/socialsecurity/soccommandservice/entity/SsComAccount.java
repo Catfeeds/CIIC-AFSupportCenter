@@ -29,11 +29,6 @@ public class SsComAccount implements Serializable {
 	@TableId(value="com_account_id", type= IdType.AUTO)
 	private Long comAccountId;
     /**
-     * EntityId
-     */
-	@TableField("entity_id")
-	private String entityId;
-    /**
      * 多租户Id
      */
 	@TableField("customer_id")
@@ -200,14 +195,6 @@ public class SsComAccount implements Serializable {
 
 	public void setComAccountId(Long comAccountId) {
 		this.comAccountId = comAccountId;
-	}
-
-	public String getEntityId() {
-		return entityId;
-	}
-
-	public void setEntityId(String entityId) {
-		this.entityId = entityId;
 	}
 
 	public String getCustomerId() {
@@ -462,7 +449,6 @@ public class SsComAccount implements Serializable {
 	public String toString() {
 		return "SsComAccount{" +
 			", comAccountId=" + comAccountId +
-			", entityId=" + entityId +
 			", customerId=" + customerId +
 			", supplierId=" + supplierId +
 			", ssAccountType=" + ssAccountType +

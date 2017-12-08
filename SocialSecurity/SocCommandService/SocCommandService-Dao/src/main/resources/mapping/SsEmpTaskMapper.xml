@@ -21,7 +21,6 @@
         <result column="task_status" property="taskStatus" />
         <result column="handle_user_id" property="handleUserId" />
         <result column="handle_user_name" property="handleUserName" />
-        <result column="handle_time" property="handleTime" />
         <result column="emp_ss_serial" property="empSsSerial" />
         <result column="handle_way" property="handleWay" />
         <result column="handle_month" property="handleMonth" />

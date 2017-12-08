@@ -9,8 +9,6 @@ public class SsEmpTaskDTO extends SsEmpTask {
     // ohter
     // 操作类型，用于区分操作
     private Integer operatorType;
-    // 任务状态
-    private Integer[] taskStatuses;
     // 任务类型
     private Integer[] taskCategories;
 
@@ -148,14 +146,6 @@ public class SsEmpTaskDTO extends SsEmpTask {
 
     public void setOperatorType(Integer operatorType) {
         this.operatorType = operatorType;
-    }
-
-    public Integer[] getTaskStatuses() {
-        return taskStatuses;
-    }
-
-    public void setTaskStatuses(Integer[] taskStatuses) {
-        this.taskStatuses = taskStatuses;
     }
 
     public Integer[] getTaskCategories() {

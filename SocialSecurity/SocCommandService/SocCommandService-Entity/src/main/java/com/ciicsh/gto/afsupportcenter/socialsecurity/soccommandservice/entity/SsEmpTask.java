@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 本地社保的雇员任务单
+ * 
  * </p>
  *
  * @author HuangXing
@@ -123,11 +123,6 @@ public class SsEmpTask implements Serializable {
      */
 	@TableField("handle_user_name")
 	private String handleUserName;
-    /**
-     * 办理时间
-     */
-	@TableField("handle_time")
-	private LocalDateTime handleTime;
     /**
      * 社保序号 10 位数字，不足10位按实际位数显示
      */
@@ -342,14 +337,6 @@ public class SsEmpTask implements Serializable {
 		this.handleUserName = handleUserName;
 	}
 
-	public LocalDateTime getHandleTime() {
-		return handleTime;
-	}
-
-	public void setHandleTime(LocalDateTime handleTime) {
-		this.handleTime = handleTime;
-	}
-
 	public String getEmpSsSerial() {
 		return empSsSerial;
 	}
@@ -490,7 +477,6 @@ public class SsEmpTask implements Serializable {
 			", taskStatus=" + taskStatus +
 			", handleUserId=" + handleUserId +
 			", handleUserName=" + handleUserName +
-			", handleTime=" + handleTime +
 			", empSsSerial=" + empSsSerial +
 			", handleWay=" + handleWay +
 			", handleMonth=" + handleMonth +

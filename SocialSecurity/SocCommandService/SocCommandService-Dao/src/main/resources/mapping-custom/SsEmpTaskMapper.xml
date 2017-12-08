@@ -72,42 +72,30 @@
             <if test="startMonth != null">
                 and ea.start_month = #{startMonth}
             </if>
-            <if test="taskCategory != null">
-                and et.task_category = #{taskCategory}
-            </if>
 
             <!--
                 任务处理状态:、1 本月未处理、2 下月未处理、3 处理中、4 已完成、5 批退，其中未处理需要特别处理
             -->
             <choose>
-                <when test="taskStatus == 1">
+                <when test="taskStatus == null">
                     and et.task_status not in (3,4,5)
+                </when>
+                <when test="taskStatus == 1">
+                    and et.submit_time <![CDATA[ <= ]]> CURTIME()
                 </when>
                 <when test="taskStatus == 2">
-                    and et.task_status not in (3,4,5)
-                </when>
-                <when test="taskStatus == 3 or taskStatus == 4 or taskStatus == 5">
-                    and et.task_status = #{taskStatus}
+                    and et.submit_time > CURTIME()
                 </when>
                 <otherwise>
-                    and et.task_status not in (3,4,5)
+                    and et.task_status  = #{taskStatus}
                 </otherwise>
             </choose>
 
             <!--
                 任务类型，DicItem.DicItemValue 1:新进：2：转入 3调整 4 补缴 5 转出 6终止 7退账 8 提取
             -->
-            <if test="taskCategory == null">
-                <choose>
-                    <when test="ohtOperatorType = 2">
-                        <!-- 特殊操作 -->
-                        and et.task_category in(6,8,9)
-                    </when>
-                    <otherwise>
-                        <!-- 常规操作 -->
-                        and et.task_category in(1,2,3,4,5,7)
-                    </otherwise>
-                </choose>
+            <if test="taskCategories != null">
+                and et.task_category in <foreach collection="taskCategories" index="index" item="task_category" open="(" separator="," close=")">#{task_category}</foreach>
             </if>
         </where>
     </select>

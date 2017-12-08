@@ -1,13 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
-
-import java.io.Serializable;
 import java.time.LocalDate;
+import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableName;
+import java.io.Serializable;
 
 /**
  * <p>
@@ -63,6 +62,11 @@ public class SsComTask implements Serializable {
 	@TableField("submitter_id")
 	private String submitterId;
     /**
+     * 发起人姓名
+     */
+	@TableField("submitter_name")
+	private String submitterName;
+    /**
      * 发起人当时所在部门Id
      */
 	@TableField("submitter_dept_id")
@@ -96,8 +100,10 @@ public class SsComTask implements Serializable {
     /**
      * 任务处理人用户Id
      */
-	@TableField("agent_user_id")
-	private String agentUserId;
+	@TableField("handle_user_id")
+	private String handleUserId;
+	@TableField("handle_user_name")
+	private String handleUserName;
     /**
      * 受理日期
      */
@@ -114,15 +120,15 @@ public class SsComTask implements Serializable {
 	@TableField("finish_date")
 	private LocalDate finishDate;
     /**
-     * 办理原因
+     * 办理备注
      */
-    @TableField("handle_remark")
-    private String handleRemark;
+	@TableField("handle_remark")
+	private String handleRemark;
     /**
-     * 批退原因
+     * 批退备注
      */
-    @TableField("rejection_remark")
-    private String rejectionRemark;
+	@TableField("rejection_remark")
+	private String rejectionRemark;
     /**
      * 是否可用
      */
@@ -219,6 +225,14 @@ public class SsComTask implements Serializable {
 		this.submitterId = submitterId;
 	}
 
+	public String getSubmitterName() {
+		return submitterName;
+	}
+
+	public void setSubmitterName(String submitterName) {
+		this.submitterName = submitterName;
+	}
+
 	public String getSubmitterDeptId() {
 		return submitterDeptId;
 	}
@@ -267,12 +281,20 @@ public class SsComTask implements Serializable {
 		this.taskStatus = taskStatus;
 	}
 
-	public String getAgentUserId() {
-		return agentUserId;
+	public String getHandleUserId() {
+		return handleUserId;
 	}
 
-	public void setAgentUserId(String agentUserId) {
-		this.agentUserId = agentUserId;
+	public void setHandleUserId(String handleUserId) {
+		this.handleUserId = handleUserId;
+	}
+
+	public String getHandleUserName() {
+		return handleUserName;
+	}
+
+	public void setHandleUserName(String handleUserName) {
+		this.handleUserName = handleUserName;
 	}
 
 	public LocalDate getStartHandleDate() {
@@ -363,7 +385,7 @@ public class SsComTask implements Serializable {
 		this.entityId = entityId;
 	}
 
-    @Override
+	@Override
 	public String toString() {
 		return "SsComTask{" +
 			", companyTaskId=" + companyTaskId +
@@ -374,13 +396,15 @@ public class SsComTask implements Serializable {
 			", taskName=" + taskName +
 			", expireDate=" + expireDate +
 			", submitterId=" + submitterId +
+			", submitterName=" + submitterName +
 			", submitterDeptId=" + submitterDeptId +
 			", submitTime=" + submitTime +
 			", submitRemark=" + submitRemark +
 			", taskFormContent=" + taskFormContent +
 			", chatHistory=" + chatHistory +
 			", taskStatus=" + taskStatus +
-			", agentUserId=" + agentUserId +
+			", handleUserId=" + handleUserId +
+			", handleUserName=" + handleUserName +
 			", startHandleDate=" + startHandleDate +
 			", sendCheckDate=" + sendCheckDate +
 			", finishDate=" + finishDate +

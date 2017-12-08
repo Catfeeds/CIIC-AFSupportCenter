@@ -5,7 +5,6 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount">
         <id column="com_account_id" property="comAccountId" />
-        <result column="entity_id" property="entityId" />
         <result column="customer_id" property="customerId" />
         <result column="supplier_id" property="supplierId" />
         <result column="ss_account_type" property="ssAccountType" />
