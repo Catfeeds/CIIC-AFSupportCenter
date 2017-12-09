@@ -1,6 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.business;
 
 import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po.FragmentaryReimbursementPO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.api.dto.FragmentaryReimbursementDTO;
+import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
+import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 
 
 /**
@@ -12,6 +15,6 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po.Fragm
  * @since 2017-12-04
  */
 public interface FragmentaryReimbursementQueryService {
-    void save(FragmentaryReimbursementPO fragmentaryReimbursement);
-    void edit(FragmentaryReimbursementPO fragmentaryReimbursement);
+    FragmentaryReimbursementPO getById(String id);
+    PageRows<FragmentaryReimbursementPO> employeeOperatorQuery(PageInfo pageInfo);
 }

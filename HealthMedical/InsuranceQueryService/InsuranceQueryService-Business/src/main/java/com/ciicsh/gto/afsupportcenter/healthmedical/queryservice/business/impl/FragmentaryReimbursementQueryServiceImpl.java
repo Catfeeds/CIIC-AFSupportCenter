@@ -1,12 +1,19 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.business.impl;
 
+import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.api.dto.FragmentaryReimbursementDTO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po.FragmentaryReimbursementPO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.dao.FragmentaryReimbursementMapper;
 import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.business.FragmentaryReimbursementQueryService;
+import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
+import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
+import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import java.math.BigDecimal;
 
 /**
@@ -19,37 +26,25 @@ import java.math.BigDecimal;
  */
 @Service
 @Transactional
-public class FragmentaryReimbursementQueryServiceImpl implements FragmentaryReimbursementQueryService {
+public class FragmentaryReimbursementQueryServiceImpl extends ServiceImpl<FragmentaryReimbursementMapper, FragmentaryReimbursementPO> implements FragmentaryReimbursementQueryService {
 
     @Autowired
     private FragmentaryReimbursementMapper fragmentaryReimbursementMapper;
 
-    /**
-     * 新增零星医疗报销
-     * @param fragmentaryReimbursement 零星医疗报销
-     * @param fragmentaryReimbursement
-     */
     @Override
-    public void save(FragmentaryReimbursementPO fragmentaryReimbursement)
-    {
-        fragmentaryReimbursement.setEmployeeId("17er");
-        BigDecimal caseMoney = new BigDecimal("15000.48");
-        fragmentaryReimbursement.setCaseMoney(caseMoney) ;
-        fragmentaryReimbursement.setInvoiceNumber(2135);
-        fragmentaryReimbursementMapper.save(fragmentaryReimbursement);
-
+    public FragmentaryReimbursementPO getById(String id) {
+        return fragmentaryReimbursementMapper.getById(id);
     }
 
     @Override
-    public void edit(FragmentaryReimbursementPO fragmentaryReimbursement)
-    {
-        fragmentaryReimbursement.setId(10);
-        fragmentaryReimbursement.setEmployeeId("17er");
-        BigDecimal caseMoney = new BigDecimal("15000.48");
-        fragmentaryReimbursement.setCaseMoney(caseMoney) ;
-        fragmentaryReimbursement.setInvoiceNumber(5);
-        fragmentaryReimbursement.setMedicalRemark("123wqe");
-        fragmentaryReimbursementMapper.edit(fragmentaryReimbursement) ;
-
+    public PageRows<FragmentaryReimbursementPO> employeeOperatorQuery(PageInfo pageInfo) {
+        FragmentaryReimbursementPO po = pageInfo.toJavaObject(FragmentaryReimbursementPO.class);
+        BigDecimal loanAmount = new BigDecimal("200");
+        po.setCaseMoney(loanAmount);
+        List<FragmentaryReimbursementPO> list=baseMapper.fragmentaryReimbursementMapperQuery(po);
+        return PageKit.doSelectPage(pageInfo, () ->list );
     }
+
+
 }
+

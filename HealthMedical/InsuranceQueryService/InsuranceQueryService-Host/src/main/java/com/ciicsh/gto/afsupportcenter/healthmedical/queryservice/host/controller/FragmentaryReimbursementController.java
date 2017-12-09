@@ -1,14 +1,25 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.host.controller;
 
+import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.api.dto.FragmentaryReimbursementDTO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.business.FragmentaryReimbursementQueryService;
+import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po.FragmentaryReimbursementPO;
+
+import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
+import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
+import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
+import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
-import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.business.FragmentaryReimbursementQueryService;
-import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po.FragmentaryReimbursementPO;
-
-import java.util.Map;
 
 /**
  * <p>
@@ -18,25 +29,34 @@ import java.util.Map;
  * @author zhaogang
  * @since 2017-12-02
  */
+
 @RestController
-@RequestMapping("/QueryService/FragmentaryReimbursement")
-//public class FragmentaryReimbursementController implements FragmentaryReimbursementProxy{
-   public class FragmentaryReimbursementController {
+@RequestMapping("/api/afsupportcenter/healthmedical/queryservice/FragmentaryReimbursement")
+
+    public class FragmentaryReimbursementController extends BasicController<FragmentaryReimbursementQueryService> {
+
     @Autowired
     private FragmentaryReimbursementQueryService fragmentaryReimbursementQueryService;
 
 
-    @RequestMapping(value = "/saveFragmentaryReimbursement", method = { RequestMethod.POST})
- //   public void saveFragmentaryReimbursement(@RequestBody Map<String, Object> param)
-    public void saveFragmentaryReimbursement()
-    {
-
-
+    @GetMapping("/getFragmentaryReimbursementById")
+    public JsonResult getFragmentaryReimbursementById(String id) {
+        JsonResult jr = new JsonResult();
+        jr.setData(fragmentaryReimbursementQueryService.getById(id));
+        return jr;
     }
 
-    @RequestMapping(value = "/editFragmentaryReimbursement", method = { RequestMethod.POST})
-    public void editFragmentaryReimbursement()
-    {
-
+    @Log("零星报销查询")
+    @PostMapping("/getFragmentaryReimbursementSelect")
+     public JsonResult<List<FragmentaryReimbursementPO>> getFragmentaryReimbursementSelect(PageInfo pageInfo) {
+     //   public JsonResult<List<FragmentaryReimbursementPO>> getFragmentaryReimbursementSelect() {
+     //   PageInfo pageInfo = new PageInfo();
+     //   pageInfo.setPageNum(1);
+     //   pageInfo.setPageSize(15);
+        PageRows<FragmentaryReimbursementPO> pageRows = business.employeeOperatorQuery(pageInfo);
+        return JsonResultKit.ofPage(pageRows);
     }
+
 }
+
+

@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.api;
 
 
-import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.api.dto.JsonResult;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 

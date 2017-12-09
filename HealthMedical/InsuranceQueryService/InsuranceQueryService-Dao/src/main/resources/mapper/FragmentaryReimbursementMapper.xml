@@ -17,41 +17,38 @@
 		<result column="created_by" property="createdBy" />
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
-	<insert id="save">
-    INSERT INTO `gtobusinessdb`.`hm_fragmentary_reimbursement` ( `employee_id`, `case_money`, `invoice_number`, `medical_remark`, `medical_clearing_money`,
- `medical_clearing_feed_back`) VALUES	(#{employeeId},#{caseMoney},#{invoiceNumber},#{medicalRemark},#{medicalClearingMoney},#{medicalClearingFeedBack})
-	</insert>
 
-	<update id="edit">
-		UPDATE hm_fragmentary_reimbursement
-		SET modified_time = CURRENT_TIMESTAMP,
-		<trim suffixOverrides=",">
-			<if test="employeeId != null and employeeId != ''">
-				employee_id = #{employeeId},
+	<select id="getById" resultMap="BaseResultMap">
+	 	SELECT `id`, `employee_id`, `case_money`, `invoice_number`, `medical_remark`, `medical_clearing_money`, `medical_clearing_feed_back`, `is_active`, `created_time`, `modified_time`, `created_by`, `modified_by`
+		from gtobusinessdb.hm_fragmentary_reimbursement
+		where id = #{id}
+	</select>
+	<select id="fragmentaryReimbursementMapperQuery" resultMap="BaseResultMap">
+		select  `id`, `employee_id`, `case_money`, `invoice_number`, `medical_remark`, `medical_clearing_money`, `medical_clearing_feed_back`, `is_active`, `created_time`, `modified_time`, `created_by`, `modified_by`
+		from  gtobusinessdb.hm_fragmentary_reimbursement
+		<where>
+			<if test="id != null">
+				and id = #{id}
 			</if>
-			<if test="caseMoney != null and caseMoney != ''">
-				case_money = #{caseMoney},
+			<if test="employeeId != null">
+				and employee_id LIKE CONCAT('%',#{employeeId},'%')
 			</if>
-			<if test="invoiceNumber != null and invoiceNumber != ''">
-				invoice_number = #{invoiceNumber},
+			<if test="caseMoney != null">
+				and case_money = #{caseMoney}
 			</if>
-			<if test="medicalRemark != null and medicalRemark != ''">
-				medical_remark = #{medicalRemark},
+			<if test="invoiceNumber != null">
+				and invoice_number = #{invoiceNumber}
 			</if>
-			<if test="medicalClearingMoney != null and medicalClearingMoney != ''">
-		    	medical_clearing_money = #{medicalClearingMoney},
-		    </if>
-			<if test="medicalClearingFeedBack != null and medicalClearingFeedBack != ''">
-				medical_clearing_feed_back = #{medicalClearingFeedBack},
+			<if test="medicalRemark != null">
+				and medical_remark = #{medicalRemark}
 			</if>
-			<if test="isActive != null">
-				is_active = #{isActive},
+			<if test="medicalClearingMoney != null">
+				and medical_clearing_money = #{medicalClearingMoney}
 			</if>
-			<if test="modifiedBy != null and modifiedBy != ''">
-				modified_by = #{modifiedBy},
+			<if test="medicalClearingFeedBack != null">
+				and medical_clearing_feed_back = #{medicalClearingFeedBack}
 			</if>
-		</trim>
-		WHERE id = #{id}
-	</update>
 
+		</where>
+	</select>
 </mapper>

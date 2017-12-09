@@ -22,7 +22,7 @@ import java.util.Map;
  * @since 2017-12-02
  */
 @RestController
-@RequestMapping("/CommandService/FragmentaryReimbursement")
+@RequestMapping("/api/afsupportcenter/healthmedical/commandservice/FragmentaryReimbursement")
 //public class FragmentaryReimbursementController implements FragmentaryReimbursementProxy{
    public class FragmentaryReimbursementController {
     @Autowired
