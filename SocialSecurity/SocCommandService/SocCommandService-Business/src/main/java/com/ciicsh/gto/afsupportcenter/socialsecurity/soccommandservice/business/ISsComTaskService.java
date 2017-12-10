@@ -58,4 +58,11 @@ public interface ISsComTaskService extends IService<SsComTask> {
      * @return
      */
     public SsComTaskDTO queryComInfoAndMaterial(SsComTaskDTO SsComTaskDTO);
+
+    /**
+     *  查询企业信息和 前道传过来的JSON（包含社保截止和付款方式）
+     * @param ssComTask
+     * @return
+     */
+    public SsComTaskDTO queryComInfoAndPayWay(SsComTask ssComTask);
 }

@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComMaterial;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask;
 
@@ -31,6 +32,8 @@ public class SsComTaskDTO extends SsComTask{
     //材料清单
      private List<SsComMaterial> materialList;
 
+    //账户
+    private SsComAccount ssComAccount;
 
     public String getCompanyName() {
         return companyName;
@@ -86,5 +89,13 @@ public class SsComTaskDTO extends SsComTask{
 
     public void setMaterialList(List<SsComMaterial> materialList) {
         this.materialList = materialList;
+    }
+
+    public SsComAccount getSsComAccount() {
+        return ssComAccount;
+    }
+
+    public void setSsComAccount(SsComAccount ssComAccount) {
+        this.ssComAccount = ssComAccount;
     }
 }

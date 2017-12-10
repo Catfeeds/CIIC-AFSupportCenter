@@ -89,16 +89,21 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
 
     @Log("获得企业信息和材料收缴信息")
     @RequestMapping(value = "getCompanyInfoAndMaterial")
-    public JsonResult<SsComTaskDTO> getCompanyInfoAndMaterial(SsComTaskDTO ssComTaskDTO){
-        if(null!=ssComTaskDTO.getCompanyTaskId()){
-            SsComTaskDTO ssComTaskDTORes =  business.queryComInfoAndMaterial(ssComTaskDTO);
+    public JsonResult<SsComTaskDTO> getCompanyInfoAndMaterial(SsComTaskDTO ssComTaskDTO) {
+        if (null != ssComTaskDTO.getCompanyTaskId()) {
+            SsComTaskDTO ssComTaskDTORes = business.queryComInfoAndMaterial(ssComTaskDTO);
             JsonResult<SsComTaskDTO> result = JsonResultKit.of(ssComTaskDTORes);
             return result;
             //前台传ID 为空 返回空
-        }else return  JsonResultKit.of();
+        } else return JsonResultKit.of();
     }
 
-
+    @Log("查询企业信息和前道传过来的JSON（包含社保截止和付款方式）")
+    @RequestMapping(value = "getComInfoAndPayWay")
+    public JsonResult<SsComTaskDTO> queryComInfoAndPayWay(SsComTask ssComTask) {
+        SsComTaskDTO ssComTaskDTO = business.queryComInfoAndPayWay(ssComTask);
+        return  JsonResultKit.of(ssComTaskDTO);
+    }
 
 }
 
