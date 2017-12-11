@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-
 /**
  * <p>
  * 零星报销表 前端控制器
@@ -38,16 +37,16 @@ import java.util.Optional;
     @Autowired
     private FragmentaryReimbursementQueryService fragmentaryReimbursementQueryService;
 
-
-    @GetMapping("/getFragmentaryReimbursementById")
-    public JsonResult getFragmentaryReimbursementById(String id) {
+    @Log("零星报销单条记录查询")
+    @GetMapping("/getEntityById")
+    public JsonResult getEntityById(String id) {
         JsonResult jr = new JsonResult();
         jr.setData(fragmentaryReimbursementQueryService.getById(id));
         return jr;
     }
 
     @Log("零星报销查询")
-    @PostMapping("/getFragmentaryReimbursementSelect")
+    @PostMapping("/getFragmentaryReimbursementList")
      public JsonResult<List<FragmentaryReimbursementPO>> getFragmentaryReimbursementSelect(PageInfo pageInfo) {
      //   public JsonResult<List<FragmentaryReimbursementPO>> getFragmentaryReimbursementSelect() {
      //   PageInfo pageInfo = new PageInfo();

@@ -33,10 +33,10 @@ public class FragmentaryReimbursementCommandServiceImpl implements FragmentaryRe
     @Override
     public void save(FragmentaryReimbursementPO fragmentaryReimbursement)
     {
-        fragmentaryReimbursement.setEmployeeId("17er");
-        BigDecimal caseMoney = new BigDecimal("15000.48");
-        fragmentaryReimbursement.setCaseMoney(caseMoney) ;
-        fragmentaryReimbursement.setInvoiceNumber(2135);
+     //   fragmentaryReimbursement.setEmployeeId("17er");
+     //   BigDecimal caseMoney = new BigDecimal("15000.48");
+     //   fragmentaryReimbursement.setCaseMoney(caseMoney) ;
+     //   fragmentaryReimbursement.setInvoiceNumber(2135);
         fragmentaryReimbursementMapper.save(fragmentaryReimbursement);
 
     }
@@ -44,12 +44,12 @@ public class FragmentaryReimbursementCommandServiceImpl implements FragmentaryRe
     @Override
     public void edit(FragmentaryReimbursementPO fragmentaryReimbursement)
     {
-        fragmentaryReimbursement.setId(10);
-        fragmentaryReimbursement.setEmployeeId("17er");
-        BigDecimal caseMoney = new BigDecimal("15000.48");
-        fragmentaryReimbursement.setCaseMoney(caseMoney) ;
-        fragmentaryReimbursement.setInvoiceNumber(5);
-        fragmentaryReimbursement.setMedicalRemark("123wqe");
+     //   fragmentaryReimbursement.setId(10);
+     //   fragmentaryReimbursement.setEmployeeId("17er");
+     //   BigDecimal caseMoney = new BigDecimal("15000.48");
+   //     fragmentaryReimbursement.setCaseMoney(caseMoney) ;
+     //   fragmentaryReimbursement.setInvoiceNumber(5);
+    //    fragmentaryReimbursement.setMedicalRemark("123wqe");
         fragmentaryReimbursementMapper.edit(fragmentaryReimbursement) ;
 
     }

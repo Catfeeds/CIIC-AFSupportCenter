@@ -17,7 +17,30 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 	<insert id="save">
-		INSERT INTO prd_basic_product(basic_product_id, product_name, business_category_id, product_category_id, remark)
-		VALUES (#{basicProductID}, #{productName}, #{businessCategoryID}, #{productCategoryID}, #{remark})
+		INSERT INTO `gtobusinessdb`.`hm_medical_relation_transform` (`employee_id`, `turn_out_date`, `turn_out_address`, `turn_back_date`, `remark`)
+		VALUES	(#{employeeId},#{turnOutDate},#{turnOutAddress},#{turnBackDate},#{remark})
 	</insert>
+
+	<update id="edit">
+		UPDATE hm_medical_relation_transform
+		SET modified_time = CURRENT_TIMESTAMP,
+		<trim suffixOverrides=",">
+			<if test="employeeId != null and employeeId != ''">
+				employee_id = #{employeeId},
+			</if>
+			<if test="turnOutDate != null and turnOutDate != ''">
+				turn_out_date = #{turnOutDate},
+			</if>
+			<if test="turnOutAddress != null and turnOutAddress != ''">
+				turn_out_address = #{turnOutAddress},
+			</if>
+			<if test="turnBackDate != null and turnBackDate != ''">
+				turn_back_date = #{turnBackDate},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</trim>
+		WHERE id = #{id}
+	</update>
 </mapper>

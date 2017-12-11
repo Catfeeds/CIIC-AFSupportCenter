@@ -25,8 +25,11 @@ public class MedicalRelationTransformCommandServiceImpl implements MedicalRelati
 
     @Override
     public void save(MedicalRelationTransformPO medicalRelationTransform){
-
         medicalRelationTransformMapper.save(medicalRelationTransform);
+    }
 
+    @Override
+    public void edit(MedicalRelationTransformPO medicalRelationTransform){
+        medicalRelationTransformMapper.edit(medicalRelationTransform);
     }
 }

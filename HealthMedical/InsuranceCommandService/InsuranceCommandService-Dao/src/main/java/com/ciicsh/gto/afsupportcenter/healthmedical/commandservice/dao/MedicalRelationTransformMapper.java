@@ -14,4 +14,6 @@ public interface MedicalRelationTransformMapper {
 
     void save(MedicalRelationTransformPO medicalRelationTransform);
 
+    void edit(MedicalRelationTransformPO medicalRelationTransform);
+
 }

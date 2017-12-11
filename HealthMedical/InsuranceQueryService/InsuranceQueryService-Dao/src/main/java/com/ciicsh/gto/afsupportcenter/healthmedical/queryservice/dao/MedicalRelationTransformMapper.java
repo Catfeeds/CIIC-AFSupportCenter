@@ -1,6 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.dao;
 
 import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po.MedicalRelationTransformPO;
+import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.springframework.stereotype.Repository;
+import java.util.List;
 
 /**
  * <p>
@@ -10,8 +13,9 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po.Medic
  * @author zhaogang
  * @since 2017-12-04
  */
-public interface MedicalRelationTransformMapper {
+public interface MedicalRelationTransformMapper  extends BaseMapper<MedicalRelationTransformPO> {
 
-    void save(MedicalRelationTransformPO medicalRelationTransform);
+    MedicalRelationTransformPO getById(String id);
+    List<MedicalRelationTransformPO> medicalRelationTransformMapperQuery(MedicalRelationTransformPO po);
 
 }

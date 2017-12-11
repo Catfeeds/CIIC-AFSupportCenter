@@ -1,6 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.business;
 
 import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po.MedicalRelationTransformPO;
+import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
+import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import java.util.List;
 
 
 /**
@@ -13,6 +16,7 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po.Medic
  */
 public interface MedicalRelationTransformQueryService {
 
-    void save(MedicalRelationTransformPO medicalRelationTransform);
+    MedicalRelationTransformPO getById(String id);
+    PageRows<MedicalRelationTransformPO> medicalRelationTransformMapperQuery(PageInfo po);
 
 }

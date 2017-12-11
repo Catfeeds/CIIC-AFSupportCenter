@@ -7,10 +7,9 @@ import org.springframework.stereotype.Controller;
 import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.api.dto.FragmentaryReimbursementDTO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.api.FragmentaryReimbursementProxy;
 import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.api.dto.JsonResult;
-import com.ciicsh.gto.afsupportcenter.util.JSONConverter;
 import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.business.FragmentaryReimbursementCommandService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po.FragmentaryReimbursementPO;
-
+import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import java.util.Map;
 
 /**
@@ -23,28 +22,22 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/afsupportcenter/healthmedical/commandservice/FragmentaryReimbursement")
-//public class FragmentaryReimbursementController implements FragmentaryReimbursementProxy{
    public class FragmentaryReimbursementController {
     @Autowired
     private FragmentaryReimbursementCommandService fragmentaryReimbursementCommandService;
 
-
-    @RequestMapping(value = "/saveFragmentaryReimbursement", method = { RequestMethod.POST})
- //   public void saveFragmentaryReimbursement(@RequestBody Map<String, Object> param)
-    public void saveFragmentaryReimbursement()
+    @Log("新增")
+    @RequestMapping(value = "/save", method = { RequestMethod.POST})
+    public void save(FragmentaryReimbursementPO po)
     {
-
-      //  Object fragmentaryReimbursementObj = param.get("fragmentaryReimbursement");
-      //  FragmentaryReimbursementPO fragmentaryReimbursementPO = JSONConverter.convertToEntity(fragmentaryReimbursementObj,FragmentaryReimbursementPO.class);
-        FragmentaryReimbursementPO fragmentaryReimbursementPO= new FragmentaryReimbursementPO();
-        fragmentaryReimbursementCommandService.save(fragmentaryReimbursementPO);
+        fragmentaryReimbursementCommandService.save(po);
 
     }
 
-    @RequestMapping(value = "/editFragmentaryReimbursement", method = { RequestMethod.POST})
-    public void editFragmentaryReimbursement()
+    @Log("更新")
+    @RequestMapping(value = "/edit", method = { RequestMethod.POST})
+    public void edit(FragmentaryReimbursementPO po)
     {
-        FragmentaryReimbursementPO fragmentaryReimbursementPO= new FragmentaryReimbursementPO();
-        fragmentaryReimbursementCommandService.edit(fragmentaryReimbursementPO);
+        fragmentaryReimbursementCommandService.edit(po);
     }
 }
