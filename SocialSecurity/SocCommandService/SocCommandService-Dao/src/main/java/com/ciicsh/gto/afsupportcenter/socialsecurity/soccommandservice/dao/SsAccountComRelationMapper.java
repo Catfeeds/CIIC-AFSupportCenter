@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComTie;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-01
+ * @since 2017-12-11
  */
-public interface SsAccountComTieMapper extends BaseMapper<SsAccountComTie> {
+public interface SsAccountComRelationMapper extends BaseMapper<SsAccountComRelation> {
 
 }

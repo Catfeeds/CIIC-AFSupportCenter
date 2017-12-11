@@ -7,8 +7,10 @@
         <id column="statement_detail_id" property="statementDetailId" />
         <result column="statement_id" property="statementId" />
         <result column="employee_id" property="employeeId" />
+        <result column="change_type" property="changeType" />
         <result column="project_name" property="projectName" />
         <result column="ss_type" property="ssType" />
+        <result column="ss_type_name" property="ssTypeName" />
         <result column="imp_amount" property="impAmount" />
         <result column="ss_amount" property="ssAmount" />
         <result column="diff_amount" property="diffAmount" />

@@ -14,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-08
+ * @since 2017-12-11
  */
 @TableName("ss_com_task")
 public class SsComTask implements Serializable {
@@ -154,11 +154,6 @@ public class SsComTask implements Serializable {
      */
 	@TableField("modified_by")
 	private String modifiedBy;
-    /**
-     * EntityId
-     */
-	@TableField("entity_id")
-	private String entityId;
 
 
 	public Long getCompanyTaskId() {
@@ -377,14 +372,6 @@ public class SsComTask implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public String getEntityId() {
-		return entityId;
-	}
-
-	public void setEntityId(String entityId) {
-		this.entityId = entityId;
-	}
-
 	@Override
 	public String toString() {
 		return "SsComTask{" +
@@ -415,7 +402,6 @@ public class SsComTask implements Serializable {
 			", modifiedTime=" + modifiedTime +
 			", createdBy=" + createdBy +
 			", modifiedBy=" + modifiedBy +
-			", entityId=" + entityId +
 			"}";
 	}
 }

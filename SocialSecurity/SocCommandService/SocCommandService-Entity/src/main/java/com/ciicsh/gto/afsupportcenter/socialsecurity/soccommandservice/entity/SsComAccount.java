@@ -16,7 +16,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-08
+ * @since 2017-12-11
  */
 @TableName("ss_com_account")
 public class SsComAccount implements Serializable {
@@ -73,8 +73,8 @@ public class SsComAccount implements Serializable {
             我司付款账单到他司  
             2-自己付款账单到我司  
             3-自己付款账单到他司  
-            4-我司付款账单到我司  5-
-            垫付
+            4-我司付款账单到我司  
+            5-垫付
      */
 	@TableField("payment_way")
 	private Integer paymentWay;
@@ -162,6 +162,10 @@ public class SsComAccount implements Serializable {
      * 备注
      */
 	private String remark;
+    /**
+     * 账户状态:1有效 2 终止
+     */
+	private Boolean state;
     /**
      * 是否可用
      */
@@ -405,6 +409,14 @@ public class SsComAccount implements Serializable {
 		this.remark = remark;
 	}
 
+	public Boolean getState() {
+		return state;
+	}
+
+	public void setState(Boolean state) {
+		this.state = state;
+	}
+
 	public Boolean getActive() {
 		return isActive;
 	}
@@ -475,6 +487,7 @@ public class SsComAccount implements Serializable {
 			", endDate=" + endDate +
 			", dispatchMaterial=" + dispatchMaterial +
 			", remark=" + remark +
+			", state=" + state +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

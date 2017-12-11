@@ -31,7 +31,6 @@
         <result column="modified_time" property="modifiedTime" />
         <result column="created_by" property="createdBy" />
         <result column="modified_by" property="modifiedBy" />
-        <result column="entity_id" property="entityId" />
     </resultMap>
 
 </mapper>

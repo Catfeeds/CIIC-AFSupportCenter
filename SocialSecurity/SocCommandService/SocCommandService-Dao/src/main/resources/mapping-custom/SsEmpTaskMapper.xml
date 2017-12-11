@@ -37,7 +37,7 @@
         LEFT JOIN ss_emp_archive ea on ea.emp_archived_id = et.emp_archived_id
         LEFT JOIN cmy_company c on ea.company_id = c.company_id
         LEFT JOIN emp_employee e on ea.employee_id = e.employee_id
-        LEFT JOIN ss_account_com_tie ssac on ssac.company_id = c.company_id
+        LEFT JOIN ss_account_com_relation ssac on ssac.company_id = c.company_id
         LEFT JOIN ss_com_account ca on ca.com_account_id = ssac.com_account_id
         <where>
             and et.is_active = 1

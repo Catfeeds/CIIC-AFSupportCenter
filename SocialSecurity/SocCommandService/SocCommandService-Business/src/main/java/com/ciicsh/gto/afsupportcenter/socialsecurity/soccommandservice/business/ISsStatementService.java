@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.service.IService;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-01
+ * @since 2017-12-11
  */
 public interface ISsStatementService extends IService<SsStatement> {
 

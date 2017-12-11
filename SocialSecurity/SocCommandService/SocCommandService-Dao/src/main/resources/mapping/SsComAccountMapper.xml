@@ -31,6 +31,7 @@
         <result column="end_date" property="endDate" />
         <result column="dispatch_material" property="dispatchMaterial" />
         <result column="remark" property="remark" />
+        <result column="state" property="state" />
         <result column="is_active" property="isActive" />
         <result column="created_time" property="createdTime" />
         <result column="modified_time" property="modifiedTime" />

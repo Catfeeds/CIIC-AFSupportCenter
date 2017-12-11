@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComTie;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
 import com.baomidou.mybatisplus.service.IService;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.service.IService;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-01
+ * @since 2017-12-11
  */
-public interface ISsAccountComTieService extends IService<SsAccountComTie> {
+public interface ISsAccountComRelationService extends IService<SsAccountComRelation> {
 
 }

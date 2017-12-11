@@ -13,25 +13,25 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-08
+ * @since 2017-12-11
  */
-@TableName("ss_account_com_tie")
-public class SsAccountComTie implements Serializable {
+@TableName("ss_account_com_relation")
+public class SsAccountComRelation implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * 记录Id
      */
-	@TableId(value="ss_account_company_id", type= IdType.AUTO)
-	private Long ssAccountCompanyId;
+	@TableId(value="account_com_relation_id", type= IdType.AUTO)
+	private Long accountComRelationId;
     /**
      * 外键, 企业社保账户Id
      */
 	@TableField("com_account_id")
 	private Long comAccountId;
     /**
-     * 外键, 客户Id, 来自gtofrontdb.CMY_COMPANY
+     * 外键, 客户Id, 来自CMY_COMPANY
      */
 	@TableField("company_id")
 	private String companyId;
@@ -67,12 +67,12 @@ public class SsAccountComTie implements Serializable {
 	private String modifiedBy;
 
 
-	public Long getSsAccountCompanyId() {
-		return ssAccountCompanyId;
+	public Long getAccountComRelationId() {
+		return accountComRelationId;
 	}
 
-	public void setSsAccountCompanyId(Long ssAccountCompanyId) {
-		this.ssAccountCompanyId = ssAccountCompanyId;
+	public void setAccountComRelationId(Long accountComRelationId) {
+		this.accountComRelationId = accountComRelationId;
 	}
 
 	public Long getComAccountId() {
@@ -141,8 +141,8 @@ public class SsAccountComTie implements Serializable {
 
 	@Override
 	public String toString() {
-		return "SsAccountComTie{" +
-			", ssAccountCompanyId=" + ssAccountCompanyId +
+		return "SsAccountComRelation{" +
+			", accountComRelationId=" + accountComRelationId +
 			", comAccountId=" + comAccountId +
 			", companyId=" + companyId +
 			", majorCom=" + majorCom +

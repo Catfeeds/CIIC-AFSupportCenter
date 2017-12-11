@@ -8,8 +8,8 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.Cm
  * 客户基础表 Mapper 接口
  * </p>
  *
- * @author xsj
- * @since 2017-12-06
+ * @author HuangXing
+ * @since 2017-12-11
  */
 public interface CmyCompanyMapper extends BaseMapper<CmyCompany> {
 
