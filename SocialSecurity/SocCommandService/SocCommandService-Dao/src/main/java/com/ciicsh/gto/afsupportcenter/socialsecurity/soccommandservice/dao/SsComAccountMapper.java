@@ -1,7 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComAccountDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,5 +16,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @since 2017-12-01
  */
 public interface SsComAccountMapper extends BaseMapper<SsComAccount> {
-
+    public List<SsComAccountDTO> queryComAccount(SsComAccountDTO ssComAccountDTO);
 }
