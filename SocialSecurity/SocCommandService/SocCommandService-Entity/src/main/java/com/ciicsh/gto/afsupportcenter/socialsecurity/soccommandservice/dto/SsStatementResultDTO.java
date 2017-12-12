@@ -57,10 +57,12 @@ public class SsStatementResultDTO implements Serializable {
      */
     private Integer projectType;
 
+
+
     /**
      * 项目名称
      */
-    private String projectName;
+    private String projectTypeName;
 
     /**
      * 外键：险种
@@ -197,24 +199,6 @@ public class SsStatementResultDTO implements Serializable {
      */
     public void setChangeTypeName(String changeTypeName) {
         this.changeTypeName = changeTypeName == null ? null : changeTypeName.trim();
-    }
-
-    /**
-     * 获取项目名称
-     *
-     * @return project_name - 项目名称
-     */
-    public String getProjectName() {
-        return projectName;
-    }
-
-    /**
-     * 设置项目名称
-     *
-     * @param projectName 项目名称
-     */
-    public void setProjectName(String projectName) {
-        this.projectName = projectName == null ? null : projectName.trim();
     }
 
     /**
@@ -375,5 +359,13 @@ public class SsStatementResultDTO implements Serializable {
 
     public void setProjectType(Integer projectType) {
         this.projectType = projectType;
+    }
+
+    public String getProjectTypeName() {
+        return projectTypeName;
+    }
+
+    public void setProjectTypeName(String projectTypeName) {
+        this.projectTypeName = projectTypeName;
     }
 }

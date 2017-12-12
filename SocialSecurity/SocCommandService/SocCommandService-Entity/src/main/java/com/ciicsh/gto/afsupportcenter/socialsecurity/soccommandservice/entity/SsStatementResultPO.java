@@ -60,8 +60,8 @@ public class SsStatementResultPO implements Serializable {
     /**
      * 项目名称
      */
-    @TableField("project_name")
-    private String projectName;
+    @TableField("project_type_name")
+    private String projectTypeName;
 
     /**
      * 外键：险种
@@ -208,24 +208,6 @@ public class SsStatementResultPO implements Serializable {
      */
     public void setChangeTypeName(String changeTypeName) {
         this.changeTypeName = changeTypeName == null ? null : changeTypeName.trim();
-    }
-
-    /**
-     * 获取项目名称
-     *
-     * @return project_name - 项目名称
-     */
-    public String getProjectName() {
-        return projectName;
-    }
-
-    /**
-     * 设置项目名称
-     *
-     * @param projectName 项目名称
-     */
-    public void setProjectName(String projectName) {
-        this.projectName = projectName == null ? null : projectName.trim();
     }
 
     /**
@@ -378,5 +360,13 @@ public class SsStatementResultPO implements Serializable {
 
     public void setProjectType(Integer projectType) {
         this.projectType = projectType;
+    }
+
+    public String getProjectTypeName() {
+        return projectTypeName;
+    }
+
+    public void setProjectTypeName(String projectTypeName) {
+        this.projectTypeName = projectTypeName;
     }
 }

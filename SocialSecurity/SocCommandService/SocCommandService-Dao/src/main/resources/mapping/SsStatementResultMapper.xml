@@ -10,7 +10,7 @@
         <result column="change_type" jdbcType="INTEGER" property="changeType" />
         <result column="change_type_name" jdbcType="VARCHAR" property="changeTypeName" />
         <result column="project_type" jdbcType="INTEGER" property="projectType" />
-        <result column="project_name" jdbcType="VARCHAR" property="projectName" />
+        <result column="project_type_name" jdbcType="VARCHAR" property="projectTypeName" />
         <result column="ss_type" jdbcType="TINYINT" property="ssType" />
         <result column="ss_type_name" jdbcType="VARCHAR" property="ssTypeName" />
         <result column="imp_amount" jdbcType="DECIMAL" property="impAmount" />
@@ -32,7 +32,7 @@
         <result column="change_type" jdbcType="INTEGER" property="changeType" />
         <result column="change_type_name" jdbcType="VARCHAR" property="changeTypeName" />
         <result column="project_type" jdbcType="INTEGER" property="projectType" />
-        <result column="project_name" jdbcType="VARCHAR" property="projectName" />
+        <result column="project_type_name" jdbcType="VARCHAR" property="projectTypeName" />
         <result column="ss_type" jdbcType="TINYINT" property="ssType" />
         <result column="ss_type_name" jdbcType="VARCHAR" property="ssTypeName" />
         <result column="imp_amount" jdbcType="DECIMAL" property="impAmount" />
