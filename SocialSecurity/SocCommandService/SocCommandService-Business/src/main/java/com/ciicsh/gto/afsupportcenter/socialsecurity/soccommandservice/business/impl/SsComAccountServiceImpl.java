@@ -5,6 +5,9 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.Ss
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsComAccountMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComAccountService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
+import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
+import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,5 +25,11 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
     @Override
     public SsComAccountDTO queryByEmpTaskId(String empTaskId) {
         return baseMapper.queryByEmpTaskId(empTaskId);
+    }
+
+    @Override
+    public PageRows<SsComAccount> accountQuery(PageInfo pageInfo) {
+        SsComAccount dto = pageInfo.toJavaObject(SsComAccount.class);
+        return PageKit.doSelectPage(pageInfo, () -> baseMapper.accountQuery(dto));
     }
 }

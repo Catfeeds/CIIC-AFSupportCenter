@@ -9,11 +9,11 @@
         <result column="com_account_id" property="comAccountId" />
         <result column="company_id" property="companyId" />
         <result column="task_category" property="taskCategory" />
-        <result column="task_name" property="taskName" />
         <result column="expire_date" property="expireDate" />
         <result column="submitter_id" property="submitterId" />
         <result column="submitter_name" property="submitterName" />
         <result column="submitter_dept_id" property="submitterDeptId" />
+        <result column="submitter_dept_name" property="submitterDeptName" />
         <result column="submit_time" property="submitTime" />
         <result column="submit_remark" property="submitRemark" />
         <result column="task_form_content" property="taskFormContent" />

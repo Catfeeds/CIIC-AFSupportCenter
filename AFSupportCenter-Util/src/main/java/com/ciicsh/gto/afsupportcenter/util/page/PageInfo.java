@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
+import java.util.Map;
 
 /**
  * 分页参数类
@@ -70,6 +71,14 @@ public class PageInfo implements Serializable {
     public String toString() {
         return "PageInfo{" + "pageNum=" + pageNum + ", pageSize=" + pageSize + ", orderBy='" + orderBy + '\'' + ", params="
             + params + '}';
+    }
+
+    public <V> V put(String key, V value) {
+        return (V) params.put(key, value);
+    }
+
+    public <V> void putAll(Map<String, ? extends V> m) {
+        params.putAll(m);
     }
 
     /**

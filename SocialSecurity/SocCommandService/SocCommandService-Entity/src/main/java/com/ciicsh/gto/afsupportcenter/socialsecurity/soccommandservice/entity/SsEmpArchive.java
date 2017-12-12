@@ -25,8 +25,8 @@ public class SsEmpArchive implements Serializable {
     /**
      * 雇员本地社保档案Id
      */
-	@TableId(value="emp_archived_id", type= IdType.AUTO)
-	private Long empArchivedId;
+	@TableId(value="emp_archive_id", type= IdType.AUTO)
+	private Long empArchiveId;
     /**
      * 多租户
      */
@@ -119,12 +119,12 @@ public class SsEmpArchive implements Serializable {
 	private String modifiedBy;
 
 
-	public Long getEmpArchivedId() {
-		return empArchivedId;
+	public Long getEmpArchiveId() {
+		return empArchiveId;
 	}
 
-	public void setEmpArchivedId(Long empArchivedId) {
-		this.empArchivedId = empArchivedId;
+	public void setEmpArchiveId(Long empArchiveId) {
+		this.empArchiveId = empArchiveId;
 	}
 
 	public String getCustomerId() {
@@ -266,7 +266,7 @@ public class SsEmpArchive implements Serializable {
 	@Override
 	public String toString() {
 		return "SsEmpArchive{" +
-			", empArchivedId=" + empArchivedId +
+			", empArchiveId=" + empArchiveId +
 			", customerId=" + customerId +
 			", companyId=" + companyId +
 			", employeeId=" + employeeId +

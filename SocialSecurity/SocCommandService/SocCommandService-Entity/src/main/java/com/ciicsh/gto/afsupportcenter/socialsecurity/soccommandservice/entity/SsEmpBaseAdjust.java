@@ -29,8 +29,8 @@ public class SsEmpBaseAdjust implements Serializable {
     /**
      * 外键，雇员社保档案Id
      */
-	@TableField("emp_archived_id")
-	private String empArchivedId;
+	@TableField("emp_archive_id")
+	private String empArchiveId;
     /**
      * 雇员本地社保任务单Id
      */
@@ -111,12 +111,12 @@ public class SsEmpBaseAdjust implements Serializable {
 		this.empBaseAdjustId = empBaseAdjustId;
 	}
 
-	public String getEmpArchivedId() {
-		return empArchivedId;
+	public String getEmpArchiveId() {
+		return empArchiveId;
 	}
 
-	public void setEmpArchivedId(String empArchivedId) {
-		this.empArchivedId = empArchivedId;
+	public void setEmpArchiveId(String empArchiveId) {
+		this.empArchiveId = empArchiveId;
 	}
 
 	public String getEmpTaskId() {
@@ -235,7 +235,7 @@ public class SsEmpBaseAdjust implements Serializable {
 	public String toString() {
 		return "SsEmpBaseAdjust{" +
 			", empBaseAdjustId=" + empBaseAdjustId +
-			", empArchivedId=" + empArchivedId +
+			", empArchiveId=" + empArchiveId +
 			", empTaskId=" + empTaskId +
 			", processWay=" + processWay +
 			", newBaseAmount=" + newBaseAmount +

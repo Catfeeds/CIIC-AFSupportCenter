@@ -34,8 +34,8 @@ public class SsEmpWithdraw implements Serializable {
     /**
      * 外键，雇员本地社保档案Id
      */
-	@TableField("emp_archived_id")
-	private String empArchivedId;
+	@TableField("emp_archive_id")
+	private String empArchiveId;
     /**
      * 提取金额
      */
@@ -93,12 +93,12 @@ public class SsEmpWithdraw implements Serializable {
 		this.empTaskId = empTaskId;
 	}
 
-	public String getEmpArchivedId() {
-		return empArchivedId;
+	public String getEmpArchiveId() {
+		return empArchiveId;
 	}
 
-	public void setEmpArchivedId(String empArchivedId) {
-		this.empArchivedId = empArchivedId;
+	public void setEmpArchiveId(String empArchiveId) {
+		this.empArchiveId = empArchiveId;
 	}
 
 	public BigDecimal getAmount() {
@@ -170,7 +170,7 @@ public class SsEmpWithdraw implements Serializable {
 		return "SsEmpWithdraw{" +
 			", empWithdrawId=" + empWithdrawId +
 			", empTaskId=" + empTaskId +
-			", empArchivedId=" + empArchivedId +
+			", empArchiveId=" + empArchiveId +
 			", amount=" + amount +
 			", processWay=" + processWay +
 			", processTime=" + processTime +

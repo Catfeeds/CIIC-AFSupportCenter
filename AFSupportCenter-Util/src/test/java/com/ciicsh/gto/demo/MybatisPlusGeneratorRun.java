@@ -59,8 +59,9 @@ public class MybatisPlusGeneratorRun {
                 List<TableInfo> list = new ArrayList<>();
 
                 super.getAllTableInfoList(config).forEach(tableInfo -> {
+                    String tableName = tableInfo.getName().toLowerCase();
                     // 添加指定前缀的表
-                    if (tableInfo.getName().toLowerCase().startsWith("ss_") || ohtTable(tableInfo)) {
+                    if (tableName.startsWith("ss_") || ohtTable(tableInfo)) {
                         // 移除 entity 前缀
                         // tableInfo.setEntityName(this.getStrategy(), tableInfo.getEntityName().substring(2));
                         list.add(tableInfo);
@@ -74,7 +75,7 @@ public class MybatisPlusGeneratorRun {
                 String tableName = tableInfo.getName().toLowerCase();
 
                 if ("emp_employee".equals(tableName)// 雇员表
-                    || "cmy_company".equals(tableName)// 客户表
+                    || "sal_company".equals(tableName)// 客户表
                     ) {
                     return true;
                 }

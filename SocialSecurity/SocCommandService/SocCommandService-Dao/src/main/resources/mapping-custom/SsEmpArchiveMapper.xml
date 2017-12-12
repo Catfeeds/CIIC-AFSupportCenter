@@ -16,6 +16,6 @@
             LEFT JOIN emp_employee e on e.employee_id = ea.employee_id
             WHERE 1 = 1
             and ea.is_active = 1
-            and EXISTS(select 1 from ss_emp_task et where et.is_active = 1 and et.emp_archived_id = ea.emp_archived_id and et.emp_task_id = #{empTaskId})
+            and EXISTS(select 1 from ss_emp_task et where et.is_active = 1 and et.emp_archive_id = ea.emp_archive_id and et.emp_task_id = #{empTaskId})
     </select>
 </mapper>

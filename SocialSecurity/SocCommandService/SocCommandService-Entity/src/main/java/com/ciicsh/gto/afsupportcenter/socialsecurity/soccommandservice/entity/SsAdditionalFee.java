@@ -29,8 +29,8 @@ public class SsAdditionalFee implements Serializable {
     /**
      * 外键，雇员社保档案Id
      */
-	@TableField("emp_archived_id")
-	private String empArchivedId;
+	@TableField("emp_archive_id")
+	private String empArchiveId;
     /**
      * 外键，雇员社保基数记录Id
      */
@@ -96,12 +96,12 @@ public class SsAdditionalFee implements Serializable {
 		this.additionalFeeId = additionalFeeId;
 	}
 
-	public String getEmpArchivedId() {
-		return empArchivedId;
+	public String getEmpArchiveId() {
+		return empArchiveId;
 	}
 
-	public void setEmpArchivedId(String empArchivedId) {
-		this.empArchivedId = empArchivedId;
+	public void setEmpArchiveId(String empArchiveId) {
+		this.empArchiveId = empArchiveId;
 	}
 
 	public Long getEmpBasePeriodId() {
@@ -196,7 +196,7 @@ public class SsAdditionalFee implements Serializable {
 	public String toString() {
 		return "SsAdditionalFee{" +
 			", additionalFeeId=" + additionalFeeId +
-			", empArchivedId=" + empArchivedId +
+			", empArchiveId=" + empArchiveId +
 			", empBasePeriodId=" + empBasePeriodId +
 			", ssType=" + ssType +
 			", ssName=" + ssName +

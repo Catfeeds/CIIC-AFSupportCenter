@@ -35,8 +35,8 @@ public class SsEmpBaseAdjustDetail implements Serializable {
     /**
      * 外键，雇员社保档案Id
      */
-	@TableField("emp_archived_id")
-	private String empArchivedId;
+	@TableField("emp_archive_id")
+	private String empArchiveId;
     /**
      * 社保险种类型，取自全局数据字典表gtobasicdb.DicItem
      */
@@ -160,12 +160,12 @@ public class SsEmpBaseAdjustDetail implements Serializable {
 		this.empBaseAdjustId = empBaseAdjustId;
 	}
 
-	public String getEmpArchivedId() {
-		return empArchivedId;
+	public String getEmpArchiveId() {
+		return empArchiveId;
 	}
 
-	public void setEmpArchivedId(String empArchivedId) {
-		this.empArchivedId = empArchivedId;
+	public void setEmpArchiveId(String empArchiveId) {
+		this.empArchiveId = empArchiveId;
 	}
 
 	public Integer getSsType() {
@@ -341,7 +341,7 @@ public class SsEmpBaseAdjustDetail implements Serializable {
 		return "SsEmpBaseAdjustDetail{" +
 			", empBaseAdjustDetailid=" + empBaseAdjustDetailid +
 			", empBaseAdjustId=" + empBaseAdjustId +
-			", empArchivedId=" + empArchivedId +
+			", empArchiveId=" + empArchiveId +
 			", ssType=" + ssType +
 			", ssTypeName=" + ssTypeName +
 			", comPolicyItemId=" + comPolicyItemId +

@@ -34,8 +34,8 @@ public class SsMonthComPayDetail implements Serializable {
     /**
      * 外键,雇员社保档案Id
      */
-	@TableField("emp_archived_id")
-	private String empArchivedId;
+	@TableField("emp_archive_id")
+	private String empArchiveId;
     /**
      * 社保基数
      */
@@ -82,12 +82,12 @@ public class SsMonthComPayDetail implements Serializable {
 		this.monthComPayId = monthComPayId;
 	}
 
-	public String getEmpArchivedId() {
-		return empArchivedId;
+	public String getEmpArchiveId() {
+		return empArchiveId;
 	}
 
-	public void setEmpArchivedId(String empArchivedId) {
-		this.empArchivedId = empArchivedId;
+	public void setEmpArchiveId(String empArchiveId) {
+		this.empArchiveId = empArchiveId;
 	}
 
 	public BigDecimal getBaseAmount() {
@@ -159,7 +159,7 @@ public class SsMonthComPayDetail implements Serializable {
 		return "SsMonthComPayDetail{" +
 			", monthComPayDetailId=" + monthComPayDetailId +
 			", monthComPayId=" + monthComPayId +
-			", empArchivedId=" + empArchivedId +
+			", empArchiveId=" + empArchiveId +
 			", baseAmount=" + baseAmount +
 			", totalAmount=" + totalAmount +
 			", costCategory=" + costCategory +
