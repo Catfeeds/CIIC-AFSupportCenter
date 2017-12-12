@@ -12,7 +12,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-11
+ * @since 2017-12-12
  */
 @TableName("cmy_company")
 public class CmyCompany implements Serializable {

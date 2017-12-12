@@ -14,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-08
+ * @since 2017-12-12
  */
 @TableName("ss_account_ratio")
 public class SsAccountRatio implements Serializable {
@@ -45,12 +45,12 @@ public class SsAccountRatio implements Serializable {
      * 开始月份
      */
 	@TableField("start_month")
-	private Integer startMonth;
+	private String startMonth;
     /**
      * 截至月份
      */
 	@TableField("end_month")
-	private Integer endMonth;
+	private String endMonth;
     /**
      * 是否可用
      */
@@ -110,19 +110,19 @@ public class SsAccountRatio implements Serializable {
 		this.comRatio = comRatio;
 	}
 
-	public Integer getStartMonth() {
+	public String getStartMonth() {
 		return startMonth;
 	}
 
-	public void setStartMonth(Integer startMonth) {
+	public void setStartMonth(String startMonth) {
 		this.startMonth = startMonth;
 	}
 
-	public Integer getEndMonth() {
+	public String getEndMonth() {
 		return endMonth;
 	}
 
-	public void setEndMonth(Integer endMonth) {
+	public void setEndMonth(String endMonth) {
 		this.endMonth = endMonth;
 	}
 

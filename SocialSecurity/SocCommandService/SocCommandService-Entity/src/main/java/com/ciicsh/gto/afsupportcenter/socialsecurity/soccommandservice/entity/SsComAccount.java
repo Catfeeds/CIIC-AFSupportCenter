@@ -16,7 +16,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-11
+ * @since 2017-12-12
  */
 @TableName("ss_com_account")
 public class SsComAccount implements Serializable {
@@ -82,7 +82,7 @@ public class SsComAccount implements Serializable {
      * 客户交付社保费用给中智的截止日期
      */
 	@TableField("expire_date")
-	private LocalDate expireDate;
+	private Integer expireDate;
     /**
      * 养老金独立开户用户名（使用U盾登陆的用户名）
      */
@@ -163,9 +163,9 @@ public class SsComAccount implements Serializable {
      */
 	private String remark;
     /**
-     * 账户状态:1有效 2 终止
+     * 账户状态:0初始 1有效 2 终止
      */
-	private Boolean state;
+	private Integer state;
     /**
      * 是否可用
      */
@@ -273,11 +273,11 @@ public class SsComAccount implements Serializable {
 		this.paymentWay = paymentWay;
 	}
 
-	public LocalDate getExpireDate() {
+	public Integer getExpireDate() {
 		return expireDate;
 	}
 
-	public void setExpireDate(LocalDate expireDate) {
+	public void setExpireDate(Integer expireDate) {
 		this.expireDate = expireDate;
 	}
 
@@ -409,11 +409,11 @@ public class SsComAccount implements Serializable {
 		this.remark = remark;
 	}
 
-	public Boolean getState() {
+	public Integer getState() {
 		return state;
 	}
 
-	public void setState(Boolean state) {
+	public void setState(Integer state) {
 		this.state = state;
 	}
 
