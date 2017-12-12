@@ -1,12 +1,13 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import java.math.BigDecimal;
-import com.baomidou.mybatisplus.annotations.TableId;
-import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -45,12 +46,12 @@ public class SsAccountRatio implements Serializable {
      * 开始月份
      */
 	@TableField("start_month")
-	private Integer startMonth;
+	private String startMonth;
     /**
      * 截至月份
      */
 	@TableField("end_month")
-	private Integer endMonth;
+	private String endMonth;
     /**
      * 是否可用
      */
@@ -110,23 +111,23 @@ public class SsAccountRatio implements Serializable {
 		this.comRatio = comRatio;
 	}
 
-	public Integer getStartMonth() {
-		return startMonth;
-	}
+    public String getStartMonth() {
+        return startMonth;
+    }
 
-	public void setStartMonth(Integer startMonth) {
-		this.startMonth = startMonth;
-	}
+    public String getEndMonth() {
+        return endMonth;
+    }
 
-	public Integer getEndMonth() {
-		return endMonth;
-	}
+    public void setStartMonth(String startMonth) {
+        this.startMonth = startMonth;
+    }
 
-	public void setEndMonth(Integer endMonth) {
-		this.endMonth = endMonth;
-	}
+    public void setEndMonth(String endMonth) {
+        this.endMonth = endMonth;
+    }
 
-	public Boolean getActive() {
+    public Boolean getActive() {
 		return isActive;
 	}
 

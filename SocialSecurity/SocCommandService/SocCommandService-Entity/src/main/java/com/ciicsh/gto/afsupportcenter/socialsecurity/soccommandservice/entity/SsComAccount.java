@@ -1,13 +1,14 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalDateTime;
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableName;
-import java.io.Serializable;
 
 /**
  * <p>
@@ -22,7 +23,6 @@ import java.io.Serializable;
 public class SsComAccount implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
     /**
      * 企业社保账户Id
      */
@@ -82,7 +82,7 @@ public class SsComAccount implements Serializable {
      * 客户交付社保费用给中智的截止日期
      */
 	@TableField("expire_date")
-	private LocalDate expireDate;
+	private Integer expireDate;
     /**
      * 养老金独立开户用户名（使用U盾登陆的用户名）
      */
@@ -165,7 +165,7 @@ public class SsComAccount implements Serializable {
     /**
      * 账户状态:1有效 2 终止
      */
-	private Boolean state;
+	private Integer state;
     /**
      * 是否可用
      */
@@ -273,15 +273,15 @@ public class SsComAccount implements Serializable {
 		this.paymentWay = paymentWay;
 	}
 
-	public LocalDate getExpireDate() {
-		return expireDate;
-	}
+    public Integer getExpireDate() {
+        return expireDate;
+    }
 
-	public void setExpireDate(LocalDate expireDate) {
-		this.expireDate = expireDate;
-	}
+    public void setExpireDate(Integer expireDate) {
+        this.expireDate = expireDate;
+    }
 
-	public String getSsUsername() {
+    public String getSsUsername() {
 		return ssUsername;
 	}
 
@@ -409,15 +409,15 @@ public class SsComAccount implements Serializable {
 		this.remark = remark;
 	}
 
-	public Boolean getState() {
-		return state;
-	}
+    public Integer getState() {
+        return state;
+    }
 
-	public void setState(Boolean state) {
-		this.state = state;
-	}
+    public void setState(Integer state) {
+        this.state = state;
+    }
 
-	public Boolean getActive() {
+    public Boolean getActive() {
 		return isActive;
 	}
 

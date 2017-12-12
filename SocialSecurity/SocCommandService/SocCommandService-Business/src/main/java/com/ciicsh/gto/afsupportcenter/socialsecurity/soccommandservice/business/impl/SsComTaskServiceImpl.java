@@ -2,14 +2,20 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsAccountRatioMapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsComAccountMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsComTaskMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComTaskDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -23,6 +29,12 @@ import java.util.List;
 @Service
 public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask> implements ISsComTaskService {
 
+    @Autowired
+    public SsComTaskMapper ssComTaskMapper;
+    @Autowired
+    public SsComAccountMapper sComAccountMapper;
+    @Autowired
+    public SsAccountRatioMapper ssAccountRatioMapper;
     /**
      * 获得企业任务单 未处理
      * xsj
@@ -92,7 +104,49 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
      * @return
      */
     public SsComTaskDTO queryComInfoAndPayWay(SsComTask ssComTask){
+
         return baseMapper.queryComInfoAndPayWay(ssComTask);
     }
+    /**
+     * 企业任务开户办理 在内做事物
+     */
+    public boolean addOrUpdateCompanyTask(SsComTask ssComTask, SsComAccount ssComAccount, SsAccountRatio ssAccountRatio){
+            //如果 账户ID为空 则添加  否则修改
+            if (null == ssComAccount.getComAccountId()) {
+                ssComAccount.setActive(true);
+                ssComAccount.setCreatedTime(LocalDateTime.now());
+                ssComAccount.setCreatedBy("xsj");
+                sComAccountMapper.insert(ssComAccount);
+                //将账户ID 赋给 任务单
+                ssComTask.setComAccountId(ssComAccount.getComAccountId());
+            }
+            else{
+                sComAccountMapper.updateById(ssComAccount);
+            }
+            //修改任务详情
+            baseMapper.updateById(ssComTask);
 
+            if(null==ssAccountRatio.getSsAccountRatioId()){
+                //工伤比例变更历史表 如果没有则添加
+                ssAccountRatio.setActive(true);
+                ssAccountRatio.setCreatedTime(LocalDateTime.now());
+                ssAccountRatio.setComAccountId(ssComAccount.getComAccountId());
+                ssAccountRatio.setCreatedBy("xsj");
+                ssAccountRatioMapper.insert(ssAccountRatio);
+            }
+            else {
+                ssAccountRatioMapper.updateById(ssAccountRatio);
+            }
+        return true;
+    }
+
+    /**
+     * 查询账户信息和材料信息
+     * @param ssComTaskDTO
+     * @return
+     */
+    public SsComTaskDTO queryAccountInfoAndMaterial(SsComTaskDTO ssComTaskDTO){
+
+        return baseMapper.queryAccountInfoAndMaterial(ssComTaskDTO);
+    }
 }

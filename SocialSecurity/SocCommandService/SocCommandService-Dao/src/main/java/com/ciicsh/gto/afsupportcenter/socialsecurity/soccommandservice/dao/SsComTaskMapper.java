@@ -22,6 +22,8 @@ public interface SsComTaskMapper extends BaseMapper<SsComTask> {
     public boolean updatePatchRefuseTask(List<SsComTask> ssComTaskList);
     public SsComTaskDTO queryComInfoAndMaterial(SsComTaskDTO ssComTaskDTO);
     public SsComTaskDTO queryComInfoAndPayWay(SsComTask ssComTask);
+    public SsComTaskDTO queryAccountInfoAndMaterial(SsComTaskDTO ssComTaskDTO);
+
 
 
 }

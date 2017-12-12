@@ -34,6 +34,9 @@ public class SsComTaskDTO extends SsComTask{
     //账户
     private SsComAccountDTO ssComAccountDTO;
 
+    //操作类型  1 开户 2 转移 3 变更 4 终止
+    private String operatorType;
+
     public String getCompanyName() {
         return companyName;
     }
@@ -96,5 +99,13 @@ public class SsComTaskDTO extends SsComTask{
 
     public void setSsComAccountDTO(SsComAccountDTO ssComAccountDTO) {
         this.ssComAccountDTO = ssComAccountDTO;
+    }
+
+    public String getOperatorType() {
+        return operatorType;
+    }
+
+    public void setOperatorType(String operatorType) {
+        this.operatorType = operatorType;
     }
 }

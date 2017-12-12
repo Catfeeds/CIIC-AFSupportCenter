@@ -9,6 +9,46 @@
     <resultMap id="getMaterialResultMap"
                type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComTaskDTO"
                extends="ModelResultMap">
+        <association property="ssComAccountDTO"
+                     javaType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComAccountDTO">
+            <result column="com_account_id_acc" property="comAccountId"/>
+            <result column="supplier_id" property="supplierId"/>
+            <result column="ss_account_type" property="ssAccountType"/>
+            <result column="ss_account" property="ssAccount"/>
+            <result column="bank_account" property="bankAccount"/>
+            <result column="com_account_name" property="comAccountName"/>
+            <result column="settlement_area" property="settlementArea"/>
+            <result column="payment_bank" property="paymentBank"/>
+            <result column="payment_way" property="paymentWay"/>
+            <result column="expire_date_acc" property="expireDate"/>
+            <result column="ss_username" property="ssUsername"/>
+            <result column="ss_pwd" property="ssPwd"/>
+            <result column="initial_balance" property="initialBalance"/>
+            <result column="initial_debt" property="initialDebt"/>
+            <result column="origin_place" property="originPlace"/>
+            <result column="origin_place_remark" property="originPlaceRemark"/>
+            <result column="query_account" property="queryAccount"/>
+            <result column="deliver_way" property="deliverWay"/>
+            <result column="deliver_way_remark" property="deliverWayRemark"/>
+            <result column="provide_certificate_time" property="provideCertificateTime"/>
+            <result column="state" property="state"/>
+            <result column="change_time" property="changeTime"/>
+            <result column="receive_date" property="receiveDate"/>
+            <result column="into_date" property="intoDate"/>
+            <result column="end_date" property="endDate"/>
+            <result column="dispatch_material" property="dispatchMaterial"/>
+            <result column="remark_acc" property="remark"/>
+            <association property="ssAccountRatio"
+                         javaType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio">
+                <id column="ss_account_ratio_id" property="ssAccountRatioId"/>
+                <result column="com_account_id_sar" property="comAccountId"/>
+                <result column="industry_category" property="industryCategory"/>
+                <result column="com_ratio" property="comRatio"/>
+                <result column="start_month" property="startMonth"/>
+                <result column="end_month" property="endMonth"/>
+                <result column="is_active" property="isActive"/>
+            </association>
+        </association>
         <collection property="materialList"
                     ofType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComMaterial">
             <id column="com_material_id" property="comMaterialId"/>
@@ -30,9 +70,8 @@
     <resultMap id="getComAccountResultMap"
                type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComTaskDTO"
                extends="ModelResultMap">
-        <association  property="ssComAccountList"
-                    javaType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount">
-
+        <association property="ssComAccountDTO"
+                     javaType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComAccountDTO">
             <result column="com_account_id_acc" property="comAccountId"/>
             <result column="supplier_id" property="supplierId"/>
             <result column="ss_account_type" property="ssAccountType"/>
@@ -59,8 +98,17 @@
             <result column="end_date" property="endDate"/>
             <result column="dispatch_material" property="dispatchMaterial"/>
             <result column="remark_acc" property="remark"/>
-
-        </association >
+            <association property="ssAccountRatio"
+                         javaType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio">
+                <id column="ss_account_ratio_id" property="ssAccountRatioId"/>
+                <result column="com_account_id_sar" property="comAccountId"/>
+                <result column="industry_category" property="industryCategory"/>
+                <result column="com_ratio" property="comRatio"/>
+                <result column="start_month" property="startMonth"/>
+                <result column="end_month" property="endMonth"/>
+                <result column="is_active" property="isActive"/>
+            </association>
+        </association>
     </resultMap>
     <!--查询企业任务单 未处理状态-->
     <select id="queryNoProgressCompanyTask" resultMap="ModelResultMap">
@@ -271,10 +319,51 @@
 				sct.is_active =1
                 AND sct.company_task_id = #{companyTaskId}
     </select>
+    <!--查询账户信息和材料-->
+    <select id="queryAccountInfoAndMaterial" resultMap="getMaterialResultMap">
+        SELECT
+        sct.company_id,
+        sct.company_task_id,
+        sct.task_category,
+        sct.customer_id,
+        sct.expire_date,
+        sct.submitter_id,
+        sct.submitter_name,
+        sct.submit_time,
+        sct.submit_remark,
+        sct.task_status,
+        sct.task_form_content,
+        sct.start_handle_date,
+        sct.send_check_date,
+        sct.finish_date,
+               cc.title,
+				scm.*,
+				sca.*
+        FROM ss_com_task sct
+        LEFT JOIN (SELECT com_account_id AS com_account_id_acc, supplier_id,ss_account_type,ss_account,bank_account,com_account_name,settlement_area,payment_bank,payment_way,expire_date AS expire_date_acc,ss_username,ss_pwd,initial_balance,initial_debt,origin_place,origin_place_remark,query_account,deliver_way,deliver_way_remark,provide_certificate_time,change_time,receive_date,into_date,end_date,dispatch_material,remark AS remark_acc,state  FROM ss_com_account)sca ON sct.com_account_id = sca.com_account_id_acc
+				LEFT JOIN
+				(SELECT
+                com_material_id,
+                company_task_id AS company_task_id_m,
+                material_type,
+                material_name,
+                submit_time AS submit_time_m,
+                receive_time,
+                remark,
+                `status`
+                FROM
+                ss_com_material  WHERE is_active = 1
+				)
+				scm ON sct.company_task_id = scm.company_task_id_m
+				LEFT JOIN (SELECT company_id, title FROM 	cmy_company  WHERE is_active = 1)cc ON sct.company_id = cc.company_id
+				WHERE
+				sct.is_active =1
+                AND sct.company_task_id = #{companyTaskId}
+    </select>
 
     <!-- 查询企业信息和前道传来的JSON 解析到期时间和支付方式 -->
     <select id="queryComInfoAndPayWay" resultMap="getComAccountResultMap">
-          SELECT
+         SELECT
         sct.company_id,
         sct.com_account_id,
         sct.company_task_id,
@@ -286,12 +375,18 @@
         sct.submit_remark,
         sct.task_status,
         sct.task_form_content,
+        sct.start_handle_date,
+        sct.send_check_date,
+        sct.finish_date,
         cc.title,
-				sca.*
+		sca.*,
+		sat.*
         FROM ss_com_task sct
-        LEFT JOIN (SELECT  company_id, title FROM 	cmy_company  WHERE is_active = 1)cc ON sct.company_id = cc.company_id
-        LEFT JOIN (SELECT com_account_id AS com_account_id_acc, supplier_id,ss_account_type,ss_account,bank_account,com_account_name,settlement_area,payment_bank,payment_way,expire_date AS expire_date_acc,ss_username,ss_pwd,initial_balance,initial_debt,origin_place,query_account,deliver_way,deliver_way_remark,provide_certificate_time,change_time,receive_date,into_date,end_date,dispatch_material,remark AS remark_acc FROM ss_com_account WHERE is_active = 1)sca
+        LEFT JOIN (SELECT  company_id, title FROM cmy_company  WHERE is_active = 1)cc ON sct.company_id = cc.company_id
+        LEFT JOIN (SELECT com_account_id AS com_account_id_acc, supplier_id,ss_account_type,ss_account,bank_account,com_account_name,settlement_area,payment_bank,payment_way,expire_date AS expire_date_acc,ss_username,ss_pwd,initial_balance,initial_debt,origin_place,origin_place_remark,query_account,deliver_way,deliver_way_remark,provide_certificate_time,change_time,receive_date,into_date,end_date,dispatch_material,remark AS remark_acc FROM ss_com_account WHERE is_active = 1)sca
 				ON sct.com_account_id = sca.com_account_id_acc
+				LEFT JOIN (SELECT ss_account_ratio_id, com_account_id AS com_account_id_sar,industry_category,com_ratio,start_month,end_month FROM ss_account_ratio WHERE is_active = 1)sat
+				ON sca.com_account_id_acc = sat.com_account_id_sar
         WHERE
         sct.is_active =1
         AND sct.company_task_id = #{companyTaskId}
