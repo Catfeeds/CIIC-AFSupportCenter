@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -46,15 +44,11 @@ public class GiftController {
      * @return
      */
     @PostMapping("/giftInsert")
-    public int giftInsert(GiftPO entity, MultipartFile file, HttpServletRequest request) {
+    public int giftInsert(GiftPO entity, MultipartFile file) {
         try {
             if (file != null && !file.isEmpty()) {
-                String filePath = request.getSession().getServletContext().getRealPath("/") + file.getOriginalFilename();
-                // 转存文件
-                file.transferTo(new File(filePath));
-                File f = new File(filePath);
                 /**上传图片*/
-                String filePathUrl = giftService.fileUpdate(f);
+                String filePathUrl = giftService.fileUpdate(file.getInputStream());
 
                 /**如果修改图片，清除原图片，再保存新图片*/
                 if (entity.getPictureUrl() != null && !"".equals(entity.getPictureUrl())) {
@@ -82,13 +76,12 @@ public class GiftController {
      */
     @PostMapping("/updateFile")
     public String updateFile(MultipartFile file) {
-        File f = new File("c://test");
+        String filepath = "";
         try {
-            file.transferTo(f);
+            filepath = giftService.fileUpdate(file.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String filepath = giftService.fileUpdate(f);
         if ("".equals(filepath)) {
             logger.info("command服务--礼品图片添加失败");
         } else {

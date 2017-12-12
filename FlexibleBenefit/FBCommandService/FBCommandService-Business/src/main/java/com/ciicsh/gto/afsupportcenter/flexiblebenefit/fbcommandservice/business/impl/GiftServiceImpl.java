@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author xiweizhen
@@ -39,10 +39,10 @@ public class GiftServiceImpl implements GiftService {
     }
 
     @Override
-    public String fileUpdate(File file) {
+    public String fileUpdate(InputStream stream) {
         String filepath = "";
         try {
-            filepath = FileHandler.uploadFile(file);
+            filepath = FileHandler.uploadFile(stream);
         } catch (IOException e) {
             e.printStackTrace();
         }
