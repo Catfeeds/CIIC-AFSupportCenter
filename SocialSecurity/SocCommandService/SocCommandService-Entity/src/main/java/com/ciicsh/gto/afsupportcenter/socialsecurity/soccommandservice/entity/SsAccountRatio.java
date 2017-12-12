@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-08
+ * @since 2017-12-12
  */
 @TableName("ss_account_ratio")
 public class SsAccountRatio implements Serializable {
@@ -111,21 +111,21 @@ public class SsAccountRatio implements Serializable {
 		this.comRatio = comRatio;
 	}
 
-    public String getStartMonth() {
-        return startMonth;
-    }
+	public String getStartMonth() {
+		return startMonth;
+	}
 
-    public String getEndMonth() {
-        return endMonth;
-    }
+	public void setStartMonth(String startMonth) {
+		this.startMonth = startMonth;
+	}
 
-    public void setStartMonth(String startMonth) {
-        this.startMonth = startMonth;
-    }
+	public String getEndMonth() {
+		return endMonth;
+	}
 
-    public void setEndMonth(String endMonth) {
-        this.endMonth = endMonth;
-    }
+	public void setEndMonth(String endMonth) {
+		this.endMonth = endMonth;
+	}
 
     public Boolean getActive() {
 		return isActive;

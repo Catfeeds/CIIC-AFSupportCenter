@@ -17,12 +17,13 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-11
+ * @since 2017-12-12
  */
 @TableName("ss_com_account")
 public class SsComAccount implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     /**
      * 企业社保账户Id
      */
@@ -163,7 +164,7 @@ public class SsComAccount implements Serializable {
      */
 	private String remark;
     /**
-     * 账户状态:1有效 2 终止
+     * 账户状态:0初始 1有效 2 终止
      */
 	private Integer state;
     /**
@@ -273,15 +274,15 @@ public class SsComAccount implements Serializable {
 		this.paymentWay = paymentWay;
 	}
 
-    public Integer getExpireDate() {
-        return expireDate;
-    }
+	public Integer getExpireDate() {
+		return expireDate;
+	}
 
-    public void setExpireDate(Integer expireDate) {
-        this.expireDate = expireDate;
-    }
+	public void setExpireDate(Integer expireDate) {
+		this.expireDate = expireDate;
+	}
 
-    public String getSsUsername() {
+	public String getSsUsername() {
 		return ssUsername;
 	}
 
@@ -409,15 +410,15 @@ public class SsComAccount implements Serializable {
 		this.remark = remark;
 	}
 
-    public Integer getState() {
-        return state;
-    }
+	public Integer getState() {
+		return state;
+	}
 
-    public void setState(Integer state) {
-        this.state = state;
-    }
+	public void setState(Integer state) {
+		this.state = state;
+	}
 
-    public Boolean getActive() {
+	public Boolean getActive() {
 		return isActive;
 	}
 

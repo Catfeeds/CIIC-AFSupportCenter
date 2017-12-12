@@ -1,12 +1,13 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import java.time.LocalDate;
-import com.baomidou.mybatisplus.annotations.TableId;
-import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -14,7 +15,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-11
+ * @since 2017-12-12
  */
 @TableName("ss_com_task")
 public class SsComTask implements Serializable {
