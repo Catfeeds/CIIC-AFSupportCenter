@@ -23,8 +23,19 @@ public interface ISsStatementService extends IService<SsStatementPO> {
      * @author wengxk
      * @date 2017-12-08
      * @param pageInfo 翻页检索条件
-     * @return  PageRows<SsStatementPO>
+     * @return  PageRows<SsStatementDTO>
      */
     PageRows<SsStatementDTO> statementQuery(PageInfo pageInfo);
+
+
+    /**
+     * <p>Description: 查询对账单主表</p>
+     *
+     * @author wengxk
+     * @date 2017-12-08
+     * @param ssStatementDTO 翻页检索条件
+     * @return  PageRows<ssStatementDTO>
+     */
+    SsStatementDTO serachStatementData(SsStatementDTO ssStatementDTO);
 
 }

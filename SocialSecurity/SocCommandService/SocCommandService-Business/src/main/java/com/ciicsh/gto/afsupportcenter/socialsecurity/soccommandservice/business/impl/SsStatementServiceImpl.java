@@ -26,4 +26,10 @@ public class SsStatementServiceImpl extends ServiceImpl<SsStatementMapper, SsSta
     public PageRows<SsStatementDTO> statementQuery(PageInfo pageInfo) {
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.statementQuery(pageInfo.toJavaObject(SsStatementDTO.class)));
     }
+
+    @Override
+    public SsStatementDTO serachStatementData(SsStatementDTO ssStatementDTO) {
+        return baseMapper.serachStatementBystatementId(ssStatementDTO);
+    }
+
 }

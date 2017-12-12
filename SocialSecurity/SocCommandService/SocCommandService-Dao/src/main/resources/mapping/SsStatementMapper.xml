@@ -22,7 +22,7 @@
         <result column="modified_by" property="modifiedBy" />
     </resultMap>
 
-    <!-- 通用查询映射结果 -->
+    <!-- 表单展示查询映射结果 -->
     <resultMap id="DtoResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementDTO">
         <id column="statement_id" property="statementId" />
         <result column="com_account_id" property="comAccountId" />
@@ -54,6 +54,9 @@
             T2.com_account_id = T1.com_account_id
         WHERE
           1=1
+        <if test = "statementId != null and statementId != ''">
+            AND T1.statement_id = #{statementId,jdbcType=VARCHAR}
+        </if>
         <if test = "ssMonth != null and ssMonth != ''">
             AND T1.ss_month = #{ssMonth,jdbcType=VARCHAR}
         </if>
@@ -76,6 +79,19 @@
         </if>
     </select>
 
+    <select id="serachStatementBystatementId" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementDTO" resultMap="DtoResultMap">
+        SELECT
+          T1.*,T2.com_account_name
+        FROM
+          ss_statement T1
+        LEFT JOIN
+          ss_com_account T2
+        ON
+          T2.com_account_id = T1.com_account_id
+        WHERE
+          1=1
+          AND T1.statement_id = #{statementId,jdbcType=VARCHAR}
+    </select>
 
 
 </mapper>

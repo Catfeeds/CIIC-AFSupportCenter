@@ -27,5 +27,15 @@ public interface SsStatementMapper extends BaseMapper<SsStatementPO> {
      */
     List<SsStatementDTO> statementQuery(SsStatementDTO ssStatementDTO);
 
+    /**
+     * <p>Description: 根据ID查询对账单主表</p>
+     *
+     * @author wengxk
+     * @date 2017-12-11
+     * @param ssStatementDTO 对账单查询实体
+     * @return  SsStatementPO
+     */
+    SsStatementDTO serachStatementBystatementId(SsStatementDTO ssStatementDTO);
+
 
 }

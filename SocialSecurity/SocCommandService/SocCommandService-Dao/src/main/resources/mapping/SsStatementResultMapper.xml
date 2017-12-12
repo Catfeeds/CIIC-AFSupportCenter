@@ -3,20 +3,60 @@
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsStatementResultMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatementResult">
-        <id column="statement_detail_id" property="statementDetailId" />
-        <result column="statement_id" property="statementId" />
-        <result column="employee_id" property="employeeId" />
-        <result column="project_name" property="projectName" />
-        <result column="ss_type" property="ssType" />
-        <result column="imp_amount" property="impAmount" />
-        <result column="ss_amount" property="ssAmount" />
-        <result column="diff_amount" property="diffAmount" />
-        <result column="is_active" property="isActive" />
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatementResultPO">
+        <id column="statement_detail_id" jdbcType="BIGINT" property="statementDetailId" />
+        <result column="statement_id" jdbcType="BIGINT" property="statementId" />
+        <result column="employee_id" jdbcType="VARCHAR" property="employeeId" />
+        <result column="change_type" jdbcType="INTEGER" property="changeType" />
+        <result column="change_type_name" jdbcType="VARCHAR" property="changeTypeName" />
+        <result column="project_type" jdbcType="INTEGER" property="projectType" />
+        <result column="project_name" jdbcType="VARCHAR" property="projectName" />
+        <result column="ss_type" jdbcType="TINYINT" property="ssType" />
+        <result column="ss_type_name" jdbcType="VARCHAR" property="ssTypeName" />
+        <result column="imp_amount" jdbcType="DECIMAL" property="impAmount" />
+        <result column="ss_amount" jdbcType="DECIMAL" property="ssAmount" />
+        <result column="diff_amount" jdbcType="DECIMAL" property="diffAmount" />
+        <result column="is_active" jdbcType="BIT" property="isActive" />
         <result column="created_time" property="createdTime" />
         <result column="modified_time" property="modifiedTime" />
-        <result column="created_by" property="createdBy" />
-        <result column="modified_by" property="modifiedBy" />
+        <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+        <result column="modified_by" jdbcType="VARCHAR" property="modifiedBy" />
     </resultMap>
+
+    <!-- 表单展示查询映射结果 -->
+    <resultMap id="DtoResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementResultDTO">
+        <id column="statement_detail_id" jdbcType="BIGINT" property="statementDetailId" />
+        <result column="statement_id" jdbcType="BIGINT" property="statementId" />
+        <result column="employee_id" jdbcType="VARCHAR" property="employeeId" />
+        <result column="employee_name" jdbcType="VARCHAR" property="employeeName" />
+        <result column="change_type" jdbcType="INTEGER" property="changeType" />
+        <result column="change_type_name" jdbcType="VARCHAR" property="changeTypeName" />
+        <result column="project_type" jdbcType="INTEGER" property="projectType" />
+        <result column="project_name" jdbcType="VARCHAR" property="projectName" />
+        <result column="ss_type" jdbcType="TINYINT" property="ssType" />
+        <result column="ss_type_name" jdbcType="VARCHAR" property="ssTypeName" />
+        <result column="imp_amount" jdbcType="DECIMAL" property="impAmount" />
+        <result column="ss_amount" jdbcType="DECIMAL" property="ssAmount" />
+        <result column="diff_amount" jdbcType="DECIMAL" property="diffAmount" />
+        <result column="is_active" jdbcType="BIT" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+        <result column="modified_by" jdbcType="VARCHAR" property="modifiedBy" />
+    </resultMap>
+
+    <select id="statementResultQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementResultDTO" resultMap="DtoResultMap">
+        SELECT
+          T1.*,T2.employee_name
+        FROM
+          ss_statement_result T1
+        LEFT JOIN
+          emp_employee T2
+        ON
+          T1.employee_id = T2.employee_id
+        WHERE
+          1=1
+          AND T1.statement_id = #{statementId,jdbcType=VARCHAR}
+    </select>
 
 </mapper>

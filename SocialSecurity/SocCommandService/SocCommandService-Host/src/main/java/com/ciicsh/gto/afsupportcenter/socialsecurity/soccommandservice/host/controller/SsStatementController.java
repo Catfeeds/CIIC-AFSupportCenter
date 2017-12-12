@@ -12,10 +12,7 @@ import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.springframework.beans.BeanUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,7 +29,7 @@ import java.util.List;
 public class SsStatementController  extends BasicController<ISsStatementService> {
 
     /**
-     * <p>Description: 对账单查询</p>
+     * <p>Description: 对账单查询(列表页)</p>
      *
      * @author wengxk
      * @date 2017-12-08
@@ -53,9 +50,39 @@ public class SsStatementController  extends BasicController<ISsStatementService>
     }
 
 
+    /**
+     * <p>Description: 社保对账主表查询导出</p>
+     *
+     * @author wengxk
+     * @date 2017-12-11
+     * @param ssStatementDTO 下载条件
+     * @return
+     */
+    @Log("社保对账主表查询导出")
+    @ResponseBody
+    @RequestMapping("/exportStatementQuery")
+    public void exportStatementQuery(SsStatementDTO ssStatementDTO) {
 
+    }
 
+    /**
+     * <p>Description: 对账单查询</p>
+     *
+     * @author wengxk
+     * @date 2017-12-08
+     * @param ssStatementDTO 检索条件
+     * @return  JsonResult<SsStatementDTO>
+     */
+    @Log("对账单查询")
+    @PostMapping("/serachStatementData")
+    public JsonResult<SsStatementDTO> serachStatementData(SsStatementDTO ssStatementDTO) {
 
+        SsStatementDTO resultDto = business.serachStatementData(ssStatementDTO);
+        JsonResult<SsStatementDTO> result = new JsonResult<SsStatementDTO>();
+        result.setData(resultDto);
+
+        return result;
+    }
 
 
 }
