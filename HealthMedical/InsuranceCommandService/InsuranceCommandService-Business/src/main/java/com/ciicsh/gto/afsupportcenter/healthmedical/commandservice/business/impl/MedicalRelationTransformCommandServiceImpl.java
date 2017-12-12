@@ -24,12 +24,13 @@ public class MedicalRelationTransformCommandServiceImpl implements MedicalRelati
     private MedicalRelationTransformMapper medicalRelationTransformMapper;
 
     @Override
-    public void save(MedicalRelationTransformPO medicalRelationTransform){
-        medicalRelationTransformMapper.save(medicalRelationTransform);
+    public int save(MedicalRelationTransformPO medicalRelationTransform){
+       Integer returnNum= medicalRelationTransformMapper.insert(medicalRelationTransform);
+       return returnNum;
     }
 
     @Override
-    public void edit(MedicalRelationTransformPO medicalRelationTransform){
-        medicalRelationTransformMapper.edit(medicalRelationTransform);
+    public int edit(MedicalRelationTransformPO medicalRelationTransform){
+        return  medicalRelationTransformMapper.updateById(medicalRelationTransform);
     }
 }

@@ -37,10 +37,8 @@ public class MedicalRelationTransformQueryServiceImpl extends ServiceImpl<Medica
     @Override
     public PageRows<MedicalRelationTransformPO> medicalRelationTransformMapperQuery(PageInfo pageInfo) {
         MedicalRelationTransformPO po = pageInfo.toJavaObject(MedicalRelationTransformPO.class);
-
-        List<MedicalRelationTransformPO> list=baseMapper.medicalRelationTransformMapperQuery(po);
-        return PageKit.doSelectPage(pageInfo, () ->list );
+        PageRows<MedicalRelationTransformPO> pageRow = PageKit.doSelectPage(pageInfo, () -> baseMapper.medicalRelationTransformMapperQuery(po) );
+        return pageRow;
     }
-
 
 }

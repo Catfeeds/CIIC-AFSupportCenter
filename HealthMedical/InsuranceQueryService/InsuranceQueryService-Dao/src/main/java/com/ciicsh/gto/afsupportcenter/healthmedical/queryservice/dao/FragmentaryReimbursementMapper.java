@@ -1,9 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
+
 import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po.FragmentaryReimbursementPO;
-import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.api.dto.FragmentaryReimbursementDTO;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 

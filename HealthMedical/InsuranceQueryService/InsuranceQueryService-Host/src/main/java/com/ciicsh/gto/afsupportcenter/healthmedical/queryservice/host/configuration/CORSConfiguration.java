@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.queryService.host;
+package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.host.configuration;
 /**
  * Created by shil on 2017/9/21.
  */

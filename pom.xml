@@ -242,11 +242,24 @@
     <modules>
         <module>AFSupportCenter-Util</module>
 
+        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Host</module>
+        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Api</module>
+        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Dao</module>
+        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Business</module>
+        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Entity</module>
+
+        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Host</module>
+        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Api</module>
+        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Dao</module>
+        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Business</module>
+        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Entity</module>
+        <!--
         <module>./SocialSecurity/SocCommandService/SocCommandService-Host</module>
         <module>./SocialSecurity/SocCommandService/SocCommandService-Api</module>
         <module>./SocialSecurity/SocCommandService/SocCommandService-Dao</module>
         <module>./SocialSecurity/SocCommandService/SocCommandService-Business</module>
         <module>./SocialSecurity/SocCommandService/SocCommandService-Entity</module>
+        -->
         <!--
                 <module>./SocialSecurity/SocQueryService/SocQueryService-Host</module>
                 <module>./SocialSecurity/SocQueryService/SocQueryService-Api</module>

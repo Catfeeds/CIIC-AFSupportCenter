@@ -45,7 +45,7 @@ public class MedicalRelationTransformController  extends BasicController<Medical
     }
 
     @Log("医疗关系转移查询")
-    @PostMapping("/getMedicalRelationTransformList")
+    @PostMapping("/getEntityList")
     public JsonResult<List<MedicalRelationTransformPO>> getEntityList(PageInfo pageInfo) {
         PageRows<MedicalRelationTransformPO> pageRows = business.medicalRelationTransformMapperQuery(pageInfo);
         return JsonResultKit.ofPage(pageRows);

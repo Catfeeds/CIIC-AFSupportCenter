@@ -31,26 +31,18 @@ public class FragmentaryReimbursementCommandServiceImpl implements FragmentaryRe
      * @param fragmentaryReimbursement
      */
     @Override
-    public void save(FragmentaryReimbursementPO fragmentaryReimbursement)
+    public int save(FragmentaryReimbursementPO fragmentaryReimbursement)
     {
-     //   fragmentaryReimbursement.setEmployeeId("17er");
-     //   BigDecimal caseMoney = new BigDecimal("15000.48");
-     //   fragmentaryReimbursement.setCaseMoney(caseMoney) ;
-     //   fragmentaryReimbursement.setInvoiceNumber(2135);
-        fragmentaryReimbursementMapper.save(fragmentaryReimbursement);
+        Integer returnNum= fragmentaryReimbursementMapper.insert(fragmentaryReimbursement);
+        return returnNum;
 
     }
 
     @Override
-    public void edit(FragmentaryReimbursementPO fragmentaryReimbursement)
+    public int edit(FragmentaryReimbursementPO fragmentaryReimbursement)
     {
-     //   fragmentaryReimbursement.setId(10);
-     //   fragmentaryReimbursement.setEmployeeId("17er");
-     //   BigDecimal caseMoney = new BigDecimal("15000.48");
-   //     fragmentaryReimbursement.setCaseMoney(caseMoney) ;
-     //   fragmentaryReimbursement.setInvoiceNumber(5);
-    //    fragmentaryReimbursement.setMedicalRemark("123wqe");
-        fragmentaryReimbursementMapper.edit(fragmentaryReimbursement) ;
+        Integer returnNum= fragmentaryReimbursementMapper.updateById(fragmentaryReimbursement);
+        return returnNum;
 
     }
 }

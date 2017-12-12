@@ -13,6 +13,7 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po.Med
  */
 public interface MedicalRelationTransformCommandService {
 
-    void save(MedicalRelationTransformPO medicalRelationTransform);
-    void edit(MedicalRelationTransformPO medicalRelationTransform);
+    int save(MedicalRelationTransformPO medicalRelationTransform);
+    int edit(MedicalRelationTransformPO medicalRelationTransform);
+
 }

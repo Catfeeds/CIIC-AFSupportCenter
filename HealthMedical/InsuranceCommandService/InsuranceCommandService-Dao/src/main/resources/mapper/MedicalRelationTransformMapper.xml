@@ -16,10 +16,7 @@
 		<result column="created_by" property="createdBy" />
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
-	<insert id="save">
-		INSERT INTO `gtobusinessdb`.`hm_medical_relation_transform` (`employee_id`, `turn_out_date`, `turn_out_address`, `turn_back_date`, `remark`)
-		VALUES	(#{employeeId},#{turnOutDate},#{turnOutAddress},#{turnBackDate},#{remark})
-	</insert>
+
 
 	<update id="edit">
 		UPDATE hm_medical_relation_transform
@@ -41,6 +38,6 @@
 				remark = #{remark},
 			</if>
 		</trim>
-		WHERE id = #{id}
+		WHERE transform_id = #{transformId}
 	</update>
 </mapper>

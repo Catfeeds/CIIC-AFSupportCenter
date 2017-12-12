@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.CommandService.host;
+package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.host.configuration;
 /**
  * Created by shil on 2017/9/21.
  */

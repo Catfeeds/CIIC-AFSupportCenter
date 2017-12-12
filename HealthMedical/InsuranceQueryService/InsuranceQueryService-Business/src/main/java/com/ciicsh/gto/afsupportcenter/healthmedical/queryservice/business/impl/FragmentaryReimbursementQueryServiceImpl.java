@@ -38,11 +38,11 @@ public class FragmentaryReimbursementQueryServiceImpl extends ServiceImpl<Fragme
 
     @Override
     public PageRows<FragmentaryReimbursementPO> employeeOperatorQuery(PageInfo pageInfo) {
+
         FragmentaryReimbursementPO po = pageInfo.toJavaObject(FragmentaryReimbursementPO.class);
-        BigDecimal loanAmount = new BigDecimal("200");
-        po.setCaseMoney(loanAmount);
-        List<FragmentaryReimbursementPO> list=baseMapper.fragmentaryReimbursementMapperQuery(po);
-        return PageKit.doSelectPage(pageInfo, () ->list );
+        PageRows<FragmentaryReimbursementPO> pageRow = PageKit.doSelectPage(pageInfo, () -> baseMapper.fragmentaryReimbursementMapperQuery(po) );
+        return pageRow;
+
     }
 
 }

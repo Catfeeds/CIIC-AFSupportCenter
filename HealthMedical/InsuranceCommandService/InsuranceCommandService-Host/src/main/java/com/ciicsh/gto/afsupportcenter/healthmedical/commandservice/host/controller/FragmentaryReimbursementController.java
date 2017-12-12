@@ -1,16 +1,20 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.host.controller;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.stereotype.Controller;
-import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.api.dto.FragmentaryReimbursementDTO;
-import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.api.FragmentaryReimbursementProxy;
-import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.api.dto.JsonResult;
+
 import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.business.FragmentaryReimbursementCommandService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po.FragmentaryReimbursementPO;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
-import java.util.Map;
+import com.ciicsh.gto.afsupportcenter.util.config.CustomConfiguration;
+import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
+import org.springframework.web.bind.annotation.RequestMapping;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -22,22 +26,19 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/afsupportcenter/healthmedical/commandservice/FragmentaryReimbursement")
-   public class FragmentaryReimbursementController {
-    @Autowired
-    private FragmentaryReimbursementCommandService fragmentaryReimbursementCommandService;
+   public class FragmentaryReimbursementController extends BasicController<FragmentaryReimbursementCommandService> {
+
 
     @Log("新增")
-    @RequestMapping(value = "/save", method = { RequestMethod.POST})
-    public void save(FragmentaryReimbursementPO po)
-    {
-        fragmentaryReimbursementCommandService.save(po);
-
+    @RequestMapping(value = "/save", method = {RequestMethod.POST})
+    public JsonResult<Integer> save(FragmentaryReimbursementPO po) {
+        Integer returnNum = business.save(po);
+        return JsonResultKit.of(returnNum);
     }
 
     @Log("更新")
-    @RequestMapping(value = "/edit", method = { RequestMethod.POST})
-    public void edit(FragmentaryReimbursementPO po)
-    {
-        fragmentaryReimbursementCommandService.edit(po);
+    @RequestMapping(value = "/edit", method = {RequestMethod.POST})
+    public JsonResult<Integer> edit(FragmentaryReimbursementPO po) {
+        return JsonResultKit.of(business.edit(po));
     }
 }

@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.dao;
 
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po.FragmentaryReimbursementPO;
 
 
@@ -11,10 +12,6 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po.Fra
  * @author zhaogang
  * @since 2017-12-04
  */
-public interface FragmentaryReimbursementMapper{
-
-    void save(FragmentaryReimbursementPO fragmentaryReimbursement);
-
-    void edit(FragmentaryReimbursementPO fragmentaryReimbursement);
+public interface FragmentaryReimbursementMapper extends BaseMapper<FragmentaryReimbursementPO> {
 
 }

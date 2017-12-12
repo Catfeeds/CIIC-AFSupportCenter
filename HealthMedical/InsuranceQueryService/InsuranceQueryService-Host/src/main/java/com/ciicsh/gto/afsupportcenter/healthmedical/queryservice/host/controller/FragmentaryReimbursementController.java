@@ -46,12 +46,9 @@ import java.util.Optional;
     }
 
     @Log("零星报销查询")
-    @PostMapping("/getFragmentaryReimbursementList")
-     public JsonResult<List<FragmentaryReimbursementPO>> getFragmentaryReimbursementSelect(PageInfo pageInfo) {
-     //   public JsonResult<List<FragmentaryReimbursementPO>> getFragmentaryReimbursementSelect() {
-     //   PageInfo pageInfo = new PageInfo();
-     //   pageInfo.setPageNum(1);
-     //   pageInfo.setPageSize(15);
+    @PostMapping("/getEntityList")
+     public JsonResult<List<FragmentaryReimbursementPO>> getEntityList(PageInfo pageInfo) {
+
         PageRows<FragmentaryReimbursementPO> pageRows = business.employeeOperatorQuery(pageInfo);
         return JsonResultKit.ofPage(pageRows);
     }
