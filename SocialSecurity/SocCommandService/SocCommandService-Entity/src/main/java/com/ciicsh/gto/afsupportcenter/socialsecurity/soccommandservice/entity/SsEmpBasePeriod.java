@@ -29,8 +29,8 @@ public class SsEmpBasePeriod implements Serializable {
     /**
      * 外键，雇员本地社保档案Id
      */
-	@TableField("emp_archived_id")
-	private String empArchivedId;
+	@TableField("emp_archive_id")
+	private String empArchiveId;
     /**
      * 本地社保的雇员任务单Id
      */
@@ -96,12 +96,12 @@ public class SsEmpBasePeriod implements Serializable {
 		this.empBasePeriodId = empBasePeriodId;
 	}
 
-	public String getEmpArchivedId() {
-		return empArchivedId;
+	public String getEmpArchiveId() {
+		return empArchiveId;
 	}
 
-	public void setEmpArchivedId(String empArchivedId) {
-		this.empArchivedId = empArchivedId;
+	public void setEmpArchiveId(String empArchiveId) {
+		this.empArchiveId = empArchiveId;
 	}
 
 	public String getEmpTaskId() {
@@ -196,7 +196,7 @@ public class SsEmpBasePeriod implements Serializable {
 	public String toString() {
 		return "SsEmpBasePeriod{" +
 			", empBasePeriodId=" + empBasePeriodId +
-			", empArchivedId=" + empArchivedId +
+			", empArchiveId=" + empArchiveId +
 			", empTaskId=" + empTaskId +
 			", baseAmount=" + baseAmount +
 			", startMonth=" + startMonth +

@@ -8,7 +8,7 @@ public class SsComAccountDTO extends SsComAccount {
     //企业工伤比例变更
     private SsAccountRatio ssAccountRatio;
 
-    // 来源表 cmy_company
+    // 来源表 sal_company
     // 客户编号
     private String companyId;
     // 客户名称

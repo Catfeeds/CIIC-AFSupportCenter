@@ -5,7 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBaseAdjust">
         <id column="emp_base_adjust_id" property="empBaseAdjustId" />
-        <result column="emp_archived_id" property="empArchivedId" />
+        <result column="emp_archive_id" property="empArchiveId" />
         <result column="emp_task_id" property="empTaskId" />
         <result column="process_way" property="processWay" />
         <result column="new_base_amount" property="newBaseAmount" />
