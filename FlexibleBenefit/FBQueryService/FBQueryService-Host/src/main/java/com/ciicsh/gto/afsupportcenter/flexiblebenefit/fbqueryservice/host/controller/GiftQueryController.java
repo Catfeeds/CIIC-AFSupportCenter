@@ -9,7 +9,6 @@ import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,6 +39,7 @@ public class GiftQueryController {
         PageHelper.startPage(page, pageSize);
         PageInfo<GiftPO> pageData = new PageInfo<>(giftService.findByEntity(entity));
         logger.info("query服务-查询礼品分页列表");
+        System.out.println("----------------查询礼品分页列表---------------");
         JsonResult jr = new JsonResult();
         jr.setCode("200");
         jr.setData(pageData);

@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.host.controller;
 
 
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.dto.JsonResult;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.GiftService;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.GiftPO;
 import org.slf4j.Logger;
@@ -32,9 +33,11 @@ public class GiftController {
      * @return
      */
     @GetMapping("/findById/{id}")
-    public GiftPO findById(@PathVariable Integer id) {
+    public JsonResult findById(@PathVariable Integer id) {
+        JsonResult result = new JsonResult();
         GiftPO entity = giftService.findById(id);
-        return entity;
+        result.setData(entity);
+        return result;
     }
 
     /**
@@ -44,7 +47,8 @@ public class GiftController {
      * @return
      */
     @PostMapping("/giftInsert")
-    public int giftInsert(GiftPO entity, MultipartFile file) {
+    public JsonResult giftInsert(GiftPO entity, MultipartFile file) {
+        JsonResult result = new JsonResult();
         try {
             if (file != null && !file.isEmpty()) {
                 /**上传图片*/
@@ -56,16 +60,19 @@ public class GiftController {
                 }
                 entity.setPictureUrl(filePathUrl);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
+            result.setErrormsg(e.getMessage());
             e.printStackTrace();
         }
         int t = giftService.insertGift(entity);
         if (t == 1) {
+            result.setErrormsg("礼品添加成功");
             logger.info("command服务--礼品添加成功");
         } else {
+            result.setErrormsg("礼品添加失败");
             logger.info("command服务--礼品添加失败");
         }
-        return t;
+        return result;
     }
 
     /**
