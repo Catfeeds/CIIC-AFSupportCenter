@@ -43,9 +43,7 @@ import java.util.Optional;
         JsonResult jr = new JsonResult();
         FragmentaryReimbursementPO po = fragmentaryReimbursementQueryService.getById(id);
         if (po == null) {
-            jr.setCode(400);
-            jr.setMessage("没有相应数据");
-            jr.setTotal((long) 0);
+            JsonResultKit.ofNum(400, "未查找到数据", 0);
         } else {
             jr.setData(po);
         }
@@ -54,20 +52,17 @@ import java.util.Optional;
 
     @Log("零星报销查询")
     @PostMapping("/getEntityList")
-     public JsonResult<List<FragmentaryReimbursementPO>> getEntityList(PageInfo pageInfo) {
-        PageRows<FragmentaryReimbursementPO> pageRows = business.employeeOperatorQuery(pageInfo);
+    public JsonResult<List<FragmentaryReimbursementPO>> getEntityList(PageInfo pageInfo) {
+        PageRows<FragmentaryReimbursementPO> pageRows = business.getEntityList(pageInfo);
         long count = pageRows.getTotal();
         if (count == 0) {
             JsonResult jr = new JsonResult();
-            jr.setCode(400);
-            jr.setMessage("没有相应数据");
-            jr.setTotal((long) 0);
+            jr = JsonResultKit.ofNum(400, "未查找到数据", 0);
             return jr;
         } else {
             return JsonResultKit.ofPage(pageRows);
         }
     }
-
 }
 
 

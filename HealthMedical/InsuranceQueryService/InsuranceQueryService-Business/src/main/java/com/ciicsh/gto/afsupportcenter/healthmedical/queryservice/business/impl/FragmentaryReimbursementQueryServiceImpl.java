@@ -37,7 +37,7 @@ public class FragmentaryReimbursementQueryServiceImpl extends ServiceImpl<Fragme
     }
 
     @Override
-    public PageRows<FragmentaryReimbursementPO> employeeOperatorQuery(PageInfo pageInfo) {
+    public PageRows<FragmentaryReimbursementPO> getEntityList(PageInfo pageInfo) {
 
         FragmentaryReimbursementPO po = pageInfo.toJavaObject(FragmentaryReimbursementPO.class);
         PageRows<FragmentaryReimbursementPO> pageRow = PageKit.doSelectPage(pageInfo, () -> baseMapper.fragmentaryReimbursementMapperQuery(po) );

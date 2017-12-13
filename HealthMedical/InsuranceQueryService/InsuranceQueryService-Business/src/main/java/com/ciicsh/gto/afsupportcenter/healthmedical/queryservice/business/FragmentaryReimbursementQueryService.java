@@ -16,5 +16,5 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
  */
 public interface FragmentaryReimbursementQueryService {
     FragmentaryReimbursementPO getById(String id);
-    PageRows<FragmentaryReimbursementPO> employeeOperatorQuery(PageInfo pageInfo);
+    PageRows<FragmentaryReimbursementPO> getEntityList(PageInfo pageInfo);
 }

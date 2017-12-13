@@ -42,9 +42,7 @@ public class MedicalRelationTransformController  extends BasicController<Medical
         JsonResult jr = new JsonResult();
         MedicalRelationTransformPO po = medicalRelationTransformQueryServiceQueryService.getById(id);
         if (po == null) {
-            jr.setCode(400);
-            jr.setMessage("没有相应数据");
-            jr.setTotal((long) 0);
+            JsonResultKit.ofNum(400, "未查找到数据", 0);
         } else {
             jr.setData(po);
         }
@@ -58,9 +56,7 @@ public class MedicalRelationTransformController  extends BasicController<Medical
         long count = pageRows.getTotal();
         if (count == 0) {
             JsonResult jr = new JsonResult();
-            jr.setCode(400);
-            jr.setMessage("没有相应数据");
-            jr.setTotal((long) 0);
+            jr=JsonResultKit.ofNum(400, "未查找到数据", 0);
             return jr;
         } else {
             return JsonResultKit.ofPage(pageRows);

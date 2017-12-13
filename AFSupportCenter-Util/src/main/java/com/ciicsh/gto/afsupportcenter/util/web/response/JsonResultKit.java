@@ -21,6 +21,14 @@ public class JsonResultKit {
         return result;
     }
 
+    public static <T> JsonResult<T> ofNum(int code, String message, int num) {
+        JsonResult<T> result = new JsonResult();
+        result.setTotal((long) num);
+        result.setCode(code);
+        result.setMessage(message);
+        return result;
+    }
+
     public static <T> JsonResult<T> of(int code, String message) {
         return of(code, message, (T) null);
     }
@@ -57,6 +65,17 @@ public class JsonResultKit {
 
     public static <T> JsonResult<T> ofError(String message) {
         return of(500, message);
+    }
+    public static <T> JsonResult<T> ofNum(int num)
+    {
+        if (num==0)
+        {
+            return ofNum(400, "无数据更新", num);
+        }
+        else
+        {
+            return ofNum(200, "操作成功", num);
+        }
     }
 
 }
