@@ -14,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-08
+ * @since 2017-12-12
  */
 @TableName("ss_statement_result")
 public class SsStatementResult implements Serializable {
@@ -37,6 +37,16 @@ public class SsStatementResult implements Serializable {
 	@TableField("employee_id")
 	private String employeeId;
     /**
+     * 变更类型
+     */
+	@TableField("change_type")
+	private Integer changeType;
+    /**
+     * 变更类型名称
+     */
+	@TableField("change_type_name")
+	private String changeTypeName;
+    /**
      * 项目名称
      */
 	@TableField("project_name")
@@ -46,6 +56,11 @@ public class SsStatementResult implements Serializable {
      */
 	@TableField("ss_type")
 	private Integer ssType;
+    /**
+     * 社保险种名称
+     */
+	@TableField("ss_type_name")
+	private String ssTypeName;
     /**
      * 从社保局导入金额
      */
@@ -112,6 +127,22 @@ public class SsStatementResult implements Serializable {
 		this.employeeId = employeeId;
 	}
 
+	public Integer getChangeType() {
+		return changeType;
+	}
+
+	public void setChangeType(Integer changeType) {
+		this.changeType = changeType;
+	}
+
+	public String getChangeTypeName() {
+		return changeTypeName;
+	}
+
+	public void setChangeTypeName(String changeTypeName) {
+		this.changeTypeName = changeTypeName;
+	}
+
 	public String getProjectName() {
 		return projectName;
 	}
@@ -126,6 +157,14 @@ public class SsStatementResult implements Serializable {
 
 	public void setSsType(Integer ssType) {
 		this.ssType = ssType;
+	}
+
+	public String getSsTypeName() {
+		return ssTypeName;
+	}
+
+	public void setSsTypeName(String ssTypeName) {
+		this.ssTypeName = ssTypeName;
 	}
 
 	public BigDecimal getImpAmount() {
@@ -198,8 +237,11 @@ public class SsStatementResult implements Serializable {
 			", statementDetailId=" + statementDetailId +
 			", statementId=" + statementId +
 			", employeeId=" + employeeId +
+			", changeType=" + changeType +
+			", changeTypeName=" + changeTypeName +
 			", projectName=" + projectName +
 			", ssType=" + ssType +
+			", ssTypeName=" + ssTypeName +
 			", impAmount=" + impAmount +
 			", ssAmount=" + ssAmount +
 			", diffAmount=" + diffAmount +

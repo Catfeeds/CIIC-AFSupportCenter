@@ -14,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-08
+ * @since 2017-12-12
  */
 @TableName("ss_com_task")
 public class SsComTask implements Serializable {
@@ -47,17 +47,12 @@ public class SsComTask implements Serializable {
 	@TableField("task_category")
 	private String taskCategory;
     /**
-     * 任务名称
-     */
-	@TableField("task_name")
-	private String taskName;
-    /**
      * 发起人要求任务完成截止日期
      */
 	@TableField("expire_date")
 	private LocalDate expireDate;
     /**
-     * 发起人用户名
+     * 发起人id
      */
 	@TableField("submitter_id")
 	private String submitterId;
@@ -72,12 +67,17 @@ public class SsComTask implements Serializable {
 	@TableField("submitter_dept_id")
 	private String submitterDeptId;
     /**
+     * 发起人当时所在部门名称
+     */
+	@TableField("submitter_dept_name")
+	private String submitterDeptName;
+    /**
      * 发起时间
      */
 	@TableField("submit_time")
 	private LocalDateTime submitTime;
     /**
-     * 发起时间备注
+     * 发起人备注信息
      */
 	@TableField("submit_remark")
 	private String submitRemark;
@@ -154,11 +154,6 @@ public class SsComTask implements Serializable {
      */
 	@TableField("modified_by")
 	private String modifiedBy;
-    /**
-     * EntityId
-     */
-	@TableField("entity_id")
-	private String entityId;
 
 
 	public Long getCompanyTaskId() {
@@ -201,14 +196,6 @@ public class SsComTask implements Serializable {
 		this.taskCategory = taskCategory;
 	}
 
-	public String getTaskName() {
-		return taskName;
-	}
-
-	public void setTaskName(String taskName) {
-		this.taskName = taskName;
-	}
-
 	public LocalDate getExpireDate() {
 		return expireDate;
 	}
@@ -239,6 +226,14 @@ public class SsComTask implements Serializable {
 
 	public void setSubmitterDeptId(String submitterDeptId) {
 		this.submitterDeptId = submitterDeptId;
+	}
+
+	public String getSubmitterDeptName() {
+		return submitterDeptName;
+	}
+
+	public void setSubmitterDeptName(String submitterDeptName) {
+		this.submitterDeptName = submitterDeptName;
 	}
 
 	public LocalDateTime getSubmitTime() {
@@ -377,14 +372,6 @@ public class SsComTask implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public String getEntityId() {
-		return entityId;
-	}
-
-	public void setEntityId(String entityId) {
-		this.entityId = entityId;
-	}
-
 	@Override
 	public String toString() {
 		return "SsComTask{" +
@@ -393,11 +380,11 @@ public class SsComTask implements Serializable {
 			", comAccountId=" + comAccountId +
 			", companyId=" + companyId +
 			", taskCategory=" + taskCategory +
-			", taskName=" + taskName +
 			", expireDate=" + expireDate +
 			", submitterId=" + submitterId +
 			", submitterName=" + submitterName +
 			", submitterDeptId=" + submitterDeptId +
+			", submitterDeptName=" + submitterDeptName +
 			", submitTime=" + submitTime +
 			", submitRemark=" + submitRemark +
 			", taskFormContent=" + taskFormContent +
@@ -415,7 +402,6 @@ public class SsComTask implements Serializable {
 			", modifiedTime=" + modifiedTime +
 			", createdBy=" + createdBy +
 			", modifiedBy=" + modifiedBy +
-			", entityId=" + entityId +
 			"}";
 	}
 }

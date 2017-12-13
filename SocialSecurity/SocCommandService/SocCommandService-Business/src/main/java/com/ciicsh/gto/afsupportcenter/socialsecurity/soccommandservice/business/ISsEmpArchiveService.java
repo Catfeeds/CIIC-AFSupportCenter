@@ -1,7 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpArchive;
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsEmpArchiveDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpArchive;
 
 /**
  * <p>
@@ -14,4 +15,12 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface ISsEmpArchiveService extends IService<SsEmpArchive> {
 
+
+    /**
+     * 根据雇员任务 ID 查询 雇员本地社保档案信息
+     *
+     * @param empTaskId
+     * @return
+     */
+    SsEmpArchiveDTO queryByEmpTaskId(String empTaskId);
 }

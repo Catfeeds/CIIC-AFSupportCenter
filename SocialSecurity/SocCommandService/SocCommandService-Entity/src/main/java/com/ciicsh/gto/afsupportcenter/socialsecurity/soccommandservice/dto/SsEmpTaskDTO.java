@@ -26,7 +26,7 @@ public class SsEmpTaskDTO extends SsEmpTask {
     // 雇员证件号
     private String idNum;
 
-    // 来源表 cmy_company
+    // 来源表 sal_company
     // 客户编号
     private String companyId;
     // 客户名称

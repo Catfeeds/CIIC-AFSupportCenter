@@ -4,7 +4,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpArchive">
-        <id column="emp_archived_id" property="empArchivedId" />
+        <id column="emp_archive_id" property="empArchiveId" />
         <result column="customer_id" property="customerId" />
         <result column="company_id" property="companyId" />
         <result column="employee_id" property="employeeId" />

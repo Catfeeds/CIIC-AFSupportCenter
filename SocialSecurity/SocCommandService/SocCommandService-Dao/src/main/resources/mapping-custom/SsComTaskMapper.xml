@@ -75,7 +75,7 @@
         sct.submit_remark,
         cc.title
         FROM ss_com_task sct
-        LEFT JOIN cmy_company cc ON sct.company_id = cc.company_id
+        LEFT JOIN sal_company cc ON sct.company_id = cc.company_id
         <where>
             AND sct.is_active = 1
             AND sct.task_status = 0
@@ -113,7 +113,7 @@
         cc.title
         FROM ss_com_task sct
         LEFT JOIN ss_com_account sca ON sct.com_account_id = sca.com_account_id
-        LEFT JOIN cmy_company cc ON sct.company_id = cc.company_id
+        LEFT JOIN sal_company cc ON sct.company_id = cc.company_id
         <where>
             AND sct.is_active = 1
             <if test="accountType!= null ">
@@ -163,7 +163,7 @@
         cc.title
         FROM ss_com_task sct
         LEFT JOIN ss_com_account sca ON sct.com_account_id = sca.com_account_id
-        LEFT JOIN cmy_company cc ON sct.company_id = cc.company_id
+        LEFT JOIN sal_company cc ON sct.company_id = cc.company_id
         <where>
             AND sct.is_active = 1
             AND sct.task_status =3
@@ -204,7 +204,7 @@
         sct.submit_remark,
         cc.title
         FROM ss_com_task sct
-        LEFT JOIN cmy_company cc ON sct.company_id = cc.company_id
+        LEFT JOIN sal_company cc ON sct.company_id = cc.company_id
         <where>
             AND sct.is_active = 1
             AND sct.task_status = 4
@@ -252,7 +252,7 @@
         cc.title,
 		scm.*
         FROM ss_com_task sct
-        LEFT JOIN (SELECT company_id, title FROM 	cmy_company  WHERE is_active = 1)cc ON sct.company_id = cc.company_id
+        LEFT JOIN (SELECT company_id, title FROM 	sal_company  WHERE is_active = 1)cc ON sct.company_id = cc.company_id
 				LEFT JOIN
 				(SELECT
                 com_material_id,
@@ -289,7 +289,7 @@
         cc.title,
 				sca.*
         FROM ss_com_task sct
-        LEFT JOIN (SELECT  company_id, title FROM 	cmy_company  WHERE is_active = 1)cc ON sct.company_id = cc.company_id
+        LEFT JOIN (SELECT  company_id, title FROM 	sal_company  WHERE is_active = 1)cc ON sct.company_id = cc.company_id
         LEFT JOIN (SELECT com_account_id AS com_account_id_acc, supplier_id,ss_account_type,ss_account,bank_account,com_account_name,settlement_area,payment_bank,payment_way,expire_date AS expire_date_acc,ss_username,ss_pwd,initial_balance,initial_debt,origin_place,query_account,deliver_way,deliver_way_remark,provide_certificate_time,change_time,receive_date,into_date,end_date,dispatch_material,remark AS remark_acc FROM ss_com_account WHERE is_active = 1)sca
 				ON sct.com_account_id = sca.com_account_id_acc
         WHERE

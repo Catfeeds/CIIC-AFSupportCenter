@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 /**
  * <p>
  * 企业社保账户信息表
-企业社保账户分类 : 大库（中智大库、外包库）、独立户 服务实现类
+ * 企业社保账户分类 : 大库（中智大库、外包库）、独立户 服务实现类
  * </p>
  *
  * @author linhui
@@ -24,9 +24,13 @@ import org.springframework.stereotype.Service;
 public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsComAccount> implements ISsComAccountService {
 
     @Override
-    public PageRows<SsComAccountDTO> queryComAccount(PageInfo pageInfo) {
-        SsComAccountDTO ssComAccountDTO= pageInfo.toJavaObject(SsComAccountDTO.class);
-        return PageKit.doSelectPage(pageInfo,()-> baseMapper.queryComAccount(ssComAccountDTO));
+    public SsComAccountDTO queryByEmpTaskId(String empTaskId) {
+        return baseMapper.queryByEmpTaskId(empTaskId);
+    }
 
+    @Override
+    public PageRows<SsComAccount> accountQuery(PageInfo pageInfo) {
+        SsComAccount dto = pageInfo.toJavaObject(SsComAccount.class);
+        return PageKit.doSelectPage(pageInfo, () -> baseMapper.accountQuery(dto));
     }
 }

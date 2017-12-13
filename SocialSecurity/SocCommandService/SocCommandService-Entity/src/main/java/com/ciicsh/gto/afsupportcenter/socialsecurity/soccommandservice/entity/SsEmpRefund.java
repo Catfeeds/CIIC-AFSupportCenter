@@ -16,7 +16,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-08
+ * @since 2017-12-12
  */
 @TableName("ss_emp_refund")
 public class SsEmpRefund implements Serializable {
@@ -36,8 +36,8 @@ public class SsEmpRefund implements Serializable {
     /**
      * 外键，关联雇员社保档案Id
      */
-	@TableField("emp_archived_id")
-	private String empArchivedId;
+	@TableField("emp_archive_id")
+	private String empArchiveId;
     /**
      * 办理月份（抵扣所属月份）
      */
@@ -115,12 +115,12 @@ public class SsEmpRefund implements Serializable {
 		this.empTaskId = empTaskId;
 	}
 
-	public String getEmpArchivedId() {
-		return empArchivedId;
+	public String getEmpArchiveId() {
+		return empArchiveId;
 	}
 
-	public void setEmpArchivedId(String empArchivedId) {
-		this.empArchivedId = empArchivedId;
+	public void setEmpArchiveId(String empArchiveId) {
+		this.empArchiveId = empArchiveId;
 	}
 
 	public String getSsMonth() {
@@ -224,7 +224,7 @@ public class SsEmpRefund implements Serializable {
 		return "SsEmpRefund{" +
 			", empRefundId=" + empRefundId +
 			", empTaskId=" + empTaskId +
-			", empArchivedId=" + empArchivedId +
+			", empArchiveId=" + empArchiveId +
 			", ssMonth=" + ssMonth +
 			", amount=" + amount +
 			", processTime=" + processTime +

@@ -15,7 +15,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-08
+ * @since 2017-12-12
  */
 @TableName("ss_emp_archive")
 public class SsEmpArchive implements Serializable {
@@ -25,8 +25,8 @@ public class SsEmpArchive implements Serializable {
     /**
      * 雇员本地社保档案Id
      */
-	@TableId(value="emp_archived_id", type= IdType.AUTO)
-	private Long empArchivedId;
+	@TableId(value="emp_archive_id", type= IdType.AUTO)
+	private Long empArchiveId;
     /**
      * 多租户
      */
@@ -46,7 +46,7 @@ public class SsEmpArchive implements Serializable {
      * 企业社保账户Id, 关联至SOC_SSAccount
      */
 	@TableField("com_account_id")
-	private String comAccountId;
+	private Long comAccountId;
     /**
      * 社保序号 :一个雇员在不同库之间序号可以相同,但在同一个库下面不可以重复,
             老系统的社保序号取数比较大而且还用到所有独立户,搞得序号特别稀有
@@ -119,12 +119,12 @@ public class SsEmpArchive implements Serializable {
 	private String modifiedBy;
 
 
-	public Long getEmpArchivedId() {
-		return empArchivedId;
+	public Long getEmpArchiveId() {
+		return empArchiveId;
 	}
 
-	public void setEmpArchivedId(Long empArchivedId) {
-		this.empArchivedId = empArchivedId;
+	public void setEmpArchiveId(Long empArchiveId) {
+		this.empArchiveId = empArchiveId;
 	}
 
 	public String getCustomerId() {
@@ -151,11 +151,11 @@ public class SsEmpArchive implements Serializable {
 		this.employeeId = employeeId;
 	}
 
-	public String getComAccountId() {
+	public Long getComAccountId() {
 		return comAccountId;
 	}
 
-	public void setComAccountId(String comAccountId) {
+	public void setComAccountId(Long comAccountId) {
 		this.comAccountId = comAccountId;
 	}
 
@@ -266,7 +266,7 @@ public class SsEmpArchive implements Serializable {
 	@Override
 	public String toString() {
 		return "SsEmpArchive{" +
-			", empArchivedId=" + empArchivedId +
+			", empArchiveId=" + empArchiveId +
 			", customerId=" + customerId +
 			", companyId=" + companyId +
 			", employeeId=" + employeeId +

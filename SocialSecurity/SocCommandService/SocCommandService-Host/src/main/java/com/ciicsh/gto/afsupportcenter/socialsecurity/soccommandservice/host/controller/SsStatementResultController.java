@@ -1,9 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsStatementResultService;
-import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-01
+ * @since 2017-12-11
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssStatementResult")
-public class SsStatementResultController  extends BasicController<ISsStatementResultService> {
+public class SsStatementResultController {
 
 }
 

@@ -2,39 +2,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsComAccountMapper">
 
-    <resultMap id="ModelResultMap"
-               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComAccountDTO"
-               extends="BaseResultMap">
-
-
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMapDTO" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComAccountDTO">
+        <!-- sal_company -->
+        <result column="company_id" property="companyId"/>
+        <result column="title" property="title"/>
     </resultMap>
-    <!--查询企业任务单 会涉及到 结算区县-->
-    <select id="queryComAccount" resultMap="ModelResultMap">
-        SELECT
-        sca.bank_account,sca.com_account_id,sca.com_account_name,sca.deliver_way,
-        sca.ss_Account_Type,sca.is_active,sca.ss_Account,sca.into_date,sca.end_date,
-        sca.end_date,sca.remark,cc.company_id,cc.title
-        FROM ss_com_account sca
-        LEFT JOIN ss_account_com_tie act ON act.com_account_id=sca.com_account_id
-        LEFT JOIN cmy_company cc ON  cc.company_id=act.company_id
 
-          <where>
-              AND act.major_com=1
-              <if test="comAccountName!= null">
-                  AND sca.com_account_name LIKE CONCAT('%', #{comAccountName}, '%')
-              </if>
-              <!--<if test="taskCategory!= null">
-                  AND sct.task_category = #{taskCategory}
-              </if>
-              <if test="companyId!= null">
-                  AND sct.customer_id = #{companyId}
-              </if>
-              <if test="submitTimeStrat!= null">
-                  AND sct.submit_time <![CDATA[ >= ]]> #{submitTimeStart}
-              </if>
-              <if test="submitTimeEnd!= null ">
-                  AND sct.submit_time <![CDATA[ <= ]]> #{submitTimeEnd}
-              </if>-->
-          </where>
+    <select id="queryByEmpTaskId" resultMap="BaseResultMapDTO">
+        select ca.*
+            ,c.company_id,c.title
+            from ss_com_account ca
+            LEFT JOIN ss_account_com_relation ssac on ca.com_account_id = ssac.com_account_id
+            LEFT JOIN sal_company c on c.company_id = ssac.company_id
+            WHERE 1 = 1
+            and ca.is_active = 1
+            and ssac.is_active = 1
+            and c.is_active = 1
+            and EXISTS(select 1 from ss_emp_task et LEFT JOIN ss_emp_archive ea on et.emp_archive_id = ea.emp_archive_id where et.is_active = 1 and ea.company_id = c.company_id and et.emp_task_id = #{empTaskId})
+    </select>
+
+    <select id="accountQuery" resultMap="BaseResultMap">
+        select * from ss_com_account ca
+        <where>
+            and ca.is_active = 1
+            <if test="ssAccount != null">
+                and ca.ss_account LIKE CONCAT('%',#{ssAccount},'%')
+            </if>
+            <if test="comAccountName != null">
+                and ca.com_account_name LIKE CONCAT('%',#{comAccountName},'%')
+            </if>
+        </where>
     </select>
 </mapper>

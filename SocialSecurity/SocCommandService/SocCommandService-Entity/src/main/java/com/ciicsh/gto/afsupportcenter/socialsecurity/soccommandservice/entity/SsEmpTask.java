@@ -11,11 +11,11 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 
+ * 本地社保的雇员任务单
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-08
+ * @since 2017-12-12
  */
 @TableName("ss_emp_task")
 public class SsEmpTask implements Serializable {
@@ -35,8 +35,8 @@ public class SsEmpTask implements Serializable {
     /**
      * 外键，雇员社保档案主表Id
      */
-	@TableField("emp_archived_id")
-	private String empArchivedId;
+	@TableField("emp_archive_id")
+	private String empArchiveId;
     /**
      * 任务类型，DicItem.DicItemValue 1:新进：2：转入 3调整 4 补缴 5 转出 6终止 7退账 8 提取 9特殊操作
      */
@@ -61,6 +61,11 @@ public class SsEmpTask implements Serializable {
      */
 	@TableField("submitter_dept_id")
 	private String submitterDeptId;
+    /**
+     * 发起人当时所在部门名称
+     */
+	@TableField("submitter_dept_name")
+	private String submitterDeptName;
     /**
      * 任务发起时间，通过该日期和客户社保截至日判断本月下月处理
      */
@@ -143,11 +148,19 @@ public class SsEmpTask implements Serializable {
      */
 	@TableField("handle_remark")
 	private String handleRemark;
+	@TableField("handle_remark_man")
+	private String handleRemarkMan;
+	@TableField("handle_remark_date")
+	private LocalDate handleRemarkDate;
     /**
      * 批退备注
      */
 	@TableField("rejection_remark")
 	private String rejectionRemark;
+	@TableField("rejection_remark_man")
+	private String rejectionRemarkMan;
+	@TableField("rejection_remark_date")
+	private LocalDate rejectionRemarkDate;
     /**
      * 办理状态：1、材料收缴  2 、受理中  3、送审中  4 已完成
      */
@@ -217,12 +230,12 @@ public class SsEmpTask implements Serializable {
 		this.customerId = customerId;
 	}
 
-	public String getEmpArchivedId() {
-		return empArchivedId;
+	public String getEmpArchiveId() {
+		return empArchiveId;
 	}
 
-	public void setEmpArchivedId(String empArchivedId) {
-		this.empArchivedId = empArchivedId;
+	public void setEmpArchiveId(String empArchiveId) {
+		this.empArchiveId = empArchiveId;
 	}
 
 	public Integer getTaskCategory() {
@@ -263,6 +276,14 @@ public class SsEmpTask implements Serializable {
 
 	public void setSubmitterDeptId(String submitterDeptId) {
 		this.submitterDeptId = submitterDeptId;
+	}
+
+	public String getSubmitterDeptName() {
+		return submitterDeptName;
+	}
+
+	public void setSubmitterDeptName(String submitterDeptName) {
+		this.submitterDeptName = submitterDeptName;
 	}
 
 	public LocalDateTime getSubmitTime() {
@@ -369,12 +390,44 @@ public class SsEmpTask implements Serializable {
 		this.handleRemark = handleRemark;
 	}
 
+	public String getHandleRemarkMan() {
+		return handleRemarkMan;
+	}
+
+	public void setHandleRemarkMan(String handleRemarkMan) {
+		this.handleRemarkMan = handleRemarkMan;
+	}
+
+	public LocalDate getHandleRemarkDate() {
+		return handleRemarkDate;
+	}
+
+	public void setHandleRemarkDate(LocalDate handleRemarkDate) {
+		this.handleRemarkDate = handleRemarkDate;
+	}
+
 	public String getRejectionRemark() {
 		return rejectionRemark;
 	}
 
 	public void setRejectionRemark(String rejectionRemark) {
 		this.rejectionRemark = rejectionRemark;
+	}
+
+	public String getRejectionRemarkMan() {
+		return rejectionRemarkMan;
+	}
+
+	public void setRejectionRemarkMan(String rejectionRemarkMan) {
+		this.rejectionRemarkMan = rejectionRemarkMan;
+	}
+
+	public LocalDate getRejectionRemarkDate() {
+		return rejectionRemarkDate;
+	}
+
+	public void setRejectionRemarkDate(LocalDate rejectionRemarkDate) {
+		this.rejectionRemarkDate = rejectionRemarkDate;
 	}
 
 	public Integer getHandleStatus() {
@@ -462,12 +515,13 @@ public class SsEmpTask implements Serializable {
 		return "SsEmpTask{" +
 			", empTaskId=" + empTaskId +
 			", customerId=" + customerId +
-			", empArchivedId=" + empArchivedId +
+			", empArchiveId=" + empArchiveId +
 			", taskCategory=" + taskCategory +
 			", urgent=" + urgent +
 			", submitterId=" + submitterId +
 			", submitterName=" + submitterName +
 			", submitterDeptId=" + submitterDeptId +
+			", submitterDeptName=" + submitterDeptName +
 			", submitTime=" + submitTime +
 			", expireDate=" + expireDate +
 			", submitterRemark=" + submitterRemark +
@@ -481,7 +535,11 @@ public class SsEmpTask implements Serializable {
 			", handleWay=" + handleWay +
 			", handleMonth=" + handleMonth +
 			", handleRemark=" + handleRemark +
+			", handleRemarkMan=" + handleRemarkMan +
+			", handleRemarkDate=" + handleRemarkDate +
 			", rejectionRemark=" + rejectionRemark +
+			", rejectionRemarkMan=" + rejectionRemarkMan +
+			", rejectionRemarkDate=" + rejectionRemarkDate +
 			", handleStatus=" + handleStatus +
 			", startHandleDate=" + startHandleDate +
 			", sendCheckDate=" + sendCheckDate +
