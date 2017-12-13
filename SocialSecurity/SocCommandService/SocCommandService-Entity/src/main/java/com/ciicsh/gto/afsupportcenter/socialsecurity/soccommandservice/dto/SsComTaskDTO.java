@@ -4,6 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComMaterial;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -36,6 +37,9 @@ public class SsComTaskDTO extends SsComTask{
 
     //操作类型  1 开户 2 转移 3 变更 4 终止
     private String operatorType;
+
+    //终止操作时 的终止日期
+    private LocalDate endDate;
 
     public String getCompanyName() {
         return companyName;
@@ -107,5 +111,13 @@ public class SsComTaskDTO extends SsComTask{
 
     public void setOperatorType(String operatorType) {
         this.operatorType = operatorType;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 }

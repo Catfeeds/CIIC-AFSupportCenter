@@ -14,6 +14,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -110,6 +111,9 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
     /**
      * 企业任务开户办理 在内做事物
      */
+    @Transactional(
+        rollbackFor = {Exception.class}
+    )
     public boolean addOrUpdateCompanyTask(SsComTask ssComTask, SsComAccount ssComAccount, SsAccountRatio ssAccountRatio){
             //如果 账户ID为空 则添加  否则修改
             if (null == ssComAccount.getComAccountId()) {
@@ -148,5 +152,26 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
     public SsComTaskDTO queryAccountInfoAndMaterial(SsComTaskDTO ssComTaskDTO){
 
         return baseMapper.queryAccountInfoAndMaterial(ssComTaskDTO);
+    }
+    /**
+     * 终止任务办理
+     * @param ssComTaskDTO
+     * @param ssComAccount
+     * @return
+     */
+    @Transactional(
+        rollbackFor = {Exception.class}
+    )
+    public boolean updateOrEndingTask(SsComTaskDTO ssComTaskDTO,SsComAccount ssComAccount){
+        boolean result = false;
+        try{
+            baseMapper.updateById(ssComTaskDTO);
+            sComAccountMapper.updateById(ssComAccount);
+            result = true;
+        }catch (Exception e){
+            result = false;
+            throw new RuntimeException("终止任务办理异常");
+        }
+        return result;
     }
 }

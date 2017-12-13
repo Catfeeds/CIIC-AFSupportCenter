@@ -80,4 +80,12 @@ public interface ISsComTaskService extends IService<SsComTask> {
      * @return
      */
     public SsComTaskDTO queryAccountInfoAndMaterial(SsComTaskDTO ssComTaskDTO);
+
+    /**
+     * 终止任务办理
+     * @param ssComTaskDTO
+     * @param ssComAccount
+     * @return
+     */
+    public boolean updateOrEndingTask(SsComTaskDTO ssComTaskDTO,SsComAccount ssComAccount);
 }

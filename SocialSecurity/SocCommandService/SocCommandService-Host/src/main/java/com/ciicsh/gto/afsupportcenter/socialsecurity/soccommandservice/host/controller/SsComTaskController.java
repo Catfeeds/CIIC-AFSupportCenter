@@ -1,7 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAccountRatioService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComAccountService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio;
@@ -14,7 +12,6 @@ import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,10 +35,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/soccommandservice/ssComTask")
 public class SsComTaskController extends BasicController<ISsComTaskService> {
-    @Autowired
-    private ISsAccountRatioService iSsAccountRatioService;
-    @Autowired
-    private ISsComAccountService iSsComAccountService;
+
     @Log("查询未处理企业任务单")
     @RequestMapping(value = "getNoProgressTask")
     public JsonResult<List<SsComTaskDTO>> getNoProgressCompanyTask(PageInfo pageInfo) {
@@ -145,6 +139,28 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
         }
         boolean result = business.addOrUpdateCompanyTask(ssComTask,ssComAccount,ssAccountRatio);
         return  JsonResultKit.of(result);
+    }
+    @Log("终止任务单")
+    @RequestMapping("updateOrEndingTask")
+    public JsonResult<Boolean> updateOrEndingTask(SsComTaskDTO ssComTaskDTO){
+        boolean result = false;
+        //0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
+        System.out.println("-------------------"+ssComTaskDTO.getTaskStatus());
+        if(ssComTaskDTO.getTaskStatus()==3){
+            if(null==ssComTaskDTO.getEndDate() || null==ssComTaskDTO.getComAccountId()) {
+                SsComAccount ssComAccount = new SsComAccount();
+                //2 表示终止
+                ssComAccount.setState(new Integer(2));
+                ssComAccount.setComAccountId(ssComTaskDTO.getComAccountId());
+                ssComAccount.setEndDate(ssComTaskDTO.getEndDate());
+                result = business.updateOrEndingTask(ssComTaskDTO, ssComAccount);
+            }
+        }else{
+            //只是做任务单的状态切换，任务单不完成
+            result = business.updateById(ssComTaskDTO);
+        }
+
+        return JsonResultKit.of(result);
     }
 
 
@@ -253,6 +269,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
     public boolean isNotNull(String charecter){
         return StringUtils.isNotBlank(charecter);
     }
+
 }
 
 
