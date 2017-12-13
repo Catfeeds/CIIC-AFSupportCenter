@@ -35,7 +35,7 @@ public interface SsStatementMapper extends BaseMapper<SsStatementPO> {
      * @param ssStatementDTO 对账单查询实体
      * @return  SsStatementPO
      */
-    SsStatementDTO serachStatementBystatementId(SsStatementDTO ssStatementDTO);
+    SsStatementDTO serachStatementByStatementId(SsStatementDTO ssStatementDTO);
 
 
 }

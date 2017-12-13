@@ -18,7 +18,7 @@ import java.io.Serializable;
  * @since 2017-12-07
  */
 @TableName("ss_month_emp_change_detail")
-public class SsMonthEmpChangeDetail implements Serializable {
+public class SsMonthEmpChangeDetailPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -42,6 +42,11 @@ public class SsMonthEmpChangeDetail implements Serializable {
      */
 	@TableField("change_type")
 	private String changeType;
+    /**
+     * 变更类型名称
+     */
+    @TableField("change_type_name")
+    private String changeTypeName;
     /**
      * 基数
      */
@@ -247,7 +252,7 @@ public class SsMonthEmpChangeDetail implements Serializable {
 
 	@Override
 	public String toString() {
-		return "SsMonthEmpChangeDetail{" +
+		return "SsMonthEmpChangeDetailPO{" +
 			", monthEmpChangeDetailId=" + monthEmpChangeDetailId +
 			", monthEmpChangeId=" + monthEmpChangeId +
 			", employeeId=" + employeeId +
@@ -267,4 +272,12 @@ public class SsMonthEmpChangeDetail implements Serializable {
 			", modifiedBy=" + modifiedBy +
 			"}";
 	}
+
+    public String getChangeTypeName() {
+        return changeTypeName;
+    }
+
+    public void setChangeTypeName(String changeTypeName) {
+        this.changeTypeName = changeTypeName;
+    }
 }

@@ -16,7 +16,7 @@ import java.io.Serializable;
  * @since 2017-12-07
  */
 @TableName("ss_month_emp_change")
-public class SsMonthEmpChange implements Serializable {
+public class SsMonthEmpChangePO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -25,6 +25,11 @@ public class SsMonthEmpChange implements Serializable {
      */
 	@TableId(value="month_emp_change_id", type= IdType.AUTO)
 	private Long monthEmpChangeId;
+    /**
+     * 外键：对账单Id
+     */
+    @TableField("statement_id")
+    private String statementId;
     /**
      * 社保缴费月份，格式是yyyyMM
      */
@@ -36,10 +41,15 @@ public class SsMonthEmpChange implements Serializable {
 	@TableField("last_compute_time")
 	private LocalDateTime lastComputeTime;
     /**
+     * 变更汇总表类型:YYS\\GSY
+     */
+	@TableField("compute_type")
+	private String computeType;
+    /**
      * 计算用户Id
      */
-	@TableField("compute_user_id")
-	private String computeUserId;
+    @TableField("compute_user_id")
+    private String computeUserId;
     /**
      * 客户账号Id
      */
@@ -154,7 +164,7 @@ public class SsMonthEmpChange implements Serializable {
 
 	@Override
 	public String toString() {
-		return "SsMonthEmpChange{" +
+		return "SsMonthEmpChangePO{" +
 			", monthEmpChangeId=" + monthEmpChangeId +
 			", ssMonth=" + ssMonth +
 			", lastComputeTime=" + lastComputeTime +
@@ -167,4 +177,20 @@ public class SsMonthEmpChange implements Serializable {
 			", modifiedBy=" + modifiedBy +
 			"}";
 	}
+
+    public String getStatementId() {
+        return statementId;
+    }
+
+    public void setStatementId(String statementId) {
+        this.statementId = statementId;
+    }
+
+    public String getComputeType() {
+        return computeType;
+    }
+
+    public void setComputeType(String computeType) {
+        this.computeType = computeType;
+    }
 }

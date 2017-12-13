@@ -29,7 +29,7 @@ public class SsStatementServiceImpl extends ServiceImpl<SsStatementMapper, SsSta
 
     @Override
     public SsStatementDTO serachStatementData(SsStatementDTO ssStatementDTO) {
-        return baseMapper.serachStatementBystatementId(ssStatementDTO);
+        return baseMapper.serachStatementByStatementId(ssStatementDTO);
     }
 
 }
