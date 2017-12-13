@@ -41,16 +41,31 @@ import java.util.Optional;
     @GetMapping("/getEntityById")
     public JsonResult getEntityById(String id) {
         JsonResult jr = new JsonResult();
-        jr.setData(fragmentaryReimbursementQueryService.getById(id));
+        FragmentaryReimbursementPO po = fragmentaryReimbursementQueryService.getById(id);
+        if (po == null) {
+            jr.setCode(400);
+            jr.setMessage("没有相应数据");
+            jr.setTotal((long) 0);
+        } else {
+            jr.setData(po);
+        }
         return jr;
     }
 
     @Log("零星报销查询")
     @PostMapping("/getEntityList")
      public JsonResult<List<FragmentaryReimbursementPO>> getEntityList(PageInfo pageInfo) {
-
         PageRows<FragmentaryReimbursementPO> pageRows = business.employeeOperatorQuery(pageInfo);
-        return JsonResultKit.ofPage(pageRows);
+        long count = pageRows.getTotal();
+        if (count == 0) {
+            JsonResult jr = new JsonResult();
+            jr.setCode(400);
+            jr.setMessage("没有相应数据");
+            jr.setTotal((long) 0);
+            return jr;
+        } else {
+            return JsonResultKit.ofPage(pageRows);
+        }
     }
 
 }

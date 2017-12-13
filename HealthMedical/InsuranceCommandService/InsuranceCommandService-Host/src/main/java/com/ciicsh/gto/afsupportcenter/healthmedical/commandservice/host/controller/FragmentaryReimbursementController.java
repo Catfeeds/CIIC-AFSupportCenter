@@ -32,13 +32,38 @@ import org.springframework.web.bind.annotation.RestController;
     @Log("新增")
     @RequestMapping(value = "/save", method = {RequestMethod.POST})
     public JsonResult<Integer> save(FragmentaryReimbursementPO po) {
-        Integer returnNum = business.save(po);
-        return JsonResultKit.of(returnNum);
+        JsonResult jr = new JsonResult();
+        Integer num = business.save(po);
+        if (num==0)
+        {
+            jr.setCode(400);
+            jr.setTotal((long) 0);
+            jr.setMessage("无数据更新");
+        }
+        else
+        {
+            jr.setCode(200);
+            jr.setTotal((long) num);
+            jr.setMessage("操作成功");
+
+        }
+        return jr;
     }
 
     @Log("更新")
     @RequestMapping(value = "/edit", method = {RequestMethod.POST})
     public JsonResult<Integer> edit(FragmentaryReimbursementPO po) {
-        return JsonResultKit.of(business.edit(po));
+        JsonResult jr = new JsonResult();
+        Integer num = business.edit(po);
+        if (num == 0) {
+            jr.setCode(400);
+            jr.setTotal((long) 0);
+            jr.setMessage("无数据更新");
+        } else {
+            jr.setCode(200);
+            jr.setTotal((long) num);
+            jr.setMessage("操作成功");
+        }
+        return jr;
     }
 }

@@ -11,12 +11,5 @@ import java.util.Map;
 @RequestMapping("/api/FragmentaryReimbursement")
 public interface FragmentaryReimbursementProxy {
 
-    /**
-     * 新增零星报销
-     * @param param 零星报销信息
-     * @return
-     */
-    @PostMapping("")
-    void saveFragmentaryReimbursement(@RequestBody Map<String, Object> param);
 
 }

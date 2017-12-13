@@ -1,11 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.dao;
 
-import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po.AcceptancePO;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * <p>

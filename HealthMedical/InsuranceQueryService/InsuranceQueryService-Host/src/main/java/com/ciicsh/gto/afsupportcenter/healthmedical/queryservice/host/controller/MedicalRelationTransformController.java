@@ -30,7 +30,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api/afsupportcenter/healthmedical/queryservice/MedicalRelationTransform")
-public class MedicalRelationTransformController  extends BasicController<MedicalRelationTransformQueryService>{
+public class MedicalRelationTransformController  extends BasicController<MedicalRelationTransformQueryService> {
 
     @Autowired
     private MedicalRelationTransformQueryService medicalRelationTransformQueryServiceQueryService;
@@ -40,7 +40,14 @@ public class MedicalRelationTransformController  extends BasicController<Medical
     @GetMapping("/getEntityById")
     public JsonResult getEntityById(String id) {
         JsonResult jr = new JsonResult();
-        jr.setData(medicalRelationTransformQueryServiceQueryService.getById(id));
+        MedicalRelationTransformPO po = medicalRelationTransformQueryServiceQueryService.getById(id);
+        if (po == null) {
+            jr.setCode(400);
+            jr.setMessage("没有相应数据");
+            jr.setTotal((long) 0);
+        } else {
+            jr.setData(po);
+        }
         return jr;
     }
 
@@ -48,6 +55,16 @@ public class MedicalRelationTransformController  extends BasicController<Medical
     @PostMapping("/getEntityList")
     public JsonResult<List<MedicalRelationTransformPO>> getEntityList(PageInfo pageInfo) {
         PageRows<MedicalRelationTransformPO> pageRows = business.medicalRelationTransformMapperQuery(pageInfo);
-        return JsonResultKit.ofPage(pageRows);
+        long count = pageRows.getTotal();
+        if (count == 0) {
+            JsonResult jr = new JsonResult();
+            jr.setCode(400);
+            jr.setMessage("没有相应数据");
+            jr.setTotal((long) 0);
+            return jr;
+        } else {
+            return JsonResultKit.ofPage(pageRows);
+        }
+
     }
 }
