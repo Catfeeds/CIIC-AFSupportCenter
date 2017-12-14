@@ -16,5 +16,4 @@
         <result column="created_by" property="createdBy" />
         <result column="modified_by" property="modifiedBy" />
     </resultMap>
-
 </mapper>

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -156,22 +157,32 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
     /**
      *  更新或者处理任务 终止 转移 变更
      * @param ssComTaskDTO
-     * @param ssComAccount
+     * @param object
      * @return
      */
     @Transactional(
         rollbackFor = {Exception.class}
     )
-    public boolean updateOrHandlerTask(SsComTaskDTO ssComTaskDTO,SsComAccount ssComAccount){
+    public boolean updateOrHandlerTask(SsComTaskDTO ssComTaskDTO,Object object){
         boolean result = false;
-        try{
+//        try{
+
+            if(object instanceof SsComAccount){//修改账户表
+                sComAccountMapper.updateById((SsComAccount)object);
+            }else if(object instanceof List){//行业比例变更
+                List<SsAccountRatio> ssAccountRatioList = (ArrayList<SsAccountRatio>)object;
+                //第二个做修改 先将endMonth 补上
+                ssAccountRatioMapper.updateEndMonthByAccId(ssAccountRatioList.get(1));
+                //第一个做插入
+                ssAccountRatioMapper.insert(ssAccountRatioList.get(0));
+            }
+            ssComTaskDTO.setComAccountId(null);
             baseMapper.updateById(ssComTaskDTO);
-            sComAccountMapper.updateById(ssComAccount);
             result = true;
-        }catch (Exception e){
-            result = false;
-            throw new RuntimeException("终止任务办理异常");
-        }
+//        }catch (Exception e){
+//            result = false;
+//            throw new RuntimeException("终止任务办理异常");
+//        }
         return result;
     }
 }

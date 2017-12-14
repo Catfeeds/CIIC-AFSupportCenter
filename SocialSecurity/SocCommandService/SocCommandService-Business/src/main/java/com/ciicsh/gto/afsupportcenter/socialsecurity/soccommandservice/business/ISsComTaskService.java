@@ -84,8 +84,9 @@ public interface ISsComTaskService extends IService<SsComTask> {
     /**
      * 更新或者处理任务 终止 转移 变更
      * @param ssComTaskDTO
-     * @param ssComAccount
+     * @param object
      * @return
      */
-    public boolean updateOrHandlerTask(SsComTaskDTO ssComTaskDTO,SsComAccount ssComAccount);
+    public boolean updateOrHandlerTask(SsComTaskDTO ssComTaskDTO,Object object);
+
 }
