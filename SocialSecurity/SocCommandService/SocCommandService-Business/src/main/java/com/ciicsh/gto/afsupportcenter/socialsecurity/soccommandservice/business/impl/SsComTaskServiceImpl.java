@@ -154,7 +154,7 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
         return baseMapper.queryAccountInfoAndMaterial(ssComTaskDTO);
     }
     /**
-     * 终止任务办理
+     *  更新或者处理任务 终止 转移 变更
      * @param ssComTaskDTO
      * @param ssComAccount
      * @return
@@ -162,7 +162,7 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
     @Transactional(
         rollbackFor = {Exception.class}
     )
-    public boolean updateOrEndingTask(SsComTaskDTO ssComTaskDTO,SsComAccount ssComAccount){
+    public boolean updateOrHandlerTask(SsComTaskDTO ssComTaskDTO,SsComAccount ssComAccount){
         boolean result = false;
         try{
             baseMapper.updateById(ssComTaskDTO);

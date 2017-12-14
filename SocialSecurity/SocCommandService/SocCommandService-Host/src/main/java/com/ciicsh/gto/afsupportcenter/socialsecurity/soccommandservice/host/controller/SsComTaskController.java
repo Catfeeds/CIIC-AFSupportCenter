@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio;
@@ -21,6 +22,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -140,29 +142,55 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
         boolean result = business.addOrUpdateCompanyTask(ssComTask,ssComAccount,ssAccountRatio);
         return  JsonResultKit.of(result);
     }
-    @Log("终止任务单")
+    @Log("终止任务单的操作")
     @RequestMapping("updateOrEndingTask")
     public JsonResult<Boolean> updateOrEndingTask(SsComTaskDTO ssComTaskDTO){
         boolean result = false;
         //0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
-        System.out.println("-------------------"+ssComTaskDTO.getTaskStatus());
         if(ssComTaskDTO.getTaskStatus()==3){
-            if(null==ssComTaskDTO.getEndDate() || null==ssComTaskDTO.getComAccountId()) {
+            if(null!=ssComTaskDTO.getEndDate() && null!=ssComTaskDTO.getComAccountId()) {
                 SsComAccount ssComAccount = new SsComAccount();
                 //2 表示终止
                 ssComAccount.setState(new Integer(2));
                 ssComAccount.setComAccountId(ssComTaskDTO.getComAccountId());
                 ssComAccount.setEndDate(ssComTaskDTO.getEndDate());
-                result = business.updateOrEndingTask(ssComTaskDTO, ssComAccount);
+                result = business.updateOrHandlerTask(ssComTaskDTO, ssComAccount);
             }
         }else{
             //只是做任务单的状态切换，任务单不完成
             result = business.updateById(ssComTaskDTO);
         }
-
         return JsonResultKit.of(result);
     }
 
+    @Log("转移任务单的操作")
+    @RequestMapping("updateOrTransferTask")
+    public JsonResult<Boolean> updateOrTransferTask(SsComTaskDTO ssComTaskDTO){
+        boolean result = false;
+        //动态扩展数据 预存转移办理时 不完成的状态的数据
+        String transferDate = ssComTaskDTO.getTransferDate();
+        String settlementArea =  ssComTaskDTO.getSettlementArea();
+        Map<String,String> dynamicExtendMap= new HashMap<String,String>();
+        dynamicExtendMap.put("settlementArea",null==settlementArea?"":settlementArea);
+        dynamicExtendMap.put("transferDate",null==transferDate?"":transferDate);
+        String dynamicExtendStr =  JSONObject.toJSONString(dynamicExtendMap);
+        ssComTaskDTO.setDynamicExtend(dynamicExtendStr);
+        //0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
+        if(ssComTaskDTO.getTaskStatus()==3){
+            if(StringUtils.isNotBlank(ssComTaskDTO.getSettlementArea()) && null!=ssComTaskDTO.getComAccountId()) {
+                SsComAccount ssComAccount =  new SsComAccount();
+                ssComAccount.setComAccountId(ssComTaskDTO.getComAccountId());
+                ssComAccount.setSettlementArea(ssComTaskDTO.getSettlementArea());
+                ssComAccount.setModifiedBy("xsj");
+                ssComAccount.setModifiedTime(LocalDateTime.now());
+                result = business.updateOrHandlerTask(ssComTaskDTO, ssComAccount);
+            }
+        }else{
+            //只是做任务单的状态切换，任务单不完成
+            result = business.updateById(ssComTaskDTO);
+        }
+        return JsonResultKit.of(result);
+    }
 
 
     public SsComAccount  getSsComAccount(Map<String,String> map){
@@ -239,7 +267,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
         //任务送审时间
         ssComTask.setSendCheckDate(isNotNull(map.get("sendCheckDate"))?LocalDate.parse(map.get("sendCheckDate"),dateFormatter):null);
         //任务完成时间
-        ssComTask.setSendCheckDate(isNotNull(map.get("finishDate"))?LocalDate.parse(map.get("finishDate"),dateFormatter):null);
+        ssComTask.setFinishDate(isNotNull(map.get("finishDate"))?LocalDate.parse(map.get("finishDate"),dateFormatter):null);
         //办理备注
         ssComTask.setHandleRemark(isNotNull(map.get("handleRemark"))?map.get("handleRemark"):null);
         ssComTask.setModifiedBy("xsj");

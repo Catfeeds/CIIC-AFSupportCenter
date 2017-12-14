@@ -41,6 +41,12 @@ public class SsComTaskDTO extends SsComTask{
     //终止操作时 的终止日期
     private LocalDate endDate;
 
+    //结算区县  在转移时使用
+    private String settlementArea;
+
+    //转移日期
+    private String transferDate;
+
     public String getCompanyName() {
         return companyName;
     }
@@ -119,5 +125,21 @@ public class SsComTaskDTO extends SsComTask{
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    public String getSettlementArea() {
+        return settlementArea;
+    }
+
+    public void setSettlementArea(String settlementArea) {
+        this.settlementArea = settlementArea;
+    }
+
+    public String getTransferDate() {
+        return transferDate;
+    }
+
+    public void setTransferDate(String transferDate) {
+        this.transferDate = transferDate;
     }
 }

@@ -5,8 +5,6 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsCom
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
-import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
-import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 
 /**
  * <p>
@@ -18,12 +16,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
  * @since 2017-12-01
  */
 public interface ISsComAccountService extends IService<SsComAccount> {
-    /**
-     * 获得企业社保账户列表
-     * linhui
-     * @return
-     */
-    public PageRows<SsComAccountDTO> queryComAccount(PageInfo pageInfo);
+
     /**
      * 根据雇员任务 ID 查询 企业社保账户信息
      *
