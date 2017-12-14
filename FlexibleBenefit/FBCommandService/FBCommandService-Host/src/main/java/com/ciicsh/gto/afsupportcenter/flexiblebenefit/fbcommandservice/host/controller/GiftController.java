@@ -55,9 +55,9 @@ public class GiftController {
                 String filePathUrl = giftService.fileUpdate(file.getInputStream());
 
                 /**如果修改图片，清除原图片，再保存新图片*/
-                if (entity.getPictureUrl() != null && !"".equals(entity.getPictureUrl())) {
-                    giftService.deletePicture(entity.getPictureUrl());
-                }
+//                if (entity.getPictureUrl() != null && !"".equals(entity.getPictureUrl())) {
+//                    giftService.deletePicture(entity.getPictureUrl());
+//                }
                 entity.setPictureUrl(filePathUrl);
             }
         } catch (Exception e) {
