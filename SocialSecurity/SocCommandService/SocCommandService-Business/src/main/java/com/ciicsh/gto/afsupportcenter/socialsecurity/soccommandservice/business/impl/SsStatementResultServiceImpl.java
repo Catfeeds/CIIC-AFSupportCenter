@@ -2,8 +2,10 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsMonthEmpChangeDetailMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsStatementImpMapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsStatementMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementResultDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthEmpChangeDetail;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatement;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatementImp;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatementResult;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsStatementResultMapper;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -33,14 +36,35 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
     @Autowired
     SsStatementImpMapper ssStatementImpMapper;
 
+    @Autowired
+    SsStatementMapper ssStatementMapper;
+
     @Override
     public List<SsStatementResultDTO> statementResultQuery(SsStatementResultDTO ssStatementResultDTO) {
         return baseMapper.statementResultQuery(ssStatementResultDTO);
     }
 
 
-    private void calculateSstatementResult(String statementId){
+    @Override
+    public SsStatementResult newSsStatementResult(){
+        SsStatementResult ssStatementResult = new SsStatementResult();
+        ssStatementResult.setSsAmount(new BigDecimal(0));
+        ssStatementResult.setImpAmount(new BigDecimal(0));
+        ssStatementResult.setDiffAmount(new BigDecimal(0));
+        return ssStatementResult;
+    }
+
+    @Override
+    public void calculateSstatementResult(Long statementId){
+        //操作时间
+        LocalDateTime dealTime = LocalDateTime.now();
+
         //清除历史结果
+        SsStatementResultDTO ssStatementResultDTO = new SsStatementResultDTO();
+        ssStatementResultDTO.setStatementId(statementId);
+        ssStatementResultDTO.setModifiedBy("张三");
+        ssStatementResultDTO.setModifiedTime(dealTime);
+        baseMapper.cleanResultByStatementId(ssStatementResultDTO);
 
         //用于存放合并节点的map
         Map<String,SsStatementResult> resultPOMap = new HashMap<>();
@@ -62,12 +86,64 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
 
 
         //批量插入对比结果
-
-
+        if(Optional.ofNullable(resultPoList).isPresent()){
+            for(int i = 0;i < resultPoList.size();i++){
+                SsStatementResult result = resultPoList.get(i);
+                //放入基本信息
+                result.setStatementId(statementId);
+                result.setActive(true);
+                result.setModifiedBy(null);
+                result.setModifiedTime(null);
+                result.setCreatedBy("对账操作人张三");
+                result.setCreatedTime(dealTime);
+                baseMapper.insert(result);
+            }
+        }
         //更新主表字段
+        SsStatement ssStatement = new SsStatement();
+        ssStatement.setStatementId(statementId);
+        ssStatement = ssStatementMapper.selectOne(ssStatement);
+        //更新操作人字段
+        ssStatement.setStatementUserId("张三");
+        ssStatement.setStatementTime(dealTime);
+        //统计字段
+        //差异项目数
+        if(Optional.ofNullable(resultPoList).isPresent()){
+            ssStatement.setDiffSumByItem(resultPoList.size());
+        }else{
+            ssStatement.setDiffSumByItem(0);
+        }
+        //差异员工数
 
+        if(Optional.ofNullable(resultPoList).isPresent()){
+            Map<String,String> map = new HashMap<>();
+            int diffSumByEmp = 0;
+            for(int i = 0;i < resultPoList.size();i++){
+                String empId = resultPoList.get(i).getEmployeeId();
+                if(!map.containsKey(empId)){
+                    diffSumByEmp++;
+                    map.put(empId,null);
+                }
+             }
+            ssStatement.setDiffSumByEmp(diffSumByEmp);
+        }else{
+            ssStatement.setDiffSumByEmp(0);
+        }
+
+
+
+        ssStatementMapper.updateById(ssStatement);
     }
 
+    /**
+     * <p>Description: 将导入结果进行拆解</p>
+     *
+     * @author wengxk
+     * @date 2017-12-15
+     * @param resultPOMap 拆分结果暂存Map
+     * @param impDetailPOList 导入结果List
+     * @return dealImpDetailToResultModle 对账单主表ID
+     */
     private void dealImpDetailToResultModle(Map<String,SsStatementResult> resultPOMap, List<SsStatementImp> impDetailPOList){
         if(!Optional.ofNullable(impDetailPOList).isPresent()){
             return;
@@ -85,7 +161,7 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
                 if(resultPOMap.containsKey(key)){
                     resultPO = resultPOMap.get(key);
                 }else{
-                    resultPO = new SsStatementResult();
+                    resultPO = newSsStatementResult();
                     //写基础值
                     BeanUtils.copyProperties(impPO,resultPO);
                     //将项目ID和名字写入
@@ -108,7 +184,7 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
                 if(resultPOMap.containsKey(key)){
                     resultPO = resultPOMap.get(key);
                 }else{
-                    resultPO = new SsStatementResult();
+                    resultPO = newSsStatementResult();
                     //写基础值
                     BeanUtils.copyProperties(impPO,resultPO);
                     //将项目ID和名字写入
@@ -131,7 +207,7 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
                 if(resultPOMap.containsKey(key)){
                     resultPO = resultPOMap.get(key);
                 }else{
-                    resultPO = new SsStatementResult();
+                    resultPO = newSsStatementResult();
                     //写基础值
                     BeanUtils.copyProperties(impPO,resultPO);
                     //将项目ID和名字写入
@@ -154,7 +230,7 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
                 if(resultPOMap.containsKey(key)){
                     resultPO = resultPOMap.get(key);
                 }else{
-                    resultPO = new SsStatementResult();
+                    resultPO = newSsStatementResult();
                     //写基础值
                     BeanUtils.copyProperties(impPO,resultPO);
                     //将项目ID和名字写入
@@ -177,7 +253,7 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
                 if(resultPOMap.containsKey(key)){
                     resultPO = resultPOMap.get(key);
                 }else{
-                    resultPO = new SsStatementResult();
+                    resultPO = newSsStatementResult();
                     //写基础值
                     BeanUtils.copyProperties(impPO,resultPO);
                     //将项目ID和名字写入
@@ -195,7 +271,15 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
     }
 
 
-
+    /**
+     * <p>Description: 将系统结果进行拆解</p>
+     *
+     * @author wengxk
+     * @date 2017-12-15
+     * @param resultPOMap 拆分结果暂存Map
+     * @param changeDetailPOList 系统结果List
+     * @return dealImpDetailToResultModle 对账单主表ID
+     */
     private void dealChangeDetailToResultModle(Map<String,SsStatementResult> resultPOMap, List<SsMonthEmpChangeDetail> changeDetailPOList){
         if(!Optional.ofNullable(changeDetailPOList).isPresent()){
             return;
@@ -213,7 +297,7 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
                 if(resultPOMap.containsKey(key)){
                     resultPO = resultPOMap.get(key);
                 }else{
-                    resultPO = new SsStatementResult();
+                    resultPO = newSsStatementResult();
                     //写基础值
                     BeanUtils.copyProperties(changePO,resultPO);
                     //将项目ID和名字写入
@@ -236,7 +320,7 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
                 if(resultPOMap.containsKey(key)){
                     resultPO = resultPOMap.get(key);
                 }else{
-                    resultPO = new SsStatementResult();
+                    resultPO = newSsStatementResult();
                     //写基础值
                     BeanUtils.copyProperties(changePO,resultPO);
                     //将项目ID和名字写入
@@ -259,7 +343,7 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
                 if(resultPOMap.containsKey(key)){
                     resultPO = resultPOMap.get(key);
                 }else{
-                    resultPO = new SsStatementResult();
+                    resultPO = newSsStatementResult();
                     //写基础值
                     BeanUtils.copyProperties(changePO,resultPO);
                     //将项目ID和名字写入
@@ -282,7 +366,7 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
                 if(resultPOMap.containsKey(key)){
                     resultPO = resultPOMap.get(key);
                 }else{
-                    resultPO = new SsStatementResult();
+                    resultPO = newSsStatementResult();
                     //写基础值
                     BeanUtils.copyProperties(changePO,resultPO);
                     //将项目ID和名字写入
@@ -290,7 +374,7 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
                     resultPO.setProjectTypeName("单位补缴");
                 }
                 //将金额加入导入金额字段
-                resultPO.getSsAmount().add(changePO.getComCompensateAmount());
+                resultPO.setSsAmount(resultPO.getSsAmount().add(changePO.getComCompensateAmount()));
                 //将节点放入map
                 resultPOMap.put(key,resultPO);
             }
@@ -305,7 +389,7 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
                 if(resultPOMap.containsKey(key)){
                     resultPO = resultPOMap.get(key);
                 }else{
-                    resultPO = new SsStatementResult();
+                    resultPO =  newSsStatementResult();
                     //写基础值
                     BeanUtils.copyProperties(changePO,resultPO);
                     //将项目ID和名字写入
@@ -323,6 +407,14 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
 
     }
 
+    /**
+     * <p>Description: 将拆分结果进行计算</p>
+     *
+     * @author wengxk
+     * @date 2017-12-15
+     * @param resultPOMap 拆分结果暂存Map
+     * @return List<SsStatementResult> 计算差异结果
+     */
     private List<SsStatementResult> calculateResultDiff(Map<String,SsStatementResult> resultPOMap){
         //计算后需要存储的List
         List<SsStatementResult> resultPoList = new ArrayList<>();
@@ -335,11 +427,6 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
 
             //若差值不为0,则放入计算后需要存储的List中
             if(BigDecimal.ZERO.compareTo(diffAmount) != 0){
-                //放入基本信息
-                resultPO.setActive(true);
-                resultPO.setCreatedBy("对账操作人");
-                resultPO.setModifiedBy(null);
-                resultPO.setModifiedTime(null);
                 //存入List
                 resultPoList.add(resultPO);
             }

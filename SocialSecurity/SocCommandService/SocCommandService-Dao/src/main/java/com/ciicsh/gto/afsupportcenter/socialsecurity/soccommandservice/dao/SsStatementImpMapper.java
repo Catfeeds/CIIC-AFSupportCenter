@@ -23,5 +23,5 @@ public interface SsStatementImpMapper extends BaseMapper<SsStatementImp> {
      * @param statementId 社保汇总数据主表ID
      * @return   List<SsStatementImp>
      */
-    List<SsStatementImp> getImpDetailByStatementId(String statementId);
+    List<SsStatementImp> getImpDetailByStatementId(Long statementId);
 }

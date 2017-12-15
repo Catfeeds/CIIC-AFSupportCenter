@@ -36,6 +36,6 @@ public interface SsMonthEmpChangeDetailMapper extends BaseMapper<SsMonthEmpChang
      * @param statementId 社保汇总数据主表ID
      * @return   List<SsMonthEmpChangeDetail>
      */
-    List<SsMonthEmpChangeDetail> serachMonthEmpChangeDetailPOByStatementId(String statementId);
+    List<SsMonthEmpChangeDetail> serachMonthEmpChangeDetailPOByStatementId(Long statementId);
 
 }

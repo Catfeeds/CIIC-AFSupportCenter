@@ -25,4 +25,22 @@ public interface ISsStatementResultService extends IService<SsStatementResult> {
      * @return  PageRows<SsStatementDTO>
      */
     List<SsStatementResultDTO> statementResultQuery(SsStatementResultDTO ssStatementResultDTO);
+
+    /**
+     * <p>Description: 计算对账</p>
+     *
+     * @author wengxk
+     * @date 2017-12-15
+     * @param statementId 对账单主表ID
+     */
+    void calculateSstatementResult(Long statementId);
+
+    /**
+     * <p>Description: 创建一个对账结果对象,并初始化数值变量</p>
+     *
+     * @author wengxk
+     * @date 2017-12-15
+     * @return  SsStatementResult
+     */
+    SsStatementResult newSsStatementResult();
 }
