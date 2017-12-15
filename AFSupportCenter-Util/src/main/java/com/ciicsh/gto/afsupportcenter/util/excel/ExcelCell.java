@@ -18,12 +18,12 @@ public @interface ExcelCell {
     String value();
 
     /**
-     * 转换
+     * 转换器
      */
     Class<? extends ExcelConvert> converter() default ExcelConvert.class;
 
     /**
-     * 排序
+     * 序号
      */
     int order() default 9999;
 }
