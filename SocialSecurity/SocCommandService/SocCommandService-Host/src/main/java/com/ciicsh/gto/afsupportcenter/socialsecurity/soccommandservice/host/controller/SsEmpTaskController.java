@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,6 +64,23 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
         }
         boolean isSuccess = business.updateBatchById(list);
         return JsonResultKit.of(isSuccess);
+    }
+
+
+    /**
+     * excel 导出
+     */
+    @Log("导出 excel")
+    @PostMapping("/exprotExcel")
+    public void exprotExcel(HttpServletRequest request, HttpServletResponse response, SsEmpTaskDTO dto) {
+        // 组织参数
+        PageInfo pageInfo = new PageInfo();
+        pageInfo.setPageNum(1);
+        pageInfo.setPageSize(2000);// 默认最多查询 2000 条
+        pageInfo.put(dto);
+        // 查询
+        JsonResult<List<SsEmpTaskDTO>> jsonResult = employeeOperatorQuery(pageInfo);
+        // 导出
     }
 
     /**

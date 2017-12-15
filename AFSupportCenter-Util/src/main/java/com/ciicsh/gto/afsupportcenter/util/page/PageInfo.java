@@ -81,6 +81,12 @@ public class PageInfo implements Serializable {
         params.putAll(m);
     }
 
+    public <V> V put(V bean) {
+        JSONObject jsonObject = JsonKit.castToObject(bean, JSONObject.class);
+        this.putAll(jsonObject);
+        return bean;
+    }
+
     /**
      * 自定函数，方便替换算法
      *
