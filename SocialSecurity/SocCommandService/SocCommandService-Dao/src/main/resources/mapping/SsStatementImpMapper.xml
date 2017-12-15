@@ -3,10 +3,10 @@
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsStatementImpMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatementImp">
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatementImpPO">
         <id column="statement_imp_id" property="statementImpId" />
         <result column="statement_id" property="statementId" />
-        <result column="emp_num" property="empNum" />
+        <result column="employee_id" property="employeeId" />
         <result column="emp_name" property="empName" />
         <result column="change_type" property="changeType" />
         <result column="change_type_name" property="changeTypeName" />
@@ -24,5 +24,17 @@
         <result column="created_by" property="createdBy" />
         <result column="modified_by" property="modifiedBy" />
     </resultMap>
+
+    <select id="getImpDetailByStatementId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+            ss_statement_imp T1
+        WHERE
+            T1.is_active = '1'
+            AND T1.statement_id = #{statementId,jdbcType=VARCHAR}
+    </select>
+
+
 
 </mapper>

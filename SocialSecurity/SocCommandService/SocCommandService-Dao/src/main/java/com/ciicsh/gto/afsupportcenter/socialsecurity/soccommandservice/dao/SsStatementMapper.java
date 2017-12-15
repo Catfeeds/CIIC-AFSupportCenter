@@ -1,7 +1,11 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatement;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsEmpTaskDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatementPO;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
  * <p>
@@ -11,6 +15,27 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @author HuangXing
  * @since 2017-12-01
  */
-public interface SsStatementMapper extends BaseMapper<SsStatement> {
+public interface SsStatementMapper extends BaseMapper<SsStatementPO> {
+
+    /**
+     * <p>Description: 查询对账单主表</p>
+     *
+     * @author wengxk
+     * @date 2017-12-08
+     * @param ssStatementDTO 对账单查询实体
+     * @return  PageRows<SsStatementPO>
+     */
+    List<SsStatementDTO> statementQuery(SsStatementDTO ssStatementDTO);
+
+    /**
+     * <p>Description: 根据ID查询对账单主表</p>
+     *
+     * @author wengxk
+     * @date 2017-12-11
+     * @param ssStatementDTO 对账单查询实体
+     * @return  SsStatementPO
+     */
+    SsStatementDTO serachStatementByStatementId(SsStatementDTO ssStatementDTO);
+
 
 }

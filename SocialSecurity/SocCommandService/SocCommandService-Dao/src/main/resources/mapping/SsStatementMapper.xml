@@ -3,7 +3,7 @@
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsStatementMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatement">
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatementPO">
         <id column="statement_id" property="statementId" />
         <result column="com_account_id" property="comAccountId" />
         <result column="ss_month" property="ssMonth" />
@@ -21,5 +21,81 @@
         <result column="created_by" property="createdBy" />
         <result column="modified_by" property="modifiedBy" />
     </resultMap>
+
+    <!-- 表单展示查询映射结果 -->
+    <resultMap id="DtoResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementDTO">
+        <id column="statement_id" property="statementId" />
+        <result column="com_account_id" property="comAccountId" />
+        <result column="com_account_name" property="comAccountName" />
+        <result column="ss_month" property="ssMonth" />
+        <result column="imp_file_type" property="impFileType" />
+        <result column="imp_file_name" property="impFileName" />
+        <result column="imp_file_path" property="impFilePath" />
+        <result column="statement_user_id" property="statementUserId" />
+        <result column="statement_time" property="statementTime" />
+        <result column="imp_record_sum" property="impRecordSum" />
+        <result column="diff_sum_by_emp" property="diffSumByEmp" />
+        <result column="diff_sum_by_item" property="diffSumByItem" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
+
+    <select id="statementQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementDTO" resultMap="DtoResultMap">
+        SELECT
+          T1.*,T2.com_account_name
+        FROM
+          ss_statement T1
+          LEFT JOIN
+            ss_com_account T2
+          ON
+            T2.com_account_id = T1.com_account_id
+            AND T2.is_active = '1'
+        WHERE
+          1=1
+          AND T1.is_active = '1'
+            <if test = "statementId != null and statementId != ''">
+                AND T1.statement_id = #{statementId,jdbcType=VARCHAR}
+            </if>
+            <if test = "ssMonth != null and ssMonth != ''">
+                AND T1.ss_month = #{ssMonth,jdbcType=VARCHAR}
+            </if>
+            <if test = "comAccountId != null and comAccountId != ''">
+                AND T1.com_account_id = #{comAccountId,jdbcType=VARCHAR}
+            </if>
+            <if test = "impFileType != null and impFileType != ''">
+                AND T1.imp_file_type = #{impFileType,jdbcType=VARCHAR}
+            </if>
+            <if test = "maxDiffSumByEmp != null and maxDiffSumByEmp != ''">
+
+                <![CDATA[
+                    AND T1.diff_sum_by_emp <= #{maxDiffSumByEmp,jdbcType=INTEGER}
+                ]]>
+            </if>
+            <if test = "minDiffSumByEmp != null and minDiffSumByEmp != ''">
+                <![CDATA[
+                    AND T1.diff_sum_by_emp >= #{minDiffSumByEmp,jdbcType=INTEGER}
+                 ]]>
+            </if>
+    </select>
+
+    <select id="serachStatementByStatementId" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementDTO" resultMap="DtoResultMap">
+        SELECT
+          T1.*,T2.com_account_name
+        FROM
+          ss_statement T1
+        LEFT JOIN
+          ss_com_account T2
+        ON
+          T2.com_account_id = T1.com_account_id
+          AND T2.is_active = '1'
+        WHERE
+          1=1
+          AND T1.is_active = '1'
+          AND T1.statement_id = #{statementId,jdbcType=VARCHAR}
+    </select>
+
 
 </mapper>

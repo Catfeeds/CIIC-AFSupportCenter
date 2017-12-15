@@ -1,74 +1,76 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import com.baomidou.mybatisplus.annotations.TableId;
-import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
  * 雇员月度变更主表
  * </p>
  *
- * @author HuangXing
- * @since 2017-12-12
+ * @author wengxk
+ * @since 2017-12-07
  */
-@TableName("ss_month_emp_change")
-public class SsMonthEmpChange implements Serializable {
+public class SsMonthEmpChangeDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * 记录Id
      */
-	@TableId(value="month_emp_change_id", type= IdType.AUTO)
 	private Long monthEmpChangeId;
+    /**
+     * 外键：对账单Id
+     */
+    private String statementId;
     /**
      * 社保缴费月份，格式是yyyyMM
      */
-	@TableField("ss_month")
 	private String ssMonth;
     /**
      * 上次计算时间
      */
-	@TableField("last_compute_time")
 	private LocalDateTime lastComputeTime;
+    /**
+     * 变更汇总表类型:YYS\\GSY
+     */
+	private String computeType;
     /**
      * 计算用户Id
      */
-	@TableField("compute_user_id")
-	private String computeUserId;
+    private String computeUserId;
+    /**
+     * 外键, 企业社保账户名
+     */
+    private String comAccountName;
     /**
      * 客户账号Id
      */
-	@TableField("com_account_id")
 	private Long comAccountId;
     /**
      * 是否可用
      */
-	@TableField("is_active")
 	private Boolean isActive;
     /**
      * 创建时间
      */
-	@TableField("created_time")
 	private LocalDateTime createdTime;
     /**
      * 最后更新时间
      */
-	@TableField("modified_time")
 	private LocalDateTime modifiedTime;
     /**
      * 创建者登录名
      */
-	@TableField("created_by")
 	private String createdBy;
     /**
      * 修改者登录名
      */
-	@TableField("modified_by")
 	private String modifiedBy;
 
 
@@ -154,7 +156,7 @@ public class SsMonthEmpChange implements Serializable {
 
 	@Override
 	public String toString() {
-		return "SsMonthEmpChange{" +
+		return "SsMonthEmpChangePO{" +
 			", monthEmpChangeId=" + monthEmpChangeId +
 			", ssMonth=" + ssMonth +
 			", lastComputeTime=" + lastComputeTime +
@@ -167,4 +169,28 @@ public class SsMonthEmpChange implements Serializable {
 			", modifiedBy=" + modifiedBy +
 			"}";
 	}
+
+    public String getStatementId() {
+        return statementId;
+    }
+
+    public void setStatementId(String statementId) {
+        this.statementId = statementId;
+    }
+
+    public String getComputeType() {
+        return computeType;
+    }
+
+    public void setComputeType(String computeType) {
+        this.computeType = computeType;
+    }
+
+    public String getComAccountName() {
+        return comAccountName;
+    }
+
+    public void setComAccountName(String comAccountName) {
+        this.comAccountName = comAccountName;
+    }
 }
