@@ -50,8 +50,8 @@ public class SsComAccountController extends BasicController<ISsComAccountService
      */
     @RequestMapping("/accountQuery")
     @Log("查询")
-    public JsonResult<List<SsComAccount>> accountQuery(PageInfo pageInfo) {
-        PageRows<SsComAccount> pageRows = business.accountQuery(pageInfo);
+    public JsonResult<List<SsComAccountDTO>> accountQuery(PageInfo pageInfo) {
+        PageRows<SsComAccountDTO> pageRows = business.accountQuery(pageInfo);
         return JsonResultKit.ofPage(pageRows);
     }
 }

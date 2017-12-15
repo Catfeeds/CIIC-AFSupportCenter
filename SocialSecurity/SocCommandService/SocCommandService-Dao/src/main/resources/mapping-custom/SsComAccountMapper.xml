@@ -23,7 +23,7 @@
             and EXISTS(select 1 from ss_emp_task et LEFT JOIN ss_emp_archive ea on et.emp_archive_id = ea.emp_archive_id where et.is_active = 1 and ea.company_id = c.company_id and et.emp_task_id = #{empTaskId})
     </select>
 
-    <select id="accountQuery" resultMap="BaseResultMap">
+    <select id="accountQuery" resultMap="BaseResultMapDTO">
         select * from ss_com_account ca
         <where>
             and ca.is_active = 1

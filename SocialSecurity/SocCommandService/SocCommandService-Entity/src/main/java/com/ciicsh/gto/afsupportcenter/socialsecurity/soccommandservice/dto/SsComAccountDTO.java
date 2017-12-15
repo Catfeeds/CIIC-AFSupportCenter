@@ -14,6 +14,8 @@ public class SsComAccountDTO extends SsComAccount {
     // 客户名称
     private String title;
 
+
+
     public SsAccountRatio getSsAccountRatio() {
         return ssAccountRatio;
     }

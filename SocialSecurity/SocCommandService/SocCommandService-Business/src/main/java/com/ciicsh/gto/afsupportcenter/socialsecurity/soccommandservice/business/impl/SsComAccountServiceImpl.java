@@ -28,8 +28,8 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
     }
 
     @Override
-    public PageRows<SsComAccount> accountQuery(PageInfo pageInfo) {
-        SsComAccount dto = pageInfo.toJavaObject(SsComAccount.class);
+    public PageRows<SsComAccountDTO> accountQuery(PageInfo pageInfo) {
+        SsComAccountDTO dto = pageInfo.toJavaObject(SsComAccountDTO.class);
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.accountQuery(dto));
     }
 }

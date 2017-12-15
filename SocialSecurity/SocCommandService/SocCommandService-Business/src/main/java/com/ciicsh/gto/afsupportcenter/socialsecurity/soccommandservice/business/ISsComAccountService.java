@@ -31,5 +31,5 @@ public interface ISsComAccountService extends IService<SsComAccount> {
      * @param pageInfo
      * @return
      */
-    PageRows<SsComAccount> accountQuery(PageInfo pageInfo);
+    PageRows<SsComAccountDTO> accountQuery(PageInfo pageInfo);
 }

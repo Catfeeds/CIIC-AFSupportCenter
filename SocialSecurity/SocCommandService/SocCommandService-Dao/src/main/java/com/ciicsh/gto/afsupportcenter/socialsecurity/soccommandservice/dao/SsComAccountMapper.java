@@ -32,5 +32,5 @@ public interface SsComAccountMapper extends BaseMapper<SsComAccount> {
      * @param dto
      * @return
      */
-    List<SsComAccount> accountQuery(SsComAccount dto);
+    List<SsComAccountDTO> accountQuery(SsComAccountDTO dto);
 }
