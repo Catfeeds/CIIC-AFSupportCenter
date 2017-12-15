@@ -1,11 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementResultDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatementResultPO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatementResult;
 import com.baomidou.mybatisplus.service.IService;
-import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
-import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 
 import java.util.List;
 
@@ -17,7 +14,7 @@ import java.util.List;
  * @author HuangXing
  * @since 2017-12-01
  */
-public interface ISsStatementResultService extends IService<SsStatementResultPO> {
+public interface ISsStatementResultService extends IService<SsStatementResult> {
 
     /**
      * <p>Description: 查询对账单结果表</p>

@@ -9,7 +9,7 @@
         <result column="seq" property="seq" />
         <result column="payment_item_name" property="paymentItemName" />
         <result column="ss_type" property="ssType" />
-        <result column="ss_name" property="ssTypeName" />
+        <result column="ss_name" property="ssName" />
         <result column="amount" property="amount" />
         <result column="is_active" property="isActive" />
         <result column="created_time" property="createdTime" />

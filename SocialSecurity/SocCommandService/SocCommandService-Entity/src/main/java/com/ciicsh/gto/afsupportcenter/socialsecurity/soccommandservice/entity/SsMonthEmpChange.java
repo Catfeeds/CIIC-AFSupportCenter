@@ -13,10 +13,10 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-12
+ * @since 2017-12-15
  */
 @TableName("ss_month_emp_change")
-public class SsMonthEmpChangePO implements Serializable {
+public class SsMonthEmpChange implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,8 +28,8 @@ public class SsMonthEmpChangePO implements Serializable {
     /**
      * 外键：对账单Id
      */
-    @TableField("statement_id")
-    private String statementId;
+	@TableField("statement_id")
+	private Long statementId;
     /**
      * 社保缴费月份，格式是yyyyMM
      */
@@ -41,15 +41,15 @@ public class SsMonthEmpChangePO implements Serializable {
 	@TableField("last_compute_time")
 	private LocalDateTime lastComputeTime;
     /**
-     * 变更汇总表类型:YYS\\GSY
+     * 计算用户Id
+     */
+	@TableField("compute_user_id")
+	private String computeUserId;
+    /**
+     * 变更汇总表类型:YYS\GSY
      */
 	@TableField("compute_type")
 	private String computeType;
-    /**
-     * 计算用户Id
-     */
-    @TableField("compute_user_id")
-    private String computeUserId;
     /**
      * 客户账号Id
      */
@@ -90,6 +90,14 @@ public class SsMonthEmpChangePO implements Serializable {
 		this.monthEmpChangeId = monthEmpChangeId;
 	}
 
+	public Long getStatementId() {
+		return statementId;
+	}
+
+	public void setStatementId(Long statementId) {
+		this.statementId = statementId;
+	}
+
 	public String getSsMonth() {
 		return ssMonth;
 	}
@@ -112,6 +120,14 @@ public class SsMonthEmpChangePO implements Serializable {
 
 	public void setComputeUserId(String computeUserId) {
 		this.computeUserId = computeUserId;
+	}
+
+	public String getComputeType() {
+		return computeType;
+	}
+
+	public void setComputeType(String computeType) {
+		this.computeType = computeType;
 	}
 
 	public Long getComAccountId() {
@@ -164,11 +180,13 @@ public class SsMonthEmpChangePO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "SsMonthEmpChangePO{" +
+		return "SsMonthEmpChange{" +
 			", monthEmpChangeId=" + monthEmpChangeId +
+			", statementId=" + statementId +
 			", ssMonth=" + ssMonth +
 			", lastComputeTime=" + lastComputeTime +
 			", computeUserId=" + computeUserId +
+			", computeType=" + computeType +
 			", comAccountId=" + comAccountId +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
@@ -177,20 +195,4 @@ public class SsMonthEmpChangePO implements Serializable {
 			", modifiedBy=" + modifiedBy +
 			"}";
 	}
-
-    public String getStatementId() {
-        return statementId;
-    }
-
-    public void setStatementId(String statementId) {
-        this.statementId = statementId;
-    }
-
-    public String getComputeType() {
-        return computeType;
-    }
-
-    public void setComputeType(String computeType) {
-        this.computeType = computeType;
-    }
 }

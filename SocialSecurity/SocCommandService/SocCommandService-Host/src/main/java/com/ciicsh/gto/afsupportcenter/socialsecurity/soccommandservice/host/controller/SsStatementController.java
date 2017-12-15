@@ -37,7 +37,7 @@ public class SsStatementController  extends BasicController<ISsStatementService>
     @PostMapping("/statementQuery")
     public JsonResult<List<SsStatementDTO>> statementQuery(PageInfo pageInfo) {
 
-       /* PageRows<SsStatementPO> pagePORows = business.statementQuery(pageInfo);
+       /* PageRows<SsStatement> pagePORows = business.statementQuery(pageInfo);
         PageRows<SsStatementDTO> pageRows = new PageRows<SsStatementDTO>();
         BeanUtils.copyProperties(pagePORows,pageRows);*/
         PageRows<SsStatementDTO> pageRows =business.statementQuery(pageInfo);

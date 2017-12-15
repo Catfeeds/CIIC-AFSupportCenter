@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsMonthEmpChangeDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsMonthEmpChangeDetailDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthEmpChangeDetailPO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthEmpChangeDetail;
 import com.baomidou.mybatisplus.service.IService;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
  * @author HuangXing
  * @since 2017-12-07
  */
-public interface ISsMonthEmpChangeDetailService extends IService<SsMonthEmpChangeDetailPO> {
+public interface ISsMonthEmpChangeDetailService extends IService<SsMonthEmpChangeDetail> {
     /**
      * <p>Description: 根据对账单ID展示社保汇总明细数据</p>
      *

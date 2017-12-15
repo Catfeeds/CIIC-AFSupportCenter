@@ -1,8 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsMonthEmpChangeDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthEmpChangePO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthEmpChange;
 import com.baomidou.mybatisplus.service.IService;
 
 /**
@@ -13,7 +12,7 @@ import com.baomidou.mybatisplus.service.IService;
  * @author HuangXing
  * @since 2017-12-07
  */
-public interface ISsMonthEmpChangeService extends IService<SsMonthEmpChangePO> {
+public interface ISsMonthEmpChangeService extends IService<SsMonthEmpChange> {
 
     /**
      * <p>Description: 根据对账单ID查询社保汇总数据主表</p>

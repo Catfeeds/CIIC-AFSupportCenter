@@ -7,7 +7,7 @@
         <id column="month_com_pay_item_id" property="monthComPayItemId" />
         <result column="month_com_pay_detail_id" property="monthComPayDetailId" />
         <result column="ss_type" property="ssType" />
-        <result column="ss_name" property="ssTypeName" />
+        <result column="ss_name" property="ssName" />
         <result column="com_amount" property="comAmount" />
         <result column="emp_amount" property="empAmount" />
         <result column="sub_total_amount" property="subTotalAmount" />

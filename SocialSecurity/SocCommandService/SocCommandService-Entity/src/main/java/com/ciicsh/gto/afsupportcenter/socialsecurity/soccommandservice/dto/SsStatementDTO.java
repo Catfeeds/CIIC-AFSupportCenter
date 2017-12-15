@@ -232,7 +232,7 @@ public class SsStatementDTO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "SsStatementPO{" +
+		return "SsStatement{" +
 			", statementId=" + statementId +
 			", comAccountId=" + comAccountId +
 			", ssMonth=" + ssMonth +

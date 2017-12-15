@@ -13,10 +13,10 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-12
+ * @since 2017-12-15
  */
 @TableName("ss_statement")
-public class SsStatementPO implements Serializable {
+public class SsStatement implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -232,7 +232,7 @@ public class SsStatementPO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "SsStatementPO{" +
+		return "SsStatement{" +
 			", statementId=" + statementId +
 			", comAccountId=" + comAccountId +
 			", ssMonth=" + ssMonth +

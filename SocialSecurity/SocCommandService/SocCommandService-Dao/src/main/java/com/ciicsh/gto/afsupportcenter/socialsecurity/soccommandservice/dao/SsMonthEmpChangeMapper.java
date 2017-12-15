@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsMonthEmpChangeDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthEmpChangePO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthEmpChange;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**
@@ -12,7 +12,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @author HuangXing
  * @since 2017-12-07
  */
-public interface SsMonthEmpChangeMapper extends BaseMapper<SsMonthEmpChangePO> {
+public interface SsMonthEmpChangeMapper extends BaseMapper<SsMonthEmpChange> {
 
     /**
      * <p>Description: 根据对账单ID查询社保汇总数据主表</p>

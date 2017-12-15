@@ -1,8 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsEmpTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatementPO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatement;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsStatementMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsStatementService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -20,7 +19,7 @@ import org.springframework.stereotype.Service;
  * @since 2017-12-11
  */
 @Service
-public class SsStatementServiceImpl extends ServiceImpl<SsStatementMapper, SsStatementPO> implements ISsStatementService {
+public class SsStatementServiceImpl extends ServiceImpl<SsStatementMapper, SsStatement> implements ISsStatementService {
 
     @Override
     public PageRows<SsStatementDTO> statementQuery(PageInfo pageInfo) {

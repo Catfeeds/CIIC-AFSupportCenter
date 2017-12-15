@@ -156,7 +156,7 @@ public class SsMonthEmpChangeDTO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "SsMonthEmpChangePO{" +
+		return "SsMonthEmpChange{" +
 			", monthEmpChangeId=" + monthEmpChangeId +
 			", ssMonth=" + ssMonth +
 			", lastComputeTime=" + lastComputeTime +
