@@ -23,7 +23,7 @@ import java.util.*;
 public class SsMonthEmpChangeDetailServiceImpl extends ServiceImpl<SsMonthEmpChangeDetailMapper, SsMonthEmpChangeDetailPO> implements ISsMonthEmpChangeDetailService {
     @Override
     public List<SsMonthEmpChangeDetailDTO> showMonthEmpChangeDetailByStatementId(SsMonthEmpChangeDTO ssMonthEmpChangeDTO) {
-        //通过条件获得社保汇总明细数据PO的数据
+        //通过条件获得社保汇总明细数据
         List<SsMonthEmpChangeDetailDTO> detailDTOList = baseMapper.serachMonthEmpChangeDetailByStatementId(ssMonthEmpChangeDTO);
 
         //将原始DTO通过业务逻辑转换成页面展示的DTO
@@ -63,7 +63,15 @@ public class SsMonthEmpChangeDetailServiceImpl extends ServiceImpl<SsMonthEmpCha
 
         return resultDTOList;
     }
-    
+    /**
+     * <p>Description: 将dto放入map中,如果有相同的key的dto已存在,则返回已存在的dto</p>
+     *
+     * @author wengxk
+     * @date 2017-12-13
+     * @param map 存放数据集的map
+     * @param dto 放入的dto
+     * @return   SsMonthEmpChangeDetailDTO
+     */
     private SsMonthEmpChangeDetailDTO getDtoOfMap ( Map<String,SsMonthEmpChangeDetailDTO> map,SsMonthEmpChangeDetailDTO dto){
         //拼装key
         String key = dto.getEmployeeId() + '-' + dto.getChangeType();
@@ -77,6 +85,14 @@ public class SsMonthEmpChangeDetailServiceImpl extends ServiceImpl<SsMonthEmpCha
             return dto;
         }
     }
+    /**
+     * <p>Description: 将dto中的值赋值到节点特定的位置中</p>
+     *
+     * @author wengxk
+     * @date 2017-12-13
+     * @param putDto 存放值节点
+     * @param getDto 取值节点
+     */
     private void putDetailValue(SsMonthEmpChangeDetailDTO putDto,SsMonthEmpChangeDetailDTO getDto){
         //定义社保类型
         //养老保险
@@ -98,8 +114,8 @@ public class SsMonthEmpChangeDetailServiceImpl extends ServiceImpl<SsMonthEmpCha
         if(PENSION == getDto.getSsType()){
             putDto.setComAmountPension(getDto.getComAmount());
             putDto.setEmpAmountPension(getDto.getEmpAmount());
-            putDto.setComCompensatedAmountPension(getDto.getComCompensatedAmount());
-            putDto.setEmpCompensatedAmountPension(getDto.getEmpCompensatedAmount());
+            putDto.setComCompensatedAmountPension(getDto.getComCompensateAmount());
+            putDto.setEmpCompensatedAmountPension(getDto.getEmpCompensateAmount());
             putDto.setOnePaymentPension(getDto.getOnePayment());
         }
 
@@ -107,32 +123,32 @@ public class SsMonthEmpChangeDetailServiceImpl extends ServiceImpl<SsMonthEmpCha
         if(MEDICAL == getDto.getSsType()){
             putDto.setComAmountMedical(getDto.getComAmount());
             putDto.setEmpAmountMedical(getDto.getEmpAmount());
-            putDto.setComCompensatedAmountMedical(getDto.getComCompensatedAmount());
-            putDto.setEmpCompensatedAmountMedical(getDto.getEmpCompensatedAmount());
+            putDto.setComCompensatedAmountMedical(getDto.getComCompensateAmount());
+            putDto.setEmpCompensatedAmountMedical(getDto.getEmpCompensateAmount());
         }
 
         //如果是失业
         if(UNEMPLOYMENT == getDto.getSsType()){
             putDto.setComAmountUnemployment(getDto.getComAmount());
             putDto.setEmpAmountUnemployment(getDto.getEmpAmount());
-            putDto.setComCompensatedAmountUnemployment(getDto.getComCompensatedAmount());
-            putDto.setEmpCompensatedAmountUnemployment(getDto.getEmpCompensatedAmount());
+            putDto.setComCompensatedAmountUnemployment(getDto.getComCompensateAmount());
+            putDto.setEmpCompensatedAmountUnemployment(getDto.getEmpCompensateAmount());
         }
 
         //如果是工伤
         if(ACCIDENT == getDto.getSsType()){
             putDto.setComAmountAccident(getDto.getComAmount());
             putDto.setEmpAmountAccident(getDto.getEmpAmount());
-            putDto.setComCompensatedAmountAccident(getDto.getComCompensatedAmount());
-            putDto.setEmpCompensatedAmountAccident(getDto.getEmpCompensatedAmount());
+            putDto.setComCompensatedAmountAccident(getDto.getComCompensateAmount());
+            putDto.setEmpCompensatedAmountAccident(getDto.getEmpCompensateAmount());
         }
 
         //如果是生育
         if(MATERNITY == getDto.getSsType()){
             putDto.setComAmountMaternity(getDto.getComAmount());
             putDto.setEmpAmountMaternity(getDto.getEmpAmount());
-            putDto.setComCompensatedAmountMaternity(getDto.getComCompensatedAmount());
-            putDto.setEmpCompensatedAmountMaternity(getDto.getEmpCompensatedAmount());
+            putDto.setComCompensatedAmountMaternity(getDto.getComCompensateAmount());
+            putDto.setEmpCompensatedAmountMaternity(getDto.getEmpCompensateAmount());
         }
     }
 

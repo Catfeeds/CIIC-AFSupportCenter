@@ -120,6 +120,13 @@ public class SsStatementResultPO implements Serializable {
 	private String modifiedBy;
 
 
+    public SsStatementResultPO(){
+        this.impAmount = new BigDecimal(0);
+        this.ssAmount = new BigDecimal(0);
+        this.diffAmount = new BigDecimal(0);
+    }
+
+
     /**
      * 获取记录Id
      *

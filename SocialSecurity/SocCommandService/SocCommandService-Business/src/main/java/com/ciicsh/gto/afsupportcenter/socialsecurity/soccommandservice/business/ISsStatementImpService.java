@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatementImp;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatementImpPO;
 import com.baomidou.mybatisplus.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.service.IService;
  * @author HuangXing
  * @since 2017-12-01
  */
-public interface ISsStatementImpService extends IService<SsStatementImp> {
+public interface ISsStatementImpService extends IService<SsStatementImpPO> {
 
 }

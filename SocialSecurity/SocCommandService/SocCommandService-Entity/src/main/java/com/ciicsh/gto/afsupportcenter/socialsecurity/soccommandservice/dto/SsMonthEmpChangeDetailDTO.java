@@ -1,13 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
-import com.baomidou.mybatisplus.enums.IdType;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -57,7 +51,7 @@ public class SsMonthEmpChangeDetailDTO implements Serializable {
     /**
      * 社保险种名称
      */
-	private String ssName;
+	private String ssTypeName;
     /**
      * 企业金额
      */
@@ -69,11 +63,11 @@ public class SsMonthEmpChangeDetailDTO implements Serializable {
     /**
      * 客户补缴金额
      */
-	private BigDecimal comCompensatedAmount;
+	private BigDecimal comCompensateAmount;
     /**
      * 雇员补缴金额
      */
-	private BigDecimal empCompensatedAmount;
+	private BigDecimal empCompensateAmount;
     /**
      * 一次性支付
      */
@@ -227,12 +221,12 @@ public class SsMonthEmpChangeDetailDTO implements Serializable {
 		this.ssType = ssType;
 	}
 
-	public String getSsName() {
-		return ssName;
+	public String getSsTypeName() {
+		return ssTypeName;
 	}
 
-	public void setSsName(String ssName) {
-		this.ssName = ssName;
+	public void setSsTypeName(String ssTypeName) {
+		this.ssTypeName = ssTypeName;
 	}
 
 	public BigDecimal getComAmount() {
@@ -251,20 +245,20 @@ public class SsMonthEmpChangeDetailDTO implements Serializable {
 		this.empAmount = empAmount;
 	}
 
-	public BigDecimal getComCompensatedAmount() {
-		return comCompensatedAmount;
+	public BigDecimal getComCompensateAmount() {
+		return comCompensateAmount;
 	}
 
-	public void setComCompensatedAmount(BigDecimal comCompensatedAmount) {
-		this.comCompensatedAmount = comCompensatedAmount;
+	public void setComCompensateAmount(BigDecimal comCompensateAmount) {
+		this.comCompensateAmount = comCompensateAmount;
 	}
 
-	public BigDecimal getEmpCompensatedAmount() {
-		return empCompensatedAmount;
+	public BigDecimal getEmpCompensateAmount() {
+		return empCompensateAmount;
 	}
 
-	public void setEmpCompensatedAmount(BigDecimal empCompensatedAmount) {
-		this.empCompensatedAmount = empCompensatedAmount;
+	public void setEmpCompensateAmount(BigDecimal empCompensateAmount) {
+		this.empCompensateAmount = empCompensateAmount;
 	}
 
 	public BigDecimal getOnePayment() {
