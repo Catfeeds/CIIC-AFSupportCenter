@@ -22,7 +22,7 @@
             <artifactId>spring-cloud-starter-eureka-server</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- æ¨¡æ¿å¼•æ“Ž -->
+        <!-- Ä£°åÒýÇæ -->
         <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity-engine-core</artifactId>

@@ -31,11 +31,24 @@
             <artifactId>afsupportcenter-util</artifactId>
             <version>1.0.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
+            <artifactId>afsupportcenter-socialsecurity-soccommandservice-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>
-        <finalName>queryingservice-host</finalName>
+        <finalName>gt1.afsupportcenter.soccommandservice-host</finalName>
         <resources>
+            <resource>
+                <directory>../SocCommandService-Dao/src/main/resources/</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/mapper/*.xml</include>
+                </includes>
+            </resource>
             <resource>
                 <directory>src/main/resources/</directory>
                 <filtering>true</filtering>

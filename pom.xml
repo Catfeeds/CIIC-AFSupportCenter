@@ -235,7 +235,7 @@
     </dependencies>
 
     <build>
-        <finalName>gt1.productcenter</finalName>
+        <finalName>gt1.afsupportcenter</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -274,6 +274,72 @@
                 <module>./SocialSecurity/SocQueryService/SocQueryService-Dao</module>
                 <module>./SocialSecurity/SocQueryService/SocQueryService-Business</module>
                 <module>./SocialSecurity/SocQueryService/SocQueryService-Entity</module>-->
+
+        <module>./HouseFund/FundQueryService/FundQueryService-Host</module>
+        <module>./HouseFund/FundQueryService/FundQueryService-Api</module>
+        <module>./HouseFund/FundQueryService/FundQueryService-Dao</module>
+        <module>./HouseFund/FundQueryService/FundQueryService-Business</module>
+        <module>./HouseFund/FundQueryService/FundQueryService-Entity</module>
+
+        <module>./HouseFund/FundCommandService/FundCommandService-Host</module>
+        <module>./HouseFund/FundCommandService/FundCommandService-Api</module>
+        <module>./HouseFund/FundCommandService/FundCommandService-Dao</module>
+        <module>./HouseFund/FundCommandService/FundCommandService-Business</module>
+        <module>./HouseFund/FundCommandService/FundCommandService-Entity</module>
+
+
+        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Host</module>
+        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Api</module>
+        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Dao</module>
+        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Business</module>
+        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Entity</module>
+
+        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Host</module>
+        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Api</module>
+        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Dao</module>
+        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Business</module>
+        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Entity</module>
+
+
+        <module>./EmployManagement/EmployQueryService/EmployQueryService-Host</module>
+        <module>./EmployManagement/EmployQueryService/EmployQueryService-Api</module>
+        <module>./EmployManagement/EmployQueryService/EmployQueryService-Dao</module>
+        <module>./EmployManagement/EmployQueryService/EmployQueryService-Business</module>
+        <module>./EmployManagement/EmployQueryService/EmployQueryService-Entity</module>
+
+        <module>./EmployManagement/EmployCommandService/EmployCommandService-Host</module>
+        <module>./EmployManagement/EmployCommandService/EmployCommandService-Api</module>
+        <module>./EmployManagement/EmployCommandService/EmployCommandService-Dao</module>
+        <module>./EmployManagement/EmployCommandService/EmployCommandService-Business</module>
+        <module>./EmployManagement/EmployCommandService/EmployCommandService-Entity</module>
+
+        <module>./FlexibleBenefit/FBQueryService/FBQueryService-Host</module>
+        <module>./FlexibleBenefit/FBQueryService/FBQueryService-Api</module>
+        <module>./FlexibleBenefit/FBQueryService/FBQueryService-Dao</module>
+        <module>./FlexibleBenefit/FBQueryService/FBQueryService-Business</module>
+        <module>./FlexibleBenefit/FBQueryService/FBQueryService-Entity</module>
+
+        <module>./FlexibleBenefit/FBCommandService/FBCommandService-Host</module>
+        <module>./FlexibleBenefit/FBCommandService/FBCommandService-Api</module>
+        <module>./FlexibleBenefit/FBCommandService/FBCommandService-Dao</module>
+        <module>./FlexibleBenefit/FBCommandService/FBCommandService-Business</module>
+        <module>./FlexibleBenefit/FBCommandService/FBCommandService-Entity</module>
+
+        <module>./Job/FundJob/FundJob-Host</module>
+        <module>./Job/FundJob/FundJob-Dao</module>
+        <module>./Job/FundJob/FundJob-Business</module>
+        <module>./Job/FundJob/FundJob-Entity</module>
+
+        <module>./Job/SocJob/SocJob-Host</module>
+        <module>./Job/SocJob/SocJob-Dao</module>
+        <module>./Job/SocJob/SocJob-Business</module>
+        <module>./Job/SocJob/SocJob-Entity</module>
+
+        <module>./Job/ZYJob/ZYJob-Host</module>
+        <module>./Job/ZYJob/ZYJob-Dao</module>
+        <module>./Job/ZYJob/ZYJob-Business</module>
+        <module>./Job/ZYJob/ZYJob-Entity</module>
+
     </modules>
 
 </project>
