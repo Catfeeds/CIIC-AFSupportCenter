@@ -1,5 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.util.excel;
 
+import com.ciicsh.gto.afsupportcenter.util.kit.ReflectKit;
+import org.springframework.util.ConcurrentReferenceHashMap;
+
+import java.util.Map;
+
 /**
  * excel 转换器
  *
@@ -7,28 +12,25 @@ package com.ciicsh.gto.afsupportcenter.util.excel;
  */
 public class ExcelConvert<T> {
 
-    // 处理之后的值
-    private T value;
+    // 换成 转换器
+    private static final Map<Class<?>, ExcelConvert> declaredExcelConvertCache = new ConcurrentReferenceHashMap<>(256);
 
-    public Object getValue() {
-        return value;
-    }
-
-    public void setValue(T value) {
-        this.value = value;
-    }
-
-    public String getAsText() {
-        return (this.value != null)
-            ? this.value.toString()
-            : null;
-    }
-
-    public void setAsText(String text) {
-        if (value instanceof String) {
-            setValue((T) text);
-            return;
+    public static <T extends ExcelConvert> ExcelConvert of(Class<T> clazz) {
+        ExcelConvert convert = declaredExcelConvertCache.get(clazz);
+        if (convert == null) {
+            convert = ReflectKit.newInstance(clazz);
+            declaredExcelConvertCache.put(clazz, convert);
         }
-        throw new java.lang.IllegalArgumentException(text);
+        return convert;
+    }
+
+    public T value(String text) {
+        return (T) text;
+    }
+
+    public String text(T value) {
+        return (value != null)
+            ? value.toString()
+            : null;
     }
 }
