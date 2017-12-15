@@ -30,6 +30,12 @@ public class GiftServiceImpl implements GiftService {
     @Transactional(rollbackFor = Exception.class)
     public int insertGift(GiftPO entity) {
         if (entity.getId() != null) {
+            /**
+             * 如果更新礼品数量为0，状态为已下架
+             */
+            if (entity.getNumber() == 0) {
+                entity.setStatus((byte) 1);
+            }
             //更新礼品
             return giftMapper.updateByPrimaryKeySelective(entity);
         } else {
