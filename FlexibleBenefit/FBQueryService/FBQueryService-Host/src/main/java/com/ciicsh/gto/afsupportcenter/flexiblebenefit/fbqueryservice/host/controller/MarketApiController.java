@@ -29,14 +29,22 @@ public class MarketApiController implements MarketCommandProxy {
     private MarketActivityService marketActivityService;
 
     @Override
-    public JsonResult findMarketList(String activityName, String publish, Byte status, Integer pegeNum, Integer pageSize) {
+    public JsonResult findMarketList(String activityName, String publish, Byte status, Integer pageNum, Integer pageSize) {
         logger.info("query服务--活动分页列表查询");
         MarketActivityPO entity = new MarketActivityPO();
         entity.setActivityTitle(activityName);
         entity.setPublisher(publish);
         entity.setStatus(status);
+
+        if (pageNum == null) {
+            pageNum = 1;
+        }
+        if (pageSize == null) {
+            pageSize = 5;
+        }
+
         JsonResult jr = new JsonResult();
-        PageHelper.startPage(pegeNum, pageSize);
+        PageHelper.startPage(pageNum, pageSize);
         PageInfo<MarketActivityPO> pageData = new PageInfo<>(marketActivityService.findByEntity(entity));
         jr.setData(pageData);
         return jr;

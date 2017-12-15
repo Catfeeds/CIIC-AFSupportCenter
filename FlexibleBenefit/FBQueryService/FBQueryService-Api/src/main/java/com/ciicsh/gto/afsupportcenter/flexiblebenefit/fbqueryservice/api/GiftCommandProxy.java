@@ -16,6 +16,6 @@ public interface GiftCommandProxy {
      * @return
      */
     @PostMapping("/findGiftList")
-    public JsonResult findGiftList(Byte giftType, Integer pegeNum, Integer pageSize);
+    JsonResult findGiftList(Byte giftType, Integer pageNum, Integer pageSize);
 
 }

@@ -16,5 +16,5 @@ public interface MarketCommandProxy {
      * @return
      */
     @PostMapping("/findMarketList")
-    public JsonResult findMarketList(String activityName, String publish, Byte status, Integer pegeNum, Integer pageSize);
+    JsonResult findMarketList(String activityName, String publish, Byte status, Integer pageNum, Integer pageSize);
 }

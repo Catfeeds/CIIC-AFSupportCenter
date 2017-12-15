@@ -24,10 +24,16 @@ public class GiftApiController implements GiftCommandProxy {
     private GiftService giftService;
 
     @Override
-    public JsonResult findGiftList(Byte giftType, Integer pegeNum, Integer pageSize) {
+    public JsonResult findGiftList(Byte giftType, Integer pageNum, Integer pageSize) {
         GiftPO entity = new GiftPO();
         JsonResult jr = new JsonResult();
-        PageHelper.startPage(pegeNum, pageSize);
+        if (pageNum == null) {
+            pageNum = 1;
+        }
+        if (pageSize == null) {
+            pageSize = 5;
+        }
+        PageHelper.startPage(pageNum, pageSize);
         entity.setGiftType(giftType);
         PageInfo<GiftPO> pageData = new PageInfo<>(giftService.findByEntity(entity));
         logger.info("query服务-查询礼品分页列表");

@@ -4,16 +4,16 @@
 
 **http方法:** post  
 **api地址:**  
-* 开发环境: http://localhost:6019/api/gift/findById/1
-* 本地联调环境：http://10.17.2.236:6019/api/gift/findById/1
-* SIT环境: http://172.16.9.25:6019/api/gift/findById/1
+* 开发环境: http://localhost:6017/api/gift/findGiftList
+* 本地联调环境：http://10.17.2.236:6017/api/gift/findGiftList
+* SIT环境: http://172.16.9.24:6017/api/gift/findGiftList
 * UAT环境：  
 * 生产环境：
 
 传入参数
 ```json
 {
-  "pegeNum":1,
+  "pageNum":1,
   "pageSize":5,
   "giftType":2
 }
@@ -115,7 +115,7 @@
             },
             {
                 "id": 7,
-                "giftName": "测试2017年12月6日11:02:25",
+                "giftName": "测试2017年12月6日11:02:24",
                 "price": 231,
                 "rightPerson": 1,
                 "giftType": 2,
@@ -163,16 +163,16 @@
 
 **http方法:** post  
 **api地址:**  
-* 开发环境: http://localhost:6019/api/market/findMarketList
+* 开发环境: http://localhost:6017/api/market/findMarketList
 * 本地联调环境：http://10.17.2.236:6017/api/market/findMarketList
-* SIT环境: http://172.16.9.25:6019/market/findMarketList
+* SIT环境: http://172.16.9.24:6017/api/market/findMarketList
 * UAT环境：  
 * 生产环境：
 
 传入参数
 ```json
 {
-  "pegeNum":1,
+  "pageNum":1,
   "pageSize":5,
   "activityName":"",
   "publish":"",
@@ -206,7 +206,7 @@
                 "sendWay": "0",
                 "isActive": true,
                 "createTime": 1510815463000,
-                "modifiedTime": 1512529099000,
+                "modifiedTime": 1512429099000,
                 "createdBy": "测试",
                 "modifiedBy": "测试",
                 "page": null
@@ -232,8 +232,8 @@
                 "id": 3,
                 "activityTitle": "ceshi",
                 "publisher": "xwz",
-                "beginTime": 1512372500000,
-                "endTime": 1512372500000,
+                "beginTime": 1512372400000,
+                "endTime": 1512372400000,
                 "status": 0,
                 "content": "测试",
                 "giftForm": "1,2,3",
