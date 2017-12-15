@@ -14,10 +14,10 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-12
+ * @since 2017-12-07
  */
 @TableName("ss_statement_result")
-public class SsStatementResult implements Serializable {
+public class SsStatementResultPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -25,62 +25,79 @@ public class SsStatementResult implements Serializable {
      * 记录Id
      */
 	@TableId(value="statement_detail_id", type= IdType.AUTO)
-	private Long statementDetailId;
+    private Long statementDetailId;
+
     /**
      * 外键，对账单Id
      */
-	@TableField("statement_id")
-	private Long statementId;
+    @TableField("statement_id")
+    private Long statementId;
+
     /**
      * 外键:雇员Id
      */
-	@TableField("employee_id")
-	private String employeeId;
+    @TableField("employee_id")
+    private String employeeId;
+
     /**
      * 变更类型
      */
-	@TableField("change_type")
-	private Integer changeType;
+    @TableField("change_type")
+    private Integer changeType;
+
     /**
      * 变更类型名称
      */
-	@TableField("change_type_name")
-	private String changeTypeName;
+    @TableField("change_type_name")
+    private String changeTypeName;
+
+    /**
+     * 项目类型
+     */
+    @TableField("project_type")
+    private Integer projectType;
+
     /**
      * 项目名称
      */
-	@TableField("project_name")
-	private String projectName;
+    @TableField("project_type_name")
+    private String projectTypeName;
+
     /**
      * 外键：险种
      */
-	@TableField("ss_type")
-	private Integer ssType;
+    @TableField("ss_type")
+    private Byte ssType;
+
     /**
      * 社保险种名称
      */
-	@TableField("ss_type_name")
-	private String ssTypeName;
+    @TableField("ss_type_name")
+    private String ssTypeName;
+
     /**
      * 从社保局导入金额
      */
-	@TableField("imp_amount")
-	private BigDecimal impAmount;
+    @TableField("imp_amount")
+    private BigDecimal impAmount;
+
     /**
      * 社保系统计算出的金额
      */
-	@TableField("ss_amount")
-	private BigDecimal ssAmount;
+    @TableField("ss_amount")
+    private BigDecimal ssAmount;
+
     /**
      * 差值
      */
-	@TableField("diff_amount")
-	private BigDecimal diffAmount;
+    @TableField("diff_amount")
+    private BigDecimal diffAmount;
+
     /**
      * 是否有效
      */
-	@TableField("is_active")
-	private Boolean isActive;
+    @TableField("is_active")
+    private Boolean isActive;
     /**
      * 创建时间
      */
@@ -103,97 +120,210 @@ public class SsStatementResult implements Serializable {
 	private String modifiedBy;
 
 
-	public Long getStatementDetailId() {
-		return statementDetailId;
-	}
+    public SsStatementResultPO(){
+        this.impAmount = new BigDecimal(0);
+        this.ssAmount = new BigDecimal(0);
+        this.diffAmount = new BigDecimal(0);
+    }
 
-	public void setStatementDetailId(Long statementDetailId) {
-		this.statementDetailId = statementDetailId;
-	}
 
-	public Long getStatementId() {
-		return statementId;
-	}
+    /**
+     * 获取记录Id
+     *
+     * @return statement_detail_id - 记录Id
+     */
+    public Long getStatementDetailId() {
+        return statementDetailId;
+    }
 
-	public void setStatementId(Long statementId) {
-		this.statementId = statementId;
-	}
+    /**
+     * 设置记录Id
+     *
+     * @param statementDetailId 记录Id
+     */
+    public void setStatementDetailId(Long statementDetailId) {
+        this.statementDetailId = statementDetailId;
+    }
 
-	public String getEmployeeId() {
-		return employeeId;
-	}
+    /**
+     * 获取外键，对账单Id
+     *
+     * @return statement_id - 外键，对账单Id
+     */
+    public Long getStatementId() {
+        return statementId;
+    }
 
-	public void setEmployeeId(String employeeId) {
-		this.employeeId = employeeId;
-	}
+    /**
+     * 设置外键，对账单Id
+     *
+     * @param statementId 外键，对账单Id
+     */
+    public void setStatementId(Long statementId) {
+        this.statementId = statementId;
+    }
 
-	public Integer getChangeType() {
-		return changeType;
-	}
+    /**
+     * 获取外键:雇员Id
+     *
+     * @return employee_id - 外键:雇员Id
+     */
+    public String getEmployeeId() {
+        return employeeId;
+    }
 
-	public void setChangeType(Integer changeType) {
-		this.changeType = changeType;
-	}
+    /**
+     * 设置外键:雇员Id
+     *
+     * @param employeeId 外键:雇员Id
+     */
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId == null ? null : employeeId.trim();
+    }
 
-	public String getChangeTypeName() {
-		return changeTypeName;
-	}
+    /**
+     * 获取变更类型
+     *
+     * @return change_type - 变更类型
+     */
+    public Integer getChangeType() {
+        return changeType;
+    }
 
-	public void setChangeTypeName(String changeTypeName) {
-		this.changeTypeName = changeTypeName;
-	}
+    /**
+     * 设置变更类型
+     *
+     * @param changeType 变更类型
+     */
+    public void setChangeType(Integer changeType) {
+        this.changeType = changeType;
+    }
 
-	public String getProjectName() {
-		return projectName;
-	}
+    /**
+     * 获取变更类型名称
+     *
+     * @return change_type_name - 变更类型名称
+     */
+    public String getChangeTypeName() {
+        return changeTypeName;
+    }
 
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
+    /**
+     * 设置变更类型名称
+     *
+     * @param changeTypeName 变更类型名称
+     */
+    public void setChangeTypeName(String changeTypeName) {
+        this.changeTypeName = changeTypeName == null ? null : changeTypeName.trim();
+    }
 
-	public Integer getSsType() {
-		return ssType;
-	}
+    /**
+     * 获取外键：险种
+     *
+     * @return ss_type - 外键：险种
+     */
+    public Byte getSsType() {
+        return ssType;
+    }
 
-	public void setSsType(Integer ssType) {
-		this.ssType = ssType;
-	}
+    /**
+     * 设置外键：险种
+     *
+     * @param ssType 外键：险种
+     */
+    public void setSsType(Byte ssType) {
+        this.ssType = ssType;
+    }
 
-	public String getSsTypeName() {
-		return ssTypeName;
-	}
+    /**
+     * 获取社保险种名称
+     *
+     * @return ss_type_name - 社保险种名称
+     */
+    public String getSsTypeName() {
+        return ssTypeName;
+    }
 
-	public void setSsTypeName(String ssTypeName) {
-		this.ssTypeName = ssTypeName;
-	}
+    /**
+     * 设置社保险种名称
+     *
+     * @param ssTypeName 社保险种名称
+     */
+    public void setSsTypeName(String ssTypeName) {
+        this.ssTypeName = ssTypeName == null ? null : ssTypeName.trim();
+    }
 
-	public BigDecimal getImpAmount() {
-		return impAmount;
-	}
+    /**
+     * 获取从社保局导入金额
+     *
+     * @return imp_amount - 从社保局导入金额
+     */
+    public BigDecimal getImpAmount() {
+        return impAmount;
+    }
 
-	public void setImpAmount(BigDecimal impAmount) {
-		this.impAmount = impAmount;
-	}
+    /**
+     * 设置从社保局导入金额
+     *
+     * @param impAmount 从社保局导入金额
+     */
+    public void setImpAmount(BigDecimal impAmount) {
+        this.impAmount = impAmount;
+    }
 
-	public BigDecimal getSsAmount() {
-		return ssAmount;
-	}
+    /**
+     * 获取社保系统计算出的金额
+     *
+     * @return ss_amount - 社保系统计算出的金额
+     */
+    public BigDecimal getSsAmount() {
+        return ssAmount;
+    }
 
-	public void setSsAmount(BigDecimal ssAmount) {
-		this.ssAmount = ssAmount;
-	}
+    /**
+     * 设置社保系统计算出的金额
+     *
+     * @param ssAmount 社保系统计算出的金额
+     */
+    public void setSsAmount(BigDecimal ssAmount) {
+        this.ssAmount = ssAmount;
+    }
 
-	public BigDecimal getDiffAmount() {
-		return diffAmount;
-	}
+    /**
+     * 获取差值
+     *
+     * @return diff_amount - 差值
+     */
+    public BigDecimal getDiffAmount() {
+        return diffAmount;
+    }
 
-	public void setDiffAmount(BigDecimal diffAmount) {
-		this.diffAmount = diffAmount;
-	}
+    /**
+     * 设置差值
+     *
+     * @param diffAmount 差值
+     */
+    public void setDiffAmount(BigDecimal diffAmount) {
+        this.diffAmount = diffAmount;
+    }
 
-	public Boolean getActive() {
-		return isActive;
-	}
+    /**
+     * 获取是否有效
+     *
+     * @return is_active - 是否有效
+     */
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    /**
+     * 设置是否有效
+     *
+     * @param isActive 是否有效
+     */
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
 
 	public void setActive(Boolean isActive) {
 		this.isActive = isActive;
@@ -231,25 +361,19 @@ public class SsStatementResult implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	@Override
-	public String toString() {
-		return "SsStatementResult{" +
-			", statementDetailId=" + statementDetailId +
-			", statementId=" + statementId +
-			", employeeId=" + employeeId +
-			", changeType=" + changeType +
-			", changeTypeName=" + changeTypeName +
-			", projectName=" + projectName +
-			", ssType=" + ssType +
-			", ssTypeName=" + ssTypeName +
-			", impAmount=" + impAmount +
-			", ssAmount=" + ssAmount +
-			", diffAmount=" + diffAmount +
-			", isActive=" + isActive +
-			", createdTime=" + createdTime +
-			", modifiedTime=" + modifiedTime +
-			", createdBy=" + createdBy +
-			", modifiedBy=" + modifiedBy +
-			"}";
-	}
+    public Integer getProjectType() {
+        return projectType;
+    }
+
+    public void setProjectType(Integer projectType) {
+        this.projectType = projectType;
+    }
+
+    public String getProjectTypeName() {
+        return projectTypeName;
+    }
+
+    public void setProjectTypeName(String projectTypeName) {
+        this.projectTypeName = projectTypeName;
+    }
 }

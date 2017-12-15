@@ -14,284 +14,284 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-12
+ * @since 2017-12-14
  */
 @TableName("ss_statement_imp")
-public class SsStatementImp implements Serializable {
+public class SsStatementImpPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * 记录Id
      */
-	@TableId(value="statement_imp_id", type= IdType.AUTO)
-	private Long statementImpId;
+    @TableId(value="statement_imp_id", type= IdType.AUTO)
+    private Long statementImpId;
     /**
      * 外键，对账单Id
      */
-	@TableField("statement_id")
-	private Long statementId;
+    @TableField("statement_id")
+    private Long statementId;
     /**
      * 雇员编号
      */
-	@TableField("emp_num")
-	private String empNum;
+    @TableField("employee_id")
+    private String employeeId;
     /**
      * 雇员姓名
      */
-	@TableField("emp_name")
-	private String empName;
+    @TableField("emp_name")
+    private String empName;
     /**
      * 变更类型名称
      */
-	@TableField("change_type")
-	private Integer changeType;
+    @TableField("change_type")
+    private Integer changeType;
     /**
      * 变更类型名称
      */
-	@TableField("change_type_name")
-	private String changeTypeName;
+    @TableField("change_type_name")
+    private String changeTypeName;
     /**
      * 基数
      */
-	@TableField("base_amount")
-	private BigDecimal baseAmount;
+    @TableField("base_amount")
+    private BigDecimal baseAmount;
     /**
      * 社保险种类型，取自全局数据字典表gtobasicdb.DicItem
      */
-	@TableField("ss_type")
-	private Integer ssType;
+    @TableField("ss_type")
+    private Integer ssType;
     /**
      * 社保险种名称
      */
-	@TableField("ss_type_name")
-	private String ssTypeName;
+    @TableField("ss_type_name")
+    private String ssTypeName;
     /**
      * 客户金额
      */
-	@TableField("com_amount")
-	private BigDecimal comAmount;
+    @TableField("com_amount")
+    private BigDecimal comAmount;
     /**
      * 雇员金额
      */
-	@TableField("emp_amount")
-	private BigDecimal empAmount;
+    @TableField("emp_amount")
+    private BigDecimal empAmount;
     /**
      * 客户补缴金额
      */
-	@TableField("com_compensate_amount")
-	private BigDecimal comCompensateAmount;
+    @TableField("com_compensate_amount")
+    private BigDecimal comCompensateAmount;
     /**
      * 雇员补缴金额
      */
-	@TableField("emp_compensate_amount")
-	private BigDecimal empCompensateAmount;
+    @TableField("emp_compensate_amount")
+    private BigDecimal empCompensateAmount;
     /**
      * 一次性支付
      */
-	@TableField("one_payment")
-	private BigDecimal onePayment;
+    @TableField("one_payment")
+    private BigDecimal onePayment;
     /**
      * 是否有效
      */
-	@TableField("is_active")
-	private Boolean isActive;
+    @TableField("is_active")
+    private Boolean isActive;
     /**
      * 创建时间
      */
-	@TableField("created_time")
-	private LocalDateTime createdTime;
+    @TableField("created_time")
+    private LocalDateTime createdTime;
     /**
      * 更新时间
      */
-	@TableField("modified_time")
-	private LocalDateTime modifiedTime;
+    @TableField("modified_time")
+    private LocalDateTime modifiedTime;
     /**
      * 创建者用户Id
      */
-	@TableField("created_by")
-	private String createdBy;
+    @TableField("created_by")
+    private String createdBy;
     /**
      * 更新者用户Id
      */
-	@TableField("modified_by")
-	private String modifiedBy;
+    @TableField("modified_by")
+    private String modifiedBy;
 
 
-	public Long getStatementImpId() {
-		return statementImpId;
-	}
+    public Long getStatementImpId() {
+        return statementImpId;
+    }
 
-	public void setStatementImpId(Long statementImpId) {
-		this.statementImpId = statementImpId;
-	}
+    public void setStatementImpId(Long statementImpId) {
+        this.statementImpId = statementImpId;
+    }
 
-	public Long getStatementId() {
-		return statementId;
-	}
+    public Long getStatementId() {
+        return statementId;
+    }
 
-	public void setStatementId(Long statementId) {
-		this.statementId = statementId;
-	}
+    public void setStatementId(Long statementId) {
+        this.statementId = statementId;
+    }
 
-	public String getEmpNum() {
-		return empNum;
-	}
+    public String getEmployeeId() {
+        return employeeId;
+    }
 
-	public void setEmpNum(String empNum) {
-		this.empNum = empNum;
-	}
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
 
-	public String getEmpName() {
-		return empName;
-	}
+    public String getEmpName() {
+        return empName;
+    }
 
-	public void setEmpName(String empName) {
-		this.empName = empName;
-	}
+    public void setEmpName(String empName) {
+        this.empName = empName;
+    }
 
-	public Integer getChangeType() {
-		return changeType;
-	}
+    public Integer getChangeType() {
+        return changeType;
+    }
 
-	public void setChangeType(Integer changeType) {
-		this.changeType = changeType;
-	}
+    public void setChangeType(Integer changeType) {
+        this.changeType = changeType;
+    }
 
-	public String getChangeTypeName() {
-		return changeTypeName;
-	}
+    public String getChangeTypeName() {
+        return changeTypeName;
+    }
 
-	public void setChangeTypeName(String changeTypeName) {
-		this.changeTypeName = changeTypeName;
-	}
+    public void setChangeTypeName(String changeTypeName) {
+        this.changeTypeName = changeTypeName;
+    }
 
-	public BigDecimal getBaseAmount() {
-		return baseAmount;
-	}
+    public BigDecimal getBaseAmount() {
+        return baseAmount;
+    }
 
-	public void setBaseAmount(BigDecimal baseAmount) {
-		this.baseAmount = baseAmount;
-	}
+    public void setBaseAmount(BigDecimal baseAmount) {
+        this.baseAmount = baseAmount;
+    }
 
-	public Integer getSsType() {
-		return ssType;
-	}
+    public Integer getSsType() {
+        return ssType;
+    }
 
-	public void setSsType(Integer ssType) {
-		this.ssType = ssType;
-	}
+    public void setSsType(Integer ssType) {
+        this.ssType = ssType;
+    }
 
-	public String getSsTypeName() {
-		return ssTypeName;
-	}
+    public String getSsTypeName() {
+        return ssTypeName;
+    }
 
-	public void setSsTypeName(String ssTypeName) {
-		this.ssTypeName = ssTypeName;
-	}
+    public void setSsTypeName(String ssTypeName) {
+        this.ssTypeName = ssTypeName;
+    }
 
-	public BigDecimal getComAmount() {
-		return comAmount;
-	}
+    public BigDecimal getComAmount() {
+        return comAmount;
+    }
 
-	public void setComAmount(BigDecimal comAmount) {
-		this.comAmount = comAmount;
-	}
+    public void setComAmount(BigDecimal comAmount) {
+        this.comAmount = comAmount;
+    }
 
-	public BigDecimal getEmpAmount() {
-		return empAmount;
-	}
+    public BigDecimal getEmpAmount() {
+        return empAmount;
+    }
 
-	public void setEmpAmount(BigDecimal empAmount) {
-		this.empAmount = empAmount;
-	}
+    public void setEmpAmount(BigDecimal empAmount) {
+        this.empAmount = empAmount;
+    }
 
-	public BigDecimal getComCompensateAmount() {
-		return comCompensateAmount;
-	}
+    public BigDecimal getComCompensateAmount() {
+        return comCompensateAmount;
+    }
 
-	public void setComCompensateAmount(BigDecimal comCompensateAmount) {
-		this.comCompensateAmount = comCompensateAmount;
-	}
+    public void setComCompensateAmount(BigDecimal comCompensateAmount) {
+        this.comCompensateAmount = comCompensateAmount;
+    }
 
-	public BigDecimal getEmpCompensateAmount() {
-		return empCompensateAmount;
-	}
+    public BigDecimal getEmpCompensateAmount() {
+        return empCompensateAmount;
+    }
 
-	public void setEmpCompensateAmount(BigDecimal empCompensateAmount) {
-		this.empCompensateAmount = empCompensateAmount;
-	}
+    public void setEmpCompensateAmount(BigDecimal empCompensateAmount) {
+        this.empCompensateAmount = empCompensateAmount;
+    }
 
-	public BigDecimal getOnePayment() {
-		return onePayment;
-	}
+    public BigDecimal getOnePayment() {
+        return onePayment;
+    }
 
-	public void setOnePayment(BigDecimal onePayment) {
-		this.onePayment = onePayment;
-	}
+    public void setOnePayment(BigDecimal onePayment) {
+        this.onePayment = onePayment;
+    }
 
-	public Boolean getActive() {
-		return isActive;
-	}
+    public Boolean getActive() {
+        return isActive;
+    }
 
-	public void setActive(Boolean isActive) {
-		this.isActive = isActive;
-	}
+    public void setActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
 
-	public LocalDateTime getCreatedTime() {
-		return createdTime;
-	}
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
+    }
 
-	public void setCreatedTime(LocalDateTime createdTime) {
-		this.createdTime = createdTime;
-	}
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
 
-	public LocalDateTime getModifiedTime() {
-		return modifiedTime;
-	}
+    public LocalDateTime getModifiedTime() {
+        return modifiedTime;
+    }
 
-	public void setModifiedTime(LocalDateTime modifiedTime) {
-		this.modifiedTime = modifiedTime;
-	}
+    public void setModifiedTime(LocalDateTime modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
 
-	public String getCreatedBy() {
-		return createdBy;
-	}
+    public String getCreatedBy() {
+        return createdBy;
+    }
 
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
 
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
 
-	@Override
-	public String toString() {
-		return "SsStatementImp{" +
-			", statementImpId=" + statementImpId +
-			", statementId=" + statementId +
-			", empNum=" + empNum +
-			", empName=" + empName +
-			", changeType=" + changeType +
-			", changeTypeName=" + changeTypeName +
-			", baseAmount=" + baseAmount +
-			", ssType=" + ssType +
-			", ssTypeName=" + ssTypeName +
-			", comAmount=" + comAmount +
-			", empAmount=" + empAmount +
-			", comCompensateAmount=" + comCompensateAmount +
-			", empCompensateAmount=" + empCompensateAmount +
-			", onePayment=" + onePayment +
-			", isActive=" + isActive +
-			", createdTime=" + createdTime +
-			", modifiedTime=" + modifiedTime +
-			", createdBy=" + createdBy +
-			", modifiedBy=" + modifiedBy +
-			"}";
-	}
+    @Override
+    public String toString() {
+        return "SsStatementImp{" +
+            ", statementImpId=" + statementImpId +
+            ", statementId=" + statementId +
+            ", employeeId=" + employeeId +
+            ", empName=" + empName +
+            ", changeType=" + changeType +
+            ", changeTypeName=" + changeTypeName +
+            ", baseAmount=" + baseAmount +
+            ", ssType=" + ssType +
+            ", ssTypeName=" + ssTypeName +
+            ", comAmount=" + comAmount +
+            ", empAmount=" + empAmount +
+            ", comCompensateAmount=" + comCompensateAmount +
+            ", empCompensateAmount=" + empCompensateAmount +
+            ", onePayment=" + onePayment +
+            ", isActive=" + isActive +
+            ", createdTime=" + createdTime +
+            ", modifiedTime=" + modifiedTime +
+            ", createdBy=" + createdBy +
+            ", modifiedBy=" + modifiedBy +
+            "}";
+    }
 }
