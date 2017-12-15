@@ -336,6 +336,8 @@
         sct.start_handle_date,
         sct.send_check_date,
         sct.finish_date,
+        sct.handle_remark,
+        sct.dynamic_extend,
                sc.title,
 				scm.*,
 				sca.*
@@ -378,12 +380,13 @@
         sct.start_handle_date,
         sct.send_check_date,
         sct.finish_date,
+        sct.handle_remark,
         sc.title,
 		sca.*,
 		sat.*
         FROM ss_com_task sct
         LEFT JOIN (SELECT  company_id, title FROM 	sal_company  WHERE is_active = 1)sc ON sct.company_id = sc.company_id
-        LEFT JOIN (SELECT com_account_id AS com_account_id_acc, supplier_id,ss_account_type,ss_account,bank_account,com_account_name,settlement_area,payment_bank,payment_way,expire_date AS expire_date_acc,ss_username,ss_pwd,initial_balance,initial_debt,origin_place,query_account,deliver_way,deliver_way_remark,provide_certificate_time,change_time,receive_date,into_date,end_date,dispatch_material,remark AS remark_acc FROM ss_com_account WHERE is_active = 1)sca
+        LEFT JOIN (SELECT com_account_id AS com_account_id_acc, supplier_id,ss_account_type,ss_account,bank_account,com_account_name,settlement_area,payment_bank,payment_way,expire_date AS expire_date_acc,ss_username,ss_pwd,initial_balance,initial_debt,origin_place,origin_place_remark,query_account,deliver_way,deliver_way_remark,provide_certificate_time,change_time,receive_date,into_date,end_date,dispatch_material,remark AS remark_acc FROM ss_com_account WHERE is_active = 1)sca
 				ON sct.com_account_id = sca.com_account_id_acc
 				LEFT JOIN (SELECT ss_account_ratio_id, com_account_id AS com_account_id_sar,industry_category,com_ratio,start_month,end_month FROM ss_account_ratio WHERE is_active = 1)sat
 				ON sca.com_account_id_acc = sat.com_account_id_sar

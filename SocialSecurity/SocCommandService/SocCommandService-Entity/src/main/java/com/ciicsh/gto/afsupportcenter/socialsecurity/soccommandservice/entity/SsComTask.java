@@ -94,6 +94,10 @@ public class SsComTask implements Serializable {
 	@TableField("chat_history")
 	private String chatHistory;
     /**
+     * 动态扩展办理数据
+     */
+    private String dynamicExtend;
+    /**
      * 任务单处理状态：0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
      */
 	@TableField("task_status")
@@ -269,7 +273,15 @@ public class SsComTask implements Serializable {
 		this.chatHistory = chatHistory;
 	}
 
-	public Integer getTaskStatus() {
+    public String getDynamicExtend() {
+        return dynamicExtend;
+    }
+
+    public void setDynamicExtend(String dynamicExtend) {
+        this.dynamicExtend = dynamicExtend;
+    }
+
+    public Integer getTaskStatus() {
 		return taskStatus;
 	}
 

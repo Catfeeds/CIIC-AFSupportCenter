@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface SsAccountRatioMapper extends BaseMapper<SsAccountRatio> {
 
+    public Integer updateEndMonthByAccId(SsAccountRatio ssAccountRatio);
 }

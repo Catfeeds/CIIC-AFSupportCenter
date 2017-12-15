@@ -18,6 +18,7 @@
         <result column="submit_remark" property="submitRemark" />
         <result column="task_form_content" property="taskFormContent" />
         <result column="chat_history" property="chatHistory" />
+        <result column="dynamic_extend" property="dynamicExtend" />
         <result column="task_status" property="taskStatus" />
         <result column="handle_user_id" property="handleUserId" />
         <result column="handle_user_name" property="handleUserName" />
