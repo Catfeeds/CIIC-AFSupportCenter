@@ -77,7 +77,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
         //mybatis 使用mybatis 的自带的批量修改
         List<SsComTask> dataList = new ArrayList<SsComTask>();
         //将前台传过来的参数解析成 任务单对象的数组
-        if (StringUtils.isNotBlank(taskIdStr)) {
+        if (isNotNull(taskIdStr)) {
             String[] taskIdArr = taskIdStr.split(",");
             for (int i = 0; i < taskIdArr.length; i++) {
                 SsComTask ssComTask = new SsComTask();
@@ -86,7 +86,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
                 //批退状态 4
                 ssComTask.setTaskStatus(4);
                 //批退原因
-                if (StringUtils.isNotBlank(refuseReason))
+                if (isNotNull(refuseReason))
                     ssComTask.setRejectionRemark(refuseReason);
                 dataList.add(ssComTask);
             }
@@ -100,7 +100,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
     @RequestMapping(value = "getCompanyInfoAndMaterial")
     public JsonResult<SsComTaskDTO> getCompanyInfoAndMaterial(SsComTaskDTO ssComTaskDTO) {
         if (null != ssComTaskDTO.getCompanyTaskId()) {
-            if (StringUtils.isNotBlank(ssComTaskDTO.getOperatorType())) {
+            if (isNotNull(ssComTaskDTO.getOperatorType())) {
                 //1 开户 2 转移 3 变更 4 终止
                 if ("1".equals(ssComTaskDTO.getOperatorType())) {
                     //开户时 需要查询企业信息(企业信息和材料)
@@ -178,7 +178,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
         ssComTaskDTO.setDynamicExtend(dynamicExtendStr);
         //0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
         if (ssComTaskDTO.getTaskStatus() == 3) {
-            if (StringUtils.isNotBlank(ssComTaskDTO.getSettlementArea()) && null != ssComTaskDTO.getComAccountId()) {
+            if (isNotNull(ssComTaskDTO.getSettlementArea()) && null != ssComTaskDTO.getComAccountId()) {
                 SsComAccount ssComAccount = new SsComAccount();
                 ssComAccount.setComAccountId(ssComTaskDTO.getComAccountId());
                 ssComAccount.setSettlementArea(ssComTaskDTO.getSettlementArea());
