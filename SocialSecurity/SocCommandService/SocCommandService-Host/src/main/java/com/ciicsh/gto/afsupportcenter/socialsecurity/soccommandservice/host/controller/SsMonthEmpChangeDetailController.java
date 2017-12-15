@@ -2,9 +2,16 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsMonthEmpChangeDetailService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsMonthEmpChangeDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsMonthEmpChangeDetailDTO;
+import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * <p>
@@ -18,6 +25,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/soccommandservice/ssMonthEmpChangeDetail")
 public class SsMonthEmpChangeDetailController  extends BasicController<ISsMonthEmpChangeDetailService> {
+    /**
+     * <p>Description: 社保汇总明细数据展示</p>
+     *
+     * @author wengxk
+     * @date 2017-12-13
+     * @param ssMonthEmpChangeDTO 社保总汇检索条件
+     * @return  JsonResult<SsMonthEmpChangeDTO>
+     */
+    @Log("社保汇总明细数据展示")
+    @PostMapping("/showMonthEmpChangeDetail")
+    public JsonResult<List<SsMonthEmpChangeDetailDTO>> showMonthEmpChangeDetail(SsMonthEmpChangeDTO ssMonthEmpChangeDTO) {
+        List<SsMonthEmpChangeDetailDTO> resultDtoList = business.showMonthEmpChangeDetailByStatementId(ssMonthEmpChangeDTO);
+        JsonResult<List<SsMonthEmpChangeDetailDTO>> result = new JsonResult<>();
+        result.setData(resultDtoList);
 
+        return result;
+    }
 }
 

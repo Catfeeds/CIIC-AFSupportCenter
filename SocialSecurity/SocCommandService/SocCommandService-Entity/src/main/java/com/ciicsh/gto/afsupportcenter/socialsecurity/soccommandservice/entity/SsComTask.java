@@ -1,13 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
-
-import java.io.Serializable;
 import java.time.LocalDate;
+import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableName;
+import java.io.Serializable;
 
 /**
  * <p>
@@ -15,7 +14,7 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-12
+ * @since 2017-12-15
  */
 @TableName("ss_com_task")
 public class SsComTask implements Serializable {
@@ -96,7 +95,8 @@ public class SsComTask implements Serializable {
     /**
      * 动态扩展办理数据
      */
-    private String dynamicExtend;
+	@TableField("dynamic_extend")
+	private String dynamicExtend;
     /**
      * 任务单处理状态：0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
      */
@@ -273,15 +273,15 @@ public class SsComTask implements Serializable {
 		this.chatHistory = chatHistory;
 	}
 
-    public String getDynamicExtend() {
-        return dynamicExtend;
-    }
+	public String getDynamicExtend() {
+		return dynamicExtend;
+	}
 
-    public void setDynamicExtend(String dynamicExtend) {
-        this.dynamicExtend = dynamicExtend;
-    }
+	public void setDynamicExtend(String dynamicExtend) {
+		this.dynamicExtend = dynamicExtend;
+	}
 
-    public Integer getTaskStatus() {
+	public Integer getTaskStatus() {
 		return taskStatus;
 	}
 
@@ -402,6 +402,7 @@ public class SsComTask implements Serializable {
 			", submitRemark=" + submitRemark +
 			", taskFormContent=" + taskFormContent +
 			", chatHistory=" + chatHistory +
+			", dynamicExtend=" + dynamicExtend +
 			", taskStatus=" + taskStatus +
 			", handleUserId=" + handleUserId +
 			", handleUserName=" + handleUserName +

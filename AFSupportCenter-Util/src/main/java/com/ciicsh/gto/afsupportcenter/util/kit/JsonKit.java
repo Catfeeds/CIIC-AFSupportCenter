@@ -1,6 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.util.kit;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 
 import java.lang.reflect.Type;
@@ -18,6 +20,20 @@ public class JsonKit {
      * @return JSON字符串
      */
     public static String toStr(Object object) {
+        return toStr(object, null);
+    }
+
+    /**
+     * 将 Object 序列化为 JSON 字符串
+     *
+     * @param object
+     * @param defaultValue
+     * @return JSON字符串
+     */
+    public static String toStr(Object object, String defaultValue) {
+        if (object == null) {
+            return defaultValue;
+        }
         return JSON.toJSONString(object);
     }
 
@@ -69,8 +85,19 @@ public class JsonKit {
      * @return
      */
     public static <T> List<T> castToList(List<?> jsonArr, Class<T> clazz) {
-        return parseList(toStr(jsonArr), clazz);
+        return parseList(toStr(jsonArr, "[]"), clazz);
     }
+
+    /**
+     * 转 JSONArray
+     *
+     * @param jsonArr
+     * @return
+     */
+    public static JSONArray castToList(List<?> jsonArr) {
+        return JSON.parseArray(toStr(jsonArr, "[]"));
+    }
+
 
     /**
      * 将 Object 转换化为 指定类型 Object
@@ -81,6 +108,17 @@ public class JsonKit {
      * @return
      */
     public static <T> T castToObject(Object jsonObj, Class<T> clazz) {
-        return parseObject(toStr(jsonObj), clazz);
+        return parseObject(toStr(jsonObj, "{}"), clazz);
     }
+
+    /**
+     * 转 JSONObject
+     *
+     * @param jsonObj
+     * @return
+     */
+    public static JSONObject castToObject(Object jsonObj) {
+        return parseObject(toStr(jsonObj, "{}"), JSONObject.class);
+    }
+
 }

@@ -6,7 +6,7 @@
     <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatementImp">
         <id column="statement_imp_id" property="statementImpId" />
         <result column="statement_id" property="statementId" />
-        <result column="emp_num" property="empNum" />
+        <result column="employee_id" property="employeeId" />
         <result column="emp_name" property="empName" />
         <result column="change_type" property="changeType" />
         <result column="change_type_name" property="changeTypeName" />

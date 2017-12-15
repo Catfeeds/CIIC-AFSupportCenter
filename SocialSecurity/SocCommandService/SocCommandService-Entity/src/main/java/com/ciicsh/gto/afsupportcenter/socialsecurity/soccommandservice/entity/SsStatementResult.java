@@ -14,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-12
+ * @since 2017-12-15
  */
 @TableName("ss_statement_result")
 public class SsStatementResult implements Serializable {
@@ -47,10 +47,15 @@ public class SsStatementResult implements Serializable {
 	@TableField("change_type_name")
 	private String changeTypeName;
     /**
+     * 项目类型
+     */
+	@TableField("project_type")
+	private Integer projectType;
+    /**
      * 项目名称
      */
-	@TableField("project_name")
-	private String projectName;
+	@TableField("project_type_name")
+	private String projectTypeName;
     /**
      * 外键：险种
      */
@@ -143,12 +148,20 @@ public class SsStatementResult implements Serializable {
 		this.changeTypeName = changeTypeName;
 	}
 
-	public String getProjectName() {
-		return projectName;
+	public Integer getProjectType() {
+		return projectType;
 	}
 
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
+	public void setProjectType(Integer projectType) {
+		this.projectType = projectType;
+	}
+
+	public String getProjectTypeName() {
+		return projectTypeName;
+	}
+
+	public void setProjectTypeName(String projectTypeName) {
+		this.projectTypeName = projectTypeName;
 	}
 
 	public Integer getSsType() {
@@ -239,7 +252,8 @@ public class SsStatementResult implements Serializable {
 			", employeeId=" + employeeId +
 			", changeType=" + changeType +
 			", changeTypeName=" + changeTypeName +
-			", projectName=" + projectName +
+			", projectType=" + projectType +
+			", projectTypeName=" + projectTypeName +
 			", ssType=" + ssType +
 			", ssTypeName=" + ssTypeName +
 			", impAmount=" + impAmount +

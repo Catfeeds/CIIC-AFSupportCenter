@@ -1,9 +1,13 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatement;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsStatementMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsStatementService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
+import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
+import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,5 +20,15 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SsStatementServiceImpl extends ServiceImpl<SsStatementMapper, SsStatement> implements ISsStatementService {
+
+    @Override
+    public PageRows<SsStatementDTO> statementQuery(PageInfo pageInfo) {
+        return PageKit.doSelectPage(pageInfo, () -> baseMapper.statementQuery(pageInfo.toJavaObject(SsStatementDTO.class)));
+    }
+
+    @Override
+    public SsStatementDTO serachStatementData(SsStatementDTO ssStatementDTO) {
+        return baseMapper.serachStatementByStatementId(ssStatementDTO);
+    }
 
 }

@@ -15,7 +15,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-12
+ * @since 2017-12-15
  */
 @TableName("ss_month_emp_change_detail")
 public class SsMonthEmpChangeDetail implements Serializable {
@@ -60,8 +60,8 @@ public class SsMonthEmpChangeDetail implements Serializable {
     /**
      * 社保险种名称
      */
-	@TableField("ss_name")
-	private String ssName;
+	@TableField("ss_type_name")
+	private String ssTypeName;
     /**
      * 企业金额
      */
@@ -75,13 +75,13 @@ public class SsMonthEmpChangeDetail implements Serializable {
     /**
      * 客户补缴金额
      */
-	@TableField("com_compensated_amount")
-	private BigDecimal comCompensatedAmount;
+	@TableField("com_compensate_amount")
+	private BigDecimal comCompensateAmount;
     /**
      * 雇员补缴金额
      */
-	@TableField("emp_compensated_amount")
-	private BigDecimal empCompensatedAmount;
+	@TableField("emp_compensate_amount")
+	private BigDecimal empCompensateAmount;
     /**
      * 一次性支付
      */
@@ -170,12 +170,12 @@ public class SsMonthEmpChangeDetail implements Serializable {
 		this.ssType = ssType;
 	}
 
-	public String getSsName() {
-		return ssName;
+	public String getSsTypeName() {
+		return ssTypeName;
 	}
 
-	public void setSsName(String ssName) {
-		this.ssName = ssName;
+	public void setSsTypeName(String ssTypeName) {
+		this.ssTypeName = ssTypeName;
 	}
 
 	public BigDecimal getComAmount() {
@@ -194,20 +194,20 @@ public class SsMonthEmpChangeDetail implements Serializable {
 		this.empAmount = empAmount;
 	}
 
-	public BigDecimal getComCompensatedAmount() {
-		return comCompensatedAmount;
+	public BigDecimal getComCompensateAmount() {
+		return comCompensateAmount;
 	}
 
-	public void setComCompensatedAmount(BigDecimal comCompensatedAmount) {
-		this.comCompensatedAmount = comCompensatedAmount;
+	public void setComCompensateAmount(BigDecimal comCompensateAmount) {
+		this.comCompensateAmount = comCompensateAmount;
 	}
 
-	public BigDecimal getEmpCompensatedAmount() {
-		return empCompensatedAmount;
+	public BigDecimal getEmpCompensateAmount() {
+		return empCompensateAmount;
 	}
 
-	public void setEmpCompensatedAmount(BigDecimal empCompensatedAmount) {
-		this.empCompensatedAmount = empCompensatedAmount;
+	public void setEmpCompensateAmount(BigDecimal empCompensateAmount) {
+		this.empCompensateAmount = empCompensateAmount;
 	}
 
 	public BigDecimal getOnePayment() {
@@ -268,11 +268,11 @@ public class SsMonthEmpChangeDetail implements Serializable {
 			", changeTypeName=" + changeTypeName +
 			", baseAmount=" + baseAmount +
 			", ssType=" + ssType +
-			", ssName=" + ssName +
+			", ssTypeName=" + ssTypeName +
 			", comAmount=" + comAmount +
 			", empAmount=" + empAmount +
-			", comCompensatedAmount=" + comCompensatedAmount +
-			", empCompensatedAmount=" + empCompensatedAmount +
+			", comCompensateAmount=" + comCompensateAmount +
+			", empCompensateAmount=" + empCompensateAmount +
 			", onePayment=" + onePayment +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +

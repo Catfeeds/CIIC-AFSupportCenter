@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.util.config;
 
 import com.ciicsh.gto.afsupportcenter.util.aspect.json.JsonResultAspect;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.LogAspect;
+import com.ciicsh.gto.afsupportcenter.util.aspect.param.RequestParamValidAspect;
 import com.ciicsh.gto.afsupportcenter.util.context.SpringContextHolder;
 import com.ciicsh.gto.afsupportcenter.util.context.annotation.CustomByNameCondition;
 import com.ciicsh.gto.afsupportcenter.util.context.annotation.CustomByTypeCondition;
@@ -22,6 +23,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -126,6 +128,22 @@ public class CustomConfiguration {
     // -----------------------------------
     // ------------- aop ----------------
     // -----------------------------------
+
+
+    @Bean
+    @ConditionalOnMissingBean
+    @Conditional(CustomByTypeCondition.class)
+    public MethodValidationPostProcessor methodValidationPostProcessor() {
+        return new MethodValidationPostProcessor();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @Conditional(CustomByTypeCondition.class)
+    public RequestParamValidAspect requestParamValidAspect() {
+        return new RequestParamValidAspect();
+    }
+
     @Bean
     @ConditionalOnMissingBean
     @Conditional(CustomByTypeCondition.class)

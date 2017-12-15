@@ -9,7 +9,8 @@
         <result column="employee_id" property="employeeId" />
         <result column="change_type" property="changeType" />
         <result column="change_type_name" property="changeTypeName" />
-        <result column="project_name" property="projectName" />
+        <result column="project_type" property="projectType" />
+        <result column="project_type_name" property="projectTypeName" />
         <result column="ss_type" property="ssType" />
         <result column="ss_type_name" property="ssTypeName" />
         <result column="imp_amount" property="impAmount" />

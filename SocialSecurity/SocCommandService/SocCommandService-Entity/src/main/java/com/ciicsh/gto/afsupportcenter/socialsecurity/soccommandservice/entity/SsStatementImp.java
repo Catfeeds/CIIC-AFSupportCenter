@@ -14,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-12
+ * @since 2017-12-15
  */
 @TableName("ss_statement_imp")
 public class SsStatementImp implements Serializable {
@@ -34,8 +34,8 @@ public class SsStatementImp implements Serializable {
     /**
      * 雇员编号
      */
-	@TableField("emp_num")
-	private String empNum;
+	@TableField("employee_id")
+	private String employeeId;
     /**
      * 雇员姓名
      */
@@ -134,12 +134,12 @@ public class SsStatementImp implements Serializable {
 		this.statementId = statementId;
 	}
 
-	public String getEmpNum() {
-		return empNum;
+	public String getEmployeeId() {
+		return employeeId;
 	}
 
-	public void setEmpNum(String empNum) {
-		this.empNum = empNum;
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
 	}
 
 	public String getEmpName() {
@@ -275,7 +275,7 @@ public class SsStatementImp implements Serializable {
 		return "SsStatementImp{" +
 			", statementImpId=" + statementImpId +
 			", statementId=" + statementId +
-			", empNum=" + empNum +
+			", employeeId=" + employeeId +
 			", empName=" + empName +
 			", changeType=" + changeType +
 			", changeTypeName=" + changeTypeName +

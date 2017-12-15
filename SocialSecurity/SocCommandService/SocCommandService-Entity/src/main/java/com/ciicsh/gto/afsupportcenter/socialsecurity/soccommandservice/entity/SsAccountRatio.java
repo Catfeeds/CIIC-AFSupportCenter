@@ -1,13 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
-
-import java.io.Serializable;
 import java.math.BigDecimal;
+import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableName;
+import java.io.Serializable;
 
 /**
  * <p>
@@ -15,7 +14,7 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-12
+ * @since 2017-12-15
  */
 @TableName("ss_account_ratio")
 public class SsAccountRatio implements Serializable {
@@ -38,7 +37,7 @@ public class SsAccountRatio implements Serializable {
 	@TableField("industry_category")
 	private String industryCategory;
     /**
-     * 企业工伤比例
+     * 企业比例
      */
 	@TableField("com_ratio")
 	private BigDecimal comRatio;
@@ -127,7 +126,7 @@ public class SsAccountRatio implements Serializable {
 		this.endMonth = endMonth;
 	}
 
-    public Boolean getActive() {
+	public Boolean getActive() {
 		return isActive;
 	}
 

@@ -12,7 +12,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-12
+ * @since 2017-12-15
  */
 @TableName("sal_company")
 public class SalCompany implements Serializable {
@@ -20,12 +20,12 @@ public class SalCompany implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 客户id
+     * 客户ID
      */
     @TableId("company_id")
 	private String companyId;
     /**
-     * 管理方id
+     * 管理方ID
      */
 	@TableField("management_id")
 	private String managementId;
@@ -34,7 +34,7 @@ public class SalCompany implements Serializable {
      */
 	private String title;
     /**
-     * 营业执照
+     * 营业执照编号
      */
 	@TableField("license_code")
 	private String licenseCode;
