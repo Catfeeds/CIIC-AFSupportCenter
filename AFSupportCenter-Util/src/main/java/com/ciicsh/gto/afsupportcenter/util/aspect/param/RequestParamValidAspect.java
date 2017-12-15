@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.core.annotation.Order;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -25,6 +26,7 @@ import java.util.Set;
  * @see org.springframework.validation.beanvalidation.MethodValidationPostProcessor
  */
 @Aspect
+@Order(1)// 1 校验，2 处理 JsonResult，99 log
 public class RequestParamValidAspect extends BasicAspect {
     private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     private final ExecutableValidator executableValidator = factory.getValidator().forExecutables();
@@ -95,7 +97,10 @@ public class RequestParamValidAspect extends BasicAspect {
         while (violationIterator.hasNext()) {
             list.add(violationIterator.next().getMessage());
         }
-        BusinessException.rethrow(StringUtils.join(list, "；"));
+
+        if (list.size() > 0) {
+            BusinessException.rethrow(StringUtils.join(list, "；"));
+        }
     }
 }
 

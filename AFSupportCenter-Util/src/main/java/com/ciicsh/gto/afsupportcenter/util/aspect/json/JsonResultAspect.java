@@ -5,11 +5,13 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.core.annotation.Order;
 
 /**
  * api 拦截
  */
 @Aspect
+@Order(2)// 1 校验，2 处理 JsonResult，99 log
 public class JsonResultAspect extends BasicAspect {
 
     // 配置 controller 环绕通知

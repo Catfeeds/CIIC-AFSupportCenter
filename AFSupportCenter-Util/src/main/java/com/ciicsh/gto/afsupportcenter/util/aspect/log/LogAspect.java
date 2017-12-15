@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.util.aspect.BasicAspect;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.core.annotation.Order;
 
 import java.lang.reflect.Method;
 
@@ -14,6 +15,7 @@ import java.lang.reflect.Method;
  * @interface Log
  */
 @Aspect
+@Order(99)// 1 校验，2 处理 JsonResult，99 log
 public class LogAspect extends BasicAspect {
 
   // 配置controller环绕通知,使用在方法aspect()上注册的切入点
