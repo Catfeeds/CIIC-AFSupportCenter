@@ -10,6 +10,20 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
-public @interface ExcelMethod {
+public @interface ExcelCell {
 
+    /**
+     * 标题
+     */
+    String value();
+
+    /**
+     * 转换
+     */
+    Class<? extends ExcelConvert> converter() default ExcelConvert.class;
+
+    /**
+     * 排序
+     */
+    int order() default 9999;
 }

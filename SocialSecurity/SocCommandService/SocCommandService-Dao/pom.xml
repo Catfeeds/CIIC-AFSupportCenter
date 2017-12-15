@@ -23,12 +23,5 @@
             <version>1.0.0</version>
         </dependency>
     </dependencies>
-    <dependencies>
-        <dependency>
-            <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
-            <artifactId>soccommandservice-entity</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-    </dependencies>
 
 </project>
