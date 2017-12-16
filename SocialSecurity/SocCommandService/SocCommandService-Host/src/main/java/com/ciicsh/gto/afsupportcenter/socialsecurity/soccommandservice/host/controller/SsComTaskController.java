@@ -227,7 +227,6 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
     }
 
     public SsComAccount getSsComAccount(Map<String, String> map) {
-
         SsComAccount ssComAccount = new SsComAccount();
         //设置账户ID
         ssComAccount.setComAccountId(isNotNull(map.get("comAccountId")) ? Long.parseLong(map.get("comAccountId")) : null);
