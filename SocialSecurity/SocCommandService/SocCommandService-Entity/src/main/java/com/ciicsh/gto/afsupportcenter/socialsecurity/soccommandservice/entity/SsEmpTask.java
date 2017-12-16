@@ -15,7 +15,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-15
+ * @since 2017-12-16
  */
 @TableName("ss_emp_task")
 public class SsEmpTask implements Serializable {
@@ -42,6 +42,30 @@ public class SsEmpTask implements Serializable {
      */
 	@TableField("task_category")
 	private Integer taskCategory;
+    /**
+     * 特殊操作任务类型:
+0 无
+1 死亡
+2 终止
+3 修改个人信息
+4 修改人员信息
+5 退账
+6工龄认定
+7 特殊工种认定
+8 账户合并
+9 遗属
+10 退休
+11 因病丧劳提前退休
+12 特殊工种提前退休
+13 退休高级专家增资
+14 退休军转增资
+15 外国人终止提取
+16 外来人员医保卡领取
+17 医保帐户提取
+18 生育津贴领取
+     */
+	@TableField("task_category_special")
+	private Integer taskCategorySpecial;
     /**
      * 是否加急 1 加急 0 空
      */
@@ -109,16 +133,6 @@ public class SsEmpTask implements Serializable {
 	@TableField("emp_classify")
 	private Integer empClassify;
     /**
-     * 任务处理状态:
-            1 本月未处理
-            2 下月未处理
-            3 处理中
-            4 已完成 
-            5 批退
-     */
-	@TableField("task_status")
-	private Integer taskStatus;
-    /**
      * 经办人用户ID
      */
 	@TableField("handle_user_id")
@@ -162,7 +176,12 @@ public class SsEmpTask implements Serializable {
 	@TableField("rejection_remark_date")
 	private LocalDate rejectionRemarkDate;
     /**
-     * 办理状态：1、材料收缴  2 、受理中  3、送审中  4 已完成
+     * 办理状态：1、未处理 2 、处理中  3 已完成（已办） 4、批退 5、不需处理
+     */
+	@TableField("task_status")
+	private Integer taskStatus;
+    /**
+     * 办理状态：1、材料收缴  2 、受理中  3、送审中  4 已完成  
      */
 	@TableField("handle_status")
 	private Integer handleStatus;
@@ -181,6 +200,16 @@ public class SsEmpTask implements Serializable {
      */
 	@TableField("finish_date")
 	private LocalDate finishDate;
+    /**
+     * 缴费段开始月份YYYYMM
+     */
+	@TableField("start_month")
+	private String startMonth;
+    /**
+     * 缴费段结束月份YYYYMM
+     */
+	@TableField("end_month")
+	private String endMonth;
     /**
      * 站内信历史记录, 
             格式：序号、部门名称、 用户姓名、 时间、 内容
@@ -244,6 +273,14 @@ public class SsEmpTask implements Serializable {
 
 	public void setTaskCategory(Integer taskCategory) {
 		this.taskCategory = taskCategory;
+	}
+
+	public Integer getTaskCategorySpecial() {
+		return taskCategorySpecial;
+	}
+
+	public void setTaskCategorySpecial(Integer taskCategorySpecial) {
+		this.taskCategorySpecial = taskCategorySpecial;
 	}
 
 	public Integer getUrgent() {
@@ -334,14 +371,6 @@ public class SsEmpTask implements Serializable {
 		this.empClassify = empClassify;
 	}
 
-	public Integer getTaskStatus() {
-		return taskStatus;
-	}
-
-	public void setTaskStatus(Integer taskStatus) {
-		this.taskStatus = taskStatus;
-	}
-
 	public String getHandleUserId() {
 		return handleUserId;
 	}
@@ -430,6 +459,14 @@ public class SsEmpTask implements Serializable {
 		this.rejectionRemarkDate = rejectionRemarkDate;
 	}
 
+	public Integer getTaskStatus() {
+		return taskStatus;
+	}
+
+	public void setTaskStatus(Integer taskStatus) {
+		this.taskStatus = taskStatus;
+	}
+
 	public Integer getHandleStatus() {
 		return handleStatus;
 	}
@@ -460,6 +497,22 @@ public class SsEmpTask implements Serializable {
 
 	public void setFinishDate(LocalDate finishDate) {
 		this.finishDate = finishDate;
+	}
+
+	public String getStartMonth() {
+		return startMonth;
+	}
+
+	public void setStartMonth(String startMonth) {
+		this.startMonth = startMonth;
+	}
+
+	public String getEndMonth() {
+		return endMonth;
+	}
+
+	public void setEndMonth(String endMonth) {
+		this.endMonth = endMonth;
 	}
 
 	public String getChatHistory() {
@@ -517,6 +570,7 @@ public class SsEmpTask implements Serializable {
 			", customerId=" + customerId +
 			", empArchiveId=" + empArchiveId +
 			", taskCategory=" + taskCategory +
+			", taskCategorySpecial=" + taskCategorySpecial +
 			", urgent=" + urgent +
 			", submitterId=" + submitterId +
 			", submitterName=" + submitterName +
@@ -528,7 +582,6 @@ public class SsEmpTask implements Serializable {
 			", taskFormContent=" + taskFormContent +
 			", salary=" + salary +
 			", empClassify=" + empClassify +
-			", taskStatus=" + taskStatus +
 			", handleUserId=" + handleUserId +
 			", handleUserName=" + handleUserName +
 			", empSsSerial=" + empSsSerial +
@@ -540,10 +593,13 @@ public class SsEmpTask implements Serializable {
 			", rejectionRemark=" + rejectionRemark +
 			", rejectionRemarkMan=" + rejectionRemarkMan +
 			", rejectionRemarkDate=" + rejectionRemarkDate +
+			", taskStatus=" + taskStatus +
 			", handleStatus=" + handleStatus +
 			", startHandleDate=" + startHandleDate +
 			", sendCheckDate=" + sendCheckDate +
 			", finishDate=" + finishDate +
+			", startMonth=" + startMonth +
+			", endMonth=" + endMonth +
 			", chatHistory=" + chatHistory +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +

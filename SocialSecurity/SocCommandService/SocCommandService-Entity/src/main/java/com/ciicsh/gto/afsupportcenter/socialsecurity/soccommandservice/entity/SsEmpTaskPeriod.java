@@ -15,7 +15,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-15
+ * @since 2017-12-16
  */
 @TableName("ss_emp_task_period")
 public class SsEmpTaskPeriod implements Serializable {
@@ -48,7 +48,7 @@ public class SsEmpTaskPeriod implements Serializable {
 	@TableField("end_month")
 	private String endMonth;
     /**
-     * 汇缴方式:   1 - 正常 2 - 补缴 3 - 调整
+     * 缴纳方式:   1 - 正常 2 - 补缴 3 - 调整
      */
 	@TableField("remit_way")
 	private Integer remitWay;

@@ -14,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-15
+ * @since 2017-12-16
  */
 @TableName("emp_employee")
 public class EmpEmployee implements Serializable {

@@ -13,7 +13,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-15
+ * @since 2017-12-16
  */
 @TableName("ss_month_com_pay")
 public class SsMonthComPay implements Serializable {

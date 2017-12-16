@@ -1,8 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * SsEmpTask DTO
@@ -10,6 +12,7 @@ import java.time.LocalDateTime;
 public class SsEmpTaskDTO extends SsEmpTask {
     // ohter
     // 操作类型，用于区分操作
+    // operatorType 操作类型，1 常规操作、2 特殊操作，默认常规操作
     private Integer operatorType;
     // 任务类型
     private Integer[] taskCategories;
@@ -17,6 +20,9 @@ public class SsEmpTaskDTO extends SsEmpTask {
     private LocalDateTime beginSubmitTime;
     // 任务发起结束时间
     private LocalDateTime endSubmitTime;
+
+    // 任务单费用段
+    private List<SsEmpTaskPeriod> empTaskPeriods;
 
     // 来源表 emp_employee
     // 雇员姓名
@@ -186,5 +192,13 @@ public class SsEmpTaskDTO extends SsEmpTask {
 
     public void setSupplierId(String supplierId) {
         this.supplierId = supplierId;
+    }
+
+    public List<SsEmpTaskPeriod> getEmpTaskPeriods() {
+        return empTaskPeriods;
+    }
+
+    public void setEmpTaskPeriods(List<SsEmpTaskPeriod> empTaskPeriods) {
+        this.empTaskPeriods = empTaskPeriods;
     }
 }

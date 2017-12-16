@@ -8,6 +8,7 @@
         <result column="customer_id" property="customerId" />
         <result column="emp_archive_id" property="empArchiveId" />
         <result column="task_category" property="taskCategory" />
+        <result column="task_category_special" property="taskCategorySpecial" />
         <result column="urgent" property="urgent" />
         <result column="submitter_id" property="submitterId" />
         <result column="submitter_name" property="submitterName" />
@@ -19,7 +20,6 @@
         <result column="task_form_content" property="taskFormContent" />
         <result column="salary" property="salary" />
         <result column="emp_classify" property="empClassify" />
-        <result column="task_status" property="taskStatus" />
         <result column="handle_user_id" property="handleUserId" />
         <result column="handle_user_name" property="handleUserName" />
         <result column="emp_ss_serial" property="empSsSerial" />
@@ -31,10 +31,13 @@
         <result column="rejection_remark" property="rejectionRemark" />
         <result column="rejection_remark_man" property="rejectionRemarkMan" />
         <result column="rejection_remark_date" property="rejectionRemarkDate" />
+        <result column="task_status" property="taskStatus" />
         <result column="handle_status" property="handleStatus" />
         <result column="start_handle_date" property="startHandleDate" />
         <result column="send_check_date" property="sendCheckDate" />
         <result column="finish_date" property="finishDate" />
+        <result column="start_month" property="startMonth" />
+        <result column="end_month" property="endMonth" />
         <result column="chat_history" property="chatHistory" />
         <result column="is_active" property="isActive" />
         <result column="created_time" property="createdTime" />

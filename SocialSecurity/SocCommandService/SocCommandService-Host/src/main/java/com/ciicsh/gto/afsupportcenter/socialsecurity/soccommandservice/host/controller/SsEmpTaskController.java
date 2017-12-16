@@ -1,21 +1,28 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskPeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsEmpTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.dto.emptask.RejectionParamDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.dto.emptask.TaskStatusConst;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
+import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +41,9 @@ import java.util.Optional;
 @Log("本地社保的雇员任务单")
 public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
 
+    @Autowired
+    private ISsEmpTaskPeriodService ssEmpTaskPeriodService;
+
     /**
      * 雇员日常操作查询
      */
@@ -49,7 +59,7 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
      */
     @Log("雇员任务批退")
     @PostMapping("/rejection")
-    public JsonResult<Boolean> rejection(RejectionRequestParam param) {
+    public JsonResult<Boolean> rejection(RejectionParamDTO param) {
         List<Long> ids = Optional.ofNullable(param.getIds()).orElse(Collections.emptyList());
         int length = ids.size();
         String remark = param.getRemark();
@@ -59,11 +69,50 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
             SsEmpTask task = new SsEmpTask();
             task.setEmpTaskId(ids.get(i));
             task.setRejectionRemark(remark);
-            task.setTaskStatus(TaskStatus.REJECTION);
+            task.setTaskStatus(TaskStatusConst.REJECTION);
             list.add(task);
         }
         boolean isSuccess = business.updateBatchById(list);
         return JsonResultKit.of(isSuccess);
+    }
+
+    /**
+     * 雇员任务查询
+     */
+    @Log("雇员任务查询")
+    @PostMapping("/empTaskById")
+    public JsonResult<SsEmpTaskDTO> empTaskById(@RequestParam("empTaskId") Long empTaskId, @RequestParam(value = "operatorType", defaultValue = "-1") Integer operatorType) {
+        SsEmpTask empTask = business.selectById(empTaskId);
+        SsEmpTaskDTO dto = JsonKit.castToObject(empTask, SsEmpTaskDTO.class);
+
+        // operatorType == 1 查询任务单费用段
+        if (operatorType == 1) {
+            List<SsEmpTaskPeriod> periods = ssEmpTaskPeriodService.queryByEmpTaskId(String.valueOf(empTaskId));
+            dto.setEmpTaskPeriods(periods);
+        }
+        return JsonResultKit.of(dto);
+    }
+
+
+    /**
+     * 雇员任务办理
+     */
+    @Log("雇员任务办理")
+    @PostMapping("/handle")
+    public JsonResult<Boolean> handle(@RequestBody SsEmpTaskDTO param) {
+        {// 更新任务单费用段
+            List<SsEmpTaskPeriod> periods = param.getEmpTaskPeriods();
+            if (periods != null) {
+                ssEmpTaskPeriodService.saveForEmpTaskId(periods, param.getEmpTaskId());
+            }
+        }
+        // 备注时间
+        LocalDate now = LocalDate.now();
+        param.setHandleRemarkDate(now);
+        param.setRejectionRemarkDate(now);
+        // 更新雇员任务信息
+        business.updateById(param);
+        return JsonResultKit.of(true);
     }
 
 
@@ -81,44 +130,6 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
         // 查询
         JsonResult<List<SsEmpTaskDTO>> jsonResult = employeeOperatorQuery(pageInfo);
         // 导出
-    }
-
-    /**
-     * 任务状态
-     */
-    private interface TaskStatus {
-
-        int CURRENT_MONTH = 1;// 本月未处理
-        int NEXT_MONTH = 2;// 下月未处理
-        int PROCESSING = 3;// 处理中
-        int FINISH = 4;// 已完成
-        int REJECTION = 5;// 批退
-    }
-
-    /**
-     * 批退 请求参数
-     */
-    private static class RejectionRequestParam {
-        // 批退 id 列表
-        private List<Long> ids;
-        // 批退备注
-        private String remark;
-
-        public List<Long> getIds() {
-            return ids;
-        }
-
-        public void setIds(List<Long> ids) {
-            this.ids = ids;
-        }
-
-        public String getRemark() {
-            return remark;
-        }
-
-        public void setRemark(String remark) {
-            this.remark = remark;
-        }
     }
 }
 
