@@ -2,7 +2,6 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsEmpTaskDTO;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
-import com.ciicsh.gto.afsupportcenter.util.excel.ExcelKit;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,8 +27,8 @@ public class TestController {
         String fileName = "test.xlsx";
         try {
             FileInputStream is = new FileInputStream("D:\\word\\" + fileName);
-            Workbook workbook = ExcelKit.createWorkbookForResponse(fileName, is, response);
-            workbook.write(response.getOutputStream());
+//            Workbook workbook = ExcelKit.createWorkbookForResponse(fileName, is, response);
+//            workbook.write(response.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }

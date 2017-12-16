@@ -12,7 +12,12 @@
 
     <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
     <artifactId>afsupportcenter-socialsecurity-soccommandservice-business</artifactId>
+    <packaging>jar</packaging>
     <version>1.0.0</version>
+
+    <build>
+        <finalName>gt1.afsupportcenter.soccommandservice-business</finalName>
+    </build>
 
     <dependencies>
         <dependency>

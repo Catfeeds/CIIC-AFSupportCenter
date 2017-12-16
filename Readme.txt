@@ -1,0 +1,9 @@
+EmployeeManagement: 雇佣管理
+FlexibleBenefit: 弹性福利
+HealthMedical: 健康医疗
+HouseFund: 公积金
+SocialSecurity: 社保
+Job: 定时任务
+   FundJob: 本地公积金定时任务
+   SocJob: 本地社保定时任务
+   ZYJob: 中盈保险定时任务

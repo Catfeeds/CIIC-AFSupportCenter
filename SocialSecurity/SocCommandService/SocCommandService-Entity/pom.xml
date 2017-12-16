@@ -12,5 +12,7 @@
 
     <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
     <artifactId>afsupportcenter-socialsecurity-soccommandservice-entity</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
 
 </project>
