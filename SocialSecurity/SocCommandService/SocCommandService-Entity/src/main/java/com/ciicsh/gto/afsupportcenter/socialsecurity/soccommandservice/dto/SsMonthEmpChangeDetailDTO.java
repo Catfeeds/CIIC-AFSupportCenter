@@ -1,5 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto;
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthEmpChangeDetail;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -12,66 +14,15 @@ import java.math.BigDecimal;
  * @author wengxk
  * @since 2017-12-13
  */
-public class SsMonthEmpChangeDetailDTO implements Serializable {
+public class SsMonthEmpChangeDetailDTO extends SsMonthEmpChangeDetail {
 
     private static final long serialVersionUID = 1L;
 
+
     /**
-     * 记录Id
-     */
-	private Long monthEmpChangeDetailId;
-    /**
-     * 外键,关联到变更主表
-     */
-	private Long monthEmpChangeId;
-    /**
-     * 外键，员工Id
-     */
-	private String employeeId;
-    /**
-     * 外键，员工Id
+     * 员工名
      */
     private String employeeName;
-    /**
-     * 变更类型
-     */
-	private String changeType;
-    /**
-     * 变更类型名称
-     */
-    private String changeTypeName;
-    /**
-     * 基数
-     */
-	private BigDecimal baseAmount;
-    /**
-     * 社保险种类型，取自全局数据字典表gtobasicdb.DicItem
-     */
-	private Integer ssType;
-    /**
-     * 社保险种名称
-     */
-	private String ssTypeName;
-    /**
-     * 企业金额
-     */
-	private BigDecimal comAmount;
-    /**
-     * 雇员金额
-     */
-	private BigDecimal empAmount;
-    /**
-     * 客户补缴金额
-     */
-	private BigDecimal comCompensateAmount;
-    /**
-     * 雇员补缴金额
-     */
-	private BigDecimal empCompensateAmount;
-    /**
-     * 一次性支付
-     */
-	private BigDecimal onePayment;
 
 	/*--------页面展示字段----------------------------------------------------------*/
 
@@ -173,101 +124,7 @@ public class SsMonthEmpChangeDetailDTO implements Serializable {
 
 
 
-	public Long getMonthEmpChangeDetailId() {
-		return monthEmpChangeDetailId;
-	}
 
-	public void setMonthEmpChangeDetailId(Long monthEmpChangeDetailId) {
-		this.monthEmpChangeDetailId = monthEmpChangeDetailId;
-	}
-
-	public Long getMonthEmpChangeId() {
-		return monthEmpChangeId;
-	}
-
-	public void setMonthEmpChangeId(Long monthEmpChangeId) {
-		this.monthEmpChangeId = monthEmpChangeId;
-	}
-
-	public String getEmployeeId() {
-		return employeeId;
-	}
-
-	public void setEmployeeId(String employeeId) {
-		this.employeeId = employeeId;
-	}
-
-	public String getChangeType() {
-		return changeType;
-	}
-
-	public void setChangeType(String changeType) {
-		this.changeType = changeType;
-	}
-
-	public BigDecimal getBaseAmount() {
-		return baseAmount;
-	}
-
-	public void setBaseAmount(BigDecimal baseAmount) {
-		this.baseAmount = baseAmount;
-	}
-
-	public Integer getSsType() {
-		return ssType;
-	}
-
-	public void setSsType(Integer ssType) {
-		this.ssType = ssType;
-	}
-
-	public String getSsTypeName() {
-		return ssTypeName;
-	}
-
-	public void setSsTypeName(String ssTypeName) {
-		this.ssTypeName = ssTypeName;
-	}
-
-	public BigDecimal getComAmount() {
-		return comAmount;
-	}
-
-	public void setComAmount(BigDecimal comAmount) {
-		this.comAmount = comAmount;
-	}
-
-	public BigDecimal getEmpAmount() {
-		return empAmount;
-	}
-
-	public void setEmpAmount(BigDecimal empAmount) {
-		this.empAmount = empAmount;
-	}
-
-	public BigDecimal getComCompensateAmount() {
-		return comCompensateAmount;
-	}
-
-	public void setComCompensateAmount(BigDecimal comCompensateAmount) {
-		this.comCompensateAmount = comCompensateAmount;
-	}
-
-	public BigDecimal getEmpCompensateAmount() {
-		return empCompensateAmount;
-	}
-
-	public void setEmpCompensateAmount(BigDecimal empCompensateAmount) {
-		this.empCompensateAmount = empCompensateAmount;
-	}
-
-	public BigDecimal getOnePayment() {
-		return onePayment;
-	}
-
-	public void setOnePayment(BigDecimal onePayment) {
-		this.onePayment = onePayment;
-	}
 
     public BigDecimal getComAmountPension() {
         return comAmountPension;
@@ -437,13 +294,6 @@ public class SsMonthEmpChangeDetailDTO implements Serializable {
         this.empCompensatedAmountMaternity = empCompensatedAmountMaternity;
     }
 
-    public String getChangeTypeName() {
-        return changeTypeName;
-    }
-
-    public void setChangeTypeName(String changeTypeName) {
-        this.changeTypeName = changeTypeName;
-    }
 
     public String getEmployeeName() {
         return employeeName;
