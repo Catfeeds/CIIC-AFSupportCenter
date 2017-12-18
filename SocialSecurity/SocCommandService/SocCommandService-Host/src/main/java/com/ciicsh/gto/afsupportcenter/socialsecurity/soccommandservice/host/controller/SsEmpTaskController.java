@@ -1,7 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskPeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsEmpTaskDTO;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -81,7 +79,9 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
      */
     @Log("雇员任务查询")
     @PostMapping("/empTaskById")
-    public JsonResult<SsEmpTaskDTO> empTaskById(@RequestParam("empTaskId") Long empTaskId, @RequestParam(value = "operatorType", defaultValue = "-1") Integer operatorType) {
+    public JsonResult<SsEmpTaskDTO> empTaskById(@RequestParam("empTaskId") Long empTaskId
+        , @RequestParam(value = "operatorType", defaultValue = "-1") Integer operatorType // 1 任务单费用段
+    ) {
         SsEmpTask empTask = business.selectById(empTaskId);
         SsEmpTaskDTO dto = JsonKit.castToObject(empTask, SsEmpTaskDTO.class);
 
@@ -106,12 +106,14 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
                 ssEmpTaskPeriodService.saveForEmpTaskId(periods, param.getEmpTaskId());
             }
         }
-        // 备注时间
-        LocalDate now = LocalDate.now();
-        param.setHandleRemarkDate(now);
-        param.setRejectionRemarkDate(now);
-        // 更新雇员任务信息
-        business.updateById(param);
+        {// 更新雇员任务信息
+            // 备注时间
+            LocalDate now = LocalDate.now();
+            param.setHandleRemarkDate(now);
+            param.setRejectionRemarkDate(now);
+            // 更新雇员任务信息
+            business.updateById(param);
+        }
         return JsonResultKit.of(true);
     }
 

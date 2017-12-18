@@ -17,7 +17,6 @@ import java.util.List;
  * @since 2017-12-01
  */
 public interface SsComAccountMapper extends BaseMapper<SsComAccount> {
-    public List<SsComAccountDTO> queryComAccount(SsComAccountDTO ssComAccountDTO);
     /**
      * 根据雇员任务 ID 查询 企业社保账户信息
      *

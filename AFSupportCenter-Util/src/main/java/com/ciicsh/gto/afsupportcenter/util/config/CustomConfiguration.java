@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.util.config;
 
+import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.ciicsh.gto.afsupportcenter.util.aspect.json.JsonResultAspect;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.LogAspect;
 import com.ciicsh.gto.afsupportcenter.util.aspect.param.RequestParamValidAspect;
@@ -17,6 +18,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -57,6 +59,26 @@ public class CustomConfiguration {
     // ---------- Listener -------------
     // -----------------------------------
 
+    @Bean
+    @ConditionalOnMissingBean
+    @Conditional(CustomByTypeCondition.class)
+    public SimpleModule simpleModule() {
+        SimpleModule simpleModule = new SimpleModule();
+        simpleModule.addSerializer(String.class, new WafJsonSerializer());
+        simpleModule.addSerializer(LocalDate.class, new LocalDateSerializer());
+        simpleModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer());
+        simpleModule.addSerializer(LocalTime.class, new LocalTimeSerializer());
+        JsonResultSerializer.of(simpleModule, JsonResult.class);
+        return simpleModule;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @Conditional(CustomByTypeCondition.class)
+    public FastJsonConfig fastJsonConfig() {
+        return new FastJsonConfig();
+    }
+
     /**
      * reqponse 响应参数序列号
      *
@@ -65,12 +87,9 @@ public class CustomConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @Conditional(CustomByTypeCondition.class)
-    public MappingJackson2HttpMessageConverter jackson2HttpMessageConverter() {
-        MappingJackson2HttpMessageConverter jackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+    public MappingJackson2HttpMessageConverter jackson2HttpMessageConverter(@Autowired SimpleModule simpleModule, @Autowired FastJsonConfig fastJsonConfig) {
+        MappingJackson2HttpMessageConverter jackson2HttpMessageConverter = new FastJsonToMappingJackson2HttpMessageConverter(fastJsonConfig);
         ObjectMapper objectMapper = new ObjectMapper();
-
-        // 特殊处理属性名称，如：SSPolicyId
-        objectMapper.setPropertyNamingStrategy(new CustomPropertyNamingStrategy());
 
         // 允许单引号
         objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
@@ -81,12 +100,6 @@ public class CustomConfiguration {
         objectMapper.configure(JsonGenerator.Feature.QUOTE_NON_NUMERIC_NUMBERS, true);
 
         // json 过滤，如 @RequestBody、@ResponseBody
-        SimpleModule simpleModule = new SimpleModule();
-        simpleModule.addSerializer(String.class, new WafJsonSerializer());
-        simpleModule.addSerializer(LocalDate.class, new LocalDateSerializer());
-        simpleModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer());
-        simpleModule.addSerializer(LocalTime.class, new LocalTimeSerializer());
-        simpleModule.addSerializer(JsonResult.class, new JsonResultSerializer());
         objectMapper.registerModule(simpleModule);
 
         jackson2HttpMessageConverter.setObjectMapper(objectMapper);
