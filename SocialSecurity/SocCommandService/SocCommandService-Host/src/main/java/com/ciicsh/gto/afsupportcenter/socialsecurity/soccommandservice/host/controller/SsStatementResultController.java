@@ -7,6 +7,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsSta
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -43,6 +44,15 @@ public class SsStatementResultController extends BasicController<ISsStatementRes
         jsonResult.setData(resultList);
 
         return jsonResult;
+    }
+
+    @Log("重算对账结果")
+    @PostMapping("/calculateSstatementResult")
+    public JsonResult<String> calculateSstatementResult(Long statementId) {
+        JsonResult<String> json = new JsonResult<>();
+        json.setData("调用成功");
+        business.calculateSstatementResult(statementId);
+        return json;
     }
 }
 

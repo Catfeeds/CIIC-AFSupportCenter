@@ -37,9 +37,21 @@
         WHERE
           1=1
           AND T1.is_active = '1'
-          AND T1.statement_id = #{statementId,jdbcType=VARCHAR}
+          AND T1.statement_id = #{statementId,jdbcType=BIGINT}
+        ORDER BY
+          T1.employee_id,T1.change_type,T1.ss_type,T1.project_type
     </select>
+    <update id="cleanResultByStatementId" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementResultDTO">
+        UPDATE
+          ss_statement_result T1
+        SET
+          T1.is_active = 0,
+          T1.modified_time = #{modifiedTime},
+          T1.modified_by = #{modifiedBy,jdbcType=VARCHAR}
 
+        WHERE
+          T1.statement_id = #{statementId,jdbcType=BIGINT}
+    </update>
 
 
 </mapper>

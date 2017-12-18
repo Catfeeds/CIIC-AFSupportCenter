@@ -25,4 +25,13 @@ public interface SsStatementResultMapper extends BaseMapper<SsStatementResult> {
      * @return  List<SsStatementResultDTO>
      */
     List<SsStatementResultDTO> statementResultQuery(SsStatementResultDTO SsStatementResultDTO);
+
+    /**
+     * <p>Description: 清理对账单结果表</p>
+     *
+     * @author wengxk
+     * @date 2017-12-15
+     * @param SsStatementResultDTO 清理条件
+     */
+    void cleanResultByStatementId(SsStatementResultDTO SsStatementResultDTO);
 }

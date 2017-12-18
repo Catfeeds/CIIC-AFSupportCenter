@@ -3,14 +3,14 @@
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsStatementImpMapper">
 
 
-    <select id="getImpDetailByStatementId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="getImpDetailByStatementId" parameterType="java.lang.Long" resultMap="BaseResultMap">
         SELECT
             *
         FROM
             ss_statement_imp T1
         WHERE
             T1.is_active = '1'
-            AND T1.statement_id = #{statementId,jdbcType=VARCHAR}
+            AND T1.statement_id = #{statementId,jdbcType=BIGINT}
     </select>
 
 

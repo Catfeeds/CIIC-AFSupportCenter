@@ -30,7 +30,7 @@
           ON
             T2.month_emp_change_id = T1.month_emp_change_id
             AND T2.is_active = '1'
-            AND T2.statement_id = #{statementId,jdbcType=VARCHAR}
+            AND T2.statement_id = #{statementId,jdbcType=BIGINT}
           LEFT JOIN
             emp_employee T3
             ON
@@ -42,7 +42,7 @@
             T1.employee_id,T1.change_type,T1.ss_type
     </select>
 
-    <select id="serachMonthEmpChangeDetailPOByStatementId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="serachMonthEmpChangeDetailPOByStatementId" parameterType="java.lang.Long" resultMap="BaseResultMap">
         SELECT
           T1.*
         FROM
@@ -52,7 +52,7 @@
           ON
             T2.month_emp_change_id = T1.month_emp_change_id
           AND T2.is_active = '1'
-          AND T2.statement_id = #{statementId,jdbcType=VARCHAR}
+          AND T2.statement_id = #{statementId,jdbcType=BIGINT}
         WHERE
           1=1
           AND T1.is_active = '1'
