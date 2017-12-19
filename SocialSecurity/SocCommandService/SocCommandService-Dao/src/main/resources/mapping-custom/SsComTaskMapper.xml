@@ -318,6 +318,12 @@
 				WHERE
 				sct.is_active =1
                 AND sct.company_task_id = #{companyTaskId}
+        <if test="isComplete != null ">
+            AND sct.task_status  != 3
+        </if>
+        <if test="isComplete == null ">
+            AND sct.task_status  = 3
+        </if>
     </select>
     <!--查询账户信息和材料-->
     <select id="queryAccountInfoAndMaterial" resultMap="getMaterialResultMap">
@@ -361,6 +367,12 @@
 				WHERE
 				sct.is_active =1
                 AND sct.company_task_id = #{companyTaskId}
+           <if test="isComplete != null ">
+                AND sct.task_status  != 3
+           </if>
+        <if test="isComplete == null ">
+            AND sct.task_status  = 3
+        </if>
     </select>
 
     <!-- 查询企业信息和前道传来的JSON 解析到期时间和支付方式 -->
@@ -393,5 +405,12 @@
         WHERE
         sct.is_active =1
         AND sct.company_task_id = #{companyTaskId}
+        <if test="isComplete != null ">
+            AND sct.task_status  != 3
+        </if>
+        <if test="isComplete == null ">
+            AND sct.task_status  = 3
+        </if>
+
     </select>
 </mapper>

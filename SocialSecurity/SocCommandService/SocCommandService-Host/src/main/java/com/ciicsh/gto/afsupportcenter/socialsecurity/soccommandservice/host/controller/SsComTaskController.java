@@ -101,6 +101,10 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
     public JsonResult<SsComTaskDTO> getCompanyInfoAndMaterial(SsComTaskDTO ssComTaskDTO) {
         if (null != ssComTaskDTO.getCompanyTaskId()) {
             if (isNotNull(ssComTaskDTO.getOperatorType())) {
+                //表示查询已完成的任务单
+                if("3".equals(ssComTaskDTO.getIsComplete())){
+                    ssComTaskDTO.setIsComplete(null);
+                }
                 //1 开户 2 转移 3 变更 4 终止
                 if ("1".equals(ssComTaskDTO.getOperatorType())) {
                     //开户时 需要查询企业信息(企业信息和材料)
@@ -118,12 +122,16 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
 
     @Log("查询企业信息和前道传过来的JSON（包含社保截止和付款方式）")
     @RequestMapping(value = "getComInfoAndPayWay")
-    public JsonResult<SsComTaskDTO> queryComInfoAndPayWay(SsComTask ssComTask) {
+    public JsonResult<SsComTaskDTO> queryComInfoAndPayWay(SsComTaskDTO ssComTask) {
+        //如果查询不是状态为3的 则 赋值为空
+        if("3".equals(ssComTask.getIsComplete())){
+            ssComTask.setIsComplete(null);
+        }
         SsComTaskDTO ssComTaskDTO = business.queryComInfoAndPayWay(ssComTask);
         return JsonResultKit.of(ssComTaskDTO);
     }
 
-    @Log("添加或者修改企业任务单")
+    @Log("添加或者修改企业任务单（开户）")
     @RequestMapping(value = "addOrUpdateCompanyTask")
     public JsonResult<Boolean> addOrUpdateCompanyTask(@RequestParam Map<String, String> map) {
         //获得社保账户信息
@@ -155,6 +163,8 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
                 ssComAccount.setState(new Integer(2));
                 ssComAccount.setComAccountId(ssComTaskDTO.getComAccountId());
                 ssComAccount.setEndDate(ssComTaskDTO.getEndDate());
+                ssComAccount.setModifiedTime(LocalDateTime.now());
+                ssComAccount.setModifiedBy("xsj");
                 result = business.updateOrHandlerTask(ssComTaskDTO, ssComAccount);
             }
         } else {
@@ -213,7 +223,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
         String dynamicExtendStr = JSONObject.toJSONString(dynamicExtendMap);
         ssComTaskDTO.setDynamicExtend(dynamicExtendStr);
         //0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
-        if (ssComTaskDTO.getTaskStatus() == 3) {
+        if (ssComTaskDTO.getTaskStatus() == 3){
             Object object = getObject(ssComTaskDTO);
             //变更类型操作
             result = business.updateOrHandlerTask(ssComTaskDTO, object);
@@ -318,7 +328,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
         //企业工伤比例
         ssAccountRatio.setComRatio(isNotNull(map.get("comRatio")) ? new BigDecimal(map.get("comRatio")).setScale(4, BigDecimal.ROUND_HALF_UP) : null);
         //开始月份
-        ssAccountRatio.setStartMonth(isNotNull(map.get("startMonth")) ? map.get("startMonth") : null);
+        ssAccountRatio.setStartMonth(isNotNull(map.get("startMonth")) ? map.get("startMonth").replaceAll("-","") : null);
 
         ssAccountRatio.setModifiedBy("xsj");
         ssAccountRatio.setModifiedTime(LocalDateTime.now());

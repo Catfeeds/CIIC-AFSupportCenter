@@ -58,6 +58,13 @@ public class SsComTaskDTO extends SsComTask{
     //开始年月
     private LocalDate startMonth;
 
+    /**
+     *  判断是否是完成状态即 在任务单办理页面时候查询没有完成的任务  在完成tab查看已完成的
+     *  如果为空则是在完成tab中查询，否则是在开户办理时查询信息（信息为任务状态!=3的）
+     */
+
+    private String isComplete;
+
     public String getCompanyName() {
         return companyName;
     }
@@ -200,5 +207,13 @@ public class SsComTaskDTO extends SsComTask{
 
     public void setChangeContentValue(String changeContentValue) {
         this.changeContentValue = changeContentValue;
+    }
+
+    public String getIsComplete() {
+        return isComplete;
+    }
+
+    public void setIsComplete(String isComplete) {
+        this.isComplete = isComplete;
     }
 }

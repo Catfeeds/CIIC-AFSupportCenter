@@ -111,12 +111,12 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
     /**
      * 查询企业信息和 前道传过来的JSON（包含社保截止和付款方式）
      *
-     * @param ssComTask
+     * @param ssComTaskDTO
      * @return
      */
-    public SsComTaskDTO queryComInfoAndPayWay(SsComTask ssComTask) {
+    public SsComTaskDTO queryComInfoAndPayWay(SsComTaskDTO ssComTaskDTO) {
 
-        return baseMapper.queryComInfoAndPayWay(ssComTask);
+        return baseMapper.queryComInfoAndPayWay(ssComTaskDTO);
     }
 
     /**
