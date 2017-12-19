@@ -28,6 +28,8 @@
         <mybatis.generator.version>1.3.5</mybatis.generator.version>
         <pagehelper.starter.version>1.2.2</pagehelper.starter.version>
         <basicdataservice.version>1.0.0</basicdataservice.version>
+        <mybatisplus-spring-boot-starter.version>1.0.5</mybatisplus-spring-boot-starter.version>
+        <mybatisplus.version>2.1.3</mybatisplus.version>
     </properties>
 
     <dependencyManagement>
@@ -39,8 +41,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-
         </dependencies>
     </dependencyManagement>
 
@@ -113,6 +113,16 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus</artifactId>
+            <version>${mybatisplus.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatisplus-spring-boot-starter</artifactId>
+            <version>${mybatisplus-spring-boot-starter.version}</version>
         </dependency>
 
         <dependency>
@@ -203,17 +213,17 @@
         <module>./EmployManagement/EmployCommandService/EmployCommandService-Business</module>
         <module>./EmployManagement/EmployCommandService/EmployCommandService-Entity</module>-->
 
+        <module>./FlexibleBenefit-entity</module>
+
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Host</module>
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Api</module>
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Dao</module>
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Business</module>
-        <module>./FlexibleBenefit/FBQueryService/FBQueryService-Entity</module>
 
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Host</module>
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Api</module>
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Dao</module>
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Business</module>
-        <module>./FlexibleBenefit/FBCommandService/FBCommandService-Entity</module>
 
         <!--<module>./Job/FundJob/FundJob-Host</module>
         <module>./Job/FundJob/FundJob-Dao</module>
