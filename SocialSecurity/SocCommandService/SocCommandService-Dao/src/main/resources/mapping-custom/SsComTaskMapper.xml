@@ -298,31 +298,34 @@
         sct.submit_remark,
         sct.task_status,
         cc.title,
-		scm.*
+        scm.*
         FROM ss_com_task sct
-        LEFT JOIN (SELECT company_id, title FROM 	sal_company  WHERE is_active = 1)cc ON sct.company_id = cc.company_id
-				LEFT JOIN
-				(SELECT
-                com_material_id,
-                company_task_id AS company_task_id_m,
-                material_type,
-                material_name,
-                submit_time AS submit_time_m,
-                receive_time,
-                remark,
-                `status`
-                FROM
-                ss_com_material  WHERE is_active = 1
-				)
-				scm ON sct.company_task_id = scm.company_task_id_m
-				WHERE
-				sct.is_active =1
-                AND sct.company_task_id = #{companyTaskId}
-        <if test="isComplete != null ">
-            AND sct.task_status  != 3
+        LEFT JOIN (SELECT company_id, title FROM sal_company WHERE is_active = 1)cc ON sct.company_id = cc.company_id
+        LEFT JOIN
+        (SELECT
+        com_material_id,
+        company_task_id AS company_task_id_m,
+        material_type,
+        material_name,
+        submit_time AS submit_time_m,
+        receive_time,
+        remark,
+        `status`
+        FROM
+        ss_com_material WHERE is_active = 1
+        )
+        scm ON sct.company_task_id = scm.company_task_id_m
+        WHERE
+        sct.is_active =1
+        AND sct.company_task_id = #{companyTaskId}
+        <if test="isComplete ==0 ">
+            AND sct.task_status != 3
         </if>
-        <if test="isComplete == null ">
-            AND sct.task_status  = 3
+        <if test="isComplete ==3">
+            AND sct.task_status = 3
+        </if>
+        <if test="isComplete ==4">
+            AND sct.task_status = 4
         </if>
     </select>
     <!--查询账户信息和材料-->
@@ -344,40 +347,47 @@
         sct.finish_date,
         sct.handle_remark,
         sct.dynamic_extend,
-               sc.title,
-				scm.*,
-				sca.*
+        sc.title,
+        scm.*,
+        sca.*
         FROM ss_com_task sct
-        LEFT JOIN (SELECT com_account_id AS com_account_id_acc, supplier_id,ss_account_type,ss_account,bank_account,com_account_name,settlement_area,payment_bank,payment_way,expire_date AS expire_date_acc,ss_username,ss_pwd,initial_balance,initial_debt,origin_place,origin_place_remark,query_account,deliver_way,deliver_way_remark,provide_certificate_time,change_time,receive_date,into_date,end_date,dispatch_material,remark AS remark_acc,state  FROM ss_com_account)sca ON sct.com_account_id = sca.com_account_id_acc
-				LEFT JOIN
-				(SELECT
-                com_material_id,
-                company_task_id AS company_task_id_m,
-                material_type,
-                material_name,
-                submit_time AS submit_time_m,
-                receive_time,
-                remark,
-                `status`
-                FROM
-                ss_com_material  WHERE is_active = 1
-				)
-				scm ON sct.company_task_id = scm.company_task_id_m
-				LEFT JOIN (SELECT company_id, title FROM 	sal_company  WHERE is_active = 1)sc ON sct.company_id = sc.company_id
-				WHERE
-				sct.is_active =1
-                AND sct.company_task_id = #{companyTaskId}
-           <if test="isComplete != null ">
-                AND sct.task_status  != 3
-           </if>
-        <if test="isComplete == null ">
-            AND sct.task_status  = 3
+        LEFT JOIN (SELECT com_account_id AS com_account_id_acc,
+        supplier_id,ss_account_type,ss_account,bank_account,com_account_name,settlement_area,payment_bank,payment_way,expire_date
+        AS
+        expire_date_acc,ss_username,ss_pwd,initial_balance,initial_debt,origin_place,origin_place_remark,query_account,deliver_way,deliver_way_remark,provide_certificate_time,change_time,receive_date,into_date,end_date,dispatch_material,remark
+        AS remark_acc,state FROM ss_com_account)sca ON sct.com_account_id = sca.com_account_id_acc
+        LEFT JOIN
+        (SELECT
+        com_material_id,
+        company_task_id AS company_task_id_m,
+        material_type,
+        material_name,
+        submit_time AS submit_time_m,
+        receive_time,
+        remark,
+        `status`
+        FROM
+        ss_com_material WHERE is_active = 1
+        )
+        scm ON sct.company_task_id = scm.company_task_id_m
+        LEFT JOIN (SELECT company_id, title FROM sal_company WHERE is_active = 1)sc ON sct.company_id = sc.company_id
+        WHERE
+        sct.is_active =1
+        AND sct.company_task_id = #{companyTaskId}
+        <if test="isComplete ==0 ">
+            AND sct.task_status != 3
+        </if>
+        <if test="isComplete ==3">
+            AND sct.task_status = 3
+        </if>
+        <if test="isComplete ==4">
+            AND sct.task_status = 4
         </if>
     </select>
 
     <!-- 查询企业信息和前道传来的JSON 解析到期时间和支付方式 -->
     <select id="queryComInfoAndPayWay" resultMap="getComAccountResultMap">
-         SELECT
+        SELECT
         sct.company_id,
         sct.com_account_id,
         sct.company_task_id,
@@ -394,23 +404,31 @@
         sct.finish_date,
         sct.handle_remark,
         sc.title,
-		sca.*,
-		sat.*
+        sca.*,
+        sat.*
         FROM ss_com_task sct
-        LEFT JOIN (SELECT  company_id, title FROM 	sal_company  WHERE is_active = 1)sc ON sct.company_id = sc.company_id
-        LEFT JOIN (SELECT com_account_id AS com_account_id_acc, supplier_id,ss_account_type,ss_account,bank_account,com_account_name,settlement_area,payment_bank,payment_way,expire_date AS expire_date_acc,ss_username,ss_pwd,initial_balance,initial_debt,origin_place,origin_place_remark,query_account,deliver_way,deliver_way_remark,provide_certificate_time,change_time,receive_date,into_date,end_date,dispatch_material,remark AS remark_acc FROM ss_com_account WHERE is_active = 1)sca
-				ON sct.com_account_id = sca.com_account_id_acc
-				LEFT JOIN (SELECT ss_account_ratio_id, com_account_id AS com_account_id_sar,industry_category,com_ratio,start_month,end_month FROM ss_account_ratio WHERE is_active = 1)sat
-				ON sca.com_account_id_acc = sat.com_account_id_sar
+        LEFT JOIN (SELECT company_id, title FROM sal_company WHERE is_active = 1)sc ON sct.company_id = sc.company_id
+        LEFT JOIN (SELECT com_account_id AS com_account_id_acc,
+        supplier_id,ss_account_type,ss_account,bank_account,com_account_name,settlement_area,payment_bank,payment_way,expire_date
+        AS
+        expire_date_acc,ss_username,ss_pwd,initial_balance,initial_debt,origin_place,origin_place_remark,query_account,deliver_way,deliver_way_remark,provide_certificate_time,change_time,receive_date,into_date,end_date,dispatch_material,remark
+        AS remark_acc FROM ss_com_account WHERE is_active = 1)sca
+        ON sct.com_account_id = sca.com_account_id_acc
+        LEFT JOIN (SELECT ss_account_ratio_id, com_account_id AS
+        com_account_id_sar,industry_category,com_ratio,start_month,end_month FROM ss_account_ratio WHERE is_active =
+        1)sat
+        ON sca.com_account_id_acc = sat.com_account_id_sar
         WHERE
         sct.is_active =1
         AND sct.company_task_id = #{companyTaskId}
-        <if test="isComplete != null ">
-            AND sct.task_status  != 3
+        <if test="isComplete ==0 ">
+            AND sct.task_status != 3
         </if>
-        <if test="isComplete == null ">
-            AND sct.task_status  = 3
+        <if test="isComplete ==3">
+            AND sct.task_status = 3
         </if>
-
+        <if test="isComplete ==4">
+            AND sct.task_status = 4
+        </if>
     </select>
 </mapper>

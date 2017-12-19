@@ -101,10 +101,6 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
     public JsonResult<SsComTaskDTO> getCompanyInfoAndMaterial(SsComTaskDTO ssComTaskDTO) {
         if (null != ssComTaskDTO.getCompanyTaskId()) {
             if (isNotNull(ssComTaskDTO.getOperatorType())) {
-                //表示查询已完成的任务单
-                if("3".equals(ssComTaskDTO.getIsComplete())){
-                    ssComTaskDTO.setIsComplete(null);
-                }
                 //1 开户 2 转移 3 变更 4 终止
                 if ("1".equals(ssComTaskDTO.getOperatorType())) {
                     //开户时 需要查询企业信息(企业信息和材料)
@@ -123,10 +119,6 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
     @Log("查询企业信息和前道传过来的JSON（包含社保截止和付款方式）")
     @RequestMapping(value = "getComInfoAndPayWay")
     public JsonResult<SsComTaskDTO> queryComInfoAndPayWay(SsComTaskDTO ssComTask) {
-        //如果查询不是状态为3的 则 赋值为空
-        if("3".equals(ssComTask.getIsComplete())){
-            ssComTask.setIsComplete(null);
-        }
         SsComTaskDTO ssComTaskDTO = business.queryComInfoAndPayWay(ssComTask);
         return JsonResultKit.of(ssComTaskDTO);
     }
