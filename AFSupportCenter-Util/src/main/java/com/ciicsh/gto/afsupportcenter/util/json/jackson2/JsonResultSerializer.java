@@ -25,7 +25,7 @@ public class JsonResultSerializer extends JsonSerializer<Object> {
     public static JsonResultSerializer of(SimpleModule simpleModule, Class<?> type) {
         if (JsonResultKit.isJsonResult(type)) {
             JsonResultSerializer serializer = new JsonResultSerializer((Class<Object>) type);
-            simpleModule.addSerializer(serializer);
+            simpleModule.addSerializer(type, serializer);
             return serializer;
         }
         throw BusinessException.unchecked("当前类型结构不是 JsonResult,class:" + type.getName());
