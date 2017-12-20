@@ -33,14 +33,14 @@ import java.util.Optional;
 public class MedicalRelationTransformController  extends BasicController<MedicalRelationTransformQueryService> {
 
     @Autowired
-    private MedicalRelationTransformQueryService medicalRelationTransformQueryServiceQueryService;
+    private MedicalRelationTransformQueryService medicalRelationTransformQueryService;
 
 
     @Log("医疗关系转移单条记录查询")
     @GetMapping("/getEntityById")
     public JsonResult getEntityById(String id) {
         JsonResult jr = new JsonResult();
-        MedicalRelationTransformPO po = medicalRelationTransformQueryServiceQueryService.getById(id);
+        MedicalRelationTransformPO po = medicalRelationTransformQueryService.getById(id);
         if (po == null) {
             JsonResultKit.ofNum(400, "未查找到数据", 0);
         } else {
