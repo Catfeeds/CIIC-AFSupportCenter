@@ -84,11 +84,18 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
         //对比数据产生对比结果
         List<SsStatementResult> resultPoList = calculateResultDiff(resultPOMap);
 
+        //统计差异人头数
+        Map<String,Integer> diffHeadMap = calculateDiffHead(impDetailPOList,changeDetailPOList);
+
 
         //批量插入对比结果
         if(Optional.ofNullable(resultPoList).isPresent()){
             for(int i = 0;i < resultPoList.size();i++){
                 SsStatementResult result = resultPoList.get(i);
+
+                //放入人头差异
+                result.setDiffHeadcount(diffHeadMap.get(result.getEmployeeId()));
+
                 //放入基本信息
                 result.setStatementId(statementId);
                 result.setActive(true);
@@ -434,5 +441,45 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
         return resultPoList;
 
     }
-
+    /**
+     * <p>Description: 计算人头差异</p>
+     *
+     * @author wengxk
+     * @date 2017-12-20
+     * @param impDetailPOList 导入数据
+     * @param changeDetailPOList 汇总数据
+     * @return Map<String,String> 人头差异结果 key:employeeId value:0 正常差异 1 系统不存在  2 导入不存在
+     */
+    private Map<String,Integer> calculateDiffHead(List<SsStatementImp> impDetailPOList,List<SsMonthEmpChangeDetail> changeDetailPOList){
+        Map<String,Integer> diffHeadMap = new HashMap<>();
+        //先循环处理导入的信息
+        if(Optional.ofNullable(impDetailPOList).isPresent()) {
+            for (int i = 0; i < impDetailPOList.size(); i++) {
+                String employeeId = impDetailPOList.get(i).getEmployeeId();
+                //将员工ID去重加入map
+                if(!diffHeadMap.containsKey(employeeId)){
+                    diffHeadMap.put(employeeId,1);
+                }
+            }
+        }
+        //再循环处理系统汇总信息
+        if(Optional.ofNullable(changeDetailPOList).isPresent()) {
+            for (int i = 0; i < changeDetailPOList.size(); i++) {
+                String employeeId = changeDetailPOList.get(i).getEmployeeId();
+                //判断是否已存在
+                if(!diffHeadMap.containsKey(employeeId)) {
+                    //不存在的话直接加入map,
+                    diffHeadMap.put(employeeId,2);
+                }else{
+                    //存在的话判断是系统数据还是导入数据还是2者都有
+                    Integer diffHead = diffHeadMap.get(employeeId);
+                    //只有当原先状态是1 系统不存在情况下,变更map中的状态,别的时候保持不变
+                    if(diffHead == 1 ){
+                        diffHeadMap.put(employeeId,0);
+                    }
+                }
+            }
+        }
+        return diffHeadMap;
+    }
 }

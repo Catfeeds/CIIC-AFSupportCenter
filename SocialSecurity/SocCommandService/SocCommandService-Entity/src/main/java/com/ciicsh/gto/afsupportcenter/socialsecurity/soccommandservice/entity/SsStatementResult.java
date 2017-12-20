@@ -14,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-16
+ * @since 2017-12-20
  */
 @TableName("ss_statement_result")
 public class SsStatementResult implements Serializable {
@@ -81,6 +81,11 @@ public class SsStatementResult implements Serializable {
      */
 	@TableField("diff_amount")
 	private BigDecimal diffAmount;
+    /**
+     * 0 正常差异 1 系统不存在  2 导入不存在
+     */
+	@TableField("diff_headcount")
+	private Integer diffHeadcount;
     /**
      * 是否有效
      */
@@ -204,6 +209,14 @@ public class SsStatementResult implements Serializable {
 		this.diffAmount = diffAmount;
 	}
 
+	public Integer getDiffHeadcount() {
+		return diffHeadcount;
+	}
+
+	public void setDiffHeadcount(Integer diffHeadcount) {
+		this.diffHeadcount = diffHeadcount;
+	}
+
 	public Boolean getActive() {
 		return isActive;
 	}
@@ -259,6 +272,7 @@ public class SsStatementResult implements Serializable {
 			", impAmount=" + impAmount +
 			", ssAmount=" + ssAmount +
 			", diffAmount=" + diffAmount +
+			", diffHeadcount=" + diffHeadcount +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

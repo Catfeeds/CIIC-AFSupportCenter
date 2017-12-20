@@ -15,7 +15,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-16
+ * @since 2017-12-20
  */
 @TableName("ss_payment")
 public class SsPayment implements Serializable {
@@ -35,19 +35,15 @@ public class SsPayment implements Serializable {
 	@TableField("total_application_amount")
 	private BigDecimal totalApplicationAmount;
     /**
-     * 总雇员数
-     */
-	@TableField("total_emp_count")
-	private Integer totalEmpCount;
-    /**
      * 支付年月YYYYMM
      */
 	@TableField("payment_month")
-	private Integer paymentMonth;
+	private String paymentMonth;
     /**
-     * 当前支付状态
+     * 支付状态: 3 ,可付(默认)   4,申请中  5,内部审批批退 6,已申请到财务部  7,财务部批退  8,财务部支付成功
      */
-	private Integer state;
+	@TableField("payment_state")
+	private Integer paymentState;
     /**
      * 制单人
      */
@@ -64,15 +60,50 @@ public class SsPayment implements Serializable {
 	@TableField("finance_payment_date")
 	private LocalDate financePaymentDate;
     /**
-     * 大库、外包、独立户
+     * 1 大库、2 外包、3独立户
      */
 	@TableField("account_type")
 	private Integer accountType;
     /**
-     * 账户总人数
+     * 总雇员数
      */
-	@TableField("total_emp")
-	private Integer totalEmp;
+	@TableField("total_emp_count")
+	private Integer totalEmpCount;
+    /**
+     * 账户总数
+     */
+	@TableField("total_account")
+	private Integer totalAccount;
+    /**
+     * 客户总数
+     */
+	@TableField("total_com")
+	private Integer totalCom;
+    /**
+     * 申请备注
+     */
+	@TableField("apply_remark")
+	private String applyRemark;
+    /**
+     * 批退备注
+     */
+	@TableField("rejection_remark")
+	private String rejectionRemark;
+    /**
+     * 批退历史备份
+            [
+            {
+            总雇员数：
+            账户总数：
+            客户总数：
+            批退备注：
+            批退人：
+            批退时间：
+            },
+            ]
+     */
+	@TableField("rejection_his")
+	private String rejectionHis;
     /**
      * 是否可用
      */
@@ -124,28 +155,20 @@ public class SsPayment implements Serializable {
 		this.totalApplicationAmount = totalApplicationAmount;
 	}
 
-	public Integer getTotalEmpCount() {
-		return totalEmpCount;
-	}
-
-	public void setTotalEmpCount(Integer totalEmpCount) {
-		this.totalEmpCount = totalEmpCount;
-	}
-
-	public Integer getPaymentMonth() {
+	public String getPaymentMonth() {
 		return paymentMonth;
 	}
 
-	public void setPaymentMonth(Integer paymentMonth) {
+	public void setPaymentMonth(String paymentMonth) {
 		this.paymentMonth = paymentMonth;
 	}
 
-	public Integer getState() {
-		return state;
+	public Integer getPaymentState() {
+		return paymentState;
 	}
 
-	public void setState(Integer state) {
-		this.state = state;
+	public void setPaymentState(Integer paymentState) {
+		this.paymentState = paymentState;
 	}
 
 	public String getCreatePaymentUser() {
@@ -180,12 +203,52 @@ public class SsPayment implements Serializable {
 		this.accountType = accountType;
 	}
 
-	public Integer getTotalEmp() {
-		return totalEmp;
+	public Integer getTotalEmpCount() {
+		return totalEmpCount;
 	}
 
-	public void setTotalEmp(Integer totalEmp) {
-		this.totalEmp = totalEmp;
+	public void setTotalEmpCount(Integer totalEmpCount) {
+		this.totalEmpCount = totalEmpCount;
+	}
+
+	public Integer getTotalAccount() {
+		return totalAccount;
+	}
+
+	public void setTotalAccount(Integer totalAccount) {
+		this.totalAccount = totalAccount;
+	}
+
+	public Integer getTotalCom() {
+		return totalCom;
+	}
+
+	public void setTotalCom(Integer totalCom) {
+		this.totalCom = totalCom;
+	}
+
+	public String getApplyRemark() {
+		return applyRemark;
+	}
+
+	public void setApplyRemark(String applyRemark) {
+		this.applyRemark = applyRemark;
+	}
+
+	public String getRejectionRemark() {
+		return rejectionRemark;
+	}
+
+	public void setRejectionRemark(String rejectionRemark) {
+		this.rejectionRemark = rejectionRemark;
+	}
+
+	public String getRejectionHis() {
+		return rejectionHis;
+	}
+
+	public void setRejectionHis(String rejectionHis) {
+		this.rejectionHis = rejectionHis;
 	}
 
 	public Boolean getActive() {
@@ -234,14 +297,18 @@ public class SsPayment implements Serializable {
 			", paymentId=" + paymentId +
 			", paymentBatchNum=" + paymentBatchNum +
 			", totalApplicationAmount=" + totalApplicationAmount +
-			", totalEmpCount=" + totalEmpCount +
 			", paymentMonth=" + paymentMonth +
-			", state=" + state +
+			", paymentState=" + paymentState +
 			", createPaymentUser=" + createPaymentUser +
 			", createPaymentDate=" + createPaymentDate +
 			", financePaymentDate=" + financePaymentDate +
 			", accountType=" + accountType +
-			", totalEmp=" + totalEmp +
+			", totalEmpCount=" + totalEmpCount +
+			", totalAccount=" + totalAccount +
+			", totalCom=" + totalCom +
+			", applyRemark=" + applyRemark +
+			", rejectionRemark=" + rejectionRemark +
+			", rejectionHis=" + rejectionHis +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

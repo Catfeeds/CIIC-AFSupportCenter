@@ -18,6 +18,7 @@
         <result column="imp_amount" jdbcType="DECIMAL" property="impAmount" />
         <result column="ss_amount" jdbcType="DECIMAL" property="ssAmount" />
         <result column="diff_amount" jdbcType="DECIMAL" property="diffAmount" />
+        <result column="diff_headcount" property="diffHeadcount" />
         <result column="is_active" jdbcType="BIT" property="isActive" />
         <result column="created_time" property="createdTime" />
         <result column="modified_time" property="modifiedTime" />

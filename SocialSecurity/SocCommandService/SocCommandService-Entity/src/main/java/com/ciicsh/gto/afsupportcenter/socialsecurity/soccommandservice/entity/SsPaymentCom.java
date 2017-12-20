@@ -15,7 +15,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-16
+ * @since 2017-12-20
  */
 @TableName("ss_payment_com")
 public class SsPaymentCom implements Serializable {
@@ -27,6 +27,8 @@ public class SsPaymentCom implements Serializable {
      */
 	@TableId(value="payment_com_id", type= IdType.AUTO)
 	private Long paymentComId;
+	@TableField("payment_id")
+	private Long paymentId;
     /**
      * 大库、独立库账户Id
      */
@@ -44,7 +46,12 @@ public class SsPaymentCom implements Serializable {
 	@TableField("payment_month")
 	private String paymentMonth;
     /**
-     * 申请支付的金额合计,=TotalComPayAmount+TotalEmpPayAmount
+     * 应缴纳金额
+     */
+	@TableField("ought_amount")
+	private BigDecimal oughtAmount;
+    /**
+     * 申请支付的金额合计,=TotalComPayAmount+TotalEmpPayAmount+extra_amount
      */
 	@TableField("total_pay_amount")
 	private BigDecimal totalPayAmount;
@@ -59,10 +66,25 @@ public class SsPaymentCom implements Serializable {
 	@TableField("total_emp_pay_amount")
 	private BigDecimal totalEmpPayAmount;
     /**
+     * 退账抵扣费用
+     */
+	@TableField("refund_deducted")
+	private BigDecimal refundDeducted;
+    /**
+     * 调整抵扣费用
+     */
+	@TableField("adjust_deducted")
+	private BigDecimal adjustDeducted;
+    /**
      * 额外金
      */
 	@TableField("extra_amount")
 	private BigDecimal extraAmount;
+    /**
+     * 抵扣费用是否纳入支付申请: 0-不纳入 1-纳入
+     */
+	@TableField("if_deducted_into_pay")
+	private Integer ifDeductedIntoPay;
     /**
      * 申请人的系统用户ID
      */
@@ -85,13 +107,13 @@ public class SsPaymentCom implements Serializable {
     /**
      * 支付总人头数
      */
-	@TableField("emp_head_count")
-	private Integer empHeadCount;
+	@TableField("emp_count")
+	private Integer empCount;
     /**
-     * 支付状态: 0-已创建 1 申请中 2完成支付 3 批退
+     * 支付状态: 1,未到帐  2,无需支付  3 ,可付 4,申请中  5,内部审批批退 6,已申请到财务部  7,财务部批退  8,财务部支付成功
      */
-	@TableField("payment_status")
-	private Integer paymentStatus;
+	@TableField("payment_state")
+	private Integer paymentState;
     /**
      * 是否可用
      */
@@ -127,6 +149,14 @@ public class SsPaymentCom implements Serializable {
 		this.paymentComId = paymentComId;
 	}
 
+	public Long getPaymentId() {
+		return paymentId;
+	}
+
+	public void setPaymentId(Long paymentId) {
+		this.paymentId = paymentId;
+	}
+
 	public Long getComAccountId() {
 		return comAccountId;
 	}
@@ -149,6 +179,14 @@ public class SsPaymentCom implements Serializable {
 
 	public void setPaymentMonth(String paymentMonth) {
 		this.paymentMonth = paymentMonth;
+	}
+
+	public BigDecimal getOughtAmount() {
+		return oughtAmount;
+	}
+
+	public void setOughtAmount(BigDecimal oughtAmount) {
+		this.oughtAmount = oughtAmount;
 	}
 
 	public BigDecimal getTotalPayAmount() {
@@ -175,12 +213,36 @@ public class SsPaymentCom implements Serializable {
 		this.totalEmpPayAmount = totalEmpPayAmount;
 	}
 
+	public BigDecimal getRefundDeducted() {
+		return refundDeducted;
+	}
+
+	public void setRefundDeducted(BigDecimal refundDeducted) {
+		this.refundDeducted = refundDeducted;
+	}
+
+	public BigDecimal getAdjustDeducted() {
+		return adjustDeducted;
+	}
+
+	public void setAdjustDeducted(BigDecimal adjustDeducted) {
+		this.adjustDeducted = adjustDeducted;
+	}
+
 	public BigDecimal getExtraAmount() {
 		return extraAmount;
 	}
 
 	public void setExtraAmount(BigDecimal extraAmount) {
 		this.extraAmount = extraAmount;
+	}
+
+	public Integer getIfDeductedIntoPay() {
+		return ifDeductedIntoPay;
+	}
+
+	public void setIfDeductedIntoPay(Integer ifDeductedIntoPay) {
+		this.ifDeductedIntoPay = ifDeductedIntoPay;
 	}
 
 	public String getApplierId() {
@@ -215,20 +277,20 @@ public class SsPaymentCom implements Serializable {
 		this.actualPaymentDate = actualPaymentDate;
 	}
 
-	public Integer getEmpHeadCount() {
-		return empHeadCount;
+	public Integer getEmpCount() {
+		return empCount;
 	}
 
-	public void setEmpHeadCount(Integer empHeadCount) {
-		this.empHeadCount = empHeadCount;
+	public void setEmpCount(Integer empCount) {
+		this.empCount = empCount;
 	}
 
-	public Integer getPaymentStatus() {
-		return paymentStatus;
+	public Integer getPaymentState() {
+		return paymentState;
 	}
 
-	public void setPaymentStatus(Integer paymentStatus) {
-		this.paymentStatus = paymentStatus;
+	public void setPaymentState(Integer paymentState) {
+		this.paymentState = paymentState;
 	}
 
 	public Boolean getActive() {
@@ -275,19 +337,24 @@ public class SsPaymentCom implements Serializable {
 	public String toString() {
 		return "SsPaymentCom{" +
 			", paymentComId=" + paymentComId +
+			", paymentId=" + paymentId +
 			", comAccountId=" + comAccountId +
 			", companyId=" + companyId +
 			", paymentMonth=" + paymentMonth +
+			", oughtAmount=" + oughtAmount +
 			", totalPayAmount=" + totalPayAmount +
 			", totalComPayAmount=" + totalComPayAmount +
 			", totalEmpPayAmount=" + totalEmpPayAmount +
+			", refundDeducted=" + refundDeducted +
+			", adjustDeducted=" + adjustDeducted +
 			", extraAmount=" + extraAmount +
+			", ifDeductedIntoPay=" + ifDeductedIntoPay +
 			", applierId=" + applierId +
 			", applicationDate=" + applicationDate +
 			", remark=" + remark +
 			", actualPaymentDate=" + actualPaymentDate +
-			", empHeadCount=" + empHeadCount +
-			", paymentStatus=" + paymentStatus +
+			", empCount=" + empCount +
+			", paymentState=" + paymentState +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +
