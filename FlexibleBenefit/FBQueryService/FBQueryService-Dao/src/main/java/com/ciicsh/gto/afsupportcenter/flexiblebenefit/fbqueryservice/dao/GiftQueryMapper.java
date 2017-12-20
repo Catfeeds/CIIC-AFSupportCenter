@@ -1,21 +1,17 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.dao;
 
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.entity.po.GiftPO;
 
-import java.util.List;
+import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.GiftPO;
 
 /**
- * @author xwz created on 2017年11月29日17:20:49
+ * <p>
+  * 礼品库 Mapper 接口
+ * </p>
+ *
+ * @author xiweizhen
+ * @since 2017-12-18
  */
-public interface GiftQueryMapper {
-
-    /**
-     * 根据实体查询数据
-     *
-     * @param gift
-     * @return List<GiftDTO>
-     */
-    List<GiftPO> findByEntity(GiftPO gift);
-
+public interface GiftQueryMapper extends BaseMapper<GiftPO> {
 
 }

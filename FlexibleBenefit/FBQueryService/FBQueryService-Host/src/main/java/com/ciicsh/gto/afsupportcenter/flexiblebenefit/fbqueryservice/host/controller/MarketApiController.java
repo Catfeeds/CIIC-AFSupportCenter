@@ -1,12 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.MarketCommandProxy;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.dto.JsonResult;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business.MarketActivityService;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.entity.po.MarketActivityPO;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.core.Result;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.MarketQueryProxy;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business.MarketActivityQueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,34 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/market")
-public class MarketApiController implements MarketCommandProxy {
+public class MarketApiController implements MarketQueryProxy {
     /**
      * 记录日志
      */
     private static Logger logger = LoggerFactory.getLogger(MarketApiController.class);
 
     @Autowired
-    private MarketActivityService marketActivityService;
+    private MarketActivityQueryService marketActivityQueryService;
 
     @Override
-    public JsonResult findMarketList(String activityName, String publish, Byte status, Integer pageNum, Integer pageSize) {
+    public Result findMarketList(String activityName, String publish, Byte status, Integer pageNum, Integer pageSize) {
         logger.info("query服务--活动分页列表查询");
-        MarketActivityPO entity = new MarketActivityPO();
-        entity.setActivityTitle(activityName);
-        entity.setPublisher(publish);
-        entity.setStatus(status);
-
-        if (pageNum == null) {
-            pageNum = 1;
-        }
-        if (pageSize == null) {
-            pageSize = 5;
-        }
-
-        JsonResult jr = new JsonResult();
-        PageHelper.startPage(pageNum, pageSize);
-        PageInfo<MarketActivityPO> pageData = new PageInfo<>(marketActivityService.findByEntity(entity));
-        jr.setData(pageData);
-        return jr;
+        Result result = new Result();
+        return result;
     }
 }

@@ -1,0 +1,17 @@
+package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.dao;
+
+
+import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyMarketActivityRecordPO;
+
+/**
+ * <p>
+  * 市场活动申请礼品表 Mapper 接口
+ * </p>
+ *
+ * @author xiweizhen
+ * @since 2017-12-18
+ */
+public interface ApplyMarketActivityRecordQueryMapper extends BaseMapper<ApplyMarketActivityRecordPO> {
+
+}

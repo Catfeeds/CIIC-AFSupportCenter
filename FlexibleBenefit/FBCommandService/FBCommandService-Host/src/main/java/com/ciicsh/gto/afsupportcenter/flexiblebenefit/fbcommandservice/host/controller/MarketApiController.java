@@ -1,9 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.host.controller;
 
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.core.Result;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.MarketCommandProxy;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.dto.JsonResult;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.MarketActivityService;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.MarketActivityPO;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.MarketActivityCommandService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,19 +25,13 @@ public class MarketApiController implements MarketCommandProxy {
     private static Logger logger = LoggerFactory.getLogger(MarketApiController.class);
 
     @Autowired
-    private MarketActivityService marketActivityService;
+    private MarketActivityCommandService marketActivityCommandService;
 
 
     @Override
     @GetMapping("/findById/{id}")
-    public JsonResult findById(@PathVariable Integer id) {
-        JsonResult json = new JsonResult();
-        MarketActivityPO entity = marketActivityService.findById(id);
-        if (entity == null || entity.getId() == null) {
-            json.setErrorcode("400");
-            json.setErrormsg("没有相应数据");
-        }
-        json.setData(entity);
+    public Result findById(@PathVariable Integer id) {
+        Result json = new Result();
         return json;
     }
 }

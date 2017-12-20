@@ -1,28 +1,17 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.dao;
 
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.entity.po.MarketActivityPO;
+
+import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.MarketActivityPO;
 
 /**
+ * <p>
+  * 市场活动表 Mapper 接口
+ * </p>
+ *
  * @author xiweizhen
- * @date 2017/12/6 10:44
+ * @since 2017-12-18
  */
-public interface MarketActivityCommandMapper {
-    /**
-     * @param record
-     * @return
-     */
-    int insertSelective(MarketActivityPO record);
-
-    /**
-     * @param id
-     * @return
-     */
-    MarketActivityPO selectByPrimaryKey(Integer id);
-
-    /**
-     * @param record
-     * @return
-     */
-    int updateByPrimaryKeySelective(MarketActivityPO record);
+public interface MarketActivityCommandMapper extends BaseMapper<MarketActivityPO> {
 
 }

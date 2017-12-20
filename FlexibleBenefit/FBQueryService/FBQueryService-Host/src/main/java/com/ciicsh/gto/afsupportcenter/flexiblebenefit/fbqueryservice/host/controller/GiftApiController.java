@@ -1,11 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.host.controller;
 
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.core.Result;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.GiftPO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.GiftCommandProxy;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.dto.JsonResult;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business.GiftService;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.entity.po.GiftPO;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business.GiftQueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,23 +19,19 @@ public class GiftApiController implements GiftCommandProxy {
     private static Logger logger = LoggerFactory.getLogger(GiftApiController.class);
 
     @Autowired
-    private GiftService giftService;
+    private GiftQueryService giftQueryService;
 
     @Override
-    public JsonResult findGiftList(Byte giftType, Integer pageNum, Integer pageSize) {
+    public Result findGiftList(Integer giftType, Integer pageNum, Integer pageSize) {
         GiftPO entity = new GiftPO();
-        JsonResult jr = new JsonResult();
+        Result jr = new Result();
         if (pageNum == null) {
             pageNum = 1;
         }
         if (pageSize == null) {
             pageSize = 5;
         }
-        PageHelper.startPage(pageNum, pageSize);
         entity.setGiftType(giftType);
-        PageInfo<GiftPO> pageData = new PageInfo<>(giftService.findByEntity(entity));
-        logger.info("query服务-查询礼品分页列表");
-        jr.setData(pageData);
         return jr;
     }
 }

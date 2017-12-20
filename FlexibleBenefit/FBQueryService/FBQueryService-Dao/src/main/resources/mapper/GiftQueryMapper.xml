@@ -1,88 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.dao.GiftQueryMapper">
-    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.entity.po.GiftPO">
-        <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="gift_name" jdbcType="VARCHAR" property="giftName"/>
-        <result column="price" jdbcType="DECIMAL" property="price"/>
-        <result column="right_person" jdbcType="TINYINT" property="rightPerson"/>
-        <result column="gift_type" jdbcType="TINYINT" property="giftType"/>
-        <result column="color" jdbcType="VARCHAR" property="color"/>
-        <result column="number" jdbcType="INTEGER" property="number"/>
-        <result column="apply_maxnum" jdbcType="INTEGER" property="applyMaxnum"/>
-        <result column="picture_url" jdbcType="VARCHAR" property="pictureUrl"/>
-        <result column="remarks" jdbcType="VARCHAR" property="remarks"/>
-        <result column="status" jdbcType="TINYINT" property="status"/>
-        <result column="is_new" jdbcType="BIT" property="isNew"/>
-        <result column="is_active" jdbcType="BIT" property="isActive"/>
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
-        <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime"/>
-        <result column="created_by" jdbcType="VARCHAR" property="createdBy"/>
-        <result column="modified_by" jdbcType="VARCHAR" property="modifiedBy"/>
-    </resultMap>
 
-    <sql id="Base_Column_List">
-        id, gift_name, price, right_person, gift_type, color, number, apply_maxnum, picture_url,
-        remarks, status, is_new, is_active, create_time, modified_time, created_by, modified_by
-    </sql>
-
-
-    <select id="findByEntity"
-            parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.entity.po.GiftPO"
-            resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from fb_gift
-        <where>
-            <if test="giftName != null and giftName != '' ">
-                AND gift_name REGEXP #{giftName,jdbcType=VARCHAR}
-            </if>
-            <if test="price != null">
-                AND price = #{price,jdbcType=DECIMAL}
-            </if>
-            <if test="rightPerson != null">
-                AND right_person = #{rightPerson,jdbcType=TINYINT}
-            </if>
-            <if test="giftType != null">
-                AND gift_type = #{giftType,jdbcType=TINYINT}
-            </if>
-            <if test="color != null">
-                AND color = #{color,jdbcType=VARCHAR}
-            </if>
-            <if test="number != null">
-                AND number = #{number,jdbcType=INTEGER}
-            </if>
-            <if test="applyMaxnum != null">
-                AND apply_maxnum = #{applyMaxnum,jdbcType=INTEGER}
-            </if>
-            <if test="pictureUrl != null">
-                AND picture_url = #{pictureUrl,jdbcType=VARCHAR}
-            </if>
-            <if test="remarks != null">
-                AND remarks = #{remarks,jdbcType=VARCHAR}
-            </if>
-            <if test="status != null">
-                AND status = #{status,jdbcType=TINYINT}
-            </if>
-            <if test="isNew != null">
-                AND is_new = #{isNew,jdbcType=BIT}
-            </if>
-            <if test="isActive != null">
-                AND is_active = #{isActive,jdbcType=BIT}
-            </if>
-            <if test="createTime != null">
-                AND create_time = #{createTime,jdbcType=TIMESTAMP}
-            </if>
-            <if test="modifiedTime != null">
-                AND modified_time = #{modifiedTime,jdbcType=TIMESTAMP}
-            </if>
-            <if test="createdBy != null">
-                AND created_by = #{createdBy,jdbcType=VARCHAR}
-            </if>
-            <if test="modifiedBy != null">
-                AND modified_by = #{modifiedBy,jdbcType=VARCHAR}
-            </if>
-        </where>
-    </select>
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.GiftPO">
+		<id column="id" property="id" />
+		<result column="gift_name" property="giftName" />
+		<result column="price" property="price" />
+		<result column="right_person" property="rightPerson" />
+		<result column="gift_type" property="giftType" />
+		<result column="color" property="color" />
+		<result column="number" property="number" />
+		<result column="apply_maxnum" property="applyMaxnum" />
+		<result column="picture_url" property="pictureUrl" />
+		<result column="remarks" property="remarks" />
+		<result column="status" property="status" />
+		<result column="is_new" property="isNew" />
+		<result column="is_active" property="isActive" />
+		<result column="create_time" property="createTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
 
 </mapper>

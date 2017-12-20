@@ -1,11 +1,11 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.host.controller;
 
-
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business.GiftService;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.entity.bo.JsonResult;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.entity.po.GiftPO;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.core.Result;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.core.ResultGenerator;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.page.PageParam;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.GiftPO;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business.GiftQueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,26 +24,25 @@ public class GiftQueryController {
     private static Logger logger = LoggerFactory.getLogger(GiftQueryController.class);
 
     @Autowired
-    private GiftService giftService;
+    private GiftQueryService giftQueryService;
 
     /**
      * 礼品分页列表查询
      *
-     * @param entity
+     * @param pageParam
      * @return
      */
     @RequestMapping("/giftList")
-    public JsonResult giftList(GiftPO entity) {
-        int page = Integer.parseInt((String) entity.getPage().get("current"));
-        int pageSize = Integer.parseInt((String) entity.getPage().get("pageSize"));
-        PageHelper.startPage(page, pageSize);
-        PageInfo<GiftPO> pageData = new PageInfo<>(giftService.findByEntity(entity));
-        logger.info("query服务-查询礼品分页列表");
-        System.out.println("----------------查询礼品分页列表---------------");
-        JsonResult jr = new JsonResult();
-        jr.setCode("200");
-        jr.setData(pageData);
-        return jr;
+    public Result giftList(PageParam pageParam) {
+        try {
+            Page<GiftPO> page = new Page<>(pageParam.getCurrent(), pageParam.getSize());
+            GiftPO entity = pageParam.getJsonObjectParams().toJavaObject(GiftPO.class);
+            page = giftQueryService.queryGiftList(page, entity);
+            logger.info("查询礼品分页列表");
+            return ResultGenerator.genSuccessResult(page);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
+        }
     }
 
 }

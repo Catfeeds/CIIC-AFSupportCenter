@@ -1,19 +1,17 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.dao;
 
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.entity.po.MarketActivityPO;
 
-import java.util.List;
+import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.MarketActivityPO;
 
 /**
+ * <p>
+  * 市场活动表 Mapper 接口
+ * </p>
+ *
  * @author xiweizhen
- * @date 2017/12/6 10:55
+ * @since 2017-12-18
  */
-public interface MarketActivityQueryMapper {
-    /**
-     * @return List
-     * @author xiweizhen
-     * @date 2017/12/6 10:54
-     */
-    List<MarketActivityPO> findByEntity(MarketActivityPO entity);
+public interface MarketActivityQueryMapper extends BaseMapper<MarketActivityPO> {
 
 }

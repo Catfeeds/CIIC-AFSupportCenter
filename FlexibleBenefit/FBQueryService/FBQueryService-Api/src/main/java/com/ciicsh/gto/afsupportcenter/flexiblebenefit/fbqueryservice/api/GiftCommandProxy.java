@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api;
 
 
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.dto.JsonResult;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.core.Result;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +16,6 @@ public interface GiftCommandProxy {
      * @return
      */
     @PostMapping("/findGiftList")
-    JsonResult findGiftList(Byte giftType, Integer pageNum, Integer pageSize);
+    Result findGiftList(Integer giftType, Integer pageNum, Integer pageSize);
 
 }

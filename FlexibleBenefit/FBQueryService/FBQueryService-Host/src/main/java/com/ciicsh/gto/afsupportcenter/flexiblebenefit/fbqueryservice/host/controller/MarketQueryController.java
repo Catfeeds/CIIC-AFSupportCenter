@@ -1,10 +1,11 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business.MarketActivityService;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.entity.bo.JsonResult;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.entity.po.MarketActivityPO;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.core.Result;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.core.ResultGenerator;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.page.PageParam;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.MarketActivityPO;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business.MarketActivityQueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,18 +25,18 @@ public class MarketQueryController {
     private static Logger logger = LoggerFactory.getLogger(MarketQueryController.class);
 
     @Autowired
-    private MarketActivityService marketActivityService;
+    private MarketActivityQueryService marketActivityQueryService;
 
     @PostMapping("/marketList")
-    public JsonResult marketList(MarketActivityPO entity) {
-        int page = Integer.parseInt((String) entity.getPage().get("current"));
-        int pageSize = Integer.parseInt((String) entity.getPage().get("pageSize"));
-        PageHelper.startPage(page, pageSize);
-        PageInfo<MarketActivityPO> pageData = new PageInfo<>(marketActivityService.findByEntity(entity));
-        logger.info("query服务--活动分页列表查询");
-        JsonResult jr = new JsonResult();
-        jr.setCode("200");
-        jr.setData(pageData);
-        return jr;
+    public Result marketList(PageParam pageParam) {
+        try {
+            Page<MarketActivityPO> page = new Page<>(pageParam.getCurrent(), pageParam.getSize());
+            MarketActivityPO entity = pageParam.getJsonObjectParams().toJavaObject(MarketActivityPO.class);
+            page = marketActivityQueryService.queryMarketList(page, entity);
+            logger.info("查询活动分页列表");
+            return ResultGenerator.genSuccessResult(page);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
+        }
     }
 }

@@ -1,75 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.dao.MarketActivityQueryMapper">
-    <resultMap id="BaseResultMap"
-               type="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.entity.po.MarketActivityPO">
-        <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="activity_title" jdbcType="VARCHAR" property="activityTitle"/>
-        <result column="publisher" jdbcType="VARCHAR" property="publisher"/>
-        <result column="begin_time" jdbcType="TIMESTAMP" property="beginTime"/>
-        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
-        <result column="status" jdbcType="TINYINT" property="status"/>
-        <result column="content" jdbcType="VARCHAR" property="content"/>
-        <result column="gift_form" jdbcType="VARCHAR" property="giftForm"/>
-        <result column="send_way" jdbcType="VARCHAR" property="sendWay"/>
-        <result column="is_active" jdbcType="BIT" property="isActive"/>
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
-        <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime"/>
-        <result column="created_by" jdbcType="VARCHAR" property="createdBy"/>
-        <result column="modified_by" jdbcType="VARCHAR" property="modifiedBy"/>
-    </resultMap>
-    <sql id="Base_Column_List">
-        id, activity_title, publisher, begin_time, end_time, status, content, gift_form,
-        send_way, is_active, create_time, modified_time, created_by, modified_by
-    </sql>
 
-    <select id="findByEntity"
-            parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.entity.po.MarketActivityPO"
-            resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from fb_market_activity
-        <where>
-            <if test="activityTitle != null and activityTitle != ''">
-                AND activity_title REGEXP #{activityTitle,jdbcType=VARCHAR}
-            </if>
-            <if test="publisher != null">
-                AND publisher = #{publisher,jdbcType=VARCHAR}
-            </if>
-            <if test="beginTime != null">
-                AND begin_time = #{beginTime,jdbcType=TIMESTAMP}
-            </if>
-            <if test="endTime != null">
-                AND end_time = #{endTime,jdbcType=TIMESTAMP}
-            </if>
-            <if test="status != null">
-                AND status = #{status,jdbcType=TINYINT}
-            </if>
-            <if test="content != null">
-                AND content = #{content,jdbcType=VARCHAR}
-            </if>
-            <if test="giftForm != null">
-                AND gift_form = #{giftForm,jdbcType=VARCHAR}
-            </if>
-            <if test="sendWay != null">
-                AND send_way = #{sendWay,jdbcType=VARCHAR}
-            </if>
-            <if test="isActive != null">
-                AND is_active = #{isActive,jdbcType=BIT}
-            </if>
-            <if test="createTime != null">
-                AND create_time = #{createTime,jdbcType=TIMESTAMP}
-            </if>
-            <if test="modifiedTime != null">
-                AND modified_time = #{modifiedTime,jdbcType=TIMESTAMP}
-            </if>
-            <if test="createdBy != null">
-                AND created_by = #{createdBy,jdbcType=VARCHAR}
-            </if>
-            <if test="modifiedBy != null">
-                AND modified_by = #{modifiedBy,jdbcType=VARCHAR}
-            </if>
-        </where>
-    </select>
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.MarketActivityPO">
+		<id column="id" property="id" />
+		<result column="activity_title" property="activityTitle" />
+		<result column="publisher" property="publisher" />
+		<result column="begin_time" property="beginTime" />
+		<result column="end_time" property="endTime" />
+		<result column="status" property="status" />
+		<result column="content" property="content" />
+		<result column="gift_form" property="giftForm" />
+		<result column="send_way" property="sendWay" />
+		<result column="is_active" property="isActive" />
+		<result column="create_time" property="createTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
 
 </mapper>
