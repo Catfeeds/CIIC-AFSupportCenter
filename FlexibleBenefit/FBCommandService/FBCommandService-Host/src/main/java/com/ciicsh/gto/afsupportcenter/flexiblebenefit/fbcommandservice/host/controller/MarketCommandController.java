@@ -24,7 +24,7 @@ public class MarketCommandController {
     private MarketActivityCommandService marketActivityCommandService;
 
     /**
-     * 单挑查询
+     * 单条查询
      *
      * @param id
      * @return

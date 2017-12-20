@@ -51,15 +51,17 @@ public class GiftCommandController {
     @PostMapping("/giftInsert")
     public Result giftInsert(GiftPO entity, MultipartFile file) {
         try {
-            /**上传图片*/
-            String filePathUrl = giftCommandService.fileUpdate(file.getInputStream());
-            entity.setPictureUrl(filePathUrl);
+            if (file != null) {
+                /**上传图片*/
+                String filePathUrl = giftCommandService.fileUpdate(file.getInputStream());
+                entity.setPictureUrl(filePathUrl);
+            }
 
             boolean flag = giftCommandService.insert(entity);
             logger.info("礼品新增");
             return ResultGenerator.genSuccessResult(flag);
         } catch (Exception e) {
-            return ResultGenerator.genServerFailResult();
+            return ResultGenerator.genServerFailResult(e.getMessage());
         }
     }
 
