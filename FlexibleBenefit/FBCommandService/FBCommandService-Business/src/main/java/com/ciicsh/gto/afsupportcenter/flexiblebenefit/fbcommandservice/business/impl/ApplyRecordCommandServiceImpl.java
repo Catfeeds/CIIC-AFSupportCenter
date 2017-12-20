@@ -4,7 +4,7 @@ package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyRecordPO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.ApplyRecordCommandService;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.dao.ApplyRecordCommandMapper;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.dao.ApplyRecordCommandMapper;
 import org.springframework.stereotype.Service;
 
 /**

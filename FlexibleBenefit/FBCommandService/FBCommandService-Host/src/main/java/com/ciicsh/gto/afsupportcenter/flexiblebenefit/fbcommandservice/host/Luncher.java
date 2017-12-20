@@ -7,7 +7,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice"})
-@MapperScan("com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.dao")
+@MapperScan({"com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.dao"})
 @EnableDiscoveryClient
 public class Luncher extends SpringBootServletInitializer {
 

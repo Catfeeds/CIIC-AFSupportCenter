@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gt1.FileHandler;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.GiftPO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.GiftCommandService;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.dao.GiftCommandMapper;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.dao.GiftCommandMapper;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
