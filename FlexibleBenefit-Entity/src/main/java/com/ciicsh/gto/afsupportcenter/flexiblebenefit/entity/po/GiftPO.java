@@ -245,7 +245,7 @@ public class GiftPO extends Model<GiftPO> {
 
     @Override
     public String toString() {
-        return "GiftPO{" +
+        return "Gift{" +
                 ", id=" + id +
                 ", giftName=" + giftName +
                 ", price=" + price +

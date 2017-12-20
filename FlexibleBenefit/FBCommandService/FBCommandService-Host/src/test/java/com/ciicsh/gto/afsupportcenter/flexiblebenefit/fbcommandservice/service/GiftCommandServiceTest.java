@@ -30,6 +30,7 @@ public class GiftCommandServiceTest {
         entity.setRightPerson(0);
         entity.setGiftType(0);
         entity.setColor("红色");
+        //entity.setNew(true);
         entity.setNumber(100);
         entity.setApplyMaxnum(51);
         entity.setRemarks("ceshi");
