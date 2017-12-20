@@ -7,14 +7,18 @@
         <id column="payment_id" property="paymentId" />
         <result column="payment_batch_num" property="paymentBatchNum" />
         <result column="total_application_amount" property="totalApplicationAmount" />
-        <result column="total_emp_count" property="totalEmpCount" />
         <result column="payment_month" property="paymentMonth" />
-        <result column="state" property="state" />
+        <result column="payment_state" property="paymentState" />
         <result column="create_payment_user" property="createPaymentUser" />
         <result column="create_payment_date" property="createPaymentDate" />
         <result column="finance_payment_date" property="financePaymentDate" />
         <result column="account_type" property="accountType" />
-        <result column="total_emp" property="totalEmp" />
+        <result column="total_emp_count" property="totalEmpCount" />
+        <result column="total_account" property="totalAccount" />
+        <result column="total_com" property="totalCom" />
+        <result column="apply_remark" property="applyRemark" />
+        <result column="rejection_remark" property="rejectionRemark" />
+        <result column="rejection_his" property="rejectionHis" />
         <result column="is_active" property="isActive" />
         <result column="created_time" property="createdTime" />
         <result column="modified_time" property="modifiedTime" />

@@ -16,6 +16,7 @@
         <result column="imp_amount" property="impAmount" />
         <result column="ss_amount" property="ssAmount" />
         <result column="diff_amount" property="diffAmount" />
+        <result column="diff_headcount" property="diffHeadcount" />
         <result column="is_active" property="isActive" />
         <result column="created_time" property="createdTime" />
         <result column="modified_time" property="modifiedTime" />

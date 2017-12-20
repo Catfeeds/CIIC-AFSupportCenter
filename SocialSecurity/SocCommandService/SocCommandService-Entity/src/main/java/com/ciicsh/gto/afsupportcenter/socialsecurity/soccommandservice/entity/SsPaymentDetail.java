@@ -14,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-16
+ * @since 2017-12-20
  */
 @TableName("ss_payment_detail")
 public class SsPaymentDetail implements Serializable {
@@ -36,6 +36,11 @@ public class SsPaymentDetail implements Serializable {
      */
 	private String seq;
     /**
+     * 支付项目代码
+     */
+	@TableField("payment_item")
+	private Integer paymentItem;
+    /**
      * 支付项目名称
      */
 	@TableField("payment_item_name")
@@ -48,10 +53,10 @@ public class SsPaymentDetail implements Serializable {
     /**
      * 社保险种名称
      */
-	@TableField("ss_name")
-	private String ssName;
+	@TableField("ss_type_name")
+	private String ssTypeName;
     /**
-     * 金额
+     * 金额值
      */
 	private BigDecimal amount;
     /**
@@ -93,6 +98,14 @@ public class SsPaymentDetail implements Serializable {
 		this.seq = seq;
 	}
 
+	public Integer getPaymentItem() {
+		return paymentItem;
+	}
+
+	public void setPaymentItem(Integer paymentItem) {
+		this.paymentItem = paymentItem;
+	}
+
 	public String getPaymentItemName() {
 		return paymentItemName;
 	}
@@ -109,12 +122,12 @@ public class SsPaymentDetail implements Serializable {
 		this.ssType = ssType;
 	}
 
-	public String getSsName() {
-		return ssName;
+	public String getSsTypeName() {
+		return ssTypeName;
 	}
 
-	public void setSsName(String ssName) {
-		this.ssName = ssName;
+	public void setSsTypeName(String ssTypeName) {
+		this.ssTypeName = ssTypeName;
 	}
 
 	public BigDecimal getAmount() {
@@ -171,9 +184,10 @@ public class SsPaymentDetail implements Serializable {
 			", paymentDetailId=" + paymentDetailId +
 			", paymentId=" + paymentId +
 			", seq=" + seq +
+			", paymentItem=" + paymentItem +
 			", paymentItemName=" + paymentItemName +
 			", ssType=" + ssType +
-			", ssName=" + ssName +
+			", ssTypeName=" + ssTypeName +
 			", amount=" + amount +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
