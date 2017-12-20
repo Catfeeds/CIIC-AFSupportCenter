@@ -20,8 +20,4 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
-	<select id="countAll" resultType="int">
-		SELECT COUNT(*) FROM gtobusinessdb.hm_acceptance
-	</select>
-
 </mapper>

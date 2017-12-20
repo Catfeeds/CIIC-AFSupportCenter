@@ -1,4 +1,5 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.api;
+package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.api;
+
 
 
 /**
@@ -11,7 +12,7 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.api;
 
 
 
-public interface AgentBusinessQueryProxy {
+public interface AgentBusinessCommandProxy {
 
  	//@RequestMapping(value = "/getAgentBusinessListById", method = {RequestMethod.GET, RequestMethod.POST})
  	//Result getAgentBusinessListById(String agentbusinessipid);

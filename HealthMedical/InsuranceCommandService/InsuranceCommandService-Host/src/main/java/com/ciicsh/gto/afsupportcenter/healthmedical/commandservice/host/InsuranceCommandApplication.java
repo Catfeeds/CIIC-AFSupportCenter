@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.host;
+package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.host;
 
 import com.ciicsh.gto.afsupportcenter.util.config.CustomConfiguration;
 import org.mybatis.spring.annotation.MapperScan;
@@ -12,16 +12,16 @@ import org.springframework.context.annotation.Import;
 /**
  * SpringBoot 方式启动类
  */
-@MapperScan(basePackages = {"com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.dao"})
+@MapperScan(basePackages = {"com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.dao"})
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.healthmedical"})
 @Import(CustomConfiguration.class)
-public class InsuramceQueryApplication
+public class InsuranceCommandApplication
 {
-    private final static Logger logger = LoggerFactory.getLogger(InsuramceQueryApplication.class);
+    private final static Logger logger = LoggerFactory.getLogger(InsuranceCommandApplication.class);
 
     public static void main(String[] args) {
         logger.info("starting ...");
-        SpringApplication.run(InsuramceQueryApplication.class, args);
+        SpringApplication.run(InsuranceCommandApplication.class, args);
         logger.info("start is success!");
     }
 }

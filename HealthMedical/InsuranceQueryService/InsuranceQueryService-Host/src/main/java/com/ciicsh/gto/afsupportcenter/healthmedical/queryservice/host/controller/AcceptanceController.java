@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
  * @since 2017-12-02
  */
 @RestController
-@RequestMapping("/CommandService/Acceptance")
+@RequestMapping("/QueryService/Acceptance")
 public class AcceptanceController {
 
    @Autowired

@@ -18,10 +18,10 @@ import org.springframework.stereotype.Service;
 public class AcceptanceQueryServiceImpl implements AcceptanceQueryService {
 
     @Autowired
-    private AcceptanceMapper AcceptanceMapper;
+    private AcceptanceMapper acceptanceMapper;
 
     @Override
     public int countAll() {
-        return AcceptanceMapper.countAll();
+        return acceptanceMapper.countAll();
     }
 }

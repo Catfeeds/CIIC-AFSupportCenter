@@ -2,6 +2,8 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po;
 
 import com.baomidou.mybatisplus.enums.IdType;
 import com.baomidou.mybatisplus.annotations.TableId;
+
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
@@ -13,51 +15,51 @@ import java.io.Serializable;
  * </p>
  *
  * @author zhaogang
- * @since 2017-12-13
+ * @since 2017-12-18
  */
 @TableName("hm_agent_business")
 public class AgentBusinessPO implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    /**
-     * 代收代付发放id
-     */
+	/**
+	 * 代收代付发放id
+	 */
 	@TableId(value="agent_business_id", type= IdType.AUTO)
 	private Integer agentBusinessId;
-    /**
-     * 代收代付保单ID
-     */
+	/**
+	 * 代收代付保单ID
+	 */
 	@TableField("agent_business_ip_id")
 	private Integer agentBusinessIpId;
-    /**
-     * 缴费年月（201604）
-     */
+	/**
+	 * 缴费年月（201604）
+	 */
 	@TableField("payment_month")
 	private String paymentMonth;
-    /**
-     * 是否可用
-     */
+	/**
+	 * 是否可用
+	 */
 	@TableField("is_active")
 	private Boolean isActive;
-    /**
-     * 创建时间
-     */
+	/**
+	 * 创建时间
+	 */
 	@TableField("created_time")
-	private LocalTime createdTime;
-    /**
-     * 最后更新时间
-     */
+	private LocalDateTime createdTime;
+	/**
+	 * 最后更新时间
+	 */
 	@TableField("modified_time")
-	private LocalTime modifiedTime;
-    /**
-     * 创建者登录名
-     */
+	private LocalDateTime modifiedTime;
+	/**
+	 * 创建者登录名
+	 */
 	@TableField("created_by")
 	private String createdBy;
-    /**
-     * 修改者登录名
-     */
+	/**
+	 * 修改者登录名
+	 */
 	@TableField("modified_by")
 	private String modifiedBy;
 
@@ -94,19 +96,19 @@ public class AgentBusinessPO implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public LocalTime getCreatedTime() {
+	public LocalDateTime getCreatedTime() {
 		return createdTime;
 	}
 
-	public void setCreatedTime(LocalTime createdTime) {
+	public void setCreatedTime(LocalDateTime createdTime) {
 		this.createdTime = createdTime;
 	}
 
-	public LocalTime getModifiedTime() {
+	public LocalDateTime getModifiedTime() {
 		return modifiedTime;
 	}
 
-	public void setModifiedTime(LocalTime modifiedTime) {
+	public void setModifiedTime(LocalDateTime modifiedTime) {
 		this.modifiedTime = modifiedTime;
 	}
 
@@ -129,14 +131,14 @@ public class AgentBusinessPO implements Serializable {
 	@Override
 	public String toString() {
 		return "AgentBusiness{" +
-			", agentBusinessId=" + agentBusinessId +
-			", agentBusinessIpId=" + agentBusinessIpId +
-			", paymentMonth=" + paymentMonth +
-			", isActive=" + isActive +
-			", createdTime=" + createdTime +
-			", modifiedTime=" + modifiedTime +
-			", createdBy=" + createdBy +
-			", modifiedBy=" + modifiedBy +
-			"}";
+				", agentBusinessId=" + agentBusinessId +
+				", agentBusinessIpId=" + agentBusinessIpId +
+				", paymentMonth=" + paymentMonth +
+				", isActive=" + isActive +
+				", createdTime=" + createdTime +
+				", modifiedTime=" + modifiedTime +
+				", createdBy=" + createdBy +
+				", modifiedBy=" + modifiedBy +
+				"}";
 	}
 }
