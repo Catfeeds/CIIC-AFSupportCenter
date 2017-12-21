@@ -3,7 +3,7 @@
 <mapper namespace="com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.dao.InsurancePolicyBatchMapper">
 
 	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po.InsurancePolicyBatch">
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po.InsurancePolicyBatchPO">
 		<id column="insurance_policy_num_batch_id" property="insurancePolicyNumBatchId" />
 		<result column="insurance_policy_num_id" property="insurancePolicyNumId" />
 		<result column="insurance_policy_num_start_date" property="insurancePolicyNumStartDate" />

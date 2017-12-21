@@ -3,7 +3,7 @@
 <mapper namespace="com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.dao.InsuranceCompanyMapper">
 
 	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po.InsuranceCompany">
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po.InsuranceCompanyPO">
 		<id column="insurance_company_id" property="insuranceCompanyId" />
 		<result column="insurance_company_name" property="insuranceCompanyName" />
 		<result column="is_active" property="isActive" />
