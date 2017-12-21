@@ -1,7 +1,7 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.dao;
+package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po.InsurancePolicyPO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po.InsurancePolicyPO;
 
 /**
  * <p>

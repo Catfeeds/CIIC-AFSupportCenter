@@ -1,9 +1,7 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.host.controller;
+package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.host.controller;
 
 
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -15,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2017-12-20
  */
 @RestController
-@RequestMapping("/commandservice/insurancePolicyBatchDetail")
+@RequestMapping("/queryservice/insurancePolicyBatchDetail")
 public class InsurancePolicyBatchDetailController {
 	
 }

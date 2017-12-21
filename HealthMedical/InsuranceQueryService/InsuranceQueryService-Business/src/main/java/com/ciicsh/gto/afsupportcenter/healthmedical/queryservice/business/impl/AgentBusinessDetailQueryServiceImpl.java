@@ -37,7 +37,7 @@ public class AgentBusinessDetailQueryServiceImpl extends ServiceImpl<AgentBusine
         if (po != null) {
             // 依据agent_business_id 返回AgentBusinessDetail 列表
             EntityWrapper<AgentBusinessDetailPO> entityWrapper = new EntityWrapper<>();
-            entityWrapper.where("agent_business_id={0}", po.getAgentBusinessId());
+            entityWrapper.where("agent_business_id like {0}", po.getAgentBusinessId());
             return selectList(entityWrapper);
         }
         return Collections.emptyList();

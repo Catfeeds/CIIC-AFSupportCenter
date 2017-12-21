@@ -4,6 +4,7 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.host.control
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Controller;
  * @author zhaogang
  * @since 2017-12-20
  */
-@Controller
+@RestController
 @RequestMapping("/commandservice/insuranceCompany")
 public class InsuranceCompanyController {
 	

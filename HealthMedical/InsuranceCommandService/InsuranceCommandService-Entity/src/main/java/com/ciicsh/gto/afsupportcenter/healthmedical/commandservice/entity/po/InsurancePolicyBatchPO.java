@@ -12,7 +12,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author zhaogang
- * @since 2017-12-20
+ * @since 2017-12-21
  */
 @TableName("hm_insurance_policy_batch")
 public class InsurancePolicyBatchPO implements Serializable {
@@ -73,6 +73,14 @@ public class InsurancePolicyBatchPO implements Serializable {
      * 操作人
      */
 	private String operator;
+    /**
+     * 操作状态：
+0-第一步
+1-第二步
+2-已提交
+     */
+	@TableField("operation_status")
+	private Integer operationStatus;
     /**
      * 操作时间
      */
@@ -193,6 +201,14 @@ public class InsurancePolicyBatchPO implements Serializable {
 		this.operator = operator;
 	}
 
+	public Integer getOperationStatus() {
+		return operationStatus;
+	}
+
+	public void setOperationStatus(Integer operationStatus) {
+		this.operationStatus = operationStatus;
+	}
+
 	public LocalTime getOperatingTime() {
 		return operatingTime;
 	}
@@ -255,6 +271,7 @@ public class InsurancePolicyBatchPO implements Serializable {
 			", agencyTotalHeadCount=" + agencyTotalHeadCount +
 			", agencyOverallPremium=" + agencyOverallPremium +
 			", operator=" + operator +
+			", operationStatus=" + operationStatus +
 			", operatingTime=" + operatingTime +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
