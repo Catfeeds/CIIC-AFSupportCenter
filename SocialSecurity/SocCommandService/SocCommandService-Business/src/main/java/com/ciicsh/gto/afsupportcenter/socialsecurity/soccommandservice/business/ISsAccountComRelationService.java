@@ -1,7 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAccountComRelationDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,11 @@ import com.baomidou.mybatisplus.service.IService;
  * @since 2017-12-11
  */
 public interface ISsAccountComRelationService extends IService<SsAccountComRelation> {
-
+    /**
+     * 通过账户ID查询
+     *
+     * @param comAccountId
+     * @return
+     */
+   public List<SsAccountComRelationDTO> queryByAccountId(String comAccountId);
 }

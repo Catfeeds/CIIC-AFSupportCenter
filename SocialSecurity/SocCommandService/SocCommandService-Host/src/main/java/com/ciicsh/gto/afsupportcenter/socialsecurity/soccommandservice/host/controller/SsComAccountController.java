@@ -1,14 +1,20 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAccountComRelationService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAccountRatioService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComAccountService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAccountComRelationDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComAccountDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +34,10 @@ import java.util.List;
 @Log("企业社保账户信息")
 public class SsComAccountController extends BasicController<ISsComAccountService> {
 
+    @Autowired
+    private ISsAccountRatioService iSsAccountRatioService;
+    @Autowired
+    private ISsAccountComRelationService iSsAccountComRelationService;
     /**
      * 根据雇员任务 ID 查询 企业社保账户信息
      *
@@ -52,6 +62,26 @@ public class SsComAccountController extends BasicController<ISsComAccountService
     public JsonResult<List<SsComAccountDTO>> accountQuery(PageInfo pageInfo) {
         PageRows<SsComAccountDTO> pageRows = business.accountQuery(pageInfo);
         return JsonResultKit.ofPage(pageRows);
+    }
+    @Log("企业社保管理详情查询")
+    @RequestMapping("/comSocialSecurityManageInfo")
+    public JsonResult<SsComAccountDTO>  comSocialSecurityManageInfo(String comAccountId){
+
+        if(StringUtils.isBlank(comAccountId))return JsonResultKit.ofError("id为空!");
+
+        /**
+         * 因都是一对多关系，所以只能分开查询
+         */
+        //查询账户和账户对应的任务单结果
+        SsComAccountDTO ssComAccountDTO = business.querySocialSecurityManageInfo(comAccountId);
+        //再查询工伤比例变更
+        List<SsAccountRatio> ssAccountRatioList = iSsAccountRatioService.queryRatioByAccountId(comAccountId);
+        //查询 账户关联的公司
+        List<SsAccountComRelationDTO> ssAccountComRelationDTOList =  iSsAccountComRelationService.queryByAccountId(comAccountId);
+        ssComAccountDTO.setSsAccountRatioList(ssAccountRatioList);
+        ssComAccountDTO.setSsAccountComRelationDTOList(ssAccountComRelationDTOList);
+
+        return JsonResultKit.of(ssComAccountDTO);
     }
 }
 

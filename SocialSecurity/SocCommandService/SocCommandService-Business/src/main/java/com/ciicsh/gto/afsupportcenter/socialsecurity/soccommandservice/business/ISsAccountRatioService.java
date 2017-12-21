@@ -2,6 +2,9 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio;
 import com.baomidou.mybatisplus.service.IService;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,10 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface ISsAccountRatioService extends IService<SsAccountRatio> {
 
+    /**
+     * 通过accountId 查询
+     * @param comAccountId
+     * @return
+     */
+    List<SsAccountRatio> queryRatioByAccountId(@Param("comAccountId") String comAccountId);
 }

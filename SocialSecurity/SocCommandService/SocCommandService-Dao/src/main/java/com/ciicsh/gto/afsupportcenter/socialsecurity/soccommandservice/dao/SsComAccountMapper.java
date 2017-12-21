@@ -32,4 +32,10 @@ public interface SsComAccountMapper extends BaseMapper<SsComAccount> {
      * @return
      */
     List<SsComAccountDTO> accountQuery(SsComAccountDTO dto);
+
+    /**
+     * 查询企业社保管理详细信息
+     * @param comAccountId
+     */
+    SsComAccountDTO querySocialSecurityManageInfo(@Param("comAccountId") String comAccountId);
 }

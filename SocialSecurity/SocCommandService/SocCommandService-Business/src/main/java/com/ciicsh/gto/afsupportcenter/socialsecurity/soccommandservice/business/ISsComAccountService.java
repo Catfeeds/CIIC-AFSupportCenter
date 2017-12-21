@@ -32,4 +32,10 @@ public interface ISsComAccountService extends IService<SsComAccount> {
      * @return
      */
     PageRows<SsComAccountDTO> accountQuery(PageInfo pageInfo);
+
+    /**
+     * 查询企业社保管理详细信息
+     * @param comAccountId
+     */
+    SsComAccountDTO querySocialSecurityManageInfo( String comAccountId);
 }

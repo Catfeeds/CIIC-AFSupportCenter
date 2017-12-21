@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComTaskDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask;
@@ -132,14 +133,22 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
         SsComTask ssComTask = getSsComTask(map);
         //获得工伤变更信息
         SsAccountRatio ssAccountRatio = getSsAccountRatio(map);
+        SsAccountComRelation ssAccountComRelation = null;
         if (3 == ssComTask.getTaskStatus()) {
             //任务单为已完成状态 账户设置为可用
             ssComAccount.setState(new Integer(1));
+            ssAccountComRelation = new SsAccountComRelation();
+            ssAccountComRelation.setCompanyId(map.get("companyId"));
+            ssAccountComRelation.setMajorCom(new Integer(1));
+            ssAccountComRelation.setCreatedTime(LocalDateTime.now());
+            ssAccountComRelation.setCreatedBy("xsj");
+            ssAccountComRelation.setModifiedBy("xsj");
+            ssAccountComRelation.setModifiedTime(LocalDateTime.now());
         } else {
             //任务单 为初始，受理， 送审  账户为初始状态
             ssComAccount.setState(new Integer(0));
         }
-        boolean result = business.addOrUpdateCompanyTask(ssComTask, ssComAccount, ssAccountRatio);
+        boolean result = business.addOrUpdateCompanyTask(ssComTask, ssComAccount, ssAccountRatio,ssAccountComRelation);
         return JsonResultKit.of(result);
     }
 

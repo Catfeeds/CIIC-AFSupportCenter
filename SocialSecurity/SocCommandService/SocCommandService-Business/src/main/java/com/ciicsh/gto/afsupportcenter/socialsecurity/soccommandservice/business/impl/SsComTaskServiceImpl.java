@@ -2,10 +2,12 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsAccountComRelationMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsAccountRatioMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsComAccountMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsComTaskMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComTaskDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask;
@@ -37,7 +39,8 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
     public SsComAccountMapper sComAccountMapper;
     @Autowired
     public SsAccountRatioMapper ssAccountRatioMapper;
-
+    @Autowired
+    public SsAccountComRelationMapper ssAccountComRelationMapper;
     /**
      * 获得企业任务单 未处理
      * xsj
@@ -125,7 +128,7 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
     @Transactional(
         rollbackFor = {Exception.class}
     )
-    public boolean addOrUpdateCompanyTask(SsComTask ssComTask, SsComAccount ssComAccount, SsAccountRatio ssAccountRatio) {
+    public boolean addOrUpdateCompanyTask(SsComTask ssComTask, SsComAccount ssComAccount, SsAccountRatio ssAccountRatio,SsAccountComRelation ssAccountComRelation) {
         //如果 账户ID为空 则添加  否则修改
         if (null == ssComAccount.getComAccountId()) {
             ssComAccount.setActive(true);
@@ -149,6 +152,12 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
             ssAccountRatioMapper.insert(ssAccountRatio);
         } else {
             ssAccountRatioMapper.updateById(ssAccountRatio);
+        }
+        //表示完成
+        if(null!=ssAccountComRelation){
+            //添加账户下对应的公司
+            ssAccountComRelation.setComAccountId(ssComAccount.getComAccountId());
+            ssAccountComRelationMapper.insert(ssAccountComRelation);
         }
         return true;
     }

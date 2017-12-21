@@ -32,4 +32,12 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
         SsComAccountDTO dto = pageInfo.toJavaObject(SsComAccountDTO.class);
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.accountQuery(dto));
     }
+    /**
+     * 查询企业社保管理详细信息
+     * @param comAccountId
+     */
+    public SsComAccountDTO querySocialSecurityManageInfo(String comAccountId){
+
+        return baseMapper.querySocialSecurityManageInfo(comAccountId);
+    }
 }
