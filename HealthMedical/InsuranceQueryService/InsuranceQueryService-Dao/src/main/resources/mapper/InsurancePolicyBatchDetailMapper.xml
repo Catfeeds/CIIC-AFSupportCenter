@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.dao.InsurancePolicyBatchDetailMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po.InsurancePolicyBatchDetailPO">
+		<id column="insurance_policy_num_batch_detail_id" property="insurancePolicyNumBatchDetailId" />
+		<result column="insurance_policy_num_batch_id" property="insurancePolicyNumBatchId" />
+		<result column="employee_id" property="employeeId" />
+		<result column="company_id" property="companyId" />
+		<result column="insure_date" property="insureDate" />
+		<result column="premium" property="premium" />
+		<result column="agency_fee" property="agencyFee" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+</mapper>

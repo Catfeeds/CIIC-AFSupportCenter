@@ -235,7 +235,7 @@
     </dependencies>
 
     <build>
-        <finalName>gt1.afsupportcenter</finalName>
+        <finalName>gt1.productcenter</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -268,13 +268,13 @@
         <module>./SocialSecurity/SocCommandService/SocCommandService-Dao</module>
         <module>./SocialSecurity/SocCommandService/SocCommandService-Business</module>
         <module>./SocialSecurity/SocCommandService/SocCommandService-Entity</module>
-                <module>./SocialSecurity/SocQueryService/SocQueryService-Host</module>
-                <module>./SocialSecurity/SocQueryService/SocQueryService-Api</module>
-                <module>./SocialSecurity/SocQueryService/SocQueryService-Dao</module>
-                <module>./SocialSecurity/SocQueryService/SocQueryService-Business</module>
-                <module>./SocialSecurity/SocQueryService/SocQueryService-Entity</module>
+        <!--<module>./SocialSecurity/SocQueryService/SocQueryService-Host</module>
+        <module>./SocialSecurity/SocQueryService/SocQueryService-Api</module>
+        <module>./SocialSecurity/SocQueryService/SocQueryService-Dao</module>
+        <module>./SocialSecurity/SocQueryService/SocQueryService-Business</module>
+        <module>./SocialSecurity/SocQueryService/SocQueryService-Entity</module>-->
 
-        <module>./HouseFund/FundQueryService/FundQueryService-Host</module>
+        <!--<module>./HouseFund/FundQueryService/FundQueryService-Host</module>
         <module>./HouseFund/FundQueryService/FundQueryService-Api</module>
         <module>./HouseFund/FundQueryService/FundQueryService-Dao</module>
         <module>./HouseFund/FundQueryService/FundQueryService-Business</module>
@@ -284,7 +284,7 @@
         <module>./HouseFund/FundCommandService/FundCommandService-Api</module>
         <module>./HouseFund/FundCommandService/FundCommandService-Dao</module>
         <module>./HouseFund/FundCommandService/FundCommandService-Business</module>
-        <module>./HouseFund/FundCommandService/FundCommandService-Entity</module>
+        <module>./HouseFund/FundCommandService/FundCommandService-Entity</module>-->
 
 
         <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Host</module>
@@ -299,7 +299,7 @@
         <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Business</module>
         <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Entity</module>
 
-
+<!--
         <module>./EmployManagement/EmployQueryService/EmployQueryService-Host</module>
         <module>./EmployManagement/EmployQueryService/EmployQueryService-Api</module>
         <module>./EmployManagement/EmployQueryService/EmployQueryService-Dao</module>
@@ -310,9 +310,9 @@
         <module>./EmployManagement/EmployCommandService/EmployCommandService-Api</module>
         <module>./EmployManagement/EmployCommandService/EmployCommandService-Dao</module>
         <module>./EmployManagement/EmployCommandService/EmployCommandService-Business</module>
-        <module>./EmployManagement/EmployCommandService/EmployCommandService-Entity</module>
+        <module>./EmployManagement/EmployCommandService/EmployCommandService-Entity</module>-->
 
-        <module>./FlexibleBenefit/FBQueryService/FBQueryService-Host</module>
+        <!--<module>./FlexibleBenefit/FBQueryService/FBQueryService-Host</module>
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Api</module>
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Dao</module>
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Business</module>
@@ -322,9 +322,9 @@
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Api</module>
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Dao</module>
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Business</module>
-        <module>./FlexibleBenefit/FBCommandService/FBCommandService-Entity</module>
+        <module>./FlexibleBenefit/FBCommandService/FBCommandService-Entity</module>-->
 
-        <module>./Job/FundJob/FundJob-Host</module>
+        <!--<module>./Job/FundJob/FundJob-Host</module>
         <module>./Job/FundJob/FundJob-Dao</module>
         <module>./Job/FundJob/FundJob-Business</module>
         <module>./Job/FundJob/FundJob-Entity</module>
@@ -337,8 +337,7 @@
         <module>./Job/ZYJob/ZYJob-Host</module>
         <module>./Job/ZYJob/ZYJob-Dao</module>
         <module>./Job/ZYJob/ZYJob-Business</module>
-        <module>./Job/ZYJob/ZYJob-Entity</module>
-
+        <module>./Job/ZYJob/ZYJob-Entity</module>-->
     </modules>
 
 </project>
