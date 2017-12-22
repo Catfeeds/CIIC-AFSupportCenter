@@ -1,9 +1,13 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsPaymentDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPayment;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsPaymentMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsPaymentService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
+import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
+import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,4 +21,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment> implements ISsPaymentService {
 
+    @Override
+    public PageRows<SsPaymentDTO> paymentQuery(PageInfo pageInfo) {
+        return PageKit.doSelectPage(pageInfo, () -> baseMapper.paymentQuery(pageInfo.toJavaObject(SsPaymentDTO.class)));
+    }
 }

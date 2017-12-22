@@ -1,7 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsPaymentComDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPaymentCom;
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
+import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 
 /**
  * <p>
@@ -12,5 +15,13 @@ import com.baomidou.mybatisplus.service.IService;
  * @since 2017-12-01
  */
 public interface ISsPaymentComService extends IService<SsPaymentCom> {
-
+    /**
+     * <p>Description: 查询社保支付-企业账户</p>
+     *
+     * @author wengxk
+     * @date 2017-12-21
+     * @param pageInfo 翻页检索条件
+     * @return  PageRows<SsPaymentComDTO>
+     */
+    PageRows<SsPaymentComDTO> paymentComQuery(PageInfo pageInfo);
 }
