@@ -90,4 +90,10 @@ public interface ISsComTaskService extends IService<SsComTask> {
      */
     public boolean updateOrHandlerTask(SsComTaskDTO ssComTaskDTO,Object object);
 
+    /**
+     * 任务单撤销
+     * @param ssComTask
+     * @return
+     */
+    public int updateTaskStatusForRevoke(SsComTask ssComTask);
 }

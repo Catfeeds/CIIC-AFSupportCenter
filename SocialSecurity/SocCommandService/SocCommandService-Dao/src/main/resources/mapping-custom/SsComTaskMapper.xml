@@ -431,4 +431,26 @@
             AND sct.task_status = 4
         </if>
     </select>
+
+    <update id="updateTaskStatusForRevoke" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask">
+        UPDATE ss_com_task sct
+        SET
+        <if test="taskStatus == 1">
+            sct.start_handle_date=NULL,
+        </if>
+        <if test="taskStatus == 2">
+            sct.send_check_date=NULL,
+         </if>
+        <if test="taskStatus != null">
+            <if test="modifiedBy != null">
+                sct.modified_by =#{modifiedBy},
+            </if>
+            <if test="modifiedTime != null">
+                sct.modified_time=#{modifiedTime},
+            </if>
+            sct.task_status = #{taskStatus}-1
+        </if>
+        WHERE
+            sct.company_task_id = #{companyTaskId}
+    </update>
 </mapper>

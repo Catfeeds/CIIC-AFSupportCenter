@@ -23,7 +23,7 @@ public interface SsComTaskMapper extends BaseMapper<SsComTask> {
     public SsComTaskDTO queryComInfoAndMaterial(SsComTaskDTO ssComTaskDTO);
     public SsComTaskDTO queryComInfoAndPayWay(SsComTaskDTO ssComTaskDTO);
     public SsComTaskDTO queryAccountInfoAndMaterial(SsComTaskDTO ssComTaskDTO);
-
+    public int updateTaskStatusForRevoke(SsComTask ssComTask);
 
 
 }

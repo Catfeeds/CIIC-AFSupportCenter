@@ -237,6 +237,16 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
         return JsonResultKit.of(result);
     }
 
+    @Log("任务单撤销")
+    @RequestMapping("/taskRevocation")
+    public JsonResult<Boolean> taskRevocation(SsComTask ssComTask){
+        //修改任单状态和时间
+        ssComTask.setModifiedBy("xsj");
+        ssComTask.setModifiedTime(LocalDateTime.now());
+        return JsonResultKit.of(business.updateTaskStatusForRevoke(ssComTask)>0?true:false);
+    }
+
+
     public SsComAccount getSsComAccount(Map<String, String> map) {
         SsComAccount ssComAccount = new SsComAccount();
         //设置账户ID

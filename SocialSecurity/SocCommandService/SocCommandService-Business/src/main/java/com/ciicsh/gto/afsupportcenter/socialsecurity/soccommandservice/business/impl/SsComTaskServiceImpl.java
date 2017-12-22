@@ -204,4 +204,13 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
         }
         return result;
     }
+
+    /**
+     * 任务单撤销
+     * @param ssComTask
+     * @return
+     */
+    public int updateTaskStatusForRevoke(SsComTask ssComTask){
+        return baseMapper.updateTaskStatusForRevoke(ssComTask);
+    }
 }
