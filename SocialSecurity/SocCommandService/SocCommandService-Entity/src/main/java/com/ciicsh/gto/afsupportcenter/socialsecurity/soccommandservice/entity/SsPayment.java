@@ -60,7 +60,7 @@ public class SsPayment implements Serializable {
 	@TableField("finance_payment_date")
 	private LocalDate financePaymentDate;
     /**
-     * 1 大库、2 外包、3独立户
+     * 1 大库、2 外包、3中智独立户
      */
 	@TableField("account_type")
 	private Integer accountType;

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsPaymentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="DtoResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPayment">
+        <id column="payment_id" property="paymentId" />
+        <result column="payment_batch_num" property="paymentBatchNum" />
+        <result column="total_application_amount" property="totalApplicationAmount" />
+        <result column="payment_month" property="paymentMonth" />
+        <result column="payment_state" property="paymentState" />
+        <result column="create_payment_user" property="createPaymentUser" />
+        <result column="create_payment_date" property="createPaymentDate" />
+        <result column="finance_payment_date" property="financePaymentDate" />
+        <result column="account_type" property="accountType" />
+        <result column="total_emp_count" property="totalEmpCount" />
+        <result column="total_account" property="totalAccount" />
+        <result column="total_com" property="totalCom" />
+        <result column="apply_remark" property="applyRemark" />
+        <result column="rejection_remark" property="rejectionRemark" />
+        <result column="rejection_his" property="rejectionHis" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
+
+    <select id="paymentQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsPaymentDTO" resultMap="DtoResultMap">
+        SELECT
+            SP.*
+        FROM
+            ss_payment SP
+        WHERE
+            SP.is_active = '1'
+            <if test = "accountType != null and accountType != ''">
+            AND SP.account_type = #{accountType}
+            </if>
+            <if test = "paymentBatchNum != null and paymentBatchNum != ''">
+                AND SP.payment_batch_num = #{paymentBatchNum}
+            </if>
+            <if test = "paymentMonthMin != null and paymentMonthMin != ''">
+                <![CDATA[
+                    AND SP.payment_month >= #{paymentMonthMin}
+                  ]]>
+            </if>
+            <if test = "paymentMonthMax != null and paymentMonthMax != ''">
+                <![CDATA[
+                    AND SP.payment_month <= #{paymentMonthMax}
+                  ]]>
+            </if>
+            <if test = "paymentState != null and paymentState != ''">
+                AND SP.payment_state = #{paymentState}
+            </if>
+    </select>
+
+
+</mapper>

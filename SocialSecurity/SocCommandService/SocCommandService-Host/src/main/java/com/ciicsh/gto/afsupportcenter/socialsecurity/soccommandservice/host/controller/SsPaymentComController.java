@@ -2,9 +2,19 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsPaymentComService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsPaymentComDTO;
+import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
+import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
+import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,6 +27,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/soccommandservice/ssPaymentCom")
 public class SsPaymentComController  extends BasicController<ISsPaymentComService> {
+    /**
+     * <p>Description: 查询社保支付-企业账户(列表页)</p>
+     *
+     * @author wengxk
+     * @date 2017-12-21
+     * @param pageInfo 翻页检索条件
+     * @return  JsonResult<>
+     */
+    @Log("查询社保支付-企业账户(列表页)")
+    @PostMapping("/paymentComQuery")
+    public JsonResult<List<SsPaymentComDTO>> paymentComQuery(PageInfo pageInfo) {
 
+        PageRows<SsPaymentComDTO> pageRows = business.paymentComQuery(pageInfo);
+        return JsonResultKit.ofPage(pageRows);
+    }
 }
 
