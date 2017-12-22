@@ -55,8 +55,7 @@
 
     <!--查询企业社保管理详细信息-->
     <select id="querySocialSecurityManageInfo" resultMap="AccountAndTaskResultMap">
-        SELECT * FROM(
-            SELECT
+         SELECT
             sca.com_account_id,
             sca.ss_account,
             sca.bank_account,
@@ -79,18 +78,25 @@
             sca.into_date,
             sca.end_date,
             sca.dispatch_material,
-            sct.company_task_id,
-            sct.task_category,
-            sct.modified_by,
-            sct.modified_time,
-            sct.task_status,
-            sct.submit_time,
-            sct.submitter_name,
-            sct.submit_remark
-            FROM
+						sct.*
+        FROM
             ss_com_account sca
-            LEFT JOIN ss_com_task sct ON sca.com_account_id = sct.com_account_id
-         )acc
-         WHERE acc.com_account_id = #{comAccountId} AND sct.task_status=3 OR sct.task_status=4
+        LEFT JOIN
+                (
+                    SELECT
+                    com_account_id,
+                    company_task_id,
+                    task_category,
+                    modified_by,
+                    modified_time,
+                    task_status,
+                    submit_time,
+                    submitter_name,
+                    submit_remark
+                    FROM ss_com_task
+                    WHERE is_active=1 AND task_status=3 OR task_status=4
+                )sct ON sca.com_account_id = sct.com_account_id
+           WHERE sca.com_account_id = #{comAccountId}
+
     </select>
 </mapper>
