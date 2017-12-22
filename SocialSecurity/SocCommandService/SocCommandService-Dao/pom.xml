@@ -5,6 +5,7 @@
     <parent>
         <artifactId>afsupportcenter-parent</artifactId>
         <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
+        <artifactId>afsupportcenter-parent</artifactId>
         <version>1.0.0</version>
         <relativePath>../../../pom.xml</relativePath>
     </parent>
@@ -15,11 +16,22 @@
     <build>
         <finalName>gt1.afsupportcenter.soccommandservice-dao</finalName>
     </build>
+    <build>
+        <finalName>gt1.afsupportcenter.soccommandservice-dao</finalName>
+    </build>
 
     <dependencies>
         <dependency>
             <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
             <artifactId>afsupportcenter-socialsecurity-soccommandservice-entity</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
+            <artifactId>soccommandservice-entity</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>

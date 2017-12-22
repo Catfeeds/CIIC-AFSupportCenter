@@ -268,13 +268,11 @@
         <module>./SocialSecurity/SocCommandService/SocCommandService-Dao</module>
         <module>./SocialSecurity/SocCommandService/SocCommandService-Business</module>
         <module>./SocialSecurity/SocCommandService/SocCommandService-Entity</module>
-        <!--
                 <module>./SocialSecurity/SocQueryService/SocQueryService-Host</module>
                 <module>./SocialSecurity/SocQueryService/SocQueryService-Api</module>
                 <module>./SocialSecurity/SocQueryService/SocQueryService-Dao</module>
                 <module>./SocialSecurity/SocQueryService/SocQueryService-Business</module>
-                <module>./SocialSecurity/SocQueryService/SocQueryService-Entity</module>-->
-<!--
+                <module>./SocialSecurity/SocQueryService/SocQueryService-Entity</module>
 
         <module>./HouseFund/FundQueryService/FundQueryService-Host</module>
         <module>./HouseFund/FundQueryService/FundQueryService-Api</module>
@@ -340,7 +338,6 @@
         <module>./Job/ZYJob/ZYJob-Dao</module>
         <module>./Job/ZYJob/ZYJob-Business</module>
         <module>./Job/ZYJob/ZYJob-Entity</module>
--->
 
     </modules>
 
