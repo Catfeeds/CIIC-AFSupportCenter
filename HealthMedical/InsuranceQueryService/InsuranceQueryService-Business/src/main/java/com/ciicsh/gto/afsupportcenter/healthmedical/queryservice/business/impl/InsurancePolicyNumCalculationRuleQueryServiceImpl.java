@@ -1,10 +1,13 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.business.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.business.InsurancePolicyNumCalculationRuleQueryService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.dao.InsurancePolicyNumCalculationRuleMapper;
 import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po.InsurancePolicyNumCalculationRulePO;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -16,5 +19,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class InsurancePolicyNumCalculationRuleQueryServiceImpl extends ServiceImpl<InsurancePolicyNumCalculationRuleMapper, InsurancePolicyNumCalculationRulePO> implements InsurancePolicyNumCalculationRuleQueryService {
-	
+
+    @Override
+    public List<InsurancePolicyNumCalculationRulePO> getInsurancePolicyNumCalculationRuleListByID(String ruleid) {
+        EntityWrapper<InsurancePolicyNumCalculationRulePO> entityIpWrapper = new EntityWrapper<>();
+        entityIpWrapper.where("insurance_policy_num_id={0}", ruleid);
+        return selectList(entityIpWrapper);
+    }
 }
