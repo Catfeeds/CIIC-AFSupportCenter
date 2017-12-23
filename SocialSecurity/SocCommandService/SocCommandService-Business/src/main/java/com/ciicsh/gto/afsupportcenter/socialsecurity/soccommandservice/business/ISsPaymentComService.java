@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.Ss
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 
 /**
  * <p>
@@ -24,4 +25,14 @@ public interface ISsPaymentComService extends IService<SsPaymentCom> {
      * @return  PageRows<SsPaymentComDTO>
      */
     PageRows<SsPaymentComDTO> paymentComQuery(PageInfo pageInfo);
+
+    /**
+     * <p>Description: 保存调整结果</p>
+     *
+     * @author wengxk
+     * @date 2017-12-23
+     * @param ssPaymentComDTO 翻页检索条件
+     * @return  JsonResult<>
+     */
+    JsonResult<String> saveAdjustment(SsPaymentComDTO ssPaymentComDTO);
 }

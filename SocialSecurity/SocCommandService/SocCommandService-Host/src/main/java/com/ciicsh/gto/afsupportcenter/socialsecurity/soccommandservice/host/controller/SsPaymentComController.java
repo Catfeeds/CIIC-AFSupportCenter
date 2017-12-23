@@ -42,5 +42,31 @@ public class SsPaymentComController  extends BasicController<ISsPaymentComServic
         PageRows<SsPaymentComDTO> pageRows = business.paymentComQuery(pageInfo);
         return JsonResultKit.ofPage(pageRows);
     }
+
+
+    /**
+     * <p>Description: 保存调整结果</p>
+     *
+     * @author wengxk
+     * @date 2017-12-23
+     * @param ssPaymentComDTO 保存的数据
+     * @return  JsonResult<>
+     */
+    @Log("保存调整结果")
+    @PostMapping("/saveAdjustment")
+    public JsonResult<String> saveAdjustment(SsPaymentComDTO ssPaymentComDTO) {
+        JsonResult<String> json = new JsonResult<String>();
+        json.setCode(200);
+        json.setMessage("成功");
+
+        //数据校验
+
+        //计算并保存
+        business.saveAdjustment(ssPaymentComDTO);
+
+
+
+        return json;
+    }
 }
 

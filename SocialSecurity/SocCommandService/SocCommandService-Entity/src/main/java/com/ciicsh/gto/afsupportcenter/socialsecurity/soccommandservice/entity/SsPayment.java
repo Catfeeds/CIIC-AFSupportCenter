@@ -15,7 +15,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-20
+ * @since 2017-12-23
  */
 @TableName("ss_payment")
 public class SsPayment implements Serializable {
@@ -60,7 +60,7 @@ public class SsPayment implements Serializable {
 	@TableField("finance_payment_date")
 	private LocalDate financePaymentDate;
     /**
-     * 1 大库、2 外包、3中智独立户
+     * 1 大库、2 外包、3独立户
      */
 	@TableField("account_type")
 	private Integer accountType;
@@ -104,6 +104,16 @@ public class SsPayment implements Serializable {
      */
 	@TableField("rejection_his")
 	private String rejectionHis;
+    /**
+     * 申请人
+     */
+	@TableField("request_user")
+	private String requestUser;
+    /**
+     * 申请日期
+     */
+	@TableField("request_date")
+	private LocalDate requestDate;
     /**
      * 是否可用
      */
@@ -251,6 +261,22 @@ public class SsPayment implements Serializable {
 		this.rejectionHis = rejectionHis;
 	}
 
+	public String getRequestUser() {
+		return requestUser;
+	}
+
+	public void setRequestUser(String requestUser) {
+		this.requestUser = requestUser;
+	}
+
+	public LocalDate getRequestDate() {
+		return requestDate;
+	}
+
+	public void setRequestDate(LocalDate requestDate) {
+		this.requestDate = requestDate;
+	}
+
 	public Boolean getActive() {
 		return isActive;
 	}
@@ -309,6 +335,8 @@ public class SsPayment implements Serializable {
 			", applyRemark=" + applyRemark +
 			", rejectionRemark=" + rejectionRemark +
 			", rejectionHis=" + rejectionHis +
+			", requestUser=" + requestUser +
+			", requestDate=" + requestDate +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +
