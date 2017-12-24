@@ -14,8 +14,7 @@ import org.springframework.context.annotation.Import;
 @MapperScan(basePackages = {"com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.dao"})
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.healthmedical"})
 @Import(CustomConfiguration.class)
-public class
-InsuranceQueryApplication
+public class InsuranceQueryApplication
 {
     private final static Logger logger = LoggerFactory.getLogger(InsuranceQueryApplication.class);
 
