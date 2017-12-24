@@ -1,5 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po;
 
+import com.baomidou.mybatisplus.enums.IdType;
+import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalTime;
 import com.baomidou.mybatisplus.annotations.TableField;
@@ -12,103 +14,92 @@ import java.io.Serializable;
  * </p>
  *
  * @author zhaogang
- * @since 2017-12-21
+ * @since 2017-12-24
  */
 @TableName("hm_insurance_policy_batch")
 public class InsurancePolicyBatchPO implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @TableId("insurance_policy_num_batch_id")
+	/**
+	 * 保单号批次ID
+	 */
+	@TableId(value="insurance_policy_num_batch_id", type= IdType.AUTO)
 	private Integer insurancePolicyNumBatchId;
-    /**
-     * 所属保单号
-     */
+	/**
+	 * 所属保单号
+	 */
 	@TableField("insurance_policy_num_id")
 	private Integer insurancePolicyNumId;
-    /**
-     * 保单号开始日期
-     */
-	@TableField("insurance_policy_num_start_date")
-	private LocalTime insurancePolicyNumStartDate;
-    /**
-     * 保单号结束日期
-     */
-	@TableField("insurance_policy_num_end_date")
-	private LocalTime insurancePolicyNumEndDate;
-    /**
-     * 缴费周期：
-1 月缴
-2 季缴
-3 年缴
-     */
-	@TableField("payment_cycle")
-	private Integer paymentCycle;
-    /**
-     * 保费计算规则
-     */
-	@TableField("payment_calculation_rule")
-	private String paymentCalculationRule;
-    /**
-     * 总人数
-     */
+	/**
+	 * 费用所属期
+	 （由于缴费周期的不一样存放的信息含义不一样:
+	 按月：201701,201702
+	 按季度：201701,201702
+	 按年：2017,2018）
+	 */
+	@TableField("expense_period")
+	private Integer expensePeriod;
+	/**
+	 * 总人数
+	 */
 	@TableField("total_head_count")
 	private Integer totalHeadCount;
-    /**
-     * 总保费
-     */
+	/**
+	 * 总保费
+	 */
 	@TableField("overall_premium")
-	private String overallPremium;
-    /**
-     * 代理费总人数
-     */
+	private BigDecimal overallPremium;
+	/**
+	 * 代理费总人数
+	 */
 	@TableField("agency_total_head_count")
 	private Integer agencyTotalHeadCount;
-    /**
-     * 代理费总额
-     */
+	/**
+	 * 代理费总额
+	 */
 	@TableField("agency_overall_premium")
-	private String agencyOverallPremium;
-    /**
-     * 操作人
-     */
+	private BigDecimal agencyOverallPremium;
+	/**
+	 * 操作人
+	 */
 	private String operator;
-    /**
-     * 操作状态：
-0-第一步
-1-第二步
-2-已提交
-     */
+	/**
+	 * 操作状态：
+	 0-第一步
+	 1-第二步
+	 2-已提交
+	 */
 	@TableField("operation_status")
 	private Integer operationStatus;
-    /**
-     * 操作时间
-     */
+	/**
+	 * 操作时间
+	 */
 	@TableField("operating_time")
 	private LocalTime operatingTime;
-    /**
-     * 是否可用
-     */
+	/**
+	 * 是否可用
+	 */
 	@TableField("is_active")
 	private Boolean isActive;
-    /**
-     * 创建时间
-     */
+	/**
+	 * 创建时间
+	 */
 	@TableField("created_time")
 	private LocalTime createdTime;
-    /**
-     * 最后更新时间
-     */
+	/**
+	 * 最后更新时间
+	 */
 	@TableField("modified_time")
 	private LocalTime modifiedTime;
-    /**
-     * 创建者登录名
-     */
+	/**
+	 * 创建者登录名
+	 */
 	@TableField("created_by")
 	private String createdBy;
-    /**
-     * 修改者登录名
-     */
+	/**
+	 * 修改者登录名
+	 */
 	@TableField("modified_by")
 	private String modifiedBy;
 
@@ -129,36 +120,12 @@ public class InsurancePolicyBatchPO implements Serializable {
 		this.insurancePolicyNumId = insurancePolicyNumId;
 	}
 
-	public LocalTime getInsurancePolicyNumStartDate() {
-		return insurancePolicyNumStartDate;
+	public Integer getExpensePeriod() {
+		return expensePeriod;
 	}
 
-	public void setInsurancePolicyNumStartDate(LocalTime insurancePolicyNumStartDate) {
-		this.insurancePolicyNumStartDate = insurancePolicyNumStartDate;
-	}
-
-	public LocalTime getInsurancePolicyNumEndDate() {
-		return insurancePolicyNumEndDate;
-	}
-
-	public void setInsurancePolicyNumEndDate(LocalTime insurancePolicyNumEndDate) {
-		this.insurancePolicyNumEndDate = insurancePolicyNumEndDate;
-	}
-
-	public Integer getPaymentCycle() {
-		return paymentCycle;
-	}
-
-	public void setPaymentCycle(Integer paymentCycle) {
-		this.paymentCycle = paymentCycle;
-	}
-
-	public String getPaymentCalculationRule() {
-		return paymentCalculationRule;
-	}
-
-	public void setPaymentCalculationRule(String paymentCalculationRule) {
-		this.paymentCalculationRule = paymentCalculationRule;
+	public void setExpensePeriod(Integer expensePeriod) {
+		this.expensePeriod = expensePeriod;
 	}
 
 	public Integer getTotalHeadCount() {
@@ -169,11 +136,11 @@ public class InsurancePolicyBatchPO implements Serializable {
 		this.totalHeadCount = totalHeadCount;
 	}
 
-	public String getOverallPremium() {
+	public BigDecimal getOverallPremium() {
 		return overallPremium;
 	}
 
-	public void setOverallPremium(String overallPremium) {
+	public void setOverallPremium(BigDecimal overallPremium) {
 		this.overallPremium = overallPremium;
 	}
 
@@ -185,11 +152,11 @@ public class InsurancePolicyBatchPO implements Serializable {
 		this.agencyTotalHeadCount = agencyTotalHeadCount;
 	}
 
-	public String getAgencyOverallPremium() {
+	public BigDecimal getAgencyOverallPremium() {
 		return agencyOverallPremium;
 	}
 
-	public void setAgencyOverallPremium(String agencyOverallPremium) {
+	public void setAgencyOverallPremium(BigDecimal agencyOverallPremium) {
 		this.agencyOverallPremium = agencyOverallPremium;
 	}
 
@@ -260,24 +227,21 @@ public class InsurancePolicyBatchPO implements Serializable {
 	@Override
 	public String toString() {
 		return "InsurancePolicyBatch{" +
-			", insurancePolicyNumBatchId=" + insurancePolicyNumBatchId +
-			", insurancePolicyNumId=" + insurancePolicyNumId +
-			", insurancePolicyNumStartDate=" + insurancePolicyNumStartDate +
-			", insurancePolicyNumEndDate=" + insurancePolicyNumEndDate +
-			", paymentCycle=" + paymentCycle +
-			", paymentCalculationRule=" + paymentCalculationRule +
-			", totalHeadCount=" + totalHeadCount +
-			", overallPremium=" + overallPremium +
-			", agencyTotalHeadCount=" + agencyTotalHeadCount +
-			", agencyOverallPremium=" + agencyOverallPremium +
-			", operator=" + operator +
-			", operationStatus=" + operationStatus +
-			", operatingTime=" + operatingTime +
-			", isActive=" + isActive +
-			", createdTime=" + createdTime +
-			", modifiedTime=" + modifiedTime +
-			", createdBy=" + createdBy +
-			", modifiedBy=" + modifiedBy +
-			"}";
+				", insurancePolicyNumBatchId=" + insurancePolicyNumBatchId +
+				", insurancePolicyNumId=" + insurancePolicyNumId +
+				", expensePeriod=" + expensePeriod +
+				", totalHeadCount=" + totalHeadCount +
+				", overallPremium=" + overallPremium +
+				", agencyTotalHeadCount=" + agencyTotalHeadCount +
+				", agencyOverallPremium=" + agencyOverallPremium +
+				", operator=" + operator +
+				", operationStatus=" + operationStatus +
+				", operatingTime=" + operatingTime +
+				", isActive=" + isActive +
+				", createdTime=" + createdTime +
+				", modifiedTime=" + modifiedTime +
+				", createdBy=" + createdBy +
+				", modifiedBy=" + modifiedBy +
+				"}";
 	}
 }
