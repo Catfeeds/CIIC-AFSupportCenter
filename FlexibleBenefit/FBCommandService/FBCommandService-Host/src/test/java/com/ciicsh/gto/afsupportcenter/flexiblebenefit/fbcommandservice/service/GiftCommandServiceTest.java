@@ -2,8 +2,8 @@ package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.service;
 
 import com.ciicsh.gt1.FileHandler;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.GiftPO;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.Luncher;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.GiftCommandService;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.host.Luncher;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +30,7 @@ public class GiftCommandServiceTest {
         entity.setRightPerson(0);
         entity.setGiftType(0);
         entity.setColor("红色");
-        //entity.setNew(true);
+        entity.setNewTag(true);
         entity.setNumber(100);
         entity.setApplyMaxnum(51);
         entity.setRemarks("ceshi");
@@ -40,9 +40,18 @@ public class GiftCommandServiceTest {
         Assert.assertEquals(flag, true);
     }
 
-
     @Test
     public void findById() {
+        /**
+         * 扫描不到mybatis文件
+         */
+//        GiftPO entity = giftCommandService.findById(1);
+        GiftPO entity = new GiftPO();
+        System.out.println(entity.toString());
+    }
+
+    @Test
+    public void test() {
         GiftPO entity = giftCommandService.selectById(1);
         System.out.println(entity.toString());
     }

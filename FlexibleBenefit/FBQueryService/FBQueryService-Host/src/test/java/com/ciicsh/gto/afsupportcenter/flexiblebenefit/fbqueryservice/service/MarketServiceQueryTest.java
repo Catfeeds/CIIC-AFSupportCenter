@@ -2,8 +2,8 @@ package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.MarketActivityPO;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.MainApplication;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business.MarketActivityQueryService;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.host.MainApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

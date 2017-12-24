@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.controller;
 
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.host.MainApplication;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.MainApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

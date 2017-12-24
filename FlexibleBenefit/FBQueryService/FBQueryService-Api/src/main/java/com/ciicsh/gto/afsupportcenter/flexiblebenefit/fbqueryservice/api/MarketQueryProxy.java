@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api;
 
 
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.core.Result;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.core.Result;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

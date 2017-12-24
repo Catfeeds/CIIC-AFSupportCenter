@@ -1,8 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.core.Result;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.GiftPO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.GiftCommandProxy;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.core.Result;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.core.ResultGenerator;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.dto.GiftDTO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business.GiftQueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,16 +23,7 @@ public class GiftApiController implements GiftCommandProxy {
     private GiftQueryService giftQueryService;
 
     @Override
-    public Result findGiftList(Integer giftType, Integer pageNum, Integer pageSize) {
-        GiftPO entity = new GiftPO();
-        Result jr = new Result();
-        if (pageNum == null) {
-            pageNum = 1;
-        }
-        if (pageSize == null) {
-            pageSize = 5;
-        }
-        entity.setGiftType(giftType);
-        return jr;
+    public Result findGiftList(GiftDTO entity) {
+        return ResultGenerator.genSuccessResult();
     }
 }

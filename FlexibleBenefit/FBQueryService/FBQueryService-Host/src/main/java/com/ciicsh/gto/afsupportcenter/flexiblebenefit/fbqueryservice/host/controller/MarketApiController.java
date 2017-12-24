@@ -1,8 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.core.Result;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.MarketQueryProxy;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.core.Result;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business.MarketActivityQueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

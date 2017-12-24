@@ -73,8 +73,8 @@ public class GiftPO extends Model<GiftPO> {
     /**
      * 是否new标识-0
      */
-    @TableField("is_new")
-    private Boolean isNew;
+    @TableField("new_tag")
+    private Boolean newTag;
     /**
      * 是否可用
      */
@@ -190,12 +190,12 @@ public class GiftPO extends Model<GiftPO> {
         this.status = status;
     }
 
-    public Boolean getNew() {
-        return isNew;
+    public Boolean getNewTag() {
+        return newTag;
     }
 
-    public void setNew(Boolean isNew) {
-        this.isNew = isNew;
+    public void setNewTag(Boolean newTag) {
+        this.newTag = newTag;
     }
 
     public Boolean getActive() {
@@ -245,24 +245,24 @@ public class GiftPO extends Model<GiftPO> {
 
     @Override
     public String toString() {
-        return "Gift{" +
-                ", id=" + id +
-                ", giftName=" + giftName +
+        return "GiftPO{" +
+                "id=" + id +
+                ", giftName='" + giftName + '\'' +
                 ", price=" + price +
                 ", rightPerson=" + rightPerson +
                 ", giftType=" + giftType +
-                ", color=" + color +
+                ", color='" + color + '\'' +
                 ", number=" + number +
                 ", applyMaxnum=" + applyMaxnum +
-                ", pictureUrl=" + pictureUrl +
-                ", remarks=" + remarks +
+                ", pictureUrl='" + pictureUrl + '\'' +
+                ", remarks='" + remarks + '\'' +
                 ", status=" + status +
-                ", isNew=" + isNew +
+                ", newTag=" + newTag +
                 ", isActive=" + isActive +
                 ", createTime=" + createTime +
                 ", modifiedTime=" + modifiedTime +
-                ", createdBy=" + createdBy +
-                ", modifiedBy=" + modifiedBy +
-                "}";
+                ", createdBy='" + createdBy + '\'' +
+                ", modifiedBy='" + modifiedBy + '\'' +
+                '}';
     }
 }

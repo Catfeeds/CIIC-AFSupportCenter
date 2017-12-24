@@ -1,11 +1,13 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.core.Result;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.core.ResultGenerator;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.MarketActivityPO;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.core.Result;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.core.ResultGenerator;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.dto.MarketActivityDTO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.MarketActivityCommandService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,13 +45,15 @@ public class MarketCommandController {
     /**
      * 活动新增
      *
-     * @param entity
+     * @param marketActivityDTO
      * @return
      */
     @PostMapping("/marketActivityAdd")
-    public Result marketActivityAdd(MarketActivityPO entity) {
+    public Result marketActivityAdd(MarketActivityDTO marketActivityDTO) {
+        MarketActivityPO marketActivityPO = new MarketActivityPO();
+        BeanUtils.copyProperties(marketActivityDTO, marketActivityPO);
         try {
-            boolean flag = marketActivityCommandService.insert(entity);
+            boolean flag = marketActivityCommandService.insert(marketActivityPO);
             logger.info("活动新增");
             return ResultGenerator.genSuccessResult(flag);
         } catch (Exception e) {
@@ -60,13 +64,16 @@ public class MarketCommandController {
     /**
      * 活动修改
      *
-     * @param entity
+     * @param marketActivityDTO
      * @return
      */
     @PostMapping("/marketActivityUpdate")
-    public Result marketActivityUpdate(MarketActivityPO entity) {
+    public Result marketActivityUpdate(MarketActivityDTO marketActivityDTO) {
+        MarketActivityPO marketActivityPO = new MarketActivityPO();
+        BeanUtils.copyProperties(marketActivityDTO, marketActivityPO);
         try {
-            boolean flag = marketActivityCommandService.updateById(entity);
+            boolean flag = marketActivityCommandService.updateById(marketActivityPO);
+            logger.info("活动修改");
             return ResultGenerator.genSuccessResult(flag);
         } catch (Exception e) {
             return ResultGenerator.genServerFailResult();

@@ -14,4 +14,5 @@ import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.GiftPO;
  */
 public interface GiftCommandMapper extends BaseMapper<GiftPO> {
 
+    GiftPO selectByPrimaryKey(Integer id);
 }

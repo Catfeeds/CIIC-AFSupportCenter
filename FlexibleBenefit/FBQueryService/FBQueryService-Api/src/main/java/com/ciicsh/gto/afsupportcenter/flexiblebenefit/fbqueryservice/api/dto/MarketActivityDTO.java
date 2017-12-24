@@ -9,53 +9,95 @@ import java.util.Date;
  * @date 2017/12/6 10:47
  */
 public class MarketActivityDTO {
+
+    private static final long serialVersionUID = 1L;
+    /**
+     * 起始页
+     */
+    private Integer current;
+
+    /**
+     * 每页条数
+     */
+    private Integer size;
+
+    public Integer getCurrent() {
+        return current;
+    }
+
+    public void setCurrent(Integer current) {
+        this.current = current;
+    }
+
+    public Integer getSize() {
+        return size;
+    }
+
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
+    /**
+     * 市场活动主键
+     */
     private Integer id;
-
+    /**
+     * 活动主题
+     */
     private String activityTitle;
-
+    /**
+     * 发布人
+     */
     private String publisher;
+    /**
+     * 活动开始时间
+     */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date beginTime;
+    /**
+     * 活动结束时间
+     */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
-
-    private Byte status;
-
+    /**
+     * 状态，进行中0，已结束1
+     */
+    private Integer status;
+    /**
+     * 活动内容
+     */
     private String content;
-
+    /**
+     * 礼品形式：以逗号隔开的数组，1实物，2纸质票券，3电子票券
+     */
     private String giftForm;
-
+    /**
+     * 派送方式：0送至中心，1委托派送
+     */
     private String sendWay;
-
+    /**
+     * 是否可用
+     */
     private Boolean isActive;
+    /**
+     * 创建时间
+     */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
+    /**
+     * 最后更新时间
+     */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date modifiedTime;
-
+    /**
+     * 创建者登录名
+     */
     private String createdBy;
-
+    /**
+     * 修改者登录名
+     */
     private String modifiedBy;
 
-    @Override
-    public String toString() {
-        return "MarketActivityPO{" +
-                "id=" + id +
-                ", activityTitle='" + activityTitle + '\'' +
-                ", publisher='" + publisher + '\'' +
-                ", beginTime=" + beginTime +
-                ", endTime=" + endTime +
-                ", status=" + status +
-                ", content='" + content + '\'' +
-                ", giftForm='" + giftForm + '\'' +
-                ", sendWay='" + sendWay + '\'' +
-                ", isActive=" + isActive +
-                ", createTime=" + createTime +
-                ", modifiedTime=" + modifiedTime +
-                ", createdBy='" + createdBy + '\'' +
-                ", modifiedBy='" + modifiedBy + '\'' +
-                '}';
-    }
 
     public Integer getId() {
         return id;
@@ -70,7 +112,7 @@ public class MarketActivityDTO {
     }
 
     public void setActivityTitle(String activityTitle) {
-        this.activityTitle = activityTitle == null ? null : activityTitle.trim();
+        this.activityTitle = activityTitle;
     }
 
     public String getPublisher() {
@@ -78,7 +120,7 @@ public class MarketActivityDTO {
     }
 
     public void setPublisher(String publisher) {
-        this.publisher = publisher == null ? null : publisher.trim();
+        this.publisher = publisher;
     }
 
     public Date getBeginTime() {
@@ -97,11 +139,11 @@ public class MarketActivityDTO {
         this.endTime = endTime;
     }
 
-    public Byte getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Byte status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -110,7 +152,7 @@ public class MarketActivityDTO {
     }
 
     public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
+        this.content = content;
     }
 
     public String getGiftForm() {
@@ -118,7 +160,7 @@ public class MarketActivityDTO {
     }
 
     public void setGiftForm(String giftForm) {
-        this.giftForm = giftForm == null ? null : giftForm.trim();
+        this.giftForm = giftForm;
     }
 
     public String getSendWay() {
@@ -129,11 +171,11 @@ public class MarketActivityDTO {
         this.sendWay = sendWay;
     }
 
-    public Boolean getIsActive() {
+    public Boolean getActive() {
         return isActive;
     }
 
-    public void setIsActive(Boolean isActive) {
+    public void setActive(Boolean isActive) {
         this.isActive = isActive;
     }
 
@@ -158,7 +200,7 @@ public class MarketActivityDTO {
     }
 
     public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy == null ? null : createdBy.trim();
+        this.createdBy = createdBy;
     }
 
     public String getModifiedBy() {
@@ -166,6 +208,7 @@ public class MarketActivityDTO {
     }
 
     public void setModifiedBy(String modifiedBy) {
-        this.modifiedBy = modifiedBy == null ? null : modifiedBy.trim();
+        this.modifiedBy = modifiedBy;
     }
+
 }

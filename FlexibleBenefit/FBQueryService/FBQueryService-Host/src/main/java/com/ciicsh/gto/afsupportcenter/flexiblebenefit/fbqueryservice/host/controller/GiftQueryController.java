@@ -1,13 +1,14 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.host.controller;
 
 import com.baomidou.mybatisplus.plugins.Page;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.core.Result;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.core.ResultGenerator;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.page.PageParam;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.GiftPO;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.core.Result;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.core.ResultGenerator;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.dto.GiftDTO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business.GiftQueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,15 +30,16 @@ public class GiftQueryController {
     /**
      * 礼品分页列表查询
      *
-     * @param pageParam
+     * @param giftDTO
      * @return
      */
     @RequestMapping("/giftList")
-    public Result giftList(PageParam pageParam) {
+    public Result giftList(GiftDTO giftDTO) {
         try {
-            Page<GiftPO> page = new Page<>(pageParam.getCurrent(), pageParam.getSize());
-            GiftPO entity = pageParam.getJsonObjectParams().toJavaObject(GiftPO.class);
-            page = giftQueryService.queryGiftList(page, entity);
+            Page<GiftPO> page = new Page<>(giftDTO.getCurrent(), giftDTO.getSize());
+            GiftPO giftPO = new GiftPO();
+            BeanUtils.copyProperties(giftDTO, giftPO);
+            page = giftQueryService.queryGiftList(page, giftPO);
             logger.info("查询礼品分页列表");
             return ResultGenerator.genSuccessResult(page);
         } catch (Exception e) {

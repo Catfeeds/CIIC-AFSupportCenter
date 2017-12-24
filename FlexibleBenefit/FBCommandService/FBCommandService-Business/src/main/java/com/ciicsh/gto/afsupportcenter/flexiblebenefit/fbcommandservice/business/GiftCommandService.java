@@ -15,6 +15,8 @@ import java.io.InputStream;
  * @since 2017-12-18
  */
 public interface GiftCommandService extends IService<GiftPO> {
+    GiftPO findById(Integer id);
+
     /**
      * 上传图片方法
      *

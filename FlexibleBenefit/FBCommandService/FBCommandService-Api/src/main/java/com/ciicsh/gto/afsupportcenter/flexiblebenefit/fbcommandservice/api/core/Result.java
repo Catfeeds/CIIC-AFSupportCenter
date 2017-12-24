@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.core;
+package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.core;
 
 import java.io.Serializable;
 

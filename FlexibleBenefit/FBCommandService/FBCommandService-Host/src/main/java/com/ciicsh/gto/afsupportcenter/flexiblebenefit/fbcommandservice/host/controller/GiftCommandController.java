@@ -1,12 +1,14 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.core.Result;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.core.ResultGenerator;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.core.Result;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.core.ResultGenerator;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.GiftPO;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.dto.GiftDTO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.GiftCommandService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +36,7 @@ public class GiftCommandController {
     @GetMapping("/findById/{id}")
     public Result findById(@PathVariable Integer id) {
         try {
-            GiftPO entity = giftCommandService.selectById(id);
+            GiftPO entity = giftCommandService.findById(id);
             logger.info("根据主键查询礼品信息");
             return ResultGenerator.genSuccessResult(entity);
         } catch (Exception e) {
@@ -49,15 +51,17 @@ public class GiftCommandController {
      * @return
      */
     @PostMapping("/giftInsert")
-    public Result giftInsert(GiftPO entity, MultipartFile file) {
+    public Result giftInsert(GiftDTO giftDTO, MultipartFile file) {
+        GiftPO giftPO = new GiftPO();
+        BeanUtils.copyProperties(giftDTO, giftPO);
         try {
             if (file != null) {
                 /**上传图片*/
                 String filePathUrl = giftCommandService.fileUpdate(file.getInputStream());
-                entity.setPictureUrl(filePathUrl);
+                giftPO.setPictureUrl(filePathUrl);
             }
 
-            boolean flag = giftCommandService.insert(entity);
+            boolean flag = giftCommandService.insert(giftPO);
             logger.info("礼品新增");
             return ResultGenerator.genSuccessResult(flag);
         } catch (Exception e) {
@@ -72,7 +76,9 @@ public class GiftCommandController {
      * @return
      */
     @PostMapping("/giftUpdate")
-    public Result giftUpdate(GiftPO entity, MultipartFile file) {
+    public Result giftUpdate(GiftDTO giftDTO, MultipartFile file) {
+        GiftPO giftPO = new GiftPO();
+        BeanUtils.copyProperties(giftDTO, giftPO);
         try {
             if (file != null && !file.isEmpty()) {
                 /**上传图片*/
@@ -82,9 +88,9 @@ public class GiftCommandController {
 //                if (entity.getPictureUrl() != null && !"".equals(entity.getPictureUrl())) {
 //                    giftCommandService.deletePicture(entity.getPictureUrl());
 //                }
-                entity.setPictureUrl(filePathUrl);
+                giftPO.setPictureUrl(filePathUrl);
             }
-            boolean flag = giftCommandService.updateById(entity);
+            boolean flag = giftCommandService.updateById(giftPO);
             logger.info("礼品修改");
             return ResultGenerator.genSuccessResult(flag);
         } catch (Exception e) {

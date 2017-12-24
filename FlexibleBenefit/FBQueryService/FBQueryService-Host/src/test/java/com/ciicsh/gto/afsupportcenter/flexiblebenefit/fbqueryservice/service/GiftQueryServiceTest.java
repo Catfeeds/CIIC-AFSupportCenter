@@ -2,8 +2,8 @@ package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.GiftPO;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.MainApplication;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business.GiftQueryService;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.host.MainApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class GiftQueryServiceTest {
     public void selectByIdTest() {
         Page<GiftPO> page = new Page<>(1, 5);
         GiftPO entity = new GiftPO();
-        entity.setGiftName("test");
+        entity.setStatus(1);
         page = giftQueryService.queryGiftList(page, entity);
         System.out.println(page.toString());
     }

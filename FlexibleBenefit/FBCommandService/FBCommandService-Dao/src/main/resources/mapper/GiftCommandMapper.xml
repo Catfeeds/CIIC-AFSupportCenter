@@ -15,7 +15,7 @@
         <result column="picture_url" property="pictureUrl"/>
         <result column="remarks" property="remarks"/>
         <result column="status" property="status"/>
-        <result column="is_new" property="isNew"/>
+        <result column="new_tag" property="newTag"/>
         <result column="is_active" property="isActive"/>
         <result column="create_time" property="createTime"/>
         <result column="modified_time" property="modifiedTime"/>
@@ -23,4 +23,14 @@
         <result column="modified_by" property="modifiedBy"/>
     </resultMap>
 
+    <sql id="Base_Column_List">
+        id, gift_name, price, right_person, gift_type, color, `number`, apply_maxnum, picture_url,
+        remarks, status, new_tag, is_active, create_time, modified_time, created_by, modified_by
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM fb_gift WHERE id = #{id,jdbcType=INTEGER}
+    </select>
 </mapper>

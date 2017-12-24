@@ -24,4 +24,6 @@ public interface GiftQueryService extends IService<GiftPO> {
      */
     Page<GiftPO> queryGiftList(Page<GiftPO> page, GiftPO entity);
 
+
+
 }

@@ -1,7 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.dto;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -10,63 +8,99 @@ import java.util.Date;
  * @date 2017/12/6 10:47
  */
 public class GiftDTO {
-    private Integer id;
 
-    private String giftName;
+    private static final long serialVersionUID = 1L;
+    /**
+     * 起始页
+     */
+    private Integer current;
 
-    private BigDecimal price;
+    /**
+     * 每页条数
+     */
+    private Integer size;
 
-    private Byte rightPerson;
-
-    private Byte giftType;
-
-    private String color;
-
-    private Integer number;
-
-    private Integer applyMaxnum;
-
-    private String pictureUrl;
-
-    private String remarks;
-
-    private Byte status;
-
-    private Boolean isNew;
-
-    private Boolean isActive;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createTime;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date modifiedTime;
-
-    private String createdBy;
-
-    private String modifiedBy;
-
-
-    @Override
-    public String toString() {
-        return "GiftPO{" +
-                "id=" + id +
-                ", giftName='" + giftName + '\'' +
-                ", price=" + price +
-                ", rightPerson=" + rightPerson +
-                ", giftType=" + giftType +
-                ", color='" + color + '\'' +
-                ", number=" + number +
-                ", applyMaxnum=" + applyMaxnum +
-                ", pictureUrl='" + pictureUrl + '\'' +
-                ", remarks='" + remarks + '\'' +
-                ", status=" + status +
-                ", isNew=" + isNew +
-                ", isActive=" + isActive +
-                ", createTime=" + createTime +
-                ", modifiedTime=" + modifiedTime +
-                ", createdBy='" + createdBy + '\'' +
-                ", modifiedBy='" + modifiedBy + '\'' +
-                '}';
+    public Integer getCurrent() {
+        return current;
     }
+
+    public void setCurrent(Integer current) {
+        this.current = current;
+    }
+
+    public Integer getSize() {
+        return size;
+    }
+
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
+    private Integer id;
+    /**
+     * 礼品名称
+     */
+    private String giftName;
+    /**
+     * 礼品价格
+     */
+    private BigDecimal price;
+    /**
+     * 适用人群：男士适用0，女士适用1，男女通用2
+     */
+    private Integer rightPerson;
+    /**
+     * 礼品类型：票券0,办公用品1,生活用品,2，食品3，饰品4，数码周边5，儿童用品6
+     */
+    private Integer giftType;
+    /**
+     * 礼品颜色
+     */
+    private String color;
+    /**
+     * 礼品数量
+     */
+    private Integer number;
+    /**
+     * 限制申请的最大数量
+     */
+    private Integer applyMaxnum;
+    /**
+     * 图片地址
+     */
+    private String pictureUrl;
+    /**
+     * 礼品介绍
+     */
+    private String remarks;
+    /**
+     * 0，正常；1，已下架
+     */
+    private Integer status;
+    /**
+     * 是否new标识-0
+     */
+    private Boolean newTag;
+    /**
+     * 是否可用
+     */
+    private Boolean isActive;
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+    /**
+     * 最后更新时间
+     */
+    private Date modifiedTime;
+    /**
+     * 创建者登录名
+     */
+    private String createdBy;
+    /**
+     * 修改者登录名
+     */
+    private String modifiedBy;
 
 
     public Integer getId() {
@@ -82,7 +116,7 @@ public class GiftDTO {
     }
 
     public void setGiftName(String giftName) {
-        this.giftName = giftName == null ? null : giftName.trim();
+        this.giftName = giftName;
     }
 
     public BigDecimal getPrice() {
@@ -93,19 +127,19 @@ public class GiftDTO {
         this.price = price;
     }
 
-    public Byte getRightPerson() {
+    public Integer getRightPerson() {
         return rightPerson;
     }
 
-    public void setRightPerson(Byte rightPerson) {
+    public void setRightPerson(Integer rightPerson) {
         this.rightPerson = rightPerson;
     }
 
-    public Byte getGiftType() {
+    public Integer getGiftType() {
         return giftType;
     }
 
-    public void setGiftType(Byte giftType) {
+    public void setGiftType(Integer giftType) {
         this.giftType = giftType;
     }
 
@@ -114,7 +148,7 @@ public class GiftDTO {
     }
 
     public void setColor(String color) {
-        this.color = color == null ? null : color.trim();
+        this.color = color;
     }
 
     public Integer getNumber() {
@@ -138,7 +172,7 @@ public class GiftDTO {
     }
 
     public void setPictureUrl(String pictureUrl) {
-        this.pictureUrl = pictureUrl == null ? null : pictureUrl.trim();
+        this.pictureUrl = pictureUrl;
     }
 
     public String getRemarks() {
@@ -146,30 +180,30 @@ public class GiftDTO {
     }
 
     public void setRemarks(String remarks) {
-        this.remarks = remarks == null ? null : remarks.trim();
+        this.remarks = remarks;
     }
 
-    public Byte getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Byte status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
-    public Boolean getIsNew() {
-        return isNew;
+    public Boolean getNewTag() {
+        return newTag;
     }
 
-    public void setIsNew(Boolean isNew) {
-        this.isNew = isNew;
+    public void setNewTag(Boolean newTag) {
+        this.newTag = newTag;
     }
 
-    public Boolean getIsActive() {
+    public Boolean getActive() {
         return isActive;
     }
 
-    public void setIsActive(Boolean isActive) {
+    public void setActive(Boolean isActive) {
         this.isActive = isActive;
     }
 
@@ -194,7 +228,7 @@ public class GiftDTO {
     }
 
     public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy == null ? null : createdBy.trim();
+        this.createdBy = createdBy;
     }
 
     public String getModifiedBy() {
@@ -202,6 +236,6 @@ public class GiftDTO {
     }
 
     public void setModifiedBy(String modifiedBy) {
-        this.modifiedBy = modifiedBy == null ? null : modifiedBy.trim();
+        this.modifiedBy = modifiedBy;
     }
 }

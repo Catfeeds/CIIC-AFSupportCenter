@@ -24,7 +24,8 @@ public class MarketActivityQueryServiceImpl extends ServiceImpl<MarketActivityQu
     public Page<MarketActivityPO> queryMarketList(Page<MarketActivityPO> page, MarketActivityPO entity) {
         EntityWrapper<MarketActivityPO> entityWrapper = new EntityWrapper<>();
         //排除活动主题空数据
-        entityWrapper.where(!StringUtils.isEmpty(entity.getActivityTitle()), "activity_title={0}", entity.getActivityTitle());
+        entityWrapper.like(StringUtils.isNotEmpty(entity.getActivityTitle()), "activity_title", entity.getActivityTitle())
+                .and(entity.getStatus() != null, "status={0}", entity.getStatus());
         page.setRecords(baseMapper.selectPage(page, entityWrapper));
         return page;
     }

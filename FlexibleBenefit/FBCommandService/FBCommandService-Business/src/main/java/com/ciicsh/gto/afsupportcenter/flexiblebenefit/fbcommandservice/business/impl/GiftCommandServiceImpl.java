@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.dao.GiftCommandMapper;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -21,6 +22,12 @@ import java.io.InputStream;
  */
 @Service
 public class GiftCommandServiceImpl extends ServiceImpl<GiftCommandMapper, GiftPO> implements GiftCommandService {
+
+    @Override
+    public GiftPO findById(Integer id) {
+        return baseMapper.selectByPrimaryKey(id);
+    }
+
     @Override
     public String fileUpdate(InputStream stream) {
         String filepath = "";

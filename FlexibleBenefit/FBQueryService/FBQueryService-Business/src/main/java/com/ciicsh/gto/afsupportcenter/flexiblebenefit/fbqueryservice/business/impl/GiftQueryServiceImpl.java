@@ -20,12 +20,15 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class GiftQueryServiceImpl extends ServiceImpl<GiftQueryMapper, GiftPO> implements GiftQueryService {
+
     @Override
     public Page<GiftPO> queryGiftList(Page<GiftPO> page, GiftPO entity) {
         EntityWrapper<GiftPO> entityWrapper = new EntityWrapper<>();
         //排除礼品名称空数据
-        entityWrapper.where(!StringUtils.isEmpty(entity.getGiftName()), "gift_name={0}", entity.getGiftName());
-        page.setRecords(baseMapper.selectPage(page, entityWrapper));
+        entityWrapper.like(StringUtils.isNotEmpty(entity.getGiftName()), "gift_name", entity.getGiftName())
+                .and(entity.getStatus() != null, "status={0}", entity.getStatus())
+                .and(entity.getGiftType() != null, "gift_type={0}", entity.getGiftType());
+        selectPage(page, entityWrapper);
         return page;
     }
 }

@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.core.Result;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.core.Result;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.MarketCommandProxy;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.MarketActivityCommandService;
 import org.slf4j.Logger;

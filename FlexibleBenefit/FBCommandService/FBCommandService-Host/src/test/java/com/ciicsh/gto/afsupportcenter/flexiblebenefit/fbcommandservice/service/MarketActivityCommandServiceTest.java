@@ -1,8 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.service;
 
 
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.Luncher;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.MarketActivityCommandService;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.host.Luncher;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

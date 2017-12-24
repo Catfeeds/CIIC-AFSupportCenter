@@ -13,5 +13,5 @@ import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.GiftPO;
  * @since 2017-12-18
  */
 public interface GiftQueryMapper extends BaseMapper<GiftPO> {
-
+    GiftPO findById(Integer id);
 }
