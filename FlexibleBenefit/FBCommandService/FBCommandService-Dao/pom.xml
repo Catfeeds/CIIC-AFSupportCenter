@@ -22,7 +22,7 @@
     <dependencies>
         <dependency>
             <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
-            <artifactId>fbcommandservice-entity</artifactId>
+            <artifactId>flexiblebenefit-entity</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>

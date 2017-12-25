@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.dao.AgentBusinessMapper">
+	<resultMap id="ServiceProductMapBO"
+			   type="com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.bo.AgentBusinessBO">
+		<result column="agent_business_ip_id" jdbcType="INTEGER" property="agentBusinessIpId" />
+		<result column="agent_business_ip_name" jdbcType="VARCHAR" property="agentBusinessIpName" />
+		<result column="insurance_company_id" jdbcType="VARCHAR" property="insuranceCompanyId" />
+		<result column="payment_cycle" jdbcType="VARCHAR" property="paymentCycle" />
+
+		<result column="agent_business_ip_start_date" jdbcType="INTEGER" property="agentBusinessIpStartDate" />
+		<result column="agent_business_ip_end_date" jdbcType="VARCHAR" property="agentBusinessIpEndDate" />
+		<result column="insurance_company_name" jdbcType="DECIMAL" property="insuranceCompanyName" />
+		<result column="paymentmonth" jdbcType="VARCHAR" property="paymentMonth" />
+	</resultMap>
+
+
+
+	<select id="getAgentBusinessIPListById" resultMap="ServiceProductMapBO">
+		select ip.agent_business_ip_id,ip.agent_business_ip_name,ip.insurance_company_id,ip.payment_cycle,
+		ip.agent_business_ip_start_date,ip.agent_business_ip_end_date,company.insurance_company_name,a.paymentmonth
+		from hm_agent_business_ip as ip LEFT JOIN(select agent_business_ip_id,max(payment_month) as paymentmonth from hm_agent_business group by agent_business_ip_id) as a
+		on ip.agent_business_ip_id= a.agent_business_ip_id
+		LEFT JOIN hm_insurance_company as company on ip.insurance_company_id= company.insurance_company_id
+
+		<where>
+			<if test="id != '' and id != null">
+				ip.insurance_company_id = #{id}
+			</if>
+		</where>
+
+	</select>
+</mapper>

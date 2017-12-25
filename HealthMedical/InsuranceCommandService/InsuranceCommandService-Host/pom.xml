@@ -26,6 +26,12 @@
             <artifactId>insurancecommandservice-api</artifactId>
             <version>1.0.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
+            <artifactId>afsupportcenter-util</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>

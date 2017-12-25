@@ -3,33 +3,31 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
         <artifactId>afsupportcenter-parent</artifactId>
+        <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
         <version>1.0.0</version>
         <relativePath>../../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
-    <artifactId>socqueryservice-host</artifactId>
-    <version>1.0.0</version>
+    <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
+    <artifactId>afsupportcenter-socialsecurity-socqueryservice-host</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
-            <artifactId>socqueryservice-business</artifactId>
+            <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
+            <artifactId>afsupportcenter-socialsecurity-socqueryservice-business</artifactId>
             <version>1.0.0</version>
         </dependency>
 
         <dependency>
-            <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
-            <artifactId>socqueryservice-api</artifactId>
+            <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
+            <artifactId>afsupportcenter-socialsecurity-socqueryservice-api</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>
 
     <build>
-        <finalName>gt1.afsupportcenter.socqueryservice-host</finalName>
         <resources>
             <resource>
                 <directory>../SocQueryService-Dao/src/main/resources/</directory>
@@ -65,14 +63,26 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.5</version>
-
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <encoding>${file.encoding}</encoding>
+                    <skipTests>true</skipTests>
                 </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
             <!-- 这是spring boot devtool plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>

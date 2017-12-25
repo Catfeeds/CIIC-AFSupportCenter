@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.dao.InsurancePolicyBatchMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po.InsurancePolicyBatchPO">
+		<id column="insurance_policy_num_batch_id" property="insurancePolicyNumBatchId" />
+		<result column="insurance_policy_num_id" property="insurancePolicyNumId" />
+		<result column="insurance_policy_num_start_date" property="insurancePolicyNumStartDate" />
+		<result column="insurance_policy_num_end_date" property="insurancePolicyNumEndDate" />
+		<result column="payment_cycle" property="paymentCycle" />
+		<result column="payment_calculation_rule" property="paymentCalculationRule" />
+		<result column="total_head_count" property="totalHeadCount" />
+		<result column="overall_premium" property="overallPremium" />
+		<result column="agency_total_head_count" property="agencyTotalHeadCount" />
+		<result column="agency_overall_premium" property="agencyOverallPremium" />
+		<result column="operator" property="operator" />
+		<result column="operating_time" property="operatingTime" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+</mapper>

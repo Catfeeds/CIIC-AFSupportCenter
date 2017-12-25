@@ -26,18 +26,19 @@
             <artifactId>insurancequeryservice-api</artifactId>
             <version>1.0.0</version>
         </dependency>
+
     </dependencies>
 
     <build>
         <finalName>gt1.afsupportcenter.insurancequeryservice-host</finalName>
         <resources>
-            <resource>
+           <!-- <resource>
                 <directory>../InsuranceQueryService-Dao/src/main/resources/</directory>
                 <filtering>true</filtering>
                 <includes>
                     <include>**/mapper/*.xml</include>
                 </includes>
-            </resource>
+            </resource>-->
             <resource>
                 <directory>src/main/resources/</directory>
                 <filtering>true</filtering>

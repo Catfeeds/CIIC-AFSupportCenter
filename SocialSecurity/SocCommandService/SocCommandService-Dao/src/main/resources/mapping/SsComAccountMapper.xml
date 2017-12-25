@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsComAccountMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount">
+        <id column="com_account_id" property="comAccountId" />
+        <result column="customer_id" property="customerId" />
+        <result column="supplier_id" property="supplierId" />
+        <result column="ss_account_type" property="ssAccountType" />
+        <result column="ss_account" property="ssAccount" />
+        <result column="bank_account" property="bankAccount" />
+        <result column="com_account_name" property="comAccountName" />
+        <result column="settlement_area" property="settlementArea" />
+        <result column="payment_bank" property="paymentBank" />
+        <result column="payment_way" property="paymentWay" />
+        <result column="expire_date" property="expireDate" />
+        <result column="ss_username" property="ssUsername" />
+        <result column="ss_pwd" property="ssPwd" />
+        <result column="initial_balance" property="initialBalance" />
+        <result column="initial_debt" property="initialDebt" />
+        <result column="origin_place" property="originPlace" />
+        <result column="origin_place_remark" property="originPlaceRemark" />
+        <result column="query_account" property="queryAccount" />
+        <result column="deliver_way" property="deliverWay" />
+        <result column="deliver_way_remark" property="deliverWayRemark" />
+        <result column="provide_certificate_time" property="provideCertificateTime" />
+        <result column="change_time" property="changeTime" />
+        <result column="receive_date" property="receiveDate" />
+        <result column="into_date" property="intoDate" />
+        <result column="end_date" property="endDate" />
+        <result column="dispatch_material" property="dispatchMaterial" />
+        <result column="remark" property="remark" />
+        <result column="state" property="state" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
+
+</mapper>

@@ -7,10 +7,9 @@
     <packaging>pom</packaging>
     <version>1.0.0</version>
 
-
     <!--
-  spring boot 父节点依赖,引入这个之后相关的引入就不需要添加version配置，spring boot会自动选择最合适的版本进行添加。
-   -->
+        spring boot 父节点依赖,引入这个之后相关的引入就不需要添加version配置，spring boot会自动选择最合适的版本进行添加。
+    -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -18,17 +17,57 @@
     </parent>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- 指定一下jdk的版本 ，这里我们使用jdk 1.8 ,默认是1.6 -->
         <java.version>1.8</java.version>
+        <encoding.version>UTF-8</encoding.version>
+
+        <project.build.sourceEncoding>${encoding.version}</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>${encoding.version}</project.reporting.outputEncoding>
+
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compiler.compilerVersion>${java.version}</maven.compiler.compilerVersion>
+
+        <!-- maven -->
+        <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
+        <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
+
+        <!--support kafka 0.10.1.1 Dalston.SR4 RELEASE-->
         <spring.cloud.version>Dalston.SR4</spring.cloud.version>
-        <fastjson.version>1.2.33</fastjson.version>
-        <mysql.connector.version>5.1.44</mysql.connector.version>
-        <mybatis.springboot.version>1.3.1</mybatis.springboot.version>
-        <mybatis.generator.version>1.3.5</mybatis.generator.version>
-        <pagehelper.starter.version>1.2.2</pagehelper.starter.version>
+
+        <!-- mybatis -->
+        <mybatisplus-spring-boot-starter.version>1.0.5</mybatisplus-spring-boot-starter.version>
+        <mybatisplus.version>2.1.6</mybatisplus.version>
+        <pagehelper-spring-boot-starter.version>1.2.2</pagehelper-spring-boot-starter.version>
+
+        <!-- alibaba datasource druid -->
+        <druid-spring-boot-starter.version>1.1.2</druid-spring-boot-starter.version>
+
+        <!-- json -->
+        <fastjson.version>1.2.35</fastjson.version>
+        <!-- apache commons -->
+        <commons.io.version>2.5</commons.io.version>
+        <commons-lang3.version>3.6</commons-lang3.version>
+        <commons-beanutils.version>1.9.3</commons-beanutils.version>
+        <commons-fileupload.version>1.3.3</commons-fileupload.version>
+        <!-- cache -->
+        <ehcache.version>3.3.1</ehcache.version>
         <basicdataservice.version>1.0.0</basicdataservice.version>
     </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>user-release</id>
+            <name>user release version</name>
+            <url>http://172.16.9.14:8081/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>user-snapshots</id>
+            <name>user snapshots version</name>
+            <url>http://172.16.9.14:8081/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
@@ -39,65 +78,84 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
 
+        <!-- spring cloud eureka -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-logging</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-eureka</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-
+        <!-- spring cloud feign -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-feign</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-config</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <!--spring boot依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-eureka</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <!-- <scope>test</scope> -->
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>${mybatis.springboot.version}</version>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
+        <!-- mybatis -->
+        <!-- mybatis-plus begin -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatisplus-spring-boot-starter</artifactId>
+            <version>${mybatisplus-spring-boot-starter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus</artifactId>
+            <version>${mybatisplus.version}</version>
+        </dependency>
+        <!-- mybatis-plus end -->
+        <!--分页插件-->
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>${pagehelper.starter.version}</version>
+            <version>${pagehelper-spring-boot-starter.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mybatis.generator</groupId>
-            <artifactId>mybatis-generator-core</artifactId>
-            <version>${mybatis.generator.version}</version>
-        </dependency>
-
+        <!--其他依赖-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
@@ -105,19 +163,90 @@
         </dependency>
 
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.connector.version}</version>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${druid-spring-boot-starter.version}</version>
         </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons.io.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>${commons-beanutils.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>${commons-fileupload.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <version>${ehcache.version}</version>
+        </dependency>
+
+        <!-- jackson -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-parameter-names</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.17</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.17</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.crab2died</groupId>
+            <artifactId>Excel4J</artifactId>
+            <version>2.1.1</version>
+        </dependency>
+        <!--文件上传-->
+        <dependency>
+            <groupId>com.ciicsh.gt1</groupId>
+            <artifactId>seaweedFS-client</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <!-- 打包 WAR 包不需要此 jar -->
+        <!--<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>-->
     </dependencies>
 
     <build>
-        <finalName>gt1.afsupportcenter</finalName>
+        <finalName>gt1.productcenter</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>${maven-compiler-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>default-compile</id>
@@ -140,20 +269,18 @@
     <modules>
         <module>AFSupportCenter-Util</module>
 
-        <module>./SocialSecurity/SocQueryService/SocQueryService-Host</module>
-        <module>./SocialSecurity/SocQueryService/SocQueryService-Api</module>
-        <module>./SocialSecurity/SocQueryService/SocQueryService-Dao</module>
-        <module>./SocialSecurity/SocQueryService/SocQueryService-Business</module>
-        <module>./SocialSecurity/SocQueryService/SocQueryService-Entity</module>
-
         <module>./SocialSecurity/SocCommandService/SocCommandService-Host</module>
         <module>./SocialSecurity/SocCommandService/SocCommandService-Api</module>
         <module>./SocialSecurity/SocCommandService/SocCommandService-Dao</module>
         <module>./SocialSecurity/SocCommandService/SocCommandService-Business</module>
         <module>./SocialSecurity/SocCommandService/SocCommandService-Entity</module>
+        <!--<module>./SocialSecurity/SocQueryService/SocQueryService-Host</module>
+        <module>./SocialSecurity/SocQueryService/SocQueryService-Api</module>
+        <module>./SocialSecurity/SocQueryService/SocQueryService-Dao</module>
+        <module>./SocialSecurity/SocQueryService/SocQueryService-Business</module>
+        <module>./SocialSecurity/SocQueryService/SocQueryService-Entity</module>-->
 
-
-        <module>./HouseFund/FundQueryService/FundQueryService-Host</module>
+        <!--<module>./HouseFund/FundQueryService/FundQueryService-Host</module>
         <module>./HouseFund/FundQueryService/FundQueryService-Api</module>
         <module>./HouseFund/FundQueryService/FundQueryService-Dao</module>
         <module>./HouseFund/FundQueryService/FundQueryService-Business</module>
@@ -163,7 +290,7 @@
         <module>./HouseFund/FundCommandService/FundCommandService-Api</module>
         <module>./HouseFund/FundCommandService/FundCommandService-Dao</module>
         <module>./HouseFund/FundCommandService/FundCommandService-Business</module>
-        <module>./HouseFund/FundCommandService/FundCommandService-Entity</module>
+        <module>./HouseFund/FundCommandService/FundCommandService-Entity</module>-->
 
 
         <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Host</module>
@@ -178,7 +305,7 @@
         <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Business</module>
         <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Entity</module>
 
-
+<!--
         <module>./EmployManagement/EmployQueryService/EmployQueryService-Host</module>
         <module>./EmployManagement/EmployQueryService/EmployQueryService-Api</module>
         <module>./EmployManagement/EmployQueryService/EmployQueryService-Dao</module>
@@ -189,21 +316,20 @@
         <module>./EmployManagement/EmployCommandService/EmployCommandService-Api</module>
         <module>./EmployManagement/EmployCommandService/EmployCommandService-Dao</module>
         <module>./EmployManagement/EmployCommandService/EmployCommandService-Business</module>
-        <module>./EmployManagement/EmployCommandService/EmployCommandService-Entity</module>
+        <module>./EmployManagement/EmployCommandService/EmployCommandService-Entity</module>-->
 
-        <module>./FlexibleBenefit/FBQueryService/FBQueryService-Host</module>
+        <module>./FlexibleBenefit-Entity</module>
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Api</module>
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Dao</module>
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Business</module>
-        <module>./FlexibleBenefit/FBQueryService/FBQueryService-Entity</module>
+        <module>./FlexibleBenefit/FBQueryService/FBQueryService-Host</module>
 
-        <module>./FlexibleBenefit/FBCommandService/FBCommandService-Host</module>
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Api</module>
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Dao</module>
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Business</module>
-        <module>./FlexibleBenefit/FBCommandService/FBCommandService-Entity</module>
+        <module>./FlexibleBenefit/FBCommandService/FBCommandService-Host</module>
 
-        <module>./Job/FundJob/FundJob-Host</module>
+        <!--<module>./Job/FundJob/FundJob-Host</module>
         <module>./Job/FundJob/FundJob-Dao</module>
         <module>./Job/FundJob/FundJob-Business</module>
         <module>./Job/FundJob/FundJob-Entity</module>
@@ -216,8 +342,7 @@
         <module>./Job/ZYJob/ZYJob-Host</module>
         <module>./Job/ZYJob/ZYJob-Dao</module>
         <module>./Job/ZYJob/ZYJob-Business</module>
-        <module>./Job/ZYJob/ZYJob-Entity</module>
-
+        <module>./Job/ZYJob/ZYJob-Entity</module>-->
     </modules>
 
 </project>

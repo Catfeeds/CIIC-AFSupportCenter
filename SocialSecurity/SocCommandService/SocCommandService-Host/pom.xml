@@ -10,20 +10,31 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
-    <artifactId>soccommandservice-host</artifactId>
+    <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
+    <artifactId>afsupportcenter-socialsecurity-soccommandservice-host</artifactId>
     <version>1.0.0</version>
 
     <dependencies>
         <dependency>
-            <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
-            <artifactId>soccommandservice-business</artifactId>
+            <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
+            <artifactId>afsupportcenter-socialsecurity-soccommandservice-business</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
+            <artifactId>afsupportcenter-socialsecurity-soccommandservice-entity</artifactId>
             <version>1.0.0</version>
         </dependency>
 
         <dependency>
             <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
-            <artifactId>soccommandservice-api</artifactId>
+            <artifactId>afsupportcenter-util</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
+            <artifactId>afsupportcenter-socialsecurity-soccommandservice-api</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>
@@ -46,6 +57,7 @@
                 <directory>src/main/java</directory>
                 <includes>
                     <include>**/*.xml</include>
+                    <include>**/*.yml</include>
                 </includes>
             </resource>
         </resources>
@@ -65,14 +77,26 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.5</version>
-
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <encoding>${file.encoding}</encoding>
+                    <skipTests>true</skipTests>
                 </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
             <!-- 这是spring boot devtool plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>

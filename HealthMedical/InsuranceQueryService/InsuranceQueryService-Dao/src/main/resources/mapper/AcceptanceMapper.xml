@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.dao.AcceptanceMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po.AcceptancePO">
+		<id column="acceptance_id" property="acceptanceId" />
+		<result column="archieve_id" property="archieveId" />
+		<result column="input_date" property="inputDate" />
+		<result column="employee_id" property="employeeId" />
+		<result column="status" property="status" />
+		<result column="handle_time" property="handleTime" />
+		<result column="invoice_num" property="invoiceNum" />
+		<result column="company_money" property="companyMoney" />
+		<result column="insurance_company_money" property="insuranceCompanyMoney" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+</mapper>

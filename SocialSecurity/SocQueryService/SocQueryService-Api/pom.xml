@@ -3,19 +3,14 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
         <artifactId>afsupportcenter-parent</artifactId>
+        <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
         <version>1.0.0</version>
         <relativePath>../../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>socqueryservice-api</artifactId>
-    <packaging>jar</packaging>
-    <version>1.0.0</version>
-
-    <build>
-        <finalName>gt1.afsupportcenter.socqueryservice-api</finalName>
-    </build>
+    <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
+    <artifactId>afsupportcenter-socialsecurity-socqueryservice-api</artifactId>
 
 </project>

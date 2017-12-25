@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.dao.FragmentaryReimbursementMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po.FragmentaryReimbursementPO">
+		<id column="id" property="id" />
+		<result column="employee_id" property="employeeId" />
+		<result column="case_money" property="caseMoney" />
+		<result column="invoice_number" property="invoiceNumber" />
+		<result column="medical_remark" property="medicalRemark" />
+		<result column="medical_clearing_money" property="medicalClearingMoney" />
+		<result column="medical_clearing_feed_back" property="medicalClearingFeedBack" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+	<select id="getById" resultMap="BaseResultMap">
+	 	SELECT `id`, `employee_id`, `case_money`, `invoice_number`, `medical_remark`, `medical_clearing_money`, `medical_clearing_feed_back`, `is_active`, `created_time`, `modified_time`, `created_by`, `modified_by`
+		from gtobusinessdb.hm_fragmentary_reimbursement
+		where id = #{id}
+	</select>
+	<select id="fragmentaryReimbursementMapperQuery" resultMap="BaseResultMap">
+		select  `id`, `employee_id`, `case_money`, `invoice_number`, `medical_remark`, `medical_clearing_money`, `medical_clearing_feed_back`, `is_active`, `created_time`, `modified_time`, `created_by`, `modified_by`
+		from  gtobusinessdb.hm_fragmentary_reimbursement
+		<where>
+			<if test="id != null">
+				and id = #{id}
+			</if>
+			<if test="employeeId != null">
+				and employee_id LIKE CONCAT('%',#{employeeId},'%')
+			</if>
+			<if test="caseMoney != null">
+				and case_money = #{caseMoney}
+			</if>
+			<if test="invoiceNumber != null">
+				and invoice_number = #{invoiceNumber}
+			</if>
+			<if test="medicalRemark != null">
+				and medical_remark = #{medicalRemark}
+			</if>
+			<if test="medicalClearingMoney != null">
+				and medical_clearing_money = #{medicalClearingMoney}
+			</if>
+			<if test="medicalClearingFeedBack != null">
+				and medical_clearing_feed_back = #{medicalClearingFeedBack}
+			</if>
+
+		</where>
+	</select>
+</mapper>
