@@ -7,7 +7,7 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.springframework.util.ClassUtils;
 
 import java.io.IOException;
 
@@ -22,11 +22,19 @@ public class JsonResultSerializer extends JsonSerializer<Object> {
         this.type = type;
     }
 
-    public static JsonResultSerializer of(SimpleModule simpleModule, Class<?> type) {
+    public static JsonResultSerializer of(String classname) {
+        try {
+            Class<Object> type = (Class) ClassUtils.forName(classname, null);
+            return of(type);
+        } catch (ClassNotFoundException ignore) {
+            throw BusinessException.unchecked("当前类型结构不是 JsonResult,class:" + classname);
+        }
+    }
+
+
+    public static JsonResultSerializer of(Class<?> type) {
         if (JsonResultKit.isJsonResult(type)) {
-            JsonResultSerializer serializer = new JsonResultSerializer((Class<Object>) type);
-            simpleModule.addSerializer(type, serializer);
-            return serializer;
+            return new JsonResultSerializer((Class<Object>) type);
         }
         throw BusinessException.unchecked("当前类型结构不是 JsonResult,class:" + type.getName());
     }

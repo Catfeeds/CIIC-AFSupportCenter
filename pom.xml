@@ -148,12 +148,6 @@
             <version>${mybatisplus.version}</version>
         </dependency>
         <!-- mybatis-plus end -->
-        <!--分页插件-->
-        <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>${pagehelper-spring-boot-starter.version}</version>
-        </dependency>
 
         <!--其他依赖-->
         <dependency>
@@ -305,18 +299,18 @@
         <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Business</module>
         <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Entity</module>
 
-<!--
-        <module>./EmployManagement/EmployQueryService/EmployQueryService-Host</module>
-        <module>./EmployManagement/EmployQueryService/EmployQueryService-Api</module>
-        <module>./EmployManagement/EmployQueryService/EmployQueryService-Dao</module>
-        <module>./EmployManagement/EmployQueryService/EmployQueryService-Business</module>
-        <module>./EmployManagement/EmployQueryService/EmployQueryService-Entity</module>
+        <!--
+                <module>./EmployManagement/EmployQueryService/EmployQueryService-Host</module>
+                <module>./EmployManagement/EmployQueryService/EmployQueryService-Api</module>
+                <module>./EmployManagement/EmployQueryService/EmployQueryService-Dao</module>
+                <module>./EmployManagement/EmployQueryService/EmployQueryService-Business</module>
+                <module>./EmployManagement/EmployQueryService/EmployQueryService-Entity</module>
 
-        <module>./EmployManagement/EmployCommandService/EmployCommandService-Host</module>
-        <module>./EmployManagement/EmployCommandService/EmployCommandService-Api</module>
-        <module>./EmployManagement/EmployCommandService/EmployCommandService-Dao</module>
-        <module>./EmployManagement/EmployCommandService/EmployCommandService-Business</module>
-        <module>./EmployManagement/EmployCommandService/EmployCommandService-Entity</module>-->
+                <module>./EmployManagement/EmployCommandService/EmployCommandService-Host</module>
+                <module>./EmployManagement/EmployCommandService/EmployCommandService-Api</module>
+                <module>./EmployManagement/EmployCommandService/EmployCommandService-Dao</module>
+                <module>./EmployManagement/EmployCommandService/EmployCommandService-Business</module>
+                <module>./EmployManagement/EmployCommandService/EmployCommandService-Entity</module>-->
 
         <module>./FlexibleBenefit-Entity</module>
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Api</module>
