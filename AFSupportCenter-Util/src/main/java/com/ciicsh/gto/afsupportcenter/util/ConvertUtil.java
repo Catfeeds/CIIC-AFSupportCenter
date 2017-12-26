@@ -49,7 +49,7 @@ public class ConvertUtil {
      * Page对象转换
      *
      * @param sourcePage 源page对象
-     * @param clazz 目标page对象中记录(records)的类型
+     * @param clazz      目标page对象中记录(records)的类型
      * @param <T>
      * @return
      */
@@ -69,6 +69,7 @@ public class ConvertUtil {
 
     /**
      * DTO类型的Page 创建时间 修改时间格式化显示
+     *
      * @param page
      * @param <T>
      * @return
@@ -90,25 +91,25 @@ public class ConvertUtil {
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-                if(Optional.ofNullable(createdTimeObj).isPresent()){
-                    if(createdTimeObj instanceof LocalDateTime) {
-                        localDateTime = (LocalDateTime)createdTimeObj;
+                if (Optional.ofNullable(createdTimeObj).isPresent()) {
+                    if (createdTimeObj instanceof LocalDateTime) {
+                        localDateTime = (LocalDateTime) createdTimeObj;
                         fieldAccessor.setPropertyValue("createdTimeStr", localDateTime.format(formatter));
                     }
 
-                    if(createdTimeObj instanceof Date) {
+                    if (createdTimeObj instanceof Date) {
                         date = (Date) createdTimeObj;
                         fieldAccessor.setPropertyValue("createdTimeStr", sdf.format(date));
                     }
                 }
 
-                if(Optional.ofNullable(modifiedTimeObj).isPresent()){
-                    if(modifiedTimeObj instanceof LocalDateTime) {
-                        localDateTime = (LocalDateTime)modifiedTimeObj;
+                if (Optional.ofNullable(modifiedTimeObj).isPresent()) {
+                    if (modifiedTimeObj instanceof LocalDateTime) {
+                        localDateTime = (LocalDateTime) modifiedTimeObj;
                         fieldAccessor.setPropertyValue("modifiedTimeStr", localDateTime.format(formatter));
                     }
 
-                    if(createdTimeObj instanceof Date) {
+                    if (createdTimeObj instanceof Date) {
                         date = (Date) modifiedTimeObj;
                         fieldAccessor.setPropertyValue("createdTimeStr", sdf.format(date));
                     }
