@@ -3,11 +3,10 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsStatementResultService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementResultDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsStatementResultBO;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -32,15 +31,15 @@ public class SsStatementResultController extends BasicController<ISsStatementRes
      *
      * @author wengxk
      * @date 2017-12-12
-     * @param ssStatementResultDTO 对账单结果检索条件
+     * @param ssStatementResultBO 对账单结果检索条件
      * @return  JsonResult<>
      */
     @Log("对账单结果查询")
     @PostMapping("/statementResultQuery")
-    public JsonResult<List<SsStatementResultDTO>> statementResultQuery(SsStatementResultDTO ssStatementResultDTO) {
+    public JsonResult<List<SsStatementResultBO>> statementResultQuery(SsStatementResultBO ssStatementResultBO) {
 
-        List<SsStatementResultDTO> resultList =business.statementResultQuery(ssStatementResultDTO);
-        JsonResult<List<SsStatementResultDTO>> jsonResult= new JsonResult<>();
+        List<SsStatementResultBO> resultList =business.statementResultQuery(ssStatementResultBO);
+        JsonResult<List<SsStatementResultBO>> jsonResult= new JsonResult<>();
         jsonResult.setData(resultList);
 
         return jsonResult;

@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsEmpTaskDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -22,5 +22,5 @@ public interface ISsEmpTaskService extends IService<SsEmpTask> {
      * @param pageInfo
      * @return
      */
-    PageRows<SsEmpTaskDTO> employeeOperatorQuery(PageInfo pageInfo);
+    PageRows<SsEmpTaskBO> employeeOperatorQuery(PageInfo pageInfo);
 }

@@ -3,7 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskPeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsEmpTaskDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.dto.emptask.RejectionParamDTO;
@@ -47,8 +47,8 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
      */
     @Log("雇员日常操作查询")
     @PostMapping("/employeeOperatorQuery")
-    public JsonResult<List<SsEmpTaskDTO>> employeeOperatorQuery(PageInfo pageInfo) {
-        PageRows<SsEmpTaskDTO> pageRows = business.employeeOperatorQuery(pageInfo);
+    public JsonResult<List<SsEmpTaskBO>> employeeOperatorQuery(PageInfo pageInfo) {
+        PageRows<SsEmpTaskBO> pageRows = business.employeeOperatorQuery(pageInfo);
         return JsonResultKit.ofPage(pageRows);
     }
 
@@ -79,11 +79,11 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
      */
     @Log("雇员任务查询")
     @PostMapping("/empTaskById")
-    public JsonResult<SsEmpTaskDTO> empTaskById(@RequestParam("empTaskId") Long empTaskId
+    public JsonResult<SsEmpTaskBO> empTaskById(@RequestParam("empTaskId") Long empTaskId
         , @RequestParam(value = "operatorType", defaultValue = "-1") Integer operatorType // 1 任务单费用段
     ) {
         SsEmpTask empTask = business.selectById(empTaskId);
-        SsEmpTaskDTO dto = JsonKit.castToObject(empTask, SsEmpTaskDTO.class);
+        SsEmpTaskBO dto = JsonKit.castToObject(empTask, SsEmpTaskBO.class);
 
         // operatorType == 1 查询任务单费用段
         if (operatorType == 1) {
@@ -99,7 +99,7 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
      */
     @Log("雇员任务办理")
     @PostMapping("/handle")
-    public JsonResult<Boolean> handle(@RequestBody SsEmpTaskDTO param) {
+    public JsonResult<Boolean> handle(@RequestBody SsEmpTaskBO param) {
         {// 更新任务单费用段
             List<SsEmpTaskPeriod> periods = param.getEmpTaskPeriods();
             if (periods != null) {
@@ -123,15 +123,28 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
      */
     @Log("导出 excel")
     @PostMapping("/exprotExcel")
-    public void exprotExcel(HttpServletRequest request, HttpServletResponse response, SsEmpTaskDTO dto) {
+    public void exprotExcel(HttpServletRequest request, HttpServletResponse response, SsEmpTaskBO dto) {
         // 组织参数
         PageInfo pageInfo = new PageInfo();
         pageInfo.setPageNum(1);
         pageInfo.setPageSize(2000);// 默认最多查询 2000 条
         pageInfo.put(dto);
         // 查询
-        JsonResult<List<SsEmpTaskDTO>> jsonResult = employeeOperatorQuery(pageInfo);
+        JsonResult<List<SsEmpTaskBO>> jsonResult = employeeOperatorQuery(pageInfo);
         // 导出
     }
+
+    /**
+     * excel 导出
+     */
+    @Log("特殊任务办理材料页面详细信息")
+    @PostMapping("/accAndEmpDetailQuery")
+    public void accAndEmpDetailQuery(SsEmpTaskBO dto) {
+
+        // 查询
+
+
+    }
+
 }
 

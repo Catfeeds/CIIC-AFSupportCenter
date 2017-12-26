@@ -4,14 +4,16 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMapDTO" extends="BaseResultMap"
-               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsEmpArchiveDTO">
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpArchiveBO">
         <result column="employee_name" property="employeeName"/>
         <result column="id_num" property="idNum"/>
     </resultMap>
 
     <select id="queryByEmpTaskId" resultMap="BaseResultMapDTO">
-        select ea.*
-            ,e.employee_name,e.id_num
+        select
+            ea.*,
+            e.employee_name,
+            e.id_num
             from ss_emp_archive ea
             LEFT JOIN emp_employee e on e.employee_id = ea.employee_id
             WHERE 1 = 1

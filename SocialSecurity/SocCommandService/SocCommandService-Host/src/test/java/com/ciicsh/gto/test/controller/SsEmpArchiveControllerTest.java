@@ -1,10 +1,9 @@
 package com.ciicsh.gto.test.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsEmpArchiveDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpArchiveBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.SocialSecurityApplication;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsEmpArchiveController;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsEmpTaskController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +23,7 @@ public class SsEmpArchiveControllerTest {
 
     @Test
     public void queryByEmpTaskId() {
-        JsonResult<SsEmpArchiveDTO> jsonResult = controller.queryByEmpTaskId("1");
+        JsonResult<SsEmpArchiveBO> jsonResult = controller.queryByEmpTaskId("1");
         System.out.println(JSON.toJSONString(jsonResult));
     }
 

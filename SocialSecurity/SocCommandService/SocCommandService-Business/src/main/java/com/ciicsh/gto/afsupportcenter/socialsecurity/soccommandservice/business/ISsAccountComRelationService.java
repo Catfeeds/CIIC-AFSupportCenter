@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAccountComRelationDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAccountComRelationBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
 
 import java.util.List;
@@ -21,5 +21,5 @@ public interface ISsAccountComRelationService extends IService<SsAccountComRelat
      * @param comAccountId
      * @return
      */
-   public List<SsAccountComRelationDTO> queryByAccountId(String comAccountId);
+   public List<SsAccountComRelationBO> queryByAccountId(String comAccountId);
 }

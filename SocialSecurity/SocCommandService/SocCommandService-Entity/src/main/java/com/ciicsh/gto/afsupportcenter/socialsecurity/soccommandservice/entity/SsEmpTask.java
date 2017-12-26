@@ -15,7 +15,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-16
+ * @since 2017-12-26
  */
 @TableName("ss_emp_task")
 public class SsEmpTask implements Serializable {
@@ -27,6 +27,10 @@ public class SsEmpTask implements Serializable {
      */
 	@TableId(value="emp_task_id", type= IdType.AUTO)
 	private Long empTaskId;
+	@TableField("company_id")
+	private String companyId;
+	@TableField("employee_id")
+	private String employeeId;
     /**
      * 多租户ID
      */
@@ -38,7 +42,7 @@ public class SsEmpTask implements Serializable {
 	@TableField("emp_archive_id")
 	private String empArchiveId;
     /**
-     * 任务类型，DicItem.DicItemValue 1:新进：2：转入 3调整 4 补缴 5 转出 6终止 7退账 8 提取 9特殊操作
+     * 任务类型，DicItem.DicItemValue 1:新进：2：转入 3调整 4 补缴 5 转出 6封存 7退账 8 提取 9特殊操作
      */
 	@TableField("task_category")
 	private Integer taskCategory;
@@ -176,12 +180,12 @@ public class SsEmpTask implements Serializable {
 	@TableField("rejection_remark_date")
 	private LocalDate rejectionRemarkDate;
     /**
-     * 办理状态：1、未处理 2 、处理中  3 已完成（已办） 4、批退 5、不需处理
+     * 办理状态：1、未处理 2 、处理中(已办)  3 已完成(已做) 4、批退 5、不需处理
      */
 	@TableField("task_status")
 	private Integer taskStatus;
     /**
-     * 办理状态：1、材料收缴  2 、受理中  3、送审中  4 已完成  
+     * 特殊任务办理状态：1、材料收缴  2 、受理中  3、送审中  4 已完成  
      */
 	@TableField("handle_status")
 	private Integer handleStatus;
@@ -249,6 +253,22 @@ public class SsEmpTask implements Serializable {
 
 	public void setEmpTaskId(Long empTaskId) {
 		this.empTaskId = empTaskId;
+	}
+
+	public String getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
+
+	public String getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
 	}
 
 	public String getCustomerId() {
@@ -567,6 +587,8 @@ public class SsEmpTask implements Serializable {
 	public String toString() {
 		return "SsEmpTask{" +
 			", empTaskId=" + empTaskId +
+			", companyId=" + companyId +
+			", employeeId=" + employeeId +
 			", customerId=" + customerId +
 			", empArchiveId=" + empArchiveId +
 			", taskCategory=" + taskCategory +

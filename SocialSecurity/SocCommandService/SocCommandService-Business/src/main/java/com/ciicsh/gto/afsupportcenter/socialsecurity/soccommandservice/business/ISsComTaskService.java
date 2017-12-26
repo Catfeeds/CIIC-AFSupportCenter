@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComTaskDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
@@ -25,28 +25,28 @@ public interface ISsComTaskService extends IService<SsComTask> {
      * xsj
      * @return
      */
-    public PageRows<SsComTaskDTO>  queryNoProgressCompanyTask(PageInfo pageInfo);
+    public PageRows<SsComTaskBO>  queryNoProgressCompanyTask(PageInfo pageInfo);
 
     /**
      * 获得企业任务单 处理中
      * @param pageInfo
      * @return
      */
-    public PageRows<SsComTaskDTO> queryProgressingCompanyTask(PageInfo pageInfo);
+    public PageRows<SsComTaskBO> queryProgressingCompanyTask(PageInfo pageInfo);
 
     /**
      * 获得企业任务单 已完成
      * @param pageInfo
      * @return
      */
-    public PageRows<SsComTaskDTO> queryFinshedCompanyTask(PageInfo pageInfo);
+    public PageRows<SsComTaskBO> queryFinshedCompanyTask(PageInfo pageInfo);
 
     /**
      * 获得企业任务单 批退
      * @param pageInfo
      * @return
      */
-    public PageRows<SsComTaskDTO> queryRefusedCompanyTask(PageInfo pageInfo);
+    public PageRows<SsComTaskBO> queryRefusedCompanyTask(PageInfo pageInfo);
 
     /**
      * 批量修改 批退任务
@@ -57,17 +57,17 @@ public interface ISsComTaskService extends IService<SsComTask> {
 
     /**
      *  查询企业信息和材料信息
-     * @param SsComTaskDTO
+     * @param SsComTaskBO
      * @return
      */
-    public SsComTaskDTO queryComInfoAndMaterial(SsComTaskDTO SsComTaskDTO);
+    public SsComTaskBO queryComInfoAndMaterial(SsComTaskBO SsComTaskBO);
 
     /**
      *  查询企业信息和 前道传过来的JSON（包含社保截止和付款方式）
-     * @param ssComTaskDTO
+     * @param ssComTaskBO
      * @return
      */
-    public SsComTaskDTO queryComInfoAndPayWay(SsComTaskDTO ssComTaskDTO);
+    public SsComTaskBO queryComInfoAndPayWay(SsComTaskBO ssComTaskBO);
 
 
     /**
@@ -77,18 +77,18 @@ public interface ISsComTaskService extends IService<SsComTask> {
 
     /**
      * 查询账户信息 和材料信息
-     * @param ssComTaskDTO
+     * @param ssComTaskBO
      * @return
      */
-    public SsComTaskDTO queryAccountInfoAndMaterial(SsComTaskDTO ssComTaskDTO);
+    public SsComTaskBO queryAccountInfoAndMaterial(SsComTaskBO ssComTaskBO);
 
     /**
      * 更新或者处理任务 终止 转移 变更
-     * @param ssComTaskDTO
+     * @param ssComTaskBO
      * @param object
      * @return
      */
-    public boolean updateOrHandlerTask(SsComTaskDTO ssComTaskDTO,Object object);
+    public boolean updateOrHandlerTask(SsComTaskBO ssComTaskBO, Object object);
 
     /**
      * 任务单撤销

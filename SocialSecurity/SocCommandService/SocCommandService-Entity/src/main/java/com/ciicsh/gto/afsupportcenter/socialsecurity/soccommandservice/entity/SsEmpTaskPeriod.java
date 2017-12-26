@@ -15,7 +15,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-16
+ * @since 2017-12-26
  */
 @TableName("ss_emp_task_period")
 public class SsEmpTaskPeriod implements Serializable {

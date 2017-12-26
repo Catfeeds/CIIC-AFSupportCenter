@@ -2,15 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsComTaskMapper">
     <resultMap id="ModelResultMap"
-               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComTaskDTO"
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComTaskBO"
                extends="BaseResultMap">
         <result column="title" property="companyName"/>
     </resultMap>
     <resultMap id="getMaterialResultMap"
-               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComTaskDTO"
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComTaskBO"
                extends="ModelResultMap">
-        <association property="ssComAccountDTO"
-                     javaType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComAccountDTO">
+        <association property="ssComAccountBO"
+                     javaType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComAccountBO">
             <result column="com_account_id_acc" property="comAccountId"/>
             <result column="supplier_id" property="supplierId"/>
             <result column="ss_account_type" property="ssAccountType"/>
@@ -68,10 +68,10 @@
     </resultMap>
 
     <resultMap id="getComAccountResultMap"
-               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComTaskDTO"
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComTaskBO"
                extends="ModelResultMap">
-        <association property="ssComAccountDTO"
-                     javaType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComAccountDTO">
+        <association property="ssComAccountBO"
+                     javaType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComAccountBO">
             <result column="com_account_id_acc" property="comAccountId"/>
             <result column="supplier_id" property="supplierId"/>
             <result column="ss_account_type" property="ssAccountType"/>
@@ -415,8 +415,8 @@
         AS remark_acc FROM ss_com_account WHERE is_active = 1)sca
         ON sct.com_account_id = sca.com_account_id_acc
         LEFT JOIN (SELECT ss_account_ratio_id, com_account_id AS
-        com_account_id_sar,industry_category,com_ratio,start_month,end_month FROM ss_account_ratio WHERE is_active =
-        1)sat
+        com_account_id_sar,industry_category,com_ratio,start_month,end_month FROM ss_account_ratio WHERE is_active =1
+        )sat
         ON sca.com_account_id_acc = sat.com_account_id_sar
         WHERE
         sct.is_active =1

@@ -5,6 +5,8 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask">
         <id column="emp_task_id" property="empTaskId" />
+        <result column="company_id" property="companyId" />
+        <result column="employee_id" property="employeeId" />
         <result column="customer_id" property="customerId" />
         <result column="emp_archive_id" property="empArchiveId" />
         <result column="task_category" property="taskCategory" />

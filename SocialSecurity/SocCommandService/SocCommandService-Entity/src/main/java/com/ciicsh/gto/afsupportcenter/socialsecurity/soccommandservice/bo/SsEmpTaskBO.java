@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * SsEmpTask DTO
  */
-public class SsEmpTaskDTO extends SsEmpTask {
+public class SsEmpTaskBO extends SsEmpTask {
     // ohter
     // 操作类型，用于区分操作
     // operatorType 操作类型，1 常规操作、2 特殊操作，默认常规操作

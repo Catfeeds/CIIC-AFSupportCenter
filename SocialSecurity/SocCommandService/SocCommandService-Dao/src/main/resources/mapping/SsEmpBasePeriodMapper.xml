@@ -11,6 +11,7 @@
         <result column="start_month" property="startMonth" />
         <result column="end_month" property="endMonth" />
         <result column="ss_month" property="ssMonth" />
+        <result column="ss_month_stop" property="ssMonthStop" />
         <result column="remit_way" property="remitWay" />
         <result column="is_active" property="isActive" />
         <result column="created_time" property="createdTime" />

@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsPaymentComDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentComBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPaymentCom;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
@@ -20,8 +20,8 @@ public interface SsPaymentComMapper extends BaseMapper<SsPaymentCom> {
      *
      * @author wengxk
      * @date 2017-12-21
-     * @param ssPaymentComDTO 企业账户
+     * @param ssPaymentComBO 企业账户
      * @return  PageRows<SsStatement>
      */
-    List<SsPaymentComDTO> paymentComQuery(SsPaymentComDTO ssPaymentComDTO);
+    List<SsPaymentComBO> paymentComQuery(SsPaymentComBO ssPaymentComBO);
 }

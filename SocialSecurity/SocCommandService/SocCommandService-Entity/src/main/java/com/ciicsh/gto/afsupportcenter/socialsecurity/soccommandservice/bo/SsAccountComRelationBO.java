@@ -1,8 +1,8 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
 
-public class SsAccountComRelationDTO extends SsAccountComRelation{
+public class SsAccountComRelationBO extends SsAccountComRelation{
     //公司名称
     private String title;
 

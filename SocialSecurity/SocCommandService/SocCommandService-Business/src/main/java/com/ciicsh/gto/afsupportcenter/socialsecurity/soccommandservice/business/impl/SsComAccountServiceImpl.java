@@ -1,9 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComAccountBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComAccountService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsComAccountMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComAccountDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
@@ -23,20 +23,20 @@ import org.springframework.stereotype.Service;
 public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsComAccount> implements ISsComAccountService {
 
     @Override
-    public SsComAccountDTO queryByEmpTaskId(String empTaskId) {
+    public SsComAccountBO queryByEmpTaskId(String empTaskId) {
         return baseMapper.queryByEmpTaskId(empTaskId);
     }
 
     @Override
-    public PageRows<SsComAccountDTO> accountQuery(PageInfo pageInfo) {
-        SsComAccountDTO dto = pageInfo.toJavaObject(SsComAccountDTO.class);
+    public PageRows<SsComAccountBO> accountQuery(PageInfo pageInfo) {
+        SsComAccountBO dto = pageInfo.toJavaObject(SsComAccountBO.class);
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.accountQuery(dto));
     }
     /**
      * 查询企业社保管理详细信息
      * @param comAccountId
      */
-    public SsComAccountDTO querySocialSecurityManageInfo(String comAccountId){
+    public SsComAccountBO querySocialSecurityManageInfo(String comAccountId){
 
         return baseMapper.querySocialSecurityManageInfo(comAccountId);
     }
