@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAddPaymentBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentComBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPaymentCom;
 import com.baomidou.mybatisplus.service.IService;
@@ -35,4 +36,14 @@ public interface ISsPaymentComService extends IService<SsPaymentCom> {
      * @return  JsonResult<>
      */
     JsonResult<String> saveAdjustment(SsPaymentComBO ssPaymentComBO);
+
+    /**
+     * <p>Description: 添加至支付批次</p>
+     *
+     * @author wengxk
+     * @date 2017-12-23
+     * @param ssAddPaymentBO 添加至支付批次参数
+     * @return  JsonResult<>
+     */
+    JsonResult<String> doAddBatch(SsAddPaymentBO ssAddPaymentBO);
 }
