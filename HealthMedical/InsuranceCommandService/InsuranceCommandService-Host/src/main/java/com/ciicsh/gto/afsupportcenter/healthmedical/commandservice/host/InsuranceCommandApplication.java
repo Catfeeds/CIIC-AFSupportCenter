@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.host;
 
+import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.host.configuration.MybatisPlusConfig;
 import com.ciicsh.gto.afsupportcenter.util.config.CustomConfiguration;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
@@ -14,7 +15,7 @@ import org.springframework.context.annotation.Import;
  */
 @MapperScan(basePackages = {"com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.dao"})
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.healthmedical.commandservice"})
-@Import(CustomConfiguration.class)
+@Import({CustomConfiguration.class, MybatisPlusConfig.class})
 public class InsuranceCommandApplication
 {
     private final static Logger logger = LoggerFactory.getLogger(InsuranceCommandApplication.class);

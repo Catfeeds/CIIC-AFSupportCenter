@@ -36,10 +36,6 @@ management:
     port: 6018
     security:
         enabled: false
-#mybatis:
-#    config-location: classpath:mybatis-config.xml
-#    mapperLocations: classpath:mapper/*.xml
-#    type-handlers-package: com.ciicsh.gto.afsupportcenter.util.typehandler
 
 mybatis-plus:
   configuration:
@@ -62,8 +58,6 @@ mybatis-plus:
   mapper-locations: classpath*:mapper/*.xml
   type-aliases-package: com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po
 
-pagehelper:
-    reasonable: true
 server:
     port: 6017
     session-timeout: '# session timeout in seconds'
