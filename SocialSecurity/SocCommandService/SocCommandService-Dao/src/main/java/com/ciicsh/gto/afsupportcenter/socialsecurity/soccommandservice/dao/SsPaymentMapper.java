@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsPaymentDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsPaymentSrarchDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPayment;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
@@ -22,7 +23,17 @@ public interface SsPaymentMapper extends BaseMapper<SsPayment> {
      * @author wengxk
      * @date 2017-12-22
      * @param ssPaymentDTO 支付批次
-     * @return  PageRows<SsStatement>
+     * @return  List<SsPaymentDTO>
      */
     List<SsPaymentDTO> paymentQuery(SsPaymentDTO ssPaymentDTO);
+
+    /**
+     * <p>Description: 按企业社保账户分类和状态检索批次</p>
+     *
+     * @author wengxk
+     * @date 2017-12-22
+     * @param ssPaymentSrarchDTO 查询条件
+     * @return  List<SsPaymentDTO>
+     */
+    List<SsPaymentDTO> searchPaymentByAccountTypeAndState(SsPaymentSrarchDTO ssPaymentSrarchDTO);
 }
