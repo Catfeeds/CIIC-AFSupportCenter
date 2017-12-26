@@ -212,7 +212,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
         // 1行业比例变更  2 付款方式变更 3 公司名称变更
         dynamicExtendMap.put("changeContentValue",ssComTaskDTO.getChangeContentValue());
         if ("1".equals(ssComTaskDTO.getChangeContentValue())) {
-            //动态扩展数据 预存转移办理时 不完成的状态的数据
+            //动态扩展数据 预存转移办理时数据
             dynamicExtendMap.put("belongsIndustry", null == ssComTaskDTO.getBelongsIndustry() ? "" : ssComTaskDTO.getBelongsIndustry());
             dynamicExtendMap.put("companyWorkInjuryPercentage", null == ssComTaskDTO.getCompanyWorkInjuryPercentage() ? "" : ssComTaskDTO.getCompanyWorkInjuryPercentage());
             dynamicExtendMap.put("startMonth", null == ssComTaskDTO.getStartMonth() ? "" : ssComTaskDTO.getStartMonth().toString());
@@ -230,7 +230,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
             result = business.updateOrHandlerTask(ssComTaskDTO, object);
         } else {
             ssComTaskDTO.setComAccountId(null);
-            //只是做任务单的状态切换，任务单不完成
+            //只做任务单的状态切换，任务单尚不完成
             result = business.updateById(ssComTaskDTO);
         }
 

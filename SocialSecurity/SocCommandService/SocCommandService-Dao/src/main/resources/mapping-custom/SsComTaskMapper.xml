@@ -415,8 +415,8 @@
         AS remark_acc FROM ss_com_account WHERE is_active = 1)sca
         ON sct.com_account_id = sca.com_account_id_acc
         LEFT JOIN (SELECT ss_account_ratio_id, com_account_id AS
-        com_account_id_sar,industry_category,com_ratio,start_month,end_month FROM ss_account_ratio WHERE is_active =
-        1)sat
+        com_account_id_sar,industry_category,com_ratio,start_month,end_month FROM ss_account_ratio WHERE is_active =1
+        )sat
         ON sca.com_account_id_acc = sat.com_account_id_sar
         WHERE
         sct.is_active =1

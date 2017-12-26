@@ -12,7 +12,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-16
+ * @since 2017-12-26
  */
 @TableName("sal_company")
 public class SalCompany implements Serializable {
@@ -37,7 +37,7 @@ public class SalCompany implements Serializable {
      * 客户证件类型（1：三证  2：三证合一  3：其他）
      */
 	@TableField("license_type")
-	private String licenseType;
+	private Integer licenseType;
     /**
      * 营业执照编号
      */
@@ -139,11 +139,11 @@ public class SalCompany implements Serializable {
 		this.title = title;
 	}
 
-	public String getLicenseType() {
+	public Integer getLicenseType() {
 		return licenseType;
 	}
 
-	public void setLicenseType(String licenseType) {
+	public void setLicenseType(Integer licenseType) {
 		this.licenseType = licenseType;
 	}
 

@@ -133,5 +133,18 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
         JsonResult<List<SsEmpTaskDTO>> jsonResult = employeeOperatorQuery(pageInfo);
         // 导出
     }
+
+    /**
+     * excel 导出
+     */
+    @Log("特殊任务办理材料页面详细信息")
+    @PostMapping("/accAndEmpDetailQuery")
+    public void accAndEmpDetailQuery(SsEmpTaskDTO dto) {
+
+        // 查询
+
+
+    }
+
 }
 
