@@ -16,9 +16,9 @@
         <result column="refund_deducted" property="refundDeducted" />
         <result column="adjust_deducted" property="adjustDeducted" />
         <result column="extra_amount" property="extraAmount" />
+        <result column="join_payment_user" property="joinPaymentUser" />
+        <result column="join_payment_date" property="joinPaymentDate" />
         <result column="if_deducted_into_pay" property="ifDeductedIntoPay" />
-        <result column="applier_id" property="applierId" />
-        <result column="application_date" property="applicationDate" />
         <result column="remark" property="remark" />
         <result column="actual_payment_date" property="actualPaymentDate" />
         <result column="emp_count" property="empCount" />

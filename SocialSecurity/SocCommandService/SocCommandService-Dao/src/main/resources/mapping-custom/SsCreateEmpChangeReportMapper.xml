@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsCreateEmpChangeReportMapper">
+
+
+    <!-- BORM=BOResultMap -->
+    <resultMap id="CreateEmpChangeReportBaseDetailBORM" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsCreateEmpChangeReportBaseDetailBO">
+        <id column="month_emp_change_id" property="monthEmpChangeId" />
+        <result column="statement_id" property="statementId" />
+        <result column="ss_month" property="ssMonth" />
+        <result column="last_compute_time" property="lastComputeTime" />
+        <result column="compute_type" property="computeType" />
+        <result column="compute_user_id" property="computeUserId" />
+        <result column="com_account_id" property="comAccountId" />
+        <result column="com_account_name" property="comAccountName" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
+    <!--#新进、转入、补缴-->
+    <select id="searchEmpBaseDetailByYYS" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsCreateEmpChangeReportBaseDetailBO" resultMap="CreateEmpChangeReportBaseDetailBORM">
+        select ebd.*,ebp.base_amount from
+        ss_emp_base_detail ebd
+        left join ss_emp_base_period ebp on ebd.emp_base_period_id=ebp.emp_base_period_id and ebp.is_active=1
+        left join ss_emp_archive ea on ea.emp_archive_id=ebp.emp_archive_id and ea.com_account_id=''
+        left join ss_emp_task et on ebp.emp_task_id=et.emp_task_id and et.is_active=1
+        where
+        et.task_category in(1,2,4)
+        and et.handle_month=''
+        and ebp.ss_month=''
+    </select>
+
+    <!--#调整-->
+    <select id="searchEmpBaseAdjustDetailByYYS" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsCreateEmpChangeReportBaseDetailBO" resultMap="CreateEmpChangeReportBaseDetailBORM">
+          select ebd.*,ebp.new_base_amount from
+        ss_emp_base_adjust_detail ebd
+        left join ss_emp_base_adjust eba on eba.emp_base_adjust_id=ebd.emp_base_adjust_id and eba.is_active=1
+        left join ss_emp_archive ea on ea.emp_archive_id=eba.emp_archive_id and ea.com_account_id=''
+        left join ss_emp_task et on ebp.emp_task_id=et.emp_task_id and et.is_active=1
+        where
+        et.task_category = 3
+        and et.handle_month=''
+        and eba.ss_month=''
+    </select>
+    <!--#转出、封存-->
+    <select id="searchEmpStopByYYS" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsCreateEmpChangeReportBaseDetailBO" resultMap="CreateEmpChangeReportBaseDetailBORM">
+      select ebd.* from
+        ss_emp_base_detail ebd
+        left join ss_emp_base_period ebp on ebd.emp_base_period_id=ebp.emp_base_period_id and ebp.is_active=1
+        left join ss_emp_archive ea on ea.emp_archive_id=ebp.emp_archive_id and ea.com_account_id=''
+        left join ss_emp_task et on ebp.emp_task_id=et.emp_task_id and et.is_active=1
+        where
+        et.task_category in(5,6)
+        and et.handle_month=''
+        and ebp.ss_month_stop =''
+    </select>
+    <!--#退账-->
+    <select id="searchEmpRefundByYYS" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsCreateEmpChangeReportBaseDetailBO" resultMap="CreateEmpChangeReportBaseDetailBORM">
+        select er.* from
+        ss_emp_refund er
+        left join ss_emp_archive ea on ea.emp_archive_id=er.emp_archive_id and ea.com_account_id=''
+        left join ss_emp_task et on er.emp_task_id=et.emp_task_id and et.is_active=1
+        where
+        et.task_category = 7
+        and et.handle_month=''
+    </select>
+
+</mapper>

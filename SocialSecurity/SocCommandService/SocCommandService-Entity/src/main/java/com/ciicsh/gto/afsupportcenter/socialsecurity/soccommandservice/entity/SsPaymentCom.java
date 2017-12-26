@@ -15,7 +15,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-20
+ * @since 2017-12-23
  */
 @TableName("ss_payment_com")
 public class SsPaymentCom implements Serializable {
@@ -81,20 +81,20 @@ public class SsPaymentCom implements Serializable {
 	@TableField("extra_amount")
 	private BigDecimal extraAmount;
     /**
+     * 加入批次人的系统用户
+     */
+	@TableField("join_payment_user")
+	private String joinPaymentUser;
+    /**
+     * 加入批次日期
+     */
+	@TableField("join_payment_date")
+	private LocalDate joinPaymentDate;
+    /**
      * 抵扣费用是否纳入支付申请: 0-不纳入 1-纳入
      */
 	@TableField("if_deducted_into_pay")
 	private Integer ifDeductedIntoPay;
-    /**
-     * 申请人的系统用户ID
-     */
-	@TableField("applier_id")
-	private String applierId;
-    /**
-     * 申请日期
-     */
-	@TableField("application_date")
-	private LocalDate applicationDate;
     /**
      * 申请备注
      */
@@ -237,28 +237,28 @@ public class SsPaymentCom implements Serializable {
 		this.extraAmount = extraAmount;
 	}
 
+	public String getJoinPaymentUser() {
+		return joinPaymentUser;
+	}
+
+	public void setJoinPaymentUser(String joinPaymentUser) {
+		this.joinPaymentUser = joinPaymentUser;
+	}
+
+	public LocalDate getJoinPaymentDate() {
+		return joinPaymentDate;
+	}
+
+	public void setJoinPaymentDate(LocalDate joinPaymentDate) {
+		this.joinPaymentDate = joinPaymentDate;
+	}
+
 	public Integer getIfDeductedIntoPay() {
 		return ifDeductedIntoPay;
 	}
 
 	public void setIfDeductedIntoPay(Integer ifDeductedIntoPay) {
 		this.ifDeductedIntoPay = ifDeductedIntoPay;
-	}
-
-	public String getApplierId() {
-		return applierId;
-	}
-
-	public void setApplierId(String applierId) {
-		this.applierId = applierId;
-	}
-
-	public LocalDate getApplicationDate() {
-		return applicationDate;
-	}
-
-	public void setApplicationDate(LocalDate applicationDate) {
-		this.applicationDate = applicationDate;
 	}
 
 	public String getRemark() {
@@ -348,9 +348,9 @@ public class SsPaymentCom implements Serializable {
 			", refundDeducted=" + refundDeducted +
 			", adjustDeducted=" + adjustDeducted +
 			", extraAmount=" + extraAmount +
+			", joinPaymentUser=" + joinPaymentUser +
+			", joinPaymentDate=" + joinPaymentDate +
 			", ifDeductedIntoPay=" + ifDeductedIntoPay +
-			", applierId=" + applierId +
-			", applicationDate=" + applicationDate +
 			", remark=" + remark +
 			", actualPaymentDate=" + actualPaymentDate +
 			", empCount=" + empCount +

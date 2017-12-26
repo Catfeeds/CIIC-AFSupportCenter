@@ -81,7 +81,12 @@ public class JsonResultKit {
         if (data instanceof JsonResult) {
             return JsonKit.castToObject(data, jsonResultClass);
         }
-        return JsonKit.castToObject(of(data), jsonResultClass);
+
+        Object jsonResult = of(data);
+        if (JsonResult.class.isAssignableFrom(jsonResultClass)) {
+            return (J) jsonResult;
+        }
+        return JsonKit.castToObject(jsonResult, jsonResultClass);
     }
 
     public static <J> J of(Class<J> jsonResultClass) {
@@ -114,5 +119,9 @@ public class JsonResultKit {
         }
 
         return hasJsonResult;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Object.class.isAssignableFrom(Object.class));
     }
 }

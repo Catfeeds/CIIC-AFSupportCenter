@@ -27,53 +27,26 @@
         </dependency>
 
         <dependency>
-            <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
-            <artifactId>afsupportcenter-util</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
             <artifactId>afsupportcenter-socialsecurity-soccommandservice-api</artifactId>
             <version>1.0.0</version>
+        </dependency>
+        <!--分页插件-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>${pagehelper-spring-boot-starter.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mybatis</groupId>
+                    <artifactId>mybatis</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
     <build>
         <finalName>gt1.afsupportcenter.soccommandservice-host</finalName>
-        <resources>
-            <resource>
-                <directory>../SocCommandService-Dao/src/main/resources/</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/mapper/*.xml</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources/</directory>
-                <filtering>true</filtering>
-            </resource>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.xml</include>
-                    <include>**/*.yml</include>
-                </includes>
-            </resource>
-        </resources>
-
-        <testResources>
-            <testResource>
-                <directory>src/test/resources/</directory>
-                <filtering>true</filtering>
-            </testResource>
-            <testResource>
-                <directory>src/test/java</directory>
-                <includes>
-                    <include>**/*.xml</include>
-                </includes>
-            </testResource>
-        </testResources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

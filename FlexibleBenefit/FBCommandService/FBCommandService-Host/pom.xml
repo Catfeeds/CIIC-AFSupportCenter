@@ -10,7 +10,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
     <artifactId>fbcommandservice-host</artifactId>
     <version>1.0.0</version>
 
@@ -31,13 +30,15 @@
     <build>
         <finalName>gt1.afsupportcenter.fbcommandservice-host</finalName>
         <resources>
-            <resource>
-                <directory>../FBCommandService-Dao/src/main/resources/</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/mapper/*.xml</include>
-                </includes>
-            </resource>
+            <!--与配置文件可能冲突，有风险-->
+            <!--mybatis.mapperLocations=classpath:mapper/*.xml-->
+            <!-- <resource>
+                 <directory>../FBCommandService-Dao/src/main/resources/</directory>
+                 <filtering>true</filtering>
+                 <includes>
+                     <include>**/mapper/*.xml</include>
+                 </includes>
+             </resource>-->
             <resource>
                 <directory>src/main/resources/</directory>
                 <filtering>true</filtering>

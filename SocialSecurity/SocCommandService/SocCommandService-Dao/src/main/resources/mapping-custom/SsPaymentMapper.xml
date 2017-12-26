@@ -19,6 +19,8 @@
         <result column="apply_remark" property="applyRemark" />
         <result column="rejection_remark" property="rejectionRemark" />
         <result column="rejection_his" property="rejectionHis" />
+        <result column="request_user" property="requestUser" />
+        <result column="request_date" property="requestDate" />
         <result column="is_active" property="isActive" />
         <result column="created_time" property="createdTime" />
         <result column="modified_time" property="modifiedTime" />

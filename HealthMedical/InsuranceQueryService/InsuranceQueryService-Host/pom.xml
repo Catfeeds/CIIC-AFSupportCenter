@@ -26,18 +26,31 @@
             <artifactId>insurancequeryservice-api</artifactId>
             <version>1.0.0</version>
         </dependency>
+
+        <!--分页插件-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>${pagehelper-spring-boot-starter.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mybatis</groupId>
+                    <artifactId>mybatis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 
     <build>
         <finalName>gt1.afsupportcenter.insurancequeryservice-host</finalName>
         <resources>
-            <resource>
+           <!-- <resource>
                 <directory>../InsuranceQueryService-Dao/src/main/resources/</directory>
                 <filtering>true</filtering>
                 <includes>
                     <include>**/mapper/*.xml</include>
                 </includes>
-            </resource>
+            </resource>-->
             <resource>
                 <directory>src/main/resources/</directory>
                 <filtering>true</filtering>
