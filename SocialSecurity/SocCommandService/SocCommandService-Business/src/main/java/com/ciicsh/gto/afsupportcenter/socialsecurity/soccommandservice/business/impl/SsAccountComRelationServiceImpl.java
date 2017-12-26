@@ -3,7 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAccountComRelationService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsAccountComRelationMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAccountComRelationDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAccountComRelationBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ public class SsAccountComRelationServiceImpl extends ServiceImpl<SsAccountComRel
      * @param comAccountId
      * @return
      */
-    public  List<SsAccountComRelationDTO> queryByAccountId(String comAccountId){
+    public  List<SsAccountComRelationBO> queryByAccountId(String comAccountId){
         return baseMapper.queryByAccountId(comAccountId);
     }
 }

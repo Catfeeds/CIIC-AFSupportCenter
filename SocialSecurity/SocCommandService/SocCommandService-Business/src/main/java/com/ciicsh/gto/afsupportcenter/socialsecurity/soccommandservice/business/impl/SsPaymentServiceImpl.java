@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsPaymentDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsPaymentSrarchDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentSrarchBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPayment;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsPaymentMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsPaymentService;
@@ -25,12 +25,12 @@ import java.util.List;
 public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment> implements ISsPaymentService {
 
     @Override
-    public PageRows<SsPaymentDTO> paymentQuery(PageInfo pageInfo) {
-        return PageKit.doSelectPage(pageInfo, () -> baseMapper.paymentQuery(pageInfo.toJavaObject(SsPaymentDTO.class)));
+    public PageRows<SsPaymentBO> paymentQuery(PageInfo pageInfo) {
+        return PageKit.doSelectPage(pageInfo, () -> baseMapper.paymentQuery(pageInfo.toJavaObject(SsPaymentBO.class)));
     }
 
     @Override
-    public List<SsPaymentDTO> showAddBatch(SsPaymentSrarchDTO paymentSrarchDTO){
+    public List<SsPaymentBO> showAddBatch(SsPaymentSrarchBO paymentSrarchDTO){
         return baseMapper.searchPaymentByAccountTypeAndState(paymentSrarchDTO);
     }
 }

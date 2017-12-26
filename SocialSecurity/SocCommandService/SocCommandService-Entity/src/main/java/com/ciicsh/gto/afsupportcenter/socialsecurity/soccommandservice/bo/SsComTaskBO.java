@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComMaterial;
@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
-public class SsComTaskDTO extends SsComTask{
+public class SsComTaskBO extends SsComTask{
     //客户名称
     private String companyName;
 
@@ -33,7 +33,7 @@ public class SsComTaskDTO extends SsComTask{
      private List<SsComMaterial> materialList;
 
     //账户
-    private SsComAccountDTO ssComAccountDTO;
+    private SsComAccountBO ssComAccountBO;
 
     //操作类型  1 开户 2 转移 3 变更 4 终止
     private String operatorType;
@@ -121,12 +121,12 @@ public class SsComTaskDTO extends SsComTask{
         this.materialList = materialList;
     }
 
-    public SsComAccountDTO getSsComAccountDTO() {
-        return ssComAccountDTO;
+    public SsComAccountBO getSsComAccountBO() {
+        return ssComAccountBO;
     }
 
-    public void setSsComAccountDTO(SsComAccountDTO ssComAccountDTO) {
-        this.ssComAccountDTO = ssComAccountDTO;
+    public void setSsComAccountBO(SsComAccountBO ssComAccountBO) {
+        this.ssComAccountBO = ssComAccountBO;
     }
 
     public String getOperatorType() {

@@ -1,8 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsStatementBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsStatementService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementDTO;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -35,12 +35,12 @@ public class SsStatementController  extends BasicController<ISsStatementService>
      */
     @Log("对账单查询")
     @PostMapping("/statementQuery")
-    public JsonResult<List<SsStatementDTO>> statementQuery(PageInfo pageInfo) {
+    public JsonResult<List<SsStatementBO>> statementQuery(PageInfo pageInfo) {
 
        /* PageRows<SsStatement> pagePORows = business.statementQuery(pageInfo);
-        PageRows<SsStatementDTO> pageRows = new PageRows<SsStatementDTO>();
+        PageRows<SsStatementBO> pageRows = new PageRows<SsStatementBO>();
         BeanUtils.copyProperties(pagePORows,pageRows);*/
-        PageRows<SsStatementDTO> pageRows =business.statementQuery(pageInfo);
+        PageRows<SsStatementBO> pageRows =business.statementQuery(pageInfo);
 
 
         return JsonResultKit.ofPage(pageRows);
@@ -52,13 +52,13 @@ public class SsStatementController  extends BasicController<ISsStatementService>
      *
      * @author wengxk
      * @date 2017-12-11
-     * @param ssStatementDTO 下载条件
+     * @param ssStatementBO 下载条件
      * @return
      */
     @Log("社保对账主表查询导出")
     @ResponseBody
     @RequestMapping("/exportStatementQuery")
-    public void exportStatementQuery(SsStatementDTO ssStatementDTO) {
+    public void exportStatementQuery(SsStatementBO ssStatementBO) {
 
     }
 
@@ -67,15 +67,15 @@ public class SsStatementController  extends BasicController<ISsStatementService>
      *
      * @author wengxk
      * @date 2017-12-08
-     * @param ssStatementDTO 检索条件
-     * @return  JsonResult<SsStatementDTO>
+     * @param ssStatementBO 检索条件
+     * @return  JsonResult<SsStatementBO>
      */
     @Log("对账单查询")
     @PostMapping("/serachStatementData")
-    public JsonResult<SsStatementDTO> serachStatementData(SsStatementDTO ssStatementDTO) {
+    public JsonResult<SsStatementBO> serachStatementData(SsStatementBO ssStatementBO) {
 
-        SsStatementDTO resultDto = business.serachStatementData(ssStatementDTO);
-        JsonResult<SsStatementDTO> result = new JsonResult<>();
+        SsStatementBO resultDto = business.serachStatementData(ssStatementBO);
+        JsonResult<SsStatementBO> result = new JsonResult<>();
         result.setData(resultDto);
 
         return result;

@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
@@ -6,7 +6,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.Ss
 
 import java.util.List;
 
-public class SsComAccountDTO extends SsComAccount {
+public class SsComAccountBO extends SsComAccount {
 
     //企业工伤比例变更(新增)
     private SsAccountRatio ssAccountRatio;
@@ -20,7 +20,7 @@ public class SsComAccountDTO extends SsComAccount {
     private List<SsComTask> ssComTaskList;
 
     //账户关联公司
-    private List<SsAccountComRelationDTO> ssAccountComRelationDTOList;
+    private List<SsAccountComRelationBO> ssAccountComRelationBOList;
     //企业工伤比例变更(查询) 1对多
     private List<SsAccountRatio> ssAccountRatioList;
     public SsAccountRatio getSsAccountRatio() {
@@ -55,12 +55,12 @@ public class SsComAccountDTO extends SsComAccount {
         this.ssComTaskList = ssComTaskList;
     }
 
-    public List<SsAccountComRelationDTO> getSsAccountComRelationDTOList() {
-        return ssAccountComRelationDTOList;
+    public List<SsAccountComRelationBO> getSsAccountComRelationBOList() {
+        return ssAccountComRelationBOList;
     }
 
-    public void setSsAccountComRelationDTOList(List<SsAccountComRelationDTO> ssAccountComRelationDTOList) {
-        this.ssAccountComRelationDTOList = ssAccountComRelationDTOList;
+    public void setSsAccountComRelationBOList(List<SsAccountComRelationBO> ssAccountComRelationBOList) {
+        this.ssAccountComRelationBOList = ssAccountComRelationBOList;
     }
 
     public List<SsAccountRatio> getSsAccountRatioList() {

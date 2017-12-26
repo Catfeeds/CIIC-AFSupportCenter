@@ -1,13 +1,6 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
-import com.baomidou.mybatisplus.enums.IdType;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatement;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -17,7 +10,7 @@ import java.time.LocalDateTime;
  * @author wengxk
  * @since 2017-12-08
  */
-public class SsStatementDTO extends SsStatement {
+public class SsStatementBO extends SsStatement {
 
     private static final long serialVersionUID = 1L;
 

@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsPaymentComDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentComBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPaymentCom;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsPaymentComMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsPaymentComService;
@@ -12,7 +12,6 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -27,25 +26,25 @@ import java.time.LocalDateTime;
 public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymentCom> implements ISsPaymentComService {
 
     @Override
-    public PageRows<SsPaymentComDTO> paymentComQuery(PageInfo pageInfo) {
-        return PageKit.doSelectPage(pageInfo, () -> baseMapper.paymentComQuery(pageInfo.toJavaObject(SsPaymentComDTO.class)));
+    public PageRows<SsPaymentComBO> paymentComQuery(PageInfo pageInfo) {
+        return PageKit.doSelectPage(pageInfo, () -> baseMapper.paymentComQuery(pageInfo.toJavaObject(SsPaymentComBO.class)));
     }
 
 
 
     @Override
-    public JsonResult<String> saveAdjustment(SsPaymentComDTO ssPaymentComDTO){
+    public JsonResult<String> saveAdjustment(SsPaymentComBO ssPaymentComBO){
         JsonResult<String> json = new JsonResult<String>();
         //验证状态
 
         //根据ID取出原数据
-        SsPaymentCom ssPaymentCom = baseMapper.selectById(ssPaymentComDTO.getPaymentComId());
+        SsPaymentCom ssPaymentCom = baseMapper.selectById(ssPaymentComBO.getPaymentComId());
 
         //新数据
         //抵扣费用是否纳入支付申请
-        int ifDeductedIntoPay = ssPaymentComDTO.getIfDeductedIntoPay();
+        int ifDeductedIntoPay = ssPaymentComBO.getIfDeductedIntoPay();
         //额外金
-        BigDecimal extraAmount = ssPaymentComDTO.getExtraAmount();
+        BigDecimal extraAmount = ssPaymentComBO.getExtraAmount();
         //原数据
         //应缴纳金额
         BigDecimal oughtAmount = ssPaymentCom.getOughtAmount();
@@ -66,7 +65,7 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
         ssPaymentCom.setExtraAmount(extraAmount);
         ssPaymentCom.setIfDeductedIntoPay(ifDeductedIntoPay);
         ssPaymentCom.setTotalPayAmount(totalPayAmount);
-        ssPaymentCom.setRemark(ssPaymentComDTO.getRemark());
+        ssPaymentCom.setRemark(ssPaymentComBO.getRemark());
         ssPaymentCom.setModifiedBy("张三");
         ssPaymentCom.setModifiedTime(LocalDateTime.now());
         //保存

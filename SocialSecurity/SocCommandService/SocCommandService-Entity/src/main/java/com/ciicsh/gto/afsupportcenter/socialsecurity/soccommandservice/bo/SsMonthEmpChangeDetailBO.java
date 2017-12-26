@@ -1,8 +1,7 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthEmpChangeDetail;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -14,7 +13,7 @@ import java.math.BigDecimal;
  * @author wengxk
  * @since 2017-12-13
  */
-public class SsMonthEmpChangeDetailDTO extends SsMonthEmpChangeDetail {
+public class SsMonthEmpChangeDetailBO extends SsMonthEmpChangeDetail {
 
     private static final long serialVersionUID = 1L;
 

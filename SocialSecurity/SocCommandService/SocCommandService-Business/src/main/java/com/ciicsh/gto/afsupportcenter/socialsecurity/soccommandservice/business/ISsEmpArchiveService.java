@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsEmpArchiveDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpArchiveBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpArchive;
 
 /**
@@ -22,5 +22,5 @@ public interface ISsEmpArchiveService extends IService<SsEmpArchive> {
      * @param empTaskId
      * @return
      */
-    SsEmpArchiveDTO queryByEmpTaskId(String empTaskId);
+    SsEmpArchiveBO queryByEmpTaskId(String empTaskId);
 }

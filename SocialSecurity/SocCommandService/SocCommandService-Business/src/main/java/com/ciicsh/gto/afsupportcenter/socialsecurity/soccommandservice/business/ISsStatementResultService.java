@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementResultDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsStatementResultBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatementResult;
 import com.baomidou.mybatisplus.service.IService;
 
@@ -21,10 +21,10 @@ public interface ISsStatementResultService extends IService<SsStatementResult> {
      *
      * @author wengxk
      * @date 2017-12-12
-     * @param ssStatementResultDTO 对账单结果检索条件
-     * @return  PageRows<SsStatementDTO>
+     * @param ssStatementResultBO 对账单结果检索条件
+     * @return  PageRows<SsStatementBO>
      */
-    List<SsStatementResultDTO> statementResultQuery(SsStatementResultDTO ssStatementResultDTO);
+    List<SsStatementResultBO> statementResultQuery(SsStatementResultBO ssStatementResultBO);
 
     /**
      * <p>Description: 计算对账</p>

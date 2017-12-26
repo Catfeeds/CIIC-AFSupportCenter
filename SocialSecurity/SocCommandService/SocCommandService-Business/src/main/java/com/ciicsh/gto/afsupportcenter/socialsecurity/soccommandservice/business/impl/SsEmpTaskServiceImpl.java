@@ -3,7 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpTaskMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsEmpTaskDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
@@ -24,8 +24,8 @@ import java.util.Optional;
 public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask> implements ISsEmpTaskService {
 
     @Override
-    public PageRows<SsEmpTaskDTO> employeeOperatorQuery(PageInfo pageInfo) {
-        SsEmpTaskDTO dto = pageInfo.toJavaObject(SsEmpTaskDTO.class);
+    public PageRows<SsEmpTaskBO> employeeOperatorQuery(PageInfo pageInfo) {
+        SsEmpTaskBO dto = pageInfo.toJavaObject(SsEmpTaskBO.class);
         handleTaskCategory(dto);
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.employeeOperatorQuery(dto));
     }
@@ -35,7 +35,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      *
      * @param dto
      */
-    private void handleTaskCategory(SsEmpTaskDTO dto) {
+    private void handleTaskCategory(SsEmpTaskBO dto) {
         // 操作类型，用于区分操作。1 日常操作、2 特殊操作， 默认日常操作
         Integer operatorType = Optional.ofNullable(dto.getOperatorType()).orElse(1);
         dto.setOperatorType(operatorType);

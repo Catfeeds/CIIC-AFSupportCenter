@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsMonthEmpChangeDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthEmpChangeBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthEmpChange;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
@@ -19,8 +19,8 @@ public interface SsMonthEmpChangeMapper extends BaseMapper<SsMonthEmpChange> {
      *
      * @author wengxk
      * @date 2017-12-13
-     * @param ssMonthEmpChangeDTO 社保汇总数据主表
-     * @return  SsMonthEmpChangeDTO
+     * @param ssMonthEmpChangeBO 社保汇总数据主表
+     * @return  SsMonthEmpChangeBO
      */
-    SsMonthEmpChangeDTO serachMonthEmpChangeByStatementId(SsMonthEmpChangeDTO ssMonthEmpChangeDTO);
+    SsMonthEmpChangeBO serachMonthEmpChangeByStatementId(SsMonthEmpChangeBO ssMonthEmpChangeBO);
 }

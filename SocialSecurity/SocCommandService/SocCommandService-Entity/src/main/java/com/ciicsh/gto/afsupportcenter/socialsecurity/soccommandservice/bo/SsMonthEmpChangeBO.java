@@ -1,13 +1,6 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
-import com.baomidou.mybatisplus.enums.IdType;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthEmpChange;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -17,7 +10,7 @@ import java.time.LocalDateTime;
  * @author wengxk
  * @since 2017-12-07
  */
-public class SsMonthEmpChangeDTO extends SsMonthEmpChange {
+public class SsMonthEmpChangeBO extends SsMonthEmpChange {
 
     private static final long serialVersionUID = 1L;
 

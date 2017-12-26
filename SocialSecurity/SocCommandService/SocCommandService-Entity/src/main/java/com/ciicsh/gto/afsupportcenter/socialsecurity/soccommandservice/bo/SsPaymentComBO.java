@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPaymentCom;
 
@@ -10,7 +10,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.Ss
  * @author wengxk
  * @since 2017-12-08
  */
-public class SsPaymentComDTO extends SsPaymentCom {
+public class SsPaymentComBO extends SsPaymentCom {
 
     private static final long serialVersionUID = 1L;
 

@@ -1,8 +1,8 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpArchive;
 
-public class SsEmpArchiveDTO extends SsEmpArchive {
+public class SsEmpArchiveBO extends SsEmpArchive {
 
     // 来源表 emp_employee
     // 雇员姓名

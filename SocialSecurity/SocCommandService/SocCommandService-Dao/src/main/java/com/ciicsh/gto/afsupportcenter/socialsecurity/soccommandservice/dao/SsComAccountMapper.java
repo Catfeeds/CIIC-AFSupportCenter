@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComAccountDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComAccountBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
 import org.apache.ibatis.annotations.Param;
 
@@ -23,7 +23,7 @@ public interface SsComAccountMapper extends BaseMapper<SsComAccount> {
      * @param empTaskId
      * @return
      */
-    SsComAccountDTO queryByEmpTaskId(@Param("empTaskId") String empTaskId);
+    SsComAccountBO queryByEmpTaskId(@Param("empTaskId") String empTaskId);
 
     /**
      * 查询企业社保账户信息
@@ -31,11 +31,11 @@ public interface SsComAccountMapper extends BaseMapper<SsComAccount> {
      * @param dto
      * @return
      */
-    List<SsComAccountDTO> accountQuery(SsComAccountDTO dto);
+    List<SsComAccountBO> accountQuery(SsComAccountBO dto);
 
     /**
      * 查询企业社保管理详细信息
      * @param comAccountId
      */
-    SsComAccountDTO querySocialSecurityManageInfo(@Param("comAccountId") String comAccountId);
+    SsComAccountBO querySocialSecurityManageInfo(@Param("comAccountId") String comAccountId);
 }

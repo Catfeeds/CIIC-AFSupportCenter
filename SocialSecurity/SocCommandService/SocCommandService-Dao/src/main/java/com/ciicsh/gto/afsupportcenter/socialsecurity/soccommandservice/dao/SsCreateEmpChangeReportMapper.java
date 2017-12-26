@@ -1,9 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsCreateEmpChangeReportAdjustBaseDetailBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsCreateEmpChangeReportBaseDetailBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsCreateEmpChangeReportRefundBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsCreateEmpChangeReportAdjustBaseDetailBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsCreateEmpChangeReportBaseDetailBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsCreateEmpChangeReportRefundBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthEmpChange;
 
 import java.util.List;

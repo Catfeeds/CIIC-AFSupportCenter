@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAccountComRelationDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAccountComRelationBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
@@ -21,6 +21,6 @@ public interface SsAccountComRelationMapper extends BaseMapper<SsAccountComRelat
      * @param comAccountId
      * @return
      */
-    List<SsAccountComRelationDTO> queryByAccountId(@Param("comAccountId") String comAccountId);
+    List<SsAccountComRelationBO> queryByAccountId(@Param("comAccountId") String comAccountId);
 
 }

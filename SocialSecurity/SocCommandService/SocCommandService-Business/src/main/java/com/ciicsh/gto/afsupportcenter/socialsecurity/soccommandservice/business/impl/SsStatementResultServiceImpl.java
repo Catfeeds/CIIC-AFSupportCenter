@@ -1,9 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsStatementResultBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsMonthEmpChangeDetailMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsStatementImpMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsStatementMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementResultDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthEmpChangeDetail;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatement;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatementImp;
@@ -40,8 +40,8 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
     SsStatementMapper ssStatementMapper;
 
     @Override
-    public List<SsStatementResultDTO> statementResultQuery(SsStatementResultDTO ssStatementResultDTO) {
-        return baseMapper.statementResultQuery(ssStatementResultDTO);
+    public List<SsStatementResultBO> statementResultQuery(SsStatementResultBO ssStatementResultBO) {
+        return baseMapper.statementResultQuery(ssStatementResultBO);
     }
 
 
@@ -60,11 +60,11 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
         LocalDateTime dealTime = LocalDateTime.now();
 
         //清除历史结果
-        SsStatementResultDTO ssStatementResultDTO = new SsStatementResultDTO();
-        ssStatementResultDTO.setStatementId(statementId);
-        ssStatementResultDTO.setModifiedBy("张三");
-        ssStatementResultDTO.setModifiedTime(dealTime);
-        baseMapper.cleanResultByStatementId(ssStatementResultDTO);
+        SsStatementResultBO ssStatementResultBO = new SsStatementResultBO();
+        ssStatementResultBO.setStatementId(statementId);
+        ssStatementResultBO.setModifiedBy("张三");
+        ssStatementResultBO.setModifiedTime(dealTime);
+        baseMapper.cleanResultByStatementId(ssStatementResultBO);
 
         //用于存放合并节点的map
         Map<String,SsStatementResult> resultPOMap = new HashMap<>();

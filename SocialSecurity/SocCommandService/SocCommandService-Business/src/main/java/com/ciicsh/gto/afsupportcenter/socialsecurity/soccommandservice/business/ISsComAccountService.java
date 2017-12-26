@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComAccountDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComAccountBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -23,7 +23,7 @@ public interface ISsComAccountService extends IService<SsComAccount> {
      * @param empTaskId
      * @return
      */
-    SsComAccountDTO queryByEmpTaskId(String empTaskId);
+    SsComAccountBO queryByEmpTaskId(String empTaskId);
 
     /**
      * 查询企业社保账户信息
@@ -31,11 +31,11 @@ public interface ISsComAccountService extends IService<SsComAccount> {
      * @param pageInfo
      * @return
      */
-    PageRows<SsComAccountDTO> accountQuery(PageInfo pageInfo);
+    PageRows<SsComAccountBO> accountQuery(PageInfo pageInfo);
 
     /**
      * 查询企业社保管理详细信息
      * @param comAccountId
      */
-    SsComAccountDTO querySocialSecurityManageInfo( String comAccountId);
+    SsComAccountBO querySocialSecurityManageInfo(String comAccountId);
 }

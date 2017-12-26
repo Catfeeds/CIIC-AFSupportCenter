@@ -4,7 +4,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMapDto" extends="BaseResultMap"
-               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsEmpTaskDTO">
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO">
         <!-- emp_employee -->
         <result column="employee_name" property="employeeName"/>
         <result column="employee_id" property="employeeId"/>

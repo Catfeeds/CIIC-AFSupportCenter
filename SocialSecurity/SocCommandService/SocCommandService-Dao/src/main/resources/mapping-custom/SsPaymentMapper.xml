@@ -28,7 +28,7 @@
         <result column="modified_by" property="modifiedBy" />
     </resultMap>
 
-    <select id="paymentQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsPaymentDTO" resultMap="DtoResultMap">
+    <select id="paymentQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentBO" resultMap="DtoResultMap">
         SELECT
             SP.*
         FROM
@@ -56,7 +56,7 @@
             </if>
     </select>
 
-    <select id="searchPaymentByAccountTypeAndState" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsPaymentSrarchDTO" resultMap="DtoResultMap">
+    <select id="searchPaymentByAccountTypeAndState" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentSrarchBO" resultMap="DtoResultMap">
         SELECT
         SP.*
         FROM
