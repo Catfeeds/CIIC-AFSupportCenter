@@ -15,6 +15,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -137,13 +138,13 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
     /**
      * excel 导出
      */
-    @Log("特殊任务办理材料页面详细信息")
-    @PostMapping("/accAndEmpDetailQuery")
-    public void accAndEmpDetailQuery(SsEmpTaskBO dto) {
-
+    @Log("特殊任务查询")
+    @PostMapping("/queryEmpSpecialTaskById")
+    public JsonResult<SsEmpTask> queryEmpSpecialTask(String empTaskId) {
         // 查询
+        SsEmpTask ssEmpTask = business.selectById(StringUtils.isNotBlank(empTaskId)?Long.valueOf(empTaskId):null);
 
-
+        return JsonResultKit.of(ssEmpTask);
     }
 
 }
