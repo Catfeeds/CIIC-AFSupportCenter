@@ -89,6 +89,7 @@
                     <if test="taskStatus != null">
                         and et.task_status = #{taskStatus}
                     </if>
+                    AND et.task_category = 9
                     <if test="beginSubmitTime != null and endSubmitTime != null">
                         and date_format(et.submit_time,'%Y-%m-%d') BETWEEN #{beginSubmitTime} AND #{endSubmitTime}
                     </if>
@@ -99,10 +100,14 @@
                             and et.task_status not in (2,3,4)
                         </when>
                         <when test="taskStatus == 1">
-                            and et.submit_time <![CDATA[ <= ]]> str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',ca.expire_date),'%Y-%m-%d') and et.task_status not in (2,3,4)
+                            and et.submit_time <![CDATA[ <= ]]>
+                            str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',ca.expire_date),'%Y-%m-%d') and
+                            et.task_status not in (2,3,4)
                         </when>
                         <when test="taskStatus == 2">
-                            and et.submit_time > str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',ca.expire_date),'%Y-%m-%d') and et.task_status not in (2,3,4)
+                            and et.submit_time >
+                            str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',ca.expire_date),'%Y-%m-%d') and
+                            et.task_status not in (2,3,4)
                         </when>
                         <otherwise>
                             and et.task_status = #{taskStatus}
@@ -123,4 +128,5 @@
             </if>
         </where>
     </select>
+
 </mapper>
