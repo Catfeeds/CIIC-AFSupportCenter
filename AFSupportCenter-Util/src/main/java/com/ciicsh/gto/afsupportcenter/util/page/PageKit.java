@@ -17,9 +17,10 @@ public class PageKit {
     public static void startPage(PageInfo pageInfo) {
         if (pageInfo != null) {
             PageHelper.startPage(pageInfo.getPageNum(), pageInfo.getPageSize());
-            if (StringUtils.isNotBlank(pageInfo.getOrderBy())) {
+            String orderBy = pageInfo.getOrderBy();
+            if (StringUtils.isNotBlank(orderBy)) {
                 Pagination pagination = PageHelper.getPagination();
-                handleOrderBy(pagination, pageInfo.getOrderBy().trim());
+                handleOrderBy(pagination, orderBy.trim());
             }
         }
     }
@@ -50,9 +51,14 @@ public class PageKit {
             pageRows.setRows(selectPage.doSelect());
             pageRows.setTotal(pageRows.getRows().size());
         } else {
-            startPage(pageInfo);
-            pageRows.setRows(selectPage.doSelect());
-            pageRows.setTotal(PageHelper.getTotal());
+            try {
+                startPage(pageInfo);
+                pageRows.setRows(selectPage.doSelect());
+                pageRows.setTotal(PageHelper.getTotal());
+            } finally {
+                // 释放
+                PageHelper.remove();
+            }
         }
         return pageRows;
     }
