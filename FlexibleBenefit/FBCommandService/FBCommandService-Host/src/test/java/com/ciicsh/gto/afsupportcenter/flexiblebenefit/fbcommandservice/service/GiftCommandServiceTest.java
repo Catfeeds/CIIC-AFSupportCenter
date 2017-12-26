@@ -42,11 +42,7 @@ public class GiftCommandServiceTest {
 
     @Test
     public void findById() {
-        /**
-         * 扫描不到mybatis文件
-         */
-//        GiftPO entity = giftCommandService.findById(1);
-        GiftPO entity = new GiftPO();
+        GiftPO entity = giftCommandService.findById(1);
         System.out.println(entity.toString());
     }
 

@@ -40,6 +40,7 @@ public class GiftCommandController {
             logger.info("根据主键查询礼品信息");
             return ResultGenerator.genSuccessResult(entity);
         } catch (Exception e) {
+            logger.info(e.getMessage());
             return ResultGenerator.genServerFailResult();
         }
     }

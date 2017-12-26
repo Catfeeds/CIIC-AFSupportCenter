@@ -1,0 +1,60 @@
+###################  项目启动端口  ###################
+server:
+  port: 6001
+  context-path: /
+###################  spring 配置  ###################
+spring:
+  application:
+    name: support-center-soc-query-service
+  profiles:
+    active: develop
+  datasource:
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://172.16.9.15:3306/gtobusinessdb?useUnicode=true&amp;characterEncoding=UTF-8
+      username: root
+      password: a111111
+      max-active: 20
+      min-idle: 8
+      initial-size: 10
+      validation-query: SELECT 'x'
+      filter:
+        stat:
+          enabled: true
+  jmx:
+    enabled: false
+
+###################  spring cloud eureka  ###################
+eureka:
+  client:
+    service-url:
+        defaultZone: http://172.16.9.21:9602/eureka/,http://172.16.9.20:9601/eureka/,http://172.16.9.19:9600/eureka/ #注册中心eureka地址
+
+###################  mybatis 配置  ###################
+mybatis:
+  mapper-locations: classpath*:/mapping*/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.ciicsh.gto.afsupportcenter.socialsecurity.socqueryservice.entity
+# https://github.com/abel533/Mapper/tree/master/wiki/mapper3
+mapper:
+  mappers: tk.mybatis.mapper.common.Mapper
+# https://github.com/pagehelper/Mybatis-PageHelper/blob/master/wikis/zh/HowToUse.md
+pagehelper:
+  helper-dialect: mysql
+
+app:
+  id: 10016001
+
+endpoints:
+  shutdown:
+    #启用shutdown
+    enabled: true
+    #禁用密码验证
+    sensitive: false
+
+#禁用安全验证
+management:
+  security:
+    enabled: false
+  port: 6002
+  context-path: /admin

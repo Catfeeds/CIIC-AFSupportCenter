@@ -9,9 +9,8 @@
         <relativePath>../../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
-    <artifactId>soccommandservice-business</artifactId>
+    <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
+    <artifactId>afsupportcenter-socialsecurity-soccommandservice-business</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0</version>
 
@@ -21,14 +20,19 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
-            <artifactId>soccommandservice-dao</artifactId>
+            <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
+            <artifactId>afsupportcenter-socialsecurity-soccommandservice-dao</artifactId>
             <version>1.0.0</version>
         </dependency>
 
         <dependency>
+            <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
+            <artifactId>afsupportcenter-socialsecurity-soccommandservice-entity</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
             <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
-            <artifactId>soccommandservice-entity</artifactId>
+            <artifactId>afsupportcenter-util</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>

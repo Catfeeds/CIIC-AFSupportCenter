@@ -8,7 +8,6 @@ import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.dao.GiftCommandMapper;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 

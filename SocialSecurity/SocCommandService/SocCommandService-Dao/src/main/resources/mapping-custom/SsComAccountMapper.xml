@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsComAccountMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMapDTO" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComAccountDTO">
+        <!-- sal_company -->
+        <result column="company_id" property="companyId"/>
+        <result column="title" property="title"/>
+    </resultMap>
+    <!--关联账户表和任务单表-->
+    <resultMap id="AccountAndTaskResultMap" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComAccountDTO">
+        <collection property="ssComTaskList"
+                    ofType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask">
+            <id column="company_task_id" property="companyTaskId"/>
+            <result column="com_account_id" property="comAccountId"/>
+            <result column="company_id" property="companyId"/>
+            <result column="task_category" property="taskCategory"/>
+            <result column="task_status" property="taskStatus"/>
+            <result column="submitter_name" property="submitterName"/>
+            <result column="submit_time" property="submitTime"/>
+            <result column="submit_remark" property="submitRemark"/>
+            <result column="modified_time" property="modifiedTime"/>
+            <result column="modified_by" property="modifiedBy"/>
+        </collection>
+    </resultMap>
+
+    <select id="queryByEmpTaskId" resultMap="BaseResultMapDTO">
+        select ca.*
+            ,c.company_id,c.title
+            from ss_com_account ca
+            LEFT JOIN ss_account_com_relation ssac on ca.com_account_id = ssac.com_account_id
+            LEFT JOIN sal_company c on c.company_id = ssac.company_id
+            WHERE 1 = 1
+            and ca.is_active = 1
+            and ssac.is_active = 1
+            and c.is_active = 1
+            and EXISTS(select 1 from ss_emp_task et LEFT JOIN ss_emp_archive ea on et.emp_archive_id = ea.emp_archive_id where et.is_active = 1 and ea.company_id = c.company_id and et.emp_task_id = #{empTaskId})
+    </select>
+
+    <select id="accountQuery" resultMap="BaseResultMapDTO">
+        select * from ss_com_account ca
+        <where>
+            and ca.is_active = 1
+            <if test="ssAccount != null">
+                and ca.ss_account LIKE CONCAT('%',#{ssAccount},'%')
+            </if>
+            <if test="comAccountName != null">
+                and ca.com_account_name LIKE CONCAT('%',#{comAccountName},'%')
+            </if>
+        </where>
+    </select>
+
+    <!--查询企业社保管理详细信息-->
+    <select id="querySocialSecurityManageInfo" resultMap="AccountAndTaskResultMap">
+         SELECT
+            sca.com_account_id,
+            sca.ss_account,
+            sca.bank_account,
+            sca.com_account_name,
+            sca.settlement_area,
+            sca.payment_bank,
+            sca.payment_way,
+            sca.query_account,
+            sca.expire_date,
+            sca.ss_username,
+            sca.ss_pwd,
+            sca.initial_balance,
+            sca.initial_debt,
+            sca.origin_place,
+            sca.origin_place_remark,
+            sca.deliver_way,
+            sca.provide_certificate_time,
+            sca.change_time,
+            sca.receive_date,
+            sca.into_date,
+            sca.end_date,
+            sca.dispatch_material,
+						sct.*
+        FROM
+            ss_com_account sca
+        LEFT JOIN
+                (
+                    SELECT
+                    com_account_id,
+                    company_task_id,
+                    task_category,
+                    modified_by,
+                    modified_time,
+                    task_status,
+                    submit_time,
+                    submitter_name,
+                    submit_remark
+                    FROM ss_com_task
+                    WHERE is_active=1 AND task_status=3 OR task_status=4
+                )sct ON sca.com_account_id = sct.com_account_id
+           WHERE sca.com_account_id = #{comAccountId}
+
+    </select>
+</mapper>

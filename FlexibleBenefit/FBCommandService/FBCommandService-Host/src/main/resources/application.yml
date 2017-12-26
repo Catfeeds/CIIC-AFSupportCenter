@@ -61,8 +61,8 @@ mybatis-plus:
       logic-not-delete-value: 1
       #自定义SQL注入器
       sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
-      mapper-locations: classpath*:mapper/*.xml
-      type-aliases-package: com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po
 
 server:
     port: 6019
