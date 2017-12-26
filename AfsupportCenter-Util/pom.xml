@@ -22,7 +22,11 @@
             <artifactId>spring-cloud-starter-eureka-server</artifactId>
             <scope>test</scope>
         </dependency>
+<<<<<<< HEAD
         <!-- 模板引擎 -->
+=======
+        <!-- ģ������ -->
+>>>>>>> remotes/origin/master
         <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity-engine-core</artifactId>

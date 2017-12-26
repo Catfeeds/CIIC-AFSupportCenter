@@ -32,7 +32,6 @@
             <artifactId>afsupportcenter-util</artifactId>
             <version>1.0.0</version>
         </dependency>
-
         <!--分页插件-->
         <dependency>
             <groupId>com.github.pagehelper</groupId>
