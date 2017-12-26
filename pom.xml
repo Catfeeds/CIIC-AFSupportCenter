@@ -148,12 +148,6 @@
             <version>${mybatisplus.version}</version>
         </dependency>
         <!-- mybatis-plus end -->
-        <!--分页插件-->
-        <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>${pagehelper-spring-boot-starter.version}</version>
-        </dependency>
 
         <!--其他依赖-->
         <dependency>
