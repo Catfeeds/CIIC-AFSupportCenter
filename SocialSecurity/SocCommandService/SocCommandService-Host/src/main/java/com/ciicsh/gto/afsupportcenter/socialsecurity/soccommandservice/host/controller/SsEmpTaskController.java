@@ -115,9 +115,15 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
             // 更新雇员任务信息
             business.updateById(param);
         }
+        {// 办理，办理状态：1、未处理 2 、处理中(已办)  3 已完成(已做) 4、批退 5、不需处理
+
+            Integer taskStatus = param.getTaskStatus();
+            if(Integer.valueOf(3).equals(taskStatus)){
+
+            }
+        }
         return JsonResultKit.of(true);
     }
-
 
     /**
      * excel 导出
