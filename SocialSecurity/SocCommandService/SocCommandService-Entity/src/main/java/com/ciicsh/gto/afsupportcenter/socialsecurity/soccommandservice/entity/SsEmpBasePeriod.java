@@ -14,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-16
+ * @since 2017-12-26
  */
 @TableName("ss_emp_base_period")
 public class SsEmpBasePeriod implements Serializable {
@@ -56,6 +56,11 @@ public class SsEmpBasePeriod implements Serializable {
      */
 	@TableField("ss_month")
 	private String ssMonth;
+    /**
+     * 社保停缴办理月份和社保办理月份不可放在同一个字段。
+     */
+	@TableField("ss_month_stop")
+	private String ssMonthStop;
     /**
      * 缴纳方式:1 - 正常 2 - 补缴
      */
@@ -144,6 +149,14 @@ public class SsEmpBasePeriod implements Serializable {
 		this.ssMonth = ssMonth;
 	}
 
+	public String getSsMonthStop() {
+		return ssMonthStop;
+	}
+
+	public void setSsMonthStop(String ssMonthStop) {
+		this.ssMonthStop = ssMonthStop;
+	}
+
 	public Integer getRemitWay() {
 		return remitWay;
 	}
@@ -202,6 +215,7 @@ public class SsEmpBasePeriod implements Serializable {
 			", startMonth=" + startMonth +
 			", endMonth=" + endMonth +
 			", ssMonth=" + ssMonth +
+			", ssMonthStop=" + ssMonthStop +
 			", remitWay=" + remitWay +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +

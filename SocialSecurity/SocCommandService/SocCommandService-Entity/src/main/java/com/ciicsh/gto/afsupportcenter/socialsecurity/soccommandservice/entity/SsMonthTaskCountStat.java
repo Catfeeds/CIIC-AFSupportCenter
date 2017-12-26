@@ -13,7 +13,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-16
+ * @since 2017-12-26
  */
 @TableName("ss_month_task_count_stat")
 public class SsMonthTaskCountStat implements Serializable {
