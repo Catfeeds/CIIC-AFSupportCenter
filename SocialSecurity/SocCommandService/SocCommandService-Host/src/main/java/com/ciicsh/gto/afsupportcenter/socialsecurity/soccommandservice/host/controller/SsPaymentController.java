@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsPaymentService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsPaymentDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsPaymentSrarchDTO;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,6 +43,34 @@ public class SsPaymentController  extends BasicController<ISsPaymentService> {
 
         PageRows<SsPaymentDTO> pageRows = business.paymentQuery(pageInfo);
         return JsonResultKit.ofPage(pageRows);
+    }
+
+
+    /**
+     * <p>Description: 按照条件显示可加入的批次</p>
+     *
+     * @author wengxk
+     * @date 2017-12-26
+     * @param paymentSrarchDTO 检索条件
+     * @return  JsonResult<>
+     */
+    @Log("按照条件显示可加入的批次")
+    @PostMapping("/showAddBatch")
+    public JsonResult<List<SsPaymentDTO>> showAddBatch(SsPaymentSrarchDTO paymentSrarchDTO ) {
+
+        //将要检索的状态写入查询条件
+        List<String> paymentStateList = new ArrayList<>();
+        //3 ,可付
+        paymentStateList.add("3");
+        //5,内部审批批退
+        paymentStateList.add("5");
+        paymentSrarchDTO.setPaymentStateList(paymentStateList);
+
+        List<SsPaymentDTO> resultList = business.showAddBatch(paymentSrarchDTO);
+        JsonResult<List<SsPaymentDTO>> jsonResult = new JsonResult<>();
+        jsonResult.setData(resultList);
+
+        return jsonResult;
     }
 }
 

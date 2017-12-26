@@ -1,10 +1,13 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsPaymentDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsPaymentSrarchDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPayment;
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+
+import java.util.List;
 
 /**
  * <p>
@@ -25,4 +28,18 @@ public interface ISsPaymentService extends IService<SsPayment> {
      * @return  PageRows<SsPaymentDTO>
      */
     PageRows<SsPaymentDTO> paymentQuery(PageInfo pageInfo);
+
+    /**
+     * <p>Description: 按照条件显示可加入的批次</p>
+     *
+     * @author wengxk
+     * @date 2017-12-26
+     * @param paymentSrarchDTO 检索条件
+     * @return  JsonResult<>
+     */
+    List<SsPaymentDTO> showAddBatch(SsPaymentSrarchDTO paymentSrarchDTO);
+
+
+
+
 }

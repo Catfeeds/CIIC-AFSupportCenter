@@ -51,7 +51,7 @@
           ON
             SC.company_id = SPC.company_id
             AND SC.is_active = '1'
-          INNER JOIN
+          LEFT JOIN
             ss_payment SP
           ON
             SP.payment_id = SPC.payment_id
