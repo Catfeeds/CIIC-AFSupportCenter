@@ -31,7 +31,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssComAccount")
-@Log("企业社保账户信息")
 public class SsComAccountController extends BasicController<ISsComAccountService> {
 
     @Autowired

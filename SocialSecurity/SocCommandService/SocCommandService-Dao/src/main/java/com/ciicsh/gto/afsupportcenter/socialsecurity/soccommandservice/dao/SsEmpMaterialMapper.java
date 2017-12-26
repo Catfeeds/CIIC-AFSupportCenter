@@ -1,7 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpMaterial;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpMaterial;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @since 2017-12-01
  */
 public interface SsEmpMaterialMapper extends BaseMapper<SsEmpMaterial> {
+
+    List<SsEmpMaterial> accAndEmpDetailQuery(@Param("empTaskId") String empTaskId);
 
 }

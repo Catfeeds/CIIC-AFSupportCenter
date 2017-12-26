@@ -1,7 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpMaterial;
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpMaterial;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,10 @@ import com.baomidou.mybatisplus.service.IService;
  * @since 2017-12-01
  */
 public interface ISsEmpMaterialService extends IService<SsEmpMaterial> {
-
+    /**
+     *  雇员特殊任务办理材料页面详细信息
+     * @param empTaskId
+     * @return
+     */
+    List<SsEmpMaterial> accAndEmpDetailQuery(@Param("empTaskId") String empTaskId);
 }

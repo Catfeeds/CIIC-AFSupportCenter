@@ -49,14 +49,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 switch (operatorType) {
                     // 日常操作
                     case 1:
-                        taskCategories = new Integer[]{1, 2, 3, 4, 5, 7};
+                        taskCategories = new Integer[]{1, 2, 3, 4, 5, 6,7};
                         break;
                     // 特殊操作
                     case 2:
-                        taskCategories = new Integer[]{6, 8, 9};
+                        taskCategories = null;//现在特殊任务只有状态为9的 后面sql已经写死为9
                         break;
                     default:// 日常操作
-                        taskCategories = new Integer[]{1, 2, 3, 4, 5, 7};
+                        taskCategories = new Integer[]{1, 2, 3, 4, 5, 6,7};
 
                 }
             } else {

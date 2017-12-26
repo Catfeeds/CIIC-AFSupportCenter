@@ -10,8 +10,10 @@
     </resultMap>
 
     <select id="queryByEmpTaskId" resultMap="BaseResultMapDTO">
-        select ea.*
-            ,e.employee_name,e.id_num
+        select
+            ea.*,
+            e.employee_name,
+            e.id_num
             from ss_emp_archive ea
             LEFT JOIN emp_employee e on e.employee_id = ea.employee_id
             WHERE 1 = 1
