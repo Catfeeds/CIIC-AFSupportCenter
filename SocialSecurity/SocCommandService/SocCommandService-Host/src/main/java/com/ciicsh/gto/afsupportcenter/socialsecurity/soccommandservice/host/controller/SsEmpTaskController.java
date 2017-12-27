@@ -134,15 +134,26 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
         {// 更新任务单费用段
             List<SsEmpTaskPeriod> taskPeriods = bo.getEmpTaskPeriods();
             if (taskPeriods != null) {
+                int taskCategory = bo.getTaskCategory();
+                String handleMonth = bo.getHandleMonth();
+
                 List<SsEmpBasePeriod> basePeriods = new ArrayList<>(taskPeriods.size());
                 taskPeriods.forEach(p -> {
                     SsEmpBasePeriod basePeriod = Adapter.adapterSsEmpBasePeriod(p);
                     basePeriod.setEmpArchiveId(bo.getEmpArchiveId());
                     basePeriod.setEmpTaskId(bo.getEmpTaskId());
+                    if (taskCategoryConst.INTO == taskCategory) {
+                        basePeriod.setSsMonthStop(handleMonth);
+                    } else {
+                        basePeriod.setSsMonth(handleMonth);
+                    }
                     basePeriods.add(basePeriod);
                 });
                 ssEmpBasePeriodService.saveForEmpTask(basePeriods, bo);
             }
+        }
+        {// 更新雇员社保汇缴基数明细
+
         }
     }
 
@@ -162,6 +173,12 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
         }
     }
 
+    /**
+     * 任务类型，DicItem.DicItemValue 1:新进：2：转入 3调整 4 补缴 5 转出 6封存 7退账 8 提取 9特殊操作
+     */
+    interface taskCategoryConst {
+        int INTO = 2;// 转入
+    }
 
     /**
      * 办理状态：1、未处理 2 、处理中(已办)  3 已完成(已做) 4、批退 5、不需处理
@@ -174,6 +191,7 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
         int REJECTION = 4;// 批退
         int NOPROGRESS = 1;// 不需处理
     }
+
 
     /**
      * 批退 请求参数
