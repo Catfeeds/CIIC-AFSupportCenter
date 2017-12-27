@@ -1,9 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskPeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.dto.emptask.RejectionParamDTO;
@@ -18,8 +18,6 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -116,41 +114,12 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
         }
         {// 办理，办理状态：1、未处理 2 、处理中(已办)  3 已完成(已做) 4、批退 5、不需处理
 
-            Integer taskStatus = param.getTaskStatus();
-            if(Integer.valueOf(3).equals(taskStatus)){
+            int taskStatus = param.getTaskStatus();
+            if (3 == taskStatus) {
 
             }
         }
         return JsonResultKit.of(true);
     }
-
-    /**
-     * excel 导出
-     */
-    @Log("导出 excel")
-    @PostMapping("/exprotExcel")
-    public void exprotExcel(HttpServletRequest request, HttpServletResponse response, SsEmpTaskBO dto) {
-        // 组织参数
-        PageInfo pageInfo = new PageInfo();
-        pageInfo.setPageNum(1);
-        pageInfo.setPageSize(2000);// 默认最多查询 2000 条
-        pageInfo.put(dto);
-        // 查询
-        JsonResult<List<SsEmpTaskBO>> jsonResult = employeeOperatorQuery(pageInfo);
-        // 导出
-    }
-
-    /**
-     * excel 导出
-     */
-    @Log("特殊任务办理材料页面详细信息")
-    @PostMapping("/accAndEmpDetailQuery")
-    public void accAndEmpDetailQuery(SsEmpTaskBO dto) {
-
-        // 查询
-
-
-    }
-
 }
 
