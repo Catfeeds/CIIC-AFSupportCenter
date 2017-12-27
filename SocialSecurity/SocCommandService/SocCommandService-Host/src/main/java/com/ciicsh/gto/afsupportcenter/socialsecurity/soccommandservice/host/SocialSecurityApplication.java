@@ -1,7 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.configuration.MybatisPlusConfig;
-import com.ciicsh.gto.afsupportcenter.util.client.EntityIdClientConfiguration;
 import com.ciicsh.gto.afsupportcenter.util.config.CustomConfiguration;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
@@ -17,7 +16,7 @@ import org.springframework.context.annotation.Import;
 @MapperScan("com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao")
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice"})
 @EnableDiscoveryClient
-@Import({CustomConfiguration.class, EntityIdClientConfiguration.class, MybatisPlusConfig.class})
+@Import({CustomConfiguration.class, MybatisPlusConfig.class})
 public class SocialSecurityApplication {
 
     private final static Logger logger = LoggerFactory.getLogger(SocialSecurityApplication.class);
