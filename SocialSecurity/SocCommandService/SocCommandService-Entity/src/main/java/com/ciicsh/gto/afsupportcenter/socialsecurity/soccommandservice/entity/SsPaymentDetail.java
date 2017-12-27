@@ -14,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author HuangXing
- * @since 2017-12-26
+ * @since 2017-12-27
  */
 @TableName("ss_payment_detail")
 public class SsPaymentDetail implements Serializable {
@@ -29,8 +29,8 @@ public class SsPaymentDetail implements Serializable {
     /**
      * 外键，支付记录Id
      */
-	@TableField("payment_id")
-	private Long paymentId;
+	@TableField("payment_com_id")
+	private Long paymentComId;
     /**
      * 序号
      */
@@ -82,12 +82,12 @@ public class SsPaymentDetail implements Serializable {
 		this.paymentDetailId = paymentDetailId;
 	}
 
-	public Long getPaymentId() {
-		return paymentId;
+	public Long getPaymentComId() {
+		return paymentComId;
 	}
 
-	public void setPaymentId(Long paymentId) {
-		this.paymentId = paymentId;
+	public void setPaymentComId(Long paymentComId) {
+		this.paymentComId = paymentComId;
 	}
 
 	public String getSeq() {
@@ -182,7 +182,7 @@ public class SsPaymentDetail implements Serializable {
 	public String toString() {
 		return "SsPaymentDetail{" +
 			", paymentDetailId=" + paymentDetailId +
-			", paymentId=" + paymentId +
+			", paymentComId=" + paymentComId +
 			", seq=" + seq +
 			", paymentItem=" + paymentItem +
 			", paymentItemName=" + paymentItemName +

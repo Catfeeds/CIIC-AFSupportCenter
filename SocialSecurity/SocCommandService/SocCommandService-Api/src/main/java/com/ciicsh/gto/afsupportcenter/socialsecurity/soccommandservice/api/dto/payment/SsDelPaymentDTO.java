@@ -10,15 +10,11 @@ import java.util.List;
  * @author wengxk
  * @since 2017-12-08
  */
-public class SsAddPaymentDTO {
+public class SsDelPaymentDTO {
 
     private static final long serialVersionUID = 1L;
 
 
-    /**
-     * 支付批次ID
-     */
-    private Long paymentId;
 
     /**
      * 企业社保账户分类
@@ -37,14 +33,6 @@ public class SsAddPaymentDTO {
 
     public void setPaymentComIdList(List<Long> paymentComIdList) {
         this.paymentComIdList = paymentComIdList;
-    }
-
-    public Long getPaymentId() {
-        return paymentId;
-    }
-
-    public void setPaymentId(Long paymentId) {
-        this.paymentId = paymentId;
     }
 }
 

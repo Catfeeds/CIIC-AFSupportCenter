@@ -24,4 +24,13 @@ public interface SsPaymentComMapper extends BaseMapper<SsPaymentCom> {
      * @return  PageRows<SsStatement>
      */
     List<SsPaymentComBO> paymentComQuery(SsPaymentComBO ssPaymentComBO);
+    /**
+     * <p>Description: 根据批次检索</p>
+     *
+     * @author wengxk
+     * @date 2017-12-27
+     * @param paymentId 批次ID
+     * @return   List<SsPaymentCom>
+     */
+    List<SsPaymentCom> getPaymentComByPaymentId(Long paymentId);
 }

@@ -29,7 +29,7 @@ public class SsPaymentDTO {
      */
     private String paymentMonthMax;
 
-    private Integer paymentId;
+    private Long paymentId;
     /**
      * 出账批号
      */
@@ -126,13 +126,6 @@ public class SsPaymentDTO {
     private String modifiedBy;
 
 
-    public Integer getPaymentId() {
-        return paymentId;
-    }
-
-    public void setPaymentId(Integer paymentId) {
-        this.paymentId = paymentId;
-    }
 
     public String getPaymentBatchNum() {
         return paymentBatchNum;
@@ -316,5 +309,13 @@ public class SsPaymentDTO {
 
     public void setPaymentMonthMax(String paymentMonthMax) {
         this.paymentMonthMax = paymentMonthMax;
+    }
+
+    public Long getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(Long paymentId) {
+        this.paymentId = paymentId;
     }
 }

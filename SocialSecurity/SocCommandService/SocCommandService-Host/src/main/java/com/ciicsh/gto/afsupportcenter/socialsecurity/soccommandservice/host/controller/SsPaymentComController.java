@@ -2,7 +2,10 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.payment.SsAddPaymentDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.payment.SsDelPaymentDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.payment.SsPaymentComDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAddPaymentBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsDelPaymentBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentComBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsPaymentComService;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
@@ -90,13 +93,29 @@ public class SsPaymentComController  extends BasicController<ISsPaymentComServic
     @PostMapping("/doAddBatch")
     public JsonResult<String> doAddBatch(SsAddPaymentDTO ssAddPaymentDTO) {
         JsonResult<String> json = new JsonResult<String>();
-        json.setCode(0);
-        json.setMessage("成功");
+        //数据转换
+        SsAddPaymentBO ssAddPaymentBO = CommonTransform.convertToEntity(ssAddPaymentDTO,SsAddPaymentBO.class);
+        //执行业务
+        json = business.doAddBatch(ssAddPaymentBO);
 
-
-
-
-
+        return json;
+    }
+    /**
+     * <p>Description: 从支付批次移出</p>
+     *
+     * @author wengxk
+     * @date 2017-12-27
+     * @param ssDelPaymentDTO 移出条件条件
+     * @return  JsonResult<>
+     */
+    @Log("从支付批次移出")
+    @PostMapping("/doDelBatch")
+    public JsonResult<String> doDelBatch(SsDelPaymentDTO ssDelPaymentDTO) {
+        JsonResult<String> json = new JsonResult<String>();
+        //数据转换
+        SsDelPaymentBO ssDelPaymentBO = CommonTransform.convertToEntity(ssDelPaymentDTO,SsDelPaymentBO.class);
+        //执行业务
+        json = business.doDelBatch(ssDelPaymentBO);
 
         return json;
     }

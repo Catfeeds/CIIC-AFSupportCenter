@@ -1,7 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAddPaymentBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsDelPaymentBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentComBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsPaymentMapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPayment;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPaymentCom;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsPaymentComMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsPaymentComService;
@@ -10,10 +13,16 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import org.apache.commons.collections.map.HashedMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * <p>
@@ -26,12 +35,15 @@ import java.time.LocalDateTime;
 @Service
 public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymentCom> implements ISsPaymentComService {
 
+
+
+    @Autowired
+    SsPaymentMapper ssPaymentMapper;
+
     @Override
     public PageRows<SsPaymentComBO> paymentComQuery(PageInfo pageInfo) {
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.paymentComQuery(pageInfo.toJavaObject(SsPaymentComBO.class)));
     }
-
-
 
     @Override
     public JsonResult<String> saveAdjustment(SsPaymentComBO ssPaymentComBO){
@@ -80,10 +92,203 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
 
     @Override
     public JsonResult<String> doAddBatch(SsAddPaymentBO ssAddPaymentBO){
-        JsonResult<String> json = new JsonResult<String>();
+        JsonResult<String> json = new JsonResult<>();
         json.setCode(0);
         json.setMessage("成功");
+        //校验数据的可操作性
+        //验证用数据
+        List<Long> paymentComIdList = ssAddPaymentBO.getPaymentComIdList();
+        //验证是否有选中的客户费用
+        if(!Optional.ofNullable(paymentComIdList).isPresent()){
+            json.setCode(1);
+            json.setMessage("没有选中的客户费用");
+            return json;
+        }
+        //循环取出客户费用
+        List<SsPaymentCom> paymentComList = new ArrayList<>();
+        for(int i = 0; i < paymentComIdList.size();i++){
+            SsPaymentCom ssPaymentCom = baseMapper.selectById(paymentComIdList.get(i));
+            //验证客户费用ID是否能取到数据
+            if(!Optional.ofNullable(ssPaymentCom).isPresent()){
+                json.setCode(2);
+                json.setMessage("没有与选中列匹配的客户费用记录");
+                return json;
+            }
+
+            //验证状态,只有3 ,可付 5,内部审批批退 状态的数据可执行添加操作
+            if(3 != ssPaymentCom.getPaymentState() && 5 != ssPaymentCom.getPaymentState()){
+                json.setCode(3);
+                json.setMessage("只有可付和内部审批批退状态的记录可以进行添加批次操作");
+                return json;
+            }
+
+            //验证原本是否已有关联批次
+            if(Optional.ofNullable(ssPaymentCom.getPaymentId()).isPresent()){
+                json.setCode(4);
+                json.setMessage("已加入批次的数据不可再次加入别的批次");
+                return json;
+            }
+
+            paymentComList.add(ssPaymentCom);
+        }
+        //取出批次
+        SsPayment ssPayment = ssPaymentMapper.selectById(ssAddPaymentBO.getPaymentId());
+        //验证批次是否存在
+        if(!Optional.ofNullable(ssPayment).isPresent()){
+            json.setCode(2);
+            json.setMessage("批次信息不存在");
+            return json;
+        }
+        //验证状态,只有3 ,可付 5,内部审批批退 状态的数据可执行添加操作
+        if(3 != ssPayment.getPaymentState() && 5 != ssPayment.getPaymentState()){
+            json.setCode(3);
+            json.setMessage("只有可付和内部审批批退状态的批次可被添加");
+            return json;
+        }
+        //验证结束
+
+        //处理业务
+        //将批次ID加入客户费用中
+        for(int i = 0; i < paymentComList.size();i++){
+            SsPaymentCom ssPaymentCom = paymentComList.get(i);
+            ssPaymentCom.setPaymentId(ssAddPaymentBO.getPaymentId());
+            baseMapper.updateById(ssPaymentCom);
+        }
+        //重算批次信息
+        json = calculatePayment(ssAddPaymentBO.getPaymentId());
 
         return json;
     }
+
+
+    @Override
+    public JsonResult<String> calculatePayment(Long paymentId){
+        JsonResult<String> json = new JsonResult<>();
+        json.setCode(0);
+        //取出批次
+        SsPayment ssPayment = ssPaymentMapper.selectById(paymentId);
+        //验证批次是否存在
+        if(!Optional.ofNullable(ssPayment).isPresent()){
+            json.setCode(2);
+            json.setMessage("批次信息不存在");
+            return json;
+        }
+
+        //取出批次下所有的客户费用
+        List<SsPaymentCom> ssPaymentComList= baseMapper.getPaymentComByPaymentId(paymentId);
+
+        //计算阶段
+        //申请总金额
+        BigDecimal totalApplicationAmount = new BigDecimal(0);
+        //总雇员数
+        int totalEmpCount = 0;
+        //账户总数
+        int totalAccount = 0;
+        //客户总数
+        int totalCom = 0;
+
+        //账户map
+        Map<Long,Object> comAccountMap = new HashedMap();
+        //客户map
+        Map<String,Object> companyMap = new HashedMap();
+
+        //循环累加
+        if(Optional.ofNullable(ssPaymentComList).isPresent()){
+            for(int i = 0;i < ssPaymentComList.size();i++){
+                SsPaymentCom ssPaymentCom = ssPaymentComList.get(i);
+                //申请总金额
+                totalApplicationAmount = totalApplicationAmount.add(ssPaymentCom.getTotalPayAmount());
+                //总雇员数
+                totalEmpCount = totalEmpCount + ssPaymentCom.getEmpCount();
+                //账户总数
+                if(!comAccountMap.containsKey(ssPaymentCom.getComAccountId())){
+                    totalAccount++;
+                    comAccountMap.put(ssPaymentCom.getComAccountId(),null);
+                }
+                //客户总数
+                if(!companyMap.containsKey(ssPaymentCom.getCompanyId())){
+                    totalCom++;
+                    companyMap.put(ssPaymentCom.getCompanyId(),null);
+                }
+            }
+        }
+        //放入值中
+        ssPayment.setTotalApplicationAmount(totalApplicationAmount);
+        ssPayment.setTotalEmpCount(totalEmpCount);
+        ssPayment.setTotalAccount(totalAccount);
+        ssPayment.setTotalCom(totalCom);
+        ssPayment.setModifiedBy("张三");
+        ssPayment.setModifiedTime(LocalDateTime.now());
+        ssPaymentMapper.updateById(ssPayment);
+
+        return json;
+    }
+
+    @Override
+    public JsonResult<String> doDelBatch(SsDelPaymentBO ssDelPaymentBO){
+        JsonResult<String> json = new JsonResult<>();
+        json.setCode(0);
+        json.setMessage("成功");
+        //校验数据的可操作性
+        //验证用数据
+        List<Long> paymentComIdList = ssDelPaymentBO.getPaymentComIdList();
+        //验证是否有选中的客户费用
+        if(!Optional.ofNullable(paymentComIdList).isPresent()){
+            json.setCode(1);
+            json.setMessage("没有选中的客户费用");
+            return json;
+        }
+        //循环取出客户费用
+        List<SsPaymentCom> paymentComList = new ArrayList<>();
+        for(int i = 0; i < paymentComIdList.size();i++){
+            SsPaymentCom ssPaymentCom = baseMapper.selectById(paymentComIdList.get(i));
+            //验证客户费用ID是否能取到数据
+            if(!Optional.ofNullable(ssPaymentCom).isPresent()){
+                json.setCode(2);
+                json.setMessage("没有与选中列匹配的客户费用记录");
+                return json;
+            }
+
+            //验证状态,只有3 ,可付 5,内部审批批退 状态的数据可执行添加操作
+            if(3 != ssPaymentCom.getPaymentState() && 5 != ssPaymentCom.getPaymentState()){
+                json.setCode(3);
+                json.setMessage("只有可付和内部审批批退状态的记录可以进行添加批次操作");
+                return json;
+            }
+
+            //验证原本是否已有关联批次
+            if(!Optional.ofNullable(ssPaymentCom.getPaymentId()).isPresent()){
+                json.setCode(5);
+                json.setMessage("原本没有加入批次的客户费用,无法移除批次");
+                return json;
+            }
+            paymentComList.add(ssPaymentCom);
+        }
+        //验证结束
+        //处理业务
+        //需要重算的批次
+        List<Long> paymentIdList = new ArrayList<>();
+
+        //将批次ID加入客户费用中
+        for(int i = 0; i < paymentComList.size();i++){
+            SsPaymentCom ssPaymentCom = paymentComList.get(i);
+            //放入要重算的批次中
+            if(!paymentIdList.contains(ssPaymentCom.getPaymentId())){
+                paymentIdList.add(ssPaymentCom.getPaymentId());
+            }
+            //将批次移除
+            ssPaymentCom.setPaymentId(null);
+            baseMapper.updateAllColumnById(ssPaymentCom);
+        }
+        //重算批次
+        if(Optional.ofNullable(paymentIdList).isPresent()){
+            for(int i = 0; i < paymentIdList.size();i++){
+                calculatePayment(paymentIdList.get(i));
+            }
+        }
+
+        return json;
+    }
+
+
 }
