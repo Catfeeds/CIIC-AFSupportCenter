@@ -11,9 +11,6 @@ import java.io.Serializable;
  * <p>
  * 首页中，系统用户执行的任务单数的月度分类统计。
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-26
  */
 @TableName("ss_month_task_count_stat")
 public class SsMonthTaskCountStat implements Serializable {

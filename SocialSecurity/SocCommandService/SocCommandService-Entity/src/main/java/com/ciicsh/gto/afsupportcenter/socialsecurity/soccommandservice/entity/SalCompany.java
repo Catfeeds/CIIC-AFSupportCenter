@@ -10,9 +10,6 @@ import java.io.Serializable;
  * <p>
  * 客户基础表
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-26
  */
 @TableName("sal_company")
 public class SalCompany implements Serializable {
@@ -88,6 +85,14 @@ public class SalCompany implements Serializable {
      */
 	@TableField("legal_person")
 	private String legalPerson;
+    /**
+     * 客户状态
+1-潜在
+2-审批通过
+3-正式
+4-冻结
+     */
+	private Integer status;
     /**
      * 是否可用
      */
@@ -227,6 +232,14 @@ public class SalCompany implements Serializable {
 		this.legalPerson = legalPerson;
 	}
 
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
 	public Boolean getActive() {
 		return isActive;
 	}
@@ -284,6 +297,7 @@ public class SalCompany implements Serializable {
 			", registeredAddress=" + registeredAddress +
 			", registeredCapital=" + registeredCapital +
 			", legalPerson=" + legalPerson +
+			", status=" + status +
 			", isActive=" + isActive +
 			", createdBy=" + createdBy +
 			", createdTime=" + createdTime +

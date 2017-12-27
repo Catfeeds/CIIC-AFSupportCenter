@@ -12,9 +12,6 @@ import java.io.Serializable;
  * <p>
  * 对账导入雇员明细
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-26
  */
 @TableName("ss_statement_imp")
 public class SsStatementImp implements Serializable {

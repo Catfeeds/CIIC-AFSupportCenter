@@ -13,9 +13,6 @@ import java.io.Serializable;
  * <p>
  * 本地社保的雇员任务单
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-26
  */
 @TableName("ss_emp_task")
 public class SsEmpTask implements Serializable {
@@ -40,7 +37,7 @@ public class SsEmpTask implements Serializable {
      * 外键，雇员社保档案主表Id
      */
 	@TableField("emp_archive_id")
-	private String empArchiveId;
+	private Long empArchiveId;
     /**
      * 任务类型，DicItem.DicItemValue 1:新进：2：转入 3调整 4 补缴 5 转出 6封存 7退账 8 提取 9特殊操作
      */
@@ -221,6 +218,11 @@ public class SsEmpTask implements Serializable {
 	@TableField("chat_history")
 	private String chatHistory;
     /**
+     * 业务接口ID
+     */
+	@TableField("business_interface_id")
+	private String businessInterfaceId;
+    /**
      * 是否可用
      */
 	@TableField("is_active")
@@ -279,11 +281,11 @@ public class SsEmpTask implements Serializable {
 		this.customerId = customerId;
 	}
 
-	public String getEmpArchiveId() {
+	public Long getEmpArchiveId() {
 		return empArchiveId;
 	}
 
-	public void setEmpArchiveId(String empArchiveId) {
+	public void setEmpArchiveId(Long empArchiveId) {
 		this.empArchiveId = empArchiveId;
 	}
 
@@ -543,6 +545,14 @@ public class SsEmpTask implements Serializable {
 		this.chatHistory = chatHistory;
 	}
 
+	public String getBusinessInterfaceId() {
+		return businessInterfaceId;
+	}
+
+	public void setBusinessInterfaceId(String businessInterfaceId) {
+		this.businessInterfaceId = businessInterfaceId;
+	}
+
 	public Boolean getActive() {
 		return isActive;
 	}
@@ -623,6 +633,7 @@ public class SsEmpTask implements Serializable {
 			", startMonth=" + startMonth +
 			", endMonth=" + endMonth +
 			", chatHistory=" + chatHistory +
+			", businessInterfaceId=" + businessInterfaceId +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

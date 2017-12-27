@@ -11,9 +11,6 @@ import java.io.Serializable;
  * <p>
  * 企业材料收缴
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-26
  */
 @TableName("ss_com_material")
 public class SsComMaterial implements Serializable {

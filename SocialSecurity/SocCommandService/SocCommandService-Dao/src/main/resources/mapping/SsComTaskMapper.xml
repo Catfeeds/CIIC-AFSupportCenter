@@ -2,36 +2,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsComTaskMapper">
 
-    <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask">
-        <id column="company_task_id" property="companyTaskId" />
-        <result column="customer_id" property="customerId" />
-        <result column="com_account_id" property="comAccountId" />
-        <result column="company_id" property="companyId" />
-        <result column="task_category" property="taskCategory" />
-        <result column="expire_date" property="expireDate" />
-        <result column="submitter_id" property="submitterId" />
-        <result column="submitter_name" property="submitterName" />
-        <result column="submitter_dept_id" property="submitterDeptId" />
-        <result column="submitter_dept_name" property="submitterDeptName" />
-        <result column="submit_time" property="submitTime" />
-        <result column="submit_remark" property="submitRemark" />
-        <result column="task_form_content" property="taskFormContent" />
-        <result column="chat_history" property="chatHistory" />
-        <result column="dynamic_extend" property="dynamicExtend" />
-        <result column="task_status" property="taskStatus" />
-        <result column="handle_user_id" property="handleUserId" />
-        <result column="handle_user_name" property="handleUserName" />
-        <result column="start_handle_date" property="startHandleDate" />
-        <result column="send_check_date" property="sendCheckDate" />
-        <result column="finish_date" property="finishDate" />
-        <result column="handle_remark" property="handleRemark" />
-        <result column="rejection_remark" property="rejectionRemark" />
-        <result column="is_active" property="isActive" />
-        <result column="created_time" property="createdTime" />
-        <result column="modified_time" property="modifiedTime" />
-        <result column="created_by" property="createdBy" />
-        <result column="modified_by" property="modifiedBy" />
-    </resultMap>
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask">
+		<id column="company_task_id" property="companyTaskId" />
+		<result column="customer_id" property="customerId" />
+		<result column="com_account_id" property="comAccountId" />
+		<result column="company_id" property="companyId" />
+		<result column="task_category" property="taskCategory" />
+		<result column="expire_date" property="expireDate" />
+		<result column="submitter_id" property="submitterId" />
+		<result column="submitter_name" property="submitterName" />
+		<result column="submitter_dept_id" property="submitterDeptId" />
+		<result column="submitter_dept_name" property="submitterDeptName" />
+		<result column="submit_time" property="submitTime" />
+		<result column="submit_remark" property="submitRemark" />
+		<result column="task_form_content" property="taskFormContent" />
+		<result column="chat_history" property="chatHistory" />
+		<result column="dynamic_extend" property="dynamicExtend" />
+		<result column="task_status" property="taskStatus" />
+		<result column="handle_user_id" property="handleUserId" />
+		<result column="handle_user_name" property="handleUserName" />
+		<result column="start_handle_date" property="startHandleDate" />
+		<result column="send_check_date" property="sendCheckDate" />
+		<result column="finish_date" property="finishDate" />
+		<result column="handle_remark" property="handleRemark" />
+		<result column="rejection_remark" property="rejectionRemark" />
+		<result column="business_interface_id" property="businessInterfaceId" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
 
 </mapper>

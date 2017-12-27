@@ -13,9 +13,6 @@ import java.io.Serializable;
  * <p>
  * 社保支付批次
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-26
  */
 @TableName("ss_payment")
 public class SsPayment implements Serializable {
@@ -23,7 +20,7 @@ public class SsPayment implements Serializable {
     private static final long serialVersionUID = 1L;
 
 	@TableId(value="payment_id", type= IdType.AUTO)
-	private Integer paymentId;
+	private Long paymentId;
     /**
      * 出账批号
      */
@@ -141,11 +138,11 @@ public class SsPayment implements Serializable {
 	private String modifiedBy;
 
 
-	public Integer getPaymentId() {
+	public Long getPaymentId() {
 		return paymentId;
 	}
 
-	public void setPaymentId(Integer paymentId) {
+	public void setPaymentId(Long paymentId) {
 		this.paymentId = paymentId;
 	}
 

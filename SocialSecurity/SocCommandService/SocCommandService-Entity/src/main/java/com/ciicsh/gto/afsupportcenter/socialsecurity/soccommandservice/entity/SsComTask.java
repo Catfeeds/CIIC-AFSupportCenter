@@ -12,9 +12,6 @@ import java.io.Serializable;
  * <p>
  * 独立库客户任务单
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-26
  */
 @TableName("ss_com_task")
 public class SsComTask implements Serializable {
@@ -134,6 +131,11 @@ public class SsComTask implements Serializable {
      */
 	@TableField("rejection_remark")
 	private String rejectionRemark;
+    /**
+     * 业务接口ID
+     */
+	@TableField("business_interface_id")
+	private String businessInterfaceId;
     /**
      * 是否可用
      */
@@ -345,6 +347,14 @@ public class SsComTask implements Serializable {
 		this.rejectionRemark = rejectionRemark;
 	}
 
+	public String getBusinessInterfaceId() {
+		return businessInterfaceId;
+	}
+
+	public void setBusinessInterfaceId(String businessInterfaceId) {
+		this.businessInterfaceId = businessInterfaceId;
+	}
+
 	public Boolean getActive() {
 		return isActive;
 	}
@@ -411,6 +421,7 @@ public class SsComTask implements Serializable {
 			", finishDate=" + finishDate +
 			", handleRemark=" + handleRemark +
 			", rejectionRemark=" + rejectionRemark +
+			", businessInterfaceId=" + businessInterfaceId +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

@@ -2,8 +2,10 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpBasePeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskPeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBasePeriod;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
@@ -37,6 +39,8 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
 
     @Autowired
     private ISsEmpTaskPeriodService ssEmpTaskPeriodService;
+    @Autowired
+    private ISsEmpBasePeriodService ssEmpBasePeriodService;
 
     /**
      * 雇员日常操作查询
@@ -75,7 +79,8 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
      */
     @Log("雇员任务查询")
     @PostMapping("/empTaskById")
-    public JsonResult<SsEmpTaskBO> empTaskById(@RequestParam("empTaskId") Long empTaskId
+    public JsonResult<SsEmpTaskBO> empTaskById(
+        @RequestParam("empTaskId") Long empTaskId
         , @RequestParam(value = "operatorType", defaultValue = "-1") Integer operatorType // 1 任务单费用段
     ) {
         SsEmpTask empTask = business.selectById(empTaskId);
@@ -83,7 +88,7 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
 
         // operatorType == 1 查询任务单费用段
         if (operatorType == 1) {
-            List<SsEmpTaskPeriod> periods = ssEmpTaskPeriodService.queryByEmpTaskId(String.valueOf(empTaskId));
+            List<SsEmpTaskPeriod> periods = ssEmpTaskPeriodService.queryByEmpTaskId(empTaskId);
             dto.setEmpTaskPeriods(periods);
         }
         return JsonResultKit.of(dto);
@@ -95,73 +100,107 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
      */
     @Log("雇员任务办理")
     @PostMapping("/handle")
-    public JsonResult<Boolean> handle(@RequestBody SsEmpTaskBO param) {
+    public JsonResult<Boolean> handle(@RequestBody SsEmpTaskBO bo) {
         {// 更新任务单费用段
-            List<SsEmpTaskPeriod> periods = param.getEmpTaskPeriods();
+            List<SsEmpTaskPeriod> periods = bo.getEmpTaskPeriods();
             if (periods != null) {
-                ssEmpTaskPeriodService.saveForEmpTaskId(periods, param.getEmpTaskId());
+                ssEmpTaskPeriodService.saveForEmpTask(periods, bo);
             }
         }
         {// 更新雇员任务信息
             // 备注时间
             LocalDate now = LocalDate.now();
-            param.setHandleRemarkDate(now);
-            param.setRejectionRemarkDate(now);
+            bo.setHandleRemarkDate(now);
+            bo.setRejectionRemarkDate(now);
             // 更新雇员任务信息
-            business.updateById(param);
+            business.updateById(bo);
         }
         {
-            int taskStatus = param.getTaskStatus();
-            // 未处理
+            int taskStatus = bo.getTaskStatus();
+            // 处理中
             if (TaskStatusConst.PROCESSING == taskStatus) {
-
+                progressing(bo);
             }
         }
         return JsonResultKit.of(true);
     }
 
-    private void progressing() {
-
+    /**
+     * 处理中
+     *
+     * @param bo
+     */
+    private void progressing(SsEmpTaskBO bo) {
+        {// 更新任务单费用段
+            List<SsEmpTaskPeriod> taskPeriods = bo.getEmpTaskPeriods();
+            if (taskPeriods != null) {
+                List<SsEmpBasePeriod> basePeriods = new ArrayList<>(taskPeriods.size());
+                taskPeriods.forEach(p -> {
+                    SsEmpBasePeriod basePeriod = Adapter.adapterSsEmpBasePeriod(p);
+                    basePeriod.setEmpArchiveId(bo.getEmpArchiveId());
+                    basePeriod.setEmpTaskId(bo.getEmpTaskId());
+                    basePeriods.add(basePeriod);
+                });
+                ssEmpBasePeriodService.saveForEmpTask(basePeriods, bo);
+            }
+        }
     }
 
+    /**
+     * 适配器
+     */
+    static class Adapter {
+
+        public static SsEmpBasePeriod adapterSsEmpBasePeriod(SsEmpTaskPeriod taskPeriod) {
+            SsEmpBasePeriod basePeriod = new SsEmpBasePeriod();
+            basePeriod.setBaseAmount(taskPeriod.getBaseAmount());
+            basePeriod.setEmpTaskId(taskPeriod.getEmpTaskId());
+            basePeriod.setEndMonth(taskPeriod.getEndMonth());
+            basePeriod.setStartMonth(taskPeriod.getStartMonth());
+            basePeriod.setRemitWay(taskPeriod.getRemitWay());
+            return basePeriod;
+        }
+    }
+
+
+    /**
+     * 办理状态：1、未处理 2 、处理中(已办)  3 已完成(已做) 4、批退 5、不需处理
+     */
+    interface TaskStatusConst {
+
+        int NOTPROGRESS = 1;// 未处理
+        int PROCESSING = 2;// 处理中
+        int FINISH = 3;// 已完成
+        int REJECTION = 4;// 批退
+        int NOPROGRESS = 1;// 不需处理
+    }
+
+    /**
+     * 批退 请求参数
+     */
+    static class RejectionParam {
+
+        // 批退 id 列表
+        private List<Long> ids;
+        // 批退备注
+        private String remark;
+
+        public List<Long> getIds() {
+            return ids;
+        }
+
+        public void setIds(List<Long> ids) {
+            this.ids = ids;
+        }
+
+        public String getRemark() {
+            return remark;
+        }
+
+        public void setRemark(String remark) {
+            this.remark = remark;
+        }
+    }
 }
 
-/**
- * 办理状态：1、未处理 2 、处理中(已办)  3 已完成(已做) 4、批退 5、不需处理
- */
-interface TaskStatusConst {
-
-    int NOTPROGRESS = 1;// 未处理
-    int PROCESSING = 2;// 处理中
-    int FINISH = 3;// 已完成
-    int REJECTION = 4;// 批退
-    int NOPROGRESS = 1;// 不需处理
-}
-
-/**
- * 批退 请求参数
- */
-class RejectionParam {
-
-    // 批退 id 列表
-    private List<Long> ids;
-    // 批退备注
-    private String remark;
-
-    public List<Long> getIds() {
-        return ids;
-    }
-
-    public void setIds(List<Long> ids) {
-        this.ids = ids;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-}
 

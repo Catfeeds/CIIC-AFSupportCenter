@@ -13,9 +13,6 @@ import java.io.Serializable;
  * 雇员社保基数调整记录明细表，
 该表细化到每一个社保险种的月度段的基数、比例、公司金额、个人金额、差额（与Em
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-26
  */
 @TableName("ss_emp_base_adjust_detail")
 public class SsEmpBaseAdjustDetail implements Serializable {
@@ -36,7 +33,7 @@ public class SsEmpBaseAdjustDetail implements Serializable {
      * 外键，雇员社保档案Id
      */
 	@TableField("emp_archive_id")
-	private String empArchiveId;
+	private Long empArchiveId;
     /**
      * 社保险种类型，取自全局数据字典表gtobasicdb.DicItem
      */
@@ -160,11 +157,11 @@ public class SsEmpBaseAdjustDetail implements Serializable {
 		this.empBaseAdjustId = empBaseAdjustId;
 	}
 
-	public String getEmpArchiveId() {
+	public Long getEmpArchiveId() {
 		return empArchiveId;
 	}
 
-	public void setEmpArchiveId(String empArchiveId) {
+	public void setEmpArchiveId(Long empArchiveId) {
 		this.empArchiveId = empArchiveId;
 	}
 

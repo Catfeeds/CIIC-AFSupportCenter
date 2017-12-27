@@ -12,9 +12,6 @@ import java.io.Serializable;
  * <p>
  * 对账差异结果表
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-26
  */
 @TableName("ss_statement_result")
 public class SsStatementResult implements Serializable {

@@ -13,9 +13,6 @@ import java.io.Serializable;
  * 月度缴费明细
 系统在每月26日晚上自动生成每月的标准和非标明细数据，用户也可重新生成，
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-26
  */
 @TableName("ss_month_charge")
 public class SsMonthCharge implements Serializable {
