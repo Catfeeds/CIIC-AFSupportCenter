@@ -6,8 +6,6 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.dto.emptask.RejectionParamDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.dto.emptask.TaskStatusConst;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -55,7 +53,7 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
      */
     @Log("雇员任务批退")
     @PostMapping("/rejection")
-    public JsonResult<Boolean> rejection(RejectionParamDTO param) {
+    public JsonResult<Boolean> rejection(RejectionParam param) {
         List<Long> ids = Optional.ofNullable(param.getIds()).orElse(Collections.emptyList());
         int length = ids.size();
         String remark = param.getRemark();
@@ -112,14 +110,58 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
             // 更新雇员任务信息
             business.updateById(param);
         }
-        {// 办理，办理状态：1、未处理 2 、处理中(已办)  3 已完成(已做) 4、批退 5、不需处理
-
+        {
             int taskStatus = param.getTaskStatus();
-            if (3 == taskStatus) {
+            // 未处理
+            if (TaskStatusConst.PROCESSING == taskStatus) {
 
             }
         }
         return JsonResultKit.of(true);
+    }
+
+    private void progressing() {
+
+    }
+
+}
+
+/**
+ * 办理状态：1、未处理 2 、处理中(已办)  3 已完成(已做) 4、批退 5、不需处理
+ */
+interface TaskStatusConst {
+
+    int NOTPROGRESS = 1;// 未处理
+    int PROCESSING = 2;// 处理中
+    int FINISH = 3;// 已完成
+    int REJECTION = 4;// 批退
+    int NOPROGRESS = 1;// 不需处理
+}
+
+/**
+ * 批退 请求参数
+ */
+class RejectionParam {
+
+    // 批退 id 列表
+    private List<Long> ids;
+    // 批退备注
+    private String remark;
+
+    public List<Long> getIds() {
+        return ids;
+    }
+
+    public void setIds(List<Long> ids) {
+        this.ids = ids;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }
 
