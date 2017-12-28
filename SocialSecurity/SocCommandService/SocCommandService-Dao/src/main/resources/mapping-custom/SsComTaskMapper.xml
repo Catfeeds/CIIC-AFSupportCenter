@@ -351,11 +351,37 @@
         scm.*,
         sca.*
         FROM ss_com_task sct
-        LEFT JOIN (SELECT com_account_id AS com_account_id_acc,
-        supplier_id,ss_account_type,ss_account,bank_account,com_account_name,settlement_area,payment_bank,payment_way,expire_date
-        AS
-        expire_date_acc,ss_username,ss_pwd,initial_balance,initial_debt,origin_place,origin_place_remark,query_account,deliver_way,deliver_way_remark,provide_certificate_time,change_time,receive_date,into_date,end_date,dispatch_material,remark
-        AS remark_acc,state FROM ss_com_account)sca ON sct.com_account_id = sca.com_account_id_acc
+        LEFT JOIN (
+        SELECT
+        com_account_id AS com_account_id_acc,
+        supplier_id,
+        ss_account_type,
+        ss_account,
+        bank_account,
+        com_account_name,
+        settlement_area,
+        payment_bank,
+        payment_way,
+        expire_date AS expire_date_acc,
+        ss_username,
+        ss_pwd,
+        initial_balance,
+        initial_debt,
+        origin_place,
+        origin_place_remark,
+        query_account,
+        deliver_way,
+        deliver_way_remark,
+        provide_certificate_time,
+        change_time,
+        receive_date,
+        into_date,
+        end_date,
+        dispatch_material,
+        remark AS remark_acc,
+        state
+        FROM ss_com_account
+        )sca ON sct.com_account_id = sca.com_account_id_acc
         LEFT JOIN
         (SELECT
         com_material_id,
@@ -370,7 +396,14 @@
         ss_com_material WHERE is_active = 1
         )
         scm ON sct.com_task_id = scm.company_task_id_m
-        LEFT JOIN (SELECT company_id, title FROM sal_company WHERE is_active = 1)sc ON sct.company_id = sc.company_id
+        LEFT JOIN (
+        SELECT
+        company_id,
+        title
+        FROM
+        sal_company
+        WHERE is_active = 1
+        )sc ON sct.company_id = sc.company_id
         WHERE
         sct.is_active =1
         AND sct.com_task_id = #{comTaskId}

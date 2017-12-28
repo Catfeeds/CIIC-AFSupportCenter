@@ -2,11 +2,13 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
+
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpBasePeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskPeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBaseDetail;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBasePeriod;
+
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
@@ -16,11 +18,16 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.common.base.Function;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -165,6 +172,49 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
     }
 
     /**
+     * 特殊任务查询
+     * @param empTaskId
+     * @return
+     */
+    @Log("特殊任务查询")
+    @PostMapping("/queryEmpSpecialTaskById")
+    public JsonResult<SsEmpTask> queryEmpSpecialTask(String empTaskId) {
+        // 查询
+        SsEmpTask ssEmpTask = business.selectById(StringUtils.isNotBlank(empTaskId)?Long.valueOf(empTaskId):null);
+
+        return JsonResultKit.of(ssEmpTask);
+    }
+
+    /**
+     * 特殊任务办理
+     * @param
+     * @return
+     */
+    @Log("特殊任务办理")
+    @PostMapping("/empSpecialTaskHandle")
+    public JsonResult empSpecialTaskHandle(SsEmpTask ssEmpTask) {
+
+        //参数对象为空
+        if (null == ssEmpTask) return JsonResultKit.ofError("参数为空");
+        //状态为空
+        if (null == ssEmpTask.getHandleStatus()) return JsonResultKit.ofError("状态错误");
+
+        //1、材料收缴  2 、受理中  3、送审中  4 已完成
+        if (1 == ssEmpTask.getHandleStatus()) {
+            ssEmpTask.setTaskStatus(new Integer(1));
+        } else if (2 == ssEmpTask.getHandleStatus() || 3 == ssEmpTask.getHandleStatus()) {
+            ssEmpTask.setTaskStatus(new Integer(2));
+        } else if (4 == ssEmpTask.getHandleStatus()) {
+            ssEmpTask.setTaskStatus(new Integer(3));
+        } else {
+            return JsonResultKit.ofError("状态错误");
+        }
+        ssEmpTask.setModifiedTime(LocalDateTime.now());
+        ssEmpTask.setModifiedBy("xsj");
+        boolean result = business.updateById(ssEmpTask);
+        return JsonResultKit.of(result);
+    }
+    /*
      * 适配器
      */
     static class Adapter {

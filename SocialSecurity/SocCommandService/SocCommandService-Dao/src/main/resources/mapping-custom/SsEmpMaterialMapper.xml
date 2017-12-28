@@ -10,6 +10,7 @@
         sem.material_type,
         sem.material_name,
         sem.submit_time,
+        sem.receive_time,
         sem.`status`,
         sem.remark
         FROM
