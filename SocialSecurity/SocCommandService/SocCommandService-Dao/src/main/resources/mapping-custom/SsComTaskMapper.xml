@@ -52,7 +52,7 @@
         <collection property="materialList"
                     ofType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComMaterial">
             <id column="com_material_id" property="comMaterialId"/>
-            <result column="company_task_id_m" property="companyTaskId"/>
+            <result column="company_task_id_m" property="comTaskId"/>
             <result column="material_type" property="materialType"/>
             <result column="material_name" property="materialName"/>
             <result column="submit_time_m" property="submitTime"/>
@@ -114,7 +114,7 @@
     <select id="queryNoProgressCompanyTask" resultMap="ModelResultMap">
         SELECT
         sct.company_id,
-        sct.company_task_id,
+        sct.com_task_id,
         sct.task_category,
         sct.customer_id,
         sct.expire_date,
@@ -151,7 +151,7 @@
         SELECT
         sct.task_status,
         sct.company_id,
-        sct.company_task_id,
+        sct.com_task_id,
         sct.task_category,
         sct.customer_id,
         sct.expire_date,
@@ -201,7 +201,7 @@
     <select id="queryFinshedCompanyTask" resultMap="ModelResultMap">
         SELECT
         sct.company_id,
-        sct.company_task_id,
+        sct.com_task_id,
         sct.task_category,
         sct.customer_id,
         sct.expire_date,
@@ -243,7 +243,7 @@
     <select id="queryRefusedCompanyTask" resultMap="ModelResultMap">
         SELECT
         sct.company_id,
-        sct.company_task_id,
+        sct.com_task_id,
         sct.task_category,
         sct.customer_id,
         sct.expire_date,
@@ -279,9 +279,9 @@
 
         UPDATE ss_com_task sct SET sct.task_status = 4
 
-        WHERE company_task_id IN
+        WHERE com_task_id IN
         <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
-            #{item.companyTaskId}
+            #{item.comTaskId}
         </foreach>
     </update>
 
@@ -289,7 +289,7 @@
     <select id="queryComInfoAndMaterial" resultMap="getMaterialResultMap">
         SELECT
         sct.company_id,
-        sct.company_task_id,
+        sct.com_task_id,
         sct.task_category,
         sct.customer_id,
         sct.expire_date,
@@ -304,7 +304,7 @@
         LEFT JOIN
         (SELECT
         com_material_id,
-        company_task_id AS company_task_id_m,
+        com_task_id AS company_task_id_m,
         material_type,
         material_name,
         submit_time AS submit_time_m,
@@ -314,10 +314,10 @@
         FROM
         ss_com_material WHERE is_active = 1
         )
-        scm ON sct.company_task_id = scm.company_task_id_m
+        scm ON sct.com_task_id = scm.company_task_id_m
         WHERE
         sct.is_active =1
-        AND sct.company_task_id = #{companyTaskId}
+        AND sct.com_task_id = #{comTaskId}
         <if test="isComplete ==0 ">
             AND sct.task_status != 3
         </if>
@@ -332,7 +332,7 @@
     <select id="queryAccountInfoAndMaterial" resultMap="getMaterialResultMap">
         SELECT
         sct.company_id,
-        sct.company_task_id,
+        sct.com_task_id,
         sct.task_category,
         sct.customer_id,
         sct.expire_date,
@@ -359,7 +359,7 @@
         LEFT JOIN
         (SELECT
         com_material_id,
-        company_task_id AS company_task_id_m,
+        com_task_id AS company_task_id_m,
         material_type,
         material_name,
         submit_time AS submit_time_m,
@@ -369,11 +369,11 @@
         FROM
         ss_com_material WHERE is_active = 1
         )
-        scm ON sct.company_task_id = scm.company_task_id_m
+        scm ON sct.com_task_id = scm.company_task_id_m
         LEFT JOIN (SELECT company_id, title FROM sal_company WHERE is_active = 1)sc ON sct.company_id = sc.company_id
         WHERE
         sct.is_active =1
-        AND sct.company_task_id = #{companyTaskId}
+        AND sct.com_task_id = #{comTaskId}
         <if test="isComplete ==0 ">
             AND sct.task_status != 3
         </if>
@@ -390,7 +390,7 @@
         SELECT
         sct.company_id,
         sct.com_account_id,
-        sct.company_task_id,
+        sct.com_task_id,
         sct.task_category,
         sct.customer_id,
         sct.expire_date,
@@ -420,7 +420,7 @@
         ON sca.com_account_id_acc = sat.com_account_id_sar
         WHERE
         sct.is_active =1
-        AND sct.company_task_id = #{companyTaskId}
+        AND sct.com_task_id = #{companyTaskId}
         <if test="isComplete ==0 ">
             AND sct.task_status != 3
         </if>
@@ -451,6 +451,6 @@
             sct.task_status = #{taskStatus}-1
         </if>
         WHERE
-            sct.company_task_id = #{companyTaskId}
+            sct.com_task_id = #{companyTaskId}
     </update>
 </mapper>

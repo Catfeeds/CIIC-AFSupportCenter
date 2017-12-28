@@ -5,7 +5,7 @@
 	<!-- 通用查询映射结果 -->
 	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComMaterial">
 		<id column="com_material_id" property="comMaterialId" />
-		<result column="company_task_id" property="companyTaskId" />
+		<result column="com_task_id" property="comTaskId" />
 		<result column="material_type" property="materialType" />
 		<result column="material_name" property="materialName" />
 		<result column="submit_time" property="submitTime" />

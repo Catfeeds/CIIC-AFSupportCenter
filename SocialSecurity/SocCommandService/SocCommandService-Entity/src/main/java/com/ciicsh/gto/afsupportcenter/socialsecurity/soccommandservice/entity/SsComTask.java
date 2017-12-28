@@ -21,8 +21,8 @@ public class SsComTask implements Serializable {
     /**
      * 任务单编号
      */
-	@TableId(value="company_task_id", type= IdType.AUTO)
-	private Long companyTaskId;
+	@TableId(value="com_task_id", type= IdType.AUTO)
+	private Long comTaskId;
     /**
      * 多租户Id
      */
@@ -163,12 +163,12 @@ public class SsComTask implements Serializable {
 	private String modifiedBy;
 
 
-	public Long getCompanyTaskId() {
-		return companyTaskId;
+	public Long getComTaskId() {
+		return comTaskId;
 	}
 
-	public void setCompanyTaskId(Long companyTaskId) {
-		this.companyTaskId = companyTaskId;
+	public void setComTaskId(Long comTaskId) {
+		this.comTaskId = comTaskId;
 	}
 
 	public String getCustomerId() {
@@ -398,7 +398,7 @@ public class SsComTask implements Serializable {
 	@Override
 	public String toString() {
 		return "SsComTask{" +
-			", companyTaskId=" + companyTaskId +
+			", comTaskId=" + comTaskId +
 			", customerId=" + customerId +
 			", comAccountId=" + comAccountId +
 			", companyId=" + companyId +

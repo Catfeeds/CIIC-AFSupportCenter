@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskPeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpTaskPeriodMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
@@ -48,7 +49,9 @@ public class SsEmpTaskPeriodServiceImpl extends ServiceImpl<SsEmpTaskPeriodMappe
         baseMapper.delete(new EntityWrapper(period));
         // 保存 new
         this.cleanPk(periods);
-        this.insertBatch(periods);
+        if (CollectionUtils.isNotEmpty(periods)) {
+            this.insertBatch(periods);
+        }
     }
 
     /**

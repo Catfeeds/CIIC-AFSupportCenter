@@ -25,8 +25,8 @@ public class SsComMaterial implements Serializable {
     /**
      * 本地社保的雇员任务单Id
      */
-	@TableField("company_task_id")
-	private Long companyTaskId;
+	@TableField("com_task_id")
+	private Long comTaskId;
     /**
      * 材料类型：1 原件、2  复印件、3 扫描件
      */
@@ -87,12 +87,12 @@ public class SsComMaterial implements Serializable {
 		this.comMaterialId = comMaterialId;
 	}
 
-	public Long getCompanyTaskId() {
-		return companyTaskId;
+	public Long getComTaskId() {
+		return comTaskId;
 	}
 
-	public void setCompanyTaskId(Long companyTaskId) {
-		this.companyTaskId = companyTaskId;
+	public void setComTaskId(Long comTaskId) {
+		this.comTaskId = comTaskId;
 	}
 
 	public Integer getMaterialType() {
@@ -187,7 +187,7 @@ public class SsComMaterial implements Serializable {
 	public String toString() {
 		return "SsComMaterial{" +
 			", comMaterialId=" + comMaterialId +
-			", companyTaskId=" + companyTaskId +
+			", comTaskId=" + comTaskId +
 			", materialType=" + materialType +
 			", materialName=" + materialName +
 			", submitTime=" + submitTime +

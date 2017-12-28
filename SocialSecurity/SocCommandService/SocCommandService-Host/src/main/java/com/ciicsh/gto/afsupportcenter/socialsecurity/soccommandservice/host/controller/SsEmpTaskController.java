@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpT
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpBasePeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskPeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBaseDetail;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBasePeriod;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod;
@@ -15,6 +16,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.google.common.base.Function;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -112,12 +114,11 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
             LocalDate now = LocalDate.now();
             bo.setHandleRemarkDate(now);
             bo.setRejectionRemarkDate(now);
-            // 更新雇员任务信息
             business.updateById(bo);
         }
         {
             int taskStatus = bo.getTaskStatus();
-            // 处理中
+            // 处理中，正式把数据写入到 ss_emp_base_period and ss_emp_base_detail(雇员社)
             if (TaskStatusConst.PROCESSING == taskStatus) {
                 progressing(bo);
             }
@@ -131,17 +132,21 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
      * @param bo
      */
     private void progressing(SsEmpTaskBO bo) {
+        List<SsEmpBasePeriod> basePeriods = new ArrayList<>();
+        Long empArchiveId = bo.getEmpArchiveId();
+        Function<SsEmpTaskBO, List<SsEmpTaskPeriod>> getEmpTaskPeriods = SsEmpTaskBO::getEmpTaskPeriods;
+
         {// 更新任务单费用段
             List<SsEmpTaskPeriod> taskPeriods = bo.getEmpTaskPeriods();
             if (taskPeriods != null) {
                 int taskCategory = bo.getTaskCategory();
                 String handleMonth = bo.getHandleMonth();
 
-                List<SsEmpBasePeriod> basePeriods = new ArrayList<>(taskPeriods.size());
                 taskPeriods.forEach(p -> {
                     SsEmpBasePeriod basePeriod = Adapter.adapterSsEmpBasePeriod(p);
-                    basePeriod.setEmpArchiveId(bo.getEmpArchiveId());
+                    basePeriod.setEmpArchiveId(empArchiveId);
                     basePeriod.setEmpTaskId(bo.getEmpTaskId());
+
                     if (taskCategoryConst.INTO == taskCategory) {
                         basePeriod.setSsMonthStop(handleMonth);
                     } else {
@@ -153,7 +158,9 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
             }
         }
         {// 更新雇员社保汇缴基数明细
-
+            basePeriods.forEach(p -> {
+                SsEmpBaseDetail detail = new SsEmpBaseDetail();
+            });
         }
     }
 

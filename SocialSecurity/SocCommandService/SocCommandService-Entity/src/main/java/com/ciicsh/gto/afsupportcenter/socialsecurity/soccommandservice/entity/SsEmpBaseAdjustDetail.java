@@ -22,8 +22,8 @@ public class SsEmpBaseAdjustDetail implements Serializable {
     /**
      * 记录Id
      */
-	@TableId(value="emp_base_adjust_detailid", type= IdType.AUTO)
-	private Long empBaseAdjustDetailid;
+	@TableId(value="emp_base_adjust_detail_id", type= IdType.AUTO)
+	private Long empBaseAdjustDetailId;
     /**
      * 外键,关联至主表SOC_EmpBaseAdjust
      */
@@ -141,12 +141,12 @@ public class SsEmpBaseAdjustDetail implements Serializable {
 	private String modifiedBy;
 
 
-	public Long getEmpBaseAdjustDetailid() {
-		return empBaseAdjustDetailid;
+	public Long getEmpBaseAdjustDetailId() {
+		return empBaseAdjustDetailId;
 	}
 
-	public void setEmpBaseAdjustDetailid(Long empBaseAdjustDetailid) {
-		this.empBaseAdjustDetailid = empBaseAdjustDetailid;
+	public void setEmpBaseAdjustDetailId(Long empBaseAdjustDetailId) {
+		this.empBaseAdjustDetailId = empBaseAdjustDetailId;
 	}
 
 	public Long getEmpBaseAdjustId() {
@@ -336,7 +336,7 @@ public class SsEmpBaseAdjustDetail implements Serializable {
 	@Override
 	public String toString() {
 		return "SsEmpBaseAdjustDetail{" +
-			", empBaseAdjustDetailid=" + empBaseAdjustDetailid +
+			", empBaseAdjustDetailId=" + empBaseAdjustDetailId +
 			", empBaseAdjustId=" + empBaseAdjustId +
 			", empArchiveId=" + empArchiveId +
 			", ssType=" + ssType +
