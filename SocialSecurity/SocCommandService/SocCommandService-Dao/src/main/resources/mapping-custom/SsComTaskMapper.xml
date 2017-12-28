@@ -52,7 +52,7 @@
         <collection property="materialList"
                     ofType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComMaterial">
             <id column="com_material_id" property="comMaterialId"/>
-            <result column="company_task_id_m" property="comTaskId"/>
+            <result column="com_task_id_m" property="comTaskId"/>
             <result column="material_type" property="materialType"/>
             <result column="material_name" property="materialName"/>
             <result column="submit_time_m" property="submitTime"/>
@@ -304,7 +304,7 @@
         LEFT JOIN
         (SELECT
         com_material_id,
-        com_task_id AS company_task_id_m,
+        com_task_id AS com_task_id_m,
         material_type,
         material_name,
         submit_time AS submit_time_m,
@@ -314,7 +314,7 @@
         FROM
         ss_com_material WHERE is_active = 1
         )
-        scm ON sct.com_task_id = scm.company_task_id_m
+        scm ON sct.com_task_id = scm.com_task_id_m
         WHERE
         sct.is_active =1
         AND sct.com_task_id = #{comTaskId}
@@ -385,7 +385,7 @@
         LEFT JOIN
         (SELECT
         com_material_id,
-        com_task_id AS company_task_id_m,
+        com_task_id AS com_task_id_m,
         material_type,
         material_name,
         submit_time AS submit_time_m,
@@ -395,7 +395,7 @@
         FROM
         ss_com_material WHERE is_active = 1
         )
-        scm ON sct.com_task_id = scm.company_task_id_m
+        scm ON sct.com_task_id = scm.com_task_id_m
         LEFT JOIN (
         SELECT
         company_id,
@@ -453,7 +453,7 @@
         ON sca.com_account_id_acc = sat.com_account_id_sar
         WHERE
         sct.is_active =1
-        AND sct.com_task_id = #{companyTaskId}
+        AND sct.com_task_id = #{comTaskId}
         <if test="isComplete ==0 ">
             AND sct.task_status != 3
         </if>
@@ -484,6 +484,6 @@
             sct.task_status = #{taskStatus}-1
         </if>
         WHERE
-            sct.com_task_id = #{companyTaskId}
+            sct.com_task_id = #{comTaskId}
     </update>
 </mapper>

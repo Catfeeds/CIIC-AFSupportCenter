@@ -318,7 +318,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
     public SsComTask getSsComTask(Map<String, String> map) {
         SsComTask ssComTask = new SsComTask();
         //企业任务单id
-        ssComTask.setComTaskId(isNotNull(map.get("companyTaskId")) ? Long.parseLong(map.get("companyTaskId")) : null);
+        ssComTask.setComTaskId(isNotNull(map.get("comTaskId")) ? Long.parseLong(map.get("comTaskId")) : null);
         //任务单类型
         ssComTask.setTaskCategory(isNotNull(map.get("taskCategory")) ? map.get("taskCategory") : null);
         //前道传过来的截止日期和支付方式
