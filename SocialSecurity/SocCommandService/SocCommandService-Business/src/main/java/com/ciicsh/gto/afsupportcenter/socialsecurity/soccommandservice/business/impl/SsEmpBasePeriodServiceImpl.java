@@ -25,10 +25,9 @@ public class SsEmpBasePeriodServiceImpl extends ServiceImpl<SsEmpBasePeriodMappe
 
     @Transactional
     @Override
-    public void saveForEmpTask(List<SsEmpBasePeriod> periods, SsEmpTaskBO empTask) {
+    public void saveForEmpTaskId(List<SsEmpBasePeriod> periods, Long empTaskId) {
         SsEmpBasePeriod period = new SsEmpBasePeriod();
-        period.setEmpTaskId(empTask.getEmpTaskId());
-        period.setEmpArchiveId(empTask.getEmpArchiveId());
+        period.setEmpTaskId(empTaskId);
         // 删除 old
         baseMapper.delete(new EntityWrapper(period));
         // 保存 new

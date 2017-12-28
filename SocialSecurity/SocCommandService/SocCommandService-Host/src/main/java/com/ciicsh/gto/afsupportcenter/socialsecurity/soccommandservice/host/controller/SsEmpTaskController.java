@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
-
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpBaseDetailService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpBasePeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskPeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskService;
@@ -50,6 +50,8 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
     private ISsEmpTaskPeriodService ssEmpTaskPeriodService;
     @Autowired
     private ISsEmpBasePeriodService ssEmpBasePeriodService;
+    @Autowired
+    private ISsEmpBaseDetailService ssEmpBaseDetailService;
 
     /**
      * 雇员日常操作查询
@@ -113,7 +115,7 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
         {// 更新任务单费用段
             List<SsEmpTaskPeriod> periods = bo.getEmpTaskPeriods();
             if (periods != null) {
-                ssEmpTaskPeriodService.saveForEmpTask(periods, bo);
+                ssEmpTaskPeriodService.saveForEmpTaskId(periods, bo.getEmpTaskId());
             }
         }
         {// 更新雇员任务信息
@@ -139,40 +141,61 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
      * @param bo
      */
     private void progressing(SsEmpTaskBO bo) {
-        List<SsEmpBasePeriod> basePeriods = new ArrayList<>();
-        Long empArchiveId = bo.getEmpArchiveId();
-        Function<SsEmpTaskBO, List<SsEmpTaskPeriod>> getEmpTaskPeriods = SsEmpTaskBO::getEmpTaskPeriods;
-
-        {// 更新任务单费用段
-            List<SsEmpTaskPeriod> taskPeriods = bo.getEmpTaskPeriods();
-            if (taskPeriods != null) {
-                int taskCategory = bo.getTaskCategory();
-                String handleMonth = bo.getHandleMonth();
-
-                taskPeriods.forEach(p -> {
-                    SsEmpBasePeriod basePeriod = Adapter.adapterSsEmpBasePeriod(p);
-                    basePeriod.setEmpArchiveId(empArchiveId);
-                    basePeriod.setEmpTaskId(bo.getEmpTaskId());
-
-                    if (taskCategoryConst.INTO == taskCategory) {
-                        basePeriod.setSsMonthStop(handleMonth);
-                    } else {
-                        basePeriod.setSsMonth(handleMonth);
-                    }
-                    basePeriods.add(basePeriod);
-                });
-                ssEmpBasePeriodService.saveForEmpTask(basePeriods, bo);
-            }
+        List<SsEmpTaskPeriod> taskPeriods = bo.getEmpTaskPeriods();
+        if (taskPeriods == null) {
+            return;
         }
+
+        List<SsEmpBasePeriod> basePeriods = new ArrayList<>(taskPeriods.size());
+        Long empArchiveId = bo.getEmpArchiveId();
+        Long empTaskId = bo.getEmpTaskId();
+
+        // 险种
+        List<?> empSocials = getEmpSocials(bo);
+
         {// 更新雇员社保汇缴基数明细
             basePeriods.forEach(p -> {
+                // 组合险种和费用段
+                List<SsEmpBaseDetail> details = new ArrayList<>();
+                Long empBasePeriodId = p.getEmpBasePeriodId();
+                empSocials.forEach(empSocial -> {
+                    SsEmpBaseDetail detail = Adapter.ssEmpBaseDetail(empSocial);
+                    detail.setEmpArchiveId(empArchiveId);
+                    detail.setEmpBasePeriodId(empBasePeriodId);
+                    details.add(detail);
+                });
                 SsEmpBaseDetail detail = new SsEmpBaseDetail();
+                detail.setEmpArchiveId(bo.getEmpArchiveId());
+                detail.setEmpBasePeriodId(empBasePeriodId);
+
+                ssEmpBaseDetailService.saveForSsEmpBaseDetail(details, detail);
             });
+        }
+
+        {// 更新任务单费用段
+            int taskCategory = bo.getTaskCategory();
+            String handleMonth = bo.getHandleMonth();
+
+            taskPeriods.forEach(p -> {
+                SsEmpBasePeriod basePeriod = Adapter.ssEmpBasePeriod(p);
+                basePeriod.setEmpArchiveId(empArchiveId);
+                basePeriod.setEmpTaskId(empTaskId);
+
+                if (taskCategoryConst.INTO == taskCategory) {
+                    basePeriod.setSsMonthStop(handleMonth);
+                } else {
+                    basePeriod.setSsMonth(handleMonth);
+                }
+                basePeriods.add(basePeriod);
+            });
+            ssEmpBasePeriodService.saveForEmpTaskId(basePeriods, empTaskId);
         }
     }
 
     /**
+     * <<<<<<< Updated upstream
      * 特殊任务查询
+     *
      * @param empTaskId
      * @return
      */
@@ -180,13 +203,14 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
     @PostMapping("/queryEmpSpecialTaskById")
     public JsonResult<SsEmpTask> queryEmpSpecialTask(String empTaskId) {
         // 查询
-        SsEmpTask ssEmpTask = business.selectById(StringUtils.isNotBlank(empTaskId)?Long.valueOf(empTaskId):null);
+        SsEmpTask ssEmpTask = business.selectById(StringUtils.isNotBlank(empTaskId) ? Long.valueOf(empTaskId) : null);
 
         return JsonResultKit.of(ssEmpTask);
     }
 
     /**
      * 特殊任务办理
+     *
      * @param
      * @return
      */
@@ -214,12 +238,43 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
         boolean result = business.updateById(ssEmpTask);
         return JsonResultKit.of(result);
     }
+
     /*
+     * 获得险种，根据业务接口 ID 查询险种或解析任务单扩展字段
+     *
+     * @param bo
+     * @param <T>
+     * @return
+     */
+    <T> List<T> getEmpSocials(SsEmpTaskBO bo) {
+        return new ArrayList<>();
+    }
+
+    /**
+     * Stashed changes
      * 适配器
      */
     static class Adapter {
 
-        public static SsEmpBasePeriod adapterSsEmpBasePeriod(SsEmpTaskPeriod taskPeriod) {
+        /**
+         * 适配《雇员社保汇缴基数明细》
+         *
+         * @param empSocial
+         * @return
+         */
+        public static SsEmpBaseDetail ssEmpBaseDetail(Object empSocial) {
+            SsEmpBaseDetail detail = new SsEmpBaseDetail();
+
+            return detail;
+        }
+
+        /**
+         * 适配《雇员正常汇缴社保的基数分段》
+         *
+         * @param taskPeriod
+         * @return
+         */
+        public static SsEmpBasePeriod ssEmpBasePeriod(SsEmpTaskPeriod taskPeriod) {
             SsEmpBasePeriod basePeriod = new SsEmpBasePeriod();
             basePeriod.setBaseAmount(taskPeriod.getBaseAmount());
             basePeriod.setEmpTaskId(taskPeriod.getEmpTaskId());
@@ -229,6 +284,10 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
             return basePeriod;
         }
     }
+
+    // ---------------------------------------------------------------------------------------------
+    // ------------------------------ 内部接口和内部类----------------------------------------------
+    // ---------------------------------------------------------------------------------------------
 
     /**
      * 任务类型，DicItem.DicItemValue 1:新进：2：转入 3调整 4 补缴 5 转出 6封存 7退账 8 提取 9特殊操作

@@ -20,7 +20,7 @@ public interface ISsEmpBasePeriodService extends IService<SsEmpBasePeriod> {
      * 根据雇员任务 保存数据
      *
      * @param periods
-     * @param empTask
+     * @param empTaskId
      */
-    void saveForEmpTask(List<SsEmpBasePeriod> periods, SsEmpTaskBO empTask);
+    void saveForEmpTaskId(List<SsEmpBasePeriod> periods, Long empTaskId);
 }
