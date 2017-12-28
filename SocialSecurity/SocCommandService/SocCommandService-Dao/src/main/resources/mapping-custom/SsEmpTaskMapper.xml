@@ -34,16 +34,13 @@
         ,c.company_id,c.title
         ,ea.emp_classify,ea.start_month
         from ss_emp_task et
-        LEFT JOIN ss_emp_archive ea on ea.emp_archive_id = et.emp_archive_id
+        LEFT JOIN ss_emp_archive ea on ea.emp_archive_id = et.emp_archive_id and ea.is_active = 1
         LEFT JOIN sal_company c on ea.company_id = c.company_id
         LEFT JOIN emp_employee e on ea.employee_id = e.employee_id
-        LEFT JOIN ss_account_com_relation ssac on ssac.company_id = c.company_id
-        LEFT JOIN ss_com_account ca on ca.com_account_id = ssac.com_account_id
+        LEFT JOIN ss_account_com_relation ssac on ssac.company_id = c.company_id and ssac.is_active = 1
+        LEFT JOIN ss_com_account ca on ca.com_account_id = ssac.com_account_id and ca.is_active = 1
         <where>
             and et.is_active = 1
-            and ea.is_active = 1
-            and ca.is_active = 1
-            and ssac.is_active = 1
             <if test="employeeName != null">
                 and e.employee_name LIKE CONCAT('%',#{employeeName},'%')
             </if>
