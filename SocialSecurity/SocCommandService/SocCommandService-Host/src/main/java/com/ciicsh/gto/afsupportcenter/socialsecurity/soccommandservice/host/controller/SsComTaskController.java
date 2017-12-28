@@ -83,7 +83,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
             for (int i = 0; i < taskIdArr.length; i++) {
                 SsComTask ssComTask = new SsComTask();
                 //批退的任务单ID
-                ssComTask.setCompanyTaskId(Long.parseLong(taskIdArr[i]));
+                ssComTask.setComTaskId(Long.parseLong(taskIdArr[i]));
                 //批退状态 4
                 ssComTask.setTaskStatus(4);
                 //批退原因
@@ -100,7 +100,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
     @Log("获得企业信息和材料收缴信息")
     @RequestMapping(value = "getCompanyInfoAndMaterial")
     public JsonResult<SsComTaskBO> getCompanyInfoAndMaterial(SsComTaskBO ssComTaskBO) {
-        if (null != ssComTaskBO.getCompanyTaskId()) {
+        if (null != ssComTaskBO.getComTaskId()) {
             if (isNotNull(ssComTaskBO.getOperatorType())) {
                 //1 开户 2 转移 3 变更 4 终止
                 if ("1".equals(ssComTaskBO.getOperatorType())) {
@@ -308,7 +308,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
     public SsComTask getSsComTask(Map<String, String> map) {
         SsComTask ssComTask = new SsComTask();
         //企业任务单id
-        ssComTask.setCompanyTaskId(isNotNull(map.get("companyTaskId")) ? Long.parseLong(map.get("companyTaskId")) : null);
+        ssComTask.setComTaskId(isNotNull(map.get("companyTaskId")) ? Long.parseLong(map.get("companyTaskId")) : null);
         //任务单类型
         ssComTask.setTaskCategory(isNotNull(map.get("taskCategory")) ? map.get("taskCategory") : null);
         //前道传过来的截止日期和支付方式
