@@ -1,14 +1,14 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
-
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpBaseDetailService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpBasePeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskPeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBaseDetail;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBasePeriod;
-
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
@@ -18,11 +18,9 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
-
+import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.StringUtils;
-
-import com.google.common.base.Function;
-
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +48,8 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
     private ISsEmpTaskPeriodService ssEmpTaskPeriodService;
     @Autowired
     private ISsEmpBasePeriodService ssEmpBasePeriodService;
+    @Autowired
+    private ISsEmpBaseDetailService ssEmpBaseDetailService;
 
     /**
      * 雇员日常操作查询
@@ -113,7 +113,9 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
         {// 更新任务单费用段
             List<SsEmpTaskPeriod> periods = bo.getEmpTaskPeriods();
             if (periods != null) {
-                ssEmpTaskPeriodService.saveForEmpTask(periods, bo);
+                ssEmpTaskPeriodService.saveForEmpTaskId(periods, bo.getEmpTaskId());
+                periods = ssEmpTaskPeriodService.queryByEmpTaskId(bo.getEmpTaskId());
+                bo.setEmpTaskPeriods(periods);
             }
         }
         {// 更新雇员任务信息
@@ -139,40 +141,64 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
      * @param bo
      */
     private void progressing(SsEmpTaskBO bo) {
-        List<SsEmpBasePeriod> basePeriods = new ArrayList<>();
+        List<SsEmpTaskPeriod> taskPeriods = bo.getEmpTaskPeriods();
+        if (taskPeriods == null) {
+            return;
+        }
+
         Long empArchiveId = bo.getEmpArchiveId();
-        Function<SsEmpTaskBO, List<SsEmpTaskPeriod>> getEmpTaskPeriods = SsEmpTaskBO::getEmpTaskPeriods;
+        Long empTaskId = bo.getEmpTaskId();
+
+        // 险种
+        List<SsEmpBasePeriod> basePeriods = new ArrayList<>(taskPeriods.size());
+        List<JSONObject> empSocials = getEmpSocials(bo);
+        // 删除 old 费用段和明细
+        ssEmpBasePeriodService.deleteByEmpTaskId(empTaskId);
 
         {// 更新任务单费用段
-            List<SsEmpTaskPeriod> taskPeriods = bo.getEmpTaskPeriods();
-            if (taskPeriods != null) {
-                int taskCategory = bo.getTaskCategory();
-                String handleMonth = bo.getHandleMonth();
+            int taskCategory = bo.getTaskCategory();
+            String handleMonth = bo.getHandleMonth();
 
-                taskPeriods.forEach(p -> {
-                    SsEmpBasePeriod basePeriod = Adapter.adapterSsEmpBasePeriod(p);
-                    basePeriod.setEmpArchiveId(empArchiveId);
-                    basePeriod.setEmpTaskId(bo.getEmpTaskId());
+            taskPeriods.forEach(p -> {
+                SsEmpBasePeriod basePeriod = Adapter.ssEmpBasePeriod(p);
+                basePeriod.setEmpArchiveId(empArchiveId);
+                basePeriod.setEmpTaskId(empTaskId);
 
-                    if (taskCategoryConst.INTO == taskCategory) {
-                        basePeriod.setSsMonthStop(handleMonth);
-                    } else {
-                        basePeriod.setSsMonth(handleMonth);
-                    }
-                    basePeriods.add(basePeriod);
-                });
-                ssEmpBasePeriodService.saveForEmpTask(basePeriods, bo);
-            }
+                if (taskCategoryConst.INTO == taskCategory) {
+                    basePeriod.setSsMonthStop(handleMonth);
+                } else {
+                    basePeriod.setSsMonth(handleMonth);
+                }
+                by(basePeriod);
+                basePeriods.add(basePeriod);
+            });
+            ssEmpBasePeriodService.saveForEmpTaskId(basePeriods, empTaskId);
         }
+
         {// 更新雇员社保汇缴基数明细
             basePeriods.forEach(p -> {
+                // 组合险种和费用段
+                List<SsEmpBaseDetail> details = new ArrayList<>();
+                Long empBasePeriodId = p.getEmpBasePeriodId();
+                empSocials.forEach(empSocial -> {
+                    SsEmpBaseDetail detail = Adapter.ssEmpBaseDetail(empSocial);
+                    detail.setEmpArchiveId(empArchiveId);
+                    detail.setEmpBasePeriodId(empBasePeriodId);
+                    by(detail);
+                    details.add(detail);
+                });
                 SsEmpBaseDetail detail = new SsEmpBaseDetail();
+                detail.setEmpArchiveId(empArchiveId);
+                detail.setEmpBasePeriodId(empBasePeriodId);
+
+                ssEmpBaseDetailService.saveForSsEmpBaseDetail(details, detail);
             });
         }
     }
 
     /**
      * 特殊任务查询
+     *
      * @param empTaskId
      * @return
      */
@@ -180,13 +206,14 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
     @PostMapping("/queryEmpSpecialTaskById")
     public JsonResult<SsEmpTask> queryEmpSpecialTask(String empTaskId) {
         // 查询
-        SsEmpTask ssEmpTask = business.selectById(StringUtils.isNotBlank(empTaskId)?Long.valueOf(empTaskId):null);
+        SsEmpTask ssEmpTask = business.selectById(StringUtils.isNotBlank(empTaskId) ? Long.valueOf(empTaskId) : null);
 
         return JsonResultKit.of(ssEmpTask);
     }
 
     /**
      * 特殊任务办理
+     *
      * @param
      * @return
      */
@@ -214,12 +241,86 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
         boolean result = business.updateById(ssEmpTask);
         return JsonResultKit.of(result);
     }
+
     /*
+     * 获得险种，根据业务接口 ID 查询险种或解析任务单扩展字段
+     *
+     * @param bo
+     * @return
+     */
+    List<JSONObject> getEmpSocials(SsEmpTaskBO bo) {
+        List<JSONObject> list = new ArrayList<>();
+        {
+            JSONObject obj = new JSONObject();
+            obj.put("itemDicId", "1");
+            obj.put("policyName", "1");
+            obj.put("empBase", "1");
+            obj.put("comBase", "1");
+            obj.put("personalRatio", "1");
+            obj.put("companyRatio", "1");
+            list.add(obj);
+        }
+        {
+            JSONObject obj = new JSONObject();
+            obj.put("itemDicId", "2");
+            obj.put("policyName", "2");
+            obj.put("empBase", "2");
+            obj.put("comBase", "2");
+            obj.put("personalRatio", "2");
+            obj.put("companyRatio", "2");
+            list.add(obj);
+        }
+        {
+            JSONObject obj = new JSONObject();
+            obj.put("itemDicId", "3");
+            obj.put("policyName", "3");
+            obj.put("empBase", "3");
+            obj.put("comBase", "3");
+            obj.put("personalRatio", "3");
+            obj.put("companyRatio", "3");
+            list.add(obj);
+        }
+
+//        bo.setTaskFormContent("");
+        return list;
+    }
+
+    void by(Object entity){
+        BeanMap bm = new BeanMap(entity);
+        bm.put("createdBy","admin");
+        bm.put("modifiedBy","admin");
+    }
+
+    /**
+     * Stashed changes
      * 适配器
      */
     static class Adapter {
 
-        public static SsEmpBasePeriod adapterSsEmpBasePeriod(SsEmpTaskPeriod taskPeriod) {
+        /**
+         * 适配《雇员社保汇缴基数明细》
+         *
+         * @param empSocial
+         * @return
+         */
+        public static SsEmpBaseDetail ssEmpBaseDetail(JSONObject empSocial) {
+            SsEmpBaseDetail detail = new SsEmpBaseDetail();
+            detail.setSsType(empSocial.getString("itemDicId"));
+            detail.setSsTypeName(empSocial.getString("policyName"));
+            detail.setEmpBase(empSocial.getBigDecimal("empBase"));
+            detail.setComBase(empSocial.getBigDecimal("comBase"));
+            detail.setEmpRatio(empSocial.getBigDecimal("personalRatio"));
+            detail.setComRatio(empSocial.getBigDecimal("companyRatio"));
+            return detail;
+        }
+
+        /**
+         * 适配《雇员正常汇缴社保的基数分段》
+         *
+         * @param taskPeriod
+         * @return
+         */
+        public static SsEmpBasePeriod ssEmpBasePeriod(SsEmpTaskPeriod taskPeriod) {
             SsEmpBasePeriod basePeriod = new SsEmpBasePeriod();
             basePeriod.setBaseAmount(taskPeriod.getBaseAmount());
             basePeriod.setEmpTaskId(taskPeriod.getEmpTaskId());
@@ -229,6 +330,10 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
             return basePeriod;
         }
     }
+
+    // ---------------------------------------------------------------------------------------------
+    // ------------------------------ 内部接口和内部类----------------------------------------------
+    // ---------------------------------------------------------------------------------------------
 
     /**
      * 任务类型，DicItem.DicItemValue 1:新进：2：转入 3调整 4 补缴 5 转出 6封存 7退账 8 提取 9特殊操作

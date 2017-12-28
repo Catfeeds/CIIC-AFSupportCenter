@@ -1,12 +1,14 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBaseDetail;
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBaseDetail;
+
+import java.util.List;
 
 /**
  * <p>
  * 雇员社保汇缴基数明细表，
-该表细化到每一个社保险种的月度段的基数、比例、公司缴纳金额、个人缴纳金额 服务类
+ * 该表细化到每一个社保险种的月度段的基数、比例、公司缴纳金额、个人缴纳金额 服务类
  * </p>
  *
  * @author HuangXing
@@ -14,4 +16,11 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface ISsEmpBaseDetailService extends IService<SsEmpBaseDetail> {
 
+    /**
+     * 保存，根据雇员社保汇缴基数明细
+     *
+     * @param details
+     * @param detail
+     */
+    void saveForSsEmpBaseDetail(List<SsEmpBaseDetail> details, SsEmpBaseDetail detail);
 }

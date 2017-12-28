@@ -32,19 +32,17 @@ public class SsEmpTaskPeriodServiceImpl extends ServiceImpl<SsEmpTaskPeriodMappe
      */
     @Override
     public List<SsEmpTaskPeriod> queryByEmpTaskId(Long empTaskId) {
-        EntityWrapper<SsEmpTaskPeriod> wrapper = new EntityWrapper<>();
         SsEmpTaskPeriod period = new SsEmpTaskPeriod();
         period.setEmpTaskId(empTaskId);
         period.setActive(true);
-        wrapper.setEntity(period);
-        return baseMapper.selectList(wrapper);
+        return baseMapper.selectList(new EntityWrapper<>(period));
     }
 
     @Transactional
     @Override
-    public void saveForEmpTask(List<SsEmpTaskPeriod> periods, SsEmpTask empTask) {
+    public void saveForEmpTaskId(List<SsEmpTaskPeriod> periods, Long empTaskId) {
         SsEmpTaskPeriod period = new SsEmpTaskPeriod();
-        period.setEmpTaskId(empTask.getEmpTaskId());
+        period.setEmpTaskId(empTaskId);
         // 删除 old
         baseMapper.delete(new EntityWrapper(period));
         // 保存 new
