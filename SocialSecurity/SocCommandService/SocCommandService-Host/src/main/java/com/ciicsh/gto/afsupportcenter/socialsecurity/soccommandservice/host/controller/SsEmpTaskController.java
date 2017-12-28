@@ -1,9 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskPeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.dto.emptask.RejectionParamDTO;
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -142,7 +143,9 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
     }
 
     /**
-     * excel 导出
+     * 特殊任务查询
+     * @param empTaskId
+     * @return
      */
     @Log("特殊任务查询")
     @PostMapping("/queryEmpSpecialTaskById")
@@ -151,6 +154,36 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
         SsEmpTask ssEmpTask = business.selectById(StringUtils.isNotBlank(empTaskId)?Long.valueOf(empTaskId):null);
 
         return JsonResultKit.of(ssEmpTask);
+    }
+
+    /**
+     * 特殊任务办理
+     * @param
+     * @return
+     */
+    @Log("特殊任务办理")
+    @PostMapping("/empSpecialTaskHandle")
+    public JsonResult empSpecialTaskHandle(SsEmpTask ssEmpTask){
+
+        //参数对象为空
+        if(null==ssEmpTask)return JsonResultKit.ofError("参数为空");
+        //状态为空
+        if(null==ssEmpTask.getHandleStatus())return JsonResultKit.ofError("状态错误");
+
+        //1、材料收缴  2 、受理中  3、送审中  4 已完成
+        if(1==ssEmpTask.getHandleStatus()){
+            ssEmpTask.setTaskStatus(new Integer(1));
+        }else if(2==ssEmpTask.getHandleStatus() || 3==ssEmpTask.getHandleStatus()){
+            ssEmpTask.setTaskStatus(new Integer(2));
+        }else if(4==ssEmpTask.getHandleStatus()){
+            ssEmpTask.setTaskStatus(new Integer(3));
+        }else{
+            return JsonResultKit.ofError("状态错误");
+        }
+        ssEmpTask.setModifiedTime(LocalDateTime.now());
+        ssEmpTask.setModifiedBy("xsj");
+        boolean result = business.updateById(ssEmpTask);
+        return JsonResultKit.of(result);
     }
 
 }

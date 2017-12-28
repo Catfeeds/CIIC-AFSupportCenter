@@ -1,12 +1,14 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask;
+import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -44,6 +46,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
     public JsonResult<List<SsComTaskBO>> getNoProgressCompanyTask(PageInfo pageInfo) {
         //mybatis 分页插件
         PageRows<SsComTaskBO> pageRows = business.queryNoProgressCompanyTask(pageInfo);
+
         return JsonResultKit.ofPage(pageRows);
     }
 
@@ -99,7 +102,8 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
 
     @Log("获得企业信息和材料收缴信息")
     @RequestMapping(value = "getCompanyInfoAndMaterial")
-    public JsonResult<SsComTaskBO> getCompanyInfoAndMaterial(SsComTaskBO ssComTaskBO) {
+    public JsonResult<SsComTaskBO> getCompanyInfoAndMaterial(SsComTaskDTO ssComTaskDTO) {
+        SsComTaskBO  ssComTaskBO = CommonTransform.convertToDTO(ssComTaskDTO,SsComTaskBO.class);
         if (null != ssComTaskBO.getCompanyTaskId()) {
             if (isNotNull(ssComTaskBO.getOperatorType())) {
                 //1 开户 2 转移 3 变更 4 终止
@@ -119,7 +123,9 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
 
     @Log("查询企业信息和前道传过来的JSON（包含社保截止和付款方式）")
     @RequestMapping(value = "getComInfoAndPayWay")
-    public JsonResult<SsComTaskBO> queryComInfoAndPayWay(SsComTaskBO ssComTask) {
+    public JsonResult<SsComTaskBO> queryComInfoAndPayWay(SsComTaskDTO ssComTaskDTO) {
+        //DTO转BO
+        SsComTaskBO  ssComTask = CommonTransform.convertToDTO(ssComTaskDTO,SsComTaskBO.class);
         SsComTaskBO ssComTaskBO = business.queryComInfoAndPayWay(ssComTask);
         return JsonResultKit.of(ssComTaskBO);
     }
@@ -154,9 +160,10 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
 
     @Log("终止任务单的操作")
     @RequestMapping("updateOrEndingTask")
-    public JsonResult<Boolean> updateOrEndingTask(SsComTaskBO ssComTaskBO) {
+    public JsonResult<Boolean> updateOrEndingTask(SsComTaskDTO ssComTaskDTO) {
         boolean result = false;
         //0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
+        SsComTaskBO  ssComTaskBO = CommonTransform.convertToDTO(ssComTaskDTO,SsComTaskBO.class);
         if (ssComTaskBO.getTaskStatus() == 3) {
             if (null != ssComTaskBO.getEndDate() && null != ssComTaskBO.getComAccountId()) {
                 SsComAccount ssComAccount = new SsComAccount();
@@ -177,8 +184,10 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
 
     @Log("转移任务单的操作")
     @RequestMapping("updateOrTransferTask")
-    public JsonResult<Boolean> updateOrTransferTask(SsComTaskBO ssComTaskBO) {
+    public JsonResult<Boolean> updateOrTransferTask(SsComTaskDTO SsComTaskDTO) {
         boolean result = false;
+        //DTO 转BO
+        SsComTaskBO ssComTaskBO = CommonTransform.convertToDTO(SsComTaskDTO,SsComTaskBO.class);
         //动态扩展数据 预存转移办理时 不完成的状态的数据
         String transferDate = ssComTaskBO.getTransferDate();
         String settlementArea = ssComTaskBO.getSettlementArea();
@@ -206,7 +215,8 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
 
     @Log("变更任务单的操作")
     @RequestMapping("updateOrChangeTask")
-    public JsonResult<Boolean> updateOrChangeTask(SsComTaskBO ssComTaskBO) {
+    public JsonResult<Boolean> updateOrChangeTask(SsComTaskDTO ssComTaskDTO) {
+        SsComTaskBO  ssComTaskBO = CommonTransform.convertToDTO(ssComTaskDTO,SsComTaskBO.class);
         boolean result = false;
         Map<String, String> dynamicExtendMap = new HashMap<String, String>();
         // 1行业比例变更  2 付款方式变更 3 公司名称变更
