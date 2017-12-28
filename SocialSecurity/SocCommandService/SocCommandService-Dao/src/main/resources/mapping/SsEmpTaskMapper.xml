@@ -2,50 +2,51 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpTaskMapper">
 
-    <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask">
-        <id column="emp_task_id" property="empTaskId" />
-        <result column="company_id" property="companyId" />
-        <result column="employee_id" property="employeeId" />
-        <result column="customer_id" property="customerId" />
-        <result column="emp_archive_id" property="empArchiveId" />
-        <result column="task_category" property="taskCategory" />
-        <result column="task_category_special" property="taskCategorySpecial" />
-        <result column="urgent" property="urgent" />
-        <result column="submitter_id" property="submitterId" />
-        <result column="submitter_name" property="submitterName" />
-        <result column="submitter_dept_id" property="submitterDeptId" />
-        <result column="submitter_dept_name" property="submitterDeptName" />
-        <result column="submit_time" property="submitTime" />
-        <result column="expire_date" property="expireDate" />
-        <result column="submitter_remark" property="submitterRemark" />
-        <result column="task_form_content" property="taskFormContent" />
-        <result column="salary" property="salary" />
-        <result column="emp_classify" property="empClassify" />
-        <result column="handle_user_id" property="handleUserId" />
-        <result column="handle_user_name" property="handleUserName" />
-        <result column="emp_ss_serial" property="empSsSerial" />
-        <result column="handle_way" property="handleWay" />
-        <result column="handle_month" property="handleMonth" />
-        <result column="handle_remark" property="handleRemark" />
-        <result column="handle_remark_man" property="handleRemarkMan" />
-        <result column="handle_remark_date" property="handleRemarkDate" />
-        <result column="rejection_remark" property="rejectionRemark" />
-        <result column="rejection_remark_man" property="rejectionRemarkMan" />
-        <result column="rejection_remark_date" property="rejectionRemarkDate" />
-        <result column="task_status" property="taskStatus" />
-        <result column="handle_status" property="handleStatus" />
-        <result column="start_handle_date" property="startHandleDate" />
-        <result column="send_check_date" property="sendCheckDate" />
-        <result column="finish_date" property="finishDate" />
-        <result column="start_month" property="startMonth" />
-        <result column="end_month" property="endMonth" />
-        <result column="chat_history" property="chatHistory" />
-        <result column="is_active" property="isActive" />
-        <result column="created_time" property="createdTime" />
-        <result column="modified_time" property="modifiedTime" />
-        <result column="created_by" property="createdBy" />
-        <result column="modified_by" property="modifiedBy" />
-    </resultMap>
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask">
+		<id column="emp_task_id" property="empTaskId" />
+		<result column="company_id" property="companyId" />
+		<result column="employee_id" property="employeeId" />
+		<result column="customer_id" property="customerId" />
+		<result column="emp_archive_id" property="empArchiveId" />
+		<result column="task_category" property="taskCategory" />
+		<result column="task_category_special" property="taskCategorySpecial" />
+		<result column="urgent" property="urgent" />
+		<result column="submitter_id" property="submitterId" />
+		<result column="submitter_name" property="submitterName" />
+		<result column="submitter_dept_id" property="submitterDeptId" />
+		<result column="submitter_dept_name" property="submitterDeptName" />
+		<result column="submit_time" property="submitTime" />
+		<result column="expire_date" property="expireDate" />
+		<result column="submitter_remark" property="submitterRemark" />
+		<result column="task_form_content" property="taskFormContent" />
+		<result column="salary" property="salary" />
+		<result column="emp_classify" property="empClassify" />
+		<result column="handle_user_id" property="handleUserId" />
+		<result column="handle_user_name" property="handleUserName" />
+		<result column="emp_ss_serial" property="empSsSerial" />
+		<result column="handle_way" property="handleWay" />
+		<result column="handle_month" property="handleMonth" />
+		<result column="handle_remark" property="handleRemark" />
+		<result column="handle_remark_man" property="handleRemarkMan" />
+		<result column="handle_remark_date" property="handleRemarkDate" />
+		<result column="rejection_remark" property="rejectionRemark" />
+		<result column="rejection_remark_man" property="rejectionRemarkMan" />
+		<result column="rejection_remark_date" property="rejectionRemarkDate" />
+		<result column="task_status" property="taskStatus" />
+		<result column="handle_status" property="handleStatus" />
+		<result column="start_handle_date" property="startHandleDate" />
+		<result column="send_check_date" property="sendCheckDate" />
+		<result column="finish_date" property="finishDate" />
+		<result column="start_month" property="startMonth" />
+		<result column="end_month" property="endMonth" />
+		<result column="chat_history" property="chatHistory" />
+		<result column="business_interface_id" property="businessInterfaceId" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
 
 </mapper>

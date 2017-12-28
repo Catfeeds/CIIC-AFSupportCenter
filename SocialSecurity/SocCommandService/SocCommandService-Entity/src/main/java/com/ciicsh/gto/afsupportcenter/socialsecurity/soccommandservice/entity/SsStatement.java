@@ -11,9 +11,6 @@ import java.io.Serializable;
  * <p>
  * 本地社保中，中智公司与社保局的对账单（各一条记录）
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-26
  */
 @TableName("ss_statement")
 public class SsStatement implements Serializable {

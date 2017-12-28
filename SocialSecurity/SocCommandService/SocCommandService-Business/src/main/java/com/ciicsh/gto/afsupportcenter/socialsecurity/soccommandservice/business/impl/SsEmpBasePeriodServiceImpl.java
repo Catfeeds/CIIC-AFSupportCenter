@@ -1,10 +1,16 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBasePeriod;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpBasePeriodMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpBasePeriodService;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.toolkit.CollectionUtils;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpBasePeriodService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpBasePeriodMapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBasePeriod;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +23,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class SsEmpBasePeriodServiceImpl extends ServiceImpl<SsEmpBasePeriodMapper, SsEmpBasePeriod> implements ISsEmpBasePeriodService {
 
+    @Transactional
+    @Override
+    public void saveForEmpTask(List<SsEmpBasePeriod> periods, SsEmpTaskBO empTask) {
+        SsEmpBasePeriod period = new SsEmpBasePeriod();
+        period.setEmpTaskId(empTask.getEmpTaskId());
+        period.setEmpArchiveId(empTask.getEmpArchiveId());
+        // 删除 old
+        baseMapper.delete(new EntityWrapper(period));
+        // 保存 new
+        if (CollectionUtils.isNotEmpty(periods)) {
+            this.insertBatch(periods);
+        }
+    }
 }

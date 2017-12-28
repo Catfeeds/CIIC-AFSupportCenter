@@ -21,7 +21,7 @@ public class SsPaymentSrarchBO {
     private String accountType;
 
     /**
-     * 企业社保账户分类
+     * 支付状态List
      */
     private List<String> paymentStateList;
 

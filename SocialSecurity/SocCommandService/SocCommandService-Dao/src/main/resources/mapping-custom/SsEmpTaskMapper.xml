@@ -28,7 +28,7 @@
     </resultMap>
 
     <select id="employeeOperatorQuery" resultMap="BaseResultMapDto">
-        select et.*
+        select et.emp_task_id,et.customer_id,et.emp_archive_id,et.task_category,et.task_category_special,et.urgent,et.submitter_id,et.submitter_name,et.submitter_dept_id,et.submitter_dept_name,et.submit_time,et.expire_date,et.submitter_remark,et.task_form_content,et.salary,et.handle_user_id,et.handle_user_name,et.emp_ss_serial,et.handle_way,et.handle_month,et.handle_remark,et.handle_remark_man,et.handle_remark_date,et.rejection_remark,et.rejection_remark_man,et.rejection_remark_date,et.task_status,et.handle_status,et.start_handle_date,et.send_check_date,et.finish_date,et.end_month,et.chat_history,et.business_interface_id
         ,e.employee_name , e.employee_id , e.id_num
         ,ca.com_account_id,ca.ss_pwd,ca.settlement_area,ca.ss_account_type,ca.ss_account,ca.supplier_id
         ,c.company_id,c.title

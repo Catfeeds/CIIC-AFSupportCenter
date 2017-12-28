@@ -13,9 +13,6 @@ import java.io.Serializable;
  * 任务单费用段表,记录任务单历史办理记录,不受将来的调整影响
 从雇员社保详细中跳转的任务表单,应从该表获取数据
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-26
  */
 @TableName("ss_emp_task_period")
 public class SsEmpTaskPeriod implements Serializable {
@@ -31,7 +28,7 @@ public class SsEmpTaskPeriod implements Serializable {
      * 本地社保的雇员任务单Id
      */
 	@TableField("emp_task_id")
-	private String empTaskId;
+	private Long empTaskId;
     /**
      * 基数, 五险合一(基数一致）时有效
      */
@@ -87,11 +84,11 @@ public class SsEmpTaskPeriod implements Serializable {
 		this.empTaskPeriodId = empTaskPeriodId;
 	}
 
-	public String getEmpTaskId() {
+	public Long getEmpTaskId() {
 		return empTaskId;
 	}
 
-	public void setEmpTaskId(String empTaskId) {
+	public void setEmpTaskId(Long empTaskId) {
 		this.empTaskId = empTaskId;
 	}
 

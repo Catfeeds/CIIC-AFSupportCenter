@@ -12,9 +12,6 @@ import java.io.Serializable;
  * <p>
  * 工伤比例
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-26
  */
 @TableName("ss_account_ratio")
 public class SsAccountRatio implements Serializable {

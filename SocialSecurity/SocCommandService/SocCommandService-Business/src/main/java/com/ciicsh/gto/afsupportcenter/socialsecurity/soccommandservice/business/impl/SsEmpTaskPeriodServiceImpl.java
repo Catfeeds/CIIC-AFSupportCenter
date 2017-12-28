@@ -1,11 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpTaskPeriodMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskPeriodService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.toolkit.CollectionUtils;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskPeriodService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpTaskPeriodMapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +31,7 @@ public class SsEmpTaskPeriodServiceImpl extends ServiceImpl<SsEmpTaskPeriodMappe
      * @return
      */
     @Override
-    public List<SsEmpTaskPeriod> queryByEmpTaskId(String empTaskId) {
+    public List<SsEmpTaskPeriod> queryByEmpTaskId(Long empTaskId) {
         EntityWrapper<SsEmpTaskPeriod> wrapper = new EntityWrapper<>();
         SsEmpTaskPeriod period = new SsEmpTaskPeriod();
         period.setEmpTaskId(empTaskId);
@@ -41,14 +42,16 @@ public class SsEmpTaskPeriodServiceImpl extends ServiceImpl<SsEmpTaskPeriodMappe
 
     @Transactional
     @Override
-    public void saveForEmpTaskId(List<SsEmpTaskPeriod> periods, Long empTaskId) {
+    public void saveForEmpTask(List<SsEmpTaskPeriod> periods, SsEmpTask empTask) {
         SsEmpTaskPeriod period = new SsEmpTaskPeriod();
-        period.setEmpTaskId(String.valueOf(empTaskId));
+        period.setEmpTaskId(empTask.getEmpTaskId());
         // 删除 old
         baseMapper.delete(new EntityWrapper(period));
         // 保存 new
         this.cleanPk(periods);
-        this.insertBatch(periods);
+        if (CollectionUtils.isNotEmpty(periods)) {
+            this.insertBatch(periods);
+        }
     }
 
     /**

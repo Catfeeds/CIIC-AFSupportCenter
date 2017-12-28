@@ -12,9 +12,6 @@ import java.io.Serializable;
  * <p>
  * 独立库客户任务单
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-26
  */
 @TableName("ss_com_task")
 public class SsComTask implements Serializable {
@@ -24,8 +21,8 @@ public class SsComTask implements Serializable {
     /**
      * 任务单编号
      */
-	@TableId(value="company_task_id", type= IdType.AUTO)
-	private Long companyTaskId;
+	@TableId(value="com_task_id", type= IdType.AUTO)
+	private Long comTaskId;
     /**
      * 多租户Id
      */
@@ -135,6 +132,11 @@ public class SsComTask implements Serializable {
 	@TableField("rejection_remark")
 	private String rejectionRemark;
     /**
+     * 业务接口ID
+     */
+	@TableField("business_interface_id")
+	private String businessInterfaceId;
+    /**
      * 是否可用
      */
 	@TableField("is_active")
@@ -161,12 +163,12 @@ public class SsComTask implements Serializable {
 	private String modifiedBy;
 
 
-	public Long getCompanyTaskId() {
-		return companyTaskId;
+	public Long getComTaskId() {
+		return comTaskId;
 	}
 
-	public void setCompanyTaskId(Long companyTaskId) {
-		this.companyTaskId = companyTaskId;
+	public void setComTaskId(Long comTaskId) {
+		this.comTaskId = comTaskId;
 	}
 
 	public String getCustomerId() {
@@ -345,6 +347,14 @@ public class SsComTask implements Serializable {
 		this.rejectionRemark = rejectionRemark;
 	}
 
+	public String getBusinessInterfaceId() {
+		return businessInterfaceId;
+	}
+
+	public void setBusinessInterfaceId(String businessInterfaceId) {
+		this.businessInterfaceId = businessInterfaceId;
+	}
+
 	public Boolean getActive() {
 		return isActive;
 	}
@@ -388,7 +398,7 @@ public class SsComTask implements Serializable {
 	@Override
 	public String toString() {
 		return "SsComTask{" +
-			", companyTaskId=" + companyTaskId +
+			", comTaskId=" + comTaskId +
 			", customerId=" + customerId +
 			", comAccountId=" + comAccountId +
 			", companyId=" + companyId +
@@ -411,6 +421,7 @@ public class SsComTask implements Serializable {
 			", finishDate=" + finishDate +
 			", handleRemark=" + handleRemark +
 			", rejectionRemark=" + rejectionRemark +
+			", businessInterfaceId=" + businessInterfaceId +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

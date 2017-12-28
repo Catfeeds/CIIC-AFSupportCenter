@@ -13,9 +13,6 @@ import java.io.Serializable;
  * 雇员月度变更表明细
 该表结果有可能需要调整
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-26
  */
 @TableName("ss_month_emp_change_detail")
 public class SsMonthEmpChangeDetail implements Serializable {

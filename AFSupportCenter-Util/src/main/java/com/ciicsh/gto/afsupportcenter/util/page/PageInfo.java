@@ -77,8 +77,14 @@ public class PageInfo implements Serializable {
 
     @Override
     public String toString() {
-        return "PageInfo{" + "pageNum=" + pageNum + ", pageSize=" + pageSize + ", orderBy='" + orderBy + '\'' + ", params="
-            + params + '}';
+        return "PageInfo{" +
+            "pageNum=" + pageNum +
+            ", pageSize=" + pageSize +
+            ", orderBy='" + orderBy + '\'' +
+            ", isAsc=" + isAsc +
+            ", filterEmpty=" + filterEmpty +
+            ", params=" + params +
+            '}';
     }
 
     public <V> V put(String key, V value) {

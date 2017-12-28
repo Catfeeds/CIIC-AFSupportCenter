@@ -12,9 +12,6 @@ import java.io.Serializable;
  * <p>
  * 雇员月度费用明细项目
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-26
  */
 @TableName("ss_month_charge_item")
 public class SsMonthChargeItem implements Serializable {

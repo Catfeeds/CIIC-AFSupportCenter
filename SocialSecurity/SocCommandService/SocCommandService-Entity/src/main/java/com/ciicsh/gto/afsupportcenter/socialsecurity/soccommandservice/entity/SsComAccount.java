@@ -14,9 +14,6 @@ import java.io.Serializable;
  * 企业社保账户信息表
 企业社保账户分类 : 大库（中智大库、外包库）、独立户
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-26
  */
 @TableName("ss_com_account")
 public class SsComAccount implements Serializable {

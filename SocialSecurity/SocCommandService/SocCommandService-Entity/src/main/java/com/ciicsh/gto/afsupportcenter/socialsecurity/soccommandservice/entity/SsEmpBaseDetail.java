@@ -13,9 +13,6 @@ import java.io.Serializable;
  * 雇员社保汇缴基数明细表，
 该表细化到每一个社保险种的月度段的基数、比例、公司缴纳金额、个人缴纳金额
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-26
  */
 @TableName("ss_emp_base_detail")
 public class SsEmpBaseDetail implements Serializable {
@@ -25,8 +22,8 @@ public class SsEmpBaseDetail implements Serializable {
     /**
      * 记录Id
      */
-	@TableId(value="emp_base_adjust_id", type= IdType.AUTO)
-	private Long empBaseAdjustId;
+	@TableId(value="emp_base_detail_id", type= IdType.AUTO)
+	private Long empBaseDetailId;
     /**
      * 外键,雇员社保汇缴基数Id
      */
@@ -36,7 +33,7 @@ public class SsEmpBaseDetail implements Serializable {
      * 外键，雇员本地社保档案Id
      */
 	@TableField("emp_archive_id")
-	private String empArchiveId;
+	private Long empArchiveId;
     /**
      * 社保险种类型，取自全局数据字典表gtobasicdb.DicItem
      */
@@ -129,12 +126,12 @@ public class SsEmpBaseDetail implements Serializable {
 	private String modifiedBy;
 
 
-	public Long getEmpBaseAdjustId() {
-		return empBaseAdjustId;
+	public Long getEmpBaseDetailId() {
+		return empBaseDetailId;
 	}
 
-	public void setEmpBaseAdjustId(Long empBaseAdjustId) {
-		this.empBaseAdjustId = empBaseAdjustId;
+	public void setEmpBaseDetailId(Long empBaseDetailId) {
+		this.empBaseDetailId = empBaseDetailId;
 	}
 
 	public Long getEmpBasePeriodId() {
@@ -145,11 +142,11 @@ public class SsEmpBaseDetail implements Serializable {
 		this.empBasePeriodId = empBasePeriodId;
 	}
 
-	public String getEmpArchiveId() {
+	public Long getEmpArchiveId() {
 		return empArchiveId;
 	}
 
-	public void setEmpArchiveId(String empArchiveId) {
+	public void setEmpArchiveId(Long empArchiveId) {
 		this.empArchiveId = empArchiveId;
 	}
 
@@ -300,7 +297,7 @@ public class SsEmpBaseDetail implements Serializable {
 	@Override
 	public String toString() {
 		return "SsEmpBaseDetail{" +
-			", empBaseAdjustId=" + empBaseAdjustId +
+			", empBaseDetailId=" + empBaseDetailId +
 			", empBasePeriodId=" + empBasePeriodId +
 			", empArchiveId=" + empArchiveId +
 			", ssType=" + ssType +

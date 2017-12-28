@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAddPaymentBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentComBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPaymentCom;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsPaymentComMapper;
@@ -73,6 +74,15 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
 
 
         //如果有批次则重算批次的值
+
+        return json;
+    }
+
+    @Override
+    public JsonResult<String> doAddBatch(SsAddPaymentBO ssAddPaymentBO){
+        JsonResult<String> json = new JsonResult<String>();
+        json.setCode(0);
+        json.setMessage("成功");
 
         return json;
     }
