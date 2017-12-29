@@ -25,7 +25,7 @@ public class SsStatementResultDTO {
     /**
      * 记录Id
      */
-    private Long statementDetailId;
+    private Long statementResultId;
     /**
      * 外键，对账单Id
      */
@@ -97,11 +97,11 @@ public class SsStatementResultDTO {
 
 
     public Long getStatementDetailId() {
-        return statementDetailId;
+        return statementResultId;
     }
 
     public void setStatementDetailId(Long statementDetailId) {
-        this.statementDetailId = statementDetailId;
+        this.statementResultId = statementDetailId;
     }
 
     public Long getStatementId() {
