@@ -16,28 +16,28 @@ public class SsAddPaymentBO {
 
 
     /**
-     *
+     * 支付批次ID
      */
-    private String paymentId;
+    private Long paymentId;
 
     /**
      * 企业社保账户分类
      */
-    private List<String> paymentComIdList;
+    private List<Long> paymentComIdList;
 
-    public String getPaymentId() {
-        return paymentId;
-    }
-
-    public void setPaymentId(String paymentId) {
-        this.paymentId = paymentId;
-    }
-
-    public List<String> getPaymentComIdList() {
+    public List<Long> getPaymentComIdList() {
         return paymentComIdList;
     }
 
-    public void setPaymentComIdList(List<String> paymentComIdList) {
+    public void setPaymentComIdList(List<Long> paymentComIdList) {
         this.paymentComIdList = paymentComIdList;
+    }
+
+    public Long getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(Long paymentId) {
+        this.paymentId = paymentId;
     }
 }

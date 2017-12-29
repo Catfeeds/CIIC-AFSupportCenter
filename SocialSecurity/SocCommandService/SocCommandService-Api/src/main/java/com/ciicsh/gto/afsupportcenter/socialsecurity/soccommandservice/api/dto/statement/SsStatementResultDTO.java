@@ -25,7 +25,7 @@ public class SsStatementResultDTO {
     /**
      * 记录Id
      */
-    private Long statementDetailId;
+    private Long statementResultId;
     /**
      * 外键，对账单Id
      */
@@ -53,7 +53,7 @@ public class SsStatementResultDTO {
     /**
      * 外键：险种
      */
-    private Integer ssType;
+    private String ssType;
     /**
      * 社保险种名称
      */
@@ -97,11 +97,11 @@ public class SsStatementResultDTO {
 
 
     public Long getStatementDetailId() {
-        return statementDetailId;
+        return statementResultId;
     }
 
     public void setStatementDetailId(Long statementDetailId) {
-        this.statementDetailId = statementDetailId;
+        this.statementResultId = statementDetailId;
     }
 
     public Long getStatementId() {
@@ -150,14 +150,6 @@ public class SsStatementResultDTO {
 
     public void setProjectTypeName(String projectTypeName) {
         this.projectTypeName = projectTypeName;
-    }
-
-    public Integer getSsType() {
-        return ssType;
-    }
-
-    public void setSsType(Integer ssType) {
-        this.ssType = ssType;
     }
 
     public String getSsTypeName() {
@@ -246,5 +238,13 @@ public class SsStatementResultDTO {
 
     public void setEmployeeName(String employeeName) {
         this.employeeName = employeeName;
+    }
+
+    public String getSsType() {
+        return ssType;
+    }
+
+    public void setSsType(String ssType) {
+        this.ssType = ssType;
     }
 }

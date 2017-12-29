@@ -13,6 +13,9 @@ import java.io.Serializable;
  * <p>
  * 本地社保应付金额交易记录主表,每月1号生成此表记录，用户也可以人工生成此表记录
  * </p>
+ *
+ * @author HuangXing
+ * @since 2017-12-27
  */
 @TableName("ss_payment_com")
 public class SsPaymentCom implements Serializable {

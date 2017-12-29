@@ -12,6 +12,9 @@ import java.io.Serializable;
  * <p>
  * 对账导入雇员明细
  * </p>
+ *
+ * @author HuangXing
+ * @since 2017-12-29
  */
 @TableName("ss_statement_imp")
 public class SsStatementImp implements Serializable {
@@ -57,7 +60,7 @@ public class SsStatementImp implements Serializable {
      * 社保险种类型，取自全局数据字典表gtobasicdb.DicItem
      */
 	@TableField("ss_type")
-	private Integer ssType;
+	private String ssType;
     /**
      * 社保险种名称
      */
@@ -171,11 +174,11 @@ public class SsStatementImp implements Serializable {
 		this.baseAmount = baseAmount;
 	}
 
-	public Integer getSsType() {
+	public String getSsType() {
 		return ssType;
 	}
 
-	public void setSsType(Integer ssType) {
+	public void setSsType(String ssType) {
 		this.ssType = ssType;
 	}
 

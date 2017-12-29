@@ -1,6 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.payment;
 
-import java.util.List;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -10,34 +12,16 @@ import java.util.List;
  * @author wengxk
  * @since 2017-12-08
  */
-public class SsAddPaymentDTO {
+public class SsOperatePaymentDTO {
 
     private static final long serialVersionUID = 1L;
 
 
+
     /**
-     * 支付批次ID
+     * 批次ID
      */
     private Long paymentId;
-
-    /**
-     * 企业社保账户分类
-     */
-    private List<Long> paymentComIdList;
-
-
-
-
-
-
-
-    public List<Long> getPaymentComIdList() {
-        return paymentComIdList;
-    }
-
-    public void setPaymentComIdList(List<Long> paymentComIdList) {
-        this.paymentComIdList = paymentComIdList;
-    }
 
     public Long getPaymentId() {
         return paymentId;
@@ -47,4 +31,3 @@ public class SsAddPaymentDTO {
         this.paymentId = paymentId;
     }
 }
-

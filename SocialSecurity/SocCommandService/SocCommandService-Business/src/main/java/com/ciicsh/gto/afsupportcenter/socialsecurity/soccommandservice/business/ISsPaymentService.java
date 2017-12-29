@@ -6,6 +6,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.Ss
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 
 import java.util.List;
 
@@ -38,6 +39,36 @@ public interface ISsPaymentService extends IService<SsPayment> {
      * @return  JsonResult<>
      */
     List<SsPaymentBO> showAddBatch(SsPaymentSrarchBO paymentSrarchDTO);
+
+    /**
+     * <p>Description: 申请支付</p>
+     *
+     * @author wengxk
+     * @date 2017-12-27
+     * @param ssPayment 检索条件
+     * @return  JsonResult<>
+     */
+    JsonResult<String> doApplyPay(SsPayment ssPayment);
+
+    /**
+     * <p>Description: 删除批次</p>
+     *
+     * @author wengxk
+     * @date 2017-12-27
+     * @param ssPayment 检索条件
+     * @return  JsonResult<>
+     */
+    JsonResult<String> doDelPayment(SsPayment ssPayment);
+
+    /**
+     * <p>Description: 添加批次</p>
+     *
+     * @author wengxk
+     * @date 2017-12-27
+     * @param ssPayment 保存批次参数
+     * @return  JsonResult<>
+     */
+    JsonResult<String> addPayment(SsPayment ssPayment);
 
 
 

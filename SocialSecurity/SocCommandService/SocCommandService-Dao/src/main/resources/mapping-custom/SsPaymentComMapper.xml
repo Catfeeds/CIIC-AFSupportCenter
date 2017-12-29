@@ -82,4 +82,14 @@
             </if>
     </select>
 
+    <select id="getPaymentComByPaymentId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        SPC.*
+        FROM
+        ss_payment_com SPC
+        WHERE
+        SPC.is_active = '1'
+          AND SPC.payment_id = #{paymentId}
+    </select>
+
 </mapper>

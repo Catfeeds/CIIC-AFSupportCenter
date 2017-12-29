@@ -13,6 +13,9 @@ import java.io.Serializable;
  * <p>
  * 社保支付批次
  * </p>
+ *
+ * @author HuangXing
+ * @since 2017-12-27
  */
 @TableName("ss_payment")
 public class SsPayment implements Serializable {

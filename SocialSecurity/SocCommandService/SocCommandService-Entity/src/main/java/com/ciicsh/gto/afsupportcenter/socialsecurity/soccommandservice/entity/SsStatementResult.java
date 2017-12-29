@@ -12,6 +12,9 @@ import java.io.Serializable;
  * <p>
  * 对账差异结果表
  * </p>
+ *
+ * @author HuangXing
+ * @since 2017-12-29
  */
 @TableName("ss_statement_result")
 public class SsStatementResult implements Serializable {
@@ -57,7 +60,7 @@ public class SsStatementResult implements Serializable {
      * 外键：险种
      */
 	@TableField("ss_type")
-	private Integer ssType;
+	private String ssType;
     /**
      * 社保险种名称
      */
@@ -166,11 +169,11 @@ public class SsStatementResult implements Serializable {
 		this.projectTypeName = projectTypeName;
 	}
 
-	public Integer getSsType() {
+	public String getSsType() {
 		return ssType;
 	}
 
-	public void setSsType(Integer ssType) {
+	public void setSsType(String ssType) {
 		this.ssType = ssType;
 	}
 

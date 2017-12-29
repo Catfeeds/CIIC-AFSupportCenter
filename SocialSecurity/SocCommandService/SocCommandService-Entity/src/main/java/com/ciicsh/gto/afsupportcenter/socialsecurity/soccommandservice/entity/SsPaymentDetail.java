@@ -12,6 +12,9 @@ import java.io.Serializable;
  * <p>
  * 本地社保应付金额交易记录明细表
  * </p>
+ *
+ * @author HuangXing
+ * @since 2017-12-27
  */
 @TableName("ss_payment_detail")
 public class SsPaymentDetail implements Serializable {

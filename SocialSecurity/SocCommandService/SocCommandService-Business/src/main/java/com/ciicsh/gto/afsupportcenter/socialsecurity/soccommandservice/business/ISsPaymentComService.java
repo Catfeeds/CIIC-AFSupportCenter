@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAddPaymentBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsDelPaymentBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentComBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPaymentCom;
 import com.baomidou.mybatisplus.service.IService;
@@ -41,9 +42,29 @@ public interface ISsPaymentComService extends IService<SsPaymentCom> {
      * <p>Description: 添加至支付批次</p>
      *
      * @author wengxk
-     * @date 2017-12-23
+     * @date 2017-12-27
      * @param ssAddPaymentBO 添加至支付批次参数
      * @return  JsonResult<>
      */
     JsonResult<String> doAddBatch(SsAddPaymentBO ssAddPaymentBO);
+
+    /**
+     * <p>Description: 从支付批次移除</p>
+     *
+     * @author wengxk
+     * @date 2017-12-27
+     * @param ssDelPaymentBO 添加至支付批次参数
+     * @return  JsonResult<>
+     */
+    JsonResult<String> doDelBatch(SsDelPaymentBO ssDelPaymentBO);
+
+    /**
+     * <p>Description: 重新计算批次</p>
+     *
+     * @author wengxk
+     * @date 2017-12-27
+     * @param paymentId 批次ID
+     * @return  int
+     */
+    JsonResult<String> calculatePayment(Long paymentId);
 }

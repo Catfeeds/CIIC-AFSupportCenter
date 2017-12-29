@@ -5,7 +5,7 @@
 
     <!-- 表单展示查询映射结果 -->
     <resultMap id="DtoResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsStatementResultBO">
-        <id column="statement_detail_id" jdbcType="BIGINT" property="statementResultId" />
+        <id column="statement_result_id" jdbcType="BIGINT" property="statementResultId" />
         <result column="statement_id" jdbcType="BIGINT" property="statementId" />
         <result column="employee_id" jdbcType="VARCHAR" property="employeeId" />
         <result column="employee_name" jdbcType="VARCHAR" property="employeeName" />
@@ -13,7 +13,7 @@
         <result column="change_type_name" jdbcType="VARCHAR" property="changeTypeName" />
         <result column="project_type" jdbcType="INTEGER" property="projectType" />
         <result column="project_type_name" jdbcType="VARCHAR" property="projectTypeName" />
-        <result column="ss_type" jdbcType="TINYINT" property="ssType" />
+        <result column="ss_type" jdbcType="VARCHAR" property="ssType" />
         <result column="ss_type_name" jdbcType="VARCHAR" property="ssTypeName" />
         <result column="imp_amount" jdbcType="DECIMAL" property="impAmount" />
         <result column="ss_amount" jdbcType="DECIMAL" property="ssAmount" />
