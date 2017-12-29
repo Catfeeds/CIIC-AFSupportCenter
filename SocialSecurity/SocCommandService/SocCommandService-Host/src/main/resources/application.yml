@@ -27,7 +27,8 @@ spring:
 eureka:
   client:
     service-url:
-        defaultZone: http://172.16.9.21:9602/eureka/ #注册中心eureka地址
+#      defaultZone: http://172.16.9.24:9602/eureka #测试服务器环境eureka
+      defaultZone: http://172.16.9.21:9602/eureka #本地开发环境eureka
 
 ###################  mybatis 配置  ###################
 #mybatis
