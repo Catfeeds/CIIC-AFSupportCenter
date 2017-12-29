@@ -3,7 +3,7 @@
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsMonthEmpChangeDetailMapper">
 
 
-    <resultMap id="DtoResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsMonthEmpChangeDetailDTO">
+    <resultMap id="DtoResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthEmpChangeDetailBO">
         <id column="month_emp_change_detail_id" property="monthEmpChangeDetailId" />
         <result column="month_emp_change_id" property="monthEmpChangeId" />
         <result column="employee_id" property="employeeId" />
@@ -20,7 +20,7 @@
         <result column="one_payment" property="onePayment" />
     </resultMap>
 
-    <select id="serachMonthEmpChangeDetailByStatementId" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsMonthEmpChangeDTO" resultMap="DtoResultMap">
+    <select id="serachMonthEmpChangeDetailByStatementId" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthEmpChangeBO" resultMap="DtoResultMap">
         SELECT
           T1.*,T3.employee_name
         FROM

@@ -4,7 +4,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMapDto" extends="BaseResultMap"
-               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsEmpTaskDTO">
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO">
         <!-- emp_employee -->
         <result column="employee_name" property="employeeName"/>
         <result column="employee_id" property="employeeId"/>
@@ -28,22 +28,19 @@
     </resultMap>
 
     <select id="employeeOperatorQuery" resultMap="BaseResultMapDto">
-        select et.*
+        select et.emp_task_id,et.customer_id,et.emp_archive_id,et.task_category,et.task_category_special,et.urgent,et.submitter_id,et.submitter_name,et.submitter_dept_id,et.submitter_dept_name,et.submit_time,et.expire_date,et.submitter_remark,et.task_form_content,et.salary,et.handle_user_id,et.handle_user_name,et.emp_ss_serial,et.handle_way,et.handle_month,et.handle_remark,et.handle_remark_man,et.handle_remark_date,et.rejection_remark,et.rejection_remark_man,et.rejection_remark_date,et.task_status,et.handle_status,et.start_handle_date,et.send_check_date,et.finish_date,et.end_month,et.chat_history,et.business_interface_id
         ,e.employee_name , e.employee_id , e.id_num
         ,ca.com_account_id,ca.ss_pwd,ca.settlement_area,ca.ss_account_type,ca.ss_account,ca.supplier_id
         ,c.company_id,c.title
         ,ea.emp_classify,ea.start_month
         from ss_emp_task et
-        LEFT JOIN ss_emp_archive ea on ea.emp_archive_id = et.emp_archive_id
+        LEFT JOIN ss_emp_archive ea on ea.emp_archive_id = et.emp_archive_id and ea.is_active = 1
         LEFT JOIN sal_company c on ea.company_id = c.company_id
         LEFT JOIN emp_employee e on ea.employee_id = e.employee_id
-        LEFT JOIN ss_account_com_relation ssac on ssac.company_id = c.company_id
-        LEFT JOIN ss_com_account ca on ca.com_account_id = ssac.com_account_id
+        LEFT JOIN ss_account_com_relation ssac on ssac.company_id = c.company_id and ssac.is_active = 1
+        LEFT JOIN ss_com_account ca on ca.com_account_id = ssac.com_account_id and ca.is_active = 1
         <where>
             and et.is_active = 1
-            and ea.is_active = 1
-            and ca.is_active = 1
-            and ssac.is_active = 1
             <if test="employeeName != null">
                 and e.employee_name LIKE CONCAT('%',#{employeeName},'%')
             </if>
@@ -81,7 +78,7 @@
             <!-- operatorType 操作类型，1 常规操作、2 特殊操作，默认常规操作 -->
 
             <!--
-                办理状态：1、未处理 2 、处理中  3 已完成（已办） 4、批退 5、不需处理
+                办理状态：1、未处理（-1 本月处理 -2 下月处理） 2 、处理中  3 已完成（已办） 4、批退 5、不需处理
             -->
             and et.task_status != 5
             <choose>
@@ -89,6 +86,7 @@
                     <if test="taskStatus != null">
                         and et.task_status = #{taskStatus}
                     </if>
+                    AND et.task_category = 9
                     <if test="beginSubmitTime != null and endSubmitTime != null">
                         and date_format(et.submit_time,'%Y-%m-%d') BETWEEN #{beginSubmitTime} AND #{endSubmitTime}
                     </if>
@@ -98,11 +96,15 @@
                         <when test="taskStatus == null">
                             and et.task_status not in (2,3,4)
                         </when>
-                        <when test="taskStatus == 1">
-                            and et.submit_time <![CDATA[ <= ]]> str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',ca.expire_date),'%Y-%m-%d') and et.task_status not in (2,3,4)
+                        <when test="taskStatus == -1">
+                            and et.submit_time <![CDATA[ <= ]]>
+                            str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',ca.expire_date),'%Y-%m-%d') and
+                            et.task_status not in (2,3,4)
                         </when>
-                        <when test="taskStatus == 2">
-                            and et.submit_time > str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',ca.expire_date),'%Y-%m-%d') and et.task_status not in (2,3,4)
+                        <when test="taskStatus == -2">
+                            and et.submit_time >
+                            str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',ca.expire_date),'%Y-%m-%d') and
+                            et.task_status not in (2,3,4)
                         </when>
                         <otherwise>
                             and et.task_status = #{taskStatus}
@@ -123,4 +125,5 @@
             </if>
         </where>
     </select>
+
 </mapper>

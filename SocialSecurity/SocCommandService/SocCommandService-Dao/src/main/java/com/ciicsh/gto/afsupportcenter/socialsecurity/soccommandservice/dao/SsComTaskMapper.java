@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComTaskDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask;
 
 import java.util.List;
@@ -15,14 +15,14 @@ import java.util.List;
  * @since 2017-12-01
  */
 public interface SsComTaskMapper extends BaseMapper<SsComTask> {
-    public List<SsComTaskDTO> queryNoProgressCompanyTask(SsComTaskDTO ssComTaskDTO);
-    public List<SsComTaskDTO> queryProgressingCompanyTask(SsComTaskDTO ssComTaskDTO);
-    public List<SsComTaskDTO> queryFinshedCompanyTask(SsComTaskDTO ssComTaskDTO);
-    public List<SsComTaskDTO> queryRefusedCompanyTask(SsComTaskDTO ssComTaskDTO);
+    public List<SsComTaskBO> queryNoProgressCompanyTask(SsComTaskBO ssComTaskBO);
+    public List<SsComTaskBO> queryProgressingCompanyTask(SsComTaskBO ssComTaskBO);
+    public List<SsComTaskBO> queryFinshedCompanyTask(SsComTaskBO ssComTaskBO);
+    public List<SsComTaskBO> queryRefusedCompanyTask(SsComTaskBO ssComTaskBO);
     public boolean updatePatchRefuseTask(List<SsComTask> ssComTaskList);
-    public SsComTaskDTO queryComInfoAndMaterial(SsComTaskDTO ssComTaskDTO);
-    public SsComTaskDTO queryComInfoAndPayWay(SsComTaskDTO ssComTaskDTO);
-    public SsComTaskDTO queryAccountInfoAndMaterial(SsComTaskDTO ssComTaskDTO);
+    public SsComTaskBO queryComInfoAndMaterial(SsComTaskBO ssComTaskBO);
+    public SsComTaskBO queryComInfoAndPayWay(SsComTaskBO ssComTaskBO);
+    public SsComTaskBO queryAccountInfoAndMaterial(SsComTaskBO ssComTaskBO);
     public int updateTaskStatusForRevoke(SsComTask ssComTask);
 
 

@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsStatementBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatement;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
@@ -21,20 +21,20 @@ public interface SsStatementMapper extends BaseMapper<SsStatement> {
      *
      * @author wengxk
      * @date 2017-12-08
-     * @param ssStatementDTO 对账单查询实体
+     * @param ssStatementBO 对账单查询实体
      * @return  PageRows<SsStatement>
      */
-    List<SsStatementDTO> statementQuery(SsStatementDTO ssStatementDTO);
+    List<SsStatementBO> statementQuery(SsStatementBO ssStatementBO);
 
     /**
      * <p>Description: 根据ID查询对账单主表</p>
      *
      * @author wengxk
      * @date 2017-12-11
-     * @param ssStatementDTO 对账单查询实体
+     * @param ssStatementBO 对账单查询实体
      * @return  SsStatement
      */
-    SsStatementDTO serachStatementByStatementId(SsStatementDTO ssStatementDTO);
+    SsStatementBO serachStatementByStatementId(SsStatementBO ssStatementBO);
 
 
 }

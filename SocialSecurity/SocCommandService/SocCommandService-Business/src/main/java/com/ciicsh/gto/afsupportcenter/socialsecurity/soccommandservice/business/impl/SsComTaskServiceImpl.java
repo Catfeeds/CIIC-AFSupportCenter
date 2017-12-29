@@ -1,16 +1,17 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsAccountComRelationMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsAccountRatioMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsComAccountMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsComTaskMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask;
+import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -48,10 +49,10 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
      * @return
      */
     @Override
-    public PageRows<SsComTaskDTO> queryNoProgressCompanyTask(PageInfo pageInfo) {
+    public PageRows<SsComTaskBO> queryNoProgressCompanyTask(PageInfo pageInfo) {
         //将json对象转 DTO对象
-        SsComTaskDTO ssComTaskDTO = pageInfo.toJavaObject(SsComTaskDTO.class);
-        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryNoProgressCompanyTask(ssComTaskDTO));
+        SsComTaskBO ssComTaskBO = pageInfo.toJavaObject(SsComTaskBO.class);
+        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryNoProgressCompanyTask(ssComTaskBO));
     }
 
     /**
@@ -61,10 +62,10 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
      * @return
      */
     @Override
-    public PageRows<SsComTaskDTO> queryProgressingCompanyTask(PageInfo pageInfo) {
+    public PageRows<SsComTaskBO> queryProgressingCompanyTask(PageInfo pageInfo) {
         //将json对象转 DTO对象
-        SsComTaskDTO ssComTaskDTO = pageInfo.toJavaObject(SsComTaskDTO.class);
-        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryProgressingCompanyTask(ssComTaskDTO));
+        SsComTaskBO ssComTaskBO = pageInfo.toJavaObject(SsComTaskBO.class);
+        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryProgressingCompanyTask(ssComTaskBO));
     }
 
     /**
@@ -74,10 +75,10 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
      * @return
      */
     @Override
-    public PageRows<SsComTaskDTO> queryFinshedCompanyTask(PageInfo pageInfo) {
+    public PageRows<SsComTaskBO> queryFinshedCompanyTask(PageInfo pageInfo) {
         //将json对象转 DTO对象
-        SsComTaskDTO ssComTaskDTO = pageInfo.toJavaObject(SsComTaskDTO.class);
-        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryFinshedCompanyTask(ssComTaskDTO));
+        SsComTaskBO ssComTaskBO = pageInfo.toJavaObject(SsComTaskBO.class);
+        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryFinshedCompanyTask(ssComTaskBO));
     }
 
     /**
@@ -87,10 +88,10 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
      * @return
      */
     @Override
-    public PageRows<SsComTaskDTO> queryRefusedCompanyTask(PageInfo pageInfo) {
+    public PageRows<SsComTaskBO> queryRefusedCompanyTask(PageInfo pageInfo) {
         //将json对象转 DTO对象
-        SsComTaskDTO ssComTaskDTO = pageInfo.toJavaObject(SsComTaskDTO.class);
-        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryRefusedCompanyTask(ssComTaskDTO));
+        SsComTaskBO ssComTaskBO = pageInfo.toJavaObject(SsComTaskBO.class);
+        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryRefusedCompanyTask(ssComTaskBO));
     }
 
     /**
@@ -106,20 +107,20 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
     }
 
     //查询企业信息和材料
-    public SsComTaskDTO queryComInfoAndMaterial(SsComTaskDTO ssComTaskDTO) {
+    public SsComTaskBO queryComInfoAndMaterial(SsComTaskBO ssComTaskBO) {
         //
-        return baseMapper.queryComInfoAndMaterial(ssComTaskDTO);
+        return baseMapper.queryComInfoAndMaterial(ssComTaskBO);
     }
 
     /**
      * 查询企业信息和 前道传过来的JSON（包含社保截止和付款方式）
      *
-     * @param ssComTaskDTO
+     * @param ssComTaskBO
      * @return
      */
-    public SsComTaskDTO queryComInfoAndPayWay(SsComTaskDTO ssComTaskDTO) {
+    public SsComTaskBO queryComInfoAndPayWay(SsComTaskBO ssComTaskBO) {
 
-        return baseMapper.queryComInfoAndPayWay(ssComTaskDTO);
+        return baseMapper.queryComInfoAndPayWay(ssComTaskBO);
     }
 
     /**
@@ -165,25 +166,25 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
     /**
      * 查询账户信息和材料信息
      *
-     * @param ssComTaskDTO
+     * @param ssComTaskBO
      * @return
      */
-    public SsComTaskDTO queryAccountInfoAndMaterial(SsComTaskDTO ssComTaskDTO) {
+    public SsComTaskBO queryAccountInfoAndMaterial(SsComTaskBO ssComTaskBO) {
 
-        return baseMapper.queryAccountInfoAndMaterial(ssComTaskDTO);
+        return baseMapper.queryAccountInfoAndMaterial(ssComTaskBO);
     }
 
     /**
      * 更新或者处理任务 终止 转移 变更
      *
-     * @param ssComTaskDTO
+     * @param ssComTaskBO
      * @param object
      * @return
      */
     @Transactional(
         rollbackFor = {Exception.class}
     )
-    public boolean updateOrHandlerTask(SsComTaskDTO ssComTaskDTO, Object object) {
+    public boolean updateOrHandlerTask(SsComTaskBO ssComTaskBO, Object object) {
         boolean result = false;
         try {
             if (object instanceof SsComAccount) {//修改账户表
@@ -195,8 +196,8 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
                 //第一个做插入
                 ssAccountRatioMapper.insert(ssAccountRatioList.get(0));
             }
-            ssComTaskDTO.setComAccountId(null);
-            baseMapper.updateById(ssComTaskDTO);
+            ssComTaskBO.setComAccountId(null);
+            baseMapper.updateById(ssComTaskBO);
             result = true;
         } catch (Exception e) {
             result = false;

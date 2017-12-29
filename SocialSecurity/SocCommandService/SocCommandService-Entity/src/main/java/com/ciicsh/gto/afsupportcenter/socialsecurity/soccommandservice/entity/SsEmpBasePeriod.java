@@ -12,9 +12,6 @@ import java.io.Serializable;
  * <p>
  * 雇员正常汇缴社保的基数分段表(每段一个基数)， 每次社保基数变更（比如年调）或补缴都会更新这张表
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-16
  */
 @TableName("ss_emp_base_period")
 public class SsEmpBasePeriod implements Serializable {
@@ -30,12 +27,12 @@ public class SsEmpBasePeriod implements Serializable {
      * 外键，雇员本地社保档案Id
      */
 	@TableField("emp_archive_id")
-	private String empArchiveId;
+	private Long empArchiveId;
     /**
      * 本地社保的雇员任务单Id
      */
 	@TableField("emp_task_id")
-	private String empTaskId;
+	private Long empTaskId;
     /**
      * 基数, 五险合一(基数一致）时有效
      */
@@ -56,6 +53,11 @@ public class SsEmpBasePeriod implements Serializable {
      */
 	@TableField("ss_month")
 	private String ssMonth;
+    /**
+     * 社保停缴办理月份和社保办理月份不可放在同一个字段。
+     */
+	@TableField("ss_month_stop")
+	private String ssMonthStop;
     /**
      * 缴纳方式:1 - 正常 2 - 补缴
      */
@@ -96,19 +98,19 @@ public class SsEmpBasePeriod implements Serializable {
 		this.empBasePeriodId = empBasePeriodId;
 	}
 
-	public String getEmpArchiveId() {
+	public Long getEmpArchiveId() {
 		return empArchiveId;
 	}
 
-	public void setEmpArchiveId(String empArchiveId) {
+	public void setEmpArchiveId(Long empArchiveId) {
 		this.empArchiveId = empArchiveId;
 	}
 
-	public String getEmpTaskId() {
+	public Long getEmpTaskId() {
 		return empTaskId;
 	}
 
-	public void setEmpTaskId(String empTaskId) {
+	public void setEmpTaskId(Long empTaskId) {
 		this.empTaskId = empTaskId;
 	}
 
@@ -142,6 +144,14 @@ public class SsEmpBasePeriod implements Serializable {
 
 	public void setSsMonth(String ssMonth) {
 		this.ssMonth = ssMonth;
+	}
+
+	public String getSsMonthStop() {
+		return ssMonthStop;
+	}
+
+	public void setSsMonthStop(String ssMonthStop) {
+		this.ssMonthStop = ssMonthStop;
 	}
 
 	public Integer getRemitWay() {
@@ -202,6 +212,7 @@ public class SsEmpBasePeriod implements Serializable {
 			", startMonth=" + startMonth +
 			", endMonth=" + endMonth +
 			", ssMonth=" + ssMonth +
+			", ssMonthStop=" + ssMonthStop +
 			", remitWay=" + remitWay +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +

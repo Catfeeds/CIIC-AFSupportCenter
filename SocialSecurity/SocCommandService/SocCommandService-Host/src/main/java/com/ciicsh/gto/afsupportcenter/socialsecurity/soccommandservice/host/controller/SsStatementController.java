@@ -1,14 +1,17 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.statement.SsStatementDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsStatementBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsStatementService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementDTO;
+import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,10 +40,13 @@ public class SsStatementController  extends BasicController<ISsStatementService>
     @PostMapping("/statementQuery")
     public JsonResult<List<SsStatementDTO>> statementQuery(PageInfo pageInfo) {
 
-       /* PageRows<SsStatement> pagePORows = business.statementQuery(pageInfo);
+        PageRows<SsStatementBO> pageBORows = business.statementQuery(pageInfo);
         PageRows<SsStatementDTO> pageRows = new PageRows<SsStatementDTO>();
-        BeanUtils.copyProperties(pagePORows,pageRows);*/
-        PageRows<SsStatementDTO> pageRows =business.statementQuery(pageInfo);
+        BeanUtils.copyProperties(pageBORows,pageRows);
+
+
+
+        //PageRows<SsStatementBO> pageRows =business.statementQuery(pageInfo);
 
 
         return JsonResultKit.ofPage(pageRows);
@@ -73,8 +79,16 @@ public class SsStatementController  extends BasicController<ISsStatementService>
     @Log("对账单查询")
     @PostMapping("/serachStatementData")
     public JsonResult<SsStatementDTO> serachStatementData(SsStatementDTO ssStatementDTO) {
+        //入口转换格式
+        SsStatementBO ssStatementBO = CommonTransform.convertToEntity(ssStatementDTO,SsStatementBO.class);
 
-        SsStatementDTO resultDto = business.serachStatementData(ssStatementDTO);
+        SsStatementBO resultBO = business.serachStatementData(ssStatementBO);
+
+        //出口转换格式
+        SsStatementDTO resultDto = new SsStatementDTO();
+        BeanUtils.copyProperties(resultBO,resultDto);
+
+
         JsonResult<SsStatementDTO> result = new JsonResult<>();
         result.setData(resultDto);
 

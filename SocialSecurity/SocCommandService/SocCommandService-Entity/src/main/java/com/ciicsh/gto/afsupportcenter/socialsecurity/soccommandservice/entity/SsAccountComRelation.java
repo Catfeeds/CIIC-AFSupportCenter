@@ -11,9 +11,6 @@ import java.io.Serializable;
  * <p>
  * 企业社保账户与公司关系表，当企业社保账户性质是独立库，例如：欧莱雅有10家子公司，在中智就一个社保账户
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-16
  */
 @TableName("ss_account_com_relation")
 public class SsAccountComRelation implements Serializable {

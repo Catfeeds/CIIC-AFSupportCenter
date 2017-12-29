@@ -14,9 +14,6 @@ import java.io.Serializable;
  * 企业社保账户信息表
 企业社保账户分类 : 大库（中智大库、外包库）、独立户
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-16
  */
 @TableName("ss_com_account")
 public class SsComAccount implements Serializable {
@@ -69,15 +66,18 @@ public class SsComAccount implements Serializable {
 	@TableField("payment_bank")
 	private String paymentBank;
     /**
-     * 付款方式：1-
-            我司付款账单到他司  
-            2-自己付款账单到我司  
-            3-自己付款账单到他司  
-            4-我司付款账单到我司  
-            5-垫付
+     * 付款方式：.
+1-我司代付款
+2-客户自付
+3-我司垫付
      */
 	@TableField("payment_way")
 	private Integer paymentWay;
+    /**
+     * 社保帐单寄到哪里: 1 我司，2 客户公司
+     */
+	@TableField("bill_receiver")
+	private Integer billReceiver;
     /**
      * 客户交付社保费用给中智的截止日期
      */
@@ -271,6 +271,14 @@ public class SsComAccount implements Serializable {
 
 	public void setPaymentWay(Integer paymentWay) {
 		this.paymentWay = paymentWay;
+	}
+
+	public Integer getBillReceiver() {
+		return billReceiver;
+	}
+
+	public void setBillReceiver(Integer billReceiver) {
+		this.billReceiver = billReceiver;
 	}
 
 	public Integer getExpireDate() {
@@ -470,6 +478,7 @@ public class SsComAccount implements Serializable {
 			", settlementArea=" + settlementArea +
 			", paymentBank=" + paymentBank +
 			", paymentWay=" + paymentWay +
+			", billReceiver=" + billReceiver +
 			", expireDate=" + expireDate +
 			", ssUsername=" + ssUsername +
 			", ssPwd=" + ssPwd +

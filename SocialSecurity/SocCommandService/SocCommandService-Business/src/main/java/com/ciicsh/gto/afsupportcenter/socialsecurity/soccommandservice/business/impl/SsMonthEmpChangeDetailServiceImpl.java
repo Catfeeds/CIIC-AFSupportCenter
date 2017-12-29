@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsMonthEmpChangeDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsMonthEmpChangeDetailDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthEmpChangeBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthEmpChangeDetailBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthEmpChangeDetail;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsMonthEmpChangeDetailMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsMonthEmpChangeDetailService;
@@ -22,12 +22,12 @@ import java.util.*;
 @Service
 public class SsMonthEmpChangeDetailServiceImpl extends ServiceImpl<SsMonthEmpChangeDetailMapper, SsMonthEmpChangeDetail> implements ISsMonthEmpChangeDetailService {
     @Override
-    public List<SsMonthEmpChangeDetailDTO> showMonthEmpChangeDetailByStatementId(SsMonthEmpChangeDTO ssMonthEmpChangeDTO) {
+    public List<SsMonthEmpChangeDetailBO> showMonthEmpChangeDetailByStatementId(SsMonthEmpChangeBO ssMonthEmpChangeBO) {
         //通过条件获得社保汇总明细数据
-        List<SsMonthEmpChangeDetailDTO> detailDTOList = baseMapper.serachMonthEmpChangeDetailByStatementId(ssMonthEmpChangeDTO);
+        List<SsMonthEmpChangeDetailBO> detailDTOList = baseMapper.serachMonthEmpChangeDetailByStatementId(ssMonthEmpChangeBO);
 
         //将原始DTO通过业务逻辑转换成页面展示的DTO
-        List<SsMonthEmpChangeDetailDTO> resulrDTOList = dealEmpChangeDetailDTO(detailDTOList);
+        List<SsMonthEmpChangeDetailBO> resulrDTOList = dealEmpChangeDetailDTO(detailDTOList);
         return resulrDTOList;
     }
 
@@ -37,27 +37,27 @@ public class SsMonthEmpChangeDetailServiceImpl extends ServiceImpl<SsMonthEmpCha
      * @author wengxk
      * @date 2017-12-13
      * @param detailDTOList 社保汇总明细数据
-     * @return   List<SsMonthEmpChangeDetailDTO>
+     * @return   List<SsMonthEmpChangeDetailBO>
      */
-    private List<SsMonthEmpChangeDetailDTO> dealEmpChangeDetailDTO( List<SsMonthEmpChangeDetailDTO> detailDTOList){
+    private List<SsMonthEmpChangeDetailBO> dealEmpChangeDetailDTO(List<SsMonthEmpChangeDetailBO> detailDTOList){
         //如果为空则直接返回
         if(!Optional.ofNullable(detailDTOList).isPresent()){
             return detailDTOList;
         }
         //用于合并的Map
-        Map<String,SsMonthEmpChangeDetailDTO> dealMap = new HashMap<>(detailDTOList.size());
+        Map<String,SsMonthEmpChangeDetailBO> dealMap = new HashMap<>(detailDTOList.size());
         //用于返回的
-        List<SsMonthEmpChangeDetailDTO> resultDTOList = new ArrayList<>();
+        List<SsMonthEmpChangeDetailBO> resultDTOList = new ArrayList<>();
         //循环处理
         for(int i = 0;i < detailDTOList.size();i++){
-            SsMonthEmpChangeDetailDTO dto = detailDTOList.get(i);
+            SsMonthEmpChangeDetailBO dto = detailDTOList.get(i);
             //从map中获取需要操作的节点
-            SsMonthEmpChangeDetailDTO doDto = getDtoOfMap(dealMap,dto);
+            SsMonthEmpChangeDetailBO doDto = getDtoOfMap(dealMap,dto);
             //将该节点的值写入需要操作的节点中
             putDetailValue(doDto,dto);
         }
         //将map中的值返给resultDTOList
-        for (SsMonthEmpChangeDetailDTO value : dealMap.values()) {
+        for (SsMonthEmpChangeDetailBO value : dealMap.values()) {
             resultDTOList.add(value);
         }
 
@@ -70,9 +70,9 @@ public class SsMonthEmpChangeDetailServiceImpl extends ServiceImpl<SsMonthEmpCha
      * @date 2017-12-13
      * @param map 存放数据集的map
      * @param dto 放入的dto
-     * @return   SsMonthEmpChangeDetailDTO
+     * @return   SsMonthEmpChangeDetailBO
      */
-    private SsMonthEmpChangeDetailDTO getDtoOfMap ( Map<String,SsMonthEmpChangeDetailDTO> map,SsMonthEmpChangeDetailDTO dto){
+    private SsMonthEmpChangeDetailBO getDtoOfMap (Map<String,SsMonthEmpChangeDetailBO> map, SsMonthEmpChangeDetailBO dto){
         //拼装key
         String key = dto.getEmployeeId() + '-' + dto.getChangeType();
         //查看map中是否存在该key的节点
@@ -93,7 +93,7 @@ public class SsMonthEmpChangeDetailServiceImpl extends ServiceImpl<SsMonthEmpCha
      * @param putDto 存放值节点
      * @param getDto 取值节点
      */
-    private void putDetailValue(SsMonthEmpChangeDetailDTO putDto,SsMonthEmpChangeDetailDTO getDto){
+    private void putDetailValue(SsMonthEmpChangeDetailBO putDto, SsMonthEmpChangeDetailBO getDto){
         //定义社保类型
         //养老保险
         final int PENSION = 1;

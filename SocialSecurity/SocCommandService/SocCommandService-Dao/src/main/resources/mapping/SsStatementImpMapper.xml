@@ -2,27 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsStatementImpMapper">
 
-    <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatementImp">
-        <id column="statement_imp_id" property="statementImpId" />
-        <result column="statement_id" property="statementId" />
-        <result column="employee_id" property="employeeId" />
-        <result column="emp_name" property="empName" />
-        <result column="change_type" property="changeType" />
-        <result column="change_type_name" property="changeTypeName" />
-        <result column="base_amount" property="baseAmount" />
-        <result column="ss_type" property="ssType" />
-        <result column="ss_type_name" property="ssTypeName" />
-        <result column="com_amount" property="comAmount" />
-        <result column="emp_amount" property="empAmount" />
-        <result column="com_compensate_amount" property="comCompensateAmount" />
-        <result column="emp_compensate_amount" property="empCompensateAmount" />
-        <result column="one_payment" property="onePayment" />
-        <result column="is_active" property="isActive" />
-        <result column="created_time" property="createdTime" />
-        <result column="modified_time" property="modifiedTime" />
-        <result column="created_by" property="createdBy" />
-        <result column="modified_by" property="modifiedBy" />
-    </resultMap>
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatementImp">
+		<id column="statement_imp_id" property="statementImpId" />
+		<result column="statement_id" property="statementId" />
+		<result column="employee_id" property="employeeId" />
+		<result column="emp_name" property="empName" />
+		<result column="change_type" property="changeType" />
+		<result column="change_type_name" property="changeTypeName" />
+		<result column="base_amount" property="baseAmount" />
+		<result column="ss_type" property="ssType" />
+		<result column="ss_type_name" property="ssTypeName" />
+		<result column="com_amount" property="comAmount" />
+		<result column="emp_amount" property="empAmount" />
+		<result column="com_compensate_amount" property="comCompensateAmount" />
+		<result column="emp_compensate_amount" property="empCompensateAmount" />
+		<result column="one_payment" property="onePayment" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
 
 </mapper>

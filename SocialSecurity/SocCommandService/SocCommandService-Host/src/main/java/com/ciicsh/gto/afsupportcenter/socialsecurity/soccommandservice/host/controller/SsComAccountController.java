@@ -1,11 +1,11 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComAccountBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAccountComRelationService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAccountRatioService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComAccountService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAccountComRelationDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComAccountDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAccountComRelationBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -31,7 +31,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssComAccount")
-@Log("企业社保账户信息")
 public class SsComAccountController extends BasicController<ISsComAccountService> {
 
     @Autowired
@@ -46,8 +45,8 @@ public class SsComAccountController extends BasicController<ISsComAccountService
      */
     @RequestMapping("/queryByEmpTaskId")
     @Log("根据雇员任务 ID 查询")
-    public JsonResult<SsComAccountDTO> queryByEmpTaskId(String empTaskId) {
-        SsComAccountDTO dto = business.queryByEmpTaskId(empTaskId);
+    public JsonResult<SsComAccountBO> queryByEmpTaskId(String empTaskId) {
+        SsComAccountBO dto = business.queryByEmpTaskId(empTaskId);
         return JsonResultKit.of(dto);
     }
 
@@ -59,13 +58,13 @@ public class SsComAccountController extends BasicController<ISsComAccountService
      */
     @RequestMapping("/accountQuery")
     @Log("查询")
-    public JsonResult<List<SsComAccountDTO>> accountQuery(PageInfo pageInfo) {
-        PageRows<SsComAccountDTO> pageRows = business.accountQuery(pageInfo);
+    public JsonResult<List<SsComAccountBO>> accountQuery(PageInfo pageInfo) {
+        PageRows<SsComAccountBO> pageRows = business.accountQuery(pageInfo);
         return JsonResultKit.ofPage(pageRows);
     }
     @Log("企业社保管理详情查询")
     @RequestMapping("/comSocialSecurityManageInfo")
-    public JsonResult<SsComAccountDTO>  comSocialSecurityManageInfo(String comAccountId){
+    public JsonResult<SsComAccountBO>  comSocialSecurityManageInfo(String comAccountId){
 
         if(StringUtils.isBlank(comAccountId))return JsonResultKit.ofError("id为空!");
 
@@ -73,15 +72,15 @@ public class SsComAccountController extends BasicController<ISsComAccountService
          * 因都是一对多关系，所以只能分开查询
          */
         //查询账户和账户对应的任务单结果
-        SsComAccountDTO ssComAccountDTO = business.querySocialSecurityManageInfo(comAccountId);
+        SsComAccountBO ssComAccountBO = business.querySocialSecurityManageInfo(comAccountId);
         //再查询工伤比例变更
         List<SsAccountRatio> ssAccountRatioList = iSsAccountRatioService.queryRatioByAccountId(comAccountId);
         //查询 账户关联的公司
-        List<SsAccountComRelationDTO> ssAccountComRelationDTOList =  iSsAccountComRelationService.queryByAccountId(comAccountId);
-        ssComAccountDTO.setSsAccountRatioList(ssAccountRatioList);
-        ssComAccountDTO.setSsAccountComRelationDTOList(ssAccountComRelationDTOList);
+        List<SsAccountComRelationBO> ssAccountComRelationBOList =  iSsAccountComRelationService.queryByAccountId(comAccountId);
+        ssComAccountBO.setSsAccountRatioList(ssAccountRatioList);
+        ssComAccountBO.setSsAccountComRelationBOList(ssAccountComRelationBOList);
 
-        return JsonResultKit.of(ssComAccountDTO);
+        return JsonResultKit.of(ssComAccountBO);
     }
 }
 

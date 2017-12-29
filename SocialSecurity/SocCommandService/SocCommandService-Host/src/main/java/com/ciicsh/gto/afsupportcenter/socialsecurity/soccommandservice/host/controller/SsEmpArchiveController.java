@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpArchiveService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsEmpArchiveDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpArchiveBO;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
@@ -29,8 +29,8 @@ public class SsEmpArchiveController extends BasicController<ISsEmpArchiveService
      * @return
      */
     @RequestMapping("/queryByEmpTaskId")
-    public JsonResult<SsEmpArchiveDTO> queryByEmpTaskId(String empTaskId) {
-        SsEmpArchiveDTO dto = business.queryByEmpTaskId(empTaskId);
+    public JsonResult<SsEmpArchiveBO> queryByEmpTaskId(String empTaskId) {
+        SsEmpArchiveBO dto = business.queryByEmpTaskId(empTaskId);
         return JsonResultKit.of(dto);
     }
 }

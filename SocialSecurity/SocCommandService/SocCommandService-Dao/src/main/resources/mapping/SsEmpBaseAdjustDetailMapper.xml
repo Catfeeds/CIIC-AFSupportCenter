@@ -2,32 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpBaseAdjustDetailMapper">
 
-    <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBaseAdjustDetail">
-        <id column="emp_base_adjust_detailid" property="empBaseAdjustDetailid" />
-        <result column="emp_base_adjust_id" property="empBaseAdjustId" />
-        <result column="emp_archive_id" property="empArchiveId" />
-        <result column="ss_type" property="ssType" />
-        <result column="ss_type_name" property="ssTypeName" />
-        <result column="com_policy_item_id" property="comPolicyItemId" />
-        <result column="emp_css_policy_item_id" property="empCssPolicyItemId" />
-        <result column="com_base" property="comBase" />
-        <result column="emp_base" property="empBase" />
-        <result column="com_ratio" property="comRatio" />
-        <result column="emp_ratio" property="empRatio" />
-        <result column="com_amount" property="comAmount" />
-        <result column="emp_amount" property="empAmount" />
-        <result column="com_addition_amount" property="comAdditionAmount" />
-        <result column="emp_addition_amount" property="empAdditionAmount" />
-        <result column="comemp_amount" property="comempAmount" />
-        <result column="com_diff_amount" property="comDiffAmount" />
-        <result column="emp_diff_amount" property="empDiffAmount" />
-        <result column="comemp_diff_amount" property="comempDiffAmount" />
-        <result column="is_active" property="isActive" />
-        <result column="created_time" property="createdTime" />
-        <result column="modified_time" property="modifiedTime" />
-        <result column="created_by" property="createdBy" />
-        <result column="modified_by" property="modifiedBy" />
-    </resultMap>
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBaseAdjustDetail">
+		<id column="emp_base_adjust_detail_id" property="empBaseAdjustDetailId" />
+		<result column="emp_base_adjust_id" property="empBaseAdjustId" />
+		<result column="emp_archive_id" property="empArchiveId" />
+		<result column="ss_type" property="ssType" />
+		<result column="ss_type_name" property="ssTypeName" />
+		<result column="com_policy_item_id" property="comPolicyItemId" />
+		<result column="emp_css_policy_item_id" property="empCssPolicyItemId" />
+		<result column="com_base" property="comBase" />
+		<result column="emp_base" property="empBase" />
+		<result column="com_ratio" property="comRatio" />
+		<result column="emp_ratio" property="empRatio" />
+		<result column="com_amount" property="comAmount" />
+		<result column="emp_amount" property="empAmount" />
+		<result column="com_addition_amount" property="comAdditionAmount" />
+		<result column="emp_addition_amount" property="empAdditionAmount" />
+		<result column="comemp_amount" property="comempAmount" />
+		<result column="com_diff_amount" property="comDiffAmount" />
+		<result column="emp_diff_amount" property="empDiffAmount" />
+		<result column="comemp_diff_amount" property="comempDiffAmount" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
 
 </mapper>

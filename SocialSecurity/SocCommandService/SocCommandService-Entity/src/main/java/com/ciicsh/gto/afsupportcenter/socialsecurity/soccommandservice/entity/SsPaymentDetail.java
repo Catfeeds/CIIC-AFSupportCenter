@@ -12,9 +12,6 @@ import java.io.Serializable;
  * <p>
  * 本地社保应付金额交易记录明细表
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-20
  */
 @TableName("ss_payment_detail")
 public class SsPaymentDetail implements Serializable {
@@ -29,8 +26,8 @@ public class SsPaymentDetail implements Serializable {
     /**
      * 外键，支付记录Id
      */
-	@TableField("payment_id")
-	private Long paymentId;
+	@TableField("payment_com_id")
+	private Long paymentComId;
     /**
      * 序号
      */
@@ -49,7 +46,7 @@ public class SsPaymentDetail implements Serializable {
      * 社保险种类型，取自全局数据字典表gtobasicdb.DicItem
      */
 	@TableField("ss_type")
-	private Integer ssType;
+	private String ssType;
     /**
      * 社保险种名称
      */
@@ -82,12 +79,12 @@ public class SsPaymentDetail implements Serializable {
 		this.paymentDetailId = paymentDetailId;
 	}
 
-	public Long getPaymentId() {
-		return paymentId;
+	public Long getPaymentComId() {
+		return paymentComId;
 	}
 
-	public void setPaymentId(Long paymentId) {
-		this.paymentId = paymentId;
+	public void setPaymentComId(Long paymentComId) {
+		this.paymentComId = paymentComId;
 	}
 
 	public String getSeq() {
@@ -114,11 +111,11 @@ public class SsPaymentDetail implements Serializable {
 		this.paymentItemName = paymentItemName;
 	}
 
-	public Integer getSsType() {
+	public String getSsType() {
 		return ssType;
 	}
 
-	public void setSsType(Integer ssType) {
+	public void setSsType(String ssType) {
 		this.ssType = ssType;
 	}
 
@@ -182,7 +179,7 @@ public class SsPaymentDetail implements Serializable {
 	public String toString() {
 		return "SsPaymentDetail{" +
 			", paymentDetailId=" + paymentDetailId +
-			", paymentId=" + paymentId +
+			", paymentComId=" + paymentComId +
 			", seq=" + seq +
 			", paymentItem=" + paymentItem +
 			", paymentItemName=" + paymentItemName +

@@ -1,13 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.configuration;
 
 
+import com.baomidou.mybatisplus.enums.DBType;
 import com.baomidou.mybatisplus.plugins.OptimisticLockerInterceptor;
 import com.baomidou.mybatisplus.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.plugins.PerformanceInterceptor;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 
-@MapperScan("com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao")
 public class MybatisPlusConfig {
 
     /**
@@ -26,7 +25,11 @@ public class MybatisPlusConfig {
      */
     @Bean
     public PaginationInterceptor paginationInterceptor() {
-        return new PaginationInterceptor();
+        PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
+        paginationInterceptor.setLocalPage(true);// 开启 PageHelper 的支持
+        paginationInterceptor.setDialectType(DBType.MYSQL.getDb());
+
+        return paginationInterceptor;
     }
 
     /**

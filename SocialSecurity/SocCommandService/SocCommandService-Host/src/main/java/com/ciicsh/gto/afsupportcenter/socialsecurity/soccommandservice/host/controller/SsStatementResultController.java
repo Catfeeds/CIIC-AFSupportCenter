@@ -2,18 +2,22 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.statement.SsStatementResultDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsStatementResultService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementResultDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsStatementResultBO;
+import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * <p>
@@ -39,9 +43,24 @@ public class SsStatementResultController extends BasicController<ISsStatementRes
     @PostMapping("/statementResultQuery")
     public JsonResult<List<SsStatementResultDTO>> statementResultQuery(SsStatementResultDTO ssStatementResultDTO) {
 
-        List<SsStatementResultDTO> resultList =business.statementResultQuery(ssStatementResultDTO);
+        //转换格式
+        SsStatementResultBO ssStatementResultBO = CommonTransform.convertToEntity(ssStatementResultDTO,SsStatementResultBO.class);
+
+
+        List<SsStatementResultBO> resultList =business.statementResultQuery(ssStatementResultBO);
+        //转换格式
+        List<SsStatementResultDTO> resultDTOList  = CommonTransform.convertToDTOs(resultList,SsStatementResultDTO.class);
+        //BeanUtils.copyProperties(resultList,resultDTOList);
+//        //循环转格式
+//        if(Optional.ofNullable(resultList).isPresent()){
+//            for(int i = 0;i < resultList.size();i++){
+//                SsStatementResultDTO resultDTO = new SsStatementResultDTO();
+//                BeanUtils.copyProperties(resultList.get(i),resultDTO);
+//                resultDTOList.add(resultDTO);
+//            }
+//        }
         JsonResult<List<SsStatementResultDTO>> jsonResult= new JsonResult<>();
-        jsonResult.setData(resultList);
+        jsonResult.setData(resultDTOList);
 
         return jsonResult;
     }

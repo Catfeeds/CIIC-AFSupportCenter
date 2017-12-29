@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsEmpArchiveDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpArchiveBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpArchive;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpArchiveMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpArchiveService;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsEmpArchive> implements ISsEmpArchiveService {
 
     @Override
-    public SsEmpArchiveDTO queryByEmpTaskId(String empTaskId) {
+    public SsEmpArchiveBO queryByEmpTaskId(String empTaskId) {
         return baseMapper.queryByEmpTaskId(empTaskId);
     }
 }

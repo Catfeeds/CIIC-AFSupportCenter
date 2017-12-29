@@ -2,15 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsComTaskMapper">
     <resultMap id="ModelResultMap"
-               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComTaskDTO"
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComTaskBO"
                extends="BaseResultMap">
         <result column="title" property="companyName"/>
     </resultMap>
     <resultMap id="getMaterialResultMap"
-               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComTaskDTO"
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComTaskBO"
                extends="ModelResultMap">
-        <association property="ssComAccountDTO"
-                     javaType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComAccountDTO">
+        <association property="ssComAccountBO"
+                     javaType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComAccountBO">
             <result column="com_account_id_acc" property="comAccountId"/>
             <result column="supplier_id" property="supplierId"/>
             <result column="ss_account_type" property="ssAccountType"/>
@@ -52,7 +52,7 @@
         <collection property="materialList"
                     ofType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComMaterial">
             <id column="com_material_id" property="comMaterialId"/>
-            <result column="company_task_id_m" property="companyTaskId"/>
+            <result column="com_task_id_m" property="comTaskId"/>
             <result column="material_type" property="materialType"/>
             <result column="material_name" property="materialName"/>
             <result column="submit_time_m" property="submitTime"/>
@@ -68,10 +68,10 @@
     </resultMap>
 
     <resultMap id="getComAccountResultMap"
-               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComTaskDTO"
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComTaskBO"
                extends="ModelResultMap">
-        <association property="ssComAccountDTO"
-                     javaType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComAccountDTO">
+        <association property="ssComAccountBO"
+                     javaType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComAccountBO">
             <result column="com_account_id_acc" property="comAccountId"/>
             <result column="supplier_id" property="supplierId"/>
             <result column="ss_account_type" property="ssAccountType"/>
@@ -114,7 +114,7 @@
     <select id="queryNoProgressCompanyTask" resultMap="ModelResultMap">
         SELECT
         sct.company_id,
-        sct.company_task_id,
+        sct.com_task_id,
         sct.task_category,
         sct.customer_id,
         sct.expire_date,
@@ -151,7 +151,7 @@
         SELECT
         sct.task_status,
         sct.company_id,
-        sct.company_task_id,
+        sct.com_task_id,
         sct.task_category,
         sct.customer_id,
         sct.expire_date,
@@ -201,7 +201,7 @@
     <select id="queryFinshedCompanyTask" resultMap="ModelResultMap">
         SELECT
         sct.company_id,
-        sct.company_task_id,
+        sct.com_task_id,
         sct.task_category,
         sct.customer_id,
         sct.expire_date,
@@ -243,7 +243,7 @@
     <select id="queryRefusedCompanyTask" resultMap="ModelResultMap">
         SELECT
         sct.company_id,
-        sct.company_task_id,
+        sct.com_task_id,
         sct.task_category,
         sct.customer_id,
         sct.expire_date,
@@ -279,9 +279,9 @@
 
         UPDATE ss_com_task sct SET sct.task_status = 4
 
-        WHERE company_task_id IN
+        WHERE com_task_id IN
         <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
-            #{item.companyTaskId}
+            #{item.comTaskId}
         </foreach>
     </update>
 
@@ -289,7 +289,7 @@
     <select id="queryComInfoAndMaterial" resultMap="getMaterialResultMap">
         SELECT
         sct.company_id,
-        sct.company_task_id,
+        sct.com_task_id,
         sct.task_category,
         sct.customer_id,
         sct.expire_date,
@@ -304,7 +304,7 @@
         LEFT JOIN
         (SELECT
         com_material_id,
-        company_task_id AS company_task_id_m,
+        com_task_id AS com_task_id_m,
         material_type,
         material_name,
         submit_time AS submit_time_m,
@@ -314,10 +314,10 @@
         FROM
         ss_com_material WHERE is_active = 1
         )
-        scm ON sct.company_task_id = scm.company_task_id_m
+        scm ON sct.com_task_id = scm.com_task_id_m
         WHERE
         sct.is_active =1
-        AND sct.company_task_id = #{companyTaskId}
+        AND sct.com_task_id = #{comTaskId}
         <if test="isComplete ==0 ">
             AND sct.task_status != 3
         </if>
@@ -332,7 +332,7 @@
     <select id="queryAccountInfoAndMaterial" resultMap="getMaterialResultMap">
         SELECT
         sct.company_id,
-        sct.company_task_id,
+        sct.com_task_id,
         sct.task_category,
         sct.customer_id,
         sct.expire_date,
@@ -351,15 +351,41 @@
         scm.*,
         sca.*
         FROM ss_com_task sct
-        LEFT JOIN (SELECT com_account_id AS com_account_id_acc,
-        supplier_id,ss_account_type,ss_account,bank_account,com_account_name,settlement_area,payment_bank,payment_way,expire_date
-        AS
-        expire_date_acc,ss_username,ss_pwd,initial_balance,initial_debt,origin_place,origin_place_remark,query_account,deliver_way,deliver_way_remark,provide_certificate_time,change_time,receive_date,into_date,end_date,dispatch_material,remark
-        AS remark_acc,state FROM ss_com_account)sca ON sct.com_account_id = sca.com_account_id_acc
+        LEFT JOIN (
+        SELECT
+        com_account_id AS com_account_id_acc,
+        supplier_id,
+        ss_account_type,
+        ss_account,
+        bank_account,
+        com_account_name,
+        settlement_area,
+        payment_bank,
+        payment_way,
+        expire_date AS expire_date_acc,
+        ss_username,
+        ss_pwd,
+        initial_balance,
+        initial_debt,
+        origin_place,
+        origin_place_remark,
+        query_account,
+        deliver_way,
+        deliver_way_remark,
+        provide_certificate_time,
+        change_time,
+        receive_date,
+        into_date,
+        end_date,
+        dispatch_material,
+        remark AS remark_acc,
+        state
+        FROM ss_com_account
+        )sca ON sct.com_account_id = sca.com_account_id_acc
         LEFT JOIN
         (SELECT
         com_material_id,
-        company_task_id AS company_task_id_m,
+        com_task_id AS com_task_id_m,
         material_type,
         material_name,
         submit_time AS submit_time_m,
@@ -369,11 +395,18 @@
         FROM
         ss_com_material WHERE is_active = 1
         )
-        scm ON sct.company_task_id = scm.company_task_id_m
-        LEFT JOIN (SELECT company_id, title FROM sal_company WHERE is_active = 1)sc ON sct.company_id = sc.company_id
+        scm ON sct.com_task_id = scm.com_task_id_m
+        LEFT JOIN (
+        SELECT
+        company_id,
+        title
+        FROM
+        sal_company
+        WHERE is_active = 1
+        )sc ON sct.company_id = sc.company_id
         WHERE
         sct.is_active =1
-        AND sct.company_task_id = #{companyTaskId}
+        AND sct.com_task_id = #{comTaskId}
         <if test="isComplete ==0 ">
             AND sct.task_status != 3
         </if>
@@ -390,7 +423,7 @@
         SELECT
         sct.company_id,
         sct.com_account_id,
-        sct.company_task_id,
+        sct.com_task_id,
         sct.task_category,
         sct.customer_id,
         sct.expire_date,
@@ -415,12 +448,12 @@
         AS remark_acc FROM ss_com_account WHERE is_active = 1)sca
         ON sct.com_account_id = sca.com_account_id_acc
         LEFT JOIN (SELECT ss_account_ratio_id, com_account_id AS
-        com_account_id_sar,industry_category,com_ratio,start_month,end_month FROM ss_account_ratio WHERE is_active =
-        1)sat
+        com_account_id_sar,industry_category,com_ratio,start_month,end_month FROM ss_account_ratio WHERE is_active =1
+        )sat
         ON sca.com_account_id_acc = sat.com_account_id_sar
         WHERE
         sct.is_active =1
-        AND sct.company_task_id = #{companyTaskId}
+        AND sct.com_task_id = #{comTaskId}
         <if test="isComplete ==0 ">
             AND sct.task_status != 3
         </if>
@@ -451,6 +484,6 @@
             sct.task_status = #{taskStatus}-1
         </if>
         WHERE
-            sct.company_task_id = #{companyTaskId}
+            sct.com_task_id = #{comTaskId}
     </update>
 </mapper>

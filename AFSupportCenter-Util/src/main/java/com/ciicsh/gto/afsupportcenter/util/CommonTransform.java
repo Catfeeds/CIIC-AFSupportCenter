@@ -10,7 +10,7 @@ public class CommonTransform {
      * 转换为DTO集合
      *
      * @param list 实体，即：bo或者po
-     * @param t    dto
+     * @param t    bo
      * @return
      */
     public static <T, E> List<T> convertToDTOs(List<E> list, Class<T> t) {
@@ -23,7 +23,7 @@ public class CommonTransform {
     /**
      * 转换为DTO
      * @param e 实体，即：bo或者po
-     * @param t dto
+     * @param t bo
      * @return
      */
     public static <T, E> T convertToDTO(E e, Class<T> t) {

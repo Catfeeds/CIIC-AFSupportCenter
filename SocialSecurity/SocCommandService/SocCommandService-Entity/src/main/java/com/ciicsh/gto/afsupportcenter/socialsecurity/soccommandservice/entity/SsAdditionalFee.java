@@ -12,9 +12,6 @@ import java.io.Serializable;
  * <p>
  * 一次性社保、滞纳金等纯金额的产品险种，与五险一金不同
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-16
  */
 @TableName("ss_additional_fee")
 public class SsAdditionalFee implements Serializable {

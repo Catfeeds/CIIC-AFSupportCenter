@@ -4,8 +4,8 @@
 
 
     <!-- 表单展示查询映射结果 -->
-    <resultMap id="DtoResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementResultDTO">
-        <id column="statement_detail_id" jdbcType="BIGINT" property="statementDetailId" />
+    <resultMap id="DtoResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsStatementResultBO">
+        <id column="statement_detail_id" jdbcType="BIGINT" property="statementResultId" />
         <result column="statement_id" jdbcType="BIGINT" property="statementId" />
         <result column="employee_id" jdbcType="VARCHAR" property="employeeId" />
         <result column="employee_name" jdbcType="VARCHAR" property="employeeName" />
@@ -26,7 +26,7 @@
         <result column="modified_by" jdbcType="VARCHAR" property="modifiedBy" />
     </resultMap>
 
-    <select id="statementResultQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementResultDTO" resultMap="DtoResultMap">
+    <select id="statementResultQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsStatementResultBO" resultMap="DtoResultMap">
         SELECT
           T1.*,T2.employee_name
         FROM
@@ -42,7 +42,7 @@
         ORDER BY
           T1.employee_id,T1.change_type,T1.ss_type,T1.project_type
     </select>
-    <update id="cleanResultByStatementId" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementResultDTO">
+    <update id="cleanResultByStatementId" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsStatementResultBO">
         UPDATE
           ss_statement_result T1
         SET

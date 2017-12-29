@@ -4,7 +4,7 @@
 
 
     <!-- 表单展示查询映射结果 -->
-    <resultMap id="DtoResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementDTO">
+    <resultMap id="DtoResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsStatementBO">
         <id column="statement_id" property="statementId" />
         <result column="com_account_id" property="comAccountId" />
         <result column="com_account_name" property="comAccountName" />
@@ -24,7 +24,7 @@
         <result column="modified_by" property="modifiedBy" />
     </resultMap>
 
-    <select id="statementQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementDTO" resultMap="DtoResultMap">
+    <select id="statementQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsStatementBO" resultMap="DtoResultMap">
         SELECT
           T1.*,T2.com_account_name
         FROM
@@ -62,7 +62,7 @@
             </if>
     </select>
 
-    <select id="serachStatementByStatementId" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsStatementDTO" resultMap="DtoResultMap">
+    <select id="serachStatementByStatementId" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsStatementBO" resultMap="DtoResultMap">
         SELECT
           T1.*,T2.com_account_name
         FROM

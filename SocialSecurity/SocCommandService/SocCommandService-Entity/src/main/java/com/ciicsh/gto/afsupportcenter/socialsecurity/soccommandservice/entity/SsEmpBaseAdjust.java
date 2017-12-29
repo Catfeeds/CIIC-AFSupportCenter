@@ -12,9 +12,6 @@ import java.io.Serializable;
  * <p>
  * 雇员社保基数调整历史月差异表
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-16
  */
 @TableName("ss_emp_base_adjust")
 public class SsEmpBaseAdjust implements Serializable {
@@ -30,12 +27,12 @@ public class SsEmpBaseAdjust implements Serializable {
      * 外键，雇员社保档案Id
      */
 	@TableField("emp_archive_id")
-	private String empArchiveId;
+	private Long empArchiveId;
     /**
      * 雇员本地社保任务单Id
      */
 	@TableField("emp_task_id")
-	private String empTaskId;
+	private Long empTaskId;
     /**
      * 处理方式 1 -网上申报 2 柜面办理
      */
@@ -111,19 +108,19 @@ public class SsEmpBaseAdjust implements Serializable {
 		this.empBaseAdjustId = empBaseAdjustId;
 	}
 
-	public String getEmpArchiveId() {
+	public Long getEmpArchiveId() {
 		return empArchiveId;
 	}
 
-	public void setEmpArchiveId(String empArchiveId) {
+	public void setEmpArchiveId(Long empArchiveId) {
 		this.empArchiveId = empArchiveId;
 	}
 
-	public String getEmpTaskId() {
+	public Long getEmpTaskId() {
 		return empTaskId;
 	}
 
-	public void setEmpTaskId(String empTaskId) {
+	public void setEmpTaskId(Long empTaskId) {
 		this.empTaskId = empTaskId;
 	}
 

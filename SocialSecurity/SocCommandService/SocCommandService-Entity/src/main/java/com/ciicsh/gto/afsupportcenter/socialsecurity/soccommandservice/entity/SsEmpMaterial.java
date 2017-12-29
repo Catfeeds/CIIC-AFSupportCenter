@@ -11,9 +11,6 @@ import java.io.Serializable;
  * <p>
  * 雇员材料收缴
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-16
  */
 @TableName("ss_emp_material")
 public class SsEmpMaterial implements Serializable {
@@ -29,7 +26,7 @@ public class SsEmpMaterial implements Serializable {
      * 本地社保的雇员任务单Id
      */
 	@TableField("emp_task_id")
-	private String empTaskId;
+	private Long empTaskId;
     /**
      * 材料类型：1 原件、2  复印件、3 扫描件
      */
@@ -103,11 +100,11 @@ public class SsEmpMaterial implements Serializable {
 		this.empMaterialId = empMaterialId;
 	}
 
-	public String getEmpTaskId() {
+	public Long getEmpTaskId() {
 		return empTaskId;
 	}
 
-	public void setEmpTaskId(String empTaskId) {
+	public void setEmpTaskId(Long empTaskId) {
 		this.empTaskId = empTaskId;
 	}
 

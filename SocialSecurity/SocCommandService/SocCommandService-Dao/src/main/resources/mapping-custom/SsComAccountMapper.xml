@@ -4,18 +4,18 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMapDTO" extends="BaseResultMap"
-               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComAccountDTO">
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComAccountBO">
         <!-- sal_company -->
         <result column="company_id" property="companyId"/>
         <result column="title" property="title"/>
     </resultMap>
     <!--关联账户表和任务单表-->
     <resultMap id="AccountAndTaskResultMap" extends="BaseResultMap"
-               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsComAccountDTO">
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComAccountBO">
         <collection property="ssComTaskList"
                     ofType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask">
-            <id column="company_task_id" property="companyTaskId"/>
-            <result column="com_account_id" property="comAccountId"/>
+            <id column="com_task_id" property="comTaskId"/>
+            <result column="com_account_id_" property="comAccountId"/>
             <result column="company_id" property="companyId"/>
             <result column="task_category" property="taskCategory"/>
             <result column="task_status" property="taskStatus"/>
@@ -84,8 +84,8 @@
         LEFT JOIN
                 (
                     SELECT
-                    com_account_id,
-                    company_task_id,
+                    com_account_id AS  com_account_id_t,
+                    com_task_id,
                     task_category,
                     modified_by,
                     modified_time,
@@ -95,7 +95,7 @@
                     submit_remark
                     FROM ss_com_task
                     WHERE is_active=1 AND task_status=3 OR task_status=4
-                )sct ON sca.com_account_id = sct.com_account_id
+                )sct ON sca.com_account_id = sct.com_account_id_t
            WHERE sca.com_account_id = #{comAccountId}
 
     </select>

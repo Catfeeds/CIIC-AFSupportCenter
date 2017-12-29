@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsEmpArchiveDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpArchiveBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpArchive;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,6 +22,6 @@ public interface SsEmpArchiveMapper extends BaseMapper<SsEmpArchive> {
      * @param empTaskId
      * @return
      */
-    SsEmpArchiveDTO queryByEmpTaskId(@Param("empTaskId") String empTaskId);
+    SsEmpArchiveBO queryByEmpTaskId(@Param("empTaskId") String empTaskId);
 
 }

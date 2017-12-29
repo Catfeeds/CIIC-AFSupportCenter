@@ -44,12 +44,6 @@ public class MybatisPlusGeneratorRun {
 
         // 执行生成
         mpg.execute();
-
-        // 打印注入设置【可无】
-        InjectionConfig cfg = mpg.getCfg();
-        if (cfg != null && cfg.getMap() != null) {
-            System.err.println(cfg.getMap().get("abc"));
-        }
     }
 
     static AutoGenerator handleGenerator() {
@@ -94,7 +88,6 @@ public class MybatisPlusGeneratorRun {
         gc.setBaseResultMap(true);// XML ResultMap
         gc.setBaseColumnList(false);// XML columList
         // .setKotlin(true) 是否生成 kotlin 代码
-        gc.setAuthor("HuangXing");
 
         // 自定义文件命名，注意 %s 会自动填充表实体属性！
 //         gc.setMapperName("%sDao");

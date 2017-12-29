@@ -14,9 +14,6 @@ import java.io.Serializable;
 如果为某雇员多缴纳了社保金额，则需向社保局提出退账申请，退账申请受理后落地到此表。
                                                 
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-16
  */
 @TableName("ss_emp_refund")
 public class SsEmpRefund implements Serializable {
@@ -32,12 +29,12 @@ public class SsEmpRefund implements Serializable {
      * 冗余，雇员任务表
      */
 	@TableField("emp_task_id")
-	private String empTaskId;
+	private Long empTaskId;
     /**
      * 外键，关联雇员社保档案Id
      */
 	@TableField("emp_archive_id")
-	private String empArchiveId;
+	private Long empArchiveId;
     /**
      * 办理月份（抵扣所属月份）
      */
@@ -107,19 +104,19 @@ public class SsEmpRefund implements Serializable {
 		this.empRefundId = empRefundId;
 	}
 
-	public String getEmpTaskId() {
+	public Long getEmpTaskId() {
 		return empTaskId;
 	}
 
-	public void setEmpTaskId(String empTaskId) {
+	public void setEmpTaskId(Long empTaskId) {
 		this.empTaskId = empTaskId;
 	}
 
-	public String getEmpArchiveId() {
+	public Long getEmpArchiveId() {
 		return empArchiveId;
 	}
 
-	public void setEmpArchiveId(String empArchiveId) {
+	public void setEmpArchiveId(Long empArchiveId) {
 		this.empArchiveId = empArchiveId;
 	}
 

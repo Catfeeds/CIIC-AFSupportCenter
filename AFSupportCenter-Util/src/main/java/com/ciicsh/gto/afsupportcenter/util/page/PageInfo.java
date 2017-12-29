@@ -18,6 +18,8 @@ public class PageInfo implements Serializable {
     private Integer pageSize;
     // 排序方式
     private String orderBy;
+    // 排序
+    private boolean isAsc;
 
     // filterEmpty true 过滤空字符串
     private boolean filterEmpty = true;
@@ -57,6 +59,14 @@ public class PageInfo implements Serializable {
         this.orderBy = orderBy;
     }
 
+    public boolean isAsc() {
+        return isAsc;
+    }
+
+    public void setAsc(boolean asc) {
+        isAsc = asc;
+    }
+
     public boolean isFilterEmpty() {
         return filterEmpty;
     }
@@ -67,8 +77,14 @@ public class PageInfo implements Serializable {
 
     @Override
     public String toString() {
-        return "PageInfo{" + "pageNum=" + pageNum + ", pageSize=" + pageSize + ", orderBy='" + orderBy + '\'' + ", params="
-            + params + '}';
+        return "PageInfo{" +
+            "pageNum=" + pageNum +
+            ", pageSize=" + pageSize +
+            ", orderBy='" + orderBy + '\'' +
+            ", isAsc=" + isAsc +
+            ", filterEmpty=" + filterEmpty +
+            ", params=" + params +
+            '}';
     }
 
     public <V> V put(String key, V value) {

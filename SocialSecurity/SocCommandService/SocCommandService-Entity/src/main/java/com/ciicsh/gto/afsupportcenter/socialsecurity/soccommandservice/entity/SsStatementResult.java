@@ -12,9 +12,6 @@ import java.io.Serializable;
  * <p>
  * 对账差异结果表
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-20
  */
 @TableName("ss_statement_result")
 public class SsStatementResult implements Serializable {
@@ -24,8 +21,8 @@ public class SsStatementResult implements Serializable {
     /**
      * 记录Id
      */
-	@TableId(value="statement_detail_id", type= IdType.AUTO)
-	private Long statementDetailId;
+	@TableId(value="statement_result_id", type= IdType.AUTO)
+	private Long statementResultId;
     /**
      * 外键，对账单Id
      */
@@ -113,12 +110,12 @@ public class SsStatementResult implements Serializable {
 	private String modifiedBy;
 
 
-	public Long getStatementDetailId() {
-		return statementDetailId;
+	public Long getStatementResultId() {
+		return statementResultId;
 	}
 
-	public void setStatementDetailId(Long statementDetailId) {
-		this.statementDetailId = statementDetailId;
+	public void setStatementResultId(Long statementResultId) {
+		this.statementResultId = statementResultId;
 	}
 
 	public Long getStatementId() {
@@ -260,7 +257,7 @@ public class SsStatementResult implements Serializable {
 	@Override
 	public String toString() {
 		return "SsStatementResult{" +
-			", statementDetailId=" + statementDetailId +
+			", statementResultId=" + statementResultId +
 			", statementId=" + statementId +
 			", employeeId=" + employeeId +
 			", changeType=" + changeType +

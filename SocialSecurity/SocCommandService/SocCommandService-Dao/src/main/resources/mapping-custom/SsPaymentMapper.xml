@@ -28,7 +28,7 @@
         <result column="modified_by" property="modifiedBy" />
     </resultMap>
 
-    <select id="paymentQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsPaymentDTO" resultMap="DtoResultMap">
+    <select id="paymentQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentBO" resultMap="DtoResultMap">
         SELECT
             SP.*
         FROM
@@ -56,5 +56,19 @@
             </if>
     </select>
 
-
+    <select id="searchPaymentByAccountTypeAndState" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentSrarchBO" resultMap="DtoResultMap">
+        SELECT
+        SP.*
+        FROM
+        ss_payment SP
+        WHERE
+        SP.is_active = '1'
+        <if test = "accountType != null and accountType != ''">
+            AND SP.account_type = #{accountType}
+        </if>
+        AND SP.payment_state IN
+        <foreach collection="paymentStateList" item="paymentState" open="(" close=")" separator=",">
+            #{paymentState}
+        </foreach>
+    </select>
 </mapper>

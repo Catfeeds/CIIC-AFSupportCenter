@@ -12,9 +12,6 @@ import java.io.Serializable;
  * <p>
  * 记录本地社保和全国委托社保中，向社保局提取雇员社保金额的业务记录，这是一种特殊业务。
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-16
  */
 @TableName("ss_emp_withdraw")
 public class SsEmpWithdraw implements Serializable {
@@ -30,12 +27,12 @@ public class SsEmpWithdraw implements Serializable {
      * 本地社保的雇员任务单Id
      */
 	@TableField("emp_task_id")
-	private String empTaskId;
+	private Long empTaskId;
     /**
      * 外键，雇员本地社保档案Id
      */
 	@TableField("emp_archive_id")
-	private String empArchiveId;
+	private Long empArchiveId;
     /**
      * 提取金额
      */
@@ -85,19 +82,19 @@ public class SsEmpWithdraw implements Serializable {
 		this.empWithdrawId = empWithdrawId;
 	}
 
-	public String getEmpTaskId() {
+	public Long getEmpTaskId() {
 		return empTaskId;
 	}
 
-	public void setEmpTaskId(String empTaskId) {
+	public void setEmpTaskId(Long empTaskId) {
 		this.empTaskId = empTaskId;
 	}
 
-	public String getEmpArchiveId() {
+	public Long getEmpArchiveId() {
 		return empArchiveId;
 	}
 
-	public void setEmpArchiveId(String empArchiveId) {
+	public void setEmpArchiveId(Long empArchiveId) {
 		this.empArchiveId = empArchiveId;
 	}
 

@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsMonthEmpChangeDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthEmpChangeBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthEmpChange;
 import com.baomidou.mybatisplus.service.IService;
 
@@ -19,8 +19,8 @@ public interface ISsMonthEmpChangeService extends IService<SsMonthEmpChange> {
      *
      * @author wengxk
      * @date 2017-12-13
-     * @param ssMonthEmpChangeDTO 检索条件
-     * @return  SsMonthEmpChangeDTO
+     * @param ssMonthEmpChangeBO 检索条件
+     * @return  SsMonthEmpChangeBO
      */
-    SsMonthEmpChangeDTO serachMonthEmpChangeByStatementId(SsMonthEmpChangeDTO ssMonthEmpChangeDTO);
+    SsMonthEmpChangeBO serachMonthEmpChangeByStatementId(SsMonthEmpChangeBO ssMonthEmpChangeBO);
 }

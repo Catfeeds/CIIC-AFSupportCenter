@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod;
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod;
 
 import java.util.List;
 
@@ -22,10 +22,10 @@ public interface ISsEmpTaskPeriodService extends IService<SsEmpTaskPeriod> {
      * @param empTaskId
      * @return
      */
-    List<SsEmpTaskPeriod> queryByEmpTaskId(String empTaskId);
+    List<SsEmpTaskPeriod> queryByEmpTaskId(Long empTaskId);
 
     /**
-     * 根据雇员任务 id 保存数据
+     * 根据雇员任务 保存数据
      * @param periods
      * @param empTaskId
      */

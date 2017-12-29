@@ -40,6 +40,7 @@ public class LogAspect extends BasicAspect {
       returnValue = joinPoint.proceed();
     } catch (Throwable e) {
       throwable = e;
+        e.printStackTrace();
     }
     // 结束执行 controller 环绕通知
     long end = System.currentTimeMillis();
