@@ -53,7 +53,7 @@ public class SsStatementResultDTO {
     /**
      * 外键：险种
      */
-    private Integer ssType;
+    private String ssType;
     /**
      * 社保险种名称
      */
@@ -152,14 +152,6 @@ public class SsStatementResultDTO {
         this.projectTypeName = projectTypeName;
     }
 
-    public Integer getSsType() {
-        return ssType;
-    }
-
-    public void setSsType(Integer ssType) {
-        this.ssType = ssType;
-    }
-
     public String getSsTypeName() {
         return ssTypeName;
     }
@@ -246,5 +238,13 @@ public class SsStatementResultDTO {
 
     public void setEmployeeName(String employeeName) {
         this.employeeName = employeeName;
+    }
+
+    public String getSsType() {
+        return ssType;
+    }
+
+    public void setSsType(String ssType) {
+        this.ssType = ssType;
     }
 }

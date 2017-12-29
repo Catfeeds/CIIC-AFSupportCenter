@@ -96,22 +96,22 @@ public class SsMonthEmpChangeDetailServiceImpl extends ServiceImpl<SsMonthEmpCha
     private void putDetailValue(SsMonthEmpChangeDetailBO putDto, SsMonthEmpChangeDetailBO getDto){
         //定义社保类型
         //养老保险
-        final int PENSION = 1;
+        final String PENSION = "DIT00042";
 
         //医疗保险
-        final int MEDICAL = 2;
+        final String MEDICAL = "DIT00043";
 
         //失业保险
-        final int UNEMPLOYMENT = 5;
+        final String UNEMPLOYMENT = "DIT00046";
 
         //工伤保险
-        final int ACCIDENT = 3;
+        final String ACCIDENT = "DIT00044";
 
         //生育保险
-        final int MATERNITY = 4;
+        final String MATERNITY = "DIT00045";
 
         //如果是养老
-        if(PENSION == getDto.getSsType()){
+        if(PENSION.equals(getDto.getSsType())){
             putDto.setComAmountPension(getDto.getComAmount());
             putDto.setEmpAmountPension(getDto.getEmpAmount());
             putDto.setComCompensatedAmountPension(getDto.getComCompensateAmount());
@@ -120,7 +120,7 @@ public class SsMonthEmpChangeDetailServiceImpl extends ServiceImpl<SsMonthEmpCha
         }
 
         //如果是医疗
-        if(MEDICAL == getDto.getSsType()){
+        if(MEDICAL.equals(getDto.getSsType())){
             putDto.setComAmountMedical(getDto.getComAmount());
             putDto.setEmpAmountMedical(getDto.getEmpAmount());
             putDto.setComCompensatedAmountMedical(getDto.getComCompensateAmount());
@@ -128,7 +128,7 @@ public class SsMonthEmpChangeDetailServiceImpl extends ServiceImpl<SsMonthEmpCha
         }
 
         //如果是失业
-        if(UNEMPLOYMENT == getDto.getSsType()){
+        if(UNEMPLOYMENT.equals(getDto.getSsType())){
             putDto.setComAmountUnemployment(getDto.getComAmount());
             putDto.setEmpAmountUnemployment(getDto.getEmpAmount());
             putDto.setComCompensatedAmountUnemployment(getDto.getComCompensateAmount());
@@ -136,7 +136,7 @@ public class SsMonthEmpChangeDetailServiceImpl extends ServiceImpl<SsMonthEmpCha
         }
 
         //如果是工伤
-        if(ACCIDENT == getDto.getSsType()){
+        if(ACCIDENT.equals(getDto.getSsType())){
             putDto.setComAmountAccident(getDto.getComAmount());
             putDto.setEmpAmountAccident(getDto.getEmpAmount());
             putDto.setComCompensatedAmountAccident(getDto.getComCompensateAmount());
@@ -144,7 +144,7 @@ public class SsMonthEmpChangeDetailServiceImpl extends ServiceImpl<SsMonthEmpCha
         }
 
         //如果是生育
-        if(MATERNITY == getDto.getSsType()){
+        if(MATERNITY.equals(getDto.getSsType())){
             putDto.setComAmountMaternity(getDto.getComAmount());
             putDto.setEmpAmountMaternity(getDto.getEmpAmount());
             putDto.setComCompensatedAmountMaternity(getDto.getComCompensateAmount());

@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.statement;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.payment;
 
 import java.util.List;
 
