@@ -13,8 +13,9 @@ import com.baomidou.mybatisplus.service.IService;
  * @since 2017-12-23
  */
 public interface ISsMonthChargeService extends IService<SsMonthCharge>{
-    void createMonthNonStandard(String comAccuntId, String ssMonth, String computeType);
-    void createMonthStandard(String comAccuntId, String ssMonth, String computeType);
-    //void createMonthEmpCharge(String comAccuntId, String ssMonth, String cmputeType)
-    //void createMonthEmpChangeReport(String comAccuntId, String ssMonth, String computeType);
+    void createMonthCharge( String ssMonth,String comAccuntId);
+//    void createMonthNonStandard(String comAccuntId, String ssMonth, String computeType);
+//    void createMonthStandard(String comAccuntId, String ssMonth, String computeType);
+//    void createMonthEmpCharge(String comAccuntId, String ssMonth, String cmputeType)
+//    void createMonthEmpChangeReport(String comAccuntId, String ssMonth, String computeType);
 }

@@ -17,6 +17,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -31,27 +32,40 @@ import java.util.List;
 @Service
 public class SsMonthChargeServiceImpl extends ServiceImpl<SsMonthChargeMapper, SsMonthCharge> implements ISsMonthChargeService {
 
+
     @Autowired
-    SsCreateEmpChangeReportMapper createEmpChangeReportMapper;
-    @Autowired
-    SsMonthEmpChangeMapper monthEmpChangeMapper;
-    @Autowired
-    SsMonthEmpChangeDetailMapper monthEmpChangeDetailMapper;
+    SsMonthChargeMapper monthChargeMapper;
+
+
+    //生成月度雇员社保明细
+    @Override
+    public void createMonthCharge(String ssMonth,String comAccuntId ){
+        HashMap<String,Integer> mapCountIfMonthFirstReport= monthChargeMapper.countIfMonthFirstReport(ssMonth,comAccuntId);
+        int intCountIfMonthFirstReport = mapCountIfMonthFirstReport.get("").intValue();
+
+        if(intCountIfMonthFirstReport == 0){
+
+        }else{
+
+        }
+
+
+    }
 
 
     //生成月度雇员社保数据(标准)
-    @Override
-    public void createMonthStandard(String comAccuntId, String ssMonth, String computeType) {
+
+    private void createMonthStandard(String comAccuntId, String ssMonth, String computeType) {
         //计算全量缴费明细（标准）
         monthEmpChargeStandard(comAccuntId,  ssMonth,  computeType);
 
     }
 
     //生成月度雇员社保数据(非标)
-    @Override
+
     public void createMonthNonStandard(String comAccuntId, String ssMonth, String computeType) {
         //计算变更汇总报表（非标）
-            monthEmpChangeReport(comAccuntId,  ssMonth,  computeType);
+           // monthEmpChangeReport(comAccuntId,  ssMonth,  computeType);
         //计算全量缴费明细（非标）
             monthEmpChargeNonStandard(comAccuntId,  ssMonth,  computeType);
     }
@@ -65,7 +79,7 @@ public class SsMonthChargeServiceImpl extends ServiceImpl<SsMonthChargeMapper, S
 
     }
 
-    //计算变更汇总报表（非标）
+ /*   //计算变更汇总报表（非标）
     private void monthEmpChangeReport(String comAccuntId, String ssMonth, String computeType) {
         EntityWrapper<SsMonthEmpChange> wrapper = new EntityWrapper<>();
 
@@ -88,7 +102,7 @@ public class SsMonthChargeServiceImpl extends ServiceImpl<SsMonthChargeMapper, S
         List<SsCreateEmpChangeReportBaseDetailBO> listEmpStop = createEmpChangeReportMapper.searchEmpStopByYYS(comAccuntId, ssMonth);
 
         List<SsCreateEmpChangeReportRefundBO> listEmpRefund = createEmpChangeReportMapper.searchEmpRefundByYYS(comAccuntId, ssMonth);
-    }
+    }*/
 
 
     private void createEmpBaseDetail() {
