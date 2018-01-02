@@ -9,9 +9,12 @@
 		<result column="seq" property="seq" />
 		<result column="payment_item" property="paymentItem" />
 		<result column="payment_item_name" property="paymentItemName" />
-		<result column="ss_type" property="ssType" />
-		<result column="ss_type_name" property="ssTypeName" />
-		<result column="amount" property="amount" />
+		<result column="base_pension_amount" property="basePensionAmount" />
+		<result column="base_medical_amount" property="baseMedicalAmount" />
+		<result column="add_medical_amount" property="addMedicalAmount" />
+		<result column="unemployment_amount" property="unemploymentAmount" />
+		<result column="accident_amount" property="accidentAmount" />
+		<result column="maternity_amount" property="maternityAmount" />
 		<result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />
 		<result column="modified_time" property="modifiedTime" />

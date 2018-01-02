@@ -29,7 +29,12 @@ public class SsPaymentComDTO {
     private Integer ssAccountType;
 
     /**
-     * 公司名名
+     * 公司名(社保账户名)
+     */
+    private String comAccountName;
+
+    /**
+     * 客户名
      */
     private String title;
 
@@ -371,5 +376,13 @@ public class SsPaymentComDTO {
 
     public void setPaymentBatchNum(String paymentBatchNum) {
         this.paymentBatchNum = paymentBatchNum;
+    }
+
+    public String getComAccountName() {
+        return comAccountName;
+    }
+
+    public void setComAccountName(String comAccountName) {
+        this.comAccountName = comAccountName;
     }
 }

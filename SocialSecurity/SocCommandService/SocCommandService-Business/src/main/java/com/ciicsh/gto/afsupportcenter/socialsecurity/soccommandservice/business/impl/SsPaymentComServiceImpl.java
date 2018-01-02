@@ -290,5 +290,10 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
         return json;
     }
 
+    @Override
+    public SsPaymentComBO getPaymentComBoByPaymentId(Long paymentComId){
+        return baseMapper.getPaymentComBoByPaymentId(paymentComId);
+    }
+
 
 }
