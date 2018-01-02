@@ -18,7 +18,6 @@ import java.util.List;
  * <p>
  * 本地社保应付金额交易记录明细表 前端控制器
  * </p>
- *
  * @author HuangXing
  * @since 2017-12-01
  */
