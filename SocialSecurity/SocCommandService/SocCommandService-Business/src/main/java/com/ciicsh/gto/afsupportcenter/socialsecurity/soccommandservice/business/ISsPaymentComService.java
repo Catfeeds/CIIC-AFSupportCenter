@@ -67,4 +67,15 @@ public interface ISsPaymentComService extends IService<SsPaymentCom> {
      * @return  int
      */
     JsonResult<String> calculatePayment(Long paymentId);
+
+
+    /**
+     * <p>Description: 根据ID获取信息及扩展信息</p>
+     *
+     * @author wengxk
+     * @date 2018-01-02
+     * @param paymentComId 客户费用明细ID
+     * @return  SsPaymentComBO
+     */
+    SsPaymentComBO getPaymentComBoByPaymentId(Long paymentComId);
 }

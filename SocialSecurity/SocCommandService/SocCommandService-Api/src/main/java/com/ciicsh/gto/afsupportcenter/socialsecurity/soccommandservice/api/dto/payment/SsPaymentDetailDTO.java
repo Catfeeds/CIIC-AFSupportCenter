@@ -1,32 +1,25 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.payment;
 
-import com.baomidou.mybatisplus.enums.IdType;
+
 import java.math.BigDecimal;
-import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalDateTime;
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableName;
-import java.io.Serializable;
 
 /**
  * <p>
  * 本地社保应付金额交易记录明细表
  * </p>
  */
-@TableName("ss_payment_detail")
-public class SsPaymentDetail implements Serializable {
+public class SsPaymentDetailDTO  {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * 记录Id
      */
-	@TableId(value="payment_detail_id", type= IdType.AUTO)
 	private Long paymentDetailId;
     /**
      * 外键，支付记录Id
      */
-	@TableField("payment_com_id")
 	private Long paymentComId;
     /**
      * 序号
@@ -35,68 +28,55 @@ public class SsPaymentDetail implements Serializable {
     /**
      * 支付项目代码
      */
-	@TableField("payment_item")
 	private Integer paymentItem;
     /**
      * 支付项目名称
      */
-	@TableField("payment_item_name")
 	private String paymentItemName;
     /**
      * 基本养老金额
      */
-	@TableField("base_pension_amount")
-	private BigDecimal basePensionAmount;
+    private BigDecimal basePensionAmount;
     /**
      * 基本医疗金额
      */
-	@TableField("base_medical_amount")
 	private BigDecimal baseMedicalAmount;
     /**
      * 地方附加医疗金额
      */
-	@TableField("add_medical_amount")
 	private BigDecimal addMedicalAmount;
     /**
      * 失业保险金额
      */
-	@TableField("unemployment_amount")
 	private BigDecimal unemploymentAmount;
     /**
      * 工伤保险金额
      */
-	@TableField("accident_amount")
 	private BigDecimal accidentAmount;
     /**
      * 生育保险金额
      */
-	@TableField("maternity_amount")
 	private BigDecimal maternityAmount;
     /**
      * 是否有效,0-无效 1-有效
      */
-	@TableField("is_active")
 	private Boolean isActive;
     /**
      * 创建时间
      */
-	@TableField("created_time")
-	private LocalDateTime createdTime;
+    private LocalDateTime createdTime;
     /**
      * 最后更新时间
      */
-	@TableField("modified_time")
-	private LocalDateTime modifiedTime;
+    private LocalDateTime modifiedTime;
     /**
      * 创建者登录名
      */
-	@TableField("created_by")
-	private String createdBy;
+    private String createdBy;
     /**
      * 修改者登录名
      */
-	@TableField("modified_by")
-	private String modifiedBy;
+    private String modifiedBy;
 
 
 	public Long getPaymentDetailId() {
@@ -227,25 +207,5 @@ public class SsPaymentDetail implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	@Override
-	public String toString() {
-		return "SsPaymentDetail{" +
-			", paymentDetailId=" + paymentDetailId +
-			", paymentComId=" + paymentComId +
-			", seq=" + seq +
-			", paymentItem=" + paymentItem +
-			", paymentItemName=" + paymentItemName +
-			", basePensionAmount=" + basePensionAmount +
-			", baseMedicalAmount=" + baseMedicalAmount +
-			", addMedicalAmount=" + addMedicalAmount +
-			", unemploymentAmount=" + unemploymentAmount +
-			", accidentAmount=" + accidentAmount +
-			", maternityAmount=" + maternityAmount +
-			", isActive=" + isActive +
-			", createdTime=" + createdTime +
-			", modifiedTime=" + modifiedTime +
-			", createdBy=" + createdBy +
-			", modifiedBy=" + modifiedBy +
-			"}";
-	}
+
 }

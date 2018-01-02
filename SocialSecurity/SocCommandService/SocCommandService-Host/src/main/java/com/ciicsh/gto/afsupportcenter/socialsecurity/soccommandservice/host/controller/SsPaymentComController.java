@@ -120,5 +120,26 @@ public class SsPaymentComController  extends BasicController<ISsPaymentComServic
         return json;
     }
 
+    /**
+     * <p>Description: 根据ID获取客户费用信息及扩展信息</p>
+     *
+     * @author wengxk
+     * @date 2018-01-02
+     * @param ssPaymentComDTO 查询条件
+     * @return  JsonResult<>
+     */
+    @Log("根据ID获取客户费用信息及扩展信息")
+    @PostMapping("/getPaymentComDtoByPaymentId")
+    public JsonResult<SsPaymentComDTO> getPaymentComDtoByPaymentId(SsPaymentComDTO ssPaymentComDTO) {
+        JsonResult<SsPaymentComDTO> json = new JsonResult<SsPaymentComDTO>();
+
+        SsPaymentComBO ssPaymentComBO = business.getPaymentComBoByPaymentId(ssPaymentComDTO.getPaymentComId());
+        SsPaymentComDTO resultDTO = CommonTransform.convertToDTO(ssPaymentComBO,SsPaymentComDTO.class);
+        json.setData(resultDTO);
+
+        return json;
+    }
+
+
 }
 
