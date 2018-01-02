@@ -125,5 +125,18 @@
             </if>
         </where>
     </select>
-
+    <!--通过社保档案ID 查询 历史任务单-->
+    <select id="queryTaskByEmpArchiveId" resultMap="BaseResultMap">
+        SELECT
+        et.emp_task_id,
+        et.handle_way,
+        et.task_category,
+        et.task_category_special,
+        et.submitter_name,
+        et.submit_time,
+        et.task_status
+        FROM
+        ss_emp_task et
+        WHERE et.emp_archive_id = #{empArchiveId}
+    </select>
 </mapper>

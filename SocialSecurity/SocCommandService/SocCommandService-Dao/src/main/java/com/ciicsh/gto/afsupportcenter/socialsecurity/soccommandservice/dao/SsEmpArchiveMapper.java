@@ -5,6 +5,8 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpA
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpArchive;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * <p>
  * 雇员本地社保档案主表,
@@ -24,4 +26,17 @@ public interface SsEmpArchiveMapper extends BaseMapper<SsEmpArchive> {
      */
     SsEmpArchiveBO queryByEmpTaskId(@Param("empTaskId") String empTaskId);
 
+    /**
+     * 雇员查询
+     * @param ssEmpArchiveBO
+     * @return
+     */
+   public List<SsEmpArchiveBO> queryEmployee (SsEmpArchiveBO ssEmpArchiveBO);
+
+    /**
+     * 雇员详细信息查询
+     * @param empArchiveId
+     * @return
+     */
+    public SsEmpArchiveBO queryEmployeeDetailInfo(@Param("empArchiveId") String empArchiveId);
 }

@@ -3,6 +3,11 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpArchiveBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpArchive;
+import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
+import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -23,4 +28,18 @@ public interface ISsEmpArchiveService extends IService<SsEmpArchive> {
      * @return
      */
     SsEmpArchiveBO queryByEmpTaskId(String empTaskId);
+
+    /**
+     *  雇员查询
+     * @param pageInfo
+     * @return
+     */
+    PageRows<SsEmpArchiveBO> queryEmployee (PageInfo pageInfo);
+
+    /**
+     * 雇员详细信息查询
+     * @param empArchiveId
+     * @return
+     */
+    public SsEmpArchiveBO queryEmployeeDetailInfo(@Param("empArchiveId") String empArchiveId);
 }

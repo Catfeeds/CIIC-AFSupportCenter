@@ -10,6 +10,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -28,6 +29,11 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         SsEmpTaskBO dto = pageInfo.toJavaObject(SsEmpTaskBO.class);
         handleTaskCategory(dto);
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.employeeOperatorQuery(dto));
+    }
+
+    @Override
+    public List<SsEmpTask> queryTaskByEmpArchiveId(String empArchiveId) {
+        return baseMapper.queryTaskByEmpArchiveId(empArchiveId);
     }
 
     /**

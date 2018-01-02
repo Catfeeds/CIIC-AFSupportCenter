@@ -12,6 +12,8 @@
 		<result column="ss_serial" property="ssSerial" />
 		<result column="salary" property="salary" />
 		<result column="emp_classify" property="empClassify" />
+		<result column="in_date" property="inDate" />
+		<result column="out_date" property="outDate" />
 		<result column="archive_status" property="archiveStatus" />
 		<result column="archive_task_status" property="archiveTaskStatus" />
 		<result column="start_month" property="startMonth" />

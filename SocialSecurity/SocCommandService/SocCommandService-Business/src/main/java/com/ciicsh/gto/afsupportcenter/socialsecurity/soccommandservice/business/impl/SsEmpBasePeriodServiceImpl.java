@@ -57,4 +57,9 @@ public class SsEmpBasePeriodServiceImpl extends ServiceImpl<SsEmpBasePeriodMappe
             baseMapper.delete(wrapper);
         });
     }
+
+    @Override
+    public List<SsEmpBasePeriod> queryPeriodByEmpArchiveId(String empArchiveId) {
+        return baseMapper.queryPeriodByEmpArchiveId(empArchiveId);
+    }
 }
