@@ -318,7 +318,7 @@
         <module>./EmployManagement/EmployCommandService/EmployCommandService-Business</module>
         <module>./EmployManagement/EmployCommandService/EmployCommandService-Entity</module>-->
 
-        <module>./FlexibleBenefit-Entity</module>
+        <module>./FlexibleBenefit/FlexibleBenefit-Entity</module>
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Api</module>
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Dao</module>
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Business</module>

@@ -11,31 +11,6 @@ import java.util.Date;
 public class MarketActivityDTO {
 
     private static final long serialVersionUID = 1L;
-    /**
-     * 起始页
-     */
-    private Integer current;
-
-    /**
-     * 每页条数
-     */
-    private Integer size;
-
-    public Integer getCurrent() {
-        return current;
-    }
-
-    public void setCurrent(Integer current) {
-        this.current = current;
-    }
-
-    public Integer getSize() {
-        return size;
-    }
-
-    public void setSize(Integer size) {
-        this.size = size;
-    }
 
     /**
      * 市场活动主键

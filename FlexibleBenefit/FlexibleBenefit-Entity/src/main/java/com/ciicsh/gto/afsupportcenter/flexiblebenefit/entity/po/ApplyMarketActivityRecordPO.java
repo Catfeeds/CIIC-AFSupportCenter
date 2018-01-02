@@ -56,7 +56,7 @@ public class ApplyMarketActivityRecordPO extends Model<ApplyMarketActivityRecord
     /**
      * 是否可用
      */
-    private Boolean IsActive;
+    private Boolean isActive;
     /**
      * 创建时间
      */
@@ -135,12 +135,12 @@ public class ApplyMarketActivityRecordPO extends Model<ApplyMarketActivityRecord
         this.deliveryAddress = deliveryAddress;
     }
 
-    public Boolean getIsActive() {
-        return IsActive;
+    public Boolean getActive() {
+        return isActive;
     }
 
-    public void setIsActive(Boolean IsActive) {
-        this.IsActive = IsActive;
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 
     public Date getCreateTime() {
@@ -183,18 +183,18 @@ public class ApplyMarketActivityRecordPO extends Model<ApplyMarketActivityRecord
     @Override
     public String toString() {
         return "ApplyMarketActivityRecordPO{" +
-                ", markertActivityRecordId=" + markertActivityRecordId +
-                ", applyRecordDetailId=" + applyRecordDetailId +
-                ", activityId=" + activityId +
-                ", number=" + number +
-                ", giftForm=" + giftForm +
-                ", sendWay=" + sendWay +
-                ", deliveryAddress=" + deliveryAddress +
-                ", IsActive=" + IsActive +
-                ", createTime=" + createTime +
-                ", modifiedTime=" + modifiedTime +
-                ", createdBy=" + createdBy +
-                ", modifiedBy=" + modifiedBy +
-                "}";
+            ", markertActivityRecordId=" + markertActivityRecordId +
+            ", applyRecordDetailId=" + applyRecordDetailId +
+            ", activityId=" + activityId +
+            ", number=" + number +
+            ", giftForm=" + giftForm +
+            ", sendWay=" + sendWay +
+            ", deliveryAddress=" + deliveryAddress +
+            ", IsActive=" + isActive +
+            ", createTime=" + createTime +
+            ", modifiedTime=" + modifiedTime +
+            ", createdBy=" + createdBy +
+            ", modifiedBy=" + modifiedBy +
+            "}";
     }
 }

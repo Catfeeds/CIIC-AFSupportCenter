@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.dao.ApplyRecordCommandMapper">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.dao.ApplyRecordCommandMapper">
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyRecordPO">
@@ -16,4 +16,66 @@
         <result column="modified_by" property="modifiedBy"/>
     </resultMap>
 
+    <insert id="insertSelective" parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyRecordPO"
+            useGeneratedKeys="true" keyProperty="applyRecordId">
+        insert into fb_apply_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="applyerId != null">
+                applyer_id,
+            </if>
+            <if test="applyTime != null">
+                apply_time,
+            </if>
+            <if test="applyType != null">
+                apply_type,
+            </if>
+            <if test="projectTopics != null">
+                project_topics,
+            </if>
+            <if test="isActive != null">
+                is_active,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="modifiedTime != null">
+                modified_time,
+            </if>
+            <if test="createdBy != null">
+                created_by,
+            </if>
+            <if test="modifiedBy != null">
+                modified_by,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="applyerId != null">
+                #{applyerId,jdbcType=INTEGER},
+            </if>
+            <if test="applyTime != null">
+                #{applyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="applyType != null">
+                #{applyType,jdbcType=TINYINT},
+            </if>
+            <if test="projectTopics != null">
+                #{projectTopics,jdbcType=VARCHAR},
+            </if>
+            <if test="isActive != null">
+                #{isActive,jdbcType=BIT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifiedTime != null">
+                #{modifiedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdBy != null">
+                #{createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="modifiedBy != null">
+                #{modifiedBy,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
 </mapper>

@@ -16,5 +16,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ApplyMarketActivityRecordCommandServiceImpl extends ServiceImpl<ApplyMarketActivityRecordCommandMapper, ApplyMarketActivityRecordPO> implements ApplyMarketActivityRecordCommandService {
-	
+    @Override
+    public Integer insertSelective(ApplyMarketActivityRecordPO applyMarketActivityRecordPO) {
+        return baseMapper.insertSelective(applyMarketActivityRecordPO);
+    }
 }
