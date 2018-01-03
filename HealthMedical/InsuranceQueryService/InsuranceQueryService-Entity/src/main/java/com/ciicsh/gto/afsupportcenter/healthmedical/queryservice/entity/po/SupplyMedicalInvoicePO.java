@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po;
 
+import com.baomidou.mybatisplus.enums.IdType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotations.TableId;
@@ -10,19 +11,25 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 补充医疗理赔发票表
+ * 补充医疗受理单相关发票表
  * </p>
  *
  * @author zhaogang
  * @since 2017-12-29
  */
-@TableName("hm_acceptance_invoice")
-public class AcceptanceInvoicePO implements Serializable {
+@TableName("hm_supply_medical_invoice")
+public class SupplyMedicalInvoice implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId("invoice_id")
+    /**
+     * 发票编号
+     */
+	@TableId(value="invoice_id", type= IdType.AUTO)
 	private Integer invoiceId;
+    /**
+     * 受理单编号
+     */
 	@TableField("acceptance_id")
 	private Integer acceptanceId;
     /**
@@ -95,6 +102,16 @@ public class AcceptanceInvoicePO implements Serializable {
      */
 	@TableField("insurance_company_money")
 	private BigDecimal insuranceCompanyMoney;
+    /**
+     * 结案状态
+     */
+	@TableField("closed_status")
+	private String closedStatus;
+    /**
+     * 结案备注
+     */
+	@TableField("closed_remark")
+	private String closedRemark;
     /**
      * 是否可用
      */
@@ -250,6 +267,22 @@ public class AcceptanceInvoicePO implements Serializable {
 		this.insuranceCompanyMoney = insuranceCompanyMoney;
 	}
 
+	public String getClosedStatus() {
+		return closedStatus;
+	}
+
+	public void setClosedStatus(String closedStatus) {
+		this.closedStatus = closedStatus;
+	}
+
+	public String getClosedRemark() {
+		return closedRemark;
+	}
+
+	public void setClosedRemark(String closedRemark) {
+		this.closedRemark = closedRemark;
+	}
+
 	public Boolean getActive() {
 		return isActive;
 	}
@@ -292,7 +325,7 @@ public class AcceptanceInvoicePO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "AcceptanceInvoice{" +
+		return "SupplyMedicalInvoice{" +
 			", invoiceId=" + invoiceId +
 			", acceptanceId=" + acceptanceId +
 			", medicalInstitution=" + medicalInstitution +
@@ -309,6 +342,8 @@ public class AcceptanceInvoicePO implements Serializable {
 			", classifiedSelfPaymentAmount=" + classifiedSelfPaymentAmount +
 			", companyMoney=" + companyMoney +
 			", insuranceCompanyMoney=" + insuranceCompanyMoney +
+			", closedStatus=" + closedStatus +
+			", closedRemark=" + closedRemark +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

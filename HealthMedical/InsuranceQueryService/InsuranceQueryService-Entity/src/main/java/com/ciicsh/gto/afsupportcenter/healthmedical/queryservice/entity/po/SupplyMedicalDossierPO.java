@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po;
 
 import com.baomidou.mybatisplus.enums.IdType;
+import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalTime;
 import com.baomidou.mybatisplus.annotations.TableField;
@@ -9,32 +10,37 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 代收代付发放表
+ * 补充医疗案卷表
  * </p>
  *
  * @author zhaogang
  * @since 2017-12-29
  */
-@TableName("hm_agent_business")
-public class AgentBusinessPO implements Serializable {
+@TableName("hm_supply_medical_dossier")
+public class SupplyMedicalDossier implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 代收代付发放id
+     * 案卷序号
      */
-	@TableId(value="agent_business_id", type= IdType.AUTO)
-	private Integer agentBusinessId;
+	@TableId(value="dossier_id", type= IdType.AUTO)
+	private Integer dossierId;
     /**
-     * 代收代付保单ID
+     * 案卷号
      */
-	@TableField("agent_business_ip_id")
-	private Integer agentBusinessIpId;
+	@TableField("dossier_number")
+	private String dossierNumber;
     /**
-     * 缴费年月（201604）
+     * 导入日期
      */
-	@TableField("payment_month")
-	private String paymentMonth;
+	@TableField("input_date")
+	private LocalDate inputDate;
+    /**
+     * 案卷记录数
+     */
+	@TableField("row_count")
+	private Integer rowCount;
     /**
      * 是否可用
      */
@@ -62,28 +68,36 @@ public class AgentBusinessPO implements Serializable {
 	private String modifiedBy;
 
 
-	public Integer getAgentBusinessId() {
-		return agentBusinessId;
+	public Integer getDossierId() {
+		return dossierId;
 	}
 
-	public void setAgentBusinessId(Integer agentBusinessId) {
-		this.agentBusinessId = agentBusinessId;
+	public void setDossierId(Integer dossierId) {
+		this.dossierId = dossierId;
 	}
 
-	public Integer getAgentBusinessIpId() {
-		return agentBusinessIpId;
+	public String getDossierNumber() {
+		return dossierNumber;
 	}
 
-	public void setAgentBusinessIpId(Integer agentBusinessIpId) {
-		this.agentBusinessIpId = agentBusinessIpId;
+	public void setDossierNumber(String dossierNumber) {
+		this.dossierNumber = dossierNumber;
 	}
 
-	public String getPaymentMonth() {
-		return paymentMonth;
+	public LocalDate getInputDate() {
+		return inputDate;
 	}
 
-	public void setPaymentMonth(String paymentMonth) {
-		this.paymentMonth = paymentMonth;
+	public void setInputDate(LocalDate inputDate) {
+		this.inputDate = inputDate;
+	}
+
+	public Integer getRowCount() {
+		return rowCount;
+	}
+
+	public void setRowCount(Integer rowCount) {
+		this.rowCount = rowCount;
 	}
 
 	public Boolean getActive() {
@@ -128,10 +142,11 @@ public class AgentBusinessPO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "AgentBusiness{" +
-			", agentBusinessId=" + agentBusinessId +
-			", agentBusinessIpId=" + agentBusinessIpId +
-			", paymentMonth=" + paymentMonth +
+		return "SupplyMedicalDossier{" +
+			", dossierId=" + dossierId +
+			", dossierNumber=" + dossierNumber +
+			", inputDate=" + inputDate +
+			", rowCount=" + rowCount +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

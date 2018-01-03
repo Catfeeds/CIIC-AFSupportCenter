@@ -9,32 +9,27 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 代收代付发放表
+ * 补充医疗受理单表
  * </p>
  *
  * @author zhaogang
  * @since 2017-12-29
  */
-@TableName("hm_agent_business")
-public class AgentBusinessPO implements Serializable {
+@TableName("hm_supply_medical_acceptance")
+public class SupplyMedicalAcceptance implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 代收代付发放id
+     * 受理单编号
      */
-	@TableId(value="agent_business_id", type= IdType.AUTO)
-	private Integer agentBusinessId;
+	@TableId(value="acceptance_id", type= IdType.AUTO)
+	private Integer acceptanceId;
     /**
-     * 代收代付保单ID
+     * 案卷序号
      */
-	@TableField("agent_business_ip_id")
-	private Integer agentBusinessIpId;
-    /**
-     * 缴费年月（201604）
-     */
-	@TableField("payment_month")
-	private String paymentMonth;
+	@TableField("dossier_id")
+	private Integer dossierId;
     /**
      * 是否可用
      */
@@ -62,28 +57,20 @@ public class AgentBusinessPO implements Serializable {
 	private String modifiedBy;
 
 
-	public Integer getAgentBusinessId() {
-		return agentBusinessId;
+	public Integer getAcceptanceId() {
+		return acceptanceId;
 	}
 
-	public void setAgentBusinessId(Integer agentBusinessId) {
-		this.agentBusinessId = agentBusinessId;
+	public void setAcceptanceId(Integer acceptanceId) {
+		this.acceptanceId = acceptanceId;
 	}
 
-	public Integer getAgentBusinessIpId() {
-		return agentBusinessIpId;
+	public Integer getDossierId() {
+		return dossierId;
 	}
 
-	public void setAgentBusinessIpId(Integer agentBusinessIpId) {
-		this.agentBusinessIpId = agentBusinessIpId;
-	}
-
-	public String getPaymentMonth() {
-		return paymentMonth;
-	}
-
-	public void setPaymentMonth(String paymentMonth) {
-		this.paymentMonth = paymentMonth;
+	public void setDossierId(Integer dossierId) {
+		this.dossierId = dossierId;
 	}
 
 	public Boolean getActive() {
@@ -128,10 +115,9 @@ public class AgentBusinessPO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "AgentBusiness{" +
-			", agentBusinessId=" + agentBusinessId +
-			", agentBusinessIpId=" + agentBusinessIpId +
-			", paymentMonth=" + paymentMonth +
+		return "SupplyMedicalAcceptance{" +
+			", acceptanceId=" + acceptanceId +
+			", dossierId=" + dossierId +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

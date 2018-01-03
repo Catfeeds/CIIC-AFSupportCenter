@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po;
 
+import com.baomidou.mybatisplus.enums.IdType;
 import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalTime;
@@ -13,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author zhaogang
- * @since 2017-12-13
+ * @since 2017-12-29
  */
 @TableName("hm_agent_business_detail")
 public class AgentBusinessDetailPO implements Serializable {
@@ -23,7 +24,7 @@ public class AgentBusinessDetailPO implements Serializable {
     /**
      * 代收代付支付明细ID
      */
-    @TableId("agent_business_detail_id")
+	@TableId(value="agent_business_detail_id", type= IdType.AUTO)
 	private Integer agentBusinessDetailId;
     /**
      * 代收代付发放id
@@ -35,6 +36,10 @@ public class AgentBusinessDetailPO implements Serializable {
      */
 	@TableField("company_id")
 	private Integer companyId;
+    /**
+     * 公司名称
+     */
+	private String title;
     /**
      * 保费
      */
@@ -97,6 +102,14 @@ public class AgentBusinessDetailPO implements Serializable {
 
 	public void setCompanyId(Integer companyId) {
 		this.companyId = companyId;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public BigDecimal getPremium() {
@@ -169,6 +182,7 @@ public class AgentBusinessDetailPO implements Serializable {
 			", agentBusinessDetailId=" + agentBusinessDetailId +
 			", agentBusinessId=" + agentBusinessId +
 			", companyId=" + companyId +
+			", title=" + title +
 			", premium=" + premium +
 			", totalHeadCount=" + totalHeadCount +
 			", remark=" + remark +

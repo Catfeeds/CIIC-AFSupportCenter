@@ -1,7 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po;
 
 import com.baomidou.mybatisplus.enums.IdType;
-import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalTime;
 import com.baomidou.mybatisplus.annotations.TableField;
@@ -10,46 +9,48 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 医疗关系转移表
+ * 中智中盈产品对应表
+包含中盈和中智的自己承包的产品
  * </p>
  *
  * @author zhaogang
  * @since 2017-12-29
  */
-@TableName("hm_medical_relation_transform")
-public class MedicalRelationTransform implements Serializable {
+@TableName("hm_product_correspond")
+public class ProductCorrespond implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 序号
+     * 保险产品编号
      */
-	@TableId(value="transform_id", type= IdType.AUTO)
-	private Integer transformId;
+	@TableId(value="insurance_product_id", type= IdType.AUTO)
+	private Integer insuranceProductId;
     /**
-     * 雇员终身编号
+     * 保险产品名称
      */
-	@TableField("employee_id")
-	private String employeeId;
+	@TableField("insurance_product_name")
+	private String insuranceProductName;
     /**
-     * 转出日期
+     * 单项产品ID,11位编码规则(CPD+BusinessCategory+6位数字)
      */
-	@TableField("turn_out_date")
-	private LocalDate turnOutDate;
+	@TableField("product_id")
+	private String productId;
     /**
-     * 转出地址
+     * 选择的服务项目ID，空格分隔
      */
-	@TableField("turn_out_address")
-	private String turnOutAddress;
+	@TableField("service_items")
+	private String serviceItems;
     /**
-     * 转回日期
+     * 保单编号
      */
-	@TableField("turn_back_date")
-	private LocalDate turnBackDate;
+	@TableField("insurance_policy_id")
+	private Integer insurancePolicyId;
     /**
-     * 备注
+     * 类型
+（1-主险 2-附件险 3-理赔规则）
      */
-	private String remark;
+	private String type;
     /**
      * 是否可用
      */
@@ -77,52 +78,52 @@ public class MedicalRelationTransform implements Serializable {
 	private String modifiedBy;
 
 
-	public Integer getTransformId() {
-		return transformId;
+	public Integer getInsuranceProductId() {
+		return insuranceProductId;
 	}
 
-	public void setTransformId(Integer transformId) {
-		this.transformId = transformId;
+	public void setInsuranceProductId(Integer insuranceProductId) {
+		this.insuranceProductId = insuranceProductId;
 	}
 
-	public String getEmployeeId() {
-		return employeeId;
+	public String getInsuranceProductName() {
+		return insuranceProductName;
 	}
 
-	public void setEmployeeId(String employeeId) {
-		this.employeeId = employeeId;
+	public void setInsuranceProductName(String insuranceProductName) {
+		this.insuranceProductName = insuranceProductName;
 	}
 
-	public LocalDate getTurnOutDate() {
-		return turnOutDate;
+	public String getProductId() {
+		return productId;
 	}
 
-	public void setTurnOutDate(LocalDate turnOutDate) {
-		this.turnOutDate = turnOutDate;
+	public void setProductId(String productId) {
+		this.productId = productId;
 	}
 
-	public String getTurnOutAddress() {
-		return turnOutAddress;
+	public String getServiceItems() {
+		return serviceItems;
 	}
 
-	public void setTurnOutAddress(String turnOutAddress) {
-		this.turnOutAddress = turnOutAddress;
+	public void setServiceItems(String serviceItems) {
+		this.serviceItems = serviceItems;
 	}
 
-	public LocalDate getTurnBackDate() {
-		return turnBackDate;
+	public Integer getInsurancePolicyId() {
+		return insurancePolicyId;
 	}
 
-	public void setTurnBackDate(LocalDate turnBackDate) {
-		this.turnBackDate = turnBackDate;
+	public void setInsurancePolicyId(Integer insurancePolicyId) {
+		this.insurancePolicyId = insurancePolicyId;
 	}
 
-	public String getRemark() {
-		return remark;
+	public String getType() {
+		return type;
 	}
 
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public Boolean getActive() {
@@ -167,13 +168,13 @@ public class MedicalRelationTransform implements Serializable {
 
 	@Override
 	public String toString() {
-		return "MedicalRelationTransform{" +
-			", transformId=" + transformId +
-			", employeeId=" + employeeId +
-			", turnOutDate=" + turnOutDate +
-			", turnOutAddress=" + turnOutAddress +
-			", turnBackDate=" + turnBackDate +
-			", remark=" + remark +
+		return "ProductCorrespond{" +
+			", insuranceProductId=" + insuranceProductId +
+			", insuranceProductName=" + insuranceProductName +
+			", productId=" + productId +
+			", serviceItems=" + serviceItems +
+			", insurancePolicyId=" + insurancePolicyId +
+			", type=" + type +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

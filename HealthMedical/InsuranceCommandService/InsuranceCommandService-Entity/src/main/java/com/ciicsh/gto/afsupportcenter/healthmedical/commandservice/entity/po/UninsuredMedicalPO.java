@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po;
 
 import com.baomidou.mybatisplus.enums.IdType;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalTime;
 import com.baomidou.mybatisplus.annotations.TableField;
@@ -10,27 +11,62 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 零星报销表
+ * 未投保医疗
  * </p>
  *
  * @author zhaogang
  * @since 2017-12-29
  */
-@TableName("hm_fragmentary_reimbursement")
-public class FragmentaryReimbursementPO implements Serializable {
+@TableName("hm_uninsured_medical")
+public class UninsuredMedicalPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * 序号
      */
-	@TableId(value="id", type= IdType.AUTO)
-	private Integer id;
+	@TableId(value="um_id", type= IdType.AUTO)
+	private Integer umId;
     /**
      * 雇员终身编号
      */
 	@TableField("employee_id")
 	private String employeeId;
+    /**
+     * 款项类型
+     */
+	@TableField("money_type")
+	private String moneyType;
+    /**
+     * 受理类型
+     */
+	@TableField("case_type")
+	private String caseType;
+    /**
+     * 中止日期
+     */
+	@TableField("dimission_date")
+	private LocalDate dimissionDate;
+    /**
+     * 退保日期
+     */
+	@TableField("surrender_date")
+	private LocalDate surrenderDate;
+    /**
+     * 连带人名字
+     */
+	@TableField("joint_person_name")
+	private String jointPersonName;
+    /**
+     * 连带人出生日期
+     */
+	@TableField("joint_person_birth_date")
+	private LocalDate jointPersonBirthDate;
+    /**
+     * 医疗备注
+     */
+	@TableField("medical_remark")
+	private String medicalRemark;
     /**
      * 受理金额
      */
@@ -41,21 +77,6 @@ public class FragmentaryReimbursementPO implements Serializable {
      */
 	@TableField("invoice_number")
 	private Integer invoiceNumber;
-    /**
-     * 医疗备注
-     */
-	@TableField("medical_remark")
-	private String medicalRemark;
-    /**
-     * 医保结算金额
-     */
-	@TableField("medical_clearing_money")
-	private BigDecimal medicalClearingMoney;
-    /**
-     * 医保结算反馈
-     */
-	@TableField("medical_clearing_feed_back")
-	private String medicalClearingFeedBack;
     /**
      * 是否可用
      */
@@ -83,12 +104,12 @@ public class FragmentaryReimbursementPO implements Serializable {
 	private String modifiedBy;
 
 
-	public Integer getId() {
-		return id;
+	public Integer getUmId() {
+		return umId;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setUmId(Integer umId) {
+		this.umId = umId;
 	}
 
 	public String getEmployeeId() {
@@ -97,6 +118,62 @@ public class FragmentaryReimbursementPO implements Serializable {
 
 	public void setEmployeeId(String employeeId) {
 		this.employeeId = employeeId;
+	}
+
+	public String getMoneyType() {
+		return moneyType;
+	}
+
+	public void setMoneyType(String moneyType) {
+		this.moneyType = moneyType;
+	}
+
+	public String getCaseType() {
+		return caseType;
+	}
+
+	public void setCaseType(String caseType) {
+		this.caseType = caseType;
+	}
+
+	public LocalDate getDimissionDate() {
+		return dimissionDate;
+	}
+
+	public void setDimissionDate(LocalDate dimissionDate) {
+		this.dimissionDate = dimissionDate;
+	}
+
+	public LocalDate getSurrenderDate() {
+		return surrenderDate;
+	}
+
+	public void setSurrenderDate(LocalDate surrenderDate) {
+		this.surrenderDate = surrenderDate;
+	}
+
+	public String getJointPersonName() {
+		return jointPersonName;
+	}
+
+	public void setJointPersonName(String jointPersonName) {
+		this.jointPersonName = jointPersonName;
+	}
+
+	public LocalDate getJointPersonBirthDate() {
+		return jointPersonBirthDate;
+	}
+
+	public void setJointPersonBirthDate(LocalDate jointPersonBirthDate) {
+		this.jointPersonBirthDate = jointPersonBirthDate;
+	}
+
+	public String getMedicalRemark() {
+		return medicalRemark;
+	}
+
+	public void setMedicalRemark(String medicalRemark) {
+		this.medicalRemark = medicalRemark;
 	}
 
 	public BigDecimal getCaseMoney() {
@@ -113,30 +190,6 @@ public class FragmentaryReimbursementPO implements Serializable {
 
 	public void setInvoiceNumber(Integer invoiceNumber) {
 		this.invoiceNumber = invoiceNumber;
-	}
-
-	public String getMedicalRemark() {
-		return medicalRemark;
-	}
-
-	public void setMedicalRemark(String medicalRemark) {
-		this.medicalRemark = medicalRemark;
-	}
-
-	public BigDecimal getMedicalClearingMoney() {
-		return medicalClearingMoney;
-	}
-
-	public void setMedicalClearingMoney(BigDecimal medicalClearingMoney) {
-		this.medicalClearingMoney = medicalClearingMoney;
-	}
-
-	public String getMedicalClearingFeedBack() {
-		return medicalClearingFeedBack;
-	}
-
-	public void setMedicalClearingFeedBack(String medicalClearingFeedBack) {
-		this.medicalClearingFeedBack = medicalClearingFeedBack;
 	}
 
 	public Boolean getActive() {
@@ -181,14 +234,18 @@ public class FragmentaryReimbursementPO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "FragmentaryReimbursement{" +
-			", id=" + id +
+		return "UninsuredMedical{" +
+			", umId=" + umId +
 			", employeeId=" + employeeId +
+			", moneyType=" + moneyType +
+			", caseType=" + caseType +
+			", dimissionDate=" + dimissionDate +
+			", surrenderDate=" + surrenderDate +
+			", jointPersonName=" + jointPersonName +
+			", jointPersonBirthDate=" + jointPersonBirthDate +
+			", medicalRemark=" + medicalRemark +
 			", caseMoney=" + caseMoney +
 			", invoiceNumber=" + invoiceNumber +
-			", medicalRemark=" + medicalRemark +
-			", medicalClearingMoney=" + medicalClearingMoney +
-			", medicalClearingFeedBack=" + medicalClearingFeedBack +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

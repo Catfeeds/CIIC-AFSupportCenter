@@ -14,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author zhaogang
- * @since 2017-12-20
+ * @since 2017-12-29
  */
 @TableName("hm_insurance_policy_num_calculation_rule")
 public class InsurancePolicyNumCalculationRulePO implements Serializable {
@@ -40,6 +40,11 @@ public class InsurancePolicyNumCalculationRulePO implements Serializable {
      * 收费
      */
 	private BigDecimal charge;
+    /**
+     * 代理费
+     */
+	@TableField("agency_fee")
+	private BigDecimal agencyFee;
     /**
      * 是否可用
      */
@@ -99,6 +104,14 @@ public class InsurancePolicyNumCalculationRulePO implements Serializable {
 		this.charge = charge;
 	}
 
+	public BigDecimal getAgencyFee() {
+		return agencyFee;
+	}
+
+	public void setAgencyFee(BigDecimal agencyFee) {
+		this.agencyFee = agencyFee;
+	}
+
 	public Boolean getActive() {
 		return isActive;
 	}
@@ -146,6 +159,7 @@ public class InsurancePolicyNumCalculationRulePO implements Serializable {
 			", insurancePolicyNumId=" + insurancePolicyNumId +
 			", claimRate=" + claimRate +
 			", charge=" + charge +
+			", agencyFee=" + agencyFee +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

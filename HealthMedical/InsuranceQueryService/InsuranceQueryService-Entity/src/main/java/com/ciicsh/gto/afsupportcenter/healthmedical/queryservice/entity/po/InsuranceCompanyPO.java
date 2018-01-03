@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po;
+package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po;
 
 import com.baomidou.mybatisplus.enums.IdType;
 import com.baomidou.mybatisplus.annotations.TableId;
@@ -13,10 +13,10 @@ import java.io.Serializable;
  * </p>
  *
  * @author zhaogang
- * @since 2017-12-13
+ * @since 2017-12-29
  */
 @TableName("hm_insurance_company")
-public class InsuranceCompanyPO implements Serializable {
+public class InsuranceCompany implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

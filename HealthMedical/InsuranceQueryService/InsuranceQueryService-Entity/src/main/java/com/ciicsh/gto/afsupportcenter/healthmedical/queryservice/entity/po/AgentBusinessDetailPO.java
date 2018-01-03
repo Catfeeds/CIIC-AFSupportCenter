@@ -1,10 +1,8 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po;
+package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po;
 
 import com.baomidou.mybatisplus.enums.IdType;
 import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotations.TableId;
-
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
@@ -16,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author zhaogang
- * @since 2017-12-18
+ * @since 2017-12-29
  */
 @TableName("hm_agent_business_detail")
 public class AgentBusinessDetailPO implements Serializable {
@@ -64,12 +62,12 @@ public class AgentBusinessDetailPO implements Serializable {
      * 创建时间
      */
 	@TableField("created_time")
-	private LocalDateTime createdTime;
+	private LocalTime createdTime;
     /**
      * 最后更新时间
      */
 	@TableField("modified_time")
-	private LocalDateTime modifiedTime;
+	private LocalTime modifiedTime;
     /**
      * 创建者登录名
      */
@@ -146,19 +144,19 @@ public class AgentBusinessDetailPO implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public LocalDateTime getCreatedTime() {
+	public LocalTime getCreatedTime() {
 		return createdTime;
 	}
 
-	public void setCreatedTime(LocalDateTime createdTime) {
+	public void setCreatedTime(LocalTime createdTime) {
 		this.createdTime = createdTime;
 	}
 
-	public LocalDateTime getModifiedTime() {
+	public LocalTime getModifiedTime() {
 		return modifiedTime;
 	}
 
-	public void setModifiedTime(LocalDateTime modifiedTime) {
+	public void setModifiedTime(LocalTime modifiedTime) {
 		this.modifiedTime = modifiedTime;
 	}
 

@@ -1,8 +1,12 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po;
+package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po;
 
+import com.baomidou.mybatisplus.enums.IdType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalTime;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
 
 /**
@@ -11,9 +15,9 @@ import java.io.Serializable;
  * </p>
  *
  * @author zhaogang
- * @since 2017-12-04
+ * @since 2017-12-29
  */
-
+@TableName("hm_acceptance")
 public class AcceptancePO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -21,18 +25,22 @@ public class AcceptancePO implements Serializable {
     /**
      * 受理单Id
      */
+	@TableId(value="acceptance_id", type= IdType.AUTO)
 	private Integer acceptanceId;
     /**
      * 案卷号（如：CIICYBQ20160126002）
      */
+	@TableField("archieve_id")
 	private String archieveId;
     /**
      * 导入日期
      */
+	@TableField("input_date")
 	private LocalTime inputDate;
     /**
      * 雇员编号
      */
+	@TableField("employee_id")
 	private String employeeId;
     /**
      * 状态：
@@ -45,38 +53,47 @@ public class AcceptancePO implements Serializable {
     /**
      * 处理时间
      */
+	@TableField("handle_time")
 	private LocalDate handleTime;
     /**
      * 发票数
      */
+	@TableField("invoice_num")
 	private Integer invoiceNum;
     /**
      * 公司理赔金额
      */
+	@TableField("company_money")
 	private BigDecimal companyMoney;
     /**
      * 保险公司理赔金额
      */
+	@TableField("insurance_company_money")
 	private BigDecimal insuranceCompanyMoney;
     /**
      * 是否可用
      */
+	@TableField("is_active")
 	private Boolean isActive;
     /**
      * 创建时间
      */
+	@TableField("created_time")
 	private LocalTime createdTime;
     /**
      * 最后更新时间
      */
+	@TableField("modified_time")
 	private LocalTime modifiedTime;
     /**
      * 创建者登录名
      */
+	@TableField("created_by")
 	private String createdBy;
     /**
      * 修改者登录名
      */
+	@TableField("modified_by")
 	private String modifiedBy;
 
 

@@ -13,7 +13,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author zhaogang
- * @since 2017-12-13
+ * @since 2017-12-29
  */
 @TableName("hm_agent_business_ip")
 public class AgentBusinessIpPO implements Serializable {

@@ -8,6 +8,8 @@
 		<result column="insurance_policy_num_batch_id" property="insurancePolicyNumBatchId" />
 		<result column="employee_id" property="employeeId" />
 		<result column="company_id" property="companyId" />
+		<result column="emp_member_id" property="empMemberId" />
+		<result column="relation_ship" property="relationShip" />
 		<result column="insure_date" property="insureDate" />
 		<result column="premium" property="premium" />
 		<result column="agency_fee" property="agencyFee" />

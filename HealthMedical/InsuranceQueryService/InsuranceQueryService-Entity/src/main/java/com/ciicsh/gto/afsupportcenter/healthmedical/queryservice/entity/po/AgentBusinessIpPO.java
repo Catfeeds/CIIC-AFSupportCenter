@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po;
+package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po;
 
 import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotations.TableId;
@@ -13,7 +13,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author zhaogang
- * @since 2017-12-13
+ * @since 2017-12-29
  */
 @TableName("hm_agent_business_ip")
 public class AgentBusinessIpPO implements Serializable {

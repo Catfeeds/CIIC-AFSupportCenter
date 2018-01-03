@@ -13,7 +13,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author zhaogang
- * @since 2017-12-21
+ * @since 2017-12-29
  */
 @TableName("hm_insurance_policy")
 public class InsurancePolicyPO implements Serializable {
