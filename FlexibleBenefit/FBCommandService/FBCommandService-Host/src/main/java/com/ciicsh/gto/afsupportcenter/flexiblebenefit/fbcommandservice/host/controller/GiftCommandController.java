@@ -1,10 +1,17 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.host.controller;
 
 
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyGiftRecordPO;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyRecordDetailPO;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyRecordPO;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.GiftPO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.core.Result;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.core.ResultGenerator;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.GiftPO;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.dto.GiftApplyDTO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.dto.GiftDTO;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.ApplyGiftRecordCommandService;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.ApplyRecordCommandService;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.ApplyRecordDetailCommandService;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.GiftCommandService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +33,12 @@ public class GiftCommandController {
 
     @Autowired
     private GiftCommandService giftCommandService;
+    @Autowired
+    private ApplyRecordCommandService applyRecordCommandService;
+    @Autowired
+    private ApplyRecordDetailCommandService applyRecordDetailCommandService;
+    @Autowired
+    private ApplyGiftRecordCommandService applyGiftRecordCommandService;
 
     /**
      * 根据主键查询礼品信息
@@ -91,7 +104,7 @@ public class GiftCommandController {
 //                }
                 giftPO.setPictureUrl(filePathUrl);
             }
-            boolean flag = giftCommandService.updateById(giftPO);
+            boolean flag = giftCommandService.updateGift(giftPO);
             logger.info("礼品修改");
             return ResultGenerator.genSuccessResult(flag);
         } catch (Exception e) {
@@ -116,5 +129,43 @@ public class GiftCommandController {
         }
     }
 
+    /**
+     * 礼品申请功能
+     *
+     * @param giftApplyDTO
+     * @return
+     */
+    @PostMapping("/insertGiftApply")
+    public Result insertGiftApply(@RequestBody GiftApplyDTO giftApplyDTO) {
+        try {
+            ApplyRecordPO applyRecordPO = new ApplyRecordPO();
+            ApplyRecordDetailPO applyRecordDetailPO = new ApplyRecordDetailPO();
+            ApplyGiftRecordPO applyGiftRecordPO = new ApplyGiftRecordPO();
+
+            BeanUtils.copyProperties(giftApplyDTO, applyRecordPO);
+            BeanUtils.copyProperties(giftApplyDTO, applyRecordDetailPO);
+            BeanUtils.copyProperties(giftApplyDTO, applyGiftRecordPO);
+
+            //申请类型为礼品--1
+            applyRecordPO.setApplyType(1);
+            applyRecordCommandService.insertSelective(applyRecordPO);
+            logger.info("新增活动申请ApplyRecordPO主键" + applyRecordPO.getApplyRecordId());
+
+            /**返回申请主键*/
+            applyRecordDetailPO.setApplyRecordId(applyRecordPO.getApplyRecordId());
+            applyRecordDetailCommandService.insertSelective(applyRecordDetailPO);
+            logger.info("新增活动申请ApplyRecordPO主键" + applyRecordDetailPO.getApplyRecordDetailId());
+
+            /**返回申请详情主键*/
+            applyGiftRecordPO.setApplyRecordDetailId(applyRecordDetailPO.getApplyRecordDetailId());
+            Integer t = applyGiftRecordCommandService.insertSelective(applyGiftRecordPO);
+
+            boolean flag = (t == 1);
+            logger.info("新增礼品申请");
+            return ResultGenerator.genSuccessResult(flag);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
+        }
+    }
 
 }

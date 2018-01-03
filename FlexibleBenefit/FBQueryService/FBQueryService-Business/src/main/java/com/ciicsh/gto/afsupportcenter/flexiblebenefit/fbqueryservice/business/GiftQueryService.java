@@ -25,5 +25,11 @@ public interface GiftQueryService extends IService<GiftPO> {
     Page<GiftPO> queryGiftList(Page<GiftPO> page, GiftPO entity);
 
 
-
+    /**
+     * 查询礼品详细信息
+     *
+     * @param giftPO
+     * @return
+     */
+    GiftPO queryGiftInformation(GiftPO giftPO);
 }

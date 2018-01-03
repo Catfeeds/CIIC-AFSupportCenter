@@ -6,7 +6,7 @@
         <artifactId>afsupportcenter-parent</artifactId>
         <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
         <version>1.0.0</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>flexiblebenefit-entity</artifactId>

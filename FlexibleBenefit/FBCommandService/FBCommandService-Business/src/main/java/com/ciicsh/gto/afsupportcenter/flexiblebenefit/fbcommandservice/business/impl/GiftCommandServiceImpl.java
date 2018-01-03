@@ -28,6 +28,12 @@ public class GiftCommandServiceImpl extends ServiceImpl<GiftCommandMapper, GiftP
     }
 
     @Override
+    public Boolean updateGift(GiftPO giftPO) {
+        Integer t = baseMapper.updateByPrimaryKeySelective(giftPO);
+        return null != t && t.intValue() >= 1;
+    }
+
+    @Override
     public String fileUpdate(InputStream stream) {
         String filepath = "";
         try {

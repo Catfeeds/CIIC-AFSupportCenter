@@ -33,4 +33,60 @@
         <include refid="Base_Column_List"/>
         FROM fb_gift WHERE id = #{id,jdbcType=INTEGER}
     </select>
+
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.GiftPO">
+        update fb_gift
+        <set>
+            <if test="giftName != null">
+                gift_name = #{giftName,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="rightPerson != null">
+                right_person = #{rightPerson,jdbcType=TINYINT},
+            </if>
+            <if test="giftType != null">
+                gift_type = #{giftType,jdbcType=TINYINT},
+            </if>
+            <if test="color != null">
+                color = #{color,jdbcType=VARCHAR},
+            </if>
+            <if test="number != null">
+                `number` = #{number,jdbcType=INTEGER},
+            </if>
+            <if test="applyMaxnum != null">
+                apply_maxnum = #{applyMaxnum,jdbcType=INTEGER},
+            </if>
+            <if test="pictureUrl != null">
+                picture_url = #{pictureUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="remarks != null">
+                remarks = #{remarks,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="newTag != null">
+                new_tag = #{newTag,jdbcType=BIT},
+            </if>
+            <if test="isActive != null">
+                is_active = #{isActive,jdbcType=BIT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifiedTime != null">
+                modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdBy != null">
+                created_by = #{createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="modifiedBy != null">
+                modified_by = #{modifiedBy,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
 </mapper>

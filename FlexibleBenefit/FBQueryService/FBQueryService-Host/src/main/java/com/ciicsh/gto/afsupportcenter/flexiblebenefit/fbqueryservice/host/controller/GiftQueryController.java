@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,14 +35,16 @@ public class GiftQueryController {
      * @return
      */
     @RequestMapping("/giftList")
-    public Result giftList(GiftDTO giftDTO) {
+    public Result giftList(@RequestBody GiftDTO giftDTO) {
         try {
             Page<GiftPO> page = new Page<>(giftDTO.getCurrent(), giftDTO.getSize());
             GiftPO giftPO = new GiftPO();
             BeanUtils.copyProperties(giftDTO, giftPO);
             page = giftQueryService.queryGiftList(page, giftPO);
+
+            BeanUtils.copyProperties(page, giftDTO);
             logger.info("查询礼品分页列表");
-            return ResultGenerator.genSuccessResult(page);
+            return ResultGenerator.genSuccessResult(giftDTO);
         } catch (Exception e) {
             return ResultGenerator.genServerFailResult();
         }

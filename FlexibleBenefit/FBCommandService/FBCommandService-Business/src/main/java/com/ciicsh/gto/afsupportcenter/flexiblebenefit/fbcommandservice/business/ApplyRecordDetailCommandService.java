@@ -13,5 +13,6 @@ import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyRecordDetai
  * @since 2017-12-18
  */
 public interface ApplyRecordDetailCommandService extends IService<ApplyRecordDetailPO> {
-	
+
+    Integer insertSelective(ApplyRecordDetailPO applyRecordDetailPO);
 }

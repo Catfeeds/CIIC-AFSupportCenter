@@ -17,5 +17,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ApplyRecordDetailCommandServiceImpl extends ServiceImpl<ApplyRecordDetailCommandMapper, ApplyRecordDetailPO> implements ApplyRecordDetailCommandService {
-	
+
+    @Override
+    public Integer insertSelective(ApplyRecordDetailPO applyRecordDetailPO) {
+        return baseMapper.insertSelective(applyRecordDetailPO);
+    }
 }

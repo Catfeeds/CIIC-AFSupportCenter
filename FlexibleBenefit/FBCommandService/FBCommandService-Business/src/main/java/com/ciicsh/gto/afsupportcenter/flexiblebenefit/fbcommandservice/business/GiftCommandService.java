@@ -18,6 +18,14 @@ public interface GiftCommandService extends IService<GiftPO> {
     GiftPO findById(Integer id);
 
     /**
+     * 修改礼品数据,不使用插件的方法，不便于维护
+     *
+     * @param giftPO
+     * @return
+     */
+    Boolean updateGift(GiftPO giftPO);
+
+    /**
      * 上传图片方法
      *
      * @param stream

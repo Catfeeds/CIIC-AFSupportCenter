@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,14 +30,16 @@ public class MarketQueryController {
     private MarketActivityQueryService marketActivityQueryService;
 
     @PostMapping("/marketList")
-    public Result marketList(MarketActivityDTO marketActivityDTO) {
+    public Result marketList(@RequestBody MarketActivityDTO marketActivityDTO) {
         try {
             Page<MarketActivityPO> page = new Page<>(marketActivityDTO.getCurrent(), marketActivityDTO.getSize());
             MarketActivityPO marketActivityPO = new MarketActivityPO();
             BeanUtils.copyProperties(marketActivityDTO, marketActivityPO);
             page = marketActivityQueryService.queryMarketList(page, marketActivityPO);
+            BeanUtils.copyProperties(page, marketActivityDTO);
+
             logger.info("查询活动分页列表");
-            return ResultGenerator.genSuccessResult(page);
+            return ResultGenerator.genSuccessResult(marketActivityDTO);
         } catch (Exception e) {
             return ResultGenerator.genServerFailResult();
         }

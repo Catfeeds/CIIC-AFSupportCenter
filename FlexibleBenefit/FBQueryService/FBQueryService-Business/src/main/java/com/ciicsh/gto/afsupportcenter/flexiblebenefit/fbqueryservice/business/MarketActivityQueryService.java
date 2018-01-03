@@ -22,4 +22,12 @@ public interface MarketActivityQueryService extends IService<MarketActivityPO> {
      * @return
      */
     Page<MarketActivityPO> queryMarketList(Page<MarketActivityPO> page, MarketActivityPO entity);
+
+    /**
+     * 查询活动发放详细信息
+     *
+     * @param marketActivityPO
+     * @return
+     */
+    MarketActivityPO queryMarketInformation(MarketActivityPO marketActivityPO);
 }

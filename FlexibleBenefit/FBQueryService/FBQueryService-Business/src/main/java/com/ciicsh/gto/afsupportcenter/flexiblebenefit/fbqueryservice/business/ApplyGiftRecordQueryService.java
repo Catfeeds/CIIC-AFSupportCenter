@@ -13,5 +13,6 @@ import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyGiftRecordP
  * @since 2017-12-18
  */
 public interface ApplyGiftRecordQueryService extends IService<ApplyGiftRecordPO> {
-	
+
+    ApplyGiftRecordPO queryApplyGiftRecord(ApplyGiftRecordPO applyGiftRecordPO);
 }
