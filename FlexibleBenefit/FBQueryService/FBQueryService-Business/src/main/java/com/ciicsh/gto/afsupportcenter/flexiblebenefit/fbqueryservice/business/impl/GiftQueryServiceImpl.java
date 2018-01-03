@@ -26,9 +26,14 @@ public class GiftQueryServiceImpl extends ServiceImpl<GiftQueryMapper, GiftPO> i
         EntityWrapper<GiftPO> entityWrapper = new EntityWrapper<>();
         //排除礼品名称空数据
         entityWrapper.like(StringUtils.isNotEmpty(entity.getGiftName()), "gift_name", entity.getGiftName())
-                .and(entity.getStatus() != null, "status={0}", entity.getStatus())
-                .and(entity.getGiftType() != null, "gift_type={0}", entity.getGiftType());
+            .and(entity.getStatus() != null, "status={0}", entity.getStatus())
+            .and(entity.getGiftType() != null, "gift_type={0}", entity.getGiftType());
         selectPage(page, entityWrapper);
         return page;
+    }
+
+    @Override
+    public GiftPO queryGiftInformation(GiftPO giftPO) {
+        return baseMapper.selectOne(giftPO);
     }
 }

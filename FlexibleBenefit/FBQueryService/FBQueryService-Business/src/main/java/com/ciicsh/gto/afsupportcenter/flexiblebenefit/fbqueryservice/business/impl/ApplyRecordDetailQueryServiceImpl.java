@@ -1,11 +1,14 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business.impl;
 
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyRecordDetailPO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business.ApplyRecordDetailQueryService;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.dao.ApplyRecordDetailQueryMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,5 +20,16 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ApplyRecordDetailQueryServiceImpl extends ServiceImpl<ApplyRecordDetailQueryMapper, ApplyRecordDetailPO> implements ApplyRecordDetailQueryService {
-	
+
+    @Override
+    public ApplyRecordDetailPO queryApplyRecordDetail(ApplyRecordDetailPO applyRecordDetailPO) {
+        return baseMapper.selectOne(applyRecordDetailPO);
+    }
+
+    @Override
+    public List<ApplyRecordDetailPO> queryApplyRecordDetailList(ApplyRecordDetailPO applyRecordDetailPO) {
+        EntityWrapper<ApplyRecordDetailPO> entityWrapper = new EntityWrapper<>();
+        entityWrapper.where(applyRecordDetailPO.getApplyRecordId() != null, "apply_record_id={0}", applyRecordDetailPO.getApplyRecordId());
+        return baseMapper.selectList(entityWrapper);
+    }
 }

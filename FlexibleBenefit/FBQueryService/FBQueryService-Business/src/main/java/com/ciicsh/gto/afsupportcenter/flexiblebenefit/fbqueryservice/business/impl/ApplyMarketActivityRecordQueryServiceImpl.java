@@ -17,5 +17,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ApplyMarketActivityRecordQueryServiceImpl extends ServiceImpl<ApplyMarketActivityRecordQueryMapper, ApplyMarketActivityRecordPO> implements ApplyMarketActivityRecordQueryService {
-	
+    @Override
+    public ApplyMarketActivityRecordPO queryApplyMarketRecord(ApplyMarketActivityRecordPO applyMarketActivityRecordPO) {
+        return baseMapper.selectOne(applyMarketActivityRecordPO);
+    }
 }

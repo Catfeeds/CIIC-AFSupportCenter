@@ -1,6 +1,2 @@
 *.idea
-target
 *.iml
-/SocialSecurity/SocCommandService/SocCommandService-Host/target
-/SocialSecurity/SocCommandService/SocCommandService-Entity/target
-/SocialSecurity/SocCommandService/SocCommandService-Dao/target

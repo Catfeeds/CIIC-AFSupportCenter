@@ -17,5 +17,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ApplyGiftRecordQueryServiceImpl extends ServiceImpl<ApplyGiftRecordQueryMapper, ApplyGiftRecordPO> implements ApplyGiftRecordQueryService {
-	
+
+    @Override
+    public ApplyGiftRecordPO queryApplyGiftRecord(ApplyGiftRecordPO applyGiftRecordPO) {
+        return baseMapper.selectOne(applyGiftRecordPO);
+    }
 }

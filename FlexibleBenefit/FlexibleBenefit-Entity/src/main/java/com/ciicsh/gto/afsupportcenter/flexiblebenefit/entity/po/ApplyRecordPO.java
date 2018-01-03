@@ -45,7 +45,7 @@ public class ApplyRecordPO extends Model<ApplyRecordPO> {
     @TableField("apply_type")
     private Integer applyType;
     /**
-     * 项目主题（待定）
+     * 项目主题：礼品名称/活动标题
      */
     @TableField("project_topics")
     private String projectTopics;

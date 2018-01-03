@@ -10,7 +10,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
     <artifactId>afsupportcenter-util</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
@@ -22,7 +21,6 @@
             <artifactId>spring-cloud-starter-eureka-server</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- ģ������ -->
         <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity-engine-core</artifactId>

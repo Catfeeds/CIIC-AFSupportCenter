@@ -25,8 +25,13 @@ public class MarketActivityQueryServiceImpl extends ServiceImpl<MarketActivityQu
         EntityWrapper<MarketActivityPO> entityWrapper = new EntityWrapper<>();
         //排除活动主题空数据
         entityWrapper.like(StringUtils.isNotEmpty(entity.getActivityTitle()), "activity_title", entity.getActivityTitle())
-                .and(entity.getStatus() != null, "status={0}", entity.getStatus());
+            .and(entity.getStatus() != null, "status={0}", entity.getStatus());
         page.setRecords(baseMapper.selectPage(page, entityWrapper));
         return page;
+    }
+
+    @Override
+    public MarketActivityPO queryMarketInformation(MarketActivityPO marketActivityPO) {
+        return baseMapper.selectOne(marketActivityPO);
     }
 }

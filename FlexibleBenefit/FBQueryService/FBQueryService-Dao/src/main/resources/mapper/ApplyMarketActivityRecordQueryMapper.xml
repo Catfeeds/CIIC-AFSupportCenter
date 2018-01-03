@@ -11,7 +11,7 @@
 		<result column="gift_form" property="giftForm" />
 		<result column="send_way" property="sendWay" />
 		<result column="delivery_address" property="deliveryAddress" />
-		<result column="IsActive" property="IsActive" />
+		<result column="is_active" property="isActive" />
 		<result column="create_time" property="createTime" />
 		<result column="modified_time" property="modifiedTime" />
 		<result column="created_by" property="createdBy" />
