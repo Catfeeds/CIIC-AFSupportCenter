@@ -36,6 +36,12 @@ management:
     port: 6020
     security:
         enabled: false
+#mybatis:
+#    config-location: classpath:mybatis-config.xml
+#    mapperLocations: classpath:mapper/*.xml
+#    type-handlers-package: com.ciicsh.gto.afsupportcenter.util.typehandler
+#pagehelper:
+#    reasonable: true
 
 mybatis-plus:
   configuration:
