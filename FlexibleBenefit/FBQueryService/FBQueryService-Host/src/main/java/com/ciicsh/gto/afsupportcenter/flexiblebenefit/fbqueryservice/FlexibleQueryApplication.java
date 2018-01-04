@@ -7,14 +7,15 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
+ * @author xwz
  * @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice"})
  */
 @SpringBootApplication
 @EnableDiscoveryClient
 @MapperScan("com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.dao")
-public class MainApplication extends SpringBootServletInitializer {
+public class FlexibleQueryApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
-        SpringApplication.run(MainApplication.class);
+        SpringApplication.run(FlexibleQueryApplication.class);
     }
 }

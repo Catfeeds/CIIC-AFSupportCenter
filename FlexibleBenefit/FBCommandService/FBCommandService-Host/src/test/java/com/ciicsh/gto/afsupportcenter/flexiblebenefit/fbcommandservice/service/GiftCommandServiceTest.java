@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.service;
 
 import com.ciicsh.gt1.FileHandler;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.GiftPO;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.Luncher;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.FlexibleCommandApplication;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.GiftCommandService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Luncher.class)
+@SpringBootTest(classes = FlexibleCommandApplication.class)
 public class GiftCommandServiceTest {
 
     @Autowired

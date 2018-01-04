@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.service;
 
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyRecordPO;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.Luncher;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.FlexibleCommandApplication;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.ApplyRecordCommandService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Date;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Luncher.class)
+@SpringBootTest(classes = FlexibleCommandApplication.class)
 public class ApplyRecordCommandServiceTest {
     @Autowired
     private ApplyRecordCommandService applyRecordCommandService;

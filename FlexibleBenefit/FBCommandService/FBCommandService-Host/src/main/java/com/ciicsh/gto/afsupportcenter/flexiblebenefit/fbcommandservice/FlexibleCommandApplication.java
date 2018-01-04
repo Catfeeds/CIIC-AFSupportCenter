@@ -8,9 +8,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @EnableDiscoveryClient
 @SpringBootApplication
 @MapperScan("com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.dao")
-public class Luncher {
+public class FlexibleCommandApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(Luncher.class);
+        SpringApplication.run(FlexibleCommandApplication.class);
     }
 }

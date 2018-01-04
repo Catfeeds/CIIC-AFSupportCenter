@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.service;
 
 
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.Luncher;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.FlexibleCommandApplication;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.MarketActivityCommandService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  * created by xwz on 2017年12月4日10:46:48
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Luncher.class)
+@SpringBootTest(classes = FlexibleCommandApplication.class)
 public class MarketActivityCommandServiceTest {
     @Autowired
     private MarketActivityCommandService marketActivityCommandService;

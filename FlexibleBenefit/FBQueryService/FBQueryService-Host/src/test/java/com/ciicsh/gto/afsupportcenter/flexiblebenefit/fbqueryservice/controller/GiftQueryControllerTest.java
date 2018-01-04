@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.controller;
 
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.MainApplication;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.FlexibleQueryApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = MainApplication.class)
+@SpringBootTest(classes = FlexibleQueryApplication.class)
 @AutoConfigureMockMvc
 public class GiftQueryControllerTest {
     @Autowired

@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.MarketActivityPO;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.MainApplication;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.FlexibleQueryApplication;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business.MarketActivityQueryService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = MainApplication.class)
+@SpringBootTest(classes = FlexibleQueryApplication.class)
 public class MarketServiceQueryTest {
 
     @Autowired
