@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po;
+package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

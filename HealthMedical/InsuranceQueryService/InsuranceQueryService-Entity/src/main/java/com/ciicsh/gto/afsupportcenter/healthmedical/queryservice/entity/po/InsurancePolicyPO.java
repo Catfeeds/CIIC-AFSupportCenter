@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po;
+package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po;
 
 import com.baomidou.mybatisplus.enums.IdType;
 import com.baomidou.mybatisplus.annotations.TableId;
@@ -16,7 +16,7 @@ import java.io.Serializable;
  * @since 2017-12-29
  */
 @TableName("hm_insurance_policy")
-public class InsurancePolicy implements Serializable {
+public class InsurancePolicyPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

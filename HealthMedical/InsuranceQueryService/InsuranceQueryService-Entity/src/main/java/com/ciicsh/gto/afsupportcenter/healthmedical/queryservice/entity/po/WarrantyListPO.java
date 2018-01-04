@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po;
+package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,7 +17,7 @@ import java.io.Serializable;
  * @since 2017-12-29
  */
 @TableName("hm_warranty_list")
-public class WarrantyList implements Serializable {
+public class WarrantyListPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

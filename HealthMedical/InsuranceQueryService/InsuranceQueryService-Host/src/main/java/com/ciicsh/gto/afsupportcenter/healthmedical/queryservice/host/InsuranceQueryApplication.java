@@ -13,13 +13,13 @@ import org.springframework.context.annotation.Import;
  * SpringBoot 方式启动类
  */
 @MapperScan(basePackages = {"com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.dao"})
-<<<<<<< HEAD
+//<<<<<<< HEAD
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.healthmedical.queryservice"})
 @Import({CustomConfiguration.class, MybatisPlusConfig.class})
-=======
-@SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.healthmedical"})
-@Import(CustomConfiguration.class)
->>>>>>> remotes/origin/feature_zhaogang_20171231
+//=======
+//@SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.healthmedical"})
+//@Import(CustomConfiguration.class)
+//>>>>>>> remotes/origin/feature_zhaogang_20171231
 public class InsuranceQueryApplication
 {
     private final static Logger logger = LoggerFactory.getLogger(InsuranceQueryApplication.class);

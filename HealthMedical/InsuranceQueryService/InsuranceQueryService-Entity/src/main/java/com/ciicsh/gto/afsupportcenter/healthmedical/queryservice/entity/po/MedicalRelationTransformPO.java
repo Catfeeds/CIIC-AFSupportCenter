@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po;
+package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po;
 
 import com.baomidou.mybatisplus.enums.IdType;
 import java.time.LocalDate;
@@ -17,7 +17,7 @@ import java.io.Serializable;
  * @since 2017-12-29
  */
 @TableName("hm_medical_relation_transform")
-public class MedicalRelationTransform implements Serializable {
+public class MedicalRelationTransformPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po;
+package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po;
 
 import com.baomidou.mybatisplus.enums.IdType;
 import java.math.BigDecimal;
@@ -18,7 +18,7 @@ import java.io.Serializable;
  * @since 2017-12-29
  */
 @TableName("hm_supply_medical_invoice")
-public class SupplyMedicalInvoice implements Serializable {
+public class SupplyMedicalInvoicePO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
