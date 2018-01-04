@@ -1,5 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.dto;
 
+import com.baomidou.mybatisplus.annotations.TableField;
+
 import java.util.Date;
 
 public class ApplyDTO extends CommonDTO {
@@ -139,6 +141,11 @@ public class ApplyDTO extends CommonDTO {
      * 发放时间
      */
     private Date sendTime;
+
+    /**
+     * 发放备注
+     */
+    private String sendRemark;
 
     /**
      * 主键
@@ -515,5 +522,13 @@ public class ApplyDTO extends CommonDTO {
 
     public void setDeliveryAddress(String deliveryAddress) {
         this.deliveryAddress = deliveryAddress;
+    }
+
+    public String getSendRemark() {
+        return sendRemark;
+    }
+
+    public void setSendRemark(String sendRemark) {
+        this.sendRemark = sendRemark;
     }
 }

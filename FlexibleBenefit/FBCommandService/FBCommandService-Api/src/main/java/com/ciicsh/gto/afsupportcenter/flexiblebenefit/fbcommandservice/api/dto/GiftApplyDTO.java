@@ -145,7 +145,10 @@ public class GiftApplyDTO {
      * 发放时间
      */
     private Date sendTime;
-
+    /**
+     * 发放备注
+     */
+    private String sendRemark;
 
     /**
      * 申请记录编号
@@ -456,5 +459,13 @@ public class GiftApplyDTO {
 
     public void setProjectTopics(String projectTopics) {
         this.projectTopics = projectTopics;
+    }
+
+    public String getSendRemark() {
+        return sendRemark;
+    }
+
+    public void setSendRemark(String sendRemark) {
+        this.sendRemark = sendRemark;
     }
 }

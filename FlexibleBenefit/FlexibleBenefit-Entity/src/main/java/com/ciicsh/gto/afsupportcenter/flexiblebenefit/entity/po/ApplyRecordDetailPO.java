@@ -35,7 +35,7 @@ public class ApplyRecordDetailPO extends Model<ApplyRecordDetailPO> {
     /**
      * 赠送对象类型：
      * 0-管理方
-     * 1-公司
+     * 1-客户
      * 2-联系人
      * 3-雇员
      * 4-其他
@@ -146,6 +146,11 @@ public class ApplyRecordDetailPO extends Model<ApplyRecordDetailPO> {
      */
     @TableField("send_time")
     private Date sendTime;
+    /**
+     * 发放备注
+     */
+    @TableField("send_remark")
+    private String sendRemark;
     /**
      * 是否可用
      */
@@ -365,6 +370,14 @@ public class ApplyRecordDetailPO extends Model<ApplyRecordDetailPO> {
         this.sendTime = sendTime;
     }
 
+    public String getSendRemark() {
+        return sendRemark;
+    }
+
+    public void setSendRemark(String sendRemark) {
+        this.sendRemark = sendRemark;
+    }
+
     public Boolean getActive() {
         return isActive;
     }
@@ -437,6 +450,7 @@ public class ApplyRecordDetailPO extends Model<ApplyRecordDetailPO> {
             ", approvalStatus=" + approvalStatus +
             ", sendStatus=" + sendStatus +
             ", sendTime=" + sendTime +
+            ", sendRemark=" + sendRemark +
             ", isActive=" + isActive +
             ", createTime=" + createTime +
             ", modifiedTime=" + modifiedTime +

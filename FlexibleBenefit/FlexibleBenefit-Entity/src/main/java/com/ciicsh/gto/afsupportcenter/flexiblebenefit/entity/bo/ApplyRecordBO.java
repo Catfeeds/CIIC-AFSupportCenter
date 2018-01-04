@@ -182,7 +182,11 @@ public class ApplyRecordBO {
      */
     @TableField("send_time")
     private Date sendTime;
-
+    /**
+     * 发放备注
+     */
+    @TableField("send_remark")
+    private String sendRemark;
     /**
      * 主键
      */
@@ -568,6 +572,14 @@ public class ApplyRecordBO {
         this.deliveryAddress = deliveryAddress;
     }
 
+    public String getSendRemark() {
+        return sendRemark;
+    }
+
+    public void setSendRemark(String sendRemark) {
+        this.sendRemark = sendRemark;
+    }
+
     @Override
     public String toString() {
         return "ApplyRecordBO{" +
@@ -603,6 +615,7 @@ public class ApplyRecordBO {
             ", approvalStatus=" + approvalStatus +
             ", sendStatus=" + sendStatus +
             ", sendTime=" + sendTime +
+            ", sendRemark='" + sendRemark + '\'' +
             ", giftRecordId=" + giftRecordId +
             ", giftId=" + giftId +
             ", applyNum=" + applyNum +
@@ -615,5 +628,4 @@ public class ApplyRecordBO {
             ", deliveryAddress='" + deliveryAddress + '\'' +
             '}';
     }
-
 }

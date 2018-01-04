@@ -1,5 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.dto;
 
+import com.baomidou.mybatisplus.annotations.TableField;
+
 import java.util.Date;
 
 /**
@@ -134,6 +136,10 @@ public class MarketApplyDTO {
      * 发放时间
      */
     private Date sendTime;
+    /**
+     * 发放备注
+     */
+    private String sendRemark;
     /**
      * 是否可用
      */
@@ -488,5 +494,13 @@ public class MarketApplyDTO {
 
     public void setProjectTopics(String projectTopics) {
         this.projectTopics = projectTopics;
+    }
+
+    public String getSendRemark() {
+        return sendRemark;
+    }
+
+    public void setSendRemark(String sendRemark) {
+        this.sendRemark = sendRemark;
     }
 }
