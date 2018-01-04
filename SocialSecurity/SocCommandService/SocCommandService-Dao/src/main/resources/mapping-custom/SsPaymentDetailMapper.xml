@@ -11,7 +11,12 @@
             ss_payment_detail SPD
         WHERE
             SPD.is_active = '1'
-            AND SPD.payment_com_id = #{paymentComId}
+            <if test = "comAccountId != null and comAccountId != ''">
+              AND SPD.com_account_id = #{comAccountId}
+            </if>
+            <if test = "paymentMonth != null and paymentMonth != ''">
+              AND SPD.payment_month = #{paymentMonth}
+            </if>
         ORDER BY
             SPD.seq
     </select>

@@ -43,4 +43,26 @@ public interface SsPaymentComMapper extends BaseMapper<SsPaymentCom> {
      * @return   SsPaymentComBO
      */
     SsPaymentComBO getPaymentComBoByPaymentId(Long paymentComId);
+
+    /**
+     * <p>Description: 去重获取一个批次下的所有客户明细的社保账号</p>
+     *
+     * @author wengxk
+     * @date 2018-01-04
+     * @param paymentId 批次ID
+     * @return   List<String>
+     */
+    List<Long> getAccountIdByPaymentId(Long paymentId);
+
+    /**
+     * <p>Description: 获取指定社保账户、支付年月条件下不在指定批次ID下的客户费用明细条数</p>
+     *
+     * @author wengxk
+     * @date 2018-01-04
+     * @param ssPaymentCom 客户费用明细查询条件
+     * @return   Integer
+     */
+    Integer getPaymentComCountNotInPayment(SsPaymentCom ssPaymentCom);
+
+
 }

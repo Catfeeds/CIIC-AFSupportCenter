@@ -24,10 +24,15 @@ public class SsPaymentDetail implements Serializable {
 	@TableId(value="payment_detail_id", type= IdType.AUTO)
 	private Long paymentDetailId;
     /**
-     * 外键，支付记录Id
+     * 外键，大库、独立库账户Id
      */
-	@TableField("payment_com_id")
-	private Long paymentComId;
+	@TableField("com_account_id")
+	private Long comAccountId;
+    /**
+     * 支付年月,格式yyyyMM
+     */
+	@TableField("payment_month")
+	private String paymentMonth;
     /**
      * 序号
      */
@@ -107,12 +112,20 @@ public class SsPaymentDetail implements Serializable {
 		this.paymentDetailId = paymentDetailId;
 	}
 
-	public Long getPaymentComId() {
-		return paymentComId;
+	public Long getComAccountId() {
+		return comAccountId;
 	}
 
-	public void setPaymentComId(Long paymentComId) {
-		this.paymentComId = paymentComId;
+	public void setComAccountId(Long comAccountId) {
+		this.comAccountId = comAccountId;
+	}
+
+	public String getPaymentMonth() {
+		return paymentMonth;
+	}
+
+	public void setPaymentMonth(String paymentMonth) {
+		this.paymentMonth = paymentMonth;
 	}
 
 	public String getSeq() {
@@ -231,7 +244,8 @@ public class SsPaymentDetail implements Serializable {
 	public String toString() {
 		return "SsPaymentDetail{" +
 			", paymentDetailId=" + paymentDetailId +
-			", paymentComId=" + paymentComId +
+			", comAccountId=" + comAccountId +
+			", paymentMonth=" + paymentMonth +
 			", seq=" + seq +
 			", paymentItem=" + paymentItem +
 			", paymentItemName=" + paymentItemName +

@@ -18,9 +18,13 @@ public class SsPaymentDetailDTO  {
      */
 	private Long paymentDetailId;
     /**
-     * 外键，支付记录Id
+     * 外键，大库、独立库账户Id
      */
-	private Long paymentComId;
+    private Long comAccountId;
+    /**
+     * 支付年月,格式yyyyMM
+     */
+    private String paymentMonth;
     /**
      * 序号
      */
@@ -85,14 +89,6 @@ public class SsPaymentDetailDTO  {
 
 	public void setPaymentDetailId(Long paymentDetailId) {
 		this.paymentDetailId = paymentDetailId;
-	}
-
-	public Long getPaymentComId() {
-		return paymentComId;
-	}
-
-	public void setPaymentComId(Long paymentComId) {
-		this.paymentComId = paymentComId;
 	}
 
 	public String getSeq() {
@@ -208,4 +204,19 @@ public class SsPaymentDetailDTO  {
 	}
 
 
+    public Long getComAccountId() {
+        return comAccountId;
+    }
+
+    public void setComAccountId(Long comAccountId) {
+        this.comAccountId = comAccountId;
+    }
+
+    public String getPaymentMonth() {
+        return paymentMonth;
+    }
+
+    public void setPaymentMonth(String paymentMonth) {
+        this.paymentMonth = paymentMonth;
+    }
 }
