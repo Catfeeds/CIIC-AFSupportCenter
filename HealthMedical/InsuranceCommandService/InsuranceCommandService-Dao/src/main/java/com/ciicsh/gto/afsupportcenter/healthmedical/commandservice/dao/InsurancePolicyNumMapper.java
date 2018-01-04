@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.dao;
 
+import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.bo.InsurancePolicyNumBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po.InsurancePolicyNumPO;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
@@ -12,5 +13,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @since 2017-12-20
  */
 public interface InsurancePolicyNumMapper extends BaseMapper<InsurancePolicyNumPO> {
-
+   // boolean addInsurancePolicyNumBO(InsurancePolicyNumBO policyNumBO);
 }

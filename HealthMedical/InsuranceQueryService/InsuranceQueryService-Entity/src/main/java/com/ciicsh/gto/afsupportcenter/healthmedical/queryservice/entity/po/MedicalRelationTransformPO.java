@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po;
+package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po;
 
 import com.baomidou.mybatisplus.enums.IdType;
 import java.time.LocalDate;
@@ -14,65 +14,65 @@ import java.io.Serializable;
  * </p>
  *
  * @author zhaogang
- * @since 2017-12-20
+ * @since 2017-12-29
  */
 @TableName("hm_medical_relation_transform")
-public class MedicalRelationTransformPO implements Serializable {
+public class MedicalRelationTransform implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * 序号
-	 */
+    /**
+     * 序号
+     */
 	@TableId(value="transform_id", type= IdType.AUTO)
 	private Integer transformId;
-	/**
-	 * 雇员终身编号
-	 */
+    /**
+     * 雇员终身编号
+     */
 	@TableField("employee_id")
 	private String employeeId;
-	/**
-	 * 转出日期
-	 */
+    /**
+     * 转出日期
+     */
 	@TableField("turn_out_date")
 	private LocalDate turnOutDate;
-	/**
-	 * 转出地址
-	 */
+    /**
+     * 转出地址
+     */
 	@TableField("turn_out_address")
 	private String turnOutAddress;
-	/**
-	 * 转回日期
-	 */
+    /**
+     * 转回日期
+     */
 	@TableField("turn_back_date")
 	private LocalDate turnBackDate;
-	/**
-	 * 备注
-	 */
+    /**
+     * 备注
+     */
 	private String remark;
-	/**
-	 * 是否可用
-	 */
+    /**
+     * 是否可用
+     */
 	@TableField("is_active")
 	private Boolean isActive;
-	/**
-	 * 创建时间
-	 */
+    /**
+     * 创建时间
+     */
 	@TableField("created_time")
 	private LocalTime createdTime;
-	/**
-	 * 最后更新时间
-	 */
+    /**
+     * 最后更新时间
+     */
 	@TableField("modified_time")
 	private LocalTime modifiedTime;
-	/**
-	 * 创建者登录名
-	 */
+    /**
+     * 创建者登录名
+     */
 	@TableField("created_by")
 	private String createdBy;
-	/**
-	 * 修改者登录名
-	 */
+    /**
+     * 修改者登录名
+     */
 	@TableField("modified_by")
 	private String modifiedBy;
 
@@ -168,17 +168,17 @@ public class MedicalRelationTransformPO implements Serializable {
 	@Override
 	public String toString() {
 		return "MedicalRelationTransform{" +
-				", transformId=" + transformId +
-				", employeeId=" + employeeId +
-				", turnOutDate=" + turnOutDate +
-				", turnOutAddress=" + turnOutAddress +
-				", turnBackDate=" + turnBackDate +
-				", remark=" + remark +
-				", isActive=" + isActive +
-				", createdTime=" + createdTime +
-				", modifiedTime=" + modifiedTime +
-				", createdBy=" + createdBy +
-				", modifiedBy=" + modifiedBy +
-				"}";
+			", transformId=" + transformId +
+			", employeeId=" + employeeId +
+			", turnOutDate=" + turnOutDate +
+			", turnOutAddress=" + turnOutAddress +
+			", turnBackDate=" + turnBackDate +
+			", remark=" + remark +
+			", isActive=" + isActive +
+			", createdTime=" + createdTime +
+			", modifiedTime=" + modifiedTime +
+			", createdBy=" + createdBy +
+			", modifiedBy=" + modifiedBy +
+			"}";
 	}
 }

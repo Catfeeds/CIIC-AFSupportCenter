@@ -1,12 +1,11 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po;
+package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
-
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalTime;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableName;
+import java.io.Serializable;
 
 /**
  * <p>
@@ -14,10 +13,10 @@ import java.time.LocalTime;
  * </p>
  *
  * @author zhaogang
- * @since 2017-12-21
+ * @since 2017-12-29
  */
 @TableName("hm_insurance_policy")
-public class InsurancePolicyPO implements Serializable {
+public class InsurancePolicy implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

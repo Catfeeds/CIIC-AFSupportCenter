@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.business;
 
+import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.bo.InsurancePolicyNumBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po.InsurancePolicyNumPO;
 import com.baomidou.mybatisplus.service.IService;
 
@@ -12,5 +13,6 @@ import com.baomidou.mybatisplus.service.IService;
  * @since 2017-12-20
  */
 public interface InsurancePolicyNumCommandService extends IService<InsurancePolicyNumPO> {
-	
+    boolean add(InsurancePolicyNumBO policyNumBO);
+    boolean update(InsurancePolicyNumBO policyNumBO);
 }

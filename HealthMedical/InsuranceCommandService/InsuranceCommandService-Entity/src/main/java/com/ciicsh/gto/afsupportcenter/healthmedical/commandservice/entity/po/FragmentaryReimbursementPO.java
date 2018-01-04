@@ -14,71 +14,71 @@ import java.io.Serializable;
  * </p>
  *
  * @author zhaogang
- * @since 2017-12-12
+ * @since 2017-12-29
  */
 @TableName("hm_fragmentary_reimbursement")
 public class FragmentaryReimbursementPO implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * 序号
-	 */
+    /**
+     * 序号
+     */
 	@TableId(value="id", type= IdType.AUTO)
 	private Integer id;
-	/**
-	 * 雇员终身编号
-	 */
+    /**
+     * 雇员终身编号
+     */
 	@TableField("employee_id")
 	private String employeeId;
-	/**
-	 * 受理金额
-	 */
+    /**
+     * 受理金额
+     */
 	@TableField("case_money")
 	private BigDecimal caseMoney;
-	/**
-	 * 发票张数
-	 */
+    /**
+     * 发票张数
+     */
 	@TableField("invoice_number")
 	private Integer invoiceNumber;
-	/**
-	 * 医疗备注
-	 */
+    /**
+     * 医疗备注
+     */
 	@TableField("medical_remark")
 	private String medicalRemark;
-	/**
-	 * 医保结算金额
-	 */
+    /**
+     * 医保结算金额
+     */
 	@TableField("medical_clearing_money")
 	private BigDecimal medicalClearingMoney;
-	/**
-	 * 医保结算反馈
-	 */
+    /**
+     * 医保结算反馈
+     */
 	@TableField("medical_clearing_feed_back")
 	private String medicalClearingFeedBack;
-	/**
-	 * 是否可用
-	 */
+    /**
+     * 是否可用
+     */
 	@TableField("is_active")
 	private Boolean isActive;
-	/**
-	 * 创建时间
-	 */
+    /**
+     * 创建时间
+     */
 	@TableField("created_time")
 	private LocalTime createdTime;
-	/**
-	 * 最后更新时间
-	 */
+    /**
+     * 最后更新时间
+     */
 	@TableField("modified_time")
 	private LocalTime modifiedTime;
-	/**
-	 * 创建者登录名
-	 */
+    /**
+     * 创建者登录名
+     */
 	@TableField("created_by")
 	private String createdBy;
-	/**
-	 * 修改者登录名
-	 */
+    /**
+     * 修改者登录名
+     */
 	@TableField("modified_by")
 	private String modifiedBy;
 
@@ -182,18 +182,18 @@ public class FragmentaryReimbursementPO implements Serializable {
 	@Override
 	public String toString() {
 		return "FragmentaryReimbursement{" +
-				", id=" + id +
-				", employeeId=" + employeeId +
-				", caseMoney=" + caseMoney +
-				", invoiceNumber=" + invoiceNumber +
-				", medicalRemark=" + medicalRemark +
-				", medicalClearingMoney=" + medicalClearingMoney +
-				", medicalClearingFeedBack=" + medicalClearingFeedBack +
-				", isActive=" + isActive +
-				", createdTime=" + createdTime +
-				", modifiedTime=" + modifiedTime +
-				", createdBy=" + createdBy +
-				", modifiedBy=" + modifiedBy +
-				"}";
+			", id=" + id +
+			", employeeId=" + employeeId +
+			", caseMoney=" + caseMoney +
+			", invoiceNumber=" + invoiceNumber +
+			", medicalRemark=" + medicalRemark +
+			", medicalClearingMoney=" + medicalClearingMoney +
+			", medicalClearingFeedBack=" + medicalClearingFeedBack +
+			", isActive=" + isActive +
+			", createdTime=" + createdTime +
+			", modifiedTime=" + modifiedTime +
+			", createdBy=" + createdBy +
+			", modifiedBy=" + modifiedBy +
+			"}";
 	}
 }

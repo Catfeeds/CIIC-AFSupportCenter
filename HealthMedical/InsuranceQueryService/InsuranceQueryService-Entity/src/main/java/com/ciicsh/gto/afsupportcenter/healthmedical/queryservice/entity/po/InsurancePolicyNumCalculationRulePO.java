@@ -1,13 +1,12 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po;
+package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
-
-import java.io.Serializable;
 import java.math.BigDecimal;
+import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalTime;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableName;
+import java.io.Serializable;
 
 /**
  * <p>
@@ -15,10 +14,10 @@ import java.time.LocalTime;
  * </p>
  *
  * @author zhaogang
- * @since 2017-12-20
+ * @since 2017-12-29
  */
 @TableName("hm_insurance_policy_num_calculation_rule")
-public class InsurancePolicyNumCalculationRulePO implements Serializable {
+public class InsurancePolicyNumCalculationRule implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -41,6 +40,11 @@ public class InsurancePolicyNumCalculationRulePO implements Serializable {
      * 收费
      */
 	private BigDecimal charge;
+    /**
+     * 代理费
+     */
+	@TableField("agency_fee")
+	private BigDecimal agencyFee;
     /**
      * 是否可用
      */
@@ -100,6 +104,14 @@ public class InsurancePolicyNumCalculationRulePO implements Serializable {
 		this.charge = charge;
 	}
 
+	public BigDecimal getAgencyFee() {
+		return agencyFee;
+	}
+
+	public void setAgencyFee(BigDecimal agencyFee) {
+		this.agencyFee = agencyFee;
+	}
+
 	public Boolean getActive() {
 		return isActive;
 	}
@@ -147,6 +159,7 @@ public class InsurancePolicyNumCalculationRulePO implements Serializable {
 			", insurancePolicyNumId=" + insurancePolicyNumId +
 			", claimRate=" + claimRate +
 			", charge=" + charge +
+			", agencyFee=" + agencyFee +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

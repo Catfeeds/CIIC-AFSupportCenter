@@ -14,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author zhaogang
- * @since 2017-12-12
+ * @since 2017-12-29
  */
 @TableName("hm_medical_relation_transform")
 public class MedicalRelationTransformPO implements Serializable {

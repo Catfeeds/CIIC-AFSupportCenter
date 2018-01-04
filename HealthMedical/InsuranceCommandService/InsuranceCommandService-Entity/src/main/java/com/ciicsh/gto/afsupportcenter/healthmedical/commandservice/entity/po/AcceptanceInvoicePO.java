@@ -2,7 +2,10 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalTime;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
 
 /**
@@ -11,99 +14,111 @@ import java.io.Serializable;
  * </p>
  *
  * @author zhaogang
- * @since 2017-12-04
+ * @since 2017-12-29
  */
-
+@TableName("hm_acceptance_invoice")
 public class AcceptanceInvoicePO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @TableId("invoice_id")
 	private Integer invoiceId;
+	@TableField("acceptance_id")
 	private Integer acceptanceId;
     /**
      * 就诊机构
      */
+	@TableField("medical_institution")
 	private String medicalInstitution;
     /**
      * 疾病名称
      */
+	@TableField("disease_name")
 	private String diseaseName;
     /**
      * 就诊日期
      */
+	@TableField("clinic_date")
 	private LocalDate clinicDate;
     /**
      * 自付金额
      */
+	@TableField("self_pay_amount")
 	private BigDecimal selfPayAmount;
     /**
      * 统筹金额
      */
+	@TableField("whole_plan_amount")
 	private BigDecimal wholePlanAmount;
     /**
      * 附加金额
      */
+	@TableField("attach_amount")
 	private BigDecimal attachAmount;
     /**
      * 自费金额
      */
+	@TableField("own_expense_amount")
 	private BigDecimal ownExpenseAmount;
     /**
      * 账户金额
      */
+	@TableField("account_amount")
 	private BigDecimal accountAmount;
     /**
      * 申请金额
      */
+	@TableField("application_amount")
 	private BigDecimal applicationAmount;
     /**
      * 赔付金额
      */
+	@TableField("claim_amount")
 	private BigDecimal claimAmount;
     /**
      * 核准金额
      */
-
+	@TableField("approved_amount")
 	private BigDecimal approvedAmount;
     /**
      * 分类自付金额
      */
-
+	@TableField("classified_self_payment_amount")
 	private BigDecimal classifiedSelfPaymentAmount;
     /**
      * 公司理赔金额
      */
-
+	@TableField("company_money")
 	private BigDecimal companyMoney;
     /**
      * 保险理赔金额
      */
-
+	@TableField("insurance_company_money")
 	private BigDecimal insuranceCompanyMoney;
     /**
      * 是否可用
      */
-
+	@TableField("is_active")
 	private Boolean isActive;
     /**
      * 创建时间
      */
-
+	@TableField("created_time")
 	private LocalTime createdTime;
     /**
      * 最后更新时间
      */
-
+	@TableField("modified_time")
 	private LocalTime modifiedTime;
     /**
      * 创建者登录名
      */
-
+	@TableField("created_by")
 	private String createdBy;
     /**
      * 修改者登录名
      */
-
+	@TableField("modified_by")
 	private String modifiedBy;
 
 

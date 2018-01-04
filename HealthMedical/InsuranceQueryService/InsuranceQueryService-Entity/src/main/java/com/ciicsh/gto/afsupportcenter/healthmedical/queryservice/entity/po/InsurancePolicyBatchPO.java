@@ -1,11 +1,12 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po;
+package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.po;
 
-import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.enums.IdType;
+import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
-
-import java.io.Serializable;
 import java.time.LocalTime;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableName;
+import java.io.Serializable;
 
 /**
  * <p>
@@ -13,14 +14,17 @@ import java.time.LocalTime;
  * </p>
  *
  * @author zhaogang
- * @since 2017-12-21
+ * @since 2017-12-29
  */
 @TableName("hm_insurance_policy_batch")
-public class InsurancePolicyBatchPO implements Serializable {
+public class InsurancePolicyBatch implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId("insurance_policy_num_batch_id")
+    /**
+     * 保单号批次ID
+     */
+	@TableId(value="insurance_policy_num_batch_id", type= IdType.AUTO)
 	private Integer insurancePolicyNumBatchId;
     /**
      * 所属保单号
@@ -28,28 +32,14 @@ public class InsurancePolicyBatchPO implements Serializable {
 	@TableField("insurance_policy_num_id")
 	private Integer insurancePolicyNumId;
     /**
-     * 保单号开始日期
+     * 费用所属期
+（由于缴费周期的不一样存放的信息含义不一样:
+按月：201701,201702
+按季度：201701,201702
+按年：2017,2018）
      */
-	@TableField("insurance_policy_num_start_date")
-	private LocalTime insurancePolicyNumStartDate;
-    /**
-     * 保单号结束日期
-     */
-	@TableField("insurance_policy_num_end_date")
-	private LocalTime insurancePolicyNumEndDate;
-    /**
-     * 缴费周期：
-1 月缴
-2 季缴
-3 年缴
-     */
-	@TableField("payment_cycle")
-	private Integer paymentCycle;
-    /**
-     * 保费计算规则
-     */
-	@TableField("payment_calculation_rule")
-	private String paymentCalculationRule;
+	@TableField("expense_period")
+	private Integer expensePeriod;
     /**
      * 总人数
      */
@@ -59,7 +49,7 @@ public class InsurancePolicyBatchPO implements Serializable {
      * 总保费
      */
 	@TableField("overall_premium")
-	private String overallPremium;
+	private BigDecimal overallPremium;
     /**
      * 代理费总人数
      */
@@ -69,7 +59,7 @@ public class InsurancePolicyBatchPO implements Serializable {
      * 代理费总额
      */
 	@TableField("agency_overall_premium")
-	private String agencyOverallPremium;
+	private BigDecimal agencyOverallPremium;
     /**
      * 操作人
      */
@@ -130,36 +120,12 @@ public class InsurancePolicyBatchPO implements Serializable {
 		this.insurancePolicyNumId = insurancePolicyNumId;
 	}
 
-	public LocalTime getInsurancePolicyNumStartDate() {
-		return insurancePolicyNumStartDate;
+	public Integer getExpensePeriod() {
+		return expensePeriod;
 	}
 
-	public void setInsurancePolicyNumStartDate(LocalTime insurancePolicyNumStartDate) {
-		this.insurancePolicyNumStartDate = insurancePolicyNumStartDate;
-	}
-
-	public LocalTime getInsurancePolicyNumEndDate() {
-		return insurancePolicyNumEndDate;
-	}
-
-	public void setInsurancePolicyNumEndDate(LocalTime insurancePolicyNumEndDate) {
-		this.insurancePolicyNumEndDate = insurancePolicyNumEndDate;
-	}
-
-	public Integer getPaymentCycle() {
-		return paymentCycle;
-	}
-
-	public void setPaymentCycle(Integer paymentCycle) {
-		this.paymentCycle = paymentCycle;
-	}
-
-	public String getPaymentCalculationRule() {
-		return paymentCalculationRule;
-	}
-
-	public void setPaymentCalculationRule(String paymentCalculationRule) {
-		this.paymentCalculationRule = paymentCalculationRule;
+	public void setExpensePeriod(Integer expensePeriod) {
+		this.expensePeriod = expensePeriod;
 	}
 
 	public Integer getTotalHeadCount() {
@@ -170,11 +136,11 @@ public class InsurancePolicyBatchPO implements Serializable {
 		this.totalHeadCount = totalHeadCount;
 	}
 
-	public String getOverallPremium() {
+	public BigDecimal getOverallPremium() {
 		return overallPremium;
 	}
 
-	public void setOverallPremium(String overallPremium) {
+	public void setOverallPremium(BigDecimal overallPremium) {
 		this.overallPremium = overallPremium;
 	}
 
@@ -186,11 +152,11 @@ public class InsurancePolicyBatchPO implements Serializable {
 		this.agencyTotalHeadCount = agencyTotalHeadCount;
 	}
 
-	public String getAgencyOverallPremium() {
+	public BigDecimal getAgencyOverallPremium() {
 		return agencyOverallPremium;
 	}
 
-	public void setAgencyOverallPremium(String agencyOverallPremium) {
+	public void setAgencyOverallPremium(BigDecimal agencyOverallPremium) {
 		this.agencyOverallPremium = agencyOverallPremium;
 	}
 
@@ -263,10 +229,7 @@ public class InsurancePolicyBatchPO implements Serializable {
 		return "InsurancePolicyBatch{" +
 			", insurancePolicyNumBatchId=" + insurancePolicyNumBatchId +
 			", insurancePolicyNumId=" + insurancePolicyNumId +
-			", insurancePolicyNumStartDate=" + insurancePolicyNumStartDate +
-			", insurancePolicyNumEndDate=" + insurancePolicyNumEndDate +
-			", paymentCycle=" + paymentCycle +
-			", paymentCalculationRule=" + paymentCalculationRule +
+			", expensePeriod=" + expensePeriod +
 			", totalHeadCount=" + totalHeadCount +
 			", overallPremium=" + overallPremium +
 			", agencyTotalHeadCount=" + agencyTotalHeadCount +
