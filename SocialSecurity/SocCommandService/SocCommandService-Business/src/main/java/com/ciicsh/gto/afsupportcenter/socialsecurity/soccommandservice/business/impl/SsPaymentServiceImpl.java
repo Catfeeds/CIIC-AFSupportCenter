@@ -63,11 +63,33 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         }
 
         //验证状态,只有3 ,可付 5,内部审批批退 状态的数据可申请支付
-        if(3 != ssPayment.getPaymentState() && 5 != ssPayment.getPaymentState()){
+        if(3 != ssPayment.getPaymentState() && 5 != ssPayment.getPaymentState() && 7 != ssPayment.getPaymentState()){
             json.setCode(3);
             json.setMessage("只有可付和内部审批批退状态的记录可申请支付");
             return json;
         }
+
+        //验证该批次中的社保账户中所有的客户费用明细是否都在该批次下
+        //取出批次中所有的社保账户
+        List<Long> accountList = ssPaymentComMapper.getAccountIdByPaymentId(ssPayment.getPaymentId());
+        //依次检验改社保账户中是否有不在改批次下的社保明细
+        if(Optional.ofNullable(accountList).isPresent()){
+            //放入参数
+            SsPaymentCom ssPaymentCom = new SsPaymentCom();
+            ssPaymentCom.setPaymentId(ssPayment.getPaymentId());
+            ssPaymentCom.setPaymentMonth(ssPayment.getPaymentMonth());
+            for (int i = 0; i < accountList.size(); i++) {
+                //不在该批次的明细条数
+                ssPaymentCom.setComAccountId(accountList.get(i));
+                int notInPaymentCount = ssPaymentComMapper.getPaymentComCountNotInPayment(ssPaymentCom);
+                if(notInPaymentCount > 0){
+                    json.setCode(3);
+                    json.setMessage("企业社保账户:" + accountList.get(i) + ";该账户下有客服费用未在本批次中,不能申请支付");
+                    return json;
+                }
+            }
+        }
+
         //验证结束
 
         //执行业务

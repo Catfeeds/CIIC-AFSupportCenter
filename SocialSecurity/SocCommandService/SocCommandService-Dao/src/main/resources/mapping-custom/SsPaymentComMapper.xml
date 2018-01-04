@@ -117,4 +117,29 @@
           SPC.is_active = '1'
           AND SPC.payment_com_id = #{paymentComId}
     </select>
+
+    <select id="getAccountIdByPaymentId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT
+            DISTINCT SPC.com_account_id
+        FROM
+            ss_payment_com SPC
+        WHERE
+            SPC.is_active = '1'
+            AND SPC.payment_id = #{paymentId}
+    </select>
+
+    <select id="getPaymentComCountNotInPayment" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPaymentCom" resultType="java.lang.Integer">
+        SELECT
+            Count(*)
+        FROM
+            ss_payment_com SPC
+        WHERE
+            SPC.is_active = '1'
+            AND (
+                SPC.payment_id != #{paymentId}
+                OR	SPC.payment_id IS NULL
+            )
+            AND SPC.payment_month = #{paymentMonth}
+            AND SPC.com_account_id = #{comAccountId}
+    </select>
 </mapper>
