@@ -71,6 +71,26 @@ public interface ISsPaymentService extends IService<SsPayment> {
     JsonResult<String> addPayment(SsPayment ssPayment);
 
 
+    /**
+     * <p>Description: 批次审批通过</p>
+     *
+     * @author wengxk
+     * @date 2018-01-05
+     * @param ssPayment 检索条件
+     * @return  JsonResult<>
+     */
+    JsonResult<String> doReviewdePass(SsPayment ssPayment);
+
+
+    /**
+     * <p>Description: 批次批退</p>
+     *
+     * @author wengxk
+     * @date 2018-01-05
+     * @param ssPayment 检索条件
+     * @return  JsonResult<>
+     */
+    JsonResult<String> doRejection(SsPayment ssPayment);
 
 
 }

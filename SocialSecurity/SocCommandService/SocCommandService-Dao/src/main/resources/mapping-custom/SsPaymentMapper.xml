@@ -54,6 +54,12 @@
             <if test = "paymentState != null and paymentState != ''">
                 AND SP.payment_state = #{paymentState}
             </if>
+            <if test = "paymentStateList != null">
+                AND SP.payment_state IN
+                <foreach collection="paymentStateList" item="state" open="(" close=")" separator=",">
+                    #{state}
+                </foreach>
+            </if>
     </select>
 
     <select id="searchPaymentByAccountTypeAndState" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentSrarchBO" resultMap="DtoResultMap">

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -28,6 +29,12 @@ public class SsPaymentDTO {
      * 最大支付年月
      */
     private String paymentMonthMax;
+
+    /**
+     * 状态List
+     */
+    private List<Integer> paymentStateList;
+
 
     private Long paymentId;
     /**
@@ -317,5 +324,13 @@ public class SsPaymentDTO {
 
     public void setPaymentId(Long paymentId) {
         this.paymentId = paymentId;
+    }
+
+    public List<Integer> getPaymentStateList() {
+        return paymentStateList;
+    }
+
+    public void setPaymentStateList(List<Integer> paymentStateList) {
+        this.paymentStateList = paymentStateList;
     }
 }

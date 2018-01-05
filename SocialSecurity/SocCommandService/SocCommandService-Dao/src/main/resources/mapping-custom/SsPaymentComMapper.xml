@@ -52,14 +52,12 @@
           ON
             SC.company_id = SPC.company_id
             AND SC.is_active = '1'
+
           LEFT JOIN
             ss_payment SP
           ON
             SP.payment_id = SPC.payment_id
             AND SP.is_active = '1'
-            <if test = "paymentBatchNum != null and paymentBatchNum != ''">
-                AND SP.payment_batch_num = #{paymentBatchNum}
-            </if>
         WHERE
             SPC.is_active = '1'
             <if test = "companyId != null and companyId != ''">
@@ -80,6 +78,12 @@
             </if>
             <if test = "comAccountId != null and comAccountId != ''">
               AND SPC.com_account_id = #{comAccountId}
+            </if>
+            <if test = "paymentId != null and paymentId != ''">
+                AND SPC.payment_id = #{paymentId}
+            </if>
+            <if test = "paymentBatchNum != null and paymentBatchNum != ''">
+                AND SP.payment_batch_num = #{paymentBatchNum}
             </if>
     </select>
 
