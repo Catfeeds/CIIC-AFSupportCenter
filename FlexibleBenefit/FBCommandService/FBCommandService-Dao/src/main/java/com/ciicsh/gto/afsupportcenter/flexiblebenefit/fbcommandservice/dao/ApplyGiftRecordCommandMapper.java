@@ -13,6 +13,4 @@ import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyGiftRecordP
  * @since 2017-12-18
  */
 public interface ApplyGiftRecordCommandMapper extends BaseMapper<ApplyGiftRecordPO> {
-
-    Integer insertSelective(ApplyGiftRecordPO applyGiftRecordPO);
 }

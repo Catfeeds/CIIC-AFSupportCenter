@@ -13,5 +13,4 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ApprovalStepCommandServiceImpl extends ServiceImpl<ApprovalStepCommandMapper, ApprovalStepPO> implements ApprovalStepCommandService {
-
 }

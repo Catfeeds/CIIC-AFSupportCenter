@@ -148,19 +148,18 @@ public class GiftCommandController {
 
             //申请类型为礼品--1
             applyRecordPO.setApplyType(1);
-            applyRecordCommandService.insertSelective(applyRecordPO);
+            applyRecordCommandService.insert(applyRecordPO);
             logger.info("新增活动申请ApplyRecordPO主键" + applyRecordPO.getApplyRecordId());
 
             /**返回申请主键*/
             applyRecordDetailPO.setApplyRecordId(applyRecordPO.getApplyRecordId());
-            applyRecordDetailCommandService.insertSelective(applyRecordDetailPO);
+            applyRecordDetailCommandService.insert(applyRecordDetailPO);
             logger.info("新增活动申请ApplyRecordPO主键" + applyRecordDetailPO.getApplyRecordDetailId());
 
             /**返回申请详情主键*/
             applyGiftRecordPO.setApplyRecordDetailId(applyRecordDetailPO.getApplyRecordDetailId());
-            Integer t = applyGiftRecordCommandService.insertSelective(applyGiftRecordPO);
+            boolean flag = applyGiftRecordCommandService.insert(applyGiftRecordPO);
 
-            boolean flag = (t == 1);
             logger.info("新增礼品申请");
             return ResultGenerator.genSuccessResult(flag);
         } catch (Exception e) {

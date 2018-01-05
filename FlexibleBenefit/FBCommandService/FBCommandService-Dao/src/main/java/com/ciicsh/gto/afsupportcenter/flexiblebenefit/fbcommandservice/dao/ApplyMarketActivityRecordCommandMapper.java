@@ -13,11 +13,4 @@ import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyMarketActiv
  * @since 2017-12-18
  */
 public interface ApplyMarketActivityRecordCommandMapper extends BaseMapper<ApplyMarketActivityRecordPO> {
-    /**
-     * 新增方法
-     *
-     * @param applyMarketActivityRecordPO
-     * @return
-     */
-    Integer insertSelective(ApplyMarketActivityRecordPO applyMarketActivityRecordPO);
 }

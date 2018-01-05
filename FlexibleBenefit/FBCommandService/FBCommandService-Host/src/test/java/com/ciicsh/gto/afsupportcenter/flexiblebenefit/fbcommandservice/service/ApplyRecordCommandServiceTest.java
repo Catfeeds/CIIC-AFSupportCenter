@@ -22,7 +22,7 @@ public class ApplyRecordCommandServiceTest {
         ApplyRecordPO applyRecordPO = new ApplyRecordPO();
         applyRecordPO.setApplyTime(new Date());
         applyRecordPO.setApplyType(2);
-        Integer t = applyRecordCommandService.insertSelective(applyRecordPO);
+        boolean t = applyRecordCommandService.insert(applyRecordPO);
         System.out.println(t);
         System.out.println(applyRecordPO.toString());
     }

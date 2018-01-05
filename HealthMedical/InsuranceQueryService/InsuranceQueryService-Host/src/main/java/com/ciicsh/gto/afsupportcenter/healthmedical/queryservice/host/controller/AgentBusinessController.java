@@ -1,19 +1,17 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.host.controller;
 
 
-import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.api.AgentBusinessQueryProxy;
-import com.ciicsh.gto.afsupportcenter.util.core.PageParam;
-import com.ciicsh.gto.afsupportcenter.util.core.Result;
-import com.ciicsh.gto.afsupportcenter.util.core.ResultGenerator;
 import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.api.dto.AgentBusinessDTO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.business.AgentBusinessQueryService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.bo.AgentBusinessBO;
-import com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.entity.po.AgentBusinessPO;
 import com.ciicsh.gto.afsupportcenter.util.ConvertUtil;
-import org.springframework.beans.BeanUtils;
+import com.ciicsh.gto.afsupportcenter.util.core.Result;
+import com.ciicsh.gto.afsupportcenter.util.core.ResultGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 

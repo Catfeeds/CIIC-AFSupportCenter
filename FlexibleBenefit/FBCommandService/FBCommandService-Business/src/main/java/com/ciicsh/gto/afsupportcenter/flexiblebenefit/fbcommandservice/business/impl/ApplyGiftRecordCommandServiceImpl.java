@@ -18,8 +18,4 @@ import org.springframework.stereotype.Service;
 @Service
 public class ApplyGiftRecordCommandServiceImpl extends ServiceImpl<ApplyGiftRecordCommandMapper, ApplyGiftRecordPO> implements ApplyGiftRecordCommandService {
 
-    @Override
-    public Integer insertSelective(ApplyGiftRecordPO applyGiftRecordPO) {
-        return baseMapper.insertSelective(applyGiftRecordPO);
-    }
 }

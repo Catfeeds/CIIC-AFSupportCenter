@@ -13,12 +13,4 @@ import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyMarketActiv
  * @since 2017-12-18
  */
 public interface ApplyMarketActivityRecordCommandService extends IService<ApplyMarketActivityRecordPO> {
-
-    /**
-     * 活动申请
-     *
-     * @param applyMarketActivityRecordPO
-     * @return
-     */
-    Integer insertSelective(ApplyMarketActivityRecordPO applyMarketActivityRecordPO);
 }

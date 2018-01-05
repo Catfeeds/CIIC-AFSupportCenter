@@ -109,7 +109,7 @@ public class MarketCommandController {
             /**前端校验数据大于0条*/
             BeanUtils.copyProperties(list.get(0), applyRecordPO);
             applyRecordPO.setApplyType(2);
-            applyRecordCommandService.insertSelective(applyRecordPO);
+            applyRecordCommandService.insert(applyRecordPO);
             logger.info("新增活动申请ApplyRecordPO主键" + applyRecordPO.getApplyRecordId());
 
             for (MarketApplyDTO item : list) {
@@ -120,12 +120,12 @@ public class MarketCommandController {
 
                 /**返回申请主键*/
                 applyRecordDetailPO.setApplyRecordId(applyRecordPO.getApplyRecordId());
-                applyRecordDetailCommandService.insertSelective(applyRecordDetailPO);
+                applyRecordDetailCommandService.insert(applyRecordDetailPO);
                 logger.info("新增活动申请ApplyRecordPO主键" + applyRecordDetailPO.getApplyRecordDetailId());
 
                 /**返回申请详情主键*/
                 applyMarketActivityRecordPO.setApplyRecordDetailId(applyRecordDetailPO.getApplyRecordDetailId());
-                applyMarketActivityRecordCommandService.insertSelective(applyMarketActivityRecordPO);
+                applyMarketActivityRecordCommandService.insert(applyMarketActivityRecordPO);
                 t++;
             }
             boolean flag = (t == list.size());

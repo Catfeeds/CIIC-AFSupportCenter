@@ -43,10 +43,17 @@ public class ApplyRecordDetailPO extends Model<ApplyRecordDetailPO> {
     @TableField("presenting_object_type")
     private Integer presentingObjectType;
     /**
+     * 赠送对象主键ID
+     */
+    @TableField("presenting_object_id")
+    private String presentingObjectId;
+    /**
      * 申请人类型（1-个人，2-公司，仅给赠送人--其他使用）
      */
     @TableField("applicant_type")
     private Integer applicantType;
+
+
     /**
      * 申请人（仅给赠送人--其他使用）
      */
@@ -100,7 +107,7 @@ public class ApplyRecordDetailPO extends Model<ApplyRecordDetailPO> {
      * 联系人手机号码
      */
     @TableField("contact_phone_num")
-    private Integer contactPhoneNum;
+    private String contactPhoneNum;
     /**
      * 联系人邮件地址
      */
@@ -290,11 +297,11 @@ public class ApplyRecordDetailPO extends Model<ApplyRecordDetailPO> {
         this.contactBrithday = contactBrithday;
     }
 
-    public Integer getContactPhoneNum() {
+    public String getContactPhoneNum() {
         return contactPhoneNum;
     }
 
-    public void setContactPhoneNum(Integer contactPhoneNum) {
+    public void setContactPhoneNum(String contactPhoneNum) {
         this.contactPhoneNum = contactPhoneNum;
     }
 
@@ -418,6 +425,14 @@ public class ApplyRecordDetailPO extends Model<ApplyRecordDetailPO> {
         this.modifiedBy = modifiedBy;
     }
 
+    public String getPresentingObjectId() {
+        return presentingObjectId;
+    }
+
+    public void setPresentingObjectId(String presentingObjectId) {
+        this.presentingObjectId = presentingObjectId;
+    }
+
     @Override
     protected Serializable pkVal() {
         return this.applyRecordDetailId;
@@ -426,36 +441,37 @@ public class ApplyRecordDetailPO extends Model<ApplyRecordDetailPO> {
     @Override
     public String toString() {
         return "ApplyRecordDetailPO{" +
-            ", applyRecordDetailId=" + applyRecordDetailId +
+            "applyRecordDetailId=" + applyRecordDetailId +
             ", applyRecordId=" + applyRecordId +
             ", presentingObjectType=" + presentingObjectType +
+            ", presentingObjectId='" + presentingObjectId + '\'' +
             ", applicantType=" + applicantType +
-            ", applicant=" + applicant +
-            ", applicantExtension=" + applicantExtension +
-            ", companyName=" + companyName +
-            ", companyAddress=" + companyAddress +
+            ", applicant='" + applicant + '\'' +
+            ", applicantExtension='" + applicantExtension + '\'' +
+            ", companyName='" + companyName + '\'' +
+            ", companyAddress='" + companyAddress + '\'' +
             ", companyTelephone=" + companyTelephone +
             ", companyFax=" + companyFax +
-            ", contactName=" + contactName +
-            ", contactDeptName=" + contactDeptName +
-            ", contactPosition=" + contactPosition +
+            ", contactName='" + contactName + '\'' +
+            ", contactDeptName='" + contactDeptName + '\'' +
+            ", contactPosition='" + contactPosition + '\'' +
             ", contactBrithday=" + contactBrithday +
-            ", contactPhoneNum=" + contactPhoneNum +
-            ", contactEmail=" + contactEmail +
+            ", contactPhoneNum='" + contactPhoneNum + '\'' +
+            ", contactEmail='" + contactEmail + '\'' +
             ", contactHomePostcode=" + contactHomePostcode +
             ", contactHomeTelephone=" + contactHomeTelephone +
-            ", contactHomeAddress=" + contactHomeAddress +
+            ", contactHomeAddress='" + contactHomeAddress + '\'' +
             ", extensionNumber=" + extensionNumber +
-            ", applyReason=" + applyReason +
+            ", applyReason='" + applyReason + '\'' +
             ", approvalStatus=" + approvalStatus +
             ", sendStatus=" + sendStatus +
             ", sendTime=" + sendTime +
-            ", sendRemark=" + sendRemark +
+            ", sendRemark='" + sendRemark + '\'' +
             ", isActive=" + isActive +
             ", createTime=" + createTime +
             ", modifiedTime=" + modifiedTime +
-            ", createdBy=" + createdBy +
-            ", modifiedBy=" + modifiedBy +
-            "}";
+            ", createdBy='" + createdBy + '\'' +
+            ", modifiedBy='" + modifiedBy + '\'' +
+            '}';
     }
 }

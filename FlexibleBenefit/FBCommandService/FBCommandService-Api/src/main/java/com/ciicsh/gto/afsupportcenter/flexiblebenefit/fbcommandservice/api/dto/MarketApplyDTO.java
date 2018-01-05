@@ -1,7 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.dto;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-
 import java.util.Date;
 
 /**
@@ -53,6 +51,10 @@ public class MarketApplyDTO {
      */
     private Integer presentingObjectType;
     /**
+     * 赠送对象主键ID
+     */
+    private String presentingObjectId;
+    /**
      * 申请人类型（1-个人，2-公司，仅给赠送人--其他使用）
      */
     private Integer applicantType;
@@ -99,7 +101,7 @@ public class MarketApplyDTO {
     /**
      * 联系人手机号码
      */
-    private Integer contactPhoneNum;
+    private String contactPhoneNum;
     /**
      * 联系人邮件地址
      */
@@ -336,11 +338,11 @@ public class MarketApplyDTO {
         this.contactBrithday = contactBrithday;
     }
 
-    public Integer getContactPhoneNum() {
+    public String getContactPhoneNum() {
         return contactPhoneNum;
     }
 
-    public void setContactPhoneNum(Integer contactPhoneNum) {
+    public void setContactPhoneNum(String contactPhoneNum) {
         this.contactPhoneNum = contactPhoneNum;
     }
 
@@ -502,5 +504,13 @@ public class MarketApplyDTO {
 
     public void setSendRemark(String sendRemark) {
         this.sendRemark = sendRemark;
+    }
+
+    public String getPresentingObjectId() {
+        return presentingObjectId;
+    }
+
+    public void setPresentingObjectId(String presentingObjectId) {
+        this.presentingObjectId = presentingObjectId;
     }
 }
