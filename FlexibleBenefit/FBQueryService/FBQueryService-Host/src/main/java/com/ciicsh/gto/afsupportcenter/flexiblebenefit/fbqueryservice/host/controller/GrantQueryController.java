@@ -74,7 +74,7 @@ public class GrantQueryController {
     }
 
     /**
-     * 礼品分页列表查询
+     * 礼品发放详细信息
      *
      * @param applyDTO
      * @return
@@ -117,7 +117,7 @@ public class GrantQueryController {
     }
 
     /**
-     * 礼品分页列表查询
+     * 礼品发放详细信息
      *
      * @param applyDTO
      * @return

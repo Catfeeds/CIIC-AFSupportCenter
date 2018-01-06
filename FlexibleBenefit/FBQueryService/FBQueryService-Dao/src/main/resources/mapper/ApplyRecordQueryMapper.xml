@@ -63,14 +63,14 @@
         FROM fb_apply_record
         JOIN fb_apply_record_detail ON fb_apply_record.apply_record_id = fb_apply_record_detail.apply_record_id
         <where>
-            <if test="approvalStatus != null">
-                AND fb_apply_record.apply_type= #{applyType,jdbcType=TIMESTAMP}
+            <if test="applyType != null">
+                AND fb_apply_record.apply_type= #{applyType,jdbcType=INTEGER}
             </if>
             <if test="approvalStatus != null">
-                AND fb_apply_record_detail.approval_status= #{approvalStatus,jdbcType=TIMESTAMP}
+                AND fb_apply_record_detail.approval_status= #{approvalStatus,jdbcType=INTEGER}
             </if>
             <if test="sendStatus != null">
-                AND fb_apply_record_detail.send_status= #{sendStatus,jdbcType=TIMESTAMP}
+                AND fb_apply_record_detail.send_status= #{sendStatus,jdbcType=INTEGER}
             </if>
         </where>
     </select>
