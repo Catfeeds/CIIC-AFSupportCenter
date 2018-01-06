@@ -13,6 +13,8 @@ import java.util.Date;
  * <p>
  * 审批步骤记录表
  * </p>
+ *
+ * @author xiweizhen
  */
 @TableName("fb_approval_step")
 public class ApprovalStepPO extends Model<ApprovalStepPO> {
