@@ -10,25 +10,26 @@ import java.util.List;
  * @author xwz
  */
 public class MarketApplyBO {
-    private MarketActivityPO marketActivityPO;
-    private ApplyRecordPO applyRecordPO;
+    private MarketActivityPO marketActivity;
+    private ApplyRecordPO applyRecord;
     private List<ApplyRecordDetailPO> recordDetailList;
     private List<ApplyMarketActivityRecordPO> applyMarketActivityRecordList;
+    private List<ApprovalStepPO> approvalStepList;
 
-    public MarketActivityPO getMarketActivityPO() {
-        return marketActivityPO;
+    public MarketActivityPO getMarketActivity() {
+        return marketActivity;
     }
 
-    public void setMarketActivityPO(MarketActivityPO marketActivityPO) {
-        this.marketActivityPO = marketActivityPO;
+    public void setMarketActivity(MarketActivityPO marketActivity) {
+        this.marketActivity = marketActivity;
     }
 
-    public ApplyRecordPO getApplyRecordPO() {
-        return applyRecordPO;
+    public ApplyRecordPO getApplyRecord() {
+        return applyRecord;
     }
 
-    public void setApplyRecordPO(ApplyRecordPO applyRecordPO) {
-        this.applyRecordPO = applyRecordPO;
+    public void setApplyRecord(ApplyRecordPO applyRecord) {
+        this.applyRecord = applyRecord;
     }
 
     public List<ApplyRecordDetailPO> getRecordDetailList() {
@@ -47,13 +48,22 @@ public class MarketApplyBO {
         this.applyMarketActivityRecordList = applyMarketActivityRecordList;
     }
 
+    public List<ApprovalStepPO> getApprovalStepList() {
+        return approvalStepList;
+    }
+
+    public void setApprovalStepList(List<ApprovalStepPO> approvalStepList) {
+        this.approvalStepList = approvalStepList;
+    }
+
     @Override
     public String toString() {
         return "MarketApplyBO{" +
-            "marketActivityPO=" + marketActivityPO +
-            ", applyRecordPO=" + applyRecordPO +
+            "marketActivity=" + marketActivity +
+            ", applyRecord=" + applyRecord +
             ", recordDetailList=" + recordDetailList +
             ", applyMarketActivityRecordList=" + applyMarketActivityRecordList +
+            ", approvalStepList=" + approvalStepList +
             '}';
     }
 }

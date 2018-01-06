@@ -1,9 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.bo;
 
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyGiftRecordPO;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyRecordDetailPO;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyRecordPO;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.GiftPO;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.*;
+
+import java.util.List;
 
 /**
  * 礼品申请详情
@@ -11,50 +10,60 @@ import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.GiftPO;
  * @author xwz
  */
 public class GiftApplyBO {
-    private GiftPO giftPO;
-    private ApplyRecordPO applyRecordPO;
-    private ApplyRecordDetailPO applyRecordDetailPO;
-    private ApplyGiftRecordPO applyGiftRecordPO;
+    private GiftPO gift;
+    private ApplyRecordPO applyRecord;
+    private ApplyRecordDetailPO applyRecordDetail;
+    private ApplyGiftRecordPO applyGiftRecord;
+    private List<ApprovalStepPO> approvalStepList;
 
-    public GiftPO getGiftPO() {
-        return giftPO;
+    public GiftPO getGift() {
+        return gift;
     }
 
-    public void setGiftPO(GiftPO giftPO) {
-        this.giftPO = giftPO;
+    public void setGift(GiftPO gift) {
+        this.gift = gift;
     }
 
-    public ApplyRecordPO getApplyRecordPO() {
-        return applyRecordPO;
+    public ApplyRecordPO getApplyRecord() {
+        return applyRecord;
     }
 
-    public void setApplyRecordPO(ApplyRecordPO applyRecordPO) {
-        this.applyRecordPO = applyRecordPO;
+    public void setApplyRecord(ApplyRecordPO applyRecord) {
+        this.applyRecord = applyRecord;
     }
 
-    public ApplyRecordDetailPO getApplyRecordDetailPO() {
-        return applyRecordDetailPO;
+    public ApplyRecordDetailPO getApplyRecordDetail() {
+        return applyRecordDetail;
     }
 
-    public void setApplyRecordDetailPO(ApplyRecordDetailPO applyRecordDetailPO) {
-        this.applyRecordDetailPO = applyRecordDetailPO;
+    public void setApplyRecordDetail(ApplyRecordDetailPO applyRecordDetail) {
+        this.applyRecordDetail = applyRecordDetail;
     }
 
-    public ApplyGiftRecordPO getApplyGiftRecordPO() {
-        return applyGiftRecordPO;
+    public ApplyGiftRecordPO getApplyGiftRecord() {
+        return applyGiftRecord;
     }
 
-    public void setApplyGiftRecordPO(ApplyGiftRecordPO applyGiftRecordPO) {
-        this.applyGiftRecordPO = applyGiftRecordPO;
+    public void setApplyGiftRecord(ApplyGiftRecordPO applyGiftRecord) {
+        this.applyGiftRecord = applyGiftRecord;
+    }
+
+    public List<ApprovalStepPO> getApprovalStepList() {
+        return approvalStepList;
+    }
+
+    public void setApprovalStepList(List<ApprovalStepPO> approvalStepList) {
+        this.approvalStepList = approvalStepList;
     }
 
     @Override
     public String toString() {
         return "GiftApplyBO{" +
-            "giftPO=" + giftPO +
-            ", applyRecordPO=" + applyRecordPO +
-            ", applyRecordDetailPO=" + applyRecordDetailPO +
-            ", applyGiftRecordPO=" + applyGiftRecordPO +
+            "gift=" + gift +
+            ", applyRecord=" + applyRecord +
+            ", applyRecordDetail=" + applyRecordDetail +
+            ", applyGiftRecord=" + applyGiftRecord +
+            ", approvalStepList=" + approvalStepList +
             '}';
     }
 }

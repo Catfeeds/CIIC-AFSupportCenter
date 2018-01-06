@@ -35,6 +35,9 @@ public class GrantQueryController {
     private ApplyRecordQueryService applyRecordQueryService;
     @Autowired
     private ApplyRecordDetailQueryService applyRecordDetailQueryService;
+    @Autowired
+    private ApprovalStepQueryService approvalStepQueryService;
+
     /**
      * 礼品的查询
      */
@@ -99,15 +102,21 @@ public class GrantQueryController {
             applyGiftRecordPO.setApplyRecordDetailId(applyRecordDetailPO.getApplyRecordDetailId());
             applyGiftRecordPO = applyGiftRecordQueryService.queryApplyGiftRecord(applyGiftRecordPO);
 
+            //查询审批表信息
+            ApprovalStepPO approvalStep = new ApprovalStepPO();
+            approvalStep.setApplyRecordDetailId(applyRecordDetailPO.getApplyRecordDetailId());
+            List<ApprovalStepPO> approvalStepList = approvalStepQueryService.selectApprovalStepList(approvalStep);
+
             //查询礼品表信息
             GiftPO giftPO = new GiftPO();
             giftPO.setId(applyGiftRecordPO.getGiftId());
             giftPO = giftQueryService.queryGiftInformation(giftPO);
 
-            giftApplyBO.setApplyRecordPO(applyRecordPO);
-            giftApplyBO.setApplyRecordDetailPO(applyRecordDetailPO);
-            giftApplyBO.setApplyGiftRecordPO(applyGiftRecordPO);
-            giftApplyBO.setGiftPO(giftPO);
+            giftApplyBO.setApplyRecord(applyRecordPO);
+            giftApplyBO.setApplyRecordDetail(applyRecordDetailPO);
+            giftApplyBO.setApplyGiftRecord(applyGiftRecordPO);
+            giftApplyBO.setGift(giftPO);
+            giftApplyBO.setApprovalStepList(approvalStepList);
 
             logger.info("查询申请记录分页列表");
             return ResultGenerator.genSuccessResult(giftApplyBO);
@@ -117,7 +126,7 @@ public class GrantQueryController {
     }
 
     /**
-     * 礼品发放详细信息
+     * 活动发放详细信息
      *
      * @param applyDTO
      * @return
@@ -147,16 +156,21 @@ public class GrantQueryController {
                 applyMarketActivityRecordList.add(applyMarketActivityRecordPO);
             }
 
+            //查询审批表信息
+            ApprovalStepPO approvalStep = new ApprovalStepPO();
+            approvalStep.setApplyRecordDetailId(applyRecordDetailList.get(0).getApplyRecordDetailId());
+            List<ApprovalStepPO> approvalStepList = approvalStepQueryService.selectApprovalStepList(approvalStep);
 
             //查询活动表信息
             MarketActivityPO marketActivityPO = new MarketActivityPO();
             marketActivityPO.setId(applyMarketActivityRecordList.get(0).getActivityId());
             marketActivityPO = marketActivityQueryService.queryMarketInformation(marketActivityPO);
 
-            marketApplyBO.setApplyRecordPO(applyRecordPO);
+            marketApplyBO.setApplyRecord(applyRecordPO);
             marketApplyBO.setRecordDetailList(applyRecordDetailList);
             marketApplyBO.setApplyMarketActivityRecordList(applyMarketActivityRecordList);
-            marketApplyBO.setMarketActivityPO(marketActivityPO);
+            marketApplyBO.setMarketActivity(marketActivityPO);
+            marketApplyBO.setApprovalStepList(approvalStepList);
 
             logger.info("查询申请记录分页列表");
             return ResultGenerator.genSuccessResult(marketApplyBO);
