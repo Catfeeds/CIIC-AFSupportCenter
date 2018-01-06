@@ -35,6 +35,11 @@ public class ApprovalStepPO extends Model<ApprovalStepPO> {
     @TableField("approver_id")
     private String approverId;
     /**
+     * 审批人姓名
+     */
+    @TableField("approve_name")
+    private String approveName;
+    /**
      * 审批时间
      */
     @TableField("approve_time")
@@ -166,6 +171,14 @@ public class ApprovalStepPO extends Model<ApprovalStepPO> {
         this.modifiedBy = modifiedBy;
     }
 
+    public String getApproveName() {
+        return approveName;
+    }
+
+    public void setApproveName(String approveName) {
+        this.approveName = approveName;
+    }
+
     @Override
     protected Serializable pkVal() {
         return this.stepId;
@@ -173,18 +186,19 @@ public class ApprovalStepPO extends Model<ApprovalStepPO> {
 
     @Override
     public String toString() {
-        return "ApprovalStep{" +
-            ", stepId=" + stepId +
+        return "ApprovalStepPO{" +
+            "stepId=" + stepId +
             ", applyRecordDetailId=" + applyRecordDetailId +
-            ", approverId=" + approverId +
+            ", approverId='" + approverId + '\'' +
+            ", approveName='" + approveName + '\'' +
             ", approveTime=" + approveTime +
             ", approveAction=" + approveAction +
-            ", approveRemark=" + approveRemark +
+            ", approveRemark='" + approveRemark + '\'' +
             ", isActive=" + isActive +
             ", createTime=" + createTime +
             ", modifiedTime=" + modifiedTime +
-            ", createdBy=" + createdBy +
-            ", modifiedBy=" + modifiedBy +
-            "}";
+            ", createdBy='" + createdBy + '\'' +
+            ", modifiedBy='" + modifiedBy + '\'' +
+            '}';
     }
 }
