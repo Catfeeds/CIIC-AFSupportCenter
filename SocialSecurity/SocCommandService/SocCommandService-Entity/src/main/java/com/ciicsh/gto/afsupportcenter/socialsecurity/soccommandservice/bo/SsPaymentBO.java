@@ -2,6 +2,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPayment;
 
+import java.util.List;
+
 /**
  * <p>
  * 本地社保中，中智公司与社保局的对账单（各一条记录）
@@ -25,6 +27,12 @@ public class SsPaymentBO extends SsPayment {
      */
     private String paymentMonthMax;
 
+    /**
+     * 状态List
+     */
+    private List<Integer> paymentStateList;
+
+
     public String getPaymentMonthMin() {
         return paymentMonthMin;
     }
@@ -39,5 +47,13 @@ public class SsPaymentBO extends SsPayment {
 
     public void setPaymentMonthMax(String paymentMonthMax) {
         this.paymentMonthMax = paymentMonthMax;
+    }
+
+    public List<Integer> getPaymentStateList() {
+        return paymentStateList;
+    }
+
+    public void setPaymentStateList(List<Integer> paymentStateList) {
+        this.paymentStateList = paymentStateList;
     }
 }

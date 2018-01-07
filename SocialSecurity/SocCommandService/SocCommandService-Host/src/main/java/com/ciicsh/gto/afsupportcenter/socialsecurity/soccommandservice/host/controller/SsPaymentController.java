@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * <p>
@@ -46,7 +47,7 @@ public class SsPaymentController  extends BasicController<ISsPaymentService> {
      */
     @Log("查询社保支付-支付批次(列表页)")
     @PostMapping("/paymentQuery")
-    public JsonResult<List<SsPaymentDTO>> paymentComQuery(PageInfo pageInfo) {
+    public JsonResult<List<SsPaymentDTO>> paymentQuery(PageInfo pageInfo) {
 
 
         PageRows<SsPaymentBO> pageBORows = business.paymentQuery(pageInfo);
@@ -179,6 +180,82 @@ public class SsPaymentController  extends BasicController<ISsPaymentService> {
         SsPayment ssPayment = CommonTransform.convertToEntity(ssPaymentDTO,SsPayment.class);
         //执行业务
         json = business.addPayment(ssPayment);
+
+        return json;
+    }
+
+    /**
+     * <p>Description: 查询社保支付审核-审核批次(列表页)</p>
+     *
+     * @author wengxk
+     * @date 2017-01-05
+     * @param pageInfo 翻页检索条件
+     * @return  JsonResult<>
+     */
+    @Log("查询社保支付-支付批次(列表页)")
+    @PostMapping("/paymentReviewedQuery")
+    public JsonResult<List<SsPaymentDTO>> paymentReviewedQuery(PageInfo pageInfo) {
+
+        //处理参数
+        //如果页面没有选择支付状态则放入默认支付状态
+        SsPaymentBO ssPaymentBO = pageInfo.toJavaObject(SsPaymentBO.class);
+        if(!Optional.ofNullable(ssPaymentBO.getPaymentState()).isPresent()){
+            List<Integer> paymentStateList = new ArrayList<>();
+            //申请中
+            paymentStateList.add(4);
+            //已申请到财务部
+            paymentStateList.add(6);
+            //财务部支付成功
+            paymentStateList.add(8);
+
+            ssPaymentBO.setPaymentStateList(paymentStateList);
+            pageInfo.put(ssPaymentBO);
+        }
+
+        PageRows<SsPaymentBO> pageBORows = business.paymentQuery(pageInfo);
+        PageRows<SsPaymentDTO> pageRows = new PageRows<SsPaymentDTO>();
+        BeanUtils.copyProperties(pageBORows,pageRows);
+
+
+        return JsonResultKit.ofPage(pageRows);
+    }
+
+    /**
+     * <p>Description: 批次审批通过</p>
+     *
+     * @author wengxk
+     * @date 2018-01-05
+     * @param ssOperatePaymentDTO 批次操作参数
+     * @return  JsonResult<>
+     */
+    @Log("批次审批通过")
+    @PostMapping("/doReviewdePass")
+    public JsonResult<String> doReviewdePass(SsOperatePaymentDTO ssOperatePaymentDTO) {
+        JsonResult<String> json = new JsonResult<String>();
+        //数据转换
+        SsPayment ssPayment = CommonTransform.convertToEntity(ssOperatePaymentDTO,SsPayment.class);
+        //执行业务
+        json = business.doReviewdePass(ssPayment);
+
+        return json;
+    }
+
+    /**
+     * <p>Description: 批次批退</p>
+     *
+     * @author wengxk
+     * @date 2018-01-05
+     * @param ssOperatePaymentDTO 批次操作参数
+     * @return  JsonResult<>
+     */
+    @Log("批次批退")
+    @PostMapping("/doRejection")
+    public JsonResult<String> doRejection(SsOperatePaymentDTO ssOperatePaymentDTO) {
+        JsonResult<String> json = new JsonResult<String>();
+        //数据转换
+        SsPayment ssPayment = CommonTransform.convertToEntity(ssOperatePaymentDTO,SsPayment.class);
+        //执行业务
+        json = business.doRejection(ssPayment);
 
         return json;
     }
