@@ -18,12 +18,20 @@ import java.util.List;
  */
 public interface SsComAccountMapper extends BaseMapper<SsComAccount> {
     /**
-     * 根据雇员任务 ID 查询 企业社保账户信息
+     * 根据雇员任务 ID 查询 企业社保账户信息（新进和转入之外）
      *
      * @param empTaskId
      * @return
      */
     SsComAccountBO queryByEmpTaskId(@Param("empTaskId") String empTaskId);
+
+    /**
+     * 根据雇员任务 ID 查询 企业社保账户信息(新进和转入)
+     *
+     * @param empTaskId
+     * @return
+     */
+    SsComAccountBO queryNewOrIntoByEmpTaskId(@Param("empTaskId") String empTaskId);
 
     /**
      * 查询企业社保账户信息

@@ -23,8 +23,16 @@ import org.springframework.stereotype.Service;
 public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsComAccount> implements ISsComAccountService {
 
     @Override
-    public SsComAccountBO queryByEmpTaskId(String empTaskId) {
-        return baseMapper.queryByEmpTaskId(empTaskId);
+    public SsComAccountBO queryByEmpTaskId(String empTaskId,String type) {
+        if("1".equals(type) || "2".equals(type)){
+            //表示新进和转入
+            return baseMapper.queryNewOrIntoByEmpTaskId(empTaskId);
+
+        }else{
+            //新进和转入之外
+            return baseMapper.queryByEmpTaskId(empTaskId);
+        }
+
     }
 
     @Override

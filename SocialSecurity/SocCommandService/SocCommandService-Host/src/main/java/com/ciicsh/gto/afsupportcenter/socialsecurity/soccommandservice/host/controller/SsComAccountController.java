@@ -16,6 +16,7 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -45,9 +46,11 @@ public class SsComAccountController extends BasicController<ISsComAccountService
      */
     @RequestMapping("/queryByEmpTaskId")
     @Log("根据雇员任务 ID 查询")
-    public JsonResult<SsComAccountBO> queryByEmpTaskId(String empTaskId) {
-        SsComAccountBO dto = business.queryByEmpTaskId(empTaskId);
-        return JsonResultKit.of(dto);
+    public JsonResult<SsComAccountBO> queryByEmpTaskId(@RequestParam("empTaskId") String empTaskId,
+                                                       @RequestParam("operatorType") String operatorType) {
+
+        SsComAccountBO ssComAccountBO = business.queryByEmpTaskId(empTaskId,operatorType);
+        return JsonResultKit.of(ssComAccountBO);
     }
 
     /**

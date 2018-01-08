@@ -2,8 +2,11 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity;
 
 import com.baomidou.mybatisplus.enums.IdType;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotations.TableId;
+
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
@@ -13,6 +16,9 @@ import java.io.Serializable;
  * 雇员本地社保档案主表,
 由中智代缴过社保的雇员在此表必有一条记录，如果雇员跳槽到另外一家客户，就会在此表产生
  * </p>
+ *
+ * @author HuangXing
+ * @since 2018-01-02
  */
 @TableName("ss_emp_archive")
 public class SsEmpArchive implements Serializable {
@@ -64,6 +70,16 @@ public class SsEmpArchive implements Serializable {
      */
 	@TableField("emp_classify")
 	private Integer empClassify;
+    /**
+     * 入职日期。为何要在此冗余添加雇员入离职表中的字段？原因是雇员入离职表被分开3张
+     */
+	@TableField("in_date")
+	private LocalDate inDate;
+    /**
+     * 离职时间
+     */
+	@TableField("out_date")
+	private LocalDate outDate;
     /**
      * 社保档案状态 : 0-未办理  1-已办  2-已做 3-转出
      */
@@ -180,6 +196,22 @@ public class SsEmpArchive implements Serializable {
 		this.empClassify = empClassify;
 	}
 
+	public LocalDate getInDate() {
+		return inDate;
+	}
+
+	public void setInDate(LocalDate inDate) {
+		this.inDate = inDate;
+	}
+
+	public LocalDate getOutDate() {
+		return outDate;
+	}
+
+	public void setOutDate(LocalDate outDate) {
+		this.outDate = outDate;
+	}
+
 	public Integer getArchiveStatus() {
 		return archiveStatus;
 	}
@@ -228,23 +260,23 @@ public class SsEmpArchive implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public LocalDateTime getCreatedTime() {
-		return createdTime;
-	}
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
+    }
 
-	public void setCreatedTime(LocalDateTime createdTime) {
-		this.createdTime = createdTime;
-	}
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
 
-	public LocalDateTime getModifiedTime() {
-		return modifiedTime;
-	}
+    public LocalDateTime getModifiedTime() {
+        return modifiedTime;
+    }
 
-	public void setModifiedTime(LocalDateTime modifiedTime) {
-		this.modifiedTime = modifiedTime;
-	}
+    public void setModifiedTime(LocalDateTime modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
 
-	public String getCreatedBy() {
+    public String getCreatedBy() {
 		return createdBy;
 	}
 
@@ -263,7 +295,7 @@ public class SsEmpArchive implements Serializable {
 	@Override
 	public String toString() {
 		return "SsEmpArchive{" +
-			", empArchiveId=" + empArchiveId +
+			"empArchiveId=" + empArchiveId +
 			", customerId=" + customerId +
 			", companyId=" + companyId +
 			", employeeId=" + employeeId +
@@ -271,6 +303,8 @@ public class SsEmpArchive implements Serializable {
 			", ssSerial=" + ssSerial +
 			", salary=" + salary +
 			", empClassify=" + empClassify +
+			", inDate=" + inDate +
+			", outDate=" + outDate +
 			", archiveStatus=" + archiveStatus +
 			", archiveTaskStatus=" + archiveTaskStatus +
 			", startMonth=" + startMonth +

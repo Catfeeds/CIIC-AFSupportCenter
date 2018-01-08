@@ -2,6 +2,10 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBasePeriod;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +16,10 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @since 2017-12-01
  */
 public interface SsEmpBasePeriodMapper extends BaseMapper<SsEmpBasePeriod> {
-
+    /**
+     * 通过社保档案ID 查询 雇员汇缴信息
+     * @param empArchiveId
+     * @return
+     */
+    List<SsEmpBasePeriod> queryPeriodByEmpArchiveId(@Param("empArchiveId")String empArchiveId);
 }

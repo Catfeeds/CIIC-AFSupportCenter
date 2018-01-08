@@ -15,7 +15,7 @@
         <collection property="ssComTaskList"
                     ofType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask">
             <id column="com_task_id" property="comTaskId"/>
-            <result column="com_account_id_" property="comAccountId"/>
+            <result column="com_account_id_t" property="comAccountId"/>
             <result column="company_id" property="companyId"/>
             <result column="task_category" property="taskCategory"/>
             <result column="task_status" property="taskStatus"/>
@@ -26,20 +26,45 @@
             <result column="modified_by" property="modifiedBy"/>
         </collection>
     </resultMap>
-
+    <!--通过雇员任务单查询账户信息-->
     <select id="queryByEmpTaskId" resultMap="BaseResultMapDTO">
-        select ca.*
-            ,c.company_id,c.title
-            from ss_com_account ca
-            LEFT JOIN ss_account_com_relation ssac on ca.com_account_id = ssac.com_account_id
-            LEFT JOIN sal_company c on c.company_id = ssac.company_id
-            WHERE 1 = 1
-            and ca.is_active = 1
-            and ssac.is_active = 1
-            and c.is_active = 1
-            and EXISTS(select 1 from ss_emp_task et LEFT JOIN ss_emp_archive ea on et.emp_archive_id = ea.emp_archive_id where et.is_active = 1 and ea.company_id = c.company_id and et.emp_task_id = #{empTaskId})
+        select
+        ca.*,
+        c.company_id,
+        c.title
+        from ss_com_account ca
+        LEFT JOIN ss_account_com_relation ssac on ca.com_account_id = ssac.com_account_id AND ssac.is_active = 1
+        LEFT JOIN sal_company c on c.company_id = ssac.company_id  AND c.is_active = 1
+        WHERE 1 = 1
+        and ca.is_active = 1
+        and EXISTS(
+            select
+            1
+            from
+            ss_emp_task et
+            LEFT JOIN ss_emp_archive ea ON et.emp_archive_id = ea.emp_archive_id
+            WHERE et.is_active = 1 AND ea.company_id = c.company_id AND et.emp_task_id = #{empTaskId}
+        )
     </select>
-
+    <!--通过雇员任务单查询 新进和转入 账户信息-->
+    <select id="queryNewOrIntoByEmpTaskId" resultMap="BaseResultMapDTO">
+        select
+        ca.*,
+        c.company_id,
+        c.title
+        from ss_com_account ca
+        LEFT JOIN ss_account_com_relation ssac on ca.com_account_id = ssac.com_account_id AND ssac.is_active = 1
+        LEFT JOIN sal_company c on c.company_id = ssac.company_id AND c.is_active = 1
+        WHERE 1 = 1
+        AND ca.is_active = 1
+        AND EXISTS(
+            select
+            1
+            from
+            ss_emp_task et
+            WHERE et.is_active = 1 AND et.company_id = c.company_id AND et.emp_task_id = #{empTaskId}
+        )
+    </select>
     <select id="accountQuery" resultMap="BaseResultMapDTO">
         select * from ss_com_account ca
         <where>

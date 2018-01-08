@@ -23,7 +23,7 @@ public class SsEmpArchiveControllerTest {
 
     @Test
     public void queryByEmpTaskId() {
-        JsonResult<SsEmpArchiveBO> jsonResult = controller.queryByEmpTaskId("1");
+        JsonResult<SsEmpArchiveBO> jsonResult = controller.queryByEmpTaskId("1","1");
         System.out.println(JSON.toJSONString(jsonResult));
     }
 
