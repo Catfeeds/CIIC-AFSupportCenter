@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComA
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -19,12 +20,11 @@ public interface ISsComAccountService extends IService<SsComAccount> {
 
     /**
      * 根据雇员任务 ID 查询 企业社保账户信息
-     *
      * @param empTaskId
+     * @param type
      * @return
      */
-    SsComAccountBO queryByEmpTaskId(String empTaskId);
-
+    SsComAccountBO queryByEmpTaskId(String empTaskId,String type);
     /**
      * 查询企业社保账户信息
      *

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpBasePeriodMapper">
+
+    <select id="queryPeriodByEmpArchiveId" resultMap="BaseResultMap">
+        SELECT
+        sebp.remit_way,
+        sebp.base_amount,
+        sebp.start_month,
+        sebp.end_month
+        FROM
+        ss_emp_base_period sebp
+        WHERE sebp.emp_archive_id = #{empArchiveId}
+        AND sebp.is_active = 1
+        ORDER BY sebp.emp_base_period_id DESC
+    </select>
+</mapper>

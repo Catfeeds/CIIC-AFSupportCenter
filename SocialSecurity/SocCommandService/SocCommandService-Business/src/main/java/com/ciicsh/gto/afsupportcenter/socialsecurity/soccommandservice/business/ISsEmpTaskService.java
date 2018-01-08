@@ -5,6 +5,9 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpT
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -23,4 +26,19 @@ public interface ISsEmpTaskService extends IService<SsEmpTask> {
      * @return
      */
     PageRows<SsEmpTaskBO> employeeOperatorQuery(PageInfo pageInfo);
+
+    /**
+     * 通过社保档案ID 查询历史任务单
+     * @param empArchiveId
+     * @return
+     */
+    List<SsEmpTask> queryTaskByEmpArchiveId(String empArchiveId);
+
+
+    /**
+     * 雇员日常办理操作
+     * @param bo
+     * @return
+     */
+    boolean saveHandleData(SsEmpTaskBO bo);
 }

@@ -12,7 +12,7 @@
 		<result column="com_amount" property="comAmount" />
 		<result column="emp_amount" property="empAmount" />
 		<result column="total_amount" property="totalAmount" />
-		<result column="is_active" property="isActive" />
+        <result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />
 		<result column="modified_time" property="modifiedTime" />
 		<result column="created_by" property="createdBy" />

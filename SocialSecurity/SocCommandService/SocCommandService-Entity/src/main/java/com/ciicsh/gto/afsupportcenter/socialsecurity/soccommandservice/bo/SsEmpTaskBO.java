@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -52,12 +53,10 @@ public class SsEmpTaskBO extends SsEmpTask {
     // 供应商Id
     private String supplierId;
 
-    // 来源表 ss_emp_archive
-    // 人员属性
-    private Integer empClassify;
     // 社保起缴月份
     private String startMonth;
-
+    //入职日期
+    private LocalDate inDate;
     public String getEmployeeName() {
         return employeeName;
     }
@@ -130,14 +129,6 @@ public class SsEmpTaskBO extends SsEmpTask {
         this.ssAccountType = ssAccountType;
     }
 
-    public Integer getEmpClassify() {
-        return empClassify;
-    }
-
-    public void setEmpClassify(Integer empClassify) {
-        this.empClassify = empClassify;
-    }
-
     public String getStartMonth() {
         return startMonth;
     }
@@ -200,5 +191,13 @@ public class SsEmpTaskBO extends SsEmpTask {
 
     public void setEmpTaskPeriods(List<SsEmpTaskPeriod> empTaskPeriods) {
         this.empTaskPeriods = empTaskPeriods;
+    }
+
+    public LocalDate getInDate() {
+        return inDate;
+    }
+
+    public void setInDate(LocalDate inDate) {
+        this.inDate = inDate;
     }
 }

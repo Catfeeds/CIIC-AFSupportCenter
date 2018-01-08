@@ -26,17 +26,138 @@
         <result column="emp_classify" property="empClassify"/>
         <result column="start_month" property="startMonth"/>
     </resultMap>
-
-    <select id="employeeOperatorQuery" resultMap="BaseResultMapDto">
-        select et.emp_task_id,et.customer_id,et.emp_archive_id,et.task_category,et.task_category_special,et.urgent,et.submitter_id,et.submitter_name,et.submitter_dept_id,et.submitter_dept_name,et.submit_time,et.expire_date,et.submitter_remark,et.task_form_content,et.salary,et.handle_user_id,et.handle_user_name,et.emp_ss_serial,et.handle_way,et.handle_month,et.handle_remark,et.handle_remark_man,et.handle_remark_date,et.rejection_remark,et.rejection_remark_man,et.rejection_remark_date,et.task_status,et.handle_status,et.start_handle_date,et.send_check_date,et.finish_date,et.end_month,et.chat_history,et.business_interface_id
+    <!--雇员日常操作查询-->
+    <select id="employeeDailyOperatorQuery" resultMap="BaseResultMapDto">
+        select
+        et.emp_task_id,
+        et.customer_id,
+        et.emp_archive_id,
+        et.task_category,
+        et.task_category_special,
+        et.urgent,
+        et.submitter_id,
+        et.submitter_name,
+        et.submitter_dept_id,
+        et.submitter_dept_name,
+        et.submit_time,
+        et.expire_date,
+        et.submitter_remark,
+        et.task_form_content,
+        et.salary,
+        et.handle_user_id,
+        et.handle_user_name,
+        et.emp_ss_serial,
+        et.handle_way,
+        et.handle_month,
+        et.handle_remark,
+        et.handle_remark_man,
+        et.handle_remark_date,
+        et.rejection_remark,
+        et.rejection_remark_man,
+        et.rejection_remark_date,
+        et.task_status,
+        et.handle_status,
+        et.start_handle_date,
+        et.send_check_date,
+        et.finish_date,
+        et.end_month,
+        et.chat_history,
+        et.business_interface_id,
+        e.employee_name,
+        e.employee_id,
+        e.id_num,
+        ca.com_account_id,
+        ca.ss_pwd,
+        ca.settlement_area,
+        ca.ss_account_type,
+        ca.ss_account,
+        ca.supplier_id,
+        c.company_id,
+        c.title
+        from ss_emp_task et
+        LEFT JOIN sal_company c on et.company_id = c.company_id
+        LEFT JOIN emp_employee e ON et.employee_id = e.employee_id
+        LEFT JOIN ss_account_com_relation ssac ON ssac.company_id = c.company_id AND ssac.is_active = 1
+        LEFT JOIN ss_com_account ca ON ca.com_account_id = ssac.com_account_id AND ca.is_active = 1
+        <where>
+            AND et.is_active = 1
+            <if test="employeeName != null">
+                AND e.employee_name LIKE CONCAT('%',#{employeeName},'%')
+            </if>
+            <if test="settlementArea != null">
+                AND ca.settlement_area = #{settlementArea}
+            </if>
+            <if test="ssAccountType != null">
+                AND ca.ss_account_type = #{ssAccountType}
+            </if>
+            <if test="empClassify != null">
+                AND et.emp_classify = #{empClassify}
+            </if>
+            <if test="ssAccount != null">
+                AND ca.ss_account = #{ssAccount}
+            </if>
+            <if test="companyId != null">
+                AND c.company_id LIKE CONCAT('%',#{companyId},'%')
+            </if>
+            <if test="idNum != null">
+                AND e.id_num LIKE CONCAT('%',#{idNum},'%')
+            </if>
+            <if test="title != null">
+                AND c.title LIKE CONCAT('%',#{title},'%')
+            </if>
+            <if test="employeeId != null">
+                AND e.employee_id LIKE CONCAT('%',#{employeeId},'%')
+            </if>
+            <if test="urgent != null">
+                AND et.urgent = #{urgent}
+            </if>
+            <if test="startMonth != null">
+                et.start_month = #{startMonth}
+            </if>
+            <!--
+                办理状态：1、未处理（-1 本月处理 -2 下月处理） 2 、处理中  3 已完成（已办） 4、批退 5、不需处理
+            -->
+            AND et.task_status != 5
+            <choose>
+                <when test="taskStatus == null">
+                    AND et.task_status NOT IN (2,3,4)
+                </when>
+                <when test="taskStatus == -1">
+                    AND et.submit_time <![CDATA[ <= ]]>
+                    str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',ca.expire_date),'%Y-%m-%d') AND
+                    et.task_status NOT IN (2,3,4)
+                </when>
+                <when test="taskStatus == -2">
+                    AND et.submit_time >
+                    str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',ca.expire_date),'%Y-%m-%d') AND
+                    et.task_status NOT IN (2,3,4)
+                </when>
+                <otherwise>
+                    AND et.task_status = #{taskStatus}
+                </otherwise>
+            </choose>
+            <!--
+                任务类型，DicItem.DicItemValue 1:新进：2：转入 3调整 4 补缴 5 转出 6终止 7退账 8 提取 9特殊操作
+            -->
+            <if test="taskCategories != null">
+                AND et.task_category !=9
+                <!--<foreach collection="taskCategories" index="index" item="task_category" open="(" separator=","-->
+                <!--close=")">#{task_category}-->
+                <!--</foreach>-->
+            </if>
+        </where>
+    </select>
+    <!--雇员特殊操作查询-->
+    <select id="employeeSpecialOperatorQuery" resultMap="BaseResultMapDto">
+        select
+        et.emp_task_id,et.customer_id,et.emp_archive_id,et.task_category,et.task_category_special,et.urgent,et.submitter_id,et.submitter_name,et.submitter_dept_id,et.submitter_dept_name,et.submit_time,et.expire_date,et.submitter_remark,et.task_form_content,et.salary,et.handle_user_id,et.handle_user_name,et.emp_ss_serial,et.handle_way,et.handle_month,et.handle_remark,et.handle_remark_man,et.handle_remark_date,et.rejection_remark,et.rejection_remark_man,et.rejection_remark_date,et.task_status,et.handle_status,et.start_handle_date,et.send_check_date,et.finish_date,et.end_month,et.chat_history,et.business_interface_id
         ,e.employee_name , e.employee_id , e.id_num
         ,ca.com_account_id,ca.ss_pwd,ca.settlement_area,ca.ss_account_type,ca.ss_account,ca.supplier_id
         ,c.company_id,c.title
-        ,ea.emp_classify,ea.start_month
+        ,et.emp_classify,et.start_month
         from ss_emp_task et
-        LEFT JOIN ss_emp_archive ea on ea.emp_archive_id = et.emp_archive_id and ea.is_active = 1
-        LEFT JOIN sal_company c on ea.company_id = c.company_id
-        LEFT JOIN emp_employee e on ea.employee_id = e.employee_id
+        LEFT JOIN sal_company c on et.company_id = c.company_id
+        LEFT JOIN emp_employee e on et.employee_id = e.employee_id
         LEFT JOIN ss_account_com_relation ssac on ssac.company_id = c.company_id and ssac.is_active = 1
         LEFT JOIN ss_com_account ca on ca.com_account_id = ssac.com_account_id and ca.is_active = 1
         <where>
@@ -51,7 +172,7 @@
                 and ca.ss_account_type = #{ssAccountType}
             </if>
             <if test="empClassify != null">
-                and ea.emp_classify = #{empClassify}
+                and et.emp_classify = #{empClassify}
             </if>
             <if test="ssAccount != null">
                 and ca.ss_account = #{ssAccount}
@@ -72,58 +193,168 @@
                 and et.urgent = #{urgent}
             </if>
             <if test="startMonth != null">
-                and ea.start_month = #{startMonth}
+                and et.start_month = #{startMonth}
             </if>
-
-            <!-- operatorType 操作类型，1 常规操作、2 特殊操作，默认常规操作 -->
-
             <!--
                 办理状态：1、未处理（-1 本月处理 -2 下月处理） 2 、处理中  3 已完成（已办） 4、批退 5、不需处理
             -->
             and et.task_status != 5
-            <choose>
-                <when test="operatorType == 2">
-                    <if test="taskStatus != null">
-                        and et.task_status = #{taskStatus}
-                    </if>
-                    AND et.task_category = 9
-                    <if test="beginSubmitTime != null and endSubmitTime != null">
-                        and date_format(et.submit_time,'%Y-%m-%d') BETWEEN #{beginSubmitTime} AND #{endSubmitTime}
-                    </if>
-                </when>
-                <otherwise>
-                    <choose>
-                        <when test="taskStatus == null">
-                            and et.task_status not in (2,3,4)
-                        </when>
-                        <when test="taskStatus == -1">
-                            and et.submit_time <![CDATA[ <= ]]>
-                            str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',ca.expire_date),'%Y-%m-%d') and
-                            et.task_status not in (2,3,4)
-                        </when>
-                        <when test="taskStatus == -2">
-                            and et.submit_time >
-                            str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',ca.expire_date),'%Y-%m-%d') and
-                            et.task_status not in (2,3,4)
-                        </when>
-                        <otherwise>
-                            and et.task_status = #{taskStatus}
-                        </otherwise>
-                    </choose>
-                </otherwise>
-            </choose>
-
-
+            <if test="taskStatus != null">
+                and et.task_status = #{taskStatus}
+            </if>
             <!--
                 任务类型，DicItem.DicItemValue 1:新进：2：转入 3调整 4 补缴 5 转出 6终止 7退账 8 提取 9特殊操作
             -->
-            <if test="taskCategories != null">
-                and et.task_category in
-                <foreach collection="taskCategories" index="index" item="task_category" open="(" separator=","
-                         close=")">#{task_category}
-                </foreach>
+            AND et.task_category = 9
+            <if test="beginSubmitTime != null and endSubmitTime != null">
+                and date_format(et.submit_time,'%Y-%m-%d') BETWEEN #{beginSubmitTime} AND #{endSubmitTime}
             </if>
         </where>
     </select>
 
+    <!--通过社保档案ID 查询 历史任务单-->
+    <select id="queryTaskByEmpArchiveId" resultMap="BaseResultMap">
+        SELECT
+        et.emp_task_id,
+        et.handle_way,
+        et.task_category,
+        et.task_category_special,
+        et.submitter_name,
+        et.submit_time,
+        et.task_status
+        FROM
+        ss_emp_task et
+        WHERE et.emp_archive_id = #{empArchiveId}
+        AND et.is_active = 1
+        ORDER BY et.emp_task_id DESC
+    </select>
+
+    <update id="updateMyselfColumnById">
+        UPDATE ss_emp_task SET
+        <if test="companyId!=null and companyId.trim()!=''.toString()">
+            company_id = #{companyId},
+        </if>
+        <if test="employeeId!=null and employeeId.trim()!=''.toString()">
+            employee_id = #{employeeId},
+        </if>
+        <if test="customerId!=null and customerId.trim()!=''.toString()">
+            customer_id = #{customerId},
+        </if>
+        <if test="empArchiveId!=null">
+            emp_archive_id = #{empArchiveId},
+        </if>
+        <if test="taskCategory!=null">
+            task_category = #{taskCategory},
+        </if>
+        <if test="taskCategorySpecial!=null">
+            task_category_special = #{taskCategorySpecial},
+        </if>
+        <if test="urgent!=null">
+            urgent = #{urgent},
+        </if>
+        <if test="submitterId!=null and submitterId.trim()!=''.toString()">
+            submitter_id = #{submitterId},
+        </if>
+        <if test="submitterName!=null and submitter_name.trim()!=''.toString()">
+            submitter_name = #{submitterName},
+        </if>
+        <if test="submitterDeptId!=null and submitterDeptId.trim()!=''.toString()">
+            submitter_dept_id = #{submitterDeptId},
+        </if>
+        <if test="submitterDeptName!=null and submitterDeptName.trim()!=''.toString()">
+            submitter_dept_name = #{submitterDeptName},
+        </if>
+        <if test="submitTime!=null">
+            submit_time = #{submitTime},
+        </if>
+        <if test="expireDate!=null">
+            expire_date = #{expireDate},
+        </if>
+        <if test="submitterRemark!=null and submitterRemark.trim()!=''.toString()">
+            submitter_remark = #{submitterRemark},
+        </if>
+        <if test="taskFormContent!=null and taskFormContent.trim()!=''.toString()">
+            task_form_content = #{taskFormContent},
+        </if>
+        <if test="salary!=null">
+            salary = #{salary},
+        </if>
+        <if test="empClassify!=null">
+            emp_classify = #{empClassify},
+        </if>
+        <if test="handleUserId!=null and handleUserId.trim()!=''.toString()">
+            handle_user_id = #{handleUserId},
+        </if>
+        <if test="handleUserName!=null and handleUserName.trim()!=''.toString()">
+            handle_user_name = #{handleUserName},
+        </if>
+        <if test="empSsSerial!=null and empSsSerial.trim()!=''.toString()">
+            emp_ss_serial = #{empSsSerial},
+        </if>
+        <if test="handleWay!=null">
+            handle_way = #{handleWay},
+        </if>
+        <if test="handleMonth!=null and handleMonth.trim()!=''.toString()">
+            handle_month = #{handleMonth},
+        </if>
+        <if test="handleRemark!=null">
+            handle_remark = #{handleRemark},
+        </if>
+        <if test="handleRemarkMan!=null and handleRemarkMan.trim()!=''.toString()">
+            handle_remark_man = #{handleRemarkMan},
+        </if>
+        <if test="handleRemarkDate!=null">
+            handle_remark_date = #{handleRemarkDate},
+        </if>
+
+        <if test="rejectionRemarkMan!=null and rejectionRemarkMan.trim()!=''.toString()">
+            rejection_remark_man = #{rejectionRemarkMan},
+        </if>
+        <if test="rejectionRemarkDate!=null">
+            rejection_remark_date = #{rejectionRemarkDate},
+        </if>
+        <if test="taskStatus!=null">
+            task_status = #{taskStatus},
+        </if>
+        <if test="handleStatus!=null">
+            handle_status = #{handleStatus},
+        </if>
+        <if test="startHandleDate!=null">
+            start_handle_date = #{startHandleDate},
+        </if>
+        <if test="sendCheckDate!=null">
+            send_check_date = #{sendCheckDate},
+        </if>
+        <if test="finishDate!=null">
+            finish_date = #{finishDate},
+        </if>
+        <if test="startMonth!=null and startMonth.trim()!=''.toString()">
+            start_month = #{startMonth},
+        </if>
+        <if test="chatHistory!=null and chatHistory.trim()!=''.toString()">
+            chat_history = #{chatHistory},
+        </if>
+        <if test="businessInterfaceId!=null and businessInterfaceId.trim()!=''.toString()">
+            business_interface_id = #{businessInterfaceId},
+        </if>
+        <if test="isActive!=null">
+            is_active = #{isActive},
+        </if>
+        <if test="createdTime!=null">
+            created_time = #{createdTime},
+        </if>
+        <if test="modifiedTime!=null">
+            modified_time = #{modifiedTime},
+        </if>
+        <if test="createdBy!=null">
+            created_by = #{createdBy},
+        </if>
+        <if test="modifiedBy!=null">
+            modified_by = #{modifiedBy},
+        </if>
+        end_month = #{endMonth},
+        rejection_remark = #{rejectionRemark},
+        rejection_remark = #{rejectionRemark}
+        WHERE emp_task_id = #{empTaskId}
+    </update>
 </mapper>

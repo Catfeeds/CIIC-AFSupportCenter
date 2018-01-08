@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBasePeriod;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -30,4 +31,11 @@ public interface ISsEmpBasePeriodService extends IService<SsEmpBasePeriod> {
      * @return
      */
     void deleteByEmpTaskId(Long empTaskId);
+
+    /**
+     * 通过社保档案ID 查询 雇员汇缴信息
+     * @param empArchiveId
+     * @return
+     */
+    List<SsEmpBasePeriod> queryPeriodByEmpArchiveId(@Param("empArchiveId")String empArchiveId);
 }
