@@ -18,12 +18,21 @@ import java.util.List;
 public interface ApplyRecordQueryMapper extends BaseMapper<ApplyRecordPO> {
 
     /**
-     * 查询申请列表信息
+     * 查询礼品申请列表信息
      *
      * @param page
      * @param applyRecordBO
      * @return
      */
-    List<ApplyRecordBO> selectApplyList(Page<ApplyRecordBO> page, ApplyRecordBO applyRecordBO);
+    List<ApplyRecordBO> selectGiftApplyList(Page<ApplyRecordBO> page, ApplyRecordBO applyRecordBO);
+
+    /**
+     * 查询活动申请列表信息
+     *
+     * @param page
+     * @param applyRecordBO
+     * @return
+     */
+    List<ApplyRecordBO> selectMarketApplyList(Page<ApplyRecordBO> page, ApplyRecordBO applyRecordBO);
 
 }

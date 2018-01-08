@@ -52,7 +52,8 @@
         <result column="modified_by" property="modifiedBy"/>
     </resultMap>
 
-    <select id="selectApplyList" parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.bo.ApplyRecordBO"
+    <select id="selectGiftApplyList"
+            parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.bo.ApplyRecordBO"
             resultMap="BaseResultMap">
         SELECT
         fb_apply_record.apply_record_id,
@@ -60,6 +61,28 @@
         fb_apply_record.project_topics,
         fb_apply_record_detail.approval_status,
         fb_apply_record_detail.send_status
+        FROM fb_apply_record
+        JOIN fb_apply_record_detail ON fb_apply_record.apply_record_id = fb_apply_record_detail.apply_record_id
+        <where>
+            <if test="applyType != null">
+                AND fb_apply_record.apply_type= #{applyType,jdbcType=INTEGER}
+            </if>
+            <if test="approvalStatus != null">
+                AND fb_apply_record_detail.approval_status= #{approvalStatus,jdbcType=INTEGER}
+            </if>
+            <if test="sendStatus != null">
+                AND fb_apply_record_detail.send_status= #{sendStatus,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectMarketApplyList"
+            parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.bo.ApplyRecordBO"
+            resultMap="BaseResultMap">
+        SELECT
+        fb_apply_record.apply_record_id,
+        fb_apply_record.apply_time,
+        fb_apply_record.project_topics,
         FROM fb_apply_record
         JOIN fb_apply_record_detail ON fb_apply_record.apply_record_id = fb_apply_record_detail.apply_record_id
         <where>

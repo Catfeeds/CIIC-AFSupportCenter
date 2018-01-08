@@ -2,11 +2,14 @@ package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.dao;
 
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.bo.MarketGrantApprovalBO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyRecordDetailPO;
+
+import java.util.List;
 
 /**
  * <p>
-  * 申请记录详细表（一个赠送对象一条记录，存放记录的审批和发放记录） Mapper 接口
+ * 申请记录详细表（一个赠送对象一条记录，存放记录的审批和发放记录） Mapper 接口
  * </p>
  *
  * @author xiweizhen
@@ -14,4 +17,11 @@ import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyRecordDetai
  */
 public interface ApplyRecordDetailQueryMapper extends BaseMapper<ApplyRecordDetailPO> {
 
+    /**
+     * 查询活动审批、申请详细信息
+     *
+     * @param id
+     * @return
+     */
+    List<MarketGrantApprovalBO> selectMarketApplyList(Integer id);
 }

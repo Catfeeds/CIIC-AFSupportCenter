@@ -9,12 +9,11 @@ import java.util.List;
  *
  * @author xwz
  */
-public class MarketApplyBO {
+public class MarketApplyGrantBO {
     private MarketActivityPO marketActivity;
     private ApplyRecordPO applyRecord;
-    private List<ApplyRecordDetailPO> recordDetailList;
+    private List<MarketGrantApprovalBO> recordDetailList;
     private List<ApplyMarketActivityRecordPO> applyMarketActivityRecordList;
-    private List<ApprovalStepPO> approvalStepList;
 
     public MarketActivityPO getMarketActivity() {
         return marketActivity;
@@ -32,11 +31,11 @@ public class MarketApplyBO {
         this.applyRecord = applyRecord;
     }
 
-    public List<ApplyRecordDetailPO> getRecordDetailList() {
+    public List<MarketGrantApprovalBO> getRecordDetailList() {
         return recordDetailList;
     }
 
-    public void setRecordDetailList(List<ApplyRecordDetailPO> recordDetailList) {
+    public void setRecordDetailList(List<MarketGrantApprovalBO> recordDetailList) {
         this.recordDetailList = recordDetailList;
     }
 
@@ -48,22 +47,14 @@ public class MarketApplyBO {
         this.applyMarketActivityRecordList = applyMarketActivityRecordList;
     }
 
-    public List<ApprovalStepPO> getApprovalStepList() {
-        return approvalStepList;
-    }
-
-    public void setApprovalStepList(List<ApprovalStepPO> approvalStepList) {
-        this.approvalStepList = approvalStepList;
-    }
 
     @Override
     public String toString() {
-        return "MarketApplyBO{" +
+        return "MarketApplyGrantBO{" +
             "marketActivity=" + marketActivity +
             ", applyRecord=" + applyRecord +
             ", recordDetailList=" + recordDetailList +
             ", applyMarketActivityRecordList=" + applyMarketActivityRecordList +
-            ", approvalStepList=" + approvalStepList +
             '}';
     }
 }

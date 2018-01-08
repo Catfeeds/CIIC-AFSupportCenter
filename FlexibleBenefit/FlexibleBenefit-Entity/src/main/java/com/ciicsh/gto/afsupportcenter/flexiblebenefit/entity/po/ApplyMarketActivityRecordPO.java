@@ -49,6 +49,11 @@ public class ApplyMarketActivityRecordPO extends Model<ApplyMarketActivityRecord
     @TableField("send_way")
     private Integer sendWay;
     /**
+     * 派送方式
+     */
+    @TableField("approval_number")
+    private Integer approvalNumber;
+    /**
      * 派送地址
      */
     @TableField("delivery_address")
@@ -180,21 +185,30 @@ public class ApplyMarketActivityRecordPO extends Model<ApplyMarketActivityRecord
         return this.markertActivityRecordId;
     }
 
+    public Integer getApprovalNumber() {
+        return approvalNumber;
+    }
+
+    public void setApprovalNumber(Integer approvalNumber) {
+        this.approvalNumber = approvalNumber;
+    }
+
     @Override
     public String toString() {
         return "ApplyMarketActivityRecordPO{" +
-            ", markertActivityRecordId=" + markertActivityRecordId +
+            "markertActivityRecordId=" + markertActivityRecordId +
             ", applyRecordDetailId=" + applyRecordDetailId +
             ", activityId=" + activityId +
             ", number=" + number +
             ", giftForm=" + giftForm +
             ", sendWay=" + sendWay +
-            ", deliveryAddress=" + deliveryAddress +
-            ", IsActive=" + isActive +
+            ", approvalNumber=" + approvalNumber +
+            ", deliveryAddress='" + deliveryAddress + '\'' +
+            ", isActive=" + isActive +
             ", createTime=" + createTime +
             ", modifiedTime=" + modifiedTime +
-            ", createdBy=" + createdBy +
-            ", modifiedBy=" + modifiedBy +
-            "}";
+            ", createdBy='" + createdBy + '\'' +
+            ", modifiedBy='" + modifiedBy + '\'' +
+            '}';
     }
 }
