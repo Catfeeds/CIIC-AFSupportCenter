@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.enums.IdType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotations.TableId;
+
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
@@ -112,12 +114,12 @@ public class SsEmpArchive implements Serializable {
      * 创建时间
      */
 	@TableField("created_time")
-	private LocalTime createdTime;
+	private LocalDateTime createdTime;
     /**
      * 最后更新时间
      */
 	@TableField("modified_time")
-	private LocalTime modifiedTime;
+	private LocalDateTime modifiedTime;
     /**
      * 创建者登录名
      */
@@ -258,23 +260,23 @@ public class SsEmpArchive implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public LocalTime getCreatedTime() {
-		return createdTime;
-	}
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
+    }
 
-	public void setCreatedTime(LocalTime createdTime) {
-		this.createdTime = createdTime;
-	}
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
 
-	public LocalTime getModifiedTime() {
-		return modifiedTime;
-	}
+    public LocalDateTime getModifiedTime() {
+        return modifiedTime;
+    }
 
-	public void setModifiedTime(LocalTime modifiedTime) {
-		this.modifiedTime = modifiedTime;
-	}
+    public void setModifiedTime(LocalDateTime modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
 
-	public String getCreatedBy() {
+    public String getCreatedBy() {
 		return createdBy;
 	}
 

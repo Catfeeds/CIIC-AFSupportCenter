@@ -23,11 +23,11 @@ public interface ISsEmpArchiveService extends IService<SsEmpArchive> {
 
     /**
      * 根据雇员任务 ID 查询 雇员本地社保档案信息
-     *
      * @param empTaskId
+     * @param operatorType
      * @return
      */
-    SsEmpArchiveBO queryByEmpTaskId(String empTaskId);
+    SsEmpArchiveBO queryByEmpTaskId(String empTaskId,String operatorType);
 
     /**
      *  雇员查询

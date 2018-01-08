@@ -21,7 +21,7 @@ public class SsEmpArchiveServiceTest {
 
     @Test
     public void queryByEmpTaskId() {
-        Object result = service.queryByEmpTaskId("1");
+        Object result = service.queryByEmpTaskId("1","1");
         System.out.println(JSON.toJSONString(result));
     }
 

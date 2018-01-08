@@ -15,6 +15,7 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -44,8 +45,9 @@ public class SsEmpArchiveController extends BasicController<ISsEmpArchiveService
      * @return
      */
     @RequestMapping("/queryByEmpTaskId")
-    public JsonResult<SsEmpArchiveBO> queryByEmpTaskId(String empTaskId) {
-        SsEmpArchiveBO dto = business.queryByEmpTaskId(empTaskId);
+    public JsonResult<SsEmpArchiveBO> queryByEmpTaskId(@RequestParam("empTaskId") String empTaskId,
+                                                       @RequestParam("operatorType") String operatorType) {
+        SsEmpArchiveBO dto = business.queryByEmpTaskId(empTaskId,operatorType);
         return JsonResultKit.of(dto);
     }
 

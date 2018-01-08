@@ -23,7 +23,14 @@ public interface SsEmpTaskMapper extends BaseMapper<SsEmpTask> {
      * @param ssComTaskDTO
      * @return
      */
-    List<SsEmpTaskBO> employeeOperatorQuery(SsEmpTaskBO ssComTaskDTO);
+    List<SsEmpTaskBO> employeeDailyOperatorQuery(SsEmpTaskBO ssComTaskDTO);
+    /**
+     * 雇员特殊操作查询
+     *
+     * @param ssComTaskDTO
+     * @return
+     */
+    List<SsEmpTaskBO> employeeSpecialOperatorQuery(SsEmpTaskBO ssComTaskDTO);
 
     /**
      * 通过社保档案ID 查询历史任务单
@@ -31,4 +38,11 @@ public interface SsEmpTaskMapper extends BaseMapper<SsEmpTask> {
      * @return
      */
     List<SsEmpTask> queryTaskByEmpArchiveId(@Param("empArchiveId")String empArchiveId);
+
+    /**
+     * 通过ID修改 修改某些字段 不需要判断是否为空
+     * @param ssComTaskDTO
+     * @return
+     */
+    Integer updateMyselfColumnById(SsEmpTaskBO ssComTaskDTO);
 }

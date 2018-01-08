@@ -33,4 +33,12 @@ public interface ISsEmpTaskService extends IService<SsEmpTask> {
      * @return
      */
     List<SsEmpTask> queryTaskByEmpArchiveId(String empArchiveId);
+
+
+    /**
+     * 雇员日常办理操作
+     * @param bo
+     * @return
+     */
+    boolean saveHandleData(SsEmpTaskBO bo);
 }

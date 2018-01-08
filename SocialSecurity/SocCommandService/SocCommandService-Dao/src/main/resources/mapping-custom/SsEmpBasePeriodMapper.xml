@@ -11,6 +11,7 @@
         FROM
         ss_emp_base_period sebp
         WHERE sebp.emp_archive_id = #{empArchiveId}
+        AND sebp.is_active = 1
         ORDER BY sebp.emp_base_period_id DESC
     </select>
 </mapper>
