@@ -24,6 +24,10 @@ public class MarketGrantApprovalBO {
      */
     private Integer approvalNumber;
     /**
+     * 申请数量
+     */
+    private Integer number;
+    /**
      * 申请记录详细编号
      */
     @TableId(value = "apply_record_detail_id", type = IdType.AUTO)
@@ -449,6 +453,14 @@ public class MarketGrantApprovalBO {
         this.approvalNumber = approvalNumber;
     }
 
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
+
     @Override
     public String toString() {
         return "MarketGrantApprovalBO{" +
@@ -485,6 +497,7 @@ public class MarketGrantApprovalBO {
             ", createdBy='" + createdBy + '\'' +
             ", modifiedBy='" + modifiedBy + '\'' +
             ", approvalNumber='" + approvalNumber + '\'' +
+            ", number='" + number + '\'' +
             '}';
     }
 }

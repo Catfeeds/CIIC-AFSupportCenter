@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * 发放管理command服务
+ *
  * @author xiweizhen
  */
 @RestController
@@ -35,13 +38,13 @@ public class GrantCommandController {
     private ApplyRecordDetailCommandService applyRecordDetailCommandService;
 
     /**
-     * 发放功能
+     * 礼品发放功能
      *
      * @param grantDTO
      * @return
      */
-    @PostMapping("/updateApplyGrant")
-    public Result updateApplyGrant(@RequestBody GrantDTO grantDTO) {
+    @PostMapping("/updateGiftApplyGrant")
+    public Result updateGiftApplyGrant(@RequestBody GrantDTO grantDTO) {
         try {
             ApprovalStepPO approvalStepPO = new ApprovalStepPO();
             ApplyRecordDetailPO applyRecordDetailPO = new ApplyRecordDetailPO();
@@ -51,6 +54,35 @@ public class GrantCommandController {
 
             boolean flag = applyRecordDetailCommandService.updateById(applyRecordDetailPO);
 
+            logger.info("弹性福利申请发放功能");
+            return ResultGenerator.genSuccessResult(flag);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
+        }
+    }
+
+    /**
+     * 活动发放功能
+     *
+     * @param grantDTO
+     * @return
+     */
+    @PostMapping("/updateMarketApplyGrant")
+    public Result updateMarketApplyGrant(@RequestBody List<GrantDTO> grantDTO) {
+        try {
+            int t = 0;
+            boolean flag;
+            for (GrantDTO entity : grantDTO) {
+                ApplyRecordDetailPO applyRecordDetail = new ApplyRecordDetailPO();
+                BeanUtils.copyProperties(entity, applyRecordDetail);
+
+                flag = applyRecordDetailCommandService.updateById(applyRecordDetail);
+                if (flag) {
+                    t++;
+                }
+            }
+
+            flag = (t == grantDTO.size());
             logger.info("弹性福利申请发放功能");
             return ResultGenerator.genSuccessResult(flag);
         } catch (Exception e) {

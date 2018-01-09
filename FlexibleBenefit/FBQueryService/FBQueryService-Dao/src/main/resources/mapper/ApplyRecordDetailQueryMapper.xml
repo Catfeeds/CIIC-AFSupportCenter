@@ -35,12 +35,14 @@
         <result column="created_by" property="createdBy"/>
         <result column="modified_by" property="modifiedBy"/>
         <result column="approval_number" property="approvalNumber"/>
+        <result column="number" property="number"/>
     </resultMap>
 
     <select id="selectMarketApplyList"
             parameterType="java.lang.Integer" resultMap="BaseResultMap">
         SELECT
           fb_apply_record_detail.*,
+          fb_apply_market_activity_record.number,
           fb_apply_market_activity_record.approval_number
         FROM fb_apply_market_activity_record
           JOIN fb_apply_record_detail
