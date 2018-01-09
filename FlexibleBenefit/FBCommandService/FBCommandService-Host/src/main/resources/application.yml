@@ -7,7 +7,7 @@ endpoints:
 eureka:
     client:
         serviceUrl:
-            defaultZone: http://172.16.9.21:9602/eureka
+            defaultZone: http://172.16.9.24:9602/eureka
 log4j:
     appender:
         ServerDailyRollingFile: org.apache.log4j.DailyRollingFileAppender

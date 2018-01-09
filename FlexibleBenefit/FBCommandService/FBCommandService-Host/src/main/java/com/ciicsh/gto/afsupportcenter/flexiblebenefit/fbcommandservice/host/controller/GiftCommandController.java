@@ -13,12 +13,16 @@ import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.ApplyRecordCommandService;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.ApplyRecordDetailCommandService;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.GiftCommandService;
+import com.ciicsh.gto.sheetservice.api.SheetServiceProxy;
+import com.ciicsh.gto.sheetservice.api.dto.request.MissionRequestDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Map;
 
 /**
  * @author xiweizhen
@@ -39,6 +43,12 @@ public class GiftCommandController {
     private ApplyRecordDetailCommandService applyRecordDetailCommandService;
     @Autowired
     private ApplyGiftRecordCommandService applyGiftRecordCommandService;
+
+    /**
+     * 对接任务单系统方法
+     */
+    @Autowired
+    private SheetServiceProxy sheetServiceProxy;
 
     /**
      * 根据主键查询礼品信息
@@ -167,6 +177,19 @@ public class GiftCommandController {
             Integer applyNum = applyGiftRecordPO.getApplyNum();
             giftPO.setNumber(number - applyNum);
             giftCommandService.updateGift(giftPO);
+
+            //对接任务单系统
+            MissionRequestDTO missionRequestDTO = new MissionRequestDTO();
+            missionRequestDTO.setMissionId(applyRecordDetailPO.getApplyRecordDetailId().toString());
+            missionRequestDTO.setProcessDefinitionKey("gift_apply");
+//            Map<String, Object> variable = new HashMap<>(10);
+//            variable.put("action", "approval");
+//            missionRequestDTO.setVariable(variable);
+            com.ciicsh.gto.sheetservice.api.dto.core.Result restResult = sheetServiceProxy.startProcess(missionRequestDTO);
+            Map<String, String> startProcessResponseMap = (Map<String, String>) restResult.getObject();
+            logger.info(String.valueOf("code:" + restResult.getCode() + ",message:") + restResult.getMessage());
+            logger.info(startProcessResponseMap.toString());
+            logger.info("sale系统收到启动流程接口返回：" + missionRequestDTO.toString());
 
             logger.info("新增礼品申请");
             return ResultGenerator.genSuccessResult(flag);

@@ -222,6 +222,11 @@
             <artifactId>seaweedFS-client</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.ciicsh.gt1.commonservice</groupId>
+            <artifactId>sheetservice-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 
         <!-- 打包 WAR 包不需要此 jar -->
         <!--<dependency>
