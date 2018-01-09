@@ -141,10 +141,12 @@ public class GiftCommandController {
             ApplyRecordPO applyRecordPO = new ApplyRecordPO();
             ApplyRecordDetailPO applyRecordDetailPO = new ApplyRecordDetailPO();
             ApplyGiftRecordPO applyGiftRecordPO = new ApplyGiftRecordPO();
+            GiftPO giftPO = new GiftPO();
 
             BeanUtils.copyProperties(giftApplyDTO, applyRecordPO);
             BeanUtils.copyProperties(giftApplyDTO, applyRecordDetailPO);
             BeanUtils.copyProperties(giftApplyDTO, applyGiftRecordPO);
+            BeanUtils.copyProperties(giftApplyDTO, giftPO);
 
             //申请类型为礼品--1
             applyRecordPO.setApplyType(1);
@@ -159,6 +161,12 @@ public class GiftCommandController {
             /**返回申请详情主键*/
             applyGiftRecordPO.setApplyRecordDetailId(applyRecordDetailPO.getApplyRecordDetailId());
             boolean flag = applyGiftRecordCommandService.insert(applyGiftRecordPO);
+
+            /**礼品数量变更*/
+            Integer number = giftPO.getNumber();
+            Integer applyNum = applyGiftRecordPO.getApplyNum();
+            giftPO.setNumber(number - applyNum);
+            giftCommandService.updateGift(giftPO);
 
             logger.info("新增礼品申请");
             return ResultGenerator.genSuccessResult(flag);
