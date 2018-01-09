@@ -43,6 +43,11 @@ public class ApplyRecordBO {
     @TableField("project_topics")
     private String projectTopics;
     /**
+     * 审批状态（0-审批中，1-同意，2-不同意，3-部分同意）
+     */
+    @TableField("record_approval_reason")
+    private String recordApprovalReason;
+    /**
      * 是否可用
      */
     @TableField("is_active")
@@ -580,6 +585,14 @@ public class ApplyRecordBO {
         this.sendRemark = sendRemark;
     }
 
+    public String getRecordApprovalReason() {
+        return recordApprovalReason;
+    }
+
+    public void setRecordApprovalReason(String recordApprovalReason) {
+        this.recordApprovalReason = recordApprovalReason;
+    }
+
     @Override
     public String toString() {
         return "ApplyRecordBO{" +
@@ -588,6 +601,7 @@ public class ApplyRecordBO {
             ", applyTime=" + applyTime +
             ", applyType=" + applyType +
             ", projectTopics='" + projectTopics + '\'' +
+            ", recordApprovalReason='" + recordApprovalReason + '\'' +
             ", isActive=" + isActive +
             ", createTime=" + createTime +
             ", modifiedTime=" + modifiedTime +

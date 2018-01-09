@@ -9,6 +9,7 @@
         <result column="apply_time" property="applyTime"/>
         <result column="apply_type" property="applyType"/>
         <result column="project_topics" property="projectTopics"/>
+        <result column="record_approval_reason" property="recordApprovalReason"/>
 
         <result column="apply_record_detail_id" property="applyRecordDetailId"/>
         <result column="presenting_object_type" property="presentingObjectType"/>
