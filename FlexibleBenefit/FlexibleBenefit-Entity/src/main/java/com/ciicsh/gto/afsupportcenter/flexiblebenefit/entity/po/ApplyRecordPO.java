@@ -53,7 +53,7 @@ public class ApplyRecordPO extends Model<ApplyRecordPO> {
      * 审批状态（0-审批中，1-同意，2-不同意，3-部分同意）
      */
     @TableField("record_approval_reason")
-    private String recordApprovalReason;
+    private Integer recordApprovalReason;
     /**
      * 是否可用
      */
@@ -161,11 +161,11 @@ public class ApplyRecordPO extends Model<ApplyRecordPO> {
         this.modifiedBy = modifiedBy;
     }
 
-    public String getRecordApprovalReason() {
+    public Integer getRecordApprovalReason() {
         return recordApprovalReason;
     }
 
-    public void setRecordApprovalReason(String recordApprovalReason) {
+    public void setRecordApprovalReason(Integer recordApprovalReason) {
         this.recordApprovalReason = recordApprovalReason;
     }
 

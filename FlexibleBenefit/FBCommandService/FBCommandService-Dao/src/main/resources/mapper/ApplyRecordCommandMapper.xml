@@ -37,7 +37,6 @@
 
         <result column="gift_record_id" property="giftRecordId"/>
         <result column="gift_id" property="giftId"/>
-        <result column="gift_name" property="giftName"/>
         <result column="apply_num" property="applyNum"/>
 
         <result column="markert_activity_record_id" property="markertActivityRecordId"/>

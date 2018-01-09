@@ -60,7 +60,7 @@
         fb_apply_record.apply_record_id,
         fb_apply_record.apply_time,
         fb_apply_record.project_topics,
-        fb_apply_record_detail.approval_status,
+        fb_apply_record.record_approval_reason,
         fb_apply_record_detail.send_status
         FROM fb_apply_record
         JOIN fb_apply_record_detail ON fb_apply_record.apply_record_id = fb_apply_record_detail.apply_record_id
@@ -81,9 +81,11 @@
             parameterType="com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.bo.ApplyRecordBO"
             resultMap="BaseResultMap">
         SELECT
+        DISTINCT
         fb_apply_record.apply_record_id,
         fb_apply_record.apply_time,
         fb_apply_record.project_topics,
+        fb_apply_record.record_approval_reason
         FROM fb_apply_record
         JOIN fb_apply_record_detail ON fb_apply_record.apply_record_id = fb_apply_record_detail.apply_record_id
         <where>
