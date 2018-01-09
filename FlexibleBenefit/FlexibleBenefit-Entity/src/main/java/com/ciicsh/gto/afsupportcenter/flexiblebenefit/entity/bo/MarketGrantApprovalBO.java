@@ -3,80 +3,44 @@ package com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.bo;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.enums.IdType;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApprovalStepPO;
 
 import java.util.Date;
+import java.util.List;
 
 /**
- * <p>
- * 申请记录表
- * </p>
+ * 活动审批，发放--申请明细对象
  *
  * @author xiweizhen
- * @since 2017-12-18
  */
-public class ApplyRecordBO {
+public class MarketGrantApprovalBO {
 
+    /**
+     * 审批记录
+     */
+    private List<ApprovalStepPO> approvalStepList;
+    /**
+     * 审批后数量
+     */
+    private Integer approvalNumber;
+    /**
+     * 申请数量
+     */
+    private Integer number;
+    /**
+     * 申请记录详细编号
+     */
+    @TableId(value = "apply_record_detail_id", type = IdType.AUTO)
+    private Integer applyRecordDetailId;
     /**
      * 申请记录编号
      */
+    @TableField("apply_record_id")
     private Integer applyRecordId;
-    /**
-     * 申请人编号
-     */
-    @TableField("applyer_id")
-    private Integer applyerId;
-    /**
-     * 申请时间
-     */
-    @TableField("apply_time")
-    private Date applyTime;
-    /**
-     * 申请类型：
-     * 1-礼品
-     * 2-市场活动
-     */
-    @TableField("apply_type")
-    private Integer applyType;
-    /**
-     * 项目主题（待定）
-     */
-    @TableField("project_topics")
-    private String projectTopics;
-    /**
-     * 审批状态（0-审批中，1-同意，2-不同意，3-部分同意）
-     */
-    @TableField("record_approval_reason")
-    private Integer recordApprovalReason;
-    /**
-     * 是否可用
-     */
-    @TableField("is_active")
-    private Boolean isActive;
-    /**
-     * 创建时间
-     */
-    @TableField("create_time")
-    private Date createTime;
-    /**
-     * 最后更新时间
-     */
-    @TableField("modified_time")
-    private Date modifiedTime;
-    /**
-     * 创建者登录名
-     */
-    @TableField("created_by")
-    private String createdBy;
-    /**
-     * 修改者登录名
-     */
-    @TableField("modified_by")
-    private String modifiedBy;
-
     /**
      * 赠送对象类型：
      * 0-管理方
-     * 1-公司
+     * 1-客户
      * 2-联系人
      * 3-雇员
      * 4-其他
@@ -84,10 +48,17 @@ public class ApplyRecordBO {
     @TableField("presenting_object_type")
     private Integer presentingObjectType;
     /**
+     * 赠送对象主键ID
+     */
+    @TableField("presenting_object_id")
+    private String presentingObjectId;
+    /**
      * 申请人类型（1-个人，2-公司，仅给赠送人--其他使用）
      */
     @TableField("applicant_type")
     private Integer applicantType;
+
+
     /**
      * 申请人（仅给赠送人--其他使用）
      */
@@ -141,7 +112,7 @@ public class ApplyRecordBO {
      * 联系人手机号码
      */
     @TableField("contact_phone_num")
-    private Integer contactPhoneNum;
+    private String contactPhoneNum;
     /**
      * 联系人邮件地址
      */
@@ -193,53 +164,46 @@ public class ApplyRecordBO {
     @TableField("send_remark")
     private String sendRemark;
     /**
-     * 主键
+     * 是否可用
      */
-    @TableId(value = "gift_record_id", type = IdType.AUTO)
-    private Integer giftRecordId;
+    @TableField("is_active")
+    private Boolean isActive;
     /**
-     * 礼品主键
+     * 创建时间
      */
-    @TableField("gift_id")
-    private Integer giftId;
+    @TableField("create_time")
+    private Date createTime;
+    /**
+     * 最后更新时间
+     */
+    @TableField("modified_time")
+    private Date modifiedTime;
+    /**
+     * 创建者登录名
+     */
+    @TableField("created_by")
+    private String createdBy;
+    /**
+     * 修改者登录名
+     */
+    @TableField("modified_by")
+    private String modifiedBy;
 
-    /**
-     * 申请礼品数量，默认是1
-     */
-    @TableField("apply_num")
-    private Integer applyNum;
+    public List<ApprovalStepPO> getApprovalStepList() {
+        return approvalStepList;
+    }
 
-    /**
-     * 赠送市场活动编号
-     */
-    @TableId(value = "markert_activity_record_id", type = IdType.AUTO)
-    private Integer markertActivityRecordId;
-    /**
-     * 活动申请表主键
-     */
-    @TableField("apply_record_detail_id")
-    private Integer applyRecordDetailId;
-    @TableField("activity_id")
-    private Integer activityId;
-    /**
-     * 申请数量
-     */
-    private Integer number;
-    /**
-     * 礼品形式
-     */
-    @TableField("gift_form")
-    private Integer giftForm;
-    /**
-     * 派送方式
-     */
-    @TableField("send_way")
-    private Integer sendWay;
-    /**
-     * 派送地址
-     */
-    @TableField("delivery_address")
-    private String deliveryAddress;
+    public void setApprovalStepList(List<ApprovalStepPO> approvalStepList) {
+        this.approvalStepList = approvalStepList;
+    }
+
+    public Integer getApplyRecordDetailId() {
+        return applyRecordDetailId;
+    }
+
+    public void setApplyRecordDetailId(Integer applyRecordDetailId) {
+        this.applyRecordDetailId = applyRecordDetailId;
+    }
 
     public Integer getApplyRecordId() {
         return applyRecordId;
@@ -249,84 +213,20 @@ public class ApplyRecordBO {
         this.applyRecordId = applyRecordId;
     }
 
-    public Integer getApplyerId() {
-        return applyerId;
-    }
-
-    public void setApplyerId(Integer applyerId) {
-        this.applyerId = applyerId;
-    }
-
-    public Date getApplyTime() {
-        return applyTime;
-    }
-
-    public void setApplyTime(Date applyTime) {
-        this.applyTime = applyTime;
-    }
-
-    public Integer getApplyType() {
-        return applyType;
-    }
-
-    public void setApplyType(Integer applyType) {
-        this.applyType = applyType;
-    }
-
-    public String getProjectTopics() {
-        return projectTopics;
-    }
-
-    public void setProjectTopics(String projectTopics) {
-        this.projectTopics = projectTopics;
-    }
-
-    public Boolean getActive() {
-        return isActive;
-    }
-
-    public void setActive(Boolean active) {
-        isActive = active;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getModifiedTime() {
-        return modifiedTime;
-    }
-
-    public void setModifiedTime(Date modifiedTime) {
-        this.modifiedTime = modifiedTime;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public String getModifiedBy() {
-        return modifiedBy;
-    }
-
-    public void setModifiedBy(String modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
-
     public Integer getPresentingObjectType() {
         return presentingObjectType;
     }
 
     public void setPresentingObjectType(Integer presentingObjectType) {
         this.presentingObjectType = presentingObjectType;
+    }
+
+    public String getPresentingObjectId() {
+        return presentingObjectId;
+    }
+
+    public void setPresentingObjectId(String presentingObjectId) {
+        this.presentingObjectId = presentingObjectId;
     }
 
     public Integer getApplicantType() {
@@ -417,11 +317,11 @@ public class ApplyRecordBO {
         this.contactBrithday = contactBrithday;
     }
 
-    public Integer getContactPhoneNum() {
+    public String getContactPhoneNum() {
         return contactPhoneNum;
     }
 
-    public void setContactPhoneNum(Integer contactPhoneNum) {
+    public void setContactPhoneNum(String contactPhoneNum) {
         this.contactPhoneNum = contactPhoneNum;
     }
 
@@ -497,52 +397,60 @@ public class ApplyRecordBO {
         this.sendTime = sendTime;
     }
 
-    public Integer getGiftRecordId() {
-        return giftRecordId;
+    public String getSendRemark() {
+        return sendRemark;
     }
 
-    public void setGiftRecordId(Integer giftRecordId) {
-        this.giftRecordId = giftRecordId;
+    public void setSendRemark(String sendRemark) {
+        this.sendRemark = sendRemark;
     }
 
-    public Integer getGiftId() {
-        return giftId;
+    public Boolean getActive() {
+        return isActive;
     }
 
-    public void setGiftId(Integer giftId) {
-        this.giftId = giftId;
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 
-    public Integer getApplyNum() {
-        return applyNum;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setApplyNum(Integer applyNum) {
-        this.applyNum = applyNum;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    public Integer getMarkertActivityRecordId() {
-        return markertActivityRecordId;
+    public Date getModifiedTime() {
+        return modifiedTime;
     }
 
-    public void setMarkertActivityRecordId(Integer markertActivityRecordId) {
-        this.markertActivityRecordId = markertActivityRecordId;
+    public void setModifiedTime(Date modifiedTime) {
+        this.modifiedTime = modifiedTime;
     }
 
-    public Integer getApplyRecordDetailId() {
-        return applyRecordDetailId;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public void setApplyRecordDetailId(Integer applyRecordDetailId) {
-        this.applyRecordDetailId = applyRecordDetailId;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
-    public Integer getActivityId() {
-        return activityId;
+    public String getModifiedBy() {
+        return modifiedBy;
     }
 
-    public void setActivityId(Integer activityId) {
-        this.activityId = activityId;
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    public Integer getApprovalNumber() {
+        return approvalNumber;
+    }
+
+    public void setApprovalNumber(Integer approvalNumber) {
+        this.approvalNumber = approvalNumber;
     }
 
     public Integer getNumber() {
@@ -553,61 +461,14 @@ public class ApplyRecordBO {
         this.number = number;
     }
 
-    public Integer getGiftForm() {
-        return giftForm;
-    }
-
-    public void setGiftForm(Integer giftForm) {
-        this.giftForm = giftForm;
-    }
-
-    public Integer getSendWay() {
-        return sendWay;
-    }
-
-    public void setSendWay(Integer sendWay) {
-        this.sendWay = sendWay;
-    }
-
-    public String getDeliveryAddress() {
-        return deliveryAddress;
-    }
-
-    public void setDeliveryAddress(String deliveryAddress) {
-        this.deliveryAddress = deliveryAddress;
-    }
-
-    public String getSendRemark() {
-        return sendRemark;
-    }
-
-    public void setSendRemark(String sendRemark) {
-        this.sendRemark = sendRemark;
-    }
-
-    public Integer getRecordApprovalReason() {
-        return recordApprovalReason;
-    }
-
-    public void setRecordApprovalReason(Integer recordApprovalReason) {
-        this.recordApprovalReason = recordApprovalReason;
-    }
-
     @Override
     public String toString() {
-        return "ApplyRecordBO{" +
-            "applyRecordId=" + applyRecordId +
-            ", applyerId=" + applyerId +
-            ", applyTime=" + applyTime +
-            ", applyType=" + applyType +
-            ", projectTopics='" + projectTopics + '\'' +
-            ", recordApprovalReason='" + recordApprovalReason + '\'' +
-            ", isActive=" + isActive +
-            ", createTime=" + createTime +
-            ", modifiedTime=" + modifiedTime +
-            ", createdBy='" + createdBy + '\'' +
-            ", modifiedBy='" + modifiedBy + '\'' +
+        return "MarketGrantApprovalBO{" +
+            "approvalStepList=" + approvalStepList +
+            ", applyRecordDetailId=" + applyRecordDetailId +
+            ", applyRecordId=" + applyRecordId +
             ", presentingObjectType=" + presentingObjectType +
+            ", presentingObjectId='" + presentingObjectId + '\'' +
             ", applicantType=" + applicantType +
             ", applicant='" + applicant + '\'' +
             ", applicantExtension='" + applicantExtension + '\'' +
@@ -619,7 +480,7 @@ public class ApplyRecordBO {
             ", contactDeptName='" + contactDeptName + '\'' +
             ", contactPosition='" + contactPosition + '\'' +
             ", contactBrithday=" + contactBrithday +
-            ", contactPhoneNum=" + contactPhoneNum +
+            ", contactPhoneNum='" + contactPhoneNum + '\'' +
             ", contactEmail='" + contactEmail + '\'' +
             ", contactHomePostcode=" + contactHomePostcode +
             ", contactHomeTelephone=" + contactHomeTelephone +
@@ -630,16 +491,13 @@ public class ApplyRecordBO {
             ", sendStatus=" + sendStatus +
             ", sendTime=" + sendTime +
             ", sendRemark='" + sendRemark + '\'' +
-            ", giftRecordId=" + giftRecordId +
-            ", giftId=" + giftId +
-            ", applyNum=" + applyNum +
-            ", markertActivityRecordId=" + markertActivityRecordId +
-            ", applyRecordDetailId=" + applyRecordDetailId +
-            ", activityId=" + activityId +
-            ", number=" + number +
-            ", giftForm=" + giftForm +
-            ", sendWay=" + sendWay +
-            ", deliveryAddress='" + deliveryAddress + '\'' +
+            ", isActive=" + isActive +
+            ", createTime=" + createTime +
+            ", modifiedTime=" + modifiedTime +
+            ", createdBy='" + createdBy + '\'' +
+            ", modifiedBy='" + modifiedBy + '\'' +
+            ", approvalNumber='" + approvalNumber + '\'' +
+            ", number='" + number + '\'' +
             '}';
     }
 }

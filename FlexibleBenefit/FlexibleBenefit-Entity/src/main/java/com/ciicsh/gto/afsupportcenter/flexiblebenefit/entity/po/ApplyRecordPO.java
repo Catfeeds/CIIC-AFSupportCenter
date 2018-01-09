@@ -50,6 +50,11 @@ public class ApplyRecordPO extends Model<ApplyRecordPO> {
     @TableField("project_topics")
     private String projectTopics;
     /**
+     * 审批状态（0-审批中，1-同意，2-不同意，3-部分同意）
+     */
+    @TableField("record_approval_reason")
+    private Integer recordApprovalReason;
+    /**
      * 是否可用
      */
     @TableField("is_active")
@@ -156,6 +161,14 @@ public class ApplyRecordPO extends Model<ApplyRecordPO> {
         this.modifiedBy = modifiedBy;
     }
 
+    public Integer getRecordApprovalReason() {
+        return recordApprovalReason;
+    }
+
+    public void setRecordApprovalReason(Integer recordApprovalReason) {
+        this.recordApprovalReason = recordApprovalReason;
+    }
+
     @Override
     protected Serializable pkVal() {
         return this.applyRecordId;
@@ -164,16 +177,17 @@ public class ApplyRecordPO extends Model<ApplyRecordPO> {
     @Override
     public String toString() {
         return "ApplyRecordPO{" +
-                ", applyRecordId=" + applyRecordId +
-                ", applyerId=" + applyerId +
-                ", applyTime=" + applyTime +
-                ", applyType=" + applyType +
-                ", projectTopics=" + projectTopics +
-                ", isActive=" + isActive +
-                ", createTime=" + createTime +
-                ", modifiedTime=" + modifiedTime +
-                ", createdBy=" + createdBy +
-                ", modifiedBy=" + modifiedBy +
-                "}";
+            ", applyRecordId=" + applyRecordId +
+            ", applyerId=" + applyerId +
+            ", applyTime=" + applyTime +
+            ", applyType=" + applyType +
+            ", projectTopics=" + projectTopics +
+            ", recordApprovalReason=" + recordApprovalReason +
+            ", isActive=" + isActive +
+            ", createTime=" + createTime +
+            ", modifiedTime=" + modifiedTime +
+            ", createdBy=" + createdBy +
+            ", modifiedBy=" + modifiedBy +
+            "}";
     }
 }

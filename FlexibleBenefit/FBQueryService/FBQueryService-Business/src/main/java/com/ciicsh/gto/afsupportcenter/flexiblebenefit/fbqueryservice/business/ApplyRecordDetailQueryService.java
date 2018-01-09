@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business;
 
 
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.bo.MarketGrantApprovalBO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyRecordDetailPO;
 
 import java.util.List;
@@ -25,4 +26,6 @@ public interface ApplyRecordDetailQueryService extends IService<ApplyRecordDetai
     ApplyRecordDetailPO queryApplyRecordDetail(ApplyRecordDetailPO applyRecordDetailPO);
 
     List<ApplyRecordDetailPO> queryApplyRecordDetailList(ApplyRecordDetailPO applyRecordDetailPO);
+
+    List<MarketGrantApprovalBO> selectMarketApplyList(Integer applyRecordId);
 }
