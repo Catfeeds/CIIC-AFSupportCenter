@@ -58,6 +58,15 @@ public class SsEmpBasePeriodServiceImpl extends ServiceImpl<SsEmpBasePeriodMappe
         });
     }
 
+    @Transactional
+    @Override
+    public void saveAdjustmentPeriod(SsEmpBasePeriod ssEmpBasePeriod, List<SsEmpBasePeriod> newEmpBasePeriodList) {
+        baseMapper.updateById(ssEmpBasePeriod);
+        newEmpBasePeriodList.forEach(p->{
+            baseMapper.insert(p);
+        });
+    }
+
     @Override
     public List<SsEmpBasePeriod> queryPeriodByEmpArchiveId(String empArchiveId) {
         return baseMapper.queryPeriodByEmpArchiveId(empArchiveId);

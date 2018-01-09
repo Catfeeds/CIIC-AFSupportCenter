@@ -101,15 +101,15 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
 
 
     /**
-     * 雇员任务办理
+     * 雇员任务办理（新进和转入）
      */
     @Log("雇员任务办理")
     @PostMapping("/handle")
     public JsonResult<Boolean> handle(@RequestBody SsEmpTaskBO bo) {
        boolean result =  business.saveHandleData(bo);
-
         return JsonResultKit.of(result);
     }
+
 
     /**
      * 特殊任务查询

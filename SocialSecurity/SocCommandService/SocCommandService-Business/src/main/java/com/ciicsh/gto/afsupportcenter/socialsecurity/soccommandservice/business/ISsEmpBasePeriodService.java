@@ -33,9 +33,16 @@ public interface ISsEmpBasePeriodService extends IService<SsEmpBasePeriod> {
     void deleteByEmpTaskId(Long empTaskId);
 
     /**
+     * 修改和添加 调整办理的时间段
+     * @param ssEmpBasePeriod
+     * @param newEmpBasePeriodList
+     */
+    void saveAdjustmentPeriod(SsEmpBasePeriod ssEmpBasePeriod,List<SsEmpBasePeriod> newEmpBasePeriodList);
+    /**
      * 通过社保档案ID 查询 雇员汇缴信息
      * @param empArchiveId
      * @return
      */
     List<SsEmpBasePeriod> queryPeriodByEmpArchiveId(@Param("empArchiveId")String empArchiveId);
+
 }
