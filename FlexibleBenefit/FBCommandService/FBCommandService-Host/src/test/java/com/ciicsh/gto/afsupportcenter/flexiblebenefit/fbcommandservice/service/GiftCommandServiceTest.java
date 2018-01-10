@@ -18,7 +18,6 @@ import java.math.BigDecimal;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = FlexibleCommandApplication.class)
 public class GiftCommandServiceTest {
-
     @Autowired
     private GiftCommandService giftCommandService;
 
@@ -43,12 +42,6 @@ public class GiftCommandServiceTest {
     @Test
     public void findById() {
         GiftPO entity = giftCommandService.findById(1);
-        System.out.println(entity.toString());
-    }
-
-    @Test
-    public void test() {
-        GiftPO entity = giftCommandService.selectById(1);
         System.out.println(entity.toString());
     }
 

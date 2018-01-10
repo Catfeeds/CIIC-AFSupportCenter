@@ -5,7 +5,8 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by bill on 17/10/23.
+ * @author bill
+ * @date 17/10/23
  */
 @Service
 public interface TaskSink {
