@@ -28,6 +28,10 @@ public class MarketGrantApprovalBO {
      */
     private Integer number;
     /**
+     * 派送地址
+     */
+    private String deliveryAddress;
+    /**
      * 申请记录详细编号
      */
     @TableId(value = "apply_record_detail_id", type = IdType.AUTO)
@@ -188,6 +192,14 @@ public class MarketGrantApprovalBO {
      */
     @TableField("modified_by")
     private String modifiedBy;
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
 
     public List<ApprovalStepPO> getApprovalStepList() {
         return approvalStepList;
@@ -498,6 +510,7 @@ public class MarketGrantApprovalBO {
             ", modifiedBy='" + modifiedBy + '\'' +
             ", approvalNumber='" + approvalNumber + '\'' +
             ", number='" + number + '\'' +
+            ", deliveryAddress='" + deliveryAddress + '\'' +
             '}';
     }
 }

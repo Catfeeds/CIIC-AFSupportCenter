@@ -36,6 +36,7 @@
         <result column="modified_by" property="modifiedBy"/>
         <result column="approval_number" property="approvalNumber"/>
         <result column="number" property="number"/>
+        <result column="delivery_address" property="deliveryAddress"/>
     </resultMap>
 
     <select id="selectMarketApplyList"
@@ -43,7 +44,8 @@
         SELECT
           fb_apply_record_detail.*,
           fb_apply_market_activity_record.number,
-          fb_apply_market_activity_record.approval_number
+          fb_apply_market_activity_record.approval_number,
+          fb_apply_market_activity_record.delivery_address
         FROM fb_apply_market_activity_record
           JOIN fb_apply_record_detail
             ON fb_apply_market_activity_record.apply_record_detail_id = fb_apply_record_detail.apply_record_detail_id
