@@ -25,7 +25,11 @@ public interface ApplyRecordDetailQueryService extends IService<ApplyRecordDetai
      */
     ApplyRecordDetailPO queryApplyRecordDetail(ApplyRecordDetailPO applyRecordDetailPO);
 
-    List<ApplyRecordDetailPO> queryApplyRecordDetailList(ApplyRecordDetailPO applyRecordDetailPO);
-
+    /**
+     * 查询活动申请详细信息
+     *
+     * @param applyRecordId
+     * @return
+     */
     List<MarketGrantApprovalBO> selectMarketApplyList(Integer applyRecordId);
 }

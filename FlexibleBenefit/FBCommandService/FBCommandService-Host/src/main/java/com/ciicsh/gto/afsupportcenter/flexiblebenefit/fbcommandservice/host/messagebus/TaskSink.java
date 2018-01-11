@@ -60,31 +60,75 @@ public interface TaskSink {
     String GIFT_APPLY = TOPIC_PREFIX + "sal_gift_apply_audit";
 
 
+    /**
+     * kafka消息
+     *
+     * @return
+     */
     @Input(AF_EMP_IN)
     MessageChannel afEmpIn();
 
-
+    /**
+     * kafka消息
+     *
+     * @return
+     */
     @Input(AF_EMP_OUT)
     MessageChannel afEmpOut();
 
+    /**
+     * kafka消息
+     *
+     * @return
+     */
     @Input(CHARGE_RESUME)
     MessageChannel chargeResume();
 
+    /**
+     * kafka消息
+     *
+     * @return
+     */
     @Input(CHARGE_STOP)
     MessageChannel chargeStop();
 
+    /**
+     * kafka消息
+     *
+     * @return
+     */
     @Input(EMP_COMPANY_CHANGE)
     MessageChannel empCompanyChange();
 
+    /**
+     * kafka消息
+     *
+     * @return
+     */
     @Input(PRE_IN)
     MessageChannel preIn();
 
+    /**
+     * kafka消息
+     *
+     * @return
+     */
     @Input(NONLOCAL_TO_SH)
     MessageChannel nonlocalToSh();
 
+    /**
+     * kafka消息
+     *
+     * @return
+     */
     @Input(SH_TO_NONLOCAL)
     MessageChannel shToNonlocal();
 
+    /**
+     * kafka消息
+     *
+     * @return
+     */
     @Input(GIFT_APPLY)
     MessageChannel giftApply();
 

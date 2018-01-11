@@ -4,6 +4,8 @@ import org.springframework.validation.BindingResult;
 
 /**
  * 响应结果生成工具
+ *
+ * @author xiweizhen
  */
 public class ResultGenerator {
     private static final String DEFAULT_SUCCESS_MESSAGE = "OK";

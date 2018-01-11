@@ -611,4 +611,59 @@ public class GiftApplyDTO {
     public void setStatus(Integer status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "GiftApplyDTO{" +
+            "giftRecordId=" + giftRecordId +
+            ", giftId=" + giftId +
+            ", applyNum=" + applyNum +
+            ", isActive=" + isActive +
+            ", createTime=" + createTime +
+            ", modifiedTime=" + modifiedTime +
+            ", createdBy='" + createdBy + '\'' +
+            ", modifiedBy='" + modifiedBy + '\'' +
+            ", applyRecordDetailId=" + applyRecordDetailId +
+            ", presentingObjectType=" + presentingObjectType +
+            ", presentingObjectId='" + presentingObjectId + '\'' +
+            ", applicantType=" + applicantType +
+            ", applicant='" + applicant + '\'' +
+            ", applicantExtension='" + applicantExtension + '\'' +
+            ", companyName='" + companyName + '\'' +
+            ", companyAddress='" + companyAddress + '\'' +
+            ", companyTelephone=" + companyTelephone +
+            ", companyFax=" + companyFax +
+            ", contactName='" + contactName + '\'' +
+            ", contactDeptName='" + contactDeptName + '\'' +
+            ", contactPosition='" + contactPosition + '\'' +
+            ", contactBrithday=" + contactBrithday +
+            ", contactPhoneNum='" + contactPhoneNum + '\'' +
+            ", contactEmail='" + contactEmail + '\'' +
+            ", contactHomePostcode=" + contactHomePostcode +
+            ", contactHomeTelephone=" + contactHomeTelephone +
+            ", contactHomeAddress='" + contactHomeAddress + '\'' +
+            ", extensionNumber=" + extensionNumber +
+            ", applyReason='" + applyReason + '\'' +
+            ", approvalStatus=" + approvalStatus +
+            ", sendStatus=" + sendStatus +
+            ", sendTime=" + sendTime +
+            ", sendRemark='" + sendRemark + '\'' +
+            ", applyRecordId=" + applyRecordId +
+            ", applyerId=" + applyerId +
+            ", applyTime=" + applyTime +
+            ", applyType=" + applyType +
+            ", projectTopics='" + projectTopics + '\'' +
+            ", id=" + id +
+            ", giftName='" + giftName + '\'' +
+            ", price=" + price +
+            ", rightPerson=" + rightPerson +
+            ", giftType=" + giftType +
+            ", color='" + color + '\'' +
+            ", number=" + number +
+            ", applyMaxnum=" + applyMaxnum +
+            ", pictureUrl='" + pictureUrl + '\'' +
+            ", remarks='" + remarks + '\'' +
+            ", status=" + status +
+            '}';
+    }
 }

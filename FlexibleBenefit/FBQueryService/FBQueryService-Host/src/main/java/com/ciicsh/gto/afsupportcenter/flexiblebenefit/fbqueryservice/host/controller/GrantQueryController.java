@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 发放管理query服务
+ *
+ * @author xiweizhen
  */
 @RestController
 @RequestMapping("/grantQueryService")
@@ -46,7 +48,7 @@ public class GrantQueryController {
             BeanUtils.copyProperties(applyDTO, applyRecordBO);
             if (applyRecordBO.getApplyType() == 1) {
                 page = applyRecordQueryService.selectGiftList(page, applyRecordBO);
-            }else {
+            } else {
                 page = applyRecordQueryService.selectMarketList(page, applyRecordBO);
             }
 

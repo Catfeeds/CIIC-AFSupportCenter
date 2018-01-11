@@ -109,9 +109,9 @@ public class GiftCommandController {
                 String filePathUrl = giftCommandService.fileUpdate(file.getInputStream());
 
                 /**如果修改图片，清除原图片，再保存新图片*/
-//                if (entity.getPictureUrl() != null && !"".equals(entity.getPictureUrl())) {
-//                    giftCommandService.deletePicture(entity.getPictureUrl());
-//                }
+                if (giftPO.getPictureUrl() != null && !"".equals(giftPO.getPictureUrl())) {
+                    giftCommandService.deletePicture(giftPO.getPictureUrl());
+                }
                 giftPO.setPictureUrl(filePathUrl);
             }
             boolean flag = giftCommandService.updateGift(giftPO);
@@ -182,9 +182,6 @@ public class GiftCommandController {
             MissionRequestDTO missionRequestDTO = new MissionRequestDTO();
             missionRequestDTO.setMissionId(applyRecordDetailPO.getApplyRecordDetailId().toString());
             missionRequestDTO.setProcessDefinitionKey("gift_apply");
-//            Map<String, Object> variable = new HashMap<>(10);
-//            variable.put("action", "approval");
-//            missionRequestDTO.setVariable(variable);
             com.ciicsh.gto.sheetservice.api.dto.core.Result restResult = sheetServiceProxy.startProcess(missionRequestDTO);
             Map<String, String> startProcessResponseMap = (Map<String, String>) restResult.getObject();
             logger.info(String.valueOf("code:" + restResult.getCode() + ",message:") + restResult.getMessage());

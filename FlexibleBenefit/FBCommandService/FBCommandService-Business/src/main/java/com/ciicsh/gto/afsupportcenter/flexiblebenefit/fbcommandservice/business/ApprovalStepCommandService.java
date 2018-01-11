@@ -7,6 +7,8 @@ import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApprovalStepPO;
  * <p>
  * 审批步骤记录表 服务类
  * </p>
+ *
+ * @author xiweizhen
  */
 public interface ApprovalStepCommandService extends IService<ApprovalStepPO> {
 

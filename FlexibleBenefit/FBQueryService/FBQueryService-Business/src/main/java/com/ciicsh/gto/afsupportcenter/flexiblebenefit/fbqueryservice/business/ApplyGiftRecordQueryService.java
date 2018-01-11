@@ -14,5 +14,11 @@ import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyGiftRecordP
  */
 public interface ApplyGiftRecordQueryService extends IService<ApplyGiftRecordPO> {
 
+    /**
+     * 查询礼品申请记录
+     *
+     * @param applyGiftRecordPO
+     * @return
+     */
     ApplyGiftRecordPO queryApplyGiftRecord(ApplyGiftRecordPO applyGiftRecordPO);
 }

@@ -8,6 +8,8 @@ import java.io.Serializable;
  * String error，字符串错误码，可选
  * String message，错误消息，可选，error=message可以配置成属性文件
  * Exception exception，异常消息，可选
+ *
+ * @author xiweizhen
  */
 public class Result<T> implements Serializable {
 
