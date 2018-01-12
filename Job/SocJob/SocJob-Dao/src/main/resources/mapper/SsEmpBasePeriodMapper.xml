@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socjob.dao.SsEmpBasePeriodMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socjob.entity.SsEmpBasePeriod">
+		<id column="emp_base_period_id" property="empBasePeriodId" />
+		<result column="emp_archive_id" property="empArchiveId" />
+		<result column="emp_task_id" property="empTaskId" />
+		<result column="base_amount" property="baseAmount" />
+		<result column="start_month" property="startMonth" />
+		<result column="end_month" property="endMonth" />
+		<result column="ss_month" property="ssMonth" />
+		<result column="ss_month_stop" property="ssMonthStop" />
+		<result column="remit_way" property="remitWay" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+    <resultMap id="ExtResultMap" type="com.ciicsh.gto.afsupportcenter.socjob.entity.custom.SsEmpBaseArchiveExt">
+        <result column="emp_base_period_id" property="empBasePeriodId" />
+        <result column="emp_archive_id" property="empArchiveId" />
+        <result column="emp_task_id" property="empTaskId" />
+        <result column="base_amount" property="baseAmount" />
+        <result column="start_month" property="startMonth" />
+        <result column="end_month" property="endMonth" />
+        <result column="ss_month" property="ssMonth" />
+        <result column="ss_month_stop" property="ssMonthStop" />
+        <result column="remit_way" property="remitWay" />
+        <result column="customer_id" property="customerId" />
+        <result column="company_id" property="companyId" />
+        <result column="employee_id" property="employeeId" />
+        <result column="com_account_id" property="comAccountId" />
+        <result column="ss_serial" property="ssSerial" />
+        <result column="salary" property="salary" />
+        <result column="emp_classify" property="empClassify" />
+        <result column="in_date" property="inDate" />
+        <result column="out_date" property="outDate" />
+        <result column="archive_status" property="archiveStatus" />
+        <result column="archive_task_status" property="archiveTaskStatus" />
+    </resultMap>
+
+    <select id="getEmpBaseArchiveExts" resultMap="ExtResultMap">
+        SELECT
+          <include refid="SsEmpBaseArchiveExt_All_Columns"/>
+        FROM
+        ss_emp_base_period a INNER JOIN ss_emp_archive b ON a.emp_archive_id = b.emp_archive_id
+        WHERE a.is_active = 1 AND b.is_active = 1
+        AND b.com_account_id = #{comAccountId}
+        AND a.ss_month != #{ssMonth}
+        AND (a.ss_month_stop != #{ssMonth} OR a.ss_month_stop is NULL)
+        AND #{ssMonth} BETWEEN a.start_month AND a.end_month
+    </select>
+
+    <sql id="SsEmpBaseArchiveExt_All_Columns">
+        a.emp_base_period_id,
+        a.emp_archive_id,
+        a.emp_task_id,
+        a.base_amount,
+        a.start_month,
+        a.end_month,
+        a.ss_month,
+        a.ss_month_stop,
+        a.remit_way,
+        b.customer_id,
+        b.company_id,
+        b.employee_id,
+        b.com_account_id,
+        b.ss_serial,
+        b.salary,
+        b.emp_classify,
+        b.in_date,
+        b.out_date,
+        b.archive_status,
+        b.archive_task_status
+    </sql>
+
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socjob.dao.SsMonthChargeMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socjob.entity.SsMonthCharge">
+        <id column="month_charge_id" property="monthChargeId" />
+        <result column="com_account_id" property="comAccountId" />
+        <result column="ss_month_belong" property="ssMonthBelong" />
+        <result column="ss_month" property="ssMonth" />
+        <result column="employee_id" property="employeeId" />
+        <result column="emp_archive_id" property="empArchiveId" />
+        <result column="base_amount" property="baseAmount" />
+        <result column="total_amount" property="totalAmount" />
+        <result column="cost_category" property="costCategory" />
+        <result column="emp_payment_status" property="empPaymentStatus" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+    <select id="ifFirstCreate" resultType="int">
+      SELECT COUNT(*) FROM ss_month_charge WHERE com_account_id = #{comAccountId} AND ss_month = #{ssMonth} AND is_active = 1
+    </select>
+    
+    <select id="delByCondition" resultType="int">
+      DELETE FROM ss_month_charge WHERE com_account_id = #{comAccountId} AND employee_id = #{employeeId} AND ss_month = #{ssMonth}
+    </select>
+
+    <select id="getMonthChangesByCondition" resultMap="BaseResultMap">
+      SELECT
+        <include refid="SsMonthCharge_All_Columns"/>
+      FROM ss_month_charge WHERE com_account_id = #{comAccountId}
+        AND employee_id = #{employeeId}
+        AND ss_month = #{ssMonth}
+    </select>
+    
+    <sql id="SsMonthCharge_All_Columns">
+      month_charge_id,
+      com_account_id,
+      ss_month_belong,
+      ss_month,
+      employee_id,
+      emp_archive_id,
+      base_amount,
+      total_amount,
+      cost_category,
+      emp_payment_status,
+      is_active,
+      created_time,
+      modified_time,
+      created_by,
+      modified_by
+    </sql>
+
+</mapper>

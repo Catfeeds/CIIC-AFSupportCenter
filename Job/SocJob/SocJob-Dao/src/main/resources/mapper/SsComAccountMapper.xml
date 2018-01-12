@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socjob.dao.SsComAccountMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socjob.entity.SsComAccount">
+		<id column="com_account_id" property="comAccountId" />
+		<result column="customer_id" property="customerId" />
+		<result column="supplier_id" property="supplierId" />
+		<result column="ss_account_type" property="ssAccountType" />
+		<result column="ss_account" property="ssAccount" />
+		<result column="bank_account" property="bankAccount" />
+		<result column="com_account_name" property="comAccountName" />
+		<result column="settlement_area" property="settlementArea" />
+		<result column="payment_bank" property="paymentBank" />
+		<result column="payment_way" property="paymentWay" />
+		<result column="bill_receiver" property="billReceiver" />
+		<result column="expire_date" property="expireDate" />
+		<result column="ss_username" property="ssUsername" />
+		<result column="ss_pwd" property="ssPwd" />
+		<result column="initial_balance" property="initialBalance" />
+		<result column="initial_debt" property="initialDebt" />
+		<result column="origin_place" property="originPlace" />
+		<result column="origin_place_remark" property="originPlaceRemark" />
+		<result column="query_account" property="queryAccount" />
+		<result column="deliver_way" property="deliverWay" />
+		<result column="deliver_way_remark" property="deliverWayRemark" />
+		<result column="provide_certificate_time" property="provideCertificateTime" />
+		<result column="change_time" property="changeTime" />
+		<result column="receive_date" property="receiveDate" />
+		<result column="into_date" property="intoDate" />
+		<result column="end_date" property="endDate" />
+		<result column="dispatch_material" property="dispatchMaterial" />
+		<result column="remark" property="remark" />
+		<result column="state" property="state" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="ExtResultMap" type="com.ciicsh.gto.afsupportcenter.socjob.entity.custom.SsAccountComExt">
+        <result column="com_account_id" property="comAccountId" />
+        <result column="customer_id" property="customerId" />
+        <result column="company_id" property="companyId" />
+        <result column="supplier_id" property="supplierId" />
+        <result column="ss_account_type" property="ssAccountType" />
+        <result column="ss_account" property="ssAccount" />
+        <result column="bank_account" property="bankAccount" />
+        <result column="com_account_name" property="comAccountName" />
+        <result column="settlement_area" property="settlementArea" />
+        <result column="payment_bank" property="paymentBank" />
+        <result column="payment_way" property="paymentWay" />
+        <result column="bill_receiver" property="billReceiver" />
+        <result column="expire_date" property="expireDate" />
+        <result column="ss_username" property="ssUsername" />
+        <result column="ss_pwd" property="ssPwd" />
+        <result column="initial_balance" property="initialBalance" />
+        <result column="initial_debt" property="initialDebt" />
+        <result column="origin_place" property="originPlace" />
+        <result column="origin_place_remark" property="originPlaceRemark" />
+        <result column="query_account" property="queryAccount" />
+        <result column="deliver_way" property="deliverWay" />
+        <result column="deliver_way_remark" property="deliverWayRemark" />
+        <result column="provide_certificate_time" property="provideCertificateTime" />
+        <result column="change_time" property="changeTime" />
+        <result column="receive_date" property="receiveDate" />
+        <result column="into_date" property="intoDate" />
+        <result column="end_date" property="endDate" />
+        <result column="dispatch_material" property="dispatchMaterial" />
+        <result column="state" property="state" />
+    </resultMap>
+
+    <select id="getSsComAccounts" resultMap="ExtResultMap">
+      SELECT
+        <include refid="SsComAccountExt_All_Columns"/>
+      FROM ss_com_account a INNER JOIN ss_account_com_relation b ON a.com_account_id = b.com_account_id
+      WHERE a.is_active = 1 AND b.is_active = 1 AND (a.end_date > NOW() OR a.end_date is NULL)
+    </select>
+
+    <sql id="SsComAccount_All_Columns">
+        com_account_id,
+        customer_id,
+        supplier_id,
+        ss_account_type,
+        ss_account,
+        bank_account,
+        com_account_name,
+        settlement_area,
+        payment_bank,
+        payment_way,
+        bill_receiver,
+        expire_date,
+        ss_username,
+        ss_pwd,
+        initial_balance,
+        initial_debt,
+        origin_place,
+        origin_place_remark,
+        query_account,
+        deliver_way,
+        deliver_way_remark,
+        provide_certificate_time,
+        change_time,
+        receive_date,
+        into_date,
+        end_date,
+        dispatch_material,
+        remark,
+        state,
+        is_active,
+        created_time,
+        modified_time,
+        created_by,
+        modified_by
+    </sql>
+
+    <sql id="SsComAccountExt_All_Columns">
+        a.com_account_id,
+        a.customer_id,
+		b.company_id,
+        a.supplier_id,
+        a.ss_account_type,
+        a.ss_account,
+        a.bank_account,
+        a.com_account_name,
+        a.settlement_area,
+        a.payment_bank,
+        a.payment_way,
+        a.bill_receiver,
+        a.expire_date,
+        a.ss_username,
+        a.ss_pwd,
+        a.initial_balance,
+        a.initial_debt,
+        a.origin_place,
+        a.origin_place_remark,
+        a.query_account,
+        a.deliver_way,
+        a.deliver_way_remark,
+        a.provide_certificate_time,
+        a.change_time,
+        a.receive_date,
+        a.into_date,
+        a.end_date,
+        a.dispatch_material,
+		a.state
+    </sql>
+
+</mapper>

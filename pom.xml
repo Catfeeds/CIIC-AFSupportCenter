@@ -202,6 +202,11 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.6</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
             <version>3.17</version>
@@ -323,14 +328,14 @@
         <!--<module>./Job/FundJob/FundJob-Host</module>
         <module>./Job/FundJob/FundJob-Dao</module>
         <module>./Job/FundJob/FundJob-Business</module>
-        <module>./Job/FundJob/FundJob-Entity</module>
+        <module>./Job/FundJob/FundJob-Entity</module>-->
 
         <module>./Job/SocJob/SocJob-Host</module>
         <module>./Job/SocJob/SocJob-Dao</module>
         <module>./Job/SocJob/SocJob-Business</module>
         <module>./Job/SocJob/SocJob-Entity</module>
 
-        <module>./Job/ZYJob/ZYJob-Host</module>
+        <!--<module>./Job/ZYJob/ZYJob-Host</module>
         <module>./Job/ZYJob/ZYJob-Dao</module>
         <module>./Job/ZYJob/ZYJob-Business</module>
         <module>./Job/ZYJob/ZYJob-Entity</module>-->
