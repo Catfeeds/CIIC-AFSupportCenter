@@ -20,6 +20,7 @@ import java.util.List;
 
 /**
  * 发放管理command服务
+ * 审批功能
  *
  * @author xiweizhen
  */
