@@ -11,8 +11,15 @@ import org.springframework.stereotype.Service;
 @Service
 public interface TaskSink {
 
+    String TOPIC_PREFIX = "common_taskservice_";
 
-    static final String TOPIC_PREFIX = "common_taskservice_";
+    /**
+     * kafka消息
+     *
+     * @return
+     */
+    @Input(GIFT_APPLY)
+    MessageChannel giftApply();
 
     /**
      * 雇员新增TOPIC
@@ -124,12 +131,5 @@ public interface TaskSink {
     @Input(SH_TO_NONLOCAL)
     MessageChannel shToNonlocal();
 
-    /**
-     * kafka消息
-     *
-     * @return
-     */
-    @Input(GIFT_APPLY)
-    MessageChannel giftApply();
 
 }

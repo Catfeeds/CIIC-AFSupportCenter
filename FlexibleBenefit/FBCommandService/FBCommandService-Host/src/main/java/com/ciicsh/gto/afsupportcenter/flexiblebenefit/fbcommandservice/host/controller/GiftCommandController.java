@@ -178,7 +178,7 @@ public class GiftCommandController {
             giftPO.setNumber(number - applyNum);
             giftCommandService.updateGift(giftPO);
 
-            //对接任务单系统
+            /**对接任务单系统*/
             MissionRequestDTO missionRequestDTO = new MissionRequestDTO();
             missionRequestDTO.setMissionId(applyRecordDetailPO.getApplyRecordDetailId().toString());
             missionRequestDTO.setProcessDefinitionKey("gift_apply");

@@ -1,6 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.host.messagebus;
 
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyRecordDetailPO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApprovalStepPO;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.ApplyRecordDetailCommandService;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.ApprovalStepCommandService;
 import com.ciicsh.gto.sheetservice.api.dto.TaskMsgDTO;
 import org.slf4j.Logger;
@@ -24,6 +26,8 @@ public class KafkaReceiver {
 
     @Autowired
     private ApprovalStepCommandService approvalStepCommandService;
+    @Autowired
+    private ApplyRecordDetailCommandService applyRecordDetailCommandService;
 
     /**
      * 礼品申请、审批任务单
@@ -36,14 +40,20 @@ public class KafkaReceiver {
         String returnInfo = taskMsgDTO.toString();
         logger.info("收到消息from GIFT_APPLY-useWork: " + returnInfo);
         /**
-         * 根据返回的positionCode,查询审批人，新增审批记录
+         * taskType,查询审批人，新增审批记录
          */
+        String positionCode = taskMsgDTO.getTaskType();
 
         ApprovalStepPO approvalStep = new ApprovalStepPO();
         approvalStep.setApproveName("xwz");
+        approvalStep.setApproverId("xwz");
         approvalStep.setApproveTime(new Date());
         approvalStep.setApplyRecordDetailId(Integer.valueOf(taskMsgDTO.getMissionId()));
-//        approvalStepCommandService.insert(approvalStep);
+
+        ApplyRecordDetailPO applyRecordDetail = applyRecordDetailCommandService.selectById(taskMsgDTO.getMissionId());
+        approvalStep.setApproveAction(applyRecordDetail.getApprovalStatus());
+        approvalStep.setApproveRemark("");
+        approvalStepCommandService.insert(approvalStep);
     }
 
     @StreamListener(TaskSink.AF_EMP_IN)
