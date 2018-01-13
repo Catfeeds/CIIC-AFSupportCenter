@@ -13,7 +13,7 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.util.List;
 
 /**
  * @author songjt
@@ -24,6 +24,7 @@ import java.util.Date;
 public class KafkaReceiver {
     private final static Logger logger = LoggerFactory.getLogger(KafkaReceiver.class);
 
+    private static final String CENTER = "centerMangerAudit";
     @Autowired
     private ApprovalStepCommandService approvalStepCommandService;
     @Autowired
@@ -39,21 +40,51 @@ public class KafkaReceiver {
         TaskMsgDTO taskMsgDTO = message.getPayload();
         String returnInfo = taskMsgDTO.toString();
         logger.info("收到消息from GIFT_APPLY-useWork: " + returnInfo);
+        updateStepList(taskMsgDTO);
+    }
+
+    /**
+     * 弹性福利更新审批公共方法
+     *
+     * @param taskMsgDTO
+     */
+    private void updateStepList(TaskMsgDTO taskMsgDTO) {
+        if (CENTER.equals(taskMsgDTO.getTaskType())) {
+            ApplyRecordDetailPO applyRecordDetailPO = new ApplyRecordDetailPO();
+            applyRecordDetailPO.setApplyRecordDetailId(Integer.valueOf(taskMsgDTO.getMissionId()));
+            applyRecordDetailPO.setTaskId(taskMsgDTO.getTaskId());
+            /**更新详情表记录*/
+            applyRecordDetailCommandService.updateById(applyRecordDetailPO);
+        }
         /**
          * taskType,查询审批人，新增审批记录
          */
         String positionCode = taskMsgDTO.getTaskType();
 
-        ApprovalStepPO approvalStep = new ApprovalStepPO();
-        approvalStep.setApproveName("xwz");
-        approvalStep.setApproverId("xwz");
-        approvalStep.setApproveTime(new Date());
-        approvalStep.setApplyRecordDetailId(Integer.valueOf(taskMsgDTO.getMissionId()));
+        List<ApprovalStepPO> approvalStepList = approvalStepCommandService.selectList(Integer.valueOf(taskMsgDTO.getMissionId()));
+        if (approvalStepList.size() == 1) {
+            approvalStepList.get(0).setApproveName("xwz");
+            approvalStepList.get(0).setApproverId("xwz");
+            approvalStepCommandService.updateById(approvalStepList.get(0));
+        } else if (approvalStepList.size() == 2) {
+            approvalStepList.get(1).setApproveName("xwz");
+            approvalStepList.get(1).setApproverId("xwz");
+            approvalStepCommandService.updateById(approvalStepList.get(1));
+        }
+    }
 
-        ApplyRecordDetailPO applyRecordDetail = applyRecordDetailCommandService.selectById(taskMsgDTO.getMissionId());
-        approvalStep.setApproveAction(applyRecordDetail.getApprovalStatus());
-        approvalStep.setApproveRemark("");
-        approvalStepCommandService.insert(approvalStep);
+    /**
+     * 活动申请、审批任务单
+     *
+     * @param message
+     */
+    @StreamListener(TaskSink.MARKETING_APPLY)
+    public void marketApply(Message<TaskMsgDTO> message) {
+        TaskMsgDTO taskMsgDTO = message.getPayload();
+        String returnInfo = taskMsgDTO.toString();
+        logger.info("收到消息from MARKETING_APPLY-useWork: " + returnInfo);
+
+        updateStepList(taskMsgDTO);
     }
 
     @StreamListener(TaskSink.AF_EMP_IN)

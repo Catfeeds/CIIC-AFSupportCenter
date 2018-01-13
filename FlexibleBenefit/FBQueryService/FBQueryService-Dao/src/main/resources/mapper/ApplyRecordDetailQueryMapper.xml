@@ -29,6 +29,7 @@
         <result column="send_status" property="sendStatus"/>
         <result column="send_remark" property="sendRemark"/>
         <result column="send_time" property="sendTime"/>
+        <result column="task_id" property="taskId"/>
         <result column="is_active" property="isActive"/>
         <result column="create_time" property="createTime"/>
         <result column="modified_time" property="modifiedTime"/>

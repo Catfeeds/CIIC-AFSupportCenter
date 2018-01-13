@@ -14,14 +14,6 @@ public interface TaskSink {
     String TOPIC_PREFIX = "common_taskservice_";
 
     /**
-     * kafka消息
-     *
-     * @return
-     */
-    @Input(GIFT_APPLY)
-    MessageChannel giftApply();
-
-    /**
      * 雇员新增TOPIC
      */
     String AF_EMP_IN = TOPIC_PREFIX + "af_empin";
@@ -65,7 +57,23 @@ public interface TaskSink {
      * 礼品申请
      */
     String GIFT_APPLY = TOPIC_PREFIX + "sal_gift_apply_audit";
+    String MARKETING_APPLY = TOPIC_PREFIX + "sal_marketing_apply_audit";
 
+    /**
+     * kafka消息
+     *
+     * @return
+     */
+    @Input(GIFT_APPLY)
+    MessageChannel giftApply();
+
+    /**
+     * kafka消息
+     *
+     * @return
+     */
+    @Input(MARKETING_APPLY)
+    MessageChannel marketApply();
 
     /**
      * kafka消息

@@ -6,7 +6,6 @@ import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.core.
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.core.ResultGenerator;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.dto.GrantDTO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.ApplyRecordDetailCommandService;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.ApprovalStepCommandService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -20,7 +19,6 @@ import java.util.List;
 
 /**
  * 发放管理command服务
- * 审批功能
  *
  * @author xiweizhen
  */
@@ -33,8 +31,6 @@ public class GrantCommandController {
      */
     private static Logger logger = LoggerFactory.getLogger(GrantCommandController.class);
 
-    @Autowired
-    private ApprovalStepCommandService approvalStepCommandService;
     @Autowired
     private ApplyRecordDetailCommandService applyRecordDetailCommandService;
 

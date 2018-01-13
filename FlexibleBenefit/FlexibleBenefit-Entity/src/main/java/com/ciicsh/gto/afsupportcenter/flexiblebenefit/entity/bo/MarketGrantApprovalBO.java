@@ -20,6 +20,11 @@ public class MarketGrantApprovalBO {
      */
     private List<ApprovalStepPO> approvalStepList;
     /**
+     * 审批备注
+     */
+    @TableField("approve_remark")
+    private String approveRemark;
+    /**
      * 审批后数量
      */
     private Integer approvalNumber;
@@ -27,6 +32,11 @@ public class MarketGrantApprovalBO {
      * 申请数量
      */
     private Integer number;
+    /**
+     * 任务单系统主键
+     */
+    @TableField("task_id")
+    private String taskId;
     /**
      * 派送地址
      */
@@ -473,6 +483,22 @@ public class MarketGrantApprovalBO {
         this.number = number;
     }
 
+    public String getApproveRemark() {
+        return approveRemark;
+    }
+
+    public void setApproveRemark(String approveRemark) {
+        this.approveRemark = approveRemark;
+    }
+
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
+    }
+
     @Override
     public String toString() {
         return "MarketGrantApprovalBO{" +
@@ -511,6 +537,8 @@ public class MarketGrantApprovalBO {
             ", approvalNumber='" + approvalNumber + '\'' +
             ", number='" + number + '\'' +
             ", deliveryAddress='" + deliveryAddress + '\'' +
+            ", approveRemark='" + approveRemark + '\'' +
+            ", taskId='" + taskId + '\'' +
             '}';
     }
 }
