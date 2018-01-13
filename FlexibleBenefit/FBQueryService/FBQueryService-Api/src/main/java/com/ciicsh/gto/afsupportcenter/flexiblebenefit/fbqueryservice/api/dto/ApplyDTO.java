@@ -1,9 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.dto;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-
 import java.util.Date;
 
+/**
+ * 申请dto
+ *
+ * @author xiweizhen
+ */
 public class ApplyDTO extends CommonDTO {
     /**
      * 申请记录编号
@@ -530,5 +533,54 @@ public class ApplyDTO extends CommonDTO {
 
     public void setSendRemark(String sendRemark) {
         this.sendRemark = sendRemark;
+    }
+
+    @Override
+    public String toString() {
+        return "ApplyDTO{" +
+            "applyRecordId=" + applyRecordId +
+            ", applyerId=" + applyerId +
+            ", applyTime=" + applyTime +
+            ", applyType=" + applyType +
+            ", projectTopics='" + projectTopics + '\'' +
+            ", isActive=" + isActive +
+            ", createTime=" + createTime +
+            ", modifiedTime=" + modifiedTime +
+            ", createdBy='" + createdBy + '\'' +
+            ", modifiedBy='" + modifiedBy + '\'' +
+            ", presentingObjectType=" + presentingObjectType +
+            ", applicantType=" + applicantType +
+            ", applicant='" + applicant + '\'' +
+            ", applicantExtension='" + applicantExtension + '\'' +
+            ", companyName='" + companyName + '\'' +
+            ", companyAddress='" + companyAddress + '\'' +
+            ", companyTelephone=" + companyTelephone +
+            ", companyFax=" + companyFax +
+            ", contactName='" + contactName + '\'' +
+            ", contactDeptName='" + contactDeptName + '\'' +
+            ", contactPosition='" + contactPosition + '\'' +
+            ", contactBrithday=" + contactBrithday +
+            ", contactPhoneNum=" + contactPhoneNum +
+            ", contactEmail='" + contactEmail + '\'' +
+            ", contactHomePostcode=" + contactHomePostcode +
+            ", contactHomeTelephone=" + contactHomeTelephone +
+            ", contactHomeAddress='" + contactHomeAddress + '\'' +
+            ", extensionNumber=" + extensionNumber +
+            ", applyReason='" + applyReason + '\'' +
+            ", approvalStatus=" + approvalStatus +
+            ", sendStatus=" + sendStatus +
+            ", sendTime=" + sendTime +
+            ", sendRemark='" + sendRemark + '\'' +
+            ", giftRecordId=" + giftRecordId +
+            ", giftId=" + giftId +
+            ", applyNum=" + applyNum +
+            ", markertActivityRecordId=" + markertActivityRecordId +
+            ", applyRecordDetailId=" + applyRecordDetailId +
+            ", activityId=" + activityId +
+            ", number=" + number +
+            ", giftForm=" + giftForm +
+            ", sendWay=" + sendWay +
+            ", deliveryAddress='" + deliveryAddress + '\'' +
+            '}';
     }
 }

@@ -48,6 +48,11 @@ public class ApplyRecordDetailPO extends Model<ApplyRecordDetailPO> {
     @TableField("presenting_object_id")
     private String presentingObjectId;
     /**
+     * 任务单系统主键
+     */
+    @TableField("task_id")
+    private String taskId;
+    /**
      * 申请人类型（1-个人，2-公司，仅给赠送人--其他使用）
      */
     @TableField("applicant_type")
@@ -433,6 +438,14 @@ public class ApplyRecordDetailPO extends Model<ApplyRecordDetailPO> {
         this.presentingObjectId = presentingObjectId;
     }
 
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
+    }
+
     @Override
     protected Serializable pkVal() {
         return this.applyRecordDetailId;
@@ -472,6 +485,7 @@ public class ApplyRecordDetailPO extends Model<ApplyRecordDetailPO> {
             ", modifiedTime=" + modifiedTime +
             ", createdBy='" + createdBy + '\'' +
             ", modifiedBy='" + modifiedBy + '\'' +
+            ", taskId='" + taskId + '\'' +
             '}';
     }
 }

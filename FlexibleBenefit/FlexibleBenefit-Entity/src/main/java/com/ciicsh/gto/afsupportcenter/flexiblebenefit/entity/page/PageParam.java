@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.plugins.Page;
 
 /**
  * 分页查询参数
+ *
+ * @author xiweizhen
  */
 public class PageParam extends Page {
     /**
