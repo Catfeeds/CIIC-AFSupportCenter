@@ -81,4 +81,12 @@ public class SsEmpBasePeriodServiceImpl extends ServiceImpl<SsEmpBasePeriodMappe
     public void updateEndMonthById(SsEmpBasePeriod ssEmpBasePeriod) {
         baseMapper.updateEndMonthById(ssEmpBasePeriod);
     }
+
+    @Override
+    public void saveBackPeriod(List<SsEmpBasePeriod> newEmpBasePeriodList) {
+        //追加调整的月份
+        if (CollectionUtils.isNotEmpty(newEmpBasePeriodList)) {
+            this.insertBatch(newEmpBasePeriodList);
+        }
+    }
 }
