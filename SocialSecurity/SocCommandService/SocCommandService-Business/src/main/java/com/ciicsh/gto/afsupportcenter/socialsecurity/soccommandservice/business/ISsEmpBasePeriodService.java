@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBasePeriod;
 import org.apache.ibatis.annotations.Param;
 
@@ -45,4 +46,5 @@ public interface ISsEmpBasePeriodService extends IService<SsEmpBasePeriod> {
      */
     List<SsEmpBasePeriod> queryPeriodByEmpArchiveId(@Param("empArchiveId")String empArchiveId);
 
+    void updateEndMonthById(SsEmpBasePeriod ssEmpBasePeriod);
 }
