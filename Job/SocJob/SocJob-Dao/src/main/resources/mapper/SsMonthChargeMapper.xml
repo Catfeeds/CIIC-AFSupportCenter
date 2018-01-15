@@ -26,7 +26,7 @@
     </select>
     
     <select id="delByCondition" resultType="int">
-      DELETE FROM ss_month_charge WHERE com_account_id = #{comAccountId} AND employee_id = #{employeeId} AND ss_month = #{ssMonth}
+      DELETE FROM ss_month_charge WHERE com_account_id = #{comAccountId} AND ss_month = #{ssMonth}
     </select>
 
     <select id="getMonthChangesByCondition" resultMap="BaseResultMap">

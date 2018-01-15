@@ -60,7 +60,7 @@ public class SsMonthCharge implements Serializable {
 	@TableField("total_amount")
 	private BigDecimal totalAmount;
     /**
-     * 费用种类：1标准 2 新进 3 转入  4 补缴 5 调整 6转出
+     * 费用种类：1标准 2 新进 3 转入  4 补缴 5 调整 6 转出
      */
 	@TableField("cost_category")
 	private Integer costCategory;

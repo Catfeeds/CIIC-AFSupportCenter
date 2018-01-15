@@ -334,6 +334,7 @@
         <module>./Job/SocJob/SocJob-Dao</module>
         <module>./Job/SocJob/SocJob-Business</module>
         <module>./Job/SocJob/SocJob-Entity</module>
+        <module>./Job/SocJob/SocJob-Util</module>
 
         <!--<module>./Job/ZYJob/ZYJob-Host</module>
         <module>./Job/ZYJob/ZYJob-Dao</module>
