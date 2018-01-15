@@ -47,4 +47,10 @@ public interface ISsEmpBasePeriodService extends IService<SsEmpBasePeriod> {
     List<SsEmpBasePeriod> queryPeriodByEmpArchiveId(@Param("empArchiveId")String empArchiveId);
 
     void updateEndMonthById(SsEmpBasePeriod ssEmpBasePeriod);
+
+    /**
+     * 补缴添加时间段到表中
+     * @param newEmpBasePeriodList
+     */
+    void saveBackPeriod(List<SsEmpBasePeriod> newEmpBasePeriodList);
 }
