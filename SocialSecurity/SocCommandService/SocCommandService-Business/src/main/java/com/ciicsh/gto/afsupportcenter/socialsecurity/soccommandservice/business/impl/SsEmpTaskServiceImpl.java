@@ -79,12 +79,19 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     @Transactional
     @Override
     public boolean saveHandleData(SsEmpTaskBO bo) {
+        int taskStatus = bo.getTaskStatus();
+        int taskCategory = bo.getTaskCategory();
         // 更新任务单费用段
         List<SsEmpTaskPeriod> periods = bo.getEmpTaskPeriods();
         if (periods != null) {
+            //表示有时间段
             ssEmpTaskPeriodService.saveForEmpTaskId(periods, bo.getEmpTaskId());
             periods = ssEmpTaskPeriodService.queryByEmpTaskId(bo.getEmpTaskId());
             bo.setEmpTaskPeriods(periods);
+        }else{
+            //无时间段
+            //更新雇员任务信息
+            baseMapper.updateMyselfColumnById(bo);
         }
         // 更新雇员任务信息
         // 备注时间
@@ -93,8 +100,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         bo.setRejectionRemarkDate(now);
         bo.setModifiedTime(LocalDateTime.now());
 
-        int taskStatus = bo.getTaskStatus();
-        int taskCategory = bo.getTaskCategory();
+
         // 处理中，正式把数据写入到 ss_emp_base_period and ss_emp_base_detail(雇员社)
         if (TaskStatusConst.PROCESSING == taskStatus) {
             if (TaskTypeConst.NEW == taskCategory || TaskTypeConst.INTO == taskCategory) {
@@ -916,6 +922,16 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param bo
      */
     private void handleTurnOutTask(SsEmpTaskBO bo) {
+
+        List<SsEmpBasePeriod> ssEmpBasePeriodList = getNormalPeriod(bo);
+        if(ssEmpBasePeriodList.size()>0){
+            SsEmpBasePeriod ssEmpBasePeriod = ssEmpBasePeriodList.get(0);
+            ssEmpBasePeriod.setSsMonthStop(bo.getHandleMonth());
+
+        }
+
+        //ssEmpArchiveService
+
 
     }
 
