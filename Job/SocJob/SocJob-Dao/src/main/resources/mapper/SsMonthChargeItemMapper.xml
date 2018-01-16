@@ -22,4 +22,26 @@
         DELETE FROM ss_month_charge_item WHERE month_charge_id = #{monthChargeId}
     </select>
 
+    <select id="getMonthChargeItemByMonthChargeId" resultMap="BaseResultMap">
+        SELECT
+          <include refid="SsMonthChargeItem_All_Columns"/>
+        FROM ss_month_charge_item
+          WHERE is_active = 1 AND month_charge_id = #{monthChargeId}
+    </select>
+    
+    <sql id="SsMonthChargeItem_All_Columns">
+        month_charge_item_id,
+        month_charge_id,
+        ss_type,
+        ss_type_name,
+        com_amount,
+        emp_amount,
+        sub_total_amount,
+        is_active,
+        created_time,
+        modified_time,
+        created_by,
+        modified_by
+    </sql>
+
 </mapper>

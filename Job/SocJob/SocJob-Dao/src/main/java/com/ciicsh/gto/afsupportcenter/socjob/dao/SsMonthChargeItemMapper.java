@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 
 /**
  * <p>
@@ -23,5 +25,12 @@ public interface SsMonthChargeItemMapper extends BaseMapper<SsMonthChargeItem> {
      * @return 返回删除影响的行数
      */
     Integer delByMonthChargeId(@Param("monthChargeId")long monthChargeId);
+
+    /**
+     * 根据monthChargeId 获取雇员月度费用明细项目信息
+     * @param monthChargeId 雇员月度费用明细ID
+     * @return 返回雇员月度费用明细项目信息
+     */
+    List<SsMonthChargeItem> getMonthChargeItemByMonthChargeId(@Param("monthChargeId")long monthChargeId);
 
 }
