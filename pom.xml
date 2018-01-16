@@ -334,6 +334,17 @@
         <module>./Job/ZYJob/ZYJob-Dao</module>
         <module>./Job/ZYJob/ZYJob-Business</module>
         <module>./Job/ZYJob/ZYJob-Entity</module>-->
+        <module>CredentialsManagement/CredentialsCommandService/CredentialsCommandService-Api</module>
+        <module>CredentialsManagement/CredentialsCommandService/CredentialsCommandService-Entity</module>
+        <module>CredentialsManagement/CredentialsCommandService/CredentialsCommandService-Dao</module>
+        <module>CredentialsManagement/CredentialsCommandService/CredentialsCommandService-Business</module>
+        <module>CredentialsManagement/CredentialsCommandService/CredentialsCommandService-Host</module>
+
+        <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Api</module>
+        <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Entity</module>
+        <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Dao</module>
+        <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Business</module>
+        <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Host</module>
     </modules>
 
 </project>
