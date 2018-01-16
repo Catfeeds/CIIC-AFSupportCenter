@@ -15,4 +15,41 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
+    <select id="select">
+      SELECT
+      <include refid="SEL_ALL_COLLUMS"></include>
+      FROM
+      cmy_af_org_policy
+      <include refid="SEL_LIST_WHERR"></include>
+    </select>
+
+    <!--<select id="selectItem">-->
+
+    <!--</select>-->
+
+    <sql id="SEL_ALL_COLLUMS">
+        org_poilcy_id,
+        name,
+        type,
+        policy_description,
+        is_active,
+        created_time,
+        modified_time,
+        created_by,
+        modified_by
+    </sql>
+    <sql id="SEL_LIST_WHERR">
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            is_active = 1
+            <if test="name != null and managementId != ''">
+                AND name = #{name}
+            </if>
+            <if test="type != null and managementId != ''">
+                AND type = #{type}
+            </if>
+        </trim>
+    </sql>
+    <!--<sql id="SEL_ITEM_WHERR">-->
+        <!---->
+    <!--</sql>-->
 </mapper>

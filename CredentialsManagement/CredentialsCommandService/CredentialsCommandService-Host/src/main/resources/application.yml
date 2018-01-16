@@ -22,10 +22,10 @@ mybatis-plus:
 
 
 server:
-  port: 9000
+  port: 6025
 
 app:
-  id=10009999
+  id=10006014
 endpoints:
   shutdown:
     enabled: true
@@ -33,5 +33,5 @@ endpoints:
 management:
   security:
     enabled: false
-  port: 9000
+  port: 6026
   context-path: /admin

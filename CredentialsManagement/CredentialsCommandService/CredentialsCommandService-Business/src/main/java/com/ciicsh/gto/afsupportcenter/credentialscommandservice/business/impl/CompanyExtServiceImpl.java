@@ -7,6 +7,8 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.CompanyExtMa
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.CompanyExtPO;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 客户数据维护（客户扩展表） 服务实现类
@@ -17,5 +19,14 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CompanyExtServiceImpl extends ServiceImpl<CompanyExtMapper, CompanyExtPO> implements CompanyExtService {
-	
+
+    @Override
+    public List<CompanyExtPO> selectBycompanyId(String companyId) {
+        return null;
+    }
+
+    @Override
+    public boolean updateBycompanyIdAndType(String companyId, String credentialsType) {
+        return false;
+    }
 }
