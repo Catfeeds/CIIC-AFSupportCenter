@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.host.controller;
 
 import com.baomidou.mybatisplus.plugins.Page;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.bo.GiftFormSendWay;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.MarketActivityPO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.core.Result;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.core.ResultGenerator;
@@ -44,4 +45,20 @@ public class MarketQueryController {
             return ResultGenerator.genServerFailResult();
         }
     }
+
+    @PostMapping("/queryGiftFormAndSendWayList")
+    public Result queryGiftFormAndSendWayList(@RequestBody MarketActivityDTO marketActivityDTO) {
+        try {
+            MarketActivityPO marketActivityPO = new MarketActivityPO();
+            BeanUtils.copyProperties(marketActivityDTO, marketActivityPO);
+            GiftFormSendWay giftFormSendWay = marketActivityQueryService.queryGiftFormAndSendWayList(marketActivityPO);
+
+            logger.info("查询活动--派送方式--礼品形式下拉框");
+            return ResultGenerator.genSuccessResult(giftFormSendWay);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
+        }
+    }
+
+
 }

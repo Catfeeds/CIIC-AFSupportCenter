@@ -1,7 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business.impl;
 
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.bo.MarketGrantApprovalBO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyRecordDetailPO;
@@ -25,13 +24,6 @@ public class ApplyRecordDetailQueryServiceImpl extends ServiceImpl<ApplyRecordDe
     @Override
     public ApplyRecordDetailPO queryApplyRecordDetail(ApplyRecordDetailPO applyRecordDetailPO) {
         return baseMapper.selectOne(applyRecordDetailPO);
-    }
-
-    @Override
-    public List<ApplyRecordDetailPO> queryApplyRecordDetailList(ApplyRecordDetailPO applyRecordDetailPO) {
-        EntityWrapper<ApplyRecordDetailPO> entityWrapper = new EntityWrapper<>();
-        entityWrapper.where(applyRecordDetailPO.getApplyRecordId() != null, "apply_record_id={0}", applyRecordDetailPO.getApplyRecordId());
-        return baseMapper.selectList(entityWrapper);
     }
 
     @Override

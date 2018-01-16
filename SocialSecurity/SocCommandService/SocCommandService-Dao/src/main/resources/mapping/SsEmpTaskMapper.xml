@@ -19,9 +19,6 @@
 		<result column="submit_time" property="submitTime" />
 		<result column="expire_date" property="expireDate" />
 		<result column="submitter_remark" property="submitterRemark" />
-		<result column="task_form_content" property="taskFormContent" />
-		<result column="salary" property="salary" />
-		<result column="emp_classify" property="empClassify" />
 		<result column="handle_user_id" property="handleUserId" />
 		<result column="handle_user_name" property="handleUserName" />
 		<result column="emp_ss_serial" property="empSsSerial" />
@@ -35,12 +32,18 @@
 		<result column="rejection_remark_date" property="rejectionRemarkDate" />
 		<result column="task_status" property="taskStatus" />
 		<result column="handle_status" property="handleStatus" />
+		<result column="chat_history" property="chatHistory" />
 		<result column="start_handle_date" property="startHandleDate" />
 		<result column="send_check_date" property="sendCheckDate" />
 		<result column="finish_date" property="finishDate" />
+		<result column="task_form_content" property="taskFormContent" />
+		<result column="salary" property="salary" />
+		<result column="emp_classify" property="empClassify" />
+		<result column="emp_base" property="empBase" />
 		<result column="start_month" property="startMonth" />
 		<result column="end_month" property="endMonth" />
-		<result column="chat_history" property="chatHistory" />
+		<result column="in_date" property="inDate" />
+		<result column="out_date" property="outDate" />
 		<result column="business_interface_id" property="businessInterfaceId" />
 		<result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />

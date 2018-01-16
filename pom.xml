@@ -222,6 +222,11 @@
             <artifactId>seaweedFS-client</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.ciicsh.gt1.commonservice</groupId>
+            <artifactId>sheetservice-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 
         <!-- 打包 WAR 包不需要此 jar -->
         <!--<dependency>
@@ -320,6 +325,11 @@
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Business</module>
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Host</module>
 
+        <module>./JoyingInterface/JoyingInterfaceService-Api</module>
+        <module>./JoyingInterface/JoyingInterfaceService-Business</module>
+        <module>./JoyingInterface/JoyingInterfaceService-Dao</module>
+        <module>./JoyingInterface/JoyingInterfaceService-Entity</module>
+        <module>./JoyingInterface/JoyingInterfaceService-Host</module>
         <!--<module>./Job/FundJob/FundJob-Host</module>
         <module>./Job/FundJob/FundJob-Dao</module>
         <module>./Job/FundJob/FundJob-Business</module>

@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.bo.GiftFormSendWay;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.MarketActivityPO;
 
 /**
@@ -30,4 +31,12 @@ public interface MarketActivityQueryService extends IService<MarketActivityPO> {
      * @return
      */
     MarketActivityPO queryMarketInformation(MarketActivityPO marketActivityPO);
+
+    /**
+     * 查询活动--派送方式--礼品形式下拉框
+     *
+     * @param marketActivityPO
+     * @return
+     */
+    GiftFormSendWay queryGiftFormAndSendWayList(MarketActivityPO marketActivityPO);
 }

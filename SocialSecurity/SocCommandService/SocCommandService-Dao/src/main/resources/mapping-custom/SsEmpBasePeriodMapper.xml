@@ -14,4 +14,7 @@
         AND sebp.is_active = 1
         ORDER BY sebp.emp_base_period_id DESC
     </select>
+    <update id="updateEndMonthById">
+        UPDATE ss_emp_base_period SET end_month= NULL WHERE emp_base_period_id=#{empBasePeriodId}
+    </update>
 </mapper>

@@ -7,6 +7,8 @@ import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApprovalStepPO;
  * <p>
  * 审批步骤记录表 Mapper 接口
  * </p>
+ *
+ * @author xiweizhen
  */
 public interface ApprovalStepQueryMapper extends BaseMapper<ApprovalStepPO> {
 

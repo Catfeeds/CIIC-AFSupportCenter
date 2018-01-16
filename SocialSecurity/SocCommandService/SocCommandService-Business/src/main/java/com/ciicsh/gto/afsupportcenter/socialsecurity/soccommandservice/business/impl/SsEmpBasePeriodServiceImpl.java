@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmp
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpBasePeriodMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBaseDetail;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBasePeriod;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,8 +59,34 @@ public class SsEmpBasePeriodServiceImpl extends ServiceImpl<SsEmpBasePeriodMappe
         });
     }
 
+    @Transactional
+    @Override
+    public void saveAdjustmentPeriod(SsEmpBasePeriod ssEmpBasePeriod, List<SsEmpBasePeriod> newEmpBasePeriodList) {
+
+        SsEmpBasePeriod period = new SsEmpBasePeriod();
+        //截止endMonth
+        baseMapper.updateById(ssEmpBasePeriod);
+        //追加调整的月份
+        if (CollectionUtils.isNotEmpty(newEmpBasePeriodList)) {
+            this.insertBatch(newEmpBasePeriodList);
+        }
+    }
+
     @Override
     public List<SsEmpBasePeriod> queryPeriodByEmpArchiveId(String empArchiveId) {
         return baseMapper.queryPeriodByEmpArchiveId(empArchiveId);
+    }
+
+    @Override
+    public void updateEndMonthById(SsEmpBasePeriod ssEmpBasePeriod) {
+        baseMapper.updateEndMonthById(ssEmpBasePeriod);
+    }
+
+    @Override
+    public void saveBackPeriod(List<SsEmpBasePeriod> newEmpBasePeriodList) {
+        //追加调整的月份
+        if (CollectionUtils.isNotEmpty(newEmpBasePeriodList)) {
+            this.insertBatch(newEmpBasePeriodList);
+        }
     }
 }

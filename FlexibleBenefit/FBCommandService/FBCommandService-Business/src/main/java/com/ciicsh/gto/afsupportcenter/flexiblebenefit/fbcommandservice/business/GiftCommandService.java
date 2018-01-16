@@ -15,6 +15,12 @@ import java.io.InputStream;
  * @since 2017-12-18
  */
 public interface GiftCommandService extends IService<GiftPO> {
+    /**
+     * 查询
+     *
+     * @param id
+     * @return
+     */
     GiftPO findById(Integer id);
 
     /**

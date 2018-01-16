@@ -29,6 +29,12 @@ public class GiftCommandServiceImpl extends ServiceImpl<GiftCommandMapper, GiftP
 
     @Override
     public Boolean updateGift(GiftPO giftPO) {
+        /**
+         * 更新礼品数量为0时，自动下架
+         */
+        if (giftPO.getNumber() == 0) {
+            giftPO.setStatus(1);
+        }
         Integer t = baseMapper.updateByPrimaryKeySelective(giftPO);
         return null != t && t.intValue() >= 1;
     }
