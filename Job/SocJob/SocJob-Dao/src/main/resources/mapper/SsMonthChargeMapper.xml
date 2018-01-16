@@ -101,7 +101,8 @@
         WHEN 4 THEN '补缴'
         WHEN 5 THEN '调整'
         WHEN 6 THEN '转出'
-	    ELSE '封存' END AS 'category_name'
+        WHEN 7 THEN '封存'
+	    ELSE '逆调' END AS 'category_name'
     </sql>
 
 </mapper>

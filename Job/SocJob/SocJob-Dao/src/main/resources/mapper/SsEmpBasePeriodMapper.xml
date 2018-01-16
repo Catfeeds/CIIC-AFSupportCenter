@@ -151,7 +151,7 @@
 			b.employee_id,
 			b.com_account_id,
 			5 AS 'category',
-			'顺向调整' AS 'category_name'
+			'调整' AS 'category_name'
         FROM ss_emp_base_period a
         INNER JOIN ss_emp_archive b on a.emp_archive_id = a.emp_archive_id
         INNER JOIN ss_emp_task c ON a.emp_task_id = c.emp_task_id
@@ -162,28 +162,6 @@
         AND a.ss_month = #{ssMonth}
         AND b.com_account_id = #{comAccountId}
         AND c.handle_month = #{ssMonth}
-        UNION
-        SELECT
-            a.emp_base_adjust_id AS 'emp_base_period_id',
-            a.emp_archive_id,
-            a.new_base_amount AS 'base_amount',
-            '' AS 'total_amount',
-            a.start_month,
-            a.end_month,
-            a.ss_month,
-            '' AS 'ss_month_stop',
-            '' AS 'ss_month_belong',
-            b.company_id,
-            b.employee_id,
-            b.com_account_id,
-            5 AS 'category',
-            '逆向调整' AS 'category_name'
-        FROM ss_emp_base_adjust a
-        INNER JOIN ss_emp_archive b ON a.emp_archive_id = b.emp_archive_id
-        WHERE a.is_active = 1
-        AND b.is_active = 1
-        AND a.ss_month = #{ssMonth}
-        AND b.com_account_id = #{comAccountId}
         UNION
         SELECT
 			a.emp_base_period_id,
@@ -261,6 +239,28 @@
         AND c.task_category = 7
         AND b.com_account_id = #{comAccountId}
         AND c.handle_month = #{ssMonth}
+        UNION
+        SELECT
+            a.emp_base_adjust_id AS 'emp_base_period_id',
+            a.emp_archive_id,
+            a.new_base_amount AS 'base_amount',
+            '' AS 'total_amount',
+            a.start_month,
+            a.end_month,
+            a.ss_month,
+            '' AS 'ss_month_stop',
+            '' AS 'ss_month_belong',
+            b.company_id,
+            b.employee_id,
+            b.com_account_id,
+            9 AS 'category',
+            '逆调' AS 'category_name'
+        FROM ss_emp_base_adjust a
+        INNER JOIN ss_emp_archive b ON a.emp_archive_id = b.emp_archive_id
+        WHERE a.is_active = 1
+        AND b.is_active = 1
+        AND a.ss_month = #{ssMonth}
+        AND b.com_account_id = #{comAccountId}
     </select>
 
 

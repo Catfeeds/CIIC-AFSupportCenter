@@ -291,20 +291,16 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
             case 2:
             case 3:
             case 4:
+            case 5:
             case 6:
             case 7:
                 this.createNoMonthChangeInfoByBasePeriod(ext);
                 break;
-            case 5:
-                if(ext.getCategoryName().equals("逆向调整")){
-                    this.createNoMonthChangeInfoByBaseAdjust(ext);
-                }
-                else{
-                    this.createNoMonthChangeInfoByBasePeriod(ext);
-                }
-                break;
             case 8:
                 this.createNoStandardMonthChargeByRefund(ext);
+                break;
+            case 9:
+                this.createNoMonthChangeInfoByBaseAdjust(ext);
                 break;
             default:
                 break;
@@ -556,7 +552,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         changeDetail.setBaseAmount(chargeExt.getBaseAmount());
         changeDetail.setSsType(chargeExt.getSsType());
         changeDetail.setSsTypeName(chargeExt.getSsTypeName());
-        if(category != 4){
+        if(category != 4 && category != 9){
             changeDetail.setComAmount(chargeExts.stream().map(p->p.getComAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y)));
             changeDetail.setEmpAmount(chargeExts.stream().map(p->p.getEmpAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y)));
         }
