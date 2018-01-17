@@ -45,4 +45,22 @@ public class CommonUtils {
         }
         return monthStrs;
     }
+
+    /**
+     *  支付年月：如果运行Job是每月16-最后一天，那么支付年月=系统时间的当月，如果运行Job是每月1-15，那么支付年月=系统时间的月份-1 （上月)
+     * @return
+     */
+    public static String getPaymentMonth(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMM");
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DATE);
+        if(day > 15){
+            return dateFormat.format(calendar.getTime());
+        }
+        else
+        {
+            calendar.add(Calendar.MONTH,-1);
+            return dateFormat.format(calendar.getTime());
+        }
+    }
 }

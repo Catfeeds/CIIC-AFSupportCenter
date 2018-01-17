@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socjob.controller;
 
 import com.ciicsh.gto.afsupportcenter.socjob.service.SsPaymentComService;
+import com.ciicsh.gto.afsupportcenter.socjob.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +19,7 @@ public class TestController {
 
     @RequestMapping("/create")
     public String create() throws ParseException{
-        String paymentMonth = "201707";
+        String paymentMonth = CommonUtils.getPaymentMonth();
         paymentComService.generateSocPaymentInfo(paymentMonth);
         return "完成";
     }
