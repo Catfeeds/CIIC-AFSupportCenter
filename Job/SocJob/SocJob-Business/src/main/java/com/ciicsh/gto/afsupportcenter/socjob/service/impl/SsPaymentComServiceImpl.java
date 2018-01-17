@@ -84,7 +84,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
 
                         /*****生成雇员社保明细****/
                         //如果数据已经存在，先删除已经存在的数据
-                        this.delMonthChangeInfos(accountComExt,paymentMonth);
+                        this.delMonthChangeInfos(accountComExt.getComAccountId(),paymentMonth);
 
                         //生成标准明细
                         List<SsEmpBaseArchiveExt> empBaseArchiveExts = empBasePeriodMapper.getEmpBaseArchiveExts(accountComExt.getComAccountId(),paymentMonth);
@@ -100,9 +100,9 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
 
                         /******生成变更汇总表*****/
                         //如果变更汇总表已经存在，先删除存在的数据
-                        this.delMonthEmpChangeInfos(accountComExt,paymentMonth);
+                        this.delMonthEmpChangeInfos(accountComExt.getComAccountId(),paymentMonth);
                         //生成变更汇总表
-                        this.createMonthEmpCharge(accountComExt,paymentMonth);
+                        this.createMonthEmpCharge(accountComExt.getComAccountId(),paymentMonth);
 
                         //生成社保通知书
                     }
@@ -133,26 +133,26 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
 
     /**
      * 根据条件删除月度缴费明细信息以及详细信息
-     * @param ext 雇员本地社保档案扩展信息
+     * @param comAccountId 企业社保账户
      * @param paymentMonth 支付年月
      */
-    private void delMonthChangeInfos(SsAccountComExt ext, String paymentMonth){
-        List<SsMonthCharge> monthCharges = monthChargeMapper.getMonthChangesByCondition(ext.getComAccountId(),paymentMonth);
+    private void delMonthChangeInfos(long comAccountId, String paymentMonth){
+        List<SsMonthCharge> monthCharges = monthChargeMapper.getMonthChangesByCondition(comAccountId,paymentMonth);
         if(null != monthCharges && monthCharges.size() > 0){
-            monthChargeMapper.delByCondition(ext.getComAccountId(),paymentMonth);
+            monthChargeMapper.delByCondition(comAccountId,paymentMonth);
             monthCharges.forEach(x->monthChargeItemMapper.delByMonthChargeId(x.getMonthChargeId()));
         }
     }
 
     /**
      * 根据条件删除雇员月度变更主表信息以及详细信息
-     * @param ext 雇员本地社保档案扩展信息
+     * @param comAccountId 企业社保账户
      * @param paymentMonth 支付年月
      */
-    private void delMonthEmpChangeInfos(SsAccountComExt ext, String paymentMonth){
-        List<SsMonthEmpChange> monthEmpChanges = monthEmpChangeMapper.getMonthEmpChangesByCondition(ext.getComAccountId(),paymentMonth);
+    private void delMonthEmpChangeInfos(long comAccountId, String paymentMonth){
+        List<SsMonthEmpChange> monthEmpChanges = monthEmpChangeMapper.getMonthEmpChangesByCondition(comAccountId,paymentMonth);
         if(null != monthEmpChanges && monthEmpChanges.size() > 0){
-           monthEmpChangeMapper.delMonthEmpChangeByfCondition(ext.getComAccountId(),paymentMonth);
+           monthEmpChangeMapper.delMonthEmpChangeByfCondition(comAccountId,paymentMonth);
            monthEmpChanges.forEach(x->monthEmpChangeDetailMapper.delByMonthEmpChangeId(x.getMonthEmpChangeId()));
         }
     }
@@ -222,9 +222,8 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         List<SsEmpBaseDetail> baseDetails = empBaseDetailMapper.getEmpBaseDetailsByPeriodId(ext.getEmpBasePeriodId());
         if(null != baseDetails && baseDetails.size() > 0){
             BigDecimal totalAmount = baseDetails.stream()
-                    .map(i -> i.getComAmount().add(i.getComAdditionAmount()).add(i.getEmpAmount()).add(i.getEmpAdditionAmount()))
-                    .reduce(new BigDecimal(0), (x, y)-> x.add(y));
-
+                .map(i -> i.getComAmount().add(i.getComAdditionAmount()).add(i.getEmpAmount()).add(i.getEmpAdditionAmount()))
+                .reduce(new BigDecimal(0), (x, y)-> x.add(y));
             SsMonthCharge monthCharge = addStandardMonthCharge(ext,paymentMonth,totalAmount);
             if(null != monthCharge){
                 baseDetails.forEach(x->addStandardMonthChargeItem(x,monthCharge.getMonthChargeId()));
@@ -255,7 +254,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         monthCharge.setModifiedTime(LocalDateTime.now());
         monthCharge.setModifiedBy("system");
         monthChargeMapper.insert(monthCharge);
-        return monthChargeMapper.selectOne(monthCharge);
+        return monthCharge;
     }
 
 
@@ -367,7 +366,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         monthCharge.setModifiedTime(LocalDateTime.now());
         monthCharge.setModifiedBy("system");
         monthChargeMapper.insert(monthCharge);
-        return monthChargeMapper.selectOne(monthCharge);
+        return monthCharge;
     }
 
 
@@ -454,11 +453,11 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
 
     /**
      * 生成雇员月度变更信息
-     * @param ext
+     * @param comAccountId 企业社保账户
      * @param paymentMonth
      */
-    private void createMonthEmpCharge(SsAccountComExt ext, String paymentMonth){
-        List<SsMonthChargeExt> monthChargeExts = monthChargeMapper.getSsMonthChargeExts(ext.getComAccountId(),paymentMonth);
+    private void createMonthEmpCharge(long comAccountId, String paymentMonth){
+        List<SsMonthChargeExt> monthChargeExts = monthChargeMapper.getSsMonthChargeExts(comAccountId,paymentMonth);
         List<SsMonthChargeExt> yysMonthChargeExts = new ArrayList<>();
         List<SsMonthChargeExt> gsyMonthChargeExts = new ArrayList<>();
         if(null != monthChargeExts && monthChargeExts.size()>0){
@@ -467,14 +466,14 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         }
 
         if(null != yysMonthChargeExts && yysMonthChargeExts.size() > 0){
-            SsMonthEmpChange monthEmpChange = addMonthEmpChange(ext.getComAccountId(),paymentMonth, ComputeType.YYS.toString());
+            SsMonthEmpChange monthEmpChange = addMonthEmpChange(comAccountId,paymentMonth, ComputeType.YYS.toString());
             if(monthEmpChange != null){
                 this.createSsMonthEmpChangeDetial(monthEmpChange,yysMonthChargeExts);
             }
         }
 
         if(null != gsyMonthChargeExts && gsyMonthChargeExts.size() > 0){
-            SsMonthEmpChange monthEmpChange = addMonthEmpChange(ext.getComAccountId(),paymentMonth, ComputeType.GSY.toString());
+            SsMonthEmpChange monthEmpChange = addMonthEmpChange(comAccountId,paymentMonth, ComputeType.GSY.toString());
             if(monthEmpChange != null){
                 this.createSsMonthEmpChangeDetial(monthEmpChange,gsyMonthChargeExts);
             }
@@ -503,7 +502,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         ssMonthEmpChange.setModifiedTime(LocalDateTime.now());
         ssMonthEmpChange.setModifiedBy("system");
         monthEmpChangeMapper.insert(ssMonthEmpChange);
-        return monthEmpChangeMapper.selectOne(ssMonthEmpChange);
+        return ssMonthEmpChange;
     }
 
 

@@ -14,7 +14,6 @@ import java.util.List;
  * 雇员月度费用明细项目 Mapper 接口
  * </p>
  */
-
 @Mapper
 @Component
 public interface SsMonthChargeItemMapper extends BaseMapper<SsMonthChargeItem> {
