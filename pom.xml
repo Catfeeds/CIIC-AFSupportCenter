@@ -337,11 +337,12 @@
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Business</module>
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Host</module>
 
-        <module>./JoyingInterface/JoyingInterfaceService-Api</module>
-        <module>./JoyingInterface/JoyingInterfaceService-Business</module>
-        <module>./JoyingInterface/JoyingInterfaceService-Dao</module>
-        <module>./JoyingInterface/JoyingInterfaceService-Entity</module>
-        <module>./JoyingInterface/JoyingInterfaceService-Host</module>
+        <!--<module>./JoyingInterface/JoyingInterfaceService-Api</module>-->
+        <!--<module>./JoyingInterface/JoyingInterfaceService-Business</module>-->
+        <!--<module>./JoyingInterface/JoyingInterfaceService-Dao</module>-->
+        <!--<module>./JoyingInterface/JoyingInterfaceService-Entity</module>-->
+        <!--<module>./JoyingInterface/JoyingInterfaceService-Host</module>-->
+
         <!--<module>./Job/FundJob/FundJob-Host</module>
         <module>./Job/FundJob/FundJob-Dao</module>
         <module>./Job/FundJob/FundJob-Business</module>

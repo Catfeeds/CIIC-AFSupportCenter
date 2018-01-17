@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.credentialscommandservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
-import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMaterialPO;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMaterial;
 
 /**
  * <p>
@@ -11,6 +11,6 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMa
  * @author guwei
  * @since 2018-01-15
  */
-public interface TaskMaterialService extends IService<TaskMaterialPO> {
+public interface TaskMaterialService extends IService<TaskMaterial> {
 	
 }

@@ -15,8 +15,8 @@ import java.util.Date;
  * @Description: 证件办理任务单
  * @Date: Created in 15:12 2018/1/15
  */
-@TableName("cmy_af_task")
-public class TaskPO extends Model<TaskPO> {
+@TableName("cm_task")
+public class Task extends Model<Task> {
 
     private static final long serialVersionUID = 1L;
 
@@ -403,7 +403,7 @@ public class TaskPO extends Model<TaskPO> {
 
     @Override
     public String toString() {
-        return "TaskPO{" +
+        return "Task{" +
             "taskId=" + taskId +
             ", employeeId=" + employeeId +
             ", companyId=" + companyId +

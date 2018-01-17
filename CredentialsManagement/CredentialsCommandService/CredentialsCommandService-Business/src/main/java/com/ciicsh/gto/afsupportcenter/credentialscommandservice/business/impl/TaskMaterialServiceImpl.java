@@ -4,7 +4,7 @@ package com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.impl;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskMaterialService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.TaskMaterialMapper;
-import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMaterialPO;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMaterial;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,6 +16,6 @@ import org.springframework.stereotype.Service;
  * @since 2018-01-15
  */
 @Service
-public class TaskMaterialServiceImpl extends ServiceImpl<TaskMaterialMapper, TaskMaterialPO> implements TaskMaterialService {
+public class TaskMaterialServiceImpl extends ServiceImpl<TaskMaterialMapper, TaskMaterial> implements TaskMaterialService {
 	
 }

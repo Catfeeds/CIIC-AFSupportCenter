@@ -14,8 +14,8 @@ import java.util.Date;
  * @Description: 证件任务单材料
  * @Date: Created in 15:13 2018/1/15
  */
-@TableName("cmy_af_task_material")
-public class TaskMaterialPO extends Model<TaskMaterialPO> {
+@TableName("cm_task_material")
+public class TaskMaterial extends Model<TaskMaterial> {
 
     private static final long serialVersionUID = 1L;
 
@@ -183,7 +183,7 @@ public class TaskMaterialPO extends Model<TaskMaterialPO> {
 
     @Override
     public String toString() {
-        return "TaskMaterialPO{" +
+        return "TaskMaterial{" +
             "taskMaterialId=" + taskMaterialId +
             ", taskId=" + taskId +
             ", employeeId=" + employeeId +

@@ -3,7 +3,7 @@
 <mapper namespace="com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.MaterialTypeRelationMapper">
 
 	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.MaterialTypeRelationPO">
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.MaterialTypeRelation">
 		<id column="material_type_relation_id" property="materialTypeRelationId" />
 		<result column="credentials_type" property="credentialsType" />
 		<result column="credentials_deal_type" property="credentialsDealType" />

@@ -3,7 +3,7 @@
 <mapper namespace="com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.TaskMapper">
 
 	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskPO">
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Task">
 		<id column="task_id" property="taskId" />
 		<result column="employee_id" property="employeeId" />
 		<result column="company_id" property="companyId" />

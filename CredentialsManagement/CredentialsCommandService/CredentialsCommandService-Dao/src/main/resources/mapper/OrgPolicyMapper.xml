@@ -3,7 +3,7 @@
 <mapper namespace="com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.OrgPolicyMapper">
 
 	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.OrgPolicyPO">
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.OrgPolicy">
 		<id column="org_poilcy_id" property="orgPoilcyId" />
 		<result column="name" property="name" />
 		<result column="type" property="type" />
@@ -15,11 +15,11 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
-    <select id="select">
+    <select id="select" resultMap="BaseResultMap">
       SELECT
       <include refid="SEL_ALL_COLLUMS"></include>
       FROM
-      cmy_af_org_policy
+      cm_org_policy
       <include refid="SEL_LIST_WHERR"></include>
     </select>
 

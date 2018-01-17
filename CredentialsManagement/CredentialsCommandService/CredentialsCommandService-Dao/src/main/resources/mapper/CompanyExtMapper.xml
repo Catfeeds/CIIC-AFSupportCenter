@@ -3,7 +3,7 @@
 <mapper namespace="com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.CompanyExtMapper">
 
 	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.CompanyExtPO">
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.CompanyExt">
 		<id column="company_ext_id" property="companyExtId" />
 		<result column="company_id" property="companyId" />
 		<result column="credentials_type" property="credentialsType" />
@@ -11,7 +11,7 @@
 		<result column="operate_account" property="operateAccount" />
 		<result column="operate_pwd" property="operatePwd" />
 		<result column="operate_type" property="operateType" />
-		<result column="charge _type" property="charge Type" />
+		<result column="charge_type" property="chargeType" />
 		<result column="special_charge_remark" property="specialChargeRemark" />
 		<result column="pay_type" property="payType" />
 		<result column="introduce_mail" property="introduceMail" />
@@ -29,5 +29,69 @@
 		<result column="created_by" property="createdBy" />
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
+
+    <select id="selectBYCompanyId" resultMap="BaseResultMap">
+      SELECT
+      <include refid="SEL_ALL_COLUMNS"></include>
+      FROM
+      cm_company_ext
+      WHERE
+      company_id = #{companyId}
+    </select>
+
+    <update id="updateBycompanyIdAndType">
+        UPDATE cmy_af_company_ext
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="operate_account != null and operate_account != ''">operate_account = #{operateAccount},</if>
+            <if test="operate_pwd != null and operate_pwd != ''">operate_pwd = #{operatePwd},</if>
+            <if test="operate_type != null and operate_type != ''">operate_type = #{operateType},</if>
+            <if test="charge_type != null and charge_type != ''">charge_type = #{chargeType},</if>
+            <if test="special_charge_remark != null and special_charge_remark != ''">special_charge_remark = #{specialChargeRemark},</if>
+            <if test="pay_type != null and pay_type != ''">pay_type = #{payType},</if>
+            <if test="introduce_mail != null and introduce_mail != ''">introduce_mail = #{introduceMail},</if>
+            <if test="online_contact_id_card != null and online_contact_id_card != ''">online_contact_id_card = #{onlineContactIdCard},</if>
+            <if test="online_contact_is_secretariat != null and online_contact_is_secretariat != ''">online_contact_is_secretariat = #{onlineContactIsSecretariat},</if>
+            <if test="online_contact != null and online_contact != ''">online_contact = #{onlineContact},</if>
+            <if test="business_licence != null and business_licence != ''">business_licence = #{businessLicence},</if>
+            <if test="organization_code != null and organization_code != ''">organization_code = #{organizationCode},</if>
+            <if test="foreign_business_approval_certificate != null and foreign_business_approval_certificate != ''">foreign_business_approval_certificate = #{foreignBusinessApprovalCertificate},</if>
+            <if test="business_rename_notice != null and business_rename_notice != ''">business_rename_notice = #{businessRenameNotice},</if>
+            <if test="special_material_remark != null and special_material_remark != ''">special_material_remark = #{specialMaterialRemark},</if>
+            modified_by = #{modifiedBy},
+            modified_time = sysdate()
+        </set>
+        where
+        company_id = #{companyId}
+        AND
+        credentials_type = #{credentialsType}
+    </update>
+
+    <sql id="SEL_ALL_COLUMNS">
+        company_ext_id,
+        company_id,
+        credentials_type,
+        name,
+        operate_account,
+        operate_pwd,
+        operate_type,
+        charge _type,
+        special_charge_remark,
+        pay_type,
+        introduce_mail,
+        online_contact_id_card,
+        online_contact_is_secretariat,
+        online_contact,
+        business_licence,
+        organization_code,
+        foreign_business_approval_certificate,
+        business_rename_notice,
+        special_material_remark,
+        is_active,
+        created_time,
+        modified_time,
+        created_by,
+        modified_by
+    </sql>
 
 </mapper>

@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao;
 
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskFollowPO;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskFollow;
 
 /**
  * <p>
@@ -12,6 +12,6 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskFo
  * @author guwei
  * @since 2018-01-15
  */
-public interface TaskFollowMapper extends BaseMapper<TaskFollowPO> {
+public interface TaskFollowMapper extends BaseMapper<TaskFollow> {
 
 }

@@ -14,8 +14,8 @@ import java.util.Date;
  * @Description: 客户数据维护（客户扩展表）
  * @Date: Created in 15:08 2018/1/15
  */
-@TableName("cmy_af_company_ext")
-public class CompanyExtPO extends Model<CompanyExtPO> {
+@TableName("cm_company_ext")
+public class CompanyExt extends Model<CompanyExt> {
 
     private static final long serialVersionUID = 1L;
 
@@ -339,7 +339,7 @@ public class CompanyExtPO extends Model<CompanyExtPO> {
 
     @Override
     public String toString() {
-        return "CompanyExtPO{" +
+        return "CompanyExt{" +
             "companyExtId=" + companyExtId +
             ", companyId=" + companyId +
             ", credentialsType=" + credentialsType +

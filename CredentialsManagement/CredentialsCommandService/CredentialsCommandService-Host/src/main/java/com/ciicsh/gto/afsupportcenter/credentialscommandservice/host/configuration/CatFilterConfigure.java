@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.configuration;
 
-import com.ciicsh.gto.companycenter.webcommandservice.host.interceptor.CatInterceptor;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.interceptor.CatInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 

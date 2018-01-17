@@ -4,7 +4,8 @@ package com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.impl;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.CompanyExtService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.CompanyExtMapper;
-import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.CompanyExtPO;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.CompanyExt;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,15 +19,19 @@ import java.util.List;
  * @since 2018-01-15
  */
 @Service
-public class CompanyExtServiceImpl extends ServiceImpl<CompanyExtMapper, CompanyExtPO> implements CompanyExtService {
+public class CompanyExtServiceImpl extends ServiceImpl<CompanyExtMapper, CompanyExt> implements CompanyExtService {
+
+    @Autowired
+    private CompanyExtMapper companyExtMapper;
 
     @Override
-    public List<CompanyExtPO> selectBycompanyId(String companyId) {
-        return null;
+    public List<CompanyExt> selectBycompanyId(String companyId) {
+        return companyExtMapper.selectBYCompanyId(companyId);
     }
 
     @Override
-    public boolean updateBycompanyIdAndType(String companyId, String credentialsType) {
-        return false;
+    public boolean updateBycompanyIdAndType(CompanyExt companyExt) {
+        int row = companyExtMapper.updateBycompanyIdAndType(companyExt);
+        return row == 1 ? true : false;
     }
 }

@@ -5,6 +5,8 @@ import com.ciicsh.gto.afsupportcenter.util.config.CustomConfiguration;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Import;
 
@@ -16,10 +18,14 @@ import org.springframework.context.annotation.Import;
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.credentialscommandservice"})
 @EnableDiscoveryClient
 @Import({CustomConfiguration.class, MybatisPlusConfig.class})
-public class CredentialsApp {
+public class CredentialsApp extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         SpringApplication.run(CredentialsApp.class, args);
     }
 
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(CredentialsApp.class);
+    }
 }

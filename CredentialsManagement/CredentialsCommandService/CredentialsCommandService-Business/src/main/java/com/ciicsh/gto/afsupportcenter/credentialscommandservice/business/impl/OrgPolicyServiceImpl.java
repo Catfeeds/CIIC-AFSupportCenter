@@ -4,7 +4,7 @@ package com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.impl;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.OrgPolicyService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.OrgPolicyMapper;
-import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.OrgPolicyPO;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.OrgPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,18 +19,18 @@ import java.util.List;
  * @since 2018-01-15
  */
 @Service
-public class OrgPolicyServiceImpl extends ServiceImpl<OrgPolicyMapper, OrgPolicyPO> implements OrgPolicyService {
+public class OrgPolicyServiceImpl extends ServiceImpl<OrgPolicyMapper, OrgPolicy> implements OrgPolicyService {
 
     @Autowired
     private OrgPolicyMapper orgPolicyMapper;
 
     @Override
-    public List<OrgPolicyPO> select(OrgPolicyPO orgPolicyPO) {
-        return orgPolicyMapper.select(orgPolicyPO);
+    public List<OrgPolicy> select(OrgPolicy orgPolicy) {
+        return orgPolicyMapper.select(orgPolicy);
     }
 
     @Override
-    public OrgPolicyPO selectItem(OrgPolicyPO orgPolicyPO) {
-        return orgPolicyMapper.selectItem(orgPolicyPO);
+    public OrgPolicy selectItem(OrgPolicy orgPolicy) {
+        return orgPolicyMapper.selectItem(orgPolicy);
     }
 }

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.OrgPolicyService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.OrgPolicyPageDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.OrgPolicyQueryDTO;
-import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.OrgPolicyPO;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.OrgPolicy;
 import com.ciicsh.gto.afsupportcenter.util.page.PageUtil;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
 import org.springframework.beans.BeanUtils;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
  * @Date: Created in 17:06 2018/1/16
  */
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api/orgPolicy")
 public class OrgPolicyController {
 
     @Autowired
@@ -33,12 +34,12 @@ public class OrgPolicyController {
     @GetMapping("/find")
     public JsonResult getPage(Integer pageNum, Integer pageSize, OrgPolicyQueryDTO orgPolicyQueryDTO){
         Page page = new Page(PageUtil.setPageNum(pageNum), PageUtil.setPageSize(pageSize));
-        OrgPolicyPO orgPolicyPO = new OrgPolicyPO();
+        OrgPolicy orgPolicy = new OrgPolicy();
         if (orgPolicyQueryDTO != null) {
-            orgPolicyPO.setName(orgPolicyQueryDTO.getName());
-            orgPolicyPO.setType(orgPolicyQueryDTO.getType());
+            orgPolicy.setName(orgPolicyQueryDTO.getName());
+            orgPolicy.setType(orgPolicyQueryDTO.getType());
         }
-        List<OrgPolicyPO> resultList = orgPolicyService.select(orgPolicyPO);
+        List<OrgPolicy> resultList = orgPolicyService.select(orgPolicy);
         resultList.stream().map(item -> {
             OrgPolicyPageDTO orgPolicyPageDTO = new OrgPolicyPageDTO();
             BeanUtils.copyProperties(item, orgPolicyPageDTO);
@@ -50,9 +51,13 @@ public class OrgPolicyController {
 
     @PostMapping("/saveOrUpdate")
     public JsonResult saveOrUpdateItem(OrgPolicyPageDTO orgPolicyPageDTO){
-        OrgPolicyPO orgPolicyPO = new OrgPolicyPO();
-        BeanUtils.copyProperties(orgPolicyPageDTO, orgPolicyPO);
-        return JsonResult.success(orgPolicyService.insertOrUpdate(orgPolicyPO));
+        OrgPolicy orgPolicy = new OrgPolicy();
+        BeanUtils.copyProperties(orgPolicyPageDTO, orgPolicy);
+        if (orgPolicy.getOrgPoilcyId() == null ) {
+            orgPolicy.setCreatedBy("gu");
+            orgPolicy.setCreatedTime(new Date());
+        }
+        return JsonResult.success(orgPolicyService.insertOrUpdate(orgPolicy));
     }
 
     @DeleteMapping("/delete")

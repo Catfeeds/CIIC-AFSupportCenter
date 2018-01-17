@@ -3,7 +3,7 @@ package com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.impl;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.TaskMapper;
-import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskPO;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Task;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2018-01-15
  */
 @Service
-public class TaskServiceImpl extends ServiceImpl<TaskMapper, TaskPO> implements TaskService {
+public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements TaskService {
 	
 }

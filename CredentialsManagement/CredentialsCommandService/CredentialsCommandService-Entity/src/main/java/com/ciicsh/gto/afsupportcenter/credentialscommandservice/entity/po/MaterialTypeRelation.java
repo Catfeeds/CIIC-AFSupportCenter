@@ -14,8 +14,8 @@ import java.util.Date;
  * @Description: 证件类型与材料关系表
  * @Date: Created in 15:10 2018/1/15
  */
-@TableName("cmy_af_material_type_relation")
-public class MaterialTypeRelationPO extends Model<MaterialTypeRelationPO> {
+@TableName("cm_material_type_relation")
+public class MaterialTypeRelation extends Model<MaterialTypeRelation> {
 
     private static final long serialVersionUID = 1L;
 
@@ -196,7 +196,7 @@ public class MaterialTypeRelationPO extends Model<MaterialTypeRelationPO> {
 
     @Override
     public String toString() {
-        return "MaterialTypeRelationPO{" +
+        return "MaterialTypeRelation{" +
             "materialTypeRelationId=" + materialTypeRelationId +
             ", credentialsType=" + credentialsType +
             ", credentialsDealType=" + credentialsDealType +

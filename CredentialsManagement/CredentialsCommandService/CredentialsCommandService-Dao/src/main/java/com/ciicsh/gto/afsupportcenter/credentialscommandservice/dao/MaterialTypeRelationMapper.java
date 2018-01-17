@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao;
 
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.MaterialTypeRelationPO;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.MaterialTypeRelation;
 
 /**
  * <p>
@@ -12,6 +12,6 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Materi
  * @author guwei
  * @since 2018-01-15
  */
-public interface MaterialTypeRelationMapper extends BaseMapper<MaterialTypeRelationPO> {
+public interface MaterialTypeRelationMapper extends BaseMapper<MaterialTypeRelation> {
 
 }

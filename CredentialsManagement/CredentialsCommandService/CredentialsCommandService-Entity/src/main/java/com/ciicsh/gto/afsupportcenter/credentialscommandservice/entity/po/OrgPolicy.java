@@ -11,24 +11,32 @@ import java.util.Date;
 
 /**
  * @Author: guwei
- * @Description: 任务跟进
- * @Date: Created in 15:13 2018/1/15
+ * @Description: 办理机构政策
+ * @Date: Created in 15:11 2018/1/15
  */
-@TableName("cmy_af_task_follow")
-public class TaskFollowPO extends Model<TaskFollowPO> {
+@TableName("cm_orgPolicy")
+public class OrgPolicy extends Model<OrgPolicy> {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 主键：任务单跟踪id
+     * 主键:办理机构政策id
      */
-    @TableId(value="task_follow_id", type= IdType.AUTO)
-    private Long taskFollowId;
+    @TableId(value="org_poilcy_id", type= IdType.AUTO)
+    private Long orgPoilcyId;
     /**
-     * 跟进内容
+     * 机构名称
      */
-    @TableField("follow_description")
-    private String followDescription;
+    private String name;
+    /**
+     * 证件类型(1：积分办理、2：居住证B证、3：留学生落户、4：居转户、5：夫妻分局、6：人才引进)
+     */
+    private Integer type;
+    /**
+     * 机构政策内容
+     */
+    @TableField("policy_description")
+    private String policyDescription;
     /**
      * 是否可用
      */
@@ -56,20 +64,36 @@ public class TaskFollowPO extends Model<TaskFollowPO> {
     private String modifiedBy;
 
 
-    public Long getTaskFollowId() {
-        return taskFollowId;
+    public Long getOrgPoilcyId() {
+        return orgPoilcyId;
     }
 
-    public void setTaskFollowId(Long taskFollowId) {
-        this.taskFollowId = taskFollowId;
+    public void setOrgPoilcyId(Long orgPoilcyId) {
+        this.orgPoilcyId = orgPoilcyId;
     }
 
-    public String getFollowDescription() {
-        return followDescription;
+    public String getName() {
+        return name;
     }
 
-    public void setFollowDescription(String followDescription) {
-        this.followDescription = followDescription;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public String getPolicyDescription() {
+        return policyDescription;
+    }
+
+    public void setPolicyDescription(String policyDescription) {
+        this.policyDescription = policyDescription;
     }
 
     public Boolean getActive() {
@@ -114,14 +138,16 @@ public class TaskFollowPO extends Model<TaskFollowPO> {
 
     @Override
     protected Serializable pkVal() {
-        return this.taskFollowId;
+        return this.orgPoilcyId;
     }
 
     @Override
     public String toString() {
-        return "TaskFollowPO{" +
-            "taskFollowId=" + taskFollowId +
-            ", followDescription=" + followDescription +
+        return "OrgPolicy{" +
+            "orgPoilcyId=" + orgPoilcyId +
+            ", name=" + name +
+            ", type=" + type +
+            ", policyDescription=" + policyDescription +
             ", isActive=" + isActive +
             ", createdTime=" + createdTime +
             ", modifiedTime=" + modifiedTime +

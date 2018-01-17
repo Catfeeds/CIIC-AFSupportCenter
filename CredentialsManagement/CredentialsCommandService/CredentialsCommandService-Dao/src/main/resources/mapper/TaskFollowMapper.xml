@@ -3,7 +3,7 @@
 <mapper namespace="com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.TaskFollowMapper">
 
 	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskFollowPO">
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskFollow">
 		<id column="task_follow_id" property="taskFollowId" />
 		<result column="follow_description" property="followDescription" />
 		<result column="is_active" property="isActive" />
