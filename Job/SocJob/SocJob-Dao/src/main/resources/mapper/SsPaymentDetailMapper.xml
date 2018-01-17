@@ -22,5 +22,9 @@
 		<result column="created_by" property="createdBy" />
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
+    
+    <select id="delPaymentDetail" resultType="int">
+      DELETE FROM ss_payment_detail WHERE com_account_id = #{comAccountId} AND payment_month = #{paymentMonth}
+    </select>
 
 </mapper>

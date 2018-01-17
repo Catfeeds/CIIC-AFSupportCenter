@@ -14,7 +14,11 @@ public class SsMonthChargeExt {
     private Long monthChargeId;
     private Long comAccountId;
     private String ssMonthBelong;
+    private String ssMonthBelongYy;
+    private String ssMonthBelongMm;
     private String ssMonth;
+    private String ssMonthYy;
+    private String ssMonthMm;
     private String employeeId;
     private BigDecimal baseAmount;
     private String ssType;

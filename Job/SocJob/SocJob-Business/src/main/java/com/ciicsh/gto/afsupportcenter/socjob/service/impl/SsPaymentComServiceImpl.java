@@ -9,6 +9,7 @@ import com.ciicsh.gto.afsupportcenter.socjob.dao.SsMonthChargeMapper;
 import com.ciicsh.gto.afsupportcenter.socjob.dao.SsMonthEmpChangeDetailMapper;
 import com.ciicsh.gto.afsupportcenter.socjob.dao.SsMonthEmpChangeMapper;
 import com.ciicsh.gto.afsupportcenter.socjob.dao.SsPaymentComMapper;
+import com.ciicsh.gto.afsupportcenter.socjob.dao.SsPaymentDetailMapper;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.SsEmpBaseAdjustDetail;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.SsEmpBaseDetail;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.SsMonthCharge;
@@ -16,6 +17,7 @@ import com.ciicsh.gto.afsupportcenter.socjob.entity.SsMonthChargeItem;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.SsMonthEmpChange;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.SsMonthEmpChangeDetail;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.SsPaymentCom;
+import com.ciicsh.gto.afsupportcenter.socjob.entity.SsPaymentDetail;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.custom.SsAccountComExt;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.custom.SsEmpBaseArchiveExt;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.custom.SsEmpBasePeriodExt;
@@ -70,6 +72,9 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
     @Autowired
     private SsMonthEmpChangeDetailMapper monthEmpChangeDetailMapper;
 
+    @Autowired
+    private SsPaymentDetailMapper paymentDetailMapper;
+
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void generateSocPaymentInfo(String paymentMonth) {
@@ -98,13 +103,21 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
                             empBasePeriodExts.forEach(ext->this.createNoStandardMonthChange(ext));
                         }
 
+
+                        // 获取除退账之外的雇员社保明细扩展信息
+                        List<SsMonthChargeExt> allMonthChargeExts = monthChargeMapper.getSsMonthChargeExts(accountComExt.getComAccountId(),paymentMonth);
+
                         /******生成变更汇总表*****/
                         //如果变更汇总表已经存在，先删除存在的数据
                         this.delMonthEmpChangeInfos(accountComExt.getComAccountId(),paymentMonth);
                         //生成变更汇总表
-                        this.createMonthEmpCharge(accountComExt.getComAccountId(),paymentMonth);
+                        this.createMonthEmpCharge(allMonthChargeExts,accountComExt.getComAccountId(),paymentMonth);
 
-                        //生成社保通知书
+                        /*****生成社保通知书*****/
+                        //第一步：如果已经存在数据，先删除
+                        paymentDetailMapper.delPaymentDetail(accountComExt.getComAccountId(),paymentMonth);
+                        //第二步：生成数据
+                        this.createPaymentDetail(allMonthChargeExts,accountComExt.getComAccountId(),paymentMonth);
                     }
                 }
             });
@@ -168,10 +181,10 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         List<SsEmpBasePeriodExt> empBasePeriodExts = empBasePeriodMapper.getEmpBasePeriodExts(comAccountId,paymentMonth);
         if(null != empBasePeriodExts && empBasePeriodExts.size()>0){
             empBasePeriodExts.forEach(ext->{
-                if(ext.getCategory().equals("补缴")){
+                if(ext.getCategory() == 4){
                     this.addEmpBasePeriodExtToList(newEmpBasePeriodExts,ext);
                 }
-                else if(ext.getCategoryName().equals("逆向调整")){
+                else if(ext.getCategory() == 9){
                     this.addEmpBasePeriodExtToList(newEmpBasePeriodExts,ext);
                 }
                 else{
@@ -456,8 +469,8 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
      * @param comAccountId 企业社保账户
      * @param paymentMonth
      */
-    private void createMonthEmpCharge(long comAccountId, String paymentMonth){
-        List<SsMonthChargeExt> monthChargeExts = monthChargeMapper.getSsMonthChargeExts(comAccountId,paymentMonth);
+    private void createMonthEmpCharge(List<SsMonthChargeExt> allMonthChargeExts, long comAccountId,String paymentMonth){
+        List<SsMonthChargeExt> monthChargeExts = allMonthChargeExts.stream().filter(x->x.getCategory() != 1).collect(Collectors.toList());
         List<SsMonthChargeExt> yysMonthChargeExts = new ArrayList<>();
         List<SsMonthChargeExt> gsyMonthChargeExts = new ArrayList<>();
         if(null != monthChargeExts && monthChargeExts.size()>0){
@@ -570,17 +583,193 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
 
 
     /**
+     * 生成月度本地社保应付金额记录明细表
+     * @param allMonthChargeExts
+     * @param comAccountId
+     * @param paymentMonth
+     */
+    private void createPaymentDetail(List<SsMonthChargeExt> allMonthChargeExts, long comAccountId,String paymentMonth){
+        List<SsMonthChargeExt> monthChargeExts = allMonthChargeExts.stream().filter(x->!(x.getCategory() == 9 && (x.getEmpAmount().compareTo(BigDecimal.ZERO) == -1 || x.getComAmount().compareTo(BigDecimal.ZERO) == -1))).collect(Collectors.toList());
+
+        List<SsPaymentDetail> paymentDetails = new ArrayList<>();
+        //单位应缴纳社会保险费
+        List<SsMonthChargeExt> currentYearCom = monthChargeExts.stream().filter(x-> x.getSsMonthBelongYy().equals(x.getSsMonthYy())).collect(Collectors.toList());
+        if(null != currentYearCom && currentYearCom.size() > 0){
+            paymentDetails.add(this.getComPaymentDetail(comAccountId,paymentMonth,1,currentYearCom));
+        }
+        //单位应补缴历年社会保险费
+        List<SsMonthChargeExt> noCurrentYearCom = monthChargeExts.stream().filter(x-> !x.getSsMonthBelongYy().equals(x.getSsMonthYy())).collect(Collectors.toList());
+        if(null != noCurrentYearCom && noCurrentYearCom.size() > 0){
+            paymentDetails.add(this.getComPaymentDetail(comAccountId,paymentMonth,2,noCurrentYearCom));
+        }
+        //个人应缴纳社会保险费
+        List<SsMonthChargeExt> currentMonthEmp = monthChargeExts.stream().filter(x->x.getSsMonthBelong().equals(x.getSsMonth())).collect(Collectors.toList());
+        if(null != currentMonthEmp && currentMonthEmp.size() > 0){
+            paymentDetails.add(this.getEmpPaymentDetail(comAccountId,paymentMonth,3,currentMonthEmp));
+        }
+        //个人应补缴历月社会保险费
+        List<SsMonthChargeExt> noCurrentMonthEmp = monthChargeExts.stream().filter(x->!x.getSsMonthBelong().equals(x.getSsMonth())).collect(Collectors.toList());
+        if(null != noCurrentMonthEmp && noCurrentMonthEmp.size() > 0){
+            paymentDetails.add(this.getEmpPaymentDetail(comAccountId,paymentMonth,4,noCurrentMonthEmp));
+        }
+
+        if(null != paymentDetails && paymentDetails.size() > 0){
+            SsPaymentDetail paymentDetail = new SsPaymentDetail();
+            paymentDetail.setComAccountId(comAccountId);
+            paymentDetail.setPaymentMonth(paymentMonth);
+            paymentDetail.setSeq("9");
+            paymentDetail.setPaymentItem(9);
+            paymentDetail.setPaymentItemName(this.paySeqTable().get(9));
+
+            //养老
+            BigDecimal pensionAmount = paymentDetails.stream().map(p->p.getBasePensionAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
+            paymentDetail.setBasePensionAmount(pensionAmount);
+
+            //医疗
+            BigDecimal medicalAmount = paymentDetails.stream().map(p->p.getBaseMedicalAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
+            paymentDetail.setBasePensionAmount(medicalAmount);
+
+            //失业
+            BigDecimal unemploymentAmount = paymentDetails.stream().map(p->p.getUnemploymentAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
+            paymentDetail.setUnemploymentAmount(unemploymentAmount);
+
+            //工伤
+            BigDecimal accidentAmount = paymentDetails.stream().map(p->p.getAccidentAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
+            paymentDetail.setAccidentAmount(accidentAmount);
+
+            //生育
+            BigDecimal maternityAmount = paymentDetails.stream().map(p->p.getMaternityAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
+            paymentDetail.setMaternityAmount(maternityAmount);
+
+            paymentDetail.setActive(true);
+            paymentDetail.setCreatedTime(LocalDateTime.now());
+            paymentDetail.setCreatedBy("system");
+            paymentDetail.setModifiedTime(LocalDateTime.now());
+            paymentDetail.setModifiedBy("system");
+
+            paymentDetails.add(paymentDetail);
+
+            paymentDetails.forEach(x->paymentDetailMapper.insert(x));
+        }
+    }
+
+
+
+
+    /**
+     * 获取企业本地社保应付金额交易记录明细
+     * @return
+     */
+    private SsPaymentDetail getComPaymentDetail(long comAccountId,String paymentMonth,Integer seq,List<SsMonthChargeExt> monthChargeExts){
+        SsPaymentDetail paymentDetail = new SsPaymentDetail();
+        paymentDetail.setComAccountId(comAccountId);
+        paymentDetail.setPaymentMonth(paymentMonth);
+        paymentDetail.setSeq(seq.toString());
+        paymentDetail.setPaymentItem(seq);
+        paymentDetail.setPaymentItemName(this.paySeqTable().get(seq));
+
+        //养老
+        List<SsMonthChargeExt> pensions = monthChargeExts.stream().filter(x->x.getSsType().equals("1")).collect(Collectors.toList());
+        if(null != pensions && pensions.size() > 0){
+            BigDecimal pensionAmount = pensions.stream().map(p->p.getComAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
+            paymentDetail.setBasePensionAmount(pensionAmount);
+        }
+        //医疗
+        List<SsMonthChargeExt> medicals = monthChargeExts.stream().filter(x->x.getSsType().equals("2")).collect(Collectors.toList());
+        if(null != medicals && medicals.size() > 0){
+            BigDecimal medicalAmount = medicals.stream().map(p->p.getComAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
+            paymentDetail.setBasePensionAmount(medicalAmount);
+        }
+        //失业
+        List<SsMonthChargeExt> unemployments = monthChargeExts.stream().filter(x->x.getSsType().equals("5")).collect(Collectors.toList());
+        if(null != unemployments && unemployments.size() > 0){
+            BigDecimal unemploymentAmount = unemployments.stream().map(p->p.getComAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
+            paymentDetail.setUnemploymentAmount(unemploymentAmount);
+        }
+        //工伤
+        List<SsMonthChargeExt> accidents = monthChargeExts.stream().filter(x->x.getSsType().equals("3")).collect(Collectors.toList());
+        if(null != accidents && accidents.size() > 0){
+            BigDecimal accidentAmount = accidents.stream().map(p->p.getComAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
+            paymentDetail.setAccidentAmount(accidentAmount);
+        }
+        //生育
+        List<SsMonthChargeExt> maternitys = monthChargeExts.stream().filter(x->x.getSsType().equals("4")).collect(Collectors.toList());
+        if(null != maternitys && maternitys.size() > 0){
+            BigDecimal maternityAmount = maternitys.stream().map(p->p.getComAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
+            paymentDetail.setMaternityAmount(maternityAmount);
+        }
+        paymentDetail.setActive(true);
+        paymentDetail.setCreatedTime(LocalDateTime.now());
+        paymentDetail.setCreatedBy("system");
+        paymentDetail.setModifiedTime(LocalDateTime.now());
+        paymentDetail.setModifiedBy("system");
+        return paymentDetail;
+    }
+
+
+    /**
+     * 获取个人本地社保应付金额交易记录明细
+     * @return
+     */
+    private SsPaymentDetail getEmpPaymentDetail(long comAccountId,String paymentMonth,Integer seq,List<SsMonthChargeExt> monthChargeExts){
+        SsPaymentDetail paymentDetail = new SsPaymentDetail();
+        paymentDetail.setComAccountId(comAccountId);
+        paymentDetail.setPaymentMonth(paymentMonth);
+        paymentDetail.setSeq(seq.toString());
+        paymentDetail.setPaymentItem(seq);
+        paymentDetail.setPaymentItemName(this.paySeqTable().get(seq));
+
+        //养老
+        List<SsMonthChargeExt> pensions = monthChargeExts.stream().filter(x->x.getSsType().equals("1")).collect(Collectors.toList());
+        if(null != pensions && pensions.size() > 0){
+            BigDecimal pensionAmount = pensions.stream().map(p->p.getEmpAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
+            paymentDetail.setBasePensionAmount(pensionAmount);
+        }
+        //医疗
+        List<SsMonthChargeExt> medicals = monthChargeExts.stream().filter(x->x.getSsType().equals("2")).collect(Collectors.toList());
+        if(null != medicals && medicals.size() > 0){
+            BigDecimal medicalAmount = medicals.stream().map(p->p.getEmpAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
+            paymentDetail.setBasePensionAmount(medicalAmount);
+        }
+        //失业
+        List<SsMonthChargeExt> unemployments = monthChargeExts.stream().filter(x->x.getSsType().equals("5")).collect(Collectors.toList());
+        if(null != unemployments && unemployments.size() > 0){
+            BigDecimal unemploymentAmount = unemployments.stream().map(p->p.getEmpAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
+            paymentDetail.setUnemploymentAmount(unemploymentAmount);
+        }
+        //工伤
+        List<SsMonthChargeExt> accidents = monthChargeExts.stream().filter(x->x.getSsType().equals("3")).collect(Collectors.toList());
+        if(null != accidents && accidents.size() > 0){
+            BigDecimal accidentAmount = accidents.stream().map(p->p.getEmpAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
+            paymentDetail.setAccidentAmount(accidentAmount);
+        }
+        //生育
+        List<SsMonthChargeExt> maternitys = monthChargeExts.stream().filter(x->x.getSsType().equals("4")).collect(Collectors.toList());
+        if(null != maternitys && maternitys.size() > 0){
+            BigDecimal maternityAmount = maternitys.stream().map(p->p.getEmpAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
+            paymentDetail.setMaternityAmount(maternityAmount);
+        }
+        paymentDetail.setActive(true);
+        paymentDetail.setCreatedTime(LocalDateTime.now());
+        paymentDetail.setCreatedBy("system");
+        paymentDetail.setModifiedTime(LocalDateTime.now());
+        paymentDetail.setModifiedBy("system");
+        return paymentDetail;
+    }
+
+    /**
      * 社保缴纳通知单序号
      */
-    private Hashtable<String,Integer> paySeqTable(){
-        Hashtable<String,Integer> table = new Hashtable<>();
-        table.put("单位应缴纳社会保险费",1);
-        table.put("单位应补缴历年社会保险费",2);
-        table.put("个人应缴纳社会保险费",3);
-        table.put("个人应补缴历月社会保险费",4);
-        table.put("其他应缴纳社会保险费",5);
-        table.put("预缴社会保险费",6);
-        table.put("单位缓缴社会保险费",8);
+    private Hashtable<Integer,String> paySeqTable(){
+        Hashtable<Integer,String> table = new Hashtable<>();
+        table.put(1,"单位应缴纳社会保险费");
+        table.put(2,"单位应补缴历年社会保险费");
+        table.put(3,"个人应缴纳社会保险费");
+        table.put(4,"个人应补缴历月社会保险费");
+        table.put(5,"其他应缴纳社会保险费");
+        table.put(6,"预缴社会保险费");
+        table.put(7,"单位缓缴社会保险费");
+        table.put(9,"单位缓缴社会保险费");
         return table;
     }
 }
