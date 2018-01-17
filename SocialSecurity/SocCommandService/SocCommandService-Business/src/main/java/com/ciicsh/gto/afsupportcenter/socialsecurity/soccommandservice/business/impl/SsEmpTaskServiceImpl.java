@@ -1,6 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
-import com.alibaba.druid.sql.visitor.functions.Substring;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -14,7 +13,6 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +51,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     ISsEmpBaseAdjustService ssEmpBaseAdjustService;
     @Autowired
     ISsEmpBaseAdjustDetailService ssEmpBaseAdjustDetailService;
-
+    @Autowired
+    ISsEmpRefundService ssEmpRefundService;
     @Override
     public PageRows<SsEmpTaskBO> employeeOperatorQuery(PageInfo pageInfo) {
         SsEmpTaskBO dto = pageInfo.toJavaObject(SsEmpTaskBO.class);
@@ -100,9 +99,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         bo.setRejectionRemarkDate(now);
         bo.setModifiedTime(LocalDateTime.now());
 
-
         // 处理中，正式把数据写入到 ss_emp_base_period and ss_emp_base_detail(雇员社)
-        if (TaskStatusConst.PROCESSING == taskStatus) {
+        if (TaskStatusConst.PROCESSING == taskStatus || TaskStatusConst.FINISH==taskStatus) {
             if (TaskTypeConst.NEW == taskCategory || TaskTypeConst.INTO == taskCategory) {
                 //新进和转入
                 newOrChangeInto(bo);
@@ -922,17 +920,29 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param bo
      */
     private void handleTurnOutTask(SsEmpTaskBO bo) {
-
         List<SsEmpBasePeriod> ssEmpBasePeriodList = getNormalPeriod(bo);
         if(ssEmpBasePeriodList.size()>0){
-            SsEmpBasePeriod ssEmpBasePeriod = ssEmpBasePeriodList.get(0);
+            //有可能是再次办理 先将endMonth 和 ss_month_stop
+            SsEmpBasePeriod ssEmpBasePeriod= ssEmpBasePeriodList.get(0);
+            //还原之前修改
+            Integer result = ssEmpBasePeriodService.updateReductionById(ssEmpBasePeriod);
+            if(result==0)throw new BusinessException("数据库修改不成功.");
             ssEmpBasePeriod.setSsMonthStop(bo.getHandleMonth());
+            ssEmpBasePeriod.setEndMonth(bo.getEndMonth());
+            ssEmpBasePeriod.setModifiedBy("xsj");
+            ssEmpBasePeriod.setModifiedTime(LocalDateTime.now());
+            //修改 没有截止时间时间段的截止时间和停缴月份
+            ssEmpBasePeriodService.updateEndMonAndHandleMon(ssEmpBasePeriod);
 
-        }
-
-        //ssEmpArchiveService
-
-
+            //修改档案表的离职时间和缴纳截止时间
+            SsEmpArchive ssEmpArchive = new SsEmpArchive();
+            ssEmpArchive.setEmpArchiveId(bo.getEmpArchiveId());
+            ssEmpArchive.setEndMonth(bo.getEndMonth());
+            ssEmpArchive.setOutDate(bo.getOutDate());
+            ssEmpArchive.setModifiedBy("xsj");
+            ssEmpArchive.setModifiedTime(LocalDateTime.now());
+            ssEmpArchiveService.updateById(ssEmpArchive);
+        }else throw new BusinessException("数据库没有缴纳时间段");
     }
 
     /**
@@ -941,14 +951,39 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param bo
      */
     private void handleSealedTask(SsEmpTaskBO bo) {
+        //封存也是转出
+        handleTurnOutTask(bo);
     }
 
     /**
      * 退账
-     *
      * @param bo
      */
     private void handleRefundAccountTask(SsEmpTaskBO bo) {
+        SsEmpRefund ssEmpRefund = provideSsEmpRefund(bo);
+        LocalDateTime now = LocalDateTime.now();
+        by(ssEmpRefund);
+        ssEmpRefund.setCreatedTime(now);
+        ssEmpRefund.setModifiedTime(now);
+
+        ssEmpRefundService.insert(ssEmpRefund);
+
+    }
+
+    /**
+     * 返回退账对象
+     * @param bo
+     */
+    private SsEmpRefund provideSsEmpRefund(SsEmpTaskBO bo) {
+        SsEmpRefund ssEmpRefund = new SsEmpRefund();
+        ssEmpRefund.setAmount(bo.getRefundAmount());
+        ssEmpRefund.setStartMonth(bo.getStartMonth());
+        ssEmpRefund.setEndMonth(bo.getEndMonth());
+        ssEmpRefund.setEmpTaskId(bo.getEmpTaskId());
+        ssEmpRefund.setEmpArchiveId(bo.getEmpArchiveId());
+        ssEmpRefund.setProcessWay(bo.getHandleWay());
+        ssEmpRefund.setSsMonth(bo.getHandleMonth());
+        return ssEmpRefund;
     }
 
     /**
@@ -969,7 +1004,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         Integer operatorType = Optional.ofNullable(dto.getOperatorType()).orElse(1);
         dto.setOperatorType(operatorType);
 
-        // 任务类型，DicItem.DicItemValue 1:新进：2：转入 3调整 4 补缴 5 转出 6终止 7退账 8 提取
+        // 任务类型，DicItem.DicItemValue 1:新进：2：转入 3调整 4 补缴 5 转出 6终止 7退账
         {
             // 任务处理类型
             Integer taskCategory = dto.getTaskCategory();

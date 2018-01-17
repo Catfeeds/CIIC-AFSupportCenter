@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -57,6 +58,8 @@ public class SsEmpTaskBO extends SsEmpTask {
     private String startMonth;
     //入职日期
     private LocalDate inDate;
+    //退账金额
+    private BigDecimal refundAmount;
     public String getEmployeeName() {
         return employeeName;
     }
@@ -199,5 +202,13 @@ public class SsEmpTaskBO extends SsEmpTask {
 
     public void setInDate(LocalDate inDate) {
         this.inDate = inDate;
+    }
+
+    public BigDecimal getRefundAmount() {
+        return refundAmount;
+    }
+
+    public void setRefundAmount(BigDecimal refundAmount) {
+        this.refundAmount = refundAmount;
     }
 }
