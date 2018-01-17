@@ -10,7 +10,7 @@
     </parent>
 
 
-    <artifactId>JoyingInterfaceService-Api</artifactId>
+    <artifactId>JoyingInterfaceService-Business</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0</version>
 

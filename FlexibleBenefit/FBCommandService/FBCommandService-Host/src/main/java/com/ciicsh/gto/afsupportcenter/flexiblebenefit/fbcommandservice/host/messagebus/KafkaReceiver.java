@@ -25,7 +25,6 @@ public class KafkaReceiver {
     private final static Logger logger = LoggerFactory.getLogger(KafkaReceiver.class);
 
     private static final String CENTER = "centerMangerAudit";
-    private static final Integer APPROVALSIZE = 2;
     @Autowired
     private ApprovalStepCommandService approvalStepCommandService;
     @Autowired
@@ -67,7 +66,7 @@ public class KafkaReceiver {
             approvalStepList.get(0).setApproveName("xwz");
             approvalStepList.get(0).setApproverId("xwz");
             approvalStepCommandService.updateById(approvalStepList.get(0));
-        } else if (APPROVALSIZE.equals(approvalStepList.size())) {
+        } else if (approvalStepList.size() == 2) {
             approvalStepList.get(1).setApproveName("xwz");
             approvalStepList.get(1).setApproverId("xwz");
             approvalStepCommandService.updateById(approvalStepList.get(1));
