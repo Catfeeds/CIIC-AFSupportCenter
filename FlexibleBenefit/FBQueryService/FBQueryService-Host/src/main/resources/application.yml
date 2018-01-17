@@ -81,10 +81,11 @@ spring:
         name: afsupportcenter-center-query-service
     datasource:
         driver-class-name: com.mysql.jdbc.Driver
-        initial-size: 10
-        max-active: 20
-        max-idle: 8
-        min-idle: 8
+        tomcat:
+          initial-size: 10
+          max-active: 20
+          max-idle: 8
+          min-idle: 8
         password: a111111
         url: jdbc:mysql://172.16.9.15:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
         username: root
