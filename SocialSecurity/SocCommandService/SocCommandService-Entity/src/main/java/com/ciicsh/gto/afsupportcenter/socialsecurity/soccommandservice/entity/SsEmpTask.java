@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.enums.IdType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotations.TableId;
+
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
@@ -13,6 +15,9 @@ import java.io.Serializable;
  * <p>
  * 本地社保的雇员任务单
  * </p>
+ *
+ * @author xsj
+ * @since 2018-01-08
  */
 @TableName("ss_emp_task")
 public class SsEmpTask implements Serializable {
@@ -95,7 +100,7 @@ public class SsEmpTask implements Serializable {
      * 任务发起时间，通过该日期和客户社保截至日判断本月下月处理
      */
 	@TableField("submit_time")
-	private LocalDateTime submitTime;
+	private LocalTime submitTime;
     /**
      * 任务截止日期
      */
@@ -106,33 +111,6 @@ public class SsEmpTask implements Serializable {
      */
 	@TableField("submitter_remark")
 	private String submitterRemark;
-    /**
-     * 任务单扩展字段，Json格式描述
-            {
-            "新进":{"工资":"","基数段":[{"社保备注":"","基数":"","执行日期":""}]},
-            "转入":{"工资":"","基数段":[{"社保备注":"","基数":"","执行日期":""}]},
-            "补缴":{"社保补缴基数":"","社保起缴月份":"201706","任务执行日期":""},
-            "调整":{"新社保基数":"","调整月份":"201706","任务执行日期":""},
-            "转出":{"转出月份":"201706","任务执行日期":""},
-            "退账":{},
-            "终止":{},
-            "提取":{}
-            }
-     */
-	@TableField("task_form_content")
-	private String taskFormContent;
-    /**
-     * 实际工资
-     */
-	private BigDecimal salary;
-    /**
-     * 人员属性：本地、外地、外籍三险、外籍五险、延迟退休人员
-            本地、外地、外籍五险：有五个险种
-            外籍三险、延迟退休人员：有三个险种
-            
-     */
-	@TableField("emp_classify")
-	private Integer empClassify;
     /**
      * 经办人用户ID
      */
@@ -187,6 +165,12 @@ public class SsEmpTask implements Serializable {
 	@TableField("handle_status")
 	private Integer handleStatus;
     /**
+     * 站内信历史记录, 
+            格式：序号、部门名称、 用户姓名、 时间、 内容
+     */
+	@TableField("chat_history")
+	private String chatHistory;
+    /**
      * 受理日期
      */
 	@TableField("start_handle_date")
@@ -202,6 +186,38 @@ public class SsEmpTask implements Serializable {
 	@TableField("finish_date")
 	private LocalDate finishDate;
     /**
+     * 任务单扩展字段，Json格式描述
+            {
+            "新进":{"工资":"","基数段":[{"社保备注":"","基数":"","执行日期":""}]},
+            "转入":{"工资":"","基数段":[{"社保备注":"","基数":"","执行日期":""}]},
+            "补缴":{"社保补缴基数":"","社保起缴月份":"201706","任务执行日期":""},
+            "调整":{"新社保基数":"","调整月份":"201706","任务执行日期":""},
+            "转出":{"转出月份":"201706","任务执行日期":""},
+            "退账":{},
+            "终止":{},
+            "提取":{}
+            }
+     */
+	@TableField("task_form_content")
+	private String taskFormContent;
+    /**
+     * 实际工资
+     */
+	private BigDecimal salary;
+    /**
+     * 人员属性：本地、外地、外籍三险、外籍五险、延迟退休人员
+            本地、外地、外籍五险：有五个险种
+            外籍三险、延迟退休人员：有三个险种
+            
+     */
+	@TableField("emp_classify")
+	private Integer empClassify;
+    /**
+     * 雇员基数：多重身份，如果是新进转入那么就是雇员缴纳基数，如果是补缴，就补缴基数，如果是调整就是调整基数
+     */
+	@TableField("emp_base")
+	private BigDecimal empBase;
+    /**
      * 缴费段开始月份YYYYMM
      */
 	@TableField("start_month")
@@ -211,12 +227,10 @@ public class SsEmpTask implements Serializable {
      */
 	@TableField("end_month")
 	private String endMonth;
-    /**
-     * 站内信历史记录, 
-            格式：序号、部门名称、 用户姓名、 时间、 内容
-     */
-	@TableField("chat_history")
-	private String chatHistory;
+	@TableField("in_date")
+	private LocalDate inDate;
+	@TableField("out_date")
+	private LocalDate outDate;
     /**
      * 业务接口ID
      */
@@ -345,11 +359,11 @@ public class SsEmpTask implements Serializable {
 		this.submitterDeptName = submitterDeptName;
 	}
 
-	public LocalDateTime getSubmitTime() {
+	public LocalTime getSubmitTime() {
 		return submitTime;
 	}
 
-	public void setSubmitTime(LocalDateTime submitTime) {
+	public void setSubmitTime(LocalTime submitTime) {
 		this.submitTime = submitTime;
 	}
 
@@ -367,30 +381,6 @@ public class SsEmpTask implements Serializable {
 
 	public void setSubmitterRemark(String submitterRemark) {
 		this.submitterRemark = submitterRemark;
-	}
-
-	public String getTaskFormContent() {
-		return taskFormContent;
-	}
-
-	public void setTaskFormContent(String taskFormContent) {
-		this.taskFormContent = taskFormContent;
-	}
-
-	public BigDecimal getSalary() {
-		return salary;
-	}
-
-	public void setSalary(BigDecimal salary) {
-		this.salary = salary;
-	}
-
-	public Integer getEmpClassify() {
-		return empClassify;
-	}
-
-	public void setEmpClassify(Integer empClassify) {
-		this.empClassify = empClassify;
 	}
 
 	public String getHandleUserId() {
@@ -497,6 +487,14 @@ public class SsEmpTask implements Serializable {
 		this.handleStatus = handleStatus;
 	}
 
+	public String getChatHistory() {
+		return chatHistory;
+	}
+
+	public void setChatHistory(String chatHistory) {
+		this.chatHistory = chatHistory;
+	}
+
 	public LocalDate getStartHandleDate() {
 		return startHandleDate;
 	}
@@ -521,6 +519,38 @@ public class SsEmpTask implements Serializable {
 		this.finishDate = finishDate;
 	}
 
+	public String getTaskFormContent() {
+		return taskFormContent;
+	}
+
+	public void setTaskFormContent(String taskFormContent) {
+		this.taskFormContent = taskFormContent;
+	}
+
+	public BigDecimal getSalary() {
+		return salary;
+	}
+
+	public void setSalary(BigDecimal salary) {
+		this.salary = salary;
+	}
+
+	public Integer getEmpClassify() {
+		return empClassify;
+	}
+
+	public void setEmpClassify(Integer empClassify) {
+		this.empClassify = empClassify;
+	}
+
+	public BigDecimal getEmpBase() {
+		return empBase;
+	}
+
+	public void setEmpBase(BigDecimal empBase) {
+		this.empBase = empBase;
+	}
+
 	public String getStartMonth() {
 		return startMonth;
 	}
@@ -537,12 +567,20 @@ public class SsEmpTask implements Serializable {
 		this.endMonth = endMonth;
 	}
 
-	public String getChatHistory() {
-		return chatHistory;
+	public LocalDate getInDate() {
+		return inDate;
 	}
 
-	public void setChatHistory(String chatHistory) {
-		this.chatHistory = chatHistory;
+	public void setInDate(LocalDate inDate) {
+		this.inDate = inDate;
+	}
+
+	public LocalDate getOutDate() {
+		return outDate;
+	}
+
+	public void setOutDate(LocalDate outDate) {
+		this.outDate = outDate;
 	}
 
 	public String getBusinessInterfaceId() {
@@ -561,23 +599,23 @@ public class SsEmpTask implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public LocalDateTime getCreatedTime() {
-		return createdTime;
-	}
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
+    }
 
-	public void setCreatedTime(LocalDateTime createdTime) {
-		this.createdTime = createdTime;
-	}
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
 
-	public LocalDateTime getModifiedTime() {
-		return modifiedTime;
-	}
+    public LocalDateTime getModifiedTime() {
+        return modifiedTime;
+    }
 
-	public void setModifiedTime(LocalDateTime modifiedTime) {
-		this.modifiedTime = modifiedTime;
-	}
+    public void setModifiedTime(LocalDateTime modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
 
-	public String getCreatedBy() {
+    public String getCreatedBy() {
 		return createdBy;
 	}
 
@@ -596,7 +634,7 @@ public class SsEmpTask implements Serializable {
 	@Override
 	public String toString() {
 		return "SsEmpTask{" +
-			", empTaskId=" + empTaskId +
+			"empTaskId=" + empTaskId +
 			", companyId=" + companyId +
 			", employeeId=" + employeeId +
 			", customerId=" + customerId +
@@ -611,9 +649,6 @@ public class SsEmpTask implements Serializable {
 			", submitTime=" + submitTime +
 			", expireDate=" + expireDate +
 			", submitterRemark=" + submitterRemark +
-			", taskFormContent=" + taskFormContent +
-			", salary=" + salary +
-			", empClassify=" + empClassify +
 			", handleUserId=" + handleUserId +
 			", handleUserName=" + handleUserName +
 			", empSsSerial=" + empSsSerial +
@@ -627,12 +662,18 @@ public class SsEmpTask implements Serializable {
 			", rejectionRemarkDate=" + rejectionRemarkDate +
 			", taskStatus=" + taskStatus +
 			", handleStatus=" + handleStatus +
+			", chatHistory=" + chatHistory +
 			", startHandleDate=" + startHandleDate +
 			", sendCheckDate=" + sendCheckDate +
 			", finishDate=" + finishDate +
+			", taskFormContent=" + taskFormContent +
+			", salary=" + salary +
+			", empClassify=" + empClassify +
+			", empBase=" + empBase +
 			", startMonth=" + startMonth +
 			", endMonth=" + endMonth +
-			", chatHistory=" + chatHistory +
+			", inDate=" + inDate +
+			", outDate=" + outDate +
 			", businessInterfaceId=" + businessInterfaceId +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
