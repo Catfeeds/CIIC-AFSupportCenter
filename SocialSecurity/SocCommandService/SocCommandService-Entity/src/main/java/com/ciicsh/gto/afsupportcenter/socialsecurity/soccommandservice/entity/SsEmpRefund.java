@@ -3,7 +3,9 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity;
 import com.baomidou.mybatisplus.enums.IdType;
 import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotations.TableId;
+
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
@@ -14,6 +16,9 @@ import java.io.Serializable;
 如果为某雇员多缴纳了社保金额，则需向社保局提出退账申请，退账申请受理后落地到此表。
                                                 
  * </p>
+ *
+ * @author xsj
+ * @since 2018-01-17
  */
 @TableName("ss_emp_refund")
 public class SsEmpRefund implements Serializable {
@@ -48,7 +53,7 @@ public class SsEmpRefund implements Serializable {
      * 处理完成的时间
      */
 	@TableField("process_time")
-	private LocalDateTime processTime;
+	private LocalTime processTime;
     /**
      * 处理方式 1 -网上申报 2 柜面办理
      */
@@ -58,12 +63,12 @@ public class SsEmpRefund implements Serializable {
      * 退账起始年月
      */
 	@TableField("start_month")
-	private Integer startMonth;
+	private String startMonth;
     /**
      * 退账截至月份
      */
 	@TableField("end_month")
-	private Integer endMonth;
+	private String endMonth;
     /**
      * 是否被抵扣支付
      */
@@ -136,11 +141,11 @@ public class SsEmpRefund implements Serializable {
 		this.amount = amount;
 	}
 
-	public LocalDateTime getProcessTime() {
+	public LocalTime getProcessTime() {
 		return processTime;
 	}
 
-	public void setProcessTime(LocalDateTime processTime) {
+	public void setProcessTime(LocalTime processTime) {
 		this.processTime = processTime;
 	}
 
@@ -152,19 +157,19 @@ public class SsEmpRefund implements Serializable {
 		this.processWay = processWay;
 	}
 
-	public Integer getStartMonth() {
+	public String getStartMonth() {
 		return startMonth;
 	}
 
-	public void setStartMonth(Integer startMonth) {
+	public void setStartMonth(String startMonth) {
 		this.startMonth = startMonth;
 	}
 
-	public Integer getEndMonth() {
+	public String getEndMonth() {
 		return endMonth;
 	}
 
-	public void setEndMonth(Integer endMonth) {
+	public void setEndMonth(String endMonth) {
 		this.endMonth = endMonth;
 	}
 
@@ -184,23 +189,23 @@ public class SsEmpRefund implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public LocalDateTime getCreatedTime() {
-		return createdTime;
-	}
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
+    }
 
-	public void setCreatedTime(LocalDateTime createdTime) {
-		this.createdTime = createdTime;
-	}
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
 
-	public LocalDateTime getModifiedTime() {
-		return modifiedTime;
-	}
+    public LocalDateTime getModifiedTime() {
+        return modifiedTime;
+    }
 
-	public void setModifiedTime(LocalDateTime modifiedTime) {
-		this.modifiedTime = modifiedTime;
-	}
+    public void setModifiedTime(LocalDateTime modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
 
-	public String getCreatedBy() {
+    public String getCreatedBy() {
 		return createdBy;
 	}
 
@@ -219,7 +224,7 @@ public class SsEmpRefund implements Serializable {
 	@Override
 	public String toString() {
 		return "SsEmpRefund{" +
-			", empRefundId=" + empRefundId +
+			"empRefundId=" + empRefundId +
 			", empTaskId=" + empTaskId +
 			", empArchiveId=" + empArchiveId +
 			", ssMonth=" + ssMonth +

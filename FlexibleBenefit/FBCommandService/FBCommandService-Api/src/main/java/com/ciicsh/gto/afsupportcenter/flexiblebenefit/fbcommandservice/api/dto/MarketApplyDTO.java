@@ -513,4 +513,51 @@ public class MarketApplyDTO {
     public void setPresentingObjectId(String presentingObjectId) {
         this.presentingObjectId = presentingObjectId;
     }
+
+    @Override
+    public String toString() {
+        return "MarketApplyDTO{" +
+            "markertActivityRecordId=" + markertActivityRecordId +
+            ", activityId=" + activityId +
+            ", number=" + number +
+            ", giftForm=" + giftForm +
+            ", sendWay=" + sendWay +
+            ", deliveryAddress='" + deliveryAddress + '\'' +
+            ", applyRecordDetailId=" + applyRecordDetailId +
+            ", presentingObjectType=" + presentingObjectType +
+            ", presentingObjectId='" + presentingObjectId + '\'' +
+            ", applicantType=" + applicantType +
+            ", applicant='" + applicant + '\'' +
+            ", applicantExtension='" + applicantExtension + '\'' +
+            ", companyName='" + companyName + '\'' +
+            ", companyAddress='" + companyAddress + '\'' +
+            ", companyTelephone=" + companyTelephone +
+            ", companyFax=" + companyFax +
+            ", contactName='" + contactName + '\'' +
+            ", contactDeptName='" + contactDeptName + '\'' +
+            ", contactPosition='" + contactPosition + '\'' +
+            ", contactBrithday=" + contactBrithday +
+            ", contactPhoneNum='" + contactPhoneNum + '\'' +
+            ", contactEmail='" + contactEmail + '\'' +
+            ", contactHomePostcode=" + contactHomePostcode +
+            ", contactHomeTelephone=" + contactHomeTelephone +
+            ", contactHomeAddress='" + contactHomeAddress + '\'' +
+            ", extensionNumber=" + extensionNumber +
+            ", applyReason='" + applyReason + '\'' +
+            ", approvalStatus=" + approvalStatus +
+            ", sendStatus=" + sendStatus +
+            ", sendTime=" + sendTime +
+            ", sendRemark='" + sendRemark + '\'' +
+            ", isActive=" + isActive +
+            ", createTime=" + createTime +
+            ", modifiedTime=" + modifiedTime +
+            ", createdBy='" + createdBy + '\'' +
+            ", modifiedBy='" + modifiedBy + '\'' +
+            ", applyRecordId=" + applyRecordId +
+            ", applyerId=" + applyerId +
+            ", applyTime=" + applyTime +
+            ", applyType=" + applyType +
+            ", projectTopics='" + projectTopics + '\'' +
+            '}';
+    }
 }

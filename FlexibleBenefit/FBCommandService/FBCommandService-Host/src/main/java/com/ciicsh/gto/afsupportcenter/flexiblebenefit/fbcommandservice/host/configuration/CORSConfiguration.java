@@ -9,7 +9,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 /**
  * 跨域
- * Created by xiweizhen on 2017/12/5.
+ *
+ * @author xiweizhen
+ * @date 2017/12/5
  */
 @Configuration
 public class CORSConfiguration {

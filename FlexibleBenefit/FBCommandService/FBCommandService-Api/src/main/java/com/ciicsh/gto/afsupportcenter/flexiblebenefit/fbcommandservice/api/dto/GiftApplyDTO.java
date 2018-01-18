@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.api.dto;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -176,6 +177,48 @@ public class GiftApplyDTO {
      * 项目主题（待定）
      */
     private String projectTopics;
+
+    private Integer id;
+    /**
+     * 礼品名称
+     */
+    private String giftName;
+    /**
+     * 礼品价格
+     */
+    private BigDecimal price;
+    /**
+     * 适用人群：男士适用0，女士适用1，男女通用2
+     */
+    private Integer rightPerson;
+    /**
+     * 礼品类型：票券0,办公用品1,生活用品,2，食品3，饰品4，数码周边5，儿童用品6
+     */
+    private Integer giftType;
+    /**
+     * 礼品颜色
+     */
+    private String color;
+    /**
+     * 礼品数量
+     */
+    private Integer number;
+    /**
+     * 限制申请的最大数量
+     */
+    private Integer applyMaxnum;
+    /**
+     * 图片地址
+     */
+    private String pictureUrl;
+    /**
+     * 礼品介绍
+     */
+    private String remarks;
+    /**
+     * 0，正常；1，已下架
+     */
+    private Integer status;
 
     public Integer getGiftRecordId() {
         return giftRecordId;
@@ -479,5 +522,148 @@ public class GiftApplyDTO {
 
     public void setPresentingObjectId(String presentingObjectId) {
         this.presentingObjectId = presentingObjectId;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getGiftName() {
+        return giftName;
+    }
+
+    public void setGiftName(String giftName) {
+        this.giftName = giftName;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public Integer getRightPerson() {
+        return rightPerson;
+    }
+
+    public void setRightPerson(Integer rightPerson) {
+        this.rightPerson = rightPerson;
+    }
+
+    public Integer getGiftType() {
+        return giftType;
+    }
+
+    public void setGiftType(Integer giftType) {
+        this.giftType = giftType;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
+
+    public Integer getApplyMaxnum() {
+        return applyMaxnum;
+    }
+
+    public void setApplyMaxnum(Integer applyMaxnum) {
+        this.applyMaxnum = applyMaxnum;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "GiftApplyDTO{" +
+            "giftRecordId=" + giftRecordId +
+            ", giftId=" + giftId +
+            ", applyNum=" + applyNum +
+            ", isActive=" + isActive +
+            ", createTime=" + createTime +
+            ", modifiedTime=" + modifiedTime +
+            ", createdBy='" + createdBy + '\'' +
+            ", modifiedBy='" + modifiedBy + '\'' +
+            ", applyRecordDetailId=" + applyRecordDetailId +
+            ", presentingObjectType=" + presentingObjectType +
+            ", presentingObjectId='" + presentingObjectId + '\'' +
+            ", applicantType=" + applicantType +
+            ", applicant='" + applicant + '\'' +
+            ", applicantExtension='" + applicantExtension + '\'' +
+            ", companyName='" + companyName + '\'' +
+            ", companyAddress='" + companyAddress + '\'' +
+            ", companyTelephone=" + companyTelephone +
+            ", companyFax=" + companyFax +
+            ", contactName='" + contactName + '\'' +
+            ", contactDeptName='" + contactDeptName + '\'' +
+            ", contactPosition='" + contactPosition + '\'' +
+            ", contactBrithday=" + contactBrithday +
+            ", contactPhoneNum='" + contactPhoneNum + '\'' +
+            ", contactEmail='" + contactEmail + '\'' +
+            ", contactHomePostcode=" + contactHomePostcode +
+            ", contactHomeTelephone=" + contactHomeTelephone +
+            ", contactHomeAddress='" + contactHomeAddress + '\'' +
+            ", extensionNumber=" + extensionNumber +
+            ", applyReason='" + applyReason + '\'' +
+            ", approvalStatus=" + approvalStatus +
+            ", sendStatus=" + sendStatus +
+            ", sendTime=" + sendTime +
+            ", sendRemark='" + sendRemark + '\'' +
+            ", applyRecordId=" + applyRecordId +
+            ", applyerId=" + applyerId +
+            ", applyTime=" + applyTime +
+            ", applyType=" + applyType +
+            ", projectTopics='" + projectTopics + '\'' +
+            ", id=" + id +
+            ", giftName='" + giftName + '\'' +
+            ", price=" + price +
+            ", rightPerson=" + rightPerson +
+            ", giftType=" + giftType +
+            ", color='" + color + '\'' +
+            ", number=" + number +
+            ", applyMaxnum=" + applyMaxnum +
+            ", pictureUrl='" + pictureUrl + '\'' +
+            ", remarks='" + remarks + '\'' +
+            ", status=" + status +
+            '}';
     }
 }

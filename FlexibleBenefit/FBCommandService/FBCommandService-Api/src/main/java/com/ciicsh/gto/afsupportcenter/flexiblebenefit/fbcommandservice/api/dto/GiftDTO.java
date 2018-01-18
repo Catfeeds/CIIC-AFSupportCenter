@@ -213,4 +213,27 @@ public class GiftDTO {
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
+
+    @Override
+    public String toString() {
+        return "GiftDTO{" +
+            "id=" + id +
+            ", giftName='" + giftName + '\'' +
+            ", price=" + price +
+            ", rightPerson=" + rightPerson +
+            ", giftType=" + giftType +
+            ", color='" + color + '\'' +
+            ", number=" + number +
+            ", applyMaxnum=" + applyMaxnum +
+            ", pictureUrl='" + pictureUrl + '\'' +
+            ", remarks='" + remarks + '\'' +
+            ", status=" + status +
+            ", newTag=" + newTag +
+            ", isActive=" + isActive +
+            ", createTime=" + createTime +
+            ", modifiedTime=" + modifiedTime +
+            ", createdBy='" + createdBy + '\'' +
+            ", modifiedBy='" + modifiedBy + '\'' +
+            '}';
+    }
 }

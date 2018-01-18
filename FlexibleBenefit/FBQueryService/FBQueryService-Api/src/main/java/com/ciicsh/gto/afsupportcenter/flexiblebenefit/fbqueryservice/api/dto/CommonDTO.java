@@ -2,6 +2,11 @@ package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.api.dto;
 
 import java.util.List;
 
+/**
+ * 分页公共方法
+ *
+ * @author xiweizhen
+ */
 public class CommonDTO<T> {
     /**
      * 起始页
@@ -48,5 +53,15 @@ public class CommonDTO<T> {
 
     public void setTotal(Integer total) {
         this.total = total;
+    }
+
+    @Override
+    public String toString() {
+        return "CommonDTO{" +
+            "current=" + current +
+            ", size=" + size +
+            ", total=" + total +
+            ", records=" + records +
+            '}';
     }
 }
