@@ -25,13 +25,6 @@ public interface OrgPolicyService extends IService<OrgPolicy> {
     List<OrgPolicy> select(OrgPolicy orgPolicy);
 
     /**
-     * 条件查询办理机构政策
-     * @param orgPolicy
-     * @return
-     */
-    OrgPolicy selectItem(OrgPolicy orgPolicy);
-
-    /**
      * 插入或更新办理机构政策
      * @param entity
      * @return
@@ -44,6 +37,5 @@ public interface OrgPolicyService extends IService<OrgPolicy> {
      * @param id
      * @return
      */
-    @Override
-    boolean deleteById(Serializable id);
+    boolean deleteById(Integer id);
 }

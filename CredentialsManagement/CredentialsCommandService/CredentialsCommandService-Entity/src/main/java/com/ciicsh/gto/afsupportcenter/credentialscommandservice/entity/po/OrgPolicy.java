@@ -14,7 +14,7 @@ import java.util.Date;
  * @Description: 办理机构政策
  * @Date: Created in 15:11 2018/1/15
  */
-@TableName("cm_orgPolicy")
+@TableName("cm_org_policy")
 public class OrgPolicy extends Model<OrgPolicy> {
 
     private static final long serialVersionUID = 1L;

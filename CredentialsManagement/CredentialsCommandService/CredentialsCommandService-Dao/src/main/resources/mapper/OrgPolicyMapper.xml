@@ -23,9 +23,9 @@
       <include refid="SEL_LIST_WHERR"></include>
     </select>
 
-    <!--<select id="selectItem">-->
-
-    <!--</select>-->
+    <delete id="deleteByOrgPolicyId">
+        DELETE FROM cm_org_policy WHERE org_poilcy_id = #{id}
+    </delete>
 
     <sql id="SEL_ALL_COLLUMS">
         org_poilcy_id,
@@ -41,10 +41,10 @@
     <sql id="SEL_LIST_WHERR">
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             is_active = 1
-            <if test="name != null and managementId != ''">
+            <if test="name != null and name != ''">
                 AND name = #{name}
             </if>
-            <if test="type != null and managementId != ''">
+            <if test="type != null and name != ''">
                 AND type = #{type}
             </if>
         </trim>

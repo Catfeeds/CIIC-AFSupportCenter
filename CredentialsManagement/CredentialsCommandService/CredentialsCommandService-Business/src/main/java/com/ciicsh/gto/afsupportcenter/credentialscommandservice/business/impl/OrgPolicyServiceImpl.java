@@ -30,7 +30,8 @@ public class OrgPolicyServiceImpl extends ServiceImpl<OrgPolicyMapper, OrgPolicy
     }
 
     @Override
-    public OrgPolicy selectItem(OrgPolicy orgPolicy) {
-        return orgPolicyMapper.selectItem(orgPolicy);
+    public boolean deleteById(Integer id) {
+        int row = orgPolicyMapper.deleteByOrgPolicyId(id);
+        return row == 1?true : false;
     }
 }

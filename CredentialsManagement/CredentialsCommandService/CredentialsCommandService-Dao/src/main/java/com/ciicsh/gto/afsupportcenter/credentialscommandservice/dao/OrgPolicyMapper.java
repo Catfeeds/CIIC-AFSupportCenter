@@ -25,9 +25,9 @@ public interface OrgPolicyMapper extends BaseMapper<OrgPolicy> {
     List<OrgPolicy> select(OrgPolicy orgPolicy);
 
     /**
-     * 根据办理机构查询政策信息
-     * @param orgPolicy
+     * 删除政策信息
+     * @param id
      * @return
      */
-    OrgPolicy selectItem(OrgPolicy orgPolicy);
+    int deleteByOrgPolicyId(Integer id);
 }
