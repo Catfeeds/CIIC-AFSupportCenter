@@ -20,6 +20,11 @@
             <artifactId>socjob-business</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
+            <artifactId>socjob-util</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 
 
     </dependencies>
@@ -27,13 +32,6 @@
     <build>
         <finalName>gt1.afsupportcenter.socjob-host</finalName>
         <resources>
-            <resource>
-                <directory>../SocJob-Dao/src/main/resources/</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/mapper/*.xml</include>
-                </includes>
-            </resource>
             <resource>
                 <directory>src/main/resources/</directory>
                 <filtering>true</filtering>
