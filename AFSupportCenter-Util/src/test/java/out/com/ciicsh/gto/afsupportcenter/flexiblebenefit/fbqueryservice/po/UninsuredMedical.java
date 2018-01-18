@@ -23,277 +23,304 @@ public class UninsuredMedical extends Model<UninsuredMedical> {
     /**
      * 未投保医疗受理编号
      */
-    @TableId(value = "um_acceptance_id", type = IdType.AUTO)
-    private Integer umAcceptanceId;
+	@TableId(value="um_acceptance_id", type= IdType.AUTO)
+	private Integer umAcceptanceId;
     /**
      * 雇员终身编号
      */
-    @TableField("employee_id")
-    private String employeeId;
+	@TableField("employee_id")
+	private String employeeId;
     /**
      * 款项类型:1-医疗费,2-体检费用,3-住院补贴,4-托费,5-大额理赔款,6-其他
      */
-    @TableField("money_type")
-    private Integer moneyType;
+	@TableField("money_type")
+	private Integer moneyType;
     /**
      * 受理类型:1-雇员,2-子女,3-配偶
      */
-    @TableField("case_type")
-    private Integer caseType;
+	@TableField("case_type")
+	private Integer caseType;
     /**
      * 中止日期
      */
-    @TableField("dimission_date")
-    private Date dimissionDate;
+	@TableField("dimission_date")
+	private Date dimissionDate;
     /**
      * 退保日期
      */
-    @TableField("surrender_date")
-    private Date surrenderDate;
+	@TableField("surrender_date")
+	private Date surrenderDate;
     /**
      * 连带人名字
      */
-    @TableField("joint_person_name")
-    private String jointPersonName;
+	@TableField("joint_person_name")
+	private String jointPersonName;
     /**
      * 连带人出生日期
      */
-    @TableField("joint_person_birth_date")
-    private Date jointPersonBirthDate;
+	@TableField("joint_person_birth_date")
+	private Date jointPersonBirthDate;
     /**
      * 医疗备注
      */
-    @TableField("medical_remark")
-    private String medicalRemark;
+	@TableField("medical_remark")
+	private String medicalRemark;
     /**
      * 受理金额
      */
-    @TableField("case_money")
-    private BigDecimal caseMoney;
+	@TableField("case_money")
+	private BigDecimal caseMoney;
     /**
      * 发票张数
      */
-    @TableField("invoice_number")
-    private Integer invoiceNumber;
+	@TableField("invoice_number")
+	private Integer invoiceNumber;
     /**
-     * 受理单状态（0-未受理，1-已受理2-拒赔，3-已审核未同步，4-已同步未支付，5-财务退回，6-已同步已支付，7-已退票，8-已完成）
+     * 受理单状态（0-未受理，1-已受理，2-拒赔，3-已审核未同步，4-已同步未支付，5-财务退回，6-已同步已支付，7-已退票，8-已完成）
      */
-    private Integer status;
+	private Integer status;
     /**
      * 受理人
      */
-    private String handler;
+	private String handler;
     /**
      * 受理日期
      */
-    @TableField("handler_date")
-    private Date handlerDate;
+	@TableField("handler_date")
+	private Date handlerDate;
+    /**
+     * 拒赔类型
+     */
+	@TableField("reject_type")
+	private Integer rejectType;
+    /**
+     * 处理备注
+     */
+	private String remark;
     /**
      * 是否可用
      */
-    @TableField("is_active")
-    private Boolean isActive;
+	@TableField("is_active")
+	private Boolean isActive;
     /**
      * 创建时间
      */
-    @TableField("created_time")
-    private Date createdTime;
+	@TableField("created_time")
+	private Date createdTime;
     /**
      * 最后更新时间
      */
-    @TableField("modified_time")
-    private Date modifiedTime;
+	@TableField("modified_time")
+	private Date modifiedTime;
     /**
      * 创建者登录名
      */
-    @TableField("created_by")
-    private String createdBy;
+	@TableField("created_by")
+	private String createdBy;
     /**
      * 修改者登录名
      */
-    @TableField("modified_by")
-    private String modifiedBy;
+	@TableField("modified_by")
+	private String modifiedBy;
 
 
-    public Integer getUmAcceptanceId() {
-        return umAcceptanceId;
-    }
+	public Integer getUmAcceptanceId() {
+		return umAcceptanceId;
+	}
 
-    public void setUmAcceptanceId(Integer umAcceptanceId) {
-        this.umAcceptanceId = umAcceptanceId;
-    }
+	public void setUmAcceptanceId(Integer umAcceptanceId) {
+		this.umAcceptanceId = umAcceptanceId;
+	}
 
-    public String getEmployeeId() {
-        return employeeId;
-    }
+	public String getEmployeeId() {
+		return employeeId;
+	}
 
-    public void setEmployeeId(String employeeId) {
-        this.employeeId = employeeId;
-    }
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
+	}
 
-    public Integer getMoneyType() {
-        return moneyType;
-    }
+	public Integer getMoneyType() {
+		return moneyType;
+	}
 
-    public void setMoneyType(Integer moneyType) {
-        this.moneyType = moneyType;
-    }
+	public void setMoneyType(Integer moneyType) {
+		this.moneyType = moneyType;
+	}
 
-    public Integer getCaseType() {
-        return caseType;
-    }
+	public Integer getCaseType() {
+		return caseType;
+	}
 
-    public void setCaseType(Integer caseType) {
-        this.caseType = caseType;
-    }
+	public void setCaseType(Integer caseType) {
+		this.caseType = caseType;
+	}
 
-    public Date getDimissionDate() {
-        return dimissionDate;
-    }
+	public Date getDimissionDate() {
+		return dimissionDate;
+	}
 
-    public void setDimissionDate(Date dimissionDate) {
-        this.dimissionDate = dimissionDate;
-    }
+	public void setDimissionDate(Date dimissionDate) {
+		this.dimissionDate = dimissionDate;
+	}
 
-    public Date getSurrenderDate() {
-        return surrenderDate;
-    }
+	public Date getSurrenderDate() {
+		return surrenderDate;
+	}
 
-    public void setSurrenderDate(Date surrenderDate) {
-        this.surrenderDate = surrenderDate;
-    }
+	public void setSurrenderDate(Date surrenderDate) {
+		this.surrenderDate = surrenderDate;
+	}
 
-    public String getJointPersonName() {
-        return jointPersonName;
-    }
+	public String getJointPersonName() {
+		return jointPersonName;
+	}
 
-    public void setJointPersonName(String jointPersonName) {
-        this.jointPersonName = jointPersonName;
-    }
+	public void setJointPersonName(String jointPersonName) {
+		this.jointPersonName = jointPersonName;
+	}
 
-    public Date getJointPersonBirthDate() {
-        return jointPersonBirthDate;
-    }
+	public Date getJointPersonBirthDate() {
+		return jointPersonBirthDate;
+	}
 
-    public void setJointPersonBirthDate(Date jointPersonBirthDate) {
-        this.jointPersonBirthDate = jointPersonBirthDate;
-    }
+	public void setJointPersonBirthDate(Date jointPersonBirthDate) {
+		this.jointPersonBirthDate = jointPersonBirthDate;
+	}
 
-    public String getMedicalRemark() {
-        return medicalRemark;
-    }
+	public String getMedicalRemark() {
+		return medicalRemark;
+	}
 
-    public void setMedicalRemark(String medicalRemark) {
-        this.medicalRemark = medicalRemark;
-    }
+	public void setMedicalRemark(String medicalRemark) {
+		this.medicalRemark = medicalRemark;
+	}
 
-    public BigDecimal getCaseMoney() {
-        return caseMoney;
-    }
+	public BigDecimal getCaseMoney() {
+		return caseMoney;
+	}
 
-    public void setCaseMoney(BigDecimal caseMoney) {
-        this.caseMoney = caseMoney;
-    }
+	public void setCaseMoney(BigDecimal caseMoney) {
+		this.caseMoney = caseMoney;
+	}
 
-    public Integer getInvoiceNumber() {
-        return invoiceNumber;
-    }
+	public Integer getInvoiceNumber() {
+		return invoiceNumber;
+	}
 
-    public void setInvoiceNumber(Integer invoiceNumber) {
-        this.invoiceNumber = invoiceNumber;
-    }
+	public void setInvoiceNumber(Integer invoiceNumber) {
+		this.invoiceNumber = invoiceNumber;
+	}
 
-    public Integer getStatus() {
-        return status;
-    }
+	public Integer getStatus() {
+		return status;
+	}
 
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 
-    public String getHandler() {
-        return handler;
-    }
+	public String getHandler() {
+		return handler;
+	}
 
-    public void setHandler(String handler) {
-        this.handler = handler;
-    }
+	public void setHandler(String handler) {
+		this.handler = handler;
+	}
 
-    public Date getHandlerDate() {
-        return handlerDate;
-    }
+	public Date getHandlerDate() {
+		return handlerDate;
+	}
 
-    public void setHandlerDate(Date handlerDate) {
-        this.handlerDate = handlerDate;
-    }
+	public void setHandlerDate(Date handlerDate) {
+		this.handlerDate = handlerDate;
+	}
 
-    public Boolean getActive() {
-        return isActive;
-    }
+	public Integer getRejectType() {
+		return rejectType;
+	}
 
-    public void setActive(Boolean isActive) {
-        this.isActive = isActive;
-    }
+	public void setRejectType(Integer rejectType) {
+		this.rejectType = rejectType;
+	}
 
-    public Date getCreatedTime() {
-        return createdTime;
-    }
+	public String getRemark() {
+		return remark;
+	}
 
-    public void setCreatedTime(Date createdTime) {
-        this.createdTime = createdTime;
-    }
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 
-    public Date getModifiedTime() {
-        return modifiedTime;
-    }
+	public Boolean getActive() {
+		return isActive;
+	}
 
-    public void setModifiedTime(Date modifiedTime) {
-        this.modifiedTime = modifiedTime;
-    }
+	public void setActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
+	public Date getCreatedTime() {
+		return createdTime;
+	}
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
+	}
 
-    public String getModifiedBy() {
-        return modifiedBy;
-    }
+	public Date getModifiedTime() {
+		return modifiedTime;
+	}
 
-    public void setModifiedBy(String modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
+	public void setModifiedTime(Date modifiedTime) {
+		this.modifiedTime = modifiedTime;
+	}
 
-    @Override
-    protected Serializable pkVal() {
-        return this.umAcceptanceId;
-    }
+	public String getCreatedBy() {
+		return createdBy;
+	}
 
-    @Override
-    public String toString() {
-        return "UninsuredMedical{" +
-            ", umAcceptanceId=" + umAcceptanceId +
-            ", employeeId=" + employeeId +
-            ", moneyType=" + moneyType +
-            ", caseType=" + caseType +
-            ", dimissionDate=" + dimissionDate +
-            ", surrenderDate=" + surrenderDate +
-            ", jointPersonName=" + jointPersonName +
-            ", jointPersonBirthDate=" + jointPersonBirthDate +
-            ", medicalRemark=" + medicalRemark +
-            ", caseMoney=" + caseMoney +
-            ", invoiceNumber=" + invoiceNumber +
-            ", status=" + status +
-            ", handler=" + handler +
-            ", handlerDate=" + handlerDate +
-            ", isActive=" + isActive +
-            ", createdTime=" + createdTime +
-            ", modifiedTime=" + modifiedTime +
-            ", createdBy=" + createdBy +
-            ", modifiedBy=" + modifiedBy +
-            "}";
-    }
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	@Override
+	protected Serializable pkVal() {
+		return this.umAcceptanceId;
+	}
+
+	@Override
+	public String toString() {
+		return "UninsuredMedical{" +
+			", umAcceptanceId=" + umAcceptanceId +
+			", employeeId=" + employeeId +
+			", moneyType=" + moneyType +
+			", caseType=" + caseType +
+			", dimissionDate=" + dimissionDate +
+			", surrenderDate=" + surrenderDate +
+			", jointPersonName=" + jointPersonName +
+			", jointPersonBirthDate=" + jointPersonBirthDate +
+			", medicalRemark=" + medicalRemark +
+			", caseMoney=" + caseMoney +
+			", invoiceNumber=" + invoiceNumber +
+			", status=" + status +
+			", handler=" + handler +
+			", handlerDate=" + handlerDate +
+			", rejectType=" + rejectType +
+			", remark=" + remark +
+			", isActive=" + isActive +
+			", createdTime=" + createdTime +
+			", modifiedTime=" + modifiedTime +
+			", createdBy=" + createdBy +
+			", modifiedBy=" + modifiedBy +
+			"}";
+	}
 }
