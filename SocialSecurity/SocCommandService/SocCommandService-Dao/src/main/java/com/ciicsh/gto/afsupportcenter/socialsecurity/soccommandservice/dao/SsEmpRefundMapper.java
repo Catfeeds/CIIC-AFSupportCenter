@@ -1,7 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpRefundBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpRefund;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
  * <p>
@@ -14,5 +17,12 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @since 2017-12-01
  */
 public interface SsEmpRefundMapper extends BaseMapper<SsEmpRefund> {
+
+    /**
+     * 退费明细
+     * @param ssEmpRefundBO
+     * @return
+     */
+    List<SsEmpRefundBO> selectRefundDetail(SsEmpRefundBO ssEmpRefundBO);
 
 }
