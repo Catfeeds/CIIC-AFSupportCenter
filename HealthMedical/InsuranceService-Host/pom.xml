@@ -23,12 +23,6 @@
 
         <dependency>
             <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
-            <artifactId>insurancequeryservice-business</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
             <artifactId>insuranceservice-api</artifactId>
             <version>1.0.0</version>
         </dependency>
@@ -43,13 +37,13 @@
     <build>
         <finalName>gt1.afsupportcenter.insuranceservice-host</finalName>
         <resources>
-            <resource>
+            <!--<resource>
                 <directory>../InsuranceService-Dao/src/main/resources/</directory>
                 <filtering>true</filtering>
                 <includes>
                     <include>**/mapper/*.xml</include>
                 </includes>
-            </resource>
+            </resource>-->
             <resource>
                 <directory>src/main/resources/</directory>
                 <filtering>true</filtering>

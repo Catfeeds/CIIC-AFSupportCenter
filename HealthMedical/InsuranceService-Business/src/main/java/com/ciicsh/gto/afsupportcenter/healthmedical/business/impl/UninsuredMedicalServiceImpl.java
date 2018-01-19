@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.business.impl;
 
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.UninsuredMedicalService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.dao.UninsuredMedicalMapper;
@@ -17,4 +18,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class UninsuredMedicalServiceImpl extends ServiceImpl<UninsuredMedicalMapper, UninsuredMedical> implements UninsuredMedicalService {
 
+    @Override
+    public Page<UninsuredMedical> queryAcceptanceList(Page<UninsuredMedical> page, UninsuredMedical uninsuredMedical) {
+        return null;
+    }
 }

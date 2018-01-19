@@ -1,12 +1,9 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.entity.dto;
+package com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto;
 
-import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -17,7 +14,7 @@ import java.util.Date;
  *
  * @author xiweizhen
  */
-public class UninsuredMedicalDTO {
+public class UninsuredMedicalDTO extends CommonEntity {
 
     /**
      * 未投保医疗受理编号
@@ -293,7 +290,8 @@ public class UninsuredMedicalDTO {
 
     @Override
     public String toString() {
-        return "UninsuredMedical{" +
+        return super.toString() +
+            "UninsuredMedical{" +
             ", umAcceptanceId=" + umAcceptanceId +
             ", employeeId=" + employeeId +
             ", moneyType=" + moneyType +
