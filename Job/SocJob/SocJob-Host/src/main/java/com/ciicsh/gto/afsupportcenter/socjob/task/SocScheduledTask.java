@@ -18,20 +18,20 @@ import java.util.Date;
 @Component
 public class SocScheduledTask {
 
-    private final static Logger logger = LoggerFactory.getLogger(SocScheduledTask.class);
-
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-    @Autowired
-    private SsPaymentComService paymentComService;
-
-
-//    @Scheduled(cron = "0 0 20 L * ?")
-    @Scheduled(fixedRate = 60000)
-    public void generateSocPayment() throws InterruptedException{
-        logger.info("开始，当前时间：" + dateFormat.format(new Date()));
-        String paymentMonth = CommonUtils.getPaymentMonth();
-        paymentComService.generateSocPaymentInfo(paymentMonth);
-        logger.info("结束，当前时间：" + dateFormat.format(new Date()));
-    }
+//    private final static Logger logger = LoggerFactory.getLogger(SocScheduledTask.class);
+//
+//    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//
+//    @Autowired
+//    private SsPaymentComService paymentComService;
+//
+//
+////    @Scheduled(cron = "0 0 20 L * ?")
+//    @Scheduled(fixedRate = 60000)
+//    public void generateSocPayment() throws InterruptedException{
+//        logger.info("开始，当前时间：" + dateFormat.format(new Date()));
+//        String paymentMonth = CommonUtils.getPaymentMonth();
+//        paymentComService.generateSocPaymentInfo(paymentMonth);
+//        logger.info("结束，当前时间：" + dateFormat.format(new Date()));
+//    }
 }
