@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.host.controller;
+package com.ciicsh.gto.afsupportcenter.healthmedical.host.controller;
 
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.UninsuredMedicalService;
 import org.springframework.beans.factory.annotation.Autowired;

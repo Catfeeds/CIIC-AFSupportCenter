@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.host.configuration;
+package com.ciicsh.gto.afsupportcenter.healthmedical.host.configuration;
 /**
  * Created by shil on 2017/9/21.
  */
@@ -10,8 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
- * @author jiangtianning
- * @date 2017/9/8
+ * @author xiweizhen
  */
 @Configuration
 public class CORSConfiguration {

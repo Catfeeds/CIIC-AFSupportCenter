@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.api;
+package com.ciicsh.gto.afsupportcenter.healthmedical.api;
 
 
 import org.springframework.cloud.netflix.feign.FeignClient;

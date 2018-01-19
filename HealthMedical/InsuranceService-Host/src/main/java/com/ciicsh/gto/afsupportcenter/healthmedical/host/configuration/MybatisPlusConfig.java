@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.commandservice.host.configuration;
+package com.ciicsh.gto.afsupportcenter.healthmedical.host.configuration;
 
 
 import com.baomidou.mybatisplus.enums.DBType;
