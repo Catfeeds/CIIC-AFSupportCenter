@@ -89,4 +89,14 @@ public class SsEmpBasePeriodServiceImpl extends ServiceImpl<SsEmpBasePeriodMappe
             this.insertBatch(newEmpBasePeriodList);
         }
     }
+
+    @Override
+    public void updateEndMonAndHandleMon(SsEmpBasePeriod ssEmpBasePeriod) {
+        baseMapper.updateEndMonAndHandleMon(ssEmpBasePeriod);
+    }
+
+    @Override
+    public Integer updateReductionById(SsEmpBasePeriod ssEmpBasePeriod) {
+        return baseMapper.updateReductionById(ssEmpBasePeriod);
+    }
 }

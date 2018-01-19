@@ -6,8 +6,15 @@ endpoints:
         sensitive: false
 eureka:
     client:
+<<<<<<< HEAD
+      registerWithEureka: false
+      serviceUrl:
+#        defaultZone: http://172.16.9.19:9600/eureka,http://172.16.9.20:9600/eureka,http://172.16.9.21:9600/eureka
+        defaultZone: http://172.16.9.24:9602/eureka
+=======
       serviceUrl:
         defaultZone: http://172.16.9.19:9600/eureka,http://172.16.9.20:9600/eureka,http://172.16.9.21:9600/eureka
+>>>>>>> origin/feature_houwanhua_20180112
     instance:
       lease-renewal-interval-in-seconds: 40
       lease-expiration-duration-in-seconds: 30
@@ -79,10 +86,11 @@ spring:
         name: afsupportcenter-center-query-service
     datasource:
         driver-class-name: com.mysql.jdbc.Driver
-        initial-size: 10
-        max-active: 20
-        max-idle: 8
-        min-idle: 8
+        tomcat:
+          initial-size: 10
+          max-active: 20
+          max-idle: 8
+          min-idle: 8
         password: a111111
         url: jdbc:mysql://172.16.9.15:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
         username: root

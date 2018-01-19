@@ -24,4 +24,8 @@ public interface SsEmpBasePeriodMapper extends BaseMapper<SsEmpBasePeriod> {
     List<SsEmpBasePeriod> queryPeriodByEmpArchiveId(@Param("empArchiveId")String empArchiveId);
 
     void updateEndMonthById(SsEmpBasePeriod ssEmpBasePeriod);
+
+    void updateEndMonAndHandleMon(SsEmpBasePeriod ssEmpBasePeriod);
+
+    Integer updateReductionById(SsEmpBasePeriod ssEmpBasePeriod);
 }

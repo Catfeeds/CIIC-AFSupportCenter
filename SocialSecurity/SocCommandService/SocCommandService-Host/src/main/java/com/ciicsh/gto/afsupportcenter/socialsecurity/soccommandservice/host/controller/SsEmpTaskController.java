@@ -1,16 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpBaseDetailService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpBasePeriodService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskPeriodService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBaseDetail;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBasePeriod;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.*;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -18,13 +12,10 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
-import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +37,8 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
 
     @Autowired
     private ISsEmpTaskPeriodService ssEmpTaskPeriodService;
-
+    @Autowired
+    private ISsEmpRefundService ssEmpRefundService;
     /**
      * 雇员日常操作查询
      */
@@ -156,6 +148,17 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
         boolean result = business.updateById(ssEmpTask);
         return JsonResultKit.of(result);
     }
+
+    @Log("通过任务单id查询退账金额")
+    @RequestMapping("/queryRefundAmountByTaskId")
+    public JsonResult<Object> queryRefundAmountByTaskId(SsEmpTaskBO ssEmpTaskBO){
+        EntityWrapper<SsEmpRefund> ew = new EntityWrapper();
+        ew.where("emp_task_id={0}",ssEmpTaskBO.getEmpTaskId()).and("is_active=1");
+        Object obj =  ssEmpRefundService.selectOne(ew);
+        System.out.println(obj);
+        return JsonResultKit.of(obj);
+    }
+
     /**
      * 办理状态：1、未处理 2 、处理中(已办)  3 已完成(已做) 4、批退 5、不需处理
      */

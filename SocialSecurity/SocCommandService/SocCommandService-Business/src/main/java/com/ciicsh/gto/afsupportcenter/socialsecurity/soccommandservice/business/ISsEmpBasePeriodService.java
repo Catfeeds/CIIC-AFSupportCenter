@@ -53,4 +53,16 @@ public interface ISsEmpBasePeriodService extends IService<SsEmpBasePeriod> {
      * @param newEmpBasePeriodList
      */
     void saveBackPeriod(List<SsEmpBasePeriod> newEmpBasePeriodList);
+
+    /**
+     * 转出时 将社保停缴月份和截止月份修改
+     * @param ssEmpBasePeriod
+     */
+    void updateEndMonAndHandleMon(SsEmpBasePeriod ssEmpBasePeriod);
+
+    /**
+     * 还原转出操作时的修改
+     * @param ssEmpBasePeriod
+     */
+    Integer updateReductionById(SsEmpBasePeriod ssEmpBasePeriod);
 }
