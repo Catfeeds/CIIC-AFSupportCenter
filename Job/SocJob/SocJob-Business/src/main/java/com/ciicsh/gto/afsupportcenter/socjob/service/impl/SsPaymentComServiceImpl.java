@@ -627,7 +627,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
 
             //医疗
             BigDecimal medicalAmount = paymentDetails.stream().map(p->p.getBaseMedicalAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
-            paymentDetail.setBasePensionAmount(medicalAmount);
+            paymentDetail.setBaseMedicalAmount(medicalAmount);
 
             //失业
             BigDecimal unemploymentAmount = paymentDetails.stream().map(p->p.getUnemploymentAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
