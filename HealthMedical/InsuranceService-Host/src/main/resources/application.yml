@@ -51,7 +51,7 @@ spring:
     datasource:
         driver-class-name: com.mysql.jdbc.Driver
         password: a111111
-        url: jdbc:mysql://172.16.9.15:3306/gtobusinessdb
+        url: jdbc:mysql://172.16.9.15:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
         username: root
         tomcat:
           initial-size: 10
