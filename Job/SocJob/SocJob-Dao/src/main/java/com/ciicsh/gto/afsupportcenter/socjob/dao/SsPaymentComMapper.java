@@ -2,9 +2,14 @@ package com.ciicsh.gto.afsupportcenter.socjob.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.SsPaymentCom;
+import com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsPaymentComBO;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeProxyDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -23,4 +28,19 @@ public interface SsPaymentComMapper extends BaseMapper<SsPaymentCom> {
      * @return 判断是否存在
      */
     Integer ifExistPayment(@Param("comAccountId") long comAccountId, @Param("paymentMonth") String paymentMonth);
+
+    //查询未支付客户
+    List<SsPaymentComBO> getPaymentComList(HashMap map);
+
+    //按照财务服务契约提供雇员级信息
+    List<EmployeeProxyDTO> getPaymentEmpList(HashMap map);
+
+    //根据接口返回的数据批量更新月度明细的支付状态
+    void updateMonthCharge(HashMap map);
+
+    //根据接口返回的数据批量更新客户的支付状态
+    void updatePaymentCom(HashMap map);
+
+    //查询 客户下有多少 不可付的记录
+    Integer countByEmpPaymentStatus(HashMap map);
 }

@@ -30,6 +30,70 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMapExt" type="com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsPaymentComBO">
+        <result column="company_id" property="companyId"/>
+        <result column="payment_com_id" property="paymentComId"/>
+        <result column="com_account_id" property="comAccountId"/>
+        <result column="payment_way" property="paymentWay"/>
+    </resultMap>
+
+    <!--查询未支付客户-->
+    <select id="getPaymentComList" resultMap="BaseResultMapExt">
+        SELECT pc.company_id,pc.payment_com_id,ca.com_account_id,ca.payment_way
+        FROM ss_payment_com pc
+        LEFT JOIN ss_com_account ca ON ca.com_account_id=pc.com_account_id
+        WHERE pc.is_active=1
+        AND pc.payment_month=#{payemntMonth}
+        AND pc.payment_state=1
+    </select>
+
+    <!--按照财务服务契约提供雇员级信息-->
+    <select id="getPaymentEmpList" resultType="com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeProxyDTO">
+        SELECT emp.employee_id employeeId,
+        pc.company_id companyId,
+        pc.payment_month payMonth,
+        pc.total_pay_amount payAmount,
+        mc.emp_payment_status isCompanyEnjoyAdvance,
+        mc.month_charge_id objId
+        FROM ss_month_charge mc
+        INNER JOIN emp_employee emp ON mc.employee_id=mc.employee_id
+        INNER JOIN ss_emp_archive ea ON ea.emp_archive_id=mc.emp_archive_id
+        INNER JOIN ss_payment_com pc ON pc.com_account_id=mc.com_account_id
+        WHERE pc.is_active=1
+        AND mc.ss_month=#{ssMonth}
+        AND pc.payment_com_id=#{paymentComId}
+    </select>
+
+    <!--根据接口返回的数据批量更新月度明细的支付状态-->
+    <update id="updateMonthCharge" parameterType="java.util.HashMap">
+        UPDATE ss_month_charge SET  emp_payment_status=#{empPaymentStatus}
+        WHERE
+        month_charge_id=#{monthChargeId}
+    </update>
+
+    <!--查询 客户下有多少 不可付的记录-->
+    <select id="countByEmpPaymentStatus" resultType="java.lang.Integer">
+        select count(1)
+        from ss_month_charge
+        where is_active=1
+        and emp_payment_status=0
+        and ss_month=#{ssMonth}
+        and com_account_id=#{comAccountId}
+    </select>
+
+    <!--根据接口返回的数据批量更新客户的支付状态-->
+    <update id="updatePaymentCom" parameterType="java.util.HashMap">
+        UPDATE ss_payment_com SET
+        payment_state=#{paymentState} where payment_com_id=#{paymentComId}
+    </update>
+
+
+
+
+
     <select id="ifExistPayment" resultType="int">
       SELECT COUNT(*) FROM ss_payment_com WHERE com_account_id = #{comAccountId} AND payment_month = #{paymentMonth} AND is_active = 1
     </select>
