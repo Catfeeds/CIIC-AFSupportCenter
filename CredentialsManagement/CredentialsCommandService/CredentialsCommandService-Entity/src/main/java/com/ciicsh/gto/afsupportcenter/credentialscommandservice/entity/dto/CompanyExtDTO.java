@@ -1,38 +1,26 @@
-package com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po;
-
-import com.baomidou.mybatisplus.activerecord.Model;
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
-import com.baomidou.mybatisplus.enums.IdType;
+package com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @Author: guwei
- * @Description: 客户数据维护（客户扩展表）
- * @Date: Created in 15:08 2018/1/15
+ * @Description:
+ * @Date: Created in 10:29 2018/1/19
  */
-@TableName("cm_company_ext")
-public class CompanyExt extends Model<CompanyExt> {
-
-    private static final long serialVersionUID = 1L;
+public class CompanyExtDTO implements Serializable{
 
     /**
      * 主键：客户数据维护id
      */
-    @TableId(value="company_ext_id", type= IdType.AUTO)
     private Long companyExtId;
     /**
      * 客户id
      */
-    @TableField("company_id")
     private String companyId;
     /**
      * 证件类型
      */
-    @TableField("credentials_type")
     private Integer credentialsType;
     /**
      * 办理机构
@@ -41,104 +29,83 @@ public class CompanyExt extends Model<CompanyExt> {
     /**
      * 操作账号
      */
-    @TableField("operate_account")
     private String operateAccount;
     /**
      * 操作密码
      */
-    @TableField("operate_pwd")
     private String operatePwd;
     /**
      * 操作方式 (1：待审代交、2：待审不代交、3：不待审代交)
      */
-    @TableField("operate_type")
     private Integer operateType;
     /**
      * 费用类型(1：免费、2：常规收费、3：特殊收费)
      */
-    @TableField("charge_type")
     private Integer chargeType;
     /**
      * 特殊收费备注
      */
-    @TableField("special_charge_remark")
     private String specialChargeRemark;
     /**
      * 支付方式(1：台帐、2：员工自付)
      */
-    @TableField("pay_type")
     private Integer payType;
     /**
      * 介绍信
      */
-    @TableField("introduce_mail")
     private Boolean introduceMail;
     /**
      * 网上联系人身份证复印件
      */
-    @TableField("online_contact_id_card")
     private Boolean onlineContactIdCard;
     /**
      * 网上联系人是否秘书台人员
      */
-    @TableField("online_contact_is_secretariat")
     private Boolean onlineContactIsSecretariat;
     /**
      * 网上联系人
      */
-    @TableField("online_contact")
     private String onlineContact;
     /**
      * 营业执照复印件或三证合一复印件
      */
-    @TableField("business_licence")
     private Boolean businessLicence;
     /**
      * 机构代码证复印件
      */
-    @TableField("organization_code")
     private Boolean organizationCode;
     /**
      * 外商企业批准证书复印件
      */
-    @TableField("foreign_business_approval_certificate")
     private Boolean foreignBusinessApprovalCertificate;
     /**
      * 工商局企业更名通知复印件
      */
-    @TableField("business_rename_notice")
     private Boolean businessRenameNotice;
     /**
      * 特殊情况备注
      */
-    @TableField("special_material_remark")
     private String specialMaterialRemark;
     /**
      * 是否可用
      */
-    @TableField("is_active")
     private Boolean isActive;
     /**
      * 创建时间
      */
-    @TableField("created_time")
     private Date createdTime;
     /**
      * 最后更新时间
      */
-    @TableField("modified_time")
     private Date modifiedTime;
     /**
      * 创建者登录名
      */
-    @TableField("created_by")
     private String createdBy;
     /**
      * 修改者登录名
      */
-    @TableField("modified_by")
     private String modifiedBy;
-
 
     public Long getCompanyExtId() {
         return companyExtId;
@@ -296,8 +263,8 @@ public class CompanyExt extends Model<CompanyExt> {
         return isActive;
     }
 
-    public void setActive(Boolean isActive) {
-        this.isActive = isActive;
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 
     public Date getCreatedTime() {
@@ -333,38 +300,32 @@ public class CompanyExt extends Model<CompanyExt> {
     }
 
     @Override
-    protected Serializable pkVal() {
-        return this.companyExtId;
-    }
-
-    @Override
     public String toString() {
-        return "CompanyExt{" +
+        return "CompanyExtDTO{" +
             "companyExtId=" + companyExtId +
-            ", companyId=" + companyId +
+            ", companyId='" + companyId + '\'' +
             ", credentialsType=" + credentialsType +
-            ", name=" + name +
-            ", operateAccount=" + operateAccount +
-            ", operatePwd=" + operatePwd +
+            ", name='" + name + '\'' +
+            ", operateAccount='" + operateAccount + '\'' +
+            ", operatePwd='" + operatePwd + '\'' +
             ", operateType=" + operateType +
-            ", charge Type=" + chargeType +
-            ", specialChargeRemark=" + specialChargeRemark +
+            ", chargeType=" + chargeType +
+            ", specialChargeRemark='" + specialChargeRemark + '\'' +
             ", payType=" + payType +
             ", introduceMail=" + introduceMail +
             ", onlineContactIdCard=" + onlineContactIdCard +
             ", onlineContactIsSecretariat=" + onlineContactIsSecretariat +
-            ", onlineContact=" + onlineContact +
+            ", onlineContact='" + onlineContact + '\'' +
             ", businessLicence=" + businessLicence +
             ", organizationCode=" + organizationCode +
             ", foreignBusinessApprovalCertificate=" + foreignBusinessApprovalCertificate +
             ", businessRenameNotice=" + businessRenameNotice +
-            ", specialMaterialRemark=" + specialMaterialRemark +
+            ", specialMaterialRemark='" + specialMaterialRemark + '\'' +
             ", isActive=" + isActive +
             ", createdTime=" + createdTime +
             ", modifiedTime=" + modifiedTime +
-            ", createdBy=" + createdBy +
-            ", modifiedBy=" + modifiedBy +
-            "}";
+            ", createdBy='" + createdBy + '\'' +
+            ", modifiedBy='" + modifiedBy + '\'' +
+            '}';
     }
-
 }

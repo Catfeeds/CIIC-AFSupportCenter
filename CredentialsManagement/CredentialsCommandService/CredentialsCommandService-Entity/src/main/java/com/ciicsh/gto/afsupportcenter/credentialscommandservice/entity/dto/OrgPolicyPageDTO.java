@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Date;
  * @Description:
  * @Date: Created in 17:46 2018/1/16
  */
-public class OrgPolicyPageDTO {
+public class OrgPolicyPageDTO implements Serializable{
 
     /**
      * 主键:办理机构政策id
@@ -119,5 +120,20 @@ public class OrgPolicyPageDTO {
 
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
+    }
+
+    @Override
+    public String toString() {
+        return "OrgPolicyPageDTO{" +
+            "orgPoilcyId=" + orgPoilcyId +
+            ", name='" + name + '\'' +
+            ", type=" + type +
+            ", policyDescription='" + policyDescription + '\'' +
+            ", isActive=" + isActive +
+            ", createdTime=" + createdTime +
+            ", modifiedTime=" + modifiedTime +
+            ", createdBy='" + createdBy + '\'' +
+            ", modifiedBy='" + modifiedBy + '\'' +
+            '}';
     }
 }

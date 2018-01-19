@@ -24,10 +24,11 @@ public interface CompanyExtService extends IService<CompanyExt> {
     List<CompanyExt> selectBycompanyId(String companyId);
 
     /**
-     * 根据客户code和证件类型更新客户证件办理信息
+     * 根据客户code和证件类型保存或更新客户证件办理信息
      * @param companyExt
      * @return
      */
-    boolean updateBycompanyIdAndType(CompanyExt companyExt);
+    @Override
+    boolean insertOrUpdate(CompanyExt companyExt);
 
 }

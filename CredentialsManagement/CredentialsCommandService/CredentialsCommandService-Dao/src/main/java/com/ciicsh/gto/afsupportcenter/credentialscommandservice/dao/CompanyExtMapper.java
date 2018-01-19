@@ -25,10 +25,4 @@ public interface CompanyExtMapper extends BaseMapper<CompanyExt> {
      */
     List<CompanyExt> selectBYCompanyId(String companyId);
 
-    /**
-     * 根据客户code和办证类型更新办证信息
-     * @param companyExt
-     * @return
-     */
-    int updateBycompanyIdAndType(CompanyExt companyExt);
 }

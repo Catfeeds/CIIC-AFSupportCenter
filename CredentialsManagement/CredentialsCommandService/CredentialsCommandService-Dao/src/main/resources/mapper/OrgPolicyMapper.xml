@@ -44,7 +44,7 @@
             <if test="name != null and name != ''">
                 AND name = #{name}
             </if>
-            <if test="type != null and name != ''">
+            <if test="type != null and type != ''">
                 AND type = #{type}
             </if>
         </trim>

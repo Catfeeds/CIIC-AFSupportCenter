@@ -3,7 +3,6 @@ package com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.controller
 import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.OrgPolicyService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.OrgPolicyPageDTO;
-import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.OrgPolicyQueryDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.OrgPolicy;
 import com.ciicsh.gto.afsupportcenter.util.page.PageUtil;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
@@ -40,7 +38,7 @@ public class OrgPolicyController {
         OrgPolicy orgPolicy = new OrgPolicy();
         orgPolicy.setName(name);
         orgPolicy.setType(type);
-        List<OrgPolicy> resultList = orgPolicyService.select(orgPolicy);
+        List<OrgPolicy> resultList = orgPolicyService.select(page, orgPolicy);
         resultList.stream().map(item -> {
             OrgPolicyPageDTO orgPolicyPageDTO = new OrgPolicyPageDTO();
             BeanUtils.copyProperties(item, orgPolicyPageDTO);

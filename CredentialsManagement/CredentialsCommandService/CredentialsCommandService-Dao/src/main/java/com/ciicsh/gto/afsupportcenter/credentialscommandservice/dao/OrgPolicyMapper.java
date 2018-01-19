@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.OrgPolicy;
 import org.springframework.stereotype.Repository;
 
@@ -20,9 +21,10 @@ public interface OrgPolicyMapper extends BaseMapper<OrgPolicy> {
     /**
      * 查询列表
      * @param orgPolicy
+     * @param page
      * @return
      */
-    List<OrgPolicy> select(OrgPolicy orgPolicy);
+    List<OrgPolicy> select(Page page, OrgPolicy orgPolicy);
 
     /**
      * 删除政策信息

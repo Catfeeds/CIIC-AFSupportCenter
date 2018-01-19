@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.credentialscommandservice.business;
 
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.OrgPolicy;
 
@@ -20,9 +21,10 @@ public interface OrgPolicyService extends IService<OrgPolicy> {
     /**
      * 条件查询办理机构政策列表
      * @param orgPolicy
+     * @param page
      * @return
      */
-    List<OrgPolicy> select(OrgPolicy orgPolicy);
+    List<OrgPolicy> select(Page page, OrgPolicy orgPolicy);
 
     /**
      * 插入或更新办理机构政策

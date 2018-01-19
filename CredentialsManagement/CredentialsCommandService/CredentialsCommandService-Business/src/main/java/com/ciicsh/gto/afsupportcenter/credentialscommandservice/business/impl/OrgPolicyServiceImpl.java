@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.impl;
 
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.OrgPolicyService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.OrgPolicyMapper;
@@ -25,8 +26,8 @@ public class OrgPolicyServiceImpl extends ServiceImpl<OrgPolicyMapper, OrgPolicy
     private OrgPolicyMapper orgPolicyMapper;
 
     @Override
-    public List<OrgPolicy> select(OrgPolicy orgPolicy) {
-        return orgPolicyMapper.select(orgPolicy);
+    public List<OrgPolicy> select(Page page, OrgPolicy orgPolicy) {
+        return orgPolicyMapper.select(page, orgPolicy);
     }
 
     @Override

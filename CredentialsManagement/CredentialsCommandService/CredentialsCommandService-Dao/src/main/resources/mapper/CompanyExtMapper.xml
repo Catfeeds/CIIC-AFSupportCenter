@@ -34,13 +34,13 @@
       SELECT
       <include refid="SEL_ALL_COLUMNS"></include>
       FROM
-      cm_company_ext
+        cm_company_ext
       WHERE
       company_id = #{companyId}
     </select>
 
     <update id="updateBycompanyIdAndType">
-        UPDATE cmy_af_company_ext
+        UPDATE cm_company_ext
         <set>
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="operate_account != null and operate_account != ''">operate_account = #{operateAccount},</if>
@@ -75,7 +75,7 @@
         operate_account,
         operate_pwd,
         operate_type,
-        charge _type,
+        charge_type,
         special_charge_remark,
         pay_type,
         introduce_mail,

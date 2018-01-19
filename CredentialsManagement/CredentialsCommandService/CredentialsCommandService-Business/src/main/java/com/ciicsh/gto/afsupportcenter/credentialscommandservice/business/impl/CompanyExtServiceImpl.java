@@ -29,9 +29,4 @@ public class CompanyExtServiceImpl extends ServiceImpl<CompanyExtMapper, Company
         return companyExtMapper.selectBYCompanyId(companyId);
     }
 
-    @Override
-    public boolean updateBycompanyIdAndType(CompanyExt companyExt) {
-        int row = companyExtMapper.updateBycompanyIdAndType(companyExt);
-        return row == 1 ? true : false;
-    }
 }
