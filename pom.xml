@@ -289,17 +289,24 @@
         <module>./HouseFund/FundCommandService/FundCommandService-Entity</module>-->
 
 
-        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Host</module>
         <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Api</module>
+        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Entity</module>
         <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Dao</module>
         <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Business</module>
-        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Entity</module>
+        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Host</module>
 
-        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Host</module>
         <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Api</module>
+        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Entity</module>
         <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Dao</module>
         <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Business</module>
-        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Entity</module>
+        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Host</module>
+
+        <!--健康医疗代码结构调整-->
+        <module>./HealthMedical/InsuranceService-Api</module>
+        <module>./HealthMedical/InsuranceService-Business</module>
+        <module>./HealthMedical/InsuranceService-Dao</module>
+        <module>./HealthMedical/InsuranceService-Entity</module>
+        <module>./HealthMedical/InsuranceService-Host</module>
 
         <!--
                 <module>./EmployManagement/EmployQueryService/EmployQueryService-Host</module>

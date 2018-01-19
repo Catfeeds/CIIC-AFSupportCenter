@@ -1,0 +1,50 @@
+app:
+    id: 10006008
+endpoints:
+    shutdown:
+        enabled: true
+        sensitive: false
+eureka:
+    client:
+        serviceUrl:
+            defaultZone: http://172.16.9.21:9602/eureka
+management:
+    context-path: /admin
+    port: 6016
+    security:
+        enabled: false
+mybatis-plus:
+    configuration:
+        cache-enabled: false
+        map-underscore-to-camel-case: true
+    mapperLocations: classpath*:mapper*/*.xml
+    type-handlers-package: com.ciicsh.gto.afsupportcenter.util.typehandler
+server:
+    port: 6015
+    tomcat:
+        background-processor-delay: 30
+        basedir: /tmp
+        max-threads: 0
+        protocol-header: x-forwarded-proto
+        remote-ip-header: x-forwarded-for
+    session:
+      timeout:
+    address: /insuranceService
+spring:
+    application:
+        name: afsupportcenter--service
+    datasource:
+        driver-class-name: com.mysql.jdbc.Driver
+        password: a111111
+        url: jdbc:mysql://172.16.9.15:3306/gtobusinessdb
+        username: root
+        tomcat:
+          initial-size: 10
+          max-active: 20
+          max-idle: 8
+          min-idle: 8
+    jpa:
+        database: MYSQL
+        hibernate:
+            ddl-auto: update
+        show-sql: true
