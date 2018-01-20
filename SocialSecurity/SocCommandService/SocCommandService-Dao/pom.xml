@@ -22,6 +22,19 @@
             <artifactId>afsupportcenter-socialsecurity-soccommandservice-entity</artifactId>
             <version>1.0.0</version>
         </dependency>
+
+        <dependency>
+            <artifactId>afsupportcenter-socialsecurity-soccommandservice-api</artifactId>
+            <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ciicsh.gt1.settlementcenter.payment</groupId>
+            <artifactId>settlementcenter-payment-command-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
     </dependencies>
 
 </project>
