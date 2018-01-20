@@ -107,6 +107,55 @@ public class CompanyExtDTO implements Serializable{
      */
     private String modifiedBy;
 
+    /**
+     * 证件类型UI
+     */
+    private String lab;
+    /**
+     * 操作方式UI
+     */
+    private String operateTypeN;
+    /**
+     *费用类型UI
+     */
+    private String chargeTypeN;
+    /**
+     *支付方式UI
+     */
+    private String payTypeN;
+
+    public String getLab() {
+        return lab;
+    }
+
+    public void setLab(String lab) {
+        this.lab = lab;
+    }
+
+    public String getOperateTypeN() {
+        return operateTypeN;
+    }
+
+    public void setOperateTypeN(String operateTypeN) {
+        this.operateTypeN = operateTypeN;
+    }
+
+    public String getChargeTypeN() {
+        return chargeTypeN;
+    }
+
+    public void setChargeTypeN(String chargeTypeN) {
+        this.chargeTypeN = chargeTypeN;
+    }
+
+    public String getPayTypeN() {
+        return payTypeN;
+    }
+
+    public void setPayTypeN(String payTypeN) {
+        this.payTypeN = payTypeN;
+    }
+
     public Long getCompanyExtId() {
         return companyExtId;
     }

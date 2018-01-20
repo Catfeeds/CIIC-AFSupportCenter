@@ -3,17 +3,19 @@ package com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.controller
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.CompanyExtService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.CompanyExtDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.CompanyExt;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.SelectionUtils;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @Author: guwei
@@ -33,7 +35,28 @@ public class CompanyExtController {
      */
     @GetMapping("/find/{companyCode}")
     public JsonResult getCompanyExt(@PathVariable("companyCode")String id){
-        return JsonResult.success(companyExtService.selectBycompanyId(id));
+        if (StringUtils.isNotBlank(id)) {
+            List<CompanyExt> companyExts = companyExtService.selectBycompanyId(id);
+            CompanyExtDTO companyExtDTO = new CompanyExtDTO();
+            companyExts.stream().forEach(i -> {
+                if (i.getCredentialsType() != null) {
+                    companyExtDTO.setLab(SelectionUtils.credentials(i.getCredentialsType()));
+                }
+                if (i.getOperateType() != null) {
+                    companyExtDTO.setOperateTypeN(SelectionUtils.operateType(i.getOperateType()));
+                }
+                if (i.getChargeType() != null) {
+                    companyExtDTO.setChargeTypeN(SelectionUtils.chargeType(i.getChargeType()));
+                }
+                if (i.getPayType() != null) {
+                    companyExtDTO.setPayTypeN(SelectionUtils.payType(i.getPayType()));
+                }
+            });
+            BeanUtils.copyProperties(companyExts,companyExtDTO);
+            return JsonResult.success(companyExtDTO);
+        }else {
+            return JsonResult.faultMessage("请求失败");
+        }
     }
 
 
