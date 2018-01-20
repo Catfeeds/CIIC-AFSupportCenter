@@ -2,9 +2,11 @@ package com.ciicsh.gto.afsupportcenter.socjob.service.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.SsPaymentCom;
+import com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsMonthChargeBO;
 import com.ciicsh.gto.afsupportcenter.socjob.service.PaymentService;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsPaymentComBO;
 import com.ciicsh.gto.afsupportcenter.socjob.dao.SsPaymentComMapper;
+import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.EmployeeMonthlyDataProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult;
@@ -53,14 +55,16 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
         HashMap qMap = new HashMap();
         qMap.put("paymentComId", paymentComId);
         qMap.put("ssMonth", ssMonth);
-        List<EmployeeProxyDTO> paymentEmpList = ssPaymentMapper.getPaymentEmpList(qMap);
+        List<SsMonthChargeBO> paymentEmpList = ssPaymentMapper.getPaymentEmpList(qMap);
+
+        List<EmployeeProxyDTO> proxyDTOList = CommonTransform.convertToDTOs(paymentEmpList, EmployeeProxyDTO.class);
 
         //2 按照财务服务契约提供雇员级信息 并调用财务接口
         EmployeeMonthlyDataProxyDTO proxyDTO = new EmployeeMonthlyDataProxyDTO();
         //上海社保
         proxyDTO.setBusinessType("1");
         proxyDTO.setBatchMonth(ssMonth);
-        proxyDTO.setEmployeeList(paymentEmpList);
+        proxyDTO.setEmployeeList(proxyDTOList);
         JsonResult<EmployeeMonthlyDataProxyDTO> res = employeeMonthlyDataProxy.employeeCanPay(proxyDTO);
 
         EmployeeMonthlyDataProxyDTO resDto = (EmployeeMonthlyDataProxyDTO) res.getData();
