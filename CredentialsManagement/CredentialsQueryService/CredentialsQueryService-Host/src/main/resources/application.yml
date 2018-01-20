@@ -1,6 +1,6 @@
 #mybatis:
 #  mapperLocations: classpath*:mapper/**.xml
-##  config-location: classpath:/mybatis-config.xml
+##  configuration-location: classpath:/mybatis-configuration.xml
 #  configuration:
 #    # map-underscore-to-camel-case: true
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

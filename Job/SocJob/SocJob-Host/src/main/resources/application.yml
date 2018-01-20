@@ -1,6 +1,6 @@
 ###################  项目启动端口  ###################
 server:
-  port: 6023
+  port: 6012
   context-path: /
 
 spring:
@@ -54,6 +54,8 @@ mongo:
 mybatis-plus:
   mapper-locations: classpath*:mapper/**.xml
   type-aliases-package: com.ciicsh.gto.afsupportcenter.socjob.entity
+  plugins:
+    - catMybatisInterceptor
 
   configuration:
       log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
