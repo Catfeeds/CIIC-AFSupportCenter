@@ -15,4 +15,13 @@
         LEFT JOIN sal_company sc ON scr.company_id = sc.company_id
         WHERE scr.com_account_id = #{comAccountId}
     </select>
+
+    <select id="queryByCond" resultMap="BaseResultMap">
+        SELECT
+        scr.*
+        FROM ss_account_com_relation scr
+        WHERE scr.com_account_id = #{comAccountId}
+        AND scr.company_id = #{companyId}
+    </select>
+
 </mapper>

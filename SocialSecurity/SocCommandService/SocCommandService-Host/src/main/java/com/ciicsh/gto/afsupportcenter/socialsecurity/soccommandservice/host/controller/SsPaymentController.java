@@ -223,7 +223,7 @@ public class SsPaymentController  extends BasicController<ISsPaymentService> {
     /**
      * <p>Description: 批次审批通过</p>
      *
-     * @author wengxk
+     * @author zhangxj
      * @date 2018-01-05
      * @param ssOperatePaymentDTO 批次操作参数
      * @return  JsonResult<>
