@@ -39,7 +39,7 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
 
 
     @Autowired
-    SsPaymentComMapper ssPaymentComMapper;
+    private SsPaymentComMapper ssPaymentComMapper;
 
     @Autowired
     private PayapplyServiceProxy payapplyServiceProxy;
@@ -201,7 +201,9 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
     }
 
     @Override
-    @Transactional
+    @Transactional(
+        rollbackFor = {Exception.class}
+    )
     public JsonResult<String> doReviewdePass(SsPayment ssPayment) {
         JsonResult<String> json = new JsonResult<>();
         json.setCode(0);
@@ -228,7 +230,7 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         //执行业务
         //将批次状态改为已申请到财务部
         ssPayment.setPaymentState(6);
-        ssPayment.setModifiedBy("张三");
+        ssPayment.setModifiedBy("system");
         ssPayment.setModifiedTime(LocalDateTime.now());
         baseMapper.updateById(ssPayment);
 
@@ -240,7 +242,7 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
                 //修改状态为已申请到财务部
                 SsPaymentCom ssPaymentCom = ssPaymentComList.get(i);
                 ssPaymentCom.setPaymentState(6);
-                ssPaymentCom.setModifiedBy("张三");
+                ssPaymentCom.setModifiedBy("system");
                 ssPaymentCom.setModifiedTime(LocalDateTime.now());
                 ssPaymentComMapper.updateById(ssPaymentCom);
             }
@@ -249,6 +251,7 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         PayApplyProxyDTO resDto = financePayApi(ssPayment);
         com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult<PayApplyProxyDTO> jsRes =
             payapplyServiceProxy.addShSocialInsurancePayApply(resDto);
+        json.setCode(Integer.parseInt(jsRes.getCode()));
         json.setMessage(jsRes.getMsg());
 
         //返回
@@ -266,6 +269,15 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
             ssPayment.getPaymentMonth());
         List<PayapplyEmployeeProxyDTO> paymentEmpList = baseMapper.getPaymentEmpList(ssPayment.getPaymentId(),
             ssPayment.getPaymentMonth());
+
+        //支付独立社保费用+支付月份  1 大库、2 外包、3独立户
+        if (ssPayment.getAccountType() == 1) {
+            dto.setPayReason("支付大库社保费用" + ssPayment.getPaymentMonth());
+        } else if (ssPayment.getAccountType() == 2) {
+            dto.setPayReason("支付外包社保费用" + ssPayment.getPaymentMonth());
+        } else if (ssPayment.getAccountType() == 3) {
+            dto.setPayReason("支付独立户社保费用" + ssPayment.getPaymentMonth());
+        }
         dto.setCompanyList(paymentComList);
         dto.setEmployeeList(paymentEmpList);
         //paymentDTO 提交给财务结构

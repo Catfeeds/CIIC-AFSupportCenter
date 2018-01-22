@@ -1,13 +1,14 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAccountComRelationBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAccountComRelationService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsAccountComRelationMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAccountComRelationBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -18,14 +19,25 @@ import java.util.List;
  * @since 2017-12-11
  */
 @Service
-public class SsAccountComRelationServiceImpl extends ServiceImpl<SsAccountComRelationMapper, SsAccountComRelation> implements ISsAccountComRelationService {
+public class SsAccountComRelationServiceImpl extends ServiceImpl<SsAccountComRelationMapper, SsAccountComRelation>
+    implements ISsAccountComRelationService {
     /**
      * 通过账户ID查询
      *
      * @param comAccountId
      * @return
      */
-    public  List<SsAccountComRelationBO> queryByAccountId(String comAccountId){
+    public List<SsAccountComRelationBO> queryByAccountId(String comAccountId) {
         return baseMapper.queryByAccountId(comAccountId);
+    }
+
+    /**
+     * 通过指定条件查询
+     *
+     * @param cond
+     * @return
+     */
+    public List<SsAccountComRelation> queryByCond(Map cond) {
+        return baseMapper.queryByCond(cond);
     }
 }
