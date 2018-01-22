@@ -53,6 +53,7 @@ public class OrgPolicyController {
     public JsonResult saveOrUpdateItem(@RequestBody OrgPolicyPageDTO orgPolicyPageDTO){
         OrgPolicy orgPolicy = new OrgPolicy();
         BeanUtils.copyProperties(orgPolicyPageDTO, orgPolicy);
+        //TODO
         if (orgPolicy.getOrgPoilcyId() == null ) {
             orgPolicy.setCreatedBy("gu");
             orgPolicy.setCreatedTime(new Date());

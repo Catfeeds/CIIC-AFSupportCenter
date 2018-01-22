@@ -12,9 +12,6 @@
 
     <groupId>com.ciicsh.gt1.afsupportcenter.credentialsmanagement</groupId>
     <artifactId>credentialscommandservice-dao</artifactId>
-    <build>
-        <finalName>gt1.afsupportcenter.credentialscommandservice-dao</finalName>
-    </build>
 
     <dependencies>
         <dependency>

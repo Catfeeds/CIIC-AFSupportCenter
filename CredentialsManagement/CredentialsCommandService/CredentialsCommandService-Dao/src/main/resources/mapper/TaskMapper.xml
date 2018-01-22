@@ -35,4 +35,38 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
+    <select id="selectByempId" resultMap="BaseResultMap">
+      SELECT
+      <include refid="SEL_ALL_COLUMS"/>
+      FROM
+      cm_task
+      WHERE
+      employee_id = #{empId}
+    </select>
+
+    <sql id="SEL_ALL_COLUMS">
+        material_back_time,
+        calls_time,
+        apply_time,
+        live_age_limit,
+        shift_letter_send_time,
+        talent_back_time,
+        talent_back_reason,
+        deal_time,
+        charge_time,
+        receive_file_time,
+        original_back_time,
+        original_back_reason,
+        integral_bill_print_time,
+        charge_amount,
+        pay_type,
+        permit_company_name,
+        telephone,
+        remark,
+        is_active,
+        created_time,
+        modified_time,
+        created_by,
+        modified_by
+    </sql>
 </mapper>

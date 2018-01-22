@@ -24,6 +24,14 @@ public interface CompanyExtService extends IService<CompanyExt> {
     List<CompanyExt> selectBycompanyId(String companyId);
 
     /**
+     * 根据客户code和证件类型查询办证信息
+     * @param companyId
+     * @param credentialsType
+     * @return
+     */
+    CompanyExt selectItem(String companyId, String credentialsType);
+
+    /**
      * 根据客户code和证件类型保存或更新客户证件办理信息
      * @param companyExt
      * @return

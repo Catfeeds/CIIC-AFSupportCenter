@@ -5,7 +5,10 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskFollowService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.TaskFollowMapper;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskFollow;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,5 +20,12 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TaskFollowServiceImpl extends ServiceImpl<TaskFollowMapper, TaskFollow> implements TaskFollowService {
-	
+
+    @Autowired
+    private TaskFollowMapper taskFollowMapper;
+
+    @Override
+    public List<TaskFollow> selectList(int taskId) {
+        return taskFollowMapper.selectListByTaskId(taskId);
+    }
 }

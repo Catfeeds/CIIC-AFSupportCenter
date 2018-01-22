@@ -39,6 +39,15 @@
       company_id = #{companyId}
     </select>
 
+    <select id="selectItem" resultMap="BaseResultMap">
+        SELECT
+        <include refid="SEL_ALL_COLUMNS"/>
+        FROM
+        cm_company_ext
+        WHERE
+        company_id = #{companyId} AND credentials_type = #{credentialsType}
+    </select>
+
     <update id="updateBycompanyIdAndType">
         UPDATE cm_company_ext
         <set>

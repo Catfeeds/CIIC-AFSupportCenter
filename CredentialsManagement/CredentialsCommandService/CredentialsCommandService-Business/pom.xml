@@ -14,10 +14,6 @@
     <packaging>jar</packaging>
     <version>1.0.0</version>
 
-    <build>
-        <finalName>gt1.afsupportcenter.credentialscommandservice-business</finalName>
-    </build>
-
     <dependencies>
         <dependency>
             <groupId>com.ciicsh.gt1.afsupportcenter.credentialsmanagement</groupId>

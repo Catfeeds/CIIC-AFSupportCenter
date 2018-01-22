@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,6 +30,8 @@ public class CompanyExtController {
     @Autowired
     private CompanyExtService companyExtService;
 
+    private static final int SPECIAL_CHARGE = 3;
+
     /**
      * 根据客户code查询证件办理信息
      * @return
@@ -37,8 +40,9 @@ public class CompanyExtController {
     public JsonResult getCompanyExt(@PathVariable("companyCode")String id){
         if (StringUtils.isNotBlank(id)) {
             List<CompanyExt> companyExts = companyExtService.selectBycompanyId(id);
-            CompanyExtDTO companyExtDTO = new CompanyExtDTO();
+            List<CompanyExtDTO> companyExtDTOS = new ArrayList<>();
             companyExts.stream().forEach(i -> {
+                CompanyExtDTO companyExtDTO = new CompanyExtDTO();
                 if (i.getCredentialsType() != null) {
                     companyExtDTO.setLab(SelectionUtils.credentials(i.getCredentialsType()));
                 }
@@ -51,14 +55,25 @@ public class CompanyExtController {
                 if (i.getPayType() != null) {
                     companyExtDTO.setPayTypeN(SelectionUtils.payType(i.getPayType()));
                 }
+                BeanUtils.copyProperties(i,companyExtDTO);
+                companyExtDTOS.add(companyExtDTO);
             });
-            BeanUtils.copyProperties(companyExts,companyExtDTO);
-            return JsonResult.success(companyExtDTO);
+            return JsonResult.success(companyExtDTOS);
         }else {
             return JsonResult.faultMessage("请求失败");
         }
     }
 
+    /**
+     * 根据客户code和证件类型查询办证信息
+     * @param companyId
+     * @param credentialsType
+     * @return
+     */
+    @GetMapping("/find")
+    public JsonResult getCompanyExtItem(String companyId, String credentialsType){
+        return JsonResult.success(companyExtService.selectItem(companyId, credentialsType));
+    }
 
     /**
      * 保存或更新客户证件办理信息
@@ -66,9 +81,13 @@ public class CompanyExtController {
      * @return
      */
     @PostMapping("/saveOrUpdate")
-    public JsonResult saveCompanyExt(@RequestBody CompanyExtDTO companyExtDTO){
+    public JsonResult saveOrUpdateCompanyExt(@RequestBody CompanyExtDTO companyExtDTO){
         CompanyExt companyExt = new CompanyExt();
         BeanUtils.copyProperties(companyExtDTO,companyExt);
+        if(companyExt.getChargeType() != SPECIAL_CHARGE){
+            companyExt.setSpecialChargeRemark("");
+        }
+        //TODO 创建人...
         return JsonResult.success(companyExtService.insertOrUpdate(companyExt));
     }
 

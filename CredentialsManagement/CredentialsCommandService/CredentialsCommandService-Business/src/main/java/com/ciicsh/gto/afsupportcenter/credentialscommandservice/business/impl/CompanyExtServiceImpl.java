@@ -29,4 +29,9 @@ public class CompanyExtServiceImpl extends ServiceImpl<CompanyExtMapper, Company
         return companyExtMapper.selectBYCompanyId(companyId);
     }
 
+    @Override
+    public CompanyExt selectItem(String companyId, String credentialsType) {
+        return companyExtMapper.selectItem(companyId, credentialsType);
+    }
+
 }
