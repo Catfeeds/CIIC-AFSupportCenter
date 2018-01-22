@@ -51,13 +51,13 @@
     </select>
 
     <!--按照财务服务契约提供雇员级信息-->
-    <select id="getPaymentEmpList" resultType="com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeProxyDTO">
-        SELECT emp.employee_id employeeId,
-        pc.company_id companyId,
-        pc.payment_month payMonth,
-        pc.total_pay_amount payAmount,
-        mc.emp_payment_status isCompanyEnjoyAdvance,
-        mc.month_charge_id objId
+    <select id="getPaymentEmpList" resultType="com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsMonthChargeBO">
+        SELECT emp.employee_id employee_id,
+        pc.company_id company_id,
+        pc.payment_month pay_month,
+        pc.total_pay_amount pay_amount,
+        mc.emp_payment_status is_company_enjoy_advance,
+        mc.month_charge_id obj_id
         FROM ss_month_charge mc
         INNER JOIN emp_employee emp ON mc.employee_id=mc.employee_id
         INNER JOIN ss_emp_archive ea ON ea.emp_archive_id=mc.emp_archive_id

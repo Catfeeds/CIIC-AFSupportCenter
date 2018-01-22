@@ -2,8 +2,8 @@ package com.ciicsh.gto.afsupportcenter.socjob.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.SsPaymentCom;
+import com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsMonthChargeBO;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsPaymentComBO;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeProxyDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -33,7 +33,7 @@ public interface SsPaymentComMapper extends BaseMapper<SsPaymentCom> {
     List<SsPaymentComBO> getPaymentComList(HashMap map);
 
     //按照财务服务契约提供雇员级信息
-    List<EmployeeProxyDTO> getPaymentEmpList(HashMap map);
+    List<SsMonthChargeBO> getPaymentEmpList(HashMap map);
 
     //根据接口返回的数据批量更新月度明细的支付状态
     void updateMonthCharge(HashMap map);
