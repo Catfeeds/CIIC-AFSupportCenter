@@ -1,4 +1,4 @@
-package out.com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.po;
+package out.com.ciicsh.gto.afsupportcenter.healthmedical.po;
 
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;

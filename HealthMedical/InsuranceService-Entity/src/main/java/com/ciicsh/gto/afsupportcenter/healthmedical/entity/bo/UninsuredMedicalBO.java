@@ -1,12 +1,10 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto;
+package com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo;
 
 import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.enums.IdType;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.CommonEntity;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 /**
  * <p>
@@ -15,7 +13,7 @@ import java.util.List;
  *
  * @author xiweizhen
  */
-public class UninsuredMedicalDTO extends CommonEntity {
+public class UninsuredMedicalBO extends CommonEntity {
     /**
      * 雇员姓名
      */
@@ -34,22 +32,8 @@ public class UninsuredMedicalDTO extends CommonEntity {
     private String companyName;
 
     /**
-     * 受理日期
-     */
-    private List<String> handlerDateRange;
-    /**
-     * 管理方编号
-     */
-    private String managementId;
-    /**
-     * 管理方名称
-     */
-    private String managementName;
-
-    /**
      * 未投保医疗受理编号
      */
-    @TableId(value = "um_acceptance_id", type = IdType.AUTO)
     private Integer umAcceptanceId;
     /**
      * 雇员终身编号
@@ -149,6 +133,37 @@ public class UninsuredMedicalDTO extends CommonEntity {
     @TableField("modified_by")
     private String modifiedBy;
 
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
+
+    public String getIdNum() {
+        return idNum;
+    }
+
+    public void setIdNum(String idNum) {
+        this.idNum = idNum;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
 
     public Integer getUmAcceptanceId() {
         return umAcceptanceId;
@@ -318,72 +333,13 @@ public class UninsuredMedicalDTO extends CommonEntity {
         this.modifiedBy = modifiedBy;
     }
 
-    public String getEmployeeName() {
-        return employeeName;
-    }
-
-    public void setEmployeeName(String employeeName) {
-        this.employeeName = employeeName;
-    }
-
-    public String getIdNum() {
-        return idNum;
-    }
-
-    public void setIdNum(String idNum) {
-        this.idNum = idNum;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public List<String> getHandlerDateRange() {
-        return handlerDateRange;
-    }
-
-    public void setHandlerDateRange(List<String> handlerDateRange) {
-        this.handlerDateRange = handlerDateRange;
-    }
-
-    public String getManagementId() {
-        return managementId;
-    }
-
-    public void setManagementId(String managementId) {
-        this.managementId = managementId;
-    }
-
-    public String getManagementName() {
-        return managementName;
-    }
-
-    public void setManagementName(String managementName) {
-        this.managementName = managementName;
-    }
-
     @Override
     public String toString() {
-        return "UninsuredMedicalDTO{" +
+        return super.toString() + "UninsuredMedicalBO{" +
             "employeeName='" + employeeName + '\'' +
             ", idNum='" + idNum + '\'' +
             ", companyId='" + companyId + '\'' +
             ", companyName='" + companyName + '\'' +
-            ", handlerDateRange=" + handlerDateRange +
-            ", managementId='" + managementId + '\'' +
-            ", managementName='" + managementName + '\'' +
             ", umAcceptanceId=" + umAcceptanceId +
             ", employeeId='" + employeeId + '\'' +
             ", moneyType=" + moneyType +

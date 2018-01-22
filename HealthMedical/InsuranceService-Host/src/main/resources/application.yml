@@ -47,7 +47,7 @@ server:
       timeout:
 spring:
     application:
-        name: afsupportcenter--service
+        name: afsupportcenter-insurance-service
     datasource:
         driver-class-name: com.mysql.jdbc.Driver
         password: a111111

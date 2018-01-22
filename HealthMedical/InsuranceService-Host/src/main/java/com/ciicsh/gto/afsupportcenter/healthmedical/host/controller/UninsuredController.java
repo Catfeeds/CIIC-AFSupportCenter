@@ -2,7 +2,10 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.host.controller;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.UninsuredMedicalService;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmpMemberBO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.UninsuredMedicalBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.UninsuredMedicalDTO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.CompanyConsultantRelation;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.UninsuredMedical;
 import com.ciicsh.gto.afsupportcenter.util.core.Result;
 import com.ciicsh.gto.afsupportcenter.util.core.ResultGenerator;
@@ -11,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * <p>
@@ -30,22 +35,104 @@ public class UninsuredController {
     @Autowired
     private UninsuredMedicalService uninsuredMedicalService;
 
+    /**
+     * 查询受理单列表
+     *
+     * @param uninsuredMedicalDTO
+     * @return
+     */
     @PostMapping("/queryAcceptanceList")
     public Result queryAcceptanceList(@RequestBody UninsuredMedicalDTO uninsuredMedicalDTO) {
         try {
             Page<UninsuredMedical> page = new Page<>(uninsuredMedicalDTO.getCurrent(), uninsuredMedicalDTO.getSize());
-            UninsuredMedical uninsuredMedical = new UninsuredMedical();
-            BeanUtils.copyProperties(uninsuredMedicalDTO, uninsuredMedical);
-            page = uninsuredMedicalService.queryAcceptanceList(page, uninsuredMedical);
+            page = uninsuredMedicalService.queryAcceptanceList(page, uninsuredMedicalDTO);
 
             BeanUtils.copyProperties(page, uninsuredMedicalDTO);
-            logger.info("查询礼品分页列表");
+            logger.info("查询受理单分页列表");
             return ResultGenerator.genSuccessResult(uninsuredMedicalDTO);
         } catch (Exception e) {
             return ResultGenerator.genServerFailResult();
         }
     }
 
+    /**
+     * 查询雇员列表
+     *
+     * @param uninsuredMedicalBO
+     * @return
+     */
+    @PostMapping("/queryEmployeeList")
+    public Result queryEmployeeList(@RequestBody UninsuredMedicalBO uninsuredMedicalBO) {
+        try {
+            Page<UninsuredMedicalBO> page = new Page<>(uninsuredMedicalBO.getCurrent(), uninsuredMedicalBO.getSize());
+            page = uninsuredMedicalService.queryEmployeeList(page, uninsuredMedicalBO);
+
+            logger.info("查询雇员分页列表");
+            return ResultGenerator.genSuccessResult(page);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
+        }
+    }
+
+    /**
+     * 查询业务顾问
+     *
+     * @param uninsuredMedicalBO
+     * @return
+     */
+    @PostMapping("/queryBusinessConsultant")
+    public Result queryBusinessConsultant(@RequestBody CompanyConsultantRelation uninsuredMedicalBO) {
+        try {
+            List<CompanyConsultantRelation> companyConsultantRelation = uninsuredMedicalService.queryBusinessConsultant(uninsuredMedicalBO.getCompanyId());
+
+            logger.info("查询公司业务顾问");
+            return ResultGenerator.genSuccessResult(companyConsultantRelation);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
+        }
+    }
+
+    /**
+     * 查询连带人下拉框数据
+     *
+     * @param uninsuredMedicalDTO
+     * @return
+     */
+    @PostMapping("/queryEmpMember")
+    public Result queryEmpMember(@RequestBody UninsuredMedicalDTO uninsuredMedicalDTO) {
+        try {
+            List<EmpMemberBO> list = uninsuredMedicalService.queryEmpMember(uninsuredMedicalDTO.getEmployeeId());
+            return ResultGenerator.genSuccessResult(list);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
+        }
+    }
+
+    /**
+     * 新增受理单
+     *
+     * @param uninsuredMedicalDTO
+     * @return
+     */
+    @PostMapping("/addAcceptance")
+    public Result addAcceptance(@RequestBody UninsuredMedicalDTO uninsuredMedicalDTO) {
+        try {
+            UninsuredMedical uninsuredMedical = new UninsuredMedical();
+            BeanUtils.copyProperties(uninsuredMedicalDTO, uninsuredMedical);
+            boolean flag = uninsuredMedicalService.insert(uninsuredMedical);
+            logger.info("新增受理单");
+            return ResultGenerator.genSuccessResult(flag);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
+        }
+    }
+
+    /**
+     * 根据主键查询收单数据
+     *
+     * @param id
+     * @return
+     */
     @GetMapping("/findById/{id}")
     public Result findById(@PathVariable Integer id) {
         try {
