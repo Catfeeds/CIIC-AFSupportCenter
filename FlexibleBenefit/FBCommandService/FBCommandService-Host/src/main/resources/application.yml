@@ -44,7 +44,7 @@ management:
     security:
         enabled: false
 #mybatis:
-#    config-location: classpath:mybatis-config.xml
+#    configuration-location: classpath:mybatis-configuration.xml
 #    mapperLocations: classpath:mapper/*.xml
 #    type-handlers-package: com.ciicsh.gto.afsupportcenter.util.typehandler
 #pagehelper:

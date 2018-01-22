@@ -13,6 +13,9 @@ import java.io.Serializable;
  * 月度缴费明细
 系统在每月26日晚上自动生成每月的标准和非标明细数据，用户也可重新生成，
  * </p>
+ *
+ * @author xsj
+ * @since 2018-01-19
  */
 @TableName("ss_month_charge")
 public class SsMonthCharge implements Serializable {
@@ -30,10 +33,20 @@ public class SsMonthCharge implements Serializable {
 	@TableField("com_account_id")
 	private Long comAccountId;
     /**
-     * 社保缴纳月份，格式为yyyyMM
+     * 所属社保月份，格式为yyyyMM
+     */
+	@TableField("ss_month_belong")
+	private String ssMonthBelong;
+    /**
+     * 实际社保缴纳发生月份，格式为yyyyMM
      */
 	@TableField("ss_month")
 	private String ssMonth;
+    /**
+     * 冗余EmployeeId
+     */
+	@TableField("employee_id")
+	private String employeeId;
     /**
      * 外键,雇员社保档案Id
      */
@@ -50,10 +63,16 @@ public class SsMonthCharge implements Serializable {
 	@TableField("total_amount")
 	private BigDecimal totalAmount;
     /**
-     * 费用种类：1标准 2新进 3补缴 4调整 5转出
+     * 费用种类：1标准 2 新进 3 转入  4 补缴 5 调整 （顺调)）6 转出 7封存 8 退账 9 调整（倒调）
+注意：历史调整，调高进入通知书的补缴汇总，如果调低，金额不进通知书
      */
 	@TableField("cost_category")
 	private Integer costCategory;
+    /**
+     * 财务接口要求的雇员支付状态
+     */
+	@TableField("emp_payment_status")
+	private Integer empPaymentStatus;
     /**
      * 是否有效, 0-无效 1-有效
      */
@@ -85,12 +104,28 @@ public class SsMonthCharge implements Serializable {
 		this.comAccountId = comAccountId;
 	}
 
+	public String getSsMonthBelong() {
+		return ssMonthBelong;
+	}
+
+	public void setSsMonthBelong(String ssMonthBelong) {
+		this.ssMonthBelong = ssMonthBelong;
+	}
+
 	public String getSsMonth() {
 		return ssMonth;
 	}
 
 	public void setSsMonth(String ssMonth) {
 		this.ssMonth = ssMonth;
+	}
+
+	public String getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
 	}
 
 	public String getEmpArchiveId() {
@@ -123,6 +158,14 @@ public class SsMonthCharge implements Serializable {
 
 	public void setCostCategory(Integer costCategory) {
 		this.costCategory = costCategory;
+	}
+
+	public Integer getEmpPaymentStatus() {
+		return empPaymentStatus;
+	}
+
+	public void setEmpPaymentStatus(Integer empPaymentStatus) {
+		this.empPaymentStatus = empPaymentStatus;
 	}
 
 	public Boolean getActive() {
@@ -168,13 +211,16 @@ public class SsMonthCharge implements Serializable {
 	@Override
 	public String toString() {
 		return "SsMonthCharge{" +
-			", monthChargeId=" + monthChargeId +
+			"monthChargeId=" + monthChargeId +
 			", comAccountId=" + comAccountId +
+			", ssMonthBelong=" + ssMonthBelong +
 			", ssMonth=" + ssMonth +
+			", employeeId=" + employeeId +
 			", empArchiveId=" + empArchiveId +
 			", baseAmount=" + baseAmount +
 			", totalAmount=" + totalAmount +
 			", costCategory=" + costCategory +
+			", empPaymentStatus=" + empPaymentStatus +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

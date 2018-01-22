@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsMonthChargeItemMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="resultMap"
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthChargeItemBO">
+        <result column="com_account_id" property="comAccountId"></result>
+        <result column="ss_month" property="ssMonth"></result>
+        <result column="ss_serial" property="ssSerial"></result>
+        <result column="employee_name" property="employeeName"></result>
+        <result column="employee_id" property="employeeId"></result>
+        <result column="company_id" property="companyId"></result>
+        <result column="ss_account_type" property="ssAccountType"></result>
+        <result column="emp_classify" property="empClassify"></result>
+        <result column="ss_month_belong" property="ssMonthBelong"></result>
+        <result column="cost_category" property="costCategory"></result>
+        <result column="base_amount" property="baseAmount"></result>
+        <result column="ss_type" property="ssType"></result>
+        <result column="com_amount" property="comAmount"></result>
+        <result column="emp_amount" property="empAmount"></result>
+        <result column="sub_total_amount" property="subTotalAmount"></result>
+        <result column="total_amount" property="totalAmount"></result>
+
+    </resultMap>
+
+    <select id="queryEmlpyeeMonthFeeDetail" resultMap="resultMap">
+        SELECT
+        mc.month_charge_id,
+        ea.ss_serial,
+        emp.employee_name,
+        emp.employee_id,
+        ea.company_id,
+        ca.ss_account_type,
+        ea.emp_classify,
+        mc.ss_month,
+        mc.ss_month_belong,
+        mc.cost_category,
+        mc.base_amount,
+		mci.ss_type,
+		mci.com_amount,
+		mci.emp_amount,
+		mci.sub_total_amount,
+		mc.total_amount
+        FROM
+        ss_month_charge_item mci
+        INNER JOIN ss_month_charge mc ON mc.month_charge_id=mci.month_charge_id
+        INNER JOIN 	ss_emp_archive ea ON ea.emp_archive_id=mc.emp_archive_id
+        INNER JOIN ss_com_account ca ON ca.com_account_id = ea.com_account_id
+        LEFT JOIN emp_employee emp ON emp.employee_id=ea.employee_id
+        WHERE
+        mci.is_active = 1 AND ca.com_account_id = #{comAccountId} AND mc.ss_month  =#{ssMonth}
+ </select>
+</mapper>
