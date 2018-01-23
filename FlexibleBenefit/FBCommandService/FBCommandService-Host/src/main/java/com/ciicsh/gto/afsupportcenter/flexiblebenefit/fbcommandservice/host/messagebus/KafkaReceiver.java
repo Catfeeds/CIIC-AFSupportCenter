@@ -37,31 +37,31 @@ public class KafkaReceiver {
      */
     @StreamListener(TaskSink.GIFT_APPLY)
     public void giftApply(Message<TaskCreateMsgDTO> message) {
-        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
-        String returnInfo = taskMsgDTO.toString();
+        TaskCreateMsgDTO taskCreateMsgDTO = message.getPayload();
+        String returnInfo = taskCreateMsgDTO.toString();
         logger.info("收到消息from GIFT_APPLY-useWork: " + returnInfo);
-        updateStepList(taskMsgDTO);
+        updateStepList(taskCreateMsgDTO);
     }
 
     /**
      * 弹性福利更新审批公共方法
      *
-     * @param taskMsgDTO
+     * @param taskCreateMsgDTO
      */
-    private void updateStepList(TaskCreateMsgDTO taskMsgDTO) {
-        if (CENTER.equals(taskMsgDTO.getTaskType())) {
+    private void updateStepList(TaskCreateMsgDTO taskCreateMsgDTO) {
+        if (CENTER.equals(taskCreateMsgDTO.getTaskType())) {
             ApplyRecordDetailPO applyRecordDetailPO = new ApplyRecordDetailPO();
-            applyRecordDetailPO.setApplyRecordDetailId(Integer.valueOf(taskMsgDTO.getMissionId()));
-            applyRecordDetailPO.setTaskId(taskMsgDTO.getTaskId());
+            applyRecordDetailPO.setApplyRecordDetailId(Integer.valueOf(taskCreateMsgDTO.getMissionId()));
+            applyRecordDetailPO.setTaskId(taskCreateMsgDTO.getTaskId());
             /**更新详情表记录*/
             applyRecordDetailCommandService.updateById(applyRecordDetailPO);
         }
         /**
          * taskType,查询审批人，新增审批记录
          */
-        String positionCode = taskMsgDTO.getTaskType();
+        String positionCode = taskCreateMsgDTO.getTaskType();
 
-        List<ApprovalStepPO> approvalStepList = approvalStepCommandService.selectList(Integer.valueOf(taskMsgDTO.getMissionId()));
+        List<ApprovalStepPO> approvalStepList = approvalStepCommandService.selectList(Integer.valueOf(taskCreateMsgDTO.getMissionId()));
         if (approvalStepList.size() == 1) {
             approvalStepList.get(0).setApproveName("xwz");
             approvalStepList.get(0).setApproverId("xwz");
@@ -80,11 +80,67 @@ public class KafkaReceiver {
      */
     @StreamListener(TaskSink.MARKETING_APPLY)
     public void marketApply(Message<TaskCreateMsgDTO> message) {
-        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
-        String returnInfo = taskMsgDTO.toString();
+        TaskCreateMsgDTO taskCreateMsgDTO = message.getPayload();
+        String returnInfo = taskCreateMsgDTO.toString();
         logger.info("收到消息from MARKETING_APPLY-useWork: " + returnInfo);
 
-        updateStepList(taskMsgDTO);
+        updateStepList(taskCreateMsgDTO);
+    }
+
+    @StreamListener(TaskSink.AF_EMP_IN)
+    public void receiveEmpIn(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskCreateMsgDTO = message.getPayload();
+        String returnInfo = taskCreateMsgDTO.toString();
+        logger.info("收到消息from AF_EMP_IN-useWork: " + returnInfo);
+    }
+
+    @StreamListener(TaskSink.AF_EMP_OUT)
+    public void receiveEmpOut(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskCreateMsgDTO = message.getPayload();
+        String returnInfo = taskCreateMsgDTO.toString();
+        logger.info("收到消息from AF_EMP_OUT-useWork: " + returnInfo);
+    }
+
+    @StreamListener(TaskSink.CHARGE_RESUME)
+    public void receiveChargeResume(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskCreateMsgDTO = message.getPayload();
+        String returnInfo = taskCreateMsgDTO.toString();
+        logger.info("收到消息from CHARGE_RESUME-useWork: " + returnInfo);
+    }
+
+    @StreamListener(TaskSink.CHARGE_STOP)
+    public void receiveChargeStop(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskCreateMsgDTO = message.getPayload();
+        String returnInfo = taskCreateMsgDTO.toString();
+        logger.info("收到消息from CHARGE_STOP-useWork: " + returnInfo);
+    }
+
+    @StreamListener(TaskSink.EMP_COMPANY_CHANGE)
+    public void receiveEmpCompanyChange(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskCreateMsgDTO = message.getPayload();
+        String returnInfo = taskCreateMsgDTO.toString();
+        logger.info("收到消息from EMP_COMPANY_CHANGE-useWork: " + returnInfo);
+    }
+
+    @StreamListener(TaskSink.PRE_IN)
+    public void receivePreIn(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskCreateMsgDTO = message.getPayload();
+        String returnInfo = taskCreateMsgDTO.toString();
+        logger.info("收到消息from PRE_IN-useWork: " + returnInfo);
+    }
+
+    @StreamListener(TaskSink.NONLOCAL_TO_SH)
+    public void receiveNonlocalToSh(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskCreateMsgDTO = message.getPayload();
+        String returnInfo = taskCreateMsgDTO.toString();
+        logger.info("收到消息from NONLOCAL_TO_SH-useWork: " + returnInfo);
+    }
+
+    @StreamListener(TaskSink.SH_TO_NONLOCAL)
+    public void receiveSh(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskCreateMsgDTO = message.getPayload();
+        String returnInfo = taskCreateMsgDTO.toString();
+        logger.info("收到消息from SH_TO_NONLOCAL-useWork: " + returnInfo);
     }
 
 }

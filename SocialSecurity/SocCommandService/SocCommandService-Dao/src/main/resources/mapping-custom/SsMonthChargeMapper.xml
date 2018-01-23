@@ -7,50 +7,62 @@
     <select id="countIfMonthFirstReport" resultType="java.util.HashMap">
         SELECT count(1) AS count_mc FROM ss_month_charge mc
         WHERE mc.is_active=1
-        AND ss_month={#}
+        AND mc.ss_month={#ssMonth}
+        AND mc.com_account_id={#comAccountId}
     </select>
-
     <!--判断是否有新的任务单-->
     <select id="selectIfNewEmpTask" resultType="java.util.HashMap">
         <![CDATA[
-        SELECT et.*
-        FROM ss_emp_task et
-        LEFT JOIN ss_emp_archive ea ON ea.emp_archive_id=et.emp_archive_id
-        WHERE et.is_active=1
-        AND et.handle_month={#}
-        AND ea.com_account_id={#}
-        AND EXISTS(
-        SELECT 1 from (
-        select MAX(mc.created_time) created_time FROM ss_month_charge mc
-        WHERE mc.is_active=1
-        AND mc.ss_month={#}
-        AND mc.com_account_id={#})t WHERE t.created_time < = et.created_time
-        )
+            SELECT et.*
+            FROM ss_emp_task et
+            LEFT JOIN ss_emp_archive ea ON ea.emp_archive_id=et.emp_archive_id
+            WHERE et.is_active=1
+            AND et.handle_month={#ssMonth}
+            AND ea.com_account_id={#comAccountId}
+            AND EXISTS(
+            SELECT 1 from (
+            select MAX(mc.created_time) created_time FROM ss_month_charge mc
+            WHERE mc.is_active=1
+            AND mc.ss_month={#ssMonth}
+            AND mc.com_account_id={#comAccountId})t WHERE t.created_time < = et.created_time
+            )
         ]]>
     </select>
     <!--逻辑删除，按月份按企业社保账户，删除险种-->
-    <update id="updateMonthChargeItem">
-
+    <update id="updateMonthChargeItemDel">
+    UPDATE ss_month_charge_item mri set is_active=0 where
+    EXISTS (select 1 from ss_month_charge mr where mr.month_charge_id=mri.month_charge_id and com_account_id={#comAccountId} and ss_month={#ssMonth} and emp_archive_id='')
     </update>
     <!--逻辑删除，按月份按企业社保账户，删除雇员-->
-    <update id="updateMonthCharge">
-
+    <update id="updateMonthChargeDel">
+    UPDATE ss_month_charge set is_active=0 WHERE and com_account_id={#comAccountId} and ss_month={#comAccountId} and emp_archive_id=''
     </update>
 
-<!--标准：按月查询标准数据,查询雇员费用段-->
-    <select id="selectStandardEmpPeriod"  resultType="java.util.HashMap">
+    <!--标准：按月查询标准数据,查询雇员费用段-->
+    <select id="selectStandardEmpPeriod" resultType="java.util.HashMap">
         <![CDATA[
-        SELECT ebp.*
-        FROM ss_emp_base_period ebp
-        LEFT JOIN ss_emp_archive ea on ea.emp_archive_id=ebp.emp_archive_id and ea.com_account_id='客户社保账户ID'
-        WHERE
-        ebp.is_active=1
-        AND '社保缴纳年月' BETWEEN ebp.start_month and ebp.end_month
-        AND ebp.ss_month<>'社保年月'
-        AND ebp.ss_month_stop<>'社保缴纳年月'
+            SELECT ebp.*
+            FROM ss_emp_base_period ebp
+            LEFT JOIN ss_emp_archive ea on ea.emp_archive_id=ebp.emp_archive_id and ea.com_account_id='客户社保账户ID'
+            WHERE
+            ebp.is_active=1
+            AND {#ssMonth} BETWEEN ebp.start_month and ebp.end_month
+            AND ebp.ss_month <> {#ssMonth}
+            AND ebp.ss_month_stop <> {#ssMonth}
         ]]>
-
     </select>
-    <!--非标：按月查询标准数据,查询雇员费用段-->
+    <!--非标：按月查询标准数据,查询雇员费用段，变更类型：新进 转入 补缴-->
+    <select id="selectNonStandardTaskCategory124">
+        select ebd.*,ebp.base_amount from
+        ss_emp_base_detail ebd
+        left join ss_emp_base_period ebp on ebd.emp_base_period_id=ebp.emp_base_period_id and ebp.is_active=1
+        left join ss_emp_archive ea on ea.emp_archive_id=ebp.emp_archive_id and ea.com_account_id={#comAccountId}
+        left join ss_emp_task et on ebp.emp_task_id=et.emp_task_id and et.is_active=1
+        where
+        et.task_category in(1,2,4)
+        and et.handle_month = {#ssMonth}
+        and ebp.ss_month ={#ssMonth}
+    </select>
+
 
 </mapper>

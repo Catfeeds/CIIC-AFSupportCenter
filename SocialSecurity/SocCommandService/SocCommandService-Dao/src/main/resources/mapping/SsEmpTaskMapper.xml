@@ -45,6 +45,7 @@
 		<result column="in_date" property="inDate" />
 		<result column="out_date" property="outDate" />
 		<result column="business_interface_id" property="businessInterfaceId" />
+		<result column="task_id" property="taskId" />
 		<result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />
 		<result column="modified_time" property="modifiedTime" />

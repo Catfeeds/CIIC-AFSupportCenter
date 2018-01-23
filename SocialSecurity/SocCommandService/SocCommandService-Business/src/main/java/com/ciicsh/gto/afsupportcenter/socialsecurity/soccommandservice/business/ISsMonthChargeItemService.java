@@ -1,7 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthChargeItemBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthChargeItem;
 import com.baomidou.mybatisplus.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,10 @@ import com.baomidou.mybatisplus.service.IService;
  * @since 2017-12-23
  */
 public interface ISsMonthChargeItemService extends IService<SsMonthChargeItem> {
-
+    /**
+     * 查询雇员月度缴费明细
+     * @param ssMonthChargeItemBO
+     * @return
+     */
+    List<SsMonthChargeItemBO> queryEmlpyeeMonthFeeDetail(SsMonthChargeItemBO ssMonthChargeItemBO);
 }

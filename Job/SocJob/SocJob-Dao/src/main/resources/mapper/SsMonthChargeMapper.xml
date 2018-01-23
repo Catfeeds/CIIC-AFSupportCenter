@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socjob.dao.SsMonthChargeMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socjob.entity.SsMonthCharge">
+        <id column="month_charge_id" property="monthChargeId" />
+        <result column="com_account_id" property="comAccountId" />
+        <result column="ss_month_belong" property="ssMonthBelong" />
+        <result column="ss_month" property="ssMonth" />
+        <result column="employee_id" property="employeeId" />
+        <result column="emp_archive_id" property="empArchiveId" />
+        <result column="base_amount" property="baseAmount" />
+        <result column="total_amount" property="totalAmount" />
+        <result column="cost_category" property="costCategory" />
+        <result column="emp_payment_status" property="empPaymentStatus" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+    <resultMap id="SsMonthChargeExtMap" type="com.ciicsh.gto.afsupportcenter.socjob.entity.custom.SsMonthChargeExt">
+        <result column="month_charge_id" property="monthChargeId" />
+        <result column="com_account_id" property="comAccountId" />
+        <result column="ss_month_belong" property="ssMonthBelong" />
+        <result column="ss_month_belong_yy" property="ssMonthBelongYy" />
+        <result column="ss_month_belong_mm" property="ssMonthBelongMm" />
+        <result column="ss_month" property="ssMonth" />
+        <result column="ss_month_yy" property="ssMonthYy" />
+        <result column="ss_month_mm" property="ssMonthMm" />
+        <result column="employee_id" property="employeeId" />
+        <result column="base_amount" property="baseAmount" />
+        <result column="category" property="category" />
+        <result column="ss_type" property="ssType" />
+        <result column="ss_type_name" property="ssTypeName" />
+        <result column="com_amount" property="comAmount" />
+        <result column="emp_amount" property="empAmount" />
+        <result column="sub_total_amount" property="subTotalAmount" />
+        <result column="category_name" property="categoryName" />
+    </resultMap>
+
+    <select id="ifFirstCreate" resultType="int">
+      SELECT COUNT(*) FROM ss_month_charge WHERE com_account_id = #{comAccountId} AND ss_month = #{ssMonth} AND is_active = 1
+    </select>
+    
+    <select id="delByCondition" resultType="int">
+      DELETE FROM ss_month_charge WHERE com_account_id = #{comAccountId} AND ss_month = #{ssMonth}
+    </select>
+
+    <select id="getMonthChangesByCondition" resultMap="BaseResultMap">
+      SELECT
+        <include refid="SsMonthCharge_All_Columns"/>
+      FROM ss_month_charge WHERE com_account_id = #{comAccountId}
+        AND ss_month = #{ssMonth}
+    </select>
+
+    <select id="getSsMonthChargeExts" resultMap="SsMonthChargeExtMap">
+      SELECT
+        <include refid="SsMonthChargeExt_All_Columns"/>
+      FROM ss_month_charge a INNER JOIN ss_month_charge_item b ON a.month_charge_id = b.month_charge_id
+      WHERE a.is_active = 1
+        AND b.is_active = 1
+        AND a.cost_category != 8
+        AND a.com_account_id = #{comAccountId}
+        AND a.ss_month = #{ssMonth}
+    </select>
+    
+    <sql id="SsMonthCharge_All_Columns">
+      month_charge_id,
+      com_account_id,
+      ss_month_belong,
+      ss_month,
+      employee_id,
+      emp_archive_id,
+      base_amount,
+      total_amount,
+      cost_category,
+      emp_payment_status,
+      is_active,
+      created_time,
+      modified_time,
+      created_by,
+      modified_by
+    </sql>
+
+    <sql id="SsMonthChargeExt_All_Columns">
+        a.month_charge_id,
+        a.com_account_id,
+        a.ss_month_belong,
+        left(a.ss_month_belong,4) AS 'ss_month_belong_yy',
+        right(a.ss_month_belong,2) AS 'ss_month_belong_mm',
+        a.ss_month,
+        left(a.ss_month,4) AS 'ss_month_yy',
+        right(a.ss_month,2) AS 'ss_month_mm',
+        a.employee_id,
+        a.base_amount,
+        a.cost_category AS 'category',
+        b.ss_type,
+        b.ss_type_name,
+        b.com_amount,
+        b.emp_amount,
+        b.sub_total_amount,
+        CASE a.cost_category
+        WHEN 1 THEN '标准'
+        WHEN 2 THEN '新进'
+        WHEN 3 THEN '转入'
+        WHEN 4 THEN '补缴'
+        WHEN 5 THEN '调整'
+        WHEN 6 THEN '转出'
+        WHEN 7 THEN '封存'
+	    ELSE '逆调' END AS 'category_name'
+    </sql>
+
+</mapper>
