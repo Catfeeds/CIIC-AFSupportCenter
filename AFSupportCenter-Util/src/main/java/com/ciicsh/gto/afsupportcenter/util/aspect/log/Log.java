@@ -12,8 +12,8 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Log {
 
-  /**
-   * 信息
-   **/
-  String value() default "";
+    /**
+     * 信息
+     **/
+    String value() default "";
 }

@@ -44,7 +44,7 @@ management:
     security:
         enabled: false
 #mybatis:
-#    config-location: classpath:mybatis-config.xml
+#    configuration-location: classpath:mybatis-configuration.xml
 #    mapperLocations: classpath:mapper/*.xml
 #    type-handlers-package: com.ciicsh.gto.afsupportcenter.util.typehandler
 #pagehelper:
@@ -73,7 +73,7 @@ mybatis-plus:
 
 server:
     port: 6019
-    session-timeout: '# session timeout in seconds'
+    session-timeout: #session timeout in seconds
     tomcat:
         background-processor-delay: 30
         basedir: /tmp
@@ -85,10 +85,11 @@ spring:
         name: afsupportcenter-center-command-service
     datasource:
         driver-class-name: com.mysql.jdbc.Driver
-        initial-size: 10
-        max-active: 20
-        max-idle: 8
-        min-idle: 8
+        tomcat:
+          initial-size: 10
+          max-active: 20
+          max-idle: 8
+          min-idle: 8
         password: a111111
         url: jdbc:mysql://172.16.9.15:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
         username: root

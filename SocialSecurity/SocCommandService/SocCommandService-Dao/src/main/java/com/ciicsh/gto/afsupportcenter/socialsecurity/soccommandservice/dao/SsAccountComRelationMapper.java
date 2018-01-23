@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -22,5 +23,12 @@ public interface SsAccountComRelationMapper extends BaseMapper<SsAccountComRelat
      * @return
      */
     List<SsAccountComRelationBO> queryByAccountId(@Param("comAccountId") String comAccountId);
+
+    /**
+     * 通过指定条件查询
+     * @param cond
+     * @return
+     */
+    List<SsAccountComRelation> queryByCond(Map cond);
 
 }

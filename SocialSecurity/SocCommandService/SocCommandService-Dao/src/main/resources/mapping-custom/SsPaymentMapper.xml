@@ -27,7 +27,25 @@
         <result column="created_by" property="createdBy" />
         <result column="modified_by" property="modifiedBy" />
     </resultMap>
+    <resultMap id="PaymentComDtoResultMap" type="com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyCompanyProxyDTO">
 
+        <result column="company_id" property="companyId" />
+        <result column="title" property="companyName" />
+        <result column="bank_account_id" property="companyBankAccountId" />
+        <result column="bank_account"  property="companyBankAccount" />
+        <result column="refund_deducted"   property="noticebillAmount" />
+        <result column="adjust_deducted"   property="deductionAmount" />
+        <result column="paymonth"   property="payMonth" />
+        <result column="total_pay_amount"   property="payAmount" />
+        <result column="payment_way"   property="isAdvance" />
+    </resultMap>
+    <resultMap id="PaymentEmpDtoResultMap" type="com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyEmployeeProxyDTO">
+        <result column="employee_id" property="employeeId" />
+        <result column="employee_name" property="employeeName" />
+        <result column="company_id" property="companyId" />
+        <result column="payment_month"  property="payMonth" />
+        <result column="emp_payment_status"   property="isAdvance" />
+    </resultMap>
     <select id="paymentQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentBO" resultMap="DtoResultMap">
         SELECT
             SP.*
@@ -76,5 +94,29 @@
         <foreach collection="paymentStateList" item="paymentState" open="(" close=")" separator=",">
             #{paymentState}
         </foreach>
+    </select>
+
+    <select id="getPaymentComList" resultMap="PaymentComDtoResultMap">
+    SELECT pc.company_id,com.title,ca.bank_account_id,ca.bank_account,
+    pc.refund_deducted,pc.adjust_deducted,pc.payment_month,pc.total_pay_amount,
+    ca.payment_way
+    FROM ss_payment_com pc
+    INNER JOIN ss_com_account ca ON ca.com_account_id = pc.com_account_id
+    INNER JOIN sal_company com ON com.company_id = pc.company_id
+    WHERE pc.is_active=1
+    AND pc.payment_month=#{paymentMonth}
+    AND pc.payment_id=#{paymentId}
+
+    </select>
+    <select id="getPaymentEmpList" resultMap="PaymentEmpDtoResultMap">
+    SELECT emp.employee_id,emp.employee_name,pc.company_id,pc.payment_month,pc.total_pay_amount,mc.emp_payment_status
+    FROM ss_month_charge mc
+    INNER JOIN emp_employee emp ON mc.employee_id=mc.employee_id
+    INNER JOIN ss_emp_archive ea ON ea.emp_archive_id=mc.emp_archive_id
+    INNER JOIN ss_payment_com pc ON pc.com_account_id=mc.com_account_id
+    WHERE pc.is_active=1
+    AND mc.ss_month=#{paymentMonth}
+    AND pc.payment_id=#{paymentId}
+
     </select>
 </mapper>
