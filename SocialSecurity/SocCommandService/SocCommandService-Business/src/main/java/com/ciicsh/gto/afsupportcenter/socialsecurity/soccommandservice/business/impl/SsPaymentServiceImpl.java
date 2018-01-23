@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -254,7 +255,7 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         json.setCode(Integer.parseInt(jsRes.getCode()));
         json.setMessage(jsRes.getMsg());
 
-        //返回
+        //如果返回失败 不更新
         return json;
     }
 
@@ -270,6 +271,17 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         List<PayapplyEmployeeProxyDTO> paymentEmpList = baseMapper.getPaymentEmpList(ssPayment.getPaymentId(),
             ssPayment.getPaymentMonth());
 
+
+        dto.setCompanyList(paymentComList);
+        dto.setEmployeeList(paymentEmpList);
+        dto.setDepartmentName("福利保障部社保");
+        dto.setIsFinancedept(0);
+        dto.setBusinessType(1);//业务类型
+        dto.setPayWay(3);//转账
+        dto.setPayAmount(ssPayment.getTotalApplicationAmount());//申请支付金额
+        dto.setReceiver("社保中心");//收款方名称
+        dto.setApplyer(ssPayment.getRequestUser());  //申请人
+        dto.setApplyDate(LocalDate.now());//申请日期
         //支付独立社保费用+支付月份  1 大库、2 外包、3独立户
         if (ssPayment.getAccountType() == 1) {
             dto.setPayReason("支付大库社保费用" + ssPayment.getPaymentMonth());
@@ -278,9 +290,7 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         } else if (ssPayment.getAccountType() == 3) {
             dto.setPayReason("支付独立户社保费用" + ssPayment.getPaymentMonth());
         }
-        dto.setCompanyList(paymentComList);
-        dto.setEmployeeList(paymentEmpList);
-        //paymentDTO 提交给财务结构
+
         return dto;
     }
 
