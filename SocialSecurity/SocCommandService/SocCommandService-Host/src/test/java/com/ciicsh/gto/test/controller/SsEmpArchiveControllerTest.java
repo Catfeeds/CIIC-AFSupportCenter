@@ -1,10 +1,12 @@
 package com.ciicsh.gto.test.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsAccountComRelationDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.payment.SsOperatePaymentDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpArchiveBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.SocialSecurityApplication;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsAccountComRelationController;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsEmpArchiveController;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsPaymentController;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.TaskSheetController;
@@ -32,6 +34,8 @@ public class SsEmpArchiveControllerTest {
     @Autowired
     TaskSheetController taskSheetController;
 
+    @Autowired
+    SsAccountComRelationController ssAccountComRelationController;
     @Test
     public void queryByEmpTaskId() {
         JsonResult<SsEmpArchiveBO> jsonResult = controller.queryByEmpTaskId("1","1");
@@ -61,5 +65,16 @@ public class SsEmpArchiveControllerTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testDoSaveRe() {
+        SsAccountComRelationDTO dto = new SsAccountComRelationDTO();
+        dto.setCompanyId("KH0000066");
+        dto.setComAccountId(66L);
+        dto.setSaveflag("1");
+
+        JsonResult<String> jr = ssAccountComRelationController.saveAccountComRelation(dto);
+        System.out.println(JSON.toJSONString(jr));
     }
 }
