@@ -11,11 +11,14 @@ import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.sheetservice.api.SheetServiceProxy;
+import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -53,6 +56,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     ISsEmpBaseAdjustDetailService ssEmpBaseAdjustDetailService;
     @Autowired
     ISsEmpRefundService ssEmpRefundService;
+    @Autowired
+    SheetServiceProxy sheetServiceProxy;
     @Override
     public PageRows<SsEmpTaskBO> employeeOperatorQuery(PageInfo pageInfo) {
         SsEmpTaskBO dto = pageInfo.toJavaObject(SsEmpTaskBO.class);
@@ -1362,6 +1367,23 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      */
     private <T> T cloneObjet(T object, Class z) {
         return (T) JSONObject.parseObject(JSONObject.toJSON(object).toString(), z);
+    }
+
+
+    /**
+     * 调用客服中心的完成任务接口
+     *
+     * @param taskSheetRequestDTO
+     * @return
+     */
+    public com.ciicsh.gto.commonservice.util.dto.Result completeTask(@RequestBody TaskSheetRequestDTO
+                                                                         taskSheetRequestDTO) throws Exception {
+        TaskRequestDTO taskRequestDTO = new TaskRequestDTO();
+        taskRequestDTO.setTaskId(taskSheetRequestDTO.getTaskId());
+        taskRequestDTO.setAssignee(taskSheetRequestDTO.getAssignee());
+        taskRequestDTO.setVariables(taskSheetRequestDTO.getVariable());
+
+        return sheetServiceProxy.completeTask(taskRequestDTO);
     }
 }
 
