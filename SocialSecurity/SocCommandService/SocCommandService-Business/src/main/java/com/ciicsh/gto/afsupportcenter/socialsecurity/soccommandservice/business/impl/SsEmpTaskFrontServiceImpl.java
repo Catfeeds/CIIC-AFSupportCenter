@@ -41,7 +41,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         rollbackFor = {Exception.class}
     )
     public boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, EmployeeInfoDTO dto) {
-        boolean result = true;
+        boolean result = false;
         try {
             AFEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
 
@@ -99,6 +99,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
             if (eleList.size() > 0) {
                 this.insertBatch(eleList);
             }
+            result = true;
         } catch (Exception e) {
             result = false;
             throw new RuntimeException("保存到雇员任务单表处理异常");
