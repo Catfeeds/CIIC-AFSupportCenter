@@ -55,7 +55,7 @@ public class DemoController {
     public String importExcel() throws Exception {
         String filePath = "F:/海贼王.xls";
         //解析excel，
-        List<TestPerson> personList = ExcelUtil.importExcel(filePath,1,1,TestPerson.class);
+        List<TestPerson> personList = ExcelUtil.importExcel(filePath,1,1,TestPerson.class,false);
         //也可以使用MultipartFile,使用 FileUtil.importExcel(MultipartFile file, Integer titleRows, Integer headerRows, Class<T> pojoClass)导入
         System.out.println("导入数据一共【"+personList.size()+"】行");
 

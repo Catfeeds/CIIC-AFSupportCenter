@@ -2,8 +2,6 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.sheetservice.api.SheetServiceProxy;
-import com.ciicsh.gto.sheetservice.api.dto.core.Result;
-import com.ciicsh.gto.sheetservice.api.dto.core.ResultGenerator;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,21 +34,23 @@ public class TaskSheetController {
 //    private ISsEmpTaskFrontService ssEmpTaskFrontService;
 
     @PostMapping(value = "/task/complete", consumes = {"application/json"})
-    public Result completeTask(@RequestBody TaskSheetRequestDTO taskSheetRequestDTO) throws Exception {
+    public com.ciicsh.gto.commonservice.util.dto.Result completeTask(@RequestBody TaskSheetRequestDTO taskSheetRequestDTO) throws Exception {
         logger.info("customer系统调用完成任务接口：" + taskSheetRequestDTO.toString());
+        com.ciicsh.gto.commonservice.util.dto.Result restResult =null;
         try {
             TaskRequestDTO taskRequestDTO = new TaskRequestDTO();
             taskRequestDTO.setTaskId(taskSheetRequestDTO.getTaskId());
             taskRequestDTO.setAssignee(taskSheetRequestDTO.getAssignee());
             taskRequestDTO.setVariables(taskSheetRequestDTO.getVariable());
 
-            Result restResult = sheetServiceProxy.completeTask(taskRequestDTO);
+            restResult= sheetServiceProxy.completeTask(taskRequestDTO);
             logger.info("customer系统收到完成任务接口返回：" + String.valueOf("code:" + restResult.getCode() + "message:") + restResult.getMessage());
-            return ResultGenerator.genSuccessResult(true);
+//            return ResultGenerator.genSuccessResult(true);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return ResultGenerator.genServerFailResult();
+//            return ResultGenerator.genServerFailResult();
         }
+        return restResult;
     }
 //
 //    @PostMapping(value = "/task/completeTest")

@@ -450,7 +450,9 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
         ssComTask.setCreatedBy("system");
         ssComTask.setModifiedBy("system");
 
+        //任务单上前道系统传递过来的内容，Json格式
         JSONObject jo = new JSONObject();
+        //1:开户
         if ("1".equals(ssComTaskDTO.getTaskCategory())) {
             jo.put("taskCategory", ssComTaskDTO.getTaskCategory());
             jo.put("companyId", ssComTaskDTO.getCompanyId());

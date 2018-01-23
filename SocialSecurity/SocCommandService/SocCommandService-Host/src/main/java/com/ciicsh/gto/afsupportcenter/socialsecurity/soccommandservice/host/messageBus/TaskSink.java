@@ -54,6 +54,11 @@ public interface TaskSink {
     String SH_TO_NONLOCAL = TOPIC_PREFIX + "af_sh_to_nonlocal";
 
     /**
+     * 上海基数年调TOPIC
+     */
+    String BASE_ADJUST_YEARLY_SH = TOPIC_PREFIX + "af_base_adjust_yearly_sh";
+
+    /**
      * 社保办理
      */
     String SOCIAL_NEW="socialNew";
@@ -62,6 +67,11 @@ public interface TaskSink {
      * 社保停办
      */
     String SOCIAL_STOP="socialStop";
+
+    /**
+     * 社保年调
+     */
+    String SOCIAL_ADJUST="socialAdjust";
 
     @Input(AF_EMP_IN)
     MessageChannel afEmpIn();
@@ -87,5 +97,8 @@ public interface TaskSink {
 
     @Input(SH_TO_NONLOCAL)
     MessageChannel shToNonlocal();
+
+    @Input(BASE_ADJUST_YEARLY_SH)
+    MessageChannel baseAdjustYearlySh();
 
 }
