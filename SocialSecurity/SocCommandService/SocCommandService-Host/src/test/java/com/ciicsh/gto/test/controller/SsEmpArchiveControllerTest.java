@@ -1,22 +1,28 @@
 package com.ciicsh.gto.test.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsAccountComRelationDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.payment.SsOperatePaymentDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpArchiveBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.SocialSecurityApplication;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsAccountComRelationController;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsEmpArchiveController;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsPaymentController;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.TaskSheetController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
-import com.ciicsh.gto.sheetservice.api.dto.core.Result;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.commonservice.util.dto.Result;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.HashMap;
 
 /**
  * <p>Description: 雇员档案 controller Test</p>
@@ -36,6 +42,10 @@ public class SsEmpArchiveControllerTest {
 
     @Autowired
     SsAccountComRelationController ssAccountComRelationController;
+
+    @Autowired
+    ISsEmpTaskService s1;
+
     @Test
     public void queryByEmpTaskId() {
         JsonResult<SsEmpArchiveBO> jsonResult = controller.queryByEmpTaskId("1","1");
@@ -56,11 +66,14 @@ public class SsEmpArchiveControllerTest {
     @Test
     public void testCompleteTask() {
         TaskSheetRequestDTO dt = new TaskSheetRequestDTO();
-        dt.setTaskId("1");
+        dt.setTaskId("100148");
         dt.setAssignee("2");
         dt.setVariable(null);
+
+//        System.out.println(JSONObject.toJSONString(SocialSecurityConst.DISTRICT_MAP));
+
         try {
-            Result ddd = taskSheetController.completeTask(dt);
+            Result ddd = s1.completeTask(dt);
             System.out.println(JSON.toJSONString(ddd));
         } catch (Exception e) {
             e.printStackTrace();

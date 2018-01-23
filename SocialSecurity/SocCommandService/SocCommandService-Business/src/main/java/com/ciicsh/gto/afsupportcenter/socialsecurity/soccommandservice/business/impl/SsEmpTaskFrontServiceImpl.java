@@ -9,7 +9,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.AFEmp
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskFront;
-import com.ciicsh.gto.sheetservice.api.dto.TaskMsgDTO;
+import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,8 +40,8 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
     @Transactional(
         rollbackFor = {Exception.class}
     )
-    public boolean insertTaskTb(TaskMsgDTO taskMsgDTO, Integer taskCategory, EmployeeInfoDTO dto) {
-        boolean result = false;
+    public boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, EmployeeInfoDTO dto) {
+        boolean result = true;
         try {
             AFEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
 
@@ -99,7 +99,6 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
             if (eleList.size() > 0) {
                 this.insertBatch(eleList);
             }
-            result = true;
         } catch (Exception e) {
             result = false;
             throw new RuntimeException("保存到雇员任务单表处理异常");

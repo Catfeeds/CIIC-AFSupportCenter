@@ -10,7 +10,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.Ss
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskFront;
 import com.ciicsh.gto.afsupportcenter.util.web.convert.StringToLocalDateConverter;
 import com.ciicsh.gto.sheetservice.api.SheetServiceProxy;
-import com.ciicsh.gto.sheetservice.api.dto.TaskMsgDTO;
+import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +45,8 @@ public class KafkaReceiver {
 //    private SheetServiceProxy sheetServiceProxy;
 
     @StreamListener(TaskSink.AF_EMP_IN)
-    public void receiveEmpIn(Message<TaskMsgDTO> message) {
-        TaskMsgDTO taskMsgDTO = message.getPayload();
+    public void receiveEmpIn(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         //社保
         boolean res = false;
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())
@@ -61,8 +61,8 @@ public class KafkaReceiver {
     }
 
     @StreamListener(TaskSink.AF_EMP_OUT)
-    public void receiveEmpOut(Message<TaskMsgDTO> message) {
-        TaskMsgDTO taskMsgDTO = message.getPayload();
+    public void receiveEmpOut(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         //社保
         boolean res = false;
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())
@@ -73,8 +73,8 @@ public class KafkaReceiver {
     }
 
     @StreamListener(TaskSink.CHARGE_RESUME)
-    public void receiveChargeResume(Message<TaskMsgDTO> message) {
-        TaskMsgDTO taskMsgDTO = message.getPayload();
+    public void receiveChargeResume(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         //社保
         boolean res = false;
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())
@@ -85,8 +85,8 @@ public class KafkaReceiver {
     }
 
     @StreamListener(TaskSink.CHARGE_STOP)
-    public void receiveChargeStop(Message<TaskMsgDTO> message) {
-        TaskMsgDTO taskMsgDTO = message.getPayload();
+    public void receiveChargeStop(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         //社保
         boolean res = false;
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())
@@ -97,8 +97,8 @@ public class KafkaReceiver {
     }
 
     @StreamListener(TaskSink.EMP_COMPANY_CHANGE)
-    public void receiveEmpCompanyChange(Message<TaskMsgDTO> message) {
-        TaskMsgDTO taskMsgDTO = message.getPayload();
+    public void receiveEmpCompanyChange(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         //社保
         boolean res = false;
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())
@@ -109,8 +109,8 @@ public class KafkaReceiver {
     }
 
     @StreamListener(TaskSink.NONLOCAL_TO_SH)
-    public void receiveNonlocalToSh(Message<TaskMsgDTO> message) {
-        TaskMsgDTO taskMsgDTO = message.getPayload();
+    public void receiveNonlocalToSh(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
 
         //社保
         boolean res = false;
@@ -123,8 +123,8 @@ public class KafkaReceiver {
     }
 
     @StreamListener(TaskSink.SH_TO_NONLOCAL)
-    public void receiveSh(Message<TaskMsgDTO> message) {
-        TaskMsgDTO taskMsgDTO = message.getPayload();
+    public void receiveSh(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         //社保
         boolean res = false;
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())
@@ -134,7 +134,18 @@ public class KafkaReceiver {
         logger.info("收到消息from SH_TO_NONLOCAL-useWork: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
-    private EmployeeInfoDTO callInf(TaskMsgDTO taskMsgDTO) {
+    @StreamListener(TaskSink.BASE_ADJUST_YEARLY_SH)
+    public void receiveBaseAdjustYearlySh(Message<TaskCreateMsgDTO> message){
+        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
+        //社保
+        boolean res = false;
+        if (TaskSink.SOCIAL_ADJUST.equals(taskMsgDTO.getTaskType())) {
+            res = insertTaskTb(taskMsgDTO, 1);
+        }
+        logger.info("收到消息from SH_TO_NONLOCAL-useWork: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
+    }
+
+    private EmployeeInfoDTO callInf(TaskCreateMsgDTO taskMsgDTO) {
 //        logger.info("数据获取接口开始调用："+taskSheetRequestDTO.toString());
 //        try {
 //            TaskRequestDTO taskRequestDTO = new TaskRequestDTO();
@@ -174,7 +185,7 @@ public class KafkaReceiver {
      * @author zhangxj
      * @date 2017-12-28
      */
-    private boolean insertTaskTb(TaskMsgDTO taskMsgDTO, Integer taskCategory) {
+    private boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) {
         //调用接口
         EmployeeInfoDTO dto = callInf(taskMsgDTO);
 
