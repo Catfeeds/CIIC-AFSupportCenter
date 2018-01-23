@@ -10,12 +10,12 @@ import java.util.List;
 
 /**
  * <p>
- * 受理单
+ * 未投保审核
  * </p>
  *
  * @author xiweizhen
  */
-public class UninsuredMedicalDTO extends CommonEntity {
+public class UninsuredMedicalAuditDTO extends CommonEntity {
     /**
      * 雇员姓名
      */
@@ -37,6 +37,10 @@ public class UninsuredMedicalDTO extends CommonEntity {
      * 受理日期
      */
     private List<Date> handlerDateRange;
+    /**
+     * 审核日期
+     */
+    private List<Date> auditDateRange;
     /**
      * 管理方编号
      */
@@ -104,7 +108,7 @@ public class UninsuredMedicalDTO extends CommonEntity {
     /**
      * 受理单状态（0-未受理，1-已受理，2-拒赔，3-已审核未同步，4-已同步未支付，5-财务退回，6-已同步已支付，7-已退票，8-已完成）
      */
-    private Integer status;
+    private Boolean status;
     /**
      * 受理人
      */
@@ -238,11 +242,11 @@ public class UninsuredMedicalDTO extends CommonEntity {
         this.invoiceNumber = invoiceNumber;
     }
 
-    public Integer getStatus() {
+    public Boolean getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Boolean status) {
         this.status = status;
     }
 
@@ -374,6 +378,14 @@ public class UninsuredMedicalDTO extends CommonEntity {
         this.managementName = managementName;
     }
 
+    public List<Date> getAuditDateRange() {
+        return auditDateRange;
+    }
+
+    public void setAuditDateRange(List<Date> auditDateRange) {
+        this.auditDateRange = auditDateRange;
+    }
+
     @Override
     public String toString() {
         return "UninsuredMedicalDTO{" +
@@ -382,6 +394,7 @@ public class UninsuredMedicalDTO extends CommonEntity {
             ", companyId='" + companyId + '\'' +
             ", companyName='" + companyName + '\'' +
             ", handlerDateRange=" + handlerDateRange +
+            ", auditDateRange=" + auditDateRange +
             ", managementId='" + managementId + '\'' +
             ", managementName='" + managementName + '\'' +
             ", umAcceptanceId=" + umAcceptanceId +

@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * <p>
- * 补充医疗理赔表 前端控制器
+ * 受理单controller
  * </p>
  *
  * @author xiweizhen
@@ -47,9 +47,8 @@ public class UninsuredController {
             Page<UninsuredMedical> page = new Page<>(uninsuredMedicalDTO.getCurrent(), uninsuredMedicalDTO.getSize());
             page = uninsuredMedicalService.queryAcceptanceList(page, uninsuredMedicalDTO);
 
-            BeanUtils.copyProperties(page, uninsuredMedicalDTO);
             logger.info("查询受理单分页列表");
-            return ResultGenerator.genSuccessResult(uninsuredMedicalDTO);
+            return ResultGenerator.genSuccessResult(page);
         } catch (Exception e) {
             return ResultGenerator.genServerFailResult();
         }
@@ -121,6 +120,30 @@ public class UninsuredController {
             BeanUtils.copyProperties(uninsuredMedicalDTO, uninsuredMedical);
             boolean flag = uninsuredMedicalService.insert(uninsuredMedical);
             logger.info("新增受理单");
+            return ResultGenerator.genSuccessResult(flag);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
+        }
+    }
+
+    /**
+     * 受理单更新
+     *
+     * @param uninsuredMedicalList
+     * @return
+     */
+    @PostMapping("/updateAcceptanceList")
+    public Result updateAcceptance(@RequestBody List<UninsuredMedicalDTO> uninsuredMedicalList) {
+        try {
+            int t = 0;
+            for (UninsuredMedicalDTO uninsuredMedicalDTO : uninsuredMedicalList) {
+                UninsuredMedical uninsuredMedical = new UninsuredMedical();
+                BeanUtils.copyProperties(uninsuredMedicalDTO, uninsuredMedical);
+                boolean flag = uninsuredMedicalService.updateById(uninsuredMedical);
+                t = flag ? t++ : t;
+            }
+            boolean flag = t == uninsuredMedicalList.size();
+            logger.info("受理单更新");
             return ResultGenerator.genSuccessResult(flag);
         } catch (Exception e) {
             return ResultGenerator.genServerFailResult();
