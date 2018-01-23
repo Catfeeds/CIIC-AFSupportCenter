@@ -100,7 +100,7 @@ public class SsEmpTask implements Serializable {
      * 任务发起时间，通过该日期和客户社保截至日判断本月下月处理
      */
 	@TableField("submit_time")
-	private LocalTime submitTime;
+	private LocalDateTime submitTime;
     /**
      * 任务截止日期
      */
@@ -359,15 +359,15 @@ public class SsEmpTask implements Serializable {
 		this.submitterDeptName = submitterDeptName;
 	}
 
-	public LocalTime getSubmitTime() {
-		return submitTime;
-	}
+    public LocalDateTime getSubmitTime() {
+        return submitTime;
+    }
 
-	public void setSubmitTime(LocalTime submitTime) {
-		this.submitTime = submitTime;
-	}
+    public void setSubmitTime(LocalDateTime submitTime) {
+        this.submitTime = submitTime;
+    }
 
-	public LocalDate getExpireDate() {
+    public LocalDate getExpireDate() {
 		return expireDate;
 	}
 

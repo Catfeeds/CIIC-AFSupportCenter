@@ -41,4 +41,11 @@ public interface ISsEmpTaskService extends IService<SsEmpTask> {
      * @return
      */
     boolean saveHandleData(SsEmpTaskBO bo);
+
+    /**
+     * 查询最大社保序号
+     * @param empTaskId
+     * @return
+     */
+    String selectMaxSsSerialByTaskId(Long empTaskId);
 }
