@@ -30,4 +30,5 @@ public interface ISsEmpTaskPeriodService extends IService<SsEmpTaskPeriod> {
      * @param empTaskId
      */
     void saveForEmpTaskId(List<SsEmpTaskPeriod> periods, Long empTaskId);
+
 }
