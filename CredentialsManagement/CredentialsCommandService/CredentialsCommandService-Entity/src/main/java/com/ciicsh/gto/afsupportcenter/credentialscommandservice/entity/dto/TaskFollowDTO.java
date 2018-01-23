@@ -1,5 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -29,10 +31,12 @@ public class TaskFollowDTO implements Serializable{
     /**
      * 创建时间
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "+8")
     private Date createdTime;
     /**
      * 最后更新时间
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "+8")
     private Date modifiedTime;
     /**
      * 创建者登录名

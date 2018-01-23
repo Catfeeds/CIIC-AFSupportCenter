@@ -19,4 +19,30 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
+    <select id="selectByIds" resultMap="BaseResultMap">
+      SELECT
+      <include refid="SEL_ALL_COLUMS"/>
+      FROM
+      cm_material_type_relation
+      WHERE material_id IN 
+      <foreach collection="Ids" item="materialId" open="(" close=")" separator=",">
+          #{materialId}
+      </foreach>
+    </select>
+
+    <sql id="SEL_ALL_COLUMS">
+        material_type_relation_id,
+        credentials_type,
+        credentials_deal_type,
+        material_id,
+        material_name,
+        material_level,
+        material_pid,
+        type,
+        is_active,
+        created_time,
+        modified_time,
+        created_by,
+        modified_by
+    </sql>
 </mapper>

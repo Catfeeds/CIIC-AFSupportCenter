@@ -28,4 +28,11 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     public List<Task> selectByempId(String empId) {
         return taskMapper.selectByempId(empId);
     }
+
+    @Override
+    public Task selectItem(long taskId) {
+        Task task = new Task();
+        task.setTaskId(taskId);
+        return taskMapper.selectOne(task);
+    }
 }

@@ -40,19 +40,10 @@ public class TaskMaterial extends Model<TaskMaterial> {
     @TableField("company_id")
     private String companyId;
     /**
-     * 签收时间
+     * 材料ids
      */
-    @TableField("sign_in_time")
-    private Date signInTime;
-    /**
-     * 签收人
-     */
-    @TableField("sign_in_people")
-    private String signInPeople;
-    /**
-     * 备注
-     */
-    private String remark;
+    @TableField("material_ids")
+    private String materialIds;
     /**
      * 是否可用
      */
@@ -112,28 +103,12 @@ public class TaskMaterial extends Model<TaskMaterial> {
         this.companyId = companyId;
     }
 
-    public Date getSignInTime() {
-        return signInTime;
+    public String getMaterialIds() {
+        return materialIds;
     }
 
-    public void setSignInTime(Date signInTime) {
-        this.signInTime = signInTime;
-    }
-
-    public String getSignInPeople() {
-        return signInPeople;
-    }
-
-    public void setSignInPeople(String signInPeople) {
-        this.signInPeople = signInPeople;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setMaterialIds(String materialIds) {
+        this.materialIds = materialIds;
     }
 
     public Boolean getActive() {
@@ -188,9 +163,7 @@ public class TaskMaterial extends Model<TaskMaterial> {
             ", taskId=" + taskId +
             ", employeeId=" + employeeId +
             ", companyId=" + companyId +
-            ", signInTime=" + signInTime +
-            ", signInPeople=" + signInPeople +
-            ", remark=" + remark +
+            ", materialIds=" + materialIds +
             ", isActive=" + isActive +
             ", createdTime=" + createdTime +
             ", modifiedTime=" + modifiedTime +

@@ -5,7 +5,11 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.MaterialTypeRelationService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.MaterialTypeRelationMapper;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.MaterialTypeRelation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * <p>
@@ -17,5 +21,13 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MaterialTypeRelationServiceImpl extends ServiceImpl<MaterialTypeRelationMapper, MaterialTypeRelation> implements MaterialTypeRelationService {
-	
+
+    @Autowired
+    private MaterialTypeRelationMapper materialTypeRelationMapper;
+
+    @Override
+    public List<MaterialTypeRelation> selectList(String materialIds) {
+        List<String> ids = Arrays.asList(materialIds.split(","));
+        return materialTypeRelationMapper.selectByIds(ids);
+    }
 }

@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMaterial;
+import org.springframework.stereotype.Repository;
 
 /**
  * <p>
@@ -12,6 +13,7 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMa
  * @author guwei
  * @since 2018-01-15
  */
+@Repository
 public interface TaskMaterialMapper extends BaseMapper<TaskMaterial> {
 
 }

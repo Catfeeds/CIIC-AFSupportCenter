@@ -40,6 +40,7 @@ public class OrgPolicyPageDTO implements Serializable{
     /**
      * 最后更新时间
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "+8")
     private Date modifiedTime;
     /**
      * 创建者登录名

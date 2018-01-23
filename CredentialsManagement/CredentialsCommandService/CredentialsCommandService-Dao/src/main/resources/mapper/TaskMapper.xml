@@ -45,6 +45,12 @@
     </select>
 
     <sql id="SEL_ALL_COLUMS">
+        task_id,
+        employee_id,
+        company_id,
+        credentials_type,
+        credentials_deal_type,
+        education,
         material_back_time,
         calls_time,
         apply_time,

@@ -23,6 +23,13 @@ public interface TaskService extends IService<Task> {
     List<Task> selectByempId(String empId);
 
     /**
+     * 查询任务单详情
+     * @param taskId
+     * @return
+     */
+    Task selectItem(long taskId);
+
+    /**
      * 保存或更新任务单
      * @param entity
      * @return

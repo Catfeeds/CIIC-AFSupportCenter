@@ -26,6 +26,35 @@ public class SelectionUtils {
         }
     }
 
+    public static String credentialsDeal(Integer i) {
+        switch(i){
+            case 1:
+                return "积分申请";
+            case 2:
+                return "积分确认";
+            case 3:
+                return "信息变更";
+            case 4:
+                return "随员";
+            case 5:
+                return "重置密码";
+            case 6:
+                return "新办";
+            case 7:
+                return "继办";
+            case 8:
+                return "随员";
+            case 9:
+                return "个人信息修改";
+            case 10:
+                return "挂失";
+            case 11:
+                return "补办";
+            default:
+                return "其他";
+        }
+    }
+
     public static String operateType(Integer i) {
         switch(i){
             case 1:
