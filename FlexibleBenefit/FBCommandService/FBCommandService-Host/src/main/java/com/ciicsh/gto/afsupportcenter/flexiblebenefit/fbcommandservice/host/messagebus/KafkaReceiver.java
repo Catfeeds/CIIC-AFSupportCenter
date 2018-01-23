@@ -4,7 +4,7 @@ import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyRecordDetai
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApprovalStepPO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.ApplyRecordDetailCommandService;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.ApprovalStepCommandService;
-import com.ciicsh.gto.sheetservice.api.dto.TaskMsgDTO;
+import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +36,8 @@ public class KafkaReceiver {
      * @param message
      */
     @StreamListener(TaskSink.GIFT_APPLY)
-    public void giftApply(Message<TaskMsgDTO> message) {
-        TaskMsgDTO taskMsgDTO = message.getPayload();
+    public void giftApply(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         String returnInfo = taskMsgDTO.toString();
         logger.info("收到消息from GIFT_APPLY-useWork: " + returnInfo);
         updateStepList(taskMsgDTO);
@@ -48,7 +48,7 @@ public class KafkaReceiver {
      *
      * @param taskMsgDTO
      */
-    private void updateStepList(TaskMsgDTO taskMsgDTO) {
+    private void updateStepList(TaskCreateMsgDTO taskMsgDTO) {
         if (CENTER.equals(taskMsgDTO.getTaskType())) {
             ApplyRecordDetailPO applyRecordDetailPO = new ApplyRecordDetailPO();
             applyRecordDetailPO.setApplyRecordDetailId(Integer.valueOf(taskMsgDTO.getMissionId()));
@@ -79,68 +79,12 @@ public class KafkaReceiver {
      * @param message
      */
     @StreamListener(TaskSink.MARKETING_APPLY)
-    public void marketApply(Message<TaskMsgDTO> message) {
-        TaskMsgDTO taskMsgDTO = message.getPayload();
+    public void marketApply(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         String returnInfo = taskMsgDTO.toString();
         logger.info("收到消息from MARKETING_APPLY-useWork: " + returnInfo);
 
         updateStepList(taskMsgDTO);
-    }
-
-    @StreamListener(TaskSink.AF_EMP_IN)
-    public void receiveEmpIn(Message<TaskMsgDTO> message) {
-        TaskMsgDTO taskMsgDTO = message.getPayload();
-        String returnInfo = taskMsgDTO.toString();
-        logger.info("收到消息from AF_EMP_IN-useWork: " + returnInfo);
-    }
-
-    @StreamListener(TaskSink.AF_EMP_OUT)
-    public void receiveEmpOut(Message<TaskMsgDTO> message) {
-        TaskMsgDTO taskMsgDTO = message.getPayload();
-        String returnInfo = taskMsgDTO.toString();
-        logger.info("收到消息from AF_EMP_OUT-useWork: " + returnInfo);
-    }
-
-    @StreamListener(TaskSink.CHARGE_RESUME)
-    public void receiveChargeResume(Message<TaskMsgDTO> message) {
-        TaskMsgDTO taskMsgDTO = message.getPayload();
-        String returnInfo = taskMsgDTO.toString();
-        logger.info("收到消息from CHARGE_RESUME-useWork: " + returnInfo);
-    }
-
-    @StreamListener(TaskSink.CHARGE_STOP)
-    public void receiveChargeStop(Message<TaskMsgDTO> message) {
-        TaskMsgDTO taskMsgDTO = message.getPayload();
-        String returnInfo = taskMsgDTO.toString();
-        logger.info("收到消息from CHARGE_STOP-useWork: " + returnInfo);
-    }
-
-    @StreamListener(TaskSink.EMP_COMPANY_CHANGE)
-    public void receiveEmpCompanyChange(Message<TaskMsgDTO> message) {
-        TaskMsgDTO taskMsgDTO = message.getPayload();
-        String returnInfo = taskMsgDTO.toString();
-        logger.info("收到消息from EMP_COMPANY_CHANGE-useWork: " + returnInfo);
-    }
-
-    @StreamListener(TaskSink.PRE_IN)
-    public void receivePreIn(Message<TaskMsgDTO> message) {
-        TaskMsgDTO taskMsgDTO = message.getPayload();
-        String returnInfo = taskMsgDTO.toString();
-        logger.info("收到消息from PRE_IN-useWork: " + returnInfo);
-    }
-
-    @StreamListener(TaskSink.NONLOCAL_TO_SH)
-    public void receiveNonlocalToSh(Message<TaskMsgDTO> message) {
-        TaskMsgDTO taskMsgDTO = message.getPayload();
-        String returnInfo = taskMsgDTO.toString();
-        logger.info("收到消息from NONLOCAL_TO_SH-useWork: " + returnInfo);
-    }
-
-    @StreamListener(TaskSink.SH_TO_NONLOCAL)
-    public void receiveSh(Message<TaskMsgDTO> message) {
-        TaskMsgDTO taskMsgDTO = message.getPayload();
-        String returnInfo = taskMsgDTO.toString();
-        logger.info("收到消息from SH_TO_NONLOCAL-useWork: " + returnInfo);
     }
 
 }

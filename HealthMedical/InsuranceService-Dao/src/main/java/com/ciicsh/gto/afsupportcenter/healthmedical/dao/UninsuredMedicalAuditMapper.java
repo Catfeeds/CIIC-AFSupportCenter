@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.UninsuredMedicalAuditBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.UninsuredMedicalAuditDTO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.UninsuredMedical;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.UninsuredMedicalAudit;
@@ -26,4 +27,13 @@ public interface UninsuredMedicalAuditMapper extends BaseMapper<UninsuredMedical
      * @return
      */
     List<UninsuredMedical> queryAcceptanceList(Page<UninsuredMedical> page, UninsuredMedicalAuditDTO uninsuredMedicalAuditDTO);
+
+    /**
+     * 查询审批列表数据
+     *
+     * @param page
+     * @param uninsuredMedicalAuditDTO
+     * @return
+     */
+    List<UninsuredMedicalAuditBO> queryAcceptanceAuditList(Page<UninsuredMedicalAuditBO> page, UninsuredMedicalAuditDTO uninsuredMedicalAuditDTO);
 }

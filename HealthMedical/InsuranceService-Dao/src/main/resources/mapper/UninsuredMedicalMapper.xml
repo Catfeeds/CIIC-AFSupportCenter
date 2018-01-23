@@ -129,7 +129,7 @@
             <if test="status != null">
                 AND hm_uninsured_medical.status = #{status,jdbcType=INTEGER}
             </if>
-            <if test="handlerDateRange != null and handlerDateRange.length == 2">
+            <if test="handlerDateRange != null and handlerDateRange.size == 2">
                 AND handler_date BETWEEN #{handlerDateRange[0],jdbcType=TIMESTAMP} AND
                 #{handlerDateRange[1],jdbcType=TIMESTAMP}
             </if>

@@ -1,56 +1,20 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto;
+package com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.enums.IdType;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 /**
  * <p>
- * 未投保审核
+ * 未投保审核--受理单关联表
  * </p>
  *
  * @author xiweizhen
  */
-public class UninsuredMedicalAuditDTO extends CommonEntity {
-    /**
-     * 雇员姓名
-     */
-    private String employeeName;
-    /**
-     * 证件号
-     */
-    private String idNum;
-    /**
-     * 客户ID
-     */
-    private String companyId;
-    /**
-     * 公司名称
-     */
-    private String companyName;
-
-    /**
-     * 受理日期
-     */
-    private List<Date> handlerDateRange;
-    /**
-     * 审核日期
-     */
-    private List<Date> auditDateRange;
-    /**
-     * 管理方编号
-     */
-    private String managementId;
-    /**
-     * 管理方名称
-     */
-    private String managementName;
-
+public class UninsuredMedicalAuditBO {
     /**
      * 未投保医疗受理编号
      */
@@ -107,9 +71,9 @@ public class UninsuredMedicalAuditDTO extends CommonEntity {
     @TableField("invoice_number")
     private Integer invoiceNumber;
     /**
-     * 审批状态
+     * 受理单状态（0-未受理，1-已受理，2-拒赔，3-已审核未同步，4-已同步未支付，5-财务退回，6-已同步已支付，7-已退票，8-已完成）
      */
-    private Boolean status;
+    private Integer status;
     /**
      * 受理人
      */
@@ -125,9 +89,13 @@ public class UninsuredMedicalAuditDTO extends CommonEntity {
     @TableField("reject_type")
     private Integer rejectType;
     /**
-     * 审核主键
+     * 处理备注
      */
+    private String remark;
+
+    @TableId(value = "audit_id", type = IdType.AUTO)
     private Integer auditId;
+
     /**
      * 就诊医院
      */
@@ -155,7 +123,7 @@ public class UninsuredMedicalAuditDTO extends CommonEntity {
     /**
      * 附件
      */
-    private MultipartFile attachment;
+    private String attachment;
     /**
      * 住院天数
      */
@@ -177,10 +145,6 @@ public class UninsuredMedicalAuditDTO extends CommonEntity {
     @TableField("hospitalization_end_date")
     private Date hospitalizationEndDate;
     /**
-     * 备注
-     */
-    private String remark;
-    /**
      * 审核人
      */
     private String auditor;
@@ -189,32 +153,6 @@ public class UninsuredMedicalAuditDTO extends CommonEntity {
      */
     @TableField("audit_date")
     private Date auditDate;
-    /**
-     * 是否可用
-     */
-    @TableField("is_active")
-    private Boolean isActive;
-    /**
-     * 创建时间
-     */
-    @TableField("created_time")
-    private Date createdTime;
-    /**
-     * 最后更新时间
-     */
-    @TableField("modified_time")
-    private Date modifiedTime;
-    /**
-     * 创建者登录名
-     */
-    @TableField("created_by")
-    private String createdBy;
-    /**
-     * 修改者登录名
-     */
-    @TableField("modified_by")
-    private String modifiedBy;
-
 
     public Integer getUmAcceptanceId() {
         return umAcceptanceId;
@@ -304,11 +242,11 @@ public class UninsuredMedicalAuditDTO extends CommonEntity {
         this.invoiceNumber = invoiceNumber;
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -342,110 +280,6 @@ public class UninsuredMedicalAuditDTO extends CommonEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public Boolean getActive() {
-        return isActive;
-    }
-
-    public void setActive(Boolean isActive) {
-        this.isActive = isActive;
-    }
-
-    public Date getCreatedTime() {
-        return createdTime;
-    }
-
-    public void setCreatedTime(Date createdTime) {
-        this.createdTime = createdTime;
-    }
-
-    public Date getModifiedTime() {
-        return modifiedTime;
-    }
-
-    public void setModifiedTime(Date modifiedTime) {
-        this.modifiedTime = modifiedTime;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public String getModifiedBy() {
-        return modifiedBy;
-    }
-
-    public void setModifiedBy(String modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
-
-    public String getEmployeeName() {
-        return employeeName;
-    }
-
-    public void setEmployeeName(String employeeName) {
-        this.employeeName = employeeName;
-    }
-
-    public String getIdNum() {
-        return idNum;
-    }
-
-    public void setIdNum(String idNum) {
-        this.idNum = idNum;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public List<Date> getHandlerDateRange() {
-        return handlerDateRange;
-    }
-
-    public void setHandlerDateRange(List<Date> handlerDateRange) {
-        this.handlerDateRange = handlerDateRange;
-    }
-
-    public String getManagementId() {
-        return managementId;
-    }
-
-    public void setManagementId(String managementId) {
-        this.managementId = managementId;
-    }
-
-    public String getManagementName() {
-        return managementName;
-    }
-
-    public void setManagementName(String managementName) {
-        this.managementName = managementName;
-    }
-
-    public List<Date> getAuditDateRange() {
-        return auditDateRange;
-    }
-
-    public void setAuditDateRange(List<Date> auditDateRange) {
-        this.auditDateRange = auditDateRange;
     }
 
     public Integer getAuditId() {
@@ -496,11 +330,11 @@ public class UninsuredMedicalAuditDTO extends CommonEntity {
         this.diagnoseDate = diagnoseDate;
     }
 
-    public MultipartFile getAttachment() {
+    public String getAttachment() {
         return attachment;
     }
 
-    public void setAttachment(MultipartFile attachment) {
+    public void setAttachment(String attachment) {
         this.attachment = attachment;
     }
 
@@ -554,16 +388,8 @@ public class UninsuredMedicalAuditDTO extends CommonEntity {
 
     @Override
     public String toString() {
-        return "UninsuredMedicalAuditDTO{" +
-            "employeeName='" + employeeName + '\'' +
-            ", idNum='" + idNum + '\'' +
-            ", companyId='" + companyId + '\'' +
-            ", companyName='" + companyName + '\'' +
-            ", handlerDateRange=" + handlerDateRange +
-            ", auditDateRange=" + auditDateRange +
-            ", managementId='" + managementId + '\'' +
-            ", managementName='" + managementName + '\'' +
-            ", umAcceptanceId=" + umAcceptanceId +
+        return "UninsuredMedicalAuditBO{" +
+            "umAcceptanceId=" + umAcceptanceId +
             ", employeeId='" + employeeId + '\'' +
             ", moneyType=" + moneyType +
             ", caseType=" + caseType +
@@ -578,25 +404,20 @@ public class UninsuredMedicalAuditDTO extends CommonEntity {
             ", handler='" + handler + '\'' +
             ", handlerDate=" + handlerDate +
             ", rejectType=" + rejectType +
+            ", remark='" + remark + '\'' +
             ", auditId=" + auditId +
             ", clinicHospital='" + clinicHospital + '\'' +
             ", acceptAmount=" + acceptAmount +
             ", payType=" + payType +
             ", diagnose='" + diagnose + '\'' +
             ", diagnoseDate=" + diagnoseDate +
-            ", attachment=" + attachment +
+            ", attachment='" + attachment + '\'' +
             ", hospitalizationDays=" + hospitalizationDays +
             ", auditAmount=" + auditAmount +
             ", hospitalizationStartDate=" + hospitalizationStartDate +
             ", hospitalizationEndDate=" + hospitalizationEndDate +
-            ", remark='" + remark + '\'' +
             ", auditor='" + auditor + '\'' +
             ", auditDate=" + auditDate +
-            ", isActive=" + isActive +
-            ", createdTime=" + createdTime +
-            ", modifiedTime=" + modifiedTime +
-            ", createdBy='" + createdBy + '\'' +
-            ", modifiedBy='" + modifiedBy + '\'' +
             '}';
     }
 }
