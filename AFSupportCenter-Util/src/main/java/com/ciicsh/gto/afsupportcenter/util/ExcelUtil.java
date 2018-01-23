@@ -2,15 +2,19 @@ package com.ciicsh.gto.afsupportcenter.util;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.jeecgframework.poi.excel.ExcelExportUtil;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.ImportParams;
+import org.jeecgframework.poi.excel.entity.TemplateExportParams;
 import org.jeecgframework.poi.excel.entity.enmus.ExcelType;
+import org.jeecgframework.poi.word.WordExportUtil;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.List;
@@ -62,11 +66,14 @@ public class ExcelUtil {
     /********************导出相关(结束)***************************/
 
     /********************导入相关(开始)***************************/
-    public static <T> List<T> importExcel(String filePath,Integer titleRows,Integer headerRows, Class<T> pojoClass) throws Exception {
+    public static <T> List<T> importExcel(String filePath,Integer titleRows,Integer headerRows, Class<T> pojoClass,boolean needVerfiy) throws Exception {
         if (StringUtils.isBlank(filePath)){
             return null;
         }
         ImportParams params = new ImportParams();
+        if(needVerfiy){
+            params.setNeedVerfiy(true);
+        }
         params.setTitleRows(titleRows);
         params.setHeadRows(headerRows);
         List<T> list = null;
@@ -81,11 +88,14 @@ public class ExcelUtil {
         }
         return list;
     }
-    public static <T> List<T> importExcel(MultipartFile file, Integer titleRows, Integer headerRows, Class<T> pojoClass) throws Exception {
+    public static <T> List<T> importExcel(MultipartFile file, Integer titleRows, Integer headerRows, Class<T> pojoClass,boolean needVerfiy) throws Exception {
         if (file == null){
             return null;
         }
         ImportParams params = new ImportParams();
+        if(needVerfiy){
+            params.setNeedVerfiy(true);
+        }
         params.setTitleRows(titleRows);
         params.setHeadRows(headerRows);
         List<T> list = null;
@@ -101,4 +111,49 @@ public class ExcelUtil {
     }
 
     /********************导入相关(结束)***************************/
+
+
+    /********************Excel模板导出相关(开始)***********************/
+    public static void exportExcelTemplate(String inputFilePath, Map<String, Object> map, boolean scanAllSheet, String outputFilePath, String... sheetName) throws IOException {
+        TemplateExportParams params = new TemplateExportParams(inputFilePath,scanAllSheet,sheetName);
+        Workbook book = ExcelExportUtil.exportExcel(params, map);
+        FileOutputStream outputStream = new FileOutputStream(outputFilePath);
+        book.write(outputStream);
+        outputStream.close();
+    }
+
+    public static void exportExcelTemplate(String inputFilePath, Map<String, Object> map, String outputFilePath, Integer... sheetNum) throws IOException {
+        TemplateExportParams params = new TemplateExportParams(inputFilePath,sheetNum);
+        Workbook book = ExcelExportUtil.exportExcel(params, map);
+        FileOutputStream outputStream = new FileOutputStream(outputFilePath);
+        book.write(outputStream);
+        outputStream.close();
+    }
+
+    public static void exportExcelTemplate(String inputFilePath, Map<String, Object> map, String outputFilePath,String sheetName, Integer... sheetNum) throws IOException {
+        TemplateExportParams params = new TemplateExportParams(inputFilePath,sheetName,sheetNum);
+        Workbook book = ExcelExportUtil.exportExcel(params, map);
+        FileOutputStream outputStream = new FileOutputStream(outputFilePath);
+        book.write(outputStream);
+        outputStream.close();
+    }
+
+    /********************Excel模板导出相关(开始)***********************/
+
+    /********************Word模板导出相关(开始)***********************/
+    /**
+     * Word 模板导出（07版本的word）
+     * @param inputFilePath  模板文件路径
+     * @param map map数据
+     * @param outputFilePath 文件输入路径
+     * @throws Exception
+     */
+    public static void exportWordTemplate(String inputFilePath,Map<String,Object> map,String outputFilePath) throws Exception {
+        XWPFDocument document = WordExportUtil.exportWord07(inputFilePath,map);
+        FileOutputStream outputStream = new FileOutputStream(outputFilePath);
+        document.write(outputStream);
+        outputStream.close();
+    }
+
+    /********************Word模板导出相关(开始)***********************/
 }
