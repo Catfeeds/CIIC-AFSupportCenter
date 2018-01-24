@@ -228,6 +228,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
                 .toString());
         } else if ("2".equals(ssComTaskBO.getChangeContentValue())) {
             dynamicExtendMap.put("paymentWay", null == ssComTaskBO.getPaymentWay() ? "" : ssComTaskBO.getPaymentWay());
+            dynamicExtendMap.put("billReceiver", null == ssComTaskBO.getBillReceiver() ? "" : ssComTaskBO.getBillReceiver());
         } else if ("3".equals(ssComTaskBO.getChangeContentValue())) {
             dynamicExtendMap.put("comAccountName", null == ssComTaskBO.getComAccountName() ? "" : ssComTaskBO
                 .getComAccountName());
@@ -275,6 +276,8 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
         ssComAccount.setPaymentBank(isNotNull(map.get("paymentBank")) ? map.get("paymentBank") : null);
         //付款方式
         ssComAccount.setPaymentWay(isNotNull(map.get("paymentWay")) ? Integer.valueOf(map.get("paymentWay")) : null);
+        //账单接收方
+        ssComAccount.setBillReceiver(isNotNull(map.get("billReceiver")) ? Integer.valueOf(map.get("billReceiver")) : null);
         //用户名
         ssComAccount.setSsUsername(isNotNull(map.get("ssUsername")) ? map.get("ssUsername") : null);
         //密码
@@ -411,6 +414,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
         } else if ("2".equals(ssComTaskBO.getChangeContentValue())) {//支付方式变更
             ssComAccount.setComAccountId(ssComTaskBO.getComAccountId());
             ssComAccount.setPaymentWay(Integer.valueOf(ssComTaskBO.getPaymentWay()));
+            ssComAccount.setBillReceiver(Integer.valueOf(ssComTaskBO.getBillReceiver()));
 
             return ssComAccount;
         } else if ("3".equals(ssComTaskBO.getChangeContentValue())) {//公司名称变更

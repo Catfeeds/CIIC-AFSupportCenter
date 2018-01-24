@@ -51,6 +51,8 @@ public class SsComTaskBO extends SsComTask{
     private String comAccountName;
     //变更的支付方式
     private String paymentWay;
+    //账单接收方
+    private String billReceiver;
     //行业类型
     private String belongsIndustry;
     //企业工伤比例
@@ -215,5 +217,13 @@ public class SsComTaskBO extends SsComTask{
 
     public void setIsComplete(String isComplete) {
         this.isComplete = isComplete;
+    }
+
+    public String getBillReceiver() {
+        return billReceiver;
+    }
+
+    public void setBillReceiver(String billReceiver) {
+        this.billReceiver = billReceiver;
     }
 }
