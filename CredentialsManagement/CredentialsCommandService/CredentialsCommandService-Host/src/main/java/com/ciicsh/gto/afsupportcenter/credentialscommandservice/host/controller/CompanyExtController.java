@@ -65,17 +65,6 @@ public class CompanyExtController {
     }
 
     /**
-     * 根据客户code和证件类型查询办证信息
-     * @param companyId
-     * @param credentialsType
-     * @return
-     */
-    @GetMapping("/find")
-    public JsonResult getCompanyExtItem(String companyId, String credentialsType){
-        return JsonResult.success(companyExtService.selectItem(companyId, credentialsType));
-    }
-
-    /**
      * 保存或更新客户证件办理信息
      * @param companyExtDTO
      * @return

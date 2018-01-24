@@ -95,13 +95,13 @@ public class EmpCredentialsDealController {
         List<Task> tasks = taskService.selectByempId(empId);
         tasks.stream().forEach(i -> {
             TaskListDTO taskListDTO = new TaskListDTO();
+            BeanUtils.copyProperties(i,taskListDTO);
             if (i.getCredentialsType() != null){
                 taskListDTO.setCredentialsTypeN(SelectionUtils.credentials(i.getCredentialsType()));
             }
             if (i.getCredentialsDealType() != null){
-                taskListDTO.setCredentialsTypeN(SelectionUtils.credentialsDeal(i.getCredentialsDealType()));
+                taskListDTO.setCredentialsDealTypeN(SelectionUtils.credentialsDeal(i.getCredentialsDealType()));
             }
-            BeanUtils.copyProperties(i,taskListDTO);
             taskListDTOs.add(taskListDTO);
         });
         return JsonResult.success(taskListDTOs);
