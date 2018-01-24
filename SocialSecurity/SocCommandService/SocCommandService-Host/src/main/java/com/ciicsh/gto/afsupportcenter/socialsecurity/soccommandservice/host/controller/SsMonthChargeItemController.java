@@ -31,7 +31,7 @@ public class SsMonthChargeItemController extends BasicController<ISsMonthChargeI
     @RequestMapping("/queryEmlpyeeMonthFeeDetail")
     @ResponseBody
     public JsonResult<List<SsMonthChargeItemBO>> queryEmlpyeeMonthFeeDetail(SsMonthChargeItemBO ssMonthChargeItemBO){
-        if(StringUtils.isBlank(ssMonthChargeItemBO.getSsMonth()) || null == ssMonthChargeItemBO.getComAccountId())
+        if(StringUtils.isBlank(ssMonthChargeItemBO.getSsMonth()) || null == ssMonthChargeItemBO.getSsAccount())
             throw new BusinessException("条件不足");
         ssMonthChargeItemBO.setSsMonth(ssMonthChargeItemBO.getSsMonth().substring(0,6));
         List<SsMonthChargeItemBO> ssMonthChargeItemBOList = dealEmpChangeDetailDTO(business.queryEmlpyeeMonthFeeDetail(ssMonthChargeItemBO));

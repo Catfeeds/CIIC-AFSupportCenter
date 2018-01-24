@@ -31,7 +31,7 @@ public class SsEmpRefundController  extends BasicController<ISsEmpRefundService>
     @Log("查询退账详情")
    @RequestMapping("/queryRefundDetails")
     public JsonResult<List<SsEmpRefundBO>> queryRefundDetails(SsEmpRefundBO ssEmpRefundBO){
-        if(StringUtils.isBlank(ssEmpRefundBO.getSsMonth()) || null == ssEmpRefundBO.getComAccountId())
+        if(StringUtils.isBlank(ssEmpRefundBO.getSsMonth()) || null == ssEmpRefundBO.getSsAccount())
             throw new BusinessException("条件不足");
         ssEmpRefundBO.setSsMonth(ssEmpRefundBO.getSsMonth().substring(0,6));
         List<SsEmpRefundBO> ssEmpRefundBOList= business.selectRefundDetail(ssEmpRefundBO);
