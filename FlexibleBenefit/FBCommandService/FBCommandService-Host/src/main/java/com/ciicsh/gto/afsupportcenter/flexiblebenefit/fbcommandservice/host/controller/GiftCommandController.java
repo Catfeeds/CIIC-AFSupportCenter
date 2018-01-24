@@ -187,7 +187,7 @@ public class GiftCommandController {
             MissionRequestDTO missionRequestDTO = new MissionRequestDTO();
             missionRequestDTO.setMissionId(applyRecordDetailPO.getApplyRecordDetailId().toString());
             missionRequestDTO.setProcessDefinitionKey("gift_apply");
-            com.ciicsh.gto.sheetservice.api.dto.core.Result restResult = sheetServiceProxy.startProcess(missionRequestDTO);
+            com.ciicsh.gto.commonservice.util.dto.Result restResult = sheetServiceProxy.startProcess(missionRequestDTO);
             Map<String, String> startProcessResponseMap = (Map<String, String>) restResult.getObject();
             logger.info(String.valueOf("code:" + restResult.getCode() + ",message:") + restResult.getMessage());
             logger.info(startProcessResponseMap.toString());
@@ -235,7 +235,7 @@ public class GiftCommandController {
                 variable.put("action", "reject");
             }
             taskRequestDTO.setVariables(variable);
-            com.ciicsh.gto.sheetservice.api.dto.core.Result restResult = sheetServiceProxy.completeTask(taskRequestDTO);
+            com.ciicsh.gto.commonservice.util.dto.Result restResult = sheetServiceProxy.completeTask(taskRequestDTO);
             Map<String, String> startProcessResponseMap = (Map<String, String>) restResult.getObject();
             logger.info(String.valueOf("code:" + restResult.getCode() + ",message:") + restResult.getMessage());
             logger.info(startProcessResponseMap.toString());

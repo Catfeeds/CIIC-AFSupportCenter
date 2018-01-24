@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.po;
+package out.com.ciicsh.gto.afsupportcenter.healthmedical.po;
 
 import java.io.Serializable;
 
@@ -8,8 +8,6 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
-
-import java.io.Serializable;
 
 /**
  * <p>

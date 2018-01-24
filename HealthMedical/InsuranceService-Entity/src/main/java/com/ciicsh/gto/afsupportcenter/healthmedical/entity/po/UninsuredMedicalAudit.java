@@ -1,4 +1,4 @@
-package out.com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.po;
+package com.ciicsh.gto.afsupportcenter.healthmedical.entity.po;
 
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
@@ -12,8 +12,10 @@ import java.util.Date;
 
 /**
  * <p>
- * <p>
+ * 未投保审核
  * </p>
+ *
+ * @author xiweizhen
  */
 @TableName("hm_uninsured_medical_audit")
 public class UninsuredMedicalAudit extends Model<UninsuredMedicalAudit> {

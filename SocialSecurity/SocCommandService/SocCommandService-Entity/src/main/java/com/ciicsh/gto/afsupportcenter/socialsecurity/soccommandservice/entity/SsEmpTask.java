@@ -370,11 +370,9 @@ public class SsEmpTask implements Serializable {
     public void setSubmitTime(LocalDateTime submitTime) {
         this.submitTime = submitTime;
     }
-
     public LocalDate getExpireDate() {
         return expireDate;
     }
-
     public void setExpireDate(LocalDate expireDate) {
         this.expireDate = expireDate;
     }

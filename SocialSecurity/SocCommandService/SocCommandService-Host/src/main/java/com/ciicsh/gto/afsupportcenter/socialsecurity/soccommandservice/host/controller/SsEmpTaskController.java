@@ -78,18 +78,24 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
     @PostMapping("/empTaskById")
     public JsonResult<SsEmpTaskBO> empTaskById(
         @RequestParam("empTaskId") Long empTaskId
-        , @RequestParam(value = "operatorType", defaultValue = "-1") Integer operatorType // 1 任务单费用段
+        , @RequestParam(value = "operatorType", defaultValue = "-1") Integer operatorType ,// 1 任务单费用段
+        @RequestParam(value = "isNeedSerial", defaultValue = "-1") Integer isNeedSerial
     ) {
         SsEmpTask empTask = business.selectById(empTaskId);
         SsEmpTaskBO dto = JsonKit.castToObject(empTask, SsEmpTaskBO.class);
-
         // operatorType == 1 查询任务单费用段
         if (operatorType == 1) {
             List<SsEmpTaskPeriod> periods = ssEmpTaskPeriodService.queryByEmpTaskId(empTaskId);
             dto.setEmpTaskPeriods(periods);
         }
+        //表示新进和转入 需要社保序号 并且任务单为 初始状态
+        if(isNeedSerial==1 && dto.getTaskStatus()==1){
+            String ssSerial = business.selectMaxSsSerialByTaskId(empTaskId);
+            dto.setEmpSsSerial(ssSerial);
+        }
         return JsonResultKit.of(dto);
     }
+
 
 
     /**
