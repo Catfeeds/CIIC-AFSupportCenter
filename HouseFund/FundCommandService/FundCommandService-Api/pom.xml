@@ -10,6 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
     <artifactId>fundcommandservice-api</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0</version>
