@@ -312,13 +312,13 @@
         <module>./HouseFund/FundQueryService/FundQueryService-Api</module>
         <module>./HouseFund/FundQueryService/FundQueryService-Dao</module>
         <module>./HouseFund/FundQueryService/FundQueryService-Business</module>
-        <module>./HouseFund/FundQueryService/FundQueryService-Entity</module>
+        <module>./HouseFund/FundQueryService/FundQueryService-Entity</module>-->
 
         <module>./HouseFund/FundCommandService/FundCommandService-Host</module>
         <module>./HouseFund/FundCommandService/FundCommandService-Api</module>
         <module>./HouseFund/FundCommandService/FundCommandService-Dao</module>
         <module>./HouseFund/FundCommandService/FundCommandService-Business</module>
-        <module>./HouseFund/FundCommandService/FundCommandService-Entity</module>-->
+        <module>./HouseFund/FundCommandService/FundCommandService-Entity</module>
 
 
         <!--<module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Api</module>
