@@ -12,12 +12,8 @@
 
     <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
     <artifactId>fundcommandservice-dao</artifactId>
-    <packaging>jar</packaging>
     <version>1.0.0</version>
-    <build>
-        <finalName>gt1.afsupportcenter.fundcommandservice-dao</finalName>
-    </build>
-
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
@@ -26,5 +22,9 @@
             <version>1.0.0</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <finalName>gt1.afsupportcenter.fundcommandservice-dao</finalName>
+    </build>
 
 </project>

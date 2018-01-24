@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundcommandservice.dao.HfComAccountClassMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundcommandservice.entity.HfComAccountClass">
+		<id column="com_account_class_id" property="comAccountClassId" />
+		<result column="com_account_id" property="comAccountId" />
+		<result column="hf_type" property="hfType" />
+		<result column="hf_com_account" property="hfComAccount" />
+		<result column="start_month" property="startMonth" />
+		<result column="end_month" property="endMonth" />
+		<result column="account_temp_store" property="accountTempStore" />
+		<result column="com_hf_month" property="comHfMonth" />
+		<result column="end_type" property="endType" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+</mapper>
