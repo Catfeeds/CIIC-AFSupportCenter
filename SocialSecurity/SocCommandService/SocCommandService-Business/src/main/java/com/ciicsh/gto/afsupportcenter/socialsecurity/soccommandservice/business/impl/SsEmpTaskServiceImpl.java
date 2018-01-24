@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.*;
@@ -12,6 +13,7 @@ import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.sheetservice.api.SheetServiceProxy;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.apache.commons.beanutils.BeanMap;
@@ -58,7 +60,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     @Autowired
     ISsEmpRefundService ssEmpRefundService;
     @Autowired
-    SheetServiceProxy sheetServiceProxy;
+    CommonApiUtils commonApiUtils;
     @Override
     public PageRows<SsEmpTaskBO> employeeOperatorQuery(PageInfo pageInfo) {
         SsEmpTaskBO dto = pageInfo.toJavaObject(SsEmpTaskBO.class);
@@ -81,9 +83,10 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param bo
      * @return
      */
-    @Transactional
+    @Transactional(rollbackFor =Exception.class )
     @Override
     public boolean saveHandleData(SsEmpTaskBO bo) {
+        TaskSheetRequestDTO taskSheetRequestDTO = new TaskSheetRequestDTO();
         int taskStatus = bo.getTaskStatus();
         int taskCategory = bo.getTaskCategory();
         // 更新任务单费用段
@@ -1371,20 +1374,5 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     }
 
 
-    /**
-     * 调用客服中心的完成任务接口
-     *
-     * @param taskSheetRequestDTO
-     * @return
-     */
-    public com.ciicsh.gto.commonservice.util.dto.Result completeTask(@RequestBody TaskSheetRequestDTO
-                                                                         taskSheetRequestDTO) throws Exception {
-        TaskRequestDTO taskRequestDTO = new TaskRequestDTO();
-        taskRequestDTO.setTaskId(taskSheetRequestDTO.getTaskId());
-        taskRequestDTO.setAssignee(taskSheetRequestDTO.getAssignee());
-        taskRequestDTO.setVariables(taskSheetRequestDTO.getVariable());
-
-        return sheetServiceProxy.completeTask(taskRequestDTO);
-    }
 }
 
