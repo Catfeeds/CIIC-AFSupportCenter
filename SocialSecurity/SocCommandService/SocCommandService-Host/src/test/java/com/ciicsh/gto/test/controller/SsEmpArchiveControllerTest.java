@@ -2,6 +2,7 @@ package com.ciicsh.gto.test.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsAccountComRelationDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.payment.SsOperatePaymentDTO;
@@ -43,8 +44,9 @@ public class SsEmpArchiveControllerTest {
     @Autowired
     SsAccountComRelationController ssAccountComRelationController;
 
+
     @Autowired
-    ISsEmpTaskService s1;
+    CommonApiUtils commonApiUtils;
 
     @Test
     public void queryByEmpTaskId() {
@@ -65,6 +67,7 @@ public class SsEmpArchiveControllerTest {
 
     @Test
     public void testCompleteTask() {
+        System.out.println("1----------------------------"+commonApiUtils);
         TaskSheetRequestDTO dt = new TaskSheetRequestDTO();
         dt.setTaskId("100148");
         dt.setAssignee("2");
@@ -73,7 +76,7 @@ public class SsEmpArchiveControllerTest {
 //        System.out.println(JSONObject.toJSONString(SocialSecurityConst.DISTRICT_MAP));
 
         try {
-            Result ddd = s1.completeTask(dt);
+            Result ddd = commonApiUtils.completeTask(dt);
             System.out.println(JSON.toJSONString(ddd));
         } catch (Exception e) {
             e.printStackTrace();
