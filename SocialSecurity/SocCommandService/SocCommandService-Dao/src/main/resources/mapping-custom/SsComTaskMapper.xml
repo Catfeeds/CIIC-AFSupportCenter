@@ -486,4 +486,30 @@
         WHERE
             sct.com_task_id = #{comTaskId}
     </update>
+
+    <!--判断企业任务单是否存在-->
+    <select id="countComTaskByCond" resultType="int">
+        SELECT
+        COUNT(1)
+        FROM ss_com_task sct
+        where sct.is_active = 1
+        AND sct.com_account_id = #{comAccountId}
+        AND sct.task_category=#{taskCategory}
+        AND sct.task_status in (0,1,2)
+    </select>
+
+    <insert id="insertComTask" useGeneratedKeys="true" keyProperty="comTaskId">
+        insert into
+        ss_com_task
+       ( `customer_id`, `com_account_id`, `company_id`, `task_category`, `expire_date`,
+       `submitter_id`, `submitter_name`, `submitter_dept_id`, `submitter_dept_name`, `submit_time`, `submit_remark`,
+        `task_form_content`, `chat_history`, `dynamic_extend`, `task_status`, `handle_user_id`, `handle_user_name`,
+        `start_handle_date`, `send_check_date`, `finish_date`, `handle_remark`, `rejection_remark`, `business_interface_id`,
+         `task_id`, `is_active`, `created_time`, `modified_time`, `created_by`, `modified_by`) VALUES
+         	(#{customerId},#{comAccountId},#{companyId},#{taskCategory},#{expireDate},#{submitterId},#{submitterName},
+         	#{submitterDeptId},#{submitterDeptName},#{submitTime},#{submitRemark},#{taskFormContent},#{chatHistory},
+         	#{dynamicExtend},#{taskStatus},#{handleUserId},#{handleUserName},#{startHandleDate},#{sendCheckDate},
+         	#{finishDate},#{handleRemark},#{rejectionRemark},#{businessInterfaceId},#{taskId},#{isActive},#{createdTime},
+         	#{modifiedTime},#{createdBy},#{modifiedBy})
+    </insert>
 </mapper>
