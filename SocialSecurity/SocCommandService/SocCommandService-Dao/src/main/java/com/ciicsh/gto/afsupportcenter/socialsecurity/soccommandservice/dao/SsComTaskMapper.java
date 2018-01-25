@@ -25,5 +25,8 @@ public interface SsComTaskMapper extends BaseMapper<SsComTask> {
     public SsComTaskBO queryAccountInfoAndMaterial(SsComTaskBO ssComTaskBO);
     public int updateTaskStatusForRevoke(SsComTask ssComTask);
 
+    //判断企业任务单是否存在
+    public int countComTaskByCond(SsComTaskBO ssComTask);
 
+    boolean insertComTask(SsComTask ssComTask);
 }
