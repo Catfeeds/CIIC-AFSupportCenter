@@ -1,11 +1,14 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.SsComTaskProxy;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComTaskBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComTaskService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.*;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -13,7 +16,10 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.commonservice.util.dto.Result;
+import com.ciicsh.gto.commonservice.util.dto.ResultGenerator;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -35,7 +41,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssComTask")
-public class SsComTaskController extends BasicController<ISsComTaskService> {
+public class SsComTaskController extends BasicController<ISsComTaskService> implements SsComTaskProxy {
 
     @Log("查询未处理企业任务单")
     @RequestMapping(value = "getNoProgressTask")
@@ -441,13 +447,45 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
 
     /**
      * 企业社保账户开户、变更、转移、转出的 创建任务单接口
+     *
+     * @param ssComTaskDTO
+     * @return
      */
     @Log("企业社保账户开户、变更、转移、转出的 创建任务单接口")
-    @PostMapping("/insertSsComTask")
-    public JsonResult<Boolean> insertSsComTask(@RequestBody SsComTaskDTO ssComTaskDTO) {
+    @PostMapping("/saveSsComTask")
+    public Result saveSsComTask(@RequestBody SsComTaskDTO ssComTaskDTO) {
+        try {
+            if (ssComTaskDTO.getComAccountId() == 0L) {
+                return ResultGenerator.genServerFailResult("企业社保账户Id不能为空！");
+            }
+            if (StringUtils.isBlank(ssComTaskDTO.getCompanyId())) {
+                return ResultGenerator.genServerFailResult("客户Id不能为空！");
+            }
+            if (StringUtils.isBlank(ssComTaskDTO.getTaskCategory())) {
+                return ResultGenerator.genServerFailResult("任务类型不能为空！");
+            }
+            if (StringUtils.isBlank(ssComTaskDTO.getBusinessInterfaceId())) {
+                return ResultGenerator.genServerFailResult("业务接口ID不能为空！");
+            }
+            SsComTaskBO ssComTask = new SsComTaskBO();
+            BeanUtils.copyProperties(ssComTaskDTO, ssComTask);
+            int cnt = business.countComTaskByCond(ssComTask);
+            if (cnt > 0) {
+                return ResultGenerator.genServerFailResult("该企业已存在相同类型的处理中任务单，不能重复添加！");
+            }
+            Long newComTaskId = insertSsComTask(ssComTaskDTO);
+            return ResultGenerator.genSuccessResult(newComTaskId);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult(e.getMessage());
+        }
+    }
+
+    //保存企业任务单
+    private Long insertSsComTask(@RequestBody SsComTaskDTO ssComTaskDTO) {
         boolean result = false;
         //数据转换
         SsComTask ssComTask = CommonTransform.convertToEntity(ssComTaskDTO, SsComTask.class);
+        ssComTask.setTaskStatus(0);
         ssComTask.setActive(true);
         ssComTask.setCreatedTime(LocalDateTime.now());
         ssComTask.setModifiedTime(LocalDateTime.now());
@@ -455,33 +493,9 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
         ssComTask.setModifiedBy("system");
 
         //任务单上前道系统传递过来的内容，Json格式
-        JSONObject jo = new JSONObject();
-        //1:开户
-        if ("1".equals(ssComTaskDTO.getTaskCategory())) {
-            jo.put("taskCategory", ssComTaskDTO.getTaskCategory());
-            jo.put("companyId", ssComTaskDTO.getCompanyId());
-            jo.put("companyName", ssComTaskDTO.getCompanyName());
-            jo.put("customerServiceSpecialist", ssComTaskDTO.getCustomerManager());
-            jo.put("customerManager", ssComTaskDTO.getCustomerManager());
-            jo.put("expireDate", ssComTaskDTO.getExpireDate());
-            jo.put("paymentWay", ssComTaskDTO.getPaymentWay());
-            jo.put("billReceiver", ssComTaskDTO.getBillReceiver());
-            jo.put("dispatchMaterial", ssComTaskDTO.getDispatchMaterial());
-            jo.put("ssAccount", ssComTaskDTO.getSsAccount());
-            jo.put("comAccountName", ssComTaskDTO.getComAccountName());
-            jo.put("bankAccount", ssComTaskDTO.getBankAccount());
-            jo.put("belongsIndustry", ssComTaskDTO.getBelongsIndustry());
-            jo.put("companyWorkInjuryPercentage", ssComTaskDTO.getCompanyWorkInjuryPercentage());
-            jo.put("startMonth", ssComTaskDTO.getStartMonth());
-        } else {
-            jo.put("taskCategory", ssComTaskDTO.getTaskCategory());
-            jo.put("companyId", ssComTaskDTO.getCompanyId());
-            jo.put("companyName", ssComTaskDTO.getCompanyName());
-            jo.put("remark", ssComTaskDTO.getHandleRemark());
-        }
-        ssComTask.setTaskFormContent(jo.toJSONString());
+        ssComTask.setTaskFormContent(JSONObject.toJSONString(ssComTaskDTO));
 
-        result = business.insert(ssComTask);
-        return JsonResultKit.of(result);
+        business.insertComTask(ssComTask);
+        return ssComTask.getComTaskId();
     }
 }

@@ -214,4 +214,18 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
     public int updateTaskStatusForRevoke(SsComTask ssComTask){
         return baseMapper.updateTaskStatusForRevoke(ssComTask);
     }
+
+    /**
+     * 判断企业任务单是否存在
+     *
+     * @param ssComTask
+     * @return
+     */
+    public int countComTaskByCond(SsComTaskBO ssComTask) {
+        return baseMapper.countComTaskByCond(ssComTask);
+    }
+
+    public boolean insertComTask(SsComTask ssComTask) {
+        return baseMapper.insertComTask(ssComTask);
+    }
 }

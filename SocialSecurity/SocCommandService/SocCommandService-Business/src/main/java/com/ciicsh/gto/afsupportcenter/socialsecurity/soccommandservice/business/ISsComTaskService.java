@@ -96,4 +96,14 @@ public interface ISsComTaskService extends IService<SsComTask> {
      * @return
      */
     public int updateTaskStatusForRevoke(SsComTask ssComTask);
+
+    /**
+     * 判断企业任务单是否存在
+     *
+     * @param ssComTask
+     * @return
+     */
+    public int countComTaskByCond(SsComTaskBO ssComTask);
+
+    boolean insertComTask(SsComTask ssComTask);
 }
