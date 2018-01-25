@@ -39,11 +39,11 @@ public class CompanyExtDTO implements Serializable{
     /**
      * 操作方式 (1：待审代交、2：待审不代交、3：不待审代交)
      */
-    private Integer operateType;
+    private String operateType;
     /**
      * 费用类型(1：免费、2：常规收费、3：特殊收费)
      */
-    private Integer chargeType;
+    private String chargeType;
     /**
      * 特殊收费备注
      */
@@ -51,7 +51,7 @@ public class CompanyExtDTO implements Serializable{
     /**
      * 支付方式(1：台帐、2：员工自付)
      */
-    private Integer payType;
+    private String payType;
     /**
      * 介绍信
      */
@@ -208,19 +208,19 @@ public class CompanyExtDTO implements Serializable{
         this.operatePwd = operatePwd;
     }
 
-    public Integer getOperateType() {
+    public String getOperateType() {
         return operateType;
     }
 
-    public void setOperateType(Integer operateType) {
+    public void setOperateType(String operateType) {
         this.operateType = operateType;
     }
 
-    public Integer getChargeType() {
+    public String getChargeType() {
         return chargeType;
     }
 
-    public void setChargeType(Integer chargeType) {
+    public void setChargeType(String chargeType) {
         this.chargeType = chargeType;
     }
 
@@ -232,11 +232,11 @@ public class CompanyExtDTO implements Serializable{
         this.specialChargeRemark = specialChargeRemark;
     }
 
-    public Integer getPayType() {
+    public String getPayType() {
         return payType;
     }
 
-    public void setPayType(Integer payType) {
+    public void setPayType(String payType) {
         this.payType = payType;
     }
 

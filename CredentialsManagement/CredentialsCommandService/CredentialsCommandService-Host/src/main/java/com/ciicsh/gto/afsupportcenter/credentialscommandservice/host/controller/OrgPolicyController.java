@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.OrgPolicyService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.OrgPolicyPageDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.OrgPolicy;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.SelectionUtils;
 import com.ciicsh.gto.afsupportcenter.util.page.PageUtil;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
 import org.springframework.beans.BeanUtils;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,14 +40,17 @@ public class OrgPolicyController {
         OrgPolicy orgPolicy = new OrgPolicy();
         orgPolicy.setName(name);
         orgPolicy.setType(type);
-        List<OrgPolicy> resultList = orgPolicyService.select(page, orgPolicy);
-        resultList.stream().map(item -> {
+        List<OrgPolicy> orgPolicys = orgPolicyService.select(page, orgPolicy);
+        ArrayList<OrgPolicyPageDTO> resultList = new ArrayList<>();
+        orgPolicys.stream().forEach( i -> {
             OrgPolicyPageDTO orgPolicyPageDTO = new OrgPolicyPageDTO();
-            BeanUtils.copyProperties(item, orgPolicyPageDTO);
-            return orgPolicyPageDTO;
-        }).collect(Collectors.toList());
+            BeanUtils.copyProperties(i,orgPolicyPageDTO);
+            if (i.getType() != null) {
+                orgPolicyPageDTO.setTypeN(SelectionUtils.credentials(i.getType()));
+            }
+            resultList.add(orgPolicyPageDTO);
+        });
         page.setRecords(resultList);
-
         return JsonResult.success(page);
     }
 

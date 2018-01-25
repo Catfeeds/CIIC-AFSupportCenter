@@ -25,7 +25,7 @@
       FROM
       cm_material_type_relation
       WHERE material_id IN 
-      <foreach collection="Ids" item="materialId" open="(" close=")" separator=",">
+      <foreach collection="ids" item="materialId" open="(" close=")" separator=",">
           #{materialId}
       </foreach>
     </select>

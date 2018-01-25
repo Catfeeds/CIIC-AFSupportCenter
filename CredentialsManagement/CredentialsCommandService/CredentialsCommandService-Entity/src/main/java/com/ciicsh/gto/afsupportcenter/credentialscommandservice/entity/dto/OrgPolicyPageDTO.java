@@ -25,6 +25,10 @@ public class OrgPolicyPageDTO implements Serializable{
      */
     private Integer type;
     /**
+     * 证件类型UI
+     */
+    private String typeN;
+    /**
      * 机构政策内容
      */
     private String policyDescription;
@@ -123,12 +127,21 @@ public class OrgPolicyPageDTO implements Serializable{
         this.modifiedBy = modifiedBy;
     }
 
+    public String getTypeN() {
+        return typeN;
+    }
+
+    public void setTypeN(String typeN) {
+        this.typeN = typeN;
+    }
+
     @Override
     public String toString() {
         return "OrgPolicyPageDTO{" +
             "orgPoilcyId=" + orgPoilcyId +
             ", name='" + name + '\'' +
             ", type=" + type +
+            ", typeN=" + typeN +
             ", policyDescription='" + policyDescription + '\'' +
             ", isActive=" + isActive +
             ", createdTime=" + createdTime +

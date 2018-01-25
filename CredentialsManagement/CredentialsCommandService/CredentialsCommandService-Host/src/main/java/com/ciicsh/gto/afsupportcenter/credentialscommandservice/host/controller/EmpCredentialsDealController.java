@@ -10,11 +10,13 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskD
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskFollowDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskListDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.CompanyExt;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.MaterialTypeRelation;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Task;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskFollow;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMaterial;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.SelectionUtils;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
+import kafka.utils.Json;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -47,6 +51,10 @@ public class EmpCredentialsDealController {
     private TaskMaterialService taskMaterialService;
     @Autowired
     private MaterialTypeRelationService materialTypeRelationService;
+
+    private static final int LV1 = 1;
+    private static final int LV2 = 2;
+    private static final int LV3 = 3;
 
     /**
      * 查询任务单跟进记录
@@ -150,6 +158,9 @@ public class EmpCredentialsDealController {
         if (b) {
             TaskMaterial taskMaterial = new TaskMaterial();
             taskMaterial.setMaterialIds(taskDetialDTO.getMaterialIds());
+            taskMaterial.setTaskId(String.valueOf(taskDetialDTO.getTaskId()));
+            taskMaterial.setCompanyId(taskDetialDTO.getCompanyId());
+            taskMaterial.setEmployeeId(taskDetialDTO.getEmployeeId());
             //TODO
             if (taskDetialDTO.getTaskId() == null) {
                 taskMaterial.setCreatedBy("gu");
@@ -161,5 +172,29 @@ public class EmpCredentialsDealController {
         } else {
             return JsonResult.faultMessage();
         }
+    }
+
+    /**
+     * 获取任务单材料收缴信息
+     * @param taskId
+     * @return
+     */
+    @GetMapping("/find/meterials/{taskId}")
+    public JsonResult getMaterials(@PathVariable("taskId") String taskId) {
+        TaskMaterial taskMaterial = taskMaterialService.selectByTaskId(taskId);
+        List<MaterialTypeRelation> materials = materialTypeRelationService.selectList(taskMaterial.getMaterialIds());
+        HashMap<String, List<MaterialTypeRelation>> resultMap = new HashMap<>(3);
+        List<MaterialTypeRelation> lv1 = new ArrayList<>();
+        List<MaterialTypeRelation> lv2 = new ArrayList<>();
+        List<MaterialTypeRelation> lv3 = new ArrayList<>();
+        resultMap.put("1",lv1);
+        resultMap.put("2",lv2);
+        resultMap.put("3",lv3);
+        materials.stream().forEach(i -> {
+            if (i.getMaterialLevel() == LV1) { lv1.add(i); }
+            if (i.getMaterialLevel() == LV2) { lv2.add(i); }
+            if (i.getMaterialLevel() == LV3) { lv3.add(i); }
+        });
+        return JsonResult.success(resultMap);
     }
 }

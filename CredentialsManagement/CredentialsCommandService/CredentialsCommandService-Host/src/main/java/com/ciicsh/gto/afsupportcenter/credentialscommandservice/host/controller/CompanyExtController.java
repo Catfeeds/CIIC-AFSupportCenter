@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -48,12 +49,15 @@ public class CompanyExtController {
                 }
                 if (i.getOperateType() != null) {
                     companyExtDTO.setOperateTypeN(SelectionUtils.operateType(i.getOperateType()));
+                    companyExtDTO.setOperateType(String.valueOf(i.getOperateType()));
                 }
                 if (i.getChargeType() != null) {
                     companyExtDTO.setChargeTypeN(SelectionUtils.chargeType(i.getChargeType()));
+                    companyExtDTO.setChargeType(String.valueOf(i.getChargeType()));
                 }
                 if (i.getPayType() != null) {
                     companyExtDTO.setPayTypeN(SelectionUtils.payType(i.getPayType()));
+                    companyExtDTO.setPayType(String.valueOf(i.getPayType()));
                 }
                 BeanUtils.copyProperties(i,companyExtDTO);
                 companyExtDTOS.add(companyExtDTO);
@@ -73,10 +77,24 @@ public class CompanyExtController {
     public JsonResult saveOrUpdateCompanyExt(@RequestBody CompanyExtDTO companyExtDTO){
         CompanyExt companyExt = new CompanyExt();
         BeanUtils.copyProperties(companyExtDTO,companyExt);
-        if(companyExt.getChargeType() != SPECIAL_CHARGE){
-            companyExt.setSpecialChargeRemark("");
+        if (StringUtils.isNotBlank(companyExtDTO.getOperateType())) {
+            companyExt.setOperateType(Integer.parseInt(companyExtDTO.getOperateType()));
+        }
+        if (StringUtils.isNotBlank(companyExtDTO.getChargeType())) {
+            companyExt.setChargeType(Integer.parseInt(companyExtDTO.getChargeType()));
+            if (companyExt.getChargeType() != SPECIAL_CHARGE){
+                companyExt.setSpecialChargeRemark("");
+            }
+        }
+        if (StringUtils.isNotBlank(companyExtDTO.getPayType())) {
+            companyExt.setPayType(Integer.parseInt(companyExtDTO.getPayType()));
         }
         //TODO 创建人...
+        if (companyExt.getCompanyExtId() == null) {
+            companyExt.setCreatedBy("gu");
+        }
+        companyExt.setModifiedBy("gu");
+        companyExt.setModifiedTime(new Date());
         return JsonResult.success(companyExtService.insertOrUpdate(companyExt));
     }
 
