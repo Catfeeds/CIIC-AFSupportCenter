@@ -1,20 +1,16 @@
 package com.ciicsh.gto.test.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsAccountComRelationDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.payment.SsOperatePaymentDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpArchiveBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.SocialSecurityApplication;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.SocialSecurityConst;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsAccountComRelationController;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsEmpArchiveController;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsPaymentController;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.TaskSheetController;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.*;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
-import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.commonservice.util.dto.Result;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.HashMap;
+import java.util.List;
 
 /**
  * <p>Description: 雇员档案 controller Test</p>
@@ -44,12 +40,36 @@ public class SsEmpArchiveControllerTest {
     SsAccountComRelationController ssAccountComRelationController;
 
     @Autowired
-    ISsEmpTaskService s1;
+    SsComTaskController d1;
+    @Autowired
+    CommonApiUtils commonApiUtils;
 
     @Test
     public void queryByEmpTaskId() {
-        JsonResult<SsEmpArchiveBO> jsonResult = controller.queryByEmpTaskId("1","1");
+        JsonResult<SsEmpArchiveBO> jsonResult = controller.queryByEmpTaskId("1", "1");
         System.out.println(JSON.toJSONString(jsonResult));
+    }
+
+
+    @Test
+    public void saveSsComTask() {
+        SsOperatePaymentDTO ssOperatePaymentDTO = new SsOperatePaymentDTO();
+        SsComTaskDTO ssComTaskDTO = new SsComTaskDTO();
+        ssComTaskDTO.setCompanyId("1");
+        ssComTaskDTO.setComAccountId(2L);
+        ssComTaskDTO.setTaskCategory("1");
+
+        Result res = d1.saveSsComTask(ssComTaskDTO);
+        System.out.println(JSON.toJSONString(res));
+    }
+
+    @Autowired
+    CommonApiUtils d2;
+
+    @Test
+    public void getDict() throws Exception {
+        List<DicItemDTO> res = d2.listByDicId("DIC00001");
+        System.out.println(JSON.toJSONString(res));
     }
 
     @Test
@@ -65,6 +85,7 @@ public class SsEmpArchiveControllerTest {
 
     @Test
     public void testCompleteTask() {
+        System.out.println("1----------------------------" + commonApiUtils);
         TaskSheetRequestDTO dt = new TaskSheetRequestDTO();
         dt.setTaskId("100148");
         dt.setAssignee("2");
@@ -73,7 +94,7 @@ public class SsEmpArchiveControllerTest {
 //        System.out.println(JSONObject.toJSONString(SocialSecurityConst.DISTRICT_MAP));
 
         try {
-            Result ddd = s1.completeTask(dt);
+            Result ddd = commonApiUtils.completeTask(dt);
             System.out.println(JSON.toJSONString(ddd));
         } catch (Exception e) {
             e.printStackTrace();

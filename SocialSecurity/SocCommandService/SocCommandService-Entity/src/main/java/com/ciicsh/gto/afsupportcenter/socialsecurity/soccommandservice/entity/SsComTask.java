@@ -136,6 +136,8 @@ public class SsComTask implements Serializable {
      */
 	@TableField("business_interface_id")
 	private String businessInterfaceId;
+	@TableField("task_id")
+	private String taskId;
     /**
      * 是否可用
      */
@@ -355,6 +357,14 @@ public class SsComTask implements Serializable {
 		this.businessInterfaceId = businessInterfaceId;
 	}
 
+	public String getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
+	}
+
 	public Boolean getActive() {
 		return isActive;
 	}
@@ -422,6 +432,7 @@ public class SsComTask implements Serializable {
 			", handleRemark=" + handleRemark +
 			", rejectionRemark=" + rejectionRemark +
 			", businessInterfaceId=" + businessInterfaceId +
+			", taskId=" + taskId +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

@@ -227,10 +227,6 @@
             <version>1.0.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-stream-kafka</artifactId>
-        </dependency>
         <!-- 打包 WAR 包不需要此 jar -->
         <!--<dependency>
             <groupId>org.springframework.boot</groupId>
@@ -266,6 +262,13 @@
             <artifactId>easypoi-annotation</artifactId>
             <version>2.4.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.ciicsh.gt1.commonservice</groupId>
+            <artifactId>basicdataservice-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -312,13 +315,13 @@
         <module>./HouseFund/FundQueryService/FundQueryService-Api</module>
         <module>./HouseFund/FundQueryService/FundQueryService-Dao</module>
         <module>./HouseFund/FundQueryService/FundQueryService-Business</module>
-        <module>./HouseFund/FundQueryService/FundQueryService-Entity</module>
+        <module>./HouseFund/FundQueryService/FundQueryService-Entity</module>-->
 
         <module>./HouseFund/FundCommandService/FundCommandService-Host</module>
         <module>./HouseFund/FundCommandService/FundCommandService-Api</module>
         <module>./HouseFund/FundCommandService/FundCommandService-Dao</module>
         <module>./HouseFund/FundCommandService/FundCommandService-Business</module>
-        <module>./HouseFund/FundCommandService/FundCommandService-Entity</module>-->
+        <module>./HouseFund/FundCommandService/FundCommandService-Entity</module>
 
 
         <!--<module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Api</module>

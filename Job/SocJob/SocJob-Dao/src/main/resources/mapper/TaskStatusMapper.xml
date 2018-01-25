@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socjob.dao.SsPaymentDetailMapper">
+
+    <select id="getEmpTaskList" resultType="Map">
+      SELECT et.emp_task_id,et.task_category,et.emp_archive_id FROM ss_emp_task et
+      WHERE  et.handle_month=#{ssMonth} AND  task_category!=9 AND task_status=2
+    </select>
+    <update id="updateEmpArchive" >
+        UPDATE ss_emp_archive SET archive_task_status= archive_status
+        WHERE emp_archive_id=#{empArchiveId}
+    </update>
+    <update id="updateEmpTask" >
+      UPDATE ss_emp_task SET task_status= #{taskStatus}
+      WHERE emp_task_id=#{empTaskId}
+    </update>
+</mapper>

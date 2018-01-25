@@ -3,23 +3,24 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.*;
+import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
-import com.ciicsh.gto.sheetservice.api.SheetServiceProxy;
-import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
+import com.ciicsh.gto.commonservice.util.dto.Result;
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -35,8 +36,7 @@ import java.util.*;
  * @since 2017-12-01
  */
 @Service
-public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask> implements ISsEmpTaskService {
-
+public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask>  implements ISsEmpTaskService{
     @Autowired
     ISsEmpTaskPeriodService ssEmpTaskPeriodService;
 
@@ -58,7 +58,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     @Autowired
     ISsEmpRefundService ssEmpRefundService;
     @Autowired
-    SheetServiceProxy sheetServiceProxy;
+    CommonApiUtils commonApiUtils;
+
     @Override
     public PageRows<SsEmpTaskBO> employeeOperatorQuery(PageInfo pageInfo) {
         SsEmpTaskBO dto = pageInfo.toJavaObject(SsEmpTaskBO.class);
@@ -81,11 +82,16 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param bo
      * @return
      */
-    @Transactional
+    @Transactional(rollbackFor =Exception.class )
     @Override
     public boolean saveHandleData(SsEmpTaskBO bo) {
         int taskStatus = bo.getTaskStatus();
         int taskCategory = bo.getTaskCategory();
+        //批退调用工作流
+        if(taskStatus==4){
+            Result result = completeTask(bo);
+            handleWorkflowResult(result);
+        }
         // 更新任务单费用段
         List<SsEmpTaskPeriod> periods = bo.getEmpTaskPeriods();
         if (periods != null) {
@@ -457,7 +463,6 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                     needAdustObj.setStartMonth(ssEmpTaskPeriod.getStartMonth());
                     needAdustObj.setEndMonth(ssEmpTaskPeriod.getEndMonth());
                     overlappingPeriodList.add(needAdustObj);
-
                     //表示起始和截止都在一个区间 且不是在第一段之前
                 } else if (endOfIndex == startOfIndex && endOfIndex != 0) {
                     SsEmpBasePeriod ssEmpBasePeriod = ssEmpBasePeriodList.get(endOfIndex);
@@ -556,7 +561,6 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                     noContinuityIsPaid(i, haveNoContinuityList.get(j), notPaidMonthList, ssEmpBasePeriodList);
                 }
             }
-
     }
 
     /**
@@ -655,9 +659,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     }
 
     public void saveAdjustAndDetail(SsEmpBaseAdjust ssEmpBaseAdjust, List<SsEmpBaseAdjustDetail> ssEmpBaseAdjustDetailList) {
-
         ssEmpBaseAdjustService.insert(ssEmpBaseAdjust);
-
         ssEmpBaseAdjustDetailList.forEach(p -> {
             p.setEmpBaseAdjustId(ssEmpBaseAdjust.getEmpBaseAdjustId());
         });
@@ -699,9 +701,13 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             ssEmpBaseAdjustDetail.setComRatio(ssEmpBaseDetail.getComRatio());
             ssEmpBaseAdjustDetail.setEmpRatio(ssEmpBaseDetail.getEmpRatio());
             //企业总额
-            ssEmpBaseAdjustDetail.setComAmount(ssEmpBaseAdjustDetail.getComBase().multiply(ssEmpBaseAdjustDetail.getComRatio()));
+            //BigDecimal base, BigDecimal ratio, BigDecimal fixedAmount, Integer calculateMethod, String roundType
+            //通过进位方式进行 计算
+            BigDecimal comAmount = CalculateSocialUtils.calculateAmount(ssEmpBaseAdjustDetail.getComBase(),ssEmpBaseAdjustDetail.getComRatio(),null,2,"DIT00018");
+            ssEmpBaseAdjustDetail.setComAmount(comAmount);
             //雇员总额
-            ssEmpBaseAdjustDetail.setEmpAmount(ssEmpBaseAdjustDetail.getEmpBase().multiply(ssEmpBaseAdjustDetail.getEmpRatio()));
+            BigDecimal empAmount  = CalculateSocialUtils.calculateAmount(ssEmpBaseAdjustDetail.getEmpBase(),ssEmpBaseAdjustDetail.getEmpRatio(),null,2,"DIT00018");
+            ssEmpBaseAdjustDetail.setEmpAmount(empAmount);
             //企业+雇员
             ssEmpBaseAdjustDetail.setComempAmount(ssEmpBaseAdjustDetail.getComAmount().add(ssEmpBaseAdjustDetail.getEmpAmount()));
             //调整后减去原来 企业部分差额
@@ -1174,7 +1180,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     private void addEmpBaseDetail(List<SsEmpBasePeriod> basePeriods, List<SsEmpTaskFront> empSocials, Long empArchiveId) {
         basePeriods.forEach(p -> {
             // 组合险种和费用段
-            List<SsEmpBaseDetail> details = new ArrayList<>();
+            List<SsEmpBaseDetail> detailsList = new ArrayList<>();
             //费用段id
             Long empBasePeriodId = p.getEmpBasePeriodId();
             //前端提交设置的基数
@@ -1185,19 +1191,21 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 detail.setComBase(empBase);
                 detail.setEmpArchiveId(empArchiveId);
                 //个人金额 个人基数*个人比例
-                detail.setEmpAmount(detail.getEmpBase().multiply(detail.getEmpRatio()));
+                BigDecimal empAmount  = CalculateSocialUtils.calculateAmount(detail.getEmpBase(),detail.getEmpRatio(),null,2,"DIT00018");
+                detail.setEmpAmount(empAmount);
                 //公司金额 个人基数*个人比例
-                detail.setComAmount(detail.getComBase().multiply(detail.getComRatio()));
+                BigDecimal comAmount  = CalculateSocialUtils.calculateAmount(detail.getComBase(),detail.getComRatio(),null,2,"DIT00018");
+                detail.setComAmount(comAmount);
                 //个人+公司
                 detail.setComempAmount(detail.getEmpAmount().add(detail.getComAmount()));
                 detail.setEmpBasePeriodId(empBasePeriodId);
                 by(detail);
-                details.add(detail);
+                detailsList.add(detail);
             });
             SsEmpBaseDetail detail = new SsEmpBaseDetail();
             detail.setEmpArchiveId(empArchiveId);
             detail.setEmpBasePeriodId(empBasePeriodId);
-            ssEmpBaseDetailService.saveForSsEmpBaseDetail(details, detail);
+            ssEmpBaseDetailService.saveForSsEmpBaseDetail(detailsList, detail);
         });
     }
 
@@ -1255,7 +1263,6 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             detail.setSsTypeName(empSocial.getPolicyName());
             detail.setEmpRatio(empSocial.getPersonalRatio());
             detail.setComRatio(empSocial.getCompanyRatio());
-
             return detail;
         }
 
@@ -1370,21 +1377,36 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         return (T) JSONObject.parseObject(JSONObject.toJSON(object).toString(), z);
     }
 
-
     /**
-     * 调用客服中心的完成任务接口
-     *
-     * @param taskSheetRequestDTO
+     * 任务单处理调用工作流
+     * @param bo
      * @return
      */
-    public com.ciicsh.gto.commonservice.util.dto.Result completeTask(@RequestBody TaskSheetRequestDTO
-                                                                         taskSheetRequestDTO) throws Exception {
-        TaskRequestDTO taskRequestDTO = new TaskRequestDTO();
-        taskRequestDTO.setTaskId(taskSheetRequestDTO.getTaskId());
-        taskRequestDTO.setAssignee(taskSheetRequestDTO.getAssignee());
-        taskRequestDTO.setVariables(taskSheetRequestDTO.getVariable());
+    private Result completeTask(SsEmpTaskBO bo){
+        TaskSheetRequestDTO taskSheetRequestDTO = new TaskSheetRequestDTO();
+        taskSheetRequestDTO.setTaskId(bo.getTaskId());
+        taskSheetRequestDTO.setAssignee("xsj");
+        try {
+            Result result =commonApiUtils.completeTask(taskSheetRequestDTO);
 
-        return sheetServiceProxy.completeTask(taskRequestDTO);
+            return result;
+        } catch (Exception e) {
+            throw new BusinessException("调用工作流异常");
+        }
     }
+
+    /**
+     * 处理工作流结果
+     * @param result
+     */
+   private void handleWorkflowResult(Result result){
+        //int code，接口调用成功=0，错误码=其他值
+        //T object，具体返回值  TRUE,FALSE
+        //String error，字符串错误码，可选
+        //String message，错误消息
+       Assert.isNull(result,"任务单操作调用工作流结果为空");
+
+       if(0!=result.getCode())throw new BusinessException(result.getMessage());
+   }
 }
 

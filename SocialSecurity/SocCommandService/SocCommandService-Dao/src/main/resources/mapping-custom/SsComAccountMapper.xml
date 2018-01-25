@@ -92,6 +92,7 @@
             sca.settlement_area,
             sca.payment_bank,
             sca.payment_way,
+            sca.bill_receiver,
             sca.query_account,
             sca.expire_date,
             sca.ss_username,

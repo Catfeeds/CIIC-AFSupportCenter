@@ -19,9 +19,9 @@ public interface SsComProxy {
     /**
      * 获取企业社保账户信息表
      *
-     * @param paramDto
+         * @param paramDto
      * @return
-     */
+         */
     @RequestMapping("/getSsComAccountList")
     JsonResult<List<com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountDTO>>
     getSsComAccountList(@RequestBody SsComAccountParamDto paramDto);
