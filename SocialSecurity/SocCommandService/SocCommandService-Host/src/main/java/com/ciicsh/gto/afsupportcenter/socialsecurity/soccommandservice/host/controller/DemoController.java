@@ -1,14 +1,20 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsStatementImpService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.GsymxOpt;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.TestPerson;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.YysmxOpt;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by houwanhua on 2018/1/22.
@@ -16,6 +22,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/soccommandservice/demo")
 public class DemoController {
+
+    @Autowired
+    private ISsStatementImpService impService;
+
     @RequestMapping("export")
     public void export(HttpServletResponse response){
 
@@ -61,5 +71,42 @@ public class DemoController {
 
         //TODO 数据处理
         return personList.toString();
+    }
+
+
+    @RequestMapping("yysmxOptImport")
+    public void yysmxOptImport() throws Exception {
+        String filePath = "F:/00972350_180123_养医失明细.xls";
+        //解析excel，
+        File tempFile = new File(filePath.trim());
+        String fileName = tempFile.getName();
+        List<YysmxOpt> optList = ExcelUtil.importExcel(filePath,1,2,YysmxOpt.class,false);
+        optList = optList.stream().filter(x->!x.getSettlement().equals("合计")).collect(Collectors.toList());
+
+        optList = optList.stream().filter(x->!x.getSettlement().equals("合计")).collect(Collectors.toList());
+
+        impService.yysImport(optList,"201801","YYS",Long.valueOf(2),fileName);
+
+        System.out.println("导入数据一共【"+optList.size()+"】行");
+        //TODO 数据处理
+    }
+
+    @RequestMapping("gsymxOptImport")
+    public void gsymxOptImport() throws Exception {
+        String filePath = "F:/00972350_180123_工伤生育明细.xls";
+        //String filePath = "F:/GSYMX.xls";
+
+        File tempFile = new File(filePath.trim());
+        String fileName = tempFile.getName();
+
+        //解析excel，
+        List<GsymxOpt> optList = ExcelUtil.importExcel(filePath,1,1,GsymxOpt.class,false);
+
+        optList = optList.stream().filter(x->!x.getSettlement().equals("合计")).collect(Collectors.toList());
+
+        impService.gsyImport(optList,"201801","GSY",Long.valueOf(2),fileName);
+
+        System.out.println("导入数据一共【"+optList.size()+"】行");
+        //TODO 数据处理
     }
 }
