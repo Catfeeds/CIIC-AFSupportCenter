@@ -110,6 +110,9 @@ public class EmpCredentialsDealController {
             if (i.getCredentialsDealType() != null){
                 taskListDTO.setCredentialsDealTypeN(SelectionUtils.credentialsDeal(i.getCredentialsDealType()));
             }
+            if (i.getPayType() != null) {
+                taskListDTO.setPayType(String.valueOf(i.getPayType()));
+            }
             taskListDTOs.add(taskListDTO);
         });
         return JsonResult.success(taskListDTOs);

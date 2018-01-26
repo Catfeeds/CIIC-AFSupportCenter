@@ -114,7 +114,7 @@ public class TaskListDTO implements Serializable {
     /**
      * 付款方式(1：台账、2：现金、3：转账、4：POS机)
      */
-    private Integer payType;
+    private String payType;
     /**
      * 办证公司名称
      */
@@ -317,11 +317,11 @@ public class TaskListDTO implements Serializable {
         this.chargeAmount = chargeAmount;
     }
 
-    public Integer getPayType() {
+    public String getPayType() {
         return payType;
     }
 
-    public void setPayType(Integer payType) {
+    public void setPayType(String payType) {
         this.payType = payType;
     }
 
