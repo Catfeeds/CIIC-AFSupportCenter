@@ -37,6 +37,9 @@ public class SsStatementImpController  extends BasicController<ISsStatementImpSe
                 break;
             case "GSY":
                 json = gsymxOptImport(args.getFile(),args.getSsMonth(),args.getFileType(),args.getComAccountId());
+                break;
+            default:
+                break;
         }
         return json;
     }
