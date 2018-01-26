@@ -2,10 +2,12 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.EmpEmployeeMapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsMonthEmpChangeMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsStatementMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsStatementImpMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsStatementImpService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.EmpEmployee;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthEmpChange;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatement;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatementImp;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.GsymxOpt;
@@ -23,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -44,6 +47,9 @@ public class SsStatementImpServiceImpl implements ISsStatementImpService {
     @Autowired
     private EmpEmployeeMapper employeeMapper;
 
+    @Autowired
+    private SsMonthEmpChangeMapper monthEmpChangeMapper;
+
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public Boolean yysImport(List<YysmxOpt> opts, String ssMonth, String fileType, Long comAccountId, String fileName) {
@@ -52,6 +58,7 @@ public class SsStatementImpServiceImpl implements ISsStatementImpService {
         SsStatement statement = this.getStatement(ssMonth,fileType,comAccountId,fileName,recordNum);
         Integer result = statementMapper.insert(statement);
         if(result > 0){
+            this.updateMonthEmpChange(statement.getStatementId(),comAccountId,ssMonth,fileType);
             opts.forEach(yysmxOpt->addStatementImpsByYys(comAccountId,statement.getStatementId(),yysmxOpt));
         }
         return true;
@@ -65,6 +72,7 @@ public class SsStatementImpServiceImpl implements ISsStatementImpService {
         SsStatement statement = this.getStatement(ssMonth,fileType,comAccountId,fileName,recordNum);
         Integer result = statementMapper.insert(statement);
         if(result > 0){
+            this.updateMonthEmpChange(statement.getStatementId(),comAccountId,ssMonth,fileType);
             opts.forEach(gsymxOpt->addStatementImpsByGsy(comAccountId,statement.getStatementId(),gsymxOpt));
         }
         return true;
@@ -84,6 +92,22 @@ public class SsStatementImpServiceImpl implements ISsStatementImpService {
                 ssStatementImpMapper.delByStatementId(p.getStatementId());
             });
         }
+    }
+
+    private void updateMonthEmpChange(Long statementId,Long comAccountId,String ssMonth,String fileType){
+        SsMonthEmpChange monthEmpChange = new SsMonthEmpChange();
+        monthEmpChange.setComAccountId(comAccountId);
+        monthEmpChange.setSsMonth(ssMonth);
+        monthEmpChange.setComputeType(fileType);
+        EntityWrapper<SsMonthEmpChange> ew = new EntityWrapper<>(monthEmpChange);
+        List<SsMonthEmpChange> monthEmpChanges = monthEmpChangeMapper.selectList(ew);
+        if(null != monthEmpChanges && monthEmpChanges.size() > 0){
+            monthEmpChanges.forEach(x->{
+                x.setStatementId(statementId);
+                monthEmpChangeMapper.updateById(x);
+            });
+        }
+
     }
 
 

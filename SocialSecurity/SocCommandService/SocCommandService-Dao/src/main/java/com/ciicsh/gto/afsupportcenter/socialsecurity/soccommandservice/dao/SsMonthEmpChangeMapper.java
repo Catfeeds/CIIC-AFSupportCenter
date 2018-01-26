@@ -3,6 +3,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthEmpChangeBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthEmpChange;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Component;
 
 /**
  * <p>
@@ -12,6 +14,8 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @author HuangXing
  * @since 2017-12-07
  */
+@Mapper
+@Component
 public interface SsMonthEmpChangeMapper extends BaseMapper<SsMonthEmpChange> {
 
     /**
