@@ -6,6 +6,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.AFEmpSocialDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.AFEmployeeCompanyDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.EmployeeInfoDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskFront;
 import com.ciicsh.gto.afsupportcenter.util.web.convert.StringToLocalDateConverter;
@@ -40,6 +41,8 @@ public class KafkaReceiver {
     private ISsEmpTaskService ssEmpTaskService;
     @Autowired
     private ISsEmpTaskFrontService ssEmpTaskFrontService;
+    @Autowired
+    private ISsComTaskService ssComTaskService;
 
 //    @Autowired
 //    private SheetServiceProxy sheetServiceProxy;
@@ -135,12 +138,25 @@ public class KafkaReceiver {
     }
 
     @StreamListener(TaskSink.BASE_ADJUST_YEARLY_SH)
-    public void receiveBaseAdjustYearlySh(Message<TaskCreateMsgDTO> message){
+    public void receiveBaseAdjustYearlySh(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         //社保
         boolean res = false;
         if (TaskSink.SOCIAL_ADJUST.equals(taskMsgDTO.getTaskType())) {
             res = insertTaskTb(taskMsgDTO, 1);
+        }
+        logger.info("收到消息from SH_TO_NONLOCAL-useWork: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
+    }
+
+    //todo
+    public void receiveComTask(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
+        //社保
+        boolean res = false;
+        if (TaskSink.SOCIAL_ADJUST.equals(taskMsgDTO.getTaskType())) {
+            SsComTask ele = ssComTaskService.selectById(taskMsgDTO.getTaskId());
+            ele.setTaskId(taskMsgDTO.getTaskId());
+            res = ssComTaskService.updateById(ele);
         }
         logger.info("收到消息from SH_TO_NONLOCAL-useWork: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }

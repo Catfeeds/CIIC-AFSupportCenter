@@ -1,11 +1,11 @@
 package com.ciicsh.gto.afsupportcenter.socjob.service.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.socjob.dao.SsPaymentComMapper;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.SsPaymentCom;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsMonthChargeBO;
-import com.ciicsh.gto.afsupportcenter.socjob.service.PaymentService;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsPaymentComBO;
-import com.ciicsh.gto.afsupportcenter.socjob.dao.SsPaymentComMapper;
+import com.ciicsh.gto.afsupportcenter.socjob.service.PaymentService;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.EmployeeMonthlyDataProxy;
@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Job 每日询问财务是否可付
@@ -39,7 +40,7 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
     )
     public void enquireFinanceComAccount(String ssMonth) {
         //1 查询未支付客户
-        HashMap map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.put("payemntMonth", StringUtil.getYear_Month(new Date()));
         List<SsPaymentComBO> paymentComList = ssPaymentMapper.getPaymentComList(map);
 
@@ -52,7 +53,7 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
 
     private void enquireFinanceComAccount(String ssMonth, Long paymentComId, Long comAccountId) {
         //查询雇员级信息
-        HashMap qMap = new HashMap();
+        Map<String, Object> qMap = new HashMap<>();
         qMap.put("paymentComId", paymentComId);
         qMap.put("ssMonth", ssMonth);
         List<SsMonthChargeBO> paymentEmpList = ssPaymentMapper.getPaymentEmpList(qMap);
@@ -67,31 +68,34 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
         proxyDTO.setEmployeeList(proxyDTOList);
         JsonResult<EmployeeMonthlyDataProxyDTO> res = employeeMonthlyDataProxy.employeeCanPay(proxyDTO);
 
-        EmployeeMonthlyDataProxyDTO resDto = (EmployeeMonthlyDataProxyDTO) res.getData();
-        List<EmployeeProxyDTO> employeeProxyDTOS = resDto.getEmployeeList();
-        HashMap map = new HashMap();
-        //4 财务接口返回的结果更新ss_month_charge
-        for (EmployeeProxyDTO ele : employeeProxyDTOS) {
-            map.put("monthChargeId", ele.getObjId());
-            map.put("empPaymentStatus", ele.getIsCompanyEnjoyAdvance());
-            ssPaymentMapper.updateMonthCharge(map);
-        }
+        if ("0".equals(res.getCode())) {
+            Map<String, Object> map = new HashMap<>();
 
-        //5 查询 客户下有多少 不可付的记录
-        map.clear();
-        map.put("comAccountId", comAccountId);
-        map.put("ssMonth", ssMonth);
-        Integer cnt = ssPaymentMapper.countByEmpPaymentStatus(map);
+            if (res.getData() != null) {
+                List<Map<String, Object>> resDto = (List) res.getData();
+                //4 财务接口返回的结果更新ss_month_charge
+                for (Map<String, Object> ele : resDto) {
+                    map.put("monthChargeId", ele.get("objId"));
+                    map.put("empPaymentStatus", ele.get("isAdvance"));
+                    ssPaymentMapper.updateMonthCharge(map);
+                }
+            }
+            //5 查询 客户下有多少 不可付的记录
+            map.clear();
+            map.put("comAccountId", comAccountId);
+            map.put("ssMonth", ssMonth);
+            Integer cnt = ssPaymentMapper.countByEmpPaymentStatus(map);
 
-        //更新客户的支付状态
-        map.clear();
-        map.put("paymentComId", paymentComId);
-        if (cnt == 0) {
-            map.put("paymentState", 3);
-            ssPaymentMapper.updatePaymentCom(map);
-        } else {
-            map.put("paymentState", 1);
-            ssPaymentMapper.updatePaymentCom(map);
+            //更新客户的支付状态
+            map.clear();
+            map.put("paymentComId", paymentComId);
+            if (cnt == 0) {
+                map.put("paymentState", 3);
+                ssPaymentMapper.updatePaymentCom(map);
+            } else {
+                map.put("paymentState", 1);
+                ssPaymentMapper.updatePaymentCom(map);
+            }
         }
     }
 

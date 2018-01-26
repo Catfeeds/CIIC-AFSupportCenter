@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 
 
@@ -30,17 +30,17 @@ public interface SsPaymentComMapper extends BaseMapper<SsPaymentCom> {
     Integer ifExistPayment(@Param("comAccountId") long comAccountId, @Param("paymentMonth") String paymentMonth);
 
     //查询未支付客户
-    List<SsPaymentComBO> getPaymentComList(HashMap map);
+    List<SsPaymentComBO> getPaymentComList(Map map);
 
     //按照财务服务契约提供雇员级信息
-    List<SsMonthChargeBO> getPaymentEmpList(HashMap map);
+    List<SsMonthChargeBO> getPaymentEmpList(Map map);
 
     //根据接口返回的数据批量更新月度明细的支付状态
-    void updateMonthCharge(HashMap map);
+    void updateMonthCharge(Map map);
 
     //根据接口返回的数据批量更新客户的支付状态
-    void updatePaymentCom(HashMap map);
+    void updatePaymentCom(Map map);
 
     //查询 客户下有多少 不可付的记录
-    Integer countByEmpPaymentStatus(HashMap map);
+    Integer countByEmpPaymentStatus(Map map);
 }

@@ -18,12 +18,10 @@ import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyCompanyProxyDT
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyEmployeeProxyDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,8 +35,6 @@ import java.util.Optional;
  */
 @Service
 public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment> implements ISsPaymentService {
-
-
     @Autowired
     private SsPaymentComMapper ssPaymentComMapper;
 
@@ -202,9 +198,6 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
     }
 
     @Override
-    @Transactional(
-        rollbackFor = {Exception.class}
-    )
     public JsonResult<String> doReviewdePass(SsPayment ssPayment) {
         JsonResult<String> json = new JsonResult<>();
         json.setCode(0);
@@ -214,9 +207,9 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         ssPayment = baseMapper.selectOne(ssPayment);
 
         //验证客户费用ID是否能取到数据
-        if (!Optional.ofNullable(ssPayment).isPresent()) {
+        if (ssPayment == null) {
             json.setCode(2);
-            json.setMessage("没有与选中列匹配的支付批次");
+            json.setMessage("没有与选中数据匹配的支付批次");
             return json;
         }
 
@@ -226,36 +219,13 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
             json.setMessage("只有申请中状态的批次能审核通过");
             return json;
         }
-        //验证结束
-
-        //执行业务
-        //将批次状态改为已申请到财务部
-        ssPayment.setPaymentState(6);
-        ssPayment.setModifiedBy("system");
-        ssPayment.setModifiedTime(LocalDateTime.now());
-        baseMapper.updateById(ssPayment);
-
-        //将批次下的客户费用明细的状态也改为已申请到财务部
-        //取出批次下所有的客户费用
-        List<SsPaymentCom> ssPaymentComList = ssPaymentComMapper.getPaymentComByPaymentId(ssPayment.getPaymentId());
-        if (Optional.ofNullable(ssPaymentComList).isPresent()) {
-            for (int i = 0; i < ssPaymentComList.size(); i++) {
-                //修改状态为已申请到财务部
-                SsPaymentCom ssPaymentCom = ssPaymentComList.get(i);
-                ssPaymentCom.setPaymentState(6);
-                ssPaymentCom.setModifiedBy("system");
-                ssPaymentCom.setModifiedTime(LocalDateTime.now());
-                ssPaymentComMapper.updateById(ssPaymentCom);
-            }
-        }
-        //调用外部审批接口
+        //验证结束,调用外部审批接口
         PayApplyProxyDTO resDto = financePayApi(ssPayment);
         com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult<PayApplyProxyDTO> jsRes =
             payapplyServiceProxy.addShSocialInsurancePayApply(resDto);
+
         json.setCode(Integer.parseInt(jsRes.getCode()));
         json.setMessage(jsRes.getMsg());
-
-        //如果返回失败 不更新
         return json;
     }
 
@@ -270,10 +240,9 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
             ssPayment.getPaymentMonth());
         List<PayapplyEmployeeProxyDTO> paymentEmpList = baseMapper.getPaymentEmpList(ssPayment.getPaymentId(),
             ssPayment.getPaymentMonth());
-
-
         dto.setCompanyList(paymentComList);
         dto.setEmployeeList(paymentEmpList);
+
         dto.setDepartmentName("福利保障部社保");
         dto.setIsFinancedept(0);
         dto.setBusinessType(1);//业务类型
@@ -282,6 +251,8 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         dto.setReceiver("社保中心");//收款方名称
         dto.setApplyer(ssPayment.getRequestUser());  //申请人
         dto.setApplyDate(LocalDate.now());//申请日期
+        dto.setBusinessPkId(ssPayment.getPaymentId());//业务方主键ID(整型)
+
         //支付独立社保费用+支付月份  1 大库、2 外包、3独立户
         if (ssPayment.getAccountType() == 1) {
             dto.setPayReason("支付大库社保费用" + ssPayment.getPaymentMonth());
@@ -290,6 +261,7 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         } else if (ssPayment.getAccountType() == 3) {
             dto.setPayReason("支付独立户社保费用" + ssPayment.getPaymentMonth());
         }
+        dto.setPayPurpose(dto.getPayReason());
 
         return dto;
     }
@@ -377,6 +349,4 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         }
         return json;
     }
-
-
 }
