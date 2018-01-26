@@ -8,8 +8,9 @@
 		<result column="com_account_id" property="comAccountId" />
 		<result column="hf_type" property="hfType" />
 		<result column="hf_com_account" property="hfComAccount" />
-		<result column="start_month" property="startMonth" />
+		<result column="com_start_month" property="comStartMonth" />
 		<result column="end_month" property="endMonth" />
+		<result column="operate_start_month" property="operateStartMonth" />
 		<result column="account_temp_store" property="accountTempStore" />
 		<result column="com_hf_month" property="comHfMonth" />
 		<result column="end_type" property="endType" />

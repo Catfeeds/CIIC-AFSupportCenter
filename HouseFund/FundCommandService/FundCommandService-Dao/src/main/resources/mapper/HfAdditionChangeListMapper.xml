@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundcommandservice.dao.HfAdditionChangeListMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundcommandservice.entity.HfAdditionChangeList">
+		<id column="addition_change_list_id" property="additionChangeListId" />
+		<result column="serial_num" property="serialNum" />
+		<result column="change_type" property="changeType" />
+		<result column="emp_name" property="empName" />
+		<result column="basic_hf_account" property="basicHfAccount" />
+		<result column="addition_hf_account" property="additionHfAccount" />
+		<result column="monthly_pay_amount" property="monthlyPayAmount" />
+		<result column="ratio" property="ratio" />
+		<result column="reduce_hf_account" property="reduceHfAccount" />
+		<result column="reduce_emp_name" property="reduceEmpName" />
+		<result column="reduce_summary" property="reduceSummary" />
+		<result column="reduce_month_pay_amount" property="reduceMonthPayAmount" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+</mapper>

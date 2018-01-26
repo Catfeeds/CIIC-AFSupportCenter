@@ -24,20 +24,15 @@ public class HfComAccount implements Serializable {
 	@TableId(value="com_account_id", type= IdType.AUTO)
 	private Long comAccountId;
     /**
-     * 多租户ID
-     */
-	@TableField("customer_id")
-	private String customerId;
-    /**
      * 企业账户名称
      */
 	@TableField("com_account_name")
 	private String comAccountName;
     /**
      * 付款方式:
-            自付（客户自己汇缴给银行，雇员由中智办理）
-            我司付款（客户预付）
-            垫付
+            1 自付（客户自己汇缴给银行，雇员由中智办理）
+            2 我司付款（客户预付）
+            3 垫付
      */
 	@TableField("payment_way")
 	private Integer paymentWay;
@@ -62,10 +57,13 @@ public class HfComAccount implements Serializable {
 	@TableField("payment_bank")
 	private Integer paymentBank;
     /**
-     * 企业当前的公积金汇缴月份，有些客户公积金账户汇缴月份不相同
+     * 备注
      */
-	@TableField("com_hf_month")
-	private Integer comHfMonth;
+	private String remark;
+    /**
+     * 账户状态:0初始 1有效 2 终止
+     */
+	private Integer state;
     /**
      * 是否可用
      */
@@ -91,6 +89,8 @@ public class HfComAccount implements Serializable {
      */
 	@TableField("modified_by")
 	private String modifiedBy;
+	@TableField("Column_15")
+	private String Column15;
 
 
 	public Long getComAccountId() {
@@ -99,14 +99,6 @@ public class HfComAccount implements Serializable {
 
 	public void setComAccountId(Long comAccountId) {
 		this.comAccountId = comAccountId;
-	}
-
-	public String getCustomerId() {
-		return customerId;
-	}
-
-	public void setCustomerId(String customerId) {
-		this.customerId = customerId;
 	}
 
 	public String getComAccountName() {
@@ -157,12 +149,20 @@ public class HfComAccount implements Serializable {
 		this.paymentBank = paymentBank;
 	}
 
-	public Integer getComHfMonth() {
-		return comHfMonth;
+	public String getRemark() {
+		return remark;
 	}
 
-	public void setComHfMonth(Integer comHfMonth) {
-		this.comHfMonth = comHfMonth;
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
 	}
 
 	public Boolean getActive() {
@@ -205,23 +205,32 @@ public class HfComAccount implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
+	public String getColumn15() {
+		return Column15;
+	}
+
+	public void setColumn15(String Column15) {
+		this.Column15 = Column15;
+	}
+
 	@Override
 	public String toString() {
 		return "HfComAccount{" +
 			", comAccountId=" + comAccountId +
-			", customerId=" + customerId +
 			", comAccountName=" + comAccountName +
 			", paymentWay=" + paymentWay +
 			", hfAccountType=" + hfAccountType +
 			", closeDay=" + closeDay +
 			", ukeyStrore=" + ukeyStrore +
 			", paymentBank=" + paymentBank +
-			", comHfMonth=" + comHfMonth +
+			", remark=" + remark +
+			", state=" + state +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +
 			", createdBy=" + createdBy +
 			", modifiedBy=" + modifiedBy +
+			", Column15=" + Column15 +
 			"}";
 	}
 }

@@ -38,17 +38,22 @@ public class HfComAccountClass implements Serializable {
 	@TableField("hf_com_account")
 	private String hfComAccount;
     /**
-     * 开始缴费年月
+     * 客户缴费起始年月
      */
-	@TableField("start_month")
-	private String startMonth;
+	@TableField("com_start_month")
+	private String comStartMonth;
     /**
-     * 截止缴费年月
+     * 截止缴费年月（截单日）
      */
 	@TableField("end_month")
 	private String endMonth;
     /**
-     * 账号暂保管，当基本公积金或补充公积金下面无人状态，专员需修改当前状态
+     * 专员操作起始年月，纯粹记录无关联逻辑
+     */
+	@TableField("operate_start_month")
+	private String operateStartMonth;
+    /**
+     * 账号暂保管，当基本公积金或补充公积金下面无人状态，专员需修改当前状态 1 是 0  否
      */
 	@TableField("account_temp_store")
 	private Integer accountTempStore;
@@ -121,12 +126,12 @@ public class HfComAccountClass implements Serializable {
 		this.hfComAccount = hfComAccount;
 	}
 
-	public String getStartMonth() {
-		return startMonth;
+	public String getComStartMonth() {
+		return comStartMonth;
 	}
 
-	public void setStartMonth(String startMonth) {
-		this.startMonth = startMonth;
+	public void setComStartMonth(String comStartMonth) {
+		this.comStartMonth = comStartMonth;
 	}
 
 	public String getEndMonth() {
@@ -135,6 +140,14 @@ public class HfComAccountClass implements Serializable {
 
 	public void setEndMonth(String endMonth) {
 		this.endMonth = endMonth;
+	}
+
+	public String getOperateStartMonth() {
+		return operateStartMonth;
+	}
+
+	public void setOperateStartMonth(String operateStartMonth) {
+		this.operateStartMonth = operateStartMonth;
 	}
 
 	public Integer getAccountTempStore() {
@@ -208,8 +221,9 @@ public class HfComAccountClass implements Serializable {
 			", comAccountId=" + comAccountId +
 			", hfType=" + hfType +
 			", hfComAccount=" + hfComAccount +
-			", startMonth=" + startMonth +
+			", comStartMonth=" + comStartMonth +
 			", endMonth=" + endMonth +
+			", operateStartMonth=" + operateStartMonth +
 			", accountTempStore=" + accountTempStore +
 			", comHfMonth=" + comHfMonth +
 			", endType=" + endType +

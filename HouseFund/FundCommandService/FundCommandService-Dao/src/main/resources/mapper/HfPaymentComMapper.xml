@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundcommandservice.dao.HfPaymentComMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundcommandservice.entity.HfPaymentCom">
+		<id column="payment_com_id" property="paymentComId" />
+		<result column="hf_type" property="hfType" />
+		<result column="company_id" property="companyId" />
+		<result column="payment_bank" property="paymentBank" />
+		<result column="remitted_amount" property="remittedAmount" />
+		<result column="bujiao_amount" property="bujiaoAmount" />
+		<result column="remitted_count_emp" property="remittedCountEmp" />
+		<result column="daozhang_amount" property="daozhangAmount" />
+		<result column="daozhang_count_emp" property="daozhangCountEmp" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+</mapper>
