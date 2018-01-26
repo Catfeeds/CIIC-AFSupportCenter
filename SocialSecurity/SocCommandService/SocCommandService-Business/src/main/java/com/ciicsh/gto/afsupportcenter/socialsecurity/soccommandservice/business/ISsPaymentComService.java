@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAddPaymentBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsDelPaymentBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentComBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPayment;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPaymentCom;
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -78,4 +79,14 @@ public interface ISsPaymentComService extends IService<SsPaymentCom> {
      * @return  SsPaymentComBO
      */
     SsPaymentComBO getPaymentComBoByPaymentId(Long paymentComId);
+
+    /**
+     * <p>Description:更新社保申请支付结果</p>
+     *
+     * @author wengxk
+     * @date 2018-01-02
+     * @param ssPayment 社保支付批次
+     * @return  SsPaymentComBO
+     */
+    void saveReviewdePassResult(SsPayment ssPayment);
 }

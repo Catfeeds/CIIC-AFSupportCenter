@@ -35,7 +35,7 @@
         <result column="bank_account"  property="companyBankAccount" />
         <result column="refund_deducted"   property="noticebillAmount" />
         <result column="adjust_deducted"   property="deductionAmount" />
-        <result column="paymonth"   property="payMonth" />
+        <result column="payment_month"   property="payMonth" />
         <result column="total_pay_amount"   property="payAmount" />
         <result column="payment_way"   property="isAdvance" />
     </resultMap>
@@ -44,6 +44,7 @@
         <result column="employee_name" property="employeeName" />
         <result column="company_id" property="companyId" />
         <result column="payment_month"  property="payMonth" />
+        <result column="total_pay_amount"  property="payAmount" />
         <result column="emp_payment_status"   property="isAdvance" />
     </resultMap>
     <select id="paymentQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentBO" resultMap="DtoResultMap">

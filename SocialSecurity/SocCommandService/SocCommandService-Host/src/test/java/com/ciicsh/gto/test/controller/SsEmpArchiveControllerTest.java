@@ -68,16 +68,16 @@ public class SsEmpArchiveControllerTest {
 
     @Test
     public void getDict() throws Exception {
-        List<DicItemDTO> res = d2.listByDicId("DIC00001");
+        List<DicItemDTO> res = d2.listByDicId("DIC00005");
         System.out.println(JSON.toJSONString(res));
     }
 
     @Test
     public void testDoReviewdePass() {
         SsOperatePaymentDTO ssOperatePaymentDTO = new SsOperatePaymentDTO();
-        ssOperatePaymentDTO.setPaymentId(2L);
-        ssOperatePaymentDTO.setApplyRemark("申请备注");
-        ssOperatePaymentDTO.setRejectionRemark("批退备注");
+        ssOperatePaymentDTO.setPaymentId(1L);
+        ssOperatePaymentDTO.setApplyRemark("再申请");
+        ssOperatePaymentDTO.setRejectionRemark("再批退");
 
         JsonResult<String> jr = ssPaymentController.doReviewdePass(ssOperatePaymentDTO);
         System.out.println(JSON.toJSONString(jr));

@@ -11,7 +11,9 @@ spring:
     username: root
     password: a111111
   application:
-    name: afoperation-center-socialsecurity-job
+    name: support-center-soc-job
+  profiles:
+    active: develop
   cloud:
     stream:
       kafka:
@@ -42,7 +44,18 @@ spring:
 
       instance-count: 2
       instance-index: 1
-
+###################  spring cloud eureka  ###################
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://172.16.9.20:9602/eureka
+      #,http://172.16.9.21:9602/eureka
+      #" #本地开发环境eureka,http://172.16.9.19:9602/eureka
+  instance:
+    lease-expiration-duration-in-seconds: 30
+    lease-renewal-interval-in-seconds: 40
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
 mongo:
   host: 172.16.9.16
   port: 27017
