@@ -1,8 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom;
 
 
-import org.jeecgframework.poi.excel.annotation.Excel;
-import org.jeecgframework.poi.excel.annotation.ExcelTarget;
+
+import cn.afterturn.easypoi.excel.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 
 import java.io.Serializable;
 import java.util.Date;

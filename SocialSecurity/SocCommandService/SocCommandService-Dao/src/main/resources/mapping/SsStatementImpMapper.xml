@@ -25,4 +25,8 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
+    <select id="delByStatementId" resultType="int">
+        DELETE FROM ss_statement_imp WHERE statement_id = #{statementId}
+    </select>
+
 </mapper>
