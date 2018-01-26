@@ -59,7 +59,7 @@ public class SsStatementImpController  extends BasicController<ISsStatementImpSe
             json.setMessage("养医失导入成功!");
         }
         else {
-            json.setCode(0);
+            json.setCode(1);
             json.setMessage("养医失导入失败!");
         }
         return json;
@@ -79,7 +79,7 @@ public class SsStatementImpController  extends BasicController<ISsStatementImpSe
             json.setMessage("导入成功!");
         }
         else {
-            json.setCode(0);
+            json.setCode(1);
             json.setMessage("导入失败!");
         }
         return json;
