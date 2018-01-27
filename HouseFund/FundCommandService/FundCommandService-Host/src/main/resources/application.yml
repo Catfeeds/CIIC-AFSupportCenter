@@ -29,6 +29,48 @@ spring:
               brokers: 172.16.9.17:9092,172.16.9.18:9092
               zk-nodes: 172.16.9.19:2181,172.16.9.20:2181,172.16.9.21:2181
           bindings:
+            common_taskservice_af_empin-channel:
+              destination: common_taskservice_af_empin # topic name
+              group: ${spring.application.name}
+              content-type: application/json
+              consumer:
+                partitioned: true
+            common_taskservice_af_empout-channel:
+              destination: common_taskservice_af_empout # topic name
+              group: ${spring.application.name}
+              content-type: application/json
+              consumer:
+                partitioned: true
+            common_taskservice_af_charge_resume-channel:
+              destination: common_taskservice_af_charge_resume # topic name
+              group: ${spring.application.name}
+              content-type: application/json
+              consumer:
+                partitioned: true
+            common_taskservice_af_charge_stop-channel:
+              destination: common_taskservice_af_charge_stop # topic name
+              group: ${spring.application.name}
+              content-type: application/json
+              consumer:
+                partitioned: true
+            common_taskservice_af_nonlocal_to_sh-channel:
+              destination: common_taskservice_af_nonlocal_to_sh # topic name
+              group: ${spring.application.name}
+              content-type: application/json
+              consumer:
+                partitioned: true
+            common_taskservice_af_sh_to_nonlocal-channel:
+              destination: common_taskservice_af_sh_to_nonlocal # topic name
+              group: ${spring.application.name}
+              content-type: application/json
+              consumer:
+                partitioned: true
+            common_taskservice_af_emp_company_change-channel:
+              destination: common_taskservice_af_emp_company_change # topic name
+              group: ${spring.application.name}
+              content-type: application/json
+              consumer:
+                partitioned: true
 
           instance-count: 2 # The number of deployed instances of an application.
                             # Must be set for partitioning and if using Kafka.

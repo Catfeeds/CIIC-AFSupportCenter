@@ -34,17 +34,18 @@ public class CamelConvert {
     }
     public  static void generalMapStr(String str){
         Arrays.stream(str.split(",")).forEach(
-            i->{
-                System.out.println();
+            s->{
+                System.out.println(s.substring(s.indexOf(".")+1,s.length()));
             }
         );
     }
     public static void main(String[] args) {
         String str="com.company_id,com.title,ca.hf_account_type,emp.employee_id,emp.employee_name,emp.id_num\n" +
             ",eab.hf_emp_account_bc,eab.hf_emp_account_bc,ea.operation_remind,ea.operation_remind_date  ";
+        generalMapStr(str);
 
-        String lineToHump = lineToHump(str);
-        System.out.println(lineToHump);//fParentNoLeader
+//        String lineToHump = lineToHump(str);
+//        System.out.println(lineToHump);//fParentNoLeader
 
     }
 }

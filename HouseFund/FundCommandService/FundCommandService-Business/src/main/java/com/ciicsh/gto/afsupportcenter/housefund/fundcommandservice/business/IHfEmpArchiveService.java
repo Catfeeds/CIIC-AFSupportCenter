@@ -1,7 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundcommandservice.business;
 
+import com.ciicsh.gto.afsupportcenter.housefund.fundcommandservice.dto.HfEmpArchiveDto;
 import com.ciicsh.gto.afsupportcenter.housefund.fundcommandservice.entity.HfEmpArchive;
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
+import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+
+import java.util.List;
 
 /**
  * <p>
@@ -10,5 +15,7 @@ import com.baomidou.mybatisplus.service.IService;
  * </p>
  */
 public interface IHfEmpArchiveService extends IService<HfEmpArchive> {
+
+    PageRows<HfEmpArchiveDto> queryEmpArchive(PageInfo pageInfo);
 
 }

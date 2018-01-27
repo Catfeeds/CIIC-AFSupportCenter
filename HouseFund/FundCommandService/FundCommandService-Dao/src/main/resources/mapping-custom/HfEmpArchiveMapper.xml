@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundcommandservice.dao.HfEmpArchiveMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="EmpArchiveResultMap"
+               type="com.ciicsh.gto.afsupportcenter.housefund.fundcommandservice.dto.HfEmpArchiveDto">
+        <result column="company_id" property="companyId"/>
+        <result column="title" property="title"/>
+        <result column="com_account_id" property="comAccountId"/>
+        <result column="belong_vendor" property="belongVendor"/>
+        <result column="hf_account_type" property="hfAccountType"/>
+        <result column="employee_id" property="employeeId"/>
+        <result column="employee_name" property="employeeName"/>
+        <result column="id_num" property="idNum"/>
+        <result column="custom_group" property="serviceCenter"/>
+        <result column="emp_status" property="empStatus"/>
+        <result column="hf_emp_account" property="hfEmpAccount"/>
+        <result column="archive_task_status" property="archiveTaskStatus"/>
+        <result column="hf_emp_account_bc" property="hfEmpAccountBc"/>
+        <result column="archive_task_status_bc" property="archiveTaskStatusBc"/>
+        <result column="emp_status" property="empStatus"/>
+        <result column="operation_remind" property="operationRemind"/>
+        <result column="operation_remind_date" property="operationRemindDate"/>
+    </resultMap>
+
+    <select id="queryEmpArchive" resultMap="EmpArchiveResultMap">
+        SELECT
+        com.company_id,com.title,ea.belong_vendor,
+        case ea.belong_vendor
+        WHEN 1 THEN
+        af.custom_group
+        WHEN 2 THEN
+        bpo.custom_group
+        END AS 'custom_group',
+        case ea.belong_vendor
+        WHEN 1 THEN
+        afemp.status
+        WHEN 2 THEN
+        bpoemp.status
+        END AS 'emp_status',
+        ca.hf_account_type,emp.employee_id,emp.employee_name,emp.id_num,ea.hf_emp_account,ea.archive_task_status
+        ,eab.hf_emp_account_bc,eab.archive_task_status_bc,ea.operation_remind,ea.operation_remind_date
+        FROM hf_emp_archive ea
+        LEFT JOIN sal_company com ON com.company_id=ea.company_id
+        INNER JOIN emp_employee emp ON emp.employee_id=ea.employee_id
+        INNER JOIN hf_com_account ca ON ca.com_account_id=ea.com_account_id
+        LEFT JOIN (SELECT hea.emp_archive_id,hea.hf_emp_account as 'hf_emp_account_bc',hea.archive_task_status as
+        'archive_task_status_bc'
+        FROM hf_emp_archive hea WHERE hea.is_active=1 AND hea.hf_type=2)eab ON eab.emp_archive_id=ea.emp_archive_id
+        LEFT JOIN sal_af_company af on ea.company_id=af.company_id
+        LEFT JOIN sal_bpo_company bpo on ea.company_id=bpo.company_id
+        LEFT JOIN emp_af_emp_company afemp on afemp.employee_id=ea.employee_id AND afemp.company_id=ea.company_id
+        LEFT JOIN emp_bpo_emp_company bpoemp on bpoemp.employee_id=ea.employee_id AND bpoemp.company_id=ea.company_id
+        WHERE
+        ea.is_active=1
+        AND ea.hf_type=1
+        <if test="employeeId !=null">
+            AND ea.employee_id=#{employeeId}
+        </if>
+        <if test="employeeName !=null">
+            AND emp.employee_name LIKE CONCAT('%',#{employeeName}, '%')
+        </if>
+        <if test="hfAccountType !=null">
+            AND ca.hf_account_type=#{hfAccountType}
+        </if>
+        <if test="paymentBank !=null">
+            AND ca.payment_bank=#{paymentBank}
+        </if>
+        <if test="serviceManager !=null">
+
+        </if>
+        <if test="idNum !=null">
+            AND emp.id_num LIKE CONCAT('%',#{idNum}, '%')
+        </if>
+        <if test="operationRemind !=null">
+            AND ea.operation_remind=#{operationRemind}
+        </if>
+        <if test="empStatus !=null">
+            AND
+            CASE ea.belong_vendor
+            WHEN 1 THEN
+            afemp.status=#{empStatus}
+            WHEN 2 THEN
+            bpoemp.status= #{empStatus}
+            END
+        </if>
+
+        -- AND
+        -- CASE ea.belong_vendor
+        -- WHEN 1 THEN
+        -- af.custom_group=''
+        -- WHEN 2 THEN
+        -- bpo.custom_group=''
+        -- END
+
+
+    </select>
+</mapper>

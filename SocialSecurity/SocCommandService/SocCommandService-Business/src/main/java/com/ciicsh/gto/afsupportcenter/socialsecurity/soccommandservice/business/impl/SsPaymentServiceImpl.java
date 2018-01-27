@@ -251,7 +251,7 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         dto.setReceiver("社保中心");//收款方名称
         dto.setApplyer(ssPayment.getRequestUser());  //申请人
         dto.setApplyDate(LocalDate.now());//申请日期
-        dto.setBusinessPkId(ssPayment.getPaymentId());//业务方主键ID(整型)
+        dto.setBusinessPkId(Math.toIntExact(ssPayment.getPaymentId()));//业务方主键ID(整型)
 
         //支付独立社保费用+支付月份  1 大库、2 外包、3独立户
         if (ssPayment.getAccountType() == 1) {

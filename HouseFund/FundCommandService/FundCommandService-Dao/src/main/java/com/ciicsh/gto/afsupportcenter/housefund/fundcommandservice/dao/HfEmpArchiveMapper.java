@@ -1,7 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundcommandservice.dao;
 
+import com.ciicsh.gto.afsupportcenter.housefund.fundcommandservice.dto.HfEmpArchiveDto;
 import com.ciicsh.gto.afsupportcenter.housefund.fundcommandservice.entity.HfEmpArchive;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
  * <p>
@@ -10,5 +13,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * </p>
  */
 public interface HfEmpArchiveMapper extends BaseMapper<HfEmpArchive> {
-
+    List<HfEmpArchiveDto> queryEmpArchive(HfEmpArchiveDto dto);
 }
