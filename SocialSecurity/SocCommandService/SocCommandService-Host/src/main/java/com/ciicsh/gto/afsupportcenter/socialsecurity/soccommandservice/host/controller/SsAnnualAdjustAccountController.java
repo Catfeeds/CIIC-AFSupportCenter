@@ -226,7 +226,7 @@ public class SsAnnualAdjustAccountController extends BasicController<ISsAnnualAd
                 response.setHeader("content-Type", "application/vnd.ms-excel");
 //                response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
                 response.setHeader("Content-Disposition",
-                    "attachment;filename=" + URLEncoder.encode("/template/ssAccount_reportYear.xls"
+                    "attachment;filename=" + URLEncoder.encode("ssAccount_reportYear.xls"
                         .replace("ssAccount", ssAnnualAdjustAccount.getSsAccount()
                             .replace("reportYear", String.valueOf(reportYear))), "UTF-8"));
                 workbook.write(response.getOutputStream());

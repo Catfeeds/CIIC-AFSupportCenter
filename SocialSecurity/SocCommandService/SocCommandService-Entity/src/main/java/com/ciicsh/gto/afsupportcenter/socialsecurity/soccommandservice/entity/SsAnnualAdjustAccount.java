@@ -93,10 +93,13 @@ public class SsAnnualAdjustAccount implements Serializable {
      */
 	@TableField("modified_by")
 	private String modifiedBy;
-
+    @TableField(exist = false)
     private Integer afImportTotal;
+    @TableField(exist = false)
     private String ssImportTotal;
+    @TableField(exist = false)
     private Integer matchTotal;
+    @TableField(exist = false)
     private Integer unMatchTotal;
 
 	public Long getAnnualAdjustAccountId() {
