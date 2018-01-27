@@ -55,7 +55,8 @@ public class MybatisPlusGeneratorRun {
                 super.getAllTableInfoList(config).forEach(tableInfo -> {
                     String tableName = tableInfo.getName().toLowerCase();
                     // 添加指定前缀的表
-                    if (tableName.startsWith("ss_") || ohtTable(tableInfo)) {
+//                    if (tableName.startsWith("ss_") || ohtTable(tableInfo)) {
+                        if (tableName.startsWith("ss_annual_adjust_account")) {
                         // 移除 entity 前缀
                         // tableInfo.setEntityName(this.getStrategy(), tableInfo.getEntityName().substring(2));
                         list.add(tableInfo);
