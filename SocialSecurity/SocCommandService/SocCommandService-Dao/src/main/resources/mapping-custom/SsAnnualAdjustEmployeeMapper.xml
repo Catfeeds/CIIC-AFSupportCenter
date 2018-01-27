@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsAnnualAdjustEmployeeMapper">
+
+	<select id="queryAnnualAdjustEmployee" resultMap="BaseResultMap">
+        SELECT
+        saae.employee_id,
+        saae.employee_name,
+        saae.ss_serial,
+        CASE WHEN saace.salary IS NULL THEN saae.salary ELSE saace.salary END salary,
+        saae.id_num,
+        saae.archive_status,
+        saae.base_amount,
+        saae.emp_classify,
+        saae.ss_account_type,
+        saae.settlement_area,
+        saae.ss_account,
+        saae.ss_username,
+        saae.ss_pwd,
+        saae.company_id,
+        saae.low_department_id,
+        saae.low_department_name,
+        saae.high_department_id,
+        saae.high_department_name,
+        saae.city_code
+        FROM ss_annual_adjust_employee saae
+        <if test="noCollection == null || noCollection == false">
+            LEFT JOIN ss_annual_adjust_company saac ON saae.company_id = saac.company_id AND saac.is_active = 1 AND saac.adjust_year=YEAR(NOW())
+            LEFT JOIN ss_annual_adjust_company_emp saace ON saac.annual_adjust_company_id = saace.annual_adjust_company_id AND saae.employee_id = saace.employee_id AND saace.is_active = 1
+        </if>
+        <where>
+            saae.is_active = 1 AND saae.adjust_year=YEAR(NOW())
+            <if test="ssAccountType != null">
+                AND saae.ss_account_type = #{ssAccountType}
+            </if>
+            <if test="comAccountId != null">
+                AND saae.com_account_id = #{comAccountId}
+            </if>
+            <if test="companyId != null">
+                AND saae.company_id = #{companyId}
+            </if>
+            <if test="employeeId != null">
+                AND saae.employee_id = #{employeeId}
+            </if>
+            <if test="idNum != null">
+                AND saae.id_num = #{idNum}
+            </if>
+            <if test="ssSerial">
+                AND saae.ss_serial = #{ssSerial}
+            </if>
+            <if test="noCollection == true">
+                AND NOT EXISTS (
+                    SELECT 1
+                    FROM ss_annual_adjust_company_emp saace INNER JOIN ss_annual_adjust_company saac
+                    ON saace.annual_adjust_company_id = saac.annual_adjust_company_id
+                    AND saac.is_active = 1
+                    WHERE saac.adjust_year=YEAR(NOW())
+                    AND saae.adjust_year=YEAR(NOW())
+                    AND saae.company_id = saac.company_id
+                    AND saae.employee_id = saace.employee_id
+                    AND saae.is_active = 1
+                    AND saace.is_active = 1
+                )
+            </if>
+        </where>
+    </select>
+</mapper>
