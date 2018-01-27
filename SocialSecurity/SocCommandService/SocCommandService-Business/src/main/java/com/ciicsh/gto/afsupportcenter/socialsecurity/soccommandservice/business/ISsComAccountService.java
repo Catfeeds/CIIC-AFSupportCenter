@@ -1,11 +1,14 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountParamDto;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComAccountBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -38,4 +41,12 @@ public interface ISsComAccountService extends IService<SsComAccount> {
      * @param comAccountId
      */
     SsComAccountBO querySocialSecurityManageInfo(String comAccountId);
+
+    /**
+     * 查询企业社保账户信息 接口用
+     *
+     * @param dto
+     * @return
+     */
+    List<com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountDTO> getSsComAccountList(SsComAccountParamDto dto);
 }

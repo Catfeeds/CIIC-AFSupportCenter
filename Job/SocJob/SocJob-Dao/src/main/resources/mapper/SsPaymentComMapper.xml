@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socjob.dao.SsPaymentComMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socjob.entity.SsPaymentCom">
+		<id column="payment_com_id" property="paymentComId" />
+		<result column="payment_id" property="paymentId" />
+		<result column="com_account_id" property="comAccountId" />
+		<result column="company_id" property="companyId" />
+		<result column="payment_month" property="paymentMonth" />
+		<result column="ought_amount" property="oughtAmount" />
+		<result column="total_pay_amount" property="totalPayAmount" />
+		<result column="total_com_pay_amount" property="totalComPayAmount" />
+		<result column="total_emp_pay_amount" property="totalEmpPayAmount" />
+		<result column="refund_deducted" property="refundDeducted" />
+		<result column="adjust_deducted" property="adjustDeducted" />
+		<result column="extra_amount" property="extraAmount" />
+		<result column="join_payment_user" property="joinPaymentUser" />
+		<result column="join_payment_date" property="joinPaymentDate" />
+		<result column="if_deducted_into_pay" property="ifDeductedIntoPay" />
+		<result column="remark" property="remark" />
+		<result column="actual_payment_date" property="actualPaymentDate" />
+		<result column="emp_count" property="empCount" />
+		<result column="payment_state" property="paymentState" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMapExt" type="com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsPaymentComBO">
+        <result column="company_id" property="companyId"/>
+        <result column="payment_com_id" property="paymentComId"/>
+        <result column="com_account_id" property="comAccountId"/>
+        <result column="payment_way" property="paymentWay"/>
+    </resultMap>
+
+    <!--查询未支付客户-->
+    <select id="getPaymentComList" resultMap="BaseResultMapExt">
+        SELECT pc.company_id,pc.payment_com_id,ca.com_account_id,ca.payment_way
+        FROM ss_payment_com pc
+        LEFT JOIN ss_com_account ca ON ca.com_account_id=pc.com_account_id
+        WHERE pc.is_active=1
+        AND pc.payment_month=#{payemntMonth}
+        AND pc.payment_state=1
+    </select>
+
+    <!--按照财务服务契约提供雇员级信息-->
+    <select id="getPaymentEmpList" resultType="com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsMonthChargeBO">
+        SELECT emp.employee_id employee_id,
+        pc.company_id company_id,
+        pc.payment_month pay_month,
+        pc.total_pay_amount pay_amount,
+        mc.emp_payment_status is_company_enjoy_advance,
+        mc.month_charge_id obj_id
+        FROM ss_month_charge mc
+        INNER JOIN emp_employee emp ON mc.employee_id=mc.employee_id
+        INNER JOIN ss_emp_archive ea ON ea.emp_archive_id=mc.emp_archive_id
+          AND ea.employee_id = emp.employee_id
+        INNER JOIN ss_payment_com pc ON pc.com_account_id=mc.com_account_id
+        WHERE pc.is_active=1
+        AND mc.ss_month=#{ssMonth}
+        AND pc.payment_com_id=#{paymentComId}
+    </select>
+
+    <!--根据接口返回的数据批量更新月度明细的支付状态-->
+    <update id="updateMonthCharge" parameterType="java.util.HashMap">
+        UPDATE ss_month_charge SET  emp_payment_status=#{empPaymentStatus}
+        WHERE
+        month_charge_id=#{monthChargeId}
+    </update>
+
+    <!--查询 客户下有多少 不可付的记录-->
+    <select id="countByEmpPaymentStatus" resultType="java.lang.Integer">
+        select count(1)
+        from ss_month_charge
+        where is_active=1
+        and emp_payment_status=0
+        and ss_month=#{ssMonth}
+        and com_account_id=#{comAccountId}
+    </select>
+
+    <!--根据接口返回的数据批量更新客户的支付状态-->
+    <update id="updatePaymentCom" parameterType="java.util.HashMap">
+        UPDATE ss_payment_com SET
+        payment_state=#{paymentState} where payment_com_id=#{paymentComId}
+    </update>
+
+
+
+
+
+    <select id="ifExistPayment" resultType="int">
+      SELECT COUNT(*) FROM ss_payment_com WHERE com_account_id = #{comAccountId} AND payment_month = #{paymentMonth} AND is_active = 1
+    </select>
+
+</mapper>

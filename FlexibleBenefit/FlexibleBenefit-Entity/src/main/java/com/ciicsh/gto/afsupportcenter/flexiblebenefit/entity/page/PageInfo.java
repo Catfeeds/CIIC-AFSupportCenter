@@ -8,6 +8,8 @@ import java.lang.reflect.Type;
 
 /**
  * 分页参数类
+ *
+ * @author xiweizhen
  */
 public class PageInfo implements Serializable {
     /**
@@ -28,7 +30,9 @@ public class PageInfo implements Serializable {
      */
     private boolean filterEmpty = true;
 
-    // 参数对象，方便转成其他对象
+    /**
+     * 参数对象，方便转成其他对象
+     */
     private JSONObject params = new JSONObject();
 
     public JSONObject getParams() {
@@ -74,7 +78,7 @@ public class PageInfo implements Serializable {
     @Override
     public String toString() {
         return "PageInfo{" + "pageNum=" + pageNum + ", pageSize=" + pageSize + ", orderBy='" + orderBy + '\'' + ", params="
-                + params + '}';
+            + params + '}';
     }
 
     /**

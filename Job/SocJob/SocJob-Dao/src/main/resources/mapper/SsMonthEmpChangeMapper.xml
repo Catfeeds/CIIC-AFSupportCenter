@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socjob.dao.SsMonthEmpChangeMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socjob.entity.SsMonthEmpChange">
+		<id column="month_emp_change_id" property="monthEmpChangeId" />
+		<result column="statement_id" property="statementId" />
+		<result column="ss_month" property="ssMonth" />
+		<result column="last_compute_time" property="lastComputeTime" />
+		<result column="compute_user_id" property="computeUserId" />
+		<result column="compute_type" property="computeType" />
+		<result column="com_account_id" property="comAccountId" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+    <select id="getMonthEmpChangesByCondition" resultMap="BaseResultMap">
+        SELECT
+        <include refid="SsMonthEmpCharge_All_Columns"/>
+        FROM ss_month_emp_change WHERE com_account_id = #{comAccountId}
+        AND ss_month = #{ssMonth}
+    </select>
+
+    <select id="delMonthEmpChangeByfCondition" resultType="int">
+        DELETE FROM ss_month_emp_change WHERE com_account_id = #{comAccountId} AND ss_month = #{ssMonth}
+    </select>
+
+    <sql id="SsMonthEmpCharge_All_Columns">
+        month_emp_change_id,
+        statement_id,
+        ss_month,
+        last_compute_time,
+        compute_user_id,
+        compute_type,
+        com_account_id,
+        is_active,
+        created_time,
+        modified_time,
+        created_by,
+        modified_by
+    </sql>
+
+</mapper>

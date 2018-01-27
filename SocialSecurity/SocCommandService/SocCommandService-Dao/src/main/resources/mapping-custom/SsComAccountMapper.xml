@@ -9,6 +9,10 @@
         <result column="company_id" property="companyId"/>
         <result column="title" property="title"/>
     </resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="SsComAccountDTO" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountDTO">
+    </resultMap>
     <!--关联账户表和任务单表-->
     <resultMap id="AccountAndTaskResultMap" extends="BaseResultMap"
                type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComAccountBO">
@@ -88,6 +92,7 @@
             sca.settlement_area,
             sca.payment_bank,
             sca.payment_way,
+            sca.bill_receiver,
             sca.query_account,
             sca.expire_date,
             sca.ss_username,
@@ -124,4 +129,21 @@
            WHERE sca.com_account_id = #{comAccountId}
 
     </select>
+
+    <select id="getSsComAccountList" resultMap="SsComAccountDTO">
+        select ca.*
+        from ss_com_account ca
+        LEFT JOIN ss_account_com_relation ssac on ca.com_account_id = ssac.com_account_id
+        <where>
+            and ca.is_active = 1
+            <if test="companyId != null">
+                and ssac.is_active = 1
+                and ssac.company_id= #{companyId}
+            </if>
+            <if test="ssAccountType != null">
+                and ca.ss_account_type= #{ssAccountType}
+            </if>
+        </where>
+    </select>
+
 </mapper>

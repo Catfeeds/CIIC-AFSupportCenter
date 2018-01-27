@@ -2,6 +2,9 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.EmpEmployee;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 
 /**
  * <p>
@@ -12,6 +15,16 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @author HuangXing
  * @since 2017-12-11
  */
+@Mapper
+@Component
 public interface EmpEmployeeMapper extends BaseMapper<EmpEmployee> {
+    /**
+     * 根据企业社保账户获取雇员
+     * @param comAccountId 企业社保账号
+     * @param employeeName 雇员名称
+     * @param ssSerial 序号
+     * @return
+     */
+    EmpEmployee getEmployeeByName(@Param("comAccountId") Long comAccountId,@Param("employeeName") String employeeName,@Param("ssSerial") String ssSerial);
 
 }

@@ -58,6 +58,15 @@ public class SsComTaskDTO extends SsComTask{
     //开始年月
     private LocalDate startMonth;
 
+    //帐单接收方
+    private String billReceiver;
+    //发出材料
+    private String dispatchMaterial;
+    //参保户登记码
+    private String ssAccount;
+    //牡丹卡号
+    private String bankAccount;
+
     /**
      *  判断是否是完成状态即 在任务单办理页面时候查询没有完成的任务  在完成tab查看已完成的
      *  如果为空则是在完成tab中查询，否则是在开户办理时查询信息（信息为任务状态!=3的）
@@ -215,5 +224,37 @@ public class SsComTaskDTO extends SsComTask{
 
     public void setIsComplete(String isComplete) {
         this.isComplete = isComplete;
+    }
+
+    public String getBillReceiver() {
+        return billReceiver;
+    }
+
+    public void setBillReceiver(String billReceiver) {
+        this.billReceiver = billReceiver;
+    }
+
+    public String getDispatchMaterial() {
+        return dispatchMaterial;
+    }
+
+    public void setDispatchMaterial(String dispatchMaterial) {
+        this.dispatchMaterial = dispatchMaterial;
+    }
+
+    public String getSsAccount() {
+        return ssAccount;
+    }
+
+    public void setSsAccount(String ssAccount) {
+        this.ssAccount = ssAccount;
+    }
+
+    public String getBankAccount() {
+        return bankAccount;
+    }
+
+    public void setBankAccount(String bankAccount) {
+        this.bankAccount = bankAccount;
     }
 }

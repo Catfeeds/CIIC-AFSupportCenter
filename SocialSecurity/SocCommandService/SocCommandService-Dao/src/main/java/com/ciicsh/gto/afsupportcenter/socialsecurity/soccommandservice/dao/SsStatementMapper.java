@@ -3,6 +3,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsStatementBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatement;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -14,6 +16,8 @@ import java.util.List;
  * @author HuangXing
  * @since 2017-12-01
  */
+@Mapper
+@Component
 public interface SsStatementMapper extends BaseMapper<SsStatement> {
 
     /**

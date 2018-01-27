@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.SsComTaskProxy;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComTaskService;
@@ -15,10 +16,11 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.commonservice.util.dto.Result;
+import com.ciicsh.gto.commonservice.util.dto.ResultGenerator;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.BeanUtils;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -39,7 +41,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssComTask")
-public class SsComTaskController extends BasicController<ISsComTaskService> {
+public class SsComTaskController extends BasicController<ISsComTaskService> implements SsComTaskProxy {
 
     @Log("查询未处理企业任务单")
     @RequestMapping(value = "getNoProgressTask")
@@ -77,7 +79,8 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
     @Log("批退任务单")
     @RequestMapping(value = "refusingTask")
     public JsonResult<Boolean> refusingTask(@RequestParam(value = "taskIdStr", required = true) String taskIdStr,
-                                            @RequestParam(value = "refuseReason", required = true) String refuseReason) {
+                                            @RequestParam(value = "refuseReason", required = true) String
+                                                refuseReason) {
         //mybatis 使用mybatis 的自带的批量修改
         List<SsComTask> dataList = new ArrayList<SsComTask>();
         //将前台传过来的参数解析成 任务单对象的数组
@@ -103,7 +106,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
     @Log("获得企业信息和材料收缴信息")
     @RequestMapping(value = "getCompanyInfoAndMaterial")
     public JsonResult<SsComTaskBO> getCompanyInfoAndMaterial(SsComTaskDTO ssComTaskDTO) {
-        SsComTaskBO  ssComTaskBO = CommonTransform.convertToDTO(ssComTaskDTO,SsComTaskBO.class);
+        SsComTaskBO ssComTaskBO = CommonTransform.convertToDTO(ssComTaskDTO, SsComTaskBO.class);
         if (null != ssComTaskBO.getComTaskId()) {
             if (isNotNull(ssComTaskBO.getOperatorType())) {
                 //1 开户 2 转移 3 变更 4 终止
@@ -125,7 +128,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
     @RequestMapping(value = "getComInfoAndPayWay")
     public JsonResult<SsComTaskBO> queryComInfoAndPayWay(SsComTaskDTO ssComTaskDTO) {
         //DTO转BO
-        SsComTaskBO  ssComTask = CommonTransform.convertToDTO(ssComTaskDTO,SsComTaskBO.class);
+        SsComTaskBO ssComTask = CommonTransform.convertToDTO(ssComTaskDTO, SsComTaskBO.class);
         SsComTaskBO ssComTaskBO = business.queryComInfoAndPayWay(ssComTask);
         return JsonResultKit.of(ssComTaskBO);
     }
@@ -154,7 +157,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
             //任务单 为初始，受理， 送审  账户为初始状态
             ssComAccount.setState(new Integer(0));
         }
-        boolean result = business.addOrUpdateCompanyTask(ssComTask, ssComAccount, ssAccountRatio,ssAccountComRelation);
+        boolean result = business.addOrUpdateCompanyTask(ssComTask, ssComAccount, ssAccountRatio, ssAccountComRelation);
         return JsonResultKit.of(result);
     }
 
@@ -163,7 +166,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
     public JsonResult<Boolean> updateOrEndingTask(SsComTaskDTO ssComTaskDTO) {
         boolean result = false;
         //0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
-        SsComTaskBO  ssComTaskBO = CommonTransform.convertToDTO(ssComTaskDTO,SsComTaskBO.class);
+        SsComTaskBO ssComTaskBO = CommonTransform.convertToDTO(ssComTaskDTO, SsComTaskBO.class);
         if (ssComTaskBO.getTaskStatus() == 3) {
             if (null != ssComTaskBO.getEndDate() && null != ssComTaskBO.getComAccountId()) {
                 SsComAccount ssComAccount = new SsComAccount();
@@ -187,7 +190,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
     public JsonResult<Boolean> updateOrTransferTask(SsComTaskDTO SsComTaskDTO) {
         boolean result = false;
         //DTO 转BO
-        SsComTaskBO ssComTaskBO = CommonTransform.convertToDTO(SsComTaskDTO,SsComTaskBO.class);
+        SsComTaskBO ssComTaskBO = CommonTransform.convertToDTO(SsComTaskDTO, SsComTaskBO.class);
         //动态扩展数据 预存转移办理时 不完成的状态的数据
         String transferDate = ssComTaskBO.getTransferDate();
         String settlementArea = ssComTaskBO.getSettlementArea();
@@ -216,25 +219,30 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
     @Log("变更任务单的操作")
     @RequestMapping("updateOrChangeTask")
     public JsonResult<Boolean> updateOrChangeTask(SsComTaskDTO ssComTaskDTO) {
-        SsComTaskBO  ssComTaskBO = CommonTransform.convertToDTO(ssComTaskDTO,SsComTaskBO.class);
+        SsComTaskBO ssComTaskBO = CommonTransform.convertToDTO(ssComTaskDTO, SsComTaskBO.class);
         boolean result = false;
         Map<String, String> dynamicExtendMap = new HashMap<String, String>();
         // 1行业比例变更  2 付款方式变更 3 公司名称变更
         dynamicExtendMap.put("changeContentValue", ssComTaskBO.getChangeContentValue());
         if ("1".equals(ssComTaskBO.getChangeContentValue())) {
             //动态扩展数据 预存转移办理时数据
-            dynamicExtendMap.put("belongsIndustry", null == ssComTaskBO.getBelongsIndustry() ? "" : ssComTaskBO.getBelongsIndustry());
-            dynamicExtendMap.put("companyWorkInjuryPercentage", null == ssComTaskBO.getCompanyWorkInjuryPercentage() ? "" : ssComTaskBO.getCompanyWorkInjuryPercentage());
-            dynamicExtendMap.put("startMonth", null == ssComTaskBO.getStartMonth() ? "" : ssComTaskBO.getStartMonth().toString());
+            dynamicExtendMap.put("belongsIndustry", null == ssComTaskBO.getBelongsIndustry() ? "" : ssComTaskBO
+                .getBelongsIndustry());
+            dynamicExtendMap.put("companyWorkInjuryPercentage", null == ssComTaskBO.getCompanyWorkInjuryPercentage()
+                ? "" : ssComTaskBO.getCompanyWorkInjuryPercentage());
+            dynamicExtendMap.put("startMonth", null == ssComTaskBO.getStartMonth() ? "" : ssComTaskBO.getStartMonth()
+                .toString());
         } else if ("2".equals(ssComTaskBO.getChangeContentValue())) {
             dynamicExtendMap.put("paymentWay", null == ssComTaskBO.getPaymentWay() ? "" : ssComTaskBO.getPaymentWay());
+            dynamicExtendMap.put("billReceiver", null == ssComTaskBO.getBillReceiver() ? "" : ssComTaskBO.getBillReceiver());
         } else if ("3".equals(ssComTaskBO.getChangeContentValue())) {
-            dynamicExtendMap.put("comAccountName", null == ssComTaskBO.getComAccountName() ? "" : ssComTaskBO.getComAccountName());
+            dynamicExtendMap.put("comAccountName", null == ssComTaskBO.getComAccountName() ? "" : ssComTaskBO
+                .getComAccountName());
         }
         String dynamicExtendStr = JSONObject.toJSONString(dynamicExtendMap);
         ssComTaskBO.setDynamicExtend(dynamicExtendStr);
         //0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
-        if (ssComTaskBO.getTaskStatus() == 3){
+        if (ssComTaskBO.getTaskStatus() == 3) {
             Object object = getObject(ssComTaskBO);
             //变更类型操作
             result = business.updateOrHandlerTask(ssComTaskBO, object);
@@ -249,18 +257,19 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
 
     @Log("任务单撤销")
     @RequestMapping("/taskRevocation")
-    public JsonResult<Boolean> taskRevocation(SsComTask ssComTask){
+    public JsonResult<Boolean> taskRevocation(SsComTask ssComTask) {
         //修改任单状态和时间
         ssComTask.setModifiedBy("xsj");
         ssComTask.setModifiedTime(LocalDateTime.now());
-        return JsonResultKit.of(business.updateTaskStatusForRevoke(ssComTask)>0?true:false);
+        return JsonResultKit.of(business.updateTaskStatusForRevoke(ssComTask) > 0 ? true : false);
     }
 
 
     public SsComAccount getSsComAccount(Map<String, String> map) {
         SsComAccount ssComAccount = new SsComAccount();
         //设置账户ID
-        ssComAccount.setComAccountId(isNotNull(map.get("comAccountId")) ? Long.parseLong(map.get("comAccountId")) : null);
+        ssComAccount.setComAccountId(isNotNull(map.get("comAccountId")) ? Long.parseLong(map.get("comAccountId")) :
+            null);
         //参保户登记码
         ssComAccount.setSsAccount(isNotNull(map.get("ssAccount")) ? map.get("ssAccount") : null);
         //卡号
@@ -273,18 +282,22 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
         ssComAccount.setPaymentBank(isNotNull(map.get("paymentBank")) ? map.get("paymentBank") : null);
         //付款方式
         ssComAccount.setPaymentWay(isNotNull(map.get("paymentWay")) ? Integer.valueOf(map.get("paymentWay")) : null);
+        //账单接收方
+        ssComAccount.setBillReceiver(isNotNull(map.get("billReceiver")) ? Integer.valueOf(map.get("billReceiver")) : null);
         //用户名
         ssComAccount.setSsUsername(isNotNull(map.get("ssUsername")) ? map.get("ssUsername") : null);
         //密码
         ssComAccount.setSsPwd(isNotNull(map.get("ssPwd")) ? map.get("ssPwd") : null);
         //初始余额
-        ssComAccount.setInitialBalance(isNotNull(map.get("initialBalance")) ? new BigDecimal(map.get("initialBalance")) : null);
+        ssComAccount.setInitialBalance(isNotNull(map.get("initialBalance")) ? new BigDecimal(map.get
+            ("initialBalance")) : null);
         //初期欠费
         ssComAccount.setInitialDebt(isNotNull(map.get("initialDebt")) ? new BigDecimal(map.get("initialDebt")) : null);
         //来源地
         ssComAccount.setOriginPlace(isNotNull(map.get("originPlace")) ? Integer.valueOf(map.get("originPlace")) : null);
         //来源地备注
-        ssComAccount.setOriginPlaceRemark(isNotNull(map.get("originPlaceRemark")) ? map.get("originPlaceRemark") : null);
+        ssComAccount.setOriginPlaceRemark(isNotNull(map.get("originPlaceRemark")) ? map.get("originPlaceRemark") :
+            null);
         //查询账户
         ssComAccount.setQueryAccount(isNotNull(map.get("queryAccount")) ? map.get("queryAccount") : null);
         //交予方式
@@ -295,13 +308,17 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         //给凭证时间
-        ssComAccount.setProvideCertificateTime(isNotNull(map.get("provideCertificateTime")) ? LocalDate.parse(map.get("provideCertificateTime"), dateFormatter) : null);
+        ssComAccount.setProvideCertificateTime(isNotNull(map.get("provideCertificateTime")) ? LocalDate.parse(map.get
+            ("provideCertificateTime"), dateFormatter) : null);
         //变更时间
-        ssComAccount.setChangeTime(isNotNull(map.get("changeTime")) ? LocalDateTime.parse(map.get("changeTime"), timeFormatter) : null);
+        ssComAccount.setChangeTime(isNotNull(map.get("changeTime")) ? LocalDateTime.parse(map.get("changeTime"),
+            timeFormatter) : null);
         //收到日期
-        ssComAccount.setReceiveDate(isNotNull(map.get("receiveDate")) ? LocalDate.parse(map.get("receiveDate"), dateFormatter) : null);
+        ssComAccount.setReceiveDate(isNotNull(map.get("receiveDate")) ? LocalDate.parse(map.get("receiveDate"),
+            dateFormatter) : null);
         //转入日期
-        ssComAccount.setIntoDate(isNotNull(map.get("intoDate")) ? LocalDate.parse(map.get("intoDate"), dateFormatter) : null);
+        ssComAccount.setIntoDate(isNotNull(map.get("intoDate")) ? LocalDate.parse(map.get("intoDate"), dateFormatter)
+            : null);
         //发出材料
         ssComAccount.setDispatchMaterial(isNotNull(map.get("dispatchMaterial")) ? map.get("dispatchMaterial") : null);
         //设置每个月截止时间
@@ -327,11 +344,14 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
         ssComTask.setTaskStatus(isNotNull(map.get("taskStatus")) ? Integer.valueOf(map.get("taskStatus")) : null);
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         //任务受理时间
-        ssComTask.setStartHandleDate(isNotNull(map.get("startHandleDate")) ? LocalDate.parse(map.get("startHandleDate"), dateFormatter) : null);
+        ssComTask.setStartHandleDate(isNotNull(map.get("startHandleDate")) ? LocalDate.parse(map.get
+            ("startHandleDate"), dateFormatter) : null);
         //任务送审时间
-        ssComTask.setSendCheckDate(isNotNull(map.get("sendCheckDate")) ? LocalDate.parse(map.get("sendCheckDate"), dateFormatter) : null);
+        ssComTask.setSendCheckDate(isNotNull(map.get("sendCheckDate")) ? LocalDate.parse(map.get("sendCheckDate"),
+            dateFormatter) : null);
         //任务完成时间
-        ssComTask.setFinishDate(isNotNull(map.get("finishDate")) ? LocalDate.parse(map.get("finishDate"), dateFormatter) : null);
+        ssComTask.setFinishDate(isNotNull(map.get("finishDate")) ? LocalDate.parse(map.get("finishDate"),
+            dateFormatter) : null);
         //办理备注
         ssComTask.setHandleRemark(isNotNull(map.get("handleRemark")) ? map.get("handleRemark") : null);
         ssComTask.setModifiedBy("xsj");
@@ -343,13 +363,16 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
     private SsAccountRatio getSsAccountRatio(Map<String, String> map) {
 
         SsAccountRatio ssAccountRatio = new SsAccountRatio();
-        ssAccountRatio.setSsAccountRatioId(isNotNull(map.get("ssAccountRatioId")) ? Long.valueOf(map.get("ssAccountRatioId")) : null);
+        ssAccountRatio.setSsAccountRatioId(isNotNull(map.get("ssAccountRatioId")) ? Long.valueOf(map.get
+            ("ssAccountRatioId")) : null);
         //行业类别
         ssAccountRatio.setIndustryCategory(isNotNull(map.get("industryCategory")) ? map.get("industryCategory") : null);
         //企业工伤比例
-        ssAccountRatio.setComRatio(isNotNull(map.get("comRatio")) ? new BigDecimal(map.get("comRatio")).setScale(4, BigDecimal.ROUND_HALF_UP) : null);
+        ssAccountRatio.setComRatio(isNotNull(map.get("comRatio")) ? new BigDecimal(map.get("comRatio")).setScale(4,
+            BigDecimal.ROUND_HALF_UP) : null);
         //开始月份
-        ssAccountRatio.setStartMonth(isNotNull(map.get("startMonth")) ? map.get("startMonth").replaceAll("-","") : null);
+        ssAccountRatio.setStartMonth(isNotNull(map.get("startMonth")) ? map.get("startMonth").replaceAll("-", "") :
+            null);
 
         ssAccountRatio.setModifiedBy("xsj");
         ssAccountRatio.setModifiedTime(LocalDateTime.now());
@@ -397,6 +420,7 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
         } else if ("2".equals(ssComTaskBO.getChangeContentValue())) {//支付方式变更
             ssComAccount.setComAccountId(ssComTaskBO.getComAccountId());
             ssComAccount.setPaymentWay(Integer.valueOf(ssComTaskBO.getPaymentWay()));
+            ssComAccount.setBillReceiver(Integer.valueOf(ssComTaskBO.getBillReceiver()));
 
             return ssComAccount;
         } else if ("3".equals(ssComTaskBO.getChangeContentValue())) {//公司名称变更
@@ -407,19 +431,71 @@ public class SsComTaskController extends BasicController<ISsComTaskService> {
             return null;
         }
     }
+
     //获得格式化的日期 格式为 210807
-    public String getFormatDate(LocalDate date){
+    public String getFormatDate(LocalDate date) {
         StringBuffer sb = new StringBuffer();
         sb.append(date.getYear());
         int month = date.getMonth().getValue();
-        if(month>9){
+        if (month > 9) {
             sb.append(month);
-        }else{
+        } else {
             sb.append(0).append(month);
         }
         return sb.toString();
     }
 
+    /**
+     * 企业社保账户开户、变更、转移、转出的 创建任务单接口
+     *
+     * @param ssComTaskDTO
+     * @return
+     */
+    @Log("企业社保账户开户、变更、转移、转出的 创建任务单接口")
+    @PostMapping("/saveSsComTask")
+    public Result saveSsComTask(@RequestBody SsComTaskDTO ssComTaskDTO) {
+        try {
+            if (ssComTaskDTO.getComAccountId() == 0L) {
+                return ResultGenerator.genServerFailResult("企业社保账户Id不能为空！");
+            }
+            if (StringUtils.isBlank(ssComTaskDTO.getCompanyId())) {
+                return ResultGenerator.genServerFailResult("客户Id不能为空！");
+            }
+            if (StringUtils.isBlank(ssComTaskDTO.getTaskCategory())) {
+                return ResultGenerator.genServerFailResult("任务类型不能为空！");
+            }
+            if (StringUtils.isBlank(ssComTaskDTO.getBusinessInterfaceId())) {
+                return ResultGenerator.genServerFailResult("业务接口ID不能为空！");
+            }
+            SsComTaskBO ssComTask = new SsComTaskBO();
+            BeanUtils.copyProperties(ssComTaskDTO, ssComTask);
+            int cnt = business.countComTaskByCond(ssComTask);
+            if (cnt > 0) {
+                return ResultGenerator.genServerFailResult("该企业已存在相同类型的处理中任务单，不能重复添加！");
+            }
+            Long newComTaskId = insertSsComTask(ssComTaskDTO);
+            return ResultGenerator.genSuccessResult(newComTaskId);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult(e.getMessage());
+        }
+    }
+
+    //保存企业任务单
+    private Long insertSsComTask(@RequestBody SsComTaskDTO ssComTaskDTO) {
+        boolean result = false;
+        //数据转换
+        SsComTask ssComTask = CommonTransform.convertToEntity(ssComTaskDTO, SsComTask.class);
+        ssComTask.setTaskStatus(0);
+        ssComTask.setActive(true);
+        ssComTask.setCreatedTime(LocalDateTime.now());
+        ssComTask.setModifiedTime(LocalDateTime.now());
+        ssComTask.setCreatedBy("system");
+        ssComTask.setModifiedBy("system");
+
+        //任务单上前道系统传递过来的内容，Json格式
+        ssComTask.setTaskFormContent(JSONObject.toJSONString(ssComTaskDTO));
+
+        business.insertComTask(ssComTask);
+        return ssComTask.getComTaskId();
+    }
 }
-
-

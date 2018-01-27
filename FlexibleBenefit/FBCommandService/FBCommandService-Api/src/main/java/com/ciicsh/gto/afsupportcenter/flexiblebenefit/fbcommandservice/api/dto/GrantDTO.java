@@ -6,6 +6,9 @@ import com.baomidou.mybatisplus.enums.IdType;
 
 import java.util.Date;
 
+/**
+ * @author xiweizhen
+ */
 public class GrantDTO {
     /**
      * 申请记录详细编号

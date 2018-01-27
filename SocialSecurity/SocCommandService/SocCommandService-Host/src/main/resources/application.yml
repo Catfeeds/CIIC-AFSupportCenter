@@ -22,17 +22,65 @@ spring:
       filter:
         stat:
           enabled: true
+  cloud:
+        stream:
+          kafka:
+            binder:
+              brokers: 172.16.9.17:9092,172.16.9.18:9092
+              zk-nodes: 172.16.9.19:2181,172.16.9.20:2181,172.16.9.21:2181
+          bindings:
+            common_taskservice_af_empin-channel:
+              destination: common_taskservice_af_empin # topic name
+              group: ${spring.application.name}
+              content-type: application/json
+              consumer:
+                partitioned: true
+            common_taskservice_af_empout-channel:
+              destination: common_taskservice_af_empout # topic name
+              group: ${spring.application.name}
+              content-type: application/json
+              consumer:
+                partitioned: true
+            common_taskservice_af_charge_resume-channel:
+              destination: common_taskservice_af_charge_resume # topic name
+              group: ${spring.application.name}
+              content-type: application/json
+              consumer:
+                partitioned: true
+            common_taskservice_af_charge_stop-channel:
+              destination: common_taskservice_af_charge_stop # topic name
+              group: ${spring.application.name}
+              content-type: application/json
+              consumer:
+                partitioned: true
+            common_taskservice_af_nonlocal_to_sh-channel:
+              destination: common_taskservice_af_nonlocal_to_sh # topic name
+              group: ${spring.application.name}
+              content-type: application/json
+              consumer:
+                partitioned: true
+            common_taskservice_af_sh_to_nonlocal-channel:
+              destination: common_taskservice_af_sh_to_nonlocal # topic name
+              group: ${spring.application.name}
+              content-type: application/json
+              consumer:
+                partitioned: true
+            common_taskservice_af_emp_company_change-channel:
+              destination: common_taskservice_af_emp_company_change # topic name
+              group: ${spring.application.name}
+              content-type: application/json
+              consumer:
+                partitioned: true
 
+          instance-count: 2 # The number of deployed instances of an application.
+                            # Must be set for partitioning and if using Kafka.
+                            # used to partition data across different consumers.
+          instance-index: 0
 ###################  spring cloud eureka  ###################
-#eureka:
-#  client:
-#    service-url:
-##      defaultZone: http://172.16.9.24:9602/eureka #测试服务器环境eureka
-#      defaultZone: http://172.16.9.21:9602/eureka #本地开发环境eureka
 eureka:
   client:
     serviceUrl:
-      defaultZone: "http://172.16.9.21:9602/eureka,http://172.16.9.20:9602/eureka/,http://172.16.9.19:9602/eureka/"
+      defaultZone: "http://172.16.9.21:9602/eureka,http://172.16.9.20:9602/eureka,http://172.16.9.19:9602/eureka" #本地开发环境eureka
   instance:
     lease-expiration-duration-in-seconds: 30
     lease-renewal-interval-in-seconds: 40
@@ -44,6 +92,8 @@ mybatis-plus:
   mapper-locations: classpath*:/mapping*/*Mapper.xml
   #实体扫描，多个package用逗号或者分号分隔
   typeAliasesPackage: com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity
+  plugins:
+    - catMybatisInterceptor
 #  typeEnumsPackage: com.baomidou.springboot.entity.enums
   global-config:
     #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";

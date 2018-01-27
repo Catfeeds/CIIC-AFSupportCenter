@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.healthmedical.dao.UninsuredMedicalMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.UninsuredMedical">
+        <id column="um_acceptance_id" property="umAcceptanceId"/>
+        <result column="employee_id" property="employeeId"/>
+        <result column="money_type" property="moneyType"/>
+        <result column="case_type" property="caseType"/>
+        <result column="dimission_date" property="dimissionDate"/>
+        <result column="surrender_date" property="surrenderDate"/>
+        <result column="joint_person_name" property="jointPersonName"/>
+        <result column="joint_person_birth_date" property="jointPersonBirthDate"/>
+        <result column="medical_remark" property="medicalRemark"/>
+        <result column="case_money" property="caseMoney"/>
+        <result column="invoice_number" property="invoiceNumber"/>
+        <result column="status" property="status"/>
+        <result column="handler" property="handler"/>
+        <result column="handler_date" property="handlerDate"/>
+        <result column="reject_type" property="rejectType"/>
+        <result column="remark" property="remark"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="modified_time" property="modifiedTime"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="modified_by" property="modifiedBy"/>
+    </resultMap>
+
+    <resultMap id="EmployeeMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.UninsuredMedicalBO">
+        <result column="employee_id" property="employeeId"/>
+        <result column="employee_name" property="employeeName"/>
+        <result column="company_id" property="companyId"/>
+        <result column="company_name" property="companyName"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <select id="queryEmployeeList"
+            parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.UninsuredMedicalBO"
+            resultMap="EmployeeMap">
+        SELECT DISTINCT
+        emp_employee.employee_id,
+        emp_employee.employee_name,
+        sal_company.company_id,
+        sal_company.title company_name,
+        emp_af_emp_company.status
+        FROM emp_employee
+        JOIN emp_af_employee
+        ON emp_af_employee.employee_id = emp_employee.employee_id
+        JOIN emp_af_emp_company
+        ON emp_af_emp_company.employee_id = emp_employee.employee_id
+        JOIN sal_company
+        ON sal_company.company_id = emp_af_emp_company.company_id
+        <where>
+            <if test="employeeId != null">
+                emp_employee.employee_id = #{employeeId,jdbcType=INTEGER}
+            </if>
+            <if test="employeeName != null and employeeName != '' ">
+                AND emp_employee.employee_name = #{employeeName,jdbcType=VARCHAR}
+            </if>
+            <if test="idNum != null and idNum != ''">
+                AND emp_employee.id_num = #{idNum,jdbcType=VARCHAR}
+            </if>
+            <if test="companyId != null and companyId != '' ">
+                AND sal_company.company_id = #{companyId,jdbcType=INTEGER}
+            </if>
+            <if test="companyName != null and companyName != '' ">
+                AND sal_company.title = #{companyName,jdbcType=VARCHAR}
+            </if>
+            <if test="jointPersonName != null and jointPersonName != '' ">
+                AND emp_employee.employee_id IN (SELECT emp_af_emp_member.employee_id
+                FROM emp_af_emp_member
+                WHERE name = #{jointPersonName,jdbcType=VARCHAR})
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="ConsultantRelationResultMap"
+               type="com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.CompanyConsultantRelation">
+        <id column="company_consultant_id" property="companyConsultantId"/>
+        <result column="company_id" property="companyId"/>
+        <result column="branch_flag" property="branchFlag"/>
+        <result column="sys_user_id" property="sysUserId"/>
+        <result column="consultant_name" property="consultantName"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="modified_time" property="modifiedTime"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="modified_by" property="modifiedBy"/>
+    </resultMap>
+
+    <select id="queryBusinessConsultant" parameterType="java.lang.String" resultMap="ConsultantRelationResultMap">
+        SELECT sal_company_consultant_relation.*
+        FROM sal_company
+          JOIN sal_company_consultant_relation
+            ON sal_company_consultant_relation.company_id = sal_company.company_id
+        WHERE sal_company.company_id = #{companyId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryEmpMember" parameterType="java.lang.String"
+            resultType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmpMemberBO">
+        SELECT
+          emp_af_emp_member.emp_member_id empMemberId,
+          emp_af_emp_member.name
+        FROM emp_af_emp_member
+        WHERE employee_id = #{employeeId,jdbcType=INTEGER}
+    </select>
+
+    <select id="queryAcceptanceList"
+            parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.UninsuredMedicalDTO"
+            resultMap="BaseResultMap">
+        SELECT hm_uninsured_medical.*
+        FROM hm_uninsured_medical
+        JOIN emp_employee
+        ON emp_employee.employee_id = hm_uninsured_medical.employee_id
+        JOIN emp_af_employee
+        ON emp_af_employee.employee_id = emp_employee.employee_id
+        JOIN emp_af_emp_company
+        ON emp_af_emp_company.employee_id = emp_employee.employee_id
+        JOIN sal_company
+        ON sal_company.company_id = emp_af_emp_company.company_id
+        JOIN sal_management
+        ON sal_management.management_id = emp_af_emp_company.management_id
+        <where>
+            <if test="moneyType != null">
+                money_type = #{moneyType,jdbcType=INTEGER}
+            </if>
+            <if test="caseType != null">
+                AND case_type = #{caseType,jdbcType=INTEGER}
+            </if>
+            <if test="status != null">
+                AND hm_uninsured_medical.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="handlerDateRange != null and handlerDateRange.size == 2">
+                AND handler_date BETWEEN #{handlerDateRange[0],jdbcType=TIMESTAMP} AND
+                #{handlerDateRange[1],jdbcType=TIMESTAMP}
+            </if>
+            <if test="managementId != null and managementId != '' ">
+                AND sal_management.management_id = #{managementId,jdbcType=VARCHAR}
+            </if>
+            <if test="managementName != null and managementName != '' ">
+                AND sal_management.title = #{managementName,jdbcType=VARCHAR}
+            </if>
+            <if test="companyId != null and companyId != '' ">
+                AND sal_company.company_id = #{companyId,jdbcType=VARCHAR}
+            </if>
+            <if test="companyName != null and companyName != '' ">
+                AND sal_company.title = #{companyName,jdbcType=VARCHAR}
+            </if>
+            <if test="employeeId != null and employeeId != '' ">
+                AND hm_uninsured_medical.employee_id = #{employeeId,jdbcType=VARCHAR}
+            </if>
+            <if test="employeeName != null and employeeName != '' ">
+                AND employee_name = #{employeeName,jdbcType=VARCHAR}
+            </if>
+            <if test="idNum != null and idNum != ''">
+                AND id_num = #{idNum,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+</mapper>

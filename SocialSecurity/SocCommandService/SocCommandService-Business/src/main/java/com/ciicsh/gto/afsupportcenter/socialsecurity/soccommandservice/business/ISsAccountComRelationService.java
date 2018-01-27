@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAcco
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -22,4 +23,13 @@ public interface ISsAccountComRelationService extends IService<SsAccountComRelat
      * @return
      */
    public List<SsAccountComRelationBO> queryByAccountId(String comAccountId);
+
+    /**
+     * 通过指定条件查询
+     *
+     * @param cond
+     * @return
+     */
+    public List<SsAccountComRelation> queryByCond(Map cond);
+
 }

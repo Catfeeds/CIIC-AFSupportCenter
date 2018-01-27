@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.MaterialTypeRelationMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.MaterialTypeRelation">
+		<id column="material_type_relation_id" property="materialTypeRelationId" />
+		<result column="credentials_type" property="credentialsType" />
+		<result column="credentials_deal_type" property="credentialsDealType" />
+		<result column="material_id" property="materialId" />
+		<result column="material_name" property="materialName" />
+		<result column="material_level" property="materialLevel" />
+		<result column="material_pid" property="materialPid" />
+		<result column="type" property="type" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+    <select id="selectByIds" resultMap="BaseResultMap">
+      SELECT
+      <include refid="SEL_ALL_COLUMS"/>
+      FROM
+      cm_material_type_relation
+      WHERE material_id IN 
+      <foreach collection="ids" item="materialId" open="(" close=")" separator=",">
+          #{materialId}
+      </foreach>
+    </select>
+
+    <sql id="SEL_ALL_COLUMS">
+        material_type_relation_id,
+        credentials_type,
+        credentials_deal_type,
+        material_id,
+        material_name,
+        material_level,
+        material_pid,
+        type,
+        is_active,
+        created_time,
+        modified_time,
+        created_by,
+        modified_by
+    </sql>
+</mapper>

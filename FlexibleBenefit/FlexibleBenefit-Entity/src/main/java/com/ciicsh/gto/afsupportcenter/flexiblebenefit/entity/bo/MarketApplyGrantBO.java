@@ -14,6 +14,24 @@ public class MarketApplyGrantBO {
     private ApplyRecordPO applyRecord;
     private List<MarketGrantApprovalBO> recordDetailList;
     private List<ApplyMarketActivityRecordPO> applyMarketActivityRecordList;
+    private List<SelectEntity> giftFormList;
+    private List<SelectEntity> sendWayList;
+
+    public List<SelectEntity> getGiftFormList() {
+        return giftFormList;
+    }
+
+    public void setGiftFormList(List<SelectEntity> giftFormList) {
+        this.giftFormList = giftFormList;
+    }
+
+    public List<SelectEntity> getSendWayList() {
+        return sendWayList;
+    }
+
+    public void setSendWayList(List<SelectEntity> sendWayList) {
+        this.sendWayList = sendWayList;
+    }
 
     public MarketActivityPO getMarketActivity() {
         return marketActivity;
@@ -55,6 +73,8 @@ public class MarketApplyGrantBO {
             ", applyRecord=" + applyRecord +
             ", recordDetailList=" + recordDetailList +
             ", applyMarketActivityRecordList=" + applyMarketActivityRecordList +
+            ", giftFormList=" + giftFormList +
+            ", sendWayList=" + sendWayList +
             '}';
     }
 }

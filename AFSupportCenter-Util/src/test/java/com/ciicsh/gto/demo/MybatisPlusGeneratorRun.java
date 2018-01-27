@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
 import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
-import com.baomidou.mybatisplus.generator.config.po.TableField;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.DbType;
@@ -55,8 +54,7 @@ public class MybatisPlusGeneratorRun {
                 super.getAllTableInfoList(config).forEach(tableInfo -> {
                     String tableName = tableInfo.getName().toLowerCase();
                     // 添加指定前缀的表
-//                    if (tableName.startsWith("ss_") || ohtTable(tableInfo)) {
-                        if (tableName.startsWith("ss_annual_adjust_account")) {
+                    if (tableName.startsWith("hf_") || ohtTable(tableInfo)) {
                         // 移除 entity 前缀
                         // tableInfo.setEntityName(this.getStrategy(), tableInfo.getEntityName().substring(2));
                         list.add(tableInfo);
@@ -161,10 +159,31 @@ public class MybatisPlusGeneratorRun {
         return strategy;
     }
 
+//    /**
+//     * 社保
+//     * @return
+//     */
+//    static PackageConfig handlePackageInfo() {
+//        PackageConfig pc = new PackageConfig();
+//        pc.setParent("com.ciicsh.gto.afsupportcenter.socialsecurity");
+//        pc.setModuleName("soccommandservice");
+//        pc.setMapper("dao");
+//        pc.setXml("mapping");
+//        pc.setController("host.controller");
+//        pc.setEntity("entity");
+//        pc.setService("business");
+//        pc.setServiceImpl("business.impl");
+//        return pc;
+//    }
+
+    /**
+     * 公积金
+     * @return
+     */
     static PackageConfig handlePackageInfo() {
         PackageConfig pc = new PackageConfig();
-        pc.setParent("com.ciicsh.gto.afsupportcenter.socialsecurity");
-        pc.setModuleName("soccommandservice");
+        pc.setParent("com.ciicsh.gto.afsupportcenter.housefund");
+        pc.setModuleName("fundcommandservice");
         pc.setMapper("dao");
         pc.setXml("mapping");
         pc.setController("host.controller");

@@ -100,6 +100,15 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bus-kafka</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-stream-kafka</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
@@ -201,40 +210,20 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
-        <!-- <dependency>
-     <groupId>org.apache.poi</groupId>
-     <artifactId>poi</artifactId>
-     <version>3.17</version>
- </dependency>
-  <dependency>
-     <groupId>org.apache.poi</groupId>
-     <artifactId>poi-ooxml</artifactId>
-     <version>3.17</version>
-        </dependency>
         <dependency>
-            <groupId>com.github.crab2died</groupId>
-            <artifactId>Excel4J</artifactId>
-            <version>2.1.1</version>
-        </dependency>-->
-        <dependency>
-            <groupId>cn.afterturn</groupId>
-            <artifactId>easypoi-base</artifactId>
-            <version>3.0.3</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.afterturn</groupId>
-            <artifactId>easypoi-web</artifactId>
-            <version>3.0.3</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.afterturn</groupId>
-            <artifactId>easypoi-annotation</artifactId>
-            <version>3.0.3</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.6</version>
         </dependency>
         <!--文件上传-->
         <dependency>
             <groupId>com.ciicsh.gt1</groupId>
             <artifactId>seaweedFS-client</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ciicsh.gt1.commonservice</groupId>
+            <artifactId>sheetservice-api</artifactId>
             <version>1.0.0</version>
         </dependency>
 
@@ -244,6 +233,56 @@
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>provided</scope>
         </dependency>-->
+
+        <!--cat依赖-->
+        <dependency>
+            <groupId>com.dianping.cat</groupId>
+            <artifactId>cat-core</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.dianping.cat</groupId>
+            <artifactId>cat-client</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
+        <!--easypoi依赖-->
+        <!--<dependency>-->
+            <!--<groupId>org.jeecg</groupId>-->
+            <!--<artifactId>easypoi-base</artifactId>-->
+            <!--<version>2.4.0</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.jeecg</groupId>-->
+            <!--<artifactId>easypoi-web</artifactId>-->
+            <!--<version>2.4.0</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.jeecg</groupId>-->
+            <!--<artifactId>easypoi-annotation</artifactId>-->
+            <!--<version>2.4.0</version>-->
+        <!--</dependency>-->
+
+        <dependency>
+            <groupId>cn.afterturn</groupId>
+            <artifactId>easypoi-base</artifactId>
+            <version>3.0.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.afterturn</groupId>
+            <artifactId>easypoi-web</artifactId>
+            <version>3.0.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.afterturn</groupId>
+            <artifactId>easypoi-annotation</artifactId>
+            <version>3.0.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ciicsh.gt1.commonservice</groupId>
+            <artifactId>basicdataservice-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -290,26 +329,33 @@
         <module>./HouseFund/FundQueryService/FundQueryService-Api</module>
         <module>./HouseFund/FundQueryService/FundQueryService-Dao</module>
         <module>./HouseFund/FundQueryService/FundQueryService-Business</module>
-        <module>./HouseFund/FundQueryService/FundQueryService-Entity</module>
+        <module>./HouseFund/FundQueryService/FundQueryService-Entity</module>-->
 
         <module>./HouseFund/FundCommandService/FundCommandService-Host</module>
         <module>./HouseFund/FundCommandService/FundCommandService-Api</module>
         <module>./HouseFund/FundCommandService/FundCommandService-Dao</module>
         <module>./HouseFund/FundCommandService/FundCommandService-Business</module>
-        <module>./HouseFund/FundCommandService/FundCommandService-Entity</module>-->
+        <module>./HouseFund/FundCommandService/FundCommandService-Entity</module>
 
 
-        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Host</module>
-        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Api</module>
+        <!--<module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Api</module>
+        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Entity</module>
         <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Dao</module>
         <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Business</module>
-        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Entity</module>
+        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Host</module>
 
-        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Host</module>
         <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Api</module>
+        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Entity</module>
         <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Dao</module>
         <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Business</module>
-        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Entity</module>
+        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Host</module>-->
+
+        <!--健康医疗代码结构调整-->
+        <module>./HealthMedical/InsuranceService-Api</module>
+        <module>./HealthMedical/InsuranceService-Business</module>
+        <module>./HealthMedical/InsuranceService-Dao</module>
+        <module>./HealthMedical/InsuranceService-Entity</module>
+        <module>./HealthMedical/InsuranceService-Host</module>
 
         <!--
                 <module>./EmployManagement/EmployQueryService/EmployQueryService-Host</module>
@@ -335,20 +381,38 @@
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Business</module>
         <module>./FlexibleBenefit/FBCommandService/FBCommandService-Host</module>
 
+        <!--<module>./JoyingInterface/JoyingInterfaceService-Api</module>-->
+        <!--<module>./JoyingInterface/JoyingInterfaceService-Business</module>-->
+        <!--<module>./JoyingInterface/JoyingInterfaceService-Dao</module>-->
+        <!--<module>./JoyingInterface/JoyingInterfaceService-Entity</module>-->
+        <!--<module>./JoyingInterface/JoyingInterfaceService-Host</module>-->
+
         <!--<module>./Job/FundJob/FundJob-Host</module>
         <module>./Job/FundJob/FundJob-Dao</module>
         <module>./Job/FundJob/FundJob-Business</module>
-        <module>./Job/FundJob/FundJob-Entity</module>
+        <module>./Job/FundJob/FundJob-Entity</module>-->
 
         <module>./Job/SocJob/SocJob-Host</module>
         <module>./Job/SocJob/SocJob-Dao</module>
         <module>./Job/SocJob/SocJob-Business</module>
         <module>./Job/SocJob/SocJob-Entity</module>
+        <module>./Job/SocJob/SocJob-Util</module>
 
-        <module>./Job/ZYJob/ZYJob-Host</module>
+        <!--<module>./Job/ZYJob/ZYJob-Host</module>
         <module>./Job/ZYJob/ZYJob-Dao</module>
         <module>./Job/ZYJob/ZYJob-Business</module>
         <module>./Job/ZYJob/ZYJob-Entity</module>-->
+        <module>CredentialsManagement/CredentialsCommandService/CredentialsCommandService-Api</module>
+        <module>CredentialsManagement/CredentialsCommandService/CredentialsCommandService-Entity</module>
+        <module>CredentialsManagement/CredentialsCommandService/CredentialsCommandService-Dao</module>
+        <module>CredentialsManagement/CredentialsCommandService/CredentialsCommandService-Business</module>
+        <module>CredentialsManagement/CredentialsCommandService/CredentialsCommandService-Host</module>
+
+        <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Api</module>
+        <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Entity</module>
+        <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Dao</module>
+        <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Business</module>
+        <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Host</module>
     </modules>
 
 </project>

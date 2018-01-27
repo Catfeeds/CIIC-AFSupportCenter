@@ -112,7 +112,10 @@
                 AND et.urgent = #{urgent}
             </if>
             <if test="startMonth != null">
-                et.start_month = #{startMonth}
+                AND et.start_month = #{startMonth}
+            </if>
+            <if test="taskCategory!=null">
+               AND et.task_category = #{taskCategory}
             </if>
             <!--
                 办理状态：1、未处理（-1 本月处理 -2 下月处理） 2 、处理中  3 已完成（已办） 4、批退 5、不需处理
@@ -154,7 +157,8 @@
         ,e.employee_name , e.employee_id , e.id_num
         ,ca.com_account_id,ca.ss_pwd,ca.settlement_area,ca.ss_account_type,ca.ss_account,ca.supplier_id
         ,c.company_id,c.title
-        ,et.emp_classify,et.start_month
+        ,et.emp_classify,
+        et.start_month
         from ss_emp_task et
         LEFT JOIN sal_company c on et.company_id = c.company_id
         LEFT JOIN emp_employee e on et.employee_id = e.employee_id
@@ -357,4 +361,14 @@
         rejection_remark = #{rejectionRemark}
         WHERE emp_task_id = #{empTaskId}
     </update>
+
+    <select id="selectMaxSsSerialByTaskId" resultType="java.lang.String">
+        SELECT IFNULL(max(ss_serial),0)+1 AS ss_serial FROM ss_emp_archive WHERE com_account_id =
+        (
+        SELECT sacr.com_account_id FROM ss_emp_task et
+        LEFT JOIN ss_account_com_relation sacr
+        ON et.company_id =sacr.company_id AND sacr.is_active=1
+        WHERE et.emp_task_id = #{empTaskId}
+        )
+    </select>
 </mapper>

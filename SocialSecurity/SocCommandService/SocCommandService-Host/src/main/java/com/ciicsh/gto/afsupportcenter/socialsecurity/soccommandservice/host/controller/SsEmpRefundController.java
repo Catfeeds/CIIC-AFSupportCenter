@@ -1,10 +1,19 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpRefundBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpRefundService;
+import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
+import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * <p>
@@ -19,6 +28,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/soccommandservice/ssEmpRefund")
 public class SsEmpRefundController  extends BasicController<ISsEmpRefundService> {
-
+    @Log("查询退账详情")
+   @RequestMapping("/queryRefundDetails")
+    public JsonResult<List<SsEmpRefundBO>> queryRefundDetails(SsEmpRefundBO ssEmpRefundBO){
+        if(StringUtils.isBlank(ssEmpRefundBO.getSsMonth()) || null == ssEmpRefundBO.getComAccountId())
+            throw new BusinessException("条件不足");
+        ssEmpRefundBO.setSsMonth(ssEmpRefundBO.getSsMonth().substring(0,6));
+        List<SsEmpRefundBO> ssEmpRefundBOList= business.selectRefundDetail(ssEmpRefundBO);
+        return JsonResultKit.of(ssEmpRefundBOList);
+    }
 }
 

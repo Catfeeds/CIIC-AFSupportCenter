@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * @author xiweizhen
+ */
 @FeignClient("afsupportcenter-center-command-service")
 @RequestMapping("/api/gift")
 public interface GiftCommandProxy {
@@ -23,7 +26,8 @@ public interface GiftCommandProxy {
     /**
      * 根据主键查询礼品信息
      *
-     * @param
+     * @param id
+     * @param num
      * @return
      */
     @PostMapping("/updateById")

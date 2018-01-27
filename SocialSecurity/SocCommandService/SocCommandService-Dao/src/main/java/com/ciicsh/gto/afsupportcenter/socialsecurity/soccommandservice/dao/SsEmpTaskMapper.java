@@ -45,4 +45,6 @@ public interface SsEmpTaskMapper extends BaseMapper<SsEmpTask> {
      * @return
      */
     Integer updateMyselfColumnById(SsEmpTaskBO ssComTaskDTO);
+
+    String selectMaxSsSerialByTaskId(@Param("empTaskId") Long empTaskId);
 }

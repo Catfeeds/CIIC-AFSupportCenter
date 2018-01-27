@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.TaskMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Task">
+		<id column="task_id" property="taskId" />
+		<result column="employee_id" property="employeeId" />
+		<result column="company_id" property="companyId" />
+		<result column="credentials_type" property="credentialsType" />
+		<result column="credentials_deal_type" property="credentialsDealType" />
+		<result column="education" property="education" />
+		<result column="material_back_time" property="materialBackTime" />
+		<result column="calls_time" property="callsTime" />
+		<result column="apply_time" property="applyTime" />
+		<result column="live_age_limit" property="liveAgeLimit" />
+		<result column="shift_letter_send_time" property="shiftLetterSendTime" />
+		<result column="talent_back_time" property="talentBackTime" />
+		<result column="talent_back_reason" property="talentBackReason" />
+		<result column="deal_time" property="dealTime" />
+		<result column="charge_time" property="chargeTime" />
+		<result column="receive_file_time" property="receiveFileTime" />
+		<result column="original_back_time" property="originalBackTime" />
+		<result column="original_back_reason" property="originalBackReason" />
+		<result column="integral_bill_print_time" property="integralBillPrintTime" />
+		<result column="charge_amount" property="chargeAmount" />
+		<result column="pay_type" property="payType" />
+		<result column="permit_company_name" property="permitCompanyName" />
+		<result column="telephone" property="telephone" />
+		<result column="remark" property="remark" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+    <select id="selectByempId" resultMap="BaseResultMap">
+      SELECT
+      <include refid="SEL_ALL_COLUMS"/>
+      FROM
+      cm_task
+      WHERE
+      employee_id = #{empId}
+    </select>
+
+    <sql id="SEL_ALL_COLUMS">
+        task_id,
+        employee_id,
+        company_id,
+        credentials_type,
+        credentials_deal_type,
+        education,
+        material_back_time,
+        calls_time,
+        apply_time,
+        live_age_limit,
+        shift_letter_send_time,
+        talent_back_time,
+        talent_back_reason,
+        deal_time,
+        charge_time,
+        receive_file_time,
+        original_back_time,
+        original_back_reason,
+        integral_bill_print_time,
+        charge_amount,
+        pay_type,
+        permit_company_name,
+        telephone,
+        remark,
+        is_active,
+        created_time,
+        modified_time,
+        created_by,
+        modified_by
+    </sql>
+</mapper>

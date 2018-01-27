@@ -1,11 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
-import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -41,4 +42,20 @@ public interface ISsEmpTaskService extends IService<SsEmpTask> {
      * @return
      */
     boolean saveHandleData(SsEmpTaskBO bo);
+
+    /**
+     * 查询最大社保序号
+     * @param empTaskId
+     * @return
+     */
+    String selectMaxSsSerialByTaskId(Long empTaskId);
+
+//    /**
+//     * 调用客服中心的完成任务接口
+//     *
+//     * @param taskSheetRequestDTO
+//     * @return
+//     */
+//    com.ciicsh.gto.commonservice.util.dto.Result completeTask(@RequestBody TaskSheetRequestDTO taskSheetRequestDTO) throws Exception;
+
 }
