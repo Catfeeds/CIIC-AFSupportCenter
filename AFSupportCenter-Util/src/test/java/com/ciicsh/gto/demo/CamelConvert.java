@@ -33,15 +33,45 @@ public class CamelConvert {
         return sb.toString();
     }
     public  static void generalMapStr(String str){
-        Arrays.stream(str.split(",")).forEach(
+        String s1="",s2="";
+        String[] aStr=str.split(",");
+        Arrays.stream(aStr).forEach(
             s->{
-                System.out.println(s.substring(s.indexOf(".")+1,s.length()));
+                String S1="",S2="";
+                S1=s.substring(s.indexOf(".")+1,s.length()).trim();
+                S2=lineToHump(S1);
+                System.out.println("<result column=\""+S1+"\" property=\""+S2+"\"/>");
+            }
+        );
+        Arrays.stream(aStr).forEach(
+            s->{
+                String S1="",S2="";
+                S1=s.substring(s.indexOf(".")+1,s.length()).trim();
+                S2=lineToHump(S1);
+                System.out.println("private String "+S2+";");
+            }
+        );
+        Arrays.stream(aStr).forEach(
+            s->{
+                String S1="",S2="";
+                S1=s.substring(s.indexOf(".")+1,s.length()).trim();
+                S2=lineToHump(S1);
+                System.out.println("<if test=\""+S2+" != null\">\n AND"+ s.trim() +" = #{"+S2+"}" +"\n</if>");
+            }
+        );
+        Arrays.stream(aStr).forEach(
+            s->{
+                String S1="",S2="";
+                S1=s.substring(s.indexOf(".")+1,s.length()).trim();
+                S2=lineToHump(S1);
+                System.out.println(S2+" : "  +"'',");
             }
         );
     }
     public static void main(String[] args) {
-        String str="com.company_id,com.title,ca.hf_account_type,emp.employee_id,emp.employee_name,emp.id_num\n" +
-            ",eab.hf_emp_account_bc,eab.hf_emp_account_bc,ea.operation_remind,ea.operation_remind_date  ";
+        String str="ca.com_account_name,ca.payment_way,ca.hf_account_type,ca.close_day,ca.ukey_strore,ca.payment_bank,ca.state,\n" +
+            "    cac.hf_type,cac.hf_com_account,cac.com_start_month,cac.end_month,cac.com_hf_month,addAc.add_com_account,\n" +
+            "    com.company_id,com.title" ;
         generalMapStr(str);
 
 //        String lineToHump = lineToHump(str);
