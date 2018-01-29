@@ -89,4 +89,14 @@ public interface ISsPaymentComService extends IService<SsPaymentCom> {
      * @return  SsPaymentComBO
      */
     void saveReviewdePassResult(SsPayment ssPayment);
+
+    /**
+     * <p>Description:付款申请拒绝返回更新支付状态</p>
+     *
+     * @author zhangxj
+     * @date 2018-01-02
+     * @param pkId 业务方主键id
+     * @param pkId 批退备注
+     */
+    boolean saveRejectResult(Long pkId, String remark);
 }

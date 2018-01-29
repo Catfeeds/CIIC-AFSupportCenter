@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.mes
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskFrontService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsPaymentComService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.AFEmpSocialDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.AFEmployeeCompanyDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.EmployeeInfoDTO;
@@ -10,6 +11,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.Ss
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskFront;
 import com.ciicsh.gto.afsupportcenter.util.web.convert.StringToLocalDateConverter;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.RejectPayApplyDTO;
 import com.ciicsh.gto.sheetservice.api.SheetServiceProxy;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.slf4j.Logger;
@@ -44,6 +46,9 @@ public class KafkaReceiver {
     @Autowired
     private ISsComTaskService ssComTaskService;
 
+    @Autowired
+    private ISsPaymentComService ssPaymentComService;
+
 //    @Autowired
 //    private SheetServiceProxy sheetServiceProxy;
 
@@ -60,7 +65,7 @@ public class KafkaReceiver {
             res = insertTaskTb(taskMsgDTO, 1);
         }
 
-        logger.info("收到消息from AF_EMP_IN-useWork: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
+        logger.info("收到消息 雇员新增TOPIC: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
     @StreamListener(TaskSink.AF_EMP_OUT)
@@ -72,7 +77,7 @@ public class KafkaReceiver {
             || TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
             res = insertTaskTb(taskMsgDTO, 1);
         }
-        logger.info("收到消息from AF_EMP_OUT-useWork: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
+        logger.info("收到消息 雇员终止TOPIC: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
     @StreamListener(TaskSink.CHARGE_RESUME)
@@ -84,7 +89,7 @@ public class KafkaReceiver {
             || TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
             res = insertTaskTb(taskMsgDTO, 1);
         }
-        logger.info("收到消息from CHARGE_RESUME-useWork: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
+        logger.info("收到消息 恢复缴费TOPIC: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
     @StreamListener(TaskSink.CHARGE_STOP)
@@ -96,7 +101,7 @@ public class KafkaReceiver {
             || TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
             res = insertTaskTb(taskMsgDTO, 1);
         }
-        logger.info("收到消息from CHARGE_STOP-useWork: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
+        logger.info("收到消息 暂停缴费TOPIC: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
     @StreamListener(TaskSink.EMP_COMPANY_CHANGE)
@@ -108,7 +113,7 @@ public class KafkaReceiver {
             || TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
             res = insertTaskTb(taskMsgDTO, 1);
         }
-        logger.info("收到消息from EMP_COMPANY_CHANGE-useWork: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
+        logger.info("收到消息 雇员翻牌TOPIC: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
     @StreamListener(TaskSink.NONLOCAL_TO_SH)
@@ -122,7 +127,7 @@ public class KafkaReceiver {
             res = insertTaskTb(taskMsgDTO, 1);
         }
 
-        logger.info("收到消息from NONLOCAL_TO_SH-useWork: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
+        logger.info("收到消息 外地转上海TOPIC: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
     @StreamListener(TaskSink.SH_TO_NONLOCAL)
@@ -134,7 +139,7 @@ public class KafkaReceiver {
             || TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
             res = insertTaskTb(taskMsgDTO, 1);
         }
-        logger.info("收到消息from SH_TO_NONLOCAL-useWork: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
+        logger.info("收到消息上海转外地TOPIC: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
     @StreamListener(TaskSink.BASE_ADJUST_YEARLY_SH)
@@ -145,10 +150,21 @@ public class KafkaReceiver {
         if (TaskSink.SOCIAL_ADJUST.equals(taskMsgDTO.getTaskType())) {
             res = insertTaskTb(taskMsgDTO, 1);
         }
-        logger.info("收到消息from SH_TO_NONLOCAL-useWork: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
+        logger.info("收到消息 上海基数年调TOPIC: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
-    //todo
+    @StreamListener(TaskSink.PAY_APPLY_PAY_STATUS_STREAM)
+    public void rejectPayApplyIdStream(Message<RejectPayApplyDTO> message) {
+        RejectPayApplyDTO taskMsgDTO = message.getPayload();
+        boolean res = false;
+        //社保
+        if (taskMsgDTO.getBusinessType() == 1) {
+            res = ssPaymentComService.saveRejectResult(taskMsgDTO.getBusinessPkId(),taskMsgDTO.getRemark());
+        }
+        logger.info("收到消息 付款申请拒绝: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
+    }
+
+    //todo 接受客服中心调用更新企业任务单
     public void receiveComTask(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         //社保
@@ -158,7 +174,7 @@ public class KafkaReceiver {
             ele.setTaskId(taskMsgDTO.getTaskId());
             res = ssComTaskService.updateById(ele);
         }
-        logger.info("收到消息from SH_TO_NONLOCAL-useWork: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
+        logger.info("收到消息 客服中心调用更新企业任务单: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
     private EmployeeInfoDTO callInf(TaskCreateMsgDTO taskMsgDTO) {
