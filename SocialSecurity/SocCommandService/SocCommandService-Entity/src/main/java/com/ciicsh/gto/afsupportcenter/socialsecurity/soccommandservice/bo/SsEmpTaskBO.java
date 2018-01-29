@@ -60,6 +60,9 @@ public class SsEmpTaskBO extends SsEmpTask {
     private LocalDate inDate;
     //退账金额
     private BigDecimal refundAmount;
+
+    //批量查询的id
+    private List<Long> empTaskIdList;
     public String getEmployeeName() {
         return employeeName;
     }
@@ -210,5 +213,13 @@ public class SsEmpTaskBO extends SsEmpTask {
 
     public void setRefundAmount(BigDecimal refundAmount) {
         this.refundAmount = refundAmount;
+    }
+
+    public List<Long> getEmpTaskIdList() {
+        return empTaskIdList;
+    }
+
+    public void setEmpTaskIdList(List<Long> empTaskIdList) {
+        this.empTaskIdList = empTaskIdList;
     }
 }

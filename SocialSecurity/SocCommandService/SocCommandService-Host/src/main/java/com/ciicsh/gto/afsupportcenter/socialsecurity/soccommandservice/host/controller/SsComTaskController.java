@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.SsComTaskProxy;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComTaskBO;
@@ -20,7 +21,9 @@ import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.commonservice.util.dto.ResultGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import utils.TaskCommonUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -42,7 +45,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/soccommandservice/ssComTask")
 public class SsComTaskController extends BasicController<ISsComTaskService> implements SsComTaskProxy {
-
+    @Autowired
+    private CommonApiUtils commonApiUtils;
     @Log("查询未处理企业任务单")
     @RequestMapping(value = "getNoProgressTask")
     public JsonResult<List<SsComTaskBO>> getNoProgressCompanyTask(PageInfo pageInfo) {
@@ -95,6 +99,8 @@ public class SsComTaskController extends BasicController<ISsComTaskService> impl
                 //批退原因
                 if (isNotNull(refuseReason))
                     ssComTask.setRejectionRemark(refuseReason);
+                //批退工作流
+                //TaskCommonUtils.completeTask(ssComTask.getTaskId(),commonApiUtils,"xsj");
                 dataList.add(ssComTask);
             }
         }
@@ -144,6 +150,8 @@ public class SsComTaskController extends BasicController<ISsComTaskService> impl
         SsAccountRatio ssAccountRatio = getSsAccountRatio(map);
         SsAccountComRelation ssAccountComRelation = null;
         if (3 == ssComTask.getTaskStatus()) {
+            //调用工作流
+          //  TaskCommonUtils.completeTask(ssComTask.getTaskId(),commonApiUtils,"xsj");
             //任务单为已完成状态 账户设置为可用
             ssComAccount.setState(new Integer(1));
             ssAccountComRelation = new SsAccountComRelation();
@@ -168,6 +176,8 @@ public class SsComTaskController extends BasicController<ISsComTaskService> impl
         //0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
         SsComTaskBO ssComTaskBO = CommonTransform.convertToDTO(ssComTaskDTO, SsComTaskBO.class);
         if (ssComTaskBO.getTaskStatus() == 3) {
+            //调用工作流
+            //TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,"xsj");
             if (null != ssComTaskBO.getEndDate() && null != ssComTaskBO.getComAccountId()) {
                 SsComAccount ssComAccount = new SsComAccount();
                 //2 表示终止
@@ -201,6 +211,8 @@ public class SsComTaskController extends BasicController<ISsComTaskService> impl
         ssComTaskBO.setDynamicExtend(dynamicExtendStr);
         //0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
         if (ssComTaskBO.getTaskStatus() == 3) {
+            //调用工作流
+            //TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,"xsj");
             if (isNotNull(ssComTaskBO.getSettlementArea()) && null != ssComTaskBO.getComAccountId()) {
                 SsComAccount ssComAccount = new SsComAccount();
                 ssComAccount.setComAccountId(ssComTaskBO.getComAccountId());
@@ -243,6 +255,8 @@ public class SsComTaskController extends BasicController<ISsComTaskService> impl
         ssComTaskBO.setDynamicExtend(dynamicExtendStr);
         //0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
         if (ssComTaskBO.getTaskStatus() == 3) {
+            //调用工作流
+            //TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,"xsj");
             Object object = getObject(ssComTaskBO);
             //变更类型操作
             result = business.updateOrHandlerTask(ssComTaskBO, object);
@@ -251,7 +265,6 @@ public class SsComTaskController extends BasicController<ISsComTaskService> impl
             //只做任务单的状态切换，任务单尚不完成
             result = business.updateById(ssComTaskBO);
         }
-
         return JsonResultKit.of(result);
     }
 
