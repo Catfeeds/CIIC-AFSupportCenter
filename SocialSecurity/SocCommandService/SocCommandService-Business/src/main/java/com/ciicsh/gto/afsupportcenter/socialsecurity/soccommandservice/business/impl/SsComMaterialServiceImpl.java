@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComMaterial;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsComMaterialMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComMaterialService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsComMaterialService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2017-12-01
  */
 @Service
-public class SsComMaterialServiceImpl extends ServiceImpl<SsComMaterialMapper, SsComMaterial> implements ISsComMaterialService {
+public class SsComMaterialServiceImpl extends ServiceImpl<SsComMaterialMapper, SsComMaterial> implements SsComMaterialService {
 
 }

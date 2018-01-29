@@ -2,9 +2,11 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.*;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.dto.emptask.EmpTaskBatchParameter;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -14,8 +16,11 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
+import utils.TaskCommonUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,12 +38,14 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/soccommandservice/ssEmpTask")
 @Log("本地社保的雇员任务单")
-public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
+public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
 
     @Autowired
-    private ISsEmpTaskPeriodService ssEmpTaskPeriodService;
+    private SsEmpTaskPeriodService ssEmpTaskPeriodService;
     @Autowired
-    private ISsEmpRefundService ssEmpRefundService;
+    private SsEmpRefundService ssEmpRefundService;
+    @Autowired
+    private CommonApiUtils commonApiUtils;
     /**
      * 雇员日常操作查询
      */
@@ -66,6 +73,8 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
             task.setRejectionRemark(remark);
             task.setTaskStatus(TaskStatusConst.REJECTION);
             list.add(task);
+            //调用工作流
+            //TaskCommonUtils.completeTask(String.valueOf(task.getEmpTaskId()),commonApiUtils,"xsj");
         }
         boolean isSuccess = business.updateBatchById(list);
         return JsonResultKit.of(isSuccess);
@@ -120,7 +129,6 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
     public JsonResult<SsEmpTask> queryEmpSpecialTask(String empTaskId) {
         // 查询
         SsEmpTask ssEmpTask = business.selectById(StringUtils.isNotBlank(empTaskId) ? Long.valueOf(empTaskId) : null);
-
         return JsonResultKit.of(ssEmpTask);
     }
 
@@ -161,9 +169,33 @@ public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
         EntityWrapper<SsEmpRefund> ew = new EntityWrapper();
         ew.where("emp_task_id={0}",ssEmpTaskBO.getEmpTaskId()).and("is_active=1");
         Object obj =  ssEmpRefundService.selectOne(ew);
-        System.out.println(obj);
         return JsonResultKit.of(obj);
     }
+    @Log("查询批量任务信息")
+    @RequestMapping("/queryBatchEmpArchiveByEmpTaskIds")
+    public JsonResult<Object> queryBatchEmpArchiveByEmpTaskIds(@RequestBody SsEmpTaskBO ssEmpTaskBO){
+        List<SsEmpTaskBO> result =business.queryBatchEmpArchiveByEmpTaskIds(ssEmpTaskBO);
+        return JsonResultKit.of(result);
+    }
+    @Log("查询批量任务信息")
+    @RequestMapping("/handleBatchTask")
+    public JsonResult<Object> handleBatchTask(@RequestBody EmpTaskBatchParameter empTaskBatchParameter){
+        Assert.notNull(empTaskBatchParameter,"参数异常");
+        Assert.notNull(empTaskBatchParameter.getSsEmpTaskBOList(),"参数异常");
+        LocalDate now = LocalDate.now();
+        StringBuffer handleMonth = TaskCommonUtils.getMonthStr(now);
+        empTaskBatchParameter.getSsEmpTaskBOList().forEach(p->{
+            p.setTaskStatus(TaskStatusConst.PROCESSING);
+            //讨论说 批量办理的 办理月份为当前月份
+            p.setHandleMonth(handleMonth.toString());
+            p.setModifiedTime(LocalDateTime.now());
+            p.setModifiedBy("xsj");
+            business.saveHandleData(p);
+        });
+        return JsonResultKit.of(true);
+    }
+
+
 
     /**
      * 办理状态：1、未处理 2 、处理中(已办)  3 已完成(已做) 4、批退 5、不需处理

@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComMaterialService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsComMaterialService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComMaterial;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
@@ -25,7 +25,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssComMaterial")
-public class SsComMaterialController  extends BasicController<ISsComMaterialService> {
+public class SsComMaterialController  extends BasicController<SsComMaterialService> {
 
     @Log("材料全部签收")
     @RequestMapping(value="signMaterials")

@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPaymentDetail;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsPaymentDetailMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsPaymentDetailService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsPaymentDetailService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ import java.util.List;
  * @since 2017-12-01
  */
 @Service
-public class SsPaymentDetailServiceImpl extends ServiceImpl<SsPaymentDetailMapper, SsPaymentDetail> implements ISsPaymentDetailService {
+public class SsPaymentDetailServiceImpl extends ServiceImpl<SsPaymentDetailMapper, SsPaymentDetail> implements SsPaymentDetailService {
 
     @Override
     public List<SsPaymentDetail> paymentDetailQuery(SsPaymentDetail ssPaymentDetail){

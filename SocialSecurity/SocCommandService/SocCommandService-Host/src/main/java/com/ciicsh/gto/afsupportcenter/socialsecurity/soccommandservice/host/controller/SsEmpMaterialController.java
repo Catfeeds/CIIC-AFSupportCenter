@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 
 import com.alibaba.fastjson.JSON;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpMaterialService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpMaterialService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpMaterial;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -25,7 +25,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssEmpMaterial")
-public class SsEmpMaterialController extends BasicController<ISsEmpMaterialService> {
+public class SsEmpMaterialController extends BasicController<SsEmpMaterialService> {
 
     @Log("查询雇员特殊操作材料信息")
     @RequestMapping("/queryEmpMaterialByTaskId")

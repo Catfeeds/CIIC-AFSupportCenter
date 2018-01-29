@@ -3,21 +3,18 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.statement.SsStatementResultDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsStatementResultService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsStatementResultService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsStatementResultBO;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * <p>
@@ -29,7 +26,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssStatementResult")
-public class SsStatementResultController extends BasicController<ISsStatementResultService> {
+public class SsStatementResultController extends BasicController<SsStatementResultService> {
 
     /**
      * <p>Description: 对账单结果查询(列表页)</p>

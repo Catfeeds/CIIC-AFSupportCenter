@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsFileImportDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsFileImport;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsFileImportMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsFileImportService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsFileImportService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * </p>
  */
 @Service
-public class SsFileImportServiceImpl extends ServiceImpl<SsFileImportMapper, SsFileImport> implements ISsFileImportService<T> {
+public class SsFileImportServiceImpl extends ServiceImpl<SsFileImportMapper, SsFileImport> implements SsFileImportService<T> {
 
     private ReentrantLock reentrantLock = new ReentrantLock();
 

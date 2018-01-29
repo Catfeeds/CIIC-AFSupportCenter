@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBaseAdjustDetail;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpBaseAdjustDetailMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpBaseAdjustDetailService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpBaseAdjustDetailService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +16,6 @@ import org.springframework.stereotype.Service;
  * @since 2017-12-01
  */
 @Service
-public class SsEmpBaseAdjustDetailServiceImpl extends ServiceImpl<SsEmpBaseAdjustDetailMapper, SsEmpBaseAdjustDetail> implements ISsEmpBaseAdjustDetailService {
+public class SsEmpBaseAdjustDetailServiceImpl extends ServiceImpl<SsEmpBaseAdjustDetailMapper, SsEmpBaseAdjustDetail> implements SsEmpBaseAdjustDetailService {
 
 }

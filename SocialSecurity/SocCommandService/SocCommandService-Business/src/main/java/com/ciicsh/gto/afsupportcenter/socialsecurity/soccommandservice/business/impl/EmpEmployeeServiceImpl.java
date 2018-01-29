@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.EmpEmployee;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.EmpEmployeeMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.IEmpEmployeeService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.EmpEmployeeService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +16,6 @@ import org.springframework.stereotype.Service;
  * @since 2017-12-11
  */
 @Service
-public class EmpEmployeeServiceImpl extends ServiceImpl<EmpEmployeeMapper, EmpEmployee> implements IEmpEmployeeService {
+public class EmpEmployeeServiceImpl extends ServiceImpl<EmpEmployeeMapper, EmpEmployee> implements EmpEmployeeService {
 
 }

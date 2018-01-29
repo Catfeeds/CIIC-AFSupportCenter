@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpBaseAdjustDetailService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpBaseAdjustDetailService;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssEmpBaseAdjustDetail")
-public class SsEmpBaseAdjustDetailController  extends BasicController<ISsEmpBaseAdjustDetailService> {
+public class SsEmpBaseAdjustDetailController  extends BasicController<SsEmpBaseAdjustDetailService> {
 
 }
 

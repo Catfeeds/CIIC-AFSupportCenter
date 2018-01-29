@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsStatementImpService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsStatementImpService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.GsymxOpt;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.TestPerson;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.YysmxOpt;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class DemoController {
 
     @Autowired
-    private ISsStatementImpService impService;
+    private SsStatementImpService impService;
 
     @RequestMapping("export")
     public void export(HttpServletResponse response){

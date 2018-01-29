@@ -9,7 +9,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.Ss
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatementImp;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatementResult;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsStatementResultMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsStatementResultService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsStatementResultService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ import java.util.*;
  * @since 2017-12-01
  */
 @Service
-public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultMapper, SsStatementResult> implements ISsStatementResultService {
+public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultMapper, SsStatementResult> implements SsStatementResultService {
 
     @Autowired
     SsMonthEmpChangeDetailMapper ssMonthEmpChangeDetailMapper;

@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsAccountComRelationDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAccountComRelationService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAccountComRelationService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -27,10 +27,10 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssAccountComRelation")
-public class SsAccountComRelationController extends BasicController<ISsAccountComRelationService> {
+public class SsAccountComRelationController extends BasicController<SsAccountComRelationService> {
 
     @Autowired
-    private ISsAccountComRelationService iSsAccountComRelationService;
+    private SsAccountComRelationService ssAccountComRelationService;
 
     /**
      * <p>Description: 企业社保账户绑定接口</p>

@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthTaskCountStat;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsMonthTaskCountStatMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsMonthTaskCountStatService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsMonthTaskCountStatService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2017-12-07
  */
 @Service
-public class SsMonthTaskCountStatServiceImpl extends ServiceImpl<SsMonthTaskCountStatMapper, SsMonthTaskCountStat> implements ISsMonthTaskCountStatService {
+public class SsMonthTaskCountStatServiceImpl extends ServiceImpl<SsMonthTaskCountStatMapper, SsMonthTaskCountStat> implements SsMonthTaskCountStatService {
 
 }
