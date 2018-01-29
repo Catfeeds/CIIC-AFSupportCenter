@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao;
 
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dto.HfEmpArchiveDto;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpArchiveBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfEmpArchive;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfEmpTask;
@@ -15,10 +15,10 @@ import java.util.List;
  * </p>
  */
 public interface HfEmpArchiveMapper extends BaseMapper<HfEmpArchive> {
-    List<HfEmpArchiveDto> queryEmpArchive(HfEmpArchiveDto dto);
-    HfEmpArchiveDto viewEmpArchive(@Param("empArchiveId")String empArchiveId);
-    HfEmpArchiveDto viewComAccount(@Param("companyId")String companyId);
-    HfEmpArchiveDto viewEmpPeriod(@Param("empArchiveId")String empArchiveId,@Param("hfType")String hfType);
+    List<HfEmpArchiveBo> queryEmpArchive(HfEmpArchiveBo dto);
+    HfEmpArchiveBo viewEmpArchive(@Param("empArchiveId")String empArchiveId);
+    HfEmpArchiveBo viewComAccount(@Param("companyId")String companyId);
+    HfEmpArchiveBo viewEmpPeriod(@Param("empArchiveId")String empArchiveId, @Param("hfType")String hfType);
     List<HfEmpTask> listEmpTaskPeriod(@Param("empArchiveId")String empArchiveId,@Param("hfType") String hfType);
     List<HfEmpTask> listEmpTransfer (@Param("empArchiveId")String empArchiveId);
 }

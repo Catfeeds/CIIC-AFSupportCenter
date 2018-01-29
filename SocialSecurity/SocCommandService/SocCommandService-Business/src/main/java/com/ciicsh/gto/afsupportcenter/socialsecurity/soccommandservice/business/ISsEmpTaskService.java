@@ -56,6 +56,6 @@ public interface ISsEmpTaskService extends IService<SsEmpTask> {
 //     * @param taskSheetRequestDTO
 //     * @return
 //     */
-//    com.ciicsh.gto.commonservice.util.dto.Result completeTask(@RequestBody TaskSheetRequestDTO taskSheetRequestDTO) throws Exception;
+//    com.ciicsh.gto.commonservice.util.bo.Result completeTask(@RequestBody TaskSheetRequestDTO taskSheetRequestDTO) throws Exception;
 
 }

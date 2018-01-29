@@ -69,9 +69,7 @@ public class CamelConvert {
         );
     }
     public static void main(String[] args) {
-        String str="ca.com_account_name,ca.payment_way,ca.hf_account_type,ca.close_day,ca.ukey_strore,ca.payment_bank,ca.state,\n" +
-            "    cac.hf_type,cac.hf_com_account,cac.com_start_month,cac.end_month,cac.com_hf_month,addAc.add_com_account,\n" +
-            "    com.company_id,com.title" ;
+        String str="et.task_category,et.emp_base,et.start_month,et.end_month,et.ratio,et.amount" ;
         generalMapStr(str);
 
 //        String lineToHump = lineToHump(str);

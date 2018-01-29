@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * The type Af employee company dto.
+ * The type Af employee company bo.
  *
  * @Description:
  * @author: wujinglei /吴敬磊

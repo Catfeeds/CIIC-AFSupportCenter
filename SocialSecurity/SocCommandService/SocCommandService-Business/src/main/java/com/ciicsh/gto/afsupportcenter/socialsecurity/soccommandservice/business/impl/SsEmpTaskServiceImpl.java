@@ -1103,7 +1103,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             }
 
             dto.setTaskCategories(taskCategories);
-            //dto.setTaskCategory(null);
+            //bo.setTaskCategory(null);
         }
 
     }

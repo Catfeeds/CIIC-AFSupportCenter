@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.housefund.siteservice.dto;
+package com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo;
 
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfEmpArchive;
 import lombok.Data;
@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class HfEmpArchiveDto  extends HfEmpArchive{
+public class HfEmpArchiveBo extends HfEmpArchive{
 
     private String companyId;
     private String title;

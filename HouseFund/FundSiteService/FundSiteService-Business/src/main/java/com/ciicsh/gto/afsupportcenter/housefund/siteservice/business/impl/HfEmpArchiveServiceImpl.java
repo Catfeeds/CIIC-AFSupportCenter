@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.impl;
 
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dto.HfEmpArchiveDto;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpArchiveBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfEmpArchive;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao.HfEmpArchiveMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.HfEmpArchiveService;
@@ -27,18 +27,18 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
     @Autowired
     HfEmpArchiveMapper hfEmpArchiveMapper;
 
-   public PageRows<HfEmpArchiveDto> queryEmpArchive(PageInfo pageInfo){
-       HfEmpArchiveDto dto = pageInfo.toJavaObject(HfEmpArchiveDto.class);
+   public PageRows<HfEmpArchiveBo> queryEmpArchive(PageInfo pageInfo){
+       HfEmpArchiveBo dto = pageInfo.toJavaObject(HfEmpArchiveBo.class);
        return  PageKit.doSelectPage(pageInfo, () ->  hfEmpArchiveMapper.queryEmpArchive(dto));
     }
 
     public Map<String, Object> viewEmpArchiveInfo(String empArchiveId,String companyId){
         Map<String,Object> resultMap=new HashMap<String,Object>();
 
-        HfEmpArchiveDto viewEmpArchiveBo= hfEmpArchiveMapper.viewEmpArchive(empArchiveId);
-        HfEmpArchiveDto viewEmpPeriodBo= hfEmpArchiveMapper.viewEmpPeriod(empArchiveId,"2");
-        HfEmpArchiveDto viewEmpPeriodAddBo= hfEmpArchiveMapper.viewEmpPeriod(empArchiveId,"2");
-        HfEmpArchiveDto viewComAccountBo= hfEmpArchiveMapper.viewComAccount(companyId);
+        HfEmpArchiveBo viewEmpArchiveBo= hfEmpArchiveMapper.viewEmpArchive(empArchiveId);
+        HfEmpArchiveBo viewEmpPeriodBo= hfEmpArchiveMapper.viewEmpPeriod(empArchiveId,"2");
+        HfEmpArchiveBo viewEmpPeriodAddBo= hfEmpArchiveMapper.viewEmpPeriod(empArchiveId,"2");
+        HfEmpArchiveBo viewComAccountBo= hfEmpArchiveMapper.viewComAccount(companyId);
         List listEmpTaskPeriodBo=hfEmpArchiveMapper.listEmpTaskPeriod(empArchiveId,"1");//基本
         List listEmpTaskPeriodAddBo=hfEmpArchiveMapper.listEmpTaskPeriod(empArchiveId,"2");//补充
         List listEmpTransferBo= hfEmpArchiveMapper.listEmpTransfer(empArchiveId);

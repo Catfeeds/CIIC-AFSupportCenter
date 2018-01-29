@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.business;
 
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dto.HfEmpArchiveDto;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpArchiveBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfEmpArchive;
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public interface HfEmpArchiveService extends IService<HfEmpArchive> {
 
-    PageRows<HfEmpArchiveDto> queryEmpArchive(PageInfo pageInfo);
+    PageRows<HfEmpArchiveBo> queryEmpArchive(PageInfo pageInfo);
     Map<String, Object> viewEmpArchiveInfo(String empArchiveId, String companyId);
 
 }

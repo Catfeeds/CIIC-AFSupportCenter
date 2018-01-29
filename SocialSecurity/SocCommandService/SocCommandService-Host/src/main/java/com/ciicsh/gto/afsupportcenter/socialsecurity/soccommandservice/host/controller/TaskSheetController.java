@@ -92,12 +92,12 @@ public class TaskSheetController {
 ////            logger.error(e.getMessage(), e);
 ////            return ResultGenerator.genServerFailResult();
 ////        }
-//        EmployeeInfoDTO dto = new EmployeeInfoDTO();
+//        EmployeeInfoDTO bo = new EmployeeInfoDTO();
 //        AFEmployeeCompanyDTO d1 = new AFEmployeeCompanyDTO();
 //        d1.setCompanyId("1");
 //        d1.setInDate(new Date());
 //        d1.setOutDate(new Date());
-//        dto.setEmployeeCompany(d1);
+//        bo.setEmployeeCompany(d1);
 //
 //        List<AFEmpSocialDTO> empSocial = new ArrayList<>();
 //        AFEmpSocialDTO dd2 = new AFEmpSocialDTO();
@@ -106,14 +106,14 @@ public class TaskSheetController {
 //        dd2 = new AFEmpSocialDTO();
 //        dd2.setEmpBase(new BigDecimal(13));
 //        empSocial.add(dd2);
-//        dto.setEmpSocial(empSocial);
-//        return dto;
+//        bo.setEmpSocial(empSocial);
+//        return bo;
 //    }
 //
 //    private void insertTaskTb(TaskMsgDTO taskMsgDTO, Integer taskCategory) {
 //        //调用接口
-//        EmployeeInfoDTO dto = callInf(taskMsgDTO);
-//        AFEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
+//        EmployeeInfoDTO bo = callInf(taskMsgDTO);
+//        AFEmployeeCompanyDTO companyDto = bo.getEmployeeCompany();
 //
 //        SsEmpTask ssEmpTask = new SsEmpTask();
 //        ssEmpTask.setTaskId(taskMsgDTO.getTaskId());
@@ -136,7 +136,7 @@ public class TaskSheetController {
 //        ssEmpTask.setCreatedTime(LocalDateTime.now());
 //        ssEmpTaskService.insert(ssEmpTask);
 //
-//        List<AFEmpSocialDTO> socialList = dto.getEmpSocial();
+//        List<AFEmpSocialDTO> socialList = bo.getEmpSocial();
 //        List<SsEmpTaskFront> eleList = new ArrayList<>();
 //        SsEmpTaskFront ssEmpTaskFront = null;
 //        for (AFEmpSocialDTO socialDto : socialList) {

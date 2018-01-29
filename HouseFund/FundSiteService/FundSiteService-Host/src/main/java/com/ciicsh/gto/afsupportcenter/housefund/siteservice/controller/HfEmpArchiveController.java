@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.controller;
 
 
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.HfEmpArchiveService;
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dto.HfEmpArchiveDto;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpArchiveBo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -36,7 +36,7 @@ public class HfEmpArchiveController extends  BasicController<HfEmpArchiveService
     @RequestMapping("/queryEmpArchive")
     @ResponseBody
     public JsonResult<PageRows> queryEmpArchive(PageInfo pageInfo) {
-        PageRows<HfEmpArchiveDto> result = business.queryEmpArchive(pageInfo);
+        PageRows<HfEmpArchiveBo> result = business.queryEmpArchive(pageInfo);
         return JsonResultKit.of(result);
     }
 
