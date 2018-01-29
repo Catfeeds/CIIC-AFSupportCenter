@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao.HfStatementCompareResultMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfStatementCompareResult">
+		<id column="statement_compare_result_id" property="statementCompareResultId" />
+		<result column="statement_compare_id" property="statementCompareId" />
+		<result column="employee_id" property="employeeId" />
+		<result column="imp_amount" property="impAmount" />
+		<result column="sys_amount" property="sysAmount" />
+		<result column="diff_amount" property="diffAmount" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+</mapper>
