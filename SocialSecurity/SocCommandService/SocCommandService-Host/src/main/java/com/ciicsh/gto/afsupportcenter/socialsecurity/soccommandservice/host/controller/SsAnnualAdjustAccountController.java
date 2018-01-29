@@ -143,7 +143,7 @@ public class SsAnnualAdjustAccountController extends BasicController<ISsAnnualAd
         ImportParams importParams = new ImportParams();
         importParams.setKeyIndex(null);
         importParams.setNeedVerfiy(true);
-        importParams.setHeadRows(6);
+        importParams.setTitleRows(5);
         importParams.setLastOfInvalidRow(2);
         importParams.setVerifyHanlder(new MyExcelVerifyHandler(fieldLengthMap, setValueMap, skipFields, null));
 
@@ -209,6 +209,7 @@ public class SsAnnualAdjustAccountController extends BasicController<ISsAnnualAd
                         lm.put("ssSerial", bo.getSsSerial());
                         lm.put("employeeName", bo.getEmployeeName());
                         lm.put("idNum", bo.getIdNum());
+                        lm.put("emp", "");
                         lm.put("paymentMonths", bo.getPaymentMonths());
                         lm.put("avgMonthSalary", bo.getAvgMonthSalary());
                         mapList.add(lm);
@@ -217,18 +218,28 @@ public class SsAnnualAdjustAccountController extends BasicController<ISsAnnualAd
                 map.put("maplist", mapList);
                 alMap.put(i, map);
             }
+            Map<String, Object> map = new HashMap<>();
+            map.put("reportYear", reportYear);
+            map.put("comAccountName", ssAnnualAdjustAccount.getComAccountName());
+            map.put("ssAccount", ssAnnualAdjustAccount.getSsAccount());
+            map.put("printDate", printDate);
+            map.put("accountAvgMonthSalary", ""); // TODO calculate? blank?
+            map.put("allTotalAmount", ""); // TODO calculate? blank?
+            map.put("allEmpTotal", ""); // TODO calculate? blank?
+            alMap.put(2, map);
 
-            TemplateExportParams params = new TemplateExportParams("/template/ssAccount_reportYear.xls", 1, 2);
+            TemplateExportParams params = new TemplateExportParams("/template/ssAccount_reportYear.xls", 0, 1, 2);
             Workbook workbook = ExcelExportUtil.exportExcel(alMap, params);
             try {
+                String fileName = URLEncoder.encode("ssAccount_reportYear.xls"
+                    .replace("ssAccount", ssAnnualAdjustAccount.getSsAccount())
+                    .replace("reportYear", String.valueOf(reportYear)), "UTF-8");
+
                 response.reset();
                 response.setCharacterEncoding("UTF-8");
                 response.setHeader("content-Type", "application/vnd.ms-excel");
 //                response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-                response.setHeader("Content-Disposition",
-                    "attachment;filename=" + URLEncoder.encode("ssAccount_reportYear.xls"
-                        .replace("ssAccount", ssAnnualAdjustAccount.getSsAccount()
-                            .replace("reportYear", String.valueOf(reportYear))), "UTF-8"));
+                response.setHeader("Content-Disposition","attachment;filename=" + fileName);
                 workbook.write(response.getOutputStream());
                 workbook.close();
             } catch (IOException e) {

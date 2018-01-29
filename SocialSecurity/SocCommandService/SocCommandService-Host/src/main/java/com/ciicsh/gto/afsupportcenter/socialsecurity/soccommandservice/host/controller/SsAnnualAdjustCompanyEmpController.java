@@ -3,6 +3,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.baomidou.mybatisplus.mapper.Condition;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAnnualAdjustCompanyEmpBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAnnualAdjustCompanyEmpService;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Wrapper;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -106,7 +109,7 @@ public class SsAnnualAdjustCompanyEmpController extends BasicController<ISsAnnua
             if (exsitsList.size() == 1) {
                 SsAnnualAdjustCompanyEmp existsSsAnnualAdjustCompanyEmp = exsitsList.get(0);
                 ssAnnualAdjustCompanyEmp.setAnnualAdjustCompanyEmpId(existsSsAnnualAdjustCompanyEmp.getAnnualAdjustCompanyEmpId());
-                ssAnnualAdjustCompanyEmp.setSalary(ssAnnualAdjustCompanyEmpBO.getSalary());
+                ssAnnualAdjustCompanyEmp.setChgSalary(ssAnnualAdjustCompanyEmpBO.getChgSalary());
                 ssAnnualAdjustCompanyEmp.setModifiedTime(LocalDateTime.now());
                 ssAnnualAdjustCompanyEmp.setModifiedBy("test"); //TODO
             } else {
@@ -119,6 +122,7 @@ public class SsAnnualAdjustCompanyEmpController extends BasicController<ISsAnnua
             ssAnnualAdjustCompanyEmp.setIdNum(ssAnnualAdjustCompanyEmpBO.getIdNum());
             ssAnnualAdjustCompanyEmp.setSsSerial(ssAnnualAdjustCompanyEmpBO.getSsSerial());
             ssAnnualAdjustCompanyEmp.setSalary(ssAnnualAdjustCompanyEmpBO.getSalary());
+            ssAnnualAdjustCompanyEmp.setChgSalary(ssAnnualAdjustCompanyEmpBO.getChgSalary());
             ssAnnualAdjustCompanyEmp.setArchiveStatus(ssAnnualAdjustCompanyEmpBO.getArchiveStatus());
             ssAnnualAdjustCompanyEmp.setBaseAmount(ssAnnualAdjustCompanyEmpBO.getBaseAmount());
             ssAnnualAdjustCompanyEmp.setEmpClassify(ssAnnualAdjustCompanyEmpBO.getEmpClassify());
@@ -155,9 +159,10 @@ public class SsAnnualAdjustCompanyEmpController extends BasicController<ISsAnnua
     @RequestMapping("/annualAdjustCompanyEmpTempQuery")
     public JsonResult<PageRows> annualAdjustCompanyEmpTempQuery(PageInfo pageInfo) {
         SsAnnualAdjustCompanyEmpTempDTO ssAnnualAdjustCompanyEmpTempDTO = pageInfo.toJavaObject(SsAnnualAdjustCompanyEmpTempDTO.class);
-        Map<String, Object> queryCondition = new HashMap<>();
-        queryCondition.put("annual_adjust_company_id", ssAnnualAdjustCompanyEmpTempDTO.getAnnualAdjustCompanyId());
-        PageRows<SsAnnualAdjustCompanyEmpTemp> result = PageKit.doSelectPage(pageInfo, () -> iSsAnnualAdjustCompanyEmpTempService.selectByMap(queryCondition));
+        EntityWrapper<SsAnnualAdjustCompanyEmpTemp> condition = new EntityWrapper<>();
+        condition.where("annual_adjust_company_id={0}", ssAnnualAdjustCompanyEmpTempDTO.getAnnualAdjustCompanyId());
+        condition.orderBy("order_num", true);
+        PageRows<SsAnnualAdjustCompanyEmpTemp> result = PageKit.doSelectPage(pageInfo, () -> iSsAnnualAdjustCompanyEmpTempService.selectList(condition));
         return JsonResultKit.of(result);
     }
 
