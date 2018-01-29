@@ -88,12 +88,8 @@
     <!--根据接口返回的数据批量更新客户的支付状态-->
     <update id="updatePaymentCom" parameterType="java.util.HashMap">
         UPDATE ss_payment_com SET
-        payment_state=#{paymentState} where payment_com_id=#{paymentComId}
+        payment_state=#{paymentState},modified_by=#{modifiedBy},modified_time=sysdate() where payment_com_id=#{paymentComId}
     </update>
-
-
-
-
 
     <select id="ifExistPayment" resultType="int">
       SELECT COUNT(*) FROM ss_payment_com WHERE com_account_id = #{comAccountId} AND payment_month = #{paymentMonth} AND is_active = 1
