@@ -5,8 +5,6 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class HfEmpTaskPeriod extends com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfEmpTaskPeriod {
-    private String taskCategory;
-
+public class HfArchiveBasePeriodBo extends com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfArchiveBasePeriod {
 
 }

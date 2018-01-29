@@ -24,10 +24,7 @@
         <result column="operation_remind_date" property="operationRemindDate"/>
 
     </resultMap>
-    <resultMap id="viewEmpArchiveResultMap" extends="queryEmpArchiveResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpArchiveBo" >
-        <result column="in_date" property="inDate"/>
-        <result column="out_date" property="outDate"/>
-    </resultMap>
+
 
 
 <!--雇员公积金查询-->
@@ -103,6 +100,11 @@
         </if>
     </select>
 
+    <resultMap id="viewEmpArchiveResultMap" extends="queryEmpArchiveResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpArchiveBo" >
+        <result column="in_date" property="inDate"/>
+        <result column="out_date" property="outDate"/>
+    </resultMap>
+
     <!--雇员公积金查询==>查看雇员公积金档案信息-->
     <select id="viewEmpArchive" resultMap="viewEmpArchiveResultMap">
         SELECT ea.emp_archive_id,emp.employee_id,emp.employee_name,emp.id_num,com.company_id,com.title,ea.hf_emp_account,ea.archive_task_status,
@@ -168,9 +170,15 @@
     AND caCom.company_id=#{companyId}
 
     </select>
-<!--<resultMap id="" type="">-->
 
-<!--</resultMap>-->
+    <resultMap id="viewEmpPeriodResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfArchiveBasePeriodBo">
+        <result column="task_category" property="taskCategory"/>
+        <result column="emp_base" property="empBase"/>
+        <result column="start_month" property="startMonth"/>
+        <result column="end_month" property="endMonth"/>
+        <result column="ratio" property="ratio"/>
+        <result column="amount" property="amount"/>
+    </resultMap>
     <!--雇员公积金查询==>查看雇员最近一次公积金汇缴段-->
     <select id="viewEmpPeriod"  resultMap="viewEmpPeriodResultMap">
     SELECT abp.base_amount,abp.start_month,abp.end_month,abp.ratio_emp+ratio_com as 'ratio',abp.amount
@@ -186,7 +194,7 @@
 
     </select>
 
-    <resultMap id="listEmpTaskPeriodResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpTaskPeriod">
+    <resultMap id="listEmpTaskPeriodResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpTaskPeriodBo">
         <result column="task_category" property="taskCategory"/>
         <result column="emp_base" property="empBase"/>
         <result column="start_month" property="startMonth"/>
@@ -204,19 +212,24 @@
     et.is_active=1
     and ea.emp_archive_id=#{empArchiveId}
     </select>
-<!--<resultMap id="" type="">-->
-
-<!--</resultMap>-->
-    <select id="listEmpTransfer" resultMap="viewEmpArchiveResultMap">
-    SELECT et.hf_type,et.transfer_out_unit,et.transfer_out_unit_account,et.transfer_in_unit,et.transfer_in_unit_account,
-    et.task_status,et.transfer_date,et.feedback_date,et.operate_date
-    from
-    hf_emp_task et
-    INNER JOIN hf_emp_archive ea ON ea.emp_archive_id=et.emp_archive_id
-    WHERE
-    et.is_active=1
-    and et.task_category=9
-    and et.emp_archive_id=#{empArchiveId}
+    <resultMap id="listEmpTransferResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfEmpTask">
+        <result column="task_category" property="taskCategory"/>
+        <result column="emp_base" property="empBase"/>
+        <result column="start_month" property="startMonth"/>
+        <result column="end_month" property="endMonth"/>
+        <result column="ratio" property="ratio"/>
+        <result column="amount" property="amount"/>
+    </resultMap>
+    <select id="listEmpTransfer" resultMap="listEmpTransferResultMap">
+        SELECT et.hf_type,et.transfer_out_unit,et.transfer_out_unit_account,et.transfer_in_unit,et.transfer_in_unit_account,
+        et.task_status,et.transfer_date,et.feedback_date,et.operate_date
+        from
+        hf_emp_task et
+        INNER JOIN hf_emp_archive ea ON ea.emp_archive_id=et.emp_archive_id
+        WHERE
+        et.is_active=1
+        and et.task_category=9
+        and et.emp_archive_id=#{empArchiveId}
     </select>
 
 </mapper>

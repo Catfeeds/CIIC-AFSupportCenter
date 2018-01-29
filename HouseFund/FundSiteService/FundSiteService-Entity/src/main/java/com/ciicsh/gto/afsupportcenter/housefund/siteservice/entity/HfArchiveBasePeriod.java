@@ -301,7 +301,7 @@ public class HfArchiveBasePeriod implements Serializable {
 
 	@Override
 	public String toString() {
-		return "HfArchiveBasePeriod{" +
+		return "HfArchiveBasePeriodBo{" +
 			", archiveBasePeriodId=" + archiveBasePeriodId +
 			", empArchiveId=" + empArchiveId +
 			", empTaskId=" + empTaskId +
