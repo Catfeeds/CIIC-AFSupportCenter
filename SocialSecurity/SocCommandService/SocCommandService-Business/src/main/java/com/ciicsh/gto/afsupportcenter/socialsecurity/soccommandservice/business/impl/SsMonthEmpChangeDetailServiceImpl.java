@@ -6,6 +6,8 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.Ss
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsMonthEmpChangeDetailMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsMonthEmpChangeDetailService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.GsyExportOpt;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.YysExportOpt;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -29,6 +31,16 @@ public class SsMonthEmpChangeDetailServiceImpl extends ServiceImpl<SsMonthEmpCha
         //将原始DTO通过业务逻辑转换成页面展示的DTO
         List<SsMonthEmpChangeDetailBO> resulrDTOList = dealEmpChangeDetailDTO(detailDTOList);
         return resulrDTOList;
+    }
+
+    @Override
+    public List<YysExportOpt> yysExportQuery(Long statementId) {
+        return baseMapper.yysExportQuery(statementId);
+    }
+
+    @Override
+    public List<GsyExportOpt> gsyExportQuery(Long statementId) {
+        return baseMapper.gsyExportQuery(statementId);
     }
 
     /**

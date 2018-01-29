@@ -4,6 +4,8 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMont
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthEmpChangeDetailBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthEmpChangeDetail;
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.GsyExportOpt;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.YysExportOpt;
 
 import java.util.List;
 
@@ -26,4 +28,19 @@ public interface SsMonthEmpChangeDetailService extends IService<SsMonthEmpChange
      * @return   List<SsMonthEmpChangeDetailBO>
      */
     List<SsMonthEmpChangeDetailBO> showMonthEmpChangeDetailByStatementId(SsMonthEmpChangeBO ssMonthEmpChangeBO);
+
+
+    /**
+     * 养老、医疗和失业变更明细导出
+     * @param statementId 对账ID
+     * @return 返回变更明细数据
+     */
+    List<YysExportOpt> yysExportQuery(Long statementId);
+
+    /**
+     * 工伤和生育变更明细导出
+     * @param statementId 对账ID
+     * @return 返回变更明细数据
+     */
+    List<GsyExportOpt> gsyExportQuery(Long statementId);
 }
