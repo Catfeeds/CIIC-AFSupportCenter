@@ -18,7 +18,7 @@ import java.util.List;
  * @author HuangXing
  * @since 2017-12-01
  */
-public interface ISsEmpTaskService extends IService<SsEmpTask> {
+public interface SsEmpTaskService extends IService<SsEmpTask> {
 
     /**
      * 雇员日常操作查询
@@ -57,5 +57,10 @@ public interface ISsEmpTaskService extends IService<SsEmpTask> {
 //     * @return
 //     */
 //    com.ciicsh.gto.commonservice.util.bo.Result completeTask(@RequestBody TaskSheetRequestDTO taskSheetRequestDTO) throws Exception;
+    /**
+     * 批量查询任务单信息
+     * @param ssEmpTaskBO
+     */
+    List<SsEmpTaskBO> queryBatchEmpArchiveByEmpTaskIds(SsEmpTaskBO ssEmpTaskBO);
 
 }
