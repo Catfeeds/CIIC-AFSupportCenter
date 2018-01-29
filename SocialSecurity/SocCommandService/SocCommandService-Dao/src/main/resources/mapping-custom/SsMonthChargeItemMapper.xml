@@ -49,6 +49,6 @@
         INNER JOIN ss_com_account ca ON ca.com_account_id = ea.com_account_id
         LEFT JOIN emp_employee emp ON emp.employee_id=ea.employee_id
         WHERE
-        mci.is_active = 1 AND ca.com_account_id = #{comAccountId} AND mc.ss_month  =#{ssMonth}
+        mci.is_active = 1 AND ca.ss_account = #{ssAccount} AND mc.ss_month  =#{ssMonth}
  </select>
 </mapper>

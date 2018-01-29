@@ -50,12 +50,11 @@ public interface ISsEmpTaskService extends IService<SsEmpTask> {
      */
     String selectMaxSsSerialByTaskId(Long empTaskId);
 
-//    /**
-//     * 调用客服中心的完成任务接口
-//     *
-//     * @param taskSheetRequestDTO
-//     * @return
-//     */
-//    com.ciicsh.gto.commonservice.util.dto.Result completeTask(@RequestBody TaskSheetRequestDTO taskSheetRequestDTO) throws Exception;
+    /**
+     * 批量查询任务单信息
+     * @param ssEmpTaskBO
+     */
+    List<SsEmpTaskBO> queryBatchEmpArchiveByEmpTaskIds(SsEmpTaskBO ssEmpTaskBO);
+
 
 }
