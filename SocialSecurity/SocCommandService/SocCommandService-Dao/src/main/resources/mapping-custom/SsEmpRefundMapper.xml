@@ -24,7 +24,7 @@
         INNER JOIN ss_com_account ca ON ca.com_account_id = ea.com_account_id
         WHERE
         er.ss_month=#{ssMonth}
-        AND ea.com_account_id=#{comAccountId}
+        AND ca.ss_account=#{ssAccount}
         AND er.is_active=1
         UNION ALL
         select com.title,com.company_id,ca.ss_account,emp.employee_name,emp.employee_id,emp.id_num,'调整' as ty,eba.start_month,eba.end_month,
@@ -36,7 +36,7 @@
         INNER JOIN ss_com_account ca ON ca.com_account_id = ea.com_account_id
         where
         eba.ss_month=#{ssMonth}
-        AND ea.com_account_id=#{comAccountId}
+        AND ca.ss_account=#{ssAccount}
         AND eba.comemp_diff_amount <![CDATA[<]]> 0
         AND eba.is_active=1
     </select>

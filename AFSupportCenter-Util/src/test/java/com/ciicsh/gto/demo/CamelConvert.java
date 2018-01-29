@@ -33,18 +33,47 @@ public class CamelConvert {
         return sb.toString();
     }
     public  static void generalMapStr(String str){
-        Arrays.stream(str.split(",")).forEach(
-            i->{
-                System.out.println();
+        String s1="",s2="";
+        String[] aStr=str.split(",");
+        Arrays.stream(aStr).forEach(
+            s->{
+                String S1="",S2="";
+                S1=s.substring(s.indexOf(".")+1,s.length()).trim();
+                S2=lineToHump(S1);
+                System.out.println("<result column=\""+S1+"\" property=\""+S2+"\"/>");
+            }
+        );
+        Arrays.stream(aStr).forEach(
+            s->{
+                String S1="",S2="";
+                S1=s.substring(s.indexOf(".")+1,s.length()).trim();
+                S2=lineToHump(S1);
+                System.out.println("private String "+S2+";");
+            }
+        );
+        Arrays.stream(aStr).forEach(
+            s->{
+                String S1="",S2="";
+                S1=s.substring(s.indexOf(".")+1,s.length()).trim();
+                S2=lineToHump(S1);
+                System.out.println("<if test=\""+S2+" != null\">\n AND"+ s.trim() +" = #{"+S2+"}" +"\n</if>");
+            }
+        );
+        Arrays.stream(aStr).forEach(
+            s->{
+                String S1="",S2="";
+                S1=s.substring(s.indexOf(".")+1,s.length()).trim();
+                S2=lineToHump(S1);
+                System.out.println(S2+" : "  +"'',");
             }
         );
     }
     public static void main(String[] args) {
-        String str="com.company_id,com.title,ca.hf_account_type,emp.employee_id,emp.employee_name,emp.id_num\n" +
-            ",eab.hf_emp_account_bc,eab.hf_emp_account_bc,ea.operation_remind,ea.operation_remind_date  ";
+        String str="et.task_category,et.emp_base,et.start_month,et.end_month,et.ratio,et.amount" ;
+        generalMapStr(str);
 
-        String lineToHump = lineToHump(str);
-        System.out.println(lineToHump);//fParentNoLeader
+//        String lineToHump = lineToHump(str);
+//        System.out.println(lineToHump);//fParentNoLeader
 
     }
 }

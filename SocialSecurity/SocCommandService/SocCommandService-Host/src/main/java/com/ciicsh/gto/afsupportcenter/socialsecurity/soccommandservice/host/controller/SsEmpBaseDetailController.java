@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpBaseDetailService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpBaseDetailService;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssEmpBaseDetail")
-public class SsEmpBaseDetailController  extends BasicController<ISsEmpBaseDetailService> {
+public class SsEmpBaseDetailController  extends BasicController<SsEmpBaseDetailService> {
 
 }
 

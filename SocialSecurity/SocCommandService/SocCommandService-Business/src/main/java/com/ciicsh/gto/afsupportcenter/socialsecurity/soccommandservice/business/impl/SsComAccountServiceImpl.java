@@ -3,7 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountParamDto;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComAccountBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComAccountService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsComAccountService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsComAccountMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -23,7 +23,7 @@ import java.util.List;
  * @since 2017-12-06
  */
 @Service
-public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsComAccount> implements ISsComAccountService {
+public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsComAccount> implements SsComAccountService {
 
     @Override
     public SsComAccountBO queryByEmpTaskId(String empTaskId,String type) {

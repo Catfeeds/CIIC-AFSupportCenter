@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthChargeItemBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsMonthChargeItemService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsMonthChargeItemService;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -25,13 +25,13 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/api/soccommandservice/ssMonthChargeItem")
-public class SsMonthChargeItemController extends BasicController<ISsMonthChargeItemService>{
+public class SsMonthChargeItemController extends BasicController<SsMonthChargeItemService>{
 
     @Log("雇员月度缴费明细")
     @RequestMapping("/queryEmlpyeeMonthFeeDetail")
     @ResponseBody
     public JsonResult<List<SsMonthChargeItemBO>> queryEmlpyeeMonthFeeDetail(SsMonthChargeItemBO ssMonthChargeItemBO){
-        if(StringUtils.isBlank(ssMonthChargeItemBO.getSsMonth()) || null == ssMonthChargeItemBO.getComAccountId())
+        if(StringUtils.isBlank(ssMonthChargeItemBO.getSsMonth()) || null == ssMonthChargeItemBO.getSsAccount())
             throw new BusinessException("条件不足");
         ssMonthChargeItemBO.setSsMonth(ssMonthChargeItemBO.getSsMonth().substring(0,6));
         List<SsMonthChargeItemBO> ssMonthChargeItemBOList = dealEmpChangeDetailDTO(business.queryEmlpyeeMonthFeeDetail(ssMonthChargeItemBO));

@@ -77,7 +77,8 @@ public class SsMonthChargeItemBO extends SsMonthChargeItem{
     private BigDecimal birthRiskEmpFee;
     //生育总计
     private BigDecimal birthRiskTotalFee;
-
+    //
+    private String ssAccount;
 
     public String getSsMonth() {
         return ssMonth;
@@ -293,5 +294,13 @@ public class SsMonthChargeItemBO extends SsMonthChargeItem{
 
     public void setBirthRiskTotalFee(BigDecimal birthRiskTotalFee) {
         this.birthRiskTotalFee = birthRiskTotalFee;
+    }
+
+    public String getSsAccount() {
+        return ssAccount;
+    }
+
+    public void setSsAccount(String ssAccount) {
+        this.ssAccount = ssAccount;
     }
 }

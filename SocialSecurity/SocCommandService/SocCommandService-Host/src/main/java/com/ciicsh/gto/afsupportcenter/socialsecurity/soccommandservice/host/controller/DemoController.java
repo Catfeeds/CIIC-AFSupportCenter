@@ -1,16 +1,23 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsStatementImpService;
+
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsMonthEmpChangeDetailService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsStatementImpService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.GsyExportOpt;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.GsymxOpt;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.StatementExportOpt;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.TestPerson;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.YysExportOpt;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.YysmxOpt;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +31,10 @@ import java.util.stream.Collectors;
 public class DemoController {
 
     @Autowired
-    private ISsStatementImpService impService;
+    private SsStatementImpService impService;
+
+    @Autowired
+    private SsMonthEmpChangeDetailService monthEmpChangeDetailService;
 
     @RequestMapping("export")
     public void export(HttpServletResponse response){
@@ -108,5 +118,146 @@ public class DemoController {
 
         System.out.println("导入数据一共【"+optList.size()+"】行");
         //TODO 数据处理
+    }
+
+
+    @RequestMapping("/yysExport")
+    public void yysExport(HttpServletResponse response){
+        Date date = new Date();
+        String fileNme = "YYS_"+ StringUtil.getDateString(date)+".xls";
+        List<YysExportOpt> opts = new ArrayList<>();
+        YysExportOpt opt;
+        opt = new YysExportOpt();
+        opt.setMonthEmpChangeId((long) 1);
+        opt.setSsMonth("201801");
+        opt.setComAccountId((long)1);
+        opt.setComAccountName("上海微软");
+        opt.setEmployeeId("18A322665");
+        opt.setEmployeeName("张三");
+        opt.setChangeType(2);
+        opt.setChangeTypeName("新进");
+        opt.setBaseAmount(BigDecimal.valueOf(5000));
+        opt.setPensionComAmount(BigDecimal.valueOf(1200));
+        opt.setPensionEmpAmount(BigDecimal.valueOf(1200));
+        opt.setPensionComRepayAmount(BigDecimal.valueOf(300));
+        opt.setPensionEmpRepayAmount(BigDecimal.valueOf(300));
+        opt.setPensionOnePayment(BigDecimal.valueOf(3000));
+
+        opt.setMedicalComAmount(BigDecimal.valueOf(1200));
+        opt.setMedicalEmpAmount(BigDecimal.valueOf(1200));
+        opt.setMedicalComRepayAmount(BigDecimal.valueOf(300));
+        opt.setMedicalEmpRepayAmount(BigDecimal.valueOf(300));
+
+        opt.setUnemploymentComAmount(BigDecimal.valueOf(1200));
+        opt.setUnemploymentEmpAmount(BigDecimal.valueOf(1200));
+        opt.setUnemploymentComRepayAmount(BigDecimal.valueOf(300));
+        opt.setUnemploymentEmpRepayAmount(BigDecimal.valueOf(300));
+        opts.add(opt);
+
+        opt = new YysExportOpt();
+        opt.setMonthEmpChangeId((long) 2);
+        opt.setSsMonth("201801");
+        opt.setComAccountId((long)1);
+        opt.setComAccountName("上海微软");
+        opt.setEmployeeId("18A322665");
+        opt.setEmployeeName("李四");
+        opt.setChangeType(3);
+        opt.setChangeTypeName("转出");
+        opt.setBaseAmount(BigDecimal.valueOf(5000));
+        opt.setPensionComAmount(BigDecimal.valueOf(1200));
+        opt.setPensionEmpAmount(BigDecimal.valueOf(1200));
+        opt.setPensionComRepayAmount(BigDecimal.valueOf(300));
+        opt.setPensionEmpRepayAmount(BigDecimal.valueOf(300));
+        opt.setPensionOnePayment(BigDecimal.valueOf(3000));
+
+        opt.setMedicalComAmount(BigDecimal.valueOf(1200));
+        opt.setMedicalEmpAmount(BigDecimal.valueOf(1200));
+        opt.setMedicalComRepayAmount(BigDecimal.valueOf(300));
+        opt.setMedicalEmpRepayAmount(BigDecimal.valueOf(300));
+
+        opt.setUnemploymentComAmount(BigDecimal.valueOf(1200));
+        opt.setUnemploymentEmpAmount(BigDecimal.valueOf(1200));
+        opt.setUnemploymentComRepayAmount(BigDecimal.valueOf(300));
+        opt.setUnemploymentEmpRepayAmount(BigDecimal.valueOf(300));
+        opts.add(opt);
+        ExcelUtil.exportExcel(opts,YysExportOpt.class,fileNme,response);
+    }
+
+    @RequestMapping("/gsyExport")
+    public void gsyExport(HttpServletResponse response){
+        Date date = new Date();
+        String fileNme = "GSY_"+ StringUtil.getDateString(date)+".xls";
+        List<GsyExportOpt> opts = new ArrayList<>();
+        GsyExportOpt opt;
+
+        opt = new GsyExportOpt();
+        opt.setMonthEmpChangeId((long) 1);
+        opt.setSsMonth("201801");
+        opt.setComAccountId((long)1);
+        opt.setComAccountName("上海微软");
+        opt.setEmployeeId("18A322665");
+        opt.setEmployeeName("张三");
+        opt.setChangeType(2);
+        opt.setChangeTypeName("新进");
+        opt.setBaseAmount(BigDecimal.valueOf(5000));
+        opt.setAccidentComAmount(BigDecimal.valueOf(1200));
+        opt.setAccidentComRepayAmount(BigDecimal.valueOf(300));
+        opt.setMaternityComAmount(BigDecimal.valueOf(1200));
+        opt.setMaternityComRepayAmount(BigDecimal.valueOf(300));
+        opts.add(opt);
+
+        opt = new GsyExportOpt();
+        opt.setMonthEmpChangeId((long) 2);
+        opt.setSsMonth("201801");
+        opt.setComAccountId((long)1);
+        opt.setComAccountName("上海微软");
+        opt.setEmployeeId("18A322665");
+        opt.setEmployeeName("李四");
+        opt.setChangeType(3);
+        opt.setChangeTypeName("转出");
+        opt.setBaseAmount(BigDecimal.valueOf(5000));
+        opt.setAccidentComAmount(BigDecimal.valueOf(1200));
+        opt.setAccidentComRepayAmount(BigDecimal.valueOf(300));
+        opt.setMaternityComAmount(BigDecimal.valueOf(1200));
+        opt.setMaternityComRepayAmount(BigDecimal.valueOf(300));
+        opts.add(opt);
+
+        ExcelUtil.exportExcel(opts,GsyExportOpt.class,fileNme,response);
+    }
+
+    @RequestMapping("/statementExport")
+    public void statementExport(HttpServletResponse response) {
+        Date date = new Date();
+        String fileNme = "社保对账_"+ StringUtil.getDateString(date)+".xls";
+        List<StatementExportOpt> opts = new ArrayList<>();
+
+        StatementExportOpt opt;
+        opt = new StatementExportOpt();
+        opt.setImpFileName("14555_YYS.xls");
+        opt.setSsMonth("201801");
+        opt.setComAccountId((long)1);
+        opt.setComAccountName("上海微软");
+        opt.setDownLoadMonthChange("养医失月度明细下载");
+        opt.setMonthChangeType("YYS(养医失)");
+        opt.setDiffSumByEmp("200");
+        opt.setStatementUserId("张三");
+        opt.setStatementTime(LocalDateTime.now());
+        opt.setImpFileType("YYS");
+        opts.add(opt);
+
+        opt = new StatementExportOpt();
+        opt.setImpFileName("14556_GSY.xls");
+        opt.setSsMonth("201801");
+        opt.setComAccountId((long)1);
+        opt.setComAccountName("上海微软");
+        opt.setDownLoadMonthChange("工伤生育月度明细下载");
+        opt.setMonthChangeType("GSY(工伤生育)");
+        opt.setDiffSumByEmp("200");
+        opt.setStatementUserId("李四");
+        opt.setStatementTime(LocalDateTime.now());
+        opt.setImpFileType("GSY");
+        opts.add(opt);
+
+        ExcelUtil.exportExcel(opts,StatementExportOpt.class,fileNme,response);
     }
 }

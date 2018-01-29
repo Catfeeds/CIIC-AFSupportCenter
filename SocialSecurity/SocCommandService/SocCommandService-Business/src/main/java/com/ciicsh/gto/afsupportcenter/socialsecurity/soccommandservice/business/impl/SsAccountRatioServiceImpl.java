@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsAccountRatioMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAccountRatioService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAccountRatioService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.List;
  * @since 2017-12-01
  */
 @Service
-public class SsAccountRatioServiceImpl extends ServiceImpl<SsAccountRatioMapper, SsAccountRatio> implements ISsAccountRatioService {
+public class SsAccountRatioServiceImpl extends ServiceImpl<SsAccountRatioMapper, SsAccountRatio> implements SsAccountRatioService {
     /**
      * 通过accountId 查询
      * @param comAccountId

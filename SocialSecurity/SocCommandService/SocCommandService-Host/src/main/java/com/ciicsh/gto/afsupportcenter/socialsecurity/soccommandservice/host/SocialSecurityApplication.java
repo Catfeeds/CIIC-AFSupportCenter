@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Import;
 /**
  * SpringBoot 方式启动类
  */
-@EnableFeignClients("com.ciicsh.gto")
+@EnableFeignClients({"com.ciicsh.gto.sheetservice.api","com.ciicsh.gto.settlementcenter.payment.cmdapi"})
 @MapperScan("com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao")
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice"})
 @EnableDiscoveryClient

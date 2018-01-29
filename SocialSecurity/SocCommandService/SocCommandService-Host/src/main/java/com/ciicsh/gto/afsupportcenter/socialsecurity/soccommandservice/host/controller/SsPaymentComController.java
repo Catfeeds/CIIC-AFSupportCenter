@@ -7,7 +7,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.p
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAddPaymentBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsDelPaymentBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentComBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsPaymentComService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsPaymentComService;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -32,7 +32,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssPaymentCom")
-public class SsPaymentComController  extends BasicController<ISsPaymentComService> {
+public class SsPaymentComController  extends BasicController<SsPaymentComService> {
     /**
      * <p>Description: 查询社保支付-企业账户(列表页)</p>
      *

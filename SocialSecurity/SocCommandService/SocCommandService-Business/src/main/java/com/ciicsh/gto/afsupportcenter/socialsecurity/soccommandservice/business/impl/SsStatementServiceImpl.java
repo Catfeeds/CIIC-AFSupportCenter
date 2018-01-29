@@ -3,12 +3,16 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsStatementBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatement;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsStatementMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsStatementService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsStatementService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.StatementExportArgs;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.StatementExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -19,7 +23,7 @@ import org.springframework.stereotype.Service;
  * @since 2017-12-11
  */
 @Service
-public class SsStatementServiceImpl extends ServiceImpl<SsStatementMapper, SsStatement> implements ISsStatementService {
+public class SsStatementServiceImpl extends ServiceImpl<SsStatementMapper, SsStatement> implements SsStatementService {
 
     @Override
     public PageRows<SsStatementBO> statementQuery(PageInfo pageInfo) {
@@ -29,6 +33,11 @@ public class SsStatementServiceImpl extends ServiceImpl<SsStatementMapper, SsSta
     @Override
     public SsStatementBO serachStatementData(SsStatementBO ssStatementBO) {
         return baseMapper.serachStatementByStatementId(ssStatementBO);
+    }
+
+    @Override
+    public List<StatementExportOpt> statementExportQuery(StatementExportArgs args) {
+        return baseMapper.statementExportQuery(args);
     }
 
 }

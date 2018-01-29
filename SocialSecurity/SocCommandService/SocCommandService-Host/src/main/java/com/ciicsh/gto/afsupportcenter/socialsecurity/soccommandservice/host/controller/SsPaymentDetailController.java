@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.payment.SsPaymentDetailDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsPaymentDetailService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsPaymentDetailService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPaymentDetail;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
@@ -23,7 +23,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssPaymentDetail")
-public class SsPaymentDetailController  extends BasicController<ISsPaymentDetailService> {
+public class SsPaymentDetailController  extends BasicController<SsPaymentDetailService> {
 
     /**
      * <p>Description: 付款通知查询(列表页)</p>

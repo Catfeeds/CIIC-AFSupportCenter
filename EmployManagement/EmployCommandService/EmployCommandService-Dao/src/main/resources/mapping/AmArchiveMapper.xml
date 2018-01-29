@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao.AmArchiveMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmArchive">
+		<id column="archive_id" property="archiveId" />
+		<result column="employment_id" property="employmentId" />
+		<result column="company_id" property="companyId" />
+		<result column="employee_id" property="employeeId" />
+		<result column="emp_prior_id" property="empPriorId" />
+		<result column="yuliu_doc_type" property="yuliuDocType" />
+		<result column="yuliu_doc_num" property="yuliuDocNum" />
+		<result column="doc_type" property="docType" />
+		<result column="doc_num" property="docNum" />
+		<result column="archive_place" property="archivePlace" />
+		<result column="archive_place_additional" property="archivePlaceAdditional" />
+		<result column="archive_card_state" property="archiveCardState" />
+		<result column="doc_code" property="docCode" />
+		<result column="doc_from" property="docFrom" />
+		<result column="employ_feedback" property="employFeedback" />
+		<result column="employ_feedback_opt_date" property="employFeedbackOptDate" />
+		<result column="diaodang_feedback" property="diaodangFeedback" />
+		<result column="diaodang_feedback_opt_date" property="diaodangFeedbackOptDate" />
+		<result column="ukey_borrow_date" property="ukeyBorrowDate" />
+		<result column="ukey_return_date" property="ukeyReturnDate" />
+		<result column="hukou_code" property="hukouCode" />
+		<result column="employ_doc_payment_to" property="employDocPaymentTo" />
+		<result column="storage_date" property="storageDate" />
+		<result column="luyong_handle_end" property="luyongHandleEnd" />
+		<result column="doc_halfway_out" property="docHalfwayOut" />
+		<result column="doc_halfway_out_date" property="docHalfwayOutDate" />
+		<result column="doc_halfway_out_direct" property="docHalfwayOutDirect" />
+		<result column="manual_storage_date" property="manualStorageDate" />
+		<result column="after_employ_manual_storage_man" property="afterEmployManualStorageMan" />
+		<result column="after_employ_manual_receive_date" property="afterEmployManualReceiveDate" />
+		<result column="recover_employ_manual_storage_man" property="recoverEmployManualStorageMan" />
+		<result column="recover_employ_manual_storage_date" property="recoverEmployManualStorageDate" />
+		<result column="mail_doc_return_man" property="mailDocReturnMan" />
+		<result column="mail_doc_return_date" property="mailDocReturnDate" />
+		<result column="open_doc_proof_man" property="openDocProofMan" />
+		<result column="open_doc_proof_date" property="openDocProofDate" />
+		<result column="budiao_doc_date1" property="budiaoDocDate1" />
+		<result column="budiao_doc_man1" property="budiaoDocMan1" />
+		<result column="budiao_doc_date2" property="budiaoDocDate2" />
+		<result column="budiao_doc_man2" property="budiaoDocMan2" />
+		<result column="employ_material_remark" property="employMaterialRemark" />
+		<result column="__退工档案办理区域__" property="退工档案办理区域" />
+		<result column="storage_out_date" property="storageOutDate" />
+		<result column="storage_out_man" property="storageOutMan" />
+		<result column="post_letter_date" property="postLetterDate" />
+		<result column="post_letter_man" property="postLetterMan" />
+		<result column="close_fee_date" property="closeFeeDate" />
+		<result column="resign_doc_payment_to" property="resignDocPaymentTo" />
+		<result column="pay_doc_amount" property="payDocAmount" />
+		<result column="close_fee_start_date" property="closeFeeStartDate" />
+		<result column="resign_doc_date" property="resignDocDate" />
+		<result column="resign_return_date" property="resignReturnDate" />
+		<result column="no_stub" property="noStub" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+</mapper>

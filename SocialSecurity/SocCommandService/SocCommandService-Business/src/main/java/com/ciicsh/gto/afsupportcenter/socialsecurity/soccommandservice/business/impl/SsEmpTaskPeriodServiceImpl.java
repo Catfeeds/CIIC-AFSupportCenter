@@ -3,9 +3,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskPeriodService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpTaskPeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpTaskPeriodMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +21,7 @@ import java.util.List;
  * @since 2017-12-01
  */
 @Service
-public class SsEmpTaskPeriodServiceImpl extends ServiceImpl<SsEmpTaskPeriodMapper, SsEmpTaskPeriod> implements ISsEmpTaskPeriodService {
+public class SsEmpTaskPeriodServiceImpl extends ServiceImpl<SsEmpTaskPeriodMapper, SsEmpTaskPeriod> implements SsEmpTaskPeriodService {
 
     /**
      * 查询任务单费用段，根据雇员任务 id

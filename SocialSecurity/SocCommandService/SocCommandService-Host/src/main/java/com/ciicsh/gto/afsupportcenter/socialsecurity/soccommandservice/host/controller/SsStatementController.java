@@ -3,8 +3,12 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.statement.SsStatementDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsStatementBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsStatementService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsStatementService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.StatementExportArgs;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.StatementExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -14,6 +18,8 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,7 +32,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssStatement")
-public class SsStatementController  extends BasicController<ISsStatementService> {
+public class SsStatementController  extends BasicController<SsStatementService> {
 
     /**
      * <p>Description: 对账单查询(列表页)</p>
@@ -54,18 +60,15 @@ public class SsStatementController  extends BasicController<ISsStatementService>
 
 
     /**
-     * <p>Description: 社保对账主表查询导出</p>
-     *
-     * @author wengxk
-     * @date 2017-12-11
-     * @param ssStatementDTO 下载条件
-     * @return
+     * 社保对账主表查询导出
      */
     @Log("社保对账主表查询导出")
-    @ResponseBody
-    @RequestMapping("/exportStatementQuery")
-    public void exportStatementQuery(SsStatementDTO ssStatementDTO) {
-
+    @PostMapping("/statementExport")
+    public void statementExport(HttpServletResponse response,@RequestBody StatementExportArgs args) {
+        Date date = new Date();
+        String fileNme = "社保对账_"+ StringUtil.getDateString(date)+".xls";
+        List<StatementExportOpt> opts = business.statementExportQuery(args);
+        ExcelUtil.exportExcel(opts,"","",StatementExportOpt.class,fileNme,response);
     }
 
     /**

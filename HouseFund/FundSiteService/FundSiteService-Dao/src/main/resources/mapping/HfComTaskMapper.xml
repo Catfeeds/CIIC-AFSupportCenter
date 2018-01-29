@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao.HfComTaskMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfComTask">
+		<id column="com_task_id" property="comTaskId" />
+		<result column="com_account_id" property="comAccountId" />
+		<result column="com_account_class_id" property="comAccountClassId" />
+		<result column="company_id" property="companyId" />
+		<result column="task_category" property="taskCategory" />
+		<result column="submitter_id" property="submitterId" />
+		<result column="submitter_name" property="submitterName" />
+		<result column="submitter_dept_id" property="submitterDeptId" />
+		<result column="submitter_dept_name" property="submitterDeptName" />
+		<result column="submit_time" property="submitTime" />
+		<result column="submit_remark" property="submitRemark" />
+		<result column="handle_user_id" property="handleUserId" />
+		<result column="handle_user_name" property="handleUserName" />
+		<result column="strart_handle_date" property="strartHandleDate" />
+		<result column="send_check_date" property="sendCheckDate" />
+		<result column="finish_date" property="finishDate" />
+		<result column="task_status" property="taskStatus" />
+		<result column="material_sign_record" property="materialSignRecord" />
+		<result column="transfer_date" property="transferDate" />
+		<result column="remark" property="remark" />
+		<result column="com_account_name" property="comAccountName" />
+		<result column="payment_way" property="paymentWay" />
+		<result column="close_day" property="closeDay" />
+		<result column="hf_com_account" property="hfComAccount" />
+		<result column="com_start_month" property="comStartMonth" />
+		<result column="end_month" property="endMonth" />
+		<result column="end_type" property="endType" />
+		<result column="task_id" property="taskId" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+</mapper>

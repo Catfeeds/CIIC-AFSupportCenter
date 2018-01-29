@@ -1,10 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpArchiveService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpArchiveService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpArchiveBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpBasePeriodService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpBasePeriodService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBasePeriod;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
@@ -33,11 +33,11 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssEmpArchive")
-public class SsEmpArchiveController extends BasicController<ISsEmpArchiveService> {
+public class SsEmpArchiveController extends BasicController<SsEmpArchiveService> {
     @Autowired
-    private ISsEmpBasePeriodService iSsEmpBasePeriodService;
+    private SsEmpBasePeriodService ssEmpBasePeriodService;
     @Autowired
-    private ISsEmpTaskService iSsEmpTaskService;
+    private SsEmpTaskService ssEmpTaskService;
     /**
      * 根据雇员任务 ID 查询 雇员本地社保档案信息
      *
@@ -80,9 +80,9 @@ public class SsEmpArchiveController extends BasicController<ISsEmpArchiveService
         //查询客户基本信息和雇员信息
         SsEmpArchiveBO ssEmpArchiveBO =  business.queryEmployeeDetailInfo(empArchiveId);
         //查询社保汇缴信息
-        List<SsEmpBasePeriod> empBasePeriodList= iSsEmpBasePeriodService.queryPeriodByEmpArchiveId(empArchiveId);
+        List<SsEmpBasePeriod> empBasePeriodList= ssEmpBasePeriodService.queryPeriodByEmpArchiveId(empArchiveId);
         //查询变动历史(任务单)
-        List<SsEmpTask> ssEmpTasksList = iSsEmpTaskService.queryTaskByEmpArchiveId(empArchiveId);
+        List<SsEmpTask> ssEmpTasksList = ssEmpTaskService.queryTaskByEmpArchiveId(empArchiveId);
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("ssEmpArchive",ssEmpArchiveBO);
         resultMap.put("empBasePeriod",empBasePeriodList);

@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsStatementImpService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsStatementImpService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.GsymxOpt;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.OptImportArgs;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.YysmxOpt;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssStatementImp")
-public class SsStatementImpController  extends BasicController<ISsStatementImpService> {
+public class SsStatementImpController  extends BasicController<SsStatementImpService> {
 
     @RequestMapping(value = "/optImport",consumes = {"multipart/form-data"})
     public JsonResult<String> optImport(@RequestBody OptImportArgs args) throws Exception {

@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthComPayDetail;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsMonthComPayDetailMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsMonthComPayDetailService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsMonthComPayDetailService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2017-12-07
  */
 @Service
-public class SsMonthComPayDetailServiceImpl extends ServiceImpl<SsMonthComPayDetailMapper, SsMonthComPayDetail> implements ISsMonthComPayDetailService {
+public class SsMonthComPayDetailServiceImpl extends ServiceImpl<SsMonthComPayDetailMapper, SsMonthComPayDetail> implements SsMonthComPayDetailService {
 
 }

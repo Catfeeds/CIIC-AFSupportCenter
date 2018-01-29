@@ -4,11 +4,10 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.SsCom
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountParamDto;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAccountComRelationBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComAccountBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAccountComRelationService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAccountRatioService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComAccountService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAccountComRelationService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAccountRatioService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsComAccountService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -17,7 +16,6 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,12 +34,12 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssComAccount")
-public class SsComAccountController extends BasicController<ISsComAccountService> implements SsComProxy {
+public class SsComAccountController extends BasicController<SsComAccountService> implements SsComProxy {
 
     @Autowired
-    private ISsAccountRatioService iSsAccountRatioService;
+    private SsAccountRatioService ssAccountRatioService;
     @Autowired
-    private ISsAccountComRelationService iSsAccountComRelationService;
+    private SsAccountComRelationService iSsAccountComRelationService;
 
     /**
      * 根据雇员任务 ID 查询 企业社保账户信息
@@ -83,7 +81,7 @@ public class SsComAccountController extends BasicController<ISsComAccountService
         //查询账户和账户对应的任务单结果
         SsComAccountBO ssComAccountBO = business.querySocialSecurityManageInfo(comAccountId);
         //再查询工伤比例变更
-        List<SsAccountRatio> ssAccountRatioList = iSsAccountRatioService.queryRatioByAccountId(comAccountId);
+        List<SsAccountRatio> ssAccountRatioList = ssAccountRatioService.queryRatioByAccountId(comAccountId);
         //查询 账户关联的公司
         List<SsAccountComRelationBO> ssAccountComRelationBOList = iSsAccountComRelationService.queryByAccountId
             (comAccountId);

@@ -1,9 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAnnualAdjustCompanyService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAnnualAdjustCompanyService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsAnnualAdjustCompanyMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAnnualAdjustCompanyDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAnnualAdjustEmployeeDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAnnualAdjustCompany;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -19,7 +18,7 @@ import java.util.List;
  * </p>
  */
 @Service
-public class SsAnnualAdjustCompanyServiceImpl extends ServiceImpl<SsAnnualAdjustCompanyMapper, SsAnnualAdjustCompany> implements ISsAnnualAdjustCompanyService {
+public class SsAnnualAdjustCompanyServiceImpl extends ServiceImpl<SsAnnualAdjustCompanyMapper, SsAnnualAdjustCompany> implements SsAnnualAdjustCompanyService {
 
     @Override
     public PageRows<SsAnnualAdjustCompany> queryAnnualAdjustCompanyInPage(PageInfo pageInfo) {

@@ -3,10 +3,10 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISalCompanyService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAnnualAdjustCompanyEmpTempService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAnnualAdjustCompanyService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsFileImportService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SalCompanyService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAnnualAdjustCompanyEmpTempService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAnnualAdjustCompanyService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsFileImportService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAnnualAdjustCompanyDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAnnualAdjustCompanyEmpTempDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.*;
@@ -36,13 +36,13 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssAnnualAdjustCompany")
-public class SsAnnualAdjustCompanyController extends BasicController<ISsAnnualAdjustCompanyService> {
+public class SsAnnualAdjustCompanyController extends BasicController<SsAnnualAdjustCompanyService> {
     @Autowired
-    private ISalCompanyService iSalCompanyService;
+    private SalCompanyService salCompanyService;
     @Autowired
-    private ISsAnnualAdjustCompanyEmpTempService iSsAnnualAdjustCompanyEmpTempService;
+    private SsAnnualAdjustCompanyEmpTempService ssAnnualAdjustCompanyEmpTempService;
     @Autowired
-    private ISsFileImportService iSsFileImportService;
+    private SsFileImportService ssFileImportService;
 
     /**
      * 根据客户编号上传该客户所属雇员的年调收集信息
@@ -54,7 +54,7 @@ public class SsAnnualAdjustCompanyController extends BasicController<ISsAnnualAd
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         String companyId = multipartRequest.getParameter("companyId");
 
-        SalCompany company = iSalCompanyService.selectById(companyId);
+        SalCompany company = salCompanyService.selectById(companyId);
         if (company == null) {
             return ResultGenerator.genServerFailResult("客户记录不存在[客户编号：" + companyId + "]");
         }
@@ -114,8 +114,8 @@ public class SsAnnualAdjustCompanyController extends BasicController<ISsAnnualAd
             importParams.setNeedVerfiy(true);
             importParams.setVerifyHanlder(new MyExcelVerifyHandler(fieldLengthMap, setValueMap, skipFields, verifyConfigMap));
 
-            iSsFileImportService.executeExcelImport(true, conditionKey, importType, annualAdjustCompanyId,
-                importParams, iSsAnnualAdjustCompanyEmpTempService, files);
+            ssFileImportService.executeExcelImport(true, conditionKey, importType, annualAdjustCompanyId,
+                importParams, ssAnnualAdjustCompanyEmpTempService, files);
             afterInsert(annualAdjustCompanyId, companyId);
         } catch (Exception e) {
             e.printStackTrace(); // TODO log
@@ -145,12 +145,12 @@ public class SsAnnualAdjustCompanyController extends BasicController<ISsAnnualAd
         for (int i = 0; i < repeatingColumns.length; i++) {
             ssAnnualAdjustCompanyEmpTempDTO.setRepeatingColumn(repeatingColumns[i]);
             ssAnnualAdjustCompanyEmpTempDTO.setColumnCN(columnCNs[i]);
-            iSsAnnualAdjustCompanyEmpTempService.updateErrorMsgForRepeatingEmployeeId(ssAnnualAdjustCompanyEmpTempDTO);
+            ssAnnualAdjustCompanyEmpTempService.updateErrorMsgForRepeatingEmployeeId(ssAnnualAdjustCompanyEmpTempDTO);
         }
 
         ssAnnualAdjustCompanyEmpTempDTO.setCompanyId(companyId);
         ssAnnualAdjustCompanyEmpTempDTO.setColumnCN("雇员识别信息(客户编号、雇员编号、雇员姓名、社保序号)与年调库不符");
-        iSsAnnualAdjustCompanyEmpTempService.updateErrorMsgForNotExistsEmployee(ssAnnualAdjustCompanyEmpTempDTO);
+        ssAnnualAdjustCompanyEmpTempService.updateErrorMsgForNotExistsEmployee(ssAnnualAdjustCompanyEmpTempDTO);
     }
 }
 

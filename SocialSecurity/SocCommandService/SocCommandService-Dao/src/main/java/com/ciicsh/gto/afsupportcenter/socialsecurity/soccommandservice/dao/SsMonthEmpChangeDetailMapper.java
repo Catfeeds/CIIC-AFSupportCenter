@@ -4,6 +4,9 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMont
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthEmpChangeDetailBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthEmpChangeDetail;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.GsyExportOpt;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.YysExportOpt;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -37,5 +40,19 @@ public interface SsMonthEmpChangeDetailMapper extends BaseMapper<SsMonthEmpChang
      * @return   List<SsMonthEmpChangeDetail>
      */
     List<SsMonthEmpChangeDetail> serachMonthEmpChangeDetailPOByStatementId(Long statementId);
+
+    /**
+     * 养老、医疗和失业变更明细导出
+     * @param statementId 对账ID
+     * @return 返回变更明细数据
+     */
+    List<YysExportOpt> yysExportQuery(@Param("statementId")Long statementId);
+
+    /**
+     * 工伤和生育变更明细导出
+     * @param statementId 对账ID
+     * @return 返回变更明细数据
+     */
+    List<GsyExportOpt> gsyExportQuery(@Param("statementId")Long statementId);
 
 }

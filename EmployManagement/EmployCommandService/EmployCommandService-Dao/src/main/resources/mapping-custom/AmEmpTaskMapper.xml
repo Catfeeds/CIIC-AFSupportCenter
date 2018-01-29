@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao.AmEmpTaskMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMapDTO" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmpTaskBO">
+        <result column="employ_style" property="employStyle" />
+        <result column="handle_type" property="handleType" />
+        <result column="employ_property" property="employProperty" />
+        <result column="employ_way" property="employWay" />
+        <result column="yuliu_doc_num" property="yuliuDocNum" />
+        <result column="doc_num" property="docNum" />
+        <result column="title" property="title" />
+        <result column="employee_name" property="employeeName"/>
+        <result column="id_num" property="idNum"/>
+        <result column="license_code" property="licenseCode" />
+        <result column="service_center" property="serviceCenter"/>
+        <result column="custom" property="custom"/>
+    </resultMap>
+
+    <select id="queryAmEmpTask" resultMap="BaseResultMapDTO">
+        SELECT
+        a.emp_task_id,/*任务id */
+        a.employee_id,/*雇员id */
+        a.company_id,/*客户Id*/
+        b.employ_way,/*用工方式 */
+        b.employ_property,/*用工属性 */
+        c.yuliu_doc_num,/*预留档案编号 */
+        c.doc_num,/*档案编号 */
+        c.diaodang_feedback,/*调档反馈 */
+        c.employ_feedback_opt_date,/*用工反馈操作日期 */
+        c.diaodang_feedback_opt_date,/*调档反馈操作日期 */
+        d.employee_name,/*雇员姓名 */
+        d.id_num,/*证件号 */
+        e.title,/*公司名称 */
+        e.license_code,/*营业执照编号 */
+        h.service_center,/*服务中心 */
+        h.custom /*客服*/
+        FROM
+        am_emp_task a
+        LEFT JOIN
+        am_employment b
+        ON a.employee_id = b.employee_id
+        LEFT JOIN
+        am_archive c
+        ON b.employment_id = c.employment_id
+        LEFT JOIN
+        emp_employee  d
+        on  b.employee_id = d.employee_id
+        LEFT JOIN
+        sal_company e
+        on e.company_id = b.company_id
+        LEFT JOIN
+        am_resign f
+        on a.employee_id = f.employee_id
+        LEFT JOIN
+        am_archive_use g
+        on a.employee_id = g.employee_id
+        LEFT JOIN
+        sal_fc_company h on h.company_id = b.company_id
+where 1=1
+        <if test="taskStatus!=null">
+            and a.task_status = ${taskStatus}
+        </if>
+        <foreach collection="param" item="plid" open="" close="" separator="">
+          and  ${plid}
+        </foreach>
+    </select>
+
+    <select id="taskCount"  resultMap="BaseResultMapDTO">
+        SELECT
+        t.task_status,
+        COUNT(t.task_status) AS count
+        FROM
+
+        (
+        SELECT
+        a.task_status
+        FROM
+        am_emp_task a
+        LEFT JOIN
+        am_employment b
+        ON a.employee_id = b.employee_id
+        LEFT JOIN
+        am_archive c
+        ON b.employment_id = c.employment_id
+        LEFT JOIN
+        emp_employee  d
+        on  b.employee_id = d.employee_id
+        LEFT JOIN
+        sal_company e
+        on e.company_id = b.company_id
+        LEFT JOIN
+        am_resign f
+        on a.employee_id = f.employee_id
+        LEFT JOIN
+        am_archive_use g
+        on a.employee_id = g.employee_id
+        LEFT JOIN
+        sal_fc_company h on h.company_id = b.company_id
+        WHERE
+        1 = 1
+        <foreach collection = "param" item = "plid"  open=""  close=""  separator="" >
+          AND  ${ plid }
+        </foreach >
+        )  t
+        GROUP BY
+        t.task_status
+    </select>
+
+    <select id="queryAmEmploymentById" resultMap="BaseResultMapDTO">
+        SELECT
+        a.emp_task_id,/*任务id */
+        a.employee_id,/*雇员id */
+        b.employ_way,/*用工方式 */
+        b.employ_property,/*用工属性 */
+        c.yuliu_doc_num,/*预留档案编号 */
+        c.doc_num,/*档案编号 */
+        c.diaodang_feedback,/*调档反馈 */
+        c.employ_feedback_opt_date,/*用工反馈操作日期 */
+        c.diaodang_feedback_opt_date,/*调档反馈操作日期 */
+        d.employee_name,/*雇员姓名 */
+        d.id_num,/*证件号 */
+        e.title,/*公司名称 */
+        e.license_code
+        FROM
+        am_emp_task a
+        LEFT JOIN
+        am_employment b
+        ON a.employee_id = b.employee_id
+        LEFT JOIN
+        am_archive c
+        ON b.employment_id = c.employment_id
+        LEFT JOIN
+        emp_employee  d
+        on  b.employee_id = d.employee_id
+        LEFT JOIN
+        sal_company e
+        on e.company_id = b.company_id
+        LEFT JOIN
+        am_resign f
+        on a.employee_id = f.employee_id
+        where
+        b.employee_id = #{employeeId}
+    </select>
+
+</mapper>

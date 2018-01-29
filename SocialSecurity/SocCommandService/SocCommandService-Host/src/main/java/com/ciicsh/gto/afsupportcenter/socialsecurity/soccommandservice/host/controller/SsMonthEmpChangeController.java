@@ -3,7 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.statement.SsMonthEmpChangeDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthEmpChangeBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsMonthEmpChangeService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsMonthEmpChangeService;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssMonthEmpChange")
-public class SsMonthEmpChangeController  extends BasicController<ISsMonthEmpChangeService> {
+public class SsMonthEmpChangeController  extends BasicController<SsMonthEmpChangeService> {
     /**
      * <p>Description: 社保汇总基本数据查询</p>
      *

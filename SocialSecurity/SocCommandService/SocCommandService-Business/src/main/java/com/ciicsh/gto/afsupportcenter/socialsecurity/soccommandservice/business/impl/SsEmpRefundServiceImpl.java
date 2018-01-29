@@ -3,7 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpRefundBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpRefund;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpRefundMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpRefundService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpRefundService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ import java.util.List;
  * @since 2017-12-01
  */
 @Service
-public class SsEmpRefundServiceImpl extends ServiceImpl<SsEmpRefundMapper, SsEmpRefund> implements ISsEmpRefundService {
+public class SsEmpRefundServiceImpl extends ServiceImpl<SsEmpRefundMapper, SsEmpRefund> implements SsEmpRefundService {
 
     @Override
     public List<SsEmpRefundBO> selectRefundDetail(SsEmpRefundBO ssEmpRefundBO) {

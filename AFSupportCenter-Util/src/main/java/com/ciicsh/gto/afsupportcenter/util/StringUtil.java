@@ -64,6 +64,25 @@ public class StringUtil {
 
 		return (returnValue);
 	}
+
+
+    /**
+     * 返回yyyymmdd
+     * @param aDate
+     * @return
+     */
+    public static final String getDateString(Date aDate) {
+        SimpleDateFormat df = null;
+        String returnValue = "";
+
+        if (aDate != null) {
+            df = new SimpleDateFormat("yyyyMMdd");
+            returnValue = df.format(aDate);
+        }
+        return (returnValue);
+    }
+
+
 	/**
 	 * hxw 返回当前年
 	 *
