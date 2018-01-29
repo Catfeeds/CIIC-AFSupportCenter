@@ -5,7 +5,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAnnu
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAnnualAdjustAccountDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAnnualAdjustAccount;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsAnnualAdjustAccountMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAnnualAdjustAccountService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAnnualAdjustAccountService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
@@ -20,7 +20,7 @@ import java.util.List;
  * </p>
  */
 @Service
-public class SsAnnualAdjustAccountServiceImpl extends ServiceImpl<SsAnnualAdjustAccountMapper, SsAnnualAdjustAccount> implements ISsAnnualAdjustAccountService {
+public class SsAnnualAdjustAccountServiceImpl extends ServiceImpl<SsAnnualAdjustAccountMapper, SsAnnualAdjustAccount> implements SsAnnualAdjustAccountService {
 
     @Override
     public List<SsAnnualAdjustAccount> queryAnnualAdjustAccount(SsAnnualAdjustAccountDTO ssAnnualAdjustAccountDTO) {

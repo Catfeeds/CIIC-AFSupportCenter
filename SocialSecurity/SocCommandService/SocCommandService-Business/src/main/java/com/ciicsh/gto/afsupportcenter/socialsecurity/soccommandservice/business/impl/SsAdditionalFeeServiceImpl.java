@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAdditionalFee;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsAdditionalFeeMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAdditionalFeeService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAdditionalFeeService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2017-12-01
  */
 @Service
-public class SsAdditionalFeeServiceImpl extends ServiceImpl<SsAdditionalFeeMapper, SsAdditionalFee> implements ISsAdditionalFeeService {
+public class SsAdditionalFeeServiceImpl extends ServiceImpl<SsAdditionalFeeMapper, SsAdditionalFee> implements SsAdditionalFeeService {
 
 }

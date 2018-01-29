@@ -5,7 +5,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.s
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.statement.SsMonthEmpChangeDetailDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthEmpChangeBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthEmpChangeDetailBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsMonthEmpChangeDetailService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsMonthEmpChangeDetailService;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -27,7 +27,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssMonthEmpChangeDetail")
-public class SsMonthEmpChangeDetailController  extends BasicController<ISsMonthEmpChangeDetailService> {
+public class SsMonthEmpChangeDetailController  extends BasicController<SsMonthEmpChangeDetailService> {
     /**
      * <p>Description: 社保汇总明细数据展示</p>
      *

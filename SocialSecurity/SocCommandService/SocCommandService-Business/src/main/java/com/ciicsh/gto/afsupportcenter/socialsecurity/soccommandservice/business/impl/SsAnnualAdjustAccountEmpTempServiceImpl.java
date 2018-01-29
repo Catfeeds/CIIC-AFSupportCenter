@@ -3,7 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAnnualAdjustAccountEmpTempDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAnnualAdjustAccountEmpTemp;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsAnnualAdjustAccountEmpTempMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAnnualAdjustAccountEmpTempService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAnnualAdjustAccountEmpTempService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  * </p>
  */
 @Service
-public class SsAnnualAdjustAccountEmpTempServiceImpl extends ServiceImpl<SsAnnualAdjustAccountEmpTempMapper, SsAnnualAdjustAccountEmpTemp> implements ISsAnnualAdjustAccountEmpTempService {
+public class SsAnnualAdjustAccountEmpTempServiceImpl extends ServiceImpl<SsAnnualAdjustAccountEmpTempMapper, SsAnnualAdjustAccountEmpTemp> implements SsAnnualAdjustAccountEmpTempService {
 
     @Override
     public void updateErrorMsgForRepeatingEmployeeId(SsAnnualAdjustAccountEmpTempDTO ssAnnualAdjustAccountEmpTempDTO) {

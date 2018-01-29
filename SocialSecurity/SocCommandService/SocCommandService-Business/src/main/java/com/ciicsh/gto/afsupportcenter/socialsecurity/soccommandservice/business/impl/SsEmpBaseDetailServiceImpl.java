@@ -4,10 +4,8 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBaseDetail;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpBaseDetailMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpBaseDetailService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpBaseDetailService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBasePeriod;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +20,7 @@ import java.util.List;
  * @since 2017-12-01
  */
 @Service
-public class SsEmpBaseDetailServiceImpl extends ServiceImpl<SsEmpBaseDetailMapper, SsEmpBaseDetail> implements ISsEmpBaseDetailService {
+public class SsEmpBaseDetailServiceImpl extends ServiceImpl<SsEmpBaseDetailMapper, SsEmpBaseDetail> implements SsEmpBaseDetailService {
 
     @Override
     public void saveForSsEmpBaseDetail(List<SsEmpBaseDetail> details, SsEmpBaseDetail detail) {

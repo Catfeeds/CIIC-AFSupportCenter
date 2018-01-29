@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISalCompanyService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SalCompanyService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SalCompany;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -25,7 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/soccommandservice/salCompany")
 @Log("客户基础信息")
-public class SalCompanyController extends BasicController<ISalCompanyService> {
+public class SalCompanyController extends BasicController<SalCompanyService> {
 
     /**
      * 查询客户基础信息

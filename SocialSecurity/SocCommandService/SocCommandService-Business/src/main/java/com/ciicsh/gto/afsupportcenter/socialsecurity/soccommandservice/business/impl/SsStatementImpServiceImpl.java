@@ -5,7 +5,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.EmpEm
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsMonthEmpChangeMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsStatementMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsStatementImpMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsStatementImpService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsStatementImpService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.EmpEmployee;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthEmpChange;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsStatement;
@@ -25,7 +25,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -36,7 +35,7 @@ import java.util.stream.Collectors;
  * @since 2017-12-01
  */
 @Service
-public class SsStatementImpServiceImpl implements ISsStatementImpService {
+public class SsStatementImpServiceImpl implements SsStatementImpService {
 
     @Autowired
     private SsStatementMapper statementMapper;

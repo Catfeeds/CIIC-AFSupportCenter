@@ -45,15 +45,15 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssAnnualAdjustAccount")
-public class SsAnnualAdjustAccountController extends BasicController<ISsAnnualAdjustAccountService> {
+public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdjustAccountService> {
     @Autowired
-    private ISsComAccountService iSsComAccountService;
+    private SsComAccountService ssComAccountService;
     @Autowired
-    private ISsAnnualAdjustAccountEmpTempService iSsAnnualAdjustAccountEmpTempService;
+    private SsAnnualAdjustAccountEmpTempService ssAnnualAdjustAccountEmpTempService;
     @Autowired
-    private ISsAnnualAdjustAccountEmpService iSsAnnualAdjustAccountEmpService;
+    private SsAnnualAdjustAccountEmpService ssAnnualAdjustAccountEmpService;
     @Autowired
-    private ISsFileImportService iSsFileImportService;
+    private SsFileImportService ssFileImportService;
 
     /**
      * 分页查询年调社保账户信息
@@ -80,7 +80,7 @@ public class SsAnnualAdjustAccountController extends BasicController<ISsAnnualAd
         SsComAccount ssComAccount;
         Long comAccountId;
 
-        List<SsComAccount> ssComAccountList = iSsComAccountService.selectByMap(map);
+        List<SsComAccount> ssComAccountList = ssComAccountService.selectByMap(map);
         if (CollectionUtils.isEmpty(ssComAccountList)) {
             return ResultGenerator.genServerFailResult("社保账户记录不存在[社保账户编号：" + ssAccount + "]");
         } else {
@@ -151,8 +151,8 @@ public class SsAnnualAdjustAccountController extends BasicController<ISsAnnualAd
             for (int i = 0; i < 2; i++) {
                 importParams.setStartSheetIndex(i);
                 setValueMap.put("accountStatus", i + 1);
-                iSsFileImportService.executeExcelImport(i == 0, conditionKey, importType, annualAdjustAccountId,
-                    importParams, iSsAnnualAdjustAccountEmpTempService, files);
+                ssFileImportService.executeExcelImport(i == 0, conditionKey, importType, annualAdjustAccountId,
+                    importParams, ssAnnualAdjustAccountEmpTempService, files);
             }
             afterInsert(annualAdjustAccountId);
         } catch (Exception e) {
@@ -168,7 +168,7 @@ public class SsAnnualAdjustAccountController extends BasicController<ISsAnnualAd
         ssAnnualAdjustAccountEmpTempDTO.setAnnualAdjustAccountId(annualAdjustAccountId);
         ssAnnualAdjustAccountEmpTempDTO.setRepeatingColumn("ss_serial");
         ssAnnualAdjustAccountEmpTempDTO.setColumnCN("社保序号");
-        iSsAnnualAdjustAccountEmpTempService.updateErrorMsgForRepeatingEmployeeId(ssAnnualAdjustAccountEmpTempDTO);
+        ssAnnualAdjustAccountEmpTempService.updateErrorMsgForRepeatingEmployeeId(ssAnnualAdjustAccountEmpTempDTO);
     }
 
     @RequestMapping("/accountEmpAvgMonthSalaryExport")
@@ -198,7 +198,7 @@ public class SsAnnualAdjustAccountController extends BasicController<ISsAnnualAd
 
                 List<Map<String, Object>> mapList = new ArrayList<>();
                 ssAnnualAdjustAccountEmpDTO.setAccountStatus(i + 1);
-                list = iSsAnnualAdjustAccountEmpService.queryAnnualAdjustAccountEmp(ssAnnualAdjustAccountEmpDTO);
+                list = ssAnnualAdjustAccountEmpService.queryAnnualAdjustAccountEmp(ssAnnualAdjustAccountEmpDTO);
 
                 if (CollectionUtils.isEmpty(list)) {
                     map.put("empTotal", 0);
@@ -244,7 +244,7 @@ public class SsAnnualAdjustAccountController extends BasicController<ISsAnnualAd
         Long annualAdjustAccountId = ssAnnualAdjustAccountDTO.getComAccountId();
         Map<String, Object> map = new HashMap<>();
         map.put("annual_adjust_account_id", annualAdjustAccountId);
-        iSsAnnualAdjustAccountEmpService.deleteByMap(map);
+        ssAnnualAdjustAccountEmpService.deleteByMap(map);
         business.deleteById(annualAdjustAccountId);
         return ResultGenerator.genSuccessResult();
     }

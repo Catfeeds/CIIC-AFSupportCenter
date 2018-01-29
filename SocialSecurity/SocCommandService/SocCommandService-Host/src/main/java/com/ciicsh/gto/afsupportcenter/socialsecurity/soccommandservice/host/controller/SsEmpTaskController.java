@@ -14,7 +14,6 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
-import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -39,12 +38,12 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/soccommandservice/ssEmpTask")
 @Log("本地社保的雇员任务单")
-public class SsEmpTaskController extends BasicController<ISsEmpTaskService> {
+public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
 
     @Autowired
-    private ISsEmpTaskPeriodService ssEmpTaskPeriodService;
+    private SsEmpTaskPeriodService ssEmpTaskPeriodService;
     @Autowired
-    private ISsEmpRefundService ssEmpRefundService;
+    private SsEmpRefundService ssEmpRefundService;
     @Autowired
     private CommonApiUtils commonApiUtils;
     /**

@@ -5,7 +5,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.Commo
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.SsComTaskProxy;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComTaskBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsComTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
@@ -23,7 +23,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import utils.TaskCommonUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -44,7 +43,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssComTask")
-public class SsComTaskController extends BasicController<ISsComTaskService> implements SsComTaskProxy {
+public class SsComTaskController extends BasicController<SsComTaskService> implements SsComTaskProxy {
     @Autowired
     private CommonApiUtils commonApiUtils;
     @Log("查询未处理企业任务单")

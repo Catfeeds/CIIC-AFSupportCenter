@@ -1,7 +1,7 @@
 package com.ciicsh.gto.test.service;
 
 import com.alibaba.fastjson.JSON;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpArchiveService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpArchiveService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.SocialSecurityApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class SsEmpArchiveServiceTest {
 
     @Autowired
-    ISsEmpArchiveService service;
+    SsEmpArchiveService service;
 
     @Test
     public void queryByEmpTaskId() {

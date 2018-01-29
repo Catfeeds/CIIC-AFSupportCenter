@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAnnualAdjustEmployeeService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAnnualAdjustEmployeeService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsAnnualAdjustEmployeeMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAnnualAdjustEmployeeDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAnnualAdjustEmployee;
@@ -18,7 +18,7 @@ import java.util.List;
  * </p>
  */
 @Service
-public class SsAnnualAdjustEmployeeServiceImpl extends ServiceImpl<SsAnnualAdjustEmployeeMapper, SsAnnualAdjustEmployee> implements ISsAnnualAdjustEmployeeService {
+public class SsAnnualAdjustEmployeeServiceImpl extends ServiceImpl<SsAnnualAdjustEmployeeMapper, SsAnnualAdjustEmployee> implements SsAnnualAdjustEmployeeService {
 
     @Override
     public List<SsAnnualAdjustEmployee> queryAnnualAdjustEmployee(SsAnnualAdjustEmployeeDTO ssAnnualAdjustEmployeeDTO) {

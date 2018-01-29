@@ -1,10 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthChargeItemBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthEmpChangeDetailBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthChargeItem;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsMonthChargeItemMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsMonthChargeItemService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsMonthChargeItemService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,7 @@ import java.util.*;
  * @since 2017-12-23
  */
 @Service
-public class SsMonthChargeItemServiceImpl extends ServiceImpl<SsMonthChargeItemMapper, SsMonthChargeItem> implements ISsMonthChargeItemService {
+public class SsMonthChargeItemServiceImpl extends ServiceImpl<SsMonthChargeItemMapper, SsMonthChargeItem> implements SsMonthChargeItemService {
 
     @Override
     public List<SsMonthChargeItemBO> queryEmlpyeeMonthFeeDetail(SsMonthChargeItemBO ssMonthChargeItemBO) {

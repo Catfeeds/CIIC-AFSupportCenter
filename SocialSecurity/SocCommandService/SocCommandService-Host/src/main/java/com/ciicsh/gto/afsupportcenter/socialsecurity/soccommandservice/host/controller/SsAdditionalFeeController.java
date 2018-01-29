@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAdditionalFeeService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAdditionalFeeService;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssAdditionalFee")
-public class SsAdditionalFeeController extends BasicController<ISsAdditionalFeeService>{
+public class SsAdditionalFeeController extends BasicController<SsAdditionalFeeService>{
 
 }
 

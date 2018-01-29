@@ -5,8 +5,8 @@ import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAnnualAdjustAccountEmpBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAnnualAdjustAccountEmpService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAnnualAdjustAccountEmpTempService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAnnualAdjustAccountEmpService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAnnualAdjustAccountEmpTempService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAnnualAdjustAccountEmpTempDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAnnualAdjustAccountEmpTemp;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
@@ -35,17 +35,17 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssAnnualAdjustAccountEmp")
-public class SsAnnualAdjustAccountEmpController extends BasicController<ISsAnnualAdjustAccountEmpService> {
+public class SsAnnualAdjustAccountEmpController extends BasicController<SsAnnualAdjustAccountEmpService> {
 
     @Autowired
-    ISsAnnualAdjustAccountEmpTempService iSsAnnualAdjustAccountEmpTempService;
+    SsAnnualAdjustAccountEmpTempService ssAnnualAdjustAccountEmpTempService;
 
     @RequestMapping("/annualAdjustAccountEmpTempQuery")
     public JsonResult<PageRows> annualAdjustAccountEmpTempQuery(PageInfo pageInfo) {
         SsAnnualAdjustAccountEmpTempDTO ssAnnualAdjustAccountEmpTempDTO = pageInfo.toJavaObject(SsAnnualAdjustAccountEmpTempDTO.class);
         Map<String, Object> queryCondition = new HashMap<>();
         queryCondition.put("annual_adjust_account_id", ssAnnualAdjustAccountEmpTempDTO.getAnnualAdjustAccountId());
-        PageRows<SsAnnualAdjustAccountEmpTemp> result = PageKit.doSelectPage(pageInfo, () -> iSsAnnualAdjustAccountEmpTempService.selectByMap(queryCondition));
+        PageRows<SsAnnualAdjustAccountEmpTemp> result = PageKit.doSelectPage(pageInfo, () -> ssAnnualAdjustAccountEmpTempService.selectByMap(queryCondition));
         return JsonResultKit.of(result);
     }
 

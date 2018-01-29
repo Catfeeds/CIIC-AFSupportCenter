@@ -1,13 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAnnualAdjustCompanyEmpBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAnnualAdjustCompanyEmpService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAnnualAdjustCompanyEmpTempService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAnnualAdjustEmployeeService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAnnualAdjustCompanyEmpService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAnnualAdjustCompanyEmpTempService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAnnualAdjustEmployeeService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAnnualAdjustCompanyEmpDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAnnualAdjustCompanyEmpTempDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAnnualAdjustEmployeeDTO;
@@ -24,10 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -40,12 +37,12 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssAnnualAdjustCompanyEmp")
-public class SsAnnualAdjustCompanyEmpController extends BasicController<ISsAnnualAdjustCompanyEmpService> {
+public class SsAnnualAdjustCompanyEmpController extends BasicController<SsAnnualAdjustCompanyEmpService> {
 
     @Autowired
-    private ISsAnnualAdjustEmployeeService iSsAnnualAdjustEmployeeService;
+    private SsAnnualAdjustEmployeeService ssAnnualAdjustEmployeeService;
     @Autowired
-    private ISsAnnualAdjustCompanyEmpTempService iSsAnnualAdjustCompanyEmpTempService;
+    private SsAnnualAdjustCompanyEmpTempService ssAnnualAdjustCompanyEmpTempService;
 
     /**
      * 分页查询年调客户雇员信息
@@ -80,7 +77,7 @@ public class SsAnnualAdjustCompanyEmpController extends BasicController<ISsAnnua
             ssAnnualAdjustEmployeeDTO.setEmployeeId(ssAnnualAdjustCompanyEmpDTO.getEmployeeId());
             ssAnnualAdjustEmployeeDTO.setIdNum(ssAnnualAdjustCompanyEmpDTO.getIdNum());
             ssAnnualAdjustEmployeeDTO.setSsSerial(ssAnnualAdjustCompanyEmpDTO.getSsSerial());
-            List<SsAnnualAdjustEmployee> originList = iSsAnnualAdjustEmployeeService.queryAnnualAdjustEmployee(ssAnnualAdjustEmployeeDTO);
+            List<SsAnnualAdjustEmployee> originList = ssAnnualAdjustEmployeeService.queryAnnualAdjustEmployee(ssAnnualAdjustEmployeeDTO);
 
             if (CollectionUtils.isNotEmpty(originList)) {
                 if (originList.size() == 1) {
@@ -157,7 +154,7 @@ public class SsAnnualAdjustCompanyEmpController extends BasicController<ISsAnnua
         SsAnnualAdjustCompanyEmpTempDTO ssAnnualAdjustCompanyEmpTempDTO = pageInfo.toJavaObject(SsAnnualAdjustCompanyEmpTempDTO.class);
         Map<String, Object> queryCondition = new HashMap<>();
         queryCondition.put("annual_adjust_company_id", ssAnnualAdjustCompanyEmpTempDTO.getAnnualAdjustCompanyId());
-        PageRows<SsAnnualAdjustCompanyEmpTemp> result = PageKit.doSelectPage(pageInfo, () -> iSsAnnualAdjustCompanyEmpTempService.selectByMap(queryCondition));
+        PageRows<SsAnnualAdjustCompanyEmpTemp> result = PageKit.doSelectPage(pageInfo, () -> ssAnnualAdjustCompanyEmpTempService.selectByMap(queryCondition));
         return JsonResultKit.of(result);
     }
 

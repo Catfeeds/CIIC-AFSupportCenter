@@ -1,10 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.CommonApiUtils;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpTaskMapper;
@@ -14,14 +12,11 @@ import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
-import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
-import com.ciicsh.gto.commonservice.util.dto.Result;
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import utils.TaskCommonUtils;
 
 import java.math.BigDecimal;
@@ -38,27 +33,27 @@ import java.util.*;
  * @since 2017-12-01
  */
 @Service
-public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask>  implements ISsEmpTaskService{
+public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask>  implements SsEmpTaskService {
     @Autowired
-    ISsEmpTaskPeriodService ssEmpTaskPeriodService;
+    SsEmpTaskPeriodService ssEmpTaskPeriodService;
 
     @Autowired
-    ISsEmpBasePeriodService ssEmpBasePeriodService;
+    SsEmpBasePeriodService ssEmpBasePeriodService;
 
     @Autowired
-    ISsEmpBaseDetailService ssEmpBaseDetailService;
+    SsEmpBaseDetailService ssEmpBaseDetailService;
 
     @Autowired
-    ISsEmpArchiveService ssEmpArchiveService;
+    SsEmpArchiveService ssEmpArchiveService;
 
     @Autowired
-    ISsEmpTaskFrontService ssEmpTaskFrontService;
+    SsEmpTaskFrontService ssEmpTaskFrontService;
     @Autowired
-    ISsEmpBaseAdjustService ssEmpBaseAdjustService;
+    SsEmpBaseAdjustService ssEmpBaseAdjustService;
     @Autowired
-    ISsEmpBaseAdjustDetailService ssEmpBaseAdjustDetailService;
+    SsEmpBaseAdjustDetailService ssEmpBaseAdjustDetailService;
     @Autowired
-    ISsEmpRefundService ssEmpRefundService;
+    SsEmpRefundService ssEmpRefundService;
     @Autowired
     CommonApiUtils commonApiUtils;
     //进位方式

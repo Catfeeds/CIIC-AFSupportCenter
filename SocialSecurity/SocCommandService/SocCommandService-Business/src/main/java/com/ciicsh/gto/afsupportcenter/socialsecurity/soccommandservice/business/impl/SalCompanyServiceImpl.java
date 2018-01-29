@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISalCompanyService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SalCompanyService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SalCompanyMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SalCompany;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  * @since 2017-12-11
  */
 @Service
-public class SalCompanyServiceImpl extends ServiceImpl<SalCompanyMapper, SalCompany> implements ISalCompanyService {
+public class SalCompanyServiceImpl extends ServiceImpl<SalCompanyMapper, SalCompany> implements SalCompanyService {
 
     @Override
     public PageRows<SalCompany> companyQuery(PageInfo pageInfo) {

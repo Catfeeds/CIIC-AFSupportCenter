@@ -1,16 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.messageBus;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsComTaskService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskFrontService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsComTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpTaskFrontService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.AFEmpSocialDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.AFEmployeeCompanyDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskFront;
-import com.ciicsh.gto.afsupportcenter.util.web.convert.StringToLocalDateConverter;
-import com.ciicsh.gto.sheetservice.api.SheetServiceProxy;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,15 +15,11 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by songjt on 17/12/18.
@@ -38,11 +30,11 @@ public class KafkaReceiver {
     private final static Logger logger = LoggerFactory.getLogger(KafkaReceiver.class);
 
     @Autowired
-    private ISsEmpTaskService ssEmpTaskService;
+    private SsEmpTaskService ssEmpTaskService;
     @Autowired
-    private ISsEmpTaskFrontService ssEmpTaskFrontService;
+    private SsEmpTaskFrontService ssEmpTaskFrontService;
     @Autowired
-    private ISsComTaskService ssComTaskService;
+    private SsComTaskService ssComTaskService;
 
 //    @Autowired
 //    private SheetServiceProxy sheetServiceProxy;

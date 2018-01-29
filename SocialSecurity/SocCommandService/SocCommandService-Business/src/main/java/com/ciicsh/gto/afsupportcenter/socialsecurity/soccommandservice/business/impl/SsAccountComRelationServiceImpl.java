@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAccountComRelationBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAccountComRelationService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAccountComRelationService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsAccountComRelationMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @Service
 public class SsAccountComRelationServiceImpl extends ServiceImpl<SsAccountComRelationMapper, SsAccountComRelation>
-    implements ISsAccountComRelationService {
+    implements SsAccountComRelationService {
     /**
      * 通过账户ID查询
      *

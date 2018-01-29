@@ -4,7 +4,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAnn
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAnnualAdjustCompanyEmpTempDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAnnualAdjustCompanyEmp;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsAnnualAdjustCompanyEmpMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsAnnualAdjustCompanyEmpService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAnnualAdjustCompanyEmpService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
@@ -22,7 +22,7 @@ import java.util.Map;
  * </p>
  */
 @Service
-public class SsAnnualAdjustCompanyEmpServiceImpl extends ServiceImpl<SsAnnualAdjustCompanyEmpMapper, SsAnnualAdjustCompanyEmp> implements ISsAnnualAdjustCompanyEmpService {
+public class SsAnnualAdjustCompanyEmpServiceImpl extends ServiceImpl<SsAnnualAdjustCompanyEmpMapper, SsAnnualAdjustCompanyEmp> implements SsAnnualAdjustCompanyEmpService {
 
     /**
      * 分页查询年调客户雇员信息

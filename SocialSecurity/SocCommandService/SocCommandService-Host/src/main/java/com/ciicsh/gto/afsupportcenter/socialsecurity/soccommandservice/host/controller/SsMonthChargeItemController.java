@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthChargeItemBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsMonthChargeItemService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsMonthChargeItemService;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -25,7 +25,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/api/soccommandservice/ssMonthChargeItem")
-public class SsMonthChargeItemController extends BasicController<ISsMonthChargeItemService>{
+public class SsMonthChargeItemController extends BasicController<SsMonthChargeItemService>{
 
     @Log("雇员月度缴费明细")
     @RequestMapping("/queryEmlpyeeMonthFeeDetail")
