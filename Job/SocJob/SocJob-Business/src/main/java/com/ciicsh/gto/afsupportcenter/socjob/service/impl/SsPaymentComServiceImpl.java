@@ -474,8 +474,8 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         List<SsMonthChargeExt> yysMonthChargeExts = new ArrayList<>();
         List<SsMonthChargeExt> gsyMonthChargeExts = new ArrayList<>();
         if(null != monthChargeExts && monthChargeExts.size()>0){
-            yysMonthChargeExts = monthChargeExts.stream().filter(x->x.getSsType().equals("1")||x.getSsType().equals("2")||x.getSsType().equals("5")).collect(Collectors.toList());
-            gsyMonthChargeExts = monthChargeExts.stream().filter(x->x.getSsType().equals("3")||x.getSsType().equals("4")).collect(Collectors.toList());
+            yysMonthChargeExts = monthChargeExts.stream().filter(x->x.getSsType().equals("DIT00042")||x.getSsType().equals("DIT00043")||x.getSsType().equals("DIT00046")).collect(Collectors.toList());
+            gsyMonthChargeExts = monthChargeExts.stream().filter(x->x.getSsType().equals("DIT00044")||x.getSsType().equals("DIT00045")).collect(Collectors.toList());
         }
 
         if(null != yysMonthChargeExts && yysMonthChargeExts.size() > 0){
@@ -670,7 +670,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         paymentDetail.setPaymentItemName(this.paySeqTable().get(seq));
 
         //养老
-        List<SsMonthChargeExt> pensions = monthChargeExts.stream().filter(x->x.getSsType().equals("1")).collect(Collectors.toList());
+        List<SsMonthChargeExt> pensions = monthChargeExts.stream().filter(x->x.getSsType().equals("DIT00042")).collect(Collectors.toList());
         if(null != pensions && pensions.size() > 0){
             BigDecimal pensionAmount = pensions.stream().map(p->p.getComAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
             paymentDetail.setBasePensionAmount(pensionAmount);
@@ -679,7 +679,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
             paymentDetail.setBasePensionAmount(BigDecimal.valueOf(0));
         }
         //医疗
-        List<SsMonthChargeExt> medicals = monthChargeExts.stream().filter(x->x.getSsType().equals("2")).collect(Collectors.toList());
+        List<SsMonthChargeExt> medicals = monthChargeExts.stream().filter(x->x.getSsType().equals("DIT00043")).collect(Collectors.toList());
         if(null != medicals && medicals.size() > 0){
             BigDecimal medicalAmount = medicals.stream().map(p->p.getComAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
             paymentDetail.setBaseMedicalAmount(medicalAmount);
@@ -688,7 +688,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
             paymentDetail.setBaseMedicalAmount(BigDecimal.valueOf(0));
         }
         //失业
-        List<SsMonthChargeExt> unemployments = monthChargeExts.stream().filter(x->x.getSsType().equals("5")).collect(Collectors.toList());
+        List<SsMonthChargeExt> unemployments = monthChargeExts.stream().filter(x->x.getSsType().equals("DIT00046")).collect(Collectors.toList());
         if(null != unemployments && unemployments.size() > 0){
             BigDecimal unemploymentAmount = unemployments.stream().map(p->p.getComAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
             paymentDetail.setUnemploymentAmount(unemploymentAmount);
@@ -697,7 +697,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
             paymentDetail.setUnemploymentAmount(BigDecimal.valueOf(0));
         }
         //工伤
-        List<SsMonthChargeExt> accidents = monthChargeExts.stream().filter(x->x.getSsType().equals("3")).collect(Collectors.toList());
+        List<SsMonthChargeExt> accidents = monthChargeExts.stream().filter(x->x.getSsType().equals("DIT00044")).collect(Collectors.toList());
         if(null != accidents && accidents.size() > 0){
             BigDecimal accidentAmount = accidents.stream().map(p->p.getComAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
             paymentDetail.setAccidentAmount(accidentAmount);
@@ -706,7 +706,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
             paymentDetail.setAccidentAmount(BigDecimal.valueOf(0));
         }
         //生育
-        List<SsMonthChargeExt> maternitys = monthChargeExts.stream().filter(x->x.getSsType().equals("4")).collect(Collectors.toList());
+        List<SsMonthChargeExt> maternitys = monthChargeExts.stream().filter(x->x.getSsType().equals("DIT00045")).collect(Collectors.toList());
         if(null != maternitys && maternitys.size() > 0){
             BigDecimal maternityAmount = maternitys.stream().map(p->p.getComAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
             paymentDetail.setMaternityAmount(maternityAmount);
@@ -737,7 +737,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         paymentDetail.setPaymentItemName(this.paySeqTable().get(seq));
 
         //养老
-        List<SsMonthChargeExt> pensions = monthChargeExts.stream().filter(x->x.getSsType().equals("1")).collect(Collectors.toList());
+        List<SsMonthChargeExt> pensions = monthChargeExts.stream().filter(x->x.getSsType().equals("DIT00042")).collect(Collectors.toList());
         if(null != pensions && pensions.size() > 0){
             BigDecimal pensionAmount = pensions.stream().map(p->p.getEmpAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
             paymentDetail.setBasePensionAmount(pensionAmount);
@@ -746,7 +746,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
             paymentDetail.setBasePensionAmount(BigDecimal.valueOf(0));
         }
         //医疗
-        List<SsMonthChargeExt> medicals = monthChargeExts.stream().filter(x->x.getSsType().equals("2")).collect(Collectors.toList());
+        List<SsMonthChargeExt> medicals = monthChargeExts.stream().filter(x->x.getSsType().equals("DIT00043")).collect(Collectors.toList());
         if(null != medicals && medicals.size() > 0){
             BigDecimal medicalAmount = medicals.stream().map(p->p.getEmpAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
             paymentDetail.setBaseMedicalAmount(medicalAmount);
@@ -755,7 +755,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
             paymentDetail.setBaseMedicalAmount(BigDecimal.valueOf(0));
         }
         //失业
-        List<SsMonthChargeExt> unemployments = monthChargeExts.stream().filter(x->x.getSsType().equals("5")).collect(Collectors.toList());
+        List<SsMonthChargeExt> unemployments = monthChargeExts.stream().filter(x->x.getSsType().equals("DIT00046")).collect(Collectors.toList());
         if(null != unemployments && unemployments.size() > 0){
             BigDecimal unemploymentAmount = unemployments.stream().map(p->p.getEmpAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
             paymentDetail.setUnemploymentAmount(unemploymentAmount);
@@ -764,7 +764,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
             paymentDetail.setUnemploymentAmount(BigDecimal.valueOf(0));
         }
         //工伤
-        List<SsMonthChargeExt> accidents = monthChargeExts.stream().filter(x->x.getSsType().equals("3")).collect(Collectors.toList());
+        List<SsMonthChargeExt> accidents = monthChargeExts.stream().filter(x->x.getSsType().equals("DIT00044")).collect(Collectors.toList());
         if(null != accidents && accidents.size() > 0){
             BigDecimal accidentAmount = accidents.stream().map(p->p.getEmpAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
             paymentDetail.setAccidentAmount(accidentAmount);
@@ -773,7 +773,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
             paymentDetail.setAccidentAmount(BigDecimal.valueOf(0));
         }
         //生育
-        List<SsMonthChargeExt> maternitys = monthChargeExts.stream().filter(x->x.getSsType().equals("4")).collect(Collectors.toList());
+        List<SsMonthChargeExt> maternitys = monthChargeExts.stream().filter(x->x.getSsType().equals("DIT00045")).collect(Collectors.toList());
         if(null != maternitys && maternitys.size() > 0){
             BigDecimal maternityAmount = maternitys.stream().map(p->p.getEmpAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y));
             paymentDetail.setMaternityAmount(maternityAmount);

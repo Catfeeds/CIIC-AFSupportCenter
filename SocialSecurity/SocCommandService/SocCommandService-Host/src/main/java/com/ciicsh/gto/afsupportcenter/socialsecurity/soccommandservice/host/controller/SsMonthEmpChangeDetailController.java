@@ -6,14 +6,22 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.s
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthEmpChangeBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthEmpChangeDetailBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.ISsMonthEmpChangeDetailService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.GsyExportOpt;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.StatementExportOpt;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.YysExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -50,6 +58,23 @@ public class SsMonthEmpChangeDetailController  extends BasicController<ISsMonthE
         result.setData(resultDtoList);
 
         return result;
+    }
+    @Log("变更总汇明细(养保、医保、失保)导出")
+    @PostMapping("/yysExport")
+    public void yysExport(HttpServletResponse response, @RequestParam Long statementId){
+        Date date = new Date();
+        String fileNme = "YYS"+ StringUtil.getDateString(date)+".xls";
+        List<YysExportOpt> opts = business.yysExportQuery(statementId);
+        ExcelUtil.exportExcel(opts,"","",StatementExportOpt.class,fileNme,response);
+    }
+
+    @Log("变更总汇明细(养保、医保、失保)导出")
+    @PostMapping("/gsyExport")
+    public void gsyExport(HttpServletResponse response,@RequestParam Long statementId){
+        Date date = new Date();
+        String fileNme = "GSY"+ StringUtil.getDateString(date)+".xls";
+        List<GsyExportOpt> opts = business.gsyExportQuery(statementId);
+        ExcelUtil.exportExcel(opts,"","",StatementExportOpt.class,fileNme,response);
     }
 }
 
