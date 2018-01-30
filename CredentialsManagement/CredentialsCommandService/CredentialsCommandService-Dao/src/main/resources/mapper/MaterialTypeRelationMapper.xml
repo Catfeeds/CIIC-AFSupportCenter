@@ -7,6 +7,7 @@
 		<id column="material_type_relation_id" property="materialTypeRelationId" />
 		<result column="credentials_type" property="credentialsType" />
 		<result column="credentials_deal_type" property="credentialsDealType" />
+        <result column="level" property="level"></result>
 		<result column="material_id" property="materialId" />
 		<result column="material_name" property="materialName" />
 		<result column="material_level" property="materialLevel" />
@@ -34,6 +35,7 @@
         material_type_relation_id,
         credentials_type,
         credentials_deal_type,
+        level,
         material_id,
         material_name,
         material_level,

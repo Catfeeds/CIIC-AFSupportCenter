@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Author: guwei
@@ -34,6 +33,14 @@ public class OrgPolicyController {
     @Autowired
     private OrgPolicyService orgPolicyService;
 
+    /**
+     * 办理机构政策维护列表页数据
+     * @param pageNum
+     * @param pageSize
+     * @param name
+     * @param type
+     * @return
+     */
     @GetMapping("/find")
     public JsonResult getPage(Integer pageNum, Integer pageSize, String name, Integer type){
         Page page = new Page(PageUtil.setPageNum(pageNum), PageUtil.setPageSize(pageSize));
@@ -54,6 +61,11 @@ public class OrgPolicyController {
         return JsonResult.success(page);
     }
 
+    /**
+     * 保存或更新政策信息
+     * @param orgPolicyPageDTO
+     * @return
+     */
     @PostMapping("/saveOrUpdate")
     public JsonResult saveOrUpdateItem(@RequestBody OrgPolicyPageDTO orgPolicyPageDTO){
         OrgPolicy orgPolicy = new OrgPolicy();
@@ -68,6 +80,11 @@ public class OrgPolicyController {
         return JsonResult.success(orgPolicyService.insertOrUpdate(orgPolicy));
     }
 
+    /**
+     * 删除政策信息
+     * @param id
+     * @return
+     */
     @DeleteMapping("/delete/{id}")
     public JsonResult deleteItem(@PathVariable("id") Integer id){
         return JsonResult.success(orgPolicyService.deleteById(id));
