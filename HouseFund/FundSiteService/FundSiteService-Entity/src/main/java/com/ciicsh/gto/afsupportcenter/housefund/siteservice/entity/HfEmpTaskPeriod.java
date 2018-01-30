@@ -223,7 +223,7 @@ public class HfEmpTaskPeriod implements Serializable {
 
 	@Override
 	public String toString() {
-		return "HfEmpTaskPeriod{" +
+		return "HfEmpTaskPeriodBo{" +
 			", empTaskPeriodId=" + empTaskPeriodId +
 			", empTaskId=" + empTaskId +
 			", baseAmount=" + baseAmount +
