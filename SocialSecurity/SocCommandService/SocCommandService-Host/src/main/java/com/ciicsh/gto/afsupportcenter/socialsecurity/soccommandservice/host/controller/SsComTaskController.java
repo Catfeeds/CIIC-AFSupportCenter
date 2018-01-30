@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import utils.TaskCommonUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -244,8 +245,8 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
             dynamicExtendMap.put("startMonth", null == ssComTaskBO.getStartMonth() ? "" : ssComTaskBO.getStartMonth()
                 .toString());
         } else if ("2".equals(ssComTaskBO.getChangeContentValue())) {
-            dynamicExtendMap.put("paymentWay", null == ssComTaskBO.getPaymentWay() ? "" : ssComTaskBO.getPaymentWay());
-            dynamicExtendMap.put("billReceiver", null == ssComTaskBO.getBillReceiver() ? "" : ssComTaskBO.getBillReceiver());
+            dynamicExtendMap.put("paymentWay", null == ssComTaskBO.getPaymentWay() ? "" : String.valueOf(ssComTaskBO.getPaymentWay()));
+            dynamicExtendMap.put("billReceiver", null == ssComTaskBO.getBillReceiver() ? "" :  String.valueOf(ssComTaskBO.getBillReceiver()));
         } else if ("3".equals(ssComTaskBO.getChangeContentValue())) {
             dynamicExtendMap.put("comAccountName", null == ssComTaskBO.getComAccountName() ? "" : ssComTaskBO
                 .getComAccountName());
@@ -411,7 +412,7 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
             ssAccountRatioInsert.setComAccountId(ssComTaskBO.getComAccountId());
             ssAccountRatioInsert.setIndustryCategory(ssComTaskBO.getBelongsIndustry());
             ssAccountRatioInsert.setComRatio(new BigDecimal(ssComTaskBO.getCompanyWorkInjuryPercentage()));
-            String monthInsert = getFormatDate(ssComTaskBO.getStartMonth());
+            String monthInsert = ssComTaskBO.getStartMonth();
             ssAccountRatioInsert.setStartMonth(monthInsert);
             ssAccountRatioInsert.setActive(true);
             ssAccountRatioInsert.setCreatedBy("xsj");
@@ -420,8 +421,7 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
             ssAccountRatioInsert.setModifiedTime(LocalDateTime.now());
             SsAccountRatioList.add(0, ssAccountRatioInsert);
             //原来数据只需要修改endMonth 在原来的月份上减一月
-            LocalDate startDate = ssComTaskBO.getStartMonth().minusMonths(1);
-            String monthUpdate = getFormatDate(startDate);
+            String monthUpdate = TaskCommonUtils.getLastMonth(Integer.valueOf(ssComTaskBO.getStartMonth()));
             ssAccountRatioUpdate.setComAccountId(ssComTaskBO.getComAccountId());
             ssAccountRatioUpdate.setEndMonth(monthUpdate);
             ssAccountRatioUpdate.setModifiedBy("xsj");
@@ -431,8 +431,8 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
             return SsAccountRatioList;
         } else if ("2".equals(ssComTaskBO.getChangeContentValue())) {//支付方式变更
             ssComAccount.setComAccountId(ssComTaskBO.getComAccountId());
-            ssComAccount.setPaymentWay(Integer.valueOf(ssComTaskBO.getPaymentWay()));
-            ssComAccount.setBillReceiver(Integer.valueOf(ssComTaskBO.getBillReceiver()));
+            ssComAccount.setPaymentWay(ssComTaskBO.getPaymentWay());
+            ssComAccount.setBillReceiver(ssComTaskBO.getBillReceiver());
 
             return ssComAccount;
         } else if ("3".equals(ssComTaskBO.getChangeContentValue())) {//公司名称变更
@@ -443,20 +443,6 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
             return null;
         }
     }
-
-    //获得格式化的日期 格式为 210807
-    public String getFormatDate(LocalDate date) {
-        StringBuffer sb = new StringBuffer();
-        sb.append(date.getYear());
-        int month = date.getMonth().getValue();
-        if (month > 9) {
-            sb.append(month);
-        } else {
-            sb.append(0).append(month);
-        }
-        return sb.toString();
-    }
-
     /**
      * 企业社保账户开户、变更、转移、转出的 创建任务单接口
      *
