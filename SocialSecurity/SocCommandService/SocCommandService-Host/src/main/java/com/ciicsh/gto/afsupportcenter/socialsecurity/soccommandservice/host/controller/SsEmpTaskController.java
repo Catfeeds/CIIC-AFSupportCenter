@@ -185,7 +185,18 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         LocalDate now = LocalDate.now();
         StringBuffer handleMonth = TaskCommonUtils.getMonthStr(now);
         empTaskBatchParameter.getSsEmpTaskBOList().forEach(p->{
-            p.setTaskStatus(TaskStatusConst.PROCESSING);
+            //1新进  2  转入 3  调整 4 补缴 5 转出 6封存 7退账
+            if(1==p.getTaskCategory() || 2==p.getTaskCategory()){
+                String ssSerial =business.selectMaxSsSerialByTaskId(p.getEmpTaskId());
+                //社保序号
+                p.setEmpSsSerial(ssSerial);
+            }
+            //退账 表示已完成
+            if(7==p.getTaskCategory()){
+                p.setTaskStatus(TaskStatusConst.FINISH);
+            }else{
+                p.setTaskStatus(TaskStatusConst.PROCESSING);
+            }
             //讨论说 批量办理的 办理月份为当前月份
             p.setHandleMonth(handleMonth.toString());
             p.setModifiedTime(LocalDateTime.now());
