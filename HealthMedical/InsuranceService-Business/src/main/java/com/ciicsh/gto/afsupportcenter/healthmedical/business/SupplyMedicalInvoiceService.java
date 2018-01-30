@@ -13,4 +13,10 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.SupplyMedicalInvoi
  */
 public interface SupplyMedicalInvoiceService extends IService<SupplyMedicalInvoice> {
 
+    /**
+     * 根据条件删除
+     *
+     * @param datilEntity
+     */
+    void deleteByEntity(SupplyMedicalInvoice datilEntity);
 }

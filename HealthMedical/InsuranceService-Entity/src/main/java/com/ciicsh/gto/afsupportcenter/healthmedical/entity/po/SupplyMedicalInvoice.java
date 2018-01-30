@@ -31,7 +31,7 @@ public class SupplyMedicalInvoice extends Model<SupplyMedicalInvoice> {
      * 受理单编号
      */
     @TableField("acceptance_id")
-    private Integer acceptanceId;
+    private String acceptanceId;
     /**
      * 就诊机构
      */
@@ -90,8 +90,8 @@ public class SupplyMedicalInvoice extends Model<SupplyMedicalInvoice> {
     /**
      * 分类自付金额
      */
-    @TableField("classified_self_payment_amount")
-    private BigDecimal classifiedSelfPaymentAmount;
+    @TableField("cs_payment_amount")
+    private BigDecimal csPaymentAmount;
     /**
      * 公司理赔金额
      */
@@ -147,11 +147,11 @@ public class SupplyMedicalInvoice extends Model<SupplyMedicalInvoice> {
         this.invoiceId = invoiceId;
     }
 
-    public Integer getAcceptanceId() {
+    public String getAcceptanceId() {
         return acceptanceId;
     }
 
-    public void setAcceptanceId(Integer acceptanceId) {
+    public void setAcceptanceId(String acceptanceId) {
         this.acceptanceId = acceptanceId;
     }
 
@@ -243,12 +243,12 @@ public class SupplyMedicalInvoice extends Model<SupplyMedicalInvoice> {
         this.approvedAmount = approvedAmount;
     }
 
-    public BigDecimal getClassifiedSelfPaymentAmount() {
-        return classifiedSelfPaymentAmount;
+    public BigDecimal getCsPaymentAmount() {
+        return csPaymentAmount;
     }
 
-    public void setClassifiedSelfPaymentAmount(BigDecimal classifiedSelfPaymentAmount) {
-        this.classifiedSelfPaymentAmount = classifiedSelfPaymentAmount;
+    public void setCsPaymentAmount(BigDecimal csPaymentAmount) {
+        this.csPaymentAmount = csPaymentAmount;
     }
 
     public BigDecimal getCompanyMoney() {
@@ -344,7 +344,7 @@ public class SupplyMedicalInvoice extends Model<SupplyMedicalInvoice> {
             ", applicationAmount=" + applicationAmount +
             ", claimAmount=" + claimAmount +
             ", approvedAmount=" + approvedAmount +
-            ", classifiedSelfPaymentAmount=" + classifiedSelfPaymentAmount +
+            ", csPaymentAmount=" + csPaymentAmount +
             ", companyMoney=" + companyMoney +
             ", insuranceCompanyMoney=" + insuranceCompanyMoney +
             ", closedStatus=" + closedStatus +

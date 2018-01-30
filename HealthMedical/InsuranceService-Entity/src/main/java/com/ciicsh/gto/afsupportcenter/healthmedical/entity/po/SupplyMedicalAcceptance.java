@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.baomidou.mybatisplus.enums.IdType;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -23,22 +22,22 @@ public class SupplyMedicalAcceptance extends Model<SupplyMedicalAcceptance> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 受理单编号（比如：201708100477）
+     * 受理单编号（比如：201801100173-4）
      */
-    @TableId(value = "acceptance_id", type = IdType.AUTO)
-    private Long acceptanceId;
+    @TableId("acceptance_id")
+    private String acceptanceId;
     /**
-     * 案卷号
+     * 案卷号（from 中盈）
      */
     @TableField("dossier_number")
     private String dossierNumber;
     /**
      * 导入日期
      */
-    @TableField("imput_date")
+    @TableField("input_date")
     private Date inputDate;
     /**
-     * 受理单状态（0-未审批，1-已批退，2-已审核未同步，3-已同步未支付，4-财务退回，5-已同步已支付，6-已退票，7-已完成)
+     * 受理单状态（0-未审批，1-已批退，2-已审核未同步，3-已同步未支付，4-财务退回，5-已同步已支付，6-已退票，7-已完成）
      */
     private Integer status;
     /**
@@ -74,8 +73,37 @@ public class SupplyMedicalAcceptance extends Model<SupplyMedicalAcceptance> {
     /**
      * 保险公司理赔总金额
      */
-    @TableField("total_insurance_company_money")
-    private BigDecimal totalInsuranceCompanyMoney;
+    @TableField("total_insurance_company_amount")
+    private BigDecimal totalInsuranceCompanyAmount;
+    /**
+     * 分类自付金额（总）
+     */
+    @TableField("total_cs_payment_amount")
+    private BigDecimal totalCsPaymentAmount;
+    /**
+     * 申请金额（总）
+     */
+    @TableField("total_application_amount")
+    private BigDecimal totalApplicationAmount;
+    /**
+     * 核准金额
+     */
+    @TableField("total_approved_amount")
+    private BigDecimal totalApprovedAmount;
+    /**
+     * 索赔金额（总）
+     */
+    @TableField("total_claim_amount")
+    private BigDecimal totalClaimAmount;
+    /**
+     * 类别（1-雇员，2-子女，3-配偶）
+     */
+    private Integer type;
+    /**
+     * 连带被保险人姓名
+     */
+    @TableField("insured_name")
+    private String insuredName;
     /**
      * 审核人
      */
@@ -112,11 +140,11 @@ public class SupplyMedicalAcceptance extends Model<SupplyMedicalAcceptance> {
     private String modifiedBy;
 
 
-    public Long getAcceptanceId() {
+    public String getAcceptanceId() {
         return acceptanceId;
     }
 
-    public void setAcceptanceId(Long acceptanceId) {
+    public void setAcceptanceId(String acceptanceId) {
         this.acceptanceId = acceptanceId;
     }
 
@@ -192,12 +220,60 @@ public class SupplyMedicalAcceptance extends Model<SupplyMedicalAcceptance> {
         this.totalCompanyAmount = totalCompanyAmount;
     }
 
-    public BigDecimal getTotalInsuranceCompanyMoney() {
-        return totalInsuranceCompanyMoney;
+    public BigDecimal getTotalInsuranceCompanyAmount() {
+        return totalInsuranceCompanyAmount;
     }
 
-    public void setTotalInsuranceCompanyMoney(BigDecimal totalInsuranceCompanyMoney) {
-        this.totalInsuranceCompanyMoney = totalInsuranceCompanyMoney;
+    public void setTotalInsuranceCompanyAmount(BigDecimal totalInsuranceCompanyAmount) {
+        this.totalInsuranceCompanyAmount = totalInsuranceCompanyAmount;
+    }
+
+    public BigDecimal getTotalCsPaymentAmount() {
+        return totalCsPaymentAmount;
+    }
+
+    public void setTotalCsPaymentAmount(BigDecimal totalCsPaymentAmount) {
+        this.totalCsPaymentAmount = totalCsPaymentAmount;
+    }
+
+    public BigDecimal getTotalApplicationAmount() {
+        return totalApplicationAmount;
+    }
+
+    public void setTotalApplicationAmount(BigDecimal totalApplicationAmount) {
+        this.totalApplicationAmount = totalApplicationAmount;
+    }
+
+    public BigDecimal getTotalApprovedAmount() {
+        return totalApprovedAmount;
+    }
+
+    public void setTotalApprovedAmount(BigDecimal totalApprovedAmount) {
+        this.totalApprovedAmount = totalApprovedAmount;
+    }
+
+    public BigDecimal getTotalClaimAmount() {
+        return totalClaimAmount;
+    }
+
+    public void setTotalClaimAmount(BigDecimal totalClaimAmount) {
+        this.totalClaimAmount = totalClaimAmount;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public String getInsuredName() {
+        return insuredName;
+    }
+
+    public void setInsuredName(String insuredName) {
+        this.insuredName = insuredName;
     }
 
     public String getAuditor() {
@@ -274,7 +350,13 @@ public class SupplyMedicalAcceptance extends Model<SupplyMedicalAcceptance> {
             ", companyName=" + companyName +
             ", invoiceNumber=" + invoiceNumber +
             ", totalCompanyAmount=" + totalCompanyAmount +
-            ", totalInsuranceCompanyMoney=" + totalInsuranceCompanyMoney +
+            ", totalInsuranceCompanyAmount=" + totalInsuranceCompanyAmount +
+            ", totalCsPaymentAmount=" + totalCsPaymentAmount +
+            ", totalApplicationAmount=" + totalApplicationAmount +
+            ", totalApprovedAmount=" + totalApprovedAmount +
+            ", totalClaimAmount=" + totalClaimAmount +
+            ", type=" + type +
+            ", insuredName=" + insuredName +
             ", auditor=" + auditor +
             ", auditTime=" + auditTime +
             ", isActive=" + isActive +

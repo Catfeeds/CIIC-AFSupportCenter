@@ -14,7 +14,13 @@
         <result column="company_name" property="companyName"/>
         <result column="invoice_number" property="invoiceNumber"/>
         <result column="total_company_amount" property="totalCompanyAmount"/>
-        <result column="total_insurance_company_money" property="totalInsuranceCompanyMoney"/>
+        <result column="total_insurance_company_amount" property="totalInsuranceCompanyAmount"/>
+        <result column="total_cs_payment_amount" property="totalCsPaymentAmount"/>
+        <result column="total_application_amount" property="totalApplicationAmount"/>
+        <result column="total_approved_amount" property="totalApprovedAmount"/>
+        <result column="total_claim_amount" property="totalClaimAmount"/>
+        <result column="type" property="type"/>
+        <result column="insured_name" property="insuredName"/>
         <result column="auditor" property="auditor"/>
         <result column="audit_time" property="auditTime"/>
         <result column="created_time" property="createdTime"/>

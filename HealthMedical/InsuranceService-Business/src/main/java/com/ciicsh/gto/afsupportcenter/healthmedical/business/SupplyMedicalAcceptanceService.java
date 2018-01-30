@@ -12,5 +12,10 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.SupplyMedicalAccep
  * @author xiweizhen
  */
 public interface SupplyMedicalAcceptanceService extends IService<SupplyMedicalAcceptance> {
-
+    /**
+     * 定时同步智灵通受理单数据
+     *
+     * @return
+     */
+    boolean syncAcceptanceSummaryDetail();
 }
