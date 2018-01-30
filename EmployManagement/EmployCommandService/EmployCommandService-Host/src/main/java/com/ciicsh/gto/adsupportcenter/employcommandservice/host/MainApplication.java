@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Import;
 @MapperScan("com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao")
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business","com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller"})
 @Import({CustomConfiguration.class, MybatisPlusConfig.class})
-@EnableFeignClients
+//@EnableFeignClients
 public class MainApplication{
 
     private final static Logger logger = LoggerFactory.getLogger(MainApplication.class);
