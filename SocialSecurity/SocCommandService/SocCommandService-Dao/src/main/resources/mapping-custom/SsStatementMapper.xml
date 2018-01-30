@@ -39,15 +39,13 @@
     </resultMap>
 
 
-
+    <!--SELECT s.*,ca.com_account_name-->
+    <!--FROM ss_month_emp_change mec-->
+    <!--LEFT JOIN ss_statement s ON s.statement_id=mec.statement_id-->
+    <!--LEFT JOIN ss_com_account ca ON ca.com_account_id=mec.com_account_id-->
+    <!--上面SQL 最終要替換下面的语句，因为 开发前期 ss_month_emp_change还没有生成数据，导致关联不出数据-->
 
     <select id="statementQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsStatementBO" resultMap="DtoResultMap">
---         SELECT s.*,ca.com_account_name
-        -- FROM ss_month_emp_change mec
---         LEFT JOIN ss_statement s ON s.statement_id=mec.statement_id
---         LEFT JOIN ss_com_account ca ON ca.com_account_id=mec.com_account_id
-        --上面SQL 最終要替換上述语句，因为 开发前期 ss_month_emp_change还没有生成数据，导致关联不出数据
-
         SELECT
           T1.*,T2.com_account_name
         FROM
