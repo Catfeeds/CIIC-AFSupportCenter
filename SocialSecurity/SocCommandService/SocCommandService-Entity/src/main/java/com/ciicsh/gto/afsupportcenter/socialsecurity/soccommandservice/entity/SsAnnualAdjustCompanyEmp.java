@@ -36,6 +36,11 @@ public class SsAnnualAdjustCompanyEmp implements Serializable {
 	@TableField("ss_serial")
 	private String ssSerial;
 	private BigDecimal salary;
+    /**
+     * 待调工资
+     */
+    @TableField("chg_salary")
+    private BigDecimal chgSalary;
 	@TableField("id_num")
 	private String idNum;
 	@TableField("archive_status")
@@ -304,6 +309,14 @@ public class SsAnnualAdjustCompanyEmp implements Serializable {
         this.highDepartmentName = highDepartmentName;
     }
 
+    public BigDecimal getChgSalary() {
+        return chgSalary;
+    }
+
+    public void setChgSalary(BigDecimal chgSalary) {
+        this.chgSalary = chgSalary;
+    }
+
     @Override
 	public String toString() {
 		return "SsAnnualAdjustCompanyEmp{" +
@@ -313,6 +326,7 @@ public class SsAnnualAdjustCompanyEmp implements Serializable {
 			", employeeName=" + employeeName +
 			", ssSerial=" + ssSerial +
 			", salary=" + salary +
+            ", chgSalary=" + chgSalary +
 			", idNum=" + idNum +
 			", archiveStatus=" + archiveStatus +
 			", baseAmount=" + baseAmount +

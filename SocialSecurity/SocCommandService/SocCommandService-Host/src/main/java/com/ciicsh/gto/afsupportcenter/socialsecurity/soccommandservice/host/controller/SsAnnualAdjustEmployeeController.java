@@ -5,6 +5,7 @@ import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAnnualAdjustEmployeeService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAnnualAdjustEmployeeDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAnnualAdjustEmployee;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -61,7 +63,7 @@ public class SsAnnualAdjustEmployeeController extends BasicController<SsAnnualAd
             ExportParams exportParams = new ExportParams();
             exportParams.setType(ExcelType.XSSF);
             exportParams.setSheetName("雇员工资数据采集");
-            Workbook workbook = null;
+            Workbook workbook;
 
             if (total <= pageInfo.getPageSize()) {
                 workbook = ExcelExportUtil.exportExcel(exportParams, SsAnnualAdjustEmployee.class, result.getRows());
@@ -75,13 +77,19 @@ public class SsAnnualAdjustEmployeeController extends BasicController<SsAnnualAd
                 }
                 ExcelExportUtil.closeExportBigExcel();
             }
+            SsAnnualAdjustEmployeeDTO ssAnnualAdjustEmployeeDTO = pageInfo.toJavaObject(SsAnnualAdjustEmployeeDTO.class);
+            Calendar calendar = Calendar.getInstance();
+            int adjustYear = calendar.get(Calendar.YEAR);
+            String fileName = URLEncoder.encode("系统申报表_companyId_adjustYear.xlsx"
+                .replace("companyId", ssAnnualAdjustEmployeeDTO.getCompanyId())
+                .replace("adjustYear", String.valueOf(adjustYear)), "UTF-8");
 
             response.reset();
             response.setCharacterEncoding("UTF-8");
 //            response.setHeader("content-Type", "application/vnd.ms-excel");
             response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             response.setHeader("Content-Disposition",
-                    "attachment;filename=" + URLEncoder.encode("系统申报表.xlsx", "UTF-8"));
+                    "attachment;filename=" + fileName);
             workbook.write(response.getOutputStream());
             workbook.close();
         } catch (IOException e) {

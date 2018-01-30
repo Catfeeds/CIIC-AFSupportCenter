@@ -9,11 +9,14 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
+import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * <p>
@@ -56,13 +59,18 @@ public class SsAnnualAdjustCompanyEmpTemp implements Serializable, IExcelModel {
     @NotNull(message = "工资不能为空")
     @Pattern(regexp="(^[1-9]([0-9]{1,7})?(\\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\\.[0-9]([0-9])?$)", message = "工资格式不正确")
 	private String salary;
+    @TableField("chg_salary")
+    @Excel(name = "待调工资", orderNum = "3")
+    @NotNull(message = "待调工资不能为空")
+    @Pattern(regexp="(^[1-9]([0-9]{1,7})?(\\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\\.[0-9]([0-9])?$)", message = "待调工资格式不正确")
+    private String chgSalary;
 	@TableField("id_num")
     @Excel(name = "身份证号", orderNum = "4")
     @NotBlank(message = "身份证号不能为空")
     @Pattern(regexp="^(\\d{15}$|^\\d{18}$|^\\d{17}(\\d|X|x))$", message = "身份证号格式不正确")
 	private String idNum;
 	@TableField("archive_status")
-    @Excel(name = "社保状态", replace = {"初始_0", "有效_1", "终止_2", "封存_3"}, orderNum = "5")
+    @Excel(name = "社保状态", orderNum = "5")
     @Pattern(regexp="^[0-3]{1}$", message = "社保状态不正确")
 	private String archiveStatus;
     /**
@@ -77,11 +85,11 @@ public class SsAnnualAdjustCompanyEmpTemp implements Serializable, IExcelModel {
      * 账户类型：1:中智大库 2中智外包 3独立户
      */
 	@TableField("ss_account_type")
-    @Excel(name = "账户类型", replace = {"中智大库_1", "中智外包_2", "独立户_3"}, orderNum = "6")
+    @Excel(name = "账户类型", orderNum = "6")
     @Pattern(regexp="^[1-3]{1}$", message = "账户类型不正确")
 	private String ssAccountType;
 	@TableField("emp_classify")
-    @Excel(name = "人员属性", replace = {"本地_1", "外地_2", "外籍三险_3", "外籍五险_4", "延迟退休人员_5"}, orderNum = "7")
+    @Excel(name = "人员属性", orderNum = "7")
     @Pattern(regexp="^[1-5]{1}$", message = "人员属性不正确")
 	private String empClassify;
     /**
@@ -119,15 +127,25 @@ public class SsAnnualAdjustCompanyEmpTemp implements Serializable, IExcelModel {
     @Length(max=16, message = "客户编号最大长度为16位")
 	private String companyId;
     @TableField("low_department_name")
-    @Excel(name = "所属小组", orderNum = "14")
+    @Excel(name = "客户经理", orderNum = "14")
     private String lowDepartmentName;
     @TableField("high_department_name")
-    @Excel(name = "所属大组", orderNum = "15")
+    @Excel(name = "客户总监", orderNum = "15")
     private String highDepartmentName;
     @TableField("error_msg")
 	private String errorMsg;
+    @TableField("order_num")
+    private Integer orderNum;
 
-	public Long getAnnualAdjustCompanyId() {
+    public String getChgSalary() {
+        return chgSalary;
+    }
+
+    public void setChgSalary(String chgSalary) {
+        this.chgSalary = chgSalary;
+    }
+
+    public Long getAnnualAdjustCompanyId() {
 		return annualAdjustCompanyId;
 	}
 
@@ -180,7 +198,16 @@ public class SsAnnualAdjustCompanyEmpTemp implements Serializable, IExcelModel {
 	}
 
 	public void setArchiveStatus(String archiveStatus) {
-		this.archiveStatus = archiveStatus;
+	    if (archiveStatus != null) {
+            Optional<Map.Entry<String, String>> optional = SocialSecurityConst.ACCOUNT_STATUS_MAP.entrySet().stream().filter(
+                t -> archiveStatus.equals(t.getValue())
+            ).findFirst();
+            if (optional.isPresent()) {
+                this.archiveStatus = optional.get().getKey();
+            } else {
+                this.archiveStatus = archiveStatus;
+            }
+        }
 	}
 
 	public String getBaseAmount() {
@@ -196,7 +223,16 @@ public class SsAnnualAdjustCompanyEmpTemp implements Serializable, IExcelModel {
 	}
 
 	public void setSsAccountType(String ssAccountType) {
-		this.ssAccountType = ssAccountType;
+        if (ssAccountType != null) {
+            Optional<Map.Entry<String, String>> optional = SocialSecurityConst.ACCOUNT_TYPE_MAP.entrySet().stream().filter(
+                t -> ssAccountType.equals(t.getValue())
+            ).findFirst();
+            if (optional.isPresent()) {
+                this.ssAccountType = optional.get().getKey();
+            } else {
+                this.ssAccountType = ssAccountType;
+            }
+        }
 	}
 
 	public String getEmpClassify() {
@@ -204,7 +240,16 @@ public class SsAnnualAdjustCompanyEmpTemp implements Serializable, IExcelModel {
 	}
 
 	public void setEmpClassify(String empClassify) {
-		this.empClassify = empClassify;
+        if (empClassify != null) {
+            Optional<Map.Entry<String, String>> optional = SocialSecurityConst.EMP_CLASSIFY_MAP.entrySet().stream().filter(
+                t -> empClassify.equals(t.getValue())
+            ).findFirst();
+            if (optional.isPresent()) {
+                this.empClassify = optional.get().getKey();
+            } else {
+                this.empClassify = empClassify;
+            }
+        }
 	}
 
 	public String getSettlementArea() {
@@ -212,7 +257,16 @@ public class SsAnnualAdjustCompanyEmpTemp implements Serializable, IExcelModel {
 	}
 
 	public void setSettlementArea(String settlementArea) {
-		this.settlementArea = settlementArea;
+        if (settlementArea != null) {
+            Optional<Map.Entry<String, String>> optional = SocialSecurityConst.DISTRICT_MAP.entrySet().stream().filter(
+                t -> settlementArea.equals(t.getValue())
+            ).findFirst();
+            if (optional.isPresent()) {
+                this.settlementArea = optional.get().getKey();
+            } else {
+                this.settlementArea = settlementArea;
+            }
+        }
 	}
 
 	public String getSsAccount() {
@@ -281,6 +335,14 @@ public class SsAnnualAdjustCompanyEmpTemp implements Serializable, IExcelModel {
         this.errorMsg = errorMsg;
     }
 
+    public Integer getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
+    }
+
     @Override
 	public String toString() {
 		return "SsAnnualAdjustCompanyEmpTemp{" +
@@ -290,6 +352,7 @@ public class SsAnnualAdjustCompanyEmpTemp implements Serializable, IExcelModel {
 			", employeeName=" + employeeName +
 			", ssSerial=" + ssSerial +
 			", salary=" + salary +
+            ", chgSalary=" + chgSalary +
 			", idNum=" + idNum +
 			", archiveStatus=" + archiveStatus +
 			", baseAmount=" + baseAmount +
@@ -303,6 +366,7 @@ public class SsAnnualAdjustCompanyEmpTemp implements Serializable, IExcelModel {
             ", highDepartmentName=" + highDepartmentName +
             ", companyId=" + companyId +
             ", errorMsg=" + errorMsg +
+            ", orderNum=" + orderNum +
 			"}";
 	}
 }

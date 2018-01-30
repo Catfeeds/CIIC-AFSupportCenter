@@ -11,8 +11,11 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -22,8 +25,13 @@ import java.util.List;
 @Service
 public class SsAnnualAdjustAccountEmpServiceImpl extends ServiceImpl<SsAnnualAdjustAccountEmpMapper, SsAnnualAdjustAccountEmp> implements SsAnnualAdjustAccountEmpService {
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void insertDataWithoutErrorMsg(SsAnnualAdjustAccountEmpTempDTO ssAnnualAdjustAccountEmpTempDTO) {
+        Map<String, Object> deleteMap = new HashMap<>();
+        deleteMap.put("annual_adjust_account_id", ssAnnualAdjustAccountEmpTempDTO.getAnnualAdjustAccountId());
+        // 先将之前的记录全部清除，再重新插入导入的记录
+        baseMapper.deleteByMap(deleteMap);
         baseMapper.insertDataWithoutErrorMsg(ssAnnualAdjustAccountEmpTempDTO);
     }
 

@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host;
+package com.ciicsh.gto.afsupportcenter.util.constant;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +16,7 @@ public interface SocialSecurityConst {
             put("3", "浦东");
             put("4", "卢湾");
             put("5", "静安");
-            put("6", "黄埔");
+            put("6", "黄浦");
         }
     };
 
@@ -89,6 +89,17 @@ public interface SocialSecurityConst {
             put("13", "外来人员医保卡领取");
             put("14", "医保帐户提取");
             put("15", "生育津贴领取");
+        }
+    };
+
+    // 人员属性
+    public static final Map<String, String> EMP_CLASSIFY_MAP = new HashMap<String, String>() {
+        {
+            put("1", "本地");
+            put("2", "外地");
+            put("3", "外籍三险");
+            put("4", "外籍五险");
+            put("5", "延迟退休人员");
         }
     };
 }

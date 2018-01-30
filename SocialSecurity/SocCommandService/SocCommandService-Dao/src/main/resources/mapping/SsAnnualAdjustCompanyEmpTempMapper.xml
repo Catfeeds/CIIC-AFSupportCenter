@@ -10,6 +10,7 @@
 		<result column="employee_name" property="employeeName" />
 		<result column="ss_serial" property="ssSerial" />
 		<result column="salary" property="salary" />
+        <result column="chg_salary" property="chgSalary" />
 		<result column="id_num" property="idNum" />
 		<result column="archive_status" property="archiveStatus" />
 		<result column="base_amount" property="baseAmount" />
@@ -23,6 +24,7 @@
         <result column="low_department_name" property="lowDepartmentName" />
         <result column="high_department_name" property="highDepartmentName" />
         <result column="error_msg" property="errorMsg" />
+        <result column="order_num" property="orderNum" />
 	</resultMap>
 
 </mapper>

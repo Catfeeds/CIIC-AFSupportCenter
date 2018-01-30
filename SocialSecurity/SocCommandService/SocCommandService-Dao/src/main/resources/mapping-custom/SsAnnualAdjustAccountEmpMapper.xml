@@ -52,7 +52,7 @@
             saaae.employee_name,
             saaae.id_num,
             saaae.payment_months,
-            t.salary AS avg_month_salary
+            t.chg_salary AS avg_month_salary
             FROM ss_annual_adjust_account_emp saaae
             INNER JOIN ss_annual_adjust_account saaa ON saaae.annual_adjust_account_id = saaa.annual_adjust_account_id
              AND saaa.is_active = 1
@@ -64,7 +64,7 @@
                 saace.ss_serial,
                 saace.employee_id,
                 saace.employee_name,
-                saace.salary
+                saace.chg_salary
                 FROM ss_annual_adjust_company_emp saace
                 INNER JOIN ss_annual_adjust_company saac ON saac.annual_adjust_company_id = saace.annual_adjust_company_id
                 AND saac.is_active = 1 AND saace.is_active = 1 AND saac.adjust_year = YEAR(NOW())
@@ -99,10 +99,10 @@
                 AND saaae.account_status = #{accountStatus}
             </if>
             <if test="avgMonthSalaryStart != null">
-                AND t.salary >= #{avgMonthSalaryStart}
+                AND t.chg_salary >= #{avgMonthSalaryStart}
             </if>
             <if test="avgMonthSalaryEnd != null">
-                AND #{avgMonthSalaryEnd} >= t.salary
+                AND #{avgMonthSalaryEnd} >= t.chg_salary
             </if>
             ORDER BY saaae.ss_serial
         </where>

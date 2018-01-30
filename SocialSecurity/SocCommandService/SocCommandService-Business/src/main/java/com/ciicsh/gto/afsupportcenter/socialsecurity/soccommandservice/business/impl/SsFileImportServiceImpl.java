@@ -62,11 +62,12 @@ public class SsFileImportServiceImpl extends ServiceImpl<SsFileImportMapper, SsF
                     // TODO sync to file server, and return the file id.
 
                     ExcelImportResult<T> result = ExcelImportUtil.importExcelMore(multipartFile.getInputStream(), entityClass, importParams);
-//                    if(result.isVerfiyFail()){
-//                    }else{
-//                    }
                     if (result.getList() != null && result.getList().size() > 0) {
                         iTempService.insertBatch(result.getList(), 3000);
+                    }
+
+                    if (result.getFailList() != null && result.getFailList().size() > 0) {
+                        iTempService.insertBatch(result.getFailList(), 3000);
                     }
 
                     reentrantLock.lock();

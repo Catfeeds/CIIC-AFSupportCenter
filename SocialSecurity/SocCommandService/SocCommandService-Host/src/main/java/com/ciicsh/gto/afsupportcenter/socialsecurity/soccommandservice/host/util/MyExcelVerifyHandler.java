@@ -15,7 +15,9 @@ public class MyExcelVerifyHandler implements IExcelVerifyHandler<IExcelModel>
     private Map<String, Object> setValueMap;
     private List<String> skipFields;
     private Map<String, Object> verifyConfigMap;
-    public final static int DEFAULT_LIMIT_LENGTH = 30;
+    private final static int DEFAULT_LIMIT_LENGTH = 30;
+    private final static String ORDER_NUM = "orderNum";
+    private int orderNum;
 
     /**
      *
@@ -51,6 +53,11 @@ public class MyExcelVerifyHandler implements IExcelVerifyHandler<IExcelModel>
                     if (setValueMap != null && setValueMap.containsKey(fieldName)) {
                         Object value = setValueMap.get(fieldName);
                         field.set(model, value);
+                        continue;
+                    }
+
+                    if (ORDER_NUM.equals(fieldName)) {
+                        field.set(model, orderNum++);
                         continue;
                     }
 
@@ -91,6 +98,11 @@ public class MyExcelVerifyHandler implements IExcelVerifyHandler<IExcelModel>
                     if (setValueMap != null && setValueMap.containsKey(fieldName)) {
                         Object value = setValueMap.get(fieldName);
                         field.set(model, value);
+                        continue;
+                    }
+
+                    if (ORDER_NUM.equals(fieldName)) {
+                        field.set(model, orderNum++);
                         continue;
                     }
 
