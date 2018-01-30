@@ -66,7 +66,7 @@ public class SsMonthEmpChangeDetailController  extends BasicController<SsMonthEm
         Date date = new Date();
         String fileNme = "YYS"+ StringUtil.getDateString(date)+".xls";
         List<YysExportOpt> opts = business.yysExportQuery(statementId);
-        ExcelUtil.exportExcel(opts,"","",StatementExportOpt.class,fileNme,response);
+        ExcelUtil.exportExcel(opts,StatementExportOpt.class,fileNme,response);
     }
 
     @Log("变更总汇明细(养保、医保、失保)导出")
@@ -75,7 +75,7 @@ public class SsMonthEmpChangeDetailController  extends BasicController<SsMonthEm
         Date date = new Date();
         String fileNme = "GSY"+ StringUtil.getDateString(date)+".xls";
         List<GsyExportOpt> opts = business.gsyExportQuery(statementId);
-        ExcelUtil.exportExcel(opts,"","",StatementExportOpt.class,fileNme,response);
+        ExcelUtil.exportExcel(opts,StatementExportOpt.class,fileNme,response);
     }
 }
 

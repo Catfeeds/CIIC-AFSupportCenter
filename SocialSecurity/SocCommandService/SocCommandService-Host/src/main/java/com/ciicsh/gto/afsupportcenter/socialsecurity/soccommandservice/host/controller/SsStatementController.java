@@ -68,7 +68,7 @@ public class SsStatementController  extends BasicController<SsStatementService> 
         Date date = new Date();
         String fileNme = "社保对账_"+ StringUtil.getDateString(date)+".xls";
         List<StatementExportOpt> opts = business.statementExportQuery(args);
-        ExcelUtil.exportExcel(opts,"","",StatementExportOpt.class,fileNme,response);
+        ExcelUtil.exportExcel(opts,StatementExportOpt.class,fileNme,response);
     }
 
     /**
