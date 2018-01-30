@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity;
 
 import com.baomidou.mybatisplus.enums.IdType;
+import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
@@ -75,6 +76,26 @@ public class HfEmpArchive implements Serializable {
      */
 	@TableField("end_month")
 	private String endMonth;
+    /**
+     * 操作提示:  1 要做、2 中心、3 中智、4 原单位、5 其他独立开户公司、6 外包 
+     */
+	@TableField("operation_remind")
+	private Integer operationRemind;
+    /**
+     * 操作提示日期
+     */
+	@TableField("operation_remind_date")
+	private LocalDate operationRemindDate;
+    /**
+     * 所属供应商：1 af 2  bpo
+     */
+	@TableField("belong_vendor")
+	private String belongVendor;
+    /**
+     * 所属基本公积金档案ID,如果记录是补充公积金,该字段必填 
+     */
+	@TableField("belong_emp_archive_id")
+	private Long belongEmpArchiveId;
     /**
      * 是否可用
      */
@@ -190,6 +211,38 @@ public class HfEmpArchive implements Serializable {
 		this.endMonth = endMonth;
 	}
 
+	public Integer getOperationRemind() {
+		return operationRemind;
+	}
+
+	public void setOperationRemind(Integer operationRemind) {
+		this.operationRemind = operationRemind;
+	}
+
+	public LocalDate getOperationRemindDate() {
+		return operationRemindDate;
+	}
+
+	public void setOperationRemindDate(LocalDate operationRemindDate) {
+		this.operationRemindDate = operationRemindDate;
+	}
+
+	public String getBelongVendor() {
+		return belongVendor;
+	}
+
+	public void setBelongVendor(String belongVendor) {
+		this.belongVendor = belongVendor;
+	}
+
+	public Long getBelongEmpArchiveId() {
+		return belongEmpArchiveId;
+	}
+
+	public void setBelongEmpArchiveId(Long belongEmpArchiveId) {
+		this.belongEmpArchiveId = belongEmpArchiveId;
+	}
+
 	public Boolean getActive() {
 		return isActive;
 	}
@@ -244,6 +297,10 @@ public class HfEmpArchive implements Serializable {
 			", archiveTaskStatus=" + archiveTaskStatus +
 			", startMonth=" + startMonth +
 			", endMonth=" + endMonth +
+			", operationRemind=" + operationRemind +
+			", operationRemindDate=" + operationRemindDate +
+			", belongVendor=" + belongVendor +
+			", belongEmpArchiveId=" + belongEmpArchiveId +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

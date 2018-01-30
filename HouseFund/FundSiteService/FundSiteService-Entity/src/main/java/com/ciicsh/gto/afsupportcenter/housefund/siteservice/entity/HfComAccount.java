@@ -49,7 +49,7 @@ public class HfComAccount implements Serializable {
     /**
      * 公积金企业U盾代管
      */
-	@TableField("ukey_strore")
+	@TableField("ukey_store")
 	private Integer ukeyStore;
     /**
      * 缴费区县：1 徐汇—X、2 西郊—C、3 东方路—P、4 卢湾—L、5 黄浦—H
@@ -133,12 +133,12 @@ public class HfComAccount implements Serializable {
 		this.closeDay = closeDay;
 	}
 
-	public Integer getUkeyStrore() {
+	public Integer getUkeyStore() {
 		return ukeyStore;
 	}
 
-	public void setUkeyStrore(Integer ukeyStrore) {
-		this.ukeyStore = ukeyStrore;
+	public void setUkeyStore(Integer ukeyStore) {
+		this.ukeyStore = ukeyStore;
 	}
 
 	public Integer getPaymentBank() {
@@ -221,7 +221,7 @@ public class HfComAccount implements Serializable {
 			", paymentWay=" + paymentWay +
 			", hfAccountType=" + hfAccountType +
 			", closeDay=" + closeDay +
-			", ukeyStrore=" + ukeyStore +
+			", ukeyStore=" + ukeyStore +
 			", paymentBank=" + paymentBank +
 			", remark=" + remark +
 			", state=" + state +

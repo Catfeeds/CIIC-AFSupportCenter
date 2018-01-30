@@ -15,6 +15,10 @@
 		<result column="archive_task_status" property="archiveTaskStatus" />
 		<result column="start_month" property="startMonth" />
 		<result column="end_month" property="endMonth" />
+		<result column="operation_remind" property="operationRemind" />
+		<result column="operation_remind_date" property="operationRemindDate" />
+		<result column="belong_vendor" property="belongVendor" />
+		<result column="belong_emp_archive_id" property="belongEmpArchiveId" />
 		<result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />
 		<result column="modified_time" property="modifiedTime" />

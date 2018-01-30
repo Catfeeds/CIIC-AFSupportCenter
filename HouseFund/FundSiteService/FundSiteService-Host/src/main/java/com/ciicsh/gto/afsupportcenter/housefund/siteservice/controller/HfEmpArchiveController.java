@@ -8,11 +8,9 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,8 +45,14 @@ public class HfEmpArchiveController extends  BasicController<HfEmpArchiveService
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap= business.viewEmpArchiveInfo(empArchiveId,companyId);
         return JsonResultKit.of(resultMap);
-
     }
 
+    @RequestMapping("saveEmpAccount")
+    @ResponseBody
+    public JsonResult<Boolean> saveEmpAccount(@RequestParam Map<String,String> updateDto){
+
+        boolean result=business.saveComAccunt(updateDto);
+        return JsonResultKit.of(result);
+    }
 }
 
