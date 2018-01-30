@@ -152,7 +152,7 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
                 importParams.setStartSheetIndex(i);
                 setValueMap.put("accountStatus", i + 1);
                 ssFileImportService.executeExcelImport(i == 0, conditionKey, importType, annualAdjustAccountId,
-                    importParams, ssAnnualAdjustAccountEmpTempService, files);
+                    importParams, ssAnnualAdjustAccountEmpTempService, files, "12"); // TODO createdBy
             }
             afterInsert(annualAdjustAccountId);
         } catch (Exception e) {
