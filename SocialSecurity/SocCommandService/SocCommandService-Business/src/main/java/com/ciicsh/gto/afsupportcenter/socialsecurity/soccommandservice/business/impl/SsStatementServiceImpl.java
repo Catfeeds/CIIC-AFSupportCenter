@@ -5,10 +5,14 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.Ss
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsStatementMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsStatementService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.StatementExportArgs;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.StatementExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -29,6 +33,11 @@ public class SsStatementServiceImpl extends ServiceImpl<SsStatementMapper, SsSta
     @Override
     public SsStatementBO serachStatementData(SsStatementBO ssStatementBO) {
         return baseMapper.serachStatementByStatementId(ssStatementBO);
+    }
+
+    @Override
+    public List<StatementExportOpt> statementExportQuery(StatementExportArgs args) {
+        return baseMapper.statementExportQuery(args);
     }
 
 }

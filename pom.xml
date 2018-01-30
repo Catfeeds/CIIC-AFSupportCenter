@@ -362,13 +362,13 @@
                 <module>./EmployManagement/EmployQueryService/EmployQueryService-Api</module>
                 <module>./EmployManagement/EmployQueryService/EmployQueryService-Dao</module>
                 <module>./EmployManagement/EmployQueryService/EmployQueryService-Business</module>
-                <module>./EmployManagement/EmployQueryService/EmployQueryService-Entity</module>
+                <module>./EmployManagement/EmployQueryService/EmployQueryService-Entity</module>-->
 
                 <module>./EmployManagement/EmployCommandService/EmployCommandService-Host</module>
                 <module>./EmployManagement/EmployCommandService/EmployCommandService-Api</module>
                 <module>./EmployManagement/EmployCommandService/EmployCommandService-Dao</module>
                 <module>./EmployManagement/EmployCommandService/EmployCommandService-Business</module>
-                <module>./EmployManagement/EmployCommandService/EmployCommandService-Entity</module>-->
+                <module>./EmployManagement/EmployCommandService/EmployCommandService-Entity</module>
 
         <module>./FlexibleBenefit/FlexibleBenefit-Entity</module>
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Api</module>

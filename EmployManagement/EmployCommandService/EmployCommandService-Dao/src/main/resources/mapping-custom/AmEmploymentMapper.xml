@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao.AmEmploymentMapper">
+
+	<!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMapDTO" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmploymentBO">
+    </resultMap>
+
+    <select id="queryAmEmployment" resultMap="BaseResultMapDTO">
+        SELECT
+         employment_id,employ_way,employ_property
+        FROM am_employment
+
+    </select>
+
+    <select id="queryAmEmploymentById" resultMap="BaseResultMapDTO">
+        SELECT
+        a.emp_task_id,/*任务id */
+        a.employee_id,/*雇员id */
+        b.employ_way,/*用工方式 */
+        b.employ_property,/*用工属性 */
+        c.yuliu_doc_num,/*预留档案编号 */
+        c.doc_num,/*档案编号 */
+        c.diaodang_feedback,/*调档反馈 */
+        c.employ_feedback_opt_date,/*用工反馈操作日期 */
+        c.diaodang_feedback_opt_date,/*调档反馈操作日期 */
+        d.employee_name,/*雇员姓名 */
+        d.id_num,/*证件号 */
+        e.title,/*公司名称 */
+        e.license_code
+        FROM
+        am_emp_task a
+        LEFT JOIN
+        am_employment b
+        ON a.employee_id = b.employee_id
+        LEFT JOIN
+        am_archive c
+        ON b.employment_id = c.employment_id
+        LEFT JOIN
+        emp_employee  d
+        on  b.employee_id = d.employee_id
+        LEFT JOIN
+        sal_company e
+        on e.company_id = b.company_id
+        LEFT JOIN
+        am_resign f
+        on a.employee_id = f.employee_id
+        where
+        b.employment_id = #{amEmploymentId}
+
+    </select>
+
+</mapper>

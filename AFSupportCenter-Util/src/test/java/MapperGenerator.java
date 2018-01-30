@@ -63,9 +63,9 @@ public class MapperGenerator {
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
         // strategy.setCapitalMode(true);// 全局大写命名 ORACLE 注意
-        strategy.setTablePrefix(new String[]{"sal_"});// 此处可以修改为您的表前缀
+        strategy.setTablePrefix(new String[]{"hm_"});// 此处可以修改为您的表前缀
         strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
-        strategy.setInclude(new String[]{"sal_company_consultant_relation"}); // 需要生成的表
+        strategy.setInclude(new String[]{"hm_supply_medical_invoice","hm_supply_medical_dossier","hm_supply_medical_acceptance","hm_acceptance_detailed","hm_acceptance_summary"}); // 需要生成的表
         // strategy.setExclude(new String[]{"test"}); // 排除生成的表
         mpg.setStrategy(strategy);
 

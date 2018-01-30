@@ -51,7 +51,8 @@ public class SsAnnualAdjustAccountEmpTemp implements Serializable, IExcelModel {
 	private String avgMonthSalary;
 	@TableField("error_msg")
 	private String errorMsg;
-
+    @TableField("order_num")
+    private Integer orderNum;
 
 	public Long getAnnualAdjustAccountEmpTempId() {
 		return annualAdjustAccountEmpTempId;
@@ -117,6 +118,14 @@ public class SsAnnualAdjustAccountEmpTemp implements Serializable, IExcelModel {
 		this.avgMonthSalary = avgMonthSalary;
 	}
 
+    public Integer getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
+    }
+
     @Override
 	public String getErrorMsg() {
 		return errorMsg;
@@ -139,6 +148,7 @@ public class SsAnnualAdjustAccountEmpTemp implements Serializable, IExcelModel {
 			", paymentMonths=" + paymentMonths +
 			", avgMonthSalary=" + avgMonthSalary +
 			", errorMsg=" + errorMsg +
+            ", orderNum=" + orderNum +
 			"}";
 	}
 }

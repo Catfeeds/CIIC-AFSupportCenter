@@ -9,7 +9,7 @@
 		<result column="payment_way" property="paymentWay" />
 		<result column="hf_account_type" property="hfAccountType" />
 		<result column="close_day" property="closeDay" />
-		<result column="ukey_strore" property="ukeyStrore" />
+		<result column="ukey_store" property="ukeyStore" />
 		<result column="payment_bank" property="paymentBank" />
 		<result column="remark" property="remark" />
 		<result column="state" property="state" />

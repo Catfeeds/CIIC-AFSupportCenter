@@ -38,6 +38,11 @@ public class SsFileImport implements Serializable {
 	@TableField("storage_file_id")
 	private String storageFileId;
     /**
+     * 文件服务器存储URL
+     */
+	@TableField("storage_file_url")
+	private String storageFileUrl;
+    /**
      * 上传文件名
      */
 	@TableField("file_name")
@@ -170,6 +175,14 @@ public class SsFileImport implements Serializable {
         this.importBatchId = importBatchId;
     }
 
+    public String getStorageFileUrl() {
+        return storageFileUrl;
+    }
+
+    public void setStorageFileUrl(String storageFileUrl) {
+        this.storageFileUrl = storageFileUrl;
+    }
+
     @Override
 	public String toString() {
 		return "SsFileImport{" +
@@ -178,6 +191,7 @@ public class SsFileImport implements Serializable {
 			", relatedUnitId=" + relatedUnitId +
             ", importBatchId=" + importBatchId +
 			", storageFileId=" + storageFileId +
+            ", storageFileUrl=" + storageFileUrl +
 			", fileName=" + fileName +
             ", isSubmit=" + isSubmit +
 			", isActive=" + isActive +

@@ -2,8 +2,11 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskRollInBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskRollOutBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.*;
@@ -70,6 +73,39 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     }
 
     @Override
+    public <T> PageRows<T> employeeDailyOperatorQueryForDisk(PageInfo pageInfo, boolean isRollIn) {
+        SsEmpTaskBO ssEmpTaskBO = pageInfo.toJavaObject(SsEmpTaskBO.class);
+        return PageKit.doSelectPage(pageInfo, () -> {
+            List<T> rollInBOs = null;
+            List<SsEmpTaskBO> list = baseMapper.employeeDailyOperatorQuery(ssEmpTaskBO);
+            if (list != null) {
+                rollInBOs = new ArrayList<>();
+
+                if (isRollIn) {
+                    for (SsEmpTaskBO bo : list) {
+                        SsEmpTaskRollInBO ssEmpTaskRollInBO = new SsEmpTaskRollInBO();
+                        ssEmpTaskRollInBO.setSsSerial(bo.getEmpSsSerial());
+                        ssEmpTaskRollInBO.setIdNum(bo.getIdNum());
+                        ssEmpTaskRollInBO.setEmployeeName(bo.getEmployeeName());
+                        ssEmpTaskRollInBO.setStartMonth(bo.getStartMonth());
+                        ssEmpTaskRollInBO.setSalary(bo.getSalary());
+                        rollInBOs.add((T) ssEmpTaskRollInBO);
+                    }
+                } else {
+                    for (SsEmpTaskBO bo : list) {
+                        SsEmpTaskRollOutBO ssEmpTaskRollOutBO = new SsEmpTaskRollOutBO();
+                        ssEmpTaskRollOutBO.setIdNum(bo.getIdNum());
+                        ssEmpTaskRollOutBO.setEmployeeName(bo.getEmployeeName());
+                        ssEmpTaskRollOutBO.setSalary(bo.getSalary());
+                        rollInBOs.add((T) ssEmpTaskRollOutBO);
+                    }
+                }
+            }
+            return rollInBOs;
+        });
+    }
+
+    @Override
     public List<SsEmpTask> queryTaskByEmpArchiveId(String empArchiveId) {
         return baseMapper.queryTaskByEmpArchiveId(empArchiveId);
     }
@@ -91,15 +127,11 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 //        }
         // 更新任务单费用段
         List<SsEmpTaskPeriod> periods = bo.getEmpTaskPeriods();
-        if (periods != null) {
+        if (periods != null){
             //表示有时间段
             ssEmpTaskPeriodService.saveForEmpTaskId(periods, bo.getEmpTaskId());
             periods = ssEmpTaskPeriodService.queryByEmpTaskId(bo.getEmpTaskId());
             bo.setEmpTaskPeriods(periods);
-        }else{
-            //无时间段
-            //更新雇员任务信息
-            baseMapper.updateMyselfColumnById(bo);
         }
         // 更新雇员任务信息
         // 备注时间
@@ -345,7 +377,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             sb.append(p).append(",");
         });
         //表示原时间段没有连续
-        if(notPaidMonthList.size()!=0)throw new BusinessException("["+sb.toString()+"]月份没有缴纳过社保，不能调整");
+        if(notPaidMonthList.size()!=0)throw new BusinessException(bo.getEmployeeName()+":该雇员["+sb.toString()+"]月份没有缴纳过社保，不能调整");
 
             SsEmpBasePeriod lastPeriod = ssEmpBasePeriodList.get(ssEmpBasePeriodList.size() - 1);
             //数据库中保存时间最早的时间段 起始时间
@@ -952,11 +984,13 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param bo
      */
     private void handleTurnOutTask(SsEmpTaskBO bo) {
+        //更新雇员任务信息
+        baseMapper.updateMyselfColumnById(bo);
         List<SsEmpBasePeriod> ssEmpBasePeriodList = getNormalPeriod(bo);
         if(ssEmpBasePeriodList.size()>0){
             //有可能是再次办理 先将endMonth 和 ss_month_stop
             SsEmpBasePeriod ssEmpBasePeriod= ssEmpBasePeriodList.get(0);
-            //还原之前修改
+            //还原之前修改 （再次办理的时候 ss_month_stop end_month 还原到为修改的状态）
             Integer result = ssEmpBasePeriodService.updateReductionById(ssEmpBasePeriod);
             if(result==0)throw new BusinessException("数据库修改不成功.");
             ssEmpBasePeriod.setSsMonthStop(bo.getHandleMonth());
@@ -992,6 +1026,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param bo
      */
     private void handleRefundAccountTask(SsEmpTaskBO bo) {
+        //更新雇员任务信息
+        baseMapper.updateMyselfColumnById(bo);
+        //删除(有可能是再次办理)
+        EntityWrapper ew = new EntityWrapper();
+        ew.where("emp_task_id={0}",bo.getEmpTaskId());
+        ssEmpRefundService.delete(ew);
         SsEmpRefund ssEmpRefund = provideSsEmpRefund(bo);
         LocalDateTime now = LocalDateTime.now();
         by(ssEmpRefund);

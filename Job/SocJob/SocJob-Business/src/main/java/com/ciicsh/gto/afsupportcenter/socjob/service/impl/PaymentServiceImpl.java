@@ -33,7 +33,7 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
     private EmployeeMonthlyDataProxy employeeMonthlyDataProxy;
 
     /**
-     * Job 每日询问财务是否可付
+     * 调用判断雇员是否垫付、是否可付接口，并更新雇员的垫付状态
      */
     @Transactional(
         rollbackFor = {Exception.class}
@@ -51,6 +51,10 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
         }
     }
 
+    /**
+     * 更新雇员的垫付状态
+     * @param ssMonth 支付年月
+     */
     private void enquireFinanceComAccount(String ssMonth, Long paymentComId, Long comAccountId) {
         //查询雇员级信息
         Map<String, Object> qMap = new HashMap<>();
@@ -66,6 +70,8 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
         proxyDTO.setBusinessType("1");
         proxyDTO.setBatchMonth(ssMonth);
         proxyDTO.setEmployeeList(proxyDTOList);
+
+        //判断雇员是否垫付、是否可付接口，返回雇员的垫付状态
         JsonResult<EmployeeMonthlyDataProxyDTO> res = employeeMonthlyDataProxy.employeeCanPay(proxyDTO);
 
         if ("0".equals(res.getCode())) {
@@ -91,9 +97,11 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
             map.put("paymentComId", paymentComId);
             if (cnt == 0) {
                 map.put("paymentState", 3);
+                map.put("modifiedBy", "system");
                 ssPaymentMapper.updatePaymentCom(map);
             } else {
                 map.put("paymentState", 1);
+                map.put("modifiedBy", "system");
                 ssPaymentMapper.updatePaymentCom(map);
             }
         }

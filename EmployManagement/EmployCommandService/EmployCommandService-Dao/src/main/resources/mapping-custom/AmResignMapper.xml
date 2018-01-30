@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao.AmResignMapper">
+
+	<!-- 通用查询映射结果 -->
+
+
+    <resultMap id="BaseResultMapDTO" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmResignBO">
+
+    </resultMap>
+
+    <select id="queryAmResign" resultMap="BaseResultMapDTO">
+        SELECT
+        transfer_way,transfer_remark,com_group_out_direct
+        FROM am_resign
+
+    </select>
+
+</mapper>

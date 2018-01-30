@@ -10,6 +10,7 @@
 		<result column="employee_name" property="employeeName" />
 		<result column="ss_serial" property="ssSerial" />
 		<result column="salary" property="salary" />
+        <result column="chg_salary" property="chgSalary" />
 		<result column="id_num" property="idNum" />
 		<result column="archive_status" property="archiveStatus" />
 		<result column="base_amount" property="baseAmount" />

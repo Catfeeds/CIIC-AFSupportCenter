@@ -13,6 +13,7 @@
 		<result column="payment_months" property="paymentMonths" />
 		<result column="avg_month_salary" property="avgMonthSalary" />
 		<result column="error_msg" property="errorMsg" />
+        <result column="order_num" property="orderNum" />
 	</resultMap>
 
 </mapper>

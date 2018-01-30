@@ -40,7 +40,7 @@ public class SocScheduledTask {
         logger.info("结束，当前时间：" + dateFormat.format(new Date()));
     }
 
-    @Scheduled(cron = "0 1/1 * * * ?") // 每10分钟执行一次
+    @Scheduled(cron = "0 1/3 * * * ?") // 每天凌晨启动一次，"0 0 0 * * ?"
     public void execEnquireFinanceComAccount() {
         logger.info("每日询问财务是否可付定时任务启动，当前时间：" + dateFormat.format(new Date()));
         paymentService.enquireFinanceComAccount(StringUtil.getYear_Month(new Date()));

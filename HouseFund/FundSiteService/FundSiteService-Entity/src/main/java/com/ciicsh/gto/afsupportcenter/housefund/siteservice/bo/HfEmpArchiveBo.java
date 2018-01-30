@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class HfEmpArchiveBo extends HfEmpArchive{
-
+    private String empArchiveIdBc;
     private String companyId;
     private String title;
     private String belongVendor;
@@ -24,9 +24,7 @@ public class HfEmpArchiveBo extends HfEmpArchive{
     private String hfEmpAccount;
     private String hfEmpAccountBc;
     private String archiveTaskStatusBc;
-    private String operationRemind;
     private String serviceManager;
-    private Date operationRemindDate;
     private Date inDate;
     private Date outDate;
 

@@ -7,7 +7,13 @@
         saae.employee_id,
         saae.employee_name,
         saae.ss_serial,
-        CASE WHEN saace.salary IS NULL THEN saae.salary ELSE saace.salary END salary,
+        saae.salary,
+        <if test="noCollection == null || noCollection == false">
+            saace.chg_salary,
+        </if>
+        <if test="noCollection == true">
+            NULL as chg_salary,
+        </if>
         saae.id_num,
         saae.archive_status,
         saae.base_amount,

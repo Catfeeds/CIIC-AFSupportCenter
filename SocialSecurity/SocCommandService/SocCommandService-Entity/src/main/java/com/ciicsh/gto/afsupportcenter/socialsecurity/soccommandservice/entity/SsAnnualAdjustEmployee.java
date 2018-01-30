@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 
 import java.io.Serializable;
 
@@ -42,57 +43,69 @@ public class SsAnnualAdjustEmployee implements Serializable {
     @Excel(name = "社保序号", orderNum = "2", width = 20)
 	private String ssSerial;
 	@Excel(name = "工资", orderNum = "3", width = 15)
-	private BigDecimal salary;
+    private BigDecimal salary;
+	@TableField(exist = false)
+    @Excel(name = "待调工资", orderNum = "4", width = 15)
+    private BigDecimal chgSalary;
 	@TableField("id_num")
-    @Excel(name = "身份证号", orderNum = "4", width = 25)
+    @Excel(name = "身份证号", orderNum = "5", width = 25)
 	private String idNum;
 	@TableField("archive_status")
-    @Excel(name = "社保状态", replace = {"初始_0", "有效_1", "终止_2", "封存_3"}, orderNum = "5", width = 15)
 	private Integer archiveStatus;
+	@TableField(exist = false)
+    @Excel(name = "社保状态", orderNum = "6", width = 15)
+	private String archiveStatusName;
     /**
      * 基数, 五险合一(基数一致）时有效
      */
 	@TableField("base_amount")
-    @Excel(name = "社保基数", orderNum = "8", width = 15)
+    @Excel(name = "社保基数", orderNum = "9", width = 15)
 	private BigDecimal baseAmount;
     /**
      * 人员属性：本地、外地、外籍三险、外籍五险、延迟退休人员
      本地、外地、外籍五险：有五个险种
      外籍三险、延迟退休人员：有三个险种
-
      */
     @TableField("emp_classify")
-    @Excel(name="人员属性", replace = {"本地_1", "外地_2", "外籍三险_3", "外籍五险_4", "延迟退休人员_5"}, orderNum = "7", width = 15)
     private Integer empClassify;
+    @Excel(name="人员属性", orderNum = "8", width = 15)
+    @TableField(exist = false)
+    private String empClassifyName;
+
     /**
      * 账户类型：1:中智大库 2中智外包 3独立户
      */
 	@TableField("ss_account_type")
-    @Excel(name = "账户类型", replace = {"中智大库_1", "中智外包_2", "独立户_3"}, orderNum = "6", width = 10)
 	private Integer ssAccountType;
+    @TableField(exist = false)
+    @Excel(name = "账户类型", orderNum = "7", width = 10)
+	private String ssAccountTypeName;
+
     /**
      * 结算区县(社保局所在上海地区)
      */
 	@TableField("settlement_area")
-    @Excel(name = "结算区县", orderNum = "9", width = 10)
 	private String settlementArea;
+	@TableField(exist = false)
+    @Excel(name = "结算区县", orderNum = "10", width = 10)
+	private String settlementAreaName;
     /**
      * 企业社保账户
      */
 	@TableField("ss_account")
-    @Excel(name = "企业社保账户", orderNum = "10", width = 20)
+    @Excel(name = "企业社保账户", orderNum = "11", width = 20)
 	private String ssAccount;
     /**
      * 养老金独立开户用户名（使用U盾登陆的用户名）
      */
 	@TableField("ss_username")
-    @Excel(name = "养老金独立开户用户名", orderNum = "11", width = 20)
+    @Excel(name = "养老金独立开户用户名", orderNum = "12", width = 20)
 	private String ssUsername;
     /**
      * 养老金独立开户密码（使用U盾登陆的密码）
      */
 	@TableField("ss_pwd")
-    @Excel(name = "养老金独立开户密码", orderNum = "12", width = 20)
+    @Excel(name = "养老金独立开户密码", orderNum = "13", width = 20)
 	private String ssPwd;
     /**
      * 雇员本地社保档案Id
@@ -115,12 +128,12 @@ public class SsAnnualAdjustEmployee implements Serializable {
     @TableField("low_department_id")
 	private Integer lowDepartmentId;
     @TableField("low_department_name")
-    @Excel(name = "所属小组", orderNum = "14", width = 20)
+    @Excel(name = "客户经理", orderNum = "14", width = 20)
     private String lowDepartmentName;
     @TableField("high_department_id")
     private Integer highDepartmentId;
     @TableField("high_department_name")
-    @Excel(name = "所属大组", orderNum = "15", width = 20)
+    @Excel(name = "客户总监", orderNum = "15", width = 20)
     private String highDepartmentName;
     @TableField("city_code")
     private String cityCode;
@@ -381,6 +394,46 @@ public class SsAnnualAdjustEmployee implements Serializable {
 
     public void setCityCode(String cityCode) {
         this.cityCode = cityCode;
+    }
+
+    public BigDecimal getChgSalary() {
+        return chgSalary;
+    }
+
+    public void setChgSalary(BigDecimal chgSalary) {
+        this.chgSalary = chgSalary;
+    }
+
+    public String getSsAccountTypeName() {
+        return SocialSecurityConst.ACCOUNT_TYPE_MAP.get(String.valueOf(ssAccountType));
+    }
+
+    public void setSsAccountTypeName(String ssAccountTypeName) {
+        this.ssAccountTypeName = ssAccountTypeName;
+    }
+
+    public String getArchiveStatusName() {
+        return SocialSecurityConst.ACCOUNT_STATUS_MAP.get(String.valueOf(archiveStatus));
+    }
+
+    public void setArchiveStatusName(String archiveStatusName) {
+        this.archiveStatusName = archiveStatusName;
+    }
+
+    public String getEmpClassifyName() {
+        return SocialSecurityConst.EMP_CLASSIFY_MAP.get(String.valueOf(empClassify));
+    }
+
+    public void setEmpClassifyName(String empClassifyName) {
+        this.empClassifyName = empClassifyName;
+    }
+
+    public String getSettlementAreaName() {
+        return SocialSecurityConst.DISTRICT_MAP.get(String.valueOf(settlementArea));
+    }
+
+    public void setSettlementAreaName(String settlementAreaName) {
+        this.settlementAreaName = settlementAreaName;
     }
 
     @Override

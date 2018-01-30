@@ -34,11 +34,22 @@ public class ExcelUtil {
     }
 
     public static void exportExcel(List<?> list, String title, String sheetName, Class<?> pojoClass,String fileName, HttpServletResponse response){
-        defaultExport(list, pojoClass, fileName, response, new ExportParams(title, sheetName));
+        if(StringUtils.isBlank(title) && StringUtils.isBlank(fileName)){
+            defaultExport(list, pojoClass, fileName, response, new ExportParams());
+        }
+        else{
+            defaultExport(list, pojoClass, fileName, response, new ExportParams(title, sheetName));
+        }
     }
+
+    public static void exportExcel(List<?> list,Class<?> pojoClass,String fileName, HttpServletResponse response){
+        defaultExport(list, pojoClass, fileName, response, new ExportParams());
+    }
+
     public static void exportExcel(List<Map<String, Object>> list, String fileName, HttpServletResponse response){
         defaultExport(list, fileName, response);
     }
+
 
     private static void defaultExport(List<?> list, Class<?> pojoClass, String fileName, HttpServletResponse response, ExportParams exportParams) {
         Workbook workbook = ExcelExportUtil.exportExcel(exportParams,pojoClass,list);
@@ -46,11 +57,14 @@ public class ExcelUtil {
         downLoadExcel(fileName, response, workbook);
     }
 
+
     private static void defaultExport(List<Map<String, Object>> list, String fileName, HttpServletResponse response) {
         Workbook workbook = ExcelExportUtil.exportExcel(list, ExcelType.HSSF);
         if (workbook != null);
         downLoadExcel(fileName, response, workbook);
     }
+
+
 
     private static void downLoadExcel(String fileName, HttpServletResponse response, Workbook workbook) {
         try {

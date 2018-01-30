@@ -22,5 +22,6 @@ public interface SsFileImportService<T> extends IService<SsFileImport> {
                             Long relatedUnitId,
                             ImportParams importParams,
                             IService<T> iService,
-                            MultiValueMap<String, MultipartFile> files) throws Exception;
+                            MultiValueMap<String, MultipartFile> files,
+                            final String createdBy) throws Exception;
 }

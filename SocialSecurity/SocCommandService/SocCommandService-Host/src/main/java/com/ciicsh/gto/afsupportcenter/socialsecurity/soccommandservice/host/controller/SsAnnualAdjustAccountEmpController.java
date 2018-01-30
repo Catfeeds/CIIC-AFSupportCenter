@@ -4,6 +4,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAnnualAdjustAccountEmpBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAnnualAdjustAccountEmpService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAnnualAdjustAccountEmpTempService;
@@ -43,9 +44,10 @@ public class SsAnnualAdjustAccountEmpController extends BasicController<SsAnnual
     @RequestMapping("/annualAdjustAccountEmpTempQuery")
     public JsonResult<PageRows> annualAdjustAccountEmpTempQuery(PageInfo pageInfo) {
         SsAnnualAdjustAccountEmpTempDTO ssAnnualAdjustAccountEmpTempDTO = pageInfo.toJavaObject(SsAnnualAdjustAccountEmpTempDTO.class);
-        Map<String, Object> queryCondition = new HashMap<>();
-        queryCondition.put("annual_adjust_account_id", ssAnnualAdjustAccountEmpTempDTO.getAnnualAdjustAccountId());
-        PageRows<SsAnnualAdjustAccountEmpTemp> result = PageKit.doSelectPage(pageInfo, () -> ssAnnualAdjustAccountEmpTempService.selectByMap(queryCondition));
+        EntityWrapper<SsAnnualAdjustAccountEmpTemp> condition = new EntityWrapper<>();
+        condition.where("annual_adjust_account_id={0}", ssAnnualAdjustAccountEmpTempDTO.getAnnualAdjustAccountId());
+        condition.orderBy("order_num", true);
+        PageRows<SsAnnualAdjustAccountEmpTemp> result = PageKit.doSelectPage(pageInfo, () -> ssAnnualAdjustAccountEmpTempService.selectList(condition));
         return JsonResultKit.of(result);
     }
 

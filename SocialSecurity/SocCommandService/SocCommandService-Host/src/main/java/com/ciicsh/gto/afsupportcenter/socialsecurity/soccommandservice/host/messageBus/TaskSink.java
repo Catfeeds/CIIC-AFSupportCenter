@@ -59,6 +59,11 @@ public interface TaskSink {
     String BASE_ADJUST_YEARLY_SH = TOPIC_PREFIX + "af_base_adjust_yearly_sh";
 
     /**
+     * 财务中心付款申请拒绝
+     */
+    String PAY_APPLY_PAY_STATUS_STREAM =  "pay-apply-pay-status-stream";
+
+    /**
      * 社保办理
      */
     String SOCIAL_NEW="socialNew";
@@ -101,4 +106,6 @@ public interface TaskSink {
     @Input(BASE_ADJUST_YEARLY_SH)
     MessageChannel baseAdjustYearlySh();
 
+    @Input(PAY_APPLY_PAY_STATUS_STREAM)
+    MessageChannel rejectPayApplyIdStream();
 }

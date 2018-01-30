@@ -49,17 +49,10 @@ public class SsComTaskBO extends SsComTask{
     private String changeContentValue;
     //需要变更的养老金公司名称
     private String comAccountName;
-    //变更的支付方式
-    private String paymentWay;
-    //账单接收方
-    private String billReceiver;
     //行业类型
     private String belongsIndustry;
     //企业工伤比例
     private String companyWorkInjuryPercentage;
-    //开始年月
-    private LocalDate startMonth;
-
     /**
      *  判断是否是完成状态即 在任务单办理页面时候查询没有完成的任务  在完成tab查看已完成的
      *  如果为空则是在完成tab中查询，否则是在开户办理时查询信息（信息为任务状态!=3的）
@@ -171,14 +164,6 @@ public class SsComTaskBO extends SsComTask{
         this.comAccountName = comAccountName;
     }
 
-    public String getPaymentWay() {
-        return paymentWay;
-    }
-
-    public void setPaymentWay(String paymentWay) {
-        this.paymentWay = paymentWay;
-    }
-
     public String getBelongsIndustry() {
         return belongsIndustry;
     }
@@ -194,15 +179,6 @@ public class SsComTaskBO extends SsComTask{
     public void setCompanyWorkInjuryPercentage(String companyWorkInjuryPercentage) {
         this.companyWorkInjuryPercentage = companyWorkInjuryPercentage;
     }
-
-    public LocalDate getStartMonth() {
-        return startMonth;
-    }
-
-    public void setStartMonth(LocalDate startMonth) {
-        this.startMonth = startMonth;
-    }
-
     public String getChangeContentValue() {
         return changeContentValue;
     }
@@ -217,13 +193,5 @@ public class SsComTaskBO extends SsComTask{
 
     public void setIsComplete(String isComplete) {
         this.isComplete = isComplete;
-    }
-
-    public String getBillReceiver() {
-        return billReceiver;
-    }
-
-    public void setBillReceiver(String billReceiver) {
-        this.billReceiver = billReceiver;
     }
 }
