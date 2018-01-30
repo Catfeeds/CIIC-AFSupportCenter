@@ -8,7 +8,12 @@
         saae.employee_name,
         saae.ss_serial,
         saae.salary,
-        saace.chg_salary,
+        <if test="noCollection == null || noCollection == false">
+            saace.chg_salary,
+        </if>
+        <if test="noCollection == true">
+            NULL as chg_salary,
+        </if>
         saae.id_num,
         saae.archive_status,
         saae.base_amount,

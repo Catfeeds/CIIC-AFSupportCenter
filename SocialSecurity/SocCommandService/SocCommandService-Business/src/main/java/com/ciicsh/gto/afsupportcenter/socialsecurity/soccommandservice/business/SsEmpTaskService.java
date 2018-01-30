@@ -3,6 +3,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskRollInBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskRollOutBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -27,6 +29,14 @@ public interface SsEmpTaskService extends IService<SsEmpTask> {
      * @return
      */
     PageRows<SsEmpTaskBO> employeeOperatorQuery(PageInfo pageInfo);
+
+    /**
+     * 雇员日常操作查询(盘片转入转出)
+     * @param pageInfo
+     * @param isRollIn
+     * @return
+     */
+    <T> PageRows<T> employeeDailyOperatorQueryForDisk(PageInfo pageInfo, boolean isRollIn);
 
     /**
      * 通过社保档案ID 查询历史任务单

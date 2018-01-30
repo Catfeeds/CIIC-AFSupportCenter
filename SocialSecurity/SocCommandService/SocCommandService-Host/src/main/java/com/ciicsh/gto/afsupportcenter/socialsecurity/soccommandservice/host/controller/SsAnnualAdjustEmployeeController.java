@@ -96,10 +96,5 @@ public class SsAnnualAdjustEmployeeController extends BasicController<SsAnnualAd
             e.printStackTrace();
         }
     }
-
-    private List<SsAnnualAdjustEmployee> getLimitList(PageInfo pageInfo) {
-        PageRows<SsAnnualAdjustEmployee> result = business.queryAnnualAdjustEmployeeInPage(pageInfo);
-        return result.getRows();
-    }
 }
 
