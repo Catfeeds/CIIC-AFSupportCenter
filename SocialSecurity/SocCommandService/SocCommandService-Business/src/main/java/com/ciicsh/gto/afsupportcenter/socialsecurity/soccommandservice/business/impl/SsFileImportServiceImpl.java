@@ -90,7 +90,9 @@ public class SsFileImportServiceImpl extends ServiceImpl<SsFileImportMapper, SsF
                     long importBatchId = baseMapper.getMaxBatchIdByRelatedUnitId(ssFileImportDTO) + 1;
 
                     for (int i = 0; i < fileNames.size(); i++) {
-                        insertFileImport(importType, relatedUnitId, importBatchId, storageFileId, urls.get(i), fileNames.get(i), createdBy);
+                        String url = urls.get(i);
+                        url = url.substring(url.lastIndexOf('/') + 1);
+                        insertFileImport(importType, relatedUnitId, importBatchId, storageFileId, url, fileNames.get(i), createdBy);
                     }
                     reentrantLock.unlock();
                 } catch (IOException e) {
