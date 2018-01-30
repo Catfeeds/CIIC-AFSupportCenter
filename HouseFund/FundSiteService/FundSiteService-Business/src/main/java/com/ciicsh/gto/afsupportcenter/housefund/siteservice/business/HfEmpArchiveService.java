@@ -5,10 +5,12 @@ import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpArchiveBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfEmpArchive;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 
 import java.util.Map;
 
-public interface HfEmpArchiveService  extends IService<HfEmpArchive> {
+public interface HfEmpArchiveService extends IService<HfEmpArchive> {
     PageRows<HfEmpArchiveBo> queryEmpArchive(PageInfo pageInfo);
-    Map<String, Object> viewEmpArchiveInfo(String empArchiveId, String companyId);
+    Map<String, Object> viewEmpArchiveInfo(String empArchiveId , String companyId);
+    boolean saveComAccunt(Map<String,String> updateDto);
 }

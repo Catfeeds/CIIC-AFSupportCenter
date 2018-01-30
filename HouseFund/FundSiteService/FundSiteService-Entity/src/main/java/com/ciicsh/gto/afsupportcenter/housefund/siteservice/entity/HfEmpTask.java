@@ -63,8 +63,8 @@ public class HfEmpTask implements Serializable {
     /**
      * 操作提示日期
      */
-	@TableField("operation_reminddate")
-	private LocalDate operationReminddate;
+	@TableField("operation_remind_date")
+	private LocalDate operationRemindDate;
     /**
      * 任务单提交人SysUserId
      */
@@ -185,6 +185,20 @@ public class HfEmpTask implements Serializable {
      */
 	@TableField("end_month")
 	private String endMonth;
+    /**
+     * 个人比例
+     */
+	@TableField("ratio_emp")
+	private BigDecimal ratioEmp;
+    /**
+     * 企业比例
+     */
+	@TableField("ratio_com")
+	private BigDecimal ratioCom;
+    /**
+     * 金额
+     */
+	private BigDecimal amount;
     /**
      * 转出单位
      */
@@ -321,12 +335,12 @@ public class HfEmpTask implements Serializable {
 		this.operationRemind = operationRemind;
 	}
 
-	public LocalDate getOperationReminddate() {
-		return operationReminddate;
+	public LocalDate getOperationRemindDate() {
+		return operationRemindDate;
 	}
 
-	public void setOperationReminddate(LocalDate operationReminddate) {
-		this.operationReminddate = operationReminddate;
+	public void setOperationRemindDate(LocalDate operationRemindDate) {
+		this.operationRemindDate = operationRemindDate;
 	}
 
 	public String getSubmitterId() {
@@ -497,6 +511,30 @@ public class HfEmpTask implements Serializable {
 		this.endMonth = endMonth;
 	}
 
+	public BigDecimal getRatioEmp() {
+		return ratioEmp;
+	}
+
+	public void setRatioEmp(BigDecimal ratioEmp) {
+		this.ratioEmp = ratioEmp;
+	}
+
+	public BigDecimal getRatioCom() {
+		return ratioCom;
+	}
+
+	public void setRatioCom(BigDecimal ratioCom) {
+		this.ratioCom = ratioCom;
+	}
+
+	public BigDecimal getAmount() {
+		return amount;
+	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+
 	public String getTransferOutUnit() {
 		return transferOutUnit;
 	}
@@ -620,7 +658,7 @@ public class HfEmpTask implements Serializable {
 			", taskCategory=" + taskCategory +
 			", urgent=" + urgent +
 			", operationRemind=" + operationRemind +
-			", operationReminddate=" + operationReminddate +
+			", operationRemindDate=" + operationRemindDate +
 			", submitterId=" + submitterId +
 			", submitterDeptName=" + submitterDeptName +
 			", submitTime=" + submitTime +
@@ -642,6 +680,9 @@ public class HfEmpTask implements Serializable {
 			", empBase=" + empBase +
 			", startMonth=" + startMonth +
 			", endMonth=" + endMonth +
+			", ratioEmp=" + ratioEmp +
+			", ratioCom=" + ratioCom +
+			", amount=" + amount +
 			", transferOutUnit=" + transferOutUnit +
 			", transferOutUnitAccount=" + transferOutUnitAccount +
 			", transferInUnit=" + transferInUnit +

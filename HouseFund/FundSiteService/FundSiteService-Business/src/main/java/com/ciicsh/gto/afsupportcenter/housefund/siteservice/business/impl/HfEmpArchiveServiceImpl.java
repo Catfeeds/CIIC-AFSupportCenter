@@ -1,5 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.impl;
 
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfArchiveBasePeriodBo;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComAccountBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpArchiveBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfEmpArchive;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao.HfEmpArchiveMapper;
@@ -8,12 +10,14 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * <p>
@@ -27,6 +31,7 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
     @Autowired
     HfEmpArchiveMapper hfEmpArchiveMapper;
 
+
    public PageRows<HfEmpArchiveBo> queryEmpArchive(PageInfo pageInfo){
        HfEmpArchiveBo dto = pageInfo.toJavaObject(HfEmpArchiveBo.class);
        return  PageKit.doSelectPage(pageInfo, () ->  hfEmpArchiveMapper.queryEmpArchive(dto));
@@ -36,9 +41,9 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
         Map<String,Object> resultMap=new HashMap<String,Object>();
 
         HfEmpArchiveBo viewEmpArchiveBo= hfEmpArchiveMapper.viewEmpArchive(empArchiveId);
-        HfEmpArchiveBo viewEmpPeriodBo= hfEmpArchiveMapper.viewEmpPeriod(empArchiveId,"2");
-        HfEmpArchiveBo viewEmpPeriodAddBo= hfEmpArchiveMapper.viewEmpPeriod(empArchiveId,"2");
-        HfEmpArchiveBo viewComAccountBo= hfEmpArchiveMapper.viewComAccount(companyId);
+        HfArchiveBasePeriodBo viewEmpPeriodBo= hfEmpArchiveMapper.viewEmpPeriod(empArchiveId,"1");
+        HfArchiveBasePeriodBo viewEmpPeriodAddBo= hfEmpArchiveMapper.viewEmpPeriod(empArchiveId,"2");
+        HfComAccountBo viewComAccountBo= hfEmpArchiveMapper.viewComAccount(companyId);
         List listEmpTaskPeriodBo=hfEmpArchiveMapper.listEmpTaskPeriod(empArchiveId,"1");//基本
         List listEmpTaskPeriodAddBo=hfEmpArchiveMapper.listEmpTaskPeriod(empArchiveId,"2");//补充
         List listEmpTransferBo= hfEmpArchiveMapper.listEmpTransfer(empArchiveId);
@@ -51,4 +56,22 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
         resultMap.put("listEmpTransfer",listEmpTransferBo);
       return resultMap;
     }
+    public boolean saveComAccunt(Map<String,String> updateDto){
+        try{
+            HfEmpArchive empArchive=new HfEmpArchive();
+            empArchive.setEmpArchiveId(Long.valueOf(updateDto.get("empArchiveId")));
+            empArchive.setHfEmpAccount(updateDto.get("hfEmpAccount"));
+            hfEmpArchiveMapper.updateById(empArchive);
+            if (Optional.ofNullable(updateDto.get("empArchiveIdBc")).isPresent()){
+                empArchive=new HfEmpArchive();
+                empArchive.setEmpArchiveId(Long.valueOf(updateDto.get("empArchiveIdBc")));
+                empArchive.setHfEmpAccount(updateDto.get("hfEmpAccountBc"));
+                hfEmpArchiveMapper.updateById(empArchive);
+            }
+        }catch (Exception e){
+            return false;
+        }
+        return true;
+    }
+
 }

@@ -12,7 +12,7 @@
 		<result column="task_category" property="taskCategory" />
 		<result column="urgent" property="urgent" />
 		<result column="operation_remind" property="operationRemind" />
-		<result column="operation_reminddate" property="operationReminddate" />
+		<result column="operation_remind_date" property="operationRemindDate" />
 		<result column="submitter_id" property="submitterId" />
 		<result column="submitter_dept_name" property="submitterDeptName" />
 		<result column="submit_time" property="submitTime" />
@@ -34,6 +34,9 @@
 		<result column="emp_base" property="empBase" />
 		<result column="start_month" property="startMonth" />
 		<result column="end_month" property="endMonth" />
+		<result column="ratio_emp" property="ratioEmp" />
+		<result column="ratio_com" property="ratioCom" />
+		<result column="amount" property="amount" />
 		<result column="transfer_out_unit" property="transferOutUnit" />
 		<result column="transfer_out_unit_account" property="transferOutUnitAccount" />
 		<result column="transfer_in_unit" property="transferInUnit" />
