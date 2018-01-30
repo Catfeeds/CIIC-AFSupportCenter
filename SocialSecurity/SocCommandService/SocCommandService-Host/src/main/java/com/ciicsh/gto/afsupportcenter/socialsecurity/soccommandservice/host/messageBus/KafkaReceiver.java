@@ -8,7 +8,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.AFEmp
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.AFEmployeeCompanyDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.RejectPayApplyDTO;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -146,8 +146,8 @@ public class KafkaReceiver {
     }
 
     @StreamListener(TaskSink.PAY_APPLY_PAY_STATUS_STREAM)
-    public void rejectPayApplyIdStream(Message<RejectPayApplyDTO> message) {
-        RejectPayApplyDTO taskMsgDTO = message.getPayload();
+    public void rejectPayApplyIdStream(Message<PayApplyPayStatusDTO> message) {
+        PayApplyPayStatusDTO taskMsgDTO = message.getPayload();
         boolean res = false;
         //社保
         if (taskMsgDTO.getBusinessType() == 1) {
