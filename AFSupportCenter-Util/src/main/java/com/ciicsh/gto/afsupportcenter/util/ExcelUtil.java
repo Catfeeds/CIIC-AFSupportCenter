@@ -28,22 +28,30 @@ public class ExcelUtil {
 
     /********************导出相关(开始)***************************/
     public static void exportExcel(List<?> list,String title,String sheetName,Class<?> pojoClass,String fileName,boolean isCreateHeader, HttpServletResponse response){
-        ExportParams exportParams = new ExportParams(title, sheetName);
+        ExportParams exportParams = new ExportParams();
+        if(!StringUtils.isBlank(title)){
+            exportParams.setTitle(title);
+        }
+        if(!StringUtils.isBlank(sheetName)){
+            exportParams.setSheetName(sheetName);
+        }
         exportParams.setCreateHeadRows(isCreateHeader);
-        defaultExport(list, pojoClass, fileName, response, exportParams);
+        defaultExport(list, pojoClass, fileName, exportParams, response);
     }
 
     public static void exportExcel(List<?> list, String title, String sheetName, Class<?> pojoClass,String fileName, HttpServletResponse response){
-        if(StringUtils.isBlank(title) && StringUtils.isBlank(fileName)){
-            defaultExport(list, pojoClass, fileName, response, new ExportParams());
+        ExportParams exportParams = new ExportParams();
+        if(!StringUtils.isBlank(title)){
+            exportParams.setTitle(title);
         }
-        else{
-            defaultExport(list, pojoClass, fileName, response, new ExportParams(title, sheetName));
+        if(!StringUtils.isBlank(sheetName)){
+            exportParams.setSheetName(sheetName);
         }
+        defaultExport(list, pojoClass, fileName, exportParams,response);
     }
 
     public static void exportExcel(List<?> list,Class<?> pojoClass,String fileName, HttpServletResponse response){
-        defaultExport(list, pojoClass, fileName, response, new ExportParams());
+        defaultExport(list, pojoClass, fileName, new ExportParams(),response);
     }
 
     public static void exportExcel(List<Map<String, Object>> list, String fileName, HttpServletResponse response){
@@ -51,7 +59,7 @@ public class ExcelUtil {
     }
 
 
-    private static void defaultExport(List<?> list, Class<?> pojoClass, String fileName, HttpServletResponse response, ExportParams exportParams) {
+    private static void defaultExport(List<?> list, Class<?> pojoClass, String fileName, ExportParams exportParams,HttpServletResponse response) {
         Workbook workbook = ExcelExportUtil.exportExcel(exportParams,pojoClass,list);
         if (workbook != null);
         downLoadExcel(fileName, response, workbook);
