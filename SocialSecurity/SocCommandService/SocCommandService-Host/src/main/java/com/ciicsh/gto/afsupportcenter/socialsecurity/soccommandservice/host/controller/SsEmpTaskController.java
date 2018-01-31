@@ -1,10 +1,16 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
+import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskRollInBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskRollOutBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.*;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAnnualAdjustEmployeeDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.dto.emptask.EmpTaskBatchParameter;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
@@ -15,11 +21,16 @@ import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.formula.functions.T;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import utils.TaskCommonUtils;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -185,7 +196,18 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         LocalDate now = LocalDate.now();
         StringBuffer handleMonth = TaskCommonUtils.getMonthStr(now);
         empTaskBatchParameter.getSsEmpTaskBOList().forEach(p->{
-            p.setTaskStatus(TaskStatusConst.PROCESSING);
+            //1新进  2  转入 3  调整 4 补缴 5 转出 6封存 7退账
+            if(1==p.getTaskCategory() || 2==p.getTaskCategory()){
+                String ssSerial =business.selectMaxSsSerialByTaskId(p.getEmpTaskId());
+                //社保序号
+                p.setEmpSsSerial(ssSerial);
+            }
+            //退账 表示已完成
+            if(7==p.getTaskCategory()){
+                p.setTaskStatus(TaskStatusConst.FINISH);
+            }else{
+                p.setTaskStatus(TaskStatusConst.PROCESSING);
+            }
             //讨论说 批量办理的 办理月份为当前月份
             p.setHandleMonth(handleMonth.toString());
             p.setModifiedTime(LocalDateTime.now());
@@ -195,7 +217,65 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         return JsonResultKit.of(true);
     }
 
+    /**
+     * 雇员日常操作转入盘片导出
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping("/employeeDailyOperatorDiskExport")
+    @Log("雇员日常操作盘片导出")
+    public void employeeDailyOperatorDiskExport(HttpServletResponse response, PageInfo pageInfo) {
+        try {
+            SsEmpTaskBO ssEmpTaskBO = pageInfo.toJavaObject(SsEmpTaskBO.class);
+            String sheetName;
+            boolean isRollIn = false;
+            Class clazz;
+            if (ssEmpTaskBO.getTaskCategory() == 2) { // TODO dictService
+                sheetName = "转入盘片";
+                isRollIn = true;
+                clazz = SsEmpTaskRollInBO.class;
+            } else {
+                sheetName = "转出盘片";
+                clazz = SsEmpTaskRollOutBO.class;
+            }
+            pageInfo.setPageSize(10000);
+            pageInfo.setPageNum(0);
+            PageRows<T> result = business.employeeDailyOperatorQueryForDisk(pageInfo, isRollIn);
+            long total = result.getTotal();
+            ExportParams exportParams = new ExportParams();
+            exportParams.setType(ExcelType.XSSF);
+            exportParams.setSheetName(sheetName);
+            Workbook workbook;
 
+            if (total <= pageInfo.getPageSize()) {
+                workbook = ExcelExportUtil.exportExcel(exportParams, clazz, result.getRows());
+            } else {
+                workbook = ExcelExportUtil.exportBigExcel(exportParams, clazz, result.getRows());
+                int pageNum = (int) Math.ceil(total / pageInfo.getPageSize());
+                for(int i = 1; i < pageNum; i++) {
+                    pageInfo.setPageNum(i);
+                    result = business.employeeDailyOperatorQueryForDisk(pageInfo, isRollIn);
+                    workbook = ExcelExportUtil.exportBigExcel(exportParams, clazz, result.getRows());
+                }
+                ExcelExportUtil.closeExportBigExcel();
+            }
+
+            String fileName = URLEncoder.encode("sheetName.xlsx"
+                .replace("sheetName", sheetName), "UTF-8");
+
+            response.reset();
+            response.setCharacterEncoding("UTF-8");
+//            response.setHeader("content-Type", "application/vnd.ms-excel");
+            response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setHeader("Content-Disposition",
+                "attachment;filename=" + fileName);
+            workbook.write(response.getOutputStream());
+            workbook.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 办理状态：1、未处理 2 、处理中(已办)  3 已完成(已做) 4、批退 5、不需处理

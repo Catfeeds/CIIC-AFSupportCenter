@@ -12,6 +12,9 @@ import java.io.Serializable;
  * <p>
  * 独立库客户任务单
  * </p>
+ *
+ * @author xsj
+ * @since 2018-01-30
  */
 @TableName("ss_com_task")
 public class SsComTask implements Serializable {
@@ -138,6 +141,59 @@ public class SsComTask implements Serializable {
 	private String businessInterfaceId;
 	@TableField("task_id")
 	private String taskId;
+    /**
+     * 参保户登记码（前道传递）
+     */
+	@TableField("ss_account")
+	private String ssAccount;
+    /**
+     * 银行账号(牡丹卡号)（前道传递）
+     */
+	@TableField("bank_account")
+	private String bankAccount;
+    /**
+     * 养老金账户公司名称（前道传递）
+     */
+	@TableField("com_account_name")
+	private String comAccountName;
+    /**
+     * 付款银行(一般情况是工商银行)（前道传递）
+     */
+	@TableField("payment_bank")
+	private String paymentBank;
+    /**
+     * 付款方式：.（前道传递）
+            1-我司代付款
+            2-客户自付
+            3-我司垫付
+     */
+	@TableField("payment_way")
+	private Integer paymentWay;
+    /**
+     * 社保帐单寄到哪里: 1 我司，2 客户公司（前道传递）
+     */
+	@TableField("bill_receiver")
+	private Integer billReceiver;
+    /**
+     * 行业类别（前道传递）
+     */
+	@TableField("industry_category")
+	private String industryCategory;
+    /**
+     * 开始月份（前道传递）
+     */
+	@TableField("start_month")
+	private String startMonth;
+    /**
+     * 客户交付社保费用给中智的截止日（前道传递）
+     */
+	@TableField("expire_date_front")
+	private Integer expireDateFront;
+    /**
+     * 结算区县(社保局所在上海地区)（前道传递）
+     */
+	@TableField("settlement_area")
+	private String settlementArea;
     /**
      * 是否可用
      */
@@ -365,6 +421,86 @@ public class SsComTask implements Serializable {
 		this.taskId = taskId;
 	}
 
+	public String getSsAccount() {
+		return ssAccount;
+	}
+
+	public void setSsAccount(String ssAccount) {
+		this.ssAccount = ssAccount;
+	}
+
+	public String getBankAccount() {
+		return bankAccount;
+	}
+
+	public void setBankAccount(String bankAccount) {
+		this.bankAccount = bankAccount;
+	}
+
+	public String getComAccountName() {
+		return comAccountName;
+	}
+
+	public void setComAccountName(String comAccountName) {
+		this.comAccountName = comAccountName;
+	}
+
+	public String getPaymentBank() {
+		return paymentBank;
+	}
+
+	public void setPaymentBank(String paymentBank) {
+		this.paymentBank = paymentBank;
+	}
+
+	public Integer getPaymentWay() {
+		return paymentWay;
+	}
+
+	public void setPaymentWay(Integer paymentWay) {
+		this.paymentWay = paymentWay;
+	}
+
+	public Integer getBillReceiver() {
+		return billReceiver;
+	}
+
+	public void setBillReceiver(Integer billReceiver) {
+		this.billReceiver = billReceiver;
+	}
+
+	public String getIndustryCategory() {
+		return industryCategory;
+	}
+
+	public void setIndustryCategory(String industryCategory) {
+		this.industryCategory = industryCategory;
+	}
+
+	public String getStartMonth() {
+		return startMonth;
+	}
+
+	public void setStartMonth(String startMonth) {
+		this.startMonth = startMonth;
+	}
+
+	public Integer getExpireDateFront() {
+		return expireDateFront;
+	}
+
+	public void setExpireDateFront(Integer expireDateFront) {
+		this.expireDateFront = expireDateFront;
+	}
+
+	public String getSettlementArea() {
+		return settlementArea;
+	}
+
+	public void setSettlementArea(String settlementArea) {
+		this.settlementArea = settlementArea;
+	}
+
 	public Boolean getActive() {
 		return isActive;
 	}
@@ -433,6 +569,16 @@ public class SsComTask implements Serializable {
 			", rejectionRemark=" + rejectionRemark +
 			", businessInterfaceId=" + businessInterfaceId +
 			", taskId=" + taskId +
+			", ssAccount=" + ssAccount +
+			", bankAccount=" + bankAccount +
+			", comAccountName=" + comAccountName +
+			", paymentBank=" + paymentBank +
+			", paymentWay=" + paymentWay +
+			", billReceiver=" + billReceiver +
+			", industryCategory=" + industryCategory +
+			", startMonth=" + startMonth +
+			", expireDateFront=" + expireDateFront +
+			", settlementArea=" + settlementArea +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

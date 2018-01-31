@@ -115,7 +115,7 @@ public class SsAnnualAdjustCompanyController extends BasicController<SsAnnualAdj
             importParams.setVerifyHanlder(new MyExcelVerifyHandler(fieldLengthMap, setValueMap, skipFields, verifyConfigMap));
 
             ssFileImportService.executeExcelImport(true, conditionKey, importType, annualAdjustCompanyId,
-                importParams, ssAnnualAdjustCompanyEmpTempService, files);
+                importParams, ssAnnualAdjustCompanyEmpTempService, files, "12"); //TODO createdBy
             afterInsert(annualAdjustCompanyId, companyId);
         } catch (Exception e) {
             e.printStackTrace(); // TODO log

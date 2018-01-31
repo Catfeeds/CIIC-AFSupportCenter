@@ -72,6 +72,7 @@
         et.start_handle_date,
         et.send_check_date,
         et.finish_date,
+        et.start_month,
         et.end_month,
         et.chat_history,
         et.business_interface_id,

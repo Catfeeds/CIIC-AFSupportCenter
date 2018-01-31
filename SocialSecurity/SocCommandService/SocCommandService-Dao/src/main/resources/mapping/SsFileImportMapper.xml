@@ -9,6 +9,7 @@
 		<result column="related_unit_id" property="relatedUnitId" />
         <result column="import_batch_id" property="importBatchId" />
 		<result column="storage_file_id" property="storageFileId" />
+        <result column="storage_file_url" property="storageFileUrl" />
 		<result column="file_name" property="fileName" />
         <result column="is_submit" property="isSubmit" />
 		<result column="is_active" property="isActive" />
