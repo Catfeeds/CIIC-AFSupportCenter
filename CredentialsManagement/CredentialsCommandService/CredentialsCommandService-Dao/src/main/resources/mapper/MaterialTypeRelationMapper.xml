@@ -7,6 +7,7 @@
 		<id column="material_type_relation_id" property="materialTypeRelationId" />
 		<result column="credentials_type" property="credentialsType" />
 		<result column="credentials_deal_type" property="credentialsDealType" />
+        <result column="level" property="level"></result>
 		<result column="material_id" property="materialId" />
 		<result column="material_name" property="materialName" />
 		<result column="material_level" property="materialLevel" />
@@ -30,10 +31,19 @@
       </foreach>
     </select>
 
+    <select id="selectMaterials" resultMap="BaseResultMap">
+        SELECT
+        <include refid="SEL_ALL_COLUMS"/>
+        FROM
+        cm_material_type_relation
+        <include refid="WHERE_QUERY"/>
+    </select>
+
     <sql id="SEL_ALL_COLUMS">
         material_type_relation_id,
         credentials_type,
         credentials_deal_type,
+        level,
         material_id,
         material_name,
         material_level,
@@ -44,5 +54,16 @@
         modified_time,
         created_by,
         modified_by
+    </sql>
+    <sql id="WHERE_QUERY">
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            is_active = 1
+            <if test="credentialsType != null and credentialsType != ''">
+                AND credentials_type = #{credentialsType}
+            </if>
+            <if test="credentialsDealType != null and credentialsDealType != ''">
+                AND credentials_deal_type = #{credentialsDealType}
+            </if>
+        </trim>
     </sql>
 </mapper>
