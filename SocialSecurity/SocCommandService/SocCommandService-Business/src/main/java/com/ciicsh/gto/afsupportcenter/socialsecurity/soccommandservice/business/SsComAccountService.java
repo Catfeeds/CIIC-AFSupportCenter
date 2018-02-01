@@ -6,9 +6,12 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComA
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.settlementcenter.invoicecommandservice.api.dto.JsonResult;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -49,4 +52,12 @@ public interface SsComAccountService extends IService<SsComAccount> {
      * @return
      */
     List<com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountDTO> getSsComAccountList(SsComAccountParamDto dto);
+
+    /**
+     * 调用银行接口保存社保企业开户转入的银行信息
+     *
+     * @param map
+     * @return
+     */
+    JsonResult addBankAccount(@RequestBody Map<String, Object> map) throws Exception;
 }

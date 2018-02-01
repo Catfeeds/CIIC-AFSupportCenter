@@ -49,4 +49,6 @@ public interface SsEmpTaskMapper extends BaseMapper<SsEmpTask> {
     String selectMaxSsSerialByTaskId(@Param("empTaskId") Long empTaskId);
 
     List<SsEmpTaskBO> queryBatchEmpArchiveByEmpTaskIds(SsEmpTaskBO ssEmpTaskBO);
+
+    List<SsEmpTaskBO> queryByTaskId(SsEmpTaskBO ssEmpTaskBO);
 }

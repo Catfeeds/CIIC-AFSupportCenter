@@ -98,5 +98,5 @@ public interface SsPaymentComService extends IService<SsPaymentCom> {
      * @param pkId 业务方主键id
      * @param pkId 批退备注
      */
-    boolean saveRejectResult(Long pkId, String remark);
+    boolean saveRejectResult(Long pkId, String remark, Integer payStatus);
 }

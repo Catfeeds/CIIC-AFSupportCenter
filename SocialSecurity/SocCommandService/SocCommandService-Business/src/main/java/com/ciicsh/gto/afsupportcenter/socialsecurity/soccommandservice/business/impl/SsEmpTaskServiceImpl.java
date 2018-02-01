@@ -1345,5 +1345,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         return baseMapper.selectById(bo);
     }
 
+    /**
+     * 查询任务单信息
+     * @param ssEmpTaskBO
+     */
+    public List<SsEmpTaskBO> queryByTaskId(SsEmpTaskBO ssEmpTaskBO) {
+        return baseMapper.queryByTaskId(ssEmpTaskBO);
+    }
 }
 

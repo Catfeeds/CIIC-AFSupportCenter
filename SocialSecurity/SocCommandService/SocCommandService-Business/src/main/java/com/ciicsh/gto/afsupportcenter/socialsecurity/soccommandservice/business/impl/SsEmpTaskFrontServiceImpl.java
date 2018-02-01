@@ -1,14 +1,15 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpTaskFrontService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpTaskFrontMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpTaskMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.AFEmpSocialDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.AFEmployeeCompanyDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskFront;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,10 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
     /**
      * <p>Description: 保存数据到雇员任务单表</p>
      *
+     * @param taskMsgDTO   消息队列接受的对象
+     * @param taskCategory 任务类型
+     * @param isChange     是否更正任务单1 是 0 否
+     * @param dto          取得的雇员信息
      * @return
      * @author zhangxj
      * @date 2017-12-28
@@ -40,15 +45,16 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
     @Transactional(
         rollbackFor = {Exception.class}
     )
-    public boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, EmployeeInfoDTO dto) {
+    public boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer isChange,
+                                AfEmployeeInfoDTO dto) {
         boolean result = false;
         try {
-            AFEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
+            AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
 
             SsEmpTask ssEmpTask = new SsEmpTask();
             ssEmpTask.setTaskId(taskMsgDTO.getTaskId());
             ssEmpTask.setCompanyId(companyDto.getCompanyId());
-            ssEmpTask.setEmployeeId(companyDto.getEmpId());
+            ssEmpTask.setEmployeeId(companyDto.getEmployeeId());
             ssEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
             ssEmpTask.setSubmitterName(companyDto.getCreatedBy());
             ssEmpTask.setSalary(companyDto.getSalary());
@@ -60,6 +66,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                 .toLocalDate());
 
             ssEmpTask.setTaskCategory(taskCategory);
+            ssEmpTask.setIsChange(isChange);
 
             ssEmpTask.setActive(true);
             ssEmpTask.setModifiedBy("system");
@@ -68,14 +75,14 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
             ssEmpTask.setCreatedTime(LocalDateTime.now());
             ssEmpTaskMapper.insert(ssEmpTask);
 
-            List<AFEmpSocialDTO> socialList = dto.getEmpSocial();
+            List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
             List<SsEmpTaskFront> eleList = new ArrayList<>();
             SsEmpTaskFront ssEmpTaskFront = null;
-            for (AFEmpSocialDTO socialDto : socialList) {
+            for (AfEmpSocialDTO socialDto : socialList) {
                 ssEmpTaskFront = new SsEmpTaskFront();
                 ssEmpTaskFront.setEmpTaskId(Long.parseLong(taskMsgDTO.getTaskId()));
-                ssEmpTaskFront.setItemDicId(socialDto.getItemDicId());
-                ssEmpTaskFront.setEmpCompanyBase(socialDto.getEmpBase());
+                ssEmpTaskFront.setItemDicId(socialDto.getItemCode());
+                ssEmpTaskFront.setEmpCompanyBase(socialDto.getEmpCompanyBase());
                 ssEmpTaskFront.setPolicyId(socialDto.getPolicyId());
 
                 ssEmpTaskFront.setPolicyName(socialDto.getPolicyName());
@@ -86,8 +93,15 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                 ssEmpTaskFront.setPersonalRatio(socialDto.getPersonalRatio());
                 ssEmpTaskFront.setPersonalBase(socialDto.getPersonalBase());
                 ssEmpTaskFront.setPersonalAmount(socialDto.getPersonalAmount());
-                ssEmpTaskFront.setStartMonth(socialDto.getStartMonth());
-                ssEmpTaskFront.setEndMonth(socialDto.getEndMonth());
+
+                if (socialDto.getStartDate() != null) {
+                    ssEmpTaskFront.setStartMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getStartDate(),
+                        "yyyyMM")));
+                }
+                if (socialDto.getEndDate() != null) {
+                    ssEmpTaskFront.setEndMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getEndDate(),
+                        "yyyyMM")));
+                }
 
                 ssEmpTaskFront.setActive(true);
                 ssEmpTaskFront.setModifiedBy(null);

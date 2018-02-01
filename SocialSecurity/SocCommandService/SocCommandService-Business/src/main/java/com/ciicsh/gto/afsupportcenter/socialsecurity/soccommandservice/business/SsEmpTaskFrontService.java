@@ -1,8 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.EmployeeInfoDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskFront;
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskFront;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 
 /**
@@ -19,5 +19,5 @@ public interface SsEmpTaskFrontService extends IService<SsEmpTaskFront> {
      * @author zhangxj
      * @date 2017-12-28
      */
-    boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, EmployeeInfoDTO dto);
+    boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer isChange, AfEmployeeInfoDTO dto);
 }
