@@ -139,3 +139,8 @@ management:
     enabled: false
   port: 6004
   context-path: /admin
+
+http:
+  multipart:
+  enabled: true
+  max-file-size: 2MB

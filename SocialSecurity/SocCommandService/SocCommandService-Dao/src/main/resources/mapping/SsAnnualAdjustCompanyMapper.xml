@@ -11,6 +11,10 @@
 		<result column="data_collect_status" property="dataCollectStatus" />
 		<result column="report_status" property="reportStatus" />
 		<result column="data_collect_time" property="dataCollectTime" />
+        <result column="com_account_id" property="comAccountId" />
+        <result column="account_avg_month_salary" property="accountAvgMonthSalary" />
+        <result column="account_salary_amount" property="accountSalaryAmount" />
+        <result column="account_emp_count" property="accountEmpCount" />
 		<result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />
 		<result column="modified_time" property="modifiedTime" />

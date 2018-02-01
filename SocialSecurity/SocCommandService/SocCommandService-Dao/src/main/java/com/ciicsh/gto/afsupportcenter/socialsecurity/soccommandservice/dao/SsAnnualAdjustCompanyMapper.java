@@ -19,4 +19,10 @@ public interface SsAnnualAdjustCompanyMapper extends BaseMapper<SsAnnualAdjustCo
      * @return
      */
     List<SsAnnualAdjustCompany> queryAnnualAdjustCompany(SsAnnualAdjustCompanyDTO ssAnnualAdjustCompanyDTO);
+
+    /**
+     * 根据社保账户ID更新年调客户信息的社保账户单位平均工资相关部分
+     * @param ssAnnualAdjustCompany
+     */
+    void updateAnnualAdjustCompanysByComAccountId(SsAnnualAdjustCompany ssAnnualAdjustCompany);
 }

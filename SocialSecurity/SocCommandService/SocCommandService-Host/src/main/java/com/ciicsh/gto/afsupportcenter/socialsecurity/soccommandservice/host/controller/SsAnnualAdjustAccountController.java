@@ -5,6 +5,7 @@ import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAnnualAdjustAccountBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAnnualAdjustAccountEmpBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAnnualAdjustAccountDTO;
@@ -77,6 +78,7 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
         String ssAccount = multipartRequest.getParameter("ssAccount");
         Map<String, Object> map = new HashMap<>();
         map.put("ss_account", ssAccount);
+        map.put("is_active", 1);
         SsComAccount ssComAccount;
         Long comAccountId;
 
@@ -173,14 +175,21 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
 
     @RequestMapping("/accountEmpAvgMonthSalaryExport")
     @Log("导出社保账户平均月工资")
-    public void accountEmpAvgMonthSalaryExport(HttpServletResponse response, PageInfo pageInfo) {
+    public void accountEmpAvgMonthSalaryExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         SsAnnualAdjustAccountDTO ssAnnualAdjustAccountDTO = pageInfo.toJavaObject(SsAnnualAdjustAccountDTO.class);
         Map<String, Object> queryCondition = new HashMap<>();
         queryCondition.put("annual_adjust_account_id", ssAnnualAdjustAccountDTO.getAnnualAdjustAccountId());
         SsAnnualAdjustAccountEmpDTO ssAnnualAdjustAccountEmpDTO = new SsAnnualAdjustAccountEmpDTO();
         ssAnnualAdjustAccountEmpDTO.setAnnualAdjustAccountId(ssAnnualAdjustAccountDTO.getAnnualAdjustAccountId());
         SsAnnualAdjustAccount ssAnnualAdjustAccount = business.selectById(ssAnnualAdjustAccountDTO.getAnnualAdjustAccountId());
-        if (ssAnnualAdjustAccount != null) {
+        if (ssAnnualAdjustAccount != null && ssAnnualAdjustAccount.getActive()) {
+            List<SsAnnualAdjustAccountBO> boList = business.getUnitAvgMonthSalaryByAnnualAdjustAccountId(ssAnnualAdjustAccountDTO.getAnnualAdjustAccountId());
+            if (CollectionUtils.isNotEmpty(boList)) {
+                if (boList.size() > 1) {
+                    throw new Exception("存在不同的单位平均工资信息，数据不正确");
+                }
+            }
+
             List<SsAnnualAdjustAccountEmpBO> list;
 
             Calendar calendar = Calendar.getInstance();
@@ -223,9 +232,9 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
             map.put("comAccountName", ssAnnualAdjustAccount.getComAccountName());
             map.put("ssAccount", ssAnnualAdjustAccount.getSsAccount());
             map.put("printDate", printDate);
-            map.put("accountAvgMonthSalary", ""); // TODO calculate? blank?
-            map.put("allTotalAmount", ""); // TODO calculate? blank?
-            map.put("allEmpTotal", ""); // TODO calculate? blank?
+            map.put("accountAvgMonthSalary", boList.get(0).getAccountAvgMonthSalary());
+            map.put("allTotalAmount", boList.get(0).getAccountSalaryAmount());
+            map.put("allEmpTotal", boList.get(0).getAccountEmpCount());
             alMap.put(2, map);
 
             TemplateExportParams params = new TemplateExportParams("/template/ssAccount_reportYear.xls", 0, 1, 2);
@@ -252,7 +261,7 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
     @Transactional(rollbackFor = Exception.class)
     public Result annualAdjustAccountDelete(PageInfo pageInfo) {
         SsAnnualAdjustAccountDTO ssAnnualAdjustAccountDTO = pageInfo.toJavaObject(SsAnnualAdjustAccountDTO.class);
-        Long annualAdjustAccountId = ssAnnualAdjustAccountDTO.getComAccountId();
+        Long annualAdjustAccountId = ssAnnualAdjustAccountDTO.getAnnualAdjustAccountId();
         Map<String, Object> map = new HashMap<>();
         map.put("annual_adjust_account_id", annualAdjustAccountId);
         ssAnnualAdjustAccountEmpService.deleteByMap(map);

@@ -5,10 +5,15 @@ import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.toolkit.CollectionUtils;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAnnualAdjustAccountBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAnnualAdjustAccountEmpBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAnnualAdjustAccountEmpService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAnnualAdjustAccountEmpTempService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAnnualAdjustAccountService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAnnualAdjustAccountDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAnnualAdjustAccountEmpTempDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAnnualAdjustAccount;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAnnualAdjustAccountEmpTemp;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -27,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,7 +45,24 @@ import java.util.Map;
 public class SsAnnualAdjustAccountEmpController extends BasicController<SsAnnualAdjustAccountEmpService> {
 
     @Autowired
+    SsAnnualAdjustAccountService ssAnnualAdjustAccountService;
+    @Autowired
     SsAnnualAdjustAccountEmpTempService ssAnnualAdjustAccountEmpTempService;
+
+    @RequestMapping("/accountUnitAvgMonthSalaryQuery")
+    public JsonResult<List> accountUnitAvgMonthSalaryQuery(PageInfo pageInfo) {
+        SsAnnualAdjustAccountDTO ssAnnualAdjustAccountDTO = pageInfo.toJavaObject(SsAnnualAdjustAccountDTO.class);
+        Long annualAdjustAccountId = ssAnnualAdjustAccountDTO.getAnnualAdjustAccountId();
+        List<SsAnnualAdjustAccountBO> list = ssAnnualAdjustAccountService.getUnitAvgMonthSalaryByAnnualAdjustAccountId(annualAdjustAccountId);
+        if (CollectionUtils.isNotEmpty(list)) {
+            if (list.size() > 1) {
+                return JsonResultKit.ofError("存在不同的单位平均工资信息，数据不正确");
+            } else {
+                return JsonResultKit.of(list);
+            }
+        }
+        return JsonResultKit.of();
+    }
 
     @RequestMapping("/annualAdjustAccountEmpTempQuery")
     public JsonResult<PageRows> annualAdjustAccountEmpTempQuery(PageInfo pageInfo) {
@@ -65,7 +88,7 @@ public class SsAnnualAdjustAccountEmpController extends BasicController<SsAnnual
      * @return
      */
     @RequestMapping("/annualAdjustAccountEmpQuery")
-    public JsonResult<PageRows> annualAdjustCompanyEmpQuery(PageInfo pageInfo) {
+    public JsonResult<PageRows> annualAdjustAccountEmpQuery(PageInfo pageInfo) {
         PageRows<SsAnnualAdjustAccountEmpBO> result = business.queryAnnualAdjustAccountEmpInPage(pageInfo);
         return JsonResultKit.of(result);
     }
@@ -87,7 +110,7 @@ public class SsAnnualAdjustAccountEmpController extends BasicController<SsAnnual
             ExportParams exportParams = new ExportParams();
             exportParams.setType(ExcelType.XSSF);
             exportParams.setSheetName("社保月平均工资申报表匹配结果");
-            Workbook workbook = null;
+            Workbook workbook;
 
             if (total <= pageInfo.getPageSize()) {
                 workbook = ExcelExportUtil.exportExcel(exportParams, SsAnnualAdjustAccountEmpBO.class, result.getRows());

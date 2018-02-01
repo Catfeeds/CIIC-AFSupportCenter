@@ -28,4 +28,10 @@ public interface SsAnnualAdjustCompanyService extends IService<SsAnnualAdjustCom
      * @return
      */
     PageRows<SsAnnualAdjustCompany> queryAnnualAdjustCompanyInPage(PageInfo pageInfo);
+
+    /**
+     * 根据社保账户ID更新年调客户信息的社保账户单位平均工资相关部分
+     * @param ssAnnualAdjustCompany
+     */
+    void updateAnnualAdjustCompanysByComAccountId(SsAnnualAdjustCompany ssAnnualAdjustCompany);
 }

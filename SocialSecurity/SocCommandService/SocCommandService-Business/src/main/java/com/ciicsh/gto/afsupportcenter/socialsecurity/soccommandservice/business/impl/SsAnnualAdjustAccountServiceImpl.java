@@ -77,4 +77,9 @@ public class SsAnnualAdjustAccountServiceImpl extends ServiceImpl<SsAnnualAdjust
     public int getCountByComAccountId(Long comAccountId) {
         return baseMapper.getCountByComAccountId(comAccountId);
     }
+
+    @Override
+    public List<SsAnnualAdjustAccountBO> getUnitAvgMonthSalaryByAnnualAdjustAccountId(Long annualAdjustAccountId) {
+        return baseMapper.getUnitAvgMonthSalaryByAnnualAdjustAccountId(annualAdjustAccountId);
+    }
 }
