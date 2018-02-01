@@ -9,8 +9,10 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.cu
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.TestPerson;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.YysExportOpt;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.YysmxOpt;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.messageBus.KafkaSender;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
+import com.ciicsh.gto.afsupportcenter.util.kafkaMessage.SocReportMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,6 +37,9 @@ public class DemoController {
 
     @Autowired
     private SsMonthEmpChangeDetailService monthEmpChangeDetailService;
+
+    @Autowired
+    private KafkaSender sender;
 
     @RequestMapping("export")
     public void export(HttpServletResponse response){
@@ -260,4 +265,14 @@ public class DemoController {
 
         ExcelUtil.exportExcel(opts,StatementExportOpt.class,fileNme,response);
     }
+
+
+    @RequestMapping("/messageTest")
+    public void messageTest(){
+        SocReportMessage message = new SocReportMessage();
+        message.setComAccountId(3L);
+        message.setSsMonth("201801");
+        sender.sendSocReportMsg(message);
+    }
+
 }
