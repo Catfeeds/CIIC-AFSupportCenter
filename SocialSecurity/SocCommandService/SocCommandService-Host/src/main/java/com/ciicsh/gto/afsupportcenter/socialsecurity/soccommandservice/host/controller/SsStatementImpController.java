@@ -3,16 +3,16 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsStatementImpService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.GsymxOpt;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.OptImportArgs;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.YysmxOpt;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,23 +20,24 @@ import java.util.stream.Collectors;
  * <p>
  * 对账导入雇员明细 前端控制器
  * </p>
- *
- * @author HuangXing
- * @since 2017-12-01
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssStatementImp")
 public class SsStatementImpController  extends BasicController<SsStatementImpService> {
 
     @RequestMapping(value = "/optImport",consumes = {"multipart/form-data"})
-    public JsonResult<String> optImport(@RequestBody OptImportArgs args) throws Exception {
+    public JsonResult<String> optImport(HttpServletRequest request,MultipartFile file) throws Exception {
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        String ssMonth = multipartRequest.getParameter("ssMonth");
+        String fileType = multipartRequest.getParameter("fileType");
+        Long comAccountId = Long.valueOf(multipartRequest.getParameter("comAccountId"));
         JsonResult<String> json = new JsonResult<String>();
-        switch (args.getFileType()){
+        switch (fileType){
             case "YYS":
-                json = yysmxOptImport(args.getFile(),args.getSsMonth(),args.getFileType(),args.getComAccountId());
+                json = yysmxOptImport(file,ssMonth,fileType,comAccountId);
                 break;
             case "GSY":
-                json = gsymxOptImport(args.getFile(),args.getSsMonth(),args.getFileType(),args.getComAccountId());
+                json = gsymxOptImport(file,ssMonth,fileType,comAccountId);
                 break;
             default:
                 break;

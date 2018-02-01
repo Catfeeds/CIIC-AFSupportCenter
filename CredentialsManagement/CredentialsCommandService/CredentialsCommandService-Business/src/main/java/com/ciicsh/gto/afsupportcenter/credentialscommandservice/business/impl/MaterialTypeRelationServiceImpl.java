@@ -30,4 +30,9 @@ public class MaterialTypeRelationServiceImpl extends ServiceImpl<MaterialTypeRel
         List<String> ids = Arrays.asList(materialIds.split(","));
         return materialTypeRelationMapper.selectByIds(ids);
     }
+
+    @Override
+    public List<MaterialTypeRelation> selectMaterials(String credentialsType, String credentialsDealType) {
+        return materialTypeRelationMapper.selectMaterials(credentialsType,credentialsDealType);
+    }
 }

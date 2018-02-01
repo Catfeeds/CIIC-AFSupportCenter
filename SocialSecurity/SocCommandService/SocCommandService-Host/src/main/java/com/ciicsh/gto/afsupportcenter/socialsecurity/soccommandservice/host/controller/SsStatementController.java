@@ -63,12 +63,12 @@ public class SsStatementController  extends BasicController<SsStatementService> 
      * 社保对账主表查询导出
      */
     @Log("社保对账主表查询导出")
-    @PostMapping("/statementExport")
-    public void statementExport(HttpServletResponse response,@RequestBody StatementExportArgs args) {
+    @RequestMapping("/statementExport")
+    public void statementExport(HttpServletResponse response,StatementExportArgs args) {
         Date date = new Date();
         String fileNme = "社保对账_"+ StringUtil.getDateString(date)+".xls";
         List<StatementExportOpt> opts = business.statementExportQuery(args);
-        ExcelUtil.exportExcel(opts,"","",StatementExportOpt.class,fileNme,response);
+        ExcelUtil.exportExcel(opts,StatementExportOpt.class,fileNme,response);
     }
 
     /**

@@ -24,7 +24,7 @@
     </select>
 
     <delete id="deleteByOrgPolicyId">
-        DELETE FROM cm_org_policy WHERE org_poilcy_id = #{id}
+        UPDATE cm_org_policy SET is_active = 0 WHERE org_poilcy_id = #{id}
     </delete>
 
     <sql id="SEL_ALL_COLLUMS">
@@ -49,7 +49,5 @@
             </if>
         </trim>
     </sql>
-    <!--<sql id="SEL_ITEM_WHERR">-->
-        <!---->
-    <!--</sql>-->
+
 </mapper>

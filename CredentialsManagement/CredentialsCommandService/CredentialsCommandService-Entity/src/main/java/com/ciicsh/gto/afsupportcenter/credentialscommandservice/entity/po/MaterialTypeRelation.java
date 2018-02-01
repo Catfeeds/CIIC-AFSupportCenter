@@ -35,6 +35,10 @@ public class MaterialTypeRelation extends Model<MaterialTypeRelation> {
     @TableField("credentials_deal_type")
     private Integer credentialsDealType;
     /**
+     * 层级
+     */
+    private String level;
+    /**
      * 材料id
      */
     @TableField("material_id")
@@ -91,6 +95,14 @@ public class MaterialTypeRelation extends Model<MaterialTypeRelation> {
 
     public void setMaterialTypeRelationId(Long materialTypeRelationId) {
         this.materialTypeRelationId = materialTypeRelationId;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
     }
 
     public Integer getCredentialsType() {

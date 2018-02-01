@@ -16,7 +16,6 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskFo
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMaterial;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.SelectionUtils;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
-import kafka.utils.Json;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -186,18 +184,18 @@ public class EmpCredentialsDealController {
     public JsonResult getMaterials(@PathVariable("taskId") String taskId) {
         TaskMaterial taskMaterial = taskMaterialService.selectByTaskId(taskId);
         List<MaterialTypeRelation> materials = materialTypeRelationService.selectList(taskMaterial.getMaterialIds());
-        HashMap<String, List<MaterialTypeRelation>> resultMap = new HashMap<>(3);
-        List<MaterialTypeRelation> lv1 = new ArrayList<>();
-        List<MaterialTypeRelation> lv2 = new ArrayList<>();
-        List<MaterialTypeRelation> lv3 = new ArrayList<>();
-        resultMap.put("1",lv1);
-        resultMap.put("2",lv2);
-        resultMap.put("3",lv3);
-        materials.stream().forEach(i -> {
-            if (i.getMaterialLevel() == LV1) { lv1.add(i); }
-            if (i.getMaterialLevel() == LV2) { lv2.add(i); }
-            if (i.getMaterialLevel() == LV3) { lv3.add(i); }
-        });
-        return JsonResult.success(resultMap);
+        return JsonResult.success(materials);
+    }
+
+    /**
+     * 生成材料收缴菜单
+     * @param credentialsType
+     * @param credentialsDealType
+     * @return
+     */
+    @GetMapping("/find/meterialsMenu")
+    public JsonResult materialsMenu(String credentialsType, String credentialsDealType) {
+        List<MaterialTypeRelation> materials = materialTypeRelationService.selectMaterials(credentialsType,credentialsDealType);
+        return JsonResult.success(materials);
     }
 }
