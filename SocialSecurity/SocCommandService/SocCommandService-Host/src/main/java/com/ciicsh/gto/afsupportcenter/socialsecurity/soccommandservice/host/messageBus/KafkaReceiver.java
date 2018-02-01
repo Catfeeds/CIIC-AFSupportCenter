@@ -1,12 +1,13 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.messageBus;
 
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeQueryDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsComTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpTaskFrontService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsPaymentComService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.AFEmpSocialDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.AFEmployeeCompanyDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
@@ -18,10 +19,8 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by songjt on 17/12/18.
@@ -37,12 +36,12 @@ public class KafkaReceiver {
     private SsEmpTaskFrontService ssEmpTaskFrontService;
     @Autowired
     private SsComTaskService ssComTaskService;
-
     @Autowired
     private SsPaymentComService ssPaymentComService;
-
+    @Autowired
+    private AfEmployeeCompanyProxy afEmployeeCompanyProxy;
 //    @Autowired
-//    private SheetServiceProxy sheetServiceProxy;
+//    private AfEmployeeSocialProxy afEmployeeSocialProxy;
 
     @StreamListener(TaskSink.AF_EMP_IN)
     public void receiveEmpIn(Message<TaskCreateMsgDTO> message) {
@@ -57,7 +56,7 @@ public class KafkaReceiver {
             res = insertTaskTb(taskMsgDTO, 1);
         }
 
-        logger.info("收到消息 雇员新增TOPIC: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
+        logger.info("收到消息 雇员新增: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
     @StreamListener(TaskSink.AF_EMP_OUT)
@@ -67,48 +66,36 @@ public class KafkaReceiver {
         boolean res = false;
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())
             || TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
-            res = insertTaskTb(taskMsgDTO, 1);
+            res = insertTaskTb(taskMsgDTO, 5);
         }
-        logger.info("收到消息 雇员终止TOPIC: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
+        logger.info("收到消息 雇员终止: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
-    @StreamListener(TaskSink.CHARGE_RESUME)
+    @StreamListener(TaskSink.AF_EMP_MAKE_UP)
     public void receiveChargeResume(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         //社保
         boolean res = false;
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())
             || TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
-            res = insertTaskTb(taskMsgDTO, 1);
+            res = insertTaskTb(taskMsgDTO, 4);
         }
-        logger.info("收到消息 恢复缴费TOPIC: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
+        logger.info("收到消息 雇员补缴: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
-    @StreamListener(TaskSink.CHARGE_STOP)
-    public void receiveChargeStop(Message<TaskCreateMsgDTO> message) {
-        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
-        //社保
-        boolean res = false;
-        if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())
-            || TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
-            res = insertTaskTb(taskMsgDTO, 1);
-        }
-        logger.info("收到消息 暂停缴费TOPIC: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
-    }
-
-    @StreamListener(TaskSink.EMP_COMPANY_CHANGE)
+    @StreamListener(TaskSink.AF_EMP_COMPANY_CHANGE)
     public void receiveEmpCompanyChange(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         //社保
         boolean res = false;
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())
             || TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
-            res = insertTaskTb(taskMsgDTO, 1);
+            res = insertTaskTb(taskMsgDTO, 12);
         }
-        logger.info("收到消息 雇员翻牌TOPIC: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
+        logger.info("收到消息 雇员翻牌: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
-    @StreamListener(TaskSink.NONLOCAL_TO_SH)
+    @StreamListener(TaskSink.AF_EMP_AGREEMENT_ADJUST)
     public void receiveNonlocalToSh(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
 
@@ -116,33 +103,37 @@ public class KafkaReceiver {
         boolean res = false;
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())
             || TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
-            res = insertTaskTb(taskMsgDTO, 1);
+            res = insertTaskTb(taskMsgDTO, 3);
         }
-
-        logger.info("收到消息 外地转上海TOPIC: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
+        logger.info("收到消息 雇员服务协议调整: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
-    @StreamListener(TaskSink.SH_TO_NONLOCAL)
+    @StreamListener(TaskSink.AF_EMP_AGREEMENT_UPDATE)
     public void receiveSh(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         //社保
         boolean res = false;
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())
             || TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
-            res = insertTaskTb(taskMsgDTO, 1);
-        }
-        logger.info("收到消息上海转外地TOPIC: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
-    }
 
-    @StreamListener(TaskSink.BASE_ADJUST_YEARLY_SH)
-    public void receiveBaseAdjustYearlySh(Message<TaskCreateMsgDTO> message) {
-        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
-        //社保
-        boolean res = false;
-        if (TaskSink.SOCIAL_ADJUST.equals(taskMsgDTO.getTaskType())) {
-            res = insertTaskTb(taskMsgDTO, 1);
+            //调用接口
+            AfEmployeeInfoDTO dto = callInf(taskMsgDTO);
+
+            //任务类型
+            Integer taskCategory = 0;
+            Map<String, Object> paramMap = taskMsgDTO.getVariables();
+            SsEmpTaskBO qd = new SsEmpTaskBO();
+            qd.setTaskId(taskMsgDTO.getTaskId());
+            qd.setEmployeeId(paramMap.get("employeeId").toString());
+            qd.setCompanyId(paramMap.get("companyId").toString());
+            List<SsEmpTaskBO> resList = ssEmpTaskService.queryByTaskId(qd);
+            if (resList.size() > 0) {
+                SsEmpTaskBO ssEmpTaskBO = resList.get(0);
+                taskCategory = ssEmpTaskBO.getTaskCategory();
+            }
+            res = ssEmpTaskFrontService.insertTaskTb(taskMsgDTO, taskCategory, 1, dto);
         }
-        logger.info("收到消息 上海基数年调TOPIC: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
+        logger.info("收到消息 雇员服务协议更正:" + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
     @StreamListener(TaskSink.PAY_APPLY_PAY_STATUS_STREAM)
@@ -151,9 +142,10 @@ public class KafkaReceiver {
         boolean res = false;
         //社保
         if (taskMsgDTO.getBusinessType() == 1) {
-            res = ssPaymentComService.saveRejectResult(taskMsgDTO.getBusinessPkId(), taskMsgDTO.getRemark());
+            res = ssPaymentComService.saveRejectResult(taskMsgDTO.getBusinessPkId(), taskMsgDTO.getRemark(),
+                taskMsgDTO.getPayStatus());
         }
-        logger.info("收到消息 付款申请拒绝: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
+        logger.info("收到消息 财务付款申请返回:" + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
     //todo 接受客服中心调用更新企业任务单
@@ -161,59 +153,43 @@ public class KafkaReceiver {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         //社保
         boolean res = false;
-        if (TaskSink.SOCIAL_ADJUST.equals(taskMsgDTO.getTaskType())) {
-            SsComTask ele = ssComTaskService.selectById(taskMsgDTO.getTaskId());
-            ele.setTaskId(taskMsgDTO.getTaskId());
-            res = ssComTaskService.updateById(ele);
-        }
+//        if (TaskSink.SOCIAL_ADJUST.equals(taskMsgDTO.getTaskType())) {
+        SsComTask ele = ssComTaskService.selectById(taskMsgDTO.getTaskId());
+        ele.setTaskId(taskMsgDTO.getTaskId());
+        res = ssComTaskService.updateById(ele);
+//        }
         logger.info("收到消息 客服中心调用更新企业任务单: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
-    private EmployeeInfoDTO callInf(TaskCreateMsgDTO taskMsgDTO) {
-//        logger.info("数据获取接口开始调用："+taskSheetRequestDTO.toString());
-//        try {
-//            TaskRequestDTO taskRequestDTO = new TaskRequestDTO();
-//            taskRequestDTO.setTaskId(taskSheetRequestDTO.getTaskId());
-//            taskRequestDTO.setAssignee(taskSheetRequestDTO.getAssignee());
-//            taskRequestDTO.setVariable(taskSheetRequestDTO.getVariable());
-//            //
-//            Result restResult = sheetServiceProxy.completeTask(taskRequestDTO);
-//            logger.info("数据获取接口返回："+String.valueOf("code:"+restResult.getCode()+"message:")+restResult.getMessage());
-//            return ResultGenerator.genSuccessResult(true);
-//        } catch (Exception e) {
-//            logger.error(e.getMessage(), e);
-//            return ResultGenerator.genServerFailResult();
-//        }
-        EmployeeInfoDTO dto = new EmployeeInfoDTO();
-        AFEmployeeCompanyDTO d1 = new AFEmployeeCompanyDTO();
-        d1.setCompanyId("1");
-        d1.setInDate(new Date());
-        d1.setOutDate(new Date());
-        dto.setEmployeeCompany(d1);
+    private AfEmployeeInfoDTO callInf(TaskCreateMsgDTO taskMsgDTO) {
+        logger.info("当前雇员信息获取接口 开始调用：" + taskMsgDTO.toString());
+        AfEmployeeInfoDTO resDto = null;
+        try {
+            AfEmployeeQueryDTO taskRequestDTO = new AfEmployeeQueryDTO();
+            taskRequestDTO.setEmpAgreementId(Long.parseLong(taskMsgDTO.getMissionId()));
 
-        List<AFEmpSocialDTO> empSocial = new ArrayList<>();
-        AFEmpSocialDTO dd2 = new AFEmpSocialDTO();
-        dd2.setEmpBase(new BigDecimal(12));
-        empSocial.add(dd2);
-        dd2 = new AFEmpSocialDTO();
-        dd2.setEmpBase(new BigDecimal(13));
-        empSocial.add(dd2);
-        dto.setEmpSocial(empSocial);
-        return dto;
+            resDto = afEmployeeCompanyProxy.getEmployeeCompany(taskRequestDTO);
+
+            logger.info("当前雇员信息获取接口 结束调用");
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+        return resDto;
     }
 
     /**
      * <p>Description: 从接口获取数据并保存到雇员任务单表</p>
      *
-     * @return
+     * @return 处理结果
      * @author zhangxj
      * @date 2017-12-28
      */
     private boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) {
-        //调用接口
-        EmployeeInfoDTO dto = callInf(taskMsgDTO);
+        //调用当前雇员信息获取接口
+        AfEmployeeInfoDTO dto = callInf(taskMsgDTO);
 
-        boolean result = ssEmpTaskFrontService.insertTaskTb(taskMsgDTO, taskCategory, dto);
+        //保存到雇员任务单表
+        boolean result = ssEmpTaskFrontService.insertTaskTb(taskMsgDTO, taskCategory, 0, dto);
 
         return result;
     }

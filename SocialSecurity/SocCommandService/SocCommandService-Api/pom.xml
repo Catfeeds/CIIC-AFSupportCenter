@@ -27,5 +27,6 @@
             <artifactId>spring-cloud-starter-feign</artifactId>
             <scope>provided</scope>
         </dependency>
+
     </dependencies>
 </project>

@@ -1,5 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api;
 
+import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialUpdateDateDTO;
+import com.ciicsh.gto.afcompanycenter.commandservice.api.proxy.AfEmployeeSocialProxy;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.basicdataservice.api.DicItemServiceProxy;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
@@ -19,6 +21,12 @@ public class CommonApiUtils {
 
     @Autowired
     DicItemServiceProxy dicItemServiceProxy;
+
+    @Autowired
+    AfEmployeeSocialProxy afEmployeeSocialProxy;
+
+//    @Autowired
+//    EmployeeInfoProxy employeeInfoProxy;
 
     /**
      * 调用客服中心的完成任务接口
@@ -63,4 +71,25 @@ public class CommonApiUtils {
     public void fresh2Redis(String dicItemId) throws Exception {
         dicItemServiceProxy.fresh2Redis(dicItemId);
     }
+
+    /**
+     * 雇员任务单实缴金额回调接口（支持中心调用客服中心）
+     *
+     * @param var1
+     * @return int
+     */
+    public int updateConfirmDate(@RequestBody List<AfEmpSocialUpdateDateDTO> var1) throws Exception {
+        return afEmployeeSocialProxy.updateConfirmDate(var1);
+    }
+
+    /**
+     * 获取雇员信息（支持中心调用雇员中心）
+     *
+     * @param var1 传入employeeId和业务类型
+     * @return
+     */
+//    public com.ciicsh.gto.employeecenter.util.JsonResult<Page<EmployeeInfoDTO>> searchEmployeeInfo(
+//            @RequestBody EmployeeSearchDTO var1) throws Exception {
+//        return employeeInfoProxy.searchEmployeeInfo(var1);
+//    }
 }

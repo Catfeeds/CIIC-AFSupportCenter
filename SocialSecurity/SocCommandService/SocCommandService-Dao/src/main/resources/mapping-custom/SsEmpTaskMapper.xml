@@ -441,4 +441,47 @@
             #{empTaskId}
         </foreach>
     </select>
+
+    <!--通过TASKID等条件查询任务单-->
+    <select id="queryByTaskId" resultMap="BaseResultMap">
+        SELECT
+        et.emp_task_id,
+        et.customer_id,
+        et.emp_archive_id,
+        et.task_category,
+        et.task_category_special,
+        et.urgent,
+        et.submitter_id,
+        et.submitter_name,
+        et.submitter_dept_id,
+        et.submitter_dept_name,
+        et.submit_time,
+        et.expire_date,
+        et.submitter_remark,
+        et.task_form_content,
+        et.salary,
+        et.handle_user_id,
+        et.handle_user_name,
+        et.emp_ss_serial,
+        et.handle_way,
+        et.handle_month,
+        et.handle_remark,
+        et.rejection_remark,
+        et.rejection_remark_man,
+        et.rejection_remark_date,
+        et.task_status,
+        et.handle_status,
+        et.start_month,
+        et.end_month,
+        et.in_date,
+        et.emp_base,
+        et.chat_history,
+        et.business_interface_id
+        FROM
+        ss_emp_task et
+        WHERE et.employee_id = #{employeeId}
+        and et.company_id=#{companyId}
+        and et.task_id=#{taskId}
+        AND et.is_active = 1
+    </select>
 </mapper>

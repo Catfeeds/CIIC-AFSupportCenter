@@ -283,6 +283,31 @@
             <artifactId>basicdataservice-api</artifactId>
             <version>1.0.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.ciicsh.gt1.settlementcenter</groupId>
+            <artifactId>invoicecommandservice-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ciicsh.gt1.afcompanycenter</groupId>
+            <artifactId>queryservice-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ciicsh.gt1.afcompanycenter</groupId>
+            <artifactId>commandservice-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>com.ciicsh.gt1.employeecenter</groupId>-->
+            <!--<artifactId>apiservice-api</artifactId>-->
+            <!--<version>1.0.0</version>-->
+        <!--</dependency>-->
+
     </dependencies>
 
     <build>

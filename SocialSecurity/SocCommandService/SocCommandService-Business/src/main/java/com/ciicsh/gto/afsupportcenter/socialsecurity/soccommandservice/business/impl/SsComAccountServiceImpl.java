@@ -9,9 +9,14 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.Ss
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.settlementcenter.invoicecommandservice.api.ComeAccountCommandProxy;
+import com.ciicsh.gto.settlementcenter.invoicecommandservice.api.dto.JsonResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -24,6 +29,9 @@ import java.util.List;
  */
 @Service
 public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsComAccount> implements SsComAccountService {
+
+    @Autowired
+    ComeAccountCommandProxy comeAccountCommandProxy;
 
     @Override
     public SsComAccountBO queryByEmpTaskId(String empTaskId,String type) {
@@ -61,4 +69,24 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
     public List<com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountDTO> getSsComAccountList(SsComAccountParamDto dto){
         return baseMapper.getSsComAccountList(dto);
     }
+
+    /**
+     * 调用银行接口保存社保企业开户转入的银行信息
+     *
+     * @param map
+     * @return
+     */
+    @Override
+    public JsonResult addBankAccount(@RequestBody Map<String, Object> map) throws Exception {
+        Long comAccountId = Long.parseLong(map.get("com_account_id").toString());
+        JsonResult jr = comeAccountCommandProxy.addAccount(map);
+
+        //更新返回的银行账号ID
+        SsComAccount ele = this.selectById(comAccountId);
+        ele.setBankAccountId(jr.getBankAccountId().longValue());
+        this.updateById(ele);
+
+        return jr;
+    }
+
 }

@@ -46,6 +46,11 @@ public class SsComAccount implements Serializable {
 	@TableField("ss_account")
 	private String ssAccount;
     /**
+     * 银行账号ID
+     */
+	@TableField("bank_account_id")
+	private Long bankAccountId;
+    /**
      * 银行账号(牡丹卡号)
      */
 	@TableField("bank_account")
@@ -133,6 +138,16 @@ public class SsComAccount implements Serializable {
      */
 	@TableField("provide_certificate_time")
 	private LocalDate provideCertificateTime;
+    /**
+     * 法人
+     */
+	@TableField("legal_person")
+	private String legalPerson;
+    /**
+     * 联系地址
+     */
+	@TableField("contact_address")
+	private String contactAddress;
     /**
      * 变更时间
      */
@@ -231,6 +246,14 @@ public class SsComAccount implements Serializable {
 
 	public void setSsAccount(String ssAccount) {
 		this.ssAccount = ssAccount;
+	}
+
+	public Long getBankAccountId() {
+		return bankAccountId;
+	}
+
+	public void setBankAccountId(Long bankAccountId) {
+		this.bankAccountId = bankAccountId;
 	}
 
 	public String getBankAccount() {
@@ -369,6 +392,22 @@ public class SsComAccount implements Serializable {
 		this.provideCertificateTime = provideCertificateTime;
 	}
 
+	public String getLegalPerson() {
+		return legalPerson;
+	}
+
+	public void setLegalPerson(String legalPerson) {
+		this.legalPerson = legalPerson;
+	}
+
+	public String getContactAddress() {
+		return contactAddress;
+	}
+
+	public void setContactAddress(String contactAddress) {
+		this.contactAddress = contactAddress;
+	}
+
 	public LocalDateTime getChangeTime() {
 		return changeTime;
 	}
@@ -473,6 +512,7 @@ public class SsComAccount implements Serializable {
 			", supplierId=" + supplierId +
 			", ssAccountType=" + ssAccountType +
 			", ssAccount=" + ssAccount +
+			", bankAccountId=" + bankAccountId +
 			", bankAccount=" + bankAccount +
 			", comAccountName=" + comAccountName +
 			", settlementArea=" + settlementArea +
@@ -490,6 +530,8 @@ public class SsComAccount implements Serializable {
 			", deliverWay=" + deliverWay +
 			", deliverWayRemark=" + deliverWayRemark +
 			", provideCertificateTime=" + provideCertificateTime +
+			", legalPerson=" + legalPerson +
+			", contactAddress=" + contactAddress +
 			", changeTime=" + changeTime +
 			", receiveDate=" + receiveDate +
 			", intoDate=" + intoDate +

@@ -333,7 +333,7 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
     @Transactional(
         rollbackFor = {Exception.class}
     )
-    public boolean saveRejectResult(Long pkId, String remark) {
+    public boolean saveRejectResult(Long pkId, String remark, Integer payStatus) {
         boolean bol = false;
         SsPayment ssPayment = new SsPayment();
         ssPayment.setPaymentId(pkId);
@@ -341,9 +341,17 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
         ssPayment = ssPaymentMapper.selectOne(ssPayment);
 
         if (ssPayment != null) {
-            //将批次状态改为财务部批退
-            ssPayment.setPaymentState(7);
-            ssPayment.setRejectionRemark(remark);
+            int paymentState = 0;
+
+            //更新批次状态 支付状态:付款状态(-1:审核未过;9.支付成功;-9:支付失败;)
+            if (payStatus == 9) {
+                paymentState = 8;
+            } else {
+                //审核未过
+                paymentState = 7;
+                ssPayment.setRejectionRemark(remark);
+            }
+            ssPayment.setPaymentState(paymentState);
             ssPayment.setModifiedBy("system");
             ssPayment.setModifiedTime(LocalDateTime.now());
             ssPaymentMapper.updateById(ssPayment);
@@ -356,7 +364,7 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
                 for (int i = 0; i < ssPaymentComList.size(); i++) {
                     //修改状态为已申请到财务部
                     ssPaymentCom = ssPaymentComList.get(i);
-                    ssPaymentCom.setPaymentState(7);
+                    ssPaymentCom.setPaymentState(paymentState);
                     ssPaymentCom.setModifiedBy("system");
                     ssPaymentCom.setModifiedTime(LocalDateTime.now());
                 }
