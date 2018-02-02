@@ -73,4 +73,9 @@ public interface SsEmpTaskService extends IService<SsEmpTask> {
      */
     List<SsEmpTaskBO> queryBatchEmpArchiveByEmpTaskIds(SsEmpTaskBO ssEmpTaskBO);
 
+    /**
+     * 查询任务单信息
+     * @param ssEmpTaskBO
+     */
+    List<SsEmpTaskBO> queryByTaskId(SsEmpTaskBO ssEmpTaskBO);
 }

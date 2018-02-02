@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.custom.SsAccountComExt;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -23,4 +24,11 @@ public interface SsComAccountMapper extends BaseMapper<SsComAccount> {
      * @return
      */
     List<SsAccountComExt> getSsComAccounts();
+
+    /**
+     * 根据企业账户ID获取企业账户扩展信息
+     * @param comAccountId 企业账户ID
+     * @return
+     */
+    SsAccountComExt getSsComAccount(@Param("comAccountId") long comAccountId);
 }

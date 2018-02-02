@@ -8,7 +8,10 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.T
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.payment.SsOperatePaymentDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpArchiveBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.SocialSecurityApplication;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.*;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsAccountComRelationController;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsComTaskController;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsEmpArchiveController;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsPaymentController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.commonservice.util.dto.Result;
@@ -32,9 +35,6 @@ public class SsEmpArchiveControllerTest {
 
     @Autowired
     SsPaymentController ssPaymentController;
-
-    @Autowired
-    TaskSheetController taskSheetController;
 
     @Autowired
     SsAccountComRelationController ssAccountComRelationController;
@@ -111,4 +111,21 @@ public class SsEmpArchiveControllerTest {
         JsonResult<String> jr = ssAccountComRelationController.saveAccountComRelation(dto);
         System.out.println(JSON.toJSONString(jr));
     }
+
+//    @Test
+//    public void testupdateConfirmDate() {
+//        System.out.println("1----------------------------" + commonApiUtils);
+//        List<AfEmpSocialUpdateDateDTO> dt = new ArrayList<>();
+//        AfEmpSocialUpdateDateDTO d1= new AfEmpSocialUpdateDateDTO();
+//        d1.setEmpAgreementId();
+//
+////        System.out.println(JSONObject.toJSONString(SocialSecurityConst.DISTRICT_MAP));
+//
+//        try {
+//            Result ddd = commonApiUtils.updateConfirmDate(dt);
+//            System.out.println(JSON.toJSONString(ddd));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

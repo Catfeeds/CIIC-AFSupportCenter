@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsPay
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsPaymentMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPayment;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPaymentCom;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -250,7 +251,7 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         dto.setPayAmount(ssPayment.getTotalApplicationAmount());//申请支付金额
         dto.setReceiver("社保中心");//收款方名称
         dto.setApplyer(ssPayment.getRequestUser());  //申请人
-        dto.setApplyDate(LocalDate.now());//申请日期
+        dto.setApplyDate(StringUtil.getNow());//申请日期
         dto.setBusinessPkId(ssPayment.getPaymentId());//业务方主键ID(整型)
 
         //支付独立社保费用+支付月份  1 大库、2 外包、3独立户

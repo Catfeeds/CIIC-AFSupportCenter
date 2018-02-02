@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 
 import cn.afterturn.easypoi.excel.entity.ImportParams;
+import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SalCompanyService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAnnualAdjustCompanyEmpTempService;
@@ -19,7 +20,9 @@ import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -55,7 +58,7 @@ public class SsAnnualAdjustCompanyController extends BasicController<SsAnnualAdj
         String companyId = multipartRequest.getParameter("companyId");
 
         SalCompany company = salCompanyService.selectById(companyId);
-        if (company == null) {
+        if (company == null || !company.getActive()) {
             return ResultGenerator.genServerFailResult("客户记录不存在[客户编号：" + companyId + "]");
         }
         SsAnnualAdjustCompanyDTO ssAnnualAdjustCompanyDTO = new SsAnnualAdjustCompanyDTO();
@@ -151,6 +154,18 @@ public class SsAnnualAdjustCompanyController extends BasicController<SsAnnualAdj
         ssAnnualAdjustCompanyEmpTempDTO.setCompanyId(companyId);
         ssAnnualAdjustCompanyEmpTempDTO.setColumnCN("雇员识别信息(客户编号、雇员编号、雇员姓名、社保序号)与年调库不符");
         ssAnnualAdjustCompanyEmpTempService.updateErrorMsgForNotExistsEmployee(ssAnnualAdjustCompanyEmpTempDTO);
+    }
+
+    @RequestMapping("/annualAdjustCompanysUpdate")
+    @Transactional(rollbackFor = Exception.class)
+    public JsonResult annualAdjustCompanysUpdate(@RequestBody JSONArray array) {
+        List<SsAnnualAdjustCompany> list =  array.toJavaList(SsAnnualAdjustCompany.class);
+        list.stream().forEach((e) -> {
+            e.setModifiedBy("11"); // TODO modifiedBy
+            business.updateAnnualAdjustCompanysByComAccountId(e);
+        });
+
+        return JsonResultKit.of();
     }
 }
 
