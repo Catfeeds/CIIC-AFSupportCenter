@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Import;
  */
 @EnableFeignClients({"com.ciicsh.gto.sheetservice.api","com.ciicsh.gto.settlementcenter.payment.cmdapi","com.ciicsh.gto.basicdataservice.api"})
 @MapperScan("com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao")
-@SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice"})
+@SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice","com.ciicsh.gto"})
 @EnableDiscoveryClient
 @Import({CustomConfiguration.class, MybatisPlusConfig.class})
 public class SocialSecurityApplication {

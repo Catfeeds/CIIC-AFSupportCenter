@@ -1,16 +1,22 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 
+import com.ciicsh.gto.RedisManager;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthChargeItemBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsMonthChargeItemService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.messageBus.KafkaSender;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
+import com.ciicsh.gto.afsupportcenter.util.kafkaMessage.SocReportMessage;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.util.ExpireTime;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.*;

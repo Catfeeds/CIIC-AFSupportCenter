@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  */
 @EnableFeignClients("com.ciicsh.gto.settlementcenter.payment.cmdapi")
 @EnableScheduling
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.ciicsh.gto"})
 @EnableDiscoveryClient
 @MapperScan("com.ciicsh.gto.afsupportcenter.socjob.dao")
 public class SocjobApp {

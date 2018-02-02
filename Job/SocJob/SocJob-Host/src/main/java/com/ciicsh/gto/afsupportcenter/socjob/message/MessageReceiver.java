@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socjob.message;
 
+import com.ciicsh.gto.RedisManager;
 import com.ciicsh.gto.afsupportcenter.socjob.service.SsPaymentComService;
 import com.ciicsh.gto.afsupportcenter.util.kafkaMessage.SocReportMessage;
 import org.slf4j.Logger;
@@ -32,6 +33,10 @@ public class MessageReceiver {
         logger.info("开始，当前时间：" + dateFormat.format(new Date()));
         logger.info("received from comAccountId : " + message.getComAccountId()+", received from ssMonth: " + message.getSsMonth());
         paymentComService.generateSocPaymentInfo(message.getComAccountId(),message.getSsMonth());
+        String key = "-com-account-"+message.getComAccountId()+"-"+message.getSsMonth()+"-";
+        if(RedisManager.get(key,SocReportMessage.class) != null){
+            RedisManager.del(key);
+        }
         logger.info("结束，当前时间：" + dateFormat.format(new Date()));
     }
 }
