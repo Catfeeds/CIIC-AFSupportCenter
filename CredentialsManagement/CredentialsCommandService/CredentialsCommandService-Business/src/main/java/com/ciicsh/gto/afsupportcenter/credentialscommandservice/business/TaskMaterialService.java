@@ -23,10 +23,9 @@ public interface TaskMaterialService extends IService<TaskMaterial> {
     TaskMaterial selectByTaskId(String taskId);
 
     /**
-     * 保存或更新收缴材料
+     * 更新材料收缴信息
      * @param taskMaterial
      * @return
      */
-    @Override
-    boolean insertOrUpdate(TaskMaterial taskMaterial);
+    int updateTaskMaterials(TaskMaterial taskMaterial);
 }

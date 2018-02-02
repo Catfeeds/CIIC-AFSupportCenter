@@ -30,6 +30,14 @@ public class TaskDetialDTO implements Serializable{
      */
     private String materialIds;
     /**
+     * 证件类型
+     */
+    private String credentialsType;
+    /**
+     * 证件办理类型
+     */
+    private String credentialsDealType;
+    /**
      * 学历认定
      */
     private String education;
@@ -168,6 +176,22 @@ public class TaskDetialDTO implements Serializable{
 
     public void setMaterialIds(String materialIds) {
         this.materialIds = materialIds;
+    }
+
+    public String getCredentialsType() {
+        return credentialsType;
+    }
+
+    public void setCredentialsType(String credentialsType) {
+        this.credentialsType = credentialsType;
+    }
+
+    public String getCredentialsDealType() {
+        return credentialsDealType;
+    }
+
+    public void setCredentialsDealType(String credentialsDealType) {
+        this.credentialsDealType = credentialsDealType;
     }
 
     public String getEducation() {
@@ -369,6 +393,8 @@ public class TaskDetialDTO implements Serializable{
             ", employeeId='" + employeeId + '\'' +
             ", companyId='" + companyId + '\'' +
             ", materialIds='" + materialIds + '\'' +
+            ", credentialsType='" + credentialsType + '\'' +
+            ", credentialsDealType='" + credentialsDealType + '\'' +
             ", education='" + education + '\'' +
             ", materialBackTime=" + materialBackTime +
             ", callsTime=" + callsTime +
