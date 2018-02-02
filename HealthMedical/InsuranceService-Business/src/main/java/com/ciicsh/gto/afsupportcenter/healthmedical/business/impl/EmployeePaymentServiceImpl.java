@@ -14,7 +14,9 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.EmployeePaymentApp
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.PaymentApplyBatchPO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeReturnTicketDTO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyProxyDTO;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyReturnTicketDTO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyEmployeeProxyDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +70,7 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
      */
     @Override
     public void handleEmpPayment () {
-        /** 已审核未同步 */
+        /** 审核未同步 */
         List<EmployeePaymentBO> audited = employeePaymentApplyMapper.selectAudited();
         /** 退票已处理 */
         audited.addAll(employeePaymentApplyMapper.selectRefund());
@@ -80,9 +82,71 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
             }
         }
         List<EmpBankRefundBO> unSync = this.selectUnSyncApply();
-        System.out.println("               =============> " + unSync.size());
+        if (!unSync.isEmpty()) {
+            this.syncEmpBankRefundData(unSync);
+        }
+        System.out.println("        =============> " + unSync.size());
     }
 
+    /**
+     * @description 处理退票
+     * @author chenpb
+     * @since 2018-02-02
+     * @param dto: 结算中心退票
+     * @return
+     */
+    @Override
+    public void handlePaymentRefund (PayApplyReturnTicketDTO dto) {
+        List<EmployeeReturnTicketDTO> detail = dto.getEmployeeReturnTicketDTOList();
+        if (!detail.isEmpty()) {
+            Integer batchId = dto.getBusinessPkId().intValue();
+            detail.forEach(pay->this.updateRefundStatus(batchId, pay));
+        }
+    }
+
+    /**
+     * @description 同步结算中心驳回，支付成功状态
+     * @author chenpb
+     * @since 2018-02-02
+     * @param dto: 结算中心处理结果
+     * @return
+     */
+    @Override
+    public void syncSettleCenterStatus (PayApplyReturnTicketDTO dto) {
+        List<EmployeeReturnTicketDTO> detail = dto.getEmployeeReturnTicketDTOList();
+        if (!detail.isEmpty()) {
+            Integer batchId = dto.getBusinessPkId().intValue();
+            detail.forEach(pay->this.updateRefundStatus(batchId, pay));
+        }
+    }
+
+    /**
+     * @description 添加补全银行卡信息申请到雇员中心
+     * @author chenpb
+     * @since 2018-02-02
+     * @param emp: 雇员信息
+     * @return
+     */
+    private void syncEmpBankRefundData (List<EmpBankRefundBO> emp) {
+        System.out.println(emp.size());
+    }
+
+    /**
+     * @description 更新付款申请退票状态
+     * @author chenpb
+     * @since 2018-02-02
+     * @param batchId
+     * @param dto
+     */
+    private void updateRefundStatus (Integer batchId, EmployeeReturnTicketDTO dto) {
+        PaymentApplyDetailBO bo = new PaymentApplyDetailBO();
+        BeanUtils.copyProperties(dto, bo);
+        bo.setApplyBatchId(batchId);
+        List<PaymentApplyDetailBO> list = paymentApplyDetailMapper.selectRefundDetail(bo);
+        if(!list.isEmpty()){
+            employeePaymentApplyMapper.updateApplyStatus(list.get(0).getPaymentApplyId(), SysConstants.ApplyStatus.REFUND.getCode(), SysConstants.PaymentJob.SYSTEM_ZH.getName());
+        }
+    }
     /**
      * @description 同步支付申请信息到结算中心
      * @author chenpb
@@ -128,17 +192,6 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
     }
 
     /**
-     * @description 更新雇员付款同步状态
-     * @author chenpb
-     * @since 2018-02-01
-     * @param batchId
-     * @return
-     */
-    private Integer updateSyncStatus (Integer batchId) {
-        return employeePaymentApplyMapper.updateSyncStatus(batchId, SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(), SysConstants.PaymentJob.SYSTEM_EN.getName());
-    }
-
-    /**
      * @description 查询已审核未同步数据
      * @author chenpb
      * @since 2018-02-01
@@ -147,6 +200,17 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
      */
     private List<EmpBankRefundBO> selectUnSyncApply () {
         return employeePaymentApplyMapper.selectUnSyncApply();
+    }
+
+    /**
+     * @description 更新付款申请状态
+     * @author chenpb
+     * @since 2018-02-01
+     * @param batchId
+     * @return
+     */
+    private Integer updateSyncStatus (Integer batchId) {
+        return employeePaymentApplyMapper.updateSyncStatus(batchId, SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(), SysConstants.PaymentJob.SYSTEM_EN.getName());
     }
 
     /**

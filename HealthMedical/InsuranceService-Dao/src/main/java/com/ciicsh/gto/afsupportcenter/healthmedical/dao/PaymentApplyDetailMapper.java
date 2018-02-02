@@ -19,4 +19,5 @@ import java.util.List;
 public interface PaymentApplyDetailMapper extends BaseMapper<PaymentApplyDetailPO> {
     Integer insertDetails (@Param("detail")List<EmployeePaymentBO> detail, @Param("applyBatchId") Integer applyBatchId, @Param("modifiedBy") String modifiedBy);
     List<PaymentApplyDetailBO> selectPending(@Param("applyBatchId") Integer applyBatchId);
+    List<PaymentApplyDetailBO> selectRefundDetail(@Param("bo") PaymentApplyDetailBO bo);
 }

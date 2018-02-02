@@ -20,6 +20,13 @@ import java.util.List;
 public interface EmployeePaymentApplyMapper extends BaseMapper<EmployeePaymentApplyPO> {
 
     /**
+     * 查询同步数据
+     * @param
+     * @return
+     */
+    List<EmployeePaymentBO> selectSyncApply();
+
+    /**
      * 查询已审核未同步申请
      * @param
      * @return
@@ -27,7 +34,7 @@ public interface EmployeePaymentApplyMapper extends BaseMapper<EmployeePaymentAp
     List<EmployeePaymentBO> selectAudited();
 
     /**
-     * 查询退回已处理申请
+     * 查询退票申请
      * @param
      * @return
      */
@@ -48,4 +55,13 @@ public interface EmployeePaymentApplyMapper extends BaseMapper<EmployeePaymentAp
      * @return
      */
     List<EmpBankRefundBO> selectUnSyncApply();
+
+    /**
+     * 更新付款申请状态
+     * @param paymentApplyId
+     * @param status
+     * @param modifiedBy
+     * @return
+     */
+    Integer updateApplyStatus(@Param("paymentApplyId") Integer paymentApplyId, @Param("status") Integer status, @Param("modifiedBy") String modifiedBy);
 }

@@ -12,6 +12,8 @@ import java.math.BigDecimal;
  */
 public class PaymentApplyDetailBO {
 
+    /** 支付批次号 */
+    private Integer applyBatchId;
     /** 付款申请记录编号 */
     private Integer paymentApplyId;
     /** 公司编号 */
@@ -38,6 +40,15 @@ public class PaymentApplyDetailBO {
     private String provinceName;
     /** 省名称 */
     private String cityName;
+
+
+    public Integer getApplyBatchId() {
+        return applyBatchId;
+    }
+
+    public void setApplyBatchId(Integer applyBatchId) {
+        this.applyBatchId = applyBatchId;
+    }
 
     public Integer getPaymentApplyId() {
         return paymentApplyId;
@@ -141,5 +152,25 @@ public class PaymentApplyDetailBO {
 
     public void setCityName(String cityName) {
         this.cityName = cityName;
+    }
+
+    @Override
+    public String toString() {
+        return "PaymentApplyDetailBO{" +
+            "applyBatchId=" + applyBatchId +
+            ", paymentApplyId=" + paymentApplyId +
+            ", companyId='" + companyId + '\'' +
+            ", companyName='" + companyName + '\'' +
+            ", employeeId='" + employeeId + '\'' +
+            ", employeeName='" + employeeName + '\'' +
+            ", payAmount=" + payAmount +
+            ", employeeBankAccount='" + employeeBankAccount + '\'' +
+            ", bankAccountName='" + bankAccountName + '\'' +
+            ", bankId=" + bankId +
+            ", areaCode='" + areaCode + '\'' +
+            ", bankName='" + bankName + '\'' +
+            ", provinceName='" + provinceName + '\'' +
+            ", cityName='" + cityName + '\'' +
+            '}';
     }
 }
