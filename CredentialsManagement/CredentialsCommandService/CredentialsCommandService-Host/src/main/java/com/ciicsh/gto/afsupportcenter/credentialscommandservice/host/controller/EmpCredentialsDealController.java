@@ -16,6 +16,7 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskFo
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMaterial;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.SelectionUtils;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -144,6 +145,12 @@ public class EmpCredentialsDealController {
     public JsonResult saveOrUpdateTask(@RequestBody TaskDetialDTO taskDetialDTO){
         Task task = new Task();
         BeanUtils.copyProperties(taskDetialDTO,task);
+        if (StringUtils.isNotBlank(taskDetialDTO.getCredentialsType())) {
+            task.setCredentialsType(Integer.parseInt(taskDetialDTO.getCredentialsType()));
+        }
+        if (StringUtils.isNotBlank(taskDetialDTO.getCredentialsDealType())) {
+            task.setCredentialsType(Integer.parseInt(taskDetialDTO.getCredentialsDealType()));
+        }
         //TODO
         if (taskDetialDTO.getTaskId() == null) {
             task.setCreatedBy("gu");
@@ -183,7 +190,6 @@ public class EmpCredentialsDealController {
     @GetMapping("/find/meterials/{taskId}")
     public JsonResult getMaterials(@PathVariable("taskId") String taskId) {
         TaskMaterial taskMaterial = taskMaterialService.selectByTaskId(taskId);
-        List<MaterialTypeRelation> materials = materialTypeRelationService.selectList(taskMaterial.getMaterialIds());
         HashMap<String, List<String>> resultMap = new HashMap<>(7);
         List list00 = new ArrayList<>();
         List list11 = new ArrayList<>();
@@ -192,15 +198,18 @@ public class EmpCredentialsDealController {
         List list22 = new ArrayList<>();
         List list30 = new ArrayList<>();
         List list40 = new ArrayList<>();
-        materials.stream().forEach(i -> {
-            if ("0-0".equals(i.getLevel())) { list00.add(i.getMaterialId());}
-            if ("1-1".equals(i.getLevel())) { list11.add(i.getMaterialId());}
-            if ("1-2".equals(i.getLevel())) { list12.add(i.getMaterialId());}
-            if ("2-1".equals(i.getLevel())) { list21.add(i.getMaterialId());}
-            if ("2-2".equals(i.getLevel())) { list22.add(i.getMaterialId());}
-            if ("3-0".equals(i.getLevel())) { list30.add(i.getMaterialId());}
-            if ("4-0".equals(i.getLevel())) { list40.add(i.getMaterialId());}
-        });
+        if (taskMaterial != null) {
+            List<MaterialTypeRelation> materials = materialTypeRelationService.selectList(taskMaterial.getMaterialIds());
+            materials.stream().forEach(i -> {
+                if ("0-0".equals(i.getLevel())) { list00.add(i.getMaterialId());}
+                if ("1-1".equals(i.getLevel())) { list11.add(i.getMaterialId());}
+                if ("1-2".equals(i.getLevel())) { list12.add(i.getMaterialId());}
+                if ("2-1".equals(i.getLevel())) { list21.add(i.getMaterialId());}
+                if ("2-2".equals(i.getLevel())) { list22.add(i.getMaterialId());}
+                if ("3-0".equals(i.getLevel())) { list30.add(i.getMaterialId());}
+                if ("4-0".equals(i.getLevel())) { list40.add(i.getMaterialId());}
+            });
+        }
         resultMap.put("main",list00);
         resultMap.put("dh",list11);
         resultMap.put("zh",list12);
