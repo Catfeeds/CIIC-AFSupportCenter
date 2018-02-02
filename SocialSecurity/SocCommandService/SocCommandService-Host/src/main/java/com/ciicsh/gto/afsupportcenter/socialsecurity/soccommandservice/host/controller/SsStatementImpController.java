@@ -7,6 +7,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.cu
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 public class SsStatementImpController  extends BasicController<SsStatementImpService> {
 
     @RequestMapping(value = "/optImport",consumes = {"multipart/form-data"})
+    @ResponseBody
     public JsonResult<String> optImport(HttpServletRequest request,MultipartFile file) throws Exception {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         String ssMonth = multipartRequest.getParameter("ssMonth");
