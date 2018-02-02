@@ -1,8 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.messageBus;
 
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeQueryDTO;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
+import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmployeeInfoDTO;
+import com.ciicsh.gto.afcompanycenter.commandservice.api.proxy.AfEmployeeSocialProxy;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsComTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpTaskFrontService;
@@ -38,11 +37,15 @@ public class KafkaReceiver {
     private SsComTaskService ssComTaskService;
     @Autowired
     private SsPaymentComService ssPaymentComService;
-    @Autowired
-    private AfEmployeeCompanyProxy afEmployeeCompanyProxy;
 //    @Autowired
-//    private AfEmployeeSocialProxy afEmployeeSocialProxy;
+//    private AfEmployeeCompanyProxy afEmployeeCompanyProxy;
+    @Autowired
+    private AfEmployeeSocialProxy afEmployeeSocialProxy;
 
+    /**
+     * 订阅雇员新增任务单
+     * @param message
+     */
     @StreamListener(TaskSink.AF_EMP_IN)
     public void receiveEmpIn(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
@@ -59,6 +62,10 @@ public class KafkaReceiver {
         logger.info("收到消息 雇员新增: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
+    /**
+     * 订阅雇员终止任务单
+     * @param message
+     */
     @StreamListener(TaskSink.AF_EMP_OUT)
     public void receiveEmpOut(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
@@ -71,6 +78,10 @@ public class KafkaReceiver {
         logger.info("收到消息 雇员终止: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
+    /**
+     * 订阅雇员补缴任务单
+     * @param message
+     */
     @StreamListener(TaskSink.AF_EMP_MAKE_UP)
     public void receiveChargeResume(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
@@ -83,6 +94,10 @@ public class KafkaReceiver {
         logger.info("收到消息 雇员补缴: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
+    /**
+     * 订阅雇员翻牌任务单
+     * @param message
+     */
     @StreamListener(TaskSink.AF_EMP_COMPANY_CHANGE)
     public void receiveEmpCompanyChange(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
@@ -95,6 +110,10 @@ public class KafkaReceiver {
         logger.info("收到消息 雇员翻牌: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
+    /**
+     * 订阅雇员服务协议调整任务单
+     * @param message
+     */
     @StreamListener(TaskSink.AF_EMP_AGREEMENT_ADJUST)
     public void receiveNonlocalToSh(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
@@ -108,6 +127,11 @@ public class KafkaReceiver {
         logger.info("收到消息 雇员服务协议调整: " + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
+    /**
+     * 订阅雇员服务协议更正任务单
+     * @param message
+     * @return
+     */
     @StreamListener(TaskSink.AF_EMP_AGREEMENT_UPDATE)
     public void receiveSh(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
@@ -136,6 +160,11 @@ public class KafkaReceiver {
         logger.info("收到消息 雇员服务协议更正:" + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
+    /**
+     * 订阅财务付款申请回调任务单
+     * @param message
+     * @return
+     */
     @StreamListener(TaskSink.PAY_APPLY_PAY_STATUS_STREAM)
     public void rejectPayApplyIdStream(Message<PayApplyPayStatusDTO> message) {
         PayApplyPayStatusDTO taskMsgDTO = message.getPayload();
@@ -145,9 +174,14 @@ public class KafkaReceiver {
             res = ssPaymentComService.saveRejectResult(taskMsgDTO.getBusinessPkId(), taskMsgDTO.getRemark(),
                 taskMsgDTO.getPayStatus());
         }
-        logger.info("收到消息 财务付款申请返回:" + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
+        logger.info("收到消息 财务付款申请回调:" + taskMsgDTO.toString() + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
+    /**
+     * 订阅客服中心调用更新企业任务单
+     * @param message
+     * @return
+     */
     //todo 接受客服中心调用更新企业任务单
     public void receiveComTask(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
@@ -165,10 +199,10 @@ public class KafkaReceiver {
         logger.info("当前雇员信息获取接口 开始调用：" + taskMsgDTO.toString());
         AfEmployeeInfoDTO resDto = null;
         try {
-            AfEmployeeQueryDTO taskRequestDTO = new AfEmployeeQueryDTO();
-            taskRequestDTO.setEmpAgreementId(Long.parseLong(taskMsgDTO.getMissionId()));
-
-            resDto = afEmployeeCompanyProxy.getEmployeeCompany(taskRequestDTO);
+//            AfEmployeeQueryDTO taskRequestDTO = new AfEmployeeQueryDTO();
+//            taskRequestDTO.setEmpAgreementId(Long.parseLong(taskMsgDTO.getMissionId()));
+//
+//            resDto = afEmployeeCompanyProxy.getEmployeeCompany(taskRequestDTO);
 
             logger.info("当前雇员信息获取接口 结束调用");
         } catch (Exception e) {
