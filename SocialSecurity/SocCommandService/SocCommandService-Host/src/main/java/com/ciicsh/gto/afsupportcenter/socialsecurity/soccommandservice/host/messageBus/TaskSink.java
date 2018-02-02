@@ -14,52 +14,37 @@ public interface TaskSink {
     static final String TOPIC_PREFIX = "common_taskservice_";
 
     /**
-     * 雇员新增TOPIC
+     * 雇员新增
      */
     String AF_EMP_IN = TOPIC_PREFIX + "af_empin";
 
     /**
-     * 雇员终止TOPIC
+     * 雇员终止
      */
     String AF_EMP_OUT = TOPIC_PREFIX + "af_empout";
 
     /**
-     * 恢复缴费TOPIC
+     * 雇员补缴
      */
-    String CHARGE_RESUME = TOPIC_PREFIX + "af_charge_resume";
+    String AF_EMP_MAKE_UP = TOPIC_PREFIX + "af_emp_make_up";
 
     /**
-     * 暂停缴费TOPIC
+     * 雇员翻牌
      */
-    String CHARGE_STOP = TOPIC_PREFIX + "af_charge_stop";
+    String AF_EMP_COMPANY_CHANGE = TOPIC_PREFIX + "af_emp_company_change";
 
     /**
-     * 雇员翻牌TOPIC
+     * 雇员服务协议调整
      */
-    String EMP_COMPANY_CHANGE = TOPIC_PREFIX + "af_emp_company_change";
+    String AF_EMP_AGREEMENT_ADJUST = TOPIC_PREFIX + "af_emp_agreement_adjust";
 
     /**
-     * 预录用TOPIC
+     * 雇员服务协议更正
      */
-    String PRE_IN = TOPIC_PREFIX + "af_emp_pre_in";
+    String AF_EMP_AGREEMENT_UPDATE = TOPIC_PREFIX + "af_emp_agreement_update";
 
     /**
-     * 外地转上海TOPIC
-     */
-    String NONLOCAL_TO_SH = TOPIC_PREFIX + "af_nonlocal_to_sh";
-
-    /**
-     * 上海转外地TOPIC
-     */
-    String SH_TO_NONLOCAL = TOPIC_PREFIX + "af_sh_to_nonlocal";
-
-    /**
-     * 上海基数年调TOPIC
-     */
-    String BASE_ADJUST_YEARLY_SH = TOPIC_PREFIX + "af_base_adjust_yearly_sh";
-
-    /**
-     * 财务中心付款申请拒绝
+     * 财务中心付款申请返回
      */
     String PAY_APPLY_PAY_STATUS_STREAM =  "pay-apply-pay-status-stream";
 
@@ -73,38 +58,23 @@ public interface TaskSink {
      */
     String SOCIAL_STOP="socialStop";
 
-    /**
-     * 社保年调
-     */
-    String SOCIAL_ADJUST="socialAdjust";
-
     @Input(AF_EMP_IN)
     MessageChannel afEmpIn();
-
 
     @Input(AF_EMP_OUT)
     MessageChannel afEmpOut();
 
-    @Input(CHARGE_RESUME)
-    MessageChannel chargeResume();
+    @Input(AF_EMP_MAKE_UP)
+    MessageChannel afEmpMakeUp();
 
-    @Input(CHARGE_STOP)
-    MessageChannel chargeStop();
+    @Input(AF_EMP_COMPANY_CHANGE)
+    MessageChannel afEmpCompanyChange();
 
-    @Input(EMP_COMPANY_CHANGE)
-    MessageChannel empCompanyChange();
+    @Input(AF_EMP_AGREEMENT_ADJUST)
+    MessageChannel afEmpAgreementAdjust();
 
-    @Input(PRE_IN)
-    MessageChannel preIn();
-
-    @Input(NONLOCAL_TO_SH)
-    MessageChannel nonlocalToSh();
-
-    @Input(SH_TO_NONLOCAL)
-    MessageChannel shToNonlocal();
-
-    @Input(BASE_ADJUST_YEARLY_SH)
-    MessageChannel baseAdjustYearlySh();
+    @Input(AF_EMP_AGREEMENT_UPDATE)
+    MessageChannel afEmpAgreementUpdate();
 
     @Input(PAY_APPLY_PAY_STATUS_STREAM)
     MessageChannel rejectPayApplyIdStream();

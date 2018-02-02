@@ -16,4 +16,18 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
+    <update id="updateTaskMaterials">
+        UPDATE cm_task_material
+        SET
+        material_ids = #{materialIds},
+        modified_by = #{modifiedBy},
+        modified_time = sysdate()
+        <!--<set>-->
+            <!--<if test="material_ids != null and material_ids != ''">material_ids = #{materialIds},</if>-->
+            <!--modified_by = #{modifiedBy},-->
+            <!--modified_time = sysdate()-->
+        <!--</set>-->
+        where
+        task_id = #{taskId}
+    </update>
 </mapper>

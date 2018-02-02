@@ -16,4 +16,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TaskMaterialMapper extends BaseMapper<TaskMaterial> {
 
+    /**
+     * 更新材料收缴信息
+     * @param taskMaterial
+     * @return
+     */
+    int updateTaskMaterials(TaskMaterial taskMaterial);
 }

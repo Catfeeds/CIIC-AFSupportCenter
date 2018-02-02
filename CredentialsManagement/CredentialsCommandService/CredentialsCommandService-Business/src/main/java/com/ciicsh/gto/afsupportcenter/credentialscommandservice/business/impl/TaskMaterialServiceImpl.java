@@ -28,4 +28,9 @@ public class TaskMaterialServiceImpl extends ServiceImpl<TaskMaterialMapper, Tas
         taskMaterial.setTaskId(taskId);
         return taskMaterialMapper.selectOne(taskMaterial);
     }
+
+    @Override
+    public int updateTaskMaterials(TaskMaterial taskMaterial) {
+        return taskMaterialMapper.updateTaskMaterials(taskMaterial);
+    }
 }
