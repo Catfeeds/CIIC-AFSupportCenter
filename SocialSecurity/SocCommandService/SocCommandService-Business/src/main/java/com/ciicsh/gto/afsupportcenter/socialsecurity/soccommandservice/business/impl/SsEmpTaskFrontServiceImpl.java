@@ -1,9 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
+import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialDTO;
+import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmployeeCompanyDTO;
+import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpTaskFrontService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpTaskFrontMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpTaskMapper;
@@ -54,7 +54,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
             SsEmpTask ssEmpTask = new SsEmpTask();
             ssEmpTask.setTaskId(taskMsgDTO.getTaskId());
             ssEmpTask.setCompanyId(companyDto.getCompanyId());
-            ssEmpTask.setEmployeeId(companyDto.getEmployeeId());
+            ssEmpTask.setEmployeeId(companyDto.getEmpId());
             ssEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
             ssEmpTask.setSubmitterName(companyDto.getCreatedBy());
             ssEmpTask.setSalary(companyDto.getSalary());
@@ -75,7 +75,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
             ssEmpTask.setCreatedTime(LocalDateTime.now());
             ssEmpTaskMapper.insert(ssEmpTask);
 
-            List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
+            List<AfEmpSocialDTO> socialList = dto.getEmpSocial();
             List<SsEmpTaskFront> eleList = new ArrayList<>();
             SsEmpTaskFront ssEmpTaskFront = null;
             for (AfEmpSocialDTO socialDto : socialList) {

@@ -17,10 +17,10 @@ import org.springframework.context.annotation.Import;
 @EnableFeignClients({"com.ciicsh.gto.sheetservice.api",
     "com.ciicsh.gto.settlementcenter.payment.cmdapi",
     "com.ciicsh.gto.basicdataservice.api",
-    "com.ciicsh.gto.afcompanycenter.queryservice.api",
+//    "com.ciicsh.gto.afcompanycenter.queryservice.api",
     "com.ciicsh.gto.afcompanycenter.commandservice.api",
     "com.ciicsh.gto.settlementcenter.invoicecommandservice.api",
-//    "com.ciicsh.gto.employeecenter.apiservice.api"
+    "com.ciicsh.gto.employeecenter.apiservice.api"
 })
 @MapperScan("com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao")
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice"})
