@@ -86,7 +86,7 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: "http://172.16.9.21:9602/eureka,http://172.16.9.20:9602/eureka,http://172.16.9.19:9602/eureka" #,http://172.16.9.21:9602/eureka
+      defaultZone: "http://172.16.9.19:9602/eureka,http://172.16.9.20:9602/eureka,http://172.16.9.21:9602/eureka" #,http://172.16.9.21:9602/eureka
                          #" #本地开发环境eureka,http://172.16.9.19:9602/eureka
  #"http://172.16.9.21:9602/eureka,http://172.16.9.20:9602/eureka,http://172.16.9.19:9602/eureka" #本地开发环境eureka
   instance:

@@ -1,7 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity;
 
-import java.math.BigDecimal;
-
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import cn.afterturn.easypoi.handler.inter.IExcelModel;
@@ -9,6 +7,7 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
+import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -73,6 +72,8 @@ public class SsAnnualAdjustCompanyEmpTemp implements Serializable, IExcelModel {
     @Excel(name = "社保状态", orderNum = "5")
     @Pattern(regexp="^[0-3]{1}$", message = "社保状态不正确")
 	private String archiveStatus;
+    @TableField(exist = false)
+	private String archiveStatusName;
     /**
      * 基数, 五险合一(基数一致）时有效
      */
@@ -88,10 +89,14 @@ public class SsAnnualAdjustCompanyEmpTemp implements Serializable, IExcelModel {
     @Excel(name = "账户类型", orderNum = "6")
     @Pattern(regexp="^[1-3]{1}$", message = "账户类型不正确")
 	private String ssAccountType;
+	@TableField(exist = false)
+	private String ssAccountTypeName;
 	@TableField("emp_classify")
     @Excel(name = "人员属性", orderNum = "7")
     @Pattern(regexp="^[1-5]{1}$", message = "人员属性不正确")
 	private String empClassify;
+	@TableField(exist = false)
+	private String empClassifyName;
     /**
      * 结算区县(社保局所在上海地区)
      */
@@ -99,6 +104,8 @@ public class SsAnnualAdjustCompanyEmpTemp implements Serializable, IExcelModel {
     @Excel(name = "结算区县", orderNum = "9")
     @Length(max=20, message = "结算区县最大长度为20位")
 	private String settlementArea;
+	@TableField(exist = false)
+	private String settlementAreaName;
     /**
      * 企业社保账户
      */
@@ -199,15 +206,17 @@ public class SsAnnualAdjustCompanyEmpTemp implements Serializable, IExcelModel {
 
 	public void setArchiveStatus(String archiveStatus) {
 	    if (archiveStatus != null) {
-            Optional<Map.Entry<String, String>> optional = SocialSecurityConst.ACCOUNT_STATUS_MAP.entrySet().stream().filter(
-                t -> archiveStatus.equals(t.getValue())
-            ).findFirst();
-            if (optional.isPresent()) {
-                this.archiveStatus = optional.get().getKey();
-            } else {
-                this.archiveStatus = archiveStatus;
-            }
+//            Optional<Map.Entry<String, String>> optional = SocialSecurityConst.ACCOUNT_STATUS_MAP.entrySet().stream().filter(
+//                t -> archiveStatus.equals(t.getValue())
+//            ).findFirst();
+//            if (optional.isPresent()) {
+//                this.archiveStatus = optional.get().getKey();
+//            } else {
+//                this.archiveStatus = archiveStatus;
+//            }
+            this.archiveStatus = DictUtil.getInstance().getValueByItemTextAndTypeValue(archiveStatus, DictUtil.TYPE_VALUE_SOCIAL_SECURITY_STATUS, true);
         }
+//        this.archiveStatus = archiveStatus;
 	}
 
 	public String getBaseAmount() {
@@ -224,15 +233,17 @@ public class SsAnnualAdjustCompanyEmpTemp implements Serializable, IExcelModel {
 
 	public void setSsAccountType(String ssAccountType) {
         if (ssAccountType != null) {
-            Optional<Map.Entry<String, String>> optional = SocialSecurityConst.ACCOUNT_TYPE_MAP.entrySet().stream().filter(
-                t -> ssAccountType.equals(t.getValue())
-            ).findFirst();
-            if (optional.isPresent()) {
-                this.ssAccountType = optional.get().getKey();
-            } else {
-                this.ssAccountType = ssAccountType;
-            }
+//            Optional<Map.Entry<String, String>> optional = SocialSecurityConst.ACCOUNT_TYPE_MAP.entrySet().stream().filter(
+//                t -> ssAccountType.equals(t.getValue())
+//            ).findFirst();
+//            if (optional.isPresent()) {
+//                this.ssAccountType = optional.get().getKey();
+//            } else {
+//                this.ssAccountType = ssAccountType;
+//            }
+            this.ssAccountType = DictUtil.getInstance().getValueByItemTextAndTypeValue(ssAccountType, DictUtil.TYPE_VALUE_SOCIAL_SECURITY_ACCOUNT_TYPE, true);
         }
+//        this.ssAccountType = ssAccountType;
 	}
 
 	public String getEmpClassify() {
@@ -241,15 +252,17 @@ public class SsAnnualAdjustCompanyEmpTemp implements Serializable, IExcelModel {
 
 	public void setEmpClassify(String empClassify) {
         if (empClassify != null) {
-            Optional<Map.Entry<String, String>> optional = SocialSecurityConst.EMP_CLASSIFY_MAP.entrySet().stream().filter(
-                t -> empClassify.equals(t.getValue())
-            ).findFirst();
-            if (optional.isPresent()) {
-                this.empClassify = optional.get().getKey();
-            } else {
-                this.empClassify = empClassify;
-            }
+//            Optional<Map.Entry<String, String>> optional = SocialSecurityConst.EMP_CLASSIFY_MAP.entrySet().stream().filter(
+//                t -> empClassify.equals(t.getValue())
+//            ).findFirst();
+//            if (optional.isPresent()) {
+//                this.empClassify = optional.get().getKey();
+//            } else {
+//                this.empClassify = empClassify;
+//            }
+            this.empClassify = DictUtil.getInstance().getValueByItemTextAndTypeValue(empClassify, DictUtil.TYPE_VALUE_SOCIAL_SECURITY_EMPLOYEE_CLASSIFY, true);
         }
+//        this.empClassify = empClassify;
 	}
 
 	public String getSettlementArea() {
@@ -341,6 +354,58 @@ public class SsAnnualAdjustCompanyEmpTemp implements Serializable, IExcelModel {
 
     public void setOrderNum(Integer orderNum) {
         this.orderNum = orderNum;
+    }
+
+    public String getArchiveStatusName() {
+        String archiveStatusName = DictUtil.getInstance().getTextByItemValueAndTypeValue(this.archiveStatus, DictUtil.TYPE_VALUE_SOCIAL_SECURITY_STATUS, false);
+        if (archiveStatusName != null) {
+            return archiveStatusName;
+        } else {
+            return this.archiveStatus;
+        }
+    }
+
+    public void setArchiveStatusName(String archiveStatusName) {
+        this.archiveStatusName = archiveStatusName;
+    }
+
+    public String getSsAccountTypeName() {
+        String ssAccountTypeName = DictUtil.getInstance().getTextByItemValueAndTypeValue(this.ssAccountType, DictUtil.TYPE_VALUE_SOCIAL_SECURITY_ACCOUNT_TYPE, false);
+        if (ssAccountTypeName != null) {
+            return ssAccountTypeName;
+        } else {
+            return this.ssAccountType;
+        }
+    }
+
+    public void setSsAccountTypeName(String ssAccountTypeName) {
+        this.ssAccountTypeName = ssAccountTypeName;
+    }
+
+    public String getEmpClassifyName() {
+        String empClassifyName = DictUtil.getInstance().getTextByItemValueAndTypeValue(this.empClassify, DictUtil.TYPE_VALUE_SOCIAL_SECURITY_EMPLOYEE_CLASSIFY, false);
+        if (empClassifyName != null) {
+            return empClassifyName;
+        } else {
+            return this.empClassify;
+        }
+    }
+
+    public void setEmpClassifyName(String empClassifyName) {
+        this.empClassifyName = empClassifyName;
+    }
+
+    public String getSettlementAreaName() {
+        String settlementAreaName = SocialSecurityConst.DISTRICT_MAP.get(this.settlementArea);
+        if (settlementAreaName != null) {
+            return settlementAreaName;
+        } else {
+            return this.settlementArea;
+        }
+    }
+
+    public void setSettlementAreaName(String settlementAreaName) {
+        this.settlementAreaName = settlementAreaName;
     }
 
     @Override

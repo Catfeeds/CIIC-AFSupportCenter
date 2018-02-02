@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
+import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 
 import java.io.Serializable;
 
@@ -45,6 +47,8 @@ public class SsAnnualAdjustCompanyEmp implements Serializable {
 	private String idNum;
 	@TableField("archive_status")
 	private Integer archiveStatus;
+    @TableField(exist = false)
+    private String archiveStatusName;
     /**
      * 基数, 五险合一(基数一致）时有效
      */
@@ -58,16 +62,22 @@ public class SsAnnualAdjustCompanyEmp implements Serializable {
      */
     @TableField("emp_classify")
     private Integer empClassify;
+    @TableField(exist = false)
+    private String empClassifyName;
     /**
      * 账户类型：1:中智大库 2中智外包 3独立户
      */
 	@TableField("ss_account_type")
 	private Integer ssAccountType;
+    @TableField(exist = false)
+    private String ssAccountTypeName;
     /**
      * 结算区县(社保局所在上海地区)
      */
 	@TableField("settlement_area")
 	private String settlementArea;
+    @TableField(exist = false)
+    private String settlementAreaName;
     /**
      * 企业社保账户
      */
@@ -315,6 +325,38 @@ public class SsAnnualAdjustCompanyEmp implements Serializable {
 
     public void setChgSalary(BigDecimal chgSalary) {
         this.chgSalary = chgSalary;
+    }
+
+    public String getArchiveStatusName() {
+        return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.archiveStatus), DictUtil.TYPE_VALUE_SOCIAL_SECURITY_STATUS, false);
+    }
+
+    public void setArchiveStatusName(String archiveStatusName) {
+        this.archiveStatusName = archiveStatusName;
+    }
+
+    public String getSsAccountTypeName() {
+        return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.ssAccountType), DictUtil.TYPE_VALUE_SOCIAL_SECURITY_ACCOUNT_TYPE, false);
+    }
+
+    public void setSsAccountTypeName(String ssAccountTypeName) {
+        this.ssAccountTypeName = ssAccountTypeName;
+    }
+
+    public String getEmpClassifyName() {
+        return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.empClassify), DictUtil.TYPE_VALUE_SOCIAL_SECURITY_EMPLOYEE_CLASSIFY, false);
+    }
+
+    public void setEmpClassifyName(String empClassifyName) {
+        this.empClassifyName = empClassifyName;
+    }
+
+    public String getSettlementAreaName() {
+        return SocialSecurityConst.DISTRICT_MAP.get(this.settlementArea);
+    }
+
+    public void setSettlementAreaName(String settlementAreaName) {
+        this.settlementAreaName = settlementAreaName;
     }
 
     @Override
