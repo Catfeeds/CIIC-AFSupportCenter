@@ -54,7 +54,7 @@ public class MybatisPlusGeneratorRun {
                 super.getAllTableInfoList(config).forEach(tableInfo -> {
                     String tableName = tableInfo.getName().toLowerCase();
                     // 添加指定前缀的表
-                    if (tableName.startsWith("hf_") || ohtTable(tableInfo)) {
+                    if (tableName.startsWith("ss_") || ohtTable(tableInfo)) {
                         // 移除 entity 前缀
                         // tableInfo.setEntityName(this.getStrategy(), tableInfo.getEntityName().substring(2));
                         list.add(tableInfo);
@@ -182,7 +182,7 @@ public class MybatisPlusGeneratorRun {
      */
     static PackageConfig handlePackageInfo() {
         PackageConfig pc = new PackageConfig();
-        pc.setParent("com.ciicsh.gto.afsupportcenter.housefund");
+        pc.setParent("com.ciicsh.gto.afsupportcenter.socialsecurity");
         pc.setModuleName("siteservice");
         pc.setMapper("dao");
         pc.setXml("mapping");
