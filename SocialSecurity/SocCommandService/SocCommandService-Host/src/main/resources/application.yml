@@ -82,6 +82,10 @@ spring:
                             # Must be set for partitioning and if using Kafka.
                             # used to partition data across different consumers.
           instance-index: 0
+  http:
+    multipart:
+      enabled: true
+      max-file-size: 2MB
 ###################  spring cloud eureka  ###################
 eureka:
   client:
