@@ -36,4 +36,11 @@ public interface TaskService extends IService<Task> {
      */
     @Override
     boolean insertOrUpdate(Task entity);
+
+    /**
+     * 新建任务单 返回主键
+     * @param task
+     * @return
+     */
+    Long insertItem(Task task);
 }

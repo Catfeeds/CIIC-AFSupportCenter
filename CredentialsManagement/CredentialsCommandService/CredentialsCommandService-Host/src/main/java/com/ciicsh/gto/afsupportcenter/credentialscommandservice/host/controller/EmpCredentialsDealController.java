@@ -152,14 +152,18 @@ public class EmpCredentialsDealController {
             task.setCredentialsType(Integer.parseInt(taskDetialDTO.getCredentialsDealType()));
         }
         //TODO
+        Long taskId = 0L;
         if (taskDetialDTO.getTaskId() == null) {
             task.setCreatedBy("gu");
             task.setCreatedTime(new Date());
+            task.setModifiedBy("gu");
+            task.setModifiedTime(new Date());
+            taskId = taskService.insertItem(task);
         }
         task.setModifiedBy("gu");
         task.setModifiedTime(new Date());
-        boolean b = taskService.insertOrUpdate(task);
-        if (b) {
+        boolean b = taskService.updateById(task);
+        if (b || taskId!=null) {
             TaskMaterial taskMaterial = new TaskMaterial();
             taskMaterial.setMaterialIds(taskDetialDTO.getMaterialIds());
             taskMaterial.setTaskId(String.valueOf(taskDetialDTO.getTaskId()));
@@ -171,6 +175,8 @@ public class EmpCredentialsDealController {
                 taskMaterial.setCreatedTime(new Date());
                 taskMaterial.setModifiedBy("gu");
                 taskMaterial.setModifiedTime(new Date());
+                //todo 获取新增的主键
+                taskMaterial.setTaskId(String.valueOf(taskId));
                 return JsonResult.success(taskMaterialService.insert(taskMaterial));
             } else {
                 taskMaterial.setModifiedBy("gu");

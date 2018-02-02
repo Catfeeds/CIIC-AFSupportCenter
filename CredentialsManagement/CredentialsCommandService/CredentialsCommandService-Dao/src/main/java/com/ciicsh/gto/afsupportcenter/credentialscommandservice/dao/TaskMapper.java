@@ -24,4 +24,11 @@ public interface TaskMapper extends BaseMapper<Task> {
      * @return
      */
     List<Task> selectByempId(String empId);
+
+    /**
+     * 保存任务单返回主键
+     * @param task
+     * @return
+     */
+    Long insertItem(Task task);
 }
