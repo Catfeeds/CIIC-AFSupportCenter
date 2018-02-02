@@ -58,5 +58,5 @@ public interface SsComAccountService extends IService<SsComAccount> {
      * @param map
      * @return
      */
-    JsonResult addBankAccount(@RequestBody Map<String, Object> map) throws Exception;
+    boolean addBankAccount(@RequestBody Map<String, Object> map) throws Exception;
 }

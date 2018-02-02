@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * <p>Description: 雇员档案 service Test</p>
  */
@@ -29,26 +32,27 @@ public class SsEmpArchiveServiceTest {
         System.out.println(JSON.toJSONString(result));
     }
 
-//    @Test
-//    public void addBankAcc() {
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("account", "6201200");
-//        map.put("account_name", "abc");
-//        map.put("bank_name", "上海银行");
-//        map.put("bank_id", "001");
-//        map.put("province_code", "002");
-//        map.put("city_code", "01");
-//        map.put("account_type", "4");
-//        map.put("finance_account_id", "1");
-//        map.put("subject_no", "1");
-//        try {
-//            com.ciicsh.gto.settlementcenter.invoicecommandservice.api.dto.JsonResult result = ssComAccountService
-//                .addBankAccount(map);
-//            System.out.println(JSON.toJSONString(result));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+    @Test
+    public void addBankAcc() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("com_account_id", "123");
+        map.put("account", "6201200");
+        map.put("account_name", "abc");
+        map.put("bank_name", "上海银行");
+        map.put("bank_id", "1");
+        map.put("province_code", "002");
+        map.put("city_code", "01");
+        map.put("account_type", "4");
+        map.put("finance_account_id", "1");
+        map.put("subject_no", "1");
+        try {
+            boolean result = ssComAccountService
+                .addBankAccount(map);
+            System.out.println(JSON.toJSONString(result));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }
