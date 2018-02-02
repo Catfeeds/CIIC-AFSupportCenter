@@ -275,7 +275,7 @@
         </dependency>
         <dependency>
             <groupId>cn.afterturn</groupId>
-            <artifactId>easypoi-annotation</artifactId>
+               <artifactId>easypoi-annotation</artifactId>
             <version>3.0.4.1</version>
         </dependency>
         <dependency>
@@ -296,11 +296,11 @@
             <version>1.0.0</version>
         </dependency>
 
-        <!--<dependency>-->
-        <!--<groupId>com.ciicsh.gt1.companycenter</groupId>-->
-        <!--<artifactId>queryservice-api</artifactId>-->
-        <!--<version>1.0.0</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.ciicsh.gt1.companycenter</groupId>
+            <artifactId>queryservice-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 
 		<dependency>
             <groupId>com.ciicsh.gt1</groupId>

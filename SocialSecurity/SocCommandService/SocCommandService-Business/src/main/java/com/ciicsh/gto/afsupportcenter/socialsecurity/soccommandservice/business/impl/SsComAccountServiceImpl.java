@@ -28,18 +28,19 @@ import java.util.Map;
  * @since 2017-12-06
  */
 @Service
-public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsComAccount> implements SsComAccountService {
+public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsComAccount> implements
+    SsComAccountService {
 
     @Autowired
     ComeAccountCommandProxy comeAccountCommandProxy;
 
     @Override
-    public SsComAccountBO queryByEmpTaskId(String empTaskId,String type) {
-        if("1".equals(type) || "2".equals(type)){
+    public SsComAccountBO queryByEmpTaskId(String empTaskId, String type) {
+        if ("1".equals(type) || "2".equals(type)) {
             //表示新进和转入
             return baseMapper.queryNewOrIntoByEmpTaskId(empTaskId);
 
-        }else{
+        } else {
             //新进和转入之外
             return baseMapper.queryByEmpTaskId(empTaskId);
         }
@@ -51,22 +52,26 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
         SsComAccountBO dto = pageInfo.toJavaObject(SsComAccountBO.class);
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.accountQuery(dto));
     }
+
     /**
      * 查询企业社保管理详细信息
+     *
      * @param comAccountId
      */
-    public SsComAccountBO querySocialSecurityManageInfo(String comAccountId){
+    public SsComAccountBO querySocialSecurityManageInfo(String comAccountId) {
 
         return baseMapper.querySocialSecurityManageInfo(comAccountId);
     }
 
     /**
-     *  查询企业社保账户信息表
+     * 查询企业社保账户信息表
+     *
      * @param dto
      * @return
      */
     @Override
-    public List<com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountDTO> getSsComAccountList(SsComAccountParamDto dto){
+    public List<com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountDTO>
+    getSsComAccountList(SsComAccountParamDto dto) {
         return baseMapper.getSsComAccountList(dto);
     }
 
@@ -77,16 +82,19 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
      * @return
      */
     @Override
-    public JsonResult addBankAccount(@RequestBody Map<String, Object> map) throws Exception {
+    public boolean addBankAccount(@RequestBody Map<String, Object> map) throws Exception {
         Long comAccountId = Long.parseLong(map.get("com_account_id").toString());
         JsonResult jr = comeAccountCommandProxy.addAccount(map);
+        boolean res = false;
 
         //更新返回的银行账号ID
         SsComAccount ele = this.selectById(comAccountId);
-        ele.setBankAccountId(jr.getBankAccountId().longValue());
-        this.updateById(ele);
+        if (ele != null) {
+            ele.setBankAccountId(jr.getBankAccountId().longValue());
+            res = this.updateById(ele);
+        }
 
-        return jr;
+        return res;
     }
 
 }

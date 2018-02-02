@@ -51,12 +51,12 @@ public interface TaskSink {
     /**
      * 社保办理
      */
-    String SOCIAL_NEW="socialNew";
+    String SOCIAL_NEW="social_new";
 
     /**
      * 社保停办
      */
-    String SOCIAL_STOP="socialStop";
+    String SOCIAL_STOP="social_stop";
 
     @Input(AF_EMP_IN)
     MessageChannel afEmpIn();

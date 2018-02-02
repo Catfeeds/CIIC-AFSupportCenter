@@ -1,12 +1,15 @@
 package com.ciicsh.gto.test.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialUpdateDateDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsAccountComRelationDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.payment.SsOperatePaymentDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpArchiveBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsComAccountService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.SocialSecurityApplication;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsAccountComRelationController;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsComTaskController;
@@ -15,13 +18,19 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.cont
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.commonservice.util.dto.Result;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeSearchDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>Description: 雇员档案 controller Test</p>
@@ -43,6 +52,9 @@ public class SsEmpArchiveControllerTest {
     SsComTaskController d1;
     @Autowired
     CommonApiUtils commonApiUtils;
+
+    @Autowired
+    SsComAccountService ssComAccountService;
 
     @Test
     public void queryByEmpTaskId() {
@@ -71,6 +83,20 @@ public class SsEmpArchiveControllerTest {
         List<DicItemDTO> res = d2.listByDicId("DIC00005");
         System.out.println(JSON.toJSONString(res));
     }
+
+
+    @Test
+    public void getEmp() throws Exception {
+        EmployeeSearchDTO dd= new EmployeeSearchDTO();
+        dd.setBusinessType(1);
+        dd.setPageSize(10);
+        dd.setCurrentPage(1);
+        dd.setTotalRecords(0);
+        dd.setEmployeeId("1");
+        com.ciicsh.gto.employeecenter.util.JsonResult<Page<EmployeeInfoDTO>> res  = d2.searchEmployeeInfo(dd);
+        System.out.println(JSON.toJSONString(res));
+    }
+
 
     @Test
     public void testDoReviewdePass() {
@@ -112,20 +138,44 @@ public class SsEmpArchiveControllerTest {
         System.out.println(JSON.toJSONString(jr));
     }
 
-//    @Test
-//    public void testupdateConfirmDate() {
-//        System.out.println("1----------------------------" + commonApiUtils);
-//        List<AfEmpSocialUpdateDateDTO> dt = new ArrayList<>();
-//        AfEmpSocialUpdateDateDTO d1= new AfEmpSocialUpdateDateDTO();
-//        d1.setEmpAgreementId();
-//
-////        System.out.println(JSONObject.toJSONString(SocialSecurityConst.DISTRICT_MAP));
-//
-//        try {
-//            Result ddd = commonApiUtils.updateConfirmDate(dt);
-//            System.out.println(JSON.toJSONString(ddd));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+    @Test
+    public void addBankAcc() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("com_account_id", "1235");
+        map.put("account", "6201200");
+        map.put("account_name", "abc");
+        map.put("bank_name", "上海银行1");
+        map.put("bank_id", "2");
+        map.put("province_code", "002");
+        map.put("city_code", "01");
+        map.put("account_type", "4");
+        map.put("finance_account_id", "1");
+        map.put("subject_no", "1");
+        try {
+            boolean result = ssComAccountService
+                .addBankAccount(map);
+            System.out.println(JSON.toJSONString(result));
+            System.out.println(JSON.toJSONString(result));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testupdateConfirmDate() {
+        System.out.println("1----------------------------" + commonApiUtils);
+        List<AfEmpSocialUpdateDateDTO> dt = new ArrayList<>();
+        AfEmpSocialUpdateDateDTO d1= new AfEmpSocialUpdateDateDTO();
+        d1.setEmpAgreementId(604L);
+        d1.setPersonalConfirmAmount(new BigDecimal(123));
+        d1.setCompanyConfirmAmount(new BigDecimal(234));
+        dt.add(d1);
+
+        try {
+            int ddd = commonApiUtils.updateConfirmDate(dt);
+            System.out.println(JSON.toJSONString(ddd));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

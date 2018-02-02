@@ -1,9 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialDTO;
-import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmployeeCompanyDTO;
-import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmployeeInfoDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpTaskFrontService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpTaskFrontMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpTaskMapper;
@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -45,39 +46,94 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
     @Transactional(
         rollbackFor = {Exception.class}
     )
-    public boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer isChange,
-                                AfEmployeeInfoDTO dto) {
+    @Override
+    public boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer isChange,
+                                 AfEmployeeInfoDTO dto) {
         boolean result = false;
         try {
-            AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
+            //插入数据到雇员任务单表
+            insertTaskTb(taskMsgDTO, taskCategory, isChange, dto);
 
-            SsEmpTask ssEmpTask = new SsEmpTask();
-            ssEmpTask.setTaskId(taskMsgDTO.getTaskId());
-            ssEmpTask.setCompanyId(companyDto.getCompanyId());
-            ssEmpTask.setEmployeeId(companyDto.getEmpId());
-            ssEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
-            ssEmpTask.setSubmitterName(companyDto.getCreatedBy());
-            ssEmpTask.setSalary(companyDto.getSalary());
-            ssEmpTask.setSubmitterRemark(companyDto.getRemark());
+            //更新旧的雇员任务单
+            updateEmpTaskTb(taskMsgDTO, dto);
 
+            result = true;
+        } catch (Exception e) {
+            result = false;
+            throw new RuntimeException("保存到雇员任务单表处理异常");
+        }
+        return result;
+    }
+
+    /**
+     * 更新旧的雇员任务单
+     *
+     * @param taskMsgDTO 消息队列接受的对象
+     * @param dto        取得的雇员信息
+     * @return
+     * @author zhangxj
+     * @date 2017-12-28
+     */
+    @Transactional(
+        rollbackFor = {Exception.class}
+    )
+    @Override
+    public boolean updateEmpTaskTc(TaskCreateMsgDTO taskMsgDTO,
+                                   AfEmployeeInfoDTO dto) {
+        //更新旧的雇员任务单
+        return updateEmpTaskTb(taskMsgDTO, dto);
+    }
+
+    /**
+     * 保存数据到雇员任务单表
+     *
+     * @param taskMsgDTO
+     * @param taskCategory
+     * @param isChange
+     * @param dto
+     * @return
+     * @throws Exception
+     */
+    @Transactional(
+        rollbackFor = {Exception.class}
+    )
+    @Override
+    public boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer isChange,
+                                AfEmployeeInfoDTO dto) throws Exception {
+        AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
+
+        SsEmpTask ssEmpTask = new SsEmpTask();
+        ssEmpTask.setTaskId(taskMsgDTO.getTaskId());
+        ssEmpTask.setCompanyId(companyDto.getCompanyId());
+        ssEmpTask.setEmployeeId(companyDto.getEmployeeId());
+        ssEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
+        ssEmpTask.setSubmitterName(companyDto.getCreatedBy());
+        ssEmpTask.setSalary(companyDto.getSalary());
+        ssEmpTask.setSubmitterRemark(companyDto.getRemark());
+
+        if (companyDto.getInDate() != null) {
             ssEmpTask.setInDate(LocalDateTime.ofInstant(companyDto.getInDate().toInstant(), ZoneId.systemDefault())
                 .toLocalDate());
+        }
+        if (companyDto.getOutDate() != null) {
             ssEmpTask.setOutDate(LocalDateTime.ofInstant(companyDto.getOutDate().toInstant(), ZoneId.systemDefault())
                 .toLocalDate());
+        }
 
-            ssEmpTask.setTaskCategory(taskCategory);
-            ssEmpTask.setIsChange(isChange);
+        ssEmpTask.setTaskCategory(taskCategory);
+        ssEmpTask.setIsChange(isChange);
 
-            ssEmpTask.setActive(true);
-            ssEmpTask.setModifiedBy("system");
-            ssEmpTask.setModifiedTime(LocalDateTime.now());
-            ssEmpTask.setCreatedBy("system");
-            ssEmpTask.setCreatedTime(LocalDateTime.now());
-            ssEmpTaskMapper.insert(ssEmpTask);
+        ssEmpTask.setActive(true);
+        ssEmpTask.setModifiedBy("system");
+        ssEmpTask.setModifiedTime(LocalDateTime.now());
+        ssEmpTask.setCreatedBy("system");
+        ssEmpTask.setCreatedTime(LocalDateTime.now());
+        ssEmpTaskMapper.insert(ssEmpTask);
 
-            List<AfEmpSocialDTO> socialList = dto.getEmpSocial();
-            List<SsEmpTaskFront> eleList = new ArrayList<>();
-            SsEmpTaskFront ssEmpTaskFront = null;
+        List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
+        List<SsEmpTaskFront> eleList = new ArrayList<>();
+        SsEmpTaskFront ssEmpTaskFront = null;
+        if (socialList != null) {
             for (AfEmpSocialDTO socialDto : socialList) {
                 ssEmpTaskFront = new SsEmpTaskFront();
                 ssEmpTaskFront.setEmpTaskId(Long.parseLong(taskMsgDTO.getTaskId()));
@@ -104,8 +160,8 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                 }
 
                 ssEmpTaskFront.setActive(true);
-                ssEmpTaskFront.setModifiedBy(null);
-                ssEmpTaskFront.setModifiedTime(null);
+                ssEmpTaskFront.setModifiedBy("system");
+                ssEmpTaskFront.setModifiedTime(LocalDateTime.now());
                 ssEmpTaskFront.setCreatedBy("system");
                 ssEmpTaskFront.setCreatedTime(LocalDateTime.now());
                 eleList.add(ssEmpTaskFront);
@@ -113,11 +169,83 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
             if (eleList.size() > 0) {
                 this.insertBatch(eleList);
             }
-            result = true;
-        } catch (Exception e) {
-            result = false;
-            throw new RuntimeException("保存到雇员任务单表处理异常");
         }
-        return result;
+        return true;
     }
+
+    /**
+     * 更新旧的雇员任务单
+     *
+     * @param taskMsgDTO
+     * @param dto
+     * @return
+     */
+    private boolean updateEmpTaskTb(TaskCreateMsgDTO taskMsgDTO,
+                                    AfEmployeeInfoDTO dto) {
+        Map<String, Object> paramMap = taskMsgDTO.getVariables();
+
+        AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
+
+        SsEmpTask ssEmpTask = new SsEmpTask();
+        ssEmpTask.setTaskId(paramMap.get("oldTaskId").toString());
+        ssEmpTask.setCompanyId(companyDto.getCompanyId());
+        ssEmpTask.setEmployeeId(companyDto.getEmployeeId());
+        ssEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
+        ssEmpTask.setSubmitterName(companyDto.getCreatedBy());
+        ssEmpTask.setSalary(companyDto.getSalary());
+        ssEmpTask.setSubmitterRemark(companyDto.getRemark());
+
+        if (companyDto.getInDate() != null) {
+            ssEmpTask.setInDate(LocalDateTime.ofInstant(companyDto.getInDate().toInstant(), ZoneId.systemDefault())
+                .toLocalDate());
+        }
+        if (companyDto.getOutDate() != null) {
+            ssEmpTask.setOutDate(LocalDateTime.ofInstant(companyDto.getOutDate().toInstant(), ZoneId.systemDefault())
+                .toLocalDate());
+        }
+
+        ssEmpTask.setModifiedBy("system");
+        ssEmpTask.setModifiedTime(LocalDateTime.now());
+        ssEmpTaskMapper.updateById(ssEmpTask);
+
+        List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
+        List<SsEmpTaskFront> eleList = new ArrayList<>();
+        SsEmpTaskFront ssEmpTaskFront = null;
+        if (socialList != null) {
+            for (AfEmpSocialDTO socialDto : socialList) {
+                ssEmpTaskFront = new SsEmpTaskFront();
+                ssEmpTaskFront.setEmpTaskId(Long.parseLong(paramMap.get("oldTaskId").toString()));
+                ssEmpTaskFront.setItemDicId(socialDto.getItemCode());
+                ssEmpTaskFront.setEmpCompanyBase(socialDto.getEmpCompanyBase());
+                ssEmpTaskFront.setPolicyId(socialDto.getPolicyId());
+
+                ssEmpTaskFront.setPolicyName(socialDto.getPolicyName());
+                ssEmpTaskFront.setCompanyRatio(socialDto.getCompanyRatio());
+                ssEmpTaskFront.setCompanyBase(socialDto.getCompanyBase());
+                ssEmpTaskFront.setCompanyAmount(socialDto.getCompanyAmount());
+
+                ssEmpTaskFront.setPersonalRatio(socialDto.getPersonalRatio());
+                ssEmpTaskFront.setPersonalBase(socialDto.getPersonalBase());
+                ssEmpTaskFront.setPersonalAmount(socialDto.getPersonalAmount());
+
+                if (socialDto.getStartDate() != null) {
+                    ssEmpTaskFront.setStartMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getStartDate(),
+                        "yyyyMM")));
+                }
+                if (socialDto.getEndDate() != null) {
+                    ssEmpTaskFront.setEndMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getEndDate(),
+                        "yyyyMM")));
+                }
+
+                ssEmpTaskFront.setModifiedBy("system");
+                ssEmpTaskFront.setModifiedTime(LocalDateTime.now());
+                eleList.add(ssEmpTaskFront);
+            }
+            if (eleList.size() > 0) {
+                this.updateBatchById(eleList);
+            }
+        }
+        return true;
+    }
+
 }
