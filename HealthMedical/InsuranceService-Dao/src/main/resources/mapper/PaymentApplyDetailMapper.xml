@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.healthmedical.dao.PaymentApplyDetailMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.PaymentApplyDetailPO">
+		<id column="apply_detail_id" property="applyDetailId" />
+		<result column="apply_batch_id" property="applyBatchId" />
+        <result column="acceptance_id" property="acceptanceId" />
+		<result column="business_id" property="businessId" />
+		<result column="company_id" property="companyId" />
+		<result column="company_name" property="companyName" />
+		<result column="employee_id" property="employeeId" />
+		<result column="employee_name" property="employeeName" />
+		<result column="bank_account" property="bankAccount" />
+		<result column="bank_name" property="bankName" />
+		<result column="bank_code" property="bankCode" />
+		<result column="pay_amount" property="payAmount" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+    <!-- 关联查询映射结果 -->
+    <resultMap id="JoinResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.PaymentApplyDetailBO">
+        <result column="acceptance_id" property="paymentApplyId" />
+        <result column="company_id" property="companyId" />
+        <result column="company_name" property="companyName" />
+        <result column="employee_id" property="employeeId" />
+        <result column="employee_name" property="employeeName" />
+        <result column="pay_amount" property="payAmount" />
+        <result column="bank_account" property="employeeBankAccount" />
+        <result column="bank_name" property="bankName" />
+        <result column="bank_code" property="bankCode" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        apply_detail_id, apply_batch_id, acceptance_type, acceptance_id, company_id, company_name, employee_id, employee_name, bank_account, bank_name, bank_code, pay_amount, is_active, created_time, modified_time, created_by, modified_by
+    </sql>
+
+    <sql id="Join_Column_List">
+      p.acceptance_id, p.company_id, p.company_name, p.employee_id, p.employee_name, p.pay_amount, p.bank_account, p.bank_name, p.bank_code
+    </sql>
+
+    <insert id="insertDetails" parameterType="java.util.List">
+        INSERT INTO hm_payment_apply_detail
+        (
+            apply_batch_id,
+            acceptance_id,
+            business_id,
+            company_id,
+            company_name,
+            employee_id,
+            employee_name,
+            bank_account,
+            bank_name,
+            bank_code,
+            pay_amount,
+            is_active,
+            created_by,
+            modified_by,
+            created_time,
+            modified_time
+        ) VALUES
+        <foreach collection="detail" item="item" index="index" separator=",">
+            (
+                #{applyBatchId},
+                #{item.paymentApplyId},
+                #{item.businessId},
+                #{item.companyId},
+                #{item.companyName},
+                #{item.employeeId},
+                #{item.employeeName},
+                #{item.bankAccount},
+                #{item.bankName},
+                #{item.bankCode},
+                #{item.payAmount},
+                1,
+                #{modifiedBy},
+                #{modifiedBy},
+                NOW(),
+                NOW()
+            )
+        </foreach>
+    </insert>
+
+    <select id="selectPending" resultMap="JoinResultMap">
+        SELECT
+          <include refid="Join_Column_List"></include>
+        FROM
+          gtobusinessdb.hm_payment_apply_detail p
+        WHERE
+          p.apply_batch_id = #{applyBatchId}
+        AND
+          p.is_active = 1
+    </select>
+
+</mapper>
