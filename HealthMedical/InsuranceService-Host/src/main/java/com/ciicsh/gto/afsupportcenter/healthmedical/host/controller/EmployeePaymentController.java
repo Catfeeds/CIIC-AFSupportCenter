@@ -57,11 +57,11 @@ public class EmployeePaymentController implements EmployeePaymentProxy {
 //    @PostMapping(value = "/handleEmpPayment")
     public void handleEmpPayment() {
         try {
-            logger.info("雇员付款任务 开始 ");
+            logger.info("+++++++++++++++++++++++++++ 雇员付款任务: 开始 +++++++++++++++++++++++++++ ");
             employeePaymentService.handleEmpPayment();
-            logger.info("雇员付款任务 结束");
+            logger.info("+++++++++++++++++++++++++++ 雇员付款任务: 结束 +++++++++++++++++++++++++++ ");
         } catch (Exception e) {
-            logger.error("雇员付款任务 异常 ： " + e.getMessage());
+            logger.error("雇员付款任务 异常 ：--------------------------------------->  " + e.getMessage());
         }
     }
 }

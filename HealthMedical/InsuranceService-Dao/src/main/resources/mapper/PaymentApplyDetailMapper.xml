@@ -32,8 +32,12 @@
         <result column="employee_name" property="employeeName" />
         <result column="pay_amount" property="payAmount" />
         <result column="bank_account" property="employeeBankAccount" />
+        <result column="account_name" property="bankAccountName" />
+        <result column="bank_id" property="bankId" />
+        <result column="bank_code" property="areaCode" />
         <result column="bank_name" property="bankName" />
-        <result column="bank_code" property="bankCode" />
+        <result column="province_name" property="provinceName" />
+        <result column="city_name" property="cityName" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -42,7 +46,7 @@
     </sql>
 
     <sql id="Join_Column_List">
-      p.acceptance_id, p.company_id, p.company_name, p.employee_id, p.employee_name, p.pay_amount, p.bank_account, p.bank_name, p.bank_code
+      p.acceptance_id, p.company_id, p.company_name, p.employee_id, p.employee_name, p.pay_amount, p.bank_account, p.account_name, p.bank_id, p.bank_code, p.bank_name, p.province_name, p.city_name
     </sql>
 
     <insert id="insertDetails" parameterType="java.util.List">
@@ -55,10 +59,14 @@
             company_name,
             employee_id,
             employee_name,
+            bank_id,
             bank_account,
-            bank_name,
+            account_name,
             bank_code,
+            bank_name,
             pay_amount,
+            province_name,
+            city_name,
             is_active,
             created_by,
             modified_by,
@@ -74,10 +82,14 @@
                 #{item.companyName},
                 #{item.employeeId},
                 #{item.employeeName},
+                #{item.bankId},
                 #{item.bankAccount},
-                #{item.bankName},
+                #{item.accountName},
                 #{item.bankCode},
+                #{item.bankName},
                 #{item.payAmount},
+                #{item.provinceCode},
+                #{item.cityCode},
                 1,
                 #{modifiedBy},
                 #{modifiedBy},

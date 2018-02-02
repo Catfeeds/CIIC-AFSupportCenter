@@ -35,8 +35,12 @@
         <result column="employee_name" property="employeeName" />
         <result column="pay_amount" property="payAmount" />
         <result column="bank_account" property="bankAccount" />
-        <result column="bank_name" property="bankName" />
+        <result column="account_name" property="accountName" />
         <result column="bank_id" property="bankId" />
+        <result column="bank_code" property="bankCode" />
+        <result column="bank_name" property="bankName" />
+        <result column="province_code" property="provinceCode" />
+        <result column="city_code" property="cityCode" />
     </resultMap>
 
     <!-- 银行信息不全映射结果 -->
@@ -59,7 +63,7 @@
 
     <!-- 关联查询结果列 -->
     <sql id="Join_Column_List">
-p.payment_apply_id, p.company_id, p.company_name, p.employee_id, p.employee_name, p.pay_total_amount AS pay_amount, 2 AS business_id, b.card_num AS bank_account, b.deposit_bank AS bank_name, b.bankcard_type AS bank_id
+        p.payment_apply_id, 2 AS business_id, p.company_id, p.company_name, p.employee_id, p.employee_name, p.pay_total_amount AS pay_amount, b.card_num AS bank_account, b.account_name, b.bankcard_type AS bank_id, b.bank_code, b.deposit_bank AS bank_name, b.province_code, b.city_code
     </sql>
 
     <!-- 关联查询结果列 -->

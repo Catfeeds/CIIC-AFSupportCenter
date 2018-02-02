@@ -1,7 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.business.impl;
 
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.EmployeePaymentService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.enums.SysConstants;
@@ -79,10 +78,9 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
             if(SysConstants.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())){
                 this.updateSyncStatus(batchPO.getApplyBatchId());
             }
-            System.out.println("-----> " + JSON.toJSONString(jsonResult));
         }
         List<EmpBankRefundBO> unSync = this.selectUnSyncApply();
-        System.out.println("-----> " + unSync.size());
+        System.out.println("               =============> " + unSync.size());
     }
 
     /**
@@ -109,9 +107,8 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
      * @return PaymentApplyBatchPO: 申请支付批次记录
      */
     private PaymentApplyBatchPO addPaymentApply (List<EmployeePaymentBO> list) {
-        SimpleDateFormat df =new SimpleDateFormat(SysConstants.PaymentJob.DATE_FORMAT.getName());
         Date now = new Date();
-        String title = df.format(now).concat(SysConstants.PaymentJob.BUSINESS.getName());
+        String title = SysConstants.PaymentJob.BUSINESS.getName();
         PaymentApplyBatchPO batchPO = new PaymentApplyBatchPO (
             SysConstants.PaymentJob.AF_SYS_MANAGEMENT.getName(),
             SysConstants.PaymentJob.FINANCE.getCode(),
@@ -161,10 +158,8 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
      */
     private PayApplyProxyDTO assignBatchDefaultValue (PaymentApplyBatchPO batchPo, PayApplyProxyDTO dto) {
         SimpleDateFormat df =new SimpleDateFormat(SysConstants.PaymentJob.DATE_FORMAT.getName());
-        Date now = new Date();
         dto.setBusinessPkId(batchPo.getApplyBatchId().longValue());
-        dto.setApplyDate(df.format(now));
-//        dto.setApplyDate(batchPo.getApplyDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        dto.setApplyDate(df.format(new Date()));
         dto.setIsFinancedept(SysConstants.PaymentJob.FINANCE.getCode());
         dto.setPresident(SysConstants.PaymentJob.PRESIDENT.getName());
         dto.setLeader(SysConstants.PaymentJob.LEADER.getName());

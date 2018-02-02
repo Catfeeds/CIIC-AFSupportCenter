@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 /**
  * <p>
- * 支付申请详情
+ * 结算中心用支付申请
  * </p>
  *
  * @author chenpb
@@ -22,14 +22,22 @@ public class PaymentApplyDetailBO {
     private String employeeId;
     /** 雇员姓名 */
     private String employeeName;
-    /** 雇员银行账号 */
-    private String employeeBankAccount;
-    /** 雇员银行名称 */
-    private String bankName;
-    /** 雇员银行编号 */
-    private String bankCode;
     /** 支付金额 */
     private BigDecimal payAmount;
+    /** 雇员银行账号 */
+    private String employeeBankAccount;
+    /** 开户名 */
+    private String bankAccountName;
+    /** 银行类别 */
+    private Integer bankId;
+    /** 银行地区码 */
+    private String areaCode;
+    /** 开户行名称 */
+    private String bankName;
+    /** 省名称 */
+    private String provinceName;
+    /** 省名称 */
+    private String cityName;
 
     public Integer getPaymentApplyId() {
         return paymentApplyId;
@@ -71,12 +79,44 @@ public class PaymentApplyDetailBO {
         this.employeeName = employeeName;
     }
 
+    public BigDecimal getPayAmount() {
+        return payAmount;
+    }
+
+    public void setPayAmount(BigDecimal payAmount) {
+        this.payAmount = payAmount;
+    }
+
     public String getEmployeeBankAccount() {
         return employeeBankAccount;
     }
 
     public void setEmployeeBankAccount(String employeeBankAccount) {
         this.employeeBankAccount = employeeBankAccount;
+    }
+
+    public String getBankAccountName() {
+        return bankAccountName;
+    }
+
+    public void setBankAccountName(String bankAccountName) {
+        this.bankAccountName = bankAccountName;
+    }
+
+    public Integer getBankId() {
+        return bankId;
+    }
+
+    public void setBankId(Integer bankId) {
+        this.bankId = bankId;
+    }
+
+    public String getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
     }
 
     public String getBankName() {
@@ -87,34 +127,19 @@ public class PaymentApplyDetailBO {
         this.bankName = bankName;
     }
 
-    public String getBankCode() {
-        return bankCode;
+    public String getProvinceName() {
+        return provinceName;
     }
 
-    public void setBankCode(String bankCode) {
-        this.bankCode = bankCode;
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
     }
 
-    public BigDecimal getPayAmount() {
-        return payAmount;
+    public String getCityName() {
+        return cityName;
     }
 
-    public void setPayAmount(BigDecimal payAmount) {
-        this.payAmount = payAmount;
-    }
-
-    @Override
-    public String toString() {
-        return "EmployeePaymentBO{" +
-            "paymentApplyId=" + paymentApplyId +
-            ", companyId='" + companyId + '\'' +
-            ", companyName='" + companyName + '\'' +
-            ", employeeId='" + employeeId + '\'' +
-            ", employeeName='" + employeeName + '\'' +
-            ", bankAccount='" + employeeBankAccount + '\'' +
-            ", bankName='" + bankName + '\'' +
-            ", bankCode='" + bankCode + '\'' +
-            ", payAmount=" + payAmount +
-            '}';
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 }
