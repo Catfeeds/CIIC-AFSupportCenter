@@ -6,14 +6,12 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.cu
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.YysmxOpt;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,11 +26,7 @@ public class SsStatementImpController  extends BasicController<SsStatementImpSer
 
     @RequestMapping(value = "/optImport",consumes = {"multipart/form-data"})
     @ResponseBody
-    public JsonResult<String> optImport(HttpServletRequest request,MultipartFile file) throws Exception {
-        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-        String ssMonth = multipartRequest.getParameter("ssMonth");
-        String fileType = multipartRequest.getParameter("fileType");
-        Long comAccountId = Long.valueOf(multipartRequest.getParameter("comAccountId"));
+    public JsonResult<String> optImport(String ssMonth,String fileType,Long comAccountId,MultipartFile file) throws Exception {
         JsonResult<String> json = new JsonResult<String>();
         switch (fileType){
             case "YYS":
