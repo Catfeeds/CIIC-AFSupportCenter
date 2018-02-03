@@ -35,7 +35,7 @@ public interface SsMonthChargeMapper extends BaseMapper<SsMonthCharge> {
      * @param ssMonth 实际社保缴纳发生月份
      * @return 月度缴费明细信息
      */
-    List<SsMonthCharge> getMonthChangesByCondition(@Param("comAccountId") long comAccountId,@Param("ssMonth") String ssMonth);
+    List<SsMonthCharge> getMonthChangesByCondition(@Param("comAccountId") long comAccountId,@Param("ssMonth") String ssMonth,@Param("costCategory") Integer costCategory);
 
 
     /**
@@ -53,5 +53,5 @@ public interface SsMonthChargeMapper extends BaseMapper<SsMonthCharge> {
      * @param ssMonth 实际社保缴纳发生月份
      * @return 返回删除影响的行数
      */
-    Integer delByCondition(@Param("comAccountId") long comAccountId,@Param("ssMonth") String ssMonth);
+    Integer delByCondition(@Param("comAccountId") long comAccountId,@Param("ssMonth") String ssMonth,@Param("costCategory") Integer costCategory);
 }

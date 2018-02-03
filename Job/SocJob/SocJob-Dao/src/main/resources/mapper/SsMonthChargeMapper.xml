@@ -46,14 +46,16 @@
     </select>
     
     <select id="delByCondition" resultType="int">
-      DELETE FROM ss_month_charge WHERE com_account_id = #{comAccountId} AND ss_month = #{ssMonth}
+      DELETE FROM ss_month_charge WHERE com_account_id = #{comAccountId} AND ss_month = #{ssMonth} AND cost_category = #{costCategory}
     </select>
 
     <select id="getMonthChangesByCondition" resultMap="BaseResultMap">
       SELECT
         <include refid="SsMonthCharge_All_Columns"/>
-      FROM ss_month_charge WHERE com_account_id = #{comAccountId}
+      FROM ss_month_charge
+      WHERE com_account_id = #{comAccountId}
         AND ss_month = #{ssMonth}
+        AND cost_category = #{costCategory}
     </select>
 
     <select id="getSsMonthChargeExts" resultMap="SsMonthChargeExtMap">
