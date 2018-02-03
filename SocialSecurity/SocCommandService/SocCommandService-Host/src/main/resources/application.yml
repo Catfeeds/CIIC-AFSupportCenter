@@ -94,8 +94,8 @@ eureka:
                          #" #本地开发环境eureka,http://172.16.9.19:9602/eureka
  #"http://172.16.9.21:9602/eureka,http://172.16.9.20:9602/eureka,http://172.16.9.19:9602/eureka" #本地开发环境eureka
   instance:
-    lease-expiration-duration-in-seconds: 30
-    lease-renewal-interval-in-seconds: 40
+    lease-expiration-duration-in-seconds: 40
+    lease-renewal-interval-in-seconds: 30
     prefer-ip-address: true
     instance-id: ${spring.cloud.client.ipAddress}:${server.port}
 ###################  mybatis 配置  ###################
