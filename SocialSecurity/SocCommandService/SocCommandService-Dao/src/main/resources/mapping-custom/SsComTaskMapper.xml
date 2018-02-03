@@ -465,7 +465,8 @@
         </if>
     </select>
 
-    <update id="updateTaskStatusForRevoke" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask">
+    <update id="updateTaskStatusForRevoke"
+            parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask">
         UPDATE ss_com_task sct
         SET
         <if test="taskStatus == 1">
@@ -473,7 +474,7 @@
         </if>
         <if test="taskStatus == 2">
             sct.send_check_date=NULL,
-         </if>
+        </if>
         <if test="taskStatus != null">
             <if test="modifiedBy != null">
                 sct.modified_by =#{modifiedBy},
@@ -484,7 +485,7 @@
             sct.task_status = #{taskStatus}-1
         </if>
         WHERE
-            sct.com_task_id = #{comTaskId}
+        sct.com_task_id = #{comTaskId}
     </update>
 
     <!--判断企业任务单是否存在-->
@@ -501,11 +502,11 @@
     <insert id="insertComTask" useGeneratedKeys="true" keyProperty="comTaskId">
         insert into
         ss_com_task
-       ( `customer_id`, `com_account_id`, `company_id`, `task_category`, `expire_date`,
-       `submitter_id`, `submitter_name`, `submitter_dept_id`, `submitter_dept_name`, `submit_time`, `submit_remark`,
-        `task_form_content`, `chat_history`, `dynamic_extend`, `task_status`, `handle_user_id`, `handle_user_name`,
-        `start_handle_date`, `send_check_date`, `finish_date`, `handle_remark`, `rejection_remark`, `business_interface_id`,
-         `task_id`, `is_active`, `created_time`, `modified_time`, `created_by`, `modified_by`) VALUES
+       (customer_id, com_account_id, company_id, task_category, expire_date,
+       submitter_id, submitter_name, submitter_dept_id, submitter_dept_name, submit_time, submit_remark,
+        task_form_content, chat_history, dynamic_extend, task_status, handle_user_id, handle_user_name,
+        start_handle_date, send_check_date, finish_date, handle_remark, rejection_remark, business_interface_id,
+         task_id, is_active, created_time, modified_time, created_by, modified_by) VALUES
          	(#{customerId},#{comAccountId},#{companyId},#{taskCategory},#{expireDate},#{submitterId},#{submitterName},
          	#{submitterDeptId},#{submitterDeptName},#{submitTime},#{submitRemark},#{taskFormContent},#{chatHistory},
          	#{dynamicExtend},#{taskStatus},#{handleUserId},#{handleUserName},#{startHandleDate},#{sendCheckDate},

@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
@@ -122,52 +123,56 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
 
         ssEmpTask.setTaskCategory(taskCategory);
         ssEmpTask.setIsChange(isChange);
+        ssEmpTask.setTaskFormContent(JSON.toJSONString(dto));
 
+        ssEmpTask.setTaskStatus(1);
         ssEmpTask.setActive(true);
-        ssEmpTask.setModifiedBy("system");
+        ssEmpTask.setModifiedBy(companyDto.getCreatedBy());
         ssEmpTask.setModifiedTime(LocalDateTime.now());
-        ssEmpTask.setCreatedBy("system");
+        ssEmpTask.setCreatedBy(companyDto.getCreatedBy());
         ssEmpTask.setCreatedTime(LocalDateTime.now());
-        ssEmpTaskMapper.insert(ssEmpTask);
+        boolean insertRes = ssEmpTaskMapper.insertEmpTask(ssEmpTask);
 
-        List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
-        List<SsEmpTaskFront> eleList = new ArrayList<>();
-        SsEmpTaskFront ssEmpTaskFront = null;
-        if (socialList != null) {
-            for (AfEmpSocialDTO socialDto : socialList) {
-                ssEmpTaskFront = new SsEmpTaskFront();
-                ssEmpTaskFront.setEmpTaskId(Long.parseLong(taskMsgDTO.getTaskId()));
-                ssEmpTaskFront.setItemDicId(socialDto.getItemCode());
-                ssEmpTaskFront.setEmpCompanyBase(socialDto.getEmpCompanyBase());
-                ssEmpTaskFront.setPolicyId(socialDto.getPolicyId());
+        if (insertRes) {
+            List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
+            List<SsEmpTaskFront> eleList = new ArrayList<>();
+            SsEmpTaskFront ssEmpTaskFront = null;
+            if (socialList != null) {
+                for (AfEmpSocialDTO socialDto : socialList) {
+                    ssEmpTaskFront = new SsEmpTaskFront();
+                    ssEmpTaskFront.setEmpTaskId(ssEmpTask.getEmpTaskId());
+                    ssEmpTaskFront.setItemDicId(socialDto.getItemCode());
+                    ssEmpTaskFront.setEmpCompanyBase(socialDto.getEmpCompanyBase());
+                    ssEmpTaskFront.setPolicyId(socialDto.getPolicyId());
 
-                ssEmpTaskFront.setPolicyName(socialDto.getPolicyName());
-                ssEmpTaskFront.setCompanyRatio(socialDto.getCompanyRatio());
-                ssEmpTaskFront.setCompanyBase(socialDto.getCompanyBase());
-                ssEmpTaskFront.setCompanyAmount(socialDto.getCompanyAmount());
+                    ssEmpTaskFront.setPolicyName(socialDto.getPolicyName());
+                    ssEmpTaskFront.setCompanyRatio(socialDto.getCompanyRatio());
+                    ssEmpTaskFront.setCompanyBase(socialDto.getCompanyBase());
+                    ssEmpTaskFront.setCompanyAmount(socialDto.getCompanyAmount());
 
-                ssEmpTaskFront.setPersonalRatio(socialDto.getPersonalRatio());
-                ssEmpTaskFront.setPersonalBase(socialDto.getPersonalBase());
-                ssEmpTaskFront.setPersonalAmount(socialDto.getPersonalAmount());
+                    ssEmpTaskFront.setPersonalRatio(socialDto.getPersonalRatio());
+                    ssEmpTaskFront.setPersonalBase(socialDto.getPersonalBase());
+                    ssEmpTaskFront.setPersonalAmount(socialDto.getPersonalAmount());
 
-                if (socialDto.getStartDate() != null) {
-                    ssEmpTaskFront.setStartMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getStartDate(),
-                        "yyyyMM")));
+                    if (socialDto.getStartDate() != null) {
+                        ssEmpTaskFront.setStartMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getStartDate(),
+                            "yyyyMM")));
+                    }
+                    if (socialDto.getEndDate() != null) {
+                        ssEmpTaskFront.setEndMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getEndDate(),
+                            "yyyyMM")));
+                    }
+
+                    ssEmpTaskFront.setActive(true);
+                    ssEmpTaskFront.setModifiedBy(companyDto.getCreatedBy());
+                    ssEmpTaskFront.setModifiedTime(LocalDateTime.now());
+                    ssEmpTaskFront.setCreatedBy(companyDto.getCreatedBy());
+                    ssEmpTaskFront.setCreatedTime(LocalDateTime.now());
+                    eleList.add(ssEmpTaskFront);
                 }
-                if (socialDto.getEndDate() != null) {
-                    ssEmpTaskFront.setEndMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getEndDate(),
-                        "yyyyMM")));
+                if (eleList.size() > 0) {
+                    this.insertBatch(eleList);
                 }
-
-                ssEmpTaskFront.setActive(true);
-                ssEmpTaskFront.setModifiedBy("system");
-                ssEmpTaskFront.setModifiedTime(LocalDateTime.now());
-                ssEmpTaskFront.setCreatedBy("system");
-                ssEmpTaskFront.setCreatedTime(LocalDateTime.now());
-                eleList.add(ssEmpTaskFront);
-            }
-            if (eleList.size() > 0) {
-                this.insertBatch(eleList);
             }
         }
         return true;
@@ -204,7 +209,9 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                 .toLocalDate());
         }
 
-        ssEmpTask.setModifiedBy("system");
+        ssEmpTask.setTaskFormContent(JSON.toJSONString(dto));
+
+        ssEmpTask.setModifiedBy(companyDto.getCreatedBy());
         ssEmpTask.setModifiedTime(LocalDateTime.now());
         ssEmpTaskMapper.updateById(ssEmpTask);
 
@@ -237,7 +244,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                         "yyyyMM")));
                 }
 
-                ssEmpTaskFront.setModifiedBy("system");
+                ssEmpTaskFront.setModifiedBy(companyDto.getCreatedBy());
                 ssEmpTaskFront.setModifiedTime(LocalDateTime.now());
                 eleList.add(ssEmpTaskFront);
             }
