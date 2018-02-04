@@ -1,6 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api;
 
-import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialUpdateDateDTO;
 import com.ciicsh.gto.afcompanycenter.commandservice.api.proxy.AfEmployeeSocialProxy;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.TaskSheetRequestDTO;
@@ -10,6 +9,7 @@ import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeSearchDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
+import com.ciicsh.gto.employeecenter.util.JsonResult;
 import com.ciicsh.gto.sheetservice.api.SheetServiceProxy;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.slf4j.Logger;
@@ -101,7 +101,7 @@ public class CommonApiUtils {
      * @param var1 传入employeeId和业务类型
      * @return
      */
-    public com.ciicsh.gto.employeecenter.util.JsonResult<Page<EmployeeInfoDTO>> searchEmployeeInfo(
+    public JsonResult<com.ciicsh.gto.employeecenter.apiservice.api.dto.Page<EmployeeInfoDTO>> searchEmployeeInfo(
         @RequestBody EmployeeSearchDTO var1) throws Exception {
         return employeeInfoProxy.searchEmployeeInfo(var1);
     }
