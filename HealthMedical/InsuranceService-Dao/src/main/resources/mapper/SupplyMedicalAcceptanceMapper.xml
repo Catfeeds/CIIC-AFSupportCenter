@@ -14,7 +14,7 @@
         <result column="company_name" property="companyName"/>
         <result column="invoice_number" property="invoiceNumber"/>
         <result column="total_company_amount" property="totalCompanyAmount"/>
-        <result column="total_insurance_company_amount" property="totalInsuranceCompanyAmount"/>
+        <result column="total_insurance_company_money" property="totalInsuranceCompanyMoney"/>
         <result column="total_cs_payment_amount" property="totalCsPaymentAmount"/>
         <result column="total_application_amount" property="totalApplicationAmount"/>
         <result column="total_approved_amount" property="totalApprovedAmount"/>
@@ -29,4 +29,106 @@
         <result column="modified_by" property="modifiedBy"/>
     </resultMap>
 
+    <select id="queryAcceptancePage"
+            parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.SupplyMedicalAcceptanceDTO"
+            resultMap="BaseResultMap">
+        SELECT hm_supply_medical_acceptance.*
+        FROM hm_supply_medical_acceptance
+        JOIN sal_company
+        ON sal_company.company_id = hm_supply_medical_acceptance.company_id
+        JOIN sal_management
+        ON sal_management.management_id = sal_company.management_id
+        <where>
+            <if test="inputDateRange != null and inputDateRange.size == 2">
+                AND input_date BETWEEN #{inputDateRange[0],jdbcType=TIMESTAMP} AND
+                #{inputDateRange[1],jdbcType=TIMESTAMP}
+            </if>
+            <if test="auditTime != null">
+                AND audit_time = #{auditTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="status != null">
+                hm_supply_medical_acceptance.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="dossierNumber != null and dossierNumber != '' ">
+                AND dossier_number = #{dossierNumber,jdbcType=VARCHAR}
+            </if>
+            <if test="acceptanceId != null and acceptanceId != '' ">
+                AND acceptance_id = #{acceptanceId,jdbcType=VARCHAR}
+            </if>
+            <if test="employeeId != null and employeeId != '' ">
+                AND hm_supply_medical_acceptance.employee_id = #{employeeId,jdbcType=VARCHAR}
+            </if>
+            <if test="employeeName != null and employeeName != '' ">
+                AND employee_name = #{employeeName,jdbcType=VARCHAR}
+            </if>
+            <if test="companyId != null and companyId != '' ">
+                AND hm_supply_medical_acceptance.company_id = #{companyId,jdbcType=VARCHAR}
+            </if>
+            <if test="companyName != null and companyName != '' ">
+                AND company_name = #{companyName,jdbcType=VARCHAR}
+            </if>
+            <if test="managementId != null and managementId != '' ">
+                AND sal_company.management_id = #{managementId,jdbcType=VARCHAR}
+            </if>
+            <if test="managementName != null and managementName != '' ">
+                AND sal_management.title = #{managementName,jdbcType=VARCHAR}
+            </if>
+            <if test="insuredName != null and insuredName != '' ">
+                AND insured_name = #{insuredName,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryAcceptanceTotal"
+            parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.SupplyMedicalAcceptanceDTO"
+            resultType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.AcceptanceStatisticsBO">
+        SELECT
+        count(1) total,
+        sum(hm_supply_medical_acceptance.total_company_amount) totalCompanyMoney,
+        sum(hm_supply_medical_acceptance.total_insurance_company_money) totalInsuranceCompanyMoney
+        FROM hm_supply_medical_acceptance
+        JOIN sal_company
+        ON sal_company.company_id = hm_supply_medical_acceptance.company_id
+        JOIN sal_management
+        ON sal_management.management_id = sal_company.management_id
+        <where>
+            <if test="inputDateRange != null and inputDateRange.size == 2">
+                AND input_date BETWEEN #{inputDateRange[0],jdbcType=TIMESTAMP} AND
+                #{inputDateRange[1],jdbcType=TIMESTAMP}
+            </if>
+            <if test="auditTime != null">
+                AND audit_time = #{auditTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="status != null">
+                hm_supply_medical_acceptance.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="dossierNumber != null and dossierNumber != '' ">
+                AND dossier_number = #{dossierNumber,jdbcType=VARCHAR}
+            </if>
+            <if test="acceptanceId != null and acceptanceId != '' ">
+                AND acceptance_id = #{acceptanceId,jdbcType=VARCHAR}
+            </if>
+            <if test="employeeId != null and employeeId != '' ">
+                AND hm_supply_medical_acceptance.employee_id = #{employeeId,jdbcType=VARCHAR}
+            </if>
+            <if test="employeeName != null and employeeName != '' ">
+                AND employee_name = #{employeeName,jdbcType=VARCHAR}
+            </if>
+            <if test="companyId != null and companyId != '' ">
+                AND hm_supply_medical_acceptance.company_id = #{companyId,jdbcType=VARCHAR}
+            </if>
+            <if test="companyName != null and companyName != '' ">
+                AND company_name = #{companyName,jdbcType=VARCHAR}
+            </if>
+            <if test="managementId != null and managementId != '' ">
+                AND sal_company.management_id = #{managementId,jdbcType=VARCHAR}
+            </if>
+            <if test="managementName != null and managementName != '' ">
+                AND sal_management.title = #{managementName,jdbcType=VARCHAR}
+            </if>
+            <if test="insuredName != null and insuredName != '' ">
+                AND insured_name = #{insuredName,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -376,7 +376,7 @@ public class UninsuredMedicalDTO extends CommonEntity {
 
     @Override
     public String toString() {
-        return "UninsuredMedicalDTO{" +
+        return super.toString() + "UninsuredMedicalDTO{" +
             "employeeName='" + employeeName + '\'' +
             ", idNum='" + idNum + '\'' +
             ", companyId='" + companyId + '\'' +

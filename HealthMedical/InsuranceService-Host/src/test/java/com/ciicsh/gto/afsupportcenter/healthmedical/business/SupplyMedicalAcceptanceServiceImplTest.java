@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.business;
 
 import com.ciicsh.gto.afsupportcenter.healthmedical.InsuranceApplication;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.SupplyMedicalAcceptance;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,5 +17,16 @@ public class SupplyMedicalAcceptanceServiceImplTest {
     @Test
     public void syncAcceptanceSummary() {
         supplyMedicalAcceptanceService.syncAcceptanceSummaryDetail();
+    }
+
+    @Test
+    public void acceptance() {
+        supplyMedicalAcceptanceService.acceptance();
+    }
+
+    @Test
+    public void test() {
+        SupplyMedicalAcceptance supplyMedicalAcceptance = supplyMedicalAcceptanceService.selectById("201801150415-2");
+        System.out.println(supplyMedicalAcceptance.toString());
     }
 }

@@ -1,14 +1,13 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.entity.po;
+package com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo;
 
-import com.baomidou.mybatisplus.activerecord.Model;
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
-import com.baomidou.mybatisplus.enums.IdType;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AcceptanceDetailed;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -17,92 +16,102 @@ import java.util.Date;
  *
  * @author xiweizhen
  */
-@TableName("hm_acceptance_summary")
-public class AcceptanceSummary extends Model<AcceptanceSummary> {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class AcceptanceSummaryBO {
+    /**
+     * 发票信息
+     */
+    private List<AcceptanceDetailed> medicalSchemeDeatils;
 
-    private static final long serialVersionUID = 1L;
+    public List<AcceptanceDetailed> getMedicalSchemeDeatils() {
+        return medicalSchemeDeatils;
+    }
 
-    @TableId(value = "summary_id", type = IdType.AUTO)
+    public void setMedicalSchemeDeatils(List<AcceptanceDetailed> medicalSchemeDeatils) {
+        this.medicalSchemeDeatils = medicalSchemeDeatils;
+    }
+
     private Integer summaryId;
     /**
      * 序号
      */
-    @TableField("zlt_sn")
+    @JsonProperty("zlt_sn")
     private Integer zltSn;
     /**
      * 案卷号
      */
-    @TableField("dossier_number")
+    @JsonProperty("dossier_number")
     private String dossierNumber;
     /**
      * 雇员编号
      */
-    @TableField("employee_id")
+    @JsonProperty("employee_id")
     private String employeeId;
     /**
      * 雇员姓名
      */
-    @TableField("employee_name")
+    @JsonProperty("employee_name")
     private String employeeName;
     /**
      * 发票张数
      */
-    @TableField("invoice_number")
+    @JsonProperty("invoice_number")
     private Integer invoiceNumber;
     /**
      * 索赔金额
      */
-    @TableField("total_compensation_amount")
+    @JsonProperty("total_compensation_amount")
     private BigDecimal totalCompensationAmount;
     /**
      * 核赔金额
      */
-    @TableField("total_hepei_amount")
+    @JsonProperty("total_hepei_amount")
     private BigDecimal totalHepeiAmount;
     /**
      * 申请金额
      */
-    @TableField("total_application_amount")
+    @JsonProperty("total_application_amount")
     private BigDecimal totalApplicationAmount;
     /**
      * 核准金额
      */
-    @TableField("total_approved_amount")
+    @JsonProperty("total_approved_amount")
     private BigDecimal totalApprovedAmount;
     /**
      * 财务年度累计已赔金额
      */
-    @TableField("total_finanical_amount")
+    @JsonProperty("total_finanical_amount")
     private BigDecimal totalFinanicalAmount;
     /**
      * 保单年度累计已赔金额
      */
-    @TableField("total_insurance_policy_amount")
+    @JsonProperty("total_insurance_policy_amount")
     private BigDecimal totalInsurancePolicyAmount;
     /**
      * 国寿理赔金额
      */
-    @TableField("total_guoshou_amount")
+    @JsonProperty("total_guoshou_amount")
     private BigDecimal totalGuoshouAmount;
     /**
      * 公司理赔金额
      */
-    @TableField("total_company_amount")
+    @JsonProperty("total_company_amount")
     private BigDecimal totalCompanyAmount;
     /**
      * 导入日期
      */
-    @TableField("input_date")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonProperty("input_date")
     private Date inputDate;
     /**
      * 公司编号
      */
-    @TableField("company_id")
+    @JsonProperty("company_id")
     private Integer companyId;
     /**
      * 报销编号
      */
-    @TableField("reimbursement_id")
+    @JsonProperty("reimbursement_id")
     private String reimbursementId;
     /**
      * 审核
@@ -111,7 +120,8 @@ public class AcceptanceSummary extends Model<AcceptanceSummary> {
     /**
      * 审核日期
      */
-    @TableField("audit_date")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonProperty("audit_date")
     private Date auditDate;
     /**
      * 成功
@@ -120,27 +130,28 @@ public class AcceptanceSummary extends Model<AcceptanceSummary> {
     /**
      * 付款方式
      */
-    @TableField("pay_way")
+    @JsonProperty("pay_way")
     private String payWay;
     /**
      * 打卡号
      */
-    @TableField("bank_card")
+    @JsonProperty("bank_card")
     private String bankCard;
     /**
      * 理赔日期
      */
-    @TableField("claim_date")
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
+    @JsonProperty("claim_date")
     private Date claimDate;
     /**
      * 理赔金额
      */
-    @TableField("total_claim_amount")
+    @JsonProperty("total_claim_amount")
     private BigDecimal totalClaimAmount;
     /**
      * 连带被保险人姓名
      */
-    @TableField("insured_name")
+    @JsonProperty("insured_name")
     private String insuredName;
     /**
      * 审核人
@@ -149,17 +160,17 @@ public class AcceptanceSummary extends Model<AcceptanceSummary> {
     /**
      * 雇员付款记录
      */
-    @TableField("pay_record")
+    @JsonProperty("pay_record")
     private Integer payRecord;
     /**
      * 理赔备注
      */
-    @TableField("claim_remark")
+    @JsonProperty("claim_remark")
     private String claimRemark;
     /**
      * 分类自负金额
      */
-    @TableField("total_cs_payment_amount")
+    @JsonProperty("total_cs_payment_amount")
     private BigDecimal totalCsPaymentAmount;
     /**
      * 报销类别
@@ -168,47 +179,47 @@ public class AcceptanceSummary extends Model<AcceptanceSummary> {
     /**
      * 投保公司
      */
-    @TableField("insurance_company")
+    @JsonProperty("insurance_company")
     private String insuranceCompany;
     /**
      * 受理批号
      */
-    @TableField("acceptance_id")
+    @JsonProperty("acceptance_id")
     private String acceptanceId;
     /**
      * 保险公司到款
      */
-    @TableField("insurance_company_money")
+    @JsonProperty("insurance_company_money")
     private Boolean insuranceCompanyMoney;
     /**
      * 保险公司到款日期
      */
-    @TableField("insurance_company_money_date")
+    @JsonProperty("insurance_company_money_date")
     private Date insuranceCompanyMoneyDate;
     /**
      * 保险公司到款序号
      */
-    @TableField("insurance_company_money_sn")
+    @JsonProperty("insurance_company_money_sn")
     private Integer insuranceCompanyMoneySn;
     /**
      * 赔付金额百分比
      */
-    @TableField("pay_percentage")
+    @JsonProperty("pay_percentage")
     private String payPercentage;
     /**
      * 分类自负金额百分比
      */
-    @TableField("cs_percentage")
+    @JsonProperty("cs_percentage")
     private String csPercentage;
     /**
      * 累计免赔额
      */
-    @TableField("mianpei_amount")
+    @JsonProperty("mianpei_amount")
     private BigDecimal mianpeiAmount;
     /**
      * 保险理赔金额
      */
-    @TableField("total_insurance_company_money")
+    @JsonProperty("total_insurance_company_money")
     private BigDecimal totalInsuranceCompanyMoney;
     /**
      * 处理中
@@ -217,7 +228,7 @@ public class AcceptanceSummary extends Model<AcceptanceSummary> {
     /**
      * 创建时间
      */
-    @TableField("created_time")
+    @JsonProperty("created_time")
     private Date createdTime;
 
 
@@ -550,13 +561,9 @@ public class AcceptanceSummary extends Model<AcceptanceSummary> {
     }
 
     @Override
-    protected Serializable pkVal() {
-        return this.summaryId;
-    }
-
-    @Override
     public String toString() {
         return "AcceptanceSummary{" +
+            ", medicalSchemeDeatils=" + medicalSchemeDeatils +
             ", summaryId=" + summaryId +
             ", zltSn=" + zltSn +
             ", dossierNumber=" + dossierNumber +

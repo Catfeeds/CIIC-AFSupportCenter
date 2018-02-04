@@ -1,25 +1,58 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.entity.po;
+package com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto;
 
-import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
  * 补充医疗受理单表
+ * 分页查询出入参数
  * </p>
  *
  * @author xiweizhen
  */
-@TableName("hm_supply_medical_acceptance")
-public class SupplyMedicalAcceptance extends Model<SupplyMedicalAcceptance> {
+public class SupplyMedicalAcceptanceDTO extends CommonEntity {
 
-    private static final long serialVersionUID = 1L;
+    /**
+     * 管理方编号
+     */
+    private String managementId;
+    /**
+     * 管理方名称
+     */
+    private String managementName;
+    /**
+     * 受理日期
+     */
+    private List<Date> inputDateRange;
+
+    public List<Date> getInputDateRange() {
+        return inputDateRange;
+    }
+
+    public void setInputDateRange(List<Date> inputDateRange) {
+        this.inputDateRange = inputDateRange;
+    }
+
+    public String getManagementId() {
+        return managementId;
+    }
+
+    public void setManagementId(String managementId) {
+        this.managementId = managementId;
+    }
+
+    public String getManagementName() {
+        return managementName;
+    }
+
+    public void setManagementName(String managementName) {
+        this.managementName = managementName;
+    }
 
     /**
      * 受理单编号（比如：201801100173-4）
@@ -333,13 +366,11 @@ public class SupplyMedicalAcceptance extends Model<SupplyMedicalAcceptance> {
     }
 
     @Override
-    protected Serializable pkVal() {
-        return this.acceptanceId;
-    }
-
-    @Override
     public String toString() {
-        return "SupplyMedicalAcceptance{" +
+        return super.toString() + "SupplyMedicalAcceptanceDTO{" +
+            ", inputDateRange=" + inputDateRange +
+            ", managementId=" + managementId +
+            ", managementName=" + managementName +
             ", acceptanceId=" + acceptanceId +
             ", dossierNumber=" + dossierNumber +
             ", inputDate=" + inputDate +

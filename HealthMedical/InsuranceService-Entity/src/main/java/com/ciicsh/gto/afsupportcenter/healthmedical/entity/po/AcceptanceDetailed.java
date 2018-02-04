@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -22,66 +24,81 @@ public class AcceptanceDetailed extends Model<AcceptanceDetailed> {
 
     private static final long serialVersionUID = 1L;
 
+    @JsonProperty("detailed_id")
     @TableId(value = "detailed_id", type = IdType.AUTO)
     private Integer detailedId;
     /**
      * 序号
      */
+    @JsonProperty("zlt_sn")
     @TableField("zlt_sn")
     private Integer zltSn;
     /**
      * 案卷号
      */
+    @JsonProperty("dossier_number")
     @TableField("dossier_number")
     private String dossierNumber;
     /**
      * 雇员编号
      */
+    @JsonProperty("employee_id")
     @TableField("employee_id")
     private String employeeId;
     /**
      * 雇员姓名
      */
+    @JsonProperty("employee_name")
     @TableField("employee_name")
     private String employeeName;
     /**
      * 身份证
      */
+    @JsonProperty("ID_num")
     @TableField("id_num")
     private String idNum;
     /**
      * 医保标志
      */
+    @JsonProperty("health_care_tag")
     @TableField("health_care_tag")
     private Boolean healthCareTag;
     /**
      * 发票张数
      */
+    @JsonProperty("invoice_number")
     @TableField("invoice_number")
     private Integer invoiceNumber;
     /**
      * 索赔金额
      */
+    @JsonProperty("compensation_amount")
     @TableField("compensation_amount")
     private BigDecimal compensationAmount;
     /**
      * 就诊日期
      */
+    @JsonProperty("clinic_date")
     @TableField("clinic_date")
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
     private Date clinicDate;
     /**
      * 受理日期
      */
+    @JsonProperty("acceptance_date")
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
     @TableField("acceptance_date")
     private Date acceptanceDate;
     /**
      * 就诊机构
      */
+    @JsonProperty("medical_institution")
     @TableField("medical_institution")
     private String medicalInstitution;
     /**
      * 疾病名称
      */
+    @JsonProperty("disease_name")
     @TableField("disease_name")
     private String diseaseName;
     /**
@@ -91,146 +108,177 @@ public class AcceptanceDetailed extends Model<AcceptanceDetailed> {
     /**
      * 核赔金额
      */
+    @JsonProperty("hepei_amount")
     @TableField("hepei_amount")
     private BigDecimal hepeiAmount;
     /**
      * 结案状态
      */
+    @JsonProperty("closed_status")
     @TableField("closed_status")
     private String closedStatus;
     /**
      * 结案原因
      */
+    @JsonProperty("closed_reason")
     @TableField("closed_reason")
     private String closedReason;
     /**
      * 结案日期
      */
+    @JsonProperty("closed_date")
     @TableField("closed_date")
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
     private Date closedDate;
     /**
      * 财务年度累计已赔金额
      */
+    @JsonProperty("finanical_amount")
     @TableField("finanical_amount")
     private BigDecimal finanicalAmount;
     /**
      * 保单年度累计已赔金额
      */
+    @JsonProperty("insurance_policy_amount")
     @TableField("insurance_policy_amount")
     private BigDecimal insurancePolicyAmount;
     /**
      * 国寿理赔金额
      */
+    @JsonProperty("guoshou_amount")
     @TableField("guoshou_amount")
     private BigDecimal guoshouAmount;
     /**
      * 国寿结案日期
      */
+    @JsonProperty("guoshou_closed_date")
     @TableField("guoshou_closed_date")
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
     private Date guoshouClosedDate;
     /**
      * 结案备注
      */
+    @JsonProperty("closed_remark")
     @TableField("closed_remark")
     private String closedRemark;
     /**
      * 发票类型
      */
+    @JsonProperty("invoice_type")
     @TableField("invoice_type")
     private String invoiceType;
     /**
      * 账户金额
      */
+    @JsonProperty("account_amount")
     @TableField("account_amount")
     private BigDecimal accountAmount;
     /**
      * 自付金额
      */
+    @JsonProperty("self_pay_amount")
     @TableField("self_pay_amount")
     private BigDecimal selfPayAmount;
     /**
      * 统筹金额
      */
+    @JsonProperty("whole_plan_amount")
     @TableField("whole_plan_amount")
     private BigDecimal wholePlanAmount;
     /**
      * 附加金额
      */
+    @JsonProperty("attach_amount")
     @TableField("attach_amount")
     private BigDecimal attachAmount;
     /**
      * 自费金额
      */
+    @JsonProperty("own_expense_amount")
     @TableField("own_expense_amount")
     private BigDecimal ownExpenseAmount;
     /**
      * 不属医保报销金额
      */
+    @JsonProperty("un_health_care_amount")
     @TableField("un_health_care_amount")
     private BigDecimal unHealthCareAmount;
     /**
      * 申请金额
      */
+    @JsonProperty("application_amount")
     @TableField("application_amount")
     private BigDecimal applicationAmount;
     /**
      * 核准金额
      */
+    @JsonProperty("approved_amount")
     @TableField("approved_amount")
     private BigDecimal approvedAmount;
     /**
      * 他方补偿金额
      */
+    @JsonProperty("other_amount")
     @TableField("other_amount")
     private BigDecimal otherAmount;
     /**
      * 他方补偿原因
      */
+    @JsonProperty("other_reason")
     @TableField("other_reason")
     private String otherReason;
     /**
      * 部分拒付金额
      */
+    @JsonProperty("other_reject_amount")
     @TableField("other_reject_amount")
     private BigDecimal otherRejectAmount;
     /**
      * 部分拒付原因
      */
+    @JsonProperty("other_reject_reason")
     @TableField("other_reject_reason")
     private String otherRejectReason;
     /**
      * 调整给付金额
      */
+    @JsonProperty("adjust_amount")
     @TableField("adjust_amount")
     private BigDecimal adjustAmount;
     /**
      * 调整给付原因
      */
+    @JsonProperty("adjust_reason")
     @TableField("adjust_reason")
     private String adjustReason;
     /**
      * 公司理赔金额
      */
+    @JsonProperty("company_money")
     @TableField("company_money")
     private BigDecimal companyMoney;
     /**
      * 公司编号
      */
+    @JsonProperty("company_id")
     @TableField("company_id")
     private Integer companyId;
     /**
      * 理赔金额
      */
+    @JsonProperty("claim_amount")
     @TableField("claim_amount")
     private BigDecimal claimAmount;
     /**
      * 连带被保险人姓名
      */
+    @JsonProperty("insured_name")
     @TableField("insured_name")
     private String insuredName;
     /**
      * 分类自负金额
      */
+    @JsonProperty("cs_payment_amount")
     @TableField("cs_payment_amount")
     private BigDecimal csPaymentAmount;
     /**
@@ -240,16 +288,19 @@ public class AcceptanceDetailed extends Model<AcceptanceDetailed> {
     /**
      * 投保公司
      */
+    @JsonProperty("insurance_company")
     @TableField("insurance_company")
     private String insuranceCompany;
     /**
      * 受理批号
      */
+    @JsonProperty("acceptance_id")
     @TableField("acceptance_id")
     private String acceptanceId;
     /**
      * 保险理赔金额
      */
+    @JsonProperty("insurance_company_money")
     @TableField("insurance_company_money")
     private BigDecimal insuranceCompanyMoney;
     /**
