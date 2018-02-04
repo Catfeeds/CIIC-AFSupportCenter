@@ -93,7 +93,7 @@ public class SsEmpArchiveControllerTest {
         dd.setCurrentPage(1);
         dd.setTotalRecords(0);
         dd.setEmployeeId("1");
-        com.ciicsh.gto.employeecenter.util.JsonResult<Page<EmployeeInfoDTO>> res  = d2.searchEmployeeInfo(dd);
+        com.ciicsh.gto.employeecenter.util.JsonResult<com.ciicsh.gto.employeecenter.apiservice.api.dto.Page<EmployeeInfoDTO>> res  = d2.searchEmployeeInfo(dd);
         System.out.println(JSON.toJSONString(res));
     }
 
