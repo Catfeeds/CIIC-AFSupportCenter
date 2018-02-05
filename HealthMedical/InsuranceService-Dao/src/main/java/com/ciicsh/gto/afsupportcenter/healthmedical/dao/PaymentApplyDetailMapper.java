@@ -20,4 +20,5 @@ public interface PaymentApplyDetailMapper extends BaseMapper<PaymentApplyDetailP
     Integer insertDetails (@Param("detail")List<EmployeePaymentBO> detail, @Param("applyBatchId") Integer applyBatchId, @Param("modifiedBy") String modifiedBy);
     List<PaymentApplyDetailBO> selectPending(@Param("applyBatchId") Integer applyBatchId);
     List<PaymentApplyDetailBO> selectRefundDetail(@Param("bo") PaymentApplyDetailBO bo);
+    Integer updateActiveByBachId (@Param("batchId") Integer batchId, @Param("modifiedBy") String modifiedBy);
 }
