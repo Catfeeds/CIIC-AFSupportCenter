@@ -14,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author xsj
- * @since 2018-01-30
+ * @since 2018-02-01
  */
 @TableName("ss_com_task")
 public class SsComTask implements Serializable {
@@ -194,6 +194,16 @@ public class SsComTask implements Serializable {
      */
 	@TableField("settlement_area")
 	private String settlementArea;
+    /**
+     * 法人(前道传递)
+     */
+	@TableField("legal_person")
+	private String legalPerson;
+    /**
+     * 联系地址(前道传递)
+     */
+	@TableField("contact_address")
+	private String contactAddress;
     /**
      * 是否可用
      */
@@ -501,6 +511,22 @@ public class SsComTask implements Serializable {
 		this.settlementArea = settlementArea;
 	}
 
+	public String getLegalPerson() {
+		return legalPerson;
+	}
+
+	public void setLegalPerson(String legalPerson) {
+		this.legalPerson = legalPerson;
+	}
+
+	public String getContactAddress() {
+		return contactAddress;
+	}
+
+	public void setContactAddress(String contactAddress) {
+		this.contactAddress = contactAddress;
+	}
+
 	public Boolean getActive() {
 		return isActive;
 	}
@@ -579,6 +605,8 @@ public class SsComTask implements Serializable {
 			", startMonth=" + startMonth +
 			", expireDateFront=" + expireDateFront +
 			", settlementArea=" + settlementArea +
+			", legalPerson=" + legalPerson +
+			", contactAddress=" + contactAddress +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

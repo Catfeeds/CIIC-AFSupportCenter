@@ -63,6 +63,9 @@ public class SsEmpTaskBO extends SsEmpTask {
 
     //批量查询的id
     private List<Long> empTaskIdList;
+
+    //存在相同已办任务单
+    private Integer isHaveSameTask;
     public String getEmployeeName() {
         return employeeName;
     }
@@ -221,5 +224,13 @@ public class SsEmpTaskBO extends SsEmpTask {
 
     public void setEmpTaskIdList(List<Long> empTaskIdList) {
         this.empTaskIdList = empTaskIdList;
+    }
+
+    public Integer getIsHaveSameTask() {
+        return isHaveSameTask;
+    }
+
+    public void setIsHaveSameTask(Integer isHaveSameTask) {
+        this.isHaveSameTask = isHaveSameTask;
     }
 }

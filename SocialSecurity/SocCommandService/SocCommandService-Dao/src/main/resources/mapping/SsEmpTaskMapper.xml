@@ -9,6 +9,7 @@
 		<result column="employee_id" property="employeeId" />
 		<result column="customer_id" property="customerId" />
 		<result column="emp_archive_id" property="empArchiveId" />
+		<result column="is_change" property="isChange" />
 		<result column="task_category" property="taskCategory" />
 		<result column="task_category_special" property="taskCategorySpecial" />
 		<result column="urgent" property="urgent" />
@@ -46,6 +47,7 @@
 		<result column="out_date" property="outDate" />
 		<result column="business_interface_id" property="businessInterfaceId" />
 		<result column="task_id" property="taskId" />
+		<result column="policy_detail_id" property="policyDetailId" />
 		<result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />
 		<result column="modified_time" property="modifiedTime" />
