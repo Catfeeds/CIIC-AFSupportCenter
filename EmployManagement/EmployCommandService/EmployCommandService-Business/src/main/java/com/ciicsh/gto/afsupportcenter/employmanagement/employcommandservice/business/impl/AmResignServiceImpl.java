@@ -5,10 +5,14 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.enti
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao.AmResignMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmResignService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -21,7 +25,45 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
 
         AmResignBO  amResignBO = pageInfo.toJavaObject(AmResignBO.class);
 
+        List<String> param = new ArrayList<String>();
+
+        if(!StringUtil.isEmpty(amResignBO.getParams()))
+        {
+            String arr[] = amResignBO.getParams().split(",");
+            for(int i=0;i<arr.length;i++) {
+                param.add(arr[i]);
+            }
+        }
+
+        amResignBO.setParam(param);
+
+        if(null!=amResignBO.getTaskStatus()&&amResignBO.getTaskStatus()==0){
+            amResignBO.setTaskStatus(null);
+        }
+
         return PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmResign(amResignBO));
 
+    }
+
+    @Override
+    public List<AmResignBO> taskCount(PageInfo pageInfo) {
+        AmResignBO amResignBO = pageInfo.toJavaObject(AmResignBO.class);
+        List<String> param = new ArrayList<String>();
+
+        if(!StringUtil.isEmpty(amResignBO.getParams()))
+        {
+            String arr[] = amResignBO.getParams().split(",");
+            for(int i=0;i<arr.length;i++) {
+                param.add(arr[i]);
+            }
+        }
+        amResignBO.setParam(param);
+
+        return baseMapper.taskCount(amResignBO);
+    }
+
+    @Override
+    public List<AmResignBO> queryAmResignDetail(AmResignBO bo) {
+        return  baseMapper.queryAmResignDetail(bo);
     }
 }
