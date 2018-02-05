@@ -47,7 +47,7 @@ public interface EmployeePaymentApplyMapper extends BaseMapper<EmployeePaymentAp
      * @param modifiedBy
      * @return
      */
-    Integer updateSyncStatus(@Param("batchId") Integer batchId, @Param("businessId") Integer businessId, @Param("modifiedBy") String modifiedBy);
+    Integer updateSyncStatus(@Param("batchId") Integer batchId, @Param("businessId") Integer businessId, @Param("status") Integer status, @Param("remark") String remark, @Param("modifiedBy") String modifiedBy);
 
     /**
      * 查询信息有误未同步数据

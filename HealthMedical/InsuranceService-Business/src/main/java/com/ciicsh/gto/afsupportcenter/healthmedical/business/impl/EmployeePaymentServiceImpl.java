@@ -15,10 +15,8 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.EmployeePaymentApp
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.PaymentApplyBatchPO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeReturnTicketDTO;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyProxyDTO;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyReturnTicketDTO;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyEmployeeProxyDTO;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.*;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,12 +76,10 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
         if (!audited.isEmpty()) {
             PaymentApplyBatchPO batchPO = this.addPaymentApply(audited);
             JsonResult jsonResult = this.syncPaymentData(batchPO);
-            System.out.println("---------> 结算中心结果  " + JSON.toJSONString(jsonResult));
             if(SysConstants.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())){
                 this.updateSyncStatus(batchPO.getApplyBatchId());
             } else {
                 this.delBathData(batchPO.getApplyBatchId());
-                System.out.println("---------> 同步结算中心失败  " + JSON.toJSONString(jsonResult));
             }
         }
         List<EmpBankRefundBO> unSync = this.selectUnSyncApply();
@@ -116,12 +112,12 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
      * @return
      */
     @Override
-    public void syncSettleCenterStatus (PayApplyReturnTicketDTO dto) {
-        List<EmployeeReturnTicketDTO> detail = dto.getEmployeeReturnTicketDTOList();
-        if (!detail.isEmpty()) {
-            Integer batchId = dto.getBusinessPkId().intValue();
-            detail.forEach(pay->this.updateRefundStatus(batchId, pay));
-        }
+    public void syncSettleCenterStatus (PayApplyPayStatusDTO dto) {
+        employeePaymentApplyMapper.updateSyncStatus(dto.getBusinessPkId().intValue(),
+            dto.getBusinessType(),
+            dto.getPayStatus(),
+            dto.getRemark(),
+            SysConstants.PaymentJob.SYSTEM_EN.getName());
     }
 
     /**
@@ -214,7 +210,11 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
      * @return
      */
     private Integer updateSyncStatus (Integer batchId) {
-        return employeePaymentApplyMapper.updateSyncStatus(batchId, SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(), SysConstants.PaymentJob.SYSTEM_EN.getName());
+        return employeePaymentApplyMapper.updateSyncStatus(batchId,
+            SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(),
+            SysConstants.ApplyStatus.SYNC.getCode(),
+            StringUtils.EMPTY,
+            SysConstants.PaymentJob.SYSTEM_EN.getName());
     }
 
     /**
