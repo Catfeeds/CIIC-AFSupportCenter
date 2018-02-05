@@ -76,7 +76,7 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
         if (!audited.isEmpty()) {
             PaymentApplyBatchPO batchPO = this.addPaymentApply(audited);
             JsonResult jsonResult = this.syncPaymentData(batchPO);
-            if(SysConstants.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())){
+            if(JsonResult.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())) {
                 this.updateSyncStatus(batchPO.getApplyBatchId());
             } else {
                 this.delBathData(batchPO.getApplyBatchId());
@@ -84,7 +84,7 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
         }
         List<EmpBankRefundBO> unSync = this.selectUnSyncApply();
         if (!unSync.isEmpty()) {
-            this.syncEmpBankRefundData(unSync);
+            this.syncIncompleteBankCardInfoApply(unSync);
         }
     }
 
@@ -127,7 +127,7 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
      * @param emp: 雇员信息
      * @return
      */
-    private void syncEmpBankRefundData (List<EmpBankRefundBO> emp) {
+    private void syncIncompleteBankCardInfoApply (List<EmpBankRefundBO> emp) {
         System.out.println(emp.size());
     }
 
