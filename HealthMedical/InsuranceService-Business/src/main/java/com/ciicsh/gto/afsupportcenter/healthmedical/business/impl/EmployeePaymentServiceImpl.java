@@ -85,7 +85,7 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
         if (!unSync.isEmpty()) {
             this.syncEmpBankRefundData(unSync);
         }
-        System.out.println("        =============> " + unSync.size());
+        System.out.println("        =============> " + unSync.size();
     }
 
     /**
