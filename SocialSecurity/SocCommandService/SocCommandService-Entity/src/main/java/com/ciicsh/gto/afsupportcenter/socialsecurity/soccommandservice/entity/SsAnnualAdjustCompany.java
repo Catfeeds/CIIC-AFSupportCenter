@@ -2,6 +2,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity;
 
 import com.baomidou.mybatisplus.enums.IdType;
 import com.baomidou.mybatisplus.annotations.TableId;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
@@ -60,6 +62,17 @@ public class SsAnnualAdjustCompany implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+	@TableField(exist = false)
+	private Long comAccountId;
+
+	@TableField("account_avg_month_salary")
+	private BigDecimal accountAvgMonthSalary;
+
+    @TableField("account_salary_amount")
+    private BigDecimal accountSalaryAmount;
+
+    @TableField("account_emp_count")
+    private BigDecimal accountEmpCount;
 
 	public Long getAnnualAdjustCompanyId() {
 		return annualAdjustCompanyId;
@@ -157,7 +170,39 @@ public class SsAnnualAdjustCompany implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	@Override
+    public Long getComAccountId() {
+        return comAccountId;
+    }
+
+    public void setComAccountId(Long comAccountId) {
+        this.comAccountId = comAccountId;
+    }
+
+    public BigDecimal getAccountAvgMonthSalary() {
+        return accountAvgMonthSalary;
+    }
+
+    public void setAccountAvgMonthSalary(BigDecimal accountAvgMonthSalary) {
+        this.accountAvgMonthSalary = accountAvgMonthSalary;
+    }
+
+    public BigDecimal getAccountSalaryAmount() {
+        return accountSalaryAmount;
+    }
+
+    public void setAccountSalaryAmount(BigDecimal accountSalaryAmount) {
+        this.accountSalaryAmount = accountSalaryAmount;
+    }
+
+    public BigDecimal getAccountEmpCount() {
+        return accountEmpCount;
+    }
+
+    public void setAccountEmpCount(BigDecimal accountEmpCount) {
+        this.accountEmpCount = accountEmpCount;
+    }
+
+    @Override
 	public String toString() {
 		return "SsAnnualAdjustCompany{" +
 			", annualAdjustCompanyId=" + annualAdjustCompanyId +
@@ -167,6 +212,10 @@ public class SsAnnualAdjustCompany implements Serializable {
 			", dataCollectStatus=" + dataCollectStatus +
 			", reportStatus=" + reportStatus +
 			", dataCollectTime=" + dataCollectTime +
+            ", comAccountId=" + comAccountId +
+            ", accountAvgMonthSalary=" + accountAvgMonthSalary +
+            ", accountSalaryAmount=" + accountSalaryAmount +
+            ", accountEmpCount=" + accountEmpCount +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

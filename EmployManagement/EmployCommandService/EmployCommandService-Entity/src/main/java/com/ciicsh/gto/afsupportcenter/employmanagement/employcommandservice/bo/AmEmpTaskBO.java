@@ -9,20 +9,21 @@ public class AmEmpTaskBO extends AmEmpTask {
 
     private String employStyle;
     /**
-     * 空、外来从业人员、居住证、调档、属地管理、市人才、梅园路、商城路、漕虹路、区人才、高校、经营者、厂长经理人才、农民工、退休、协保、退工不调档、用工不调档、其他、非全日制、中智、徐职、公司自行保管
+     * 办理类型
      */
     private String handleType;
-
     /**
-     * 空、中智、外包、独立
+     * 用工属性
      */
-
     private String employProperty;
-
+    /**
+     * 预留档案编号
+     */
     private String yuliuDocNum;
-
-   private String idNum;
-
+    /**
+     * 身份证号码
+     */
+    private String idNum;
     /**
      * 档案编号
 
@@ -35,14 +36,14 @@ public class AmEmpTaskBO extends AmEmpTask {
     /**
      * 雇员姓名
      */
-
     private String employeeName;
-
     /**
      * 用工反馈操作日期
      */
     private LocalDate employFeedbackOptDate;
-
+    /**
+     *  调档反馈操作日期
+     */
     private String diaodangFeedback;
     /**
      * 调档反馈操作日期
@@ -52,11 +53,42 @@ public class AmEmpTaskBO extends AmEmpTask {
      * 退工状态数量
      */
     private  Integer count;
-
+    /**
+     * 公司编码
+     */
     private  String licenseCode;
-
+    /**
+     * 服务中心
+     */
     private  String serviceCenter;
+    /**
+     * 客服
+     */
     private String custom;
+    /**
+     * 退工日期
+     */
+    private LocalDate resignDate;
+    /**
+     * 实际录用日期
+     */
+    private LocalDate employDate;
+
+    public LocalDate getResignDate() {
+        return resignDate;
+    }
+
+    public void setResignDate(LocalDate resignDate) {
+        this.resignDate = resignDate;
+    }
+    
+    public LocalDate getEmployDate() {
+        return employDate;
+    }
+
+    public void setEmployDate(LocalDate employDate) {
+        this.employDate = employDate;
+    }
 
     public String getServiceCenter() {
         return serviceCenter;

@@ -81,48 +81,62 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         List<SsAccountComExt> accountComExts = accountMapper.getSsComAccounts();
         if(null != accountComExts && accountComExts.size() > 0){
             accountComExts.forEach(accountComExt -> {
-                Integer val = paymentComMapper.ifExistPayment(accountComExt.getComAccountId(),paymentMonth);
-                if(val <= 0){
-                    //新增支付信息
-                    Integer result = addPaymentCom(accountComExt,paymentMonth);
-                    if(result > 0){
-
-                        /*****生成雇员社保明细****/
-                        //如果数据已经存在，先删除已经存在的数据
-                        this.delMonthChangeInfos(accountComExt.getComAccountId(),paymentMonth);
-
-                        //生成标准明细
-                        List<SsEmpBaseArchiveExt> empBaseArchiveExts = empBasePeriodMapper.getEmpBaseArchiveExts(accountComExt.getComAccountId(),paymentMonth);
-                        if(null != empBaseArchiveExts && empBaseArchiveExts.size() > 0){
-                            empBaseArchiveExts.forEach(ext->this.createStandardMonthChange(ext,paymentMonth));
-                        }
-
-                        //生成非标准明细
-                        List<SsEmpBasePeriodExt> empBasePeriodExts = convertNewEmpBasePeriodExt(accountComExt.getComAccountId(),paymentMonth);
-                        if(null != empBasePeriodExts && empBasePeriodExts.size()>0){
-                            empBasePeriodExts.forEach(ext->this.createNoStandardMonthChange(ext));
-                        }
-
-
-                        // 获取除退账之外的雇员社保明细扩展信息
-                        List<SsMonthChargeExt> allMonthChargeExts = monthChargeMapper.getSsMonthChargeExts(accountComExt.getComAccountId(),paymentMonth);
-
-                        /******生成变更汇总表*****/
-                        //如果变更汇总表已经存在，先删除存在的数据
-                        this.delMonthEmpChangeInfos(accountComExt.getComAccountId(),paymentMonth);
-                        //生成变更汇总表
-                        this.createMonthEmpCharge(allMonthChargeExts,accountComExt.getComAccountId(),paymentMonth);
-
-                        /*****生成社保通知书*****/
-                        //第一步：如果已经存在数据，先删除
-                        paymentDetailMapper.delPaymentDetail(accountComExt.getComAccountId(),paymentMonth);
-                        //第二步：生成数据
-                        this.createPaymentDetail(allMonthChargeExts,accountComExt.getComAccountId(),paymentMonth);
-                    }
-                }
+                this.generateInfo(accountComExt,paymentMonth);
             });
         }
     }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void generateSocPaymentInfo(Long comAccountId,String paymentMonth) {
+        SsAccountComExt accountComExt = accountMapper.getSsComAccount(comAccountId);
+        if(null != accountComExt){
+            this.generateInfo(accountComExt,paymentMonth);
+        }
+    }
+
+
+    private void generateInfo(SsAccountComExt accountComExt,String paymentMonth){
+        Integer val = paymentComMapper.ifExistPayment(accountComExt.getComAccountId(),paymentMonth);
+        if(val <= 0){
+            //新增支付信息
+            Integer result = addPaymentCom(accountComExt,paymentMonth);
+            if(result > 0){
+                /*****生成雇员社保明细****/
+                //如果数据已经存在，先删除已经存在的数据(标准数据)
+                this.delMonthChangeInfos(accountComExt.getComAccountId(),paymentMonth,1);
+
+                //生成标准明细
+                List<SsEmpBaseArchiveExt> empBaseArchiveExts = empBasePeriodMapper.getEmpBaseArchiveExts(accountComExt.getComAccountId(),paymentMonth);
+                if(null != empBaseArchiveExts && empBaseArchiveExts.size() > 0){
+                    empBaseArchiveExts.forEach(ext->this.createStandardMonthChange(ext,paymentMonth));
+                }
+//
+//                //生成非标准明细
+//                List<SsEmpBasePeriodExt> empBasePeriodExts = convertNewEmpBasePeriodExt(accountComExt.getComAccountId(),paymentMonth);
+//                if(null != empBasePeriodExts && empBasePeriodExts.size()>0){
+//                    empBasePeriodExts.forEach(ext->this.createNoStandardMonthChange(ext));
+//                }
+
+
+                // 获取除退账之外的雇员社保明细扩展信息
+                List<SsMonthChargeExt> allMonthChargeExts = monthChargeMapper.getSsMonthChargeExts(accountComExt.getComAccountId(),paymentMonth);
+
+                /******生成变更汇总表*****/
+                //如果变更汇总表已经存在，先删除存在的数据
+                this.delMonthEmpChangeInfos(accountComExt.getComAccountId(),paymentMonth);
+                //生成变更汇总表
+                this.createMonthEmpCharge(allMonthChargeExts,accountComExt.getComAccountId(),paymentMonth);
+
+                /*****生成社保通知书*****/
+                //第一步：如果已经存在数据，先删除
+                paymentDetailMapper.delPaymentDetail(accountComExt.getComAccountId(),paymentMonth);
+                //第二步：生成数据
+                this.createPaymentDetail(allMonthChargeExts,accountComExt.getComAccountId(),paymentMonth);
+            }
+        }
+    }
+
 
     /**
      * 新增支付信息
@@ -149,10 +163,10 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
      * @param comAccountId 企业社保账户
      * @param paymentMonth 支付年月
      */
-    private void delMonthChangeInfos(long comAccountId, String paymentMonth){
-        List<SsMonthCharge> monthCharges = monthChargeMapper.getMonthChangesByCondition(comAccountId,paymentMonth);
+    private void delMonthChangeInfos(long comAccountId, String paymentMonth,Integer costCategory){
+        List<SsMonthCharge> monthCharges = monthChargeMapper.getMonthChangesByCondition(comAccountId,paymentMonth,costCategory);
         if(null != monthCharges && monthCharges.size() > 0){
-            monthChargeMapper.delByCondition(comAccountId,paymentMonth);
+            monthChargeMapper.delByCondition(comAccountId,paymentMonth,costCategory);
             monthCharges.forEach(x->monthChargeItemMapper.delByMonthChargeId(x.getMonthChargeId()));
         }
     }

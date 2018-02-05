@@ -22,4 +22,11 @@ public interface MaterialTypeRelationService extends IService<MaterialTypeRelati
      */
     List<MaterialTypeRelation> selectList(String materialIds);
 
+    /**
+     * 材料收缴菜单
+     * @param credentialsType
+     * @param credentialsDealType
+     * @return
+     */
+    List<MaterialTypeRelation> selectMaterials(String credentialsType, String credentialsDealType);
 }

@@ -39,7 +39,6 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
-    <!-- 通用查询映射结果 -->
     <resultMap id="ExtResultMap" type="com.ciicsh.gto.afsupportcenter.socjob.entity.custom.SsAccountComExt">
         <result column="com_account_id" property="comAccountId" />
         <result column="customer_id" property="customerId" />
@@ -77,6 +76,16 @@
         <include refid="SsComAccountExt_All_Columns"/>
       FROM ss_com_account a INNER JOIN ss_account_com_relation b ON a.com_account_id = b.com_account_id
       WHERE a.is_active = 1 AND b.is_active = 1 AND (a.end_date > NOW() OR a.end_date is NULL)
+    </select>
+
+    <select id="getSsComAccount" resultMap="ExtResultMap">
+        SELECT
+          <include refid="SsComAccountExt_All_Columns"/>
+        FROM ss_com_account a INNER JOIN ss_account_com_relation b ON a.com_account_id = b.com_account_id
+        WHERE a.is_active = 1
+          AND b.is_active = 1
+          AND (a.end_date > NOW() OR a.end_date is NULL)
+          AND a.com_account_id = #{comAccountId}
     </select>
 
     <sql id="SsComAccount_All_Columns">

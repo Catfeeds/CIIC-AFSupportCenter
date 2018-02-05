@@ -19,10 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
 import java.net.URLEncoder;
 import java.util.Calendar;
-import java.util.List;
 
 /**
  * <p>
@@ -33,6 +31,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/soccommandservice/ssAnnualAdjustEmployee")
 public class SsAnnualAdjustEmployeeController extends BasicController<SsAnnualAdjustEmployeeService> {
+
     /**
      * 社保雇员年调表分页查询
      *
@@ -54,52 +53,43 @@ public class SsAnnualAdjustEmployeeController extends BasicController<SsAnnualAd
      */
     @RequestMapping("/annualAdjustEmployeeExport")
     @Log("导出社保雇员年调表信息")
-    public void annualAdjustEmployeeExport(HttpServletResponse response, PageInfo pageInfo) {
-        try {
-            pageInfo.setPageSize(10000);
-            pageInfo.setPageNum(0);
-            PageRows<SsAnnualAdjustEmployee> result = business.queryAnnualAdjustEmployeeInPage(pageInfo);
-            long total = result.getTotal();
-            ExportParams exportParams = new ExportParams();
-            exportParams.setType(ExcelType.XSSF);
-            exportParams.setSheetName("雇员工资数据采集");
-            Workbook workbook;
-
-            if (total <= pageInfo.getPageSize()) {
-                workbook = ExcelExportUtil.exportExcel(exportParams, SsAnnualAdjustEmployee.class, result.getRows());
-            } else {
-                workbook = ExcelExportUtil.exportBigExcel(exportParams, SsAnnualAdjustEmployee.class, result.getRows());
-                int pageNum = (int) Math.ceil(total / pageInfo.getPageSize());
-                for(int i = 1; i < pageNum; i++) {
-                    pageInfo.setPageNum(i);
-                    result = business.queryAnnualAdjustEmployeeInPage(pageInfo);
-                    workbook = ExcelExportUtil.exportBigExcel(exportParams, SsAnnualAdjustEmployee.class, result.getRows());
-                }
-                ExcelExportUtil.closeExportBigExcel();
-            }
-            SsAnnualAdjustEmployeeDTO ssAnnualAdjustEmployeeDTO = pageInfo.toJavaObject(SsAnnualAdjustEmployeeDTO.class);
-            Calendar calendar = Calendar.getInstance();
-            int adjustYear = calendar.get(Calendar.YEAR);
-            String fileName = URLEncoder.encode("系统申报表_companyId_adjustYear.xlsx"
-                .replace("companyId", ssAnnualAdjustEmployeeDTO.getCompanyId())
-                .replace("adjustYear", String.valueOf(adjustYear)), "UTF-8");
-
-            response.reset();
-            response.setCharacterEncoding("UTF-8");
-//            response.setHeader("content-Type", "application/vnd.ms-excel");
-            response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setHeader("Content-Disposition",
-                    "attachment;filename=" + fileName);
-            workbook.write(response.getOutputStream());
-            workbook.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private List<SsAnnualAdjustEmployee> getLimitList(PageInfo pageInfo) {
+    public void annualAdjustEmployeeExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
+        pageInfo.setPageSize(10000);
+        pageInfo.setPageNum(0);
         PageRows<SsAnnualAdjustEmployee> result = business.queryAnnualAdjustEmployeeInPage(pageInfo);
-        return result.getRows();
+        long total = result.getTotal();
+        ExportParams exportParams = new ExportParams();
+        exportParams.setType(ExcelType.XSSF);
+        exportParams.setSheetName("雇员工资数据采集");
+        Workbook workbook;
+
+        if (total <= pageInfo.getPageSize()) {
+            workbook = ExcelExportUtil.exportExcel(exportParams, SsAnnualAdjustEmployee.class, result.getRows());
+        } else {
+            workbook = ExcelExportUtil.exportBigExcel(exportParams, SsAnnualAdjustEmployee.class, result.getRows());
+            int pageNum = (int) Math.ceil(total / pageInfo.getPageSize());
+            for(int i = 1; i < pageNum; i++) {
+                pageInfo.setPageNum(i);
+                result = business.queryAnnualAdjustEmployeeInPage(pageInfo);
+                workbook = ExcelExportUtil.exportBigExcel(exportParams, SsAnnualAdjustEmployee.class, result.getRows());
+            }
+            ExcelExportUtil.closeExportBigExcel();
+        }
+        SsAnnualAdjustEmployeeDTO ssAnnualAdjustEmployeeDTO = pageInfo.toJavaObject(SsAnnualAdjustEmployeeDTO.class);
+        Calendar calendar = Calendar.getInstance();
+        int adjustYear = calendar.get(Calendar.YEAR);
+        String fileName = URLEncoder.encode("系统申报表_companyId_adjustYear.xlsx"
+            .replace("companyId", ssAnnualAdjustEmployeeDTO.getCompanyId())
+            .replace("adjustYear", String.valueOf(adjustYear)), "UTF-8");
+
+        response.reset();
+        response.setCharacterEncoding("UTF-8");
+//            response.setHeader("content-Type", "application/vnd.ms-excel");
+        response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition",
+                "attachment;filename=" + fileName);
+        workbook.write(response.getOutputStream());
+        workbook.close();
     }
 }
 

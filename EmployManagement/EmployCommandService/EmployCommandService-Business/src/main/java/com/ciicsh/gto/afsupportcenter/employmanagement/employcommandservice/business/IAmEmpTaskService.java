@@ -22,4 +22,8 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
 
     List<AmEmpTaskBO> queryAmEmpTaskById(@Param("AmEmploymentId") String AmEmploymentId);
 
+    List<AmEmpTaskBO>  queryEmployeeHository(String employeeId);
+
+    List<AmEmpTaskBO>  queryCustom(String companyId);
+
 }

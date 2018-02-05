@@ -35,4 +35,9 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         task.setTaskId(taskId);
         return taskMapper.selectOne(task);
     }
+
+    @Override
+    public Long insertItem(Task task) {
+        return taskMapper.insertItem(task);
+    }
 }

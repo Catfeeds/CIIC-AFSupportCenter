@@ -16,7 +16,7 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskFo
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMaterial;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.SelectionUtils;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
-import kafka.utils.Json;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -51,10 +50,6 @@ public class EmpCredentialsDealController {
     private TaskMaterialService taskMaterialService;
     @Autowired
     private MaterialTypeRelationService materialTypeRelationService;
-
-    private static final int LV1 = 1;
-    private static final int LV2 = 2;
-    private static final int LV3 = 3;
 
     /**
      * 查询任务单跟进记录
@@ -150,15 +145,25 @@ public class EmpCredentialsDealController {
     public JsonResult saveOrUpdateTask(@RequestBody TaskDetialDTO taskDetialDTO){
         Task task = new Task();
         BeanUtils.copyProperties(taskDetialDTO,task);
+        if (StringUtils.isNotBlank(taskDetialDTO.getCredentialsType())) {
+            task.setCredentialsType(Integer.parseInt(taskDetialDTO.getCredentialsType()));
+        }
+        if (StringUtils.isNotBlank(taskDetialDTO.getCredentialsDealType())) {
+            task.setCredentialsType(Integer.parseInt(taskDetialDTO.getCredentialsDealType()));
+        }
         //TODO
+        Long taskId = 0L;
         if (taskDetialDTO.getTaskId() == null) {
             task.setCreatedBy("gu");
             task.setCreatedTime(new Date());
+            task.setModifiedBy("gu");
+            task.setModifiedTime(new Date());
+            taskId = taskService.insertItem(task);
         }
         task.setModifiedBy("gu");
         task.setModifiedTime(new Date());
-        boolean b = taskService.insertOrUpdate(task);
-        if (b) {
+        boolean b = taskService.updateById(task);
+        if (b || taskId!=null) {
             TaskMaterial taskMaterial = new TaskMaterial();
             taskMaterial.setMaterialIds(taskDetialDTO.getMaterialIds());
             taskMaterial.setTaskId(String.valueOf(taskDetialDTO.getTaskId()));
@@ -168,36 +173,68 @@ public class EmpCredentialsDealController {
             if (taskDetialDTO.getTaskId() == null) {
                 taskMaterial.setCreatedBy("gu");
                 taskMaterial.setCreatedTime(new Date());
+                taskMaterial.setModifiedBy("gu");
+                taskMaterial.setModifiedTime(new Date());
+                //todo 获取新增的主键
+                taskMaterial.setTaskId(String.valueOf(taskId));
+                return JsonResult.success(taskMaterialService.insert(taskMaterial));
+            } else {
+                taskMaterial.setModifiedBy("gu");
+                taskMaterial.setModifiedTime(new Date());
+                return JsonResult.success(taskMaterialService.updateTaskMaterials(taskMaterial));
             }
-            taskMaterial.setModifiedBy("gu");
-            taskMaterial.setModifiedTime(new Date());
-            return JsonResult.success(taskMaterialService.insertOrUpdate(taskMaterial));
         } else {
             return JsonResult.faultMessage();
         }
     }
 
     /**
-     * 获取任务单材料收缴信息
+     * 获取任务单材料收缴信息{level:[materialsId],...}
      * @param taskId
      * @return
      */
     @GetMapping("/find/meterials/{taskId}")
     public JsonResult getMaterials(@PathVariable("taskId") String taskId) {
         TaskMaterial taskMaterial = taskMaterialService.selectByTaskId(taskId);
-        List<MaterialTypeRelation> materials = materialTypeRelationService.selectList(taskMaterial.getMaterialIds());
-        HashMap<String, List<MaterialTypeRelation>> resultMap = new HashMap<>(3);
-        List<MaterialTypeRelation> lv1 = new ArrayList<>();
-        List<MaterialTypeRelation> lv2 = new ArrayList<>();
-        List<MaterialTypeRelation> lv3 = new ArrayList<>();
-        resultMap.put("1",lv1);
-        resultMap.put("2",lv2);
-        resultMap.put("3",lv3);
-        materials.stream().forEach(i -> {
-            if (i.getMaterialLevel() == LV1) { lv1.add(i); }
-            if (i.getMaterialLevel() == LV2) { lv2.add(i); }
-            if (i.getMaterialLevel() == LV3) { lv3.add(i); }
-        });
+        HashMap<String, List<String>> resultMap = new HashMap<>(7);
+        List list00 = new ArrayList<>();
+        List list11 = new ArrayList<>();
+        List list12 = new ArrayList<>();
+        List list21 = new ArrayList<>();
+        List list22 = new ArrayList<>();
+        List list30 = new ArrayList<>();
+        List list40 = new ArrayList<>();
+        if (taskMaterial != null) {
+            List<MaterialTypeRelation> materials = materialTypeRelationService.selectList(taskMaterial.getMaterialIds());
+            materials.stream().forEach(i -> {
+                if ("0-0".equals(i.getLevel())) { list00.add(i.getMaterialId());}
+                if ("1-1".equals(i.getLevel())) { list11.add(i.getMaterialId());}
+                if ("1-2".equals(i.getLevel())) { list12.add(i.getMaterialId());}
+                if ("2-1".equals(i.getLevel())) { list21.add(i.getMaterialId());}
+                if ("2-2".equals(i.getLevel())) { list22.add(i.getMaterialId());}
+                if ("3-0".equals(i.getLevel())) { list30.add(i.getMaterialId());}
+                if ("4-0".equals(i.getLevel())) { list40.add(i.getMaterialId());}
+            });
+        }
+        resultMap.put("main",list00);
+        resultMap.put("dh",list11);
+        resultMap.put("zh",list12);
+        resultMap.put("marryWithoutChild",list21);
+        resultMap.put("marryWithChild",list22);
+        resultMap.put("remarry",list30);
+        resultMap.put("settle",list40);
         return JsonResult.success(resultMap);
+    }
+
+    /**
+     * 生成材料收缴菜单
+     * @param credentialsType
+     * @param credentialsDealType
+     * @return
+     */
+    @GetMapping("/find/meterialsMenu")
+    public JsonResult materialsMenu(String credentialsType, String credentialsDealType) {
+        List<MaterialTypeRelation> materials = materialTypeRelationService.selectMaterials(credentialsType,credentialsDealType);
+        return JsonResult.success(materials);
     }
 }

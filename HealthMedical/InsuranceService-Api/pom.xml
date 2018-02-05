@@ -17,5 +17,12 @@
     <build>
         <finalName>gt1.afsupportcenter.insuranceservice-api</finalName>
     </build>
+    <dependencies>
+        <dependency>
+            <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
+            <artifactId>insuranceservice-entity</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
 
 </project>

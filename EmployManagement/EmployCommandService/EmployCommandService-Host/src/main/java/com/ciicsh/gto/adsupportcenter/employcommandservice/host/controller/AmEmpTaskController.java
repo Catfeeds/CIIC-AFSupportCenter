@@ -3,10 +3,10 @@ package com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmArchiveService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpMaterialService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpTaskService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmploymentService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmArchive;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmployment;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmRemark;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -14,6 +14,8 @@ import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
@@ -39,6 +41,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
     @Autowired
     private IAmArchiveService amArchiveService;
+
+    @Autowired
+    private IAmRemarkService amRemarkService;
 
     /**
      *用工资料任务单查询
@@ -109,21 +114,52 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @Log("用工办理查询")
     @RequestMapping("/employeeDetailInfoQuery")
-    public JsonResult employeeDetailInfoQuery(String employeeId) {
+    public JsonResult employeeDetailInfoQuery(String employeeId,String companyId) {
 
         List<AmEmpTaskBO> list = business.queryAmEmpTaskById(employeeId);
 
-        AmEmpTaskBO amEmploymentBO = list.get(0);
-
+        AmEmpTaskBO amEmpTaskBO = list.get(0);
+        //用工材料
         PageInfo pageInfo = new PageInfo();
         JSONObject params = new JSONObject();
         params.put("employeeId",employeeId);
         pageInfo.setParams(params);
         PageRows<AmEmpMaterialBO> result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
+        //用工信息
+        PageRows<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(pageInfo);
+        //用工档案
+        List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchive(employeeId);
+        //用工备注
+        PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);
+        //雇佣历史查询
+//        List<AmEmpTaskBO> listHistory = business.queryEmployeeHository(employeeId);
+        //客户信息
+        List<AmEmpTaskBO>  listCompany = business.queryCustom(companyId);
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        resultMap.put("amEmploymentBO",amEmploymentBO);
+        resultMap.put("amEmpTaskBO",amEmpTaskBO);
         resultMap.put("materialList",result);
+
+        if(null!= resultEmployList&&resultEmployList.getRows().size()>0)
+        {
+            resultMap.put("amEmploymentBO",resultEmployList.getRows().get(0));
+        }
+        if(null!=amArchiveBOList&&amArchiveBOList.size()>0)
+        {
+            resultMap.put("amArchaiveBo",amArchiveBOList.get(0));
+        }
+        if(null!=amRemarkBOPageRows)
+        {
+            resultMap.put("amRemarkBo",amRemarkBOPageRows);
+        }
+//        if(null!=listHistory)
+//        {
+//            resultMap.put("listHistory",listHistory);
+//        }
+        if(null!=listCompany&&listCompany.size()>0)
+        {
+            resultMap.put("company",listCompany.get(0));
+        }
 
         return JsonResultKit.of(resultMap);
 
@@ -134,14 +170,19 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @Log("保存用工信息")
     @RequestMapping("/saveEmployee")
-    public JsonResult<Boolean> saveEmployee(AmEmploymentBO bo) {
+    public JsonResult<Boolean> saveEmployee(AmEmployment entity) {
         LocalDateTime now = LocalDateTime.now();
-        bo.setCreatedTime(now);
-        bo.setModifiedTime(now);
-        bo.setCreatedBy("sys");
-        bo.setModifiedBy("sys");
-        bo.setIsActive(1);
-        boolean result =  amEmploymentService.insert(bo);
+        if(entity.getEmploymentId()==null){
+            entity.setCreatedTime(now);
+            entity.setModifiedTime(now);
+            entity.setCreatedBy("sys");
+            entity.setModifiedBy("sys");
+            entity.setIsActive(1);
+        }else{
+            entity.setModifiedTime(now);
+            entity.setModifiedBy("sys");
+        }
+        boolean result =  amEmploymentService.insertOrUpdate(entity);
         return JsonResultKit.of(result);
     }
 
@@ -150,20 +191,70 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      * @param bo
      * @return
      */
-    @Log("保存用工信息")
+    @Log("保存用工档案")
     @RequestMapping("/saveAmArchive")
-    public  JsonResult<Boolean>  saveAmArchive(AmArchiveBO bo){
+    public  JsonResult<Boolean>  saveAmArchive(AmArchive entity){
         LocalDateTime now = LocalDateTime.now();
-        bo.setCreatedTime(now);
-        bo.setModifiedTime(now);
-        bo.setCreatedBy("sys");
-        bo.setModifiedBy("sys");
-        bo.setIsActive(1);
-
-        boolean result = amArchiveService.insert(bo);
-
+        if(entity.getArchiveId()==null){
+            entity.setCreatedTime(now);
+            entity.setModifiedTime(now);
+            entity.setCreatedBy("sys");
+            entity.setModifiedBy("sys");
+            entity.setIsActive(1);
+        }else{
+            entity.setModifiedTime(now);
+            entity.setModifiedBy("sys");
+        }
+        boolean result = amArchiveService.insertOrUpdate(entity);
         return JsonResultKit.of(result);
     }
+
+    @PostMapping("/saveAmRemark")
+    @Log("保存用工备注信息")
+    public JsonResult<Boolean>  saveAmRemark(@RequestBody List<AmRemark> list) {
+
+        List<AmRemark>  data = new ArrayList<AmRemark>();
+         for(AmRemark bo:list)
+         {
+             LocalDateTime now = LocalDateTime.now();
+             bo.setCreatedTime(now);
+             bo.setModifiedTime(now);
+             bo.setCreatedBy("sys");
+             bo.setModifiedBy("sys");
+             data.add(bo);
+         }
+
+        boolean result = false;
+        try {
+            result = amRemarkService.insertBatch(list);
+        } catch (Exception e) {
+
+        }
+
+        return JsonResultKit.of(result);
+
+    }
+
+
+    @Log("用工备注查询")
+    @RequestMapping("/queryAmRemark")
+    public JsonResult queryAmRemark(PageInfo pageInfo) {
+        PageRows<AmRemarkBO> result = amRemarkService.queryAmRemark(pageInfo);
+        return JsonResultKit.of(result);
+    }
+
+    @RequestMapping("/deleteAmRemark")
+    public JsonResult<Boolean>  deleteAmRemark(Long amRemarkId){
+       boolean  result = amRemarkService.deleteAmRemark(amRemarkId);
+        return JsonResultKit.of(result);
+    }
+
+    @RequestMapping("/queryEmployeeHository")
+    public JsonResult queryEmployeeHository(String  employeeId){
+        List<AmEmpTaskBO> list = business.queryEmployeeHository(employeeId);
+        return JsonResultKit.of(list);
+    }
+
 
 
 

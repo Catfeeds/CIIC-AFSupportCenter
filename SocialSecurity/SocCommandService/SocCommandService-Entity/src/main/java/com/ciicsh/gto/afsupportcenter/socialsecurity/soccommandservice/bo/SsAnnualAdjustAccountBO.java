@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class SsAnnualAdjustAccountBO implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -8,6 +9,9 @@ public class SsAnnualAdjustAccountBO implements Serializable {
     private Integer accountStatus;
     private Integer matchStatus;
     private Integer cnt = 0;
+    private BigDecimal accountAvgMonthSalary;
+    private BigDecimal accountSalaryAmount;
+    private BigDecimal accountEmpCount;
 
     public Integer getAccountStatus() {
         return accountStatus;
@@ -31,5 +35,29 @@ public class SsAnnualAdjustAccountBO implements Serializable {
 
     public void setCnt(Integer cnt) {
         this.cnt = cnt;
+    }
+
+    public BigDecimal getAccountAvgMonthSalary() {
+        return accountAvgMonthSalary;
+    }
+
+    public void setAccountAvgMonthSalary(BigDecimal accountAvgMonthSalary) {
+        this.accountAvgMonthSalary = accountAvgMonthSalary;
+    }
+
+    public BigDecimal getAccountSalaryAmount() {
+        return accountSalaryAmount;
+    }
+
+    public void setAccountSalaryAmount(BigDecimal accountSalaryAmount) {
+        this.accountSalaryAmount = accountSalaryAmount;
+    }
+
+    public BigDecimal getAccountEmpCount() {
+        return accountEmpCount;
+    }
+
+    public void setAccountEmpCount(BigDecimal accountEmpCount) {
+        this.accountEmpCount = accountEmpCount;
     }
 }

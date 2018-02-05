@@ -73,8 +73,8 @@ public class SupplyMedicalAcceptance extends Model<SupplyMedicalAcceptance> {
     /**
      * 保险公司理赔总金额
      */
-    @TableField("total_insurance_company_amount")
-    private BigDecimal totalInsuranceCompanyAmount;
+    @TableField("total_insurance_company_money")
+    private BigDecimal totalInsuranceCompanyMoney;
     /**
      * 分类自付金额（总）
      */
@@ -220,12 +220,12 @@ public class SupplyMedicalAcceptance extends Model<SupplyMedicalAcceptance> {
         this.totalCompanyAmount = totalCompanyAmount;
     }
 
-    public BigDecimal getTotalInsuranceCompanyAmount() {
-        return totalInsuranceCompanyAmount;
+    public BigDecimal getTotalInsuranceCompanyMoney() {
+        return totalInsuranceCompanyMoney;
     }
 
-    public void setTotalInsuranceCompanyAmount(BigDecimal totalInsuranceCompanyAmount) {
-        this.totalInsuranceCompanyAmount = totalInsuranceCompanyAmount;
+    public void setTotalInsuranceCompanyMoney(BigDecimal totalInsuranceCompanyMoney) {
+        this.totalInsuranceCompanyMoney = totalInsuranceCompanyMoney;
     }
 
     public BigDecimal getTotalCsPaymentAmount() {
@@ -350,7 +350,7 @@ public class SupplyMedicalAcceptance extends Model<SupplyMedicalAcceptance> {
             ", companyName=" + companyName +
             ", invoiceNumber=" + invoiceNumber +
             ", totalCompanyAmount=" + totalCompanyAmount +
-            ", totalInsuranceCompanyAmount=" + totalInsuranceCompanyAmount +
+            ", totalInsuranceCompanyMoney=" + totalInsuranceCompanyMoney +
             ", totalCsPaymentAmount=" + totalCsPaymentAmount +
             ", totalApplicationAmount=" + totalApplicationAmount +
             ", totalApprovedAmount=" + totalApprovedAmount +

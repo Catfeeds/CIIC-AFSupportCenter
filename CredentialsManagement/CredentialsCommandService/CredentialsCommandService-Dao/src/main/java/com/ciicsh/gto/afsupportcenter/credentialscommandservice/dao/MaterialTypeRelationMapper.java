@@ -25,4 +25,12 @@ public interface MaterialTypeRelationMapper extends BaseMapper<MaterialTypeRelat
      * @return
      */
     List<MaterialTypeRelation> selectByIds(@Param("ids")List<String> ids);
+
+    /**
+     * 材料收缴菜单
+     * @param credentialsType
+     * @param credentialsDealType
+     * @return
+     */
+    List<MaterialTypeRelation> selectMaterials(@Param("credentialsType")String credentialsType, @Param("credentialsDealType")String credentialsDealType);
 }

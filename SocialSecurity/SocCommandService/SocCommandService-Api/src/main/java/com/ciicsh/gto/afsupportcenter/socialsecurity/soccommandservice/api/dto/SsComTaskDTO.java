@@ -49,17 +49,17 @@ public class SsComTaskDTO extends SsComTask{
     private String changeContentValue;
     //需要变更的养老金公司名称
     private String comAccountName;
-    //变更的支付方式
-    private String paymentWay;
+//    //变更的支付方式
+//    private String paymentWay;
     //行业类型
     private String belongsIndustry;
     //企业工伤比例
     private String companyWorkInjuryPercentage;
     //开始年月
-    private LocalDate startMonth;
+//    private LocalDate startMonth;
 
     //帐单接收方
-    private String billReceiver;
+//    private String billReceiver;
     //发出材料
     private String dispatchMaterial;
     //参保户登记码
@@ -178,13 +178,13 @@ public class SsComTaskDTO extends SsComTask{
         this.comAccountName = comAccountName;
     }
 
-    public String getPaymentWay() {
-        return paymentWay;
-    }
-
-    public void setPaymentWay(String paymentWay) {
-        this.paymentWay = paymentWay;
-    }
+//    public String getPaymentWay() {
+//        return paymentWay;
+//    }
+//
+//    public void setPaymentWay(String paymentWay) {
+//        this.paymentWay = paymentWay;
+//    }
 
     public String getBelongsIndustry() {
         return belongsIndustry;
@@ -202,13 +202,13 @@ public class SsComTaskDTO extends SsComTask{
         this.companyWorkInjuryPercentage = companyWorkInjuryPercentage;
     }
 
-    public LocalDate getStartMonth() {
-        return startMonth;
-    }
+//    public LocalDate getStartMonth() {
+//        return startMonth;
+//    }
 
-    public void setStartMonth(LocalDate startMonth) {
-        this.startMonth = startMonth;
-    }
+//    public void setStartMonth(LocalDate startMonth) {
+//        this.startMonth = startMonth;
+//    }
 
     public String getChangeContentValue() {
         return changeContentValue;
@@ -226,13 +226,13 @@ public class SsComTaskDTO extends SsComTask{
         this.isComplete = isComplete;
     }
 
-    public String getBillReceiver() {
-        return billReceiver;
-    }
+//    public String getBillReceiver() {
+//        return billReceiver;
+//    }
 
-    public void setBillReceiver(String billReceiver) {
-        this.billReceiver = billReceiver;
-    }
+//    public void setBillReceiver(String billReceiver) {
+//        this.billReceiver = billReceiver;
+//    }
 
     public String getDispatchMaterial() {
         return dispatchMaterial;

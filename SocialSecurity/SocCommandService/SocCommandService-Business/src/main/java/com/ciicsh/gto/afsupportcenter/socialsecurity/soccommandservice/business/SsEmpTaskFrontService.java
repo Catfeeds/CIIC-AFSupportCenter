@@ -1,8 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.EmployeeInfoDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskFront;
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskFront;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 
 /**
@@ -13,11 +13,36 @@ import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 public interface SsEmpTaskFrontService extends IService<SsEmpTaskFront> {
 
     /**
-     * <p>Description: 保存数据到雇员任务单表</p>
+     * 保存数据到雇员任务单表
+     * @param taskMsgDTO
+     * @param taskCategory
+     * @param isChange
+     * @param dto
+     * @return
+     */
+    boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer isChange, AfEmployeeInfoDTO dto);
+
+    /**
+     * 更新旧的雇员任务单
      *
+     * @param taskMsgDTO 消息队列接受的对象
+     * @param dto        取得的雇员信息
      * @return
      * @author zhangxj
      * @date 2017-12-28
      */
-    boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, EmployeeInfoDTO dto);
+    boolean updateEmpTaskTc(TaskCreateMsgDTO taskMsgDTO,
+                            AfEmployeeInfoDTO dto);
+
+    /**
+     * 保存数据到雇员任务单表
+     * @param taskMsgDTO
+     * @param taskCategory
+     * @param isChange
+     * @param dto
+     * @return
+     * @throws Exception
+     */
+    boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer isChange,
+                         AfEmployeeInfoDTO dto) throws Exception;
 }

@@ -2,8 +2,11 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskRollInBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskRollOutBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.*;
@@ -67,6 +70,39 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         } else {
             return PageKit.doSelectPage(pageInfo, () -> baseMapper.employeeDailyOperatorQuery(dto));
         }
+    }
+
+    @Override
+    public <T> PageRows<T> employeeDailyOperatorQueryForDisk(PageInfo pageInfo, boolean isRollIn) {
+        SsEmpTaskBO ssEmpTaskBO = pageInfo.toJavaObject(SsEmpTaskBO.class);
+        return PageKit.doSelectPage(pageInfo, () -> {
+            List<T> rollInBOs = null;
+            List<SsEmpTaskBO> list = baseMapper.employeeDailyOperatorQuery(ssEmpTaskBO);
+            if (list != null) {
+                rollInBOs = new ArrayList<>();
+
+                if (isRollIn) {
+                    for (SsEmpTaskBO bo : list) {
+                        SsEmpTaskRollInBO ssEmpTaskRollInBO = new SsEmpTaskRollInBO();
+                        ssEmpTaskRollInBO.setSsSerial(bo.getEmpSsSerial());
+                        ssEmpTaskRollInBO.setIdNum(bo.getIdNum());
+                        ssEmpTaskRollInBO.setEmployeeName(bo.getEmployeeName());
+                        ssEmpTaskRollInBO.setStartMonth(bo.getStartMonth());
+                        ssEmpTaskRollInBO.setSalary(bo.getSalary());
+                        rollInBOs.add((T) ssEmpTaskRollInBO);
+                    }
+                } else {
+                    for (SsEmpTaskBO bo : list) {
+                        SsEmpTaskRollOutBO ssEmpTaskRollOutBO = new SsEmpTaskRollOutBO();
+                        ssEmpTaskRollOutBO.setIdNum(bo.getIdNum());
+                        ssEmpTaskRollOutBO.setEmployeeName(bo.getEmployeeName());
+                        ssEmpTaskRollOutBO.setSalary(bo.getSalary());
+                        rollInBOs.add((T) ssEmpTaskRollOutBO);
+                    }
+                }
+            }
+            return rollInBOs;
+        });
     }
 
     @Override
@@ -1309,5 +1345,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         return baseMapper.selectById(bo);
     }
 
+    /**
+     * 查询任务单信息
+     * @param ssEmpTaskBO
+     */
+    public List<SsEmpTaskBO> queryByTaskId(SsEmpTaskBO ssEmpTaskBO) {
+        return baseMapper.queryByTaskId(ssEmpTaskBO);
+    }
 }
 

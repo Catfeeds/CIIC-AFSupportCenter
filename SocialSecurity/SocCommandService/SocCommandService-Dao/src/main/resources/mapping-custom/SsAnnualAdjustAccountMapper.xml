@@ -5,6 +5,9 @@
         <result column="account_status" property="accountStatus" />
         <result column="match_status" property="matchStatus" />
         <result column="cnt" property="cnt" />
+        <result column="account_avg_month_salary" property="accountAvgMonthSalary" />
+        <result column="account_salary_amount" property="accountSalaryAmount" />
+        <result column="account_emp_count" property="accountEmpCount" />
     </resultMap>
 
     <select id="queryAnnualAdjustAccount" resultMap="BaseResultMap">
@@ -88,6 +91,23 @@
         ON saac.company_id=sacr.company_id AND sacr.is_active=1
         <where>
             saace.is_active=1 AND sacr.com_account_id=#{comAccountId}
+        </where>
+    </select>
+
+    <select id="getUnitAvgMonthSalaryByAnnualAdjustAccountId" resultMap="SsAnnualAdjustAccountBO">
+        SELECT DISTINCT
+        saac.account_avg_month_salary,
+        saac.account_salary_amount,
+        saac.account_emp_count
+        FROM ss_annual_adjust_company saac
+        INNER JOIN ss_account_com_relation sacr
+        ON saac.company_id = sacr.company_id
+        AND sacr.is_active = 1 AND saac.adjust_year = YEAR(NOW())
+        INNER JOIN ss_annual_adjust_account saaa ON saaa.com_account_id = sacr.com_account_id
+        <where>
+            saaa.is_active = 1
+            AND saaa.adjust_year = YEAR(NOW())
+            AND saaa.annual_adjust_account_id = #{annualAdjustAccountId}
         </where>
     </select>
 </mapper>

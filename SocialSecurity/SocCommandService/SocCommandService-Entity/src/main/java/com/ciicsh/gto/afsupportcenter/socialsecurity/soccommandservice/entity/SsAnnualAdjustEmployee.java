@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 
 import java.io.Serializable;
@@ -20,7 +21,6 @@ import java.io.Serializable;
 @TableName("ss_annual_adjust_employee")
 @ExcelTarget("annualAdjustEmployee")
 public class SsAnnualAdjustEmployee implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
 	@TableId(value="annual_adjust_employee_id", type= IdType.AUTO)
@@ -405,7 +405,8 @@ public class SsAnnualAdjustEmployee implements Serializable {
     }
 
     public String getSsAccountTypeName() {
-        return SocialSecurityConst.ACCOUNT_TYPE_MAP.get(String.valueOf(ssAccountType));
+        return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(ssAccountType), DictUtil.TYPE_VALUE_SOCIAL_SECURITY_ACCOUNT_TYPE, true);
+//        return this.ssAccountTypeName;
     }
 
     public void setSsAccountTypeName(String ssAccountTypeName) {
@@ -413,7 +414,8 @@ public class SsAnnualAdjustEmployee implements Serializable {
     }
 
     public String getArchiveStatusName() {
-        return SocialSecurityConst.ACCOUNT_STATUS_MAP.get(String.valueOf(archiveStatus));
+        return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(archiveStatus), DictUtil.TYPE_VALUE_SOCIAL_SECURITY_STATUS, true);
+//        return this.archiveStatusName;
     }
 
     public void setArchiveStatusName(String archiveStatusName) {
@@ -421,7 +423,8 @@ public class SsAnnualAdjustEmployee implements Serializable {
     }
 
     public String getEmpClassifyName() {
-        return SocialSecurityConst.EMP_CLASSIFY_MAP.get(String.valueOf(empClassify));
+	    return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(empClassify), DictUtil.TYPE_VALUE_SOCIAL_SECURITY_EMPLOYEE_CLASSIFY, true);
+//        return this.empClassifyName;
     }
 
     public void setEmpClassifyName(String empClassifyName) {

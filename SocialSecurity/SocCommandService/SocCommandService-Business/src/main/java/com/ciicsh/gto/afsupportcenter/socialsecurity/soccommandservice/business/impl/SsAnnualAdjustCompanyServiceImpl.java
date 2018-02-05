@@ -27,6 +27,11 @@ public class SsAnnualAdjustCompanyServiceImpl extends ServiceImpl<SsAnnualAdjust
     }
 
     @Override
+    public void updateAnnualAdjustCompanysByComAccountId(SsAnnualAdjustCompany ssAnnualAdjustCompany) {
+        baseMapper.updateAnnualAdjustCompanysByComAccountId(ssAnnualAdjustCompany);
+    }
+
+    @Override
     public List<SsAnnualAdjustCompany> queryAnnualAdjustCompany(SsAnnualAdjustCompanyDTO ssAnnualAdjustCompanyDTO) {
         return baseMapper.queryAnnualAdjustCompany(ssAnnualAdjustCompanyDTO);
     }

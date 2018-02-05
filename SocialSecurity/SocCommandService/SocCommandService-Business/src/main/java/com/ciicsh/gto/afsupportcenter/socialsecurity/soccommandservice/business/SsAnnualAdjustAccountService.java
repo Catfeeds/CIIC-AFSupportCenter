@@ -49,4 +49,11 @@ public interface SsAnnualAdjustAccountService extends IService<SsAnnualAdjustAcc
      * @return
      */
     int getCountByComAccountId(Long comAccountId);
+
+    /**
+     * 根据社保账户ID查询社保账户单位平均工资相关信息
+     * @param annualAdjustAccountId
+     * @return
+     */
+    List<SsAnnualAdjustAccountBO> getUnitAvgMonthSalaryByAnnualAdjustAccountId(Long annualAdjustAccountId);
 }

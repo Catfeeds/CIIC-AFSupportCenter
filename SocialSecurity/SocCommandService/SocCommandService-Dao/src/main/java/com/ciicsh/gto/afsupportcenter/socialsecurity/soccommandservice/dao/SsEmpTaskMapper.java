@@ -24,6 +24,7 @@ public interface SsEmpTaskMapper extends BaseMapper<SsEmpTask> {
      * @return
      */
     List<SsEmpTaskBO> employeeDailyOperatorQuery(SsEmpTaskBO ssComTaskDTO);
+
     /**
      * 雇员特殊操作查询
      *
@@ -34,13 +35,15 @@ public interface SsEmpTaskMapper extends BaseMapper<SsEmpTask> {
 
     /**
      * 通过社保档案ID 查询历史任务单
+     *
      * @param empArchiveId
      * @return
      */
-    List<SsEmpTask> queryTaskByEmpArchiveId(@Param("empArchiveId")String empArchiveId);
+    List<SsEmpTask> queryTaskByEmpArchiveId(@Param("empArchiveId") String empArchiveId);
 
     /**
      * 通过ID修改 修改某些字段 不需要判断是否为空
+     *
      * @param ssComTaskDTO
      * @return
      */
@@ -49,4 +52,8 @@ public interface SsEmpTaskMapper extends BaseMapper<SsEmpTask> {
     String selectMaxSsSerialByTaskId(@Param("empTaskId") Long empTaskId);
 
     List<SsEmpTaskBO> queryBatchEmpArchiveByEmpTaskIds(SsEmpTaskBO ssEmpTaskBO);
+
+    List<SsEmpTaskBO> queryByTaskId(SsEmpTaskBO ssEmpTaskBO);
+
+    boolean insertEmpTask(SsEmpTask ssEmpTask);
 }

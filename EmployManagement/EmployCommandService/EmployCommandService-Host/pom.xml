@@ -29,10 +29,10 @@
     </dependencies>
 
     <build>
-        <finalName>gt1.afsupportcenter.soccommandservice-host</finalName>
+        <finalName>gt1.afsupportcenter.employcommandservice-host</finalName>
         <resources>
             <resource>
-                <directory>../SocCommandService-Dao/src/main/resources/</directory>
+                <directory>../EmployCommandService-Dao/src/main/resources/</directory>
                 <filtering>true</filtering>
                 <includes>
                     <include>**/mapper/*.xml</include>

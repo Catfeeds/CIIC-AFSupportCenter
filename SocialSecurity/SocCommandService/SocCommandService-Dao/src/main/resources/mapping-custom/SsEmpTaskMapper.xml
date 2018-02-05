@@ -73,6 +73,7 @@
         et.start_handle_date,
         et.send_check_date,
         et.finish_date,
+        et.start_month,
         et.end_month,
         et.chat_history,
         et.business_interface_id,
@@ -442,4 +443,106 @@
             #{empTaskId}
         </foreach>
     </select>
+
+    <!--通过TASKID等条件查询任务单-->
+    <select id="queryByTaskId" resultMap="BaseResultMap">
+        SELECT
+        et.emp_task_id,
+        et.customer_id,
+        et.emp_archive_id,
+        et.task_category,
+        et.task_category_special,
+        et.urgent,
+        et.submitter_id,
+        et.submitter_name,
+        et.submitter_dept_id,
+        et.submitter_dept_name,
+        et.submit_time,
+        et.expire_date,
+        et.submitter_remark,
+        et.task_form_content,
+        et.salary,
+        et.handle_user_id,
+        et.handle_user_name,
+        et.emp_ss_serial,
+        et.handle_way,
+        et.handle_month,
+        et.handle_remark,
+        et.rejection_remark,
+        et.rejection_remark_man,
+        et.rejection_remark_date,
+        et.task_status,
+        et.handle_status,
+        et.start_month,
+        et.end_month,
+        et.in_date,
+        et.emp_base,
+        et.chat_history,
+        et.business_interface_id
+        FROM
+        ss_emp_task et
+        WHERE et.employee_id = #{employeeId}
+        and et.company_id=#{companyId}
+        and et.task_id=#{taskId}
+        AND et.is_active = 1
+    </select>
+
+    <insert id="insertEmpTask" useGeneratedKeys="true" keyProperty="empTaskId">
+        insert into
+        ss_emp_task
+        (company_id,
+        employee_id,
+        customer_id,
+        emp_archive_id,
+        is_change,
+        task_category,
+        task_category_special,
+        urgent,
+        submitter_id,
+        submitter_name,
+        submitter_dept_id,
+        submitter_dept_name,
+        submit_time,
+        expire_date,
+        submitter_remark,
+        handle_user_id,
+        handle_user_name,
+        emp_ss_serial,
+        handle_way,
+        handle_month,
+        handle_remark,
+        handle_remark_man,
+        handle_remark_date,
+        rejection_remark,
+        rejection_remark_man,
+        rejection_remark_date,
+        task_status,
+        handle_status,
+        chat_history,
+        start_handle_date,
+        send_check_date,
+        finish_date,
+        task_form_content,
+        salary,
+        emp_classify,
+        emp_base,
+        start_month,
+        end_month,
+        in_date,
+        out_date,
+        business_interface_id,
+        task_id,
+        policy_detail_id,
+        is_active,
+        created_time,
+        modified_time,
+        created_by,
+        modified_by) VALUES
+        (#{companyId},#{employeeId},#{customerId},#{empArchiveId},#{isChange},#{taskCategory},#{taskCategorySpecial},#{urgent},#{submitterId},
+        #{submitterName},#{submitterDeptId},#{submitterDeptName},#{submitTime},#{expireDate},#{submitterRemark},#{handleUserId},#{handleUserName},
+        #{empSsSerial},#{handleWay},#{handleMonth},#{handleRemark},#{handleRemarkMan},#{handleRemarkDate},#{rejectionRemark},#{rejectionRemarkMan},
+        #{rejectionRemarkDate},#{taskStatus},#{handleStatus},#{chatHistory},#{startHandleDate},#{sendCheckDate},#{finishDate},#{taskFormContent},
+        #{salary},#{empClassify},#{empBase},#{startMonth},#{endMonth},#{inDate},#{outDate},#{businessInterfaceId},#{taskId},#{policyDetailId},
+        #{isActive},#{createdTime},#{modifiedTime},#{createdBy},#{modifiedBy})
+    </insert>
 </mapper>
