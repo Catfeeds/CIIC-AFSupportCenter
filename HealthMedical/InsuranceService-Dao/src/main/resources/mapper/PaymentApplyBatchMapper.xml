@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.healthmedical.dao.PaymentApplyBatchMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.PaymentApplyBatchPO">
+		<id column="apply_batch_id" property="applyBatchId" />
+		<result column="department_name" property="departmentName" />
+		<result column="is_finance_dept" property="isFinanceDept" />
+		<result column="business_type" property="businessType" />
+		<result column="pay_way" property="payWay" />
+		<result column="pay_amount" property="payAmount" />
+		<result column="receiver" property="receiver" />
+		<result column="applyer" property="applyer" />
+		<result column="apply_date" property="applyDate" />
+		<result column="pay_purpose" property="payPurpose" />
+		<result column="pay_reason" property="payReason" />
+		<result column="batch_status" property="batchStatus" />
+		<result column="operator" property="operator" />
+		<result column="operator_time" property="operatorTime" />
+		<result column="remark" property="remark" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        apply_batch_id, department_name, is_finance_dept, business_type, pay_way, pay_amount, receiver, applyer, apply_date, pay_purpose, pay_reason, batch_status, operator, operator_time, remark, is_active, created_time, modified_time, created_by, modified_by
+    </sql>
+
+    <update id="updateActiveByBachId">
+        UPDATE gtobusinessdb.hm_payment_apply_batch SET is_active = 0, modified_time = NOW(), modified_by = #{modifiedBy, jdbcType=VARCHAR} WHERE apply_batch_id = #{batchId, jdbcType=INTEGER}
+    </update>
+
+</mapper>

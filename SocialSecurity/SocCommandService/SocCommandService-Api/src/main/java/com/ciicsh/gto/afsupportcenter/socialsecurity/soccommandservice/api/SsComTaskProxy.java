@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 企业社保账户信息查询接口
  */
-@FeignClient("service-soccommandservice")
+@FeignClient("support-center-soc-command-service")
 @RequestMapping("/api/soccommandservice/sscomtask")
 public interface SsComTaskProxy {
     /**

@@ -1,7 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao;
 
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmArchiveBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmArchive;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
  * <p>
@@ -9,5 +12,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * </p>
  */
 public interface AmArchiveMapper extends BaseMapper<AmArchive> {
+
+    List<AmArchiveBO>  queryAmArchive(String employeeId);
 
 }

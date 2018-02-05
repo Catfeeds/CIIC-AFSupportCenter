@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao.AmRemarkMapper">
+
+    <resultMap id="BaseResultMapDTO" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmRemarkBO">
+
+    </resultMap>
+
+     <select id="queryAmRemark" resultMap="BaseResultMapDTO">
+         SELECT  *  from am_remark where employee_id = #{employeeId}
+     </select>
+
+    <delete id="deleteAmRemark">
+        DELETE FROM am_remark WHERE remark_id = #{remarkId}
+    </delete>
+</mapper>
