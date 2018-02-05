@@ -2,14 +2,18 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.con
 
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsAccountComRelationDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComAccountBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAccountComRelationService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.AccountCompanyRelationOpt;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -110,6 +114,18 @@ public class SsAccountComRelationController extends BasicController<SsAccountCom
             return json;
         }
         return json;
+    }
+
+
+    /**
+     * 根据企业社保账户获取公司信息
+     * @param comAccountId
+     * @return 返回信息
+     */
+    @RequestMapping("/getAccountCompanyRelationByAccountId")
+    public JsonResult<AccountCompanyRelationOpt> getAccountCompanyRelationByAccountId(@RequestParam("comAccountId") Long comAccountId) {
+        AccountCompanyRelationOpt relationOpt = business.getAccountCompanyRelationByAccountId(comAccountId);
+        return JsonResultKit.of(relationOpt);
     }
 }
 
