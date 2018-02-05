@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.business.impl;
 
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.EmployeePaymentService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.enums.SysConstants;
@@ -77,8 +78,12 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
         if (!audited.isEmpty()) {
             PaymentApplyBatchPO batchPO = this.addPaymentApply(audited);
             JsonResult jsonResult = this.syncPaymentData(batchPO);
+            System.out.println("---------> 结算中心结果  " + JSON.toJSONString(jsonResult));
             if(SysConstants.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())){
                 this.updateSyncStatus(batchPO.getApplyBatchId());
+            } else {
+                this.delBathData(batchPO.getApplyBatchId());
+                System.out.println("---------> 同步结算中心失败  " + JSON.toJSONString(jsonResult));
             }
         }
         List<EmpBankRefundBO> unSync = this.selectUnSyncApply();
@@ -210,6 +215,18 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
      */
     private Integer updateSyncStatus (Integer batchId) {
         return employeePaymentApplyMapper.updateSyncStatus(batchId, SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(), SysConstants.PaymentJob.SYSTEM_EN.getName());
+    }
+
+    /**
+     * @description 删除数据有误批次申请
+     * @author chenpb
+     * @since 2018-02-05
+     * @param batchId
+     * @return
+     */
+    private void delBathData (Integer batchId) {
+        paymentApplyBatchMapper.updateActiveByBachId(batchId, SysConstants.PaymentJob.SYSTEM_EN.getName());
+        paymentApplyDetailMapper.updateActiveByBachId(batchId, SysConstants.PaymentJob.SYSTEM_EN.getName());
     }
 
     /**
