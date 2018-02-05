@@ -17,6 +17,8 @@
         <result column="license_code" property="licenseCode" />
         <result column="service_center" property="serviceCenter"/>
         <result column="custom" property="custom"/>
+        <result column="employ_date" property="employDate" />
+        <result column="resign_date" property="resignDate" />
     </resultMap>
 
     <select id="queryAmEmpTask" resultMap="BaseResultMapDTO">
@@ -59,7 +61,7 @@
         on a.employee_id = g.employee_id
         LEFT JOIN
         sal_fc_company h on h.company_id = b.company_id
-where 1=1
+where   task_category = '1'
         <if test="taskStatus!=null">
             and a.task_status = ${taskStatus}
         </if>
@@ -100,7 +102,7 @@ where 1=1
         LEFT JOIN
         sal_fc_company h on h.company_id = b.company_id
         WHERE
-        1 = 1
+        task_category = '1'
         <foreach collection = "param" item = "plid"  open=""  close=""  separator="" >
           AND  ${ plid }
         </foreach >
@@ -142,7 +144,42 @@ where 1=1
         am_resign f
         on a.employee_id = f.employee_id
         where
+        task_category = '1'
+        and
         b.employee_id = #{employeeId}
+    </select>
+
+    <select id="queryEmployeeHository" resultMap="BaseResultMapDTO">
+        SELECT
+        a.company_id,
+        b.title,
+        c.employ_date,
+        d.resign_date
+        FROM
+        am_emp_task a
+        LEFT JOIN sal_company b ON a.company_id = b.company_id
+        LEFT JOIN am_employment c on  a.employee_id =  c.employee_id
+        LEFT JOIN am_resign  d  on  c.employment_id = d.employment_id
+        where
+        task_category = '1'
+        and
+        a.employee_id = #{employeeId}
+    </select>
+
+    <select id="queryCustom" resultMap="BaseResultMapDTO">
+        SELECT
+        a.company_id,/**客户id*/
+        b.title,/**公司名称*/
+        c.service_center,/**服务中心*/
+        c.custom /**客服*/
+        FROM
+        am_emp_task a
+        LEFT JOIN sal_company b ON a.company_id = b.company_id
+        LEFT JOIN sal_fc_company c on c.company_id = b.company_id
+        where
+        task_category = '1'
+        and
+        a.company_id = #{companyId}
     </select>
 
 </mapper>
