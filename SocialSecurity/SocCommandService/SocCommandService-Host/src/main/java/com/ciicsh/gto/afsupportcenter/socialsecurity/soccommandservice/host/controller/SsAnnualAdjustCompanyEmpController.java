@@ -137,7 +137,9 @@ public class SsAnnualAdjustCompanyEmpController extends BasicController<SsAnnual
     @RequestMapping("/annualAdjustCompanyEmpsUpdate")
     public JsonResult annualAdjustCompanyEmpsUpdate(@RequestBody JSONArray array) {
         List<SsAnnualAdjustCompanyEmp> list =  array.toJavaList(SsAnnualAdjustCompanyEmp.class);
-        business.updateBatchById(list);
+        if (!business.updateBatchById(list)) {
+            return JsonResultKit.ofError("数据库更新操作失败");
+        }
 
         return JsonResultKit.of();
     }
@@ -145,7 +147,9 @@ public class SsAnnualAdjustCompanyEmpController extends BasicController<SsAnnual
     @RequestMapping("/annualAdjustCompanyEmpsDelete")
     public JsonResult annualAdjustCompanyEmpsDelete(@RequestBody JSONArray array) {
         List<Long> list = array.toJavaList(Long.class);
-        business.deleteBatchIds(list);
+        if (!business.deleteBatchIds(list)) {
+            return JsonResultKit.ofError("数据库批量删除失败");
+        }
         return JsonResultKit.of();
     }
 

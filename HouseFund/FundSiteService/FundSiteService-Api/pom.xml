@@ -15,8 +15,23 @@
     <packaging>jar</packaging>
     <version>1.0.0</version>
 
-    <build>
-        <finalName>gt1.afsupportcenter.fundsiteservice-api</finalName>
-    </build>
+    <!--<build>-->
+        <!--<finalName>gt1.afsupportcenter.fundsiteservice-api</finalName>-->
+    <!--</build>-->
 
+    <dependencies>
+        <!-- spring cloud eureka -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-eureka</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- spring cloud feign -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-feign</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+    </dependencies>
 </project>

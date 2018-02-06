@@ -8,6 +8,10 @@ import java.util.Map;
  */
 public interface SocialSecurityConst {
 
+    public static final String PROCESS_PERIOD_KEY = "ProcessPeriod";
+    public static final String PAY_BANK_KEY = "PayBank";
+    public static final String FUND_TYPE_KEY = "FundType";
+
     //结算区县
     public static final Map<String, String> DISTRICT_MAP = new HashMap<String, String>() {
         {
@@ -20,7 +24,8 @@ public interface SocialSecurityConst {
         }
     };
 
-    //账户类型
+    //账户类型(已创建字典，请从字典服务取得)
+    @Deprecated
     public static final Map<String, String> ACCOUNT_TYPE_MAP = new HashMap<String, String>() {
         {
             put("1", "中智大库");
@@ -29,7 +34,8 @@ public interface SocialSecurityConst {
         }
     };
 
-    //社保账户状态
+    //社保账户状态(已创建字典，请从字典服务取得)
+    @Deprecated
     public static final Map<String, String> ACCOUNT_STATUS_MAP = new HashMap<String, String>() {
         {
             put("0", "初始");
@@ -39,7 +45,8 @@ public interface SocialSecurityConst {
         }
     };
 
-    //办理状态
+    //办理状态(已创建字典，请从字典服务取得)
+    @Deprecated
     public static final Map<String, String> PROCESS_STATUS_MAP = new HashMap<String, String>() {
         {
             put("1", "未处理");
@@ -49,7 +56,9 @@ public interface SocialSecurityConst {
             put("5", "不需处理");
         }
     };
-    //任务类型
+
+    //任务类型(已创建字典，请从字典服务取得)
+    @Deprecated
     public static final Map<String, String> TASK_TYPE_MAP = new HashMap<String, String>() {
         {
             put("1", "新进");
@@ -92,7 +101,8 @@ public interface SocialSecurityConst {
         }
     };
 
-    // 人员属性
+    // 人员属性(已创建字典，请从字典服务取得)
+    @Deprecated
     public static final Map<String, String> EMP_CLASSIFY_MAP = new HashMap<String, String>() {
         {
             put("1", "本地");
@@ -100,6 +110,34 @@ public interface SocialSecurityConst {
             put("3", "外籍三险");
             put("4", "外籍五险");
             put("5", "延迟退休人员");
+        }
+    };
+
+    // 处理周期
+    public static final Map<String, String> PROCESS_PERIOD_MAP = new HashMap<String, String>() {
+        {
+            put("1", "本月处理");
+            put("2", "下月处理");
+        }
+    };
+
+    // 缴费银行
+    public static final Map<String, String> PAY_BANK_MAP = new HashMap<String, String>() {
+        {
+            put("0", "徐汇");
+            put("1", "长宁");
+            put("2", "浦东");
+            put("3", "卢湾");
+            put("4", "静安");
+            put("5", "黄浦");
+        }
+    };
+
+    // 公积金类型
+    public static final Map<String, String> FUND_TYPE_MAP = new HashMap<String, String>() {
+        {
+            put("0", "基本公积金");
+            put("1", "补充公积金");
         }
     };
 }
