@@ -131,4 +131,16 @@
             </if>
         </where>
     </select>
+
+    <update id="updateStatus">
+        UPDATE
+            gtobusinessdb.hm_supply_medical_acceptance m
+        SET
+            m.status = #{status, jdbcType=INTEGER},
+            m.modified_by = #{modifiedBy, jdbcType=VARCHAR},
+            m.modified_time= now()
+        WHERE
+            m.acceptance_id = #{acceptanceId, jdbcType=VARCHAR}
+    </update>
+
 </mapper>

@@ -64,7 +64,7 @@ mybatis-plus:
 
 ####################### xxl-job #############################
 logging:
-  config : classpath:logback.xml
+  config: classpath:logback.xml
 xxl:
   job:
     admin:

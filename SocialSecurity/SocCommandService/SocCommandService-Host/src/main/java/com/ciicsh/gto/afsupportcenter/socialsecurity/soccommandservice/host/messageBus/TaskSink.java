@@ -58,6 +58,15 @@ public interface TaskSink {
      */
     String SOCIAL_STOP="social_stop";
 
+    /**
+     * 社保补缴
+     */
+    String SOCIAL_MAKE_UP="social_make_up";
+
+//    fund_make_up
+//        add_fund_make_up
+
+
     @Input(AF_EMP_IN)
     MessageChannel afEmpIn();
 

@@ -13,4 +13,6 @@ import java.util.List;
  */
 public interface AmResignMapper extends BaseMapper<AmResign> {
     List<AmResignBO> queryAmResign(AmResignBO amResignBO);
+    List<AmResignBO> taskCount(AmResignBO amResignBO);
+    List<AmResignBO> queryAmResignDetail(AmResignBO amResignBO);
 }
