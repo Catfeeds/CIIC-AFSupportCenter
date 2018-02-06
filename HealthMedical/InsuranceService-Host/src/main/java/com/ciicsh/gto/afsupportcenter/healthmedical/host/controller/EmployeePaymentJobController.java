@@ -36,12 +36,12 @@ public class EmployeePaymentJobController implements EmployeePaymentJobProxy {
      * @return
      */
 //    @Scheduled(cron = "0/6 * * * * *")
-    @GetMapping(value = "/handleEmpPayment")
+    @GetMapping(value = "/handle")
 //    @PostMapping(value = "/handleEmpPayment")
-    public void handleEmpPayment() {
+    public void handle() {
         try {
             logger.info("+++++++++++++++++++++++++++ 雇员付款任务: 开始 +++++++++++++++++++++++++++ ");
-            employeePaymentService.handleEmpPayment();
+            employeePaymentService.handle();
             logger.info("+++++++++++++++++++++++++++ 雇员付款任务: 结束 +++++++++++++++++++++++++++ ");
         } catch (Exception e) {
             logger.error("雇员付款任务 异常 ：--------------------------------------->  " + e.getMessage());

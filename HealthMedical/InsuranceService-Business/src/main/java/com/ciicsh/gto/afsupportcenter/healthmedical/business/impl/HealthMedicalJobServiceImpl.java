@@ -3,15 +3,12 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.business.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afsupportcenter.healthmedical.business.EmployeePaymentJobService;
+import com.ciicsh.gto.afsupportcenter.healthmedical.business.HealthMedicalJobService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.enums.SysConstants;
-import com.ciicsh.gto.afsupportcenter.healthmedical.dao.EmployeePaymentApplyMapper;
-import com.ciicsh.gto.afsupportcenter.healthmedical.dao.PaymentApplyBatchMapper;
-import com.ciicsh.gto.afsupportcenter.healthmedical.dao.PaymentApplyDetailMapper;
+import com.ciicsh.gto.afsupportcenter.healthmedical.dao.*;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmpBankRefundBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.PaymentApplyDetailBO;
-import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.EmployeePaymentApplyPO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.PaymentApplyBatchPO;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
@@ -37,7 +34,7 @@ import java.util.List;
  * @since 2018-01-29
  */
 @Service
-public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentApplyMapper, EmployeePaymentApplyPO> implements EmployeePaymentJobService {
+public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMapper, PaymentApplyBatchPO> implements HealthMedicalJobService {
     /**
      *  结算中心数据同步接口
      */
@@ -58,17 +55,27 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
      */
     @Autowired
     private PaymentApplyDetailMapper paymentApplyDetailMapper;
+    /**
+     *  补充医疗受理
+     */
+    @Autowired
+    private SupplyMedicalAcceptanceMapper supplyMedicalAcceptanceMapper;
+    /**
+     *  未投保医疗
+     */
+    @Autowired
+    private UninsuredMedicalMapper uninsuredMedicalMapper;
 
     /**
-     * @description 处理雇员付款业务
+     * @description 补充医疗受理任务
      * @author chenpb
-     * @since 2018-01-29
+     * @since 2018-02-06
      * @param
      * @return
      */
     @Transactional(rollbackFor = {Exception.class})
     @Override
-    public void handle () {
+    public void handleSupplyMedical () {
         /** 审核未同步 */
         List<EmployeePaymentBO> audited = employeePaymentApplyMapper.selectAudited();
         /** 退票已处理 */
@@ -78,7 +85,37 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
             JsonResult jsonResult = this.syncPaymentData(batchPO);
             System.out.println(JSON.toJSONString(jsonResult));
             if(JsonResult.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())) {
-                this.updateSyncStatus(batchPO.getApplyBatchId());
+                this.updateSyncStatus(batchPO.getApplyBatchId(), SysConstants.SupplyMedicalStatus.SYNC.getCode());
+            } else {
+                this.delBathData(batchPO.getApplyBatchId());
+            }
+        }
+        List<EmpBankRefundBO> unSync = this.selectUnSyncApply();
+        if (!unSync.isEmpty()) {
+            this.syncIncompleteBankCardInfoApply(unSync);
+        }
+    }
+
+    /**
+     * @description 未投保医疗任务
+     * @author chenpb
+     * @since 2018-02-06
+     * @param
+     * @return
+     */
+    @Transactional(rollbackFor = {Exception.class})
+    @Override
+    public void handleUninsuredMedical () {
+        /** 审核未同步 */
+        List<EmployeePaymentBO> audited = employeePaymentApplyMapper.selectAudited();
+        /** 退票已处理 */
+        audited.addAll(employeePaymentApplyMapper.selectRefund());
+        if (!audited.isEmpty()) {
+            PaymentApplyBatchPO batchPO = this.addPaymentApply(audited);
+            JsonResult jsonResult = this.syncPaymentData(batchPO);
+            System.out.println(JSON.toJSONString(jsonResult));
+            if(JsonResult.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())) {
+                this.updateSyncStatus(batchPO.getApplyBatchId(), SysConstants.UninsuredMedicalStatus.SYNC.getCode());
             } else {
                 this.delBathData(batchPO.getApplyBatchId());
             }
@@ -92,7 +129,7 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
     /**
      * @description 处理退票
      * @author chenpb
-     * @since 2018-02-02
+     * @since 2018-02-06
      * @param dto: 结算中心退票
      * @return
      */
@@ -108,7 +145,7 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
     /**
      * @description 同步结算中心驳回，支付成功状态
      * @author chenpb
-     * @since 2018-02-02
+     * @since 2018-02-06
      * @param dto: 结算中心处理结果
      * @return
      */
@@ -136,7 +173,7 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
     /**
      * @description 更新付款申请退票状态
      * @author chenpb
-     * @since 2018-02-02
+     * @since 2018-02-06
      * @param batchId
      * @param dto
      */
@@ -146,13 +183,18 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
         bo.setApplyBatchId(batchId);
         List<PaymentApplyDetailBO> list = paymentApplyDetailMapper.selectRefundDetail(bo);
         if(!list.isEmpty()){
-            employeePaymentApplyMapper.updateApplyStatus(list.get(0).getPaymentApplyId(), SysConstants.EmpApplyStatus.REFUND.getCode(), SysConstants.JobConstants.SYSTEM_ZH.getName());
+            Integer businessId = list.get(0).getBusinessId();
+            if (SysConstants.BusinessId.SUPPLY_MEDICAL.equals(businessId)) {
+                supplyMedicalAcceptanceMapper.updateStatus(list.get(0).getPaymentApplyId().toString(), SysConstants.SupplyMedicalStatus.REFUND.getCode(), SysConstants.JobConstants.SYSTEM_ZH.getName());
+            } else {
+                uninsuredMedicalMapper.updateStatus(list.get(0).getPaymentApplyId(), SysConstants.UninsuredMedicalStatus.REFUND.getCode(), SysConstants.JobConstants.SYSTEM_ZH.getName());
+            }
         }
     }
     /**
      * @description 同步支付申请信息到结算中心
      * @author chenpb
-     * @since 2018-01-31
+     * @since 2018-02-06
      * @param batchPO: 批处理信息
      * @return JsonResult: 结算中心同步数据结果
      */
@@ -162,24 +204,24 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
         this.assignBatchDefaultValue(batchPO, payApplyProxyDTO);
         List<PaymentApplyDetailBO> detail = paymentApplyDetailMapper.selectPending(batchPO.getApplyBatchId());
         payApplyProxyDTO.setEmployeeList(CommonTransform.convertToDTOs(detail, PayapplyEmployeeProxyDTO.class));
-        return payapplyServiceProxy.employeeReimburse(payApplyProxyDTO);
+        return payapplyServiceProxy.medicalReimburse(payApplyProxyDTO);
     }
 
     /**
      * @description 保存支付申请信息
      * @author chenpb
-     * @since 2018-01-30
-     * @param list: 雇员付款申请数据
+     * @since 2018-02-06
+     * @param list: 付款申请数据
      * @return PaymentApplyBatchPO: 申请支付批次记录
      */
     private PaymentApplyBatchPO addPaymentApply (List<EmployeePaymentBO> list) {
         Date now = new Date();
-        String title = SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getName();
+        String title = SysConstants.JobConstants.MEDICAL_CLAIMS.getName();
         BigDecimal payAmount = list.stream().map(p->p.getPayAmount()).reduce(BigDecimal.ZERO, (x,y)->x.add(y));
         PaymentApplyBatchPO batchPO = new PaymentApplyBatchPO (
-            SysConstants.JobConstants.AF_SYS_MANAGEMENT.getName(),
+            SysConstants.JobConstants.HEALTH_MEDICAL_DEPT.getName(),
             SysConstants.JobConstants.FINANCE_NOT.getCode(),
-            SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode(),
+            SysConstants.JobConstants.HEALTH_MEDICAL_DEPT.getCode(),
             SysConstants.JobConstants.PAY_WAY.getCode(),
             payAmount,
             SysConstants.JobConstants.INDIVIDUAL.getName(),
@@ -197,7 +239,7 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
     /**
      * @description 查询已审核未同步数据
      * @author chenpb
-     * @since 2018-02-01
+     * @since 2018-02-06
      * @param
      * @return
      */
@@ -212,10 +254,10 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
      * @param batchId
      * @return
      */
-    private Integer updateSyncStatus (Integer batchId) {
+    private Integer updateSyncStatus (Integer batchId, Integer status) {
         return employeePaymentApplyMapper.syncStatus(batchId,
             SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(),
-            SysConstants.EmpApplyStatus.SYNC.getCode(),
+            status,
             StringUtils.EMPTY,
             SysConstants.JobConstants.SYSTEM_ZH.getName());
     }
@@ -223,7 +265,7 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
     /**
      * @description 删除数据有误批次申请
      * @author chenpb
-     * @since 2018-02-05
+     * @since 2018-02-06
      * @param batchId
      * @return
      */
@@ -235,7 +277,7 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
     /**
      * @description 申请支付批次默认值处理
      * @author chenpb
-     * @since 2018-01-31
+     * @since 2018-02-06
      * @param dto
      * @return PayApplyProxyDTO
      */

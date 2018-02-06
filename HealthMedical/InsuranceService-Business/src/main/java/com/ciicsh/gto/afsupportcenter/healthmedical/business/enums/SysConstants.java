@@ -44,11 +44,10 @@ public interface SysConstants {
         }
     }
 
-
     /**
-     * 申请状态
+     * 雇员申请状态
      */
-    enum ApplyStatus {
+    enum EmpApplyStatus {
         APPLY(1, "未审核"),
         REFUSE(2, "已批退"),
         AUDITED(3, "已审核未同步"),
@@ -59,7 +58,47 @@ public interface SysConstants {
         COMPLETE(8, "已完成");
         private int code;
         private String name;
-        ApplyStatus(int code, String name) {
+        EmpApplyStatus(int code, String name) {
+            this.code = code;
+            this.name = name;
+        }
+        public int getCode() {
+            return code;
+        }
+        public String getName() {
+            return name;
+        }
+    }
+
+    /**
+     * 补充医疗受理状态
+     */
+    enum SupplyMedicalStatus {
+        SYNC(3, "已同步"),
+        REFUND(6, "已退票");
+        private int code;
+        private String name;
+        SupplyMedicalStatus(int code, String name) {
+            this.code = code;
+            this.name = name;
+        }
+        public int getCode() {
+            return code;
+        }
+        public String getName() {
+            return name;
+        }
+    }
+
+    /**
+     * 未投保医疗状态
+     */
+    enum UninsuredMedicalStatus {
+        SYNC(4, "已同步"),
+        REFUND(7, "已退票");
+        private int code;
+        private String name;
+        UninsuredMedicalStatus(int code, String name) {
             this.code = code;
             this.name = name;
         }
