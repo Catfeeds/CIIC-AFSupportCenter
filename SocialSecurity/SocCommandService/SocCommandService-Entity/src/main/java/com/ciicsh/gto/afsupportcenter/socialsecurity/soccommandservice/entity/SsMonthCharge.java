@@ -15,7 +15,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author xsj
- * @since 2018-01-19
+ * @since 2018-02-05
  */
 @TableName("ss_month_charge")
 public class SsMonthCharge implements Serializable {
@@ -27,6 +27,8 @@ public class SsMonthCharge implements Serializable {
      */
 	@TableId(value="month_charge_id", type= IdType.AUTO)
 	private Long monthChargeId;
+	@TableField("emp_task_id")
+	private Long empTaskId;
     /**
      * 外键：企业社保账户
      */
@@ -94,6 +96,14 @@ public class SsMonthCharge implements Serializable {
 
 	public void setMonthChargeId(Long monthChargeId) {
 		this.monthChargeId = monthChargeId;
+	}
+
+	public Long getEmpTaskId() {
+		return empTaskId;
+	}
+
+	public void setEmpTaskId(Long empTaskId) {
+		this.empTaskId = empTaskId;
 	}
 
 	public Long getComAccountId() {
@@ -212,6 +222,7 @@ public class SsMonthCharge implements Serializable {
 	public String toString() {
 		return "SsMonthCharge{" +
 			"monthChargeId=" + monthChargeId +
+			", empTaskId=" + empTaskId +
 			", comAccountId=" + comAccountId +
 			", ssMonthBelong=" + ssMonthBelong +
 			", ssMonth=" + ssMonth +
