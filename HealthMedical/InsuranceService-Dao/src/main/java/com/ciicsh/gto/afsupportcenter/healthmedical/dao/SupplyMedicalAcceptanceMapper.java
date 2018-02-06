@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.AcceptanceStatisticsBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.SupplyMedicalAcceptanceDTO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.SupplyMedicalAcceptance;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -34,4 +35,13 @@ public interface SupplyMedicalAcceptanceMapper extends BaseMapper<SupplyMedicalA
      * @return
      */
     AcceptanceStatisticsBO queryAcceptanceTotal(SupplyMedicalAcceptanceDTO supplyMedicalAcceptanceDTO);
+
+    /**
+     * 更新状态
+     * @param acceptanceId
+     * @param status
+     * @param modifiedBy
+     * @return
+     */
+    Integer updateStatus(@Param("acceptanceId") String acceptanceId, @Param("status") Integer status, @Param("modifiedBy") String modifiedBy);
 }

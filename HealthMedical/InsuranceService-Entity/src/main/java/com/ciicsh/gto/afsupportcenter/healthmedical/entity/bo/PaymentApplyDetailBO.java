@@ -14,6 +14,8 @@ public class PaymentApplyDetailBO {
 
     /** 支付批次号 */
     private Integer applyBatchId;
+    /** 受理单类型（0-补充医疗理赔，1-未投保医疗理赔，2-雇员付款）*/
+    private Integer businessId;
     /** 付款申请记录编号 */
     private Integer paymentApplyId;
     /** 公司编号 */
@@ -41,13 +43,20 @@ public class PaymentApplyDetailBO {
     /** 省名称 */
     private String cityName;
 
-
     public Integer getApplyBatchId() {
         return applyBatchId;
     }
 
     public void setApplyBatchId(Integer applyBatchId) {
         this.applyBatchId = applyBatchId;
+    }
+
+    public Integer getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(Integer businessId) {
+        this.businessId = businessId;
     }
 
     public Integer getPaymentApplyId() {

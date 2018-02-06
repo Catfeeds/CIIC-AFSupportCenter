@@ -26,6 +26,7 @@
     <!-- 关联查询映射结果 -->
     <resultMap id="JoinResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.PaymentApplyDetailBO">
         <result column="apply_batch_id" property="applyBatchId" />
+        <result column="business_id" property="businessId" />
         <result column="acceptance_id" property="paymentApplyId" />
         <result column="company_id" property="companyId" />
         <result column="company_name" property="companyName" />
@@ -47,7 +48,7 @@
     </sql>
 
     <sql id="Join_Column_List">
-        p.acceptance_id, p.company_id, p.company_name, p.employee_id, p.employee_name, p.pay_amount, p.bank_account, p.account_name, p.bank_id, p.bank_code, p.bank_name, p.province_name, p.city_name
+        p.acceptance_id, p.business_id, p.company_id, p.company_name, p.employee_id, p.employee_name, p.pay_amount, p.bank_account, p.account_name, p.bank_id, p.bank_code, p.bank_name, p.province_name, p.city_name
     </sql>
 
     <insert id="insertDetails" parameterType="java.util.List">

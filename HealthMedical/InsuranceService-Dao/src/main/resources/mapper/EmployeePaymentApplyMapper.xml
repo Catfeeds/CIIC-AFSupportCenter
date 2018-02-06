@@ -193,7 +193,7 @@
         AND p.is_active = 1
     </select>
 
-    <update id="updateSyncStatus">
+    <update id="syncStatus">
         UPDATE
             gtobusinessdb.cmy_af_employee_payment_apply p
         SET
@@ -226,7 +226,7 @@
             p.modified_by = #{modifiedBy, jdbcType=VARCHAR},
             p.modified_time= now()
         WHERE
-            p.payment_apply_id = = #{paymentApplyId, jdbcType=INTEGER}
+            p.payment_apply_id = #{paymentApplyId, jdbcType=INTEGER}
     </update>
 
 </mapper>
