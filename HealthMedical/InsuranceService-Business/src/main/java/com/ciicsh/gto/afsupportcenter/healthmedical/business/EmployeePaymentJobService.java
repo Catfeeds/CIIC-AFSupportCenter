@@ -14,7 +14,7 @@ import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyReturnTicketDT
  * @author chenpb
  * @since 2018-01-29
  */
-public interface EmployeePaymentService extends IService<EmployeePaymentApplyPO> {
+public interface EmployeePaymentJobService extends IService<EmployeePaymentApplyPO> {
 
     /**
      * @description 处理雇员付款任务

@@ -1,17 +1,13 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.healthmedical.api.EmployeePaymentProxy;
-import com.ciicsh.gto.afsupportcenter.healthmedical.business.EmployeePaymentService;
-import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.PaymentBatchDTO;
-import com.ciicsh.gto.commonservice.util.dto.Result;
-import com.ciicsh.gto.commonservice.util.dto.ResultGenerator;
+import com.ciicsh.gto.afsupportcenter.healthmedical.api.EmployeePaymentJobProxy;
+import com.ciicsh.gto.afsupportcenter.healthmedical.business.EmployeePaymentJobService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -23,27 +19,14 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/support/employeePayment")
-public class EmployeePaymentController implements EmployeePaymentProxy {
+public class EmployeePaymentJobController implements EmployeePaymentJobProxy {
     /**
      * 记录日志
      */
-    private static final Logger logger = LoggerFactory.getLogger(EmployeePaymentController.class);
+    private static final Logger logger = LoggerFactory.getLogger(EmployeePaymentJobController.class);
 
     @Autowired
-    private EmployeePaymentService employeePaymentService;
-
-    /**
-     * @description 更新结算中心付款结果
-     * @author chenpb
-     * @since 2018-01-31
-     * @param
-     * @return
-     */
-    @Override
-    @PostMapping(value = "/updatePayment")
-    public Result updatePayment(@RequestBody PaymentBatchDTO dto) {
-        return ResultGenerator.genSuccessResult();
-    }
+    private EmployeePaymentJobService employeePaymentService;
 
     /**
      * @description 雇员付款任务
