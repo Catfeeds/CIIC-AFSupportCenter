@@ -11,6 +11,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class AccountCompanyRelationOpt {
     private Long comAccountId;
+    private String ssAccount;
     private String comAccountName;
     private String companyId;
     private String companyName;
