@@ -65,4 +65,13 @@ public interface UninsuredMedicalMapper extends BaseMapper<UninsuredMedical> {
      */
     Integer updateStatus(@Param("umAcceptanceId") Integer umAcceptanceId, @Param("status") Integer status, @Param("modifiedBy") String modifiedBy);
 
+    /**
+     * 更新受理单状态为已同步
+     * @param batchId
+     * @param businessId
+     * @param modifiedBy
+     * @return
+     */
+    Integer syncStatus(@Param("batchId") Integer batchId, @Param("businessId") Integer businessId, @Param("status") Integer status, @Param("modifiedBy") String modifiedBy);
+
 }

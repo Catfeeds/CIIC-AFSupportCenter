@@ -31,7 +31,7 @@ import java.util.List;
  * </p>
  *
  * @author chenpb
- * @since 2018-01-29
+ * @since 2018-02-06
  */
 @Service
 public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMapper, PaymentApplyBatchPO> implements HealthMedicalJobService {
@@ -85,7 +85,7 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
             JsonResult jsonResult = this.syncPaymentData(batchPO);
             System.out.println(JSON.toJSONString(jsonResult));
             if(JsonResult.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())) {
-                this.updateSyncStatus(batchPO.getApplyBatchId(), SysConstants.SupplyMedicalStatus.SYNC.getCode());
+                supplyMedicalAcceptanceMapper.syncStatus(batchPO.getApplyBatchId(), SysConstants.BusinessId.SUPPLY_MEDICAL.getId(), SysConstants.SupplyMedicalStatus.SYNC.getCode(), SysConstants.JobConstants.SYSTEM_ZH.getName());
             } else {
                 this.delBathData(batchPO.getApplyBatchId());
             }
@@ -115,7 +115,7 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
             JsonResult jsonResult = this.syncPaymentData(batchPO);
             System.out.println(JSON.toJSONString(jsonResult));
             if(JsonResult.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())) {
-                this.updateSyncStatus(batchPO.getApplyBatchId(), SysConstants.UninsuredMedicalStatus.SYNC.getCode());
+                uninsuredMedicalMapper.syncStatus(batchPO.getApplyBatchId(), SysConstants.BusinessId.UNINSURED_MEDICAL.getId(), SysConstants.UninsuredMedicalStatus.SYNC.getCode(), SysConstants.JobConstants.SYSTEM_ZH.getName());
             } else {
                 this.delBathData(batchPO.getApplyBatchId());
             }
@@ -162,7 +162,7 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
     /**
      * @description 添加补全银行卡信息申请到雇员中心
      * @author chenpb
-     * @since 2018-02-02
+     * @since 2018-02-06
      * @param emp: 雇员信息
      * @return
      */
@@ -248,21 +248,6 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
     }
 
     /**
-     * @description 更新付款申请状态
-     * @author chenpb
-     * @since 2018-02-01
-     * @param batchId
-     * @return
-     */
-    private Integer updateSyncStatus (Integer batchId, Integer status) {
-        return employeePaymentApplyMapper.syncStatus(batchId,
-            SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(),
-            status,
-            StringUtils.EMPTY,
-            SysConstants.JobConstants.SYSTEM_ZH.getName());
-    }
-
-    /**
      * @description 删除数据有误批次申请
      * @author chenpb
      * @since 2018-02-06
@@ -288,7 +273,7 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
         dto.setIsFinancedept(SysConstants.JobConstants.FINANCE_NOT.getCode());
         dto.setPresident(SysConstants.JobConstants.PRESIDENT.getName());
         dto.setLeader(SysConstants.JobConstants.LEADER.getName());
-        dto.setDepartmentManager(SysConstants.JobConstants.DEPARTMENT_MANAGER.getName());
+        dto.setDepartmentManager(SysConstants.JobConstants.DEPARTMENT_MASTER.getName());
         dto.setReviewer(SysConstants.JobConstants.REVIEWER.getName());
         return dto;
     }

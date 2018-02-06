@@ -158,7 +158,7 @@
           b.status = 1
     </select>
 
-    <!-- 信息有误未同步 -->
+    <!-- 未同步 -->
     <select id="selectUnSyncApply" resultMap="PartialResultMap">
         SELECT
             <include refid="Partial_Column_List"></include>
