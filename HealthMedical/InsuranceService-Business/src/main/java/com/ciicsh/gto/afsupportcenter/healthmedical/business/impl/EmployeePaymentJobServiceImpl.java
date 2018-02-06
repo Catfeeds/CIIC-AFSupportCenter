@@ -3,7 +3,7 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.business.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afsupportcenter.healthmedical.business.EmployeePaymentService;
+import com.ciicsh.gto.afsupportcenter.healthmedical.business.EmployeePaymentJobService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.enums.SysConstants;
 import com.ciicsh.gto.afsupportcenter.healthmedical.dao.EmployeePaymentApplyMapper;
 import com.ciicsh.gto.afsupportcenter.healthmedical.dao.PaymentApplyBatchMapper;
@@ -37,7 +37,7 @@ import java.util.List;
  * @since 2018-01-29
  */
 @Service
-public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApplyMapper, EmployeePaymentApplyPO> implements EmployeePaymentService {
+public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentApplyMapper, EmployeePaymentApplyPO> implements EmployeePaymentJobService {
     /**
      *  结算中心数据同步接口
      */
@@ -174,12 +174,12 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
      */
     private PaymentApplyBatchPO addPaymentApply (List<EmployeePaymentBO> list) {
         Date now = new Date();
-        String title = SysConstants.JobConstants.BUSINESS.getName();
+        String title = SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getName();
         BigDecimal payAmount = list.stream().map(p->p.getPayAmount()).reduce(BigDecimal.ZERO, (x,y)->x.add(y));
         PaymentApplyBatchPO batchPO = new PaymentApplyBatchPO (
             SysConstants.JobConstants.AF_SYS_MANAGEMENT.getName(),
-            SysConstants.JobConstants.FINANCE.getCode(),
-            SysConstants.JobConstants.BUSINESS.getCode(),
+            SysConstants.JobConstants.FINANCE_NOT.getCode(),
+            SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode(),
             SysConstants.JobConstants.PAY_WAY.getCode(),
             payAmount,
             SysConstants.JobConstants.INDIVIDUAL.getName(),
@@ -243,7 +243,7 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
         SimpleDateFormat df =new SimpleDateFormat(SysConstants.JobConstants.DATE_FORMAT.getName());
         dto.setBusinessPkId(batchPo.getApplyBatchId().longValue());
         dto.setApplyDate(df.format(new Date()));
-        dto.setIsFinancedept(SysConstants.JobConstants.FINANCE.getCode());
+        dto.setIsFinancedept(SysConstants.JobConstants.FINANCE_NOT.getCode());
         dto.setPresident(SysConstants.JobConstants.PRESIDENT.getName());
         dto.setLeader(SysConstants.JobConstants.LEADER.getName());
         dto.setDepartmentManager(SysConstants.JobConstants.DEPARTMENT_MANAGER.getName());

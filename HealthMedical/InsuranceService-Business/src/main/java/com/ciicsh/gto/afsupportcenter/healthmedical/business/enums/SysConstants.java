@@ -15,11 +15,13 @@ public interface SysConstants {
      */
     enum JobConstants {
         AF_SYS_MANAGEMENT(1, "外企内控中心"),
+        HEALTH_MEDICAL_DEPT(2, "健康医疗部"),
         SYSTEM_ZH(1, "系统"),
         SYSTEM_EN(2, "system"),
         INDIVIDUAL(1, "个人"),
-        FINANCE(0, "否"),
-        BUSINESS(11, "AF雇员报销"),
+        FINANCE_NOT(0, "否"),
+        AF_EMPLOYEE_PAYMENT(11, "AF雇员报销"),
+        MEDICAL_CLAIMS(12, "医疗理赔报销"),
         PAY_WAY(3, "转账"),
         ACTIVE(1, "可用"),
         DATE_FORMAT(1, "yyyy-MM-dd"),
@@ -93,6 +95,8 @@ public interface SysConstants {
      * 业务ID
      */
     enum BusinessId {
+        SUPPLY_MEDICAL(0, "补充医疗理赔"),
+        UNINSURED_MEDICAL(1, "未投保医疗理赔"),
         EMPLOYEE_PAYMENT(2, "雇员付款");
 
         private int id;
