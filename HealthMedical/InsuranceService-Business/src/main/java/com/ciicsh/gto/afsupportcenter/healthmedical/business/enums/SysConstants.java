@@ -27,6 +27,7 @@ public interface SysConstants {
         DATE_FORMAT(1, "yyyy-MM-dd"),
         PRESIDENT(1, "总经理"),
         LEADER(1, "分管领导"),
+        DEPARTMENT_MASTER(1, "部门经理"),
         DEPARTMENT_MANAGER(1, "部门经理"),
         REVIEWER(1, "审核人");
 
@@ -76,13 +77,13 @@ public interface SysConstants {
     enum SupplyMedicalStatus {
         SYNC(3, "已同步"),
         REFUND(6, "已退票");
-        private int code;
+        private Integer code;
         private String name;
-        SupplyMedicalStatus(int code, String name) {
+        SupplyMedicalStatus(Integer code, String name) {
             this.code = code;
             this.name = name;
         }
-        public int getCode() {
+        public Integer getCode() {
             return code;
         }
         public String getName() {
@@ -96,13 +97,13 @@ public interface SysConstants {
     enum UninsuredMedicalStatus {
         SYNC(4, "已同步"),
         REFUND(7, "已退票");
-        private int code;
+        private Integer code;
         private String name;
-        UninsuredMedicalStatus(int code, String name) {
+        UninsuredMedicalStatus(Integer code, String name) {
             this.code = code;
             this.name = name;
         }
-        public int getCode() {
+        public Integer getCode() {
             return code;
         }
         public String getName() {

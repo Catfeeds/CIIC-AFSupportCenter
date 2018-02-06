@@ -168,4 +168,26 @@
             m.um_acceptance_id = #{umAcceptanceId, jdbcType=INTEGER}
     </update>
 
+    <update id="syncStatus">
+        UPDATE
+            gtobusinessdb.hm_uninsured_medical p
+        SET
+            p.status = #{status},
+            p.modified_by = #{modifiedBy, jdbcType=VARCHAR},
+            p.modified_time = now()
+        WHERE EXISTS
+        (
+            SELECT
+              d.acceptance_id
+            FROM
+              hm_payment_apply_detail d
+            WHERE
+              d.acceptance_id = p.um_acceptance_id
+            AND
+              d.apply_batch_id = #{batchId, jdbcType=INTEGER}
+            AND
+              d.business_id = #{businessId, jdbcType=INTEGER}
+        )
+    </update>
+
 </mapper>
