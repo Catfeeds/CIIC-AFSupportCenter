@@ -90,32 +90,6 @@ public interface SysConstants {
     }
 
     /**
-     * MsgCode
-     */
-    enum MsgCode {
-        SUCCESS("0", "SUCCESS"),
-        REMOTE_INVOCATION_ERROR("300", "远程服务接口调用异常"),
-        SERVICE_BUSY("201", "服务器繁忙，请稍后再试！"),
-        ILLEGAL_ARGUMENT("400", "非法的请求参数");
-
-        private String code;
-        private String msg;
-
-        private MsgCode(String code, String msg) {
-            this.code = code;
-            this.msg = msg;
-        }
-
-        public String getCode() {
-            return this.code;
-        }
-
-        public String getMsg() {
-            return this.msg;
-        }
-    }
-
-    /**
      * 业务ID
      */
     enum BusinessId {

@@ -1,7 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.business.impl;
 
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.EmployeePaymentService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.enums.SysConstants;
@@ -20,6 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -67,6 +67,7 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
      * @param
      * @return
      */
+    @Transactional(rollbackFor = {Exception.class})
     @Override
     public void handleEmpPayment () {
         /** 审核未同步 */
@@ -76,7 +77,7 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
         if (!audited.isEmpty()) {
             PaymentApplyBatchPO batchPO = this.addPaymentApply(audited);
             JsonResult jsonResult = this.syncPaymentData(batchPO);
-            if(SysConstants.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())){
+            if(JsonResult.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())) {
                 this.updateSyncStatus(batchPO.getApplyBatchId());
             } else {
                 this.delBathData(batchPO.getApplyBatchId());
@@ -84,7 +85,7 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
         }
         List<EmpBankRefundBO> unSync = this.selectUnSyncApply();
         if (!unSync.isEmpty()) {
-            this.syncEmpBankRefundData(unSync);
+            this.syncIncompleteBankCardInfoApply(unSync);
         }
     }
 
@@ -95,6 +96,7 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
      * @param dto: 结算中心退票
      * @return
      */
+    @Transactional(rollbackFor = {Exception.class})
     @Override
     public void handlePaymentRefund (PayApplyReturnTicketDTO dto) {
         List<EmployeeReturnTicketDTO> detail = dto.getEmployeeReturnTicketDTOList();
@@ -111,6 +113,7 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
      * @param dto: 结算中心处理结果
      * @return
      */
+    @Transactional(rollbackFor = {Exception.class})
     @Override
     public void syncSettleCenterStatus (PayApplyPayStatusDTO dto) {
         employeePaymentApplyMapper.updateSyncStatus(dto.getBusinessPkId().intValue(),
@@ -127,7 +130,7 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
      * @param emp: 雇员信息
      * @return
      */
-    private void syncEmpBankRefundData (List<EmpBankRefundBO> emp) {
+    private void syncIncompleteBankCardInfoApply (List<EmpBankRefundBO> emp) {
         System.out.println(emp.size());
     }
 
