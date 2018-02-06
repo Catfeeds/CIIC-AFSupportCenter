@@ -44,7 +44,10 @@
       employee_id = #{empId}
     </select>
 
-    <insert id="insertItem" parameterType="Task" useGeneratedKeys="true" keyProperty="taskId">
+    <insert id="insertItem" parameterType="com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Task">
+      <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="taskId">
+          SELECT LAST_INSERT_ID() AS taskId
+      </selectKey>
         INSERT INTO cm_task(
             material_back_time,
             calls_time,
