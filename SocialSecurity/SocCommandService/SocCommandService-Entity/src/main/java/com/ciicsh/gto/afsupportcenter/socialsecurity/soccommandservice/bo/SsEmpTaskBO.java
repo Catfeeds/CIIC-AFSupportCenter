@@ -66,6 +66,18 @@ public class SsEmpTaskBO extends SsEmpTask {
 
     //存在相同已办任务单
     private Integer isHaveSameTask;
+
+    //顺调 和  倒调(1 顺调 0 倒调)
+    private Integer adustType;
+
+    public Integer getAdustType() {
+        return adustType;
+    }
+
+    public void setAdustType(Integer adustType) {
+        this.adustType = adustType;
+    }
+
     public String getEmployeeName() {
         return employeeName;
     }

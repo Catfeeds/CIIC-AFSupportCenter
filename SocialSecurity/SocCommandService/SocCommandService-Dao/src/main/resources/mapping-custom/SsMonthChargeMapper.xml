@@ -2,7 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsMonthChargeMapper">
 
-
+    <resultMap id="ResultMap" extends="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthChargeBO">
+        <collection property="ssMonthChargeItemList" ofType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthChargeItem">
+            <id column="month_charge_item_id" property="monthChargeItemId" />
+            <result column="ss_type" property="ssType" />
+            <result column="ss_type_name" property="ssTypeName" />
+            <result column="com_amount" property="comAmount" />
+            <result column="emp_amount" property="empAmount" />
+            <result column="sub_total_amount" property="subTotalAmount" />
+        </collection>
+    </resultMap>
     <!--判断当月是否首次生成明细报表-->
     <select id="countIfMonthFirstReport" resultType="java.util.HashMap">
         SELECT count(1) AS count_mc FROM ss_month_charge mc
@@ -63,6 +72,30 @@
         and et.handle_month = {#ssMonth}
         and ebp.ss_month ={#ssMonth}
     </select>
+    <!-- 删除当月 某月 非标数据-->
+    <update id="deleteOldDate">
+        DELETE  FROM ss_month_charge WHERE employee_id=#{employeeId} AND ss_month_belong =#{paymentMonth} AND ss_month =#{handleMonth}
+    </update>
+    <select id="selectOldDate" resultMap="BaseResultMap">
+       SELECT * FROM ss_month_charge WHERE employee_id=#{employeeId} AND ss_month_belong =#{paymentMonth} AND ss_month =#{handleMonth}
+    </select>
 
+    <!--查询总额 之前做了相减 则当月已办肯定没有-->
+    <select id="selectTotalFromOld" parameterType="string" resultMap="ResultMap">
+        SELECT
+        smc.total_amount,
+        smc.ss_month_belong,
+        smc.ss_month,
+        smci.month_charge_item_id,
+        smci.com_amount,
+        smci.emp_amount,
+        smci.sub_total_amount,
+        smci.ss_type,
+        smci.ss_type_name
+        FROM
+        ss_month_charge  smc
+        JOIN ss_month_charge_item smci ON smc.month_charge_id = smci.month_charge_id AND smci.is_active=1
+        WHERE smc.employee_id =#{employeeId} AND smc.ss_month_belong=#{paymentMonth} AND smc.is_active=1
+    </select>
 
 </mapper>
