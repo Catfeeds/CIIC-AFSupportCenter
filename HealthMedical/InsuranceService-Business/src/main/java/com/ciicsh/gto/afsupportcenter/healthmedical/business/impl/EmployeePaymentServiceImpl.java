@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.business.impl;
 
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.EmployeePaymentService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.enums.SysConstants;
@@ -12,6 +13,7 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.PaymentApplyDetailBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.EmployeePaymentApplyPO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.PaymentApplyBatchPO;
+import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.*;
@@ -23,11 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -77,6 +76,7 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
         if (!audited.isEmpty()) {
             PaymentApplyBatchPO batchPO = this.addPaymentApply(audited);
             JsonResult jsonResult = this.syncPaymentData(batchPO);
+            System.out.println(JSON.toJSONString(jsonResult));
             if(JsonResult.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())) {
                 this.updateSyncStatus(batchPO.getApplyBatchId());
             } else {
@@ -101,8 +101,7 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
     public void handlePaymentRefund (PayApplyReturnTicketDTO dto) {
         List<EmployeeReturnTicketDTO> detail = dto.getEmployeeReturnTicketDTOList();
         if (!detail.isEmpty()) {
-            Integer batchId = dto.getBusinessPkId().intValue();
-            detail.forEach(pay->this.updateRefundStatus(batchId, pay));
+            detail.forEach(pay->this.updateRefundStatus(dto.getBusinessPkId().intValue(), pay));
         }
     }
 
@@ -120,7 +119,7 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
             dto.getBusinessType(),
             dto.getPayStatus(),
             dto.getRemark(),
-            SysConstants.PaymentJob.SYSTEM_EN.getName());
+            SysConstants.JobConstants.SYSTEM_ZH.getName());
     }
 
     /**
@@ -147,7 +146,7 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
         bo.setApplyBatchId(batchId);
         List<PaymentApplyDetailBO> list = paymentApplyDetailMapper.selectRefundDetail(bo);
         if(!list.isEmpty()){
-            employeePaymentApplyMapper.updateApplyStatus(list.get(0).getPaymentApplyId(), SysConstants.ApplyStatus.REFUND.getCode(), SysConstants.PaymentJob.SYSTEM_ZH.getName());
+            employeePaymentApplyMapper.updateApplyStatus(list.get(0).getPaymentApplyId(), SysConstants.ApplyStatus.REFUND.getCode(), SysConstants.JobConstants.SYSTEM_ZH.getName());
         }
     }
     /**
@@ -162,7 +161,7 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
         BeanUtils.copyProperties(batchPO, payApplyProxyDTO);
         this.assignBatchDefaultValue(batchPO, payApplyProxyDTO);
         List<PaymentApplyDetailBO> detail = paymentApplyDetailMapper.selectPending(batchPO.getApplyBatchId());
-        payApplyProxyDTO.setEmployeeList(this.convertToDTOs(detail, PayapplyEmployeeProxyDTO.class));
+        payApplyProxyDTO.setEmployeeList(CommonTransform.convertToDTOs(detail, PayapplyEmployeeProxyDTO.class));
         return payapplyServiceProxy.employeeReimburse(payApplyProxyDTO);
     }
 
@@ -175,19 +174,20 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
      */
     private PaymentApplyBatchPO addPaymentApply (List<EmployeePaymentBO> list) {
         Date now = new Date();
-        String title = SysConstants.PaymentJob.BUSINESS.getName();
+        String title = SysConstants.JobConstants.BUSINESS.getName();
+        BigDecimal payAmount = list.stream().map(p->p.getPayAmount()).reduce(BigDecimal.ZERO, (x,y)->x.add(y));
         PaymentApplyBatchPO batchPO = new PaymentApplyBatchPO (
-            SysConstants.PaymentJob.AF_SYS_MANAGEMENT.getName(),
-            SysConstants.PaymentJob.FINANCE.getCode(),
-            SysConstants.PaymentJob.BUSINESS.getCode(),
-            SysConstants.PaymentJob.PAY_WAY.getCode(),
-            BigDecimal.ZERO,
-            SysConstants.PaymentJob.INDIVIDUAL.getName(),
-            SysConstants.PaymentJob.SYSTEM_EN.getName(), now, title, title,
+            SysConstants.JobConstants.AF_SYS_MANAGEMENT.getName(),
+            SysConstants.JobConstants.FINANCE.getCode(),
+            SysConstants.JobConstants.BUSINESS.getCode(),
+            SysConstants.JobConstants.PAY_WAY.getCode(),
+            payAmount,
+            SysConstants.JobConstants.INDIVIDUAL.getName(),
+            SysConstants.JobConstants.SYSTEM_ZH.getName(), now, title, title,
             SysConstants.BatchStatus.ADD.getCode(),
-            SysConstants.PaymentJob.ACTIVE.getCode(), now, now,
-            SysConstants.PaymentJob.SYSTEM_ZH.getName(),
-            SysConstants.PaymentJob.SYSTEM_ZH.getName()
+            SysConstants.JobConstants.ACTIVE.getCode(), now, now,
+            SysConstants.JobConstants.SYSTEM_ZH.getName(),
+            SysConstants.JobConstants.SYSTEM_ZH.getName()
         );
         paymentApplyBatchMapper.insert(batchPO);
         paymentApplyDetailMapper.insertDetails(list, batchPO.getApplyBatchId(), batchPO.getModifiedBy());
@@ -217,7 +217,7 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
             SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(),
             SysConstants.ApplyStatus.SYNC.getCode(),
             StringUtils.EMPTY,
-            SysConstants.PaymentJob.SYSTEM_EN.getName());
+            SysConstants.JobConstants.SYSTEM_ZH.getName());
     }
 
     /**
@@ -228,8 +228,8 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
      * @return
      */
     private void delBathData (Integer batchId) {
-        paymentApplyBatchMapper.updateActiveByBachId(batchId, SysConstants.PaymentJob.SYSTEM_EN.getName());
-        paymentApplyDetailMapper.updateActiveByBachId(batchId, SysConstants.PaymentJob.SYSTEM_EN.getName());
+        paymentApplyBatchMapper.updateActiveByBachId(batchId, SysConstants.JobConstants.SYSTEM_ZH.getName());
+        paymentApplyDetailMapper.updateActiveByBachId(batchId, SysConstants.JobConstants.SYSTEM_ZH.getName());
     }
 
     /**
@@ -240,30 +240,14 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
      * @return PayApplyProxyDTO
      */
     private PayApplyProxyDTO assignBatchDefaultValue (PaymentApplyBatchPO batchPo, PayApplyProxyDTO dto) {
-        SimpleDateFormat df =new SimpleDateFormat(SysConstants.PaymentJob.DATE_FORMAT.getName());
+        SimpleDateFormat df =new SimpleDateFormat(SysConstants.JobConstants.DATE_FORMAT.getName());
         dto.setBusinessPkId(batchPo.getApplyBatchId().longValue());
         dto.setApplyDate(df.format(new Date()));
-        dto.setIsFinancedept(SysConstants.PaymentJob.FINANCE.getCode());
-        dto.setPresident(SysConstants.PaymentJob.PRESIDENT.getName());
-        dto.setLeader(SysConstants.PaymentJob.LEADER.getName());
-        dto.setDepartmentManager(SysConstants.PaymentJob.DEPARTMENT_MANAGER.getName());
-        dto.setReviewer(SysConstants.PaymentJob.REVIEWER.getName());
-        return dto;
-    }
-
-    private <T, E> List<T> convertToDTOs(Collection<E> list, Class<T> t) {
-        if (list == null || list.size() <= 0) {
-            return Collections.emptyList();
-        }
-        return list.stream().map(e -> convertToDTO(e, t)).collect(Collectors.toList());
-    }
-
-    private <T, E> T convertToDTO(E e, Class<T> t) {
-        T dto = BeanUtils.instantiate(t);
-        if (e == null) {
-            return null;
-        }
-        BeanUtils.copyProperties(e, dto);
+        dto.setIsFinancedept(SysConstants.JobConstants.FINANCE.getCode());
+        dto.setPresident(SysConstants.JobConstants.PRESIDENT.getName());
+        dto.setLeader(SysConstants.JobConstants.LEADER.getName());
+        dto.setDepartmentManager(SysConstants.JobConstants.DEPARTMENT_MANAGER.getName());
+        dto.setReviewer(SysConstants.JobConstants.REVIEWER.getName());
         return dto;
     }
 
