@@ -19,6 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -66,6 +67,7 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
      * @param
      * @return
      */
+    @Transactional(rollbackFor = {Exception.class})
     @Override
     public void handleEmpPayment () {
         /** 审核未同步 */
@@ -94,6 +96,7 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
      * @param dto: 结算中心退票
      * @return
      */
+    @Transactional(rollbackFor = {Exception.class})
     @Override
     public void handlePaymentRefund (PayApplyReturnTicketDTO dto) {
         List<EmployeeReturnTicketDTO> detail = dto.getEmployeeReturnTicketDTOList();
@@ -110,6 +113,7 @@ public class EmployeePaymentServiceImpl extends ServiceImpl<EmployeePaymentApply
      * @param dto: 结算中心处理结果
      * @return
      */
+    @Transactional(rollbackFor = {Exception.class})
     @Override
     public void syncSettleCenterStatus (PayApplyPayStatusDTO dto) {
         employeePaymentApplyMapper.updateSyncStatus(dto.getBusinessPkId().intValue(),
