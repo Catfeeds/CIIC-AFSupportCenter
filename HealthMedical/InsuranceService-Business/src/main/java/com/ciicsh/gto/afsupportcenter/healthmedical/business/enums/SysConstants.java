@@ -13,7 +13,7 @@ public interface SysConstants {
     /**
      * 雇员付款常量
      */
-    enum PaymentJob {
+    enum JobConstants {
         AF_SYS_MANAGEMENT(1, "外企内控中心"),
         SYSTEM_ZH(1, "系统"),
         SYSTEM_EN(2, "system"),
@@ -30,7 +30,7 @@ public interface SysConstants {
 
         private int code;
         private String name;
-        PaymentJob(int code, String name) {
+        JobConstants(int code, String name) {
             this.code = code;
             this.name = name;
         }
@@ -44,7 +44,7 @@ public interface SysConstants {
 
 
     /**
-     * 雇员付款申请状态
+     * 申请状态
      */
     enum ApplyStatus {
         APPLY(1, "未审核"),
@@ -98,7 +98,7 @@ public interface SysConstants {
         private int id;
         private String name;
 
-        private BusinessId(int id, String name) {
+        BusinessId(int id, String name) {
             this.id = id;
             this.name = name;
         }
