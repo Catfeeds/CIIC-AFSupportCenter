@@ -26,13 +26,14 @@
     <!-- 关联查询映射结果 -->
     <resultMap id="JoinResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.PaymentApplyDetailBO">
         <result column="apply_batch_id" property="applyBatchId" />
-        <result column="business_id" property="businessId" />
+        <result column="business_id" property="businessItemId" />
         <result column="acceptance_id" property="paymentApplyId" />
         <result column="company_id" property="companyId" />
         <result column="company_name" property="companyName" />
         <result column="employee_id" property="employeeId" />
         <result column="employee_name" property="employeeName" />
         <result column="pay_amount" property="payAmount" />
+        <result column="tax_amount" property="taxAmount" />
         <result column="bank_account" property="employeeBankAccount" />
         <result column="account_name" property="bankAccountName" />
         <result column="bank_id" property="bankId" />
