@@ -7,14 +7,135 @@
 
     <resultMap id="BaseResultMapDTO" extends="BaseResultMap"
                type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmResignBO">
-
+        <result column="employee_id" property="employeeId" />
+        <result column="company_id" property="companyId" />
+        <result column="employ_style" property="employStyle" />
+        <result column="handle_type" property="handleType" />
+        <result column="employ_property" property="employProperty" />
+        <result column="employ_way" property="employWay" />
+        <result column="yuliu_doc_num" property="yuliuDocNum" />
+        <result column="doc_num" property="docNum" />
+        <result column="title" property="title" />
+        <result column="employee_name" property="employeeName"/>
+        <result column="id_num" property="idNum"/>
+        <result column="license_code" property="licenseCode" />
+        <result column="service_center" property="serviceCenter"/>
+        <result column="custom" property="custom"/>
+        <result column="employ_date" property="employDate" />
+        <result column="archive_place" property="archivePlace" />
+        <result column="storage_out_date" property="storageOutDate" />
+        <result column="doc_code" property="docCode" />
+        <result column="archive_place_additional" property="archivePlaceAdditional" />
+        <result column="archive_card_state" property="archiveCardState" />
     </resultMap>
 
     <select id="queryAmResign" resultMap="BaseResultMapDTO">
-        SELECT
-        transfer_way,transfer_remark,com_group_out_direct
-        FROM am_resign
 
+        SELECT
+        a.employee_id,
+        a.company_id,
+        b.employment_id,
+        b.employ_property,/**用工属性*/
+        b.employ_date,/**实际录用日期*/
+        b.handle_type,/**办理类型*/
+        f.resign_date,/**退工日期*/
+        f.resign_feedback1,/**退工反馈*/
+        f.resign_reason,/**退工原因*/
+        d.employee_id,/**雇员编号*/
+        d.employee_name,/**雇员姓名*/
+        d.id_num,/*证件号 */
+        e.title,/*公司名称 */
+        c.doc_num,
+        c.yuliu_doc_num,
+        c.archive_place,
+        c.storage_out_date
+        FROM
+        am_emp_task a
+        INNER JOIN
+        am_employment b
+        ON a.employee_id = b.employee_id and a.company_id = b.company_id
+        LEFT JOIN
+        am_resign  f
+        ON b.employment_id = f.employment_id
+        LEFT JOIN
+        emp_employee  d
+        on  b.employee_id = d.employee_id
+        LEFT JOIN
+        sal_company e
+        on e.company_id = a.company_id
+        LEFT JOIN
+        am_archive c on c.employment_id = b.employment_id
+        where a.task_category = '2'
+        <if test="taskStatus!=null">
+            and a.task_status = ${taskStatus}
+        </if>
+        <foreach collection="param" item="plid" open="" close="" separator="">
+            and  ${plid}
+        </foreach>
+
+    </select>
+
+    <select id="taskCount"  resultMap="BaseResultMapDTO">
+        SELECT
+        t.task_status,
+        COUNT(t.task_status) AS count
+        FROM
+        (
+        SELECT
+        a.task_status
+        FROM
+        am_emp_task a
+        INNER JOIN
+        am_employment b
+        ON a.employee_id = b.employee_id and a.company_id = b.company_id
+        LEFT JOIN
+        am_resign  f
+        ON b.employment_id = f.employment_id
+        LEFT JOIN
+        emp_employee  d
+        on  b.employee_id = d.employee_id
+        LEFT JOIN
+        sal_company e
+        on e.company_id = a.company_id
+        LEFT JOIN
+        am_archive c on c.employment_id = b.employment_id
+        where a.task_category = '2'
+        <foreach collection="param" item="plid" open="" close="" separator="">
+            and  ${plid}
+        </foreach>
+        )  t
+        GROUP BY
+        t.task_status
+    </select>
+
+    <select id="queryAmResignDetail" resultMap="BaseResultMapDTO" >
+        SELECT
+        a.employment_id,
+        a.company_id,
+        a.employee_id,
+        a.employ_date,
+        a.open_af_date,
+        a.handle_type,
+        b.storage_date,
+        b.yuliu_doc_num,
+        b.doc_num,
+        b.archive_place,
+        b.archive_place_additional,
+        b.archive_card_state,
+        b.doc_code,
+        b.diaodang_feedback,
+        c.*
+        FROM
+        am_employment a
+        INNER JOIN
+        am_archive b
+        ON a.company_id = b.company_id
+        AND a.employee_id = b.employee_id
+        LEFT JOIN am_resign c on c.employment_id = a.employment_id
+        where
+        a.company_id = #{companyId}
+        and
+        a.employee_id = #{employeeId}
     </select>
 
 </mapper>

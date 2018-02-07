@@ -3,11 +3,14 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmpBankRefundBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmpMemberBO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.UninsuredMedicalBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.UninsuredMedicalDTO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.CompanyConsultantRelation;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.UninsuredMedical;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -55,4 +58,42 @@ public interface UninsuredMedicalMapper extends BaseMapper<UninsuredMedical> {
      */
     List<UninsuredMedical> queryAcceptanceList(Page<UninsuredMedical> page, UninsuredMedicalDTO entity);
 
+    /**
+     * 更新状态
+     * @param umAcceptanceId
+     * @param status
+     * @param modifiedBy
+     * @return
+     */
+    Integer updateStatus(@Param("umAcceptanceId") Integer umAcceptanceId, @Param("status") Integer status, @Param("modifiedBy") String modifiedBy);
+
+    /**
+     * 更新受理单状态为已同步
+     * @param batchId
+     * @param businessId
+     * @param modifiedBy
+     * @return
+     */
+    Integer syncStatus(@Param("batchId") Integer batchId, @Param("businessId") Integer businessId, @Param("status") Integer status, @Param("remark") String remark, @Param("modifiedBy") String modifiedBy);
+
+    /**
+     * 查询已审核未同步申请
+     * @param
+     * @return
+     */
+    List<EmployeePaymentBO> selectAudited();
+
+    /**
+     * 查询退票申请
+     * @param
+     * @return
+     */
+    List<EmployeePaymentBO> selectRefund();
+
+    /**
+     * 查询信息有误未同步数据
+     * @param
+     * @return
+     */
+    List<EmpBankRefundBO> selectUnSync();
 }

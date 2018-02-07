@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAccountComRelationBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.AccountCompanyRelationOpt;
 
 import java.util.List;
 import java.util.Map;
@@ -31,5 +32,13 @@ public interface SsAccountComRelationService extends IService<SsAccountComRelati
      * @return
      */
     public List<SsAccountComRelation> queryByCond(Map cond);
+
+
+    /**
+     * 根据企业社保账户获取公司信息
+     * @param comAccountId 企业社保账户
+     * @return 返回企业社保账户获取公司信息
+     */
+    AccountCompanyRelationOpt getAccountCompanyRelationByAccountId(Long comAccountId);
 
 }

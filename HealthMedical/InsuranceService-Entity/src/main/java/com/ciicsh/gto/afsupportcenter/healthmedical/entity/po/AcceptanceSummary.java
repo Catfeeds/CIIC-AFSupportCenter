@@ -184,7 +184,7 @@ public class AcceptanceSummary extends Model<AcceptanceSummary> {
      * 保险公司到款日期
      */
     @TableField("insurance_company_money_date")
-    private Integer insuranceCompanyMoneyDate;
+    private Date insuranceCompanyMoneyDate;
     /**
      * 保险公司到款序号
      */
@@ -485,11 +485,11 @@ public class AcceptanceSummary extends Model<AcceptanceSummary> {
         this.insuranceCompanyMoney = insuranceCompanyMoney;
     }
 
-    public Integer getInsuranceCompanyMoneyDate() {
+    public Date getInsuranceCompanyMoneyDate() {
         return insuranceCompanyMoneyDate;
     }
 
-    public void setInsuranceCompanyMoneyDate(Integer insuranceCompanyMoneyDate) {
+    public void setInsuranceCompanyMoneyDate(Date insuranceCompanyMoneyDate) {
         this.insuranceCompanyMoneyDate = insuranceCompanyMoneyDate;
     }
 

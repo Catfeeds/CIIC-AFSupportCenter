@@ -1,8 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfArchiveBasePeriodBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComAccountBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpArchiveBo;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dto.EmpAccountImpXsl;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfEmpArchive;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao.HfEmpArchiveMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.HfEmpArchiveService;
@@ -31,7 +33,6 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
     @Autowired
     HfEmpArchiveMapper hfEmpArchiveMapper;
 
-
    public PageRows<HfEmpArchiveBo> queryEmpArchive(PageInfo pageInfo){
        HfEmpArchiveBo dto = pageInfo.toJavaObject(HfEmpArchiveBo.class);
        return  PageKit.doSelectPage(pageInfo, () ->  hfEmpArchiveMapper.queryEmpArchive(dto));
@@ -56,7 +57,7 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
         resultMap.put("listEmpTransfer",listEmpTransferBo);
       return resultMap;
     }
-    public boolean saveComAccunt(Map<String,String> updateDto){
+    public boolean saveComAccount(Map<String,String> updateDto){
         try{
             HfEmpArchive empArchive=new HfEmpArchive();
             empArchive.setEmpArchiveId(Long.valueOf(updateDto.get("empArchiveId")));
@@ -73,5 +74,22 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
         }
         return true;
     }
-
+    public String xlsImportEmpAccount(List<EmpAccountImpXsl> xls, String fileName){
+        StringBuffer retStr= new StringBuffer();
+        xls.forEach(
+            xlsRecord->{
+                Map map=hfEmpArchiveMapper.selectEmpByCardIdAndName(xlsRecord.getEmpName(),xlsRecord.getIdNum());
+                if (map==null){
+                    retStr.append(xlsRecord.getEmpName()).append("|");
+                    return;
+                }
+                HfEmpArchive hfEmpArchive=new HfEmpArchive();
+                hfEmpArchive.setHfEmpAccount(xlsRecord.getEmpAccount());
+                hfEmpArchive.setEmpArchiveId((Long) map.get("emp_archive_id"));
+                hfEmpArchiveMapper.updateById(hfEmpArchive);
+                System.out.println(xlsRecord.getEmpAccount());
+            }
+        );
+        return retStr.toString();
+    }
 }

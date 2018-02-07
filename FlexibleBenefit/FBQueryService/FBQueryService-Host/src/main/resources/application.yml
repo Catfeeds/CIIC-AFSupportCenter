@@ -1,53 +1,25 @@
 app:
-    id: 10006009
+  id: 10006009
 endpoints:
-    shutdown:
-        enabled: true
-        sensitive: false
+  shutdown:
+    enabled: true
+    sensitive: false
 eureka:
-    client:
-<<<<<<< HEAD
-      registerWithEureka: false
-      serviceUrl:
+  client:
+    registerWithEureka: false
+    serviceUrl:
 #        defaultZone: http://172.16.9.19:9600/eureka,http://172.16.9.20:9600/eureka,http://172.16.9.21:9600/eureka
-        defaultZone: http://172.16.9.24:9602/eureka
-=======
-      serviceUrl:
-        defaultZone: http://172.16.9.19:9600/eureka,http://172.16.9.20:9600/eureka,http://172.16.9.21:9600/eureka
->>>>>>> origin/feature_houwanhua_20180112
-    instance:
-      lease-renewal-interval-in-seconds: 40
-      lease-expiration-duration-in-seconds: 30
-      prefer-ip-address: true
-      instance-id: ${spring.cloud.client.ipAddress}:${server.port}
-log4j:
-    appender:
-        ServerDailyRollingFile: org.apache.log4j.DailyRollingFileAppender
-        ServerDailyRollingFile.Append: true
-        ServerDailyRollingFile.DatePattern: '''.''yyyy-MM-dd'
-        ServerDailyRollingFile.File: D://test/test.log
-        ServerDailyRollingFile.layout: org.apache.log4j.PatternLayout
-        ServerDailyRollingFile.layout.ConversionPattern: '%d{yyyy-MM-dd HH:mm:ss} [%t] %-5p [%c] - %m%n'
-        stdout: org.apache.log4j.ConsoleAppender
-        stdout.layout: org.apache.log4j.PatternLayout
-        stdout.layout.ConversionPattern: '%d yyyy-MM-dd HH:mm:ss %p [%c] %m%n'
-    logger:
-        com:
-            ibatis: DEBUG
-            ibatis.common.jdbc.ScriptRunner: DEBUG
-            ibatis.common.jdbc.SimpleDataSource: DEBUG
-            ibatis.sqlmap.engine.impl.SqlMapClientDelegate: DEBUG
-        java:
-            sql:
-                Connection: DEBUG
-                PreparedStatement: DEBUG
-                Statement: DEBUG
-    rootLogger: DEBUG,ServerDailyRollingFile,stdout
+      defaultZone: http://172.16.9.24:9602/eureka
+  instance:
+    lease-renewal-interval-in-seconds: 40
+    lease-expiration-duration-in-seconds: 30
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
 management:
-    context-path: /admin
-    port: 6018
-    security:
-        enabled: false
+  context-path: /admin
+  port: 6018
+  security:
+    enabled: false
 
 mybatis-plus:
   configuration:
@@ -70,32 +42,59 @@ mybatis-plus:
   mapper-locations: classpath*:mapper/*.xml
   type-aliases-package: com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po
 
-pagehelper:
-    reasonable: true
 server:
-    port: 6017
-    session-timeout: '# session timeout in seconds'
-    tomcat:
-        background-processor-delay: 30
-        basedir: /tmp
-        max-threads: 0
-        protocol-header: x-forwarded-proto
-        remote-ip-header: x-forwarded-for
+  port: 6017
+  # session timeout in seconds
+  session:
+    timeout: 300
+  tomcat:
+    background-processor-delay: 30
+    basedir: /tmp
+    max-threads: 0
+    protocol-header: x-forwarded-proto
+    remote-ip-header: x-forwarded-for
 spring:
-    application:
-        name: afsupportcenter-center-query-service
-    datasource:
-        driver-class-name: com.mysql.jdbc.Driver
-        tomcat:
-          initial-size: 10
-          max-active: 20
-          max-idle: 8
-          min-idle: 8
-        password: a111111
-        url: jdbc:mysql://172.16.9.15:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
-        username: root
-    jpa:
-        database: MYSQL
-        hibernate:
-            ddl-auto: update
-        show-sql: true
+  application:
+    name: afsupportcenter-center-query-service
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    tomcat:
+      initial-size: 10
+      max-active: 20
+      max-idle: 8
+      min-idle: 8
+    password: a111111
+    url: jdbc:mysql://172.16.9.15:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
+    username: root
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: 172.16.9.17:9092,172.16.9.18:9092
+          zk-nodes: 172.16.9.19:2181,172.16.9.20:2181,172.16.9.21:2181
+      bindings:
+        taskService-employeeEntry-useWorker-channel:
+          destination: taskService-employeeEntry-useWorker # topic name
+          group: ${spring.application.name}
+          content-type: application/json
+          consumer:
+            partitioned: true
+        taskService-employeeEntry-socialSecurity-channel:
+          destination: taskService-employeeEntry-socialSecurity # topic name
+          group: ${spring.application.name}
+          content-type: application/json
+          consumer:
+            partitioned: true
+        taskService-employeeEntry-contract-channel:
+          destination: taskService-employeeEntry-contract # topic name
+          group: ${spring.application.name}
+          content-type: application/json
+          consumer:
+            partitioned: true
+      instance-count: 2
+      instance-index: 0
+  jpa:
+    database: MYSQL
+    hibernate:
+      ddl-auto: update
+    show-sql: true

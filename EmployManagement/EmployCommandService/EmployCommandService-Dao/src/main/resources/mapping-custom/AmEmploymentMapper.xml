@@ -8,9 +8,7 @@
     </resultMap>
 
     <select id="queryAmEmployment" resultMap="BaseResultMapDTO">
-        SELECT
-         employment_id,employ_way,employ_property
-        FROM am_employment
+        SELECT  *  FROM  am_employment  where  employee_id = #{employeeId}
 
     </select>
 

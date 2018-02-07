@@ -113,6 +113,17 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             String ssSerial = business.selectMaxSsSerialByTaskId(empTaskId);
             dto.setEmpSsSerial(ssSerial);
         }
+        //查询该雇员是否还有其他已办理或者未办理的任务
+       EntityWrapper<SsEmpTask> ew =  new EntityWrapper<SsEmpTask>();
+        ew.where("employee_id={0}",dto.getEmployeeId())
+            .and("task_category={0}",dto.getTaskCategory())
+            .and("is_active=1").and("emp_task_id!={0}",dto.getEmpTaskId()).and("task_status=1");
+        List<SsEmpTask> ssEmpTaskList = business.selectList(ew);
+        if(ssEmpTaskList.size()>1){
+            dto.setIsHaveSameTask(1);
+        }else{
+            dto.setIsHaveSameTask(0);
+        }
         return JsonResultKit.of(dto);
     }
 

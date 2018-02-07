@@ -13,6 +13,9 @@ import java.io.Serializable;
  * <p>
  * 本地社保的雇员任务单
  * </p>
+ *
+ * @author xsj
+ * @since 2018-02-01
  */
 @TableName("ss_emp_task")
 public class SsEmpTask implements Serializable {
@@ -152,7 +155,7 @@ public class SsEmpTask implements Serializable {
 	@TableField("rejection_remark_date")
 	private LocalDate rejectionRemarkDate;
     /**
-     * 办理状态：1、未处理 2 、处理中(已办)  3 已完成(已做) 4、批退 5、不需处理
+     * 办理状态：1、未处理 2 、处理中(已办)  3 已完成(已做) 4、批退 5、不需处理 6 撤销
      */
 	@TableField("task_status")
 	private Integer taskStatus;

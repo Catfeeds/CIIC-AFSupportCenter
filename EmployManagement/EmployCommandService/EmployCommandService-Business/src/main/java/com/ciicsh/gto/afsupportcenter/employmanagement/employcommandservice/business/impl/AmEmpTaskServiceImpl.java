@@ -67,4 +67,14 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     public List<AmEmpTaskBO> queryAmEmpTaskById(String AmEmploymentId) {
         return   baseMapper.queryAmEmploymentById(AmEmploymentId);
     }
+
+    @Override
+    public List<AmEmpTaskBO> queryEmployeeHository(String employeeId) {
+        return baseMapper.queryEmployeeHository(employeeId);
+    }
+
+    @Override
+    public List<AmEmpTaskBO> queryCustom(String companyId) {
+        return   baseMapper.queryCustom(companyId);
+    }
 }

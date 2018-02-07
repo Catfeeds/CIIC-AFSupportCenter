@@ -19,4 +19,8 @@ public interface AmEmpTaskMapper extends BaseMapper<AmEmpTask> {
 
     List<AmEmpTaskBO>  queryAmEmploymentById(String AmEmploymentId);
 
+    List<AmEmpTaskBO>   queryEmployeeHository(String employeeId);
+
+    List<AmEmpTaskBO>  queryCustom(String companyId);
+
 }

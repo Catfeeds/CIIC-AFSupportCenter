@@ -5,13 +5,22 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.enti
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
  * 用工表 服务类
  * </p>
  */
+
+@Service
 public interface IAmResignService extends IService<AmResign> {
 
     PageRows<AmResignBO> queryAmResign(PageInfo pageInfo);
+
+    List<AmResignBO> taskCount(PageInfo pageInfo);
+
+    List<AmResignBO>  queryAmResignDetail(AmResignBO bo);
 }
