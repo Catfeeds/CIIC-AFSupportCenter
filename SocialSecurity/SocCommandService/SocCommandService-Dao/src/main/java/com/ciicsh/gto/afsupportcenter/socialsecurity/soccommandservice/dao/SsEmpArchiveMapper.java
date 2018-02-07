@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpArchiveBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpArchive;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.empSSSearchExportOpt;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -31,8 +32,8 @@ public interface SsEmpArchiveMapper extends BaseMapper<SsEmpArchive> {
      * @param ssEmpArchiveBO
      * @return
      */
-   public List<SsEmpArchiveBO> queryEmployee (SsEmpArchiveBO ssEmpArchiveBO);
-
+    List<SsEmpArchiveBO> queryEmployee (SsEmpArchiveBO ssEmpArchiveBO);
+    List<empSSSearchExportOpt> empSSSearchExport (SsEmpArchiveBO ssEmpArchiveBO);
     /**
      * 雇员详细信息查询
      * @param empArchiveId
