@@ -12,8 +12,13 @@ import org.springframework.context.annotation.Import;
 /**
  * Created by houwanhua on 2018/1/24.
  */
-@EnableFeignClients({
-    "com.ciicsh.gto.basicdataservice.api"
+@EnableFeignClients({"com.ciicsh.gto.sheetservice.api",
+    "com.ciicsh.gto.settlementcenter.payment.cmdapi",
+    "com.ciicsh.gto.settlementcenter.invoicecommandservice.api",
+    "com.ciicsh.gto.basicdataservice.api",
+    "com.ciicsh.gto.afcompanycenter.queryservice.api",
+    "com.ciicsh.gto.afcompanycenter.commandservice.api"
+//    "com.ciicsh.gto.employeecenter.apiservice.api"
 })
 @MapperScan("com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao")
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.housefund.siteservice"})

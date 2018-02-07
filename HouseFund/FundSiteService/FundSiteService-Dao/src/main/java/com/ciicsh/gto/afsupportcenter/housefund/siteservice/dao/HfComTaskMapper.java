@@ -11,4 +11,19 @@ Com：公司简写 Mapper 接口
  */
 public interface HfComTaskMapper extends BaseMapper<HfComTask> {
 
+    /**
+     * 保存企业任务单
+     *
+     * @param hfComTask
+     * @return
+     */
+    boolean insertComTask(HfComTask hfComTask);
+
+    /**
+     * 判断企业任务单是否存在
+     *
+     * @param hfComTask
+     * @return
+     */
+    int countComTaskByCond(HfComTask hfComTask);
 }
