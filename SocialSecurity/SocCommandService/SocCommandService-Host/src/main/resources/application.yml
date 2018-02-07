@@ -90,9 +90,10 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: "http://172.16.9.19:9602/eureka,http://172.16.9.20:9602/eureka,http://172.16.9.21:9602/eureka" #,http://172.16.9.21:9602/eureka
-                         #" #本地开发环境eureka,http://172.16.9.19:9602/eureka
- #"http://172.16.9.21:9602/eureka,http://172.16.9.20:9602/eureka,http://172.16.9.19:9602/eureka" #本地开发环境eureka
+      defaultZone: "http://172.16.9.24:9602/eureka,http://172.16.9.25:9602/eureka"  #SIT
+                     #"http://172.16.9.19:9602/eureka,http://172.16.9.20:9602/eureka,http://172.16.9.21:9602/eureka" #DEV
+                     #" #本地开发环境eureka,http://172.16.9.19:9602/eureka
+                     #"http://172.16.9.21:9602/eureka,http://172.16.9.20:9602/eureka,http://172.16.9.19:9602/eureka" #本地开发环境eureka
   instance:
     lease-expiration-duration-in-seconds: 40
     lease-renewal-interval-in-seconds: 30

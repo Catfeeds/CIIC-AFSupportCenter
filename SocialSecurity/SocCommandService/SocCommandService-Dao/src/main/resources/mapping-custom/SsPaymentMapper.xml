@@ -100,7 +100,7 @@
     <select id="getPaymentComList" resultMap="PaymentComDtoResultMap">
     SELECT pc.company_id,com.title,ca.bank_account_id,ca.bank_account,
     pc.refund_deducted,pc.adjust_deducted,pc.payment_month,pc.total_pay_amount,
-    ca.payment_way
+    CASE ca.payment_way WHEN 3 THEN  1 ELSE  0 END  AS 'payment_way'
     FROM ss_payment_com pc
     INNER JOIN ss_com_account ca ON ca.com_account_id = pc.com_account_id
     INNER JOIN sal_company com ON com.company_id = pc.company_id
