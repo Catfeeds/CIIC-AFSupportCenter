@@ -38,6 +38,13 @@ public interface SsComAccountService extends IService<SsComAccount> {
      */
     PageRows<SsComAccountBO> accountQuery(PageInfo pageInfo);
 
+
+    /**
+     * 获取企业社保账户信息导出信息
+     */
+    List<SsComAccountBO> getAccounts(SsComAccountBO accountBo);
+
+
     /**
      * 查询企业社保管理详细信息
      * @param comAccountId
