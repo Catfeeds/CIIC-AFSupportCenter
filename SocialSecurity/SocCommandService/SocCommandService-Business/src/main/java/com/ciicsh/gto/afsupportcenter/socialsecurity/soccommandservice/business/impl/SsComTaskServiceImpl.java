@@ -14,6 +14,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.Ss
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +55,11 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryNoProgressCompanyTask(ssComTaskBO));
     }
 
+    @Override
+    public List<SsComTaskBO> getNoProgressCompanyTasks(SsComTaskBO taskBo) {
+        return baseMapper.queryNoProgressCompanyTask(taskBo);
+    }
+
     /**
      * 获得企业任务单 处理中
      * xsj
@@ -65,6 +71,11 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
         //将json对象转 DTO对象
         SsComTaskBO ssComTaskBO = pageInfo.toJavaObject(SsComTaskBO.class);
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryProgressingCompanyTask(ssComTaskBO));
+    }
+
+    @Override
+    public List<SsComTaskBO> getProgressingCompanyTasks(SsComTaskBO taskBo) {
+        return baseMapper.queryProgressingCompanyTask(taskBo);
     }
 
     /**
@@ -196,7 +207,9 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
                 ssAccountRatioMapper.insert(ssAccountRatioList.get(0));
             }
             ssComTaskBO.setComAccountId(null);
-            baseMapper.updateById(ssComTaskBO);
+            SsComTask comTask = new SsComTask();
+            BeanUtils.copyProperties(ssComTaskBO,comTask);
+            baseMapper.updateById(comTask);
             result = true;
         } catch (Exception e) {
             result = false;

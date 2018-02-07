@@ -53,6 +53,11 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.accountQuery(dto));
     }
 
+    @Override
+    public List<SsComAccountBO> getAccounts(SsComAccountBO accountBo) {
+        return baseMapper.accountQuery(accountBo);
+    }
+
     /**
      * 查询企业社保管理详细信息
      *
