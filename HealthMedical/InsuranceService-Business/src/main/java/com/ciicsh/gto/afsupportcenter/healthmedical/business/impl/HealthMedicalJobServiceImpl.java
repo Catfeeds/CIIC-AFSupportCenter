@@ -204,9 +204,9 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
         List<PaymentApplyDetailBO> list = paymentApplyDetailMapper.selectRefundDetail(bo);
         if(!list.isEmpty()){
             if (SysConstants.BusinessId.SUPPLY_MEDICAL.equals(list.get(0).getBusinessItemId())) {
-                supplyMedicalAcceptanceMapper.updateStatus(list.get(0).getPaymentApplyId().toString(), SysConstants.SupplyMedicalStatus.REFUND.getCode(), SysConstants.JobConstants.SYSTEM_ZH.getName());
+                supplyMedicalAcceptanceMapper.updateStatus(list.get(0).getPaymentApplyId().toString(), SysConstants.SupplyMedicalStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName());
             } else {
-                uninsuredMedicalMapper.updateStatus(list.get(0).getPaymentApplyId(), SysConstants.UninsuredMedicalStatus.REFUND.getCode(), SysConstants.JobConstants.SYSTEM_ZH.getName());
+                uninsuredMedicalMapper.updateStatus(list.get(0).getPaymentApplyId(), SysConstants.UninsuredMedicalStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName());
             }
         }
     }

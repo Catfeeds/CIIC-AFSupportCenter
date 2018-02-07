@@ -179,6 +179,9 @@
             gtobusinessdb.hm_supply_medical_acceptance m
         SET
             m.status = #{status, jdbcType=INTEGER},
+        <if test="remark != null and remark != ''">
+            p.remark = #{remark},
+        </if>
             m.modified_by = #{modifiedBy, jdbcType=VARCHAR},
             m.modified_time= now()
         WHERE

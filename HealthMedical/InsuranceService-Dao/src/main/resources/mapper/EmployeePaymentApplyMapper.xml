@@ -224,6 +224,9 @@
             gtobusinessdb.cmy_af_employee_payment_apply p
         SET
             p.status = #{status, jdbcType=INTEGER},
+        <if test="remark != null and remark != ''">
+            p.remark = #{remark},
+        </if>
             p.modified_by = #{modifiedBy, jdbcType=VARCHAR},
             p.modified_time= now()
         WHERE
