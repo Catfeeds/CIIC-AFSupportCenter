@@ -34,11 +34,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.ciicsh.gt1.commonservice</groupId>
-            <artifactId>sheetservice-api</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-stream-kafka</artifactId>
         </dependency>

@@ -11,6 +11,10 @@ public interface SocialSecurityConst {
     public static final String PROCESS_PERIOD_KEY = "ProcessPeriod";
     public static final String PAY_BANK_KEY = "PayBank";
     public static final String FUND_TYPE_KEY = "FundType";
+    public static final String COM_PAYMENT_WAY_KEY = "ComPaymentWay";
+    public static final String COM_UKEY_STORE_KEY = "ComUkeyStore";
+    public static final String OPERATION_REMIND_KEY = "OperationRemind";
+    public static final String REPAIR_REASON_KEY = "RepairReason";
 
     //结算区县
     public static final Map<String, String> DISTRICT_MAP = new HashMap<String, String>() {
@@ -138,6 +142,50 @@ public interface SocialSecurityConst {
         {
             put("0", "基本公积金");
             put("1", "补充公积金");
+        }
+    };
+
+    // 企业公积金账户付款方式
+    public static final Map<String, String> COM_PAYMENT_WAY_MAP = new HashMap<String, String>() {
+        {
+            put("1", "自付");
+            put("2", "我司付款");
+            put("3", "垫付");
+        }
+    };
+
+    // 企业公积金U盾
+    public static final Map<String, String> COM_UKEY_STORE_MAP = new HashMap<String, String>() {
+        {
+            put("0", "无");
+            put("1", "有(中智代办)");
+        }
+    };
+
+    // 操作提示
+    public static final Map<String, String> OPERATION_REMIND_MAP = new HashMap<String, String>() {
+        {
+            put("1", "要做");
+            put("2", "中心");
+            put("3", "中智");
+            put("4", "原单位");
+            put("5", "外服");
+            put("6", "不做");
+            put("7", "外包");
+            put("8", "其他独立开户公司");
+        }
+    };
+
+    // 补缴类型
+    public static final Map<String, String> REPAIR_REASON_MAP = new HashMap<String, String>() {
+        {
+            put("1", "漏缴补缴");
+            put("2", "少缴补缴");
+            put("3", "欠款单位补缴");
+            put("4", "外省市转入补缴");
+            put("5", "错缴更正补缴");
+            put("6", "特殊补缴");
+            put("7", "账外补缴");
         }
     };
 }

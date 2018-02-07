@@ -25,10 +25,10 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
     private void dictInit() {
         List<DicItemDTO> dictItemList;
         try {
-            dictItemList = business.listByDicId(DictUtil.DICT_ID_SOC_LOCAL_TASK_CATEGORY);
-            Map<String, String> socLocalTaskCategoryMap = new HashMap<>();
-            dictItemList.stream().forEach((d) -> socLocalTaskCategoryMap.put(d.getDicItemValue(), d.getDicItemText()));
-            DictUtil.getInstance().putDictByTypeValue(DictUtil.TYPE_VALUE_SOC_LOCAL_TASK_CATEGORY, socLocalTaskCategoryMap, false);
+            dictItemList = business.listByDicId(DictUtil.DICT_ID_HF_LOCAL_TASK_CATEGORY);
+            Map<String, String> hfLocalTaskCategoryMap = new HashMap<>();
+            dictItemList.stream().forEach((d) -> hfLocalTaskCategoryMap.put(d.getDicItemValue(), d.getDicItemText()));
+            DictUtil.getInstance().putDictByTypeValue(DictUtil.TYPE_VALUE_HF_LOCAL_TASK_CATEGORY, hfLocalTaskCategoryMap, false);
 
             dictItemList = business.listByDicId(DictUtil.DICT_ID_SOCIAL_SECURITY_ACCOUNT_TYPE);
             Map<String, String> accountTypeMap = new HashMap<>();
@@ -43,6 +43,10 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.PROCESS_PERIOD_KEY, SocialSecurityConst.PROCESS_PERIOD_MAP, false);
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.FUND_TYPE_KEY, SocialSecurityConst.FUND_TYPE_MAP, false);
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.PAY_BANK_KEY, SocialSecurityConst.PAY_BANK_MAP, false);
+            DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.COM_PAYMENT_WAY_KEY, SocialSecurityConst.COM_PAYMENT_WAY_MAP, false);
+            DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.COM_UKEY_STORE_KEY, SocialSecurityConst.COM_UKEY_STORE_MAP, false);
+            DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.OPERATION_REMIND_KEY, SocialSecurityConst.OPERATION_REMIND_MAP, false);
+            DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.REPAIR_REASON_KEY, SocialSecurityConst.REPAIR_REASON_MAP, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
