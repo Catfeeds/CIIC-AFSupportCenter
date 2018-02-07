@@ -48,13 +48,14 @@
     <resultMap id="PartialResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmpBankRefundBO">
         <result column="payment_apply_id" property="applyId" />
         <result column="business_id" property="businessId" />
+        <result column="business_type" property="businessType" />
         <result column="company_id" property="companyId" />
         <result column="employee_id" property="employeeId" />
-        <result column="customer_Manager" property="customerManager" />
+        <result column="customer_manager" property="customerManager" />
         <result column="service_center" property="serviceCenter" />
-        <result column="bankcard_id" property="bankcardId" />
         <result column="pay_amount" property="payAmount" />
-        <result column="remark" property="remark" />
+        <result column="refund_date" property="refundDate" />
+        <result column="reason" property="reason" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -69,7 +70,7 @@
 
     <!-- 关联查询结果列 -->
     <sql id="Partial_Column_List">
-        p.payment_apply_id, 2 AS business_id, p.company_id, p.employee_id, p.pay_total_amount AS pay_amount, p.created_by AS customer_manager, "外企内控中心" AS service_center, "无银行卡" AS remark
+        p.payment_apply_id, 2 AS business_id, 1 AS business_type, p.company_id, p.employee_id, p.pay_total_amount AS pay_amount, p.created_by AS customer_manager, "外企内控中心" AS service_center, now() AS refund_date, "无卡" AS reason
     </sql>
 
     <!-- 需同步数据 -->
@@ -189,6 +190,19 @@
                     a.is_active = 1
                 AND
                     cbr.is_active = 1
+            UNION
+                SELECT
+                    r.apply_id
+                FROM
+                    gtobusinessdb.emp_bank_refund r
+                WHERE
+                    r.apply_id = p.payment_apply_id
+                AND
+                    r.business_id = 2
+                AND
+                    r.status = 0
+                AND
+                    r.is_active = 1
             )
         AND p. status = 3
         AND p.is_active = 1
