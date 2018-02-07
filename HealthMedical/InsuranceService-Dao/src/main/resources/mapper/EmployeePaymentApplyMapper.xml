@@ -34,6 +34,7 @@
         <result column="employee_id" property="employeeId" />
         <result column="employee_name" property="employeeName" />
         <result column="pay_amount" property="payAmount" />
+        <result column="tax_amount" property="taxAmount" />
         <result column="bank_account" property="bankAccount" />
         <result column="account_name" property="accountName" />
         <result column="bank_id" property="bankId" />
@@ -63,7 +64,7 @@
 
     <!-- 关联查询结果列 -->
     <sql id="Join_Column_List">
-        p.payment_apply_id, 2 AS business_id, p.company_id, p.company_name, p.employee_id, p.employee_name, p.pay_total_amount AS pay_amount, b.card_num AS bank_account, b.account_name, b.bankcard_type AS bank_id, b.bank_code, b.deposit_bank AS bank_name, b.province_code, b.city_code
+        p.payment_apply_id, 2 AS business_id, p.company_id, p.company_name, p.employee_id, p.employee_name, p.pay_total_amount AS pay_amount, p.tax_amount, b.card_num AS bank_account, b.account_name, b.bankcard_type AS bank_id, b.bank_code, b.deposit_bank AS bank_name, b.province_code, b.city_code
     </sql>
 
     <!-- 关联查询结果列 -->
