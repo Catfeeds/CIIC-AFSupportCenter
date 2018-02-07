@@ -418,10 +418,10 @@
         <!--<module>./JoyingInterface/JoyingInterfaceService-Entity</module>-->
         <!--<module>./JoyingInterface/JoyingInterfaceService-Host</module>-->
 
-        <!--<module>./Job/FundJob/FundJob-Host</module>
+        <module>./Job/FundJob/FundJob-Host</module>
         <module>./Job/FundJob/FundJob-Dao</module>
         <module>./Job/FundJob/FundJob-Business</module>
-        <module>./Job/FundJob/FundJob-Entity</module>-->
+        <module>./Job/FundJob/FundJob-Entity</module>
 
         <module>./Job/SocJob/SocJob-Host</module>
         <module>./Job/SocJob/SocJob-Dao</module>
