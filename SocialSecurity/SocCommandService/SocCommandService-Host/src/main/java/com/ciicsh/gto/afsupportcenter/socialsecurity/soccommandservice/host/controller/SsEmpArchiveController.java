@@ -7,6 +7,11 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBasePeriod;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.StatementExportArgs;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.StatementExportOpt;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.empSSSearchExportOpt;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -18,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +72,19 @@ public class SsEmpArchiveController extends BasicController<SsEmpArchiveService>
 
         return JsonResultKit.of(result);
     }
+
+    /**
+     * 雇员社保查询查询导出
+     */
+    @Log("雇员社保查询查询导出")
+    @RequestMapping("/empSSSearchExport")
+    public void empSSSearchExport(HttpServletResponse response,SsEmpArchiveBO ssEmpArchiveBO) {
+        Date date = new Date();
+        String fileNme = "雇员社保查询_"+ StringUtil.getDateString(date)+".xls";
+        List<empSSSearchExportOpt> opts = business.empSSSearchExport(ssEmpArchiveBO);
+        ExcelUtil.exportExcel(opts,empSSSearchExportOpt.class,fileNme,response);
+    }
+
 
     /**
      * 雇员详情信息查询

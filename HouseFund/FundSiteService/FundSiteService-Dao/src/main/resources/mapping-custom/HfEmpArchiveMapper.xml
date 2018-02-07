@@ -231,5 +231,9 @@
         and et.emp_archive_id
         in(select emp_archive_id from hf_emp_archive where emp_archive_id=#{empArchiveId} OR belong_emp_archive_id=#{empArchiveId} )
     </select>
-
+    <select id="selectEmpByCardIdAndName" resultType="java.util.Map">
+        SELECT ea.emp_archive_id,ea.hf_emp_account FROM
+        emp_employee emp INNER JOIN hf_emp_archive ea on ea.employee_id=emp.employee_id
+        WHERE ea.is_active=1 and emp.employee_name = #{empName} and emp.id_num= #{idNum};
+    </select>
 </mapper>

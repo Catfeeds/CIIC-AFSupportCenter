@@ -39,6 +39,8 @@
 		<result column="start_month" property="startMonth" />
 		<result column="expire_date_front" property="expireDateFront" />
 		<result column="settlement_area" property="settlementArea" />
+		<result column="legal_person" property="legalPerson" />
+		<result column="contact_address" property="contactAddress" />
 		<result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />
 		<result column="modified_time" property="modifiedTime" />

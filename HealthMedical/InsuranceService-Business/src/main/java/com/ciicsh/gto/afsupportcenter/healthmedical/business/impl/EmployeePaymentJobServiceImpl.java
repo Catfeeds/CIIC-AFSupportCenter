@@ -76,7 +76,7 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
         if (!audited.isEmpty()) {
             PaymentApplyBatchPO batchPO = this.addPaymentApply(audited);
             JsonResult jsonResult = this.syncPaymentData(batchPO);
-            System.out.println(JSON.toJSONString(jsonResult));
+            System.out.println("----------->> " + JSON.toJSONString(jsonResult));
             if(JsonResult.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())) {
                 this.updateSyncStatus(batchPO.getApplyBatchId());
             } else {
@@ -116,7 +116,7 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
     @Override
     public void syncSettleCenterStatus (PayApplyPayStatusDTO dto) {
         employeePaymentApplyMapper.syncStatus(dto.getBusinessPkId().intValue(),
-            dto.getBusinessType(),
+            SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(),
             dto.getPayStatus(),
             dto.getRemark(),
             SysConstants.JobConstants.SYSTEM_ZH.getName());
@@ -146,7 +146,7 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
         bo.setApplyBatchId(batchId);
         List<PaymentApplyDetailBO> list = paymentApplyDetailMapper.selectRefundDetail(bo);
         if(!list.isEmpty()){
-            employeePaymentApplyMapper.updateApplyStatus(list.get(0).getPaymentApplyId(), SysConstants.EmpApplyStatus.REFUND.getCode(), SysConstants.JobConstants.SYSTEM_ZH.getName());
+            employeePaymentApplyMapper.updateApplyStatus(list.get(0).getPaymentApplyId(), SysConstants.EmpApplyStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName());
         }
     }
     /**

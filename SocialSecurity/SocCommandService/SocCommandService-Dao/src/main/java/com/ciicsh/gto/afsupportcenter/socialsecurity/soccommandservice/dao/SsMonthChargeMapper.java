@@ -1,8 +1,11 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthChargeBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsMonthCharge;
+import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,4 +30,10 @@ public interface SsMonthChargeMapper extends BaseMapper<SsMonthCharge> {
     void updateMonthCharge(String ssMonth, String comAccountId, String empArchiveId);
 
     List<HashMap> selectNonStandardTaskCategory124(String ssMonth, String comAccountId);
+
+    void deleteOldDate(@Param("employeeId") String employeeId, @Param("paymentMonth") String paymentMonth, @Param("handleMonth") String handleMonth);
+
+    List<SsMonthCharge> selectOldDate(@Param("employeeId") String employeeId, @Param("paymentMonth") String paymentMonth, @Param("handleMonth") String handleMonth);
+
+    List<SsMonthChargeBO> selectTotalFromOld(@Param("employeeId")String employeeId, @Param("paymentMonth")String paymentMonth);
 }
