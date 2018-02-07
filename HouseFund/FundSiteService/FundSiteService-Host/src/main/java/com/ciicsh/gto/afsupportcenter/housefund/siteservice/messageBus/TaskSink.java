@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.messageBus;
+package com.ciicsh.gto.afsupportcenter.housefund.siteservice.messageBus;
 
 import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.messaging.MessageChannel;
@@ -49,19 +49,30 @@ public interface TaskSink {
     String PAY_APPLY_PAY_STATUS_STREAM = "pay-apply-pay-status-stream";
 
     /**
-     * 社保办理
+     * 公积金办理
      */
-    String SOCIAL_NEW = "social_new";
+    String FUND_NEW = "fund_new";
+    /**
+     * 补充公积金办理
+     */
+    String ADD_FUND_NEW = "add_fund_new";
+    /**
+     * 公积金停办
+     */
+    String FUND_STOP = "fund_stop";
+    /**
+     * 补充公积金停办
+     */
+    String ADD_FUND_STOP = "add_fund_stop";
 
     /**
-     * 社保停办
+     * 公积金补缴
      */
-    String SOCIAL_STOP = "social_stop";
-
+    String FUND_MAKE_UP = "fund_make_up";
     /**
-     * 社保补缴
+     * 补充公积金补缴
      */
-    String SOCIAL_MAKE_UP = "social_make_up";
+    String ADD_FUND_MAKE_UP = "add_fund_make_up";
 
     @Input(AF_EMP_IN)
     MessageChannel afEmpIn();

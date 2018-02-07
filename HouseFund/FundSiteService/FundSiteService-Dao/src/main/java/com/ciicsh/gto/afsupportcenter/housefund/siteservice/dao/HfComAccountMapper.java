@@ -1,7 +1,11 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao;
 
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfComAccount;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.api.dto.HfComAccountDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.api.dto.HfComAccountParamDto;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfComAccount;
+
+import java.util.List;
 
 /**
  * <p>
@@ -11,4 +15,11 @@ HF：House Fun Mapper 接口
  */
 public interface HfComAccountMapper extends BaseMapper<HfComAccount> {
 
+    /**
+     * 查询企业社保账户信息表
+     *
+     * @param dto
+     * @return
+     */
+    List<HfComAccountDTO> getHfComAccountList(HfComAccountParamDto dto) ;
 }

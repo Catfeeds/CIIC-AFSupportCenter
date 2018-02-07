@@ -1,10 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business;
 
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpTask;
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -22,4 +24,5 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
 
     List<AmEmpTaskBO> queryAmEmpTaskById(@Param("AmEmploymentId") String AmEmploymentId);
 
+    boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) throws Exception;
 }
