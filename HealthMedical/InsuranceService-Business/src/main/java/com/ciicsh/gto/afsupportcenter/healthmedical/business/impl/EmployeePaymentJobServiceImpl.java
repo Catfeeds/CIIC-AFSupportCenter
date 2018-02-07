@@ -116,7 +116,7 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
     @Override
     public void syncSettleCenterStatus (PayApplyPayStatusDTO dto) {
         employeePaymentApplyMapper.syncStatus(dto.getBusinessPkId().intValue(),
-            dto.getBusinessType(),
+            SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(),
             dto.getPayStatus(),
             dto.getRemark(),
             SysConstants.JobConstants.SYSTEM_ZH.getName());

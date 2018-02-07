@@ -139,15 +139,15 @@ public interface SysConstants {
         UNINSURED_MEDICAL(1, "未投保医疗理赔"),
         EMPLOYEE_PAYMENT(2, "雇员付款");
 
-        private int id;
+        private Integer id;
         private String name;
 
-        BusinessId(int id, String name) {
+        BusinessId(Integer id, String name) {
             this.id = id;
             this.name = name;
         }
 
-        public int getId() {
+        public Integer getId() {
             return this.id;
         }
 

@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 public class EmployeePaymentBO {
 
     /** 付款申请记录编号 */
-    private Integer paymentApplyId;
+    private String paymentApplyId;
     /** 业务ID */
     private Integer businessId;
     /** 公司编号 */
@@ -41,11 +41,11 @@ public class EmployeePaymentBO {
     /** 城市code */
     private String cityCode;
 
-    public Integer getPaymentApplyId() {
+    public String getPaymentApplyId() {
         return paymentApplyId;
     }
 
-    public void setPaymentApplyId(Integer paymentApplyId) {
+    public void setPaymentApplyId(String paymentApplyId) {
         this.paymentApplyId = paymentApplyId;
     }
 

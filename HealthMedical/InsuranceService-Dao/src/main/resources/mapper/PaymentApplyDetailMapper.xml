@@ -135,4 +135,14 @@
         UPDATE gtobusinessdb.hm_payment_apply_detail SET is_active = 0, modified_time = NOW(), modified_by = #{modifiedBy, jdbcType=VARCHAR} WHERE apply_batch_id = #{batchId, jdbcType=INTEGER}
     </update>
 
+    <select id="selectBusinessId" resultType="java.lang.Integer">
+        SELECT
+            d.business_id
+        FROM
+            gtobusinessdb.hm_payment_apply_detail d
+        WHERE
+            d.apply_batch_id = #{bo.applyBatchId}
+        LIMIT 1
+    </select>
+
 </mapper>

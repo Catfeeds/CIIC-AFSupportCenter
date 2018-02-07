@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 public class EmpBankRefundBO {
 
     /** 付款申请记录编号 */
-    private Integer applyId;
+    private String applyId;
     /** 业务ID */
     private Integer businessId;
     /** 公司编号 */
@@ -31,11 +31,11 @@ public class EmpBankRefundBO {
     /** 退票原因 */
     private String remark;
 
-    public Integer getApplyId() {
+    public String getApplyId() {
         return applyId;
     }
 
-    public void setApplyId(Integer applyId) {
+    public void setApplyId(String applyId) {
         this.applyId = applyId;
     }
 
