@@ -9,6 +9,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfEmpTask;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -23,4 +24,5 @@ public interface HfEmpArchiveMapper extends BaseMapper<HfEmpArchive> {
     HfArchiveBasePeriodBo viewEmpPeriod(@Param("empArchiveId")String empArchiveId, @Param("hfType")String hfType);
     List<HfEmpTask> listEmpTaskPeriod(@Param("empArchiveId")String empArchiveId,@Param("hfType") String hfType);
     List<HfEmpTask> listEmpTransfer (@Param("empArchiveId")String empArchiveId);
+    Map selectEmpByCardIdAndName(@Param("empName")String empName, @Param("idNum")String idNum);
 }
