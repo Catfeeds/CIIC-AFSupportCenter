@@ -68,6 +68,17 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
         return baseMapper.querySocialSecurityManageInfo(comAccountId);
     }
 
+
+    /**
+     * 根据企业社保账户ID查询企业社保信息
+     * @param comAccountId
+     * @return
+     */
+    @Override
+    public SsComAccount getAccountById(Long comAccountId) {
+        return baseMapper.selectById(comAccountId);
+    }
+
     /**
      * 查询企业社保账户信息表
      *
