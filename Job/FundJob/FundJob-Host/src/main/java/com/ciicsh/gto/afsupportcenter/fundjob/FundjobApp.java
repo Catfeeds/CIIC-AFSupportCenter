@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * Created by houwanhua on 2018/2/7.
  */
 @EnableScheduling
-@SpringBootApplication(scanBasePackages = {"com.ciicsh.gto"})
+@SpringBootApplication
 @EnableDiscoveryClient
 @MapperScan("com.ciicsh.gto.afsupportcenter.fundjob.dao")
 public class FundjobApp {
