@@ -255,6 +255,11 @@ public class HfEmpTask implements Serializable {
 	@TableField("business_interface_id")
 	private String businessInterfaceId;
     /**
+     * 前道传递的政策明细ID,用它调用系统中心获取进位方式
+     */
+	@TableField("policy_detail_id")
+	private Integer policyDetailId;
+    /**
      * TaskService 反馈的 task_id  流程下的任务ID
      */
 	@TableField("task_id")
@@ -638,6 +643,14 @@ public class HfEmpTask implements Serializable {
 		this.businessInterfaceId = businessInterfaceId;
 	}
 
+	public Integer getPolicyDetailId() {
+		return policyDetailId;
+	}
+
+	public void setPolicyDetailId(Integer policyDetailId) {
+		this.policyDetailId = policyDetailId;
+	}
+
 	public String getTaskId() {
 		return taskId;
 	}
@@ -733,6 +746,7 @@ public class HfEmpTask implements Serializable {
 			", feedbackDate=" + feedbackDate +
 			", operateDate=" + operateDate +
 			", businessInterfaceId=" + businessInterfaceId +
+			", policyDetailId=" + policyDetailId +
 			", taskId=" + taskId +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +

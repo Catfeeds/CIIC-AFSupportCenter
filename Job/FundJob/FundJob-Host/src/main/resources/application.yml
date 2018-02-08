@@ -1,6 +1,6 @@
 ###################  项目启动端口  ###################
 server:
-  port: 6013
+  port: 6028
   context-path: /
 
 spring:
@@ -14,15 +14,6 @@ spring:
     name: support-center-fund-job
   profiles:
     active: develop
-  cloud:
-    stream:
-      kafka:
-        binder:
-          brokers: 172.16.9.17:9092,172.16.9.18:9092
-          zk-nodes: 172.16.9.19:2181,172.16.9.20:2181,172.16.9.21:2181
-
-      instance-count: 2
-      instance-index: 1
 ###################  spring cloud eureka  ###################
 eureka:
   client:
@@ -63,7 +54,7 @@ xxl:
     admin:
       addresses: http://127.0.0.1:8080/xxl-job-admin
     executor:
-      appname: soc-job-executor
+      appname: fund-job-executor
       ip:
       port: 9999
       logpath: /data/applogs/xxl-job/jobhandler

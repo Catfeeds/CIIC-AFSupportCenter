@@ -13,9 +13,6 @@ import java.io.Serializable;
  * <p>
  * 本地社保的雇员任务单
  * </p>
- *
- * @author xsj
- * @since 2018-02-01
  */
 @TableName("ss_emp_task")
 public class SsEmpTask implements Serializable {
@@ -236,11 +233,19 @@ public class SsEmpTask implements Serializable {
      */
 	@TableField("business_interface_id")
 	private String businessInterfaceId;
+	@TableField("proc_inst_id")
+	private String procInstId;
+	@TableField("process_id")
+	private String processId;
     /**
      * TaskService 反馈的 TaskId
      */
 	@TableField("task_id")
 	private String taskId;
+	@TableField("task_def_key")
+	private String taskDefKey;
+	@TableField("pro_def_key")
+	private String proDefKey;
     /**
      * 前道传递的政策明细ID,用它调用系统中心获取计算方式
      */
@@ -609,12 +614,44 @@ public class SsEmpTask implements Serializable {
 		this.businessInterfaceId = businessInterfaceId;
 	}
 
+	public String getProcInstId() {
+		return procInstId;
+	}
+
+	public void setProcInstId(String procInstId) {
+		this.procInstId = procInstId;
+	}
+
+	public String getProcessId() {
+		return processId;
+	}
+
+	public void setProcessId(String processId) {
+		this.processId = processId;
+	}
+
 	public String getTaskId() {
 		return taskId;
 	}
 
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;
+	}
+
+	public String getTaskDefKey() {
+		return taskDefKey;
+	}
+
+	public void setTaskDefKey(String taskDefKey) {
+		this.taskDefKey = taskDefKey;
+	}
+
+	public String getProDefKey() {
+		return proDefKey;
+	}
+
+	public void setProDefKey(String proDefKey) {
+		this.proDefKey = proDefKey;
 	}
 
 	public Integer getPolicyDetailId() {
@@ -710,7 +747,11 @@ public class SsEmpTask implements Serializable {
 			", inDate=" + inDate +
 			", outDate=" + outDate +
 			", businessInterfaceId=" + businessInterfaceId +
+			", procInstId=" + procInstId +
+			", processId=" + processId +
 			", taskId=" + taskId +
+			", taskDefKey=" + taskDefKey +
+			", proDefKey=" + proDefKey +
 			", policyDetailId=" + policyDetailId +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
