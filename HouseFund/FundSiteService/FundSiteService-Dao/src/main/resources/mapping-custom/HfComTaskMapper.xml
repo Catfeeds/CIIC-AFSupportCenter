@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao.HfComTaskMapper">
+
+    <!--判断企业任务单是否存在-->
+    <select id="countComTaskByCond" resultType="int">
+        SELECT
+        COUNT(1)
+        FROM hf_com_task sct
+        where sct.is_active = 1
+        AND sct.com_account_id = #{comAccountId}
+        AND sct.task_category=#{taskCategory}
+        AND sct.task_status in (0,1,2)
+    </select>
+
+    <insert id="insertComTask" useGeneratedKeys="true" keyProperty="comTaskId">
+        insert into
+        hf_com_task
+       (com_account_id,
+        com_account_class_id,
+        company_id,
+        hf_type,
+        task_category,
+        submitter_id,
+        submitter_name,
+        submitter_dept_id,
+        submitter_dept_name,
+        submit_time,
+        submit_remark,
+        handle_user_id,
+        handle_user_name,
+        strart_handle_date,
+        send_check_date,
+        finish_date,
+        task_status,
+        material_sign_record,
+        transfer_date,
+        remark,
+        com_account_name,
+        payment_way,
+        close_day,
+        hf_com_account,
+        com_start_month,
+        end_month,
+        end_type,
+        task_id,
+        is_active,
+        created_time,
+        modified_time,
+        created_by,
+        modified_by) VALUES
+        (#{comAccountId},#{comAccountClassId},#{companyId},#{hfType},#{taskCategory},#{submitterId},#{submitterName},#{submitterDeptId},
+        #{submitterDeptName},#{submitTime},#{submitRemark},#{handleUserId},#{handleUserName},#{strartHandleDate},#{sendCheckDate},#{finishDate},#{taskStatus},
+        #{materialSignRecord},#{transferDate},#{remark},#{comAccountName},#{paymentWay},#{closeDay},#{hfComAccount},#{comStartMonth},#{endMonth},
+        #{endType},#{taskId},#{isActive},#{createdTime},#{modifiedTime},#{createdBy},#{modifiedBy})
+    </insert>
+</mapper>

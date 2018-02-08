@@ -3,6 +3,8 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.controller;
 
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.HfEmpArchiveService;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpArchiveBo;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dto.EmpAccountImpXsl;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -11,9 +13,12 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -51,8 +56,26 @@ public class HfEmpArchiveController extends  BasicController<HfEmpArchiveService
     @ResponseBody
     public JsonResult<Boolean> saveEmpAccount(@RequestParam Map<String,String> updateDto){
 
-        boolean result=business.saveComAccunt(updateDto);
+        boolean result=business.saveComAccount(updateDto);
         return JsonResultKit.of(result);
     }
+
+    @RequestMapping(value = "/xlsImportEmpAccount",consumes = {"multipart/form-data"})
+    @ResponseBody
+    public JsonResult<String> xlsImportEmpAccount(MultipartFile file) throws Exception {
+        List<EmpAccountImpXsl> optList = ExcelUtil.importExcel(file,0,1,EmpAccountImpXsl.class,false);
+        JsonResult<String> json = new JsonResult<String>();
+        String result = business.xlsImportEmpAccount(optList,file.getOriginalFilename());
+        if(result==null){
+            json.setCode(0);
+            json.setMessage("导入成功!");
+        } else {
+            json.setCode(1);
+            json.setMessage("导入失败! " + result);
+        }
+        return json;
+    }
+
+
 }
 

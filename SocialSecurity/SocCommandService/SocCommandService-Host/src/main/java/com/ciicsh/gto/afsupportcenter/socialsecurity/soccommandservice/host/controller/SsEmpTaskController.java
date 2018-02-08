@@ -6,13 +6,17 @@ import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.CommonApiUtils;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpArchiveBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskRollInBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskRollOutBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAnnualAdjustEmployeeDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.*;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.empSSSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.dto.emptask.EmpTaskBatchParameter;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -33,10 +37,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * <p>
@@ -65,6 +66,14 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     public JsonResult<List<SsEmpTaskBO>> employeeOperatorQuery(PageInfo pageInfo) {
         PageRows<SsEmpTaskBO> pageRows = business.employeeOperatorQuery(pageInfo);
         return JsonResultKit.ofPage(pageRows);
+    }
+
+    @RequestMapping("/employeeOperatorQueryExport")
+    public void employeeOperatorQueryExport(HttpServletResponse response,PageInfo pageInfo) {
+        Date date = new Date();
+        String fileNme = "雇员社保查询_"+ StringUtil.getDateString(date)+".xls";
+        PageRows<SsEmpTaskBO> pageRows= business.employeeOperatorQuery(pageInfo);
+        ExcelUtil.exportExcel(pageRows.getRows(),SsEmpTaskBO.class,fileNme,response);
     }
 
     /**

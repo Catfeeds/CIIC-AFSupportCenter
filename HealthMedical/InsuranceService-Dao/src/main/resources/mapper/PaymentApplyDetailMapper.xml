@@ -16,6 +16,7 @@
 		<result column="bank_name" property="bankName" />
 		<result column="bank_code" property="bankCode" />
 		<result column="pay_amount" property="payAmount" />
+        <result column="tax_amount" property="taxAmount" />
 		<result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />
 		<result column="modified_time" property="modifiedTime" />
@@ -26,13 +27,14 @@
     <!-- 关联查询映射结果 -->
     <resultMap id="JoinResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.PaymentApplyDetailBO">
         <result column="apply_batch_id" property="applyBatchId" />
-        <result column="business_id" property="businessId" />
+        <result column="business_id" property="businessItemId" />
         <result column="acceptance_id" property="paymentApplyId" />
         <result column="company_id" property="companyId" />
         <result column="company_name" property="companyName" />
         <result column="employee_id" property="employeeId" />
         <result column="employee_name" property="employeeName" />
         <result column="pay_amount" property="payAmount" />
+        <result column="tax_amount" property="taxAmount" />
         <result column="bank_account" property="employeeBankAccount" />
         <result column="account_name" property="bankAccountName" />
         <result column="bank_id" property="bankId" />
@@ -48,7 +50,7 @@
     </sql>
 
     <sql id="Join_Column_List">
-        p.acceptance_id, p.business_id, p.company_id, p.company_name, p.employee_id, p.employee_name, p.pay_amount, p.bank_account, p.account_name, p.bank_id, p.bank_code, p.bank_name, p.province_name, p.city_name
+        p.acceptance_id, p.business_id, p.company_id, p.company_name, p.employee_id, p.employee_name, p.pay_amount, p.tax_amount, p.bank_account, p.account_name, p.bank_id, p.bank_code, p.bank_name, p.province_name, p.city_name
     </sql>
 
     <insert id="insertDetails" parameterType="java.util.List">
@@ -67,6 +69,7 @@
             bank_code,
             bank_name,
             pay_amount,
+            tax_amount,
             province_name,
             city_name,
             is_active,
@@ -90,6 +93,7 @@
                 #{item.bankCode},
                 #{item.bankName},
                 #{item.payAmount},
+                #{item.taxAmount},
                 #{item.provinceCode},
                 #{item.cityCode},
                 1,
@@ -134,5 +138,15 @@
     <update id="updateActiveByBachId">
         UPDATE gtobusinessdb.hm_payment_apply_detail SET is_active = 0, modified_time = NOW(), modified_by = #{modifiedBy, jdbcType=VARCHAR} WHERE apply_batch_id = #{batchId, jdbcType=INTEGER}
     </update>
+
+    <select id="selectBusinessId" resultType="java.lang.Integer">
+        SELECT
+            d.business_id
+        FROM
+            gtobusinessdb.hm_payment_apply_detail d
+        WHERE
+            d.apply_batch_id = #{bo.applyBatchId}
+        LIMIT 1
+    </select>
 
 </mapper>

@@ -32,7 +32,7 @@ public interface SsEmpTaskService extends IService<SsEmpTask> {
      * @return
      */
     PageRows<SsEmpTaskBO> employeeOperatorQuery(PageInfo pageInfo);
-
+  //  List<SsEmpTaskBO> empOperatorQueryExport(SsEmpTaskBO ssEmpTaskBO);
     /**
      * 雇员日常操作查询(盘片转入转出)
      * @param pageInfo

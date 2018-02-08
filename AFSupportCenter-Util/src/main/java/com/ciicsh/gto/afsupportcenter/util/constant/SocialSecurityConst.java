@@ -8,6 +8,14 @@ import java.util.Map;
  */
 public interface SocialSecurityConst {
 
+    public static final String PROCESS_PERIOD_KEY = "ProcessPeriod";
+    public static final String PAY_BANK_KEY = "PayBank";
+    public static final String FUND_TYPE_KEY = "FundType";
+    public static final String COM_PAYMENT_WAY_KEY = "ComPaymentWay";
+    public static final String COM_UKEY_STORE_KEY = "ComUkeyStore";
+    public static final String OPERATION_REMIND_KEY = "OperationRemind";
+    public static final String REPAIR_REASON_KEY = "RepairReason";
+
     //结算区县
     public static final Map<String, String> DISTRICT_MAP = new HashMap<String, String>() {
         {
@@ -20,7 +28,8 @@ public interface SocialSecurityConst {
         }
     };
 
-    //账户类型
+    //账户类型(已创建字典，请从字典服务取得)
+    @Deprecated
     public static final Map<String, String> ACCOUNT_TYPE_MAP = new HashMap<String, String>() {
         {
             put("1", "中智大库");
@@ -29,7 +38,8 @@ public interface SocialSecurityConst {
         }
     };
 
-    //社保账户状态
+    //社保账户状态(已创建字典，请从字典服务取得)
+    @Deprecated
     public static final Map<String, String> ACCOUNT_STATUS_MAP = new HashMap<String, String>() {
         {
             put("0", "初始");
@@ -39,7 +49,8 @@ public interface SocialSecurityConst {
         }
     };
 
-    //办理状态
+    //办理状态(已创建字典，请从字典服务取得)
+    @Deprecated
     public static final Map<String, String> PROCESS_STATUS_MAP = new HashMap<String, String>() {
         {
             put("1", "未处理");
@@ -49,7 +60,9 @@ public interface SocialSecurityConst {
             put("5", "不需处理");
         }
     };
-    //任务类型
+
+    //任务类型(已创建字典，请从字典服务取得)
+    @Deprecated
     public static final Map<String, String> TASK_TYPE_MAP = new HashMap<String, String>() {
         {
             put("1", "新进");
@@ -92,7 +105,8 @@ public interface SocialSecurityConst {
         }
     };
 
-    // 人员属性
+    // 人员属性(已创建字典，请从字典服务取得)
+    @Deprecated
     public static final Map<String, String> EMP_CLASSIFY_MAP = new HashMap<String, String>() {
         {
             put("1", "本地");
@@ -100,6 +114,78 @@ public interface SocialSecurityConst {
             put("3", "外籍三险");
             put("4", "外籍五险");
             put("5", "延迟退休人员");
+        }
+    };
+
+    // 处理周期
+    public static final Map<String, String> PROCESS_PERIOD_MAP = new HashMap<String, String>() {
+        {
+            put("1", "本月处理");
+            put("2", "下月处理");
+        }
+    };
+
+    // 缴费银行
+    public static final Map<String, String> PAY_BANK_MAP = new HashMap<String, String>() {
+        {
+            put("0", "徐汇");
+            put("1", "长宁");
+            put("2", "浦东");
+            put("3", "卢湾");
+            put("4", "静安");
+            put("5", "黄浦");
+        }
+    };
+
+    // 公积金类型
+    public static final Map<String, String> FUND_TYPE_MAP = new HashMap<String, String>() {
+        {
+            put("0", "基本公积金");
+            put("1", "补充公积金");
+        }
+    };
+
+    // 企业公积金账户付款方式
+    public static final Map<String, String> COM_PAYMENT_WAY_MAP = new HashMap<String, String>() {
+        {
+            put("1", "自付");
+            put("2", "我司付款");
+            put("3", "垫付");
+        }
+    };
+
+    // 企业公积金U盾
+    public static final Map<String, String> COM_UKEY_STORE_MAP = new HashMap<String, String>() {
+        {
+            put("0", "无");
+            put("1", "有(中智代办)");
+        }
+    };
+
+    // 操作提示
+    public static final Map<String, String> OPERATION_REMIND_MAP = new HashMap<String, String>() {
+        {
+            put("1", "要做");
+            put("2", "中心");
+            put("3", "中智");
+            put("4", "原单位");
+            put("5", "外服");
+            put("6", "不做");
+            put("7", "外包");
+            put("8", "其他独立开户公司");
+        }
+    };
+
+    // 补缴类型
+    public static final Map<String, String> REPAIR_REASON_MAP = new HashMap<String, String>() {
+        {
+            put("1", "漏缴补缴");
+            put("2", "少缴补缴");
+            put("3", "欠款单位补缴");
+            put("4", "外省市转入补缴");
+            put("5", "错缴更正补缴");
+            put("6", "特殊补缴");
+            put("7", "账外补缴");
         }
     };
 }

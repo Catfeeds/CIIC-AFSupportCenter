@@ -27,12 +27,24 @@ public interface SsComTaskService extends IService<SsComTask> {
      */
     public PageRows<SsComTaskBO>  queryNoProgressCompanyTask(PageInfo pageInfo);
 
+
+    /**
+     * 获得企业任务单未处理导出数据
+     */
+    List<SsComTaskBO> getNoProgressCompanyTasks(SsComTaskBO taskBo);
+
     /**
      * 获得企业任务单 处理中
      * @param pageInfo
      * @return
      */
     public PageRows<SsComTaskBO> queryProgressingCompanyTask(PageInfo pageInfo);
+
+
+    /**
+     * 获得企业任务单处理中导出数据
+     */
+    List<SsComTaskBO> getProgressingCompanyTasks(SsComTaskBO taskBo);
 
     /**
      * 获得企业任务单 已完成

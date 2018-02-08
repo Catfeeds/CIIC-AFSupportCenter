@@ -8,12 +8,16 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmp
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpArchiveService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.StatementExportOpt;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.empSSSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -66,7 +70,18 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
 
         return PageKit.doSelectPage(pageInfo,() -> baseMapper.queryEmployee(ssEmpArchiveBO));
     }
+    /**
+     * 雇员查询导出
+     * @param ssEmpArchiveBO
+     * @return
+     */
+    @Override
+    public List<empSSSearchExportOpt> empSSSearchExport(SsEmpArchiveBO ssEmpArchiveBO) {
+        //将json对象转 BO对象
+       // SsEmpArchiveBO ssEmpArchiveBO = pageInfo.toJavaObject(SsEmpArchiveBO.class);
 
+        return baseMapper.empSSSearchExport(ssEmpArchiveBO);
+    }
     @Override
     public SsEmpArchiveBO queryEmployeeDetailInfo(String empArchiveId) {
 

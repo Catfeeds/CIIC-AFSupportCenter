@@ -35,6 +35,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -205,7 +206,7 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
                 map.put("ssAccount", ssAnnualAdjustAccount.getSsAccount());
                 map.put("printDate", printDate);
 
-                List<Map<String, Object>> mapList = new ArrayList<>();
+                List<Map<String, Object>> mapList = null;
                 ssAnnualAdjustAccountEmpDTO.setAccountStatus(i + 1);
                 list = ssAnnualAdjustAccountEmpService.queryAnnualAdjustAccountEmp(ssAnnualAdjustAccountEmpDTO);
 
@@ -213,14 +214,15 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
                     map.put("empTotal", 0);
                 } else {
                     map.put("empTotal", list.size());
+                    mapList = new ArrayList<>();
                     for (SsAnnualAdjustAccountEmpBO bo : list) {
                         Map<String, Object> lm = new HashMap<>();
                         lm.put("ssSerial", bo.getSsSerial());
                         lm.put("employeeName", bo.getEmployeeName());
-                        lm.put("idNum", bo.getIdNum());
+                        lm.put("idNum", bo.getIdNum() == null ? "" : bo.getIdNum());
                         lm.put("emp", "");
-                        lm.put("paymentMonths", bo.getPaymentMonths());
-                        lm.put("avgMonthSalary", bo.getAvgMonthSalary());
+                        lm.put("paymentMonths", bo.getPaymentMonths() == null ? "" : bo.getPaymentMonths());
+                        lm.put("avgMonthSalary", bo.getAvgMonthSalary() == null ? "" : bo.getAvgMonthSalary());
                         mapList.add(lm);
                     }
                 }
@@ -232,9 +234,12 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
             map.put("comAccountName", ssAnnualAdjustAccount.getComAccountName());
             map.put("ssAccount", ssAnnualAdjustAccount.getSsAccount());
             map.put("printDate", printDate);
-            map.put("accountAvgMonthSalary", boList.get(0).getAccountAvgMonthSalary());
-            map.put("allTotalAmount", boList.get(0).getAccountSalaryAmount());
-            map.put("allEmpTotal", boList.get(0).getAccountEmpCount());
+            BigDecimal accountAvgMonthSalary = boList.get(0).getAccountAvgMonthSalary();
+            BigDecimal allTotalAmount = boList.get(0).getAccountSalaryAmount();
+            BigDecimal allEmpTotal = boList.get(0).getAccountEmpCount();
+            map.put("accountAvgMonthSalary", accountAvgMonthSalary == null? "" : accountAvgMonthSalary);
+            map.put("allTotalAmount", allTotalAmount == null? "" : allTotalAmount);
+            map.put("allEmpTotal", allEmpTotal == null? "" : allEmpTotal);
             alMap.put(2, map);
 
             TemplateExportParams params = new TemplateExportParams("/template/ssAccount_reportYear.xls", 0, 1, 2);
