@@ -119,7 +119,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             .and("task_category={0}",dto.getTaskCategory())
             .and("is_active=1").and("emp_task_id!={0}",dto.getEmpTaskId()).and("task_status=1");
         List<SsEmpTask> ssEmpTaskList = business.selectList(ew);
-        if(ssEmpTaskList.size()>1){
+        if(ssEmpTaskList.size()>0){
             dto.setIsHaveSameTask(1);
         }else{
             dto.setIsHaveSameTask(0);
