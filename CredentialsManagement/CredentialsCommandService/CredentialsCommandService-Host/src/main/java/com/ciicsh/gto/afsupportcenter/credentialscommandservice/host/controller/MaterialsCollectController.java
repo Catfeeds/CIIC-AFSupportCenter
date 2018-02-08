@@ -37,7 +37,7 @@ public class MaterialsCollectController {
     @GetMapping("/find/{taskId}")
     public JsonResult getMaterials(@PathVariable("taskId") String taskId) {
         TaskMaterial taskMaterial = taskMaterialService.selectByTaskId(taskId);
-        HashMap<String, List<String>> resultMap = new HashMap<>();
+        HashMap<String, List<String>> resultMap = new HashMap<>(37);
         List list00 = new ArrayList<>();
         List list11 = new ArrayList<>();
         List list12 = new ArrayList<>();
