@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.fundjob.dao.HfPaymentMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.fundjob.entity.HfPayment">
+        <id column="payment_id" property="paymentId" />
+        <result column="payment_batch_num" property="paymentBatchNum" />
+        <result column="total_application_amonut" property="totalApplicationAmonut" />
+        <result column="total_emp_count" property="totalEmpCount" />
+        <result column="payment_month" property="paymentMonth" />
+        <result column="payment_state" property="paymentState" />
+        <result column="create_payment_user" property="createPaymentUser" />
+        <result column="create_payment_date" property="createPaymentDate" />
+        <result column="finance_payment_date" property="financePaymentDate" />
+        <result column="hf_account_type" property="hfAccountType" />
+        <result column="total_emp" property="totalEmp" />
+        <result column="apply_remark" property="applyRemark" />
+        <result column="rejection_remark" property="rejectionRemark" />
+        <result column="rejection_his" property="rejectionHis" />
+        <result column="request_user" property="requestUser" />
+        <result column="request_date" property="requestDate" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+    <select id="getByPaymentId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        payment_account_id,
+        payment_id,
+        com_account_id,
+        payment_bank,
+        payment_status,
+        total_com_pay_amount,
+        total_emp_pay_amount,
+        is_active,
+        created_time,
+        modified_time,
+        created_by,
+        modified_by
+        FROM
+        hf_payment_account SPC
+        WHERE
+        SPC.is_active = '1'
+        AND SPC.payment_id = #{paymentId}
+    </select>
+
+</mapper>

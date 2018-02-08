@@ -226,7 +226,7 @@ public class KafkaReceiver {
             res = false;
             logger.error(e.getMessage(), e);
         }
-        logger.info("收到消息 客服中心调用更新企业任务单: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
+        logger.info("收到消息 客服中心调用更新公积金企业任务单: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
     }
 
     /**
