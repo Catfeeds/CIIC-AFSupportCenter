@@ -51,6 +51,15 @@ public interface SsComAccountService extends IService<SsComAccount> {
      */
     SsComAccountBO querySocialSecurityManageInfo(String comAccountId);
 
+
+    /**
+     * 根据企业社保账户ID查询企业社保信息
+     * @param comAccountId
+     * @return
+     */
+    SsComAccount getAccountById(Long comAccountId);
+
+
     /**
      * 查询企业社保账户信息 接口用
      *
