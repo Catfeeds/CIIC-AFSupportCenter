@@ -20,12 +20,6 @@
             <artifactId>fundjob-business</artifactId>
             <version>1.0.0</version>
         </dependency>
-        <dependency>
-            <groupId>com.ciicsh.gt1</groupId>
-            <artifactId>redis-manager</artifactId>
-            <version>0.0.3</version>
-        </dependency>
-
     </dependencies>
 
     <build>

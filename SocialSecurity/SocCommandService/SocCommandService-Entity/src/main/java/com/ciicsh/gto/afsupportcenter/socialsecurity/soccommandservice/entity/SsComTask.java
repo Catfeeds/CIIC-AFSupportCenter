@@ -12,9 +12,6 @@ import java.io.Serializable;
  * <p>
  * 独立库客户任务单
  * </p>
- *
- * @author xsj
- * @since 2018-02-01
  */
 @TableName("ss_com_task")
 public class SsComTask implements Serializable {

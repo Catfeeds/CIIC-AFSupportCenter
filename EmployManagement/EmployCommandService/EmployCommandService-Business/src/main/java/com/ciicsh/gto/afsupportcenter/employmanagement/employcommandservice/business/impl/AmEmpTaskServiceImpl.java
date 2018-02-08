@@ -90,7 +90,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
         AmEmpTask amEmpTask = new AmEmpTask();
         amEmpTask.setTaskId(taskMsgDTO.getTaskId());
-        //TODO 调用刘玉T接口传入PROCESSID返回数据
+        //TODO 调用刘玉庭接口传入taskMsgDTO.getMissionId()返回数据
+
 //        amEmpTask.setCompanyId(companyDto.getCompanyId());
 //        amEmpTask.setEmployeeId(companyDto.getEmployeeId());
         amEmpTask.setSubmitterId("system");
