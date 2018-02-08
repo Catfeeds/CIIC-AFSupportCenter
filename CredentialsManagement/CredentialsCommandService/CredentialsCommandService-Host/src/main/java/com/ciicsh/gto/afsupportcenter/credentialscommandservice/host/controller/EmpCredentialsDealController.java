@@ -149,7 +149,7 @@ public class EmpCredentialsDealController {
             task.setCredentialsType(Integer.parseInt(taskDetialDTO.getCredentialsType()));
         }
         if (StringUtils.isNotBlank(taskDetialDTO.getCredentialsDealType())) {
-            task.setCredentialsType(Integer.parseInt(taskDetialDTO.getCredentialsDealType()));
+            task.setCredentialsDealType(Integer.parseInt(taskDetialDTO.getCredentialsDealType()));
         }
         //TODO
         if (taskDetialDTO.getTaskId() == null) {
