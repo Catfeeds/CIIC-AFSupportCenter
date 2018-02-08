@@ -46,26 +46,22 @@ public interface TaskSink {
     /**
      * 财务中心付款申请返回
      */
-    String PAY_APPLY_PAY_STATUS_STREAM =  "pay-apply-pay-status-stream";
+    String PAY_APPLY_PAY_STATUS_STREAM = "pay-apply-pay-status-stream";
 
     /**
      * 社保办理
      */
-    String SOCIAL_NEW="social_new";
+    String SOCIAL_NEW = "social_new";
 
     /**
      * 社保停办
      */
-    String SOCIAL_STOP="social_stop";
+    String SOCIAL_STOP = "social_stop";
 
     /**
      * 社保补缴
      */
-    String SOCIAL_MAKE_UP="social_make_up";
-
-//    fund_make_up
-//        add_fund_make_up
-
+    String SOCIAL_MAKE_UP = "social_make_up";
 
     @Input(AF_EMP_IN)
     MessageChannel afEmpIn();

@@ -163,7 +163,7 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
             month = cal.get(Calendar.MONTH) + 1;
         }
         //拼接字符
-        String paymentMonth = year + "" + month;
+        String paymentMonth = year + "" + (String.valueOf(month).length()==1?"0"+month : month);
         json.setData(paymentMonth);
 
         return json;

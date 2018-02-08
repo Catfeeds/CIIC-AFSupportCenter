@@ -14,10 +14,6 @@
     <artifactId>fundjob-dao</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0</version>
-    <build>
-        <finalName>gt1.afsupportcenter.fundjob-dao</finalName>
-    </build>
-
 
     <dependencies>
         <dependency>
@@ -26,5 +22,9 @@
             <version>1.0.0</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <finalName>gt1.afsupportcenter.fundjob-dao</finalName>
+    </build>
 
 </project>

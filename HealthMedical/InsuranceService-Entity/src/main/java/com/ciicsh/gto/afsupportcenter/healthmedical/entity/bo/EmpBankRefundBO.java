@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * <p>
@@ -16,6 +17,8 @@ public class EmpBankRefundBO {
     private String applyId;
     /** 业务ID */
     private Integer businessId;
+    /** 客户业务类型 */
+    private Integer businessType;
     /** 公司编号 */
     private String companyId;
     /** 雇员编号 */
@@ -28,8 +31,10 @@ public class EmpBankRefundBO {
     private String bankcardId;
     /** 支付金额 */
     private BigDecimal payAmount;
+    /** 退票日期 */
+    private Date refundDate;
     /** 退票原因 */
-    private String remark;
+    private String reason;
 
     public String getApplyId() {
         return applyId;
@@ -45,6 +50,14 @@ public class EmpBankRefundBO {
 
     public void setBusinessId(Integer businessId) {
         this.businessId = businessId;
+    }
+
+    public Integer getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(Integer businessType) {
+        this.businessType = businessType;
     }
 
     public String getCompanyId() {
@@ -95,12 +108,20 @@ public class EmpBankRefundBO {
         this.payAmount = payAmount;
     }
 
-    public String getRemark() {
-        return remark;
+    public Date getRefundDate() {
+        return refundDate;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setRefundDate(Date refundDate) {
+        this.refundDate = refundDate;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     @Override
@@ -114,7 +135,7 @@ public class EmpBankRefundBO {
             ", serviceSenter='" + serviceCenter + '\'' +
             ", bankcardId='" + bankcardId + '\'' +
             ", payAmount=" + payAmount +
-            ", remark='" + remark + '\'' +
+            ", remark='" + reason + '\'' +
             '}';
     }
 }
