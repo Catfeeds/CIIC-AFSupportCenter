@@ -147,6 +147,8 @@ where   task_category = '1'
         task_category = '1'
         and
         b.employee_id = #{employeeId}
+        AND
+        b.company_id = #{companyId}
     </select>
 
     <select id="queryEmployeeHository" resultMap="BaseResultMapDTO">

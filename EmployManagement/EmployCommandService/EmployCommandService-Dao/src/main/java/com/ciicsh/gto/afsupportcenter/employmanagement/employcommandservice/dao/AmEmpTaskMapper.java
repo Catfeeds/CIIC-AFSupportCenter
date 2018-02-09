@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.enti
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -17,7 +18,7 @@ public interface AmEmpTaskMapper extends BaseMapper<AmEmpTask> {
 
     List<AmEmpTaskBO>   taskCount(AmEmpTaskBO amEmpTaskBO);
 
-    List<AmEmpTaskBO>  queryAmEmploymentById(String AmEmploymentId);
+    List<AmEmpTaskBO>  queryAmEmploymentById(Map<String,Object> param);
 
     List<AmEmpTaskBO>   queryEmployeeHository(String employeeId);
 

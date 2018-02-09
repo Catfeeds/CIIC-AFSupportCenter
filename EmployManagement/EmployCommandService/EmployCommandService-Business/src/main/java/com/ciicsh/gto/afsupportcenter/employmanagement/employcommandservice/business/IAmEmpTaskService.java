@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -20,7 +21,7 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
 
     List<AmEmpTaskBO> taskCount(PageInfo pageInfo);
 
-    List<AmEmpTaskBO> queryAmEmpTaskById(@Param("AmEmploymentId") String AmEmploymentId);
+    List<AmEmpTaskBO> queryAmEmpTaskById(Map<String,Object> param);
 
     List<AmEmpTaskBO>  queryEmployeeHository(String employeeId);
 

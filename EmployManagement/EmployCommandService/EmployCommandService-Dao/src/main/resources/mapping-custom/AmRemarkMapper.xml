@@ -8,7 +8,7 @@
     </resultMap>
 
      <select id="queryAmRemark" resultMap="BaseResultMapDTO">
-         SELECT  *  from am_remark where employee_id = #{employeeId}
+         SELECT  *  from am_remark where employee_id = #{employeeId}  and remark_type = #{remarkType}
      </select>
 
     <delete id="deleteAmRemark">
