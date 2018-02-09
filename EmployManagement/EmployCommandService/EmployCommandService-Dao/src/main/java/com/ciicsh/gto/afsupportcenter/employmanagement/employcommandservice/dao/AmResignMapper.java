@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.enti
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -14,5 +15,5 @@ import java.util.List;
 public interface AmResignMapper extends BaseMapper<AmResign> {
     List<AmResignBO> queryAmResign(AmResignBO amResignBO);
     List<AmResignBO> taskCount(AmResignBO amResignBO);
-    List<AmResignBO> queryAmResignDetail(AmResignBO amResignBO);
+    List<AmResignBO> queryAmResignDetail(Map<String,Object> param);
 }

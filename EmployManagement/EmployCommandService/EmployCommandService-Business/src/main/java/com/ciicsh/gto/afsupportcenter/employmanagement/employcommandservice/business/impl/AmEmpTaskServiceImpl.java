@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -70,8 +71,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     }
 
     @Override
-    public List<AmEmpTaskBO> queryAmEmpTaskById(String AmEmploymentId) {
-        return baseMapper.queryAmEmploymentById(AmEmploymentId);
+    public List<AmEmpTaskBO> queryAmEmpTaskById(Map<String, Object> param) {
+        return baseMapper.queryAmEmploymentById(param);
     }
 
     /**

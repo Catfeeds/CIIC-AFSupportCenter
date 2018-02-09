@@ -11,4 +11,15 @@
         select * from am_archive where  employee_id = #{employeeId}
     </select>
 
+    <select id="queryAmArchiveList" resultMap="BaseResultMapDTO">
+        select  *  from am_archive
+        where  1=1
+        <if test="employeeId!=null">
+           and  employee_id = #{employeeId}
+        </if>
+        <if test="employmentId!=null">
+            and  employment_id = #{employmentId}
+        </if>
+    </select>
+
 </mapper>

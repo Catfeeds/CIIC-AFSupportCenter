@@ -5,6 +5,21 @@
 	<!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMapDTO" extends="BaseResultMap"
                type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmploymentBO">
+        <result column="yuliu_doc_num" property="yuliuDocNum" />
+        <result column="doc_num" property="docNum" />
+        <result column="resign_handle_date" property="resignHandleDate" />
+        <result column="return_doc_date" property="returnDocDate" />
+        <result column="resign_feedback1" property="resignFeedback1" />
+        <result column="resign_feedback2" property="resignFeedback2" />
+        <result column="employ_feedback" property="employFeedback" />
+        <result column="storage_out_date" property="storageOutDate" />
+        <result column="archive_place" property="archivePlace" />
+        <result column="return_doc_date" property="returnDocDate" />
+        <result column="resign_handle_date" property="resignHandleDate" />
+        <result column="employ_feedback" property="employFeedback" />
+        <result column="task_status" property="taskStatus" />
+        <result column="task_category" property="taskCategory" />
+        <result column="archive_id" property="archiveId" />
     </resultMap>
 
     <select id="queryAmEmployment" resultMap="BaseResultMapDTO">
@@ -23,6 +38,7 @@
         c.diaodang_feedback,/*调档反馈 */
         c.employ_feedback_opt_date,/*用工反馈操作日期 */
         c.diaodang_feedback_opt_date,/*调档反馈操作日期 */
+        c.archive_id,
         d.employee_name,/*雇员姓名 */
         d.id_num,/*证件号 */
         e.title,/*公司名称 */
@@ -49,4 +65,93 @@
 
     </select>
 
+    <select id="queryAmArchive" resultMap="BaseResultMapDTO">
+        SELECT
+        b.employment_id,
+        b.employee_id,
+        b.company_id,
+        /**用工属性*/
+        b.employ_property,
+        /**用工属性*/
+        b.employ_way,
+        b.handle_type,
+        c.doc_num,
+        c.yuliu_doc_num,
+        c.archive_place,
+        /**出库日期*/
+        c.storage_out_date,
+        c.archive_id,
+        b.employ_date,
+        /**退工日期*/
+        f.resign_date,
+        /**用工反馈*/
+        c.employ_feedback,
+        f.resign_feedback1,
+        f.resign_feedback2,
+        /**退档日期*/
+        f.return_doc_date,
+        /**退工送办日期*/
+        f.resign_handle_date
+        FROM
+        am_employment b
+        LEFT JOIN am_emp_task a on  a.company_id = b.company_id and a.employee_id = b.employee_id
+        LEFT JOIN am_archive c ON b.employment_id = c.employment_id
+        LEFT JOIN am_resign f ON f.employment_id = b.employment_id
+        where  1= 1
+        <if test="taskStatus!=null">
+            and  a.task_status = ${taskStatus}
+        </if>
+        <if test="taskCategory!=null">
+            and  a.task_category = ${taskCategory}
+        </if>
+        <foreach collection="param" item="plid" open="" close="" separator="">
+            and  ${plid}
+        </foreach>
+    </select>
+
+    <select id="taskCountEmployee"  resultMap="BaseResultMapDTO">
+        SELECT
+        t.task_status,
+        COUNT(t.task_status) AS count
+        FROM
+        (
+        SELECT
+        a.task_status
+        FROM
+        am_employment b
+        LEFT JOIN am_emp_task a on  a.company_id = b.company_id and a.employee_id = b.employee_id
+        LEFT JOIN am_archive c ON b.employment_id = c.employment_id
+        LEFT JOIN am_resign f ON f.employment_id = b.employment_id
+        WHERE
+        task_category = '1'
+        <foreach collection = "param" item = "plid"  open=""  close=""  separator="" >
+            AND  ${ plid }
+        </foreach >
+        )  t
+        GROUP BY
+        t.task_status
+    </select>
+
+    <select id="taskCountResign"  resultMap="BaseResultMapDTO">
+        SELECT
+        t.task_status,
+        COUNT(t.task_status) AS count
+        FROM
+        (
+        SELECT
+        a.task_status
+        FROM
+        am_employment b
+        LEFT JOIN am_emp_task a on  a.company_id = b.company_id and a.employee_id = b.employee_id
+        LEFT JOIN am_archive c ON b.employment_id = c.employment_id
+        LEFT JOIN am_resign f ON f.employment_id = b.employment_id
+        WHERE
+        task_category = '2'
+        <foreach collection = "param" item = "plid"  open=""  close=""  separator="" >
+            AND  ${ plid }
+        </foreach >
+        )  t
+        GROUP BY
+        t.task_status
+    </select>
 </mapper>
