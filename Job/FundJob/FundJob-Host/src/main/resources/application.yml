@@ -1,6 +1,6 @@
 #项目启动端口
 server:
-  port: 6028
+  port: 6029
   context-path: /
 
 spring:
