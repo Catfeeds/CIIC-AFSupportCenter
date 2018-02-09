@@ -88,7 +88,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
 
         dto.setDepartmentName("福利保障部公积金");
         dto.setIsFinancedept(0);
-        dto.setBusinessType(1);//业务类型
+        dto.setBusinessType(2);//业务类型
         dto.setPayWay(3);//转账
         dto.setPayAmount(hfPayment.getTotalApplicationAmonut());//申请支付金额
         dto.setReceiver("公积金中心");//收款方名称
