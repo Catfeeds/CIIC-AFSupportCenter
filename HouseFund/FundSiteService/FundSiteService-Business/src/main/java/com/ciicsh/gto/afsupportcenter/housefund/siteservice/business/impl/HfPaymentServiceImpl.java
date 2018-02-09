@@ -79,6 +79,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         List<PayapplyCompanyProxyDTO> paymentComList = baseMapper.getPaymentComList(hfPayment.getPaymentId()
                 .longValue(),
             hfPayment.getPaymentMonth());
+        //TODO SQL修改
         List<PayapplyEmployeeProxyDTO> paymentEmpList = baseMapper.getPaymentEmpList(hfPayment.getPaymentId()
                 .longValue(),
             hfPayment.getPaymentMonth());
