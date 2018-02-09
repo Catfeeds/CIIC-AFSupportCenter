@@ -313,12 +313,6 @@
             <artifactId>apiservice-api</artifactId>
             <version>1.0.0</version>
         </dependency>
-
-		<dependency>
-            <groupId>com.ciicsh.gt1</groupId>
-            <artifactId>redis-manager</artifactId>
-            <version>0.0.3</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -395,11 +389,11 @@
                 <module>./EmployManagement/EmployQueryService/EmployQueryService-Business</module>
                 <module>./EmployManagement/EmployQueryService/EmployQueryService-Entity</module>-->
 
-                <module>./EmployManagement/EmployCommandService/EmployCommandService-Host</module>
-                <module>./EmployManagement/EmployCommandService/EmployCommandService-Api</module>
-                <module>./EmployManagement/EmployCommandService/EmployCommandService-Dao</module>
-                <module>./EmployManagement/EmployCommandService/EmployCommandService-Business</module>
-                <module>./EmployManagement/EmployCommandService/EmployCommandService-Entity</module>
+        <module>./EmployManagement/EmployCommandService/EmployCommandService-Host</module>
+        <module>./EmployManagement/EmployCommandService/EmployCommandService-Api</module>
+        <module>./EmployManagement/EmployCommandService/EmployCommandService-Dao</module>
+        <module>./EmployManagement/EmployCommandService/EmployCommandService-Business</module>
+        <module>./EmployManagement/EmployCommandService/EmployCommandService-Entity</module>
 
         <module>./FlexibleBenefit/FlexibleBenefit-Entity</module>
         <module>./FlexibleBenefit/FBQueryService/FBQueryService-Api</module>

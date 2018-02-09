@@ -74,15 +74,16 @@
     </select>
     <!-- 删除当月 某月 非标数据-->
     <update id="deleteOldDate">
-        DELETE  FROM ss_month_charge WHERE employee_id=#{employeeId} AND ss_month_belong =#{paymentMonth} AND ss_month =#{handleMonth}
+        DELETE  FROM ss_month_charge WHERE employee_id=#{employeeId} AND ss_month_belong =#{paymentMonth} AND ss_month =#{handleMonth} AND cost_category =#{costCategory}
     </update>
     <select id="selectOldDate" resultMap="BaseResultMap">
-       SELECT * FROM ss_month_charge WHERE employee_id=#{employeeId} AND ss_month_belong =#{paymentMonth} AND ss_month =#{handleMonth}
+       SELECT * FROM ss_month_charge WHERE employee_id=#{employeeId} AND ss_month_belong =#{paymentMonth} AND ss_month =#{handleMonth} AND cost_category =#{costCategory}
     </select>
 
     <!--查询总额 之前做了相减 则当月已办肯定没有-->
     <select id="selectTotalFromOld" parameterType="string" resultMap="ResultMap">
         SELECT
+        smc.month_charge_id,
         smc.total_amount,
         smc.ss_month_belong,
         smc.ss_month,
@@ -95,7 +96,10 @@
         FROM
         ss_month_charge  smc
         JOIN ss_month_charge_item smci ON smc.month_charge_id = smci.month_charge_id AND smci.is_active=1
-        WHERE smc.employee_id =#{employeeId} AND smc.ss_month_belong=#{paymentMonth} AND smc.is_active=1
+        WHERE smc.employee_id =#{employeeId}
+        AND smc.ss_month_belong=#{paymentMonth}
+         AND smc.is_active=1
+         AND smc.cost_category = 9
     </select>
 
 </mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.fundjob.dao.HfPaymentAccountMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.fundjob.entity.HfPaymentAccount">
+        <id column="payment_account_id" property="paymentAccountId" />
+        <result column="payment_id" property="paymentId" />
+        <result column="com_account_id" property="comAccountId" />
+        <result column="payment_bank" property="paymentBank" />
+        <result column="payment_status" property="paymentStatus" />
+        <result column="total_com_pay_amount" property="totalComPayAmount" />
+        <result column="total_emp_pay_amount" property="totalEmpPayAmount" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
+
+    <!--根据接口返回的数据批量更新客户的支付状态-->
+    <update id="updatePaymentAcc" parameterType="java.util.HashMap">
+        UPDATE hf_payment_account SET
+        payment_status=#{paymentStatus},modified_by=#{modifiedBy},modified_time=sysdate()
+        where com_account_id=#{comAccountId}
+    </update>
+
+</mapper>

@@ -126,6 +126,10 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         ssEmpTask.setIsChange(isChange);
         ssEmpTask.setTaskFormContent(JSON.toJSONString(dto));
 
+        if (dto.getNowAgreement() != null && dto.getNowAgreement().getSocialRuleId() != null) {
+            ssEmpTask.setPolicyDetailId(dto.getNowAgreement().getSocialRuleId().intValue());
+        }
+        ssEmpTask.setProcessId(taskMsgDTO.getProcessId());
         ssEmpTask.setTaskStatus(1);
         ssEmpTask.setActive(true);
         ssEmpTask.setModifiedBy(companyDto.getCreatedBy());

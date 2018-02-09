@@ -6,6 +6,6 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 
 public interface HfPaymentService extends IService<HfPayment> {
 
-//    JsonResult<String> doReviewdePass(HfPayment hfPayment);
+    JsonResult<String> doReviewdePass(HfPayment hfPayment);
 
 }
