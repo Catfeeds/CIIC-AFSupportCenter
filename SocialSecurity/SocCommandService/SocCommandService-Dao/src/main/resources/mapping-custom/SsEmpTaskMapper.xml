@@ -136,12 +136,12 @@
             </when>
             <when test="taskStatus == -1">
                 AND et.submit_time <![CDATA[ <= ]]>
-                str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',ca.expire_date),'%Y-%m-%d') AND
+                str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',if(isnull(ca.expire_date),26,ca.expire_date)),'%Y-%m-%d') AND
                 et.task_status NOT IN (2,3,4)
             </when>
             <when test="taskStatus == -2">
                 AND et.submit_time >
-                str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',ca.expire_date),'%Y-%m-%d') AND
+                str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',if(isnull(ca.expire_date),26,ca.expire_date)),'%Y-%m-%d') AND
                 et.task_status NOT IN (2,3,4)
             </when>
             <otherwise>

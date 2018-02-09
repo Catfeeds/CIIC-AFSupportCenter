@@ -114,16 +114,25 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @Log("用工办理查询")
     @RequestMapping("/employeeDetailInfoQuery")
-    public JsonResult employeeDetailInfoQuery(String employeeId,String companyId) {
+    public JsonResult employeeDetailInfoQuery(String employeeId,String companyId,String remarkType) {
 
-        List<AmEmpTaskBO> list = business.queryAmEmpTaskById(employeeId);
+        AmEmpTaskBO bo = new AmEmpTaskBO();
+        bo.setEmployeeId(employeeId);
+        bo.setCompanyId(companyId);
+        Map<String,Object> param = new HashMap<>();
+        param.put("employeeId",employeeId);
+        param.put("companyId",companyId);
 
+        List<AmEmpTaskBO> list = business.queryAmEmpTaskById(param);
         AmEmpTaskBO amEmpTaskBO = list.get(0);
+
         //用工材料
         PageInfo pageInfo = new PageInfo();
         JSONObject params = new JSONObject();
         params.put("employeeId",employeeId);
+        params.put("remarkType",remarkType);
         pageInfo.setParams(params);
+
         PageRows<AmEmpMaterialBO> result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
         //用工信息
         PageRows<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(pageInfo);
@@ -131,13 +140,13 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchive(employeeId);
         //用工备注
         PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);
-        //雇佣历史查询
-//        List<AmEmpTaskBO> listHistory = business.queryEmployeeHository(employeeId);
         //客户信息
         List<AmEmpTaskBO>  listCompany = business.queryCustom(companyId);
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
+        //雇员信息
         resultMap.put("amEmpTaskBO",amEmpTaskBO);
+
         resultMap.put("materialList",result);
 
         if(null!= resultEmployList&&resultEmployList.getRows().size()>0)
@@ -152,10 +161,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         {
             resultMap.put("amRemarkBo",amRemarkBOPageRows);
         }
-//        if(null!=listHistory)
-//        {
-//            resultMap.put("listHistory",listHistory);
-//        }
+
         if(null!=listCompany&&listCompany.size()>0)
         {
             resultMap.put("company",listCompany.get(0));
@@ -221,12 +227,15 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
              bo.setModifiedTime(now);
              bo.setCreatedBy("sys");
              bo.setModifiedBy("sys");
-             data.add(bo);
+             if(bo.getRemarkId()==null){
+                 data.add(bo);
+             }
+
          }
 
         boolean result = false;
         try {
-            result = amRemarkService.insertBatch(list);
+            result = amRemarkService.insertOrUpdateBatch(data);
         } catch (Exception e) {
 
         }

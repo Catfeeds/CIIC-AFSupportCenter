@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -63,7 +64,7 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
     }
 
     @Override
-    public List<AmResignBO> queryAmResignDetail(AmResignBO bo) {
-        return  baseMapper.queryAmResignDetail(bo);
+    public List<AmResignBO> queryAmResignDetail(Map<String,Object> param) {
+        return  baseMapper.queryAmResignDetail(param);
     }
 }

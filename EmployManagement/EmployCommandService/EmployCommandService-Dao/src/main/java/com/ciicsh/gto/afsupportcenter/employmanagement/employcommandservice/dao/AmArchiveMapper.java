@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.enti
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -14,5 +15,7 @@ import java.util.List;
 public interface AmArchiveMapper extends BaseMapper<AmArchive> {
 
     List<AmArchiveBO>  queryAmArchive(String employeeId);
+
+    List<AmArchiveBO>  queryAmArchiveList(Map<String,Object>  param);
 
 }

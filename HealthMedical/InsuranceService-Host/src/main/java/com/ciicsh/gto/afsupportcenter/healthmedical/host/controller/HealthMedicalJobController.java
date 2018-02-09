@@ -4,6 +4,7 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.business.HealthMedicalJobSer
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +35,8 @@ public class HealthMedicalJobController {
      * @param
      * @return
      */
-    @GetMapping(value = "/handleSupplyMedical")
+    @Scheduled(cron = "10 0/3 * * * *")
+//    @GetMapping(value = "/handleSupplyMedical")
     public void handleSupplyMedical() {
         try {
             logger.info("+++++++++++++++++++++++++++ 补充医疗受理任务: 开始 +++++++++++++++++++++++++++ ");
@@ -52,7 +54,8 @@ public class HealthMedicalJobController {
      * @param
      * @return
      */
-    @GetMapping(value = "/handleUninsuredMedical")
+    @Scheduled(cron = "20 0/3 * * * *")
+//    @GetMapping(value = "/handleUninsuredMedical")
     public void handleUninsuredMedical() {
         try {
             logger.info("+++++++++++++++++++++++++++ 未投保医疗任务: 开始 +++++++++++++++++++++++++++ ");

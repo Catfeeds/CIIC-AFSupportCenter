@@ -114,10 +114,10 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
                 }
 //
                 //生成非标准明细
-                List<SsEmpBasePeriodExt> empBasePeriodExts = convertNewEmpBasePeriodExt(accountComExt.getComAccountId(),paymentMonth);
-                if(null != empBasePeriodExts && empBasePeriodExts.size()>0){
-                    empBasePeriodExts.forEach(ext->this.createNoStandardMonthChange(ext));
-                }
+//                List<SsEmpBasePeriodExt> empBasePeriodExts = convertNewEmpBasePeriodExt(accountComExt.getComAccountId(),paymentMonth);
+//                if(null != empBasePeriodExts && empBasePeriodExts.size()>0){
+//                    empBasePeriodExts.forEach(ext->this.createNoStandardMonthChange(ext));
+//                }
 
 
                 // 获取除退账之外的雇员社保明细扩展信息

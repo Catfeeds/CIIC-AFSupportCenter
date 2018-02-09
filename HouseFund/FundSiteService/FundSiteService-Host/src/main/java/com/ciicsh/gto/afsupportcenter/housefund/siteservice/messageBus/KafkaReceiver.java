@@ -78,7 +78,7 @@ public class KafkaReceiver {
             || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
             boolean bolRes = checkDupSsEmpTask(taskMsgDTO);
             if (bolRes) {
-                res = insertHfEmpTaskTb(taskMsgDTO, 5);
+                res = insertHfEmpTaskTb(taskMsgDTO, 7);
                 logger.info("收到消息 公积金雇员终止: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
             }
         }
@@ -98,7 +98,7 @@ public class KafkaReceiver {
             || TaskSink.ADD_FUND_MAKE_UP.equals(taskMsgDTO.getTaskType())) {
             boolean bolRes = checkDupSsEmpTask(taskMsgDTO);
             if (bolRes) {
-                res = insertHfEmpTaskTb(taskMsgDTO, 4);
+                res = insertHfEmpTaskTb(taskMsgDTO, 6);
                 logger.info("收到消息 公积金雇员补缴: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
             }
         }
@@ -118,7 +118,7 @@ public class KafkaReceiver {
             || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
             boolean bolRes = checkDupSsEmpTask(taskMsgDTO);
             if (bolRes) {
-                res = insertHfEmpTaskTb(taskMsgDTO, 12);
+                res = insertHfEmpTaskTb(taskMsgDTO, 13);
                 logger.info("收到消息 公积金雇员翻牌: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
             }
         }
@@ -141,7 +141,7 @@ public class KafkaReceiver {
             || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
             boolean bolRes = checkDupSsEmpTask(taskMsgDTO);
             if (bolRes) {
-                res = insertHfEmpTaskTb(taskMsgDTO, 3);
+                res = insertHfEmpTaskTb(taskMsgDTO, 4);
                 logger.info("收到消息 公积金雇员服务协议调整: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
             }
         }
@@ -229,7 +229,7 @@ public class KafkaReceiver {
      * @param message
      * @return
      */
-    //todo 接受客服中心调用更新企业任务单
+    //TODO 接受客服中心调用更新企业任务单
     public void receiveComTask(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         //公积金

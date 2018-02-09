@@ -340,7 +340,7 @@
             WHERE
                 r.apply_id = p.um_acceptance_id
             AND
-                r.business_id = 2
+                r.business_id = 1
             AND
                 r.status = 0
             AND
