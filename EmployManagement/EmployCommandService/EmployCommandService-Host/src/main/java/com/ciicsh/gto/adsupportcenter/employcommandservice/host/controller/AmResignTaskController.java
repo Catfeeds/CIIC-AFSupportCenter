@@ -102,7 +102,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
         AmEmpTaskBO amEmpTaskBO = list.get(0);
 
-        List<AmResignBO> listResignBO = business.queryAmResignDetail(bo);
+        List<AmResignBO> listResignBO = business.queryAmResignDetail(param);
 
         PageInfo pageInfo = new PageInfo();
         JSONObject params = new JSONObject();
