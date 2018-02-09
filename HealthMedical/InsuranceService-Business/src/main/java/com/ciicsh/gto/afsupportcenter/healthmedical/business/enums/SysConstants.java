@@ -22,6 +22,8 @@ public interface SysConstants {
         FINANCE_NOT(0, "否"),
         AF_EMPLOYEE_PAYMENT(11, "AF雇员报销"),
         MEDICAL_CLAIMS(12, "医疗理赔报销"),
+        SUPPLY_MEDICAL(0, "补充医疗理赔"),
+        UNINSURED_MEDICAL(1, "未投保医疗理赔"),
         PAY_WAY(3, "转账"),
         ACTIVE(1, "可用"),
         DATE_FORMAT(1, "yyyy-MM-dd"),
@@ -31,13 +33,13 @@ public interface SysConstants {
         DEPARTMENT_MANAGER(1, "部门经理"),
         REVIEWER(1, "审核人");
 
-        private int code;
+        private Integer code;
         private String name;
-        JobConstants(int code, String name) {
+        JobConstants(Integer code, String name) {
             this.code = code;
             this.name = name;
         }
-        public int getCode() {
+        public Integer getCode() {
             return code;
         }
         public String getName() {
