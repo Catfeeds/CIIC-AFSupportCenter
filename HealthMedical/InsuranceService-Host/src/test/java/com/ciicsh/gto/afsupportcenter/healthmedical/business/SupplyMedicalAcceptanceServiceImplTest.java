@@ -23,7 +23,7 @@ public class SupplyMedicalAcceptanceServiceImplTest {
 
     @Test
     public void importAcceptanceXls() {
-        File file = new File("/Users/wisdom/oneDrive/work/test/02-JY201801231002.xlsx");
+        File file = new File("C:\\Users\\xiweizhen.CIIC\\Desktop\\test\\02-JY201801231002.xlsx");
         try {
             InputStream inputStream = new FileInputStream(file);
             supplyMedicalAcceptanceService.importAcceptanceXls(inputStream);
