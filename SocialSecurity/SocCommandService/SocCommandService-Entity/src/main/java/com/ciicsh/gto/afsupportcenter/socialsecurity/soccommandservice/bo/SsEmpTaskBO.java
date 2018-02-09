@@ -130,4 +130,9 @@ public class SsEmpTaskBO implements Serializable {
     //顺调 和  倒调(1 顺调 0 倒调)
     private Integer adustType;
 
+    //企业部分实缴金额（回调时使用）
+    private BigDecimal companyConfirmAmount;
+
+    //雇员部分实缴金额（回调使用）
+    private BigDecimal personalConfirmAmount;
 }
