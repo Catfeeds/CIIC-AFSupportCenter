@@ -139,6 +139,11 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         hfEmpTask.setIsChange(isChange);
         hfEmpTask.setTaskFormContent(JSON.toJSONString(dto));
 
+        if (dto.getNowAgreement() != null && dto.getNowAgreement().getFundSocialRuleId() != null) {
+            hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getFundSocialRuleId().intValue());
+        }
+        //TODO 表中加字段
+//        hfEmpTask.setProcessId(taskMsgDTO.getProcessId());
         hfEmpTask.setTaskStatus(1);
         hfEmpTask.setActive(true);
         hfEmpTask.setModifiedBy(companyDto.getCreatedBy());

@@ -30,7 +30,7 @@ import java.util.List;
 
 /**
  * <p>
- * 公积金 API控制器
+ * 公积金 接口控制器
  * </p>
  *
  * @author zxj

@@ -27,39 +27,39 @@ public class KafkaReceiver {
     private AfEmployeeCompanyProxy afEmployeeCompanyProxy;
 
     /**
-     * 订阅雇员新增任务单
+     * 订阅用工办理任务单
      *
      * @param message
      */
     @StreamListener(TaskSink.AF_EMP_IN)
     public void receiveEmpIn(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
-        //社保
+        //用工办理
         boolean res = false;
         if (TaskSink.HIRE.equals(taskMsgDTO.getTaskType())) {
             res = insertAmEmpTaskTb(taskMsgDTO, 1);
-            logger.info("收到消息 雇员新增: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
+            logger.info("收到消息 用工办理: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
         }
     }
 
     /**
-     * 订阅雇员终止任务单
+     * 订阅退工任务单
      *
      * @param message
      */
     @StreamListener(TaskSink.AF_EMP_OUT)
     public void receiveEmpOut(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
-        //社保
+        //退工
         boolean res = false;
         if (TaskSink.FIRE.equals(taskMsgDTO.getTaskType())) {
             res = insertAmEmpTaskTb(taskMsgDTO, 2);
-            logger.info("收到消息 雇员终止: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
+            logger.info("收到消息 退工: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
         }
     }
 
     /**
-     * 从接口获取数据并保存到社保雇员任务单表
+     * 从接口获取数据并保存到雇员任务单表
      *
      * @param taskMsgDTO
      * @param taskCategory
