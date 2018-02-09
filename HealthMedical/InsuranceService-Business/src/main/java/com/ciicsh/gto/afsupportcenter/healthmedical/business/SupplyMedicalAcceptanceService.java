@@ -7,6 +7,8 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.AcceptanceStatisti
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.SupplyMedicalAcceptanceDTO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.SupplyMedicalAcceptance;
 
+import java.io.IOException;
+
 /**
  * <p>
  * 补充医疗受理单表 服务类
@@ -15,6 +17,7 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.SupplyMedicalAccep
  * @author xiweizhen
  */
 public interface SupplyMedicalAcceptanceService extends IService<SupplyMedicalAcceptance> {
+
     /**
      * 补充医疗分页查询
      *
@@ -23,11 +26,6 @@ public interface SupplyMedicalAcceptanceService extends IService<SupplyMedicalAc
      * @return
      */
     Page<SupplyMedicalAcceptance> queryAcceptancePage(Page<SupplyMedicalAcceptance> page, SupplyMedicalAcceptanceDTO supplyMedicalAcceptanceDTO);
-
-    /**
-     * 同步备份表数据到业务表
-     */
-    void acceptance();
 
     /**
      * 定时同步智灵通受理单数据
@@ -42,4 +40,12 @@ public interface SupplyMedicalAcceptanceService extends IService<SupplyMedicalAc
      * @param supplyMedicalAcceptanceDTO
      */
     AcceptanceStatisticsBO queryAcceptanceTotal(SupplyMedicalAcceptanceDTO supplyMedicalAcceptanceDTO);
+
+
+    /**
+     * 导入方法
+     *
+     * @throws IOException
+     */
+//    void importAcceptanceXls();
 }
