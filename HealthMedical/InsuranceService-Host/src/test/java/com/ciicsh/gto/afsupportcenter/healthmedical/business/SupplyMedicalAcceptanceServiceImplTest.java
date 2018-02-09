@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
+import java.io.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = InsuranceApplication.class)
@@ -23,7 +23,13 @@ public class SupplyMedicalAcceptanceServiceImplTest {
 
     @Test
     public void importAcceptanceXls() {
-//        supplyMedicalAcceptanceService.importAcceptanceXls();
+        File file = new File("/Users/wisdom/oneDrive/work/test/02-JY201801231002.xlsx");
+        try {
+            InputStream inputStream = new FileInputStream(file);
+            supplyMedicalAcceptanceService.importAcceptanceXls(inputStream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

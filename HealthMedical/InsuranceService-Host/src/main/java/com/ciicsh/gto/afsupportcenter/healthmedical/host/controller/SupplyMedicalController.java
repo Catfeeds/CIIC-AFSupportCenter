@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -157,6 +158,22 @@ public class SupplyMedicalController {
             supplyMedicalInvoice.setSupplyMedicalInvoices(supplyMedicalInvoiceService.queryMedicalInvoiceList(acceptanceId));
 
             return ResultGenerator.genSuccessResult(supplyMedicalInvoice);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
+        }
+    }
+
+    /**
+     * 查询发票详情数据
+     *
+     * @param multipartFile
+     * @return
+     */
+    @PostMapping("/importAcceptanceXls")
+    public Result importAcceptanceXls(MultipartFile multipartFile) {
+        try {
+            supplyMedicalAcceptanceService.importAcceptanceXls(multipartFile.getInputStream());
+            return ResultGenerator.genSuccessResult();
         } catch (Exception e) {
             return ResultGenerator.genServerFailResult();
         }

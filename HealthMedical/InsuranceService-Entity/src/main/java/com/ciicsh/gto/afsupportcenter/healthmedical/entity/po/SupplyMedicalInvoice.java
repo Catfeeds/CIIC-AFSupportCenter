@@ -88,7 +88,7 @@ public class SupplyMedicalInvoice extends Model<SupplyMedicalInvoice> {
     @TableField("approved_amount")
     private BigDecimal approvedAmount;
     /**
-     * 分类自付金额
+     * 分类自负金额
      */
     @TableField("cs_payment_amount")
     private BigDecimal csPaymentAmount;

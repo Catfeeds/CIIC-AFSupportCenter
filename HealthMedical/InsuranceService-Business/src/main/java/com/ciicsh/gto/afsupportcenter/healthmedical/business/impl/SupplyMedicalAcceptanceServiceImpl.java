@@ -33,7 +33,10 @@ import org.springframework.web.client.RestTemplate;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -50,6 +53,7 @@ public class SupplyMedicalAcceptanceServiceImpl extends ServiceImpl<SupplyMedica
      */
     private static Logger logger = LoggerFactory.getLogger(SupplyMedicalAcceptanceServiceImpl.class);
 
+    private static String EMPLOYEE = "雇员";
     private static String CHILDREN = "子女";
     private static String SPOUSE = "配偶";
 
@@ -133,17 +137,22 @@ public class SupplyMedicalAcceptanceServiceImpl extends ServiceImpl<SupplyMedica
         return acceptanceStatisticsBO;
     }
 
-    public static void main(String[] args) {
-        importAcceptanceXls();
-    }
-
-    private static void importAcceptanceXls() {
-        File file = new File("C:\\Users\\xiweizhen.CIIC\\Desktop\\test\\02-JY201801231002.xls");
-
+    @Override
+    public void importAcceptanceXls(InputStream inputStream) {
         try {
-            OfficeIoResult officeIoResult = importXls(file);
+            OfficeIoResult officeIoResult = importXls(inputStream);
 
-            List list = officeIoResult.getImportList();
+            List<SupplyAcceptanceImportDTO> list = officeIoResult.getImportList();
+
+            Map<String, List<SupplyAcceptanceImportDTO>> map = list.stream().collect(Collectors.groupingBy(SupplyAcceptanceImportDTO::getAcceptanceId));
+
+            for (String key : map.keySet()) {
+                List<SupplyAcceptanceImportDTO> supplyAcceptanceImportDTOS = map.get(key);
+                List<SupplyMedicalInvoice> supplyMedicalInvoices = CommonTransform.convertToDTOs(supplyAcceptanceImportDTOS, SupplyMedicalInvoice.class);
+                SupplyMedicalAcceptance supplyMedicalAcceptance = new SupplyMedicalAcceptance();
+                BeanUtils.copyProperties(supplyAcceptanceImportDTOS.get(0), supplyMedicalAcceptance);
+            }
+
             if (list != null && list.size() > 0) {
                 exportXls(list);
 
@@ -161,7 +170,6 @@ public class SupplyMedicalAcceptanceServiceImpl extends ServiceImpl<SupplyMedica
     }
 
     private static Integer msgTran(String str) {
-        String EMPLOYEE = "雇员";
         if (EMPLOYEE.equals(str)) {
             return 1;
         } else if (CHILDREN.equals(str)) {
@@ -173,11 +181,11 @@ public class SupplyMedicalAcceptanceServiceImpl extends ServiceImpl<SupplyMedica
     }
 
 
-    private static OfficeIoResult importXls(File file) {
+    private static OfficeIoResult importXls(InputStream inputStream) {
         SheetSettings sheet = new SheetSettings("sheet1", SupplyAcceptanceImportDTO.class);
         sheet = acceptanceCellSettings(sheet);
 
-        OfficeIoResult officeIoResult = OfficeIoUtils.importXlsx(file, new SheetSettings[]{sheet});
+        OfficeIoResult officeIoResult = OfficeIoUtils.importXlsx(inputStream, new SheetSettings[]{sheet});
         return officeIoResult;
     }
 
@@ -232,12 +240,14 @@ public class SupplyMedicalAcceptanceServiceImpl extends ServiceImpl<SupplyMedica
             new CellSettings("col17", "部分拒付原因"),
             new CellSettings("col18", "调整给付金额"),
             new CellSettings("col19", "调整给付原因"),
-            new CellSettings("col20", "理赔金额"),
+            //对应赔付金额
+            new CellSettings("claimAmount", "理赔金额"),
             new CellSettings("insuredName", "连带被保险人姓名"),
-            new CellSettings("col21", "分类自负金额"),
+            new CellSettings("csPaymentAmount", "分类自负金额"),
             new CellSettings("col22", "投保公司"),
             new CellSettings("col23", "报销类别"),
-            new CellSettings("col24", "中智赔付"),
+            //对应公司理赔金额
+            new CellSettings("companyMoney", "中智赔付"),
             new CellSettings("insuranceCompanyMoney", "保险公司赔付"),
         });
         return sheetSettings;
