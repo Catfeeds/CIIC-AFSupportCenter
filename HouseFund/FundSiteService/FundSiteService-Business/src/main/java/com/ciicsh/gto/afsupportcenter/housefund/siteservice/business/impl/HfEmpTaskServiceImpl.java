@@ -16,6 +16,7 @@ import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -120,9 +121,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         hfEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
         hfEmpTask.setSubmitterId(companyDto.getCreatedBy());
         hfEmpTask.setSubmitterRemark(companyDto.getRemark());
-
-        //公积金账号 TODO
-        hfEmpTask.setHfEmpAccount("");
+        hfEmpTask.setSubmitTime(LocalDate.now());
 
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
         //来源地 1：中心  2：原单位

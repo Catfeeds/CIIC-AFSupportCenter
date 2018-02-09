@@ -142,10 +142,18 @@
         in_date
         FROM
         hf_emp_task et
-        WHERE et.employee_id = #{employeeId}
-        and et.company_id=#{companyId}
-        and et.task_id=#{taskId}
-        AND et.is_active = 1
+        <where>
+            et.is_active = 1
+            <if test="companyId != null">
+                and et.company_id = #{companyId}
+            </if>
+            <if test="employeeId != null">
+                and et.employee_id = #{employeeId}
+            </if>
+            <if test="taskId != null">
+                and et.task_id=#{taskId}
+            </if>
+        </where>
     </select>
 
     <insert id="insertHfEmpTask" useGeneratedKeys="true" keyProperty="empTaskId">
