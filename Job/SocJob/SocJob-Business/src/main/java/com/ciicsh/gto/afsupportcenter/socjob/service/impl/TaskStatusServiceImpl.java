@@ -26,6 +26,9 @@ public class TaskStatusServiceImpl implements TaskStatusService {
     @Override
     public void updateTaskStatus(String ssMonth) {
         List<Map> empTaskList= taskStatusMapper.getEmpTaskList(ssMonth);
+        empTaskList.stream().forEach(map -> {
+            System.out.println(map.get("emp_archive_id").toString());
+        });
         empTaskList.stream().forEach(map->{
             int taskCategory=(int) map.get("task_category");
             if(taskCategory==1 || taskCategory==2 ){  //新进、转入
@@ -33,20 +36,18 @@ public class TaskStatusServiceImpl implements TaskStatusService {
                 ssEmpArchive.setArchiveStatus(2);
                 ssEmpArchive.setArchiveTaskStatus(2);
                 ssEmpArchive.setEmpArchiveId((long)map.get("emp_archive_id"));
-                EntityWrapper<SsEmpArchive> wrapper=new EntityWrapper();
+                ssEmpArchiveMapper.updateById(ssEmpArchive);
+              /*  EntityWrapper<SsEmpArchive> wrapper=new EntityWrapper();
                 wrapper.setEntity(ssEmpArchive);
-                ssEmpArchiveMapper.update(ssEmpArchive, wrapper);
+                ssEmpArchiveMapper.update(ssEmpArchive, wrapper);*/
             }else if(taskCategory== 5 || taskCategory== 6) {// 转出 封存
                 SsEmpArchive ssEmpArchive=new SsEmpArchive();
                 ssEmpArchive.setArchiveStatus(3);
                 ssEmpArchive.setArchiveTaskStatus(3);
                 ssEmpArchive.setEmpArchiveId((long)map.get("emp_archive_id"));
-                EntityWrapper<SsEmpArchive> wrapper=new EntityWrapper();
-                wrapper.setEntity(ssEmpArchive);
-                ssEmpArchiveMapper.update(ssEmpArchive, wrapper);
+                ssEmpArchiveMapper.updateById(ssEmpArchive);
             }else{ //其他
                 taskStatusMapper.updateEmpArchive(map.get("emp_archive_id").toString());
-
             }
             taskStatusMapper.updateEmpTask("3",map.get("emp_task_id").toString());
         });
