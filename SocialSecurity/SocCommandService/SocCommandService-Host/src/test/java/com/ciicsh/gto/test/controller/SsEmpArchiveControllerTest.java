@@ -9,7 +9,10 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.S
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.payment.SsOperatePaymentDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpArchiveBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsComAccountService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.SocialSecurityApplication;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsAccountComRelationController;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsComTaskController;
@@ -55,6 +58,9 @@ public class SsEmpArchiveControllerTest {
 
     @Autowired
     SsComAccountService ssComAccountService;
+
+    @Autowired
+    SsEmpTaskService ssEmpTaskService;
 
     @Test
     public void queryByEmpTaskId() {
@@ -140,25 +146,34 @@ public class SsEmpArchiveControllerTest {
 
     @Test
     public void addBankAcc() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("com_account_id", "1235");
-        map.put("account", "6201200");
-        map.put("account_name", "abc");
-        map.put("bank_name", "上海银行1");
-        map.put("bank_id", "2");
-        map.put("province_code", "002");
-        map.put("city_code", "01");
-        map.put("account_type", "4");
-        map.put("finance_account_id", "1");
-        map.put("subject_no", "1");
-        try {
-            boolean result = ssComAccountService
-                .addBankAccount(map);
-            System.out.println(JSON.toJSONString(result));
-            System.out.println(JSON.toJSONString(result));
-        } catch (Exception e) {
-            e.printStackTrace();
+        boolean result = false;
+
+        SsEmpTaskBO qd = new SsEmpTaskBO();
+        qd.setTaskId("311096");
+
+        List<SsEmpTaskBO> resList = ssEmpTaskService.queryByTaskId(qd);
+        if (resList.size() == 0) {
+            result = true;
         }
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("com_account_id", "1235");
+//        map.put("account", "6201200");
+//        map.put("account_name", "abc");
+//        map.put("bank_name", "上海银行1");
+//        map.put("bank_id", "2");
+//        map.put("province_code", "002");
+//        map.put("city_code", "01");
+//        map.put("account_type", "4");
+//        map.put("finance_account_id", "1");
+//        map.put("subject_no", "1");
+//        try {
+//            boolean result = ssComAccountService
+//                .addBankAccount(map);
+//            System.out.println(JSON.toJSONString(result));
+//            System.out.println(JSON.toJSONString(result));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Test

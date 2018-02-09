@@ -112,6 +112,9 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         ssEmpTask.setSubmitterName(companyDto.getCreatedBy());
         ssEmpTask.setSalary(companyDto.getSalary());
         ssEmpTask.setSubmitterRemark(companyDto.getRemark());
+        ssEmpTask.setSubmitTime(LocalDateTime.now());
+        ssEmpTask.setTaskDefKey(taskMsgDTO.getTaskType());
+        ssEmpTask.setProDefKey(taskMsgDTO.getProcessDefinitionKey());
 
         if (companyDto.getInDate() != null) {
             ssEmpTask.setInDate(LocalDateTime.ofInstant(companyDto.getInDate().toInstant(), ZoneId.systemDefault())

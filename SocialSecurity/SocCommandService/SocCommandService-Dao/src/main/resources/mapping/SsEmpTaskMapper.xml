@@ -46,7 +46,6 @@
         <result column="in_date" property="inDate" />
         <result column="out_date" property="outDate" />
         <result column="business_interface_id" property="businessInterfaceId" />
-        <result column="proc_inst_id" property="procInstId" />
         <result column="process_id" property="processId" />
         <result column="task_id" property="taskId" />
         <result column="task_def_key" property="taskDefKey" />

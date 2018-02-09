@@ -233,8 +233,6 @@ public class SsEmpTask implements Serializable {
      */
 	@TableField("business_interface_id")
 	private String businessInterfaceId;
-	@TableField("proc_inst_id")
-	private String procInstId;
 	@TableField("process_id")
 	private String processId;
     /**
@@ -614,14 +612,6 @@ public class SsEmpTask implements Serializable {
 		this.businessInterfaceId = businessInterfaceId;
 	}
 
-	public String getProcInstId() {
-		return procInstId;
-	}
-
-	public void setProcInstId(String procInstId) {
-		this.procInstId = procInstId;
-	}
-
 	public String getProcessId() {
 		return processId;
 	}
@@ -747,7 +737,6 @@ public class SsEmpTask implements Serializable {
 			", inDate=" + inDate +
 			", outDate=" + outDate +
 			", businessInterfaceId=" + businessInterfaceId +
-			", procInstId=" + procInstId +
 			", processId=" + processId +
 			", taskId=" + taskId +
 			", taskDefKey=" + taskDefKey +
