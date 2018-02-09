@@ -75,12 +75,12 @@
         month_charge_id=#{monthChargeId}
     </update>
 
-    <!--查询 客户下有多少 不可付的记录-->
+    <!--查询 客户下有多少可付或垫款可付的记录-->
     <select id="countByEmpPaymentStatus" resultType="java.lang.Integer">
         select count(1)
         from ss_month_charge
         where is_active=1
-        and emp_payment_status=0
+        and emp_payment_status in(1,2)
         and ss_month=#{ssMonth}
         and com_account_id=#{comAccountId}
     </select>
