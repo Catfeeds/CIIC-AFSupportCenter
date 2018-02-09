@@ -12,6 +12,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpA
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsComAccountService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsPaymentComService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.SocialSecurityApplication;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsAccountComRelationController;
@@ -62,10 +63,13 @@ public class SsEmpArchiveControllerTest {
     @Autowired
     SsEmpTaskService ssEmpTaskService;
 
+    @Autowired
+    SsPaymentComService ssPaymentComService;
+
     @Test
     public void queryByEmpTaskId() {
-        JsonResult<SsEmpArchiveBO> jsonResult = controller.queryByEmpTaskId("1", "1");
-        System.out.println(JSON.toJSONString(jsonResult));
+        boolean bol = ssPaymentComService.saveRejectResult(1L, "未通过",1);
+        System.out.println(JSON.toJSONString(bol));
     }
 
 
