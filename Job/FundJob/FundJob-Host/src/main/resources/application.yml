@@ -1,4 +1,4 @@
-###################  项目启动端口  ###################
+#项目启动端口
 server:
   port: 6028
   context-path: /
@@ -30,13 +30,13 @@ spring:
 
       instance-count: 2
       instance-index: 1
-###################  spring cloud eureka  ###################
+#spring cloud eureka
 eureka:
   client:
     serviceUrl:
       defaultZone: http://172.16.9.20:9602/eureka
-      #,http://172.16.9.21:9602/eureka
-      #" #本地开发环境eureka,http://172.16.9.19:9602/eureka
+      #http://172.16.9.21:9602/eureka
+      #本地开发环境eureka,http://172.16.9.19:9602/eureka
   instance:
     lease-expiration-duration-in-seconds: 30
     lease-renewal-interval-in-seconds: 40
@@ -62,7 +62,7 @@ mybatis-plus:
       cache-enabled: false
 
 
-####################### xxl-job #############################
+#xxl-job
 logging:
   config: classpath:logback.xml
 xxl:
