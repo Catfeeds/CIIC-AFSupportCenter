@@ -17,7 +17,7 @@ public class PaymentApplyDetailBO {
     /** 受理单类型（0-补充医疗理赔，1-未投保医疗理赔，2-雇员付款）*/
     private Integer businessItemId;
     /** 付款申请记录编号 */
-    private Integer paymentApplyId;
+    private String paymentApplyId;
     /** 公司编号 */
     private String companyId;
     /** 公司名称 */
@@ -61,11 +61,11 @@ public class PaymentApplyDetailBO {
         this.businessItemId = businessItemId;
     }
 
-    public Integer getPaymentApplyId() {
+    public String getPaymentApplyId() {
         return paymentApplyId;
     }
 
-    public void setPaymentApplyId(Integer paymentApplyId) {
+    public void setPaymentApplyId(String paymentApplyId) {
         this.paymentApplyId = paymentApplyId;
     }
 

@@ -186,8 +186,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             bo.setPersonalConfirmAmount(new BigDecimal(0));
         }
         //任务单完成 回调
-        //taskCompletCallBack(bo);
-
+        taskCompletCallBack(bo);
         return true;
     }
 

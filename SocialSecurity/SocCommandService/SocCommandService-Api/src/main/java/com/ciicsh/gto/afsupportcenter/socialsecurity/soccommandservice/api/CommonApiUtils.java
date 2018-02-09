@@ -5,6 +5,7 @@ import com.ciicsh.gto.afcompanycenter.commandservice.api.proxy.AfEmployeeSocialP
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.basicdataservice.api.DicItemServiceProxy;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
+import com.ciicsh.gto.basicdataservice.api.dto.EmptyDicItemDTO;
 import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeSearchDTO;
@@ -78,11 +79,11 @@ public class CommonApiUtils {
     /**
      * 刷新REDIS中的ID数据
      *
-     * @param dicItemId
+     * @param dicItemDto
      * @return
      */
-    public void fresh2Redis(String dicItemId) throws Exception {
-        dicItemServiceProxy.fresh2Redis(dicItemId);
+    public void fresh2Redis(EmptyDicItemDTO dicItemDto) throws Exception {
+        dicItemServiceProxy.fresh2Redis(dicItemDto);
     }
 
     /**

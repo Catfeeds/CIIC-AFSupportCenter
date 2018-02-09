@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.InetAddress;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -135,7 +136,12 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         ssEmpTask.setProcessId(taskMsgDTO.getProcessId());
         ssEmpTask.setTaskStatus(1);
         ssEmpTask.setActive(true);
-        ssEmpTask.setModifiedBy(companyDto.getCreatedBy());
+//        ssEmpTask.setModifiedBy(companyDto.getCreatedBy());
+
+
+        InetAddress address = InetAddress.getLocalHost();
+        String hostAddress = address.getHostAddress();
+        ssEmpTask.setModifiedBy(hostAddress);
         ssEmpTask.setModifiedTime(LocalDateTime.now());
         ssEmpTask.setCreatedBy(companyDto.getCreatedBy());
         ssEmpTask.setCreatedTime(LocalDateTime.now());

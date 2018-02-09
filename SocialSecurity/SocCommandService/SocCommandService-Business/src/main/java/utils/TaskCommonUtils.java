@@ -47,6 +47,7 @@ public class TaskCommonUtils {
         taskSheetRequestDTO.setTaskId(taskId);
         taskSheetRequestDTO.setAssignee(assignee);
         try {
+            System.out.println("------------"+taskSheetRequestDTO);
             Result result =commonApiUtils.completeTask(taskSheetRequestDTO);
             handleWorkflowResult(result);
         } catch (Exception e) {
@@ -83,6 +84,7 @@ public class TaskCommonUtils {
             int result =commonApiUtils.updateConfirmDate(paramsList);
             System.out.println("------------------------------------"+result);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BusinessException("实缴金额回调异常");
         }
     }
