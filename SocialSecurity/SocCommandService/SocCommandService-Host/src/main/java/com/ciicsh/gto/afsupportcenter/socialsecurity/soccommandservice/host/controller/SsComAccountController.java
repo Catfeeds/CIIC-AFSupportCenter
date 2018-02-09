@@ -8,6 +8,9 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAccountRatioService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsComAccountService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -21,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -69,6 +74,20 @@ public class SsComAccountController extends BasicController<SsComAccountService>
         return JsonResultKit.ofPage(pageRows);
     }
 
+    /**
+     * 企业社保账户信息导出
+     */
+    @Log("企业社保账户信息导出")
+    @RequestMapping("/accountExport")
+    public void accountExport(HttpServletResponse response, SsComAccountBO accountBo) {
+        Date date = new Date();
+        String fileNme = "企业社保账户_"+ StringUtil.getDateString(date)+".xls";
+        List<SsComAccountBO> accountBos = business.getAccounts(accountBo);
+        ExcelUtil.exportExcel(accountBos,SsComAccountBO.class,fileNme,response);
+    }
+
+
+
     @Log("企业社保管理详情查询")
     @RequestMapping("/comSocialSecurityManageInfo")
     public JsonResult<SsComAccountBO> comSocialSecurityManageInfo(String comAccountId) {
@@ -102,6 +121,18 @@ public class SsComAccountController extends BasicController<SsComAccountService>
 
         return JsonResultKit.ofList(ssComAccountList, com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice
             .api.dto.JsonResult.class);
+    }
+
+
+    /**
+     * 根据企业社保账户获取公司信息
+     * @param comAccountId
+     * @return 返回信息
+     */
+    @RequestMapping("/getAccountByAccountId")
+    public JsonResult<SsComAccount> getAccountByAccountId(@RequestParam("comAccountId") Long comAccountId) {
+        SsComAccount comAccount = business.getAccountById(comAccountId);
+        return JsonResultKit.of(comAccount);
     }
 
 }

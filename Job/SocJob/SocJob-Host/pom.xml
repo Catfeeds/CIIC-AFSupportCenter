@@ -32,6 +32,12 @@
             <artifactId>spring-cloud-starter-stream-kafka</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.ciicsh.gt1</groupId>
+            <artifactId>redis-manager</artifactId>
+            <version>0.0.3</version>
+        </dependency>
+
         <!-- jetty -->
         <!--<dependency>-->
             <!--<groupId>org.eclipse.jetty</groupId>-->

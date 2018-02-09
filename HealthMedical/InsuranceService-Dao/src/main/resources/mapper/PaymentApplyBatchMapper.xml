@@ -31,4 +31,8 @@
         apply_batch_id, department_name, is_finance_dept, business_type, pay_way, pay_amount, receiver, applyer, apply_date, pay_purpose, pay_reason, batch_status, operator, operator_time, remark, is_active, created_time, modified_time, created_by, modified_by
     </sql>
 
+    <update id="updateActiveByBachId">
+        UPDATE gtobusinessdb.hm_payment_apply_batch SET is_active = 0, modified_time = NOW(), modified_by = #{modifiedBy, jdbcType=VARCHAR} WHERE apply_batch_id = #{batchId, jdbcType=INTEGER}
+    </update>
+
 </mapper>

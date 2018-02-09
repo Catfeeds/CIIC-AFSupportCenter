@@ -24,6 +24,7 @@ import com.ciicsh.gto.afsupportcenter.socjob.entity.custom.SsEmpBasePeriodExt;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.custom.SsMonthChargeExt;
 import com.ciicsh.gto.afsupportcenter.socjob.service.SsPaymentComService;
 import com.ciicsh.gto.afsupportcenter.socjob.service.enums.ComputeType;
+import com.ciicsh.gto.afsupportcenter.socjob.service.enums.CostCategory;
 import com.ciicsh.gto.afsupportcenter.socjob.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,11 +113,11 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
                     empBaseArchiveExts.forEach(ext->this.createStandardMonthChange(ext,paymentMonth));
                 }
 //
-//                //生成非标准明细
-//                List<SsEmpBasePeriodExt> empBasePeriodExts = convertNewEmpBasePeriodExt(accountComExt.getComAccountId(),paymentMonth);
-//                if(null != empBasePeriodExts && empBasePeriodExts.size()>0){
-//                    empBasePeriodExts.forEach(ext->this.createNoStandardMonthChange(ext));
-//                }
+                //生成非标准明细
+                List<SsEmpBasePeriodExt> empBasePeriodExts = convertNewEmpBasePeriodExt(accountComExt.getComAccountId(),paymentMonth);
+                if(null != empBasePeriodExts && empBasePeriodExts.size()>0){
+                    empBasePeriodExts.forEach(ext->this.createNoStandardMonthChange(ext));
+                }
 
 
                 // 获取除退账之外的雇员社保明细扩展信息
@@ -382,7 +383,8 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         monthCharge.setEmployeeId(ext.getEmployeeId());
         monthCharge.setEmpArchiveId(ext.getEmpArchiveId().toString());
         monthCharge.setBaseAmount(ext.getBaseAmount()); //社保基数
-        if(ext.getCategory() == 6 || ext.getCategory() == 7 ){
+
+        if(ext.getCategory().equals(CostCategory.OUT.getCategory()) || ext.getCategory().equals(CostCategory.SEALED.getCategory())) {
             totalAmount = totalAmount.negate();
         }
         monthCharge.setTotalAmount(totalAmount); //总金额
@@ -436,7 +438,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         BigDecimal empAmount = empBaseDetail.getEmpAmount().add(empBaseDetail.getEmpAdditionAmount());
         BigDecimal totalAmount = empBaseDetail.getComAmount().add(empBaseDetail.getComAdditionAmount()).add(empBaseDetail.getEmpAmount()).add(empBaseDetail.getEmpAdditionAmount());
         //转出或者封存
-        if(category == 6 || category == 7){
+        if(category.equals(CostCategory.OUT.getCategory()) || category.equals(CostCategory.SEALED.getCategory())){
             comAmount = comAmount.negate();
             empAmount = empAmount.negate();
             totalAmount = totalAmount.negate();
@@ -578,7 +580,8 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         changeDetail.setBaseAmount(chargeExt.getBaseAmount());
         changeDetail.setSsType(chargeExt.getSsType());
         changeDetail.setSsTypeName(chargeExt.getSsTypeName());
-        if(category != 4 && category != 9){
+
+        if(!category.equals(CostCategory.REPPAYMENT.getCategory()) && !category.equals(CostCategory.INVERSEADJUST.getCategory())) {
             changeDetail.setComAmount(chargeExts.stream().map(p->p.getComAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y)));
             changeDetail.setEmpAmount(chargeExts.stream().map(p->p.getEmpAmount()).reduce(new BigDecimal(0),(x,y)->x.add(y)));
         }

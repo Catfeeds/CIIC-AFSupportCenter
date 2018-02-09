@@ -44,10 +44,12 @@ public interface EmployeePaymentApplyMapper extends BaseMapper<EmployeePaymentAp
      * 更新申请状态为已同步
      * @param batchId
      * @param businessId
+     * @param status
+     * @param remark
      * @param modifiedBy
      * @return
      */
-    Integer updateSyncStatus(@Param("batchId") Integer batchId, @Param("businessId") Integer businessId, @Param("modifiedBy") String modifiedBy);
+    Integer syncStatus(@Param("batchId") Integer batchId, @Param("businessId") Integer businessId, @Param("status") Integer status, @Param("remark") String remark, @Param("modifiedBy") String modifiedBy);
 
     /**
      * 查询信息有误未同步数据
@@ -60,8 +62,9 @@ public interface EmployeePaymentApplyMapper extends BaseMapper<EmployeePaymentAp
      * 更新付款申请状态
      * @param paymentApplyId
      * @param status
+     * @param remark
      * @param modifiedBy
      * @return
      */
-    Integer updateApplyStatus(@Param("paymentApplyId") Integer paymentApplyId, @Param("status") Integer status, @Param("modifiedBy") String modifiedBy);
+    Integer updateApplyStatus(@Param("paymentApplyId") Integer paymentApplyId, @Param("status") Integer status, @Param("remark") String remark, @Param("modifiedBy") String modifiedBy);
 }

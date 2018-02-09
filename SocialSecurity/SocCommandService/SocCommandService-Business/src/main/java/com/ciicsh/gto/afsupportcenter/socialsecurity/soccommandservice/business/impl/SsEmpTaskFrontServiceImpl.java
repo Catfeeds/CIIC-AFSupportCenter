@@ -102,6 +102,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
     public boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer isChange,
                                 AfEmployeeInfoDTO dto) throws Exception {
         AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
+        List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
 
         SsEmpTask ssEmpTask = new SsEmpTask();
         ssEmpTask.setTaskId(taskMsgDTO.getTaskId());
@@ -111,6 +112,9 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         ssEmpTask.setSubmitterName(companyDto.getCreatedBy());
         ssEmpTask.setSalary(companyDto.getSalary());
         ssEmpTask.setSubmitterRemark(companyDto.getRemark());
+        ssEmpTask.setSubmitTime(LocalDateTime.now());
+        ssEmpTask.setTaskDefKey(taskMsgDTO.getTaskType());
+        ssEmpTask.setProDefKey(taskMsgDTO.getProcessDefinitionKey());
 
         if (companyDto.getInDate() != null) {
             ssEmpTask.setInDate(LocalDateTime.ofInstant(companyDto.getInDate().toInstant(), ZoneId.systemDefault())
@@ -125,50 +129,73 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         ssEmpTask.setIsChange(isChange);
         ssEmpTask.setTaskFormContent(JSON.toJSONString(dto));
 
+        if (dto.getNowAgreement() != null && dto.getNowAgreement().getSocialRuleId() != null) {
+            ssEmpTask.setPolicyDetailId(dto.getNowAgreement().getSocialRuleId().intValue());
+        }
+        ssEmpTask.setProcessId(taskMsgDTO.getProcessId());
         ssEmpTask.setTaskStatus(1);
         ssEmpTask.setActive(true);
         ssEmpTask.setModifiedBy(companyDto.getCreatedBy());
         ssEmpTask.setModifiedTime(LocalDateTime.now());
         ssEmpTask.setCreatedBy(companyDto.getCreatedBy());
         ssEmpTask.setCreatedTime(LocalDateTime.now());
+
+        for(AfEmpSocialDTO socialDto:socialList) {
+            if (socialDto.getPolicyName() != null && !socialDto.getPolicyName().contains("公积金")) {
+                ssEmpTask.setEmpBase(socialDto.getPersonalBase());
+                if (socialDto.getStartDate() != null) {
+                    ssEmpTask.setStartMonth(StringUtil.dateToString(socialDto
+                            .getStartDate(),
+                        "yyyyMM"));
+                }
+                if (socialDto.getEndDate() != null) {
+                    ssEmpTask.setEndMonth(StringUtil.dateToString(socialDto.getEndDate(),
+                        "yyyyMM"));
+                }
+                break;
+            }
+        }
+
         boolean insertRes = ssEmpTaskMapper.insertEmpTask(ssEmpTask);
 
         if (insertRes) {
-            List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
             List<SsEmpTaskFront> eleList = new ArrayList<>();
             SsEmpTaskFront ssEmpTaskFront = null;
             if (socialList != null) {
                 for (AfEmpSocialDTO socialDto : socialList) {
-                    ssEmpTaskFront = new SsEmpTaskFront();
-                    ssEmpTaskFront.setEmpTaskId(ssEmpTask.getEmpTaskId());
-                    ssEmpTaskFront.setItemDicId(socialDto.getItemCode());
-                    ssEmpTaskFront.setEmpCompanyBase(socialDto.getEmpCompanyBase());
-                    ssEmpTaskFront.setPolicyId(socialDto.getPolicyId());
+                    if (socialDto.getPolicyName() != null && !socialDto.getPolicyName().contains("公积金")) {
+                        ssEmpTaskFront = new SsEmpTaskFront();
+                        ssEmpTaskFront.setEmpTaskId(ssEmpTask.getEmpTaskId());
+                        ssEmpTaskFront.setItemDicId(socialDto.getItemCode());
+                        ssEmpTaskFront.setEmpCompanyBase(socialDto.getEmpCompanyBase());
+                        ssEmpTaskFront.setPolicyId(socialDto.getPolicyId());
 
-                    ssEmpTaskFront.setPolicyName(socialDto.getPolicyName());
-                    ssEmpTaskFront.setCompanyRatio(socialDto.getCompanyRatio());
-                    ssEmpTaskFront.setCompanyBase(socialDto.getCompanyBase());
-                    ssEmpTaskFront.setCompanyAmount(socialDto.getCompanyAmount());
+                        ssEmpTaskFront.setPolicyName(socialDto.getPolicyName());
+                        ssEmpTaskFront.setCompanyRatio(socialDto.getCompanyRatio());
+                        ssEmpTaskFront.setCompanyBase(socialDto.getCompanyBase());
+                        ssEmpTaskFront.setCompanyAmount(socialDto.getCompanyAmount());
 
-                    ssEmpTaskFront.setPersonalRatio(socialDto.getPersonalRatio());
-                    ssEmpTaskFront.setPersonalBase(socialDto.getPersonalBase());
-                    ssEmpTaskFront.setPersonalAmount(socialDto.getPersonalAmount());
+                        ssEmpTaskFront.setPersonalRatio(socialDto.getPersonalRatio());
+                        ssEmpTaskFront.setPersonalBase(socialDto.getPersonalBase());
+                        ssEmpTaskFront.setPersonalAmount(socialDto.getPersonalAmount());
 
-                    if (socialDto.getStartDate() != null) {
-                        ssEmpTaskFront.setStartMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getStartDate(),
-                            "yyyyMM")));
+                        if (socialDto.getStartDate() != null) {
+                            ssEmpTaskFront.setStartMonth(Integer.parseInt(StringUtil.dateToString(socialDto
+                                    .getStartDate(),
+                                "yyyyMM")));
+                        }
+                        if (socialDto.getEndDate() != null) {
+                            ssEmpTaskFront.setEndMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getEndDate(),
+                                "yyyyMM")));
+                        }
+
+                        ssEmpTaskFront.setActive(true);
+                        ssEmpTaskFront.setModifiedBy(companyDto.getCreatedBy());
+                        ssEmpTaskFront.setModifiedTime(LocalDateTime.now());
+                        ssEmpTaskFront.setCreatedBy(companyDto.getCreatedBy());
+                        ssEmpTaskFront.setCreatedTime(LocalDateTime.now());
+                        eleList.add(ssEmpTaskFront);
                     }
-                    if (socialDto.getEndDate() != null) {
-                        ssEmpTaskFront.setEndMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getEndDate(),
-                            "yyyyMM")));
-                    }
-
-                    ssEmpTaskFront.setActive(true);
-                    ssEmpTaskFront.setModifiedBy(companyDto.getCreatedBy());
-                    ssEmpTaskFront.setModifiedTime(LocalDateTime.now());
-                    ssEmpTaskFront.setCreatedBy(companyDto.getCreatedBy());
-                    ssEmpTaskFront.setCreatedTime(LocalDateTime.now());
-                    eleList.add(ssEmpTaskFront);
                 }
                 if (eleList.size() > 0) {
                     this.insertBatch(eleList);

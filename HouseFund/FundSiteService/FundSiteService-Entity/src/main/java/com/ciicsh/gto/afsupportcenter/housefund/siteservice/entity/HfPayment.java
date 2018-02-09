@@ -75,6 +75,39 @@ public class HfPayment implements Serializable {
 	@TableField("total_emp")
 	private Integer totalEmp;
     /**
+     * 申请备注
+     */
+	@TableField("apply_remark")
+	private String applyRemark;
+    /**
+     * 批退备注
+     */
+	@TableField("rejection_remark")
+	private String rejectionRemark;
+    /**
+     * 批退历史备份
+            [{
+            总雇员数：
+            账户总数：
+            客户总数：
+            批退备注：
+            批退人：
+            批退时间：
+            },{},{}]
+     */
+	@TableField("rejection_his")
+	private String rejectionHis;
+    /**
+     * 申请人
+     */
+	@TableField("request_user")
+	private String requestUser;
+    /**
+     * 申请日期
+     */
+	@TableField("request_date")
+	private LocalDate requestDate;
+    /**
      * 是否可用
      */
 	@TableField("is_active")
@@ -189,6 +222,46 @@ public class HfPayment implements Serializable {
 		this.totalEmp = totalEmp;
 	}
 
+	public String getApplyRemark() {
+		return applyRemark;
+	}
+
+	public void setApplyRemark(String applyRemark) {
+		this.applyRemark = applyRemark;
+	}
+
+	public String getRejectionRemark() {
+		return rejectionRemark;
+	}
+
+	public void setRejectionRemark(String rejectionRemark) {
+		this.rejectionRemark = rejectionRemark;
+	}
+
+	public String getRejectionHis() {
+		return rejectionHis;
+	}
+
+	public void setRejectionHis(String rejectionHis) {
+		this.rejectionHis = rejectionHis;
+	}
+
+	public String getRequestUser() {
+		return requestUser;
+	}
+
+	public void setRequestUser(String requestUser) {
+		this.requestUser = requestUser;
+	}
+
+	public LocalDate getRequestDate() {
+		return requestDate;
+	}
+
+	public void setRequestDate(LocalDate requestDate) {
+		this.requestDate = requestDate;
+	}
+
 	public Boolean getActive() {
 		return isActive;
 	}
@@ -243,6 +316,11 @@ public class HfPayment implements Serializable {
 			", financePaymentDate=" + financePaymentDate +
 			", hfAccountType=" + hfAccountType +
 			", totalEmp=" + totalEmp +
+			", applyRemark=" + applyRemark +
+			", rejectionRemark=" + rejectionRemark +
+			", rejectionHis=" + rejectionHis +
+			", requestUser=" + requestUser +
+			", requestDate=" + requestDate +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

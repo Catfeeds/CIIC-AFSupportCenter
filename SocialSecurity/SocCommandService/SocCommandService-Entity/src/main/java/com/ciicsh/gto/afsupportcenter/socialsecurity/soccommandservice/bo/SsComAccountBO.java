@@ -1,12 +1,100 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo;
-
+import cn.afterturn.easypoi.excel.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
-public class SsComAccountBO extends SsComAccount {
+
+@Data
+@EqualsAndHashCode(callSuper = false)
+@ExcelTarget("SsComAccountBO")
+public class SsComAccountBO {
+
+    private Long comAccountId;
+
+    private String customerId;
+
+    private String supplierId;
+
+    @Excel(name = "社保账户类型", replace = {"中智大库_1","中智外包_2","独立户_3"},orderNum = "2")
+    private Integer ssAccountType;
+    @Excel(name = "企业社保账号",orderNum = "4")
+    private String ssAccount;
+
+    private Long bankAccountId;
+
+    private String bankAccount;
+
+    @Excel(name = "养老金用公司名称", orderNum = "1")
+    private String comAccountName;
+
+
+    private String settlementArea;
+
+    private String paymentBank;
+
+    private Integer paymentWay;
+
+    private Integer billReceiver;
+
+    private Integer expireDate;
+
+    private String ssUsername;
+
+    private String ssPwd;
+
+    private BigDecimal initialBalance;
+
+    private BigDecimal initialDebt;
+
+    private Integer originPlace;
+
+    private String originPlaceRemark;
+    private String queryAccount;
+
+    private String deliverWay;
+
+    private String deliverWayRemark;
+
+    private LocalDate provideCertificateTime;
+
+    private String legalPerson;
+
+    private String contactAddress;
+
+    private LocalDateTime changeTime;
+
+    private LocalDate receiveDate;
+
+    @Excel(name = "开户/转入日期",format = "yyyy-MM-dd",orderNum = "5")
+    private LocalDate intoDate;
+    @Excel(name = "终止日期",format = "yyyy-MM-dd",orderNum = "6")
+    private LocalDate endDate;
+
+    private String dispatchMaterial;
+
+    @Excel(name = "备注说明",orderNum = "7")
+    private String remark;
+
+    @Excel(name = "状态", replace = {"初始_0","有效_1","封_2","终止_3"},orderNum = "3")
+    private Integer state;
+
+    private Boolean isActive;
+
+    private LocalDateTime createdTime;
+
+    private LocalDateTime modifiedTime;
+
+    private String createdBy;
+
+    private String modifiedBy;
 
     //企业工伤比例变更(新增)
     private SsAccountRatio ssAccountRatio;
@@ -23,51 +111,4 @@ public class SsComAccountBO extends SsComAccount {
     private List<SsAccountComRelationBO> ssAccountComRelationBOList;
     //企业工伤比例变更(查询) 1对多
     private List<SsAccountRatio> ssAccountRatioList;
-    public SsAccountRatio getSsAccountRatio() {
-        return ssAccountRatio;
-    }
-
-    public void setSsAccountRatio(SsAccountRatio ssAccountRatio) {
-        this.ssAccountRatio = ssAccountRatio;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public List<SsComTask> getSsComTaskList() {
-        return ssComTaskList;
-    }
-
-    public void setSsComTaskList(List<SsComTask> ssComTaskList) {
-        this.ssComTaskList = ssComTaskList;
-    }
-
-    public List<SsAccountComRelationBO> getSsAccountComRelationBOList() {
-        return ssAccountComRelationBOList;
-    }
-
-    public void setSsAccountComRelationBOList(List<SsAccountComRelationBO> ssAccountComRelationBOList) {
-        this.ssAccountComRelationBOList = ssAccountComRelationBOList;
-    }
-
-    public List<SsAccountRatio> getSsAccountRatioList() {
-        return ssAccountRatioList;
-    }
-
-    public void setSsAccountRatioList(List<SsAccountRatio> ssAccountRatioList) {
-        this.ssAccountRatioList = ssAccountRatioList;
-    }
 }

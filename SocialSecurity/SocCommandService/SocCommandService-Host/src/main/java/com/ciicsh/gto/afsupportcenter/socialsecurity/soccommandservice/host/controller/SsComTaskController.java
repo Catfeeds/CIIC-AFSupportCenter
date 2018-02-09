@@ -11,6 +11,8 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.Ss
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComTask;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -25,11 +27,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import utils.TaskCommonUtils;
 
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +60,23 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
         return JsonResultKit.ofPage(pageRows);
     }
 
+
+
+    /**
+     * 未处理企业任务单导出
+     */
+    @Log("未处理企业任务单导出")
+    @RequestMapping("/noProgressTaskExport")
+    public void noProgressTaskExport(HttpServletResponse response, PageInfo pageInfo) {
+        Date date = new Date();
+        String fileNme = "企业任务单未处理_"+ StringUtil.getDateString(date)+".xls";
+        SsComTaskBO taskBO = pageInfo.toJavaObject(SsComTaskBO.class);
+        List<SsComTaskBO> taskBos = business.getNoProgressCompanyTasks(taskBO);
+        ExcelUtil.exportExcel(taskBos,SsComTaskBO.class,fileNme,response);
+    }
+
+
+
     @Log("查询处理中企业任务单")
     @RequestMapping(value = "getProgressingTask")
     public JsonResult<List<SsComTaskBO>> getNoProgressingCompanyTask(PageInfo pageInfo) {
@@ -63,6 +84,21 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
         PageRows<SsComTaskBO> pageRows = business.queryProgressingCompanyTask(pageInfo);
         return JsonResultKit.ofPage(pageRows);
     }
+
+
+    /**
+     * 处理中企业任务单导出
+     */
+    @Log("处理中企业任务单导出")
+    @RequestMapping("/progressingTaskExport")
+    public void progressingTaskExport(HttpServletResponse response, PageInfo pageInfo) {
+        Date date = new Date();
+        String fileNme = "企业任务单处理中_"+ StringUtil.getDateString(date)+".xls";
+        SsComTaskBO taskBO = pageInfo.toJavaObject(SsComTaskBO.class);
+        List<SsComTaskBO> taskBos = business.getProgressingCompanyTasks(taskBO);
+        ExcelUtil.exportExcel(taskBos,SsComTaskBO.class,fileNme,response);
+    }
+
 
     @Log("查询已完成企业任务单")
     @RequestMapping(value = "getFinshedTask")
@@ -189,8 +225,11 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
                 result = business.updateOrHandlerTask(ssComTaskBO, ssComAccount);
             }
         } else {
+            SsComTask comTask = new SsComTask();
+            BeanUtils.copyProperties(ssComTaskBO,comTask);
+
             //只是做任务单的状态切换，任务单不完成
-            result = business.updateById(ssComTaskBO);
+            result = business.updateById(comTask);
         }
         return JsonResultKit.of(result);
     }
@@ -222,8 +261,11 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
                 result = business.updateOrHandlerTask(ssComTaskBO, ssComAccount);
             }
         } else {
+            SsComTask comTask = new SsComTask();
+            BeanUtils.copyProperties(ssComTaskBO,comTask);
+
             //只是做任务单的状态切换，任务单不完成
-            result = business.updateById(ssComTaskBO);
+            result = business.updateById(comTask);
         }
         return JsonResultKit.of(result);
     }
@@ -263,7 +305,10 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
         } else {
             ssComTaskBO.setComAccountId(null);
             //只做任务单的状态切换，任务单尚不完成
-            result = business.updateById(ssComTaskBO);
+
+            SsComTask comTask = new SsComTask();
+            BeanUtils.copyProperties(ssComTaskBO,comTask);
+            result = business.updateById(comTask);
         }
         return JsonResultKit.of(result);
     }

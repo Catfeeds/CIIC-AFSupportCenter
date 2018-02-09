@@ -2,11 +2,11 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskRollInBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskRollOutBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthChargeBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.*;
@@ -15,11 +15,13 @@ import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import io.swagger.models.auth.In;
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import scala.Int;
 import utils.TaskCommonUtils;
 
 import java.math.BigDecimal;
@@ -59,6 +61,10 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     SsEmpRefundService ssEmpRefundService;
     @Autowired
     CommonApiUtils commonApiUtils;
+    @Autowired
+    SsMonthChargeService ssMonthChargeService;
+    @Autowired
+    SsMonthChargeItemService ssMonthChargeItemService;
     //进位方式
    // private static String  roundType;
     @Override
@@ -71,6 +77,16 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             return PageKit.doSelectPage(pageInfo, () -> baseMapper.employeeDailyOperatorQuery(dto));
         }
     }
+
+//    public List<SsEmpTaskBO> empOperatorQueryExport(SsEmpTaskBO ssEmpTaskBO){
+//        SsEmpTaskBO dto = pageInfo.toJavaObject(SsEmpTaskBO.class);
+//        handleTaskCategory(dto);
+//        if (2 == dto.getOperatorType()) {
+//            return PageKit.doSelectPage(pageInfo, () -> baseMapper.employeeSpecialOperatorQuery(dto));
+//        } else {
+//            return PageKit.doSelectPage(pageInfo, () -> baseMapper.employeeDailyOperatorQuery(dto));
+//        }
+//    }
 
     @Override
     public <T> PageRows<T> employeeDailyOperatorQueryForDisk(PageInfo pageInfo, boolean isRollIn) {
@@ -150,7 +166,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 //新进和转入
                 newOrChangeInto(bo);
             } else if (TaskTypeConst.ADJUSTMENT == taskCategory) {
-               // TaskCommonUtils.getRoundTypeFromApi(commonApiUtils,"DIC00005");
+               //TaskCommonUtils.getRoundTypeFromApi(commonApiUtils,"DIC00005");
                 //调整
                 handleAdjustmentTask(bo);
             } else if (TaskTypeConst.BACK == taskCategory) {
@@ -205,7 +221,10 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         deleteForTask(bo,TaskPeriodConst.ADJUSTMENTTYPE);
         //查询正常缴纳费用段
         List<SsEmpBasePeriod> ssEmpBasePeriodList = getNormalPeriod(bo);
-
+        SsEmpTaskPeriod ssEmpTaskPeriod =taskPeriods.get(0);
+        SsEmpBasePeriod ssEmpBasePeriod = ssEmpBasePeriodList.get(ssEmpBasePeriodList.size()-1);
+        if(Integer.valueOf(ssEmpTaskPeriod.getStartMonth())<Integer.valueOf(ssEmpBasePeriod.getStartMonth()))
+            throw new BusinessException("调整缴纳起始月应该在缴纳段之内.");
         //判断时间费否有交叉 再进行修改添加  （通过startDate）
         adjustmentStartForTaskPeriods(taskPeriods, ssEmpBasePeriodList, bo);
     }
@@ -242,7 +261,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         }
         //删除调整差异表
         EntityWrapper<SsEmpBaseAdjust> ew2 = new EntityWrapper();
-        ew1.where("emp_task_id={0}", bo.getEmpTaskId());
+        ew2.where("emp_task_id={0}", bo.getEmpTaskId());
         List<SsEmpBaseAdjust> ssEmpBaseAdjustList =ssEmpBaseAdjustService.selectList(ew2);
         ssEmpBaseAdjustList.forEach(p->{
             //删除差异详细表
@@ -283,7 +302,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         StringBuffer nowDateStr = TaskCommonUtils.getMonthStr(nowDate);
         Integer currentYearMonth = Integer.valueOf(nowDateStr.toString());
         //通过各自的开始时间进行比较 判断是否有交叉
-        if (minStartDateTask > currentYearMonth) {
+        if (minStartDateTask >= currentYearMonth) {
             //无交叉
             //添加 新添加的时间段
             //任务时间段转empBase
@@ -297,6 +316,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             if(empSocials.size()==0) throw new BusinessException("前道传递险种详细信息为空");
             //添加明细
             addEmpBaseDetail(newEmpBasePeriodList, empSocials, bo.getEmpArchiveId());
+            {//顺调的逻辑
+                //表示顺调
+                bo.setAdustType(1);
+                SsEmpBasePeriod ssEmpBasePeriodAdd =newEmpBasePeriodList.get(0);
+                createNonstandardData(bo,ssEmpBasePeriodAdd,null,null,null);
+            }
         } else {
             //有交叉 逻辑
             /**
@@ -360,16 +385,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
          * 4,在连续情况下，直接找出交叉的时间段
          * 5,在不连续的情况下找出交叉的时间段和为缴纳的时间段
          */
-        //分调整的时间段是否有endMonth
 
         //添加调整交叉的时间段
         List<SsEmpBasePeriod> overlappingPeriodList = new ArrayList<SsEmpBasePeriod>();
         //最后一段 当前月到永远
         List<SsEmpBasePeriod> addPeriodList = new ArrayList<SsEmpBasePeriod>();
-        //调整 走补缴
+        //调整 走补缴(预留 暂时还没用到)
         List<SsEmpBasePeriod> supplementPayList = new ArrayList<SsEmpBasePeriod>();
         //连续
-        //
         List notPaidMonthList = new ArrayList();
         getNotPaidMonth(notPaidMonthList,ssEmpTaskPeriod,haveNoContinuityList,ssEmpBasePeriodList);
         StringBuffer sb = new StringBuffer();
@@ -513,7 +536,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                             }
                             //任务单 始末月 在第一天startMonth 到当前月之内
                             needAdustObj.setStartMonth(ssEmpBasePeriod.getStartMonth());
-                            needAdustObj.setEndMonth(currentMonthObj.toString());
+                            needAdustObj.setEndMonth(String.valueOf(taskEndMonth));
+                            //needAdustObj.setEndMonth(currentMonthObj.toString());
                             overlappingPeriodList.add(needAdustObj);
                         } else if (i == startOfIndex) {
                             SsEmpBasePeriod needAdustObj = TaskCommonUtils.cloneObjet(ssEmpBasePeriod, SsEmpBasePeriod.class);
@@ -557,7 +581,6 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 //            }
             //获得需要处理的集合 进行处理
             handleAdjustmentResult(newData, bo);
-
     }
 
     /**
@@ -571,7 +594,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         Integer startMonth = Integer.valueOf(ssEmpTaskPeriod.getStartMonth());
         Integer endMonth = null;
         //ssEmpTaskPeriod.getEndMonth();
-        //表示调整无
+        //表示调整无EndMonth
         if(StringUtils.isBlank(ssEmpTaskPeriod.getEndMonth())){
             //当前月时间
             LocalDate now = LocalDate.now();
@@ -658,7 +681,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param addPeriodList
      */
     private void addPeriodAndUpdateEndMoth(List<SsEmpBasePeriod> addPeriodList) {
-        //前端只有一段
+        //添加只有一段
         SsEmpBasePeriod ssEmpBasePeriod = addPeriodList.get(0);
         //先修改 再添加
         SsEmpBasePeriod ssEmpBasePeriodForUpdate = new SsEmpBasePeriod();
@@ -672,13 +695,19 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
     private void transforAndSave(List<SsEmpBasePeriod> overlappingPeriodList, SsEmpTaskPeriod ssEmpTaskPeriod, SsEmpTaskBO bo) {
         overlappingPeriodList.forEach(p -> {
+            //获得计算的差额
             Map<String, Object> resultMap = getSsEmpBaseAdjust(p, ssEmpTaskPeriod, bo);
             SsEmpBaseAdjust ssEmpBaseAdjust = (SsEmpBaseAdjust) resultMap.get(TaskPeriodConst.SSEMPBASEADJUST);
-            List<SsEmpBaseAdjustDetail> ssEmpBaseDetailList = (List<SsEmpBaseAdjustDetail>) resultMap.get(TaskPeriodConst.SSEMPBASEADJUSTDETAILLIST);
-            if (null == ssEmpBaseAdjust || null == ssEmpBaseDetailList || ssEmpBaseDetailList.size() == 0)
+            List<SsEmpBaseAdjustDetail> ssEmpBaseAdjustDetailList = (List<SsEmpBaseAdjustDetail>) resultMap.get(TaskPeriodConst.SSEMPBASEADJUSTDETAILLIST);
+            if (null == ssEmpBaseAdjust || null == ssEmpBaseAdjustDetailList || ssEmpBaseAdjustDetailList.size() == 0)
                 throw new BusinessException("转换差异详情异常");
             //保存
-            saveAdjustAndDetail(ssEmpBaseAdjust, ssEmpBaseDetailList);
+            saveAdjustAndDetail(ssEmpBaseAdjust, ssEmpBaseAdjustDetailList);
+
+            //非标数据
+            //逆调
+            bo.setAdustType(0);
+            createNonstandardData(bo,null,ssEmpBaseAdjust,ssEmpBaseAdjustDetailList,null);
         });
     }
 
@@ -700,10 +729,16 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         ssEmpBaseAdjust.setSsMonth(bo.getHandleMonth());
         ssEmpBaseAdjust.setStartMonth(p.getStartMonth());
         ssEmpBaseAdjust.setEndMonth(p.getEndMonth());
-        //通过时间段ID 查询详细表的信息
+        //通过时间段ID 查询详细表的信息 (原缴纳段的数据)
         EntityWrapper ew = new EntityWrapper<SsEmpBasePeriod>();
         ew.where("emp_base_period_id={0}", p.getEmpBasePeriodId()).and("is_active=1");
         List<SsEmpBaseDetail> ssEmpBaseDetailList = ssEmpBaseDetailService.selectList(ew);
+
+        //通过时间段ID 查询详细表的信息 (前道传递)
+        EntityWrapper ew1 = new EntityWrapper<SsEmpTaskFront>();
+        ew1.where("emp_task_id={0}", bo.getEmpTaskId()).and("is_active=1");
+        List<SsEmpTaskFront> ssTaskEmpBaseDetailList = ssEmpTaskFrontService.selectList(ew1);
+
         List<SsEmpBaseAdjustDetail> ssEmpBaseAdjustDetailList = new ArrayList();
         LocalDateTime now = LocalDateTime.now();
         //企业差额合计
@@ -712,46 +747,68 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         BigDecimal empDiffSumAmount = new BigDecimal(0);
         //总差额合计
         BigDecimal comempDiffSumAmount = new BigDecimal(0);
-        for (int i = 0; i < ssEmpBaseDetailList.size(); i++) {
-            SsEmpBaseAdjustDetail ssEmpBaseAdjustDetail = new SsEmpBaseAdjustDetail();
-            SsEmpBaseDetail ssEmpBaseDetail = ssEmpBaseDetailList.get(i);
-            ssEmpBaseAdjustDetail.setEmpArchiveId(p.getEmpArchiveId());
-            ssEmpBaseAdjustDetail.setSsType(ssEmpBaseDetail.getSsType());
-            ssEmpBaseAdjustDetail.setSsTypeName(ssEmpBaseDetail.getSsTypeName());
-            ssEmpBaseAdjustDetail.setComPolicyItemId(ssEmpBaseDetail.getComPolicyItemId());
-            ssEmpBaseAdjustDetail.setEmpCssPolicyItemId(ssEmpBaseDetail.getEmpPolicyItemId());
-            ssEmpBaseAdjustDetail.setComBase(ssEmpTaskPeriod.getBaseAmount());
-            ssEmpBaseAdjustDetail.setEmpBase(ssEmpTaskPeriod.getBaseAmount());
-            ssEmpBaseAdjustDetail.setComRatio(ssEmpBaseDetail.getComRatio());
-            ssEmpBaseAdjustDetail.setEmpRatio(ssEmpBaseDetail.getEmpRatio());
-            //企业总额
-            //BigDecimal base, BigDecimal ratio, BigDecimal fixedAmount, Integer calculateMethod, String roundType
-            //通过进位方式进行 计算
-            BigDecimal comAmount = CalculateSocialUtils.calculateAmount(ssEmpBaseAdjustDetail.getComBase(),ssEmpBaseAdjustDetail.getComRatio(),null,2,"DIT00018");
-            ssEmpBaseAdjustDetail.setComAmount(comAmount);
-            //雇员总额
-            BigDecimal empAmount  = CalculateSocialUtils.calculateAmount(ssEmpBaseAdjustDetail.getEmpBase(),ssEmpBaseAdjustDetail.getEmpRatio(),null,2,"DIT00018");
-            ssEmpBaseAdjustDetail.setEmpAmount(empAmount);
-            //企业+雇员
-            ssEmpBaseAdjustDetail.setComempAmount(ssEmpBaseAdjustDetail.getComAmount().add(ssEmpBaseAdjustDetail.getEmpAmount()));
-            //调整后减去原来 企业部分差额
-            ssEmpBaseAdjustDetail.setComDiffAmount(ssEmpBaseAdjustDetail.getComAmount().subtract(ssEmpBaseDetail.getComAmount()));
-            //调整减原来    雇员部分差额
-            ssEmpBaseAdjustDetail.setEmpDiffAmount(ssEmpBaseAdjustDetail.getEmpAmount().subtract(ssEmpBaseDetail.getEmpAmount()));
-            //总差额
-            ssEmpBaseAdjustDetail.setComempDiffAmount(ssEmpBaseAdjustDetail.getComempAmount().subtract(ssEmpBaseDetail.getComempAmount()));
-            //企业附加金额
-            ssEmpBaseAdjustDetail.setComAdditionAmount(ssEmpBaseDetail.getComAdditionAmount());
-            //雇员附加金额
-            ssEmpBaseAdjustDetail.setEmpAdditionAmount(ssEmpBaseDetail.getEmpAdditionAmount());
-            ssEmpBaseAdjustDetail.setCreatedTime(now);
-            ssEmpBaseAdjustDetail.setModifiedTime(now);
-            by(ssEmpBaseAdjustDetail);
-            comDiffSumAmount = comDiffSumAmount.add(ssEmpBaseAdjustDetail.getComDiffAmount());
-            empDiffSumAmount = empDiffSumAmount.add(ssEmpBaseAdjustDetail.getEmpDiffAmount());
-            comempDiffSumAmount = comempDiffSumAmount.add(ssEmpBaseAdjustDetail.getComempDiffAmount());
-            ssEmpBaseAdjustDetailList.add(ssEmpBaseAdjustDetail);
+        for (int j = 0; j < ssTaskEmpBaseDetailList.size(); j++) {
+            SsEmpTaskFront ssEmpTaskFront =ssTaskEmpBaseDetailList.get(j);
+            for (int i = 0; i < ssEmpBaseDetailList.size(); i++) {
+                SsEmpBaseDetail ssEmpBaseDetail = ssEmpBaseDetailList.get(i);
+                if(ssEmpTaskFront.getItemDicId().equals(ssEmpBaseDetail.getSsType())){
+                    SsEmpBaseAdjustDetail ssEmpBaseAdjustDetail = new SsEmpBaseAdjustDetail();
+                    ssEmpBaseAdjustDetail.setEmpArchiveId(p.getEmpArchiveId());
+                    ssEmpBaseAdjustDetail.setSsType(ssEmpBaseDetail.getSsType());
+                    ssEmpBaseAdjustDetail.setSsTypeName(ssEmpBaseDetail.getSsTypeName());
+                    ssEmpBaseAdjustDetail.setComPolicyItemId(ssEmpBaseDetail.getComPolicyItemId());
+                    ssEmpBaseAdjustDetail.setEmpCssPolicyItemId(ssEmpBaseDetail.getEmpPolicyItemId());
+                    ssEmpBaseAdjustDetail.setComBase(ssEmpTaskFront.getCompanyBase());
+                    ssEmpBaseAdjustDetail.setEmpBase(ssEmpTaskFront.getPersonalBase());
+                    ssEmpBaseAdjustDetail.setComRatio(ssEmpTaskFront.getCompanyRatio());
+                    ssEmpBaseAdjustDetail.setEmpRatio(ssEmpTaskFront.getPersonalRatio());
+                    //企业部分总额
+                    //BigDecimal base, BigDecimal ratio, BigDecimal fixedAmount, Integer calculateMethod, String roundType
+                    //通过进位方式进行 计算(原数据)
+                    BigDecimal comAmount = CalculateSocialUtils.calculateAmount(ssEmpBaseDetail.getComBase(),ssEmpBaseDetail.getComRatio(),null,2,"DIT00018");
+                    //System.out.println(ssEmpBaseDetail.getSsType()+"企业部分原数据额"+comAmount);
+                    //企业部分总额
+                    //通过进位方式进行 计算(前道传递)
+                    BigDecimal frontComAmount = CalculateSocialUtils.calculateAmount(ssEmpTaskFront.getCompanyBase(),ssEmpTaskFront.getCompanyRatio(),null,2,"DIT00018");
+                    //System.out.println(ssEmpBaseDetail.getSsType()+"企业部分前道数据额"+frontComAmount);
+                    ssEmpBaseAdjustDetail.setComAmount(frontComAmount);
+                    //雇员总额(原数据)
+                    BigDecimal empAmount  = CalculateSocialUtils.calculateAmount(ssEmpBaseDetail.getEmpBase(),ssEmpBaseDetail.getEmpRatio(),null,2,"DIT00018");
+                    //System.out.println(ssEmpBaseDetail.getSsType()+"雇员部分原数据额"+empAmount);
+                    //雇员总额(前道传递)
+                    BigDecimal frontEmpAmount  = CalculateSocialUtils.calculateAmount(ssEmpBaseAdjustDetail.getEmpBase(),ssEmpBaseAdjustDetail.getEmpRatio(),null,2,"DIT00018");
+                    //System.out.println(ssEmpBaseDetail.getSsType()+"雇员部分前道数据额"+frontEmpAmount);
+                    ssEmpBaseAdjustDetail.setEmpAmount(frontEmpAmount);
+                    //企业+雇员
+                    ssEmpBaseAdjustDetail.setComempAmount(frontComAmount.add(frontEmpAmount));
+                    //System.out.println(ssEmpBaseDetail.getSsType()+"q前道总额"+ssEmpBaseAdjustDetail.getComempAmount());
+                    //调整后减去原来 企业部分差额
+                    ssEmpBaseAdjustDetail.setComDiffAmount(frontComAmount.subtract(comAmount));
+
+                    //调整减原来    雇员部分差额
+                    ssEmpBaseAdjustDetail.setEmpDiffAmount(frontEmpAmount.subtract(empAmount));
+                    //总差额
+                    ssEmpBaseAdjustDetail.setComempDiffAmount(ssEmpBaseAdjustDetail.getComempAmount().subtract(ssEmpBaseDetail.getComempAmount()));
+//                    //企业附加金额
+//                    ssEmpBaseAdjustDetail.setComAdditionAmount(ssEmpBaseDetail.getComAdditionAmount());
+//                    //雇员附加金额
+//                    ssEmpBaseAdjustDetail.setEmpAdditionAmount(ssEmpBaseDetail.getEmpAdditionAmount());
+                    ssEmpBaseAdjustDetail.setCreatedTime(now);
+                    ssEmpBaseAdjustDetail.setModifiedTime(now);
+                    by(ssEmpBaseAdjustDetail);
+                    comDiffSumAmount = comDiffSumAmount.add(ssEmpBaseAdjustDetail.getComDiffAmount());
+                    System.out.println(ssEmpBaseDetail.getSsType()+":----comDiff["+ssEmpBaseAdjustDetail.getComDiffAmount()+"]");
+                    empDiffSumAmount = empDiffSumAmount.add(ssEmpBaseAdjustDetail.getEmpDiffAmount());
+                    System.out.println(ssEmpBaseDetail.getSsType()+":----empDiff["+ssEmpBaseAdjustDetail.getEmpDiffAmount()+"]");
+                    comempDiffSumAmount = comempDiffSumAmount.add(ssEmpBaseAdjustDetail.getComempDiffAmount());
+                    System.out.println(ssEmpBaseDetail.getSsType()+":----totalDiff["+ssEmpBaseAdjustDetail.getComempDiffAmount()+"]");
+                    ssEmpBaseAdjustDetailList.add(ssEmpBaseAdjustDetail);
+                    break;
+                }
+            }
+
         }
+
         ssEmpBaseAdjust.setComDiffSumAmount(comDiffSumAmount);
         ssEmpBaseAdjust.setEmpDiffSumAmount(empDiffSumAmount);
         ssEmpBaseAdjust.setComempDiffAmount(comempDiffSumAmount);
@@ -847,6 +904,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         if(empSocials.size()==0) throw new BusinessException("前道传递险种详细信息为空");
         //添加明细 （养 医 失 工 生育 险种）
         addEmpBaseDetail(newEmpBasePeriodList, empSocials, bo.getEmpArchiveId());
+        //创建非标 数据
+        SsEmpBasePeriod ssEmpBasePeriod =newEmpBasePeriodList.get(0);
+        createNonstandardData(bo,ssEmpBasePeriod,null,null,null);
     }
 
     /**
@@ -1008,6 +1068,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             ssEmpArchive.setModifiedBy("xsj");
             ssEmpArchive.setModifiedTime(LocalDateTime.now());
             ssEmpArchiveService.updateById(ssEmpArchive);
+            //创建非标数据
+
+             createNonstandardData(bo,ssEmpBasePeriod,null,null,null);
         }else throw new BusinessException("数据库没有缴纳时间段");
     }
 
@@ -1038,6 +1101,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         ssEmpRefund.setCreatedTime(now);
         ssEmpRefund.setModifiedTime(now);
         ssEmpRefundService.insert(ssEmpRefund);
+        //退账生成非标数据
+        createNonstandardData(bo,null,null,null,ssEmpRefund);
     }
 
     /**
@@ -1149,6 +1214,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         if(empSocials.size()==0) throw new BusinessException("前道传递险种详细信息为空");
         //添加明细 （养 医 失 工 生育 险种）
         addEmpBaseDetail(basePeriods, empSocials, empArchiveId);
+
+        {//生成非标数据
+            String now = TaskCommonUtils.getMonthStr(LocalDate.now()).toString();
+            SsEmpBasePeriod ssEmpBasePeriod= basePeriods.get(0);
+            createNonstandardData(bo,ssEmpBasePeriod,null,null,null);
+        }
     }
 
     /**
@@ -1351,6 +1422,316 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      */
     public List<SsEmpTaskBO> queryByTaskId(SsEmpTaskBO ssEmpTaskBO) {
         return baseMapper.queryByTaskId(ssEmpTaskBO);
+    }
+
+    /**
+     * 非标
+     * @param ssEmpTaskBO
+     * @param ssEmpBasePeriod
+     * @param ssEmpBaseAdjust
+     * @param ssEmpBaseAdjustDetailList
+     */
+    public void createNonstandardData(
+        SsEmpTaskBO ssEmpTaskBO,
+        SsEmpBasePeriod ssEmpBasePeriod,
+        SsEmpBaseAdjust ssEmpBaseAdjust,
+        List<SsEmpBaseAdjustDetail> ssEmpBaseAdjustDetailList,
+        SsEmpRefund ssEmpRefund
+        ) {
+
+        //1新进  2  转入 3  调整 4 补缴 5 转出 6封存 7退账  9 特殊操作  10 集体转入   11 集体转出 12 翻牌
+            switch (ssEmpTaskBO.getTaskCategory()){
+                case 1:
+                case 2:
+                    ssEmpBasePeriod.setEndMonth(ssEmpBasePeriod.getSsMonth());
+                    //新进转入 只有办理月份 需要做非标数据
+                    createNewOrIntoNonstandard(ssEmpTaskBO,ssEmpBasePeriod);
+                    break;
+                case 3://3  调整
+                    if(1==ssEmpTaskBO.getAdustType()){//顺调
+                        ssEmpBasePeriod.setEndMonth(ssEmpBasePeriod.getSsMonth());
+                        createNewOrIntoNonstandard(ssEmpTaskBO,ssEmpBasePeriod);
+                    }else{//逆调
+                        createAdjustNonstandard(ssEmpTaskBO,ssEmpBaseAdjust,ssEmpBaseAdjustDetailList);
+                    }
+                    break;
+                case 4:
+                    //补缴
+                    createNewOrIntoNonstandard(ssEmpTaskBO,ssEmpBasePeriod);
+                    break;
+                case 5:
+                case 6:
+                    ssEmpBasePeriod.setStartMonth(ssEmpTaskBO.getHandleMonth());
+                    ssEmpBasePeriod.setEndMonth(ssEmpTaskBO.getHandleMonth());
+                    //新进转入 只有办理月份 需要做非标数据
+                    createNewOrIntoNonstandard(ssEmpTaskBO,ssEmpBasePeriod);
+                    break ;
+                case 7:
+                    //退账
+                    createRefundNonstandard(ssEmpTaskBO,ssEmpRefund);
+                    break;
+            }
+    }
+
+    /**
+     * 退账 非标数据
+     * @param ssEmpTaskBO
+     * @param ssEmpRefund
+     */
+    private void createRefundNonstandard(SsEmpTaskBO ssEmpTaskBO, SsEmpRefund ssEmpRefund) {
+        int startMonth =Integer.valueOf(ssEmpRefund.getStartMonth());
+        int endMontrh = Integer.valueOf(ssEmpRefund.getEndMonth());
+        int totalMonthCount = endMontrh-startMonth+1;
+        //每个月的缴纳金额
+        BigDecimal eachMonthAmount = ssEmpRefund.getAmount().divide(new BigDecimal(totalMonthCount));
+        SsMonthCharge ssMonthCharge = getSsMonthCharge(ssEmpTaskBO);
+        ssMonthCharge.setCostCategory(8);
+        ssMonthCharge.setTotalAmount(eachMonthAmount);
+        for (int i = startMonth; i <=endMontrh; i=TaskCommonUtils.getNextMonthInt(i)) {
+            ssMonthCharge.setSsMonthBelong(String.valueOf(i));
+            ssMonthChargeService.insert(ssMonthCharge);
+        }
+    }
+
+    /**
+     * 逆调
+     * @param ssEmpTaskBO
+     * @param ssEmpBaseAdjust
+     * @param ssEmpBasedjustDetailList
+     */
+    private void createAdjustNonstandard(SsEmpTaskBO ssEmpTaskBO, SsEmpBaseAdjust ssEmpBaseAdjust, List<SsEmpBaseAdjustDetail> ssEmpBasedjustDetailList) {
+        //backwardAdjust
+        //SsEmpTaskBO ssEmpTaskBO, SsEmpBasePeriod ssEmpBasePeriod, List<SsEmpBaseDetail> ssEmpBaseDetailList
+        addSsMonthChargeAndDetails(ssEmpTaskBO,null,null,ssEmpBaseAdjust,ssEmpBasedjustDetailList);
+
+    }
+
+    /**
+     *  除 逆调 和 退账 其他的非标数据生成 走这里
+     * @param ssEmpTaskBO
+     * @param ssEmpBasePeriod
+     */
+    private void createNewOrIntoNonstandard(SsEmpTaskBO ssEmpTaskBO,SsEmpBasePeriod ssEmpBasePeriod) {
+
+        Long empBasePeriodId = ssEmpBasePeriod.getEmpBasePeriodId();
+        //通过empBasePeriodId 获得明细
+        EntityWrapper<SsEmpBaseDetail> ew = new EntityWrapper();
+        ew.where("emp_base_period_id={0}",empBasePeriodId).and("is_active=1");
+        List<SsEmpBaseDetail> ssEmpBaseDetailList = ssEmpBaseDetailService.selectList(ew);
+        if(ssEmpBaseDetailList.size()==0)throw new BusinessException("后台异常");
+            //获得月度变更 对象 和 详细数据
+            addSsMonthChargeAndDetails(ssEmpTaskBO,ssEmpBasePeriod,ssEmpBaseDetailList, null,null);
+    }
+
+
+    /**
+     * 添加 非标数据
+     * @param ssEmpTaskBO
+     * @param ssEmpBasePeriod
+     * @param ssEmpBaseDetailList
+     */
+    private void addSsMonthChargeAndDetails(
+        SsEmpTaskBO ssEmpTaskBO, SsEmpBasePeriod ssEmpBasePeriod, List<SsEmpBaseDetail> ssEmpBaseDetailList,
+        SsEmpBaseAdjust ssEmpBaseAdjust, List<SsEmpBaseAdjustDetail> ssEmpBaseeAdjustDetailList
+    ) {
+        //创建通用的 月度非标数据
+        SsMonthCharge ssMonthCharge = getSsMonthCharge(ssEmpTaskBO);
+        //1新进  2  转入 3  调整 4 补缴 5 转出 6封存 7退账  9 特殊操作  10 集体转入   11 集体转出 12 翻牌
+        switch (ssEmpTaskBO.getTaskCategory()){
+            case 1:
+            case 10:
+                ssMonthCharge.setCostCategory(2);
+                createSsMonthChargeObject(ssEmpBasePeriod,ssMonthCharge,ssEmpBaseDetailList);
+                break;
+            case 2:
+            case 11:
+                ssMonthCharge.setCostCategory(3);
+                createSsMonthChargeObject(ssEmpBasePeriod,ssMonthCharge,ssEmpBaseDetailList);
+                break;
+            case 3:
+                if(1==ssEmpTaskBO.getAdustType()){//顺调
+                    ssMonthCharge.setCostCategory(5);
+                    createSsMonthChargeObject(ssEmpBasePeriod,ssMonthCharge,ssEmpBaseDetailList);
+                }else{//逆调
+                    ssMonthCharge.setCostCategory(9);
+                    createSsMonthChargeObject(ssEmpTaskBO,ssEmpBaseAdjust,ssEmpBaseeAdjustDetailList,ssMonthCharge);
+                }
+                break;
+            case 4://补缴
+                ssMonthCharge.setCostCategory(4);
+                createSsMonthChargeObject(ssEmpBasePeriod,ssMonthCharge,ssEmpBaseDetailList);
+                break;
+            case 5:
+                ssMonthCharge.setCostCategory(6);
+                createSsMonthChargeObject(ssEmpBasePeriod,ssMonthCharge,ssEmpBaseDetailList);
+                break;
+            case 6:
+                ssMonthCharge.setCostCategory(7);
+                createSsMonthChargeObject(ssEmpBasePeriod,ssMonthCharge,ssEmpBaseDetailList);
+                break;
+        }
+    }
+
+    /**
+     * 创建通用的 月度非标数据
+     * @param ssEmpTaskBO
+     * @return
+     */
+    private SsMonthCharge getSsMonthCharge(SsEmpTaskBO ssEmpTaskBO) {
+        SsMonthCharge ssMonthCharge = new SsMonthCharge();
+        ssMonthCharge.setEmpTaskId(ssEmpTaskBO.getEmpTaskId());
+        ssMonthCharge.setComAccountId(ssEmpTaskBO.getComAccountId());
+        ssMonthCharge.setEmployeeId(ssEmpTaskBO.getEmployeeId());
+        ssMonthCharge.setEmpArchiveId(String.valueOf(ssEmpTaskBO.getEmpArchiveId()));
+        ssMonthCharge.setSsMonth(ssEmpTaskBO.getHandleMonth());
+        by(ssMonthCharge);
+        return ssMonthCharge;
+    }
+
+    /**
+     * 创建非标(顺调和新进转入 补缴)
+     * @param ssEmpBasePeriod
+     * @param ssMonthCharge
+     */
+    private void createSsMonthChargeObject(SsEmpBasePeriod ssEmpBasePeriod, SsMonthCharge ssMonthCharge,List<SsEmpBaseDetail> ssEmpBaseDetailList) {
+        int startMonth = Integer.valueOf(ssEmpBasePeriod.getStartMonth());
+        int endMonth = Integer.valueOf( ssEmpBasePeriod.getEndMonth());
+        BigDecimal negative =new BigDecimal(-1);
+        for (int i = startMonth; i <=endMonth; i=TaskCommonUtils.getNextMonthInt(i)) {
+            ssMonthCharge.setSsMonthBelong(String.valueOf(i));
+            //转出和封存是负数
+            ssMonthCharge.setBaseAmount(ssEmpBasePeriod.getBaseAmount());
+            List<SsMonthChargeItem> ssMonthChargeItemList = new ArrayList<>();
+            ssMonthChargeService.insert(ssMonthCharge);
+            BigDecimal totalAmount = new BigDecimal(0);
+            //明细表
+            for (int j = 0; j < ssEmpBaseDetailList.size(); j++) {
+                SsEmpBaseDetail ssEmpBaseDetail =ssEmpBaseDetailList.get(j);
+                SsMonthChargeItem ssMonthChargeItem = new SsMonthChargeItem();
+                ssMonthChargeItem.setMonthChargeId(ssMonthCharge.getMonthChargeId());
+                //转出和封存是负数
+                ssMonthChargeItem.setComAmount(6==ssMonthCharge.getCostCategory()|| 7==ssMonthCharge.getCostCategory()?ssEmpBaseDetail.getComAmount().multiply(negative):ssEmpBaseDetail.getComAmount());
+                ssMonthChargeItem.setEmpAmount(6==ssMonthCharge.getCostCategory()|| 7==ssMonthCharge.getCostCategory()?ssEmpBaseDetail.getEmpAmount().multiply(negative):ssEmpBaseDetail.getEmpAmount());
+                ssMonthChargeItem.setSubTotalAmount(6==ssMonthCharge.getCostCategory()|| 7==ssMonthCharge.getCostCategory()?ssEmpBaseDetail.getComempAmount().multiply(negative):ssEmpBaseDetail.getComempAmount());
+                ssMonthChargeItem.setSsType(ssEmpBaseDetail.getSsType());
+                ssMonthChargeItem.setSsTypeName(ssEmpBaseDetail.getSsTypeName());
+                by(ssMonthChargeItem);
+                ssMonthChargeItemList.add(ssMonthChargeItem);
+                //主表没有记录 总额的数据 所以需要先计算
+                totalAmount=totalAmount.add(ssEmpBaseDetail.getComempAmount());
+            }
+            ssMonthCharge.setTotalAmount(6==ssMonthCharge.getCostCategory()|| 7==ssMonthCharge.getCostCategory()?totalAmount.multiply(negative):totalAmount);
+            ssMonthChargeService.updateById(ssMonthCharge);
+            ssMonthChargeItemService.insertBatch(ssMonthChargeItemList);
+        }
+    }
+    /**
+     * 创建非标(逆调)
+     * @param ssEmpTaskBO
+     * @param ssEmpBaseAdjust
+     * @param ssEmpBaseeAdjustDetailList
+     * @param ssMonthCharge
+     */
+    private void createSsMonthChargeObject(SsEmpTaskBO ssEmpTaskBO, SsEmpBaseAdjust ssEmpBaseAdjust, List<SsEmpBaseAdjustDetail> ssEmpBaseeAdjustDetailList, SsMonthCharge ssMonthCharge) {
+        int startMonth = Integer.parseInt(ssEmpBaseAdjust.getStartMonth());
+        int endMonth = Integer.parseInt(ssEmpBaseAdjust.getEndMonth());
+        //将每个月拆分出来
+        for (int i = startMonth; i <= endMonth; i=TaskCommonUtils.getNextMonthInt(i)) {
+            //删除 该员工 该所属月份 该办理月份的 非标数据(即 重新发调整任务单 并且 该任务是已办未做)
+            ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(),String.valueOf(i),ssEmpTaskBO.getHandleMonth(),ssMonthCharge.getCostCategory());
+            //减去 该所属月份的调整的历史差额总和
+            List<SsMonthChargeBO> ssMonthChargeBOList = ssMonthChargeService.selectTotalFromOld(ssEmpTaskBO.getEmployeeId(),String.valueOf(i));
+                ssMonthCharge.setSsMonthBelong(String.valueOf(i));
+                ssMonthCharge.setBaseAmount(ssEmpBaseAdjust.getNewBaseAmount());
+                ssMonthCharge.setTotalAmount(ssEmpBaseAdjust.getComempDiffAmount());
+                //计算总额 并添加
+                calculationTotalAmountAndAdd(ssMonthChargeBOList,ssEmpBaseeAdjustDetailList,ssMonthCharge);
+        }
+    }
+
+    /**
+     * 计算 历史调整 总额
+     * @param ssMonthChargeBOList
+     * @param ssEmpBaseeAdjustDetailList
+     */
+    private void calculationTotalAmountAndAdd(List<SsMonthChargeBO> ssMonthChargeBOList, List<SsEmpBaseAdjustDetail> ssEmpBaseeAdjustDetailList,SsMonthCharge ssMonthCharge) {
+
+        if(ssMonthChargeBOList.size()==0){
+            //将 调整明细的 五险 转 非标的明细(无历史已做)
+            transAdjustToMonthChargeItem(ssEmpBaseeAdjustDetailList,ssMonthCharge,null);
+        }else {
+            //将 调整明细的 五险 转 非标的明细
+            transAdjustToMonthChargeItem(ssEmpBaseeAdjustDetailList, ssMonthCharge, ssMonthChargeBOList);
+        }
+    }
+
+    private void transAdjustToMonthChargeItem(List<SsEmpBaseAdjustDetail> ssEmpBaseeAdjustDetailList, SsMonthCharge ssMonthCharge, List<SsMonthChargeBO> ssMonthChargeBOList) {
+        boolean haveHistoryData = null==ssMonthChargeBOList?false:true;
+        //记录每个险种对应的历史总额
+        Map<String,BigDecimal[]> totalDetailMap = new HashMap();
+        //有历史 已做数据
+        if(haveHistoryData){
+            BigDecimal total = new BigDecimal(0);
+            for (int i = 0; i < ssMonthChargeBOList.size(); i++) {
+                SsMonthChargeBO ssMonthChargeBO = ssMonthChargeBOList.get(i);
+                //计算总差额
+                total=total.add(ssMonthChargeBO.getTotalAmount());
+                //计算单个险种历史差异总额
+                setDetailTotal(totalDetailMap,ssMonthChargeBO.getSsMonthChargeItemList());
+            }
+            //总额减去 历史
+            ssMonthCharge.setTotalAmount(ssMonthCharge.getTotalAmount().subtract(total));
+        }
+        //添加 月度变更主表
+        ssMonthChargeService.insert(ssMonthCharge);
+
+        List<SsMonthChargeItem> ssMonthChargeItemList = new ArrayList<>();
+        //将 差异表转换成 非标
+        ssEmpBaseeAdjustDetailList.forEach(p->{
+            SsMonthChargeItem ssMonthChargeItem = new SsMonthChargeItem();
+            ssMonthChargeItem.setSsTypeName(p.getSsTypeName());
+            ssMonthChargeItem.setSsType(p.getSsType());
+            if(haveHistoryData){
+                BigDecimal[] amountDetailArr = totalDetailMap.get(p.getSsType());
+                ssMonthChargeItem.setEmpAmount(p.getEmpDiffAmount().subtract(amountDetailArr[0]));
+                ssMonthChargeItem.setComAmount(p.getComDiffAmount().subtract(amountDetailArr[1]));
+                ssMonthChargeItem.setSubTotalAmount(p.getComempDiffAmount().subtract(amountDetailArr[2]));
+            }else{
+                ssMonthChargeItem.setEmpAmount(p.getEmpDiffAmount());
+                ssMonthChargeItem.setComAmount(p.getComDiffAmount());
+                ssMonthChargeItem.setSubTotalAmount(p.getComempDiffAmount());
+            }
+            ssMonthChargeItem.setMonthChargeId(ssMonthCharge.getMonthChargeId());
+            by(ssMonthChargeItem);
+            ssMonthChargeItemList.add(ssMonthChargeItem);
+        });
+        ssMonthChargeItemService.insertBatch(ssMonthChargeItemList);
+    }
+
+    /**
+     *  获得单个险种历史差异总额
+     * @param totalDetail
+     * @param ssMonthChargeItemList
+     */
+    private void setDetailTotal(Map<String, BigDecimal[]> totalDetail, List<SsMonthChargeItem> ssMonthChargeItemList) {
+
+        for (int i = 0; i <ssMonthChargeItemList.size() ; i++) {
+            SsMonthChargeItem ssMonthChargeItem = ssMonthChargeItemList.get(i);
+           String ssType = ssMonthChargeItem.getSsType();
+            if(null==totalDetail.get(ssType)){
+                BigDecimal[] bigDecimalArr = new BigDecimal[3];
+                bigDecimalArr[0]=ssMonthChargeItem.getEmpAmount();
+                bigDecimalArr[1]=ssMonthChargeItem.getComAmount();
+                bigDecimalArr[2]=ssMonthChargeItem.getSubTotalAmount();
+                totalDetail.put(ssType,bigDecimalArr);
+            }else{
+                BigDecimal[] data = totalDetail.get(ssType);
+                data[0] = data[0].add(ssMonthChargeItem.getEmpAmount());
+                data[1] =  data[1].add(ssMonthChargeItem.getComAmount());
+                data[2] = data[2].add(ssMonthChargeItem.getSubTotalAmount());
+            }
+
+        }
     }
 }
 

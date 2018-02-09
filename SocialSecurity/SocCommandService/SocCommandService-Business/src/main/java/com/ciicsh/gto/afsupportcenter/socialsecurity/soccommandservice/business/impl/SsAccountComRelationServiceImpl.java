@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAcco
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAccountComRelationService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsAccountComRelationMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.AccountCompanyRelationOpt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,5 +40,10 @@ public class SsAccountComRelationServiceImpl extends ServiceImpl<SsAccountComRel
      */
     public List<SsAccountComRelation> queryByCond(Map cond) {
         return baseMapper.queryByCond(cond);
+    }
+
+    @Override
+    public AccountCompanyRelationOpt getAccountCompanyRelationByAccountId(Long comAccountId) {
+        return baseMapper.getAccountCompanyRelationByAccountId(comAccountId);
     }
 }

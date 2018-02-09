@@ -40,14 +40,29 @@ public class HfEmpTask implements Serializable {
 	@TableField("emp_archive_id")
 	private Long empArchiveId;
     /**
+     * 入职日期
+     */
+	@TableField("in_date")
+	private LocalDateTime inDate;
+    /**
+     * 是否更正 1 是 0 否
+     */
+	@TableField("is_change")
+	private Integer isChange;
+    /**
      * 公积金类型:1 基本 2 补充
             
      */
 	@TableField("hf_type")
 	private Integer hfType;
     /**
+     * 雇员公积金账号
+     */
+	@TableField("hf_emp_account")
+	private String hfEmpAccount;
+    /**
      * 任务类型：1 新增(新开) 、2 新增（转入） 、3 新增（启封）、4 调整（封存）、5 调整（启封）、
-            6 补缴、7 离职（转出）、8 离职（封存）、9 转移、 10 特殊任务  11 集体转入  12  集体转出  13 公积金年调
+            6 补缴、7 离职（转出）、8 离职（封存）、9 转移、 10 特殊任务  11 集体转入  12  集体转出  13 翻牌
      */
 	@TableField("task_category")
 	private Integer taskCategory;
@@ -200,7 +215,7 @@ public class HfEmpTask implements Serializable {
      */
 	private BigDecimal amount;
     /**
-     * 转出单位
+     * 转出单位(来源地)
      */
 	@TableField("transfer_out_unit")
 	private String transferOutUnit;
@@ -239,6 +254,11 @@ public class HfEmpTask implements Serializable {
      */
 	@TableField("business_interface_id")
 	private String businessInterfaceId;
+    /**
+     * 前道传递的政策明细ID,用它调用系统中心获取进位方式
+     */
+	@TableField("policy_detail_id")
+	private Integer policyDetailId;
     /**
      * TaskService 反馈的 task_id  流程下的任务ID
      */
@@ -303,12 +323,36 @@ public class HfEmpTask implements Serializable {
 		this.empArchiveId = empArchiveId;
 	}
 
+	public LocalDateTime getInDate() {
+		return inDate;
+	}
+
+	public void setInDate(LocalDateTime inDate) {
+		this.inDate = inDate;
+	}
+
+	public Integer getIsChange() {
+		return isChange;
+	}
+
+	public void setIsChange(Integer isChange) {
+		this.isChange = isChange;
+	}
+
 	public Integer getHfType() {
 		return hfType;
 	}
 
 	public void setHfType(Integer hfType) {
 		this.hfType = hfType;
+	}
+
+	public String getHfEmpAccount() {
+		return hfEmpAccount;
+	}
+
+	public void setHfEmpAccount(String hfEmpAccount) {
+		this.hfEmpAccount = hfEmpAccount;
 	}
 
 	public Integer getTaskCategory() {
@@ -599,6 +643,14 @@ public class HfEmpTask implements Serializable {
 		this.businessInterfaceId = businessInterfaceId;
 	}
 
+	public Integer getPolicyDetailId() {
+		return policyDetailId;
+	}
+
+	public void setPolicyDetailId(Integer policyDetailId) {
+		this.policyDetailId = policyDetailId;
+	}
+
 	public String getTaskId() {
 		return taskId;
 	}
@@ -654,7 +706,10 @@ public class HfEmpTask implements Serializable {
 			", companyId=" + companyId +
 			", employeeId=" + employeeId +
 			", empArchiveId=" + empArchiveId +
+			", inDate=" + inDate +
+			", isChange=" + isChange +
 			", hfType=" + hfType +
+			", hfEmpAccount=" + hfEmpAccount +
 			", taskCategory=" + taskCategory +
 			", urgent=" + urgent +
 			", operationRemind=" + operationRemind +
@@ -691,6 +746,7 @@ public class HfEmpTask implements Serializable {
 			", feedbackDate=" + feedbackDate +
 			", operateDate=" + operateDate +
 			", businessInterfaceId=" + businessInterfaceId +
+			", policyDetailId=" + policyDetailId +
 			", taskId=" + taskId +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +

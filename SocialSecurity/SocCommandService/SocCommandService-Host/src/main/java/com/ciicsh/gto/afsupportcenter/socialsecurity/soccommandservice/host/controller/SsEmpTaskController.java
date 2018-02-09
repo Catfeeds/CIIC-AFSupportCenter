@@ -6,13 +6,17 @@ import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.CommonApiUtils;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpArchiveBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskRollInBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskRollOutBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.SsAnnualAdjustEmployeeDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.*;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.empSSSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.dto.emptask.EmpTaskBatchParameter;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -33,10 +37,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * <p>
@@ -65,6 +66,14 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     public JsonResult<List<SsEmpTaskBO>> employeeOperatorQuery(PageInfo pageInfo) {
         PageRows<SsEmpTaskBO> pageRows = business.employeeOperatorQuery(pageInfo);
         return JsonResultKit.ofPage(pageRows);
+    }
+
+    @RequestMapping("/employeeOperatorQueryExport")
+    public void employeeOperatorQueryExport(HttpServletResponse response,PageInfo pageInfo) {
+        Date date = new Date();
+        String fileNme = "雇员社保查询_"+ StringUtil.getDateString(date)+".xls";
+        PageRows<SsEmpTaskBO> pageRows= business.employeeOperatorQuery(pageInfo);
+        ExcelUtil.exportExcel(pageRows.getRows(),SsEmpTaskBO.class,fileNme,response);
     }
 
     /**
@@ -112,6 +121,17 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         if(isNeedSerial==1 && dto.getTaskStatus()==1){
             String ssSerial = business.selectMaxSsSerialByTaskId(empTaskId);
             dto.setEmpSsSerial(ssSerial);
+        }
+        //查询该雇员是否还有其他已办理或者未办理的任务
+       EntityWrapper<SsEmpTask> ew =  new EntityWrapper<SsEmpTask>();
+        ew.where("employee_id={0}",dto.getEmployeeId())
+            .and("task_category={0}",dto.getTaskCategory())
+            .and("is_active=1").and("emp_task_id!={0}",dto.getEmpTaskId()).and("task_status=1");
+        List<SsEmpTask> ssEmpTaskList = business.selectList(ew);
+        if(ssEmpTaskList.size()>0){
+            dto.setIsHaveSameTask(1);
+        }else{
+            dto.setIsHaveSameTask(0);
         }
         return JsonResultKit.of(dto);
     }

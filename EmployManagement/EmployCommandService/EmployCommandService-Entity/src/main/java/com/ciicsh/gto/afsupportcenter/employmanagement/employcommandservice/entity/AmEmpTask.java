@@ -86,6 +86,11 @@ public class AmEmpTask implements Serializable {
 	@TableField("rejection_remark")
 	private String rejectionRemark;
     /**
+     * TaskService 反馈的 task_id  流程下的任务ID
+     */
+	@TableField("task_id")
+	private String taskId;
+    /**
      * 是否可用
      */
 	@TableField("is_active")
@@ -216,6 +221,14 @@ public class AmEmpTask implements Serializable {
 		this.rejectionRemark = rejectionRemark;
 	}
 
+	public String getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
+	}
+
 	public Boolean getActive() {
 		return isActive;
 	}
@@ -272,6 +285,7 @@ public class AmEmpTask implements Serializable {
 			", handleTime=" + handleTime +
 			", handleRemark=" + handleRemark +
 			", rejectionRemark=" + rejectionRemark +
+			", taskId=" + taskId +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +
