@@ -10,6 +10,7 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.SupplyMedicalAcce
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.SupplyMedicalAcceptance;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,6 +41,7 @@ public interface SupplyMedicalAcceptanceMapper extends BaseMapper<SupplyMedicalA
 
     /**
      * 更新状态
+     *
      * @param acceptanceId
      * @param status
      * @param remark
@@ -50,6 +52,7 @@ public interface SupplyMedicalAcceptanceMapper extends BaseMapper<SupplyMedicalA
 
     /**
      * 更新受理单状态为已同步
+     *
      * @param batchId
      * @param businessId
      * @param status
@@ -61,6 +64,7 @@ public interface SupplyMedicalAcceptanceMapper extends BaseMapper<SupplyMedicalA
 
     /**
      * 查询已审核未同步申请
+     *
      * @param
      * @return
      */
@@ -68,6 +72,7 @@ public interface SupplyMedicalAcceptanceMapper extends BaseMapper<SupplyMedicalA
 
     /**
      * 查询退票申请
+     *
      * @param
      * @return
      */
@@ -75,8 +80,17 @@ public interface SupplyMedicalAcceptanceMapper extends BaseMapper<SupplyMedicalA
 
     /**
      * 查询信息有误未同步数据
+     *
      * @param
      * @return
      */
     List<EmpBankRefundBO> selectUnSync();
+
+    /**
+     * 批量更新受理单
+     *
+     * @param date
+     * @return
+     */
+    Integer updateByEntity(Date date);
 }

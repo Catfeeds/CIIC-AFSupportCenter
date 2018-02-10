@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -184,14 +185,32 @@ public class SupplyMedicalController {
      *
      * @return
      */
-    @GetMapping("/syncAcceptanceSummaryDetail")
+    @Scheduled(cron = "0 0 */2 * * ?")
     public Result syncAcceptanceSummaryDetail() {
         try {
             boolean flag = supplyMedicalAcceptanceService.syncAcceptanceSummaryDetail();
-            logger.info("定时同步智灵通数据");
+            logger.info("同步智灵通受理单、发票数据");
             return ResultGenerator.genSuccessResult(flag);
         } catch (Exception e) {
             return ResultGenerator.genServerFailResult();
         }
     }
+
+    /**
+     * 定时更新数据
+     *
+     * @return
+     */
+    @Scheduled(cron = "0 */2 * * * ?")
+    public Result updateAcceptanceStatus() {
+        try {
+            supplyMedicalAcceptanceService.updateAcceptanceStatus();
+            logger.info("定时更新受理单状态");
+            return ResultGenerator.genSuccessResult();
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
+        }
+    }
+
+
 }

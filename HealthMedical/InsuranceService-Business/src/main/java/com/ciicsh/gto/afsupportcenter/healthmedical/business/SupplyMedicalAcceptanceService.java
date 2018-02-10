@@ -44,9 +44,14 @@ public interface SupplyMedicalAcceptanceService extends IService<SupplyMedicalAc
 
 
     /**
+     * 定时同步更新审批状态
+     */
+    void updateAcceptanceStatus();
+
+    /**
      * 导入方法
      *
-     * @throws IOException
+     * @param inputStream
      */
     void importAcceptanceXls(InputStream inputStream);
 }
