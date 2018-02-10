@@ -49,36 +49,37 @@
     </resultMap>
     <select id="paymentQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentBO" resultMap="DtoResultMap">
         SELECT
-            SP.*
+            sp.*
         FROM
-            ss_payment SP
+            ss_payment sp
         WHERE
-            SP.is_active = '1'
+            sp.is_active = '1'
             <if test = "accountType != null and accountType != ''">
-            AND SP.account_type = #{accountType}
+            AND sp.account_type = #{accountType}
             </if>
             <if test = "paymentBatchNum != null and paymentBatchNum != ''">
-                AND SP.payment_batch_num = #{paymentBatchNum}
+                AND sp.payment_batch_num = #{paymentBatchNum}
             </if>
             <if test = "paymentMonthMin != null and paymentMonthMin != ''">
                 <![CDATA[
-                    AND SP.payment_month >= #{paymentMonthMin}
+                    AND sp.payment_month >= #{paymentMonthMin}
                   ]]>
             </if>
             <if test = "paymentMonthMax != null and paymentMonthMax != ''">
                 <![CDATA[
-                    AND SP.payment_month <= #{paymentMonthMax}
+                    AND sp.payment_month <= #{paymentMonthMax}
                   ]]>
             </if>
             <if test = "paymentState != null and paymentState != ''">
-                AND SP.payment_state = #{paymentState}
+                AND sp.payment_state = #{paymentState}
             </if>
             <if test = "paymentStateList != null">
-                AND SP.payment_state IN
+                AND sp.payment_state IN
                 <foreach collection="paymentStateList" item="state" open="(" close=")" separator=",">
                     #{state}
                 </foreach>
             </if>
+            ORDER BY sp.created_time DESC
     </select>
 
     <select id="searchPaymentByAccountTypeAndState" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentSrarchBO" resultMap="DtoResultMap">
@@ -110,10 +111,10 @@
 
     </select>
     <select id="getPaymentEmpList" resultMap="PaymentEmpDtoResultMap">
-    SELECT emp.employee_id,emp.employee_name,pc.company_id,pc.payment_month,pc.total_pay_amount,mc.emp_payment_status
+    SELECT emp.employee_id,emp.employee_name,pc.company_id,pc.payment_month,
+    pc.total_pay_amount,ifnull(mc.emp_payment_status,1) emp_payment_status
     FROM ss_month_charge mc
-    INNER JOIN emp_employee emp ON mc.employee_id=mc.employee_id
-    INNER JOIN ss_emp_archive ea ON ea.emp_archive_id=mc.emp_archive_id
+    INNER JOIN emp_employee emp ON emp.employee_id=mc.employee_id
     INNER JOIN ss_payment_com pc ON pc.com_account_id=mc.com_account_id
     WHERE pc.is_active=1
     AND mc.ss_month=#{paymentMonth}
