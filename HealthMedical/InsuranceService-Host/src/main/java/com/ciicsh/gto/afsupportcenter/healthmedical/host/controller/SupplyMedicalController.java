@@ -201,7 +201,7 @@ public class SupplyMedicalController {
      *
      * @return
      */
-    @Scheduled(cron = "0 */2 * * * ?")
+    @Scheduled(cron = "0 0 2 * * ?")
     public Result updateAcceptanceStatus() {
         try {
             supplyMedicalAcceptanceService.updateAcceptanceStatus();
