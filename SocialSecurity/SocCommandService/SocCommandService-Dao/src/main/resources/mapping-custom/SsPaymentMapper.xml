@@ -111,10 +111,10 @@
 
     </select>
     <select id="getPaymentEmpList" resultMap="PaymentEmpDtoResultMap">
-    SELECT emp.employee_id,emp.employee_name,pc.company_id,pc.payment_month,pc.total_pay_amount,mc.emp_payment_status
+    SELECT emp.employee_id,emp.employee_name,pc.company_id,pc.payment_month,
+    pc.total_pay_amount,ifnull(mc.emp_payment_status,1) emp_payment_status
     FROM ss_month_charge mc
     INNER JOIN emp_employee emp ON emp.employee_id=mc.employee_id
-    INNER JOIN ss_emp_archive ea ON ea.emp_archive_id=mc.emp_archive_id
     INNER JOIN ss_payment_com pc ON pc.com_account_id=mc.com_account_id
     WHERE pc.is_active=1
     AND mc.ss_month=#{paymentMonth}

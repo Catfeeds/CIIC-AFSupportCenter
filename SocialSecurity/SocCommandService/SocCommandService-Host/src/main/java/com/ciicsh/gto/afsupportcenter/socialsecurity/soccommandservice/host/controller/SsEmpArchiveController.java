@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpArchiveBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpBasePeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpArchive;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpBasePeriod;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.custom.StatementExportArgs;
@@ -110,5 +111,13 @@ public class SsEmpArchiveController extends BasicController<SsEmpArchiveService>
 
         return JsonResultKit.of(resultMap);
     }
+    @RequestMapping("/saveEmpSerial")
+    public void saveEmpSerial(@RequestParam Map<String,String> map) {
+        SsEmpArchive ssEmpArchive = new SsEmpArchive();
+        ssEmpArchive.setSsSerial(ssEmpArchive.getSsSerial());
+        ssEmpArchive.setEmpArchiveId(Long.valueOf(map.get("empArchiveId")));
+        business.updateById(ssEmpArchive);
+    }
+
 }
 
