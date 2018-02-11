@@ -34,4 +34,13 @@
         <result column="payment_way"   property="isAdvance" />
     </resultMap>
 
+    <resultMap id="PaymentEmpDtoResultMap" type="com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyEmployeeProxyDTO">
+        <result column="employee_id" property="employeeId" />
+        <result column="employee_name" property="employeeName" />
+        <result column="company_id" property="companyId" />
+        <result column="payment_month"  property="payMonth" />
+        <result column="total_pay_amount"  property="payAmount" />
+        <result column="emp_payment_status"   property="isAdvance" />
+    </resultMap>
+
 </mapper>
