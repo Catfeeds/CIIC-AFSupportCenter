@@ -29,19 +29,19 @@
 
     <resultMap id="QueryBachResultMap" extends="BaseResultMapDto"
                type="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO">
-        <collection property="empTaskPeriods"   ofType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod">
-            <id column="emp_task_period_id" property="empTaskPeriodId" />
-            <result column="emp_task_id_p" property="empTaskId" />
-            <result column="base_amount_p" property="baseAmount" />
-            <result column="start_month_p" property="startMonth" />
-            <result column="end_month_p" property="endMonth" />
-            <result column="remit_way_p" property="remitWay" />
+        <collection property="empTaskPeriods"
+                    ofType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTaskPeriod">
+            <id column="emp_task_period_id" property="empTaskPeriodId"/>
+            <result column="emp_task_id_p" property="empTaskId"/>
+            <result column="base_amount_p" property="baseAmount"/>
+            <result column="start_month_p" property="startMonth"/>
+            <result column="end_month_p" property="endMonth"/>
+            <result column="remit_way_p" property="remitWay"/>
         </collection>
     </resultMap>
-    <!--雇员日常操作查询-->
-    <select id="employeeDailyOperatorQuery" resultMap="BaseResultMapDto">
-        select
-        et.emp_task_id,
+
+    <sql id="employeeDailyOperatorQuery_select">
+         et.emp_task_id,
         et.customer_id,
         et.emp_archive_id,
         et.task_category,
@@ -88,6 +88,80 @@
         ca.supplier_id,
         c.company_id,
         c.title
+    </sql>
+    <sql id="employeeDailyOperatorQuery_where">
+        <if test="employeeName != null">
+            AND e.employee_name LIKE CONCAT('%',#{employeeName},'%')
+        </if>
+        <if test="settlementArea != null">
+            AND ca.settlement_area = #{settlementArea}
+        </if>
+        <if test="ssAccountType != null">
+            AND ca.ss_account_type = #{ssAccountType}
+        </if>
+        <if test="empClassify != null">
+            AND et.emp_classify = #{empClassify}
+        </if>
+        <if test="ssAccount != null">
+            AND ca.ss_account = #{ssAccount}
+        </if>
+        <if test="companyId != null">
+            AND c.company_id LIKE CONCAT('%',#{companyId},'%')
+        </if>
+        <if test="idNum != null">
+            AND e.id_num LIKE CONCAT('%',#{idNum},'%')
+        </if>
+        <if test="title != null">
+            AND c.title LIKE CONCAT('%',#{title},'%')
+        </if>
+        <if test="employeeId != null">
+            AND e.employee_id LIKE CONCAT('%',#{employeeId},'%')
+        </if>
+        <if test="urgent != null">
+            AND et.urgent = #{urgent}
+        </if>
+        <if test="startMonth != null">
+            AND et.start_month = #{startMonth}
+        </if>
+        <if test="taskCategory!=null">
+            AND et.task_category = #{taskCategory}
+        </if>
+        <!--
+            办理状态：1、未处理（-1 本月处理 -2 下月处理） 2 、处理中  3 已完成（已办） 4、批退 5、不需处理
+        -->
+        AND et.task_status != 5
+        <choose>
+            <when test="taskStatus == null">
+                AND et.task_status NOT IN (2,3,4)
+            </when>
+            <when test="taskStatus == -1">
+                AND et.submit_time <![CDATA[ <= ]]>
+                str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',if(isnull(ca.expire_date),26,ca.expire_date)),'%Y-%m-%d') AND
+                et.task_status NOT IN (2,3,4)
+            </when>
+            <when test="taskStatus == -2">
+                AND et.submit_time >
+                str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',if(isnull(ca.expire_date),26,ca.expire_date)),'%Y-%m-%d') AND
+                et.task_status NOT IN (2,3,4)
+            </when>
+            <otherwise>
+                AND et.task_status = #{taskStatus}
+            </otherwise>
+        </choose>
+        <!--
+            任务类型，DicItem.DicItemValue 1:新进：2：转入 3调整 4 补缴 5 转出 6终止 7退账 8 提取 9特殊操作
+        -->
+        <if test="taskCategories != null">
+            AND et.task_category !=9
+            <!--<foreach collection="taskCategories" index="index" item="task_category" open="(" separator=","-->
+            <!--close=")">#{task_category}-->
+            <!--</foreach>-->
+        </if>
+    </sql>
+    <!--雇员日常操作查询-->
+    <select id="employeeDailyOperatorQuery" resultMap="BaseResultMapDto">
+        select
+        <include refid="employeeDailyOperatorQuery_select"/>
         from ss_emp_task et
         LEFT JOIN sal_company c on et.company_id = c.company_id
         LEFT JOIN emp_employee e ON et.employee_id = e.employee_id
@@ -95,73 +169,7 @@
         LEFT JOIN ss_com_account ca ON ca.com_account_id = ssac.com_account_id AND ca.is_active = 1
         <where>
             AND et.is_active = 1
-            <if test="employeeName != null">
-                AND e.employee_name LIKE CONCAT('%',#{employeeName},'%')
-            </if>
-            <if test="settlementArea != null">
-                AND ca.settlement_area = #{settlementArea}
-            </if>
-            <if test="ssAccountType != null">
-                AND ca.ss_account_type = #{ssAccountType}
-            </if>
-            <if test="empClassify != null">
-                AND et.emp_classify = #{empClassify}
-            </if>
-            <if test="ssAccount != null">
-                AND ca.ss_account = #{ssAccount}
-            </if>
-            <if test="companyId != null">
-                AND c.company_id LIKE CONCAT('%',#{companyId},'%')
-            </if>
-            <if test="idNum != null">
-                AND e.id_num LIKE CONCAT('%',#{idNum},'%')
-            </if>
-            <if test="title != null">
-                AND c.title LIKE CONCAT('%',#{title},'%')
-            </if>
-            <if test="employeeId != null">
-                AND e.employee_id LIKE CONCAT('%',#{employeeId},'%')
-            </if>
-            <if test="urgent != null">
-                AND et.urgent = #{urgent}
-            </if>
-            <if test="startMonth != null">
-                AND et.start_month = #{startMonth}
-            </if>
-            <if test="taskCategory!=null">
-               AND et.task_category = #{taskCategory}
-            </if>
-            <!--
-                办理状态：1、未处理（-1 本月处理 -2 下月处理） 2 、处理中  3 已完成（已办） 4、批退 5、不需处理
-            -->
-            AND et.task_status != 5
-            <choose>
-                <when test="taskStatus == null">
-                    AND et.task_status NOT IN (2,3,4)
-                </when>
-                <when test="taskStatus == -1">
-                    AND et.submit_time <![CDATA[ <= ]]>
-                    str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',ca.expire_date),'%Y-%m-%d') AND
-                    et.task_status NOT IN (2,3,4)
-                </when>
-                <when test="taskStatus == -2">
-                    AND et.submit_time >
-                    str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',ca.expire_date),'%Y-%m-%d') AND
-                    et.task_status NOT IN (2,3,4)
-                </when>
-                <otherwise>
-                    AND et.task_status = #{taskStatus}
-                </otherwise>
-            </choose>
-            <!--
-                任务类型，DicItem.DicItemValue 1:新进：2：转入 3调整 4 补缴 5 转出 6终止 7退账 8 提取 9特殊操作
-            -->
-            <if test="taskCategories != null">
-                AND et.task_category !=9
-                <!--<foreach collection="taskCategories" index="index" item="task_category" open="(" separator=","-->
-                <!--close=")">#{task_category}-->
-                <!--</foreach>-->
-            </if>
+            <include refid="employeeDailyOperatorQuery_where"/>
         </where>
     </select>
     <!--雇员特殊操作查询-->
@@ -437,7 +445,7 @@
         LEFT JOIN sal_company c on et.company_id = c.company_id AND c.is_active=1
         LEFT JOIN emp_employee e ON et.employee_id = e.employee_id
         LEFT JOIN ss_account_com_relation ssac ON ssac.company_id = c.company_id AND ssac.is_active = 1
-        LEFT JOIN  ss_emp_task_period sebp ON  sebp.emp_task_id = et.emp_task_id AND sebp.is_active = 1
+        LEFT JOIN ss_emp_task_period sebp ON sebp.emp_task_id = et.emp_task_id AND sebp.is_active = 1
         WHERE et.emp_task_id IN
         <foreach collection="empTaskIdList" item="empTaskId" open="(" close=")" separator=",">
             #{empTaskId}
@@ -481,10 +489,18 @@
         et.business_interface_id
         FROM
         ss_emp_task et
-        WHERE et.employee_id = #{employeeId}
-        and et.company_id=#{companyId}
-        and et.task_id=#{taskId}
-        AND et.is_active = 1
+        <where>
+            et.is_active = 1
+            <if test="companyId != null">
+                and et.company_id = #{companyId}
+            </if>
+            <if test="employeeId != null">
+                and et.employee_id = #{employeeId}
+            </if>
+            <if test="taskId != null">
+                and et.task_id=#{taskId}
+            </if>
+        </where>
     </select>
 
     <insert id="insertEmpTask" useGeneratedKeys="true" keyProperty="empTaskId">
@@ -531,18 +547,22 @@
         in_date,
         out_date,
         business_interface_id,
+        process_id,
         task_id,
+        task_def_key,
+        pro_def_key,
         policy_detail_id,
         is_active,
         created_time,
         modified_time,
         created_by,
         modified_by) VALUES
-        (#{companyId},#{employeeId},#{customerId},#{empArchiveId},#{isChange},#{taskCategory},#{taskCategorySpecial},#{urgent},#{submitterId},
-        #{submitterName},#{submitterDeptId},#{submitterDeptName},#{submitTime},#{expireDate},#{submitterRemark},#{handleUserId},#{handleUserName},
-        #{empSsSerial},#{handleWay},#{handleMonth},#{handleRemark},#{handleRemarkMan},#{handleRemarkDate},#{rejectionRemark},#{rejectionRemarkMan},
-        #{rejectionRemarkDate},#{taskStatus},#{handleStatus},#{chatHistory},#{startHandleDate},#{sendCheckDate},#{finishDate},#{taskFormContent},
-        #{salary},#{empClassify},#{empBase},#{startMonth},#{endMonth},#{inDate},#{outDate},#{businessInterfaceId},#{taskId},#{policyDetailId},
-        #{isActive},#{createdTime},#{modifiedTime},#{createdBy},#{modifiedBy})
+        (#{companyId},#{employeeId},#{customerId},#{empArchiveId},#{isChange},#{taskCategory},#{taskCategorySpecial},#{urgent},
+        #{submitterId},#{submitterName},#{submitterDeptId},#{submitterDeptName},#{submitTime},#{expireDate},#{submitterRemark},
+        #{handleUserId},#{handleUserName},#{empSsSerial},#{handleWay},#{handleMonth},#{handleRemark},#{handleRemarkMan},
+        #{handleRemarkDate},#{rejectionRemark},#{rejectionRemarkMan},#{rejectionRemarkDate},#{taskStatus},#{handleStatus},
+        #{chatHistory},#{startHandleDate},#{sendCheckDate},#{finishDate},#{taskFormContent},#{salary},#{empClassify},#{empBase},
+        #{startMonth},#{endMonth},#{inDate},#{outDate},#{businessInterfaceId},#{processId},#{taskId},#{taskDefKey},
+        #{proDefKey},#{policyDetailId},#{isActive},#{createdTime},#{modifiedTime},#{createdBy},#{modifiedBy})
     </insert>
 </mapper>

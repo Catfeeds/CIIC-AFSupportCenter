@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -76,13 +77,14 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
         if (!audited.isEmpty()) {
             PaymentApplyBatchPO batchPO = this.addPaymentApply(audited);
             JsonResult jsonResult = this.syncPaymentData(batchPO);
-            System.out.println(JSON.toJSONString(jsonResult));
+            System.out.println("--> " + JSON.toJSONString(jsonResult));
             if(JsonResult.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())) {
                 this.updateSyncStatus(batchPO.getApplyBatchId());
             } else {
                 this.delBathData(batchPO.getApplyBatchId());
             }
         }
+        /** 无卡申请*/
         List<EmpBankRefundBO> unSync = this.selectUnSyncApply();
         if (!unSync.isEmpty()) {
             this.syncIncompleteBankCardInfoApply(unSync);
@@ -106,7 +108,7 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
     }
 
     /**
-     * @description 同步结算中心驳回，支付成功状态
+     * @description 同步结算中心支付成功，驳回状态
      * @author chenpb
      * @since 2018-02-02
      * @param dto: 结算中心处理结果
@@ -123,14 +125,14 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
     }
 
     /**
-     * @description 添加补全银行卡信息申请到雇员中心
+     * @description 添加维护银行卡信息申请到雇员中心
      * @author chenpb
      * @since 2018-02-02
      * @param emp: 雇员信息
      * @return
      */
     private void syncIncompleteBankCardInfoApply (List<EmpBankRefundBO> emp) {
-        System.out.println(emp.size());
+        System.out.println("--> " + JSON.toJSONString(emp));
     }
 
     /**
@@ -145,8 +147,8 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
         BeanUtils.copyProperties(dto, bo);
         bo.setApplyBatchId(batchId);
         List<PaymentApplyDetailBO> list = paymentApplyDetailMapper.selectRefundDetail(bo);
-        if(!list.isEmpty()){
-            employeePaymentApplyMapper.updateApplyStatus(list.get(0).getPaymentApplyId(), SysConstants.EmpApplyStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName());
+        if(!list.isEmpty()) {
+            employeePaymentApplyMapper.updateApplyStatus(Integer.getInteger(list.get(0).getPaymentApplyId()), SysConstants.EmpApplyStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName());
         }
     }
     /**
@@ -176,6 +178,7 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
         Date now = new Date();
         String title = SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getName();
         BigDecimal payAmount = list.stream().map(p->p.getPayAmount()).reduce(BigDecimal.ZERO, (x,y)->x.add(y));
+        list.stream().map((x) -> setAreaInfo(x)).collect(Collectors.toList());
         PaymentApplyBatchPO batchPO = new PaymentApplyBatchPO (
             SysConstants.JobConstants.AF_SYS_MANAGEMENT.getName(),
             SysConstants.JobConstants.FINANCE_NOT.getCode(),
@@ -249,6 +252,18 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
         dto.setDepartmentManager(SysConstants.JobConstants.DEPARTMENT_MANAGER.getName());
         dto.setReviewer(SysConstants.JobConstants.REVIEWER.getName());
         return dto;
+    }
+
+    /**
+     * 根据城市code查询省份名和城市名
+     * @param bo
+     * @return
+     */
+    private EmployeePaymentBO setAreaInfo (EmployeePaymentBO bo) {
+        //TODO ： 调用基础服务接口查询省份和城市名
+        bo.setProvinceCode("上海");
+        bo.setCityCode("上海市");
+        return bo;
     }
 
 }

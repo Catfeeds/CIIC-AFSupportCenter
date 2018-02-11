@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.fundjob.dao.HfPaymentComMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.fundjob.entity.HfPaymentCom">
+        <id column="payment_com_id" property="paymentComId" />
+        <result column="hf_type" property="hfType" />
+        <result column="company_id" property="companyId" />
+        <result column="payment_bank" property="paymentBank" />
+        <result column="remitted_amount" property="remittedAmount" />
+        <result column="bujiao_amount" property="bujiaoAmount" />
+        <result column="remitted_count_emp" property="remittedCountEmp" />
+        <result column="daozhang_amount" property="daozhangAmount" />
+        <result column="daozhang_count_emp" property="daozhangCountEmp" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMapExt" type="com.ciicsh.gto.afsupportcenter.fundjob.bo.HfPaymentComBO">
+        <result column="company_id" property="companyId"/>
+        <result column="payment_com_id" property="paymentComId"/>
+        <result column="com_account_id" property="comAccountId"/>
+        <result column="payment_way" property="paymentWay"/>
+    </resultMap>
+
+    <!--查询未支付客户-->
+    <select id="getPaymentComList" resultMap="BaseResultMapExt">
+        SELECT pc.company_id,pc.payment_com_id,ca.com_account_id,ca.payment_way
+        FROM hf_payment_com pc
+        LEFT JOIN hf_com_account ca ON ca.com_account_id=pc.com_account_id
+        WHERE pc.is_active=1
+        AND EXISTS (SELECT 1 FROM hf_payment hp WHERE hp.payment_id=pc.payment_id AND hp.payment_month=#{payemntMonth})
+        AND EXISTS (SELECT 1 FROM hf_payment_account hpa WHERE hpa.com_account_id=pc.com_account_id AND hpa.payment_status=1)
+    </select>
+
+</mapper>

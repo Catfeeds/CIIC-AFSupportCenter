@@ -50,18 +50,15 @@
         AND pc.payment_state=1
     </select>
 
-    <!--按照财务服务契约提供雇员级信息-->
+    <!--按照财务服务契约提供雇员级名单-->
     <select id="getPaymentEmpList" resultType="com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsMonthChargeBO">
-        SELECT emp.employee_id employee_id,
+        SELECT mc.employee_id ,
         pc.company_id company_id,
         pc.payment_month pay_month,
         pc.total_pay_amount pay_amount,
         mc.emp_payment_status is_company_enjoy_advance,
         mc.month_charge_id obj_id
         FROM ss_month_charge mc
-        INNER JOIN emp_employee emp ON mc.employee_id=mc.employee_id
-        INNER JOIN ss_emp_archive ea ON ea.emp_archive_id=mc.emp_archive_id
-          AND ea.employee_id = emp.employee_id
         INNER JOIN ss_payment_com pc ON pc.com_account_id=mc.com_account_id
         WHERE pc.is_active=1
         AND mc.ss_month=#{ssMonth}
@@ -75,12 +72,12 @@
         month_charge_id=#{monthChargeId}
     </update>
 
-    <!--查询 客户下有多少 不可付的记录-->
+    <!--查询 客户下有多少可付或垫款可付的记录-->
     <select id="countByEmpPaymentStatus" resultType="java.lang.Integer">
         select count(1)
         from ss_month_charge
         where is_active=1
-        and emp_payment_status=0
+        and emp_payment_status in(1,2)
         and ss_month=#{ssMonth}
         and com_account_id=#{comAccountId}
     </select>

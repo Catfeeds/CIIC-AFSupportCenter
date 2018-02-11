@@ -31,9 +31,9 @@ public interface SsMonthChargeMapper extends BaseMapper<SsMonthCharge> {
 
     List<HashMap> selectNonStandardTaskCategory124(String ssMonth, String comAccountId);
 
-    void deleteOldDate(@Param("employeeId") String employeeId, @Param("paymentMonth") String paymentMonth, @Param("handleMonth") String handleMonth);
+    void deleteOldDate(@Param("employeeId") String employeeId, @Param("paymentMonth") String paymentMonth, @Param("handleMonth") String handleMonth,@Param("costCategory")Integer costCategory);
 
-    List<SsMonthCharge> selectOldDate(@Param("employeeId") String employeeId, @Param("paymentMonth") String paymentMonth, @Param("handleMonth") String handleMonth);
+    List<SsMonthCharge> selectOldDate(@Param("employeeId") String employeeId, @Param("paymentMonth") String paymentMonth, @Param("handleMonth") String handleMonth,@Param("costCategory")Integer costCategory);
 
     List<SsMonthChargeBO> selectTotalFromOld(@Param("employeeId")String employeeId, @Param("paymentMonth")String paymentMonth);
 }

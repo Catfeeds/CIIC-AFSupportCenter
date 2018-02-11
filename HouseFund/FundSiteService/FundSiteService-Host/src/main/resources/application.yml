@@ -41,32 +41,32 @@ spring:
               content-type: application/json
               consumer:
                 partitioned: true
-            common_taskservice_af_charge_resume-channel:
-              destination: common_taskservice_af_charge_resume # topic name
-              group: ${spring.application.name}
-              content-type: application/json
-              consumer:
-                partitioned: true
-            common_taskservice_af_charge_stop-channel:
-              destination: common_taskservice_af_charge_stop # topic name
-              group: ${spring.application.name}
-              content-type: application/json
-              consumer:
-                partitioned: true
-            common_taskservice_af_nonlocal_to_sh-channel:
-              destination: common_taskservice_af_nonlocal_to_sh # topic name
-              group: ${spring.application.name}
-              content-type: application/json
-              consumer:
-                partitioned: true
-            common_taskservice_af_sh_to_nonlocal-channel:
-              destination: common_taskservice_af_sh_to_nonlocal # topic name
+            common_taskservice_af_emp_make_up-channel:
+              destination: common_taskservice_af_emp_make_up # topic name
               group: ${spring.application.name}
               content-type: application/json
               consumer:
                 partitioned: true
             common_taskservice_af_emp_company_change-channel:
               destination: common_taskservice_af_emp_company_change # topic name
+              group: ${spring.application.name}
+              content-type: application/json
+              consumer:
+                partitioned: true
+            common_taskservice_af_emp_agreement_adjust-channel:
+              destination: common_taskservice_af_emp_agreement_adjust # topic name
+              group: ${spring.application.name}
+              content-type: application/json
+              consumer:
+                partitioned: true
+            common_taskservice_af_emp_agreement_update-channel:
+              destination: common_taskservice_af_emp_agreement_update # topic name
+              group: ${spring.application.name}
+              content-type: application/json
+              consumer:
+                partitioned: true
+            common_taskservice_pay-apply-pay-status-stream-channel:
+              destination: common_taskservice_pay-apply-pay-status-stream # topic name
               group: ${spring.application.name}
               content-type: application/json
               consumer:

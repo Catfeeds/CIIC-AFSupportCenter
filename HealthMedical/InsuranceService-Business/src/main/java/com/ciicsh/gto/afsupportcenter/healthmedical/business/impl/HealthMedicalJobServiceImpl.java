@@ -26,6 +26,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -206,7 +207,7 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
             if (SysConstants.BusinessId.SUPPLY_MEDICAL.equals(list.get(0).getBusinessItemId())) {
                 supplyMedicalAcceptanceMapper.updateStatus(list.get(0).getPaymentApplyId().toString(), SysConstants.SupplyMedicalStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName());
             } else {
-                uninsuredMedicalMapper.updateStatus(list.get(0).getPaymentApplyId(), SysConstants.UninsuredMedicalStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName());
+                uninsuredMedicalMapper.updateStatus(Integer.getInteger(list.get(0).getPaymentApplyId()), SysConstants.UninsuredMedicalStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName());
             }
         }
     }
@@ -234,13 +235,19 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
      * @return PaymentApplyBatchPO: 申请支付批次记录
      */
     private PaymentApplyBatchPO addPaymentApply (List<EmployeePaymentBO> list) {
+        String title;
         Date now = new Date();
-        String title = SysConstants.JobConstants.MEDICAL_CLAIMS.getName();
+        if(SysConstants.JobConstants.SUPPLY_MEDICAL.getCode().equals(list.get(0).getBusinessId())){
+            title = SysConstants.JobConstants.SUPPLY_MEDICAL.getName();
+        } else {
+            title = SysConstants.JobConstants.UNINSURED_MEDICAL.getName();
+        }
         BigDecimal payAmount = list.stream().map(p->p.getPayAmount()).reduce(BigDecimal.ZERO, (x,y)->x.add(y));
+        list.stream().map((x) -> setAreaInfo(x)).collect(Collectors.toList());
         PaymentApplyBatchPO batchPO = new PaymentApplyBatchPO (
             SysConstants.JobConstants.HEALTH_MEDICAL_DEPT.getName(),
             SysConstants.JobConstants.FINANCE_NOT.getCode(),
-            SysConstants.JobConstants.HEALTH_MEDICAL_DEPT.getCode(),
+            SysConstants.JobConstants.MEDICAL_CLAIMS.getCode(),
             SysConstants.JobConstants.PAY_WAY.getCode(),
             payAmount,
             SysConstants.JobConstants.INDIVIDUAL.getName(),
@@ -306,6 +313,17 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
         dto.setDepartmentManager(SysConstants.JobConstants.DEPARTMENT_MASTER.getName());
         dto.setReviewer(SysConstants.JobConstants.REVIEWER.getName());
         return dto;
+    }
+
+    /**
+     * 根据城市code查询省份名和城市名
+     * @param bo
+     * @return
+     */
+    private EmployeePaymentBO setAreaInfo (EmployeePaymentBO bo) {
+        bo.setProvinceCode("上海");
+        bo.setCityCode("上海市");
+        return bo;
     }
 
 }

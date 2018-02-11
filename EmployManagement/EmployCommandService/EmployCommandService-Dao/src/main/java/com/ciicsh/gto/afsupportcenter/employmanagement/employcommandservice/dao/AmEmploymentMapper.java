@@ -17,4 +17,12 @@ public interface AmEmploymentMapper extends BaseMapper<AmEmployment> {
      List<AmEmploymentBO> queryAmEmployment(AmEmploymentBO amEmploymentBO);
 
      AmEmploymentBO queryAmEmploymentById(@Param("amEmploymentId") String amEmploymentId);
+
+     List<AmEmploymentBO>  queryAmArchive(AmEmploymentBO amEmploymentBO);
+
+     List<AmEmploymentBO>  taskCountEmployee(AmEmploymentBO amEmploymentBO);
+
+     List<AmEmploymentBO>  taskCountResign(AmEmploymentBO amEmploymentBO);
+
+
 }

@@ -53,6 +53,11 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.accountQuery(dto));
     }
 
+    @Override
+    public List<SsComAccountBO> getAccounts(SsComAccountBO accountBo) {
+        return baseMapper.accountQuery(accountBo);
+    }
+
     /**
      * 查询企业社保管理详细信息
      *
@@ -61,6 +66,17 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
     public SsComAccountBO querySocialSecurityManageInfo(String comAccountId) {
 
         return baseMapper.querySocialSecurityManageInfo(comAccountId);
+    }
+
+
+    /**
+     * 根据企业社保账户ID查询企业社保信息
+     * @param comAccountId
+     * @return
+     */
+    @Override
+    public SsComAccount getAccountById(Long comAccountId) {
+        return baseMapper.selectById(comAccountId);
     }
 
     /**

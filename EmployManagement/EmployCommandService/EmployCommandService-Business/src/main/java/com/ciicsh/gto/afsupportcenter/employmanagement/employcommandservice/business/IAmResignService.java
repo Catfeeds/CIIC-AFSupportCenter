@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -22,5 +23,5 @@ public interface IAmResignService extends IService<AmResign> {
 
     List<AmResignBO> taskCount(PageInfo pageInfo);
 
-    List<AmResignBO>  queryAmResignDetail(AmResignBO bo);
+    List<AmResignBO>  queryAmResignDetail(Map<String,Object> param);
 }

@@ -29,49 +29,48 @@ spring:
               brokers: 172.16.9.17:9092,172.16.9.18:9092
               zk-nodes: 172.16.9.19:2181,172.16.9.20:2181,172.16.9.21:2181
           bindings:
-            common_taskservice_af_empin-channel:
+            common_taskservice_af_empin_channel:
               destination: common_taskservice_af_empin # topic name
               group: ${spring.application.name}
               content-type: application/json
               consumer:
                 partitioned: true
-            common_taskservice_af_empout-channel:
+            common_taskservice_af_empout_channel:
               destination: common_taskservice_af_empout # topic name
               group: ${spring.application.name}
               content-type: application/json
               consumer:
                 partitioned: true
-            common_taskservice_af_charge_resume-channel:
-              destination: common_taskservice_af_charge_resume # topic name
+            common_taskservice_af_emp_make_up_channel:
+              destination: common_taskservice_af_emp_make_up # topic name
               group: ${spring.application.name}
               content-type: application/json
               consumer:
                 partitioned: true
-            common_taskservice_af_charge_stop-channel:
-              destination: common_taskservice_af_charge_stop # topic name
-              group: ${spring.application.name}
-              content-type: application/json
-              consumer:
-                partitioned: true
-            common_taskservice_af_nonlocal_to_sh-channel:
-              destination: common_taskservice_af_nonlocal_to_sh # topic name
-              group: ${spring.application.name}
-              content-type: application/json
-              consumer:
-                partitioned: true
-            common_taskservice_af_sh_to_nonlocal-channel:
-              destination: common_taskservice_af_sh_to_nonlocal # topic name
-              group: ${spring.application.name}
-              content-type: application/json
-              consumer:
-                partitioned: true
-            common_taskservice_af_emp_company_change-channel:
+            common_taskservice_af_emp_company_change_channel:
               destination: common_taskservice_af_emp_company_change # topic name
               group: ${spring.application.name}
               content-type: application/json
               consumer:
                 partitioned: true
-
+            common_taskservice_af_emp_agreement_adjust_channel:
+              destination: common_taskservice_af_emp_agreement_adjust # topic name
+              group: ${spring.application.name}
+              content-type: application/json
+              consumer:
+                partitioned: true
+            common_taskservice_af_emp_agreement_update_channel:
+              destination: common_taskservice_af_emp_agreement_update # topic name
+              group: ${spring.application.name}
+              content-type: application/json
+              consumer:
+                partitioned: true
+            common_taskservice_pay_apply_pay_status_stream_channel:
+              destination: pay-apply-pay-status-stream # topic name
+              group: ${spring.application.name}
+              content-type: application/json
+              consumer:
+                partitioned: true
             soc_report_output_channel:
               destination: af_soc_report_generate # topic name
               content-type: application/json
@@ -90,9 +89,10 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: "http://172.16.9.19:9602/eureka,http://172.16.9.20:9602/eureka,http://172.16.9.21:9602/eureka" #,http://172.16.9.21:9602/eureka
-                         #" #本地开发环境eureka,http://172.16.9.19:9602/eureka
- #"http://172.16.9.21:9602/eureka,http://172.16.9.20:9602/eureka,http://172.16.9.19:9602/eureka" #本地开发环境eureka
+      defaultZone: "http://172.16.9.24:9602/eureka,http://172.16.9.25:9602/eureka"  #SIT
+                     #"http://172.16.9.19:9602/eureka,http://172.16.9.20:9602/eureka,http://172.16.9.21:9602/eureka" #DEV
+                     #" #本地开发环境eureka,http://172.16.9.19:9602/eureka
+                     #"http://172.16.9.21:9602/eureka,http://172.16.9.20:9602/eureka,http://172.16.9.19:9602/eureka" #本地开发环境eureka
   instance:
     lease-expiration-duration-in-seconds: 40
     lease-renewal-interval-in-seconds: 30

@@ -16,6 +16,10 @@ eureka:
     lease-expiration-duration-in-seconds: 30
     prefer-ip-address: true
     instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+
+ribbon:
+  ReadTimeout: 60000
+
 management:
   context-path: /admin
   port: 6016

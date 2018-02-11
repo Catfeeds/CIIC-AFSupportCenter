@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.business.EmployeePaymentJobS
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,9 +36,8 @@ public class EmployeePaymentJobController implements EmployeePaymentJobProxy {
      * @param
      * @return
      */
-//    @Scheduled(cron = "0/6 * * * * *")
-    @GetMapping(value = "/handle")
-//    @PostMapping(value = "/handleEmpPayment")
+    @Scheduled(cron = "0 0/3 * * * *")
+//    @GetMapping(value = "/handle")
     public void handle() {
         try {
             logger.info("+++++++++++++++++++++++++++ 雇员付款任务: 开始 +++++++++++++++++++++++++++ ");

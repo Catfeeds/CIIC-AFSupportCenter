@@ -90,10 +90,41 @@ public class AmResignBO extends AmResign {
 
     private Integer taskStatus;
 
+    private String remarkType;
+    /**
+     * 用工反馈
+     */
+    private  String employFeedback;
+
+    private String matchEmployIndex;
+
+    public String getMatchEmployIndex() {
+        return matchEmployIndex;
+    }
+
+    public void setMatchEmployIndex(String matchEmployIndex) {
+        this.matchEmployIndex = matchEmployIndex;
+    }
+
+    public String getEmployFeedback() {
+        return employFeedback;
+    }
+
+    public void setEmployFeedback(String employFeedback) {
+        this.employFeedback = employFeedback;
+    }
 
     private String params;
 
     private List<String> param;
+
+    public String getRemarkType() {
+        return remarkType;
+    }
+
+    public void setRemarkType(String remarkType) {
+        this.remarkType = remarkType;
+    }
 
     public String getArchiveCardState() {
         return archiveCardState;

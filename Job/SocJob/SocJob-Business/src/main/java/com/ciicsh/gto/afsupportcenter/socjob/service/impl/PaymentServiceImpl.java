@@ -7,7 +7,6 @@ import com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsMonthChargeBO;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsPaymentComBO;
 import com.ciicsh.gto.afsupportcenter.socjob.service.PaymentService;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
-import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.EmployeeMonthlyDataProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeMonthlyDataProxyDTO;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +39,7 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
     public void enquireFinanceComAccount(String ssMonth) {
         //1 查询未支付客户
         Map<String, Object> map = new HashMap<>();
-        map.put("payemntMonth", StringUtil.getYear_Month(new Date()));
+        map.put("payemntMonth", ssMonth);
         List<SsPaymentComBO> paymentComList = ssPaymentMapper.getPaymentComList(map);
 
         for (SsPaymentComBO ele : paymentComList) {

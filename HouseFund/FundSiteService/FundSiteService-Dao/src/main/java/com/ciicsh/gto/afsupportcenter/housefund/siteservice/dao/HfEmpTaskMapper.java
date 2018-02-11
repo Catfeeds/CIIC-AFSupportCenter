@@ -29,4 +29,17 @@ public interface HfEmpTaskMapper extends BaseMapper<HfEmpTask> {
      * @return
      */
     List<HfEmpTaskHandleBo> getEmpTaskHandleData(HfEmpTaskHandleDTO hfEmpTaskHandleDTO);
+    /**
+     * 查询任务单信息
+     *
+     * @param hfEmpTask
+     */
+    List<HfEmpTask> queryByTaskId(HfEmpTask hfEmpTask);
+
+    /**
+     * 保存雇员公积金任务单
+     * @param hfEmpTask
+     * @return
+     */
+    int insertHfEmpTask(HfEmpTask hfEmpTask);
 }

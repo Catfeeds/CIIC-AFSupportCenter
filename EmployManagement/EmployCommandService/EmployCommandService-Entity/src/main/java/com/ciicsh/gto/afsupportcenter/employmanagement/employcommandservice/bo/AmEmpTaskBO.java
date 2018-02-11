@@ -74,6 +74,10 @@ public class AmEmpTaskBO extends AmEmpTask {
      */
     private LocalDate employDate;
 
+    private String params;
+
+    private List<String> param;
+
     public LocalDate getResignDate() {
         return resignDate;
     }
@@ -122,9 +126,6 @@ public class AmEmpTaskBO extends AmEmpTask {
         this.count = count;
     }
 
-
-
-
     public LocalDate getEmployFeedbackOptDate() {
         return employFeedbackOptDate;
     }
@@ -148,10 +149,6 @@ public class AmEmpTaskBO extends AmEmpTask {
     public void setDiaodangFeedbackOptDate(LocalDate diaodangFeedbackOptDate) {
         this.diaodangFeedbackOptDate = diaodangFeedbackOptDate;
     }
-
-    private String params;
-
-    private List<String> param;
 
     public List<String> getParam() {
         return param;

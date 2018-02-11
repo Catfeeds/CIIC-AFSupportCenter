@@ -197,9 +197,11 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
             for (int i = 0; i < ssPaymentComList.size(); i++) {
                 SsPaymentCom ssPaymentCom = ssPaymentComList.get(i);
                 //申请总金额
-                totalApplicationAmount = totalApplicationAmount.add(ssPaymentCom.getTotalPayAmount());
+                if(ssPaymentCom.getTotalPayAmount()!=null)
+                    totalApplicationAmount = totalApplicationAmount.add(ssPaymentCom.getTotalPayAmount());
                 //总雇员数
-                totalEmpCount = totalEmpCount + ssPaymentCom.getEmpCount();
+                if(ssPaymentCom.getEmpCount()!=null)
+                    totalEmpCount = totalEmpCount + ssPaymentCom.getEmpCount();
                 //账户总数
                 if (!comAccountMap.containsKey(ssPaymentCom.getComAccountId())) {
                     totalAccount++;

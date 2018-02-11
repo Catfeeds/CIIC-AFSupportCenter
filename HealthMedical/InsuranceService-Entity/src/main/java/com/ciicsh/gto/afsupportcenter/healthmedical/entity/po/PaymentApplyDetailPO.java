@@ -73,6 +73,10 @@ public class PaymentApplyDetailPO extends Model<PaymentApplyDetailPO> {
      */
 	private BigDecimal payAmount;
     /**
+     * 税金
+    */
+    private BigDecimal taxAmount;
+    /**
      * 是否可用
      */
     @TableLogic
@@ -191,7 +195,15 @@ public class PaymentApplyDetailPO extends Model<PaymentApplyDetailPO> {
 		this.payAmount = payAmount;
 	}
 
-	public Boolean getActive() {
+    public BigDecimal getTaxAmount() {
+        return taxAmount;
+    }
+
+    public void setTaxAmount(BigDecimal taxAmount) {
+        this.taxAmount = taxAmount;
+    }
+
+    public Boolean getActive() {
 		return isActive;
 	}
 

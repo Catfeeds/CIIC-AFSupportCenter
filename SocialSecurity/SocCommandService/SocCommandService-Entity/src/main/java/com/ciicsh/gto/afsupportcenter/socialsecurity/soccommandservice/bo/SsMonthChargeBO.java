@@ -23,9 +23,14 @@ import java.util.List;
  * @author xsj
  * @since 2018-02-05
  */
-@Data
-@EqualsAndHashCode(callSuper = false)
 public class SsMonthChargeBO extends SsMonthCharge {
         private List<SsMonthChargeItem> ssMonthChargeItemList;
 
+    public List<SsMonthChargeItem> getSsMonthChargeItemList() {
+        return ssMonthChargeItemList;
+    }
+
+    public void setSsMonthChargeItemList(List<SsMonthChargeItem> ssMonthChargeItemList) {
+        this.ssMonthChargeItemList = ssMonthChargeItemList;
+    }
 }

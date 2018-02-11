@@ -16,6 +16,7 @@
 		<result column="bank_name" property="bankName" />
 		<result column="bank_code" property="bankCode" />
 		<result column="pay_amount" property="payAmount" />
+        <result column="tax_amount" property="taxAmount" />
 		<result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />
 		<result column="modified_time" property="modifiedTime" />
@@ -49,7 +50,7 @@
     </sql>
 
     <sql id="Join_Column_List">
-        p.acceptance_id, p.business_id, p.company_id, p.company_name, p.employee_id, p.employee_name, p.pay_amount, p.bank_account, p.account_name, p.bank_id, p.bank_code, p.bank_name, p.province_name, p.city_name
+        p.acceptance_id, p.business_id, p.company_id, p.company_name, p.employee_id, p.employee_name, p.pay_amount, p.tax_amount, p.bank_account, p.account_name, p.bank_id, p.bank_code, p.bank_name, p.province_name, p.city_name
     </sql>
 
     <insert id="insertDetails" parameterType="java.util.List">
@@ -68,6 +69,7 @@
             bank_code,
             bank_name,
             pay_amount,
+            tax_amount,
             province_name,
             city_name,
             is_active,
@@ -91,6 +93,7 @@
                 #{item.bankCode},
                 #{item.bankName},
                 #{item.payAmount},
+                #{item.taxAmount},
                 #{item.provinceCode},
                 #{item.cityCode},
                 1,
