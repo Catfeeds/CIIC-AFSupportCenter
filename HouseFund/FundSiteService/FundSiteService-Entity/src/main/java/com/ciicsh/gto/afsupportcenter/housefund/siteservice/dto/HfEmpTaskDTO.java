@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.dto;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class HfEmpTaskDTO implements Serializable {
@@ -17,9 +18,9 @@ public class HfEmpTaskDTO implements Serializable {
     private Integer urgent;
     private Integer processStatus;
     private Integer taskStatus;
-    private LocalDateTime[] submitTime;
-    private LocalDateTime submitTimeStart;
-    private LocalDateTime submitTimeEnd;
+    private LocalDate[] submitTime;
+    private LocalDate submitTimeStart;
+    private LocalDate submitTimeEnd;
 
     public String getCompanyId() {
         return companyId;
@@ -101,23 +102,23 @@ public class HfEmpTaskDTO implements Serializable {
         this.processStatus = processStatus;
     }
 
-    public LocalDateTime getSubmitTimeStart() {
+    public LocalDate getSubmitTimeStart() {
         return submitTimeStart;
     }
 
-    public void setSubmitTimeStart(LocalDateTime submitTimeStart) {
+    public void setSubmitTimeStart(LocalDate submitTimeStart) {
         this.submitTimeStart = submitTimeStart;
     }
 
-    public LocalDateTime getSubmitTimeEnd() {
+    public LocalDate getSubmitTimeEnd() {
         return submitTimeEnd;
     }
 
-    public LocalDateTime[] getSubmitTime() {
+    public LocalDate[] getSubmitTime() {
         return submitTime;
     }
 
-    public void setSubmitTime(LocalDateTime[] submitTime) {
+    public void setSubmitTime(LocalDate[] submitTime) {
         this.submitTime = submitTime;
         if (submitTime != null && submitTime.length == 2) {
             setSubmitTimeStart(submitTime[0]);
@@ -125,7 +126,7 @@ public class HfEmpTaskDTO implements Serializable {
         }
     }
 
-    public void setSubmitTimeEnd(LocalDateTime submitTimeEnd) {
+    public void setSubmitTimeEnd(LocalDate submitTimeEnd) {
         this.submitTimeEnd = submitTimeEnd;
     }
 

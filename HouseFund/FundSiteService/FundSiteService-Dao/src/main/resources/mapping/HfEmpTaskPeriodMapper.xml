@@ -12,7 +12,7 @@
 		<result column="hf_month" property="hfMonth" />
 		<result column="amount" property="amount" />
 		<result column="ratio" property="ratio" />
-		<result column="bujiao_reason" property="bujiaoReason" />
+		<result column="repair_reason" property="repairReason" />
 		<result column="remit_way" property="remitWay" />
 		<result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />

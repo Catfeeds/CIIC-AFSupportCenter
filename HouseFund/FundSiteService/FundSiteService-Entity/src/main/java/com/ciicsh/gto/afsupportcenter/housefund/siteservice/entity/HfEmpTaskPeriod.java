@@ -58,6 +58,16 @@ public class HfEmpTaskPeriod implements Serializable {
      */
 	private BigDecimal ratio;
     /**
+     * 个人比例
+     */
+    @TableField("ratio_emp")
+    private BigDecimal ratioEmp;
+    /**
+     * 企业比例
+     */
+    @TableField("ratio_com")
+    private BigDecimal ratioCom;
+    /**
      * 补缴原因
             1 漏缴补缴
             2 少缴补缴
@@ -67,8 +77,8 @@ public class HfEmpTaskPeriod implements Serializable {
             6 特殊补缴
             7 账外补缴（特殊补缴）
      */
-	@TableField("bujiao_reason")
-	private Integer bujiaoReason;
+	@TableField("repair_reason")
+	private Integer repairReason;
     /**
      * 汇缴方式:   1 - 正常 2 - 补缴 3 - 调整
      */
@@ -165,12 +175,12 @@ public class HfEmpTaskPeriod implements Serializable {
 		this.ratio = ratio;
 	}
 
-	public Integer getBujiaoReason() {
-		return bujiaoReason;
+	public Integer getRepairReason() {
+		return repairReason;
 	}
 
-	public void setBujiaoReason(Integer bujiaoReason) {
-		this.bujiaoReason = bujiaoReason;
+	public void setRepairReason(Integer repairReason) {
+		this.repairReason = repairReason;
 	}
 
 	public Integer getRemitWay() {
@@ -221,7 +231,23 @@ public class HfEmpTaskPeriod implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	@Override
+    public BigDecimal getRatioEmp() {
+        return ratioEmp;
+    }
+
+    public void setRatioEmp(BigDecimal ratioEmp) {
+        this.ratioEmp = ratioEmp;
+    }
+
+    public BigDecimal getRatioCom() {
+        return ratioCom;
+    }
+
+    public void setRatioCom(BigDecimal ratioCom) {
+        this.ratioCom = ratioCom;
+    }
+
+    @Override
 	public String toString() {
 		return "HfEmpTaskPeriod{" +
 			", empTaskPeriodId=" + empTaskPeriodId +
@@ -232,7 +258,9 @@ public class HfEmpTaskPeriod implements Serializable {
 			", hfMonth=" + hfMonth +
 			", amount=" + amount +
 			", ratio=" + ratio +
-			", bujiaoReason=" + bujiaoReason +
+            ", ratioEmp=" + ratioEmp +
+            ", ratioCom=" + ratioCom +
+			", repairReason=" + repairReason +
 			", remitWay=" + remitWay +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,17 +25,17 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
         List<DicItemDTO> dictItemList;
         try {
             dictItemList = business.listByDicId(DictUtil.DICT_ID_SOCIAL_SECURITY_ACCOUNT_TYPE);
-            Map<String, String> accountTypeMap = new HashMap<>();
+            Map<String, String> accountTypeMap = new LinkedHashMap<>();
             dictItemList.stream().forEach((d) -> accountTypeMap.put(d.getDicItemValue(), d.getDicItemText()));
             DictUtil.getInstance().putDictByTypeValue(DictUtil.TYPE_VALUE_SOCIAL_SECURITY_ACCOUNT_TYPE, accountTypeMap, false);
 
             dictItemList = business.listByDicId(DictUtil.DICT_ID_SOCIAL_SECURITY_STATUS);
-            Map<String, String> statusMap = new HashMap<>();
+            Map<String, String> statusMap = new LinkedHashMap<>();
             dictItemList.stream().forEach((d) -> statusMap.put(d.getDicItemValue(), d.getDicItemText()));
             DictUtil.getInstance().putDictByTypeValue(DictUtil.TYPE_VALUE_SOCIAL_SECURITY_STATUS, statusMap, false);
 
             dictItemList = business.listByDicId(DictUtil.DICT_ID_SOCIAL_SECURITY_EMPLOYEE_CLASSIFY);
-            Map<String, String> employeeClassifyMap = new HashMap<>();
+            Map<String, String> employeeClassifyMap = new LinkedHashMap<>();
             dictItemList.stream().forEach((d) -> employeeClassifyMap.put(d.getDicItemValue(), d.getDicItemText()));
             DictUtil.getInstance().putDictByTypeValue(DictUtil.TYPE_VALUE_SOCIAL_SECURITY_EMPLOYEE_CLASSIFY, employeeClassifyMap, false);
         } catch (Exception e) {
@@ -45,7 +45,7 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
 
     @RequestMapping("/getDictData")
     @Log("获取本页面需要使用的字典数据")
-    public JsonResult<Map<String, List<KeyValue>>> getDictData() {
+    public JsonResult<Map<String, List<?>>> getDictData() {
         return JsonResultKit.of(DictUtil.getInstance().getDictItemList());
     }
 }

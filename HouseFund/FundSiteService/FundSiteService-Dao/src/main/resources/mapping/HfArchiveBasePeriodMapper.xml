@@ -19,7 +19,7 @@
 		<result column="amount" property="amount" />
 		<result column="amount_emp" property="amountEmp" />
 		<result column="com_amount" property="comAmount" />
-		<result column="bujiao_reason" property="bujiaoReason" />
+		<result column="repair_reason" property="repairReason" />
 		<result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />
 		<result column="modified_time" property="modifiedTime" />
