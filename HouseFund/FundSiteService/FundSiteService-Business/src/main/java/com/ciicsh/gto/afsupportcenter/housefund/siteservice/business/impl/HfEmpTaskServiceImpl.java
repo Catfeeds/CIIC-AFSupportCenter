@@ -138,6 +138,9 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         hfEmpTask.setIsChange(isChange);
         hfEmpTask.setTaskFormContent(JSON.toJSONString(dto));
 
+        //福利办理方
+        hfEmpTask.setWelfareUnit(companyDto.getFundUnit());
+
         if (dto.getNowAgreement() != null && dto.getNowAgreement().getFundSocialRuleId() != null) {
             hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getFundSocialRuleId().intValue());
         }

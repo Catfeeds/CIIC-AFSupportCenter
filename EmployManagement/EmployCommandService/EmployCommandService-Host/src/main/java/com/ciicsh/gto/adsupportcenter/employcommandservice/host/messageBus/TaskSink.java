@@ -10,18 +10,15 @@ import org.springframework.stereotype.Service;
 @Service
 public interface TaskSink {
 
-
-    static final String TOPIC_PREFIX = "common_taskservice_";
-
     /**
      * 雇员新增
      */
-    String AF_EMP_IN = TOPIC_PREFIX + "af_empin";
+    String AF_EMP_IN = "common_taskservice_af_empin";
 
     /**
      * 雇员终止
      */
-    String AF_EMP_OUT = TOPIC_PREFIX + "af_empout";
+    String AF_EMP_OUT = "common_taskservice_af_empout";
 
     /**
      * 用工办理
