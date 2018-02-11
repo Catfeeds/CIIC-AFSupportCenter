@@ -24,6 +24,14 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
     PageRows<HfEmpTaskBo> queryHfEmpTaskInPage(PageInfo pageInfo);
 
     /**
+     * 分页查询雇员任务单信息
+     *
+     * @param pageInfo
+     * @return
+     */
+    PageRows<HfEmpTaskBo> queryHfEmpTaskInPage(PageInfo pageInfo, String exceptTaskCategories);
+
+    /**
      * 查询雇员任务单办理信息
      * @param hfEmpTaskHandleDTO
      * @return

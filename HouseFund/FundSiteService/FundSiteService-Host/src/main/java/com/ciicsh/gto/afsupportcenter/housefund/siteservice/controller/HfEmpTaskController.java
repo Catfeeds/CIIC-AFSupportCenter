@@ -33,7 +33,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
 
     @RequestMapping("/hfEmpTaskQuery")
     public JsonResult<PageRows> hfEmpTaskQuery(@RequestBody PageInfo pageInfo) {
-        return JsonResultKit.of(business.queryHfEmpTaskInPage(pageInfo));
+        return JsonResultKit.of(business.queryHfEmpTaskInPage(pageInfo, "9,10"));
     }
 
     /**

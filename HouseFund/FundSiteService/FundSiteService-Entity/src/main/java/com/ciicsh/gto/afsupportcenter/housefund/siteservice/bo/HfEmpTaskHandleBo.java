@@ -32,7 +32,10 @@ public class HfEmpTaskHandleBo implements Serializable {
     private String paymentWayName;
     private Integer ukeyStore;
     private String ukeyStoreName;
+    private Integer comAccountId;
     private String comAccountName;
+    private Long basicComAccountClassId;
+    private Long addedComAccountClassId;
     private Integer basicComTaskStatus;
 //    private String basicComTaskStatusName;
     private Integer addedComTaskStatus;
@@ -64,6 +67,8 @@ public class HfEmpTaskHandleBo implements Serializable {
     private Long addedEmpArchiveId;
     private Integer addedArchiveStatus;
     private String addedArchiveStatusName;
+    private String handleRemark;
+    private String rejectionRemark;
     private Integer operationRemind;
     private LocalDate operationRemindDate;
     private List<HfArchiveBasePeriod> basicArchiveBasePeriods;

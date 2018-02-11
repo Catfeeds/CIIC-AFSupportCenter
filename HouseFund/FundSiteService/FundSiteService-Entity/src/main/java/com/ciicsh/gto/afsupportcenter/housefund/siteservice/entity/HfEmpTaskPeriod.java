@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.enums.IdType;
 import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotations.TableId;
@@ -29,6 +30,11 @@ public class HfEmpTaskPeriod implements Serializable {
      */
 	@TableField("emp_task_id")
 	private Long empTaskId;
+    /**
+     * 本地社保的雇员任务单费用段Id
+     */
+    @TableField("archive_base_period_id")
+    private Long archiveBasePeriodId;
     /**
      * 公积金汇缴基数
      */
@@ -92,12 +98,14 @@ public class HfEmpTaskPeriod implements Serializable {
     /**
      * 创建时间
      */
-	@TableField("created_time")
+    @JSONField(serialize=false)
+    @TableField("created_time")
 	private LocalDateTime createdTime;
     /**
      * 最后更新时间
      */
 	@TableField("modified_time")
+    @JSONField(serialize=false)
 	private LocalDateTime modifiedTime;
     /**
      * 创建者登录名
@@ -247,11 +255,20 @@ public class HfEmpTaskPeriod implements Serializable {
         this.ratioCom = ratioCom;
     }
 
+    public Long getArchiveBasePeriodId() {
+        return archiveBasePeriodId;
+    }
+
+    public void setArchiveBasePeriodId(Long archiveBasePeriodId) {
+        this.archiveBasePeriodId = archiveBasePeriodId;
+    }
+
     @Override
 	public String toString() {
 		return "HfEmpTaskPeriod{" +
 			", empTaskPeriodId=" + empTaskPeriodId +
 			", empTaskId=" + empTaskId +
+            ", archiveBasePeriodId=" + archiveBasePeriodId +
 			", baseAmount=" + baseAmount +
 			", startMonth=" + startMonth +
 			", endMonth=" + endMonth +

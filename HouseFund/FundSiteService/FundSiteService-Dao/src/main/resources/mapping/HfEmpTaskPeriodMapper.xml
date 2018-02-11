@@ -6,6 +6,7 @@
 	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfEmpTaskPeriod">
 		<id column="emp_task_period_id" property="empTaskPeriodId" />
 		<result column="emp_task_id" property="empTaskId" />
+        <result column="archive_base_period_id" property="archiveBasePeriodId" />
 		<result column="base_amount" property="baseAmount" />
 		<result column="start_month" property="startMonth" />
 		<result column="end_month" property="endMonth" />

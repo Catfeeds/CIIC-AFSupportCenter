@@ -15,6 +15,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +34,15 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
 
     @Override
     public PageRows<HfEmpTaskBo> queryHfEmpTaskInPage(PageInfo pageInfo) {
+        return queryHfEmpTaskInPage(pageInfo, null);
+    }
+
+    @Override
+    public PageRows<HfEmpTaskBo> queryHfEmpTaskInPage(PageInfo pageInfo, String exceptTaskCategories) {
         HfEmpTaskDTO hfEmpTaskDTO = pageInfo.toJavaObject(HfEmpTaskDTO.class);
+        if (StringUtils.isNotBlank(exceptTaskCategories)) {
+            hfEmpTaskDTO.setExceptTaskCategories(exceptTaskCategories);
+        }
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryHfEmpTask(hfEmpTaskDTO));
     }
 
