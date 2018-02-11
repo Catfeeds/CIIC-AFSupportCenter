@@ -47,6 +47,7 @@
         <result column="transfer_date" property="transferDate" />
         <result column="feedback_date" property="feedbackDate" />
         <result column="operate_date" property="operateDate" />
+        <result column="welfare_unit" property="welfareUnit" />
         <result column="business_interface_id" property="businessInterfaceId" />
         <result column="policy_detail_id" property="policyDetailId" />
         <result column="task_id" property="taskId" />

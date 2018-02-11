@@ -65,8 +65,8 @@ spring:
               content-type: application/json
               consumer:
                 partitioned: true
-            common_taskservice_pay-apply-pay-status-stream-channel:
-              destination: common_taskservice_pay-apply-pay-status-stream # topic name
+            pay-apply-pay-status-stream-channel:
+              destination: pay-apply-pay-status-stream # topic name
               group: ${spring.application.name}
               content-type: application/json
               consumer:
