@@ -22,4 +22,16 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
+    <resultMap id="PaymentComDtoResultMap" type="com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyCompanyProxyDTO">
+        <result column="company_id" property="companyId" />
+        <result column="title" property="companyName" />
+        <result column="bank_account_id" property="companyBankAccountId" />
+        <result column="bank_account"  property="companyBankAccount" />
+        <result column="refund_deducted"   property="noticebillAmount" />
+        <result column="adjust_deducted"   property="deductionAmount" />
+        <result column="payment_month"   property="payMonth" />
+        <result column="total_pay_amount"   property="payAmount" />
+        <result column="payment_way"   property="isAdvance" />
+    </resultMap>
+
 </mapper>
