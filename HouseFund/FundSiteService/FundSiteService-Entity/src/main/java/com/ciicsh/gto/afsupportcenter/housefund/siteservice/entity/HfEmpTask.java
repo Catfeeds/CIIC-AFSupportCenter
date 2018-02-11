@@ -250,6 +250,11 @@ public class HfEmpTask implements Serializable {
 	@TableField("operate_date")
 	private LocalDate operateDate;
     /**
+     * 福利办理方
+     */
+	@TableField("welfare_unit")
+	private Integer welfareUnit;
+    /**
      * 业务接口ID  missionId
      */
 	@TableField("business_interface_id")
@@ -635,6 +640,14 @@ public class HfEmpTask implements Serializable {
 		this.operateDate = operateDate;
 	}
 
+	public Integer getWelfareUnit() {
+		return welfareUnit;
+	}
+
+	public void setWelfareUnit(Integer welfareUnit) {
+		this.welfareUnit = welfareUnit;
+	}
+
 	public String getBusinessInterfaceId() {
 		return businessInterfaceId;
 	}
@@ -745,6 +758,7 @@ public class HfEmpTask implements Serializable {
 			", transferDate=" + transferDate +
 			", feedbackDate=" + feedbackDate +
 			", operateDate=" + operateDate +
+			", welfareUnit=" + welfareUnit +
 			", businessInterfaceId=" + businessInterfaceId +
 			", policyDetailId=" + policyDetailId +
 			", taskId=" + taskId +

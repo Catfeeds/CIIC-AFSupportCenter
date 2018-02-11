@@ -79,6 +79,18 @@
             <if test="comAccountName != null">
                 and ca.com_account_name LIKE CONCAT('%',#{comAccountName},'%')
             </if>
+            <if test="ssAccountType != null">
+                and ca.ss_account_type LIKE CONCAT('%',#{ssAccountType},'%')
+            </if>
+            <if test="companyId != null">
+                AND  EXISTS (select 1 from ss_account_com_relation  acr
+                                where  acr.com_account_id=ca.com_account_id
+                                AND  acr.company_id like CONCAT('%',#{companyId},'%')
+                              )
+        </if>
+            <if test="state != null">
+                and ca.state =#{state}
+            </if>
         </where>
     </select>
 

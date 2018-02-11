@@ -136,6 +136,8 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         ssEmpTask.setProcessId(taskMsgDTO.getProcessId());
         ssEmpTask.setTaskStatus(1);
         ssEmpTask.setActive(true);
+        //福利办理方
+        ssEmpTask.setWelfareUnit(companyDto.getSocialUnit());
 //        ssEmpTask.setModifiedBy(companyDto.getCreatedBy());
 
 

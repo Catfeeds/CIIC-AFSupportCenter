@@ -229,7 +229,12 @@ public class SsEmpTask implements Serializable {
 	@TableField("out_date")
 	private LocalDate outDate;
     /**
-     * 业务接口ID missionId
+     * 福利办理方
+     */
+	@TableField("welfare_unit")
+	private Integer welfareUnit;
+    /**
+     * 业务接口ID,在流程里是 missionId, 社保拿当前id 通过feign取业务数据
      */
 	@TableField("business_interface_id")
 	private String businessInterfaceId;
@@ -604,6 +609,14 @@ public class SsEmpTask implements Serializable {
 		this.outDate = outDate;
 	}
 
+	public Integer getWelfareUnit() {
+		return welfareUnit;
+	}
+
+	public void setWelfareUnit(Integer welfareUnit) {
+		this.welfareUnit = welfareUnit;
+	}
+
 	public String getBusinessInterfaceId() {
 		return businessInterfaceId;
 	}
@@ -736,6 +749,7 @@ public class SsEmpTask implements Serializable {
 			", endMonth=" + endMonth +
 			", inDate=" + inDate +
 			", outDate=" + outDate +
+			", welfareUnit=" + welfareUnit +
 			", businessInterfaceId=" + businessInterfaceId +
 			", processId=" + processId +
 			", taskId=" + taskId +

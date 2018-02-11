@@ -167,13 +167,13 @@ public class SupplyMedicalController {
     /**
      * 查询发票详情数据
      *
-     * @param multipartFile
+     * @param file
      * @return
      */
     @PostMapping("/importAcceptanceXls")
-    public Result importAcceptanceXls(MultipartFile multipartFile) {
+    public Result importAcceptanceXls(MultipartFile file) {
         try {
-            supplyMedicalAcceptanceService.importAcceptanceXls(multipartFile.getInputStream());
+            supplyMedicalAcceptanceService.importAcceptanceXls(file.getInputStream());
             return ResultGenerator.genSuccessResult();
         } catch (Exception e) {
             return ResultGenerator.genServerFailResult();

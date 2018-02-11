@@ -23,11 +23,11 @@ spring:
         stat:
           enabled: true
   cloud:
-        stream:
-          kafka:
-            binder:
-              brokers: 172.16.9.17:9092,172.16.9.18:9092
-              zk-nodes: 172.16.9.19:2181,172.16.9.20:2181,172.16.9.21:2181
+    stream:
+      kafka:
+        binder:
+          brokers:  172.16.9.11:9092
+          zk-nodes: 172.16.9.11:2181,172.16.9.16:2181
           bindings:
             common_taskservice_af_empin-channel:
               destination: common_taskservice_af_empin # topic name
@@ -65,8 +65,8 @@ spring:
               content-type: application/json
               consumer:
                 partitioned: true
-            common_taskservice_pay-apply-pay-status-stream-channel:
-              destination: common_taskservice_pay-apply-pay-status-stream # topic name
+            pay-apply-pay-status-stream-channel:
+              destination: pay-apply-pay-status-stream # topic name
               group: ${spring.application.name}
               content-type: application/json
               consumer:
