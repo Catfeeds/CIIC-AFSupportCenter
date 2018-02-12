@@ -1243,10 +1243,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 detail.setComBase(empBase);
                 detail.setEmpArchiveId(empArchiveId);
                 //个人金额 个人基数*个人比例
-                BigDecimal empAmount  = CalculateSocialUtils.calculateAmount(detail.getEmpBase(),detail.getEmpRatio(),null,2,"DIT00018");
+                BigDecimal empRatio = detail.getEmpRatio() != null ? detail.getEmpRatio() : BigDecimal.valueOf(0);
+                BigDecimal empAmount  = CalculateSocialUtils.calculateAmount(detail.getEmpBase(),empRatio,null,2,"DIT00018");
                 detail.setEmpAmount(empAmount);
                 //公司金额 个人基数*个人比例
-                BigDecimal comAmount  = CalculateSocialUtils.calculateAmount(detail.getComBase(),detail.getComRatio(),null,2,"DIT00018");
+                BigDecimal comRatio = detail.getComRatio() != null ? detail.getComRatio() : BigDecimal.valueOf(0);
+                BigDecimal comAmount  = CalculateSocialUtils.calculateAmount(detail.getComBase(),comRatio,null,2,"DIT00018");
                 detail.setComAmount(comAmount);
                 //个人+公司
                 detail.setComempAmount(detail.getEmpAmount().add(detail.getComAmount()));
