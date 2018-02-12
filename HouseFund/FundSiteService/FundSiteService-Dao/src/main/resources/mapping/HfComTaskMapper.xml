@@ -8,6 +8,7 @@
 		<result column="com_account_id" property="comAccountId" />
 		<result column="com_account_class_id" property="comAccountClassId" />
 		<result column="company_id" property="companyId" />
+        <result column="hf_type" property="hfType" />
 		<result column="task_category" property="taskCategory" />
 		<result column="submitter_id" property="submitterId" />
 		<result column="submitter_name" property="submitterName" />
@@ -38,5 +39,51 @@
 		<result column="created_by" property="createdBy" />
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
+
+    <resultMap id="HfComTaskBOResultMap"
+               type="com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComTaskBo"
+               extends="BaseResultMap">
+        <result column="company_name" property="companyName"/>
+        <result column="task_category_name" property="taskCategoryName"/>
+        <result column="hf_type_name" property="hfTypeName"/>
+        <result column="com_task_payment_way_name" property="comTaskPaymentWayName"/>
+    </resultMap>
+
+    <!--查询公积金企业任务单 未处理状态-->
+    <select id="queryNoProcessCompanyTask" resultMap="HfComTaskBOResultMap">
+        SELECT
+        hft.com_task_id,
+        ctc.task_category_name,
+        ht.hf_type_name,
+        hft.company_id,
+        cc.title as company_name,
+        hft.handle_user_id,
+        hft.handle_user_name,
+        hft.submitter_id,
+        hft.submitter_name,
+        hft.payment_way,
+        ctpw.com_task_payment_way_name
+        FROM hf_com_task hft
+        LEFT JOIN sal_company cc ON hft.company_id = cc.company_id
+        LEFT JOIN hf_com_task_category ctc ON hft.task_category = ctc.task_category_code
+        LEFT JOIN hf_type ht ON hft.hf_type = ht.hf_type_code
+        LEFT JOIN hf_com_task_payment_way ctpw ON hft.payment_way = ctpw.com_task_payment_way_code
+        <where>
+            AND hft.is_active = 1
+            AND hft.task_status = 0
+            <if test="companyName!= null">
+                AND cc.title LIKE CONCAT('%', #{companyName}, '%')
+            </if>
+            <if test="taskCategory!= null">
+                AND hft.task_category = #{taskCategory}
+            </if>
+            <if test="companyId!= null">
+                AND hft.company_id = #{companyId}
+            </if>
+            <if test="hfTypeName!= null">
+                AND ht.hf_type_name = TRIM(#{hfTypeName})
+            </if>
+        </where>
+    </select>
 
 </mapper>

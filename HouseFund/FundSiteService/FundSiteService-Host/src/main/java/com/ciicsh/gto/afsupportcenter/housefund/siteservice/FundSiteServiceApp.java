@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.util.config.CustomConfiguration;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Import;
 
 /**
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Import;
 @MapperScan("com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao")
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.housefund.siteservice"})
 @Import({CustomConfiguration.class, MybatisPlusConfig.class})
+@EnableDiscoveryClient
 public class FundSiteServiceApp {
     public static void main(String[] args) {
         SpringApplication.run(FundSiteServiceApp.class, args);
