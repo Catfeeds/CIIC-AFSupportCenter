@@ -10,68 +10,59 @@ spring:
   profiles:
     active: dev
   cloud:
-<<<<<<< HEAD
-    stream:
-      kafka:
-        binder:
-          brokers:  172.16.9.11:9092
-          zk-nodes: 172.16.9.11:2181,172.16.9.16:2181
-=======
-        stream:
->>>>>>> feature_houwanhua_20180228
-          bindings:
-            common_taskservice_af_empin_channel:
-              destination: common_taskservice_af_empin # topic name
-              group: ${spring.application.name}
-              #content-type: application/json
-              consumer:
-                partitioned: true
-            common_taskservice_af_empout_channel:
-              destination: common_taskservice_af_empout # topic name
-              group: ${spring.application.name}
-              #content-type: application/json
-              consumer:
-                partitioned: true
-            common_taskservice_af_emp_make_up_channel:
-              destination: common_taskservice_af_emp_make_up # topic name
-              group: ${spring.application.name}
-              #content-type: application/json
-              consumer:
-                partitioned: true
-            common_taskservice_af_emp_company_change_channel:
-              destination: common_taskservice_af_emp_company_change # topic name
-              group: ${spring.application.name}
-              #content-type: application/json
-              consumer:
-                partitioned: true
-            common_taskservice_af_emp_agreement_adjust_channel:
-              destination: common_taskservice_af_emp_agreement_adjust # topic name
-              group: ${spring.application.name}
-              #content-type: application/json
-              consumer:
-                partitioned: true
-            common_taskservice_af_emp_agreement_update_channel:
-              destination: common_taskservice_af_emp_agreement_update # topic name
-              group: ${spring.application.name}
-              #content-type: application/json
-              consumer:
-                partitioned: true
-            pay_apply_pay_status_stream_channel:
-              destination: pay-apply-pay-status-stream # topic name
-              group: ${spring.application.name}
-              #content-type: application/json
-              consumer:
-                partitioned: true
-            soc_report_output_channel:
-              destination: af_soc_report_generate # topic name
-              content-type: application/json
-              producer:
-                partitionCount: 2
+    bindings:
+      common_taskservice_af_empin_channel:
+        destination: common_taskservice_af_empin # topic name
+        group: ${spring.application.name}
+        #content-type: application/json
+        consumer:
+          partitioned: true
+      common_taskservice_af_empout_channel:
+        destination: common_taskservice_af_empout # topic name
+        group: ${spring.application.name}
+        #content-type: application/json
+        consumer:
+          partitioned: true
+      common_taskservice_af_emp_make_up_channel:
+        destination: common_taskservice_af_emp_make_up # topic name
+        group: ${spring.application.name}
+        #content-type: application/json
+        consumer:
+          partitioned: true
+      common_taskservice_af_emp_company_change_channel:
+        destination: common_taskservice_af_emp_company_change # topic name
+        group: ${spring.application.name}
+        #content-type: application/json
+        consumer:
+          partitioned: true
+      common_taskservice_af_emp_agreement_adjust_channel:
+        destination: common_taskservice_af_emp_agreement_adjust # topic name
+        group: ${spring.application.name}
+        #content-type: application/json
+        consumer:
+          partitioned: true
+      common_taskservice_af_emp_agreement_update_channel:
+        destination: common_taskservice_af_emp_agreement_update # topic name
+        group: ${spring.application.name}
+        #content-type: application/json
+        consumer:
+          partitioned: true
+      pay_apply_pay_status_stream_channel:
+        destination: pay-apply-pay-status-stream # topic name
+        group: ${spring.application.name}
+        #content-type: application/json
+        consumer:
+          partitioned: true
+      soc_report_output_channel:
+        destination: af_soc_report_generate # topic name
+        content-type: application/json
+        producer:
+          partitionCount: 2
 
-          instance-count: 2 # The number of deployed instances of an application.
-                            # Must be set for partitioning and if using Kafka.
-                            # used to partition data across different consumers.
-          instance-index: 0
+    instance-count: 2 # The number of deployed instances of an application.
+                      # Must be set for partitioning and if using Kafka.
+                      # used to partition data across different consumers.
+    instance-index: 0
   http:
     multipart:
       enabled: true
