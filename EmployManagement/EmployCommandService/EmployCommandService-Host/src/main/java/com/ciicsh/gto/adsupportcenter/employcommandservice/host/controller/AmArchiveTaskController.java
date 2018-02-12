@@ -168,7 +168,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         //退工归还材料签收
         PageRows<AmEmpMaterialBO> result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
         //用工信息
-        PageRows<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(pageInfo);
+        List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(param);
 
         List<AmResignBO> listResignBO = amResignService.queryAmResignDetail(param);
 
@@ -194,9 +194,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         }
 
-        if(null!= resultEmployList&&resultEmployList.getRows().size()>0)
+        if(null!= resultEmployList&&resultEmployList.size()>0)
         {
-            resultMap.put("amEmploymentBO",resultEmployList.getRows().get(0));
+            resultMap.put("amEmploymentBO",resultEmployList.get(0));
         }
 
         if(null!=amRemarkBOPageRows)

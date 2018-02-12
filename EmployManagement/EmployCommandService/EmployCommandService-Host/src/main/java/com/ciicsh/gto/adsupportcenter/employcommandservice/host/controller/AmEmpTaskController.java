@@ -131,13 +131,21 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         JSONObject params = new JSONObject();
         params.put("employeeId",employeeId);
         params.put("remarkType",remarkType);
+        params.put("companyId",companyId);
         pageInfo.setParams(params);
 
         PageRows<AmEmpMaterialBO> result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
         //用工信息
-        PageRows<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(pageInfo);
+        List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(param);
         //用工档案
-        List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchive(employeeId);
+        List<AmArchiveBO> amArchiveBOList = null;
+
+        if(null!=resultEmployList&&resultEmployList.size()>0)
+        {
+            params.put("employmentId",resultEmployList.get(0).getEmploymentId());
+            amArchiveBOList = amArchiveService.queryAmArchiveList(params);
+        }
+
         //用工备注
         PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);
         //客户信息
@@ -149,9 +157,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         resultMap.put("materialList",result);
 
-        if(null!= resultEmployList&&resultEmployList.getRows().size()>0)
+        if(null!= resultEmployList&&resultEmployList.size()>0)
         {
-            resultMap.put("amEmploymentBO",resultEmployList.getRows().get(0));
+            resultMap.put("amEmploymentBO",resultEmployList.get(0));
         }
         if(null!=amArchiveBOList&&amArchiveBOList.size()>0)
         {
@@ -243,7 +251,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         return JsonResultKit.of(result);
 
     }
-
 
     @Log("用工备注查询")
     @RequestMapping("/queryAmRemark")
