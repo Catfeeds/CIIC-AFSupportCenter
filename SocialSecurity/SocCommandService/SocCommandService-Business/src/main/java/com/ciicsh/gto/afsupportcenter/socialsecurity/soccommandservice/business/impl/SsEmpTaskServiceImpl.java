@@ -1756,7 +1756,6 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param bo
      */
     void taskCompletCallBack(SsEmpTaskBO bo){
-        TaskCommonUtils.completeTask(bo.getTaskId(),commonApiUtils,"xsj");
         //新开_1","转入_2","调整_3","补缴_4","转出_5","封存_6","退账_7","集体转入_10","集体转出_11
         switch (bo.getTaskCategory()){
             case 1:
@@ -1770,6 +1769,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 TaskCommonUtils.updateConfirmDate(commonApiUtils,bo);
                 break;
         }
+        //任务单完成接口调用
+        TaskCommonUtils.completeTask(bo.getTaskId(),commonApiUtils,"xsj");
     }
 
 }
