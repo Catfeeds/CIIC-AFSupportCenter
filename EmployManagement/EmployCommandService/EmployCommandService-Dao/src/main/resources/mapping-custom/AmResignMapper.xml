@@ -32,7 +32,6 @@
     </resultMap>
 
     <select id="queryAmResign" resultMap="BaseResultMapDTO">
-
         SELECT
         a.employee_id,
         a.company_id,
@@ -62,15 +61,14 @@
         c.archive_place,
         c.storage_out_date,
         c.employ_feedback
-
         FROM
         am_emp_task a
-        INNER JOIN am_resign f ON a.employee_id = f.employee_id
-        AND a.company_id = f.company_id
-        LEFT JOIN am_employment b ON b.employment_id = f.employment_id
+        LEFT JOIN am_employment b  ON a.employee_id = b.employee_id
+        AND a.company_id = b.company_id
         LEFT JOIN emp_employee d ON b.employee_id = d.employee_id
-        LEFT JOIN sal_company e ON e.company_id = a.company_id
+        LEFT JOIN sal_company e ON e.company_id = b.company_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
+        LEFT JOIN am_resign f on  f.employment_id = b.employment_id
         WHERE
         a.task_category = '2'
         <if test="taskStatus!=null">
@@ -92,12 +90,12 @@
         a.task_status
         FROM
         am_emp_task a
-        INNER JOIN am_resign f ON a.employee_id = f.employee_id
-        AND a.company_id = f.company_id
-        LEFT JOIN am_employment b ON b.employment_id = f.employment_id
+        LEFT JOIN am_employment b  ON a.employee_id = b.employee_id
+        AND a.company_id = b.company_id
         LEFT JOIN emp_employee d ON b.employee_id = d.employee_id
-        LEFT JOIN sal_company e ON e.company_id = a.company_id
+        LEFT JOIN sal_company e ON e.company_id = b.company_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
+        LEFT JOIN am_resign f on  f.employment_id = b.employment_id
         WHERE
         a.task_category = '2'
         <foreach collection="param" item="plid" open="" close="" separator="">

@@ -23,8 +23,15 @@
     </resultMap>
 
     <select id="queryAmEmployment" resultMap="BaseResultMapDTO">
-        SELECT  *  FROM  am_employment  where  employee_id = #{employeeId}
-
+        SELECT  *  FROM  am_employment
+        where
+          is_active = 1
+        <if test="employeeId!=null">
+            and  employee_id = #{employeeId}
+        </if>
+        <if test="employmentId!=null">
+            and  employment_id = #{employmentId}
+        </if>
     </select>
 
     <select id="queryAmEmploymentById" resultMap="BaseResultMapDTO">

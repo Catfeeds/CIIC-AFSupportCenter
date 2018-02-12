@@ -47,7 +47,6 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         return JsonResultKit.of(result);
     }
 
-
     @RequestMapping("/queryResignTaskCount")
     public  JsonResult<AmResignCollection>  taskCount(PageInfo pageInfo){
 
@@ -101,7 +100,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         List<AmEmpTaskBO> list = taskService.queryAmEmpTaskById(param);
 
         AmEmpTaskBO amEmpTaskBO = list.get(0);
-
+        //退工信息
         List<AmResignBO> listResignBO = business.queryAmResignDetail(param);
 
         PageInfo pageInfo = new PageInfo();
@@ -112,7 +111,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
         //退工备注
         PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);
-        //退工备注
+
         params.put("remarkType","1");
         pageInfo.setParams(params);
         PageRows<AmRemarkBO> amRemarkBOPageRows1 = amRemarkService.queryAmRemark(pageInfo);
@@ -121,21 +120,24 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         pageInfo.setParams(params);
         PageRows<AmRemarkBO> amRemarkBOPageRows2 = amRemarkService.queryAmRemark(pageInfo);
         //用工信息
-        PageRows<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(pageInfo);
+        List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(param);
+
         //用工档案
-        List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchive(bo.getEmployeeId());
+        List<AmArchiveBO> amArchiveBOList = null;
+
+        if(null!=resultEmployList&&resultEmployList.size()>0){
+            param.put("employmentId",resultEmployList.get(0).getEmploymentId());
+            amArchiveBOList = amArchiveService.queryAmArchiveList(param);
+        }
         //客户信息
         List<AmEmpTaskBO>  listCompany = taskService.queryCustom(bo.getCompanyId());
-
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
         //雇员信息
         resultMap.put("amEmpTaskBO",amEmpTaskBO);
-
+        //退工信息
         if(null!=listResignBO&&listResignBO.size()>0){
-            LocalDateTime now = LocalDateTime.now();
             AmResignBO temp = listResignBO.get(0);
-//            temp.setResignDate(now.toLocalDate());
             resultMap.put("resignBO",temp);
         }
 
@@ -153,9 +155,9 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             resultMap.put("amRemarkBo2",amRemarkBOPageRows2);
         }
 
-        if(null!= resultEmployList&&resultEmployList.getRows().size()>0)
+        if(null!= resultEmployList&&resultEmployList.size()>0)
         {
-            resultMap.put("amEmploymentBO",resultEmployList.getRows().get(0));
+            resultMap.put("amEmploymentBO",resultEmployList.get(0));
         }
 
         if(null!=amArchiveBOList&&amArchiveBOList.size()>0)

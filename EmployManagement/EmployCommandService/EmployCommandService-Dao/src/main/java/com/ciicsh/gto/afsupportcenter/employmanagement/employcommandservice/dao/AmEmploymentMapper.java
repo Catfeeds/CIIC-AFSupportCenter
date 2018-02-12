@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -14,9 +15,7 @@ import java.util.List;
  */
 public interface AmEmploymentMapper extends BaseMapper<AmEmployment> {
 
-     List<AmEmploymentBO> queryAmEmployment(AmEmploymentBO amEmploymentBO);
-
-     AmEmploymentBO queryAmEmploymentById(@Param("amEmploymentId") String amEmploymentId);
+     List<AmEmploymentBO> queryAmEmployment(Map<String,Object> param);
 
      List<AmEmploymentBO>  queryAmArchive(AmEmploymentBO amEmploymentBO);
 

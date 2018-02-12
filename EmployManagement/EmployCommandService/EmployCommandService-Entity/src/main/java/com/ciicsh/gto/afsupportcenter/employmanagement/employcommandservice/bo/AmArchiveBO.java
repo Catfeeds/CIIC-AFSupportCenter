@@ -6,4 +6,5 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.enti
  * Created by zhangzhiwen on 2018/1/29.
  */
 public class AmArchiveBO extends AmArchive {
+
 }

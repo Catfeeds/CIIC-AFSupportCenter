@@ -44,6 +44,7 @@
         LEFT JOIN
         am_employment b
         ON a.employee_id = b.employee_id
+        and a.company_id = b.company_id
         LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id
@@ -61,7 +62,7 @@
         on a.employee_id = g.employee_id
         LEFT JOIN
         sal_fc_company h on h.company_id = b.company_id
-where   task_category = '1'
+        where   a.task_category = '1'
         <if test="taskStatus!=null">
             and a.task_status = ${taskStatus}
         </if>
@@ -75,7 +76,6 @@ where   task_category = '1'
         t.task_status,
         COUNT(t.task_status) AS count
         FROM
-
         (
         SELECT
         a.task_status
@@ -84,6 +84,7 @@ where   task_category = '1'
         LEFT JOIN
         am_employment b
         ON a.employee_id = b.employee_id
+        and a.company_id = b.company_id
         LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id
@@ -101,8 +102,7 @@ where   task_category = '1'
         on a.employee_id = g.employee_id
         LEFT JOIN
         sal_fc_company h on h.company_id = b.company_id
-        WHERE
-        task_category = '1'
+        where   a.task_category = '1'
         <foreach collection = "param" item = "plid"  open=""  close=""  separator="" >
           AND  ${ plid }
         </foreach >

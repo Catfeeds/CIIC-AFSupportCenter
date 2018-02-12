@@ -14,8 +14,6 @@ import java.util.Map;
  */
 public interface AmArchiveMapper extends BaseMapper<AmArchive> {
 
-    List<AmArchiveBO>  queryAmArchive(String employeeId);
-
     List<AmArchiveBO>  queryAmArchiveList(Map<String,Object>  param);
 
 }
