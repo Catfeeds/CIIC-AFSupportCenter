@@ -1,12 +1,12 @@
 ###################  项目启动端口  ###################
 server:
-  port: 6007
+  port: 6003
   context-path: /
 
 ###################  spring 配置  ###################
 spring:
   application:
-    name: support-center-housefund-site-service
+    name: support-center-soc-command-service
   profiles:
     active: develop
   datasource:
@@ -23,64 +23,76 @@ spring:
         stat:
           enabled: true
   cloud:
-    stream:
-      kafka:
-        binder:
-          brokers:  172.16.9.11:9092
-          zk-nodes: 172.16.9.11:2181,172.16.9.16:2181
+        stream:
+          kafka:
+            binder:
+              brokers: 172.16.9.17:9092,172.16.9.18:9092
+              zk-nodes: 172.16.9.19:2181,172.16.9.20:2181,172.16.9.21:2181
           bindings:
-            common_taskservice_af_empin-channel:
+            common_taskservice_af_empin_channel:
               destination: common_taskservice_af_empin # topic name
               group: ${spring.application.name}
-              content-type: application/json
+              #content-type: application/json
               consumer:
                 partitioned: true
-            common_taskservice_af_empout-channel:
+            common_taskservice_af_empout_channel:
               destination: common_taskservice_af_empout # topic name
               group: ${spring.application.name}
-              content-type: application/json
+              #content-type: application/json
               consumer:
                 partitioned: true
-            common_taskservice_af_emp_make_up-channel:
+            common_taskservice_af_emp_make_up_channel:
               destination: common_taskservice_af_emp_make_up # topic name
               group: ${spring.application.name}
-              content-type: application/json
+              #content-type: application/json
               consumer:
                 partitioned: true
-            common_taskservice_af_emp_company_change-channel:
+            common_taskservice_af_emp_company_change_channel:
               destination: common_taskservice_af_emp_company_change # topic name
               group: ${spring.application.name}
-              content-type: application/json
+              #content-type: application/json
               consumer:
                 partitioned: true
-            common_taskservice_af_emp_agreement_adjust-channel:
+            common_taskservice_af_emp_agreement_adjust_channel:
               destination: common_taskservice_af_emp_agreement_adjust # topic name
               group: ${spring.application.name}
-              content-type: application/json
+              #content-type: application/json
               consumer:
                 partitioned: true
-            common_taskservice_af_emp_agreement_update-channel:
+            common_taskservice_af_emp_agreement_update_channel:
               destination: common_taskservice_af_emp_agreement_update # topic name
               group: ${spring.application.name}
-              content-type: application/json
+              #content-type: application/json
               consumer:
                 partitioned: true
-            pay-apply-pay-status-stream-channel:
+            pay_apply_pay_status_stream_channel:
               destination: pay-apply-pay-status-stream # topic name
               group: ${spring.application.name}
-              content-type: application/json
+              #content-type: application/json
               consumer:
                 partitioned: true
+            soc_report_output_channel:
+              destination: af_soc_report_generate # topic name
+              content-type: application/json
+              producer:
+                partitionCount: 2
 
           instance-count: 2 # The number of deployed instances of an application.
                             # Must be set for partitioning and if using Kafka.
                             # used to partition data across different consumers.
           instance-index: 0
+  http:
+    multipart:
+      enabled: true
+      max-file-size: 2MB
 ###################  spring cloud eureka  ###################
 eureka:
   client:
     serviceUrl:
-      defaultZone: "http://172.16.9.19:9602/eureka,http://172.16.9.20:9602/eureka,http://172.16.9.21:9602/eureka" #本地开发环境eureka
+      defaultZone: "http://172.16.9.24:9602/eureka,http://172.16.9.25:9602/eureka"  #SIT
+                     #"http://172.16.9.19:9602/eureka,http://172.16.9.20:9602/eureka,http://172.16.9.21:9602/eureka" #DEV
+                     #" #本地开发环境eureka,http://172.16.9.19:9602/eureka
+                     #"http://172.16.9.21:9602/eureka,http://172.16.9.20:9602/eureka,http://172.16.9.19:9602/eureka" #本地开发环境eureka
   instance:
     lease-expiration-duration-in-seconds: 40
     lease-renewal-interval-in-seconds: 30
@@ -91,7 +103,7 @@ eureka:
 mybatis-plus:
   mapper-locations: classpath*:/mapping*/*Mapper.xml
   #实体扫描，多个package用逗号或者分号分隔
-  typeAliasesPackage: com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity
+  typeAliasesPackage: com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity
   plugins:
     - catMybatisInterceptor
 #  typeEnumsPackage: com.baomidou.springboot.entity.enums
@@ -120,7 +132,7 @@ mybatis-plus:
     cache-enabled: false
 
 app:
-  id: 10006004
+  id: 10016002
 
 endpoints:
   shutdown:
@@ -135,5 +147,10 @@ endpoints:
 management:
   security:
     enabled: false
-  port: 6008
+  port: 6004
   context-path: /admin
+
+http:
+  multipart:
+  enabled: true
+  max-file-size: 2MB

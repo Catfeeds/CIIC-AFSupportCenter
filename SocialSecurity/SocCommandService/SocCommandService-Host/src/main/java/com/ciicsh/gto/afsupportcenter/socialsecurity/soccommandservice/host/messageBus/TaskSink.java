@@ -43,7 +43,7 @@ public interface TaskSink {
     /**
      * 财务中心付款申请返回
      */
-    String PAY_APPLY_PAY_STATUS_STREAM = "common_taskservice_pay_apply_pay_status_stream_channel";
+    String PAY_APPLY_PAY_STATUS_STREAM = "pay_apply_pay_status_stream_channel";
 
     /**
      * 社保办理

@@ -13,12 +13,12 @@ public interface TaskSink {
     /**
      * 雇员新增
      */
-    String AF_EMP_IN = "common_taskservice_af_empin";
+    String AF_EMP_IN = "common_taskservice_af_empin_channel";
 
     /**
      * 雇员终止
      */
-    String AF_EMP_OUT = "common_taskservice_af_empout";
+    String AF_EMP_OUT = "common_taskservice_af_empout_channel";
 
     /**
      * 用工办理

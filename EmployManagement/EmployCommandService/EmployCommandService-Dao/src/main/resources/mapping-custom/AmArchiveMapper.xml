@@ -7,10 +7,6 @@
                type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmArchiveBO">
     </resultMap>
 
-    <select id="queryAmArchive" resultMap="BaseResultMapDTO">
-        select * from am_archive where  employee_id = #{employeeId}
-    </select>
-
     <select id="queryAmArchiveList" resultMap="BaseResultMapDTO">
         select  *  from am_archive
         where  1=1
