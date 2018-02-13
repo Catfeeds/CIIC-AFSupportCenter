@@ -22,7 +22,7 @@ public class CalculateSocialUtils {
 	 * @return big decimal
 	 */
 	public static BigDecimal calculateAmount(BigDecimal base, BigDecimal ratio, BigDecimal fixedAmount, Integer calculateMethod, String roundType){
-		switch (calculateMethod){
+	    switch (calculateMethod){
 			case 1:
 				return calculateByRoundType(fixedAmount,roundType);
 			case 2:

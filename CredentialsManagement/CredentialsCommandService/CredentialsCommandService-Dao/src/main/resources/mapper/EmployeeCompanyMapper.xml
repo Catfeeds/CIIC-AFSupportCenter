@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.EmployeeCompanyMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.EmployeeCompany">
+		<id column="company_id" property="companyId" />
+		<result column="employee_id" property="employeeId" />
+		<result column="employee_name" property="employeeName" />
+		<result column="company_name" property="companyName" />
+		<result column="id_num" property="idNum" />
+        <result column="type" property="type" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <select id="select" resultMap="BaseResultMap">
+        SELECT
+        <include refid="ALL_COLUMS"></include>
+        FROM
+        vw_employee_company
+        <include refid="SEL_LIST_WHERR"></include>
+    </select>
+
+    <sql id="ALL_COLUMS">
+        employee_id,
+        employee_name,
+        id_num,
+        company_id,
+        company_name,
+        type,
+        status
+    </sql>
+
+    <sql id="SEL_LIST_WHERR">
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="companyId != null and companyId != ''">
+                AND company_id LIKE concat(concat('%',#{companyId}),'%')
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                AND employee_name LIKE concat(concat('%',#{employeeName}),'%')
+            </if>
+            <if test="employeeId != null and employeeId != ''">
+                AND employee_id LIKE concat(concat('%',#{employeeId}),'%')
+            </if>
+            <if test="companyName != null and companyName != ''">
+                AND company_name LIKE concat(concat('%',#{companyName}),'%')
+            </if>
+            <if test="idNum != null and idNum != ''">
+                AND idNum LIKE concat(concat('%',#{idNum}),'%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status LIKE concat(concat('%',#{status}),'%')
+            </if>
+        </trim>
+    </sql>
+</mapper>
