@@ -8,7 +8,7 @@
     </resultMap>
 
     <select id="queryAmArchiveUseList" resultMap="BaseResultMapDTO">
-        select * from  am_archive_use  where is_active = 1 and employee_id = #{employeeId} and archive_id = #{archiveId} and type = #{type}
+        select * from  am_archive_use  where is_active = 1 and employee_id = #{employeeId} and archive_id = #{archiveId} and use_borrow = #{useBorrow}
     </select>
 
     <update id="deleteAmArchiveUse">

@@ -278,23 +278,25 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
     @PostMapping("/saveAmArchiveUse")
     public JsonResult<Boolean>  saveAmArchiveUse(@RequestBody List<AmArchiveUse> list) {
-        List<AmArchiveUse>  data = new ArrayList<>();
+
         for(AmArchiveUse bo:list)
         {
             LocalDateTime now = LocalDateTime.now();
-            bo.setCreatedTime(now);
-            bo.setModifiedTime(now);
-            bo.setCreatedBy("sys");
-            bo.setModifiedBy("sys");
-            if(bo.getArchiveUseId()==null){
-                data.add(bo);
-            }
 
+            if(bo.getArchiveUseId()==null){
+                bo.setCreatedTime(now);
+                bo.setModifiedTime(now);
+                bo.setCreatedBy("sys");
+                bo.setModifiedBy("sys");
+            }else {
+                bo.setModifiedTime(now);
+                bo.setModifiedBy("sys");
+            }
         }
 
         boolean result = false;
         try {
-            result = iAmArchiveUseService.insertBatch(data);
+            result = iAmArchiveUseService.insertOrUpdateBatch(list);
         } catch (Exception e) {
 
         }
@@ -309,7 +311,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         JSONObject params = new JSONObject();
         params.put("employeeId",archiveUse.getEmployeeId());
         params.put("archiveId",archiveUse.getArchiveId());
-        params.put("type",0);
+        params.put("useBorrow",0);
         pageInfo.setParams(params);
 
 
@@ -317,7 +319,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         PageRows<AmArchiveUse>  amArchiveUsePageRows  = iAmArchiveUseService.queryAmArchiveUse(pageInfo);
 
-        params.put("type",1);
+        params.put("useBorrow",1);
         pageInfo.setParams(params);
 
         PageRows<AmArchiveUse>  amArchiveUsePageRows1  = iAmArchiveUseService.queryAmArchiveUse(pageInfo);
