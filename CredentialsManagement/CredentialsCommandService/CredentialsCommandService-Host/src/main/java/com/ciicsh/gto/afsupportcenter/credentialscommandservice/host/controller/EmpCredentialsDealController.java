@@ -48,8 +48,6 @@ public class EmpCredentialsDealController {
     private CompanyExtService companyExtService;
     @Autowired
     private TaskMaterialService taskMaterialService;
-    @Autowired
-    private MaterialTypeRelationService materialTypeRelationService;
 
     /**
      * 查询任务单跟进记录
