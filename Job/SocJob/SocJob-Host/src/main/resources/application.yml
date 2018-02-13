@@ -1,8 +1,7 @@
-#应用程序配置
 server:
   port: 6012
   context-path: /
-#spring相关配置
+
 spring:
   application:
     name: support-center-soc-job
@@ -17,16 +16,12 @@ spring:
           group: ${spring.application.name} #consumer group
           consumer:
             partitioned: true
-      instance-count: 2
-      instance-index: 1
-#eureka配置
 eureka:
   instance:
     lease-expiration-duration-in-seconds: 30
     lease-renewal-interval-in-seconds: 40
     prefer-ip-address: true
     instance-id: ${spring.cloud.client.ipAddress}:${server.port}
-#mybatis-plus配置
 mybatis-plus:
   mapper-locations: classpath*:mapper/**.xml
   type-aliases-package: com.ciicsh.gto.afsupportcenter.socjob.entity
