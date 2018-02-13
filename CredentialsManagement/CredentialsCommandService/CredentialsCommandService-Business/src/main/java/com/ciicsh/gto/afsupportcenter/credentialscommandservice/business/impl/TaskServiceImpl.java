@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.TaskMapper;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Task;
-import com.netflix.discovery.converters.Auto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

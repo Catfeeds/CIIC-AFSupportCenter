@@ -1,7 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.payment;
 
-import com.baomidou.mybatisplus.annotations.TableId;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

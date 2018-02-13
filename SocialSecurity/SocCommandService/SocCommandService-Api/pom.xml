@@ -28,6 +28,41 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.ciicsh.gt1.commonservice</groupId>
+            <artifactId>basicdataservice-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ciicsh.gt1.companycenter</groupId>
+            <artifactId>commandservice-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ciicsh.gt1.commonservice</groupId>
+            <artifactId>sheetservice-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ciicsh.gt1.companycenter</groupId>
+            <artifactId>queryservice-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ciicsh.gt1.employeecenter</groupId>
+            <artifactId>apiservice-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+
         <!--<dependency>-->
             <!--<groupId>com.ciicsh.gt1.employeecenter</groupId>-->
             <!--<artifactId>apiservice-api</artifactId>-->

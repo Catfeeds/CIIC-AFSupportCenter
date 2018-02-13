@@ -6,7 +6,6 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComA
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
-import com.ciicsh.gto.settlementcenter.invoicecommandservice.api.dto.JsonResult;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;

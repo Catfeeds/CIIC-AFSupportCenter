@@ -1,7 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.entity;
 
-import com.baomidou.mybatisplus.annotations.TableName;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,7 +14,6 @@ import java.time.LocalDateTime;
  * @author HuangXing
  * @since 2017-12-26
  */
-@TableName("ss_com_account")
 public class SsComAccount implements Serializable {
 
     private static final long serialVersionUID = 1L;

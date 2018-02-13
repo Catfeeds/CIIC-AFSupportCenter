@@ -1,10 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.entity;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
-import com.baomidou.mybatisplus.enums.IdType;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -16,7 +11,6 @@ import java.time.LocalDateTime;
  * @author HuangXing
  * @since 2017-12-26
  */
-@TableName("ss_com_material")
 public class SsComMaterial implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,32 +18,26 @@ public class SsComMaterial implements Serializable {
     /**
      * 雇员任务单编号
      */
-	@TableId(value="com_material_id", type= IdType.AUTO)
 	private Long comMaterialId;
     /**
      * 本地社保的雇员任务单Id
      */
-	@TableField("com_task_id")
 	private Long comTaskId;
     /**
      * 材料类型：1 原件、2  复印件、3 扫描件
      */
-	@TableField("material_type")
 	private Integer materialType;
     /**
      * 任务单提交人所属部门Id
      */
-	@TableField("material_name")
 	private String materialName;
     /**
      * 发起时间
      */
-	@TableField("submit_time")
 	private LocalDateTime submitTime;
     /**
      * 任务发起人备注
      */
-	@TableField("receive_time")
 	private LocalDateTime receiveTime;
 	private String remark;
     /**
@@ -59,27 +47,25 @@ public class SsComMaterial implements Serializable {
     /**
      * 是否可用
      */
-	@TableField("is_active")
 	private Boolean isActive;
     /**
      * 创建时间
      */
-	@TableField("created_time")
+
 	private LocalDateTime createdTime;
     /**
      * 最后更新时间
      */
-	@TableField("modified_time")
+
 	private LocalDateTime modifiedTime;
     /**
      * 创建者登录名
      */
-	@TableField("created_by")
+
 	private String createdBy;
     /**
      * 修改者登录名
      */
-	@TableField("modified_by")
 	private String modifiedBy;
 
 
