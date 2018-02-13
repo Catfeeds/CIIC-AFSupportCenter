@@ -1,8 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmInjuryBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmRemarkBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmInjuryService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao.AmInjuryMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmInjury;
