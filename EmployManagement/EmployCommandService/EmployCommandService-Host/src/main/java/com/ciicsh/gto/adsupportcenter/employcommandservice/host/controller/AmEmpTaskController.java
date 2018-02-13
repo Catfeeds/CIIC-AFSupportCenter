@@ -238,7 +238,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
              if(bo.getRemarkId()==null){
                  data.add(bo);
              }
-
          }
 
         boolean result = false;
@@ -247,7 +246,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         } catch (Exception e) {
 
         }
-
         return JsonResultKit.of(result);
 
     }
@@ -270,8 +268,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         List<AmEmpTaskBO> list = business.queryEmployeeHository(employeeId);
         return JsonResultKit.of(list);
     }
-
-
 
 
 }

@@ -86,4 +86,5 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
         amEmploymentBO.setParam(param);
         return baseMapper.taskCountResign(amEmploymentBO);
     }
+
 }
