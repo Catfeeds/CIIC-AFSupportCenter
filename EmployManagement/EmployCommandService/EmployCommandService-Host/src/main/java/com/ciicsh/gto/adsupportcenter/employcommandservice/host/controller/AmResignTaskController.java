@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmResign;
-import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -46,7 +45,6 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         PageRows<AmResignBO> result = business.queryAmResign(pageInfo);
         return JsonResultKit.of(result);
     }
-
 
     @RequestMapping("/queryResignTaskCount")
     public  JsonResult<AmResignCollection>  taskCount(PageInfo pageInfo){
@@ -101,7 +99,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         List<AmEmpTaskBO> list = taskService.queryAmEmpTaskById(param);
 
         AmEmpTaskBO amEmpTaskBO = list.get(0);
-
+        //退工信息
         List<AmResignBO> listResignBO = business.queryAmResignDetail(param);
 
         PageInfo pageInfo = new PageInfo();
@@ -112,7 +110,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
         //退工备注
         PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);
-        //退工备注
+
         params.put("remarkType","1");
         pageInfo.setParams(params);
         PageRows<AmRemarkBO> amRemarkBOPageRows1 = amRemarkService.queryAmRemark(pageInfo);
@@ -121,21 +119,24 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         pageInfo.setParams(params);
         PageRows<AmRemarkBO> amRemarkBOPageRows2 = amRemarkService.queryAmRemark(pageInfo);
         //用工信息
-        PageRows<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(pageInfo);
+        List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(param);
+
         //用工档案
-        List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchive(bo.getEmployeeId());
+        List<AmArchiveBO> amArchiveBOList = null;
+
+        if(null!=resultEmployList&&resultEmployList.size()>0){
+            param.put("employmentId",resultEmployList.get(0).getEmploymentId());
+            amArchiveBOList = amArchiveService.queryAmArchiveList(param);
+        }
         //客户信息
         List<AmEmpTaskBO>  listCompany = taskService.queryCustom(bo.getCompanyId());
-
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
         //雇员信息
         resultMap.put("amEmpTaskBO",amEmpTaskBO);
-
+        //退工信息
         if(null!=listResignBO&&listResignBO.size()>0){
-            LocalDateTime now = LocalDateTime.now();
             AmResignBO temp = listResignBO.get(0);
-//            temp.setResignDate(now.toLocalDate());
             resultMap.put("resignBO",temp);
         }
 
@@ -153,9 +154,9 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             resultMap.put("amRemarkBo2",amRemarkBOPageRows2);
         }
 
-        if(null!= resultEmployList&&resultEmployList.getRows().size()>0)
+        if(null!= resultEmployList&&resultEmployList.size()>0)
         {
-            resultMap.put("amEmploymentBO",resultEmployList.getRows().get(0));
+            resultMap.put("amEmploymentBO",resultEmployList.get(0));
         }
 
         if(null!=amArchiveBOList&&amArchiveBOList.size()>0)
@@ -175,10 +176,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
     public JsonResult<Boolean> saveAmResign(AmResignBO bo) {
         AmResign entity = new AmResign();
         BeanUtils.copyProperties(bo,entity);
-        if(bo.getEmploymentId()==null&& !StringUtil.isEmpty(bo.getMatchEmployIndex()))
-        {
-            entity.setEmploymentId(Long.parseLong(bo.getMatchEmployIndex()));
-        }
+
         LocalDateTime now = LocalDateTime.now();
         if(entity.getResignId()==null){
             entity.setCreatedTime(now);
@@ -192,5 +190,58 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
         boolean result =  business.insertOrUpdate(entity);
         return JsonResultKit.of(result);
+    }
+
+    @RequestMapping("/bindEmploymentId")
+    public JsonResult  bindEmploymentId(AmResignBO bo) {
+
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        AmResign entity = new AmResign();
+        BeanUtils.copyProperties(bo,entity);
+
+        if(bo.getEmploymentId()==null)
+        {
+            boolean result = false;
+            Map<String,Object> param = new HashMap<>();
+            param.put("employmentId",bo.getMatchEmployIndex());
+            List<AmEmploymentBO> list =  amEmploymentService.queryAmEmployment(param);
+
+            if(null!=list&&list.size()>0)
+            {
+                try {
+                    entity.setEmploymentId(Long.parseLong(bo.getMatchEmployIndex()));
+                } catch (NumberFormatException e) {
+                    resultMap.put("result","用工序号格式不对");
+                    return JsonResultKit.of(resultMap);
+                }
+
+                LocalDateTime now = LocalDateTime.now();
+                if(entity.getResignId()==null){
+                    entity.setCreatedTime(now);
+                    entity.setModifiedTime(now);
+                    entity.setCreatedBy("sys");
+                    entity.setModifiedBy("sys");
+                }else{
+                    entity.setModifiedTime(now);
+                    entity.setModifiedBy("sys");
+                }
+
+                result =  business.insertOrUpdate(entity);
+
+                if(result){
+                    resultMap.put("result",result);
+                }else{
+                    resultMap.put("result","绑定失败");
+                }
+            }else {
+                resultMap.put("result","对应用工序号不重在");
+            }
+
+        }else{
+            resultMap.put("result","对应用工序号已经重在");
+        }
+
+        return JsonResultKit.of(resultMap);
+
     }
 }
