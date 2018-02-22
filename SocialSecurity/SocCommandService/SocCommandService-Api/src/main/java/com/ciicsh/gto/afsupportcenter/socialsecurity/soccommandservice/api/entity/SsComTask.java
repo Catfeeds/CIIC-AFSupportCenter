@@ -1,19 +1,14 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import java.time.LocalDate;
-import com.baomidou.mybatisplus.annotations.TableId;
-import java.time.LocalDateTime;
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * <p>
  * 独立库客户任务单
  * </p>
  */
-@TableName("ss_com_task")
 public class SsComTask implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -21,142 +16,113 @@ public class SsComTask implements Serializable {
     /**
      * 任务单编号
      */
-	@TableId(value="com_task_id", type= IdType.AUTO)
 	private Long comTaskId;
     /**
      * 多租户Id
      */
-	@TableField("customer_id")
 	private String customerId;
     /**
      * 外键,企业社保账户Id
      */
-	@TableField("com_account_id")
 	private Long comAccountId;
     /**
      * 客户Id
      */
-	@TableField("company_id")
 	private String companyId;
     /**
      * 引用：DicItem.DicItemValue 1:开户：2：转移 3：变更 4：终止
      */
-	@TableField("task_category")
 	private String taskCategory;
     /**
      * 发起人要求任务完成截止日期
      */
-	@TableField("expire_date")
 	private LocalDate expireDate;
     /**
      * 发起人id
      */
-	@TableField("submitter_id")
 	private String submitterId;
     /**
      * 发起人姓名
      */
-	@TableField("submitter_name")
 	private String submitterName;
     /**
      * 发起人当时所在部门Id
      */
-	@TableField("submitter_dept_id")
 	private String submitterDeptId;
     /**
      * 发起人当时所在部门名称
      */
-	@TableField("submitter_dept_name")
 	private String submitterDeptName;
     /**
      * 发起时间
      */
-	@TableField("submit_time")
 	private LocalDateTime submitTime;
     /**
      * 发起人备注信息
      */
-	@TableField("submit_remark")
 	private String submitRemark;
     /**
      * 任务单上前道系统传递过来的内容，Json格式
      */
-	@TableField("task_form_content")
 	private String taskFormContent;
     /**
      * 对话记录, Json,
             格式：部门名称 姓名 时间 内容
      */
-	@TableField("chat_history")
 	private String chatHistory;
     /**
      * 动态扩展办理数据
      */
-	@TableField("dynamic_extend")
 	private String dynamicExtend;
     /**
      * 任务单处理状态：0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
      */
-	@TableField("task_status")
 	private Integer taskStatus;
     /**
      * 任务处理人用户Id
      */
-	@TableField("handle_user_id")
 	private String handleUserId;
-	@TableField("handle_user_name")
 	private String handleUserName;
     /**
      * 受理日期
      */
-	@TableField("start_handle_date")
 	private LocalDate startHandleDate;
     /**
      * 送审日期
      */
-	@TableField("send_check_date")
 	private LocalDate sendCheckDate;
     /**
      * 完成日期
      */
-	@TableField("finish_date")
 	private LocalDate finishDate;
     /**
      * 办理备注
      */
-	@TableField("handle_remark")
 	private String handleRemark;
     /**
      * 批退备注
      */
-	@TableField("rejection_remark")
 	private String rejectionRemark;
     /**
      * 业务接口ID
      */
-	@TableField("business_interface_id")
 	private String businessInterfaceId;
-	@TableField("task_id")
 	private String taskId;
     /**
      * 参保户登记码（前道传递）
      */
-	@TableField("ss_account")
 	private String ssAccount;
     /**
      * 银行账号(牡丹卡号)（前道传递）
      */
-	@TableField("bank_account")
 	private String bankAccount;
     /**
      * 养老金账户公司名称（前道传递）
      */
-	@TableField("com_account_name")
 	private String comAccountName;
     /**
      * 付款银行(一般情况是工商银行)（前道传递）
      */
-	@TableField("payment_bank")
 	private String paymentBank;
     /**
      * 付款方式：.（前道传递）
@@ -164,67 +130,54 @@ public class SsComTask implements Serializable {
             2-客户自付
             3-我司垫付
      */
-	@TableField("payment_way")
 	private Integer paymentWay;
     /**
      * 社保帐单寄到哪里: 1 我司，2 客户公司（前道传递）
      */
-	@TableField("bill_receiver")
 	private Integer billReceiver;
     /**
      * 行业类别（前道传递）
      */
-	@TableField("industry_category")
 	private String industryCategory;
     /**
      * 开始月份（前道传递）
      */
-	@TableField("start_month")
 	private String startMonth;
     /**
      * 客户交付社保费用给中智的截止日（前道传递）
      */
-	@TableField("expire_date_front")
 	private Integer expireDateFront;
     /**
      * 结算区县(社保局所在上海地区)（前道传递）
      */
-	@TableField("settlement_area")
 	private String settlementArea;
     /**
      * 法人(前道传递)
      */
-	@TableField("legal_person")
 	private String legalPerson;
     /**
      * 联系地址(前道传递)
      */
-	@TableField("contact_address")
 	private String contactAddress;
     /**
      * 是否可用
      */
-	@TableField("is_active")
 	private Boolean isActive;
     /**
      * 创建时间
      */
-	@TableField("created_time")
 	private LocalDateTime createdTime;
     /**
      * 最后更新时间
      */
-	@TableField("modified_time")
 	private LocalDateTime modifiedTime;
     /**
      * 创建者登录名
      */
-	@TableField("created_by")
 	private String createdBy;
     /**
      * 修改者登录名
      */
-	@TableField("modified_by")
 	private String modifiedBy;
 
 

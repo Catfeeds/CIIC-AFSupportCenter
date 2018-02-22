@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountParamDto;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountParamDTO;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComAccountBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
@@ -56,5 +56,5 @@ public interface SsComAccountMapper extends BaseMapper<SsComAccount> {
      * @param dto
      * @return
      */
-    List<com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountDTO> getSsComAccountList(SsComAccountParamDto dto);
+    List<com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountDTO> getSsComAccountList(SsComAccountParamDTO dto);
 }

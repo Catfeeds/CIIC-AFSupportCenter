@@ -16,13 +16,10 @@ import java.time.LocalDateTime;
 public class SsPaymentComDTO {
 
     private static final long serialVersionUID = 1L;
-
-
     /**
      * 出账批号
      */
     private String paymentBatchNum;
-
     /**
      * 账户类型：1:中智大库 2中智外包 3独立户
      */
@@ -47,8 +44,6 @@ public class SsPaymentComDTO {
      * 最大支付年月
      */
     private String paymentMonthMax;
-
-
     /**
      * 记录Id
      */

@@ -1,11 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto;
 
-import java.util.List;
-
 /**
  * 企业社保账户信息表 参数 DTO
  */
-public class SsComAccountParamDto {
+public class SsComAccountParamDTO {
     // 客户ID
     private String companyId;
     /**

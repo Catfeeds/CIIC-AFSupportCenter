@@ -3,9 +3,9 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentSrarchBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.PayapplyCompanyProxyDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.PayapplyEmployeeProxyDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPayment;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyCompanyProxyDTO;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyEmployeeProxyDTO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

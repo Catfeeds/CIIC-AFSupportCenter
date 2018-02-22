@@ -1,19 +1,15 @@
 package com.ciicsh.gto.test.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialUpdateDateDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsAccountComRelationDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComTaskDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.payment.SsOperatePaymentDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpArchiveBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsComAccountService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsPaymentComService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsEmpTask;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.SocialSecurityApplication;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsAccountComRelationController;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller.SsComTaskController;
@@ -24,6 +20,7 @@ import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeSearchDTO;
+import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +29,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>Description: 雇员档案 controller Test</p>
@@ -81,8 +76,8 @@ public class SsEmpArchiveControllerTest {
         ssComTaskDTO.setComAccountId(2L);
         ssComTaskDTO.setTaskCategory("1");
 
-        Result res = d1.saveSsComTask(ssComTaskDTO);
-        System.out.println(JSON.toJSONString(res));
+        com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.JsonResult json = d1.saveSsComTask(ssComTaskDTO);
+        System.out.println(JSON.toJSONString(json));
     }
 
     @Autowired
@@ -122,10 +117,9 @@ public class SsEmpArchiveControllerTest {
     @Test
     public void testCompleteTask() {
         System.out.println("1----------------------------" + commonApiUtils);
-        TaskSheetRequestDTO dt = new TaskSheetRequestDTO();
+        TaskRequestDTO dt = new TaskRequestDTO();
         dt.setTaskId("100148");
         dt.setAssignee("2");
-        dt.setVariable(null);
 
 //        System.out.println(JSONObject.toJSONString(SocialSecurityConst.DISTRICT_MAP));
 

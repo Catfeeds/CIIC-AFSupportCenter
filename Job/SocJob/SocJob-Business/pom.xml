@@ -43,5 +43,11 @@
             <artifactId>afsupportcenter-util</artifactId>
             <version>1.0.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.ciicsh.gt1.settlementcenter.payment</groupId>
+            <artifactId>settlementcenter-payment-command-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 </project>
