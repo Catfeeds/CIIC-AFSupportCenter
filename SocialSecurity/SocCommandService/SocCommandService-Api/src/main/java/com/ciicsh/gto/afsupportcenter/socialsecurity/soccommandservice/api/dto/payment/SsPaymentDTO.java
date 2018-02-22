@@ -1,7 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.payment;
 
-import com.baomidou.mybatisplus.annotations.TableId;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,7 +16,6 @@ import java.util.List;
 public class SsPaymentDTO {
 
     private static final long serialVersionUID = 1L;
-
 
     /**
      * 最小支付年月

@@ -1,14 +1,13 @@
-package utils;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialUpdateDateDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.CommonApiUtils;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.enumeration.ItemCode;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.commonservice.util.dto.Result;
+import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 
@@ -43,12 +42,13 @@ public class TaskCommonUtils {
      * @return
      */
     public static void completeTask(String taskId,CommonApiUtils commonApiUtils,String assignee){
-        TaskSheetRequestDTO taskSheetRequestDTO = new TaskSheetRequestDTO();
-        taskSheetRequestDTO.setTaskId(taskId);
-        taskSheetRequestDTO.setAssignee(assignee);
+
+        TaskRequestDTO taskRequestDTO = new TaskRequestDTO();
+        taskRequestDTO.setTaskId(taskId);
+        taskRequestDTO.setAssignee(assignee);
         try {
-            System.out.println("------------"+taskSheetRequestDTO);
-            Result result =commonApiUtils.completeTask(taskSheetRequestDTO);
+            System.out.println("------------"+taskRequestDTO);
+            Result result =commonApiUtils.completeTask(taskRequestDTO);
             handleWorkflowResult(result);
         } catch (Exception e) {
             e.printStackTrace();

@@ -6,6 +6,8 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaym
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsPaymentService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsPaymentComMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsPaymentMapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.PayapplyCompanyProxyDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dto.PayapplyEmployeeProxyDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPayment;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsPaymentCom;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
@@ -15,8 +17,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyProxyDTO;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyCompanyProxyDTO;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyEmployeeProxyDTO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -241,8 +243,21 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
             ssPayment.getPaymentMonth());
         List<PayapplyEmployeeProxyDTO> paymentEmpList = baseMapper.getPaymentEmpList(ssPayment.getPaymentId(),
             ssPayment.getPaymentMonth());
-        dto.setCompanyList(paymentComList);
-        dto.setEmployeeList(paymentEmpList);
+
+        List<com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyCompanyProxyDTO> companyDtos = paymentComList.stream().map(x->{
+            com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyCompanyProxyDTO pdto = new com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyCompanyProxyDTO();
+            BeanUtils.copyProperties(x,pdto);
+            return pdto;
+        }).collect(Collectors.toList());
+
+        List<com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyEmployeeProxyDTO> employeeDtos = paymentEmpList.stream().map(x->{
+            com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyEmployeeProxyDTO pdto = new com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyEmployeeProxyDTO();
+            BeanUtils.copyProperties(x,pdto);
+            return pdto;
+        }).collect(Collectors.toList());
+
+        dto.setCompanyList(companyDtos);
+        dto.setEmployeeList(employeeDtos);
 
         dto.setDepartmentName("福利保障部社保");
         dto.setIsFinancedept(0);

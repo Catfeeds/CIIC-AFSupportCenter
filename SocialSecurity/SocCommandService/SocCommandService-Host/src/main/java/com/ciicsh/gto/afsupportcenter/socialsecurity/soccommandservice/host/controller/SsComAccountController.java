@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.SsComProxy;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountParamDto;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountParamDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAccountComRelationBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComAccountBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAccountComRelationService;
@@ -114,7 +114,7 @@ public class SsComAccountController extends BasicController<SsComAccountService>
     @RequestMapping("/getSsComAccountList")
     @Log("获取企业社保账户信息表")
     public com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.JsonResult<List<com.ciicsh.gto
-        .afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountDTO>> getSsComAccountList(@RequestBody SsComAccountParamDto paramDto) {
+        .afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountDTO>> getSsComAccountList(@RequestBody SsComAccountParamDTO paramDto) {
         // 根据 客户ID和账户类型查询
         List<com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountDTO> ssComAccountList =
             business.getSsComAccountList(paramDto);

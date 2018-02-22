@@ -1,15 +1,14 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.utils;
 
 import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialUpdateDateDTO;
 import com.ciicsh.gto.afcompanycenter.commandservice.api.proxy.AfEmployeeSocialProxy;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.basicdataservice.api.DicItemServiceProxy;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
-
 import com.ciicsh.gto.basicdataservice.api.dto.EmptyDicItemDTO;
 import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeSearchDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.Page;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import com.ciicsh.gto.employeecenter.util.JsonResult;
 import com.ciicsh.gto.sheetservice.api.SheetServiceProxy;
@@ -22,9 +21,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
+/**
+ * Created by houwanhua on 2018/2/22.
+ */
 @Component
 public class CommonApiUtils {
-
     private Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     @Autowired
@@ -41,18 +42,12 @@ public class CommonApiUtils {
 
     /**
      * 调用客服中心的完成任务接口
-     *
-     * @param taskSheetRequestDTO
+     * @param requestDTO
      * @return
      */
-    public Result completeTask(@RequestBody TaskSheetRequestDTO taskSheetRequestDTO) throws Exception {
-        logger.info("customer系统调用完成任务接口：" + taskSheetRequestDTO.toString());
-        TaskRequestDTO taskRequestDTO = new TaskRequestDTO();
-        taskRequestDTO.setTaskId(taskSheetRequestDTO.getTaskId());
-        taskRequestDTO.setAssignee(taskSheetRequestDTO.getAssignee());
-        taskRequestDTO.setVariables(taskSheetRequestDTO.getVariable());
-        com.ciicsh.gto.commonservice.util.dto.Result restResult = sheetServiceProxy.completeTask(taskRequestDTO);
-
+    public Result completeTask(@RequestBody TaskRequestDTO requestDTO) throws Exception {
+        logger.info("customer系统调用完成任务接口：" + requestDTO.toString());
+        com.ciicsh.gto.commonservice.util.dto.Result restResult = sheetServiceProxy.completeTask(requestDTO);
         logger.info("customer系统收到完成任务接口返回：" + String.valueOf("code:" + restResult.getCode() + "message:") + restResult.getMessage());
         return restResult;
     }
@@ -103,7 +98,7 @@ public class CommonApiUtils {
      * @param var1 传入employeeId和业务类型
      * @return
      */
-    public JsonResult<com.ciicsh.gto.employeecenter.apiservice.api.dto.Page<EmployeeInfoDTO>> searchEmployeeInfo(
+    public JsonResult<Page<EmployeeInfoDTO>> searchEmployeeInfo(
         @RequestBody EmployeeSearchDTO var1) throws Exception {
         return employeeInfoProxy.searchEmployeeInfo(var1);
     }
