@@ -17,7 +17,6 @@ public class SsPaymentDTO {
 
     private static final long serialVersionUID = 1L;
 
-
     /**
      * 最小支付年月
      */

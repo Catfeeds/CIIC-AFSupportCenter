@@ -13,19 +13,10 @@ import java.util.List;
 public class SsDelPaymentDTO {
 
     private static final long serialVersionUID = 1L;
-
-
-
     /**
      * 企业社保账户分类
      */
     private List<Long> paymentComIdList;
-
-
-
-
-
-
 
     public List<Long> getPaymentComIdList() {
         return paymentComIdList;

@@ -1,9 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.JsonResult;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountParamDto;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountParamDTO;
 import org.springframework.cloud.netflix.feign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -24,6 +23,6 @@ public interface SsComProxy {
          */
     @RequestMapping("/getSsComAccountList")
     JsonResult<List<com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountDTO>>
-    getSsComAccountList(@RequestBody SsComAccountParamDto paramDto);
+    getSsComAccountList(@RequestBody SsComAccountParamDTO paramDto);
 
 }
