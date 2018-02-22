@@ -85,7 +85,6 @@
         <dependency>
             <groupId>com.ciicsh.gt1.commonservice</groupId>
             <artifactId>sheetservice-api</artifactId>
-            <version>1.0.0</version>
         </dependency>
 
         <dependency>

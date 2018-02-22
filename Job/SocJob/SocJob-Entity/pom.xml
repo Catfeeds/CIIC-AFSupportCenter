@@ -21,18 +21,15 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatisplus-spring-boot-starter</artifactId>
-            <version>${mybatisplus-spring-boot-starter.version}</version>
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus</artifactId>
-            <version>${mybatisplus.version}</version>
         </dependency>
         <!-- mybatis-plus end -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.16.6</version>
         </dependency>
     </dependencies>
 
