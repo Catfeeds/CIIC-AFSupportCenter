@@ -174,7 +174,7 @@ public class KafkaReceiver {
                         Integer taskCategory = 0;
                         Map<String, Object> paramMap = taskMsgDTO.getVariables();
                         SsEmpTaskBO qd = new SsEmpTaskBO();
-                        qd.setTaskId(paramMap.get("oldTaskId").toString());
+                        qd.setTaskId(paramMap.get("oldEmpAgreementId").toString());
                         qd.setEmployeeId(paramMap.get("employeeId").toString());
                         qd.setCompanyId(paramMap.get("companyId").toString());
 
