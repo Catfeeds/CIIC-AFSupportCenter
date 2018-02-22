@@ -29,43 +29,43 @@ spring:
           brokers:  172.16.9.11:9092
           zk-nodes: 172.16.9.11:2181,172.16.9.16:2181
           bindings:
-            common_taskservice_af_empin-channel:
+            common_taskservice_af_empin_channel:
               destination: common_taskservice_af_empin # topic name
               group: ${spring.application.name}
               content-type: application/json
               consumer:
                 partitioned: true
-            common_taskservice_af_empout-channel:
+            common_taskservice_af_empout_channel:
               destination: common_taskservice_af_empout # topic name
               group: ${spring.application.name}
               content-type: application/json
               consumer:
                 partitioned: true
-            common_taskservice_af_emp_make_up-channel:
+            common_taskservice_af_emp_make_up_channel:
               destination: common_taskservice_af_emp_make_up # topic name
               group: ${spring.application.name}
               content-type: application/json
               consumer:
                 partitioned: true
-            common_taskservice_af_emp_company_change-channel:
+            common_taskservice_af_emp_company_change_channel:
               destination: common_taskservice_af_emp_company_change # topic name
               group: ${spring.application.name}
               content-type: application/json
               consumer:
                 partitioned: true
-            common_taskservice_af_emp_agreement_adjust-channel:
+            common_taskservice_af_emp_agreement_adjust_channel:
               destination: common_taskservice_af_emp_agreement_adjust # topic name
               group: ${spring.application.name}
               content-type: application/json
               consumer:
                 partitioned: true
-            common_taskservice_af_emp_agreement_update-channel:
+            common_taskservice_af_emp_agreement_update_channel:
               destination: common_taskservice_af_emp_agreement_update # topic name
               group: ${spring.application.name}
               content-type: application/json
               consumer:
                 partitioned: true
-            pay-apply-pay-status-stream-channel:
+            pay-apply-pay-status-stream_channel:
               destination: pay-apply-pay-status-stream # topic name
               group: ${spring.application.name}
               content-type: application/json
