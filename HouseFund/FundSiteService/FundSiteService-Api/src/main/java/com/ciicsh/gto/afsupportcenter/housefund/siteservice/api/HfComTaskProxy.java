@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * 企业公积金账户信息查询接口
  */
 @FeignClient("support-center-housefund-site-service")
-@RequestMapping("/api/housefundsiteservice/hfcomtask")
+@RequestMapping("/ai/soccommandservice/hfApi")
 public interface HfComTaskProxy {
     /**
      * 保存企业任务单

@@ -224,7 +224,7 @@ public class KafkaReceiver {
      * @param message
      * @return
      */
-    //todo 接受客服中心调用更新企业任务单
+    @StreamListener(TaskSink.AF_COMPANY_SOCIAL_ACCOUNT_ONCE)
     public void receiveComTask(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         //社保

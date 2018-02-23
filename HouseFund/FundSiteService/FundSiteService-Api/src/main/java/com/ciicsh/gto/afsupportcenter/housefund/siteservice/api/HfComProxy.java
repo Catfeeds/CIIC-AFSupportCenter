@@ -13,7 +13,7 @@ import java.util.List;
  * 企业公积金账户信息查询接口
  */
 @FeignClient("support-center-housefund-site-service")
-@RequestMapping("/api/housefundsiteservice/hfcom")
+@RequestMapping("/ai/soccommandservice/hfApi")
 public interface HfComProxy {
 
     /**
