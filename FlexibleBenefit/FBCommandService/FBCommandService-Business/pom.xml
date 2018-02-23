@@ -29,7 +29,6 @@
         <dependency>
             <groupId>com.ciicsh.gt1</groupId>
             <artifactId>seaweedFS-client</artifactId>
-            <version>1.0.0</version>
         </dependency>
     </dependencies>
 </project>

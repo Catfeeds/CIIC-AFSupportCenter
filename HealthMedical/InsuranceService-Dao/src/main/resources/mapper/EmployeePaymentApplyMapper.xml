@@ -208,7 +208,7 @@
         AND p.is_active = 1
     </select>
 
-    <update id="syncStatus">
+    <update id="syncStatus" parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentStatusBO">
         UPDATE
             gtobusinessdb.cmy_af_employee_payment_apply p
         SET
@@ -233,7 +233,7 @@
         )
     </update>
 
-    <update id="updateApplyStatus">
+    <update id="updateApplyStatus" parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentStatusBO">
         UPDATE
             gtobusinessdb.cmy_af_employee_payment_apply p
         SET
@@ -244,7 +244,7 @@
             p.modified_by = #{modifiedBy, jdbcType=VARCHAR},
             p.modified_time= now()
         WHERE
-            p.payment_apply_id = #{paymentApplyId, jdbcType=INTEGER}
+            p.payment_apply_id = #{applyId, jdbcType=INTEGER}
     </update>
 
 </mapper>

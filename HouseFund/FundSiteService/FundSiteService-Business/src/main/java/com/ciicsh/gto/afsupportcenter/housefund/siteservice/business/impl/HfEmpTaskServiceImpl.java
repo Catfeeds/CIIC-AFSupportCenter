@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpTaskBo;
@@ -11,6 +12,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao.HfEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dto.HfEmpTaskDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dto.HfEmpTaskHandleDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfEmpTask;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -19,8 +21,10 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 
@@ -83,7 +87,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
             insertTaskTb(taskMsgDTO, taskCategory, isChange, dto);
 
             //更新旧的雇员任务单
-            updateEmpTaskTb(taskMsgDTO, dto);
+//            updateEmpTaskTb(taskMsgDTO, dto);
 
             result = true;
         } catch (Exception e) {
@@ -140,7 +144,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         hfEmpTask.setSubmitTime(LocalDate.now());
 
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
-        //来源地 1：中心  2：原单位
+        //转出单位(来源地)
         if (paramMap.get("source") != null) {
             String sSource = paramMap.get("source").toString();
             if ("1".equals(sSource)) {
@@ -149,25 +153,68 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                 hfEmpTask.setTransferOutUnit("原单位");
             }
         }
-
+        //任务类型
         hfEmpTask.setTaskCategory(taskCategory);
+        //是否更正 1 是 0 否
         hfEmpTask.setIsChange(isChange);
         hfEmpTask.setTaskFormContent(JSON.toJSONString(dto));
 
         //福利办理方
         hfEmpTask.setWelfareUnit(companyDto.getFundUnit());
 
+        //前道传递的政策明细ID,用它调用系统中心获取进位方式
         if (dto.getNowAgreement() != null && dto.getNowAgreement().getFundSocialRuleId() != null) {
             hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getFundSocialRuleId().intValue());
         }
         //TODO 表中加字段
 //        hfEmpTask.setProcessId(taskMsgDTO.getProcessId());
+        //办理状态：1、未处理 2 、处理中(已办)  3 已完成(已做) 4、批退 5、不需处理
         hfEmpTask.setTaskStatus(1);
+        //入职日期
+        if (companyDto.getInDate() != null) {
+            hfEmpTask.setInDate(LocalDateTime.ofInstant(companyDto.getInDate().toInstant(), ZoneId.systemDefault()));
+        }
         hfEmpTask.setActive(true);
         hfEmpTask.setModifiedBy(companyDto.getCreatedBy());
         hfEmpTask.setModifiedTime(LocalDateTime.now());
         hfEmpTask.setCreatedBy(companyDto.getCreatedBy());
         hfEmpTask.setCreatedTime(LocalDateTime.now());
+
+        List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
+        //缴费段开始月份YYYYMM
+        for (AfEmpSocialDTO socialDto : socialList) {
+            if (socialDto.getPolicyName() != null && socialDto.getPolicyName().contains("公积金")) {
+                hfEmpTask.setEmpBase(socialDto.getPersonalBase());
+                if (socialDto.getStartDate() != null) {
+                    hfEmpTask.setStartMonth(StringUtil.dateToString(socialDto
+                            .getStartDate(),
+                        "yyyyMM"));
+                }
+                if (socialDto.getEndDate() != null) {
+                    hfEmpTask.setEndMonth(StringUtil.dateToString(socialDto.getEndDate(),
+                        "yyyyMM"));
+                }
+                break;
+            }
+        }
+        hfEmpTask.setAmount(new BigDecimal(0));
+        for (AfEmpSocialDTO socialDto : socialList) {
+            if (socialDto.getPolicyName() != null) {
+                if (taskMsgDTO.getTaskType().startsWith("fund") && socialDto.getPolicyName().contains("基本公积金")
+                    || (taskMsgDTO.getTaskType().startsWith("add_fund") && socialDto.getPolicyName().contains
+                    ("补充公积金"))) {
+                    hfEmpTask.setAmount(socialDto.getTotal());
+                    break;
+                }
+            }
+        }
+        //公积金类型:1 基本 2 补充
+        if (taskMsgDTO.getTaskType().startsWith("fund")) {
+            hfEmpTask.setHfType(1);
+        } else if (taskMsgDTO.getTaskType().startsWith("add_fund")) {
+            hfEmpTask.setHfType(2);
+        }
+
         baseMapper.insertHfEmpTask(hfEmpTask);
 
         return true;
@@ -187,17 +234,69 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
 
         HfEmpTask hfEmpTask = new HfEmpTask();
-        hfEmpTask.setTaskId(paramMap.get("oldTaskId").toString());
+        hfEmpTask.setTaskId(paramMap.get("oldEmpAgreementId").toString());
         hfEmpTask.setCompanyId(companyDto.getCompanyId());
         hfEmpTask.setEmployeeId(companyDto.getEmployeeId());
-        hfEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
+//        hfEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
         hfEmpTask.setSubmitterId(companyDto.getCreatedBy());
         hfEmpTask.setSubmitterRemark(companyDto.getRemark());
 
         hfEmpTask.setTaskFormContent(JSON.toJSONString(dto));
 
+        //转出单位(来源地)
+        if (paramMap.get("source") != null) {
+            String sSource = paramMap.get("source").toString();
+            if ("1".equals(sSource)) {
+                hfEmpTask.setTransferOutUnit("中心");
+            } else if ("2".equals(sSource)) {
+                hfEmpTask.setTransferOutUnit("原单位");
+            }
+        }
+        //福利办理方
+        hfEmpTask.setWelfareUnit(companyDto.getFundUnit());
+
+        //前道传递的政策明细ID,用它调用系统中心获取进位方式
+        if (dto.getNowAgreement() != null && dto.getNowAgreement().getFundSocialRuleId() != null) {
+            hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getFundSocialRuleId().intValue());
+        }
+        //TODO 表中加字段
+//        hfEmpTask.setProcessId(taskMsgDTO.getProcessId());
+        //入职日期
+        if (companyDto.getInDate() != null) {
+            hfEmpTask.setInDate(LocalDateTime.ofInstant(companyDto.getInDate().toInstant(), ZoneId.systemDefault()));
+        }
+
         hfEmpTask.setModifiedBy(companyDto.getCreatedBy());
         hfEmpTask.setModifiedTime(LocalDateTime.now());
+
+        List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
+        //缴费段开始月份YYYYMM
+        for (AfEmpSocialDTO socialDto : socialList) {
+            if (socialDto.getPolicyName() != null && socialDto.getPolicyName().contains("公积金")) {
+                hfEmpTask.setEmpBase(socialDto.getPersonalBase());
+                if (socialDto.getStartDate() != null) {
+                    hfEmpTask.setStartMonth(StringUtil.dateToString(socialDto
+                            .getStartDate(),
+                        "yyyyMM"));
+                }
+                if (socialDto.getEndDate() != null) {
+                    hfEmpTask.setEndMonth(StringUtil.dateToString(socialDto.getEndDate(),
+                        "yyyyMM"));
+                }
+                break;
+            }
+        }
+        hfEmpTask.setAmount(new BigDecimal(0));
+        for (AfEmpSocialDTO socialDto : socialList) {
+            if (socialDto.getPolicyName() != null) {
+                if (taskMsgDTO.getTaskType().startsWith("fund") && socialDto.getPolicyName().contains("基本公积金")
+                    || (taskMsgDTO.getTaskType().startsWith("add_fund") && socialDto.getPolicyName().contains
+                    ("补充公积金"))) {
+                    hfEmpTask.setAmount(socialDto.getTotal());
+                    break;
+                }
+            }
+        }
         baseMapper.updateById(hfEmpTask);
 
         return true;

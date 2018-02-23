@@ -46,6 +46,11 @@ public interface TaskSink {
     String PAY_APPLY_PAY_STATUS_STREAM = "pay-apply-pay-status-stream_channel";
 
     /**
+     * 接受客服中心调用更新企业任务单
+     */
+    String AF_COMPANY_SOCIAL_ACCOUNT_ONCE = "common_taskservice_af_company_social_account_once_channel";
+
+    /**
      * 公积金办理
      */
     String FUND_NEW = "fund_new";
@@ -91,4 +96,7 @@ public interface TaskSink {
 
     @Input(PAY_APPLY_PAY_STATUS_STREAM)
     MessageChannel rejectPayApplyIdStream();
+
+    @Input(AF_COMPANY_SOCIAL_ACCOUNT_ONCE)
+    MessageChannel afCompanySocialAccountOnce();
 }

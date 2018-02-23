@@ -174,7 +174,7 @@ public class KafkaReceiver {
                         Integer taskCategory = 0;
                         Map<String, Object> paramMap = taskMsgDTO.getVariables();
                         SsEmpTaskBO qd = new SsEmpTaskBO();
-                        qd.setTaskId(paramMap.get("oldTaskId").toString());
+                        qd.setTaskId(paramMap.get("oldEmpAgreementId").toString());
                         qd.setEmployeeId(paramMap.get("employeeId").toString());
                         qd.setCompanyId(paramMap.get("companyId").toString());
 
@@ -224,7 +224,7 @@ public class KafkaReceiver {
      * @param message
      * @return
      */
-    //todo 接受客服中心调用更新企业任务单
+    @StreamListener(TaskSink.AF_COMPANY_SOCIAL_ACCOUNT_ONCE)
     public void receiveComTask(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         //社保

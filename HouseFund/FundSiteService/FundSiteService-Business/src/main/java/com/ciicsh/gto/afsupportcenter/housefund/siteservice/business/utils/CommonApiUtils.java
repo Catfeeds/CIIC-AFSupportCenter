@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.housefund.siteservice.api;
+package com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.utils;
 
 import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialUpdateDateDTO;
 import com.ciicsh.gto.afcompanycenter.commandservice.api.proxy.AfEmployeeSocialProxy;

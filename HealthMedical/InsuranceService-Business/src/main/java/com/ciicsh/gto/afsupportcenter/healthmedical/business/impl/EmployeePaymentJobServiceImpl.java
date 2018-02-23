@@ -10,10 +10,12 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.dao.PaymentApplyBatchMapper;
 import com.ciicsh.gto.afsupportcenter.healthmedical.dao.PaymentApplyDetailMapper;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmpBankRefundBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentBO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentStatusBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.PaymentApplyDetailBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.EmployeePaymentApplyPO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.PaymentApplyBatchPO;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.employeecenter.apiservice.api.proxy.BankCardInfoProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.*;
@@ -44,6 +46,11 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
      */
     @Autowired
     private PayapplyServiceProxy payapplyServiceProxy;
+    /**
+     *  雇员中心补全银行卡信息处理
+     */
+    @Autowired
+    private BankCardInfoProxy bankCardInfoProxy;
     /**
      *  雇员付款申请
      */
@@ -117,22 +124,21 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public void syncSettleCenterStatus (PayApplyPayStatusDTO dto) {
-        employeePaymentApplyMapper.syncStatus(dto.getBusinessPkId().intValue(),
-            SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(),
-            dto.getPayStatus(),
-            dto.getRemark(),
-            SysConstants.JobConstants.SYSTEM_ZH.getName());
+        employeePaymentApplyMapper.syncStatus(new EmployeePaymentStatusBO(
+            dto.getBusinessPkId().intValue(),  SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(), dto.getPayStatus(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+        ));
     }
 
     /**
      * @description 添加维护银行卡信息申请到雇员中心
      * @author chenpb
      * @since 2018-02-02
-     * @param emp: 雇员信息
+     * @param refund: 付款雇员信息
      * @return
      */
-    private void syncIncompleteBankCardInfoApply (List<EmpBankRefundBO> emp) {
-        System.out.println("--> " + JSON.toJSONString(emp));
+    private void syncIncompleteBankCardInfoApply (List<EmpBankRefundBO> refund) {
+//        com.ciicsh.gto.employeecenter.util.JsonResult jsonResult = bankCardInfoProxy.createBankRefund(refund);
+        System.out.println("--> " + JSON.toJSONString(refund));
     }
 
     /**
@@ -148,7 +154,11 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
         bo.setApplyBatchId(batchId);
         List<PaymentApplyDetailBO> list = paymentApplyDetailMapper.selectRefundDetail(bo);
         if(!list.isEmpty()) {
-            employeePaymentApplyMapper.updateApplyStatus(Integer.getInteger(list.get(0).getPaymentApplyId()), SysConstants.EmpApplyStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName());
+            employeePaymentApplyMapper.updateApplyStatus(
+                new EmployeePaymentStatusBO(
+                    Integer.getInteger(list.get(0).getPaymentApplyId()), SysConstants.EmpApplyStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+                )
+            );
         }
     }
     /**
@@ -216,11 +226,9 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
      * @return
      */
     private Integer updateSyncStatus (Integer batchId) {
-        return employeePaymentApplyMapper.syncStatus(batchId,
-            SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(),
-            SysConstants.EmpApplyStatus.SYNC.getCode(),
-            StringUtils.EMPTY,
-            SysConstants.JobConstants.SYSTEM_ZH.getName());
+        return employeePaymentApplyMapper.syncStatus(new EmployeePaymentStatusBO(
+            batchId,  SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(), SysConstants.EmpApplyStatus.SYNC.getCode(), StringUtils.EMPTY,  SysConstants.JobConstants.SYSTEM_ZH.getName()
+        ));
     }
 
     /**
