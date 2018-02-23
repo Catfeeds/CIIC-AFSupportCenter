@@ -3,15 +3,14 @@ package com.ciicsh.gto.test.controller;
 import com.alibaba.fastjson.JSON;
 import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialUpdateDateDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.FundSiteServiceApp;
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.api.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.api.dto.HfComTaskDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.api.dto.TaskSheetRequestDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.api.dto.ResultDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.HfPaymentService;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.controller.HfApiController;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.controller.HfEmpArchiveController;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfPayment;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
-import com.ciicsh.gto.commonservice.util.dto.Result;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +47,7 @@ public class HfApiControllerTest {
         ssComTaskDTO.setComAccountId(2L);
         ssComTaskDTO.setTaskCategory(1);
 
-        Result res = d1.saveHfComTask(ssComTaskDTO);
+        ResultDTO res = d1.saveHfComTask(ssComTaskDTO);
         System.out.println(JSON.toJSONString(res));
     }
 
@@ -65,18 +64,23 @@ public class HfApiControllerTest {
 
     @Test
     public void testCompleteTask() {
-        System.out.println("1----------------------------" + commonApiUtils);
-        TaskSheetRequestDTO dt = new TaskSheetRequestDTO();
-        dt.setTaskId("100148");
-        dt.setAssignee("2");
-        dt.setVariable(null);
-
-        try {
-            Result ddd = commonApiUtils.completeTask(dt);
-            System.out.println(JSON.toJSONString(ddd));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        SocReportMessage mm = new SocReportMessage();
+//        mm.setComAccountId(3L);
+//        mm.setSsMonth("201801");
+//
+//        sender.sendSocReportMsg(mm);
+//        System.out.println("1----------------------------" + commonApiUtils);
+//        TaskSheetRequestDTO dt = new TaskSheetRequestDTO();
+//        dt.setTaskId("100148");
+//        dt.setAssignee("2");
+//        dt.setVariable(null);
+//
+//        try {
+//            Result ddd = commonApiUtils.completeTask(dt);
+//            System.out.println(JSON.toJSONString(ddd));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Test

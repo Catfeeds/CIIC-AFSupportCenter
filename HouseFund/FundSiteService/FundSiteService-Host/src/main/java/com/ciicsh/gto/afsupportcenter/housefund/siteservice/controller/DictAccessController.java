@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.controller;
 
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.api.CommonApiUtils;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
