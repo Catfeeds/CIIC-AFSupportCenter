@@ -185,7 +185,8 @@ public class KafkaReceiver {
                             taskCategory = ssEmpTaskBO.getTaskCategory();
                         }
                         res = ssEmpTaskFrontService.saveEmpTaskTc(taskMsgDTO, taskCategory, 1, dto);
-                        logger.info("收到消息 社保雇员服务协议更正:" + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
+                        logger.info("收到消息 社保雇员服务协议更正:" + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" :
+                            "失败"));
                     }
                 }
             } catch (Exception e) {
@@ -230,11 +231,9 @@ public class KafkaReceiver {
         //社保
         boolean res = false;
         try {
-//        if (TaskSink.SOCIAL_ADJUST.equals(taskMsgDTO.getTaskType())) {
-            SsComTask ele = ssComTaskService.selectById(taskMsgDTO.getTaskId());
+            SsComTask ele = ssComTaskService.selectById(taskMsgDTO.getMissionId());
             ele.setTaskId(taskMsgDTO.getTaskId());
             res = ssComTaskService.updateById(ele);
-//        }
         } catch (Exception e) {
             res = false;
             logger.error(e.getMessage(), e);

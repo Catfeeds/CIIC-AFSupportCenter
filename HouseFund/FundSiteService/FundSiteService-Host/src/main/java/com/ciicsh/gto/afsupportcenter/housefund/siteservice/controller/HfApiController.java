@@ -5,7 +5,6 @@ import com.ciicsh.gto.afsupportcenter.housefund.siteservice.api.HfComTaskProxy;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.api.dto.HfComAccountDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.api.dto.HfComAccountParamDto;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.api.dto.HfComTaskDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.api.dto.ResultDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.HfComTaskService;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfComTask;
@@ -49,37 +48,24 @@ public class HfApiController implements HfComTaskProxy, HfComProxy {
     @Log("企业社保账户开户、变更、转移、转出的 创建任务单接口")
     @Override
     @PostMapping("/saveHfComTask")
-    public ResultDTO saveHfComTask(@RequestBody HfComTaskDTO hfComTaskDTO) {
-        ResultDTO json = new ResultDTO(false, null);
+    public com.ciicsh.common.entity.JsonResult saveHfComTask(@RequestBody HfComTaskDTO hfComTaskDTO) {
         try {
-            if (hfComTaskDTO.getComAccountId() == 0L) {
-                json.faultMessage("企业社保账户Id不能为空！");
-                return json;
-            }
             if (StringUtils.isBlank(hfComTaskDTO.getCompanyId())) {
-                json.faultMessage("客户Id不能为空！");
-                return json;
+                return com.ciicsh.common.entity.JsonResult.faultMessage("客户Id不能为空！");
             }
             if (hfComTaskDTO.getTaskCategory() == null || hfComTaskDTO.getTaskCategory() == 0) {
-                json.faultMessage("任务类型不能为空！");
-                return json;
+                return com.ciicsh.common.entity.JsonResult.faultMessage("任务类型不能为空！");
             }
-//            if (StringUtils.isBlank(hfComTaskDTO.getBusinessInterfaceId())) {
-//                return ResultGenerator.genServerFailResult("业务接口ID不能为空！");
-//            }
             HfComTask ssComTask = new HfComTask();
             BeanUtils.copyProperties(hfComTaskDTO, ssComTask);
             int cnt = hfComTaskService.countComTaskByCond(ssComTask);
             if (cnt > 0) {
-                json.faultMessage("该企业已存在相同类型的处理中任务单，不能重复添加！");
-                return json;
+                return com.ciicsh.common.entity.JsonResult.faultMessage("该企业已存在相同类型的处理中任务单，不能重复添加！");
             }
             Long newComTaskId = insertHfComTask(hfComTaskDTO);
-            json.success(newComTaskId);
-            return json;
+            return com.ciicsh.common.entity.JsonResult.success(newComTaskId);
         } catch (Exception e) {
-            json.faultMessage(e.getMessage());
-            return json;
+            return com.ciicsh.common.entity.JsonResult.faultMessage(e.getMessage());
         }
     }
 
@@ -105,13 +91,11 @@ public class HfApiController implements HfComTaskProxy, HfComProxy {
     @Override
     @RequestMapping("/getHfComAccountList")
     @Log("获取企业社保账户信息表")
-    public ResultDTO getHfComAccountList(@RequestBody HfComAccountParamDto paramDto) {
+    public com.ciicsh.common.entity.JsonResult getHfComAccountList(@RequestBody HfComAccountParamDto paramDto) {
         // 根据 客户ID和账户类型查询
         List<HfComAccountDTO> ssComAccountList =
             hfComAccountService.getHfComAccountList(paramDto);
 
-        ResultDTO json = new ResultDTO(true, null);
-        json.success(ssComAccountList);
-        return json;
+        return com.ciicsh.common.entity.JsonResult.success(ssComAccountList);
     }
 }

@@ -1,13 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.api;
 
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.api.dto.HfComAccountDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.api.dto.HfComAccountParamDto;
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.api.dto.ResultDTO;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
 
 /**
  * 企业公积金账户信息查询接口
@@ -23,6 +19,6 @@ public interface HfComProxy {
      * @return
      */
     @RequestMapping("/getHfComAccountList")
-    ResultDTO<List<HfComAccountDTO>> getHfComAccountList(@RequestBody HfComAccountParamDto paramDto);
+    com.ciicsh.common.entity.JsonResult getHfComAccountList(@RequestBody HfComAccountParamDto paramDto);
 
 }

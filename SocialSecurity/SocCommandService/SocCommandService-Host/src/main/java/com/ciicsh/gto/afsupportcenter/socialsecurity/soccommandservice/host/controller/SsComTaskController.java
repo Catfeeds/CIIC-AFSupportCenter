@@ -494,38 +494,23 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
     @Log("企业社保账户开户、变更、转移、转出的 创建任务单接口")
     @PostMapping("/saveSsComTask")
     public com.ciicsh.common.entity.JsonResult saveSsComTask(@RequestBody SsComTaskDTO ssComTaskDTO) {
-        com.ciicsh.common.entity.JsonResult json = new com.ciicsh.common.entity.JsonResult(false, null);
         try {
-            if (ssComTaskDTO.getComAccountId() == 0L) {
-                json.faultMessage("企业社保账户Id不能为空！");
-                return json;
-            }
             if (StringUtils.isBlank(ssComTaskDTO.getCompanyId())) {
-                json.faultMessage("客户Id不能为空！");
-                return json;
+                return com.ciicsh.common.entity.JsonResult.faultMessage("客户Id不能为空！");
             }
             if (StringUtils.isBlank(ssComTaskDTO.getTaskCategory())) {
-                json.faultMessage("任务类型不能为空！");
-                return json;
-
-            }
-            if (StringUtils.isBlank(ssComTaskDTO.getBusinessInterfaceId())) {
-                json.faultMessage("业务接口ID不能为空！");
-                return json;
+                return com.ciicsh.common.entity.JsonResult.faultMessage("任务类型不能为空！");
             }
             SsComTaskBO ssComTask = new SsComTaskBO();
             BeanUtils.copyProperties(ssComTaskDTO, ssComTask);
             int cnt = business.countComTaskByCond(ssComTask);
             if (cnt > 0) {
-                json.faultMessage("该企业已存在相同类型的处理中任务单，不能重复添加！");
-                return json;
+                return com.ciicsh.common.entity.JsonResult.faultMessage("该企业已存在相同类型的处理中任务单，不能重复添加！");
             }
             Long newComTaskId = insertSsComTask(ssComTaskDTO);
-            json.success(newComTaskId);
-            return json;
+            return com.ciicsh.common.entity.JsonResult.success(newComTaskId);
         } catch (Exception e) {
-            json.faultMessage(e.getMessage());
-            return json;
+            return com.ciicsh.common.entity.JsonResult.faultMessage(e.getMessage());
         }
     }
 
