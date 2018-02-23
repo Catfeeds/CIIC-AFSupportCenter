@@ -13,10 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @author xiweizhen
  */
 @EnableFeignClients({"com.ciicsh.gto.sheetservice.api",
-    "com.ciicsh.gto.settlementcenter.invoicecommandservice.api",
-    "com.ciicsh.gto.basicdataservice.api",
     "com.ciicsh.gto.afcompanycenter.queryservice.api",
-    "com.ciicsh.gto.afcompanycenter.commandservice.api",
     "com.ciicsh.gto.employeecenter.apiservice.api",
     "com.ciicsh.gto.settlementcenter.payment.cmdapi",
     "com.ciicsh.gto.employeecenter.apiservice.api.proxy"
