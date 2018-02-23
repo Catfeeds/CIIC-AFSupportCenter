@@ -61,30 +61,27 @@ public class HfApiControllerTest {
         JsonResult<String> jr = hfPaymentService.doReviewdePass(ssOperatePaymentDTO);
         System.out.println(JSON.toJSONString(jr));
     }
-//
-//    @Autowired
-//    private KafkaSender sender;
-//
-//    @Test
-//    public void testCompleteTask() {
+
+    @Test
+    public void testCompleteTask() {
 //        SocReportMessage mm = new SocReportMessage();
 //        mm.setComAccountId(3L);
 //        mm.setSsMonth("201801");
 //
 //        sender.sendSocReportMsg(mm);
 //        System.out.println("1----------------------------" + commonApiUtils);
-////        TaskSheetRequestDTO dt = new TaskSheetRequestDTO();
-////        dt.setTaskId("100148");
-////        dt.setAssignee("2");
-////        dt.setVariable(null);
-////
-////        try {
-////            Result ddd = commonApiUtils.completeTask(dt);
-////            System.out.println(JSON.toJSONString(ddd));
-////        } catch (Exception e) {
-////            e.printStackTrace();
-////        }
-//    }
+//        TaskSheetRequestDTO dt = new TaskSheetRequestDTO();
+//        dt.setTaskId("100148");
+//        dt.setAssignee("2");
+//        dt.setVariable(null);
+//
+//        try {
+//            Result ddd = commonApiUtils.completeTask(dt);
+//            System.out.println(JSON.toJSONString(ddd));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+    }
 
     @Test
     public void testupdateConfirmDate() {
