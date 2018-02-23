@@ -12,8 +12,5 @@ import java.util.Map;
  */
 public interface IAmArchiveService extends IService<AmArchive> {
 
-
-    List<AmArchiveBO> queryAmArchive(String employeeId);
-
     List<AmArchiveBO>  queryAmArchiveList(Map<String,Object> param);
 }

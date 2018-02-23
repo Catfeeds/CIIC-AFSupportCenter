@@ -1,11 +1,11 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.SsComTaskProxy;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsComTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
@@ -19,13 +19,12 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
-import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.commonservice.util.dto.ResultGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import utils.TaskCommonUtils;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.utils.TaskCommonUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
@@ -496,30 +495,49 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
      */
     @Log("企业社保账户开户、变更、转移、转出的 创建任务单接口")
     @PostMapping("/saveSsComTask")
-    public Result saveSsComTask(@RequestBody SsComTaskDTO ssComTaskDTO) {
+    public com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.JsonResult saveSsComTask(@RequestBody SsComTaskDTO ssComTaskDTO) {
+
+        com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.JsonResult json = new com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.JsonResult();
+
         try {
             if (ssComTaskDTO.getComAccountId() == 0L) {
-                return ResultGenerator.genServerFailResult("企业社保账户Id不能为空！");
+                json.setCode(1);
+                json.setMessage("企业社保账户Id不能为空！");
+                return json;
             }
             if (StringUtils.isBlank(ssComTaskDTO.getCompanyId())) {
-                return ResultGenerator.genServerFailResult("客户Id不能为空！");
+                json.setCode(1);
+                json.setMessage("客户Id不能为空！");
+                return json;
             }
             if (StringUtils.isBlank(ssComTaskDTO.getTaskCategory())) {
-                return ResultGenerator.genServerFailResult("任务类型不能为空！");
+                json.setCode(1);
+                json.setMessage("任务类型不能为空！");
+                return json;
+
             }
             if (StringUtils.isBlank(ssComTaskDTO.getBusinessInterfaceId())) {
-                return ResultGenerator.genServerFailResult("业务接口ID不能为空！");
+                json.setCode(1);
+                json.setMessage("业务接口ID不能为空！");
+                return json;
             }
             SsComTaskBO ssComTask = new SsComTaskBO();
             BeanUtils.copyProperties(ssComTaskDTO, ssComTask);
             int cnt = business.countComTaskByCond(ssComTask);
             if (cnt > 0) {
-                return ResultGenerator.genServerFailResult("该企业已存在相同类型的处理中任务单，不能重复添加！");
+                json.setCode(1);
+                json.setMessage("该企业已存在相同类型的处理中任务单，不能重复添加！");
+                return json;
             }
             Long newComTaskId = insertSsComTask(ssComTaskDTO);
-            return ResultGenerator.genSuccessResult(newComTaskId);
+            json.setCode(0);
+            json.setMessage("成功！");
+            json.setData(newComTaskId);
+            return json;
         } catch (Exception e) {
-            return ResultGenerator.genServerFailResult(e.getMessage());
+            json.setCode(1);
+            json.setMessage(e.getMessage());
+            return json;
         }
     }
 

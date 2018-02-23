@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -15,9 +16,8 @@ import java.util.List;
  * </p>
  */
 public interface IAmEmploymentService extends IService<AmEmployment> {
-    PageRows<AmEmploymentBO> queryAmEmployment(PageInfo pageInfo);
 
-    AmEmploymentBO queryAmEmployment(@Param("AmEmploymentId") String AmEmploymentId);
+    List<AmEmploymentBO> queryAmEmployment(Map<String,Object> param);
 
     PageRows<AmEmploymentBO> queryAmArchive(PageInfo pageInfo);
 

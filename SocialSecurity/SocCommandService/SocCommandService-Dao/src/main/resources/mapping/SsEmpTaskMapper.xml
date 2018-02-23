@@ -45,6 +45,7 @@
         <result column="end_month" property="endMonth" />
         <result column="in_date" property="inDate" />
         <result column="out_date" property="outDate" />
+        <result column="welfare_unit" property="welfareUnit" />
         <result column="business_interface_id" property="businessInterfaceId" />
         <result column="process_id" property="processId" />
         <result column="task_id" property="taskId" />

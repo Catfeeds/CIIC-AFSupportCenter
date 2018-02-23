@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.CommonApiUtils;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;

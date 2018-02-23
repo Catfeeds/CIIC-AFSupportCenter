@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -21,16 +22,10 @@ import java.util.List;
  */
 @Service
 public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmEmployment> implements IAmEmploymentService {
-    @Override
-    public PageRows<AmEmploymentBO> queryAmEmployment(PageInfo pageInfo) {
-        AmEmploymentBO amEmploymentBO = pageInfo.toJavaObject(AmEmploymentBO.class);
-
-        return PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmEmployment(amEmploymentBO));
-    }
 
     @Override
-    public AmEmploymentBO queryAmEmployment(String amEmploymentId) {
-        return baseMapper.queryAmEmploymentById(amEmploymentId);
+    public List<AmEmploymentBO> queryAmEmployment(Map<String, Object> param) {
+        return baseMapper.queryAmEmployment(param);
     }
 
     @Override
@@ -91,4 +86,5 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
         amEmploymentBO.setParam(param);
         return baseMapper.taskCountResign(amEmploymentBO);
     }
+
 }

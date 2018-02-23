@@ -71,11 +71,10 @@ spring:
                 content-type: application/json
                 consumer:
                   partitioned: true
-
-            instance-count: 2 # The number of deployed instances of an application.
-                              # Must be set for partitioning and if using Kafka.
-                              # used to partition data across different consumers.
-            instance-index: 0
+          instance-count: 2 # The number of deployed instances of an application.
+                            # Must be set for partitioning and if using Kafka.
+                            # used to partition data across different consumers.
+          instance-index: 0
   ###################  spring cloud eureka  ###################
   eureka:
     client:

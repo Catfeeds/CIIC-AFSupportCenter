@@ -90,4 +90,49 @@ public class SelectionUtils {
         }
     }
 
+    public static String afStatus(Integer i) {
+        switch(i){
+            case 0:
+                return "预录用";
+            case 1:
+                return "雇员信息确认中";
+            case 2:
+                return "在职";
+            case 3:
+                return "离职";
+            case 4:
+                return "取消入职";
+            default:
+                return "其他";
+        }
+    }
+
+    public static String bpoStatus(Integer i) {
+        switch(i){
+            case 0:
+                return "预增";
+            case 1:
+                return "报入职";
+            case 2:
+                return "在职";
+            case 3:
+                return "报离职";
+            case 4:
+                return "离职";
+            default:
+                return "其他";
+        }
+    }
+
+    public static String fcStatus(Integer i) {
+        switch(i){
+            case 0:
+                return "离职";
+            case 1:
+                return "在职";
+            default:
+                return "其他";
+        }
+    }
+
 }

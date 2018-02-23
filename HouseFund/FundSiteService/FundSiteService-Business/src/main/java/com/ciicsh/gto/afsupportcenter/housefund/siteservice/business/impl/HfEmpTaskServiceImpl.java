@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 
@@ -67,7 +68,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
             insertTaskTb(taskMsgDTO, taskCategory, isChange, dto);
 
             //更新旧的雇员任务单
-            updateEmpTaskTb(taskMsgDTO, dto);
+//            updateEmpTaskTb(taskMsgDTO, dto);
 
             result = true;
         } catch (Exception e) {
@@ -124,7 +125,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         hfEmpTask.setSubmitTime(LocalDate.now());
 
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
-        //来源地 1：中心  2：原单位
+        //转出单位(来源地)
         if (paramMap.get("source") != null) {
             String sSource = paramMap.get("source").toString();
             if ("1".equals(sSource)) {
@@ -133,17 +134,27 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                 hfEmpTask.setTransferOutUnit("原单位");
             }
         }
-
+        //任务类型
         hfEmpTask.setTaskCategory(taskCategory);
+        //是否更正 1 是 0 否
         hfEmpTask.setIsChange(isChange);
         hfEmpTask.setTaskFormContent(JSON.toJSONString(dto));
 
+        //福利办理方
+        hfEmpTask.setWelfareUnit(companyDto.getFundUnit());
+
+        //前道传递的政策明细ID,用它调用系统中心获取进位方式
         if (dto.getNowAgreement() != null && dto.getNowAgreement().getFundSocialRuleId() != null) {
             hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getFundSocialRuleId().intValue());
         }
         //TODO 表中加字段
 //        hfEmpTask.setProcessId(taskMsgDTO.getProcessId());
+        //办理状态：1、未处理 2 、处理中(已办)  3 已完成(已做) 4、批退 5、不需处理
         hfEmpTask.setTaskStatus(1);
+        //入职日期
+        if (companyDto.getInDate() != null) {
+            hfEmpTask.setInDate(LocalDateTime.ofInstant(companyDto.getInDate().toInstant(), ZoneId.systemDefault()));
+        }
         hfEmpTask.setActive(true);
         hfEmpTask.setModifiedBy(companyDto.getCreatedBy());
         hfEmpTask.setModifiedTime(LocalDateTime.now());
@@ -168,14 +179,37 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
 
         HfEmpTask hfEmpTask = new HfEmpTask();
-        hfEmpTask.setTaskId(paramMap.get("oldTaskId").toString());
+        hfEmpTask.setTaskId(paramMap.get("oldEmpAgreementId").toString());
         hfEmpTask.setCompanyId(companyDto.getCompanyId());
         hfEmpTask.setEmployeeId(companyDto.getEmployeeId());
-        hfEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
+//        hfEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
         hfEmpTask.setSubmitterId(companyDto.getCreatedBy());
         hfEmpTask.setSubmitterRemark(companyDto.getRemark());
 
         hfEmpTask.setTaskFormContent(JSON.toJSONString(dto));
+
+        //转出单位(来源地)
+        if (paramMap.get("source") != null) {
+            String sSource = paramMap.get("source").toString();
+            if ("1".equals(sSource)) {
+                hfEmpTask.setTransferOutUnit("中心");
+            } else if ("2".equals(sSource)) {
+                hfEmpTask.setTransferOutUnit("原单位");
+            }
+        }
+        //福利办理方
+        hfEmpTask.setWelfareUnit(companyDto.getFundUnit());
+
+        //前道传递的政策明细ID,用它调用系统中心获取进位方式
+        if (dto.getNowAgreement() != null && dto.getNowAgreement().getFundSocialRuleId() != null) {
+            hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getFundSocialRuleId().intValue());
+        }
+        //TODO 表中加字段
+//        hfEmpTask.setProcessId(taskMsgDTO.getProcessId());
+        //入职日期
+        if (companyDto.getInDate() != null) {
+            hfEmpTask.setInDate(LocalDateTime.ofInstant(companyDto.getInDate().toInstant(), ZoneId.systemDefault()));
+        }
 
         hfEmpTask.setModifiedBy(companyDto.getCreatedBy());
         hfEmpTask.setModifiedTime(LocalDateTime.now());

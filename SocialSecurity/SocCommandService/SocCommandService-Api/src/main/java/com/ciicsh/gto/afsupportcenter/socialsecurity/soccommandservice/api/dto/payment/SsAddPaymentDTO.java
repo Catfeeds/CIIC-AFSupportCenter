@@ -14,7 +14,6 @@ public class SsAddPaymentDTO {
 
     private static final long serialVersionUID = 1L;
 
-
     /**
      * 支付批次ID
      */
@@ -24,12 +23,6 @@ public class SsAddPaymentDTO {
      * 企业社保账户分类
      */
     private List<Long> paymentComIdList;
-
-
-
-
-
-
 
     public List<Long> getPaymentComIdList() {
         return paymentComIdList;

@@ -2,12 +2,12 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskRollInBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskRollOutBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthChargeBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.*;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
@@ -15,14 +15,12 @@ import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
-import io.swagger.models.auth.In;
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import scala.Int;
-import utils.TaskCommonUtils;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.utils.TaskCommonUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -1243,10 +1241,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 detail.setComBase(empBase);
                 detail.setEmpArchiveId(empArchiveId);
                 //个人金额 个人基数*个人比例
-                BigDecimal empAmount  = CalculateSocialUtils.calculateAmount(detail.getEmpBase(),detail.getEmpRatio(),null,2,"DIT00018");
+                BigDecimal empRatio = detail.getEmpRatio() != null ? detail.getEmpRatio() : BigDecimal.valueOf(0);
+                BigDecimal empAmount  = CalculateSocialUtils.calculateAmount(detail.getEmpBase(),empRatio,null,2,"DIT00018");
                 detail.setEmpAmount(empAmount);
                 //公司金额 个人基数*个人比例
-                BigDecimal comAmount  = CalculateSocialUtils.calculateAmount(detail.getComBase(),detail.getComRatio(),null,2,"DIT00018");
+                BigDecimal comRatio = detail.getComRatio() != null ? detail.getComRatio() : BigDecimal.valueOf(0);
+                BigDecimal comAmount  = CalculateSocialUtils.calculateAmount(detail.getComBase(),comRatio,null,2,"DIT00018");
                 detail.setComAmount(comAmount);
                 //个人+公司
                 detail.setComempAmount(detail.getEmpAmount().add(detail.getComAmount()));
@@ -1754,7 +1754,6 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param bo
      */
     void taskCompletCallBack(SsEmpTaskBO bo){
-        TaskCommonUtils.completeTask(bo.getTaskId(),commonApiUtils,"xsj");
         //新开_1","转入_2","调整_3","补缴_4","转出_5","封存_6","退账_7","集体转入_10","集体转出_11
         switch (bo.getTaskCategory()){
             case 1:
@@ -1768,6 +1767,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 TaskCommonUtils.updateConfirmDate(commonApiUtils,bo);
                 break;
         }
+        //任务单完成接口调用
+        TaskCommonUtils.completeTask(bo.getTaskId(),commonApiUtils,"xsj");
     }
 
 }

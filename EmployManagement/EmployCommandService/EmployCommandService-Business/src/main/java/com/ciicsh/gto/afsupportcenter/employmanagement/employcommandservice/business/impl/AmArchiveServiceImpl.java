@@ -16,10 +16,6 @@ import java.util.Map;
 
 @Service
 public class AmArchiveServiceImpl  extends ServiceImpl<AmArchiveMapper, AmArchive> implements IAmArchiveService {
-    @Override
-    public List<AmArchiveBO> queryAmArchive(String employeeId) {
-        return baseMapper.queryAmArchive(employeeId);
-    }
 
     @Override
     public List<AmArchiveBO> queryAmArchiveList(Map<String, Object> param) {
