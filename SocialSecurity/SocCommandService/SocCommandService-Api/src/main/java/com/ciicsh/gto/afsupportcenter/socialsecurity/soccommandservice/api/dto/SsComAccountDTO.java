@@ -29,6 +29,10 @@ public class SsComAccountDTO {
      */
     private String ssAccount;
     /**
+     * 银行账号ID
+     */
+    private Long bankAccountId;
+    /**
      * 银行账号(牡丹卡号)
      */
     private String bankAccount;
@@ -99,6 +103,14 @@ public class SsComAccountDTO {
      * 给凭证时间
      */
     private LocalDate provideCertificateTime;
+    /**
+     * 法人
+     */
+    private String legalPerson;
+    /**
+     * 联系地址
+     */
+    private String contactAddress;
     /**
      * 变更时间
      */
@@ -493,5 +505,29 @@ public class SsComAccountDTO {
 
     public void setSsAccountRatioList(List<SsAccountRatio> ssAccountRatioList) {
         this.ssAccountRatioList = ssAccountRatioList;
+    }
+
+    public Long getBankAccountId() {
+        return bankAccountId;
+    }
+
+    public void setBankAccountId(Long bankAccountId) {
+        this.bankAccountId = bankAccountId;
+    }
+
+    public String getLegalPerson() {
+        return legalPerson;
+    }
+
+    public void setLegalPerson(String legalPerson) {
+        this.legalPerson = legalPerson;
+    }
+
+    public String getContactAddress() {
+        return contactAddress;
+    }
+
+    public void setContactAddress(String contactAddress) {
+        this.contactAddress = contactAddress;
     }
 }
