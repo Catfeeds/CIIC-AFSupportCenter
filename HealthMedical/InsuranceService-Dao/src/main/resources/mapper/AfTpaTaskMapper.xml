@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.healthmedical.dao.AfTpaTaskMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfTpaTask">
+        <result column="af_task_id" property="afTaskId" />
+        <result column="task_type" property="taskType" />
+        <result column="status" property="status" />
+        <result column="employee_id" property="employeeId" />
+        <result column="employee_name" property="employeeName" />
+        <result column="company_id" property="companyId" />
+        <result column="company_name" property="companyName" />
+        <result column="af_product_id" property="afProductId" />
+        <result column="product_name" property="productName" />
+        <result column="start_confirm_date" property="startConfirmDate" />
+        <result column="end_confirm_date" property="endConfirmDate" />
+        <result column="type" property="type" />
+        <result column="associated_insurant_id" property="associatedInsurantId" />
+        <result column="associated_insurant_name" property="associatedInsurantName" />
+        <result column="id_num" property="idNum" />
+        <result column="gender" property="gender" />
+        <result column="age" property="age" />
+        <result column="birth_date" property="birthDate" />
+        <result column="price" property="price" />
+        <result column="service_items" property="serviceItems" />
+        <result column="key_type" property="keyType" />
+        <result column="key_value" property="keyValue" />
+        <result column="remark" property="remark" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
+
+</mapper>

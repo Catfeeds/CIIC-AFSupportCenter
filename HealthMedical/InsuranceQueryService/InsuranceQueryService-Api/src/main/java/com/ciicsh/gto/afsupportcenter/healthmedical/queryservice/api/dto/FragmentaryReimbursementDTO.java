@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.api.dto;
+package com.ciicsh.gto.afsupportcenter.healthmedical.api.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;

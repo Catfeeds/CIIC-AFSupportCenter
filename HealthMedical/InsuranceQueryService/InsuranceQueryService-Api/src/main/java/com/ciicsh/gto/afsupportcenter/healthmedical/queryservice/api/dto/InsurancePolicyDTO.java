@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.healthmedical.queryservice.api.dto;
+package com.ciicsh.gto.afsupportcenter.healthmedical.api.dto;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
