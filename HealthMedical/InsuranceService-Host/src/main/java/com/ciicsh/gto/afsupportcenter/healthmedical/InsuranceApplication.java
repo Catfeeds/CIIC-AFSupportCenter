@@ -21,6 +21,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 })
 @SpringBootApplication
 @EnableDiscoveryClient
+@EnableFeignClients({"com.ciicsh.gto.settlementcenter.payment.cmdapi", "com.ciicsh.gto.employeecenter.apiservice.api.proxy"})
 @MapperScan(basePackages = {"com.ciicsh.gto.afsupportcenter.healthmedical.dao"})
 @EnableScheduling
 public class InsuranceApplication {

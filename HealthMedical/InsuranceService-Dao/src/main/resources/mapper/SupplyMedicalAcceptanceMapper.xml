@@ -183,7 +183,7 @@
         AND status = 0
     </update>
 
-    <update id="updateStatus">
+    <update id="updateStatus" parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentStatusBO">
         UPDATE
         gtobusinessdb.hm_supply_medical_acceptance m
         SET
@@ -197,28 +197,28 @@
         m.acceptance_id = #{acceptanceId, jdbcType=VARCHAR}
     </update>
 
-    <update id="syncStatus">
+    <update id="syncStatus" parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentStatusBO">
         UPDATE
-        gtobusinessdb.hm_supply_medical_acceptance p
+          gtobusinessdb.hm_supply_medical_acceptance p
         SET
-        p.status = #{status},
+          p.status = #{status},
         <if test="remark != null and remark != ''">
             p.remark = #{remark},
         </if>
-        p.modified_by = #{modifiedBy, jdbcType=VARCHAR},
-        p.modified_time = now()
+          p.modified_by = #{modifiedBy, jdbcType=VARCHAR},
+          p.modified_time = now()
         WHERE EXISTS
         (
-        SELECT
-        d.acceptance_id
-        FROM
-        hm_payment_apply_detail d
-        WHERE
-        d.acceptance_id = p.acceptance_id
-        AND
-        d.apply_batch_id = #{batchId, jdbcType=INTEGER}
-        AND
-        d.business_id = #{businessId, jdbcType=INTEGER}
+            SELECT
+              d.acceptance_id
+            FROM
+              hm_payment_apply_detail d
+            WHERE
+              d.acceptance_id = p.acceptance_id
+            AND
+              d.apply_batch_id = #{batchId, jdbcType=INTEGER}
+            AND
+              d.business_id = #{businessId, jdbcType=INTEGER}
         )
     </update>
 

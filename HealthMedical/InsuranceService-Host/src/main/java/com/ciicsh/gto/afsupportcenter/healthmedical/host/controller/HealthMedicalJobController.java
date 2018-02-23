@@ -35,7 +35,7 @@ public class HealthMedicalJobController {
      * @param
      * @return
      */
-    @Scheduled(cron = "10 0/3 * * * *")
+    @Scheduled(cron = "20 0/30 * * * *")
 //    @GetMapping(value = "/handleSupplyMedical")
     public void handleSupplyMedical() {
         try {
@@ -54,7 +54,7 @@ public class HealthMedicalJobController {
      * @param
      * @return
      */
-    @Scheduled(cron = "20 0/3 * * * *")
+    @Scheduled(cron = "45 0/30 * * * *")
 //    @GetMapping(value = "/handleUninsuredMedical")
     public void handleUninsuredMedical() {
         try {

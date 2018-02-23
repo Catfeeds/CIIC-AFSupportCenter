@@ -104,6 +104,13 @@
             <groupId>com.ciicsh.gt1.companycenter</groupId>
             <artifactId>queryservice-api</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.ciicsh.gt1.employeecenter</groupId>
+            <artifactId>gt1.employeecenter.apiservice-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>

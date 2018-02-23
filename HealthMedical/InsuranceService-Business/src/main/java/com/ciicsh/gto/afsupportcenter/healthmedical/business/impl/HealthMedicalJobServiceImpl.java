@@ -10,6 +10,7 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.dao.SupplyMedicalAcceptanceM
 import com.ciicsh.gto.afsupportcenter.healthmedical.dao.UninsuredMedicalMapper;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmpBankRefundBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentBO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentStatusBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.PaymentApplyDetailBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.PaymentApplyBatchPO;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 
 /**
  * <p>
- * 雇员付款服务实现类
+ * 健康医疗服务实现类
  * </p>
  *
  * @author chenpb
@@ -83,13 +84,11 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
             JsonResult jsonResult = this.syncPaymentData(batchPO);
             System.out.println(JSON.toJSONString(jsonResult));
             if(JsonResult.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())) {
-                supplyMedicalAcceptanceMapper.syncStatus(
-                    batchPO.getApplyBatchId(),
-                    SysConstants.BusinessId.SUPPLY_MEDICAL.getId(),
-                    SysConstants.SupplyMedicalStatus.SYNC.getCode(),
-                    StringUtils.EMPTY,
+                supplyMedicalAcceptanceMapper.syncStatus(new EmployeePaymentStatusBO(
+                    batchPO.getApplyBatchId(), SysConstants.BusinessId.SUPPLY_MEDICAL.getId(),
+                    SysConstants.SupplyMedicalStatus.SYNC.getCode(), StringUtils.EMPTY,
                     SysConstants.JobConstants.SYSTEM_ZH.getName()
-                );
+                ));
             } else {
                 this.delBathData(batchPO.getApplyBatchId());
             }
@@ -119,13 +118,11 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
             JsonResult jsonResult = this.syncPaymentData(batchPO);
             System.out.println(JSON.toJSONString(jsonResult));
             if(JsonResult.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())) {
-                uninsuredMedicalMapper.syncStatus(
-                    batchPO.getApplyBatchId(),
-                    SysConstants.BusinessId.UNINSURED_MEDICAL.getId(),
-                    SysConstants.UninsuredMedicalStatus.SYNC.getCode(),
-                    StringUtils.EMPTY,
+                uninsuredMedicalMapper.syncStatus(new EmployeePaymentStatusBO(
+                    batchPO.getApplyBatchId(), SysConstants.BusinessId.UNINSURED_MEDICAL.getId(),
+                    SysConstants.UninsuredMedicalStatus.SYNC.getCode(), StringUtils.EMPTY,
                     SysConstants.JobConstants.SYSTEM_ZH.getName()
-                );
+                ));
             } else {
                 this.delBathData(batchPO.getApplyBatchId());
             }
@@ -163,20 +160,13 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
     @Override
     public void syncSettleCenterStatus (PayApplyPayStatusDTO dto) {
         Integer businessId= paymentApplyDetailMapper.selectBusinessId(dto.getBusinessPkId().intValue());
+        EmployeePaymentStatusBO statusBO = new EmployeePaymentStatusBO(
+            dto.getBusinessPkId().intValue(), businessId, dto.getPayStatus(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+        );
         if(SysConstants.BusinessId.SUPPLY_MEDICAL.equals(businessId)){
-            supplyMedicalAcceptanceMapper.syncStatus(dto.getBusinessPkId().intValue(),
-                businessId,
-                dto.getPayStatus(),
-                dto.getRemark(),
-                SysConstants.JobConstants.SYSTEM_ZH.getName()
-            );
+            supplyMedicalAcceptanceMapper.syncStatus(statusBO);
         } else if(SysConstants.BusinessId.UNINSURED_MEDICAL.equals(businessId)) {
-            uninsuredMedicalMapper.syncStatus(dto.getBusinessPkId().intValue(),
-                businessId,
-                dto.getPayStatus(),
-                dto.getRemark(),
-                SysConstants.JobConstants.SYSTEM_ZH.getName()
-            );
+            uninsuredMedicalMapper.syncStatus(statusBO);
         }
     }
 
@@ -205,9 +195,13 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
         List<PaymentApplyDetailBO> list = paymentApplyDetailMapper.selectRefundDetail(bo);
         if(!list.isEmpty()){
             if (SysConstants.BusinessId.SUPPLY_MEDICAL.equals(list.get(0).getBusinessItemId())) {
-                supplyMedicalAcceptanceMapper.updateStatus(list.get(0).getPaymentApplyId().toString(), SysConstants.SupplyMedicalStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName());
+                supplyMedicalAcceptanceMapper.updateStatus(new EmployeePaymentStatusBO(
+                    list.get(0).getPaymentApplyId().toString(), SysConstants.SupplyMedicalStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+                ));
             } else {
-                uninsuredMedicalMapper.updateStatus(Integer.getInteger(list.get(0).getPaymentApplyId()), SysConstants.UninsuredMedicalStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName());
+                uninsuredMedicalMapper.updateStatus(new EmployeePaymentStatusBO(
+                    Integer.getInteger(list.get(0).getPaymentApplyId()), SysConstants.UninsuredMedicalStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+                ));
             }
         }
     }
