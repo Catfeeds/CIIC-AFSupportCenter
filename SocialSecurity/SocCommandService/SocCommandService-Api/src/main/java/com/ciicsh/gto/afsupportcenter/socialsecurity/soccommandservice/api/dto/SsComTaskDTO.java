@@ -219,7 +219,7 @@ public class SsComTaskDTO{
 
     //帐单接收方
 //    private String billReceiver;
-    //发出材料
+    //发出材料（前道传递）
     private String dispatchMaterial;
 
     /**
