@@ -10,6 +10,7 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.dao.PaymentApplyBatchMapper;
 import com.ciicsh.gto.afsupportcenter.healthmedical.dao.PaymentApplyDetailMapper;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmpBankRefundBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentBO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentStatusBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.PaymentApplyDetailBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.EmployeePaymentApplyPO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.PaymentApplyBatchPO;
@@ -117,11 +118,9 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public void syncSettleCenterStatus (PayApplyPayStatusDTO dto) {
-        employeePaymentApplyMapper.syncStatus(dto.getBusinessPkId().intValue(),
-            SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(),
-            dto.getPayStatus(),
-            dto.getRemark(),
-            SysConstants.JobConstants.SYSTEM_ZH.getName());
+        employeePaymentApplyMapper.syncStatus(new EmployeePaymentStatusBO(
+            dto.getBusinessPkId().intValue(),  SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(), dto.getPayStatus(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+        ));
     }
 
     /**
@@ -148,7 +147,11 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
         bo.setApplyBatchId(batchId);
         List<PaymentApplyDetailBO> list = paymentApplyDetailMapper.selectRefundDetail(bo);
         if(!list.isEmpty()) {
-            employeePaymentApplyMapper.updateApplyStatus(Integer.getInteger(list.get(0).getPaymentApplyId()), SysConstants.EmpApplyStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName());
+            employeePaymentApplyMapper.updateApplyStatus(
+                new EmployeePaymentStatusBO(
+                    Integer.getInteger(list.get(0).getPaymentApplyId()), SysConstants.EmpApplyStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+                )
+            );
         }
     }
     /**
@@ -216,11 +219,9 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
      * @return
      */
     private Integer updateSyncStatus (Integer batchId) {
-        return employeePaymentApplyMapper.syncStatus(batchId,
-            SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(),
-            SysConstants.EmpApplyStatus.SYNC.getCode(),
-            StringUtils.EMPTY,
-            SysConstants.JobConstants.SYSTEM_ZH.getName());
+        return employeePaymentApplyMapper.syncStatus(new EmployeePaymentStatusBO(
+            batchId,  SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(), SysConstants.EmpApplyStatus.SYNC.getCode(), StringUtils.EMPTY,  SysConstants.JobConstants.SYSTEM_ZH.getName()
+        ));
     }
 
     /**
