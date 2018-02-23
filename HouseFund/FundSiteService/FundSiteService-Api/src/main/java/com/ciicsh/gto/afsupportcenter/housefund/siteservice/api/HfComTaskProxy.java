@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.api;
 
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.api.dto.HfComTaskDTO;
-import com.ciicsh.gto.commonservice.util.dto.Result;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.api.dto.ResultDTO;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +20,6 @@ public interface HfComTaskProxy {
      * @return
      */
     @PostMapping("/saveHfComTask")
-    public Result saveHfComTask(@RequestBody HfComTaskDTO hfComTaskDTO);
+    ResultDTO saveHfComTask(@RequestBody HfComTaskDTO hfComTaskDTO);
 
 }

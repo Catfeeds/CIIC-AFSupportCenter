@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.api;
 
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.api.dto.HfComAccountDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.api.dto.HfComAccountParamDto;
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.api.dto.JsonResult;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.api.dto.ResultDTO;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +23,6 @@ public interface HfComProxy {
      * @return
      */
     @RequestMapping("/getHfComAccountList")
-    JsonResult<List<HfComAccountDTO>> getHfComAccountList(@RequestBody HfComAccountParamDto paramDto);
+    ResultDTO<List<HfComAccountDTO>> getHfComAccountList(@RequestBody HfComAccountParamDto paramDto);
 
 }
