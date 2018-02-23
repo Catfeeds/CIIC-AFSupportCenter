@@ -9,7 +9,6 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.business.AfTpaTaskService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfTpaTask;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeMemberDTO;
 import com.ciicsh.gto.sheetservice.api.MsgConstants;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
@@ -38,31 +37,31 @@ public class KafkaReceiver {
     @Autowired
     private AfTpaTaskService afTpaTaskService;
 
-     //   private final static Logger logger = LoggerFactory.getLogger(com.ciicsh.gto.customerservice.commandservice.host.messageBus.KafkaReceiver.class);
-     @Autowired
-     private AfEmployeeCompanyProxy afEmployeeCompanyProxy;
+    //   private final static Logger logger = LoggerFactory.getLogger(com.ciicsh.gto.customerservice.commandservice.host.messageBus.KafkaReceiver.class);
+    @Autowired
+    private AfEmployeeCompanyProxy afEmployeeCompanyProxy;
 
-     @Autowired
-     private EmployeeInfoProxy employeeInfoProxy;
+    @Autowired
+    private EmployeeInfoProxy employeeInfoProxy;
 
-        @StreamListener(MsgConstants.AFCompanyCenter.AF_EMP_IN)
-        public void receiveBaseAdjustYearlyNonlocal(Message<TaskCreateMsgDTO> message) {
-            TaskCreateMsgDTO taskMsgDTO = message.getPayload();
-            String missionID = taskMsgDTO.getMissionId();
-            //   taskMsgDTO.getVariables("");
-            // logger.info("收到消息from BASE_ADJUST_YEARLY_NONLOCAL-useWork: " + returnInfo);
+    @StreamListener(MsgConstants.AFCompanyCenter.AF_EMP_IN)
+    public void receiveBaseAdjustYearlyNonlocal(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
+        String missionID = taskMsgDTO.getMissionId();
+        //   taskMsgDTO.getVariables("");
+        // logger.info("收到消息from BASE_ADJUST_YEARLY_NONLOCAL-useWork: " + returnInfo);
 
-            boolean res = false;
-            // 判断是否投保任务单
-            if (taskMsgDTO.getTaskType() != "insurance_new") {
-                // 读客服中心接口，插入任务单表
-                res = insertTaskTb(taskMsgDTO, 1);
-            }
-
-            // 判断是否退保任务单
-
-
+        boolean res = false;
+        // 判断是否投保任务单
+        if (taskMsgDTO.getTaskType() != "insurance_new") {
+            // 读客服中心接口，插入任务单表
+            res = insertTaskTb(taskMsgDTO, 1);
         }
+
+        // 判断是否退保任务单
+
+
+    }
 
     private AfEmployeeInfoDTO callInf(TaskCreateMsgDTO taskMsgDTO) {
 
@@ -123,7 +122,6 @@ public class KafkaReceiver {
                 // </editor-fold>
 
 
-
                 // List<AfEmployeeInfoDTO> list = JsonUtil.fromJsonToList(JsonUtil.fromJsonToObject(serviceItem,String.class),List.class,String.class);
 
                 // 2.1   判断，如果是投保给子女或者配偶，需要判断是否有信息
@@ -132,7 +130,7 @@ public class KafkaReceiver {
                 // 2.2   查询，投保任务单数据完善和补充
 
 
-                com.ciicsh.gto.employeecenter.util.JsonResult<List<EmployeeMemberDTO>> employeeMemberInfoList = employeeInfoProxy.getEmployeeMemberInfo("667064237877603");
+//                com.ciicsh.gto.employeecenter.util.JsonResult<List<EmployeeMemberDTO>> employeeMemberInfoList = employeeInfoProxy.getEmployeeMemberInfo("667064237877603");
 
 
                 task.setCompanyId(item.getCompanyId());
@@ -164,29 +162,27 @@ public class KafkaReceiver {
      * 接收任务完成消息
      * @param message
 
-    @StreamListener(MsgConstants.COMMON_TASKSERVICE_TASK_COMPLETE)
-    public void commonTaskserviceTaskComplete(Message<TaskCompleteMsgDTO> message){
-        TaskCompleteMsgDTO taskCompleteMsgDTO = message.getPayload();
-        String returnInfo = "taskId="+taskCompleteMsgDTO.getTaskId()+
-                ",taskType="+taskCompleteMsgDTO.getTaskType()+
-                ",missionId="+taskCompleteMsgDTO.getMissionId()+
-                ",processId="+taskCompleteMsgDTO.getProcessId()+
-                ",processDefinitionKey="+taskCompleteMsgDTO.getProcessDefinitionKey()+
-                ",Variables="+taskCompleteMsgDTO.getVariables();
-        logger.info("收到任务完成消息: " + returnInfo);
-    }
-*/
+     @StreamListener(MsgConstants.COMMON_TASKSERVICE_TASK_COMPLETE) public void commonTaskserviceTaskComplete(Message<TaskCompleteMsgDTO> message){
+     TaskCompleteMsgDTO taskCompleteMsgDTO = message.getPayload();
+     String returnInfo = "taskId="+taskCompleteMsgDTO.getTaskId()+
+     ",taskType="+taskCompleteMsgDTO.getTaskType()+
+     ",missionId="+taskCompleteMsgDTO.getMissionId()+
+     ",processId="+taskCompleteMsgDTO.getProcessId()+
+     ",processDefinitionKey="+taskCompleteMsgDTO.getProcessDefinitionKey()+
+     ",Variables="+taskCompleteMsgDTO.getVariables();
+     logger.info("收到任务完成消息: " + returnInfo);
+     }
+     */
     /**
      * 流程结束消息
      * @param message
 
-    @StreamListener(MsgConstants.COMMON_TASKSERVICE_PROCESS_COMPLETE)
-    public void commonTaskserviceProcessComplete(Message<ProcessCompleteMsgDTO> message){
-        ProcessCompleteMsgDTO processCompleteMsgDTO = message.getPayload();
-        String returnInfo = "processId="+processCompleteMsgDTO.getProcessId()+
-                ",missionId="+processCompleteMsgDTO.getMissionId()+
-                ",processDefinitionKey="+processCompleteMsgDTO.getProcessDefinitionKey();
-        logger.info("收到流程结束消息: " + returnInfo);
-    }
+     @StreamListener(MsgConstants.COMMON_TASKSERVICE_PROCESS_COMPLETE) public void commonTaskserviceProcessComplete(Message<ProcessCompleteMsgDTO> message){
+     ProcessCompleteMsgDTO processCompleteMsgDTO = message.getPayload();
+     String returnInfo = "processId="+processCompleteMsgDTO.getProcessId()+
+     ",missionId="+processCompleteMsgDTO.getMissionId()+
+     ",processDefinitionKey="+processCompleteMsgDTO.getProcessDefinitionKey();
+     logger.info("收到流程结束消息: " + returnInfo);
+     }
      */
 }
