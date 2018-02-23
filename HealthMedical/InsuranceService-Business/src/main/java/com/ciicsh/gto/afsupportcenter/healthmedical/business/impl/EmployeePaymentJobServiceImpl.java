@@ -15,6 +15,7 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.PaymentApplyDetail
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.EmployeePaymentApplyPO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.PaymentApplyBatchPO;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.employeecenter.apiservice.api.proxy.BankCardInfoProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.*;
@@ -45,6 +46,11 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
      */
     @Autowired
     private PayapplyServiceProxy payapplyServiceProxy;
+    /**
+     *  雇员中心补全银行卡信息处理
+     */
+    @Autowired
+    private BankCardInfoProxy bankCardInfoProxy;
     /**
      *  雇员付款申请
      */
@@ -127,11 +133,12 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
      * @description 添加维护银行卡信息申请到雇员中心
      * @author chenpb
      * @since 2018-02-02
-     * @param emp: 雇员信息
+     * @param refund: 付款雇员信息
      * @return
      */
-    private void syncIncompleteBankCardInfoApply (List<EmpBankRefundBO> emp) {
-        System.out.println("--> " + JSON.toJSONString(emp));
+    private void syncIncompleteBankCardInfoApply (List<EmpBankRefundBO> refund) {
+//        com.ciicsh.gto.employeecenter.util.JsonResult jsonResult = bankCardInfoProxy.createBankRefund(refund);
+        System.out.println("--> " + JSON.toJSONString(refund));
     }
 
     /**
