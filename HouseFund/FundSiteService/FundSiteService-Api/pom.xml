@@ -34,6 +34,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.ciicsh.gt1.companycenter</groupId>
             <artifactId>commandservice-api</artifactId>
         </dependency>
