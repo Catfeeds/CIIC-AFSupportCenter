@@ -44,6 +44,15 @@ public class SsPaymentComBO extends SsPaymentCom {
      * 最大支付年月
      */
     private String paymentMonthMax;
+    private String ssAccount;
+
+    public String getSsAccount() {
+        return ssAccount;
+    }
+
+    public void setSsAccount(String ssAccount) {
+        this.ssAccount = ssAccount;
+    }
 
     public String getTitle() {
         return title;

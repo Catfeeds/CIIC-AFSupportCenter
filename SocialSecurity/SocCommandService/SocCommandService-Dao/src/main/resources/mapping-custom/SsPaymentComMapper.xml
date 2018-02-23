@@ -32,11 +32,12 @@
         <result column="title" property="title" />
         <result column="ss_account_type" property="ssAccountType" />
         <result column="com_account_name" property="comAccountName" />
+        <result column="ss_account" property="ssAccount" />
     </resultMap>
 
     <select id="paymentComQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsPaymentComBO" resultMap="DtoResultMap">
         SELECT
-          SPC.*,SCA.ss_account_type,SCA.com_account_name,SC.title,SP.payment_batch_num
+          SPC.*,SCA.ss_account_type,SCA.com_account_name,SC.title,SP.payment_batch_num,SCA.ss_account
         FROM
           ss_payment_com SPC
           INNER JOIN

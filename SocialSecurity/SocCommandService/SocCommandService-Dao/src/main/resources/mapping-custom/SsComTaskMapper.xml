@@ -38,6 +38,8 @@
             <result column="end_date" property="endDate"/>
             <result column="dispatch_material" property="dispatchMaterial"/>
             <result column="remark_acc" property="remark"/>
+            <result column="handle_remark" property="handleRemark"/>
+            <result column="rejection_remark" property="rejectionRemark"/>
             <association property="ssAccountRatio"
                          javaType="com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio">
                 <id column="ss_account_ratio_id" property="ssAccountRatioId"/>
@@ -121,6 +123,8 @@
         sct.submitter_id,
         sct.submit_time,
         sct.submit_remark,
+        sct.rejection_remark,
+        sct.handle_remark,
         cc.title
         FROM ss_com_task sct
         LEFT JOIN sal_company cc ON sct.company_id = cc.company_id
@@ -158,6 +162,7 @@
         sct.submitter_id,
         sct.submit_time,
         sct.submit_remark,
+        sct.rejection_remark,
         cc.title
         FROM ss_com_task sct
         LEFT JOIN ss_com_account sca ON sct.com_account_id = sca.com_account_id
@@ -208,6 +213,7 @@
         sct.submitter_id,
         sct.submit_time,
         sct.submit_remark,
+        sct.rejection_remark,
         cc.title
         FROM ss_com_task sct
         LEFT JOIN ss_com_account sca ON sct.com_account_id = sca.com_account_id
@@ -250,6 +256,7 @@
         sct.submitter_id,
         sct.submit_time,
         sct.submit_remark,
+        sct.rejection_remark,
         cc.title
         FROM ss_com_task sct
         LEFT JOIN sal_company cc ON sct.company_id = cc.company_id
@@ -346,6 +353,7 @@
         sct.send_check_date,
         sct.finish_date,
         sct.handle_remark,
+        sct.rejection_remark,
         sct.dynamic_extend,
         sc.title,
         scm.*,
@@ -436,6 +444,7 @@
         sct.send_check_date,
         sct.finish_date,
         sct.handle_remark,
+        sct.rejection_remark,
         sc.title,
         sca.*,
         sat.*
