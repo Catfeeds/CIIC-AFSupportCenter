@@ -2,8 +2,6 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.entity.SsComMaterial;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +29,7 @@ public class SsComTaskDTO{
     /**
      * 发起人要求任务完成截止日期
      */
-    private LocalDate expireDate;
+    private Date expireDate;
     /**
      * 发起人id
      */
@@ -51,7 +49,7 @@ public class SsComTaskDTO{
     /**
      * 发起时间
      */
-    private LocalDateTime submitTime;
+    private Date submitTime;
     /**
      * 发起人备注信息
      */
@@ -81,15 +79,15 @@ public class SsComTaskDTO{
     /**
      * 受理日期
      */
-    private LocalDate startHandleDate;
+    private Date startHandleDate;
     /**
      * 送审日期
      */
-    private LocalDate sendCheckDate;
+    private Date sendCheckDate;
     /**
      * 完成日期
      */
-    private LocalDate finishDate;
+    private Date finishDate;
     /**
      * 办理备注
      */
@@ -161,11 +159,11 @@ public class SsComTaskDTO{
     /**
      * 创建时间
      */
-    private LocalDateTime createdTime;
+    private Date createdTime;
     /**
      * 最后更新时间
      */
-    private LocalDateTime modifiedTime;
+    private Date modifiedTime;
     /**
      * 创建者登录名
      */
@@ -202,7 +200,7 @@ public class SsComTaskDTO{
     private String operatorType;
 
     //终止操作时 的终止日期
-    private LocalDate endDate;
+    private Date endDate;
 
     //转移日期
     private String transferDate;
@@ -215,7 +213,7 @@ public class SsComTaskDTO{
     //企业工伤比例
     private String companyWorkInjuryPercentage;
     //开始年月
-//    private LocalDate startMonth;
+//    private Date startMonth;
 
     //帐单接收方
 //    private String billReceiver;
@@ -269,11 +267,11 @@ public class SsComTaskDTO{
         this.taskCategory = taskCategory;
     }
 
-    public LocalDate getExpireDate() {
+    public Date getExpireDate() {
         return expireDate;
     }
 
-    public void setExpireDate(LocalDate expireDate) {
+    public void setExpireDate(Date expireDate) {
         this.expireDate = expireDate;
     }
 
@@ -309,11 +307,11 @@ public class SsComTaskDTO{
         this.submitterDeptName = submitterDeptName;
     }
 
-    public LocalDateTime getSubmitTime() {
+    public Date getSubmitTime() {
         return submitTime;
     }
 
-    public void setSubmitTime(LocalDateTime submitTime) {
+    public void setSubmitTime(Date submitTime) {
         this.submitTime = submitTime;
     }
 
@@ -373,27 +371,27 @@ public class SsComTaskDTO{
         this.handleUserName = handleUserName;
     }
 
-    public LocalDate getStartHandleDate() {
+    public Date getStartHandleDate() {
         return startHandleDate;
     }
 
-    public void setStartHandleDate(LocalDate startHandleDate) {
+    public void setStartHandleDate(Date startHandleDate) {
         this.startHandleDate = startHandleDate;
     }
 
-    public LocalDate getSendCheckDate() {
+    public Date getSendCheckDate() {
         return sendCheckDate;
     }
 
-    public void setSendCheckDate(LocalDate sendCheckDate) {
+    public void setSendCheckDate(Date sendCheckDate) {
         this.sendCheckDate = sendCheckDate;
     }
 
-    public LocalDate getFinishDate() {
+    public Date getFinishDate() {
         return finishDate;
     }
 
-    public void setFinishDate(LocalDate finishDate) {
+    public void setFinishDate(Date finishDate) {
         this.finishDate = finishDate;
     }
 
@@ -533,19 +531,19 @@ public class SsComTaskDTO{
         isActive = active;
     }
 
-    public LocalDateTime getCreatedTime() {
+    public Date getCreatedTime() {
         return createdTime;
     }
 
-    public void setCreatedTime(LocalDateTime createdTime) {
+    public void setCreatedTime(Date createdTime) {
         this.createdTime = createdTime;
     }
 
-    public LocalDateTime getModifiedTime() {
+    public Date getModifiedTime() {
         return modifiedTime;
     }
 
-    public void setModifiedTime(LocalDateTime modifiedTime) {
+    public void setModifiedTime(Date modifiedTime) {
         this.modifiedTime = modifiedTime;
     }
 
@@ -637,11 +635,11 @@ public class SsComTaskDTO{
         this.operatorType = operatorType;
     }
 
-    public LocalDate getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 
