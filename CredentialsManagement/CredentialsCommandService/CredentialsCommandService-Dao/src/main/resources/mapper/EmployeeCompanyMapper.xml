@@ -51,6 +51,9 @@
             <if test="status != null and status != ''">
                 AND status LIKE concat(concat('%',#{status}),'%')
             </if>
+            <if test="type != null and type != ''">
+                AND type LIKE concat(concat('%',#{type}),'%')
+            </if>
         </trim>
     </sql>
 </mapper>

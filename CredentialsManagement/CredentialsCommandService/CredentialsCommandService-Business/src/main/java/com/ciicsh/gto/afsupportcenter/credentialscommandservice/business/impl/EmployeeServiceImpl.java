@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.EmployeeService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.EmployeeMapper;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Employee;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**

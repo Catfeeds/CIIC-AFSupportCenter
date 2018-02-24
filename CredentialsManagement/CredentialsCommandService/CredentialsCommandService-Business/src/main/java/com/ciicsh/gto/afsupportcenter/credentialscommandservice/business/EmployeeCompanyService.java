@@ -2,7 +2,6 @@ package com.ciicsh.gto.afsupportcenter.credentialscommandservice.business;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
-import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Company;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.EmployeeCompany;
 
 import java.util.List;
@@ -20,6 +19,6 @@ public interface EmployeeCompanyService extends IService<EmployeeCompany> {
      * @param employeeCompany
      * @return
      */
-    List<Company> select(Page page, EmployeeCompany employeeCompany);
+    List<EmployeeCompany> select(Page page, EmployeeCompany employeeCompany);
 
 }

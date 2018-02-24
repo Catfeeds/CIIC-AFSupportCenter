@@ -14,5 +14,4 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Employ
  */
 public interface EmployeeService extends IService<Employee> {
 
-
 }

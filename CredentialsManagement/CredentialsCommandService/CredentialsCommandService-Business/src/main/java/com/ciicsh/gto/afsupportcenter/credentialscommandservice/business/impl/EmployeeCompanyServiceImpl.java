@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.EmployeeCompanyService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.EmployeeCompanyMapper;
-import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Company;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.EmployeeCompany;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,7 @@ public class EmployeeCompanyServiceImpl extends ServiceImpl<EmployeeCompanyMappe
     private EmployeeCompanyMapper employeeCompanyMapper;
 
     @Override
-    public List<Company> select(Page page, EmployeeCompany employeeCompany) {
+    public List<EmployeeCompany> select(Page page, EmployeeCompany employeeCompany) {
         return employeeCompanyMapper.select(page, employeeCompany);
     }
 }
