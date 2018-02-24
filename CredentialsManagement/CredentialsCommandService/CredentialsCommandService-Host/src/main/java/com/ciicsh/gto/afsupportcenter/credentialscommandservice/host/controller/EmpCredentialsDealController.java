@@ -1,7 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.controller;
 
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.CompanyExtService;
-import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.MaterialTypeRelationService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskFollowService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskMaterialService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskService;
@@ -10,7 +9,6 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskD
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskFollowDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskListDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.CompanyExt;
-import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.MaterialTypeRelation;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Task;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskFollow;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMaterial;
@@ -28,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 /**
