@@ -24,9 +24,9 @@ public class empSSSearchExportOpt {
     private String idNum;
     @Excel(name = "企业社保账号",width = 20, orderNum = "4")
     private String ssAccount;
-    @Excel(name = "社保状态", orderNum = "5")
+    @Excel(name = "社保状态", orderNum = "5", replace = {"已办_1","已做_2","转出_3"})
     private Integer archiveTaskStatus;
-    @Excel(name = "社保账户类型", orderNum = "6")
+    @Excel(name = "社保账户类型", orderNum = "6", replace = {"中智大库_1","中智外包_2","独立户_3"})
     private Integer ssAccountType;
     @Excel(name = "结算区县", orderNum = "7")
     private String settlementArea;
