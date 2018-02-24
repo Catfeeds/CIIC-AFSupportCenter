@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsAccountRatioMapper">
+
+
+    <update id="updateEndMonthByAccId"
+            parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAccountRatio">
+        UPDATE
+        ss_account_ratio
+        SET end_month=#{endMonth}
+        WHERE com_account_id =#{comAccountId} AND end_month IS NULL
+    </update>
+
+    <select id="queryRatioByAccountId" resultMap="BaseResultMap">
+        SELECT
+        sar.industry_category,
+        sar.com_ratio,
+        sar.start_month,
+        sar.end_month
+        FROM ss_account_ratio sar
+        WHERE
+        sar.is_active =1 AND com_account_id = #{comAccountId}
+    </select>
+</mapper>

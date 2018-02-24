@@ -252,45 +252,77 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
     private List<HfArchiveBasePeriod> repairEmpBasePeriod(HfEmpTask hfEmpTask, List<HfEmpTaskPeriod> hfEmpTaskPeriodList) {
         List<HfArchiveBasePeriod> hfArchiveBasePeriodList = new ArrayList<>();
         EntityWrapper<HfArchiveBasePeriod> wrapper = new EntityWrapper<>();
-        wrapper.where("company_id={0} AND employee_id={1} AND is_active = 1", hfEmpTask.getCompanyId(), hfEmpTask.getEmployeeId());
+        wrapper.where("employee_id={1} AND is_active = 1", hfEmpTask.getEmployeeId());
         wrapper.orderBy("start_month", true);
         List<HfArchiveBasePeriod> existHfArchiveBasePeriodList = hfArchiveBasePeriodService.selectList(wrapper);
 
         if (CollectionUtils.isNotEmpty(existHfArchiveBasePeriodList)) {
-            YearMonth permitStartMonth;
-            YearMonth permitEndMonth;
-
             hfEmpTaskPeriodList.stream().forEach(e -> {
                 if (StringUtils.isEmpty(e.getStartMonth()) || StringUtils.isEmpty(e.getEndMonth())) {
-                    throw new BusinessException("补缴任务费用分段表中缴费起始月或缴费截止月为空");
+                    throw new BusinessException("补缴任务费用分段中缴费起始月或缴费截止月为空");
                 }
+                final YearMonth currentMonth = YearMonth.now();
                 YearMonth repairStartMonth = YearMonth.parse(e.getStartMonth(), formatter);
                 YearMonth repairEndMonth = YearMonth.parse(e.getEndMonth(), formatter);
+                if (repairEndMonth.equals(currentMonth) || repairEndMonth.isAfter(currentMonth)) {
+                    throw new BusinessException("补缴任务费用分段中缴费截止月不能在当前年月以后");
+                }
+
+                YearMonth[] permitYearMonth = new YearMonth[1];
 
                 existHfArchiveBasePeriodList.stream().forEach(o -> {
                     YearMonth startMonth = YearMonth.parse(o.getStartMonth(), formatter);
-                    YearMonth endMonth = YearMonth.now();
+                    YearMonth endMonth = currentMonth;
                     if (StringUtils.isNotEmpty(o.getEndMonth())) {
                         endMonth = YearMonth.parse(o.getEndMonth(), formatter);
                     }
                     // 匹配费用段，如果任务单费用段包含在雇员档案费用段中，那么支持差额补缴；
                     // 差额补缴时，雇员档案费用段不变，增加雇员调整差异数据
-                    if ((repairStartMonth.isAfter(startMonth) || repairStartMonth.equals(startMonth))
+                    if (
+//                        hfEmpTask.getCompanyId().equals(o.getCompanyId())
+//                        && e.getRatio().compareTo(o.getRatio()) == 0
+//                        && e.getBaseAmount().compareTo(o.getBaseAmount()) == 0 &&
+                        (repairStartMonth.isAfter(startMonth) || repairStartMonth.equals(startMonth))
                         && (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth))) {
-//                        throw new BusinessException("补缴任务费用分段表中缴费期间与雇员档案费用分段表中缴费期间交叉");
+                        // TODO 差异
 
                     } else {
-//                        permitEndMonth = startMonth;
+                        boolean isMatch = false;
+                        // 匹配费用段空档区间，如果任务单费用段包含在雇员档案费用段空档区间中，那么支持全额补缴；
+                        // 全额补缴时，更新雇员档案费用段，不需要增加雇员调整差异数据
+                        if (permitYearMonth[0] == null) {
+                            if (repairEndMonth.isBefore(startMonth)) {
+                                permitYearMonth[0] = endMonth;
+                                setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e);
+                                isMatch = true;
+                            }
+                        } else if (endMonth.isBefore(currentMonth)) {
+                            if (repairStartMonth.isAfter(permitYearMonth[0]) && repairEndMonth.isBefore(startMonth)) {
+                                permitYearMonth[0] = endMonth;
+                                setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e);
+                                isMatch = true;
+                            }
+                        } else {
+                            if (repairStartMonth.isAfter(startMonth) && repairEndMonth.isBefore(endMonth)) {
+                                setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e);
+                                isMatch = true;
+                            }
+                        }
+
+                        if (!isMatch) {
+                            throw new BusinessException("一条补缴任务费用分段不能同时包括全额补缴及差额补缴");
+                        }
+
+                        hfArchiveBasePeriodService.insertOrUpdateBatch(hfArchiveBasePeriodList);
                     }
                 });
-
-                setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e);
+//                setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e);
             });
         } else {
             // 雇员档案费用段不存在时，数据不正常，需先做新增再做补缴
             throw new BusinessException("当前雇员的雇员汇缴月份段数据不存在，不能补缴");
         }
-        hfArchiveBasePeriodService.insertOrUpdateBatch(hfArchiveBasePeriodList);
+//        hfArchiveBasePeriodService.insertOrUpdateBatch(hfArchiveBasePeriodList);
         return hfArchiveBasePeriodList;
     }
 

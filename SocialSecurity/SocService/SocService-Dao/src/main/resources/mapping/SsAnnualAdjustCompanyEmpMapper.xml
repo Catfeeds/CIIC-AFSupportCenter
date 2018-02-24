@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsAnnualAdjustCompanyEmpMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAnnualAdjustCompanyEmp">
+		<id column="annual_adjust_company_emp_id" property="annualAdjustCompanyEmpId" />
+		<result column="annual_adjust_company_id" property="annualAdjustCompanyId" />
+		<result column="employee_id" property="employeeId" />
+		<result column="employee_name" property="employeeName" />
+		<result column="ss_serial" property="ssSerial" />
+		<result column="salary" property="salary" />
+        <result column="chg_salary" property="chgSalary" />
+		<result column="id_num" property="idNum" />
+		<result column="archive_status" property="archiveStatus" />
+		<result column="base_amount" property="baseAmount" />
+        <result column="emp_classify" property="empClassify" />
+		<result column="ss_account_type" property="ssAccountType" />
+		<result column="settlement_area" property="settlementArea" />
+		<result column="ss_account" property="ssAccount" />
+		<result column="ss_username" property="ssUsername" />
+		<result column="ss_pwd" property="ssPwd" />
+        <result column="low_department_id" property="lowDepartmentId" />
+        <result column="low_department_name" property="lowDepartmentName" />
+        <result column="high_department_id" property="highDepartmentId" />
+        <result column="high_department_name" property="highDepartmentName" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+</mapper>
