@@ -34,6 +34,16 @@ public class HfArchiveBaseAdjust implements Serializable {
 	@TableField("emp_task_id")
 	private Long empTaskId;
     /**
+     * 客户主表ID
+     */
+    @TableField("company_id")
+    private String companyId;
+    /**
+     * 雇员主表ID
+     */
+    @TableField("employee_id")
+    private String employeeId;
+    /**
      * 调整新基数
      */
 	@TableField("new_base_amount")
@@ -123,7 +133,23 @@ public class HfArchiveBaseAdjust implements Serializable {
 		this.empTaskId = empTaskId;
 	}
 
-	public BigDecimal getNewBaseAmount() {
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public BigDecimal getNewBaseAmount() {
 		return newBaseAmount;
 	}
 
@@ -233,6 +259,8 @@ public class HfArchiveBaseAdjust implements Serializable {
 			", empBaseAdjustId=" + empBaseAdjustId +
 			", empArchiveId=" + empArchiveId +
 			", empTaskId=" + empTaskId +
+            ", companyId=" + companyId +
+            ", employeeId=" + employeeId +
 			", newBaseAmount=" + newBaseAmount +
 			", hfMonth=" + hfMonth +
 			", startMonth=" + startMonth +

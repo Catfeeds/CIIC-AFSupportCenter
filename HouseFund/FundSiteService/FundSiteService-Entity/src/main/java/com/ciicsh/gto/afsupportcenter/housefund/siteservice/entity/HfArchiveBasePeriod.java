@@ -34,6 +34,16 @@ public class HfArchiveBasePeriod implements Serializable {
 	@TableField("emp_task_id")
 	private Long empTaskId;
     /**
+     * 客户主表ID
+     */
+    @TableField("company_id")
+    private String companyId;
+    /**
+     * 雇员主表ID
+     */
+    @TableField("employee_id")
+    private String employeeId;
+    /**
      * 基数
      */
 	@TableField("base_amount")
@@ -102,8 +112,8 @@ public class HfArchiveBasePeriod implements Serializable {
             6 特殊补缴
             7 账外补缴（特殊补缴）
      */
-	@TableField("bujiao_reason")
-	private Integer bujiaoReason;
+	@TableField("repair_reason")
+	private Integer repairReason;
     /**
      * 是否可用
      */
@@ -155,7 +165,23 @@ public class HfArchiveBasePeriod implements Serializable {
 		this.empTaskId = empTaskId;
 	}
 
-	public BigDecimal getBaseAmount() {
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public BigDecimal getBaseAmount() {
 		return baseAmount;
 	}
 
@@ -251,12 +277,12 @@ public class HfArchiveBasePeriod implements Serializable {
 		this.comAmount = comAmount;
 	}
 
-	public Integer getBujiaoReason() {
-		return bujiaoReason;
+	public Integer getRepairReason() {
+		return repairReason;
 	}
 
-	public void setBujiaoReason(Integer bujiaoReason) {
-		this.bujiaoReason = bujiaoReason;
+	public void setRepairReason(Integer repairReason) {
+		this.repairReason = repairReason;
 	}
 
 	public Boolean getActive() {
@@ -305,6 +331,8 @@ public class HfArchiveBasePeriod implements Serializable {
 			", archiveBasePeriodId=" + archiveBasePeriodId +
 			", empArchiveId=" + empArchiveId +
 			", empTaskId=" + empTaskId +
+            ", companyId=" + companyId +
+            ", employeeId=" + employeeId +
 			", baseAmount=" + baseAmount +
 			", startMonth=" + startMonth +
 			", endMonth=" + endMonth +
@@ -317,7 +345,7 @@ public class HfArchiveBasePeriod implements Serializable {
 			", amount=" + amount +
 			", amountEmp=" + amountEmp +
 			", comAmount=" + comAmount +
-			", bujiaoReason=" + bujiaoReason +
+			", repairReason=" + repairReason +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

@@ -1,6 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.util.constant;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,10 +13,13 @@ public interface SocialSecurityConst {
     public static final String PROCESS_PERIOD_KEY = "ProcessPeriod";
     public static final String PAY_BANK_KEY = "PayBank";
     public static final String FUND_TYPE_KEY = "FundType";
+    public static final String COM_ACCOUNT_STATE_KEY = "ComAccountState";
     public static final String COM_PAYMENT_WAY_KEY = "ComPaymentWay";
     public static final String COM_UKEY_STORE_KEY = "ComUkeyStore";
     public static final String OPERATION_REMIND_KEY = "OperationRemind";
     public static final String REPAIR_REASON_KEY = "RepairReason";
+    public static final String HANDLE_STATUS_KEY = "HandleStatus";
+    public static final String FUND_OUT_UNIT_KEY = "FundOutUnit";
 
     //结算区县
     public static final Map<String, String> DISTRICT_MAP = new HashMap<String, String>() {
@@ -140,8 +145,8 @@ public interface SocialSecurityConst {
     // 公积金类型
     public static final Map<String, String> FUND_TYPE_MAP = new HashMap<String, String>() {
         {
-            put("0", "基本公积金");
-            put("1", "补充公积金");
+            put("1", "基本公积金");
+            put("2", "补充公积金");
         }
     };
 
@@ -186,6 +191,32 @@ public interface SocialSecurityConst {
             put("5", "错缴更正补缴");
             put("6", "特殊补缴");
             put("7", "账外补缴");
+        }
+    };
+
+    public static final Map<String, String> COM_ACCOUNT_STATE_MAP = new HashMap<String, String>() {
+        {
+            put("0", "初始");
+            put("1", "有效");
+            put("2", "终止");
+        }
+    };
+
+    public static final Map<String, String> HANDLE_STATUS_MAP = new HashMap<String, String>() {
+        {
+            put("1", "材料收缴");
+            put("2", "受理中");
+            put("3", "送审中");
+            put("4", "已完成");
+        }
+    };
+
+    public static final List<String> FUND_OUT_UNIT_LIST = new ArrayList<String>() {
+        {
+            add("原单位");
+            add("市公积金封存办(中心)");
+            add("中智大库");
+            add("中智外包");
         }
     };
 }

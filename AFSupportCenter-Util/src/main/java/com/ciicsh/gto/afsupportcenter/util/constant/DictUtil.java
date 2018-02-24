@@ -70,8 +70,8 @@ public class DictUtil {
         return null;
     }
 
-    public Map<String, List<KeyValue>> getDictItemList() {
-        Map<String, List<KeyValue>> rtn = new HashMap<>();
+    public Map<String, List<?>> getDictItemList() {
+        Map<String, List<?>> rtn = new HashMap<>();
 
         if (dict.size() > 0) {
             dict.entrySet().stream().forEach(e -> {

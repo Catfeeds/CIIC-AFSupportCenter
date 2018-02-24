@@ -7,6 +7,8 @@
 		<id column="emp_base_adjust_id" property="empBaseAdjustId" />
 		<result column="emp_archive_id" property="empArchiveId" />
 		<result column="emp_task_id" property="empTaskId" />
+        <result column="company_id" property="companyId" />
+        <result column="employee_id" property="employeeId" />
 		<result column="new_base_amount" property="newBaseAmount" />
 		<result column="hf_month" property="hfMonth" />
 		<result column="start_month" property="startMonth" />

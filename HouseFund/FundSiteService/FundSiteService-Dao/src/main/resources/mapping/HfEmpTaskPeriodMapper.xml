@@ -6,13 +6,14 @@
 	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfEmpTaskPeriod">
 		<id column="emp_task_period_id" property="empTaskPeriodId" />
 		<result column="emp_task_id" property="empTaskId" />
+        <result column="archive_base_period_id" property="archiveBasePeriodId" />
 		<result column="base_amount" property="baseAmount" />
 		<result column="start_month" property="startMonth" />
 		<result column="end_month" property="endMonth" />
 		<result column="hf_month" property="hfMonth" />
 		<result column="amount" property="amount" />
 		<result column="ratio" property="ratio" />
-		<result column="bujiao_reason" property="bujiaoReason" />
+		<result column="repair_reason" property="repairReason" />
 		<result column="remit_way" property="remitWay" />
 		<result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />

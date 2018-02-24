@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao;
 
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfEmpMonthCharge;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfMonthCharge;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**
@@ -9,6 +9,6 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 当任务单状态为已办，?该表就应该有对应的明细数据，包含调整数据 Mapper 接口
  * </p>
  */
-public interface HfEmpMonthChargeMapper extends BaseMapper<HfEmpMonthCharge> {
+public interface HfMonthChargeMapper extends BaseMapper<HfMonthCharge> {
 
 }
