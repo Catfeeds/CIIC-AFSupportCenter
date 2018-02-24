@@ -75,6 +75,7 @@ public class HfEmpTaskHandleBo implements Serializable {
     private List<HfArchiveBasePeriod> addedArchiveBasePeriods;
     private List<HfEmpTaskPeriod> empTaskPeriods;
     private List<HfEmpTaskRemarkBo> empTaskRemarks;
+    private boolean canHandle;
 
     public String getHfTypeName() {
         return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.hfType), SocialSecurityConst.FUND_TYPE_KEY, false);

@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.business;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpTaskBo;
@@ -9,6 +10,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dto.HfEmpTaskHandleD
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 
 import java.util.List;
@@ -31,12 +33,6 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      */
     PageRows<HfEmpTaskBo> queryHfEmpTaskInPage(PageInfo pageInfo, String exceptTaskCategories);
 
-    /**
-     * 查询雇员任务单办理信息
-     * @param hfEmpTaskHandleDTO
-     * @return
-     */
-    List<HfEmpTaskHandleBo> getEmpTaskHandleData(HfEmpTaskHandleDTO hfEmpTaskHandleDTO);
     /**
      * 保存数据到雇员任务单表
      *

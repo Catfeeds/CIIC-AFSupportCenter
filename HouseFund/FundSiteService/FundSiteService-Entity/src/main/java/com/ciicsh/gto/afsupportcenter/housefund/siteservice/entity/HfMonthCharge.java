@@ -14,21 +14,24 @@ import java.io.Serializable;
 当任务单状态为已办，?该表就应该有对应的明细数据，包含调整数据
  * </p>
  */
-@TableName("hf_emp_month_charge")
-public class HfEmpMonthCharge implements Serializable {
+@TableName("hf_month_charge")
+public class HfMonthCharge implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * 主键
      */
-	@TableId(value="emp_month_charge_id", type= IdType.AUTO)
-	private Long empMonthChargeId;
+	@TableId(value="month_charge_id", type= IdType.AUTO)
+	private Long monthChargeId;
     /**
      * 外键：HF_EmpArchive
      */
 	@TableField("emp_archive_id")
 	private Long empArchiveId;
+
+    @TableField("emp_task_id")
+	private Long empTaskId;
     /**
      * 客户主表ID
      */
@@ -69,8 +72,8 @@ public class HfEmpMonthCharge implements Serializable {
             6 特殊补缴
             7 账外补缴（特殊补缴）
      */
-	@TableField("bujiao_reason")
-	private Integer bujiaoReason;
+	@TableField("repair_reason")
+	private Integer repairReason;
     /**
      * 基数
      */
@@ -135,12 +138,12 @@ public class HfEmpMonthCharge implements Serializable {
 	private String modifiedBy;
 
 
-	public Long getEmpMonthChargeId() {
-		return empMonthChargeId;
+	public Long getMonthChargeId() {
+		return monthChargeId;
 	}
 
-	public void setEmpMonthChargeId(Long empMonthChargeId) {
-		this.empMonthChargeId = empMonthChargeId;
+	public void setMonthChargeId(Long monthChargeId) {
+		this.monthChargeId = monthChargeId;
 	}
 
 	public Long getEmpArchiveId() {
@@ -151,7 +154,15 @@ public class HfEmpMonthCharge implements Serializable {
 		this.empArchiveId = empArchiveId;
 	}
 
-	public String getCompanyId() {
+    public Long getEmpTaskId() {
+        return empTaskId;
+    }
+
+    public void setEmpTaskId(Long empTaskId) {
+        this.empTaskId = empTaskId;
+    }
+
+    public String getCompanyId() {
 		return companyId;
 	}
 
@@ -199,12 +210,12 @@ public class HfEmpMonthCharge implements Serializable {
 		this.paymentType = paymentType;
 	}
 
-	public Integer getBujiaoReason() {
-		return bujiaoReason;
+	public Integer getRepairReason() {
+		return repairReason;
 	}
 
-	public void setBujiaoReason(Integer bujiaoReason) {
-		this.bujiaoReason = bujiaoReason;
+	public void setRepairReason(Integer repairReason) {
+		this.repairReason = repairReason;
 	}
 
 	public BigDecimal getBase() {
@@ -314,15 +325,16 @@ public class HfEmpMonthCharge implements Serializable {
 	@Override
 	public String toString() {
 		return "HfEmpMonthCharge{" +
-			", empMonthChargeId=" + empMonthChargeId +
+			", monthChargeId=" + monthChargeId +
 			", empArchiveId=" + empArchiveId +
+            ", empTaskId=" + empTaskId +
 			", companyId=" + companyId +
 			", employeeId=" + employeeId +
 			", hfType=" + hfType +
 			", hfMonth=" + hfMonth +
 			", ssMonthBelong=" + ssMonthBelong +
 			", paymentType=" + paymentType +
-			", bujiaoReason=" + bujiaoReason +
+			", repairReason=" + repairReason +
 			", base=" + base +
 			", ratio=" + ratio +
 			", ratioEmp=" + ratioEmp +

@@ -25,6 +25,7 @@ public class HfEmpTaskDTO implements Serializable {
     private LocalDate submitTimeStart;
     private LocalDate submitTimeEnd;
     private String exceptTaskCategories;
+    private String hfComAccount;
 
     public void setSubmitTime(LocalDate[] submitTime) {
         this.submitTime = submitTime;
