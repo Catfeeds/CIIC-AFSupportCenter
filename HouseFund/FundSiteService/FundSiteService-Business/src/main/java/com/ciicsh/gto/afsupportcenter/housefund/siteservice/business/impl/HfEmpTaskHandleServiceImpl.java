@@ -110,6 +110,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 
         if (isHandle) {
             inputHfEmpTask.setHfType(hfEmpTask.getHfType());
+            inputHfEmpTask.setCompanyId(hfEmpTask.getCompanyId());
+            inputHfEmpTask.setEmployeeId(hfEmpTask.getEmployeeId());
             handleEmpArchive(params, inputHfEmpTask);
         }
 
@@ -136,12 +138,12 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                         case HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN:
                         case HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN:
                         case HfEmpTaskConstant.TASK_CATEGORY_IN_MULTI_TRANS_IN:
-                            hfArchiveBasePeriodList = createEmpBasePeriod(hfEmpTask, hfEmpTaskPeriodList);
-                            createHfMonthCharge(hfEmpTask, hfArchiveBasePeriodList);
+                            hfArchiveBasePeriodList = createEmpBasePeriod(inputHfEmpTask, hfEmpTaskPeriodList);
+                            createHfMonthCharge(inputHfEmpTask, hfArchiveBasePeriodList);
                             break;
                         case HfEmpTaskConstant.TASK_CATEGORY_REPAIR:
-                            hfArchiveBasePeriodList = repairEmpBasePeriod(hfEmpTask, hfEmpTaskPeriodList);
-                            createHfMonthCharge(hfEmpTask, hfArchiveBasePeriodList);
+                            hfArchiveBasePeriodList = repairEmpBasePeriod(inputHfEmpTask, hfEmpTaskPeriodList);
+                            createHfMonthCharge(inputHfEmpTask, hfArchiveBasePeriodList);
                             break;
 
                         default:
@@ -173,14 +175,16 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
      * 根据任务单费用分段表数据实装雇员档案费用分段表数据
      *
      * @param hfArchiveBasePeriodList 雇员档案费用分段表数据
-     * @param hfEmpTask 任务表原数据
-     * @param hfEmpTaskPeriod 已保存的任务费用分段表数据
+     * @param hfEmpTask 任务单表数据
+     * @param hfEmpTaskPeriod 任务费用分段表数据
      */
     private void setHfArchiveBasePeriodList(List<HfArchiveBasePeriod> hfArchiveBasePeriodList, HfEmpTask hfEmpTask, HfEmpTaskPeriod hfEmpTaskPeriod) {
         HfArchiveBasePeriod hfArchiveBasePeriod = new HfArchiveBasePeriod();
         System.out.println("e.getArchiveBasePeriodId() = " + hfEmpTaskPeriod.getArchiveBasePeriodId()); // TODO log
         hfArchiveBasePeriod.setArchiveBasePeriodId(hfEmpTaskPeriod.getArchiveBasePeriodId());
         hfArchiveBasePeriod.setEmpTaskId(hfEmpTaskPeriod.getEmpTaskId());
+        hfArchiveBasePeriod.setEmployeeId(hfEmpTask.getEmployeeId());
+        hfArchiveBasePeriod.setCompanyId(hfEmpTask.getCompanyId());
         hfArchiveBasePeriod.setAmount(hfEmpTaskPeriod.getAmount());
         hfArchiveBasePeriod.setBaseAmount(hfEmpTaskPeriod.getBaseAmount());
         hfArchiveBasePeriod.setRatioCom(hfEmpTaskPeriod.getRatioCom());
@@ -226,9 +230,9 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
     /**
      * 新增任务时雇员档案费用分段表数据处理
      *
-     * @param hfEmpTask 任务表原数据
-     * @param hfEmpTaskPeriodList 已保存的任务费用分段表数据
-     * @return 已保存的雇员档案费用分段表数据
+     * @param hfEmpTask 任务单表数据
+     * @param hfEmpTaskPeriodList 任务费用分段表数据
+     * @return 雇员档案费用分段表数据
      */
     private List<HfArchiveBasePeriod> createEmpBasePeriod(HfEmpTask hfEmpTask, List<HfEmpTaskPeriod> hfEmpTaskPeriodList) {
         List<HfArchiveBasePeriod> hfArchiveBasePeriodList = new ArrayList<>();
@@ -239,39 +243,53 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 
     /**
      * 补缴任务时雇员档案费用分段表数据处理
+     * 分全额补缴及差额补缴
      *
-     * @param hfEmpTask 任务表原数据
-     * @param hfEmpTaskPeriodList 已保存的任务费用分段表数据
-     * @return 已保存的雇员档案费用分段表数据
+     * @param hfEmpTask 任务单表数据
+     * @param hfEmpTaskPeriodList 任务费用分段表数据
+     * @return 雇员档案费用分段表数据
      */
     private List<HfArchiveBasePeriod> repairEmpBasePeriod(HfEmpTask hfEmpTask, List<HfEmpTaskPeriod> hfEmpTaskPeriodList) {
         List<HfArchiveBasePeriod> hfArchiveBasePeriodList = new ArrayList<>();
         EntityWrapper<HfArchiveBasePeriod> wrapper = new EntityWrapper<>();
-        wrapper.where("emp_archive_id={0} AND is_active = 1", hfEmpTask.getEmpArchiveId());
+        wrapper.where("company_id={0} AND employee_id={1} AND is_active = 1", hfEmpTask.getCompanyId(), hfEmpTask.getEmployeeId());
+        wrapper.orderBy("start_month", true);
         List<HfArchiveBasePeriod> existHfArchiveBasePeriodList = hfArchiveBasePeriodService.selectList(wrapper);
 
-        hfEmpTaskPeriodList.stream().forEach(e -> {
-            if (StringUtils.isEmpty(e.getStartMonth()) || StringUtils.isEmpty(e.getEndMonth())) {
-                throw new BusinessException("补缴任务费用分段表中缴费起始月或缴费截止月为空");
-            }
-            YearMonth repairStartMonthDate = YearMonth.parse(e.getStartMonth(), formatter);
-            YearMonth repairEndMonthDate = YearMonth.parse(e.getEndMonth(), formatter);
+        if (CollectionUtils.isNotEmpty(existHfArchiveBasePeriodList)) {
+            YearMonth permitStartMonth;
+            YearMonth permitEndMonth;
 
-            if (CollectionUtils.isNotEmpty(existHfArchiveBasePeriodList)) {
+            hfEmpTaskPeriodList.stream().forEach(e -> {
+                if (StringUtils.isEmpty(e.getStartMonth()) || StringUtils.isEmpty(e.getEndMonth())) {
+                    throw new BusinessException("补缴任务费用分段表中缴费起始月或缴费截止月为空");
+                }
+                YearMonth repairStartMonth = YearMonth.parse(e.getStartMonth(), formatter);
+                YearMonth repairEndMonth = YearMonth.parse(e.getEndMonth(), formatter);
+
                 existHfArchiveBasePeriodList.stream().forEach(o -> {
-                    YearMonth startMonthDate = YearMonth.parse(o.getStartMonth(), formatter);
-                    YearMonth endMonthDate = YearMonth.now();
+                    YearMonth startMonth = YearMonth.parse(o.getStartMonth(), formatter);
+                    YearMonth endMonth = YearMonth.now();
                     if (StringUtils.isNotEmpty(o.getEndMonth())) {
-                        endMonthDate = YearMonth.parse(o.getEndMonth(), formatter);
+                        endMonth = YearMonth.parse(o.getEndMonth(), formatter);
                     }
-                    if (repairStartMonthDate.isAfter(startMonthDate) || repairStartMonthDate.equals(startMonthDate)
-                        || repairEndMonthDate.isBefore(endMonthDate) || repairEndMonthDate.equals(endMonthDate)) {
-                        throw new BusinessException("补缴任务费用分段表中缴费期间与雇员档案费用分段表中缴费期间交叉");
+                    // 匹配费用段，如果任务单费用段包含在雇员档案费用段中，那么支持差额补缴；
+                    // 差额补缴时，雇员档案费用段不变，增加雇员调整差异数据
+                    if ((repairStartMonth.isAfter(startMonth) || repairStartMonth.equals(startMonth))
+                        && (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth))) {
+//                        throw new BusinessException("补缴任务费用分段表中缴费期间与雇员档案费用分段表中缴费期间交叉");
+
+                    } else {
+//                        permitEndMonth = startMonth;
                     }
                 });
-            }
-            setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e);
-        });
+
+                setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e);
+            });
+        } else {
+            // 雇员档案费用段不存在时，数据不正常，需先做新增再做补缴
+            throw new BusinessException("当前雇员的雇员汇缴月份段数据不存在，不能补缴");
+        }
         hfArchiveBasePeriodService.insertOrUpdateBatch(hfArchiveBasePeriodList);
         return hfArchiveBasePeriodList;
     }
@@ -279,8 +297,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
     /**
      * 创建雇员月度汇缴明细库数据
      *
-     * @param hfEmpTask 任务表原数据
-     * @param hfArchiveBasePeriodList 已保存的雇员档案费用分段表数据
+     * @param hfEmpTask 任务单表数据
+     * @param hfArchiveBasePeriodList 雇员档案费用分段表数据
      */
     private void createHfMonthCharge(HfEmpTask hfEmpTask, List<HfArchiveBasePeriod> hfArchiveBasePeriodList) {
         int temp = 0;
@@ -330,6 +348,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 hfMonthCharge.setRatioEmp(e.getRatioEmp());
                 hfMonthCharge.setPaymentType(paymentType);
                 hfMonthCharge.setCreatedBy("test"); // TODO
+                hfMonthCharge.setModifiedBy("test"); // TODO
                 hfMonthChargeList.add(hfMonthCharge);
             }
             hfMonthChargeService.insertBatch(hfMonthChargeList);
@@ -340,7 +359,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
      * 雇员档案表数据处理
      *
      * @param params 画面传入参数
-     * @param inputHfEmpTask 已保存的任务单表数据
+     * @param inputHfEmpTask 任务单表数据
      */
     private void handleEmpArchive(JSONObject params, HfEmpTask inputHfEmpTask) {
         HfEmpArchive hfEmpArchive = new HfEmpArchive();

@@ -7,6 +7,8 @@
 		<id column="archive_base_period_id" property="archiveBasePeriodId" />
 		<result column="emp_archive_id" property="empArchiveId" />
 		<result column="emp_task_id" property="empTaskId" />
+        <result column="company_id" property="companyId" />
+        <result column="employee_id" property="employeeId" />
 		<result column="base_amount" property="baseAmount" />
 		<result column="start_month" property="startMonth" />
 		<result column="end_month" property="endMonth" />
