@@ -47,7 +47,7 @@ public class HfApiControllerTest {
         ssComTaskDTO.setComAccountId(2L);
         ssComTaskDTO.setTaskCategory(1);
 
-        ResultDTO res = d1.saveHfComTask(ssComTaskDTO);
+        com.ciicsh.common.entity.JsonResult res = d1.saveHfComTask(ssComTaskDTO);
         System.out.println(JSON.toJSONString(res));
     }
 

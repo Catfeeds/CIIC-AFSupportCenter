@@ -114,12 +114,10 @@ public class SsComAccountController extends BasicController<SsComAccountService>
     @Log("获取企业社保账户信息表")
     public com.ciicsh.common.entity.JsonResult getSsComAccountList(@RequestBody SsComAccountParamDTO paramDto) {
         // 根据 客户ID和账户类型查询
-        com.ciicsh.common.entity.JsonResult json = new com.ciicsh.common.entity.JsonResult(false, null);
         List<com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountDTO> ssComAccountList =
             business.getSsComAccountList(paramDto);
 
-        json.success(ssComAccountList);
-        return json;
+        return com.ciicsh.common.entity.JsonResult.success(ssComAccountList);
     }
 
 

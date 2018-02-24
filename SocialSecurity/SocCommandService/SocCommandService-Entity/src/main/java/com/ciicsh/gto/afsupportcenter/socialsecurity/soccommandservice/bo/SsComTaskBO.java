@@ -156,4 +156,6 @@ public class SsComTaskBO {
      */
 
     private String isComplete;
+
+    private String dispatchMaterial;
 }
