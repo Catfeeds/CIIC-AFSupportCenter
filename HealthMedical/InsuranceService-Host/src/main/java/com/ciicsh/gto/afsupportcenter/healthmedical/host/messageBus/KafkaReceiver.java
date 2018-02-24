@@ -37,7 +37,7 @@ public class KafkaReceiver {
     @Autowired
     private AfTpaTaskService afTpaTaskService;
 
-    //   private final static Logger logger = LoggerFactory.getLogger(com.ciicsh.gto.customerservice.commandservice.host.messageBus.KafkaReceiver.class);
+    //   private final static Logger logger = LoggerFactory.getLogger(com.ciicsh.gto.customerservice.commandservice.host.message.KafkaReceiver.class);
     @Autowired
     private AfEmployeeCompanyProxy afEmployeeCompanyProxy;
 

@@ -89,6 +89,10 @@
             <version>1.0.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.ciicsh.gt1</groupId>
+            <artifactId>redis-manager</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
