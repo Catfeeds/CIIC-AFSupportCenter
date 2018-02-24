@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.configuration;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.host.configuration;
 
 
 import com.baomidou.mybatisplus.enums.DBType;

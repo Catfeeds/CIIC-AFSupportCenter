@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.EmpEmployeeMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.EmpEmployee">
+		<id column="employee_id" property="employeeId" />
+		<result column="id_card_type" property="idCardType" />
+		<result column="id_num" property="idNum" />
+		<result column="employee_name" property="employeeName" />
+		<result column="former_name" property="formerName" />
+		<result column="gender" property="gender" />
+		<result column="birthday" property="birthday" />
+		<result column="country_code" property="countryCode" />
+		<result column="province_code" property="provinceCode" />
+		<result column="city_code" property="cityCode" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+
+    <select id="getEmployeeByName" resultMap="BaseResultMap">
+        SELECT
+            <include refid="EmpEmployee_All_Columns"/>
+        FROM
+            emp_employee a
+        INNER JOIN ss_emp_archive b ON a.employee_id = b.employee_id
+        WHERE
+            b.is_active = 1
+        AND b.com_account_id = #{comAccountId}
+        AND a.employee_name = #{employeeName}
+        AND b.ss_serial = #{ssSerial}
+    </select>
+
+    <sql id="EmpEmployee_All_Columns">
+        a.employee_id,
+        a.id_card_type,
+        a.id_num,
+        a.employee_name,
+        a.former_name,
+        a.gender,
+        a.birthday,
+        a.country_code,
+        a.province_code,
+        a.city_code,
+        a.created_time,
+        a.modified_time,
+        a.created_by,
+        a.modified_by
+    </sql>
+
+</mapper>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsMonthChargeMapper">
+
+    <resultMap id="ResultMap" extends="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthChargeBO">
+        <collection property="ssMonthChargeItemList" ofType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsMonthChargeItem">
+            <id column="month_charge_item_id" property="monthChargeItemId" />
+            <result column="ss_type" property="ssType" />
+            <result column="ss_type_name" property="ssTypeName" />
+            <result column="com_amount" property="comAmount" />
+            <result column="emp_amount" property="empAmount" />
+            <result column="sub_total_amount" property="subTotalAmount" />
+        </collection>
+    </resultMap>
+    <!--判断当月是否首次生成明细报表-->
+    <select id="countIfMonthFirstReport" resultType="java.util.HashMap">
+        SELECT count(1) AS count_mc FROM ss_month_charge mc
+        WHERE mc.is_active=1
+        AND mc.ss_month={#ssMonth}
+        AND mc.com_account_id={#comAccountId}
+    </select>
+    <!--判断是否有新的任务单-->
+    <select id="selectIfNewEmpTask" resultType="java.util.HashMap">
+        <![CDATA[
+            SELECT et.*
+            FROM ss_emp_task et
+            LEFT JOIN ss_emp_archive ea ON ea.emp_archive_id=et.emp_archive_id
+            WHERE et.is_active=1
+            AND et.handle_month={#ssMonth}
+            AND ea.com_account_id={#comAccountId}
+            AND EXISTS(
+            SELECT 1 from (
+            select MAX(mc.created_time) created_time FROM ss_month_charge mc
+            WHERE mc.is_active=1
+            AND mc.ss_month={#ssMonth}
+            AND mc.com_account_id={#comAccountId})t WHERE t.created_time < = et.created_time
+            )
+        ]]>
+    </select>
+    <!--逻辑删除，按月份按企业社保账户，删除险种-->
+    <update id="updateMonthChargeItemDel">
+    UPDATE ss_month_charge_item mri set is_active=0 where
+    EXISTS (select 1 from ss_month_charge mr where mr.month_charge_id=mri.month_charge_id and com_account_id={#comAccountId} and ss_month={#ssMonth} and emp_archive_id='')
+    </update>
+    <!--逻辑删除，按月份按企业社保账户，删除雇员-->
+    <update id="updateMonthChargeDel">
+    UPDATE ss_month_charge set is_active=0 WHERE and com_account_id={#comAccountId} and ss_month={#comAccountId} and emp_archive_id=''
+    </update>
+
+    <!--标准：按月查询标准数据,查询雇员费用段-->
+    <select id="selectStandardEmpPeriod" resultType="java.util.HashMap">
+        <![CDATA[
+            SELECT ebp.*
+            FROM ss_emp_base_period ebp
+            LEFT JOIN ss_emp_archive ea on ea.emp_archive_id=ebp.emp_archive_id and ea.com_account_id='客户社保账户ID'
+            WHERE
+            ebp.is_active=1
+            AND {#ssMonth} BETWEEN ebp.start_month and ebp.end_month
+            AND ebp.ss_month <> {#ssMonth}
+            AND ebp.ss_month_stop <> {#ssMonth}
+        ]]>
+    </select>
+    <!--非标：按月查询标准数据,查询雇员费用段，变更类型：新进 转入 补缴-->
+    <select id="selectNonStandardTaskCategory124">
+        select ebd.*,ebp.base_amount from
+        ss_emp_base_detail ebd
+        left join ss_emp_base_period ebp on ebd.emp_base_period_id=ebp.emp_base_period_id and ebp.is_active=1
+        left join ss_emp_archive ea on ea.emp_archive_id=ebp.emp_archive_id and ea.com_account_id={#comAccountId}
+        left join ss_emp_task et on ebp.emp_task_id=et.emp_task_id and et.is_active=1
+        where
+        et.task_category in(1,2,4)
+        and et.handle_month = {#ssMonth}
+        and ebp.ss_month ={#ssMonth}
+    </select>
+    <!-- 删除当月 某月 非标数据-->
+    <update id="deleteOldDate">
+        DELETE  FROM ss_month_charge WHERE employee_id=#{employeeId} AND ss_month_belong =#{paymentMonth} AND ss_month =#{handleMonth} AND cost_category =#{costCategory}
+    </update>
+    <select id="selectOldDate" resultMap="BaseResultMap">
+       SELECT * FROM ss_month_charge WHERE employee_id=#{employeeId} AND ss_month_belong =#{paymentMonth} AND ss_month =#{handleMonth} AND cost_category =#{costCategory}
+    </select>
+
+    <!--查询总额 之前做了相减 则当月已办肯定没有-->
+    <select id="selectTotalFromOld" parameterType="string" resultMap="ResultMap">
+        SELECT
+        smc.month_charge_id,
+        smc.total_amount,
+        smc.ss_month_belong,
+        smc.ss_month,
+        smci.month_charge_item_id,
+        smci.com_amount,
+        smci.emp_amount,
+        smci.sub_total_amount,
+        smci.ss_type,
+        smci.ss_type_name
+        FROM
+        ss_month_charge  smc
+        JOIN ss_month_charge_item smci ON smc.month_charge_id = smci.month_charge_id AND smci.is_active=1
+        WHERE smc.employee_id =#{employeeId}
+        AND smc.ss_month_belong=#{paymentMonth}
+         AND smc.is_active=1
+         AND smc.cost_category = 9
+    </select>
+
+</mapper>
