@@ -4,7 +4,7 @@
 
     <select id="getEmpTaskList" resultType="Map">
       SELECT et.emp_task_id,et.task_category,et.emp_archive_id FROM ss_emp_task et
-      WHERE  et.handle_month=#{ssMonth} AND  task_category!=9 AND task_status=2
+      WHERE  et.handle_month=#{ssMonth} AND  task_category!=9 AND task_status=2 AND et.emp_archive_id is not null
     </select>
     <update id="updateEmpArchive" >
         UPDATE ss_emp_archive SET archive_task_status= archive_status
