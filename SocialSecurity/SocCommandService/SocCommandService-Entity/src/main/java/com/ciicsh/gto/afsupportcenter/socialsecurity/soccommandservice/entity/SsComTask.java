@@ -12,6 +12,9 @@ import java.io.Serializable;
  * <p>
  * 独立库客户任务单
  * </p>
+ *
+ * @author xsj
+ * @since 2018-02-23
  */
 @TableName("ss_com_task")
 public class SsComTask implements Serializable {
@@ -201,6 +204,11 @@ public class SsComTask implements Serializable {
      */
 	@TableField("contact_address")
 	private String contactAddress;
+    /**
+     * 发出材料(前道传递):正式通知书、预生成通知书、收据、银行对账单、汇总表、实时表
+     */
+	@TableField("dispatch_material")
+	private String dispatchMaterial;
     /**
      * 是否可用
      */
@@ -524,6 +532,14 @@ public class SsComTask implements Serializable {
 		this.contactAddress = contactAddress;
 	}
 
+	public String getDispatchMaterial() {
+		return dispatchMaterial;
+	}
+
+	public void setDispatchMaterial(String dispatchMaterial) {
+		this.dispatchMaterial = dispatchMaterial;
+	}
+
 	public Boolean getActive() {
 		return isActive;
 	}
@@ -604,6 +620,7 @@ public class SsComTask implements Serializable {
 			", settlementArea=" + settlementArea +
 			", legalPerson=" + legalPerson +
 			", contactAddress=" + contactAddress +
+			", dispatchMaterial=" + dispatchMaterial +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

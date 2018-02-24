@@ -8,79 +8,64 @@ spring:
   application:
     name: support-center-housefund-site-service
   profiles:
-    active: develop
-  datasource:
-    druid:
-      driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://172.16.9.15:3306/gtobusinessdb?useUnicode=true&useSSL=true&amp;characterEncoding=UTF-8
-      username: root
-      password: a111111
-      max-active: 20
-      min-idle: 8
-      initial-size: 10
-      validation-query: SELECT 'x'
-      filter:
-        stat:
-          enabled: true
+    active: dev
   cloud:
     stream:
-      kafka:
-        binder:
-          brokers:  172.16.9.11:9092
-          zk-nodes: 172.16.9.11:2181,172.16.9.16:2181
-          bindings:
-            common_taskservice_af_empin-channel:
-              destination: common_taskservice_af_empin # topic name
-              group: ${spring.application.name}
-              content-type: application/json
-              consumer:
-                partitioned: true
-            common_taskservice_af_empout-channel:
-              destination: common_taskservice_af_empout # topic name
-              group: ${spring.application.name}
-              content-type: application/json
-              consumer:
-                partitioned: true
-            common_taskservice_af_emp_make_up-channel:
-              destination: common_taskservice_af_emp_make_up # topic name
-              group: ${spring.application.name}
-              content-type: application/json
-              consumer:
-                partitioned: true
-            common_taskservice_af_emp_company_change-channel:
-              destination: common_taskservice_af_emp_company_change # topic name
-              group: ${spring.application.name}
-              content-type: application/json
-              consumer:
-                partitioned: true
-            common_taskservice_af_emp_agreement_adjust-channel:
-              destination: common_taskservice_af_emp_agreement_adjust # topic name
-              group: ${spring.application.name}
-              content-type: application/json
-              consumer:
-                partitioned: true
-            common_taskservice_af_emp_agreement_update-channel:
-              destination: common_taskservice_af_emp_agreement_update # topic name
-              group: ${spring.application.name}
-              content-type: application/json
-              consumer:
-                partitioned: true
-            pay-apply-pay-status-stream-channel:
-              destination: pay-apply-pay-status-stream # topic name
-              group: ${spring.application.name}
-              content-type: application/json
-              consumer:
-                partitioned: true
-
-          instance-count: 2 # The number of deployed instances of an application.
-                            # Must be set for partitioning and if using Kafka.
-                            # used to partition data across different consumers.
-          instance-index: 0
+      bindings:
+        common_taskservice_af_empin_channel:
+          destination: common_taskservice_af_empin # topic name
+          group: ${spring.application.name}
+#          content-type: application/json
+          consumer:
+            partitioned: true
+        common_taskservice_af_empout_channel:
+          destination: common_taskservice_af_empout # topic name
+          group: ${spring.application.name}
+#          content-type: application/json
+          consumer:
+            partitioned: true
+        common_taskservice_af_emp_make_up_channel:
+          destination: common_taskservice_af_emp_make_up # topic name
+          group: ${spring.application.name}
+#          content-type: application/json
+          consumer:
+            partitioned: true
+        common_taskservice_af_emp_company_change_channel:
+          destination: common_taskservice_af_emp_company_change # topic name
+          group: ${spring.application.name}
+#          content-type: application/json
+          consumer:
+            partitioned: true
+        common_taskservice_af_emp_agreement_adjust_channel:
+          destination: common_taskservice_af_emp_agreement_adjust # topic name
+          group: ${spring.application.name}
+#          content-type: application/json
+          consumer:
+            partitioned: true
+        common_taskservice_af_emp_agreement_update_channel:
+          destination: common_taskservice_af_emp_agreement_update # topic name
+          group: ${spring.application.name}
+#          content-type: application/json
+          consumer:
+            partitioned: true
+        pay-apply-pay-status-stream_channel:
+          destination: pay-apply-pay-status-stream # topic name
+          group: ${spring.application.name}
+#          content-type: application/json
+          consumer:
+            partitioned: true
+        common_taskservice_af_company_social_account_once_channel11:
+          destination: common_taskservice_af_company_social_account_once11 # topic name
+          group: ${spring.application.name}
+          #content-type: application/json
+          consumer:
+            partitioned: true
+      instance-count: 2 # The number of deployed instances of an application.
+                        # Must be set for partitioning and if using Kafka.
+                        # used to partition data across different consumers.
+      instance-index: 0
 ###################  spring cloud eureka  ###################
 eureka:
-  client:
-    serviceUrl:
-      defaultZone: "http://172.16.9.19:9602/eureka,http://172.16.9.20:9602/eureka,http://172.16.9.21:9602/eureka" #本地开发环境eureka
   instance:
     lease-expiration-duration-in-seconds: 40
     lease-renewal-interval-in-seconds: 30

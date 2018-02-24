@@ -102,8 +102,8 @@ public class HfArchiveBasePeriod implements Serializable {
             6 特殊补缴
             7 账外补缴（特殊补缴）
      */
-	@TableField("bujiao_reason")
-	private Integer bujiaoReason;
+	@TableField("repair_reason")
+	private Integer repairReason;
     /**
      * 是否可用
      */
@@ -251,12 +251,12 @@ public class HfArchiveBasePeriod implements Serializable {
 		this.comAmount = comAmount;
 	}
 
-	public Integer getBujiaoReason() {
-		return bujiaoReason;
+	public Integer getRepairReason() {
+		return repairReason;
 	}
 
-	public void setBujiaoReason(Integer bujiaoReason) {
-		this.bujiaoReason = bujiaoReason;
+	public void setRepairReason(Integer repairReason) {
+		this.repairReason = repairReason;
 	}
 
 	public Boolean getActive() {
@@ -317,7 +317,7 @@ public class HfArchiveBasePeriod implements Serializable {
 			", amount=" + amount +
 			", amountEmp=" + amountEmp +
 			", comAmount=" + comAmount +
-			", bujiaoReason=" + bujiaoReason +
+			", repairReason=" + repairReason +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

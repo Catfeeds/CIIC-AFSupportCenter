@@ -2,12 +2,12 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskRollInBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsEmpTaskRollOutBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsMonthChargeBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.*;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.dao.SsEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
@@ -15,14 +15,12 @@ import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
-import io.swagger.models.auth.In;
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import scala.Int;
-import utils.TaskCommonUtils;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.utils.TaskCommonUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

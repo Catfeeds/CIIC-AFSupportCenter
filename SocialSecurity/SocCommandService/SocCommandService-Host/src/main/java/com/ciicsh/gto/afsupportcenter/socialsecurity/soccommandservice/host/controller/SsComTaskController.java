@@ -1,11 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.SsComTaskProxy;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsComTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.utils.CommonApiUtils;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountComRelation;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsAccountRatio;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.entity.SsComAccount;
@@ -19,24 +20,17 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
-import com.ciicsh.gto.commonservice.util.dto.Result;
-import com.ciicsh.gto.commonservice.util.dto.ResultGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import utils.TaskCommonUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -51,6 +45,7 @@ import java.util.Map;
 public class SsComTaskController extends BasicController<SsComTaskService> implements SsComTaskProxy {
     @Autowired
     private CommonApiUtils commonApiUtils;
+
     @Log("查询未处理企业任务单")
     @RequestMapping(value = "getNoProgressTask")
     public JsonResult<List<SsComTaskBO>> getNoProgressCompanyTask(PageInfo pageInfo) {
@@ -61,7 +56,6 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
     }
 
 
-
     /**
      * 未处理企业任务单导出
      */
@@ -69,12 +63,11 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
     @RequestMapping("/noProgressTaskExport")
     public void noProgressTaskExport(HttpServletResponse response, PageInfo pageInfo) {
         Date date = new Date();
-        String fileNme = "企业任务单未处理_"+ StringUtil.getDateString(date)+".xls";
+        String fileNme = "企业任务单未处理_" + StringUtil.getDateString(date) + ".xls";
         SsComTaskBO taskBO = pageInfo.toJavaObject(SsComTaskBO.class);
         List<SsComTaskBO> taskBos = business.getNoProgressCompanyTasks(taskBO);
-        ExcelUtil.exportExcel(taskBos,SsComTaskBO.class,fileNme,response);
+        ExcelUtil.exportExcel(taskBos, SsComTaskBO.class, fileNme, response);
     }
-
 
 
     @Log("查询处理中企业任务单")
@@ -93,10 +86,10 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
     @RequestMapping("/progressingTaskExport")
     public void progressingTaskExport(HttpServletResponse response, PageInfo pageInfo) {
         Date date = new Date();
-        String fileNme = "企业任务单处理中_"+ StringUtil.getDateString(date)+".xls";
+        String fileNme = "企业任务单处理中_" + StringUtil.getDateString(date) + ".xls";
         SsComTaskBO taskBO = pageInfo.toJavaObject(SsComTaskBO.class);
         List<SsComTaskBO> taskBos = business.getProgressingCompanyTasks(taskBO);
-        ExcelUtil.exportExcel(taskBos,SsComTaskBO.class,fileNme,response);
+        ExcelUtil.exportExcel(taskBos, SsComTaskBO.class, fileNme, response);
     }
 
 
@@ -187,7 +180,7 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
         SsAccountComRelation ssAccountComRelation = null;
         if (3 == ssComTask.getTaskStatus()) {
             //调用工作流
-          //  TaskCommonUtils.completeTask(ssComTask.getTaskId(),commonApiUtils,"xsj");
+            //  TaskCommonUtils.completeTask(ssComTask.getTaskId(),commonApiUtils,"xsj");
             //任务单为已完成状态 账户设置为可用
             ssComAccount.setState(new Integer(1));
             ssAccountComRelation = new SsAccountComRelation();
@@ -226,7 +219,7 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
             }
         } else {
             SsComTask comTask = new SsComTask();
-            BeanUtils.copyProperties(ssComTaskBO,comTask);
+            BeanUtils.copyProperties(ssComTaskBO, comTask);
 
             //只是做任务单的状态切换，任务单不完成
             result = business.updateById(comTask);
@@ -262,7 +255,7 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
             }
         } else {
             SsComTask comTask = new SsComTask();
-            BeanUtils.copyProperties(ssComTaskBO,comTask);
+            BeanUtils.copyProperties(ssComTaskBO, comTask);
 
             //只是做任务单的状态切换，任务单不完成
             result = business.updateById(comTask);
@@ -287,8 +280,10 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
             dynamicExtendMap.put("startMonth", null == ssComTaskBO.getStartMonth() ? "" : ssComTaskBO.getStartMonth()
                 .toString());
         } else if ("2".equals(ssComTaskBO.getChangeContentValue())) {
-            dynamicExtendMap.put("paymentWay", null == ssComTaskBO.getPaymentWay() ? "" : String.valueOf(ssComTaskBO.getPaymentWay()));
-            dynamicExtendMap.put("billReceiver", null == ssComTaskBO.getBillReceiver() ? "" :  String.valueOf(ssComTaskBO.getBillReceiver()));
+            dynamicExtendMap.put("paymentWay", null == ssComTaskBO.getPaymentWay() ? "" : String.valueOf(ssComTaskBO
+                .getPaymentWay()));
+            dynamicExtendMap.put("billReceiver", null == ssComTaskBO.getBillReceiver() ? "" : String.valueOf
+                (ssComTaskBO.getBillReceiver()));
         } else if ("3".equals(ssComTaskBO.getChangeContentValue())) {
             dynamicExtendMap.put("comAccountName", null == ssComTaskBO.getComAccountName() ? "" : ssComTaskBO
                 .getComAccountName());
@@ -307,7 +302,7 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
             //只做任务单的状态切换，任务单尚不完成
 
             SsComTask comTask = new SsComTask();
-            BeanUtils.copyProperties(ssComTaskBO,comTask);
+            BeanUtils.copyProperties(ssComTaskBO, comTask);
             result = business.updateById(comTask);
         }
         return JsonResultKit.of(result);
@@ -341,7 +336,8 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
         //付款方式
         ssComAccount.setPaymentWay(isNotNull(map.get("paymentWay")) ? Integer.valueOf(map.get("paymentWay")) : null);
         //账单接收方
-        ssComAccount.setBillReceiver(isNotNull(map.get("billReceiver")) ? Integer.valueOf(map.get("billReceiver")) : null);
+        ssComAccount.setBillReceiver(isNotNull(map.get("billReceiver")) ? Integer.valueOf(map.get("billReceiver")) :
+            null);
         //用户名
         ssComAccount.setSsUsername(isNotNull(map.get("ssUsername")) ? map.get("ssUsername") : null);
         //密码
@@ -488,6 +484,7 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
             return null;
         }
     }
+
     /**
      * 企业社保账户开户、变更、转移、转出的 创建任务单接口
      *
@@ -496,30 +493,24 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
      */
     @Log("企业社保账户开户、变更、转移、转出的 创建任务单接口")
     @PostMapping("/saveSsComTask")
-    public Result saveSsComTask(@RequestBody SsComTaskDTO ssComTaskDTO) {
+    public com.ciicsh.common.entity.JsonResult saveSsComTask(@RequestBody SsComTaskDTO ssComTaskDTO) {
         try {
-            if (ssComTaskDTO.getComAccountId() == 0L) {
-                return ResultGenerator.genServerFailResult("企业社保账户Id不能为空！");
-            }
             if (StringUtils.isBlank(ssComTaskDTO.getCompanyId())) {
-                return ResultGenerator.genServerFailResult("客户Id不能为空！");
+                return com.ciicsh.common.entity.JsonResult.faultMessage("客户Id不能为空！");
             }
             if (StringUtils.isBlank(ssComTaskDTO.getTaskCategory())) {
-                return ResultGenerator.genServerFailResult("任务类型不能为空！");
-            }
-            if (StringUtils.isBlank(ssComTaskDTO.getBusinessInterfaceId())) {
-                return ResultGenerator.genServerFailResult("业务接口ID不能为空！");
+                return com.ciicsh.common.entity.JsonResult.faultMessage("任务类型不能为空！");
             }
             SsComTaskBO ssComTask = new SsComTaskBO();
             BeanUtils.copyProperties(ssComTaskDTO, ssComTask);
             int cnt = business.countComTaskByCond(ssComTask);
             if (cnt > 0) {
-                return ResultGenerator.genServerFailResult("该企业已存在相同类型的处理中任务单，不能重复添加！");
+                return com.ciicsh.common.entity.JsonResult.faultMessage("该企业已存在相同类型的处理中任务单，不能重复添加！");
             }
             Long newComTaskId = insertSsComTask(ssComTaskDTO);
-            return ResultGenerator.genSuccessResult(newComTaskId);
+            return com.ciicsh.common.entity.JsonResult.success(newComTaskId);
         } catch (Exception e) {
-            return ResultGenerator.genServerFailResult(e.getMessage());
+            return com.ciicsh.common.entity.JsonResult.faultMessage(e.getMessage());
         }
     }
 

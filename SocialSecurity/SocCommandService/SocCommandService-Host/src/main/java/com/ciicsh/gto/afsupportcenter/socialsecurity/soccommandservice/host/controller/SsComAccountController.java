@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.controller;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.SsComProxy;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountParamDto;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountParamDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsAccountComRelationBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.bo.SsComAccountBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.business.SsAccountComRelationService;
@@ -57,7 +57,7 @@ public class SsComAccountController extends BasicController<SsComAccountService>
     public JsonResult<SsComAccountBO> queryByEmpTaskId(@RequestParam("empTaskId") String empTaskId,
                                                        @RequestParam("operatorType") String operatorType) {
 
-        SsComAccountBO ssComAccountBO = business.queryByEmpTaskId(empTaskId,operatorType);
+        SsComAccountBO ssComAccountBO = business.queryByEmpTaskId(empTaskId, operatorType);
         return JsonResultKit.of(ssComAccountBO);
     }
 
@@ -81,11 +81,10 @@ public class SsComAccountController extends BasicController<SsComAccountService>
     @RequestMapping("/accountExport")
     public void accountExport(HttpServletResponse response, SsComAccountBO accountBo) {
         Date date = new Date();
-        String fileNme = "企业社保账户_"+ StringUtil.getDateString(date)+".xls";
+        String fileNme = "企业社保账户_" + StringUtil.getDateString(date) + ".xls";
         List<SsComAccountBO> accountBos = business.getAccounts(accountBo);
-        ExcelUtil.exportExcel(accountBos,SsComAccountBO.class,fileNme,response);
+        ExcelUtil.exportExcel(accountBos, SsComAccountBO.class, fileNme, response);
     }
-
 
 
     @Log("企业社保管理详情查询")
@@ -113,19 +112,18 @@ public class SsComAccountController extends BasicController<SsComAccountService>
     @Override
     @RequestMapping("/getSsComAccountList")
     @Log("获取企业社保账户信息表")
-    public com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.JsonResult<List<com.ciicsh.gto
-        .afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountDTO>> getSsComAccountList(@RequestBody SsComAccountParamDto paramDto) {
+    public com.ciicsh.common.entity.JsonResult getSsComAccountList(@RequestBody SsComAccountParamDTO paramDto) {
         // 根据 客户ID和账户类型查询
         List<com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.api.dto.SsComAccountDTO> ssComAccountList =
             business.getSsComAccountList(paramDto);
 
-        return JsonResultKit.ofList(ssComAccountList, com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice
-            .api.dto.JsonResult.class);
+        return com.ciicsh.common.entity.JsonResult.success(ssComAccountList);
     }
 
 
     /**
      * 根据企业社保账户获取公司信息
+     *
      * @param comAccountId
      * @return 返回信息
      */

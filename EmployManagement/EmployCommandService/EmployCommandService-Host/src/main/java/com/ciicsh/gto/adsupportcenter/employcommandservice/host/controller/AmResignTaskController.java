@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmResign;
-import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -177,10 +176,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
     public JsonResult<Boolean> saveAmResign(AmResignBO bo) {
         AmResign entity = new AmResign();
         BeanUtils.copyProperties(bo,entity);
-        if(bo.getEmploymentId()==null&& !StringUtil.isEmpty(bo.getMatchEmployIndex()))
-        {
-            entity.setEmploymentId(Long.parseLong(bo.getMatchEmployIndex()));
-        }
+
         LocalDateTime now = LocalDateTime.now();
         if(entity.getResignId()==null){
             entity.setCreatedTime(now);
@@ -194,5 +190,58 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
         boolean result =  business.insertOrUpdate(entity);
         return JsonResultKit.of(result);
+    }
+
+    @RequestMapping("/bindEmploymentId")
+    public JsonResult  bindEmploymentId(AmResignBO bo) {
+
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        AmResign entity = new AmResign();
+        BeanUtils.copyProperties(bo,entity);
+
+        if(bo.getEmploymentId()==null)
+        {
+            boolean result = false;
+            Map<String,Object> param = new HashMap<>();
+            param.put("employmentId",bo.getMatchEmployIndex());
+            List<AmEmploymentBO> list =  amEmploymentService.queryAmEmployment(param);
+
+            if(null!=list&&list.size()>0)
+            {
+                try {
+                    entity.setEmploymentId(Long.parseLong(bo.getMatchEmployIndex()));
+                } catch (NumberFormatException e) {
+                    resultMap.put("result","用工序号格式不对");
+                    return JsonResultKit.of(resultMap);
+                }
+
+                LocalDateTime now = LocalDateTime.now();
+                if(entity.getResignId()==null){
+                    entity.setCreatedTime(now);
+                    entity.setModifiedTime(now);
+                    entity.setCreatedBy("sys");
+                    entity.setModifiedBy("sys");
+                }else{
+                    entity.setModifiedTime(now);
+                    entity.setModifiedBy("sys");
+                }
+
+                result =  business.insertOrUpdate(entity);
+
+                if(result){
+                    resultMap.put("result",result);
+                }else{
+                    resultMap.put("result","绑定失败");
+                }
+            }else {
+                resultMap.put("result","对应用工序号不重在");
+            }
+
+        }else{
+            resultMap.put("result","对应用工序号已经重在");
+        }
+
+        return JsonResultKit.of(resultMap);
+
     }
 }

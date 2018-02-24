@@ -200,7 +200,7 @@
         </where>
     </select>
 
-    <update id="updateStatus">
+    <update id="updateStatus" parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentStatusBO">
         UPDATE
             gtobusinessdb.hm_uninsured_medical m
         SET
@@ -211,10 +211,10 @@
             m.modified_by = #{modifiedBy, jdbcType=VARCHAR},
             m.modified_time= now()
         WHERE
-            m.um_acceptance_id = #{umAcceptanceId, jdbcType=INTEGER}
+            m.um_acceptance_id = #{applyId, jdbcType=INTEGER}
     </update>
 
-    <update id="syncStatus">
+    <update id="syncStatus" parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentStatusBO">
         UPDATE
             gtobusinessdb.hm_uninsured_medical p
         SET

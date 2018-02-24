@@ -51,6 +51,7 @@
         <!-- cache -->
         <ehcache.version>3.3.1</ehcache.version>
         <basicdataservice.version>1.0.0</basicdataservice.version>
+        <mysql.connector.version>5.1.44</mysql.connector.version>
     </properties>
 
     <distributionManagement>
@@ -75,245 +76,238 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <!--&lt;!&ndash; spring cloud eureka &ndash;&gt;-->
+            <!--<dependency>-->
+            <!--<groupId>org.springframework.cloud</groupId>-->
+            <!--<artifactId>spring-cloud-starter-eureka</artifactId>-->
+            <!--</dependency>-->
+            <!--&lt;!&ndash; spring cloud feign &ndash;&gt;-->
+            <!--<dependency>-->
+            <!--<groupId>org.springframework.cloud</groupId>-->
+            <!--<artifactId>spring-cloud-starter-feign</artifactId>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-actuator</artifactId>-->
+            <!--</dependency>-->
+            <!--&lt;!&ndash;spring boot依赖&ndash;&gt;-->
+            <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-aop</artifactId>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+            <!--<groupId>org.springframework.cloud</groupId>-->
+            <!--<artifactId>spring-cloud-starter-bus-kafka</artifactId>-->
+            <!--</dependency>-->
+
+            <!--<dependency>-->
+            <!--<groupId>org.springframework.cloud</groupId>-->
+            <!--<artifactId>spring-cloud-starter-stream-kafka</artifactId>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-web</artifactId>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-cache</artifactId>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-validation</artifactId>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-jdbc</artifactId>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-test</artifactId>-->
+            <!--&lt;!&ndash; <scope>test</scope> &ndash;&gt;-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-devtools</artifactId>-->
+            <!--<optional>true</optional>-->
+            <!--</dependency>-->
+
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.connector.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <!-- mybatis -->
+            <!-- mybatis-plus begin -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatisplus-spring-boot-starter</artifactId>
+                <version>${mybatisplus-spring-boot-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus</artifactId>
+                <version>${mybatisplus.version}</version>
+            </dependency>
+            <!-- mybatis-plus end -->
+
+            <!--其他依赖-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid-spring-boot-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons.io.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${commons-beanutils.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>${commons-fileupload.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ehcache</groupId>
+                <artifactId>ehcache</artifactId>
+                <version>${ehcache.version}</version>
+            </dependency>
+
+            <!-- jackson -->
+            <!--<dependency>-->
+            <!--<groupId>com.fasterxml.jackson.core</groupId>-->
+            <!--<artifactId>jackson-core</artifactId>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+            <!--<groupId>com.fasterxml.jackson.module</groupId>-->
+            <!--<artifactId>jackson-module-parameter-names</artifactId>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+            <!--<groupId>com.fasterxml.jackson.datatype</groupId>-->
+            <!--<artifactId>jackson-datatype-jdk8</artifactId>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+            <!--<groupId>com.fasterxml.jackson.datatype</groupId>-->
+            <!--<artifactId>jackson-datatype-jsr310</artifactId>-->
+            <!--</dependency>-->
+            <!--文件上传-->
+            <dependency>
+                <groupId>com.ciicsh.gt1</groupId>
+                <artifactId>seaweedFS-client</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ciicsh.gt1.commonservice</groupId>
+                <artifactId>sheetservice-api</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+
+            <!--cat依赖-->
+            <dependency>
+                <groupId>com.dianping.cat</groupId>
+                <artifactId>cat-core</artifactId>
+                <version>2.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.dianping.cat</groupId>
+                <artifactId>cat-client</artifactId>
+                <version>2.0.0</version>
+            </dependency>
+
+            <!--easypoi依赖-->
+            <dependency>
+                <groupId>cn.afterturn</groupId>
+                <artifactId>easypoi-base</artifactId>
+                <version>3.0.4.1</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.afterturn</groupId>
+                <artifactId>easypoi-web</artifactId>
+                <version>3.0.4.1</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.afterturn</groupId>
+                <artifactId>easypoi-annotation</artifactId>
+                <version>3.0.4.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ciicsh.gt1.commonservice</groupId>
+                <artifactId>basicdataservice-api</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ciicsh.gt1.settlementcenter</groupId>
+                <artifactId>invoicecommandservice-api</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ciicsh.gt1.settlementcenter.payment</groupId>
+                <artifactId>settlementcenter-payment-command-api</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ciicsh.gt1.companycenter</groupId>
+                <artifactId>commandservice-api</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ciicsh.gt1.companycenter</groupId>
+                <artifactId>queryservice-api</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ciicsh.gt1.employeecenter</groupId>
+                <artifactId>gt1.employeecenter.apiservice-api</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ciicsh.gt1.employeecenter</groupId>
+                <artifactId>apiservice-api</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ciicsh.gt1</groupId>
+                <artifactId>redis-manager</artifactId>
+                <version>0.0.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.16.6</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ciicsh.gt1</groupId>
+                <artifactId>common-entity</artifactId>
+                <version>0.0.1</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
-
-    <dependencies>
-
-        <!-- spring cloud eureka -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-eureka</artifactId>
-        </dependency>
-        <!-- spring cloud feign -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-feign</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <!--spring boot依赖-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-bus-kafka</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-stream-kafka</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-cache</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <!-- <scope>test</scope> -->
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <!-- mybatis -->
-        <!-- mybatis-plus begin -->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatisplus-spring-boot-starter</artifactId>
-            <version>${mybatisplus-spring-boot-starter.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus</artifactId>
-            <version>${mybatisplus.version}</version>
-        </dependency>
-        <!-- mybatis-plus end -->
-
-        <!--其他依赖-->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>${fastjson.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
-            <version>${druid-spring-boot-starter.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons.io.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>${commons-beanutils.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>${commons-fileupload.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-            <version>${ehcache.version}</version>
-        </dependency>
-
-        <!-- jackson -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-parameter-names</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jdk8</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.16.6</version>
-        </dependency>
-        <!--文件上传-->
-        <dependency>
-            <groupId>com.ciicsh.gt1</groupId>
-            <artifactId>seaweedFS-client</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ciicsh.gt1.commonservice</groupId>
-            <artifactId>sheetservice-api</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <!-- 打包 WAR 包不需要此 jar -->
-        <!--<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>provided</scope>
-        </dependency>-->
-
-        <!--cat依赖-->
-        <dependency>
-            <groupId>com.dianping.cat</groupId>
-            <artifactId>cat-core</artifactId>
-            <version>2.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.dianping.cat</groupId>
-            <artifactId>cat-client</artifactId>
-            <version>2.0.0</version>
-        </dependency>
-
-        <!--easypoi依赖-->
-        <!--<dependency>-->
-            <!--<groupId>org.jeecg</groupId>-->
-            <!--<artifactId>easypoi-base</artifactId>-->
-            <!--<version>2.4.0</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.jeecg</groupId>-->
-            <!--<artifactId>easypoi-web</artifactId>-->
-            <!--<version>2.4.0</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.jeecg</groupId>-->
-            <!--<artifactId>easypoi-annotation</artifactId>-->
-            <!--<version>2.4.0</version>-->
-        <!--</dependency>-->
-
-        <dependency>
-            <groupId>cn.afterturn</groupId>
-            <artifactId>easypoi-base</artifactId>
-            <version>3.0.4.1</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.afterturn</groupId>
-            <artifactId>easypoi-web</artifactId>
-            <version>3.0.4.1</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.afterturn</groupId>
-               <artifactId>easypoi-annotation</artifactId>
-            <version>3.0.4.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ciicsh.gt1.commonservice</groupId>
-            <artifactId>basicdataservice-api</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ciicsh.gt1.settlementcenter</groupId>
-            <artifactId>invoicecommandservice-api</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ciicsh.gt1.settlementcenter.payment</groupId>
-            <artifactId>settlementcenter-payment-command-api</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ciicsh.gt1.companycenter</groupId>
-            <artifactId>commandservice-api</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ciicsh.gt1.companycenter</groupId>
-            <artifactId>queryservice-api</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ciicsh.gt1.employeecenter</groupId>
-            <artifactId>apiservice-api</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-    </dependencies>
 
     <build>
         <finalName>gt1.productcenter</finalName>

@@ -156,7 +156,7 @@ public class HfEmpTaskBo implements Serializable{
     }
 
     public String getTaskCategoryName() {
-        return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.taskCategory), DictUtil.TYPE_VALUE_SOC_LOCAL_TASK_CATEGORY, true);
+        return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.taskCategory), DictUtil.TYPE_VALUE_HF_LOCAL_TASK_CATEGORY, true);
 //        return taskCategoryName;
     }
 

@@ -179,7 +179,7 @@ public class KafkaReceiver {
                         Integer taskCategory = 0;
                         Map<String, Object> paramMap = taskMsgDTO.getVariables();
                         HfEmpTask qd = new HfEmpTask();
-                        qd.setTaskId(paramMap.get("oldTaskId").toString());
+                        qd.setTaskId(paramMap.get("oldEmpAgreementId").toString());
                         qd.setEmployeeId(paramMap.get("employeeId").toString());
                         qd.setCompanyId(paramMap.get("companyId").toString());
 
@@ -190,7 +190,8 @@ public class KafkaReceiver {
                             taskCategory = hfEmpTask.getTaskCategory();
                         }
                         res = hfEmpTaskService.saveEmpTaskTc(taskMsgDTO, taskCategory, 1, dto);
-                        logger.info("收到消息 公积金雇员服务协议更正:" + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
+                        logger.info("收到消息 公积金雇员服务协议更正:" + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" :
+                            "失败"));
                     }
                 }
             } catch (Exception e) {
@@ -229,17 +230,15 @@ public class KafkaReceiver {
      * @param message
      * @return
      */
-    //TODO 接受客服中心调用更新企业任务单
+    @StreamListener(TaskSink.AF_COMPANY_SOCIAL_ACCOUNT_ONCE11)
     public void receiveComTask(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         //公积金
         boolean res = false;
         try {
-//        if (TaskSink.SOCIAL_ADJUST.equals(taskMsgDTO.getTaskType())) {
-            HfComTask ele = hfComTaskService.selectById(taskMsgDTO.getTaskId());
+            HfComTask ele = hfComTaskService.selectById(taskMsgDTO.getMissionId());
             ele.setTaskId(taskMsgDTO.getTaskId());
             res = hfComTaskService.updateById(ele);
-//        }
         } catch (Exception e) {
             res = false;
             logger.error(e.getMessage(), e);

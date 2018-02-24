@@ -28,6 +28,7 @@
             <result column="submit_remark" property="submitRemark"/>
             <result column="modified_time" property="modifiedTime"/>
             <result column="modified_by" property="modifiedBy"/>
+
         </collection>
     </resultMap>
     <!--通过雇员任务单查询账户信息-->
@@ -73,6 +74,7 @@
         select * from ss_com_account ca
         <where>
             and ca.is_active = 1
+            and ca.state != 0
             <if test="ssAccount != null">
                 and ca.ss_account LIKE CONCAT('%',#{ssAccount},'%')
             </if>
@@ -120,7 +122,15 @@
             sca.into_date,
             sca.end_date,
             sca.dispatch_material,
-						sct.*
+            sca.deliver_way_remark,
+            sct.com_account_id_t,
+            sct.task_category,
+            sct.task_status,
+            sct.submitter_name,
+            sct.submit_time,
+            sct.submit_remark,
+            sct.modified_time,
+            sct.modified_by
         FROM
             ss_com_account sca
         LEFT JOIN

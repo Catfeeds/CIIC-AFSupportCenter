@@ -174,7 +174,7 @@ public class KafkaReceiver {
                         Integer taskCategory = 0;
                         Map<String, Object> paramMap = taskMsgDTO.getVariables();
                         SsEmpTaskBO qd = new SsEmpTaskBO();
-                        qd.setTaskId(paramMap.get("oldTaskId").toString());
+                        qd.setTaskId(paramMap.get("oldEmpAgreementId").toString());
                         qd.setEmployeeId(paramMap.get("employeeId").toString());
                         qd.setCompanyId(paramMap.get("companyId").toString());
 
@@ -185,7 +185,8 @@ public class KafkaReceiver {
                             taskCategory = ssEmpTaskBO.getTaskCategory();
                         }
                         res = ssEmpTaskFrontService.saveEmpTaskTc(taskMsgDTO, taskCategory, 1, dto);
-                        logger.info("收到消息 社保雇员服务协议更正:" + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
+                        logger.info("收到消息 社保雇员服务协议更正:" + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" :
+                            "失败"));
                     }
                 }
             } catch (Exception e) {
@@ -224,17 +225,15 @@ public class KafkaReceiver {
      * @param message
      * @return
      */
-    //todo 接受客服中心调用更新企业任务单
+    @StreamListener(TaskSink.AF_COMPANY_SOCIAL_ACCOUNT_ONCE)
     public void receiveComTask(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         //社保
         boolean res = false;
         try {
-//        if (TaskSink.SOCIAL_ADJUST.equals(taskMsgDTO.getTaskType())) {
-            SsComTask ele = ssComTaskService.selectById(taskMsgDTO.getTaskId());
+            SsComTask ele = ssComTaskService.selectById(taskMsgDTO.getMissionId());
             ele.setTaskId(taskMsgDTO.getTaskId());
             res = ssComTaskService.updateById(ele);
-//        }
         } catch (Exception e) {
             res = false;
             logger.error(e.getMessage(), e);

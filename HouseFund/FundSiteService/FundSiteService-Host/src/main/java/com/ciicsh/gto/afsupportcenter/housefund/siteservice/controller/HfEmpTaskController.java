@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpTaskBatchRejectBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpTaskBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.HfEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
@@ -16,6 +17,7 @@ import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -31,9 +35,20 @@ import java.util.List;
 @RequestMapping("/api/fundcommandservice/hfEmpTask")
 public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
 
+    /**
+     * 雇员公积金任务查询
+     *
+     * @param pageInfo
+     * @return
+     */
     @RequestMapping("/hfEmpTaskQuery")
+    @Log("雇员公积金任务查询")
     public JsonResult<PageRows> hfEmpTaskQuery(@RequestBody PageInfo pageInfo) {
-        return JsonResultKit.of(business.queryHfEmpTaskInPage(pageInfo));
+        return JsonResultKit.of(business.queryHfEmpTaskInPage(pageInfo, StringUtils.join(
+            new Integer[] {
+                HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK,
+                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
+            }, ',')));
     }
 
     /**
@@ -43,7 +58,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
      * @return
      */
     @RequestMapping("/hfEmpTaskExport")
-    @Log("雇员公积金任务信息")
+    @Log("雇员公积金任务导出")
     public void hfEmpTaskExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         pageInfo.setPageSize(10000);
         pageInfo.setPageNum(0);
@@ -88,8 +103,10 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
             for (Long empTaskId : selectedData) {
                 HfEmpTask hfEmpTask = new HfEmpTask();
                 hfEmpTask.setEmpTaskId(empTaskId);
-                hfEmpTask.setTaskStatus(4); // TODO,Constants
+                hfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_REJECTED);
                 hfEmpTask.setRejectionRemark(hfEmpTaskBatchRejectBo.getRejectionRemark());
+                hfEmpTask.setModifiedTime(LocalDateTime.now());
+                hfEmpTask.setModifiedBy("test"); // TODO current user
                 list.add(hfEmpTask);
             }
 

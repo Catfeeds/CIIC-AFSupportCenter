@@ -54,6 +54,12 @@ spring:
           #content-type: application/json
           consumer:
             partitioned: true
+        common_taskservice_af_company_social_account_once_channel:
+          destination: common_taskservice_af_company_social_account_once # topic name
+          group: ${spring.application.name}
+          #content-type: application/json
+          consumer:
+            partitioned: true
         soc_report_output_channel:
           destination: af_soc_report_generate # topic name
           content-type: application/json
