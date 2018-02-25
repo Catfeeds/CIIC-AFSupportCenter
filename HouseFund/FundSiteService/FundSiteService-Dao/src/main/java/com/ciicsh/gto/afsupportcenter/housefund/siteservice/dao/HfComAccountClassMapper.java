@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao;
 
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfComAccountClass;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.springframework.stereotype.Repository;
 
 /**
  * <p>
@@ -11,6 +12,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @author 沈健
  * @since 2018-02-07
  */
+@Repository
 public interface HfComAccountClassMapper extends BaseMapper<HfComAccountClass> {
 
 }

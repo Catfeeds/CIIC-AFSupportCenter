@@ -19,6 +19,6 @@ import java.util.List;
 @Repository
 public interface HfComTaskMapper extends BaseMapper<HfComTask> {
 
-    public List<HfComTaskBo> queryNoProcessCompanyTask(HfComTaskBo hfComTaskBo);
+    List<HfComTaskBo> queryNoProcessCompanyTask(HfComTaskBo hfComTaskBo);
 
 }

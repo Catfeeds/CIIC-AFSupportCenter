@@ -15,4 +15,13 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
+    <select id="queryIfComAccountIdExists" resultType="int">
+        SELECT
+        COUNT(*)
+        FROM hf_account_com_relation hacr
+        <where>
+          hacr.com_account_id = #{comAccountId}
+        </where>
+    </select>
+
 </mapper>

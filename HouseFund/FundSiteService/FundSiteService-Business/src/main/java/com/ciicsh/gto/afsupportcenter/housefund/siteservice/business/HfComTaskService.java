@@ -6,6 +6,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfComTask;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 
+import java.util.Map;
+
 
 /**
  * <p>
@@ -44,4 +46,11 @@ public interface HfComTaskService extends IService<HfComTask> {
      * @return
      */
     public PageRows<HfComTaskBo> queryRejectedCompanyTask(PageInfo pageInfo);
+
+    /**
+     * 添加/删除企业任务单
+     * @param map
+     * @return
+     */
+    public boolean upsertCompanyTaskRelated(Map<String, String> map);
 }

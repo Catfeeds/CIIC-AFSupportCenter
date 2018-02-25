@@ -2,10 +2,10 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity;
 
 import com.baomidou.mybatisplus.enums.IdType;
 import com.baomidou.mybatisplus.annotations.TableId;
-import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -73,12 +73,12 @@ public class HfComAccount implements Serializable {
      * 创建时间
      */
 	@TableField("created_time")
-	private LocalDateTime createdTime;
+	private Date createdTime;
     /**
      * 最后更新时间
      */
 	@TableField("modified_time")
-	private LocalDateTime modifiedTime;
+	private Date modifiedTime;
     /**
      * 创建者登录名
      */
@@ -89,9 +89,6 @@ public class HfComAccount implements Serializable {
      */
 	@TableField("modified_by")
 	private String modifiedBy;
-	@TableField("Column_15")
-	private String Column15;
-
 
 	public Long getComAccountId() {
 		return comAccountId;
@@ -173,19 +170,19 @@ public class HfComAccount implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public LocalDateTime getCreatedTime() {
+	public Date getCreatedTime() {
 		return createdTime;
 	}
 
-	public void setCreatedTime(LocalDateTime createdTime) {
+	public void setCreatedTime(Date createdTime) {
 		this.createdTime = createdTime;
 	}
 
-	public LocalDateTime getModifiedTime() {
+	public Date getModifiedTime() {
 		return modifiedTime;
 	}
 
-	public void setModifiedTime(LocalDateTime modifiedTime) {
+	public void setModifiedTime(Date modifiedTime) {
 		this.modifiedTime = modifiedTime;
 	}
 
@@ -205,14 +202,6 @@ public class HfComAccount implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public String getColumn15() {
-		return Column15;
-	}
-
-	public void setColumn15(String Column15) {
-		this.Column15 = Column15;
-	}
-
 	@Override
 	public String toString() {
 		return "HfComAccount{" +
@@ -230,7 +219,6 @@ public class HfComAccount implements Serializable {
 			", modifiedTime=" + modifiedTime +
 			", createdBy=" + createdBy +
 			", modifiedBy=" + modifiedBy +
-			", Column15=" + Column15 +
 			"}";
 	}
 }
