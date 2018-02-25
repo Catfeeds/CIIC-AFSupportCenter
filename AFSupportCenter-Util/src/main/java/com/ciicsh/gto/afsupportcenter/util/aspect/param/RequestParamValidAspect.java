@@ -68,6 +68,7 @@ public class RequestParamValidAspect extends BasicAspect {
                 // 检查返回值
                 validateAfter(target, method, returnValue);
             } catch (Throwable e) {
+                e.printStackTrace();
                 return createErrorJsonResult(returnType, getMessage(e));
             }
         } else {// 不是 JsonResult 直接校验

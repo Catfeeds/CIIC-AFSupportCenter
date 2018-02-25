@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.AmEmpTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTaskPeriod;
 import lombok.Data;
@@ -135,4 +136,7 @@ public class SsEmpTaskBO implements Serializable {
 
     //雇员部分实缴金额（回调使用）
     private BigDecimal personalConfirmAmount;
+
+    //用退工信息
+    private AmEmpTaskDTO amEmpTaskDTO;
 }
