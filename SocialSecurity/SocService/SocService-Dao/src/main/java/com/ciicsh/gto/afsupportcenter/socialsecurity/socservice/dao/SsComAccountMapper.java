@@ -57,4 +57,7 @@ public interface SsComAccountMapper extends BaseMapper<SsComAccount> {
      * @return
      */
     List<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountDTO> getSsComAccountList(SsComAccountParamDTO dto);
+
+    int checkComAccountDuplicateaSSAccount(SsComAccount ssComAccount);
+    int checkComAccountDuplicateaSSAccountName(SsComAccount ssComAccount);
 }

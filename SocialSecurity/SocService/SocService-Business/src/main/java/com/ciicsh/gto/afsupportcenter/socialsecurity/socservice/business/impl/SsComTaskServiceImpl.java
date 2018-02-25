@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * <p>
@@ -171,6 +172,30 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
             ssAccountComRelationMapper.insert(ssAccountComRelation);
         }
         return true;
+    }
+
+
+    /**
+     * 判断企业社保账户和名称是否重复
+     */
+    public String checkComAccountDuplicate(SsComAccount ssComAccount) {
+        int accountC = 0,accountNameC = 0;
+        String retStr="";
+        if (Optional.ofNullable(ssComAccount.getSsAccount()).isPresent() ){
+            accountC=sComAccountMapper.checkComAccountDuplicateaSSAccount(ssComAccount);
+        }
+        if (Optional.ofNullable(ssComAccount.getComAccountName()).isPresent() ){
+            accountNameC=sComAccountMapper.checkComAccountDuplicateaSSAccountName(ssComAccount);
+        }
+        if (accountC > 0){
+            retStr="参保户登记码在系统中已重复，";
+        }
+
+        if (accountNameC > 0){
+            retStr="养老金用公司名称在系统中已重复，";
+        }
+
+        return retStr;
     }
 
     /**
