@@ -14,6 +14,8 @@
 		<result column="start_month" property="startMonth" />
 		<result column="end_month" property="endMonth" />
 		<result column="ratio" property="ratio" />
+        <result column="ratio_emp" property="ratioEmp" />
+        <result column="ratio_com" property="ratioCom" />
 		<result column="com_diff_sum_amount" property="comDiffSumAmount" />
 		<result column="emp_diff_sum_amount" property="empDiffSumAmount" />
 		<result column="comemp_sum_diff_amount" property="comempSumDiffAmount" />
