@@ -565,4 +565,11 @@
         #{startMonth},#{endMonth},#{inDate},#{outDate},#{businessInterfaceId},#{processId},#{taskId},#{taskDefKey},
         #{proDefKey},#{policyDetailId},#{isActive},#{createdTime},#{modifiedTime},#{createdBy},#{modifiedBy})
     </insert>
+    <!---->
+    <select id="fetchEmpArchiveId" resultType="long">
+      SELECT ea.emp_archive_id from ss_emp_archive ea where ea.is_active=1
+      and ea.company_id=#{companyId} and ea.employee_id=#{employeeId}
+      ORDER BY ea.emp_archive_id DESC
+      LIMIT 1
+    </select>
 </mapper>
