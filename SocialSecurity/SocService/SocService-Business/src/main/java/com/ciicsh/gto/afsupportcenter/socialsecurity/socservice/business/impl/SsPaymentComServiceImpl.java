@@ -116,7 +116,7 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
             }
 
             //验证状态,只有3 ,可付 5,内部审批批退 状态的数据可执行添加操作
-            if (3 != ssPaymentCom.getPaymentState() && 5 != ssPaymentCom.getPaymentState()) {
+            if (3 != ssPaymentCom.getPaymentState() && 5 != ssPaymentCom.getPaymentState() && 7 != ssPaymentCom.getPaymentState()) {
                 json.setCode(3);
                 json.setMessage("只有可付和内部审批批退状态的记录可以进行添加批次操作");
                 return json;

@@ -25,10 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -111,10 +108,15 @@ public class SsEmpArchiveController extends BasicController<SsEmpArchiveService>
 
         return JsonResultKit.of(resultMap);
     }
+    /**
+     * 修改社保序号
+     * */
     @RequestMapping("/saveEmpSerial")
     public void saveEmpSerial(@RequestParam Map<String,String> map) {
         SsEmpArchive ssEmpArchive = new SsEmpArchive();
-        ssEmpArchive.setSsSerial(ssEmpArchive.getSsSerial());
+        //TODO 此处需要判断社保序号是否已存在
+        String ssSerial= Optional.of(map.get("ssSerial")).orElse("");
+        ssEmpArchive.setSsSerial(ssSerial);
         ssEmpArchive.setEmpArchiveId(Long.valueOf(map.get("empArchiveId")));
         business.updateById(ssEmpArchive);
     }
