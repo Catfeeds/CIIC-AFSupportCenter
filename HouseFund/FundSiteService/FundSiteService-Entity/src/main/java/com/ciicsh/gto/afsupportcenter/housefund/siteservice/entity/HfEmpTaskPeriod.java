@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.enums.IdType;
 import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotations.TableId;
@@ -30,6 +31,11 @@ public class HfEmpTaskPeriod implements Serializable {
 	@TableField("emp_task_id")
 	private Long empTaskId;
     /**
+     * 本地社保的雇员任务单费用段Id
+     */
+    @TableField("archive_base_period_id")
+    private Long archiveBasePeriodId;
+    /**
      * 公积金汇缴基数
      */
 	@TableField("base_amount")
@@ -58,6 +64,16 @@ public class HfEmpTaskPeriod implements Serializable {
      */
 	private BigDecimal ratio;
     /**
+     * 个人比例
+     */
+    @TableField("ratio_emp")
+    private BigDecimal ratioEmp;
+    /**
+     * 企业比例
+     */
+    @TableField("ratio_com")
+    private BigDecimal ratioCom;
+    /**
      * 补缴原因
             1 漏缴补缴
             2 少缴补缴
@@ -67,8 +83,8 @@ public class HfEmpTaskPeriod implements Serializable {
             6 特殊补缴
             7 账外补缴（特殊补缴）
      */
-	@TableField("bujiao_reason")
-	private Integer bujiaoReason;
+	@TableField("repair_reason")
+	private Integer repairReason;
     /**
      * 汇缴方式:   1 - 正常 2 - 补缴 3 - 调整
      */
@@ -82,12 +98,14 @@ public class HfEmpTaskPeriod implements Serializable {
     /**
      * 创建时间
      */
-	@TableField("created_time")
+    @JSONField(serialize=false)
+    @TableField("created_time")
 	private LocalDateTime createdTime;
     /**
      * 最后更新时间
      */
 	@TableField("modified_time")
+    @JSONField(serialize=false)
 	private LocalDateTime modifiedTime;
     /**
      * 创建者登录名
@@ -165,12 +183,12 @@ public class HfEmpTaskPeriod implements Serializable {
 		this.ratio = ratio;
 	}
 
-	public Integer getBujiaoReason() {
-		return bujiaoReason;
+	public Integer getRepairReason() {
+		return repairReason;
 	}
 
-	public void setBujiaoReason(Integer bujiaoReason) {
-		this.bujiaoReason = bujiaoReason;
+	public void setRepairReason(Integer repairReason) {
+		this.repairReason = repairReason;
 	}
 
 	public Integer getRemitWay() {
@@ -221,18 +239,45 @@ public class HfEmpTaskPeriod implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	@Override
+    public BigDecimal getRatioEmp() {
+        return ratioEmp;
+    }
+
+    public void setRatioEmp(BigDecimal ratioEmp) {
+        this.ratioEmp = ratioEmp;
+    }
+
+    public BigDecimal getRatioCom() {
+        return ratioCom;
+    }
+
+    public void setRatioCom(BigDecimal ratioCom) {
+        this.ratioCom = ratioCom;
+    }
+
+    public Long getArchiveBasePeriodId() {
+        return archiveBasePeriodId;
+    }
+
+    public void setArchiveBasePeriodId(Long archiveBasePeriodId) {
+        this.archiveBasePeriodId = archiveBasePeriodId;
+    }
+
+    @Override
 	public String toString() {
 		return "HfEmpTaskPeriod{" +
 			", empTaskPeriodId=" + empTaskPeriodId +
 			", empTaskId=" + empTaskId +
+            ", archiveBasePeriodId=" + archiveBasePeriodId +
 			", baseAmount=" + baseAmount +
 			", startMonth=" + startMonth +
 			", endMonth=" + endMonth +
 			", hfMonth=" + hfMonth +
 			", amount=" + amount +
 			", ratio=" + ratio +
-			", bujiaoReason=" + bujiaoReason +
+            ", ratioEmp=" + ratioEmp +
+            ", ratioCom=" + ratioCom +
+			", repairReason=" + repairReason +
 			", remitWay=" + remitWay +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +

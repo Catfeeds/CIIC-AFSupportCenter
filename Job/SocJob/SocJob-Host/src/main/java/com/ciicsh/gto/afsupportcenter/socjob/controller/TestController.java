@@ -37,7 +37,9 @@ public class TestController {
         paymentComService.generateSocPaymentInfo(paymentMonth);
         return "完成";
     }
-
+    /*
+    * 任务单状已办批量修改已做
+    * */
     @RequestMapping("/taskStatus")
     public String taskStatus(@RequestParam String ssMonth) throws ParseException{
         if(Optional.ofNullable(ssMonth).isPresent()) {
@@ -47,7 +49,9 @@ public class TestController {
             return "请传参数";
         }
     }
-
+    /*
+    * 每日按雇员询问财务是否可付
+    * */
     @RequestMapping("dailyEmpPaymentStatus")
     public  String dailyEmpPaymentStatus(@RequestParam String ssMonth) throws ParseException{
         if(Optional.ofNullable(ssMonth).isPresent()) {

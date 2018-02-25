@@ -54,6 +54,12 @@ spring:
 #          content-type: application/json
           consumer:
             partitioned: true
+        common_taskservice_af_company_social_account_once_channel11:
+          destination: common_taskservice_af_company_social_account_once11 # topic name
+          group: ${spring.application.name}
+          #content-type: application/json
+          consumer:
+            partitioned: true
       instance-count: 2 # The number of deployed instances of an application.
                         # Must be set for partitioning and if using Kafka.
                         # used to partition data across different consumers.

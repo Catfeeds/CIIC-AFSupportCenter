@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsAccountComRelationMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="ExtendResultMap" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsAccountComRelationBO">
+        <result column="title" property="title"></result>
+    </resultMap>
+
+    <resultMap id="AccountComapanyRelationMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.AccountCompanyRelationOpt">
+        <result column="com_account_id" property="comAccountId"></result>
+        <result column="ss_account" property="ssAccount"></result>
+        <result column="com_account_name" property="comAccountName" />
+        <result column="company_id" property="companyId" />
+        <result column="company_name" property="companyName" />
+    </resultMap>
+
+
+    <select id="queryByAccountId" resultMap="ExtendResultMap">
+        SELECT
+        scr.company_id,
+        sc.title AS title
+        FROM ss_account_com_relation scr
+        LEFT JOIN sal_company sc ON scr.company_id = sc.company_id
+        WHERE scr.com_account_id = #{comAccountId}
+    </select>
+
+    <select id="queryByCond" resultMap="BaseResultMap">
+        SELECT
+        scr.*
+        FROM ss_account_com_relation scr
+        WHERE scr.com_account_id = #{comAccountId}
+        AND scr.company_id = #{companyId}
+    </select>
+
+
+    <select id="getAccountCompanyRelationByAccountId" resultMap="AccountComapanyRelationMap">
+        SELECT
+            a.com_account_id,
+            a.ss_account,
+            a.com_account_name,
+            b.company_id,
+            c.title AS 'company_name'
+        FROM
+            ss_com_account a
+        INNER JOIN ss_account_com_relation b ON a.com_account_id = b.com_account_id
+        INNER JOIN sal_company c ON b.company_id = c.company_id
+        WHERE
+            a.is_active = 1
+        AND b.is_active = 1
+        AND c.is_active = 1
+        AND a.com_account_id = #{comAccountId}
+    </select>
+
+</mapper>
