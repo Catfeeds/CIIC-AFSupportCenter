@@ -1,34 +1,34 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.host.messageBus;
 
 
-import com.alibaba.fastjson.serializer.AfterFilter;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpInsuranceDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeQueryDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfFullEmployeeDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.AfTpaTaskService;
+import com.ciicsh.gto.afsupportcenter.healthmedical.business.SupplyMedicalInvoiceService;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeeBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfTpaTask;
+import com.ciicsh.gto.afsupportcenter.util.web.convert.JsonUtil;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeMemberDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
-import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.employeecenter.util.JsonResult;
 import com.ciicsh.gto.sheetservice.api.MsgConstants;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
-import com.ciicsh.gto.afsupportcenter.util.web.convert.JsonUtil;
 
-import java.math.BigDecimal;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by songjt on 17/12/18.
+ * @author zhaogang
+ * @date 17/12/18
  */
 @EnableBinding(value = TaskSink.class)
 @Component
@@ -37,12 +37,14 @@ public class KafkaReceiver {
     @Autowired
     private AfTpaTaskService afTpaTaskService;
 
-    //   private final static Logger logger = LoggerFactory.getLogger(com.ciicsh.gto.customerservice.commandservice.host.message.KafkaReceiver.class);
     @Autowired
     private AfEmployeeCompanyProxy afEmployeeCompanyProxy;
 
     @Autowired
     private EmployeeInfoProxy employeeInfoProxy;
+
+    @Autowired
+    private SupplyMedicalInvoiceService supplyMedicalInvoiceService;
 
     @StreamListener(MsgConstants.AFCompanyCenter.AF_EMP_IN)
     public void receiveBaseAdjustYearlyNonlocal(Message<TaskCreateMsgDTO> message) {
@@ -81,7 +83,6 @@ public class KafkaReceiver {
         boolean result = false;
 
         try {
-
             //<editor-fold desc=" 1 调用接口，获取前道过来的投保任务单数据">
             AfEmployeeInfoDTO dto = callInf(taskMsgDTO);
             AfFullEmployeeDTO empDTO = dto.getEmployee();
@@ -101,19 +102,33 @@ public class KafkaReceiver {
                 try {
                     list = JsonUtil.fromJsonToList(JsonUtil.fromJsonToObject(serviceItem, String.class), List.class, String.class);
                 } catch (Exception e) {
-
+                    e.printStackTrace();
                 }
                 // </editor-fold>
 
                 // <editor-fold desc="2.1 通用字段赋值">
+                EmployeeBO employeeBO = supplyMedicalInvoiceService.queryEmployeeInfo(empDTO.getEmployeeId());
+
                 task.setCompanyId(item.getCompanyId());
                 // 投保任务单
-                task.setType(1);
+                if (serviceItem.contains("雇员")) {
+                    task.setType(1);
+                } else {
+                    if (serviceItem.contains("子女")) {
+                        task.setType(2);
+                    } else if (serviceItem.contains("配偶")) {
+                        task.setType(3);
+                    }
+                    /* 验证信息，如果存在，状态为-待处理
+                    * 如果不存在，状态为信息待完善*/
+
+                }
+
                 task.setEmployeeId(empDTO.getEmployeeId());
                 task.setEmployeeName(empDTO.getEmployeeName());
                 task.setCompanyId(item.getCompanyId());
                 //通过接口依据companyID查companyName，现在暂时为固定值
-                task.setCompanyName("苹果公司");
+                task.setCompanyName(employeeBO.getCompanyName());
                 task.setAfProductId(item.getProductId());
                 task.setProductName(item.getProductName());
                 // 投保日期
@@ -130,14 +145,10 @@ public class KafkaReceiver {
                 // 2.2   查询，投保任务单数据完善和补充
 
 
-//                com.ciicsh.gto.employeecenter.util.JsonResult<List<EmployeeMemberDTO>> employeeMemberInfoList = employeeInfoProxy.getEmployeeMemberInfo("667064237877603");
+                JsonResult<List<EmployeeMemberDTO>> employeeMemberInfoList = employeeInfoProxy.getEmployeeMemberInfo("667064237877603");
 
-
-                task.setCompanyId(item.getCompanyId());
 
                 //依据services_item确定status，type
-
-
                 task.setServiceItems(item.getServiceItems());
                 task.setKeyValue(item.getKeyValue());
                 // task.setStartConfirmDate(item.getStartDate());
@@ -157,6 +168,16 @@ public class KafkaReceiver {
         return result;
     }
 
+    public static void main(String[] args) {
+        String serviceItem = "[{\"remark\": \"\", \"options\": [{\"title\": \"赔付比例\", \"values\": 90}, {\"title\": \"被保障人\", \"values\": [\"配偶\"]}], \"itemName\": \"特需医疗保障\", \"basicServiceItemId\": 12}]";
+        List<String> list = null;
+        try {
+            list = JsonUtil.fromJsonToList(JsonUtil.fromJsonToObject(serviceItem, String.class), List.class, String.class);
+            System.out.println(list);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 接收任务完成消息
