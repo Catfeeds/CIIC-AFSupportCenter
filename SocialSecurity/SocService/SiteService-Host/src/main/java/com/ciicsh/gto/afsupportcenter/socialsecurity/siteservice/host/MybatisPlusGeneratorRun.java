@@ -63,7 +63,7 @@ public class MybatisPlusGeneratorRun {
                 super.getAllTableInfoList(config).forEach(tableInfo -> {
                     // 添加指定前缀的表
                     if (tableInfo.getName().toLowerCase().startsWith("am_")) {
-                        // 移除 entity 前缀
+                        // 移除 customer 前缀
                         // tableInfo.setEntityName(this.getStrategy(), tableInfo.getEntityName().substring(2));
                         list.add(tableInfo);
                     }

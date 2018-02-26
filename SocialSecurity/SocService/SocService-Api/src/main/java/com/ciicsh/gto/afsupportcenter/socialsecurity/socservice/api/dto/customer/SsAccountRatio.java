@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.entity;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.customer;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

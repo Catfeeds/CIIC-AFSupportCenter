@@ -75,7 +75,7 @@ public class SsEmpArchiveControllerTest {
 //        ssComTaskDTO.setComAccountId(2L);
 //        ssComTaskDTO.setTaskCategory("1");
 //
-//        com.ciicsh.common.entity.JsonResult json = d1.saveSsComTask(ssComTaskDTO);
+//        com.ciicsh.common.customer.JsonResult json = d1.saveSsComTask(ssComTaskDTO);
 //        System.out.println(JSON.toJSONString(json));
 //    }
 

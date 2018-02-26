@@ -502,24 +502,24 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
 //     */
 //    @Log("企业社保账户开户、变更、转移、转出的 创建任务单接口")
 //    @PostMapping("/saveSsComTask")
-//    public com.ciicsh.common.entity.JsonResult saveSsComTask(@RequestBody SsComTaskDTO ssComTaskDTO) {
+//    public com.ciicsh.common.customer.JsonResult saveSsComTask(@RequestBody SsComTaskDTO ssComTaskDTO) {
 //        try {
 //            if (StringUtils.isBlank(ssComTaskDTO.getCompanyId())) {
-//                return com.ciicsh.common.entity.JsonResult.faultMessage("客户Id不能为空！");
+//                return com.ciicsh.common.customer.JsonResult.faultMessage("客户Id不能为空！");
 //            }
 //            if (StringUtils.isBlank(ssComTaskDTO.getTaskCategory())) {
-//                return com.ciicsh.common.entity.JsonResult.faultMessage("任务类型不能为空！");
+//                return com.ciicsh.common.customer.JsonResult.faultMessage("任务类型不能为空！");
 //            }
 //            SsComTaskBO ssComTask = new SsComTaskBO();
 //            BeanUtils.copyProperties(ssComTaskDTO, ssComTask);
 //            int cnt = business.countComTaskByCond(ssComTask);
 //            if (cnt > 0) {
-//                return com.ciicsh.common.entity.JsonResult.faultMessage("该企业已存在相同类型的处理中任务单，不能重复添加！");
+//                return com.ciicsh.common.customer.JsonResult.faultMessage("该企业已存在相同类型的处理中任务单，不能重复添加！");
 //            }
 //            Long newComTaskId = insertSsComTask(ssComTaskDTO);
-//            return com.ciicsh.common.entity.JsonResult.success(newComTaskId);
+//            return com.ciicsh.common.customer.JsonResult.success(newComTaskId);
 //        } catch (Exception e) {
-//            return com.ciicsh.common.entity.JsonResult.faultMessage(e.getMessage());
+//            return com.ciicsh.common.customer.JsonResult.faultMessage(e.getMessage());
 //        }
 //    }
 //
