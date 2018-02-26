@@ -64,7 +64,7 @@
 
     <!-- 关联查询结果列 -->
     <sql id="Payment_Column_List">
-        p.acceptance_id, 0 AS business_id, p.company_id, p.company_name, p.employee_id, p.employee_name, p.total_insurance_company_money AS pay_amount, 0 AS tax_amount, b.card_num AS bank_account, b.account_name, b.bankcard_type AS bank_id, b.bank_code, b.deposit_bank AS bank_name, b.province_code, b.city_code
+            p.acceptance_id, 0 AS business_id, p.company_id, p.company_name, p.employee_id, p.employee_name, p.total_insurance_company_money AS pay_amount, 0 AS tax_amount, b.card_num AS bank_account, b.account_name, b.bankcard_type AS bank_id, b.bank_code, b.deposit_bank AS bank_name, b.province_code, b.city_code
     </sql>
 
     <!-- 关联查询结果列 -->

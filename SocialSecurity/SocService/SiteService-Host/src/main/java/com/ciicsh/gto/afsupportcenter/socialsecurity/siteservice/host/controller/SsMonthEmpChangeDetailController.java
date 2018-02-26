@@ -1,13 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.statement.SsMonthEmpChangeDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.statement.SsMonthEmpChangeDetailDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.statement.SsMonthEmpChangeBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.statement.SsMonthEmpChangeDetailBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsMonthEmpChangeDetailService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.GsyExportOpt;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.StatementExportOpt;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.YysExportOpt;
 
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
@@ -47,15 +44,15 @@ public class SsMonthEmpChangeDetailController  extends BasicController<SsMonthEm
      */
     @Log("社保汇总明细数据展示")
     @PostMapping("/showMonthEmpChangeDetail")
-    public JsonResult<List<SsMonthEmpChangeDetailDTO>> showMonthEmpChangeDetail(SsMonthEmpChangeDTO ssMonthEmpChangeDTO) {
+    public JsonResult<List<SsMonthEmpChangeDetailBO>> showMonthEmpChangeDetail(SsMonthEmpChangeBO ssMonthEmpChangeDTO) {
 
         //转换格式
-        SsMonthEmpChangeBO ssMonthEmpChangeBO = CommonTransform.convertToEntity(ssMonthEmpChangeDTO,SsMonthEmpChangeBO.class);
-        List<SsMonthEmpChangeDetailBO> resultBoList = business.showMonthEmpChangeDetailByStatementId(ssMonthEmpChangeBO);
+        com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeBO ssMonthEmpChangeBO = CommonTransform.convertToEntity(ssMonthEmpChangeDTO, com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeBO.class);
+        List<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO> resultBoList = business.showMonthEmpChangeDetailByStatementId(ssMonthEmpChangeBO);
 
         //转换格式
-        List<SsMonthEmpChangeDetailDTO> resultDtoList = CommonTransform.convertToDTOs(resultBoList,SsMonthEmpChangeDetailDTO.class);
-        JsonResult<List<SsMonthEmpChangeDetailDTO>> result = new JsonResult<>();
+        List<SsMonthEmpChangeDetailBO> resultDtoList = CommonTransform.convertToDTOs(resultBoList,SsMonthEmpChangeDetailBO.class);
+        JsonResult<List<SsMonthEmpChangeDetailBO>> result = new JsonResult<>();
         result.setData(resultDtoList);
 
         return result;

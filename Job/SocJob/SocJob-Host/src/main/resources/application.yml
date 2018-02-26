@@ -24,7 +24,7 @@ eureka:
     instance-id: ${spring.cloud.client.ipAddress}:${server.port}
 mybatis-plus:
   mapper-locations: classpath*:mapper/**.xml
-  type-aliases-package: com.ciicsh.gto.afsupportcenter.socjob.entity
+  type-aliases-package: com.ciicsh.gto.afsupportcenter.socjob.customer
   plugins:
     - catMybatisInterceptor
 

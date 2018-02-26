@@ -1,7 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller;
 
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskFrontService;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
+import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,5 +42,19 @@ public class TestController {
     @PostMapping("/upload")
     public String upload(@RequestParam("file") MultipartFile file, @RequestParam(name = "companyId", required = false) String companyId) {
         return "";
+    }
+    @Autowired
+SsEmpTaskFrontService ssEmpTaskFrontService;
+    //处理文件上传
+
+    @RequestMapping(value = "/test")
+    public void test() throws Exception {
+        TaskCreateMsgDTO taskMsgDTO=new TaskCreateMsgDTO(); Integer taskCategory=3;
+            AfEmployeeInfoDTO dto =new AfEmployeeInfoDTO();
+        AfEmployeeCompanyDTO companyDTO=new AfEmployeeCompanyDTO();
+        companyDTO.setCompanyId("KH0000003");
+        companyDTO.setEmployeeId("00000003044444444");
+        dto.setEmployeeCompany(companyDTO);
+        ssEmpTaskFrontService.insertTaskTb(taskMsgDTO,taskCategory,0,dto);
     }
 }

@@ -1,9 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsAccountComRelationDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComAccountBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAccountComRelationService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsAccountComRelationDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAccountComRelation;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.AccountCompanyRelationOpt;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
