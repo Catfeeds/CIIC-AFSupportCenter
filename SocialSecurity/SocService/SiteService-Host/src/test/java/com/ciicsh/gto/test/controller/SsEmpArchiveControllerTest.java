@@ -1,6 +1,7 @@
 package com.ciicsh.gto.test.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialUpdateDateDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsAccountComRelationDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComTaskDTO;
@@ -16,6 +17,8 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller
 import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller.SsEmpArchiveController;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller.SsPaymentController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsResposeDTO;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
@@ -190,5 +193,17 @@ public class SsEmpArchiveControllerTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testGetRoundType() {
+        GetSSPItemsRequestDTO getSSPItemsRequestDTO = new GetSSPItemsRequestDTO();
+        getSSPItemsRequestDTO.setSsPolicyId("201");
+        getSSPItemsRequestDTO.setPayAccountType(1);
+        getSSPItemsRequestDTO.setEffectiveMonth("201803");
+
+        com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<GetSSPItemsResposeDTO> jsonResult =commonApiUtils.getRoundingType(getSSPItemsRequestDTO);
+
+        System.out.println("结果"+JSONObject.toJSON(jsonResult).toString());
     }
 }

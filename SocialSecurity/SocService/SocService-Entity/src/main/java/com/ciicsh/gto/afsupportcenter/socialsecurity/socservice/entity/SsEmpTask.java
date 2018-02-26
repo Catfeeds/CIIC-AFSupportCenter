@@ -13,6 +13,9 @@ import java.io.Serializable;
  * <p>
  * 本地社保的雇员任务单
  * </p>
+ *
+ * @author xsj
+ * @since 2018-02-26
  */
 @TableName("ss_emp_task")
 public class SsEmpTask implements Serializable {
@@ -254,6 +257,8 @@ public class SsEmpTask implements Serializable {
      */
 	@TableField("policy_detail_id")
 	private Integer policyDetailId;
+    @TableField("af_bpo_fc")
+    private Integer afBpoFc;
     /**
      * 是否可用
      */
@@ -665,7 +670,15 @@ public class SsEmpTask implements Serializable {
 		this.policyDetailId = policyDetailId;
 	}
 
-	public Boolean getActive() {
+    public Integer getAfBpoFc() {
+        return afBpoFc;
+    }
+
+    public void setAfBpoFc(Integer afBpoFc) {
+        this.afBpoFc = afBpoFc;
+    }
+
+    public Boolean getActive() {
 		return isActive;
 	}
 
@@ -756,6 +769,7 @@ public class SsEmpTask implements Serializable {
 			", taskDefKey=" + taskDefKey +
 			", proDefKey=" + proDefKey +
 			", policyDetailId=" + policyDetailId +
+            ", afBpoFc=" + afBpoFc +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +
