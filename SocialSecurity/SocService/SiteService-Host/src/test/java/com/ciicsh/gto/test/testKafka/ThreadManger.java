@@ -20,7 +20,7 @@ public class ThreadManger {
     /*
      * 线程池单例创建方法
      */
-    public ThreadManger newInstance(){
+    public synchronized ThreadManger newInstance(){
         return SingleThreadPool.threadManger;
     }
     // 实质就是newFixedThreadPool 创建一个定长线程池，可控制线程最大并发数，超出的线程会在队列中等待
