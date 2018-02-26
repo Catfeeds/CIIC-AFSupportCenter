@@ -46,7 +46,7 @@
                 AND company_name LIKE concat(concat('%',#{companyName}),'%')
             </if>
             <if test="idNum != null and idNum != ''">
-                AND idNum LIKE concat(concat('%',#{idNum}),'%')
+                AND id_num LIKE concat(concat('%',#{idNum}),'%')
             </if>
             <if test="status != null and status != ''">
                 AND status LIKE concat(concat('%',#{status}),'%')

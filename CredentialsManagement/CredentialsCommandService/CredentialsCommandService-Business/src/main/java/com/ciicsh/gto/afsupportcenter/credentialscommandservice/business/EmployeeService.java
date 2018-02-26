@@ -14,4 +14,18 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Employ
  */
 public interface EmployeeService extends IService<Employee> {
 
+    /**
+     * 新增单项雇员
+     * @param employee
+     * @return
+     */
+    int addEmployee(Employee employee);
+
+    /**
+     * 根据证件查询雇员
+     * @param idCardType
+     * @param idNum
+     * @return
+     */
+    boolean findEmpByIdCard(Integer idCardType, String idNum);
 }

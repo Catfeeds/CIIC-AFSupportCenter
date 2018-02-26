@@ -19,4 +19,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> implements EmployeeService {
 
+    @Autowired
+    private EmployeeMapper employeeMapper;
+
+    @Override
+    public int addEmployee(Employee employee) {
+        return employeeMapper.insert(employee);
+    }
+
+    @Override
+    public boolean findEmpByIdCard(Integer idCardType, String idNum) {
+        return employeeMapper.findEmpByIdCard(idCardType, idNum) == null ? true : false;
+    }
 }

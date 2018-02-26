@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.Import;
 
 /**
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.Import;
 @MapperScan("com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao")
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.credentialscommandservice"})
 @EnableDiscoveryClient
+@EnableFeignClients({"com.ciicsh.gto.basicdataservice.api","com.ciicsh.gto.employeecenter.apiservice.api"})
 @Import({CorsConfiguration.class, MybatisPlusConfig.class})
 public class CredentialsApp extends SpringBootServletInitializer {
 

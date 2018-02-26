@@ -52,7 +52,7 @@ public class EmployeeCompany extends Model<EmployeeCompany> {
 
     @Override
     protected Serializable pkVal() {
-        return null;
+        return employeeId;
     }
 
     public String getEmployeeId() {

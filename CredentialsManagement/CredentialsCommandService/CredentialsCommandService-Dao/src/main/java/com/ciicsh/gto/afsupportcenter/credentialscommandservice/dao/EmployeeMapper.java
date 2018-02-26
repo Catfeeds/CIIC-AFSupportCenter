@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Employee;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -15,4 +16,11 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface EmployeeMapper extends BaseMapper<Employee> {
+    /**
+     * 根据身份证件查询雇员
+     * @param idCardType
+     * @param idNum
+     * @return
+     */
+    Employee findEmpByIdCard(@Param("idCardType") Integer idCardType, @Param("idNum") String idNum);
 }

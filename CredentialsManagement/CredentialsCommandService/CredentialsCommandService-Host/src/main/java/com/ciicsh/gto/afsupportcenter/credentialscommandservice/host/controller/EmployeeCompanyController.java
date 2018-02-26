@@ -2,21 +2,30 @@ package com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.controller
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.EmployeeCompanyService;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.EmployeeOtherService;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.EmployeeService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.EmployeeCompanyDTO;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.EmployeeDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Employee;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.EmployeeCompany;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.EmployeeOther;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.SelectionUtils;
 import com.ciicsh.gto.afsupportcenter.util.page.PageUtil;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeIdQueryDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @Author: guwei
@@ -29,6 +38,12 @@ public class EmployeeCompanyController {
 
     @Autowired
     private EmployeeCompanyService employeeCompanyService;
+    @Autowired
+    private EmployeeService employeeService;
+    @Autowired
+    private EmployeeOtherService employeeOtherService;
+    @Autowired
+    private EmployeeInfoProxy employeeInfoProxy;
 
     /**
      * 获取雇员列表
@@ -74,11 +89,35 @@ public class EmployeeCompanyController {
 
     /**
      * 添加单项雇员
-     * @param employee
+     * @param employeeDTO
      * @return
      */
     @PostMapping("/add")
-    public JsonResult addEmployee(Employee employee) {
-        return null;
+    public JsonResult addEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO,employee);
+        employee.setEmployeeId(getEmpId()+"");
+        EmployeeOther employeeOther = new EmployeeOther();
+        BeanUtils.copyProperties(employeeDTO,employeeOther);
+        employeeOther.setEmployeeId(employee.getEmployeeId());
+        employeeOther.setCompanyId(employeeDTO.getCompanyId());
+        if (employeeDTO.getIdCardType() != null && StringUtils.isNotBlank(employeeDTO.getIdNum()) && StringUtils.isNotBlank(employeeDTO.getEmployeeName())) {
+            boolean b = employeeService.findEmpByIdCard(employeeDTO.getIdCardType(),employeeDTO.getIdNum());
+            if (b) {
+                employeeService.addEmployee(employee);
+                employeeOtherService.addEmployeeOther(employeeOther);
+            } else {
+                return JsonResult.faultMessage("雇员已存在，保存失败！");
+            }
+            return JsonResult.success(null);
+        } else {
+            return JsonResult.faultMessage("参数检验失败");
+        }
+    }
+
+    public String getEmpId() {
+        EmployeeIdQueryDTO employeeIdQueryDTO = new EmployeeIdQueryDTO();
+        String employeeId = employeeInfoProxy.getEmployeeId(employeeIdQueryDTO).getData();
+        return employeeId;
     }
 }
