@@ -68,8 +68,8 @@
             <if test="applyType != null">
                 AND fb_apply_record.apply_type= #{applyType,jdbcType=INTEGER}
             </if>
-            <if test="approvalStatus != null">
-                AND fb_apply_record_detail.approval_status= #{approvalStatus,jdbcType=INTEGER}
+            <if test="recordApprovalReason != null">
+                AND fb_apply_record.record_approval_reason= #{recordApprovalReason,jdbcType=INTEGER}
             </if>
             <if test="sendStatus != null">
                 AND fb_apply_record_detail.send_status= #{sendStatus,jdbcType=INTEGER}
@@ -93,8 +93,8 @@
             <if test="applyType != null">
                 AND fb_apply_record.apply_type= #{applyType,jdbcType=INTEGER}
             </if>
-            <if test="approvalStatus != null">
-                AND fb_apply_record_detail.approval_status= #{approvalStatus,jdbcType=INTEGER}
+            <if test="recordApprovalReason != null">
+                AND fb_apply_record.record_approval_reason= #{recordApprovalReason,jdbcType=INTEGER}
             </if>
             <if test="sendStatus != null">
                 AND fb_apply_record_detail.send_status= #{sendStatus,jdbcType=INTEGER}

@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Import;
  * Created by houwanhua on 2018/2/24.
  */
 @MapperScan("com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao")
-@SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.socialsecurity.socservice","com.ciicsh.common"})
+@SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.socialsecurity.apiservice","com.ciicsh.common"})
 @EnableDiscoveryClient
 @Import({CustomConfiguration.class, MybatisPlusConfig.class})
 public class ApiServiceApp {

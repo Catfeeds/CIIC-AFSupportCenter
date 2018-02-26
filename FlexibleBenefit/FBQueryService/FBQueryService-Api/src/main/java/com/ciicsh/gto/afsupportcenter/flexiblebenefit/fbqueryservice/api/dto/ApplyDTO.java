@@ -137,6 +137,19 @@ public class ApplyDTO extends CommonDTO {
      */
     private Integer approvalStatus;
     /**
+     * 审批状态（0-审批中，1-同意，2-不同意，3-部分同意）
+     */
+    private Integer recordApprovalReason;
+
+    public Integer getRecordApprovalReason() {
+        return recordApprovalReason;
+    }
+
+    public void setRecordApprovalReason(Integer recordApprovalReason) {
+        this.recordApprovalReason = recordApprovalReason;
+    }
+
+    /**
      * 发放状态（1-未处理，2-已发放，3-已批退）
      */
     private Integer sendStatus;

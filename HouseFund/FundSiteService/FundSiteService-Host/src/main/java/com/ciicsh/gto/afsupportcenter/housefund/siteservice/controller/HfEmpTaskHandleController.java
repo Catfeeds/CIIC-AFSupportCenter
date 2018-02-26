@@ -13,7 +13,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.*;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.constant.HfEmpTaskPeriodConstant;
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dto.HfEmpTaskHandleDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpTaskHandlePostBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -48,7 +48,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
      * @return JSON格式处理结果
      */
     @RequestMapping("/empTaskHandleDataQuery")
-    public JsonResult<HfEmpTaskHandleBo> empTaskHandleDataQuery(HfEmpTaskHandleDTO hfEmpTaskHandleDTO) {
+    public JsonResult<HfEmpTaskHandleBo> empTaskHandleDataQuery(HfEmpTaskHandlePostBo hfEmpTaskHandleDTO) {
         // 获取当前任务单主体信息
         List<HfEmpTaskHandleBo> list = business.getEmpTaskHandleData(hfEmpTaskHandleDTO);
         if (CollectionUtils.isNotEmpty(list)) {

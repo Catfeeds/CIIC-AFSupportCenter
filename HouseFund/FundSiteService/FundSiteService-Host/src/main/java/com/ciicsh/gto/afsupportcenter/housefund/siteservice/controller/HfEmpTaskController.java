@@ -3,14 +3,12 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.controller;
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
-import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpTaskBatchRejectBo;
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpTaskBo;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpTaskExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.HfEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
-import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -27,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -62,7 +59,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
     public void hfEmpTaskExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         pageInfo.setPageSize(10000);
         pageInfo.setPageNum(0);
-        PageRows<HfEmpTaskBo> result = business.queryHfEmpTaskInPage(pageInfo);
+        PageRows<HfEmpTaskExportBo> result = business.queryHfEmpTaskInPage(pageInfo);
         long total = result.getTotal();
         ExportParams exportParams = new ExportParams();
         exportParams.setType(ExcelType.XSSF);
@@ -70,14 +67,14 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
         Workbook workbook;
 
         if (total <= pageInfo.getPageSize()) {
-            workbook = ExcelExportUtil.exportExcel(exportParams, HfEmpTaskBo.class, result.getRows());
+            workbook = ExcelExportUtil.exportExcel(exportParams, HfEmpTaskExportBo.class, result.getRows());
         } else {
-            workbook = ExcelExportUtil.exportBigExcel(exportParams, HfEmpTaskBo.class, result.getRows());
+            workbook = ExcelExportUtil.exportBigExcel(exportParams, HfEmpTaskExportBo.class, result.getRows());
             int pageNum = (int) Math.ceil(total / pageInfo.getPageSize());
             for(int i = 1; i < pageNum; i++) {
                 pageInfo.setPageNum(i);
                 result = business.queryHfEmpTaskInPage(pageInfo);
-                workbook = ExcelExportUtil.exportBigExcel(exportParams, HfEmpTaskBo.class, result.getRows());
+                workbook = ExcelExportUtil.exportBigExcel(exportParams, HfEmpTaskExportBo.class, result.getRows());
             }
             ExcelExportUtil.closeExportBigExcel();
         }

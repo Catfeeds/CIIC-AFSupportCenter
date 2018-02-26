@@ -140,6 +140,8 @@ public class HfArchiveBasePeriod implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+	@TableField(exist = false)
+	private Boolean isDiffRepair;
 
 	public Long getArchiveBasePeriodId() {
 		return archiveBasePeriodId;
@@ -325,7 +327,15 @@ public class HfArchiveBasePeriod implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	@Override
+    public Boolean getDiffRepair() {
+        return isDiffRepair;
+    }
+
+    public void setDiffRepair(Boolean diffRepair) {
+        isDiffRepair = diffRepair;
+    }
+
+    @Override
 	public String toString() {
 		return "HfArchiveBasePeriod{" +
 			", archiveBasePeriodId=" + archiveBasePeriodId +
