@@ -53,7 +53,7 @@ SsEmpTaskFrontService ssEmpTaskFrontService;
             AfEmployeeInfoDTO dto =new AfEmployeeInfoDTO();
         AfEmployeeCompanyDTO companyDTO=new AfEmployeeCompanyDTO();
         companyDTO.setCompanyId("KH0000003");
-        companyDTO.setEmployeeId("000000030");
+        companyDTO.setEmployeeId("00000003044444444");
         dto.setEmployeeCompany(companyDTO);
         ssEmpTaskFrontService.insertTaskTb(taskMsgDTO,taskCategory,0,dto);
     }
