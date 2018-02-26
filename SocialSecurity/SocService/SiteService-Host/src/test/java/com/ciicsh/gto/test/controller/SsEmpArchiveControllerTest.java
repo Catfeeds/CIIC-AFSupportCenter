@@ -68,17 +68,17 @@ public class SsEmpArchiveControllerTest {
     }
 
 
-    @Test
-    public void saveSsComTask() {
-        SsOperatePaymentDTO ssOperatePaymentDTO = new SsOperatePaymentDTO();
-        SsComTaskDTO ssComTaskDTO = new SsComTaskDTO();
-        ssComTaskDTO.setCompanyId("1");
-        ssComTaskDTO.setComAccountId(2L);
-        ssComTaskDTO.setTaskCategory("1");
-
-        com.ciicsh.common.entity.JsonResult json = d1.saveSsComTask(ssComTaskDTO);
-        System.out.println(JSON.toJSONString(json));
-    }
+//    @Test
+//    public void saveSsComTask() {
+//        SsOperatePaymentDTO ssOperatePaymentDTO = new SsOperatePaymentDTO();
+//        SsComTaskDTO ssComTaskDTO = new SsComTaskDTO();
+//        ssComTaskDTO.setCompanyId("1");
+//        ssComTaskDTO.setComAccountId(2L);
+//        ssComTaskDTO.setTaskCategory("1");
+//
+//        com.ciicsh.common.entity.JsonResult json = d1.saveSsComTask(ssComTaskDTO);
+//        System.out.println(JSON.toJSONString(json));
+//    }
 
     @Autowired
     CommonApiUtils d2;

@@ -1,7 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.SsComProxy;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountParamDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsAccountComRelationBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComAccountBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAccountComRelationService;
@@ -19,7 +17,6 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,7 +36,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssComAccount")
-public class SsComAccountController extends BasicController<SsComAccountService> implements SsComProxy {
+public class SsComAccountController extends BasicController<SsComAccountService>{
 
     @Autowired
     private SsAccountRatioService ssAccountRatioService;
@@ -109,16 +106,16 @@ public class SsComAccountController extends BasicController<SsComAccountService>
         return JsonResultKit.of(ssComAccountBO);
     }
 
-    @Override
-    @RequestMapping("/getSsComAccountList")
-    @Log("获取企业社保账户信息表")
-    public com.ciicsh.common.entity.JsonResult getSsComAccountList(@RequestBody SsComAccountParamDTO paramDto) {
-        // 根据 客户ID和账户类型查询
-        List<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountDTO> ssComAccountList =
-            business.getSsComAccountList(paramDto);
-
-        return com.ciicsh.common.entity.JsonResult.success(ssComAccountList);
-    }
+//    @Override
+//    @RequestMapping("/getSsComAccountList")
+//    @Log("获取企业社保账户信息表")
+//    public com.ciicsh.common.entity.JsonResult getSsComAccountList(@RequestBody SsComAccountParamDTO paramDto) {
+//        // 根据 客户ID和账户类型查询
+//        List<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountDTO> ssComAccountList =
+//            business.getSsComAccountList(paramDto);
+//
+//        return com.ciicsh.common.entity.JsonResult.success(ssComAccountList);
+//    }
 
 
     /**
