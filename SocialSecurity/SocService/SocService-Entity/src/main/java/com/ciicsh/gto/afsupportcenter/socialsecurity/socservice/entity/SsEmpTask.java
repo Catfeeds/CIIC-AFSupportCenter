@@ -253,7 +253,7 @@ public class SsEmpTask implements Serializable {
      * 前道传递的政策明细ID,用它调用系统中心获取计算方式
      */
 	@TableField("policy_detail_id")
-	private Integer policyDetailId;
+	private String policyDetailId;
     /**
      * 是否可用
      */
@@ -657,11 +657,11 @@ public class SsEmpTask implements Serializable {
 		this.proDefKey = proDefKey;
 	}
 
-	public Integer getPolicyDetailId() {
+	public String getPolicyDetailId() {
 		return policyDetailId;
 	}
 
-	public void setPolicyDetailId(Integer policyDetailId) {
+	public void setPolicyDetailId(String policyDetailId) {
 		this.policyDetailId = policyDetailId;
 	}
 
