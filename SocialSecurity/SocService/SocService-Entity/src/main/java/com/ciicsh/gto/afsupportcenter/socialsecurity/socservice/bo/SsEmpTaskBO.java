@@ -139,4 +139,8 @@ public class SsEmpTaskBO implements Serializable {
 
     //用退工信息
     private AmEmpTaskDTO amEmpTaskDTO;
+    /**
+     * 福利办理方
+     */
+    private Integer welfareUnit;
 }
