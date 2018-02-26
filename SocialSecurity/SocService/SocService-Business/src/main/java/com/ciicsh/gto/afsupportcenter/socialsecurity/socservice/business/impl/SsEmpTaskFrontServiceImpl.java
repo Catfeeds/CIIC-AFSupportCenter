@@ -139,8 +139,11 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         ssEmpTask.setTaskFormContent(JSON.toJSONString(dto));
 
         if (dto.getNowAgreement() != null && dto.getNowAgreement().getSocialRuleId() != null) {
-            ssEmpTask.setPolicyDetailId(dto.getNowAgreement().getSocialRuleId().intValue());
+            //ssEmpTask.setPolicyDetailId(dto.getNowAgreement().getSocialRuleId().intValue());
+            ssEmpTask.setPolicyDetailId(dto.getNowAgreement().getSocialPolicyId());
+
         }
+
         ssEmpTask.setProcessId(taskMsgDTO.getProcessId());
         ssEmpTask.setTaskStatus(1);
         ssEmpTask.setActive(true);
@@ -257,7 +260,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         ssEmpTask.setTaskFormContent(JSON.toJSONString(dto));
 
         if (dto.getNowAgreement() != null && dto.getNowAgreement().getSocialRuleId() != null) {
-            ssEmpTask.setPolicyDetailId(dto.getNowAgreement().getSocialRuleId().intValue());
+            ssEmpTask.setPolicyDetailId(dto.getNowAgreement().getSocialPolicyId());
         }
         //福利办理方
         ssEmpTask.setWelfareUnit(companyDto.getSocialUnit());
