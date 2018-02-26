@@ -15,18 +15,18 @@ import java.util.List;
  * @since 2017-12-01
  */
 public interface SsComTaskMapper extends BaseMapper<SsComTask> {
-    public List<SsComTaskBO> queryNoProgressCompanyTask(SsComTaskBO ssComTaskBO);
-    public List<SsComTaskBO> queryProgressingCompanyTask(SsComTaskBO ssComTaskBO);
-    public List<SsComTaskBO> queryFinshedCompanyTask(SsComTaskBO ssComTaskBO);
-    public List<SsComTaskBO> queryRefusedCompanyTask(SsComTaskBO ssComTaskBO);
-    public boolean updatePatchRefuseTask(List<SsComTask> ssComTaskList);
-    public SsComTaskBO queryComInfoAndMaterial(SsComTaskBO ssComTaskBO);
-    public SsComTaskBO queryComInfoAndPayWay(SsComTaskBO ssComTaskBO);
-    public SsComTaskBO queryAccountInfoAndMaterial(SsComTaskBO ssComTaskBO);
-    public int updateTaskStatusForRevoke(SsComTask ssComTask);
+    List<SsComTaskBO> queryNoProgressCompanyTask(SsComTaskBO ssComTaskBO);
+    List<SsComTaskBO> queryProgressingCompanyTask(SsComTaskBO ssComTaskBO);
+    List<SsComTaskBO> queryFinshedCompanyTask(SsComTaskBO ssComTaskBO);
+    List<SsComTaskBO> queryRefusedCompanyTask(SsComTaskBO ssComTaskBO);
+    boolean updatePatchRefuseTask(List<SsComTask> ssComTaskList);
+    SsComTaskBO queryComInfoAndMaterial(SsComTaskBO ssComTaskBO);
+    SsComTaskBO queryComInfoAndPayWay(SsComTaskBO ssComTaskBO);
+    SsComTaskBO queryAccountInfoAndMaterial(SsComTaskBO ssComTaskBO);
+    int updateTaskStatusForRevoke(SsComTask ssComTask);
 
     //判断企业任务单是否存在
-    public int countComTaskByCond(SsComTaskBO ssComTask);
+    int countComTaskByCond(SsComTaskBO ssComTask);
 
     boolean insertComTask(SsComTask ssComTask);
 }

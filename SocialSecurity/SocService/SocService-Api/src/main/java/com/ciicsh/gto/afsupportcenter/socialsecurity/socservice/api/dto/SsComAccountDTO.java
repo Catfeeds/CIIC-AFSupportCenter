@@ -181,7 +181,7 @@ public class SsComAccountDTO {
     /**
      * 账户关联公司
      */
-    private List<SsAccountComRelationDTO> ssAccountComRelationDTOList;
+    private List<SsAccountComRelationDTO> ssAccountComRelationList;
     /**
      * 企业工伤比例变更(查询) 1对多
      */
@@ -491,12 +491,12 @@ public class SsComAccountDTO {
         this.ssComTaskList = ssComTaskList;
     }
 
-    public List<SsAccountComRelationDTO> getSsAccountComRelationDTOList() {
-        return ssAccountComRelationDTOList;
+    public List<SsAccountComRelationDTO> getSsAccountComRelationList() {
+        return ssAccountComRelationList;
     }
 
-    public void setSsAccountComRelationDTOList(List<SsAccountComRelationDTO> ssAccountComRelationDTOList) {
-        this.ssAccountComRelationDTOList = ssAccountComRelationDTOList;
+    public void setSsAccountComRelationList(List<SsAccountComRelationDTO> ssAccountComRelationDTOList) {
+        this.ssAccountComRelationList = ssAccountComRelationDTOList;
     }
 
     public List<SsAccountRatio> getSsAccountRatioList() {

@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
  * Created by houwanhua on 2018/2/26.
  */
 @RestController
+@RequestMapping("/api/comtask")
 public class ComTaskController implements SsComTaskProxy{
 
     @Autowired
@@ -34,7 +36,7 @@ public class ComTaskController implements SsComTaskProxy{
      * @return
      */
     @Log("企业社保账户开户、变更、转移、转出的 创建任务单接口")
-    @PostMapping("/saveSsComTask")
+    @PostMapping("/saveComTask")
     public JsonResult saveSsComTask(@RequestBody SsComTaskDTO ssComTaskDTO) {
         try {
             if (StringUtils.isBlank(ssComTaskDTO.getCompanyId())) {
