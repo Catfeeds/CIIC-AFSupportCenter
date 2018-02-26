@@ -3,8 +3,10 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.entity.po;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
+
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
+
 import java.io.Serializable;
 
 /**
@@ -29,7 +31,13 @@ public class AfTpaTask implements Serializable {
      * 任务单类型（1-投保任务单，2-退保任务单，3-变更保任务单）
      */
     @TableField("task_type")
-    private Integer taskType;
+    private String taskType;
+
+    /**
+     * 流程ID
+     */
+    @TableField("process_id")
+    private String processId;
     /**
      * 状态（1-信息待完善，2-待处理，3-暂缓，4-已审核，5-已完成，6-已批退）
      */
@@ -92,11 +100,11 @@ public class AfTpaTask implements Serializable {
      * 被保险人身份证（）
      */
     @TableField("id_num")
-    private Integer idNum;
+    private String idNum;
     /**
      * 被保险人性别  1:男 0:女
      */
-    private Boolean gender;
+    private Integer gender;
     /**
      * 被保险人年龄
      */
@@ -155,6 +163,13 @@ public class AfTpaTask implements Serializable {
     @TableField("modified_by")
     private String modifiedBy;
 
+    public String getProcessId() {
+        return processId;
+    }
+
+    public void setProcessId(String processId) {
+        this.processId = processId;
+    }
 
     public Integer getAfTaskId() {
         return afTaskId;
@@ -164,11 +179,11 @@ public class AfTpaTask implements Serializable {
         this.afTaskId = afTaskId;
     }
 
-    public Integer getTaskType() {
+    public String getTaskType() {
         return taskType;
     }
 
-    public void setTaskType(Integer taskType) {
+    public void setTaskType(String taskType) {
         this.taskType = taskType;
     }
 
@@ -268,19 +283,19 @@ public class AfTpaTask implements Serializable {
         this.associatedInsurantName = associatedInsurantName;
     }
 
-    public Integer getIdNum() {
+    public String getIdNum() {
         return idNum;
     }
 
-    public void setIdNum(Integer idNum) {
+    public void setIdNum(String idNum) {
         this.idNum = idNum;
     }
 
-    public Boolean getGender() {
+    public Integer getGender() {
         return gender;
     }
 
-    public void setGender(Boolean gender) {
+    public void setGender(Integer gender) {
         this.gender = gender;
     }
 
