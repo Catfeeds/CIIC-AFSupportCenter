@@ -83,10 +83,13 @@
         het.submit_time,
         het.task_id
         FROM hf_emp_task het
-        INNER JOIN hf_account_com_relation hacr ON het.company_id = hacr.company_id AND hacr.is_active = 1
-        INNER JOIN hf_com_account hca ON hacr.com_account_id = hca.com_account_id AND hca.is_active = 1
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
+        LEFT JOIN hf_account_com_relation hacr ON het.company_id = hacr.company_id AND hacr.is_active = 1
+        LEFT JOIN hf_com_account hca ON hacr.com_account_id = hca.com_account_id AND hca.is_active = 1
+        <if test="hfComAccount != null">
+            LEFT JOIN hf_com_account_class hcac ON hca.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = het.hf_type
+        </if>
         <where>
             het.is_active = 1 AND IFNULL(het.task_status, 1) != 5
             <if test="exceptTaskCategories != null">
@@ -125,16 +128,29 @@
             <if test="submitTimeEnd != null">
                 AND #{submitTimeEnd} >= het.submit_time
             </if>
-            <if test="taskStatus == null">
-                AND IFNULL(het.task_status, 1) = 1
+            <if test="taskStatus != null">
+                AND IFNULL(het.task_status, 1) = #{taskStatus}
             </if>
             <if test="processStatus == 1">
                 AND het.submit_time <![CDATA[ <= ]]>
-                str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',hca.close_day),'%Y-%m-%d')
+                (
+                SELECT CASE WHEN DAY(CURDATE()) > hca.close_day THEN
+                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hca.close_day)
+                ELSE
+                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hca.close_day) END
+                )
             </if>
             <if test="processStatus == 2">
-                AND et.submit_time >
-                str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',hca.close_day),'%Y-%m-%d')
+                AND het.submit_time >
+                (
+                SELECT CASE WHEN DAY(CURDATE()) > hca.close_day THEN
+                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hca.close_day)
+                ELSE
+                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hca.close_day) END
+                )
+            </if>
+            <if test="hfComAccount != null">
+                AND hcac.hf_com_account = #{hfComAccount}
             </if>
         </where>
     </select>

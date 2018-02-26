@@ -58,7 +58,7 @@
              AND saaa.is_active = 1
             LEFT JOIN (
             SELECT
-                sacr.com_account_id,
+                saae.com_account_id,
                 saac.company_id,
                 saac.company_name,
                 saace.ss_serial,
@@ -68,8 +68,8 @@
                 FROM ss_annual_adjust_company_emp saace
                 INNER JOIN ss_annual_adjust_company saac ON saac.annual_adjust_company_id = saace.annual_adjust_company_id
                 AND saac.is_active = 1 AND saace.is_active = 1 AND saac.adjust_year = YEAR(NOW())
-                INNER JOIN ss_account_com_relation sacr ON saac.company_id = sacr.company_id
-                AND sacr.is_active = 1
+                INNER JOIN ss_annual_adjust_employee saae ON saac.company_id = saae.company_id AND saace.employee_id=saae.employee_id
+                AND saae.is_active = 1
             ) t ON t.com_account_id = saaa.com_account_id AND saaae.ss_serial = t.ss_serial AND saaae.employee_name = t.employee_name
         <where>
             saaae.is_active = 1

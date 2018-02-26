@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao;
 
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfMonthChargeBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfMonthCharge;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
@@ -11,4 +12,11 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface HfMonthChargeMapper extends BaseMapper<HfMonthCharge> {
 
+    /**
+     * 根据条件将雇员月度汇缴明细库记录逻辑删除
+     *
+     * @param hfMonthChargeBo
+     * @return
+     */
+    int inactiveHfMonthCharge(HfMonthChargeBo hfMonthChargeBo);
 }
