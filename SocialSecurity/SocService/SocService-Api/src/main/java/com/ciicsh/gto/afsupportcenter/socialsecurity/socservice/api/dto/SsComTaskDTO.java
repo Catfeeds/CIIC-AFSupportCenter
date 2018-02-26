@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.entity.SsComMaterial;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.customer.SsComMaterial;
 
 import java.util.Date;
 import java.util.List;

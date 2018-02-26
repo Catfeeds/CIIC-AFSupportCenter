@@ -1,12 +1,11 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.SsComTaskProxy;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.TaskCommonUtils;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsComTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAccountComRelation;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAccountRatio;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAccount;
@@ -20,18 +19,23 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
-import kafka.utils.Json;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -43,7 +47,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssComTask")
-public class SsComTaskController extends BasicController<SsComTaskService> implements SsComTaskProxy {
+public class SsComTaskController extends BasicController<SsComTaskService>{
     @Autowired
     private CommonApiUtils commonApiUtils;
 
@@ -490,51 +494,51 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
         }
     }
 
-    /**
-     * 企业社保账户开户、变更、转移、转出的 创建任务单接口
-     *
-     * @param ssComTaskDTO
-     * @return
-     */
-    @Log("企业社保账户开户、变更、转移、转出的 创建任务单接口")
-    @PostMapping("/saveSsComTask")
-    public com.ciicsh.common.entity.JsonResult saveSsComTask(@RequestBody SsComTaskDTO ssComTaskDTO) {
-        try {
-            if (StringUtils.isBlank(ssComTaskDTO.getCompanyId())) {
-                return com.ciicsh.common.entity.JsonResult.faultMessage("客户Id不能为空！");
-            }
-            if (StringUtils.isBlank(ssComTaskDTO.getTaskCategory())) {
-                return com.ciicsh.common.entity.JsonResult.faultMessage("任务类型不能为空！");
-            }
-            SsComTaskBO ssComTask = new SsComTaskBO();
-            BeanUtils.copyProperties(ssComTaskDTO, ssComTask);
-            int cnt = business.countComTaskByCond(ssComTask);
-            if (cnt > 0) {
-                return com.ciicsh.common.entity.JsonResult.faultMessage("该企业已存在相同类型的处理中任务单，不能重复添加！");
-            }
-            Long newComTaskId = insertSsComTask(ssComTaskDTO);
-            return com.ciicsh.common.entity.JsonResult.success(newComTaskId);
-        } catch (Exception e) {
-            return com.ciicsh.common.entity.JsonResult.faultMessage(e.getMessage());
-        }
-    }
-
-    //保存企业任务单
-    private Long insertSsComTask(@RequestBody SsComTaskDTO ssComTaskDTO) {
-        boolean result = false;
-        //数据转换
-        SsComTask ssComTask = CommonTransform.convertToEntity(ssComTaskDTO, SsComTask.class);
-        ssComTask.setTaskStatus(0);
-        ssComTask.setActive(true);
-        ssComTask.setCreatedTime(LocalDateTime.now());
-        ssComTask.setModifiedTime(LocalDateTime.now());
-        ssComTask.setCreatedBy("system");
-        ssComTask.setModifiedBy("system");
-
-        //任务单上前道系统传递过来的内容，Json格式
-        ssComTask.setTaskFormContent(JSONObject.toJSONString(ssComTaskDTO));
-
-        business.insertComTask(ssComTask);
-        return ssComTask.getComTaskId();
-    }
+//    /**
+//     * 企业社保账户开户、变更、转移、转出的 创建任务单接口
+//     *
+//     * @param ssComTaskDTO
+//     * @return
+//     */
+//    @Log("企业社保账户开户、变更、转移、转出的 创建任务单接口")
+//    @PostMapping("/saveSsComTask")
+//    public com.ciicsh.common.customer.JsonResult saveSsComTask(@RequestBody SsComTaskDTO ssComTaskDTO) {
+//        try {
+//            if (StringUtils.isBlank(ssComTaskDTO.getCompanyId())) {
+//                return com.ciicsh.common.customer.JsonResult.faultMessage("客户Id不能为空！");
+//            }
+//            if (StringUtils.isBlank(ssComTaskDTO.getTaskCategory())) {
+//                return com.ciicsh.common.customer.JsonResult.faultMessage("任务类型不能为空！");
+//            }
+//            SsComTaskBO ssComTask = new SsComTaskBO();
+//            BeanUtils.copyProperties(ssComTaskDTO, ssComTask);
+//            int cnt = business.countComTaskByCond(ssComTask);
+//            if (cnt > 0) {
+//                return com.ciicsh.common.customer.JsonResult.faultMessage("该企业已存在相同类型的处理中任务单，不能重复添加！");
+//            }
+//            Long newComTaskId = insertSsComTask(ssComTaskDTO);
+//            return com.ciicsh.common.customer.JsonResult.success(newComTaskId);
+//        } catch (Exception e) {
+//            return com.ciicsh.common.customer.JsonResult.faultMessage(e.getMessage());
+//        }
+//    }
+//
+//    //保存企业任务单
+//    private Long insertSsComTask(@RequestBody SsComTaskDTO ssComTaskDTO) {
+//        boolean result = false;
+//        //数据转换
+//        SsComTask ssComTask = CommonTransform.convertToEntity(ssComTaskDTO, SsComTask.class);
+//        ssComTask.setTaskStatus(0);
+//        ssComTask.setActive(true);
+//        ssComTask.setCreatedTime(LocalDateTime.now());
+//        ssComTask.setModifiedTime(LocalDateTime.now());
+//        ssComTask.setCreatedBy("system");
+//        ssComTask.setModifiedBy("system");
+//
+//        //任务单上前道系统传递过来的内容，Json格式
+//        ssComTask.setTaskFormContent(JSONObject.toJSONString(ssComTaskDTO));
+//
+//        business.insertComTask(ssComTask);
+//        return ssComTask.getComTaskId();
+//    }
 }

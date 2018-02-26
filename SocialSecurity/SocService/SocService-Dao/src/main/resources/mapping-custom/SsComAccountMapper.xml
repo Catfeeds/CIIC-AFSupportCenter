@@ -10,8 +10,8 @@
         <result column="title" property="title"/>
     </resultMap>
     <!-- 通用查询映射结果 -->
-    <resultMap id="SsComAccountDTO" extends="BaseResultMap"
-               type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountDTO">
+    <resultMap id="ComAccountExtMap" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.ComAccountExtPO">
     </resultMap>
     <!--关联账户表和任务单表-->
     <resultMap id="AccountAndTaskResultMap" extends="BaseResultMap"
@@ -152,7 +152,7 @@
 
     </select>
 
-    <select id="getSsComAccountList" resultMap="SsComAccountDTO">
+    <select id="getSsComAccountList" resultMap="ComAccountExtMap">
         select ca.*
         from ss_com_account ca
         LEFT JOIN ss_account_com_relation ssac on ca.com_account_id = ssac.com_account_id

@@ -135,12 +135,12 @@
                 AND et.task_status NOT IN (2,3,4)
             </when>
             <when test="taskStatus == -1">
-                AND et.submit_time <![CDATA[ <= ]]>
+                AND date_format(et.submit_time,'%Y-%m-%d') <![CDATA[ <= ]]>
                 str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',if(isnull(ca.expire_date),26,ca.expire_date)),'%Y-%m-%d') AND
                 et.task_status NOT IN (2,3,4)
             </when>
             <when test="taskStatus == -2">
-                AND et.submit_time >
+                AND date_format(et.submit_time,'%Y-%m-%d') <![CDATA[ > ]]>
                 str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',if(isnull(ca.expire_date),26,ca.expire_date)),'%Y-%m-%d') AND
                 et.task_status NOT IN (2,3,4)
             </when>
@@ -566,7 +566,7 @@
         #{proDefKey},#{policyDetailId},#{isActive},#{createdTime},#{modifiedTime},#{createdBy},#{modifiedBy})
     </insert>
     <!---->
-    <select id="fetchEmpArchiveId" resultType="long">
+    <select id="fetchEmpArchiveId" resultType="string">
       SELECT ea.emp_archive_id from ss_emp_archive ea where ea.is_active=1
       and ea.company_id=#{companyId} and ea.employee_id=#{employeeId}
       ORDER BY ea.emp_archive_id DESC

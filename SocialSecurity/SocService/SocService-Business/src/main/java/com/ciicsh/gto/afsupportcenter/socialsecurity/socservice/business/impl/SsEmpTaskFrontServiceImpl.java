@@ -129,23 +129,21 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         //任务单类型不是 新进 和 转入 就要补充雇员社保档案主表ID
         if(taskCategory!=1 && taskCategory!=2){
             if(Optional.ofNullable(companyDto.getCompanyId()).isPresent() && Optional.ofNullable(companyDto.getEmployeeId()).isPresent()){
-                long ssEmpArchiveId=0;
-                try {
-                    ssEmpArchiveId= ssEmpTaskMapper.fetchEmpArchiveId(companyDto.getCompanyId(),companyDto.getEmployeeId());
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-                ssEmpTask.setEmpArchiveId(ssEmpArchiveId);
+                String ssEmpArchiveId="";
+                ssEmpArchiveId = ssEmpTaskMapper.fetchEmpArchiveId(companyDto.getCompanyId(),companyDto.getEmployeeId());
+                ssEmpTask.setEmpArchiveId( Long.valueOf(Optional.ofNullable(ssEmpArchiveId).orElse("0")) );
             }
-
         }
         ssEmpTask.setTaskCategory(taskCategory);
         ssEmpTask.setIsChange(isChange);
         ssEmpTask.setTaskFormContent(JSON.toJSONString(dto));
 
         if (dto.getNowAgreement() != null && dto.getNowAgreement().getSocialRuleId() != null) {
-            ssEmpTask.setPolicyDetailId(dto.getNowAgreement().getSocialRuleId().intValue());
+            //ssEmpTask.setPolicyDetailId(dto.getNowAgreement().getSocialRuleId().intValue());
+            ssEmpTask.setPolicyDetailId(dto.getNowAgreement().getSocialPolicyId());
+
         }
+
         ssEmpTask.setProcessId(taskMsgDTO.getProcessId());
         ssEmpTask.setTaskStatus(1);
         ssEmpTask.setActive(true);
@@ -262,7 +260,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         ssEmpTask.setTaskFormContent(JSON.toJSONString(dto));
 
         if (dto.getNowAgreement() != null && dto.getNowAgreement().getSocialRuleId() != null) {
-            ssEmpTask.setPolicyDetailId(dto.getNowAgreement().getSocialRuleId().intValue());
+            ssEmpTask.setPolicyDetailId(dto.getNowAgreement().getSocialPolicyId());
         }
         //福利办理方
         ssEmpTask.setWelfareUnit(companyDto.getSocialUnit());

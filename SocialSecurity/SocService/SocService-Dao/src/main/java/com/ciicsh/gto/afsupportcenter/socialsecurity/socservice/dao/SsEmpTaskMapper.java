@@ -57,5 +57,5 @@ public interface SsEmpTaskMapper extends BaseMapper<SsEmpTask> {
 
     boolean insertEmpTask(SsEmpTask ssEmpTask);
 
-    Long fetchEmpArchiveId(@Param("companyId") String companyId,@Param("employeeId") String employeeId);
+    String fetchEmpArchiveId(@Param("companyId") String companyId,@Param("employeeId") String employeeId);
 }

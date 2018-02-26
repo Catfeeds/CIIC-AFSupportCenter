@@ -2,9 +2,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controlle
 
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.statement.SsStatementResultDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.statement.SsStatementResultBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsStatementResultService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementResultBO;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -38,25 +37,25 @@ public class SsStatementResultController extends BasicController<SsStatementResu
      */
     @Log("对账单结果查询")
     @PostMapping("/statementResultQuery")
-    public JsonResult<List<SsStatementResultDTO>> statementResultQuery(SsStatementResultDTO ssStatementResultDTO) {
+    public JsonResult<List<SsStatementResultBO>> statementResultQuery(SsStatementResultBO ssStatementResultDTO) {
 
         //转换格式
-        SsStatementResultBO ssStatementResultBO = CommonTransform.convertToEntity(ssStatementResultDTO,SsStatementResultBO.class);
+        com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementResultBO ssStatementResultBO = CommonTransform.convertToEntity(ssStatementResultDTO, com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementResultBO.class);
 
 
-        List<SsStatementResultBO> resultList =business.statementResultQuery(ssStatementResultBO);
+        List<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementResultBO> resultList =business.statementResultQuery(ssStatementResultBO);
         //转换格式
-        List<SsStatementResultDTO> resultDTOList  = CommonTransform.convertToDTOs(resultList,SsStatementResultDTO.class);
+        List<SsStatementResultBO> resultDTOList  = CommonTransform.convertToDTOs(resultList,SsStatementResultBO.class);
         //BeanUtils.copyProperties(resultList,resultDTOList);
 //        //循环转格式
 //        if(Optional.ofNullable(resultList).isPresent()){
 //            for(int i = 0;i < resultList.size();i++){
-//                SsStatementResultDTO resultDTO = new SsStatementResultDTO();
+//                SsStatementResultBO resultDTO = new SsStatementResultBO();
 //                BeanUtils.copyProperties(resultList.get(i),resultDTO);
 //                resultDTOList.add(resultDTO);
 //            }
 //        }
-        JsonResult<List<SsStatementResultDTO>> jsonResult= new JsonResult<>();
+        JsonResult<List<SsStatementResultBO>> jsonResult= new JsonResult<>();
         jsonResult.setData(resultDTOList);
 
         return jsonResult;

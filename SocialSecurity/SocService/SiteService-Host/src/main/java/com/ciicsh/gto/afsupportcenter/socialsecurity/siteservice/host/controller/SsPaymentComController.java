@@ -1,12 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.payment.SsAddPaymentDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.payment.SsDelPaymentDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.payment.SsPaymentComDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsAddPaymentBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsDelPaymentBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentComBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.payment.SsAddPaymentBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.payment.SsDelPaymentBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.payment.SsPaymentComBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsPaymentComService;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
@@ -43,10 +40,10 @@ public class SsPaymentComController  extends BasicController<SsPaymentComService
      */
     @Log("查询社保支付-企业账户(列表页)")
     @PostMapping("/paymentComQuery")
-    public JsonResult<List<SsPaymentComDTO>> paymentComQuery(PageInfo pageInfo) {
+    public JsonResult<List<SsPaymentComBO>> paymentComQuery(PageInfo pageInfo) {
 
-        PageRows<SsPaymentComBO> pageBORows = business.paymentComQuery(pageInfo);
-        PageRows<SsPaymentComDTO> pageRows = new PageRows<SsPaymentComDTO>();
+        PageRows<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentComBO> pageBORows = business.paymentComQuery(pageInfo);
+        PageRows<SsPaymentComBO> pageRows = new PageRows<SsPaymentComBO>();
         BeanUtils.copyProperties(pageBORows,pageRows);
 
         //PageRows<SsPaymentComBO> pageRows = business.paymentComQuery(pageInfo);
@@ -64,10 +61,10 @@ public class SsPaymentComController  extends BasicController<SsPaymentComService
      */
     @Log("保存调整结果")
     @PostMapping("/saveAdjustment")
-    public JsonResult<String> saveAdjustment(SsPaymentComDTO ssPaymentComDTO) {
+    public JsonResult<String> saveAdjustment(SsPaymentComBO ssPaymentComDTO) {
 
         //数据转换
-        SsPaymentComBO ssPaymentComBO = CommonTransform.convertToEntity(ssPaymentComDTO,SsPaymentComBO.class);
+        com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentComBO ssPaymentComBO = CommonTransform.convertToEntity(ssPaymentComDTO, com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentComBO.class);
 
 
         JsonResult<String> json = new JsonResult<String>();
@@ -91,10 +88,10 @@ public class SsPaymentComController  extends BasicController<SsPaymentComService
      */
     @Log("添加至支付批次")
     @PostMapping("/doAddBatch")
-    public JsonResult<String> doAddBatch(SsAddPaymentDTO ssAddPaymentDTO) {
+    public JsonResult<String> doAddBatch(SsAddPaymentBO ssAddPaymentDTO) {
         JsonResult<String> json = new JsonResult<String>();
         //数据转换
-        SsAddPaymentBO ssAddPaymentBO = CommonTransform.convertToEntity(ssAddPaymentDTO,SsAddPaymentBO.class);
+        com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsAddPaymentBO ssAddPaymentBO = CommonTransform.convertToEntity(ssAddPaymentDTO, com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsAddPaymentBO.class);
         //执行业务
         json = business.doAddBatch(ssAddPaymentBO);
 
@@ -110,10 +107,10 @@ public class SsPaymentComController  extends BasicController<SsPaymentComService
      */
     @Log("从支付批次移出")
     @PostMapping("/doDelBatch")
-    public JsonResult<String> doDelBatch(SsDelPaymentDTO ssDelPaymentDTO) {
+    public JsonResult<String> doDelBatch(SsDelPaymentBO ssDelPaymentDTO) {
         JsonResult<String> json = new JsonResult<String>();
         //数据转换
-        SsDelPaymentBO ssDelPaymentBO = CommonTransform.convertToEntity(ssDelPaymentDTO,SsDelPaymentBO.class);
+        com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsDelPaymentBO ssDelPaymentBO = CommonTransform.convertToEntity(ssDelPaymentDTO, com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsDelPaymentBO.class);
         //执行业务
         json = business.doDelBatch(ssDelPaymentBO);
 
@@ -130,11 +127,11 @@ public class SsPaymentComController  extends BasicController<SsPaymentComService
      */
     @Log("根据ID获取客户费用信息及扩展信息")
     @PostMapping("/getPaymentComDtoByPaymentId")
-    public JsonResult<SsPaymentComDTO> getPaymentComDtoByPaymentId(SsPaymentComDTO ssPaymentComDTO) {
-        JsonResult<SsPaymentComDTO> json = new JsonResult<SsPaymentComDTO>();
+    public JsonResult<SsPaymentComBO> getPaymentComDtoByPaymentId(SsPaymentComBO ssPaymentComDTO) {
+        JsonResult<SsPaymentComBO> json = new JsonResult<SsPaymentComBO>();
 
-        SsPaymentComBO ssPaymentComBO = business.getPaymentComBoByPaymentId(ssPaymentComDTO.getPaymentComId());
-        SsPaymentComDTO resultDTO = CommonTransform.convertToDTO(ssPaymentComBO,SsPaymentComDTO.class);
+        com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentComBO ssPaymentComBO = business.getPaymentComBoByPaymentId(ssPaymentComDTO.getPaymentComId());
+        SsPaymentComBO resultDTO = CommonTransform.convertToDTO(ssPaymentComBO,SsPaymentComBO.class);
         json.setData(resultDTO);
 
         return json;

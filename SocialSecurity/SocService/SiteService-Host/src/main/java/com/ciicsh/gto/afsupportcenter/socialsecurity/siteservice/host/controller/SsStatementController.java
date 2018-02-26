@@ -1,8 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.statement.SsStatementDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.statement.SsStatementBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsStatementService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.StatementExportArgs;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.StatementExportOpt;
@@ -44,10 +43,10 @@ public class SsStatementController  extends BasicController<SsStatementService> 
      */
     @Log("对账单查询")
     @PostMapping("/statementQuery")
-    public JsonResult<List<SsStatementDTO>> statementQuery(PageInfo pageInfo) {
+    public JsonResult<List<SsStatementBO>> statementQuery(PageInfo pageInfo) {
 
-        PageRows<SsStatementBO> pageBORows = business.statementQuery(pageInfo);
-        PageRows<SsStatementDTO> pageRows = new PageRows<SsStatementDTO>();
+        PageRows<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementBO> pageBORows = business.statementQuery(pageInfo);
+        PageRows<SsStatementBO> pageRows = new PageRows<SsStatementBO>();
         BeanUtils.copyProperties(pageBORows,pageRows);
 
 
@@ -77,22 +76,22 @@ public class SsStatementController  extends BasicController<SsStatementService> 
      * @author wengxk
      * @date 2017-12-08
      * @param ssStatementDTO 检索条件
-     * @return  JsonResult<SsStatementDTO>
+     * @return  JsonResult<SsStatementBO>
      */
     @Log("对账单查询")
     @PostMapping("/serachStatementData")
-    public JsonResult<SsStatementDTO> serachStatementData(SsStatementDTO ssStatementDTO) {
+    public JsonResult<SsStatementBO> serachStatementData(SsStatementBO ssStatementDTO) {
         //入口转换格式
-        SsStatementBO ssStatementBO = CommonTransform.convertToEntity(ssStatementDTO,SsStatementBO.class);
+        com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementBO ssStatementBO = CommonTransform.convertToEntity(ssStatementDTO, com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementBO.class);
 
-        SsStatementBO resultBO = business.serachStatementData(ssStatementBO);
+        com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementBO resultBO = business.serachStatementData(ssStatementBO);
 
         //出口转换格式
-        SsStatementDTO resultDto = new SsStatementDTO();
+        SsStatementBO resultDto = new SsStatementBO();
         BeanUtils.copyProperties(resultBO,resultDto);
 
 
-        JsonResult<SsStatementDTO> result = new JsonResult<>();
+        JsonResult<SsStatementBO> result = new JsonResult<>();
         result.setData(resultDto);
 
         return result;

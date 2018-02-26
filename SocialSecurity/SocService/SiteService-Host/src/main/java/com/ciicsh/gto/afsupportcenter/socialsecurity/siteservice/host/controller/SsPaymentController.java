@@ -1,11 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.payment.SsOperatePaymentDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.payment.SsPaymentDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.payment.SsPaymentSrarchDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentSrarchBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.payment.SsOperatePaymentBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.payment.SsPaymentBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.payment.SsPaymentSrarchBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsPaymentComService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsPaymentService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPayment;
@@ -52,11 +50,11 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
      */
     @Log("查询社保支付-支付批次(列表页)")
     @PostMapping("/paymentQuery")
-    public JsonResult<List<SsPaymentDTO>> paymentQuery(PageInfo pageInfo) {
+    public JsonResult<List<SsPaymentBO>> paymentQuery(PageInfo pageInfo) {
 
 
-        PageRows<SsPaymentBO> pageBORows = business.paymentQuery(pageInfo);
-        PageRows<SsPaymentDTO> pageRows = new PageRows<SsPaymentDTO>();
+        PageRows<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentBO> pageBORows = business.paymentQuery(pageInfo);
+        PageRows<SsPaymentBO> pageRows = new PageRows<SsPaymentBO>();
         BeanUtils.copyProperties(pageBORows, pageRows);
 
 
@@ -75,9 +73,9 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
      */
     @Log("按照条件显示可加入的批次")
     @PostMapping("/showAddBatch")
-    public JsonResult<List<SsPaymentDTO>> showAddBatch(SsPaymentSrarchDTO paymentSrarchDTO) {
+    public JsonResult<List<SsPaymentBO>> showAddBatch(SsPaymentSrarchBO paymentSrarchDTO) {
 
-        SsPaymentSrarchBO ssPaymentSrarchBO = CommonTransform.convertToEntity(paymentSrarchDTO, SsPaymentSrarchBO
+        com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentSrarchBO ssPaymentSrarchBO = CommonTransform.convertToEntity(paymentSrarchDTO, com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentSrarchBO
             .class);
 
         //将要检索的状态写入查询条件
@@ -88,12 +86,12 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
         paymentStateList.add("5");
         ssPaymentSrarchBO.setPaymentStateList(paymentStateList);
 
-        List<SsPaymentBO> resultList = business.showAddBatch(ssPaymentSrarchBO);
+        List<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentBO> resultList = business.showAddBatch(ssPaymentSrarchBO);
 
-        List<SsPaymentDTO> resultDTOList = CommonTransform.convertToDTOs(resultList, SsPaymentDTO.class);
+        List<SsPaymentBO> resultDTOList = CommonTransform.convertToDTOs(resultList, SsPaymentBO.class);
 
 
-        JsonResult<List<SsPaymentDTO>> jsonResult = new JsonResult<>();
+        JsonResult<List<SsPaymentBO>> jsonResult = new JsonResult<>();
         jsonResult.setData(resultDTOList);
 
         return jsonResult;
@@ -109,7 +107,7 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
      */
     @Log("申请支付")
     @PostMapping("/doApplyPay")
-    public JsonResult<String> doApplyPay(SsOperatePaymentDTO ssOperatePaymentDTO) {
+    public JsonResult<String> doApplyPay(SsOperatePaymentBO ssOperatePaymentDTO) {
         JsonResult<String> json = new JsonResult<String>();
         //数据转换
         SsPayment ssPayment = CommonTransform.convertToEntity(ssOperatePaymentDTO, SsPayment.class);
@@ -130,7 +128,7 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
      */
     @Log("删除批次")
     @PostMapping("/doDelPayment")
-    public JsonResult<String> doDelPayment(SsOperatePaymentDTO ssOperatePaymentDTO) {
+    public JsonResult<String> doDelPayment(SsOperatePaymentBO ssOperatePaymentDTO) {
         JsonResult<String> json = new JsonResult<String>();
         //数据转换
         SsPayment ssPayment = CommonTransform.convertToEntity(ssOperatePaymentDTO, SsPayment.class);
@@ -179,7 +177,7 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
      */
     @Log("添加批次")
     @PostMapping("/addPayment")
-    public JsonResult<String> addPayment(SsPaymentDTO ssPaymentDTO) {
+    public JsonResult<String> addPayment(SsPaymentBO ssPaymentDTO) {
         JsonResult<String> json = new JsonResult<String>();
         //数据转换
         SsPayment ssPayment = CommonTransform.convertToEntity(ssPaymentDTO, SsPayment.class);
@@ -199,11 +197,11 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
      */
     @Log("查询社保支付-支付批次(列表页)")
     @PostMapping("/paymentReviewedQuery")
-    public JsonResult<List<SsPaymentDTO>> paymentReviewedQuery(PageInfo pageInfo) {
+    public JsonResult<List<SsPaymentBO>> paymentReviewedQuery(PageInfo pageInfo) {
 
         //处理参数
         //如果页面没有选择支付状态则放入默认支付状态
-        SsPaymentBO ssPaymentBO = pageInfo.toJavaObject(SsPaymentBO.class);
+        com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentBO ssPaymentBO = pageInfo.toJavaObject(com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentBO.class);
         if (!Optional.ofNullable(ssPaymentBO.getPaymentState()).isPresent()) {
             List<Integer> paymentStateList = new ArrayList<>();
             //申请中
@@ -217,8 +215,8 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
             pageInfo.put(ssPaymentBO);
         }
 
-        PageRows<SsPaymentBO> pageBORows = business.paymentQuery(pageInfo);
-        PageRows<SsPaymentDTO> pageRows = new PageRows<SsPaymentDTO>();
+        PageRows<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentBO> pageBORows = business.paymentQuery(pageInfo);
+        PageRows<SsPaymentBO> pageRows = new PageRows<SsPaymentBO>();
         BeanUtils.copyProperties(pageBORows, pageRows);
 
 
@@ -235,7 +233,7 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
      */
     @Log("批次审批通过")
     @PostMapping("/doReviewdePass")
-    public JsonResult<String> doReviewdePass(SsOperatePaymentDTO ssOperatePaymentDTO) {
+    public JsonResult<String> doReviewdePass(SsOperatePaymentBO ssOperatePaymentDTO) {
         //数据转换
         SsPayment ssPayment = CommonTransform.convertToEntity(ssOperatePaymentDTO, SsPayment.class);
         //执行业务
@@ -258,7 +256,7 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
      */
     @Log("批次批退")
     @PostMapping("/doRejection")
-    public JsonResult<String> doRejection(SsOperatePaymentDTO ssOperatePaymentDTO) {
+    public JsonResult<String> doRejection(SsOperatePaymentBO ssOperatePaymentDTO) {
         JsonResult<String> json = new JsonResult<String>();
         //数据转换
         SsPayment ssPayment = CommonTransform.convertToEntity(ssOperatePaymentDTO, SsPayment.class);
