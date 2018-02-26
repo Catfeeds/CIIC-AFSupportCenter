@@ -35,8 +35,8 @@ public class HealthMedicalJobController {
      * @param
      * @return
      */
-    @Scheduled(cron = "20 0/30 * * * *")
-//    @GetMapping(value = "/handleSupplyMedical")
+//    @Scheduled(cron = "20 0/10 * * * *")
+    @GetMapping(value = "/handleSupplyMedical")
     public void handleSupplyMedical() {
         try {
             logger.info("+++++++++++++++++++++++++++ 补充医疗受理任务: 开始 +++++++++++++++++++++++++++ ");
@@ -54,8 +54,8 @@ public class HealthMedicalJobController {
      * @param
      * @return
      */
-    @Scheduled(cron = "45 0/30 * * * *")
-//    @GetMapping(value = "/handleUninsuredMedical")
+//    @Scheduled(cron = "45 0/10 * * * *")
+    @GetMapping(value = "/handleUninsuredMedical")
     public void handleUninsuredMedical() {
         try {
             logger.info("+++++++++++++++++++++++++++ 未投保医疗任务: 开始 +++++++++++++++++++++++++++ ");
