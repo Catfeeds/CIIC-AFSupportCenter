@@ -20,6 +20,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import kafka.utils.Json;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -193,6 +194,10 @@ public class SsComTaskController extends BasicController<SsComTaskService> imple
         } else {
             //任务单 为初始，受理， 送审  账户为初始状态
             ssComAccount.setState(new Integer(0));
+        }
+        String retCheckResult=business.checkComAccountDuplicate(ssComAccount);
+        if ( !retCheckResult.equals("")){//检查输入的内容是否重复
+            return JsonResultKit.ofError(retCheckResult.substring(0,retCheckResult.length()-1));
         }
         boolean result = business.addOrUpdateCompanyTask(ssComTask, ssComAccount, ssAccountRatio, ssAccountComRelation);
         return JsonResultKit.of(result);

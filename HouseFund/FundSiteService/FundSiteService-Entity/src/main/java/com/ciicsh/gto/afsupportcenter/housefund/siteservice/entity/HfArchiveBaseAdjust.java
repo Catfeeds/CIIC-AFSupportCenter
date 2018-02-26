@@ -68,6 +68,16 @@ public class HfArchiveBaseAdjust implements Serializable {
      */
 	private BigDecimal ratio;
     /**
+     * 个人比例
+     */
+    @TableField("ratio_emp")
+    private BigDecimal ratioEmp;
+    /**
+     * 企业比例
+     */
+    @TableField("ratio_com")
+    private BigDecimal ratioCom;
+    /**
      * 和上一次年调后的企业缴纳部分金额的差额合计
      */
 	@TableField("com_diff_sum_amount")
@@ -189,7 +199,23 @@ public class HfArchiveBaseAdjust implements Serializable {
 		this.ratio = ratio;
 	}
 
-	public BigDecimal getComDiffSumAmount() {
+    public BigDecimal getRatioEmp() {
+        return ratioEmp;
+    }
+
+    public void setRatioEmp(BigDecimal ratioEmp) {
+        this.ratioEmp = ratioEmp;
+    }
+
+    public BigDecimal getRatioCom() {
+        return ratioCom;
+    }
+
+    public void setRatioCom(BigDecimal ratioCom) {
+        this.ratioCom = ratioCom;
+    }
+
+    public BigDecimal getComDiffSumAmount() {
 		return comDiffSumAmount;
 	}
 
@@ -266,6 +292,8 @@ public class HfArchiveBaseAdjust implements Serializable {
 			", startMonth=" + startMonth +
 			", endMonth=" + endMonth +
 			", ratio=" + ratio +
+            ", ratioEmp=" + ratioEmp +
+            ", ratioCom=" + ratioCom +
 			", comDiffSumAmount=" + comDiffSumAmount +
 			", empDiffSumAmount=" + empDiffSumAmount +
 			", comempSumDiffAmount=" + comempSumDiffAmount +

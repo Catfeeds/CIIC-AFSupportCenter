@@ -167,5 +167,22 @@
             </if>
         </where>
     </select>
-
+    <select id="checkComAccountDuplicateaSSAccount" resultType="Integer">
+        SELECT count(1)
+        FROM ss_com_account ca
+        WHERE 1=1
+        AND ca.ss_account=#{ssAccount}
+        <if test="comAccountId != null">
+            AND ca.com_account_id !=#{comAccountId}
+        </if>
+    </select>
+    <select id="checkComAccountDuplicateaSSAccountName" resultType="Integer">
+        SELECT count(1)
+        FROM ss_com_account ca
+        WHERE 1=1
+        AND ca.com_account_name=#{comAccountName}
+        <if test="comAccountId != null">
+            AND ca.com_account_id !=#{comAccountId}
+        </if>
+    </select>
 </mapper>

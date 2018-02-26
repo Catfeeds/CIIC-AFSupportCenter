@@ -3,7 +3,7 @@
 <mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao.HfEmpTaskMapper">
 
 	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMapBo" type="com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpTaskBo">
+	<resultMap id="BaseResultMapBo" type="com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpTaskExportBo">
 		<result column="emp_task_id" property="empTaskId" />
 		<result column="company_id" property="companyId" />
         <result column="company_name" property="companyName" />

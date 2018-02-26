@@ -86,7 +86,7 @@ public interface SsComTaskService extends IService<SsComTask> {
      * 企业任务开户办理 在内做事物
      */
     public boolean addOrUpdateCompanyTask(SsComTask ssComTask, SsComAccount ssComAccount, SsAccountRatio ssAccountRatio,SsAccountComRelation ssAccountComRelation);
-
+    public String checkComAccountDuplicate(SsComAccount ssComAccount);
     /**
      * 查询账户信息 和材料信息
      * @param ssComTaskBO

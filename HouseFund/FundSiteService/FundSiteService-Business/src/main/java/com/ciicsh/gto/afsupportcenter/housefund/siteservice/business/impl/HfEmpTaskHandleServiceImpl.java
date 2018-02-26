@@ -13,7 +13,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.siteservice.constant.HfEmpArchiv
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.constant.HfMonthChargeConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao.HfEmpTaskMapper;
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dto.HfEmpTaskHandleDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfEmpTaskHandlePostBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
@@ -29,8 +29,8 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask> implements HfEmpTaskHandleService {
@@ -44,11 +44,13 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
     private HfEmpTaskPeriodService hfEmpTaskPeriodService;
     @Autowired
     private HfComAccountService hfComAccountService;
+    @Autowired
+    private HfArchiveBaseAdjustService hfArchiveBaseAdjustService;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
     @Override
-    public List<HfEmpTaskHandleBo> getEmpTaskHandleData(HfEmpTaskHandleDTO hfEmpTaskHandleDTO) {
+    public List<HfEmpTaskHandleBo> getEmpTaskHandleData(HfEmpTaskHandlePostBo hfEmpTaskHandleDTO) {
         return baseMapper.getEmpTaskHandleData(hfEmpTaskHandleDTO);
     }
 
@@ -86,11 +88,16 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             } else {
                 return JsonResultKit.ofError("当前雇员任务单所属的企业账户不存在");
             }
+
+            JsonResult rlt = checkEmpArchive(params);
+            if (rlt.getCode() != 200) {
+                return rlt;
+            }
         }
 
         HfEmpTask inputHfEmpTask = new HfEmpTask();
         if (isHandle) {
-            handleEmpTask(hfEmpTask, inputHfEmpTask);
+            setEmpTask(hfEmpTask, inputHfEmpTask);
         }
         inputHfEmpTask.setEmpTaskId(empTaskId);
         inputHfEmpTask.setTaskCategory(params.getInteger("taskCategory"));
@@ -161,7 +168,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
      * @param origEmpTask 既存的雇员任务数据
      * @param inputHfEmpTask 画面输入的雇员任务数据
      */
-    private void handleEmpTask(HfEmpTask origEmpTask, HfEmpTask inputHfEmpTask) {
+    private void setEmpTask(HfEmpTask origEmpTask, HfEmpTask inputHfEmpTask) {
         System.out.println("origEmpTask.getEmpArchiveId() = " + origEmpTask.getEmpArchiveId()); // TODO log
         inputHfEmpTask.setEmpArchiveId(origEmpTask.getEmpArchiveId());
         inputHfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_HANDLED);
@@ -174,40 +181,46 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
     /**
      * 根据任务单费用分段表数据实装雇员档案费用分段表数据
      *
-     * @param hfArchiveBasePeriodList 雇员档案费用分段表数据
+     * @param hfArchiveBasePeriodList 雇员档案费用分段表数据列表
      * @param hfEmpTask 任务单表数据
      * @param hfEmpTaskPeriod 任务费用分段表数据
+     * @param repairHfArchiveBasePeriod 差额补缴的雇员档案费用分段表数据
      */
-    private void setHfArchiveBasePeriodList(List<HfArchiveBasePeriod> hfArchiveBasePeriodList, HfEmpTask hfEmpTask, HfEmpTaskPeriod hfEmpTaskPeriod) {
+    private void setHfArchiveBasePeriodList(List<HfArchiveBasePeriod> hfArchiveBasePeriodList, HfEmpTask hfEmpTask, HfEmpTaskPeriod hfEmpTaskPeriod, HfArchiveBasePeriod repairHfArchiveBasePeriod) {
         HfArchiveBasePeriod hfArchiveBasePeriod = new HfArchiveBasePeriod();
         System.out.println("e.getArchiveBasePeriodId() = " + hfEmpTaskPeriod.getArchiveBasePeriodId()); // TODO log
         hfArchiveBasePeriod.setArchiveBasePeriodId(hfEmpTaskPeriod.getArchiveBasePeriodId());
         hfArchiveBasePeriod.setEmpTaskId(hfEmpTaskPeriod.getEmpTaskId());
         hfArchiveBasePeriod.setEmployeeId(hfEmpTask.getEmployeeId());
         hfArchiveBasePeriod.setCompanyId(hfEmpTask.getCompanyId());
-        hfArchiveBasePeriod.setAmount(hfEmpTaskPeriod.getAmount());
         hfArchiveBasePeriod.setBaseAmount(hfEmpTaskPeriod.getBaseAmount());
         hfArchiveBasePeriod.setRatioCom(hfEmpTaskPeriod.getRatioCom());
         hfArchiveBasePeriod.setRatioEmp(hfEmpTaskPeriod.getRatioEmp());
-        BigDecimal ratioCom = BigDecimal.ZERO;
-        BigDecimal ratioEmp = BigDecimal.ZERO;
-        BigDecimal amount = BigDecimal.ZERO;
-        if (hfEmpTaskPeriod.getRatioCom() != null) {
-            ratioCom = hfEmpTaskPeriod.getRatioCom();
-        }
-        if (hfEmpTaskPeriod.getRatioEmp() != null) {
-            ratioEmp = hfEmpTaskPeriod.getRatioEmp();
-        }
-        if (hfEmpTaskPeriod.getAmount() != null) {
-            amount = hfEmpTaskPeriod.getAmount();
-        }
+        BigDecimal ratioCom = hfEmpTaskPeriod.getRatioCom();
+        BigDecimal ratioEmp = hfEmpTaskPeriod.getRatioEmp();
+        BigDecimal amount = hfEmpTaskPeriod.getAmount();
+//        if (hfEmpTaskPeriod.getRatioCom() != null) {
+//            ratioCom = hfEmpTaskPeriod.getRatioCom();
+//        }
+//        if (hfEmpTaskPeriod.getRatioEmp() != null) {
+//            ratioEmp = hfEmpTaskPeriod.getRatioEmp();
+//        }
+//        if (hfEmpTaskPeriod.getAmount() != null) {
+//            amount = hfEmpTaskPeriod.getAmount();
+//        }
         hfArchiveBasePeriod.setRatio(ratioCom.add(ratioEmp).setScale(2, BigDecimal.ROUND_HALF_UP));
-        if (hfArchiveBasePeriod.getRatio().compareTo(BigDecimal.ZERO) > 0) {
+//        if (hfArchiveBasePeriod.getRatio().compareTo(BigDecimal.ZERO) > 0) {
+        if (repairHfArchiveBasePeriod == null) {
+            hfArchiveBasePeriod.setAmount(hfEmpTaskPeriod.getAmount());
             hfArchiveBasePeriod.setAmountEmp(amount.multiply(ratioEmp.divide(hfArchiveBasePeriod.getRatio())).setScale(2, BigDecimal.ROUND_HALF_UP));
             hfArchiveBasePeriod.setComAmount(amount.multiply(ratioCom.divide(hfArchiveBasePeriod.getRatio())).setScale(2, BigDecimal.ROUND_HALF_UP));
         } else {
-            hfArchiveBasePeriod.setAmountEmp(BigDecimal.ZERO);
-            hfArchiveBasePeriod.setComAmount(BigDecimal.ZERO);
+            // 代码特殊处理，仅为了差额补缴时，不重新计算单月差额
+            hfArchiveBasePeriod.setAmountEmp(repairHfArchiveBasePeriod.getAmountEmp());
+            hfArchiveBasePeriod.setComAmount(repairHfArchiveBasePeriod.getComAmount());
+            hfArchiveBasePeriod.setAmount(repairHfArchiveBasePeriod.getAmountEmp()
+                .add(repairHfArchiveBasePeriod.getComAmount()).setScale(2, BigDecimal.ROUND_HALF_UP));
+            hfArchiveBasePeriod.setDiffRepair(true);
         }
 
         hfArchiveBasePeriod.setStartMonth(hfEmpTaskPeriod.getStartMonth());
@@ -231,12 +244,12 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
      * 新增任务时雇员档案费用分段表数据处理
      *
      * @param hfEmpTask 任务单表数据
-     * @param hfEmpTaskPeriodList 任务费用分段表数据
+     * @param hfEmpTaskPeriodList 任务费用分段表数据列表
      * @return 雇员档案费用分段表数据
      */
     private List<HfArchiveBasePeriod> createEmpBasePeriod(HfEmpTask hfEmpTask, List<HfEmpTaskPeriod> hfEmpTaskPeriodList) {
         List<HfArchiveBasePeriod> hfArchiveBasePeriodList = new ArrayList<>();
-        hfEmpTaskPeriodList.stream().forEach(e -> setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e));
+        hfEmpTaskPeriodList.stream().forEach(e -> setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e, null));
         hfArchiveBasePeriodService.insertOrUpdateBatch(hfArchiveBasePeriodList);
         return hfArchiveBasePeriodList;
     }
@@ -246,17 +259,22 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
      * 分全额补缴及差额补缴
      *
      * @param hfEmpTask 任务单表数据
-     * @param hfEmpTaskPeriodList 任务费用分段表数据
+     * @param hfEmpTaskPeriodList 任务费用分段表数据列表
      * @return 雇员档案费用分段表数据
      */
     private List<HfArchiveBasePeriod> repairEmpBasePeriod(HfEmpTask hfEmpTask, List<HfEmpTaskPeriod> hfEmpTaskPeriodList) {
-        List<HfArchiveBasePeriod> hfArchiveBasePeriodList = new ArrayList<>();
-        EntityWrapper<HfArchiveBasePeriod> wrapper = new EntityWrapper<>();
+        List<HfArchiveBasePeriod> hfArchiveBasePeriodList;
+        List<HfArchiveBasePeriod> diffHfArchiveBasePeriodList;
+            EntityWrapper<HfArchiveBasePeriod> wrapper = new EntityWrapper<>();
         wrapper.where("employee_id={1} AND is_active = 1", hfEmpTask.getEmployeeId());
         wrapper.orderBy("start_month", true);
         List<HfArchiveBasePeriod> existHfArchiveBasePeriodList = hfArchiveBasePeriodService.selectList(wrapper);
 
         if (CollectionUtils.isNotEmpty(existHfArchiveBasePeriodList)) {
+            hfArchiveBasePeriodList = new ArrayList<>();
+            diffHfArchiveBasePeriodList = new ArrayList<>();
+            List<HfArchiveBaseAdjust> hfArchiveBaseAdjustList = new ArrayList<>();
+
             hfEmpTaskPeriodList.stream().forEach(e -> {
                 if (StringUtils.isEmpty(e.getStartMonth()) || StringUtils.isEmpty(e.getEndMonth())) {
                     throw new BusinessException("补缴任务费用分段中缴费起始月或缴费截止月为空");
@@ -269,60 +287,85 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 }
 
                 YearMonth[] permitYearMonth = new YearMonth[1];
+                boolean isMatch = false;
 
-                existHfArchiveBasePeriodList.stream().forEach(o -> {
-                    YearMonth startMonth = YearMonth.parse(o.getStartMonth(), formatter);
+                for (HfArchiveBasePeriod hfArchiveBasePeriod : existHfArchiveBasePeriodList) {
+                    YearMonth startMonth = YearMonth.parse(hfArchiveBasePeriod.getStartMonth(), formatter);
                     YearMonth endMonth = currentMonth;
-                    if (StringUtils.isNotEmpty(o.getEndMonth())) {
-                        endMonth = YearMonth.parse(o.getEndMonth(), formatter);
+                    if (StringUtils.isNotEmpty(hfArchiveBasePeriod.getEndMonth())) {
+                        endMonth = YearMonth.parse(hfArchiveBasePeriod.getEndMonth(), formatter);
                     }
                     // 匹配费用段，如果任务单费用段包含在雇员档案费用段中，那么支持差额补缴；
                     // 差额补缴时，雇员档案费用段不变，增加雇员调整差异数据
-                    if (
-//                        hfEmpTask.getCompanyId().equals(o.getCompanyId())
-//                        && e.getRatio().compareTo(o.getRatio()) == 0
-//                        && e.getBaseAmount().compareTo(o.getBaseAmount()) == 0 &&
-                        (repairStartMonth.isAfter(startMonth) || repairStartMonth.equals(startMonth))
+                    if ((repairStartMonth.isAfter(startMonth) || repairStartMonth.equals(startMonth))
                         && (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth))) {
-                        // TODO 差异
-
+                        if (!hfEmpTask.getCompanyId().equals(hfArchiveBasePeriod.getCompanyId())) {
+                            throw new BusinessException("补缴任务费用分段中缴费期间与所匹配的费用段不属于同一个客户");
+                        }
+                        setHfArchiveBaseAdjust(hfArchiveBaseAdjustList, hfEmpTask, e, hfArchiveBasePeriod);
+                        setHfArchiveBasePeriodList(diffHfArchiveBasePeriodList, hfEmpTask, e, hfArchiveBasePeriod);
+                        isMatch = true;
+                        break;
                     } else {
-                        boolean isMatch = false;
                         // 匹配费用段空档区间，如果任务单费用段包含在雇员档案费用段空档区间中，那么支持全额补缴；
                         // 全额补缴时，更新雇员档案费用段，不需要增加雇员调整差异数据
                         if (permitYearMonth[0] == null) {
+                            // 匹配最早的费用段，判断补缴段的截止年月是否早于雇员档案费用段的起始年月
                             if (repairEndMonth.isBefore(startMonth)) {
+                                if (!hfEmpTask.getCompanyId().equals(hfArchiveBasePeriod.getCompanyId())) {
+                                    throw new BusinessException("补缴任务费用分段中缴费期间与所匹配的费用段不属于同一个客户");
+                                }
                                 permitYearMonth[0] = endMonth;
-                                setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e);
+                                setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e, null);
                                 isMatch = true;
+                                break;
                             }
                         } else if (endMonth.isBefore(currentMonth)) {
+                            // 如果雇员档案费用段的截止年月早于当前年月
+                            // 那么判断补缴段是否属于两个雇员档案费用段之间的空档期间
                             if (repairStartMonth.isAfter(permitYearMonth[0]) && repairEndMonth.isBefore(startMonth)) {
+                                if (!hfEmpTask.getCompanyId().equals(hfArchiveBasePeriod.getCompanyId())) {
+                                    throw new BusinessException("补缴任务费用分段中缴费期间与所匹配的费用段不属于同一个客户");
+                                }
                                 permitYearMonth[0] = endMonth;
-                                setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e);
+                                setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e, null);
                                 isMatch = true;
+                                break;
                             }
-                        } else {
-                            if (repairStartMonth.isAfter(startMonth) && repairEndMonth.isBefore(endMonth)) {
-                                setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e);
-                                isMatch = true;
-                            }
+//                        } else {
+//                            //
+//                            if (repairStartMonth.isAfter(startMonth) && repairEndMonth.isBefore(endMonth)) {
+//                                if (!hfEmpTask.getCompanyId().equals(hfArchiveBasePeriod.getCompanyId())) {
+//                                    throw new BusinessException("补缴任务费用分段中缴费期间与所匹配的费用段不属于同一个客户");
+//                                }
+//                                setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e, null);
+//                                isMatch = true;
+//                                break;
+//                            }
                         }
-
-                        if (!isMatch) {
-                            throw new BusinessException("一条补缴任务费用分段不能同时包括全额补缴及差额补缴");
-                        }
-
-                        hfArchiveBasePeriodService.insertOrUpdateBatch(hfArchiveBasePeriodList);
                     }
-                });
-//                setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e);
+                }
+
+                if (!isMatch) {
+                    throw new BusinessException("补缴任务费用分段期间不正确");
+                }
             });
+
+            if (CollectionUtils.isNotEmpty(hfArchiveBaseAdjustList)) {
+                hfArchiveBaseAdjustService.insertBatch(hfArchiveBaseAdjustList);
+            }
         } else {
             // 雇员档案费用段不存在时，数据不正常，需先做新增再做补缴
             throw new BusinessException("当前雇员的雇员汇缴月份段数据不存在，不能补缴");
         }
-//        hfArchiveBasePeriodService.insertOrUpdateBatch(hfArchiveBasePeriodList);
+
+        if (CollectionUtils.isNotEmpty(hfArchiveBasePeriodList)) {
+            hfArchiveBasePeriodService.insertOrUpdateBatch(hfArchiveBasePeriodList);
+        }
+
+        if (CollectionUtils.isNotEmpty(diffHfArchiveBasePeriodList)) {
+            hfArchiveBasePeriodList.addAll(diffHfArchiveBasePeriodList);
+        }
         return hfArchiveBasePeriodList;
     }
 
@@ -330,25 +373,24 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
      * 创建雇员月度汇缴明细库数据
      *
      * @param hfEmpTask 任务单表数据
-     * @param hfArchiveBasePeriodList 雇员档案费用分段表数据
+     * @param hfArchiveBasePeriodList 雇员档案费用分段表数据列表
      */
     private void createHfMonthCharge(HfEmpTask hfEmpTask, List<HfArchiveBasePeriod> hfArchiveBasePeriodList) {
-        int temp = 0;
+        int[] paymentType = new int[1];
         switch (hfEmpTask.getTaskCategory()) {
             case HfEmpTaskConstant.TASK_CATEGORY_IN_ADD:
             case HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN:
             case HfEmpTaskConstant.TASK_CATEGORY_IN_MULTI_TRANS_IN:
-                temp = HfMonthChargeConstant.PAYMENT_TYPE_NORMAL;
+                paymentType[0] = HfMonthChargeConstant.PAYMENT_TYPE_NORMAL;
                 break;
             case HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN:
-                temp = HfMonthChargeConstant.PAYMENT_TYPE_OPEN;
+                paymentType[0] = HfMonthChargeConstant.PAYMENT_TYPE_OPEN;
                 break;
             case HfEmpTaskConstant.TASK_CATEGORY_REPAIR:
-                temp = HfMonthChargeConstant.PAYMENT_TYPE_REPAIR;
+                paymentType[0] = HfMonthChargeConstant.PAYMENT_TYPE_REPAIR;
             default:
                 break;
         }
-        final int paymentType = temp;
         hfArchiveBasePeriodList.stream().forEach(e -> {
             String startMonth = e.getStartMonth();
             if (StringUtils.isEmpty(startMonth)) {
@@ -362,6 +404,22 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             }
             long months = startMonthDate.until(endMonthDate, ChronoUnit.MONTHS);
             List<HfMonthCharge> hfMonthChargeList = new ArrayList<>();
+            BigDecimal comAmount;
+            BigDecimal empAmount;
+            BigDecimal amount;
+
+            // 非差额补缴时，需根据基数计算出当月金额
+            if (e.getDiffRepair() == null || !e.getDiffRepair()) {
+                comAmount = e.getBaseAmount().multiply(e.getRatioCom()).setScale(2, BigDecimal.ROUND_HALF_UP);
+                empAmount = e.getBaseAmount().multiply(e.getRatioEmp()).setScale(2, BigDecimal.ROUND_HALF_UP);
+                amount = comAmount.add(empAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
+            } else {
+                comAmount = e.getComAmount();
+                empAmount =e.getAmountEmp();
+                amount = e.getAmount();
+                paymentType[0] = HfMonthChargeConstant.PAYMENT_TYPE_DIFF_REPAIR;
+            }
+
             for(long i = 0; i <= months; i++) {
                 HfMonthCharge hfMonthCharge = new HfMonthCharge();
                 hfMonthCharge.setEmpArchiveId(e.getEmpArchiveId());
@@ -371,14 +429,14 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 hfMonthCharge.setCompanyId(hfEmpTask.getCompanyId());
                 hfMonthCharge.setEmployeeId(hfEmpTask.getEmployeeId());
                 hfMonthCharge.setHfType(e.getHfType());
-                hfMonthCharge.setAmount(e.getAmount());
-                hfMonthCharge.setComAmount(e.getComAmount());
-                hfMonthCharge.setEmpAmount(e.getAmountEmp());
+                hfMonthCharge.setAmount(amount);
+                hfMonthCharge.setComAmount(comAmount);
+                hfMonthCharge.setEmpAmount(empAmount);
                 hfMonthCharge.setBase(e.getBaseAmount());
                 hfMonthCharge.setRatio(e.getRatio());
                 hfMonthCharge.setRatioCom(e.getRatioCom());
                 hfMonthCharge.setRatioEmp(e.getRatioEmp());
-                hfMonthCharge.setPaymentType(paymentType);
+                hfMonthCharge.setPaymentType(paymentType[0]);
                 hfMonthCharge.setCreatedBy("test"); // TODO
                 hfMonthCharge.setModifiedBy("test"); // TODO
                 hfMonthChargeList.add(hfMonthCharge);
@@ -388,12 +446,74 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
     }
 
     /**
+     *
+     *
+     * @param params
+     * @return
+     */
+    private JsonResult checkEmpArchive(JSONObject params) {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("company_id", params.getString("companyId"));
+        condition.put("employee_id", params.getString("employeeId"));
+        condition.put("is_active", 1);
+        boolean isNothing = false;
+        List<HfEmpArchive> hfEmpArchiveList = hfEmpArchiveService.selectByMap(condition);
+        if (CollectionUtils.isNotEmpty(hfEmpArchiveList)) {
+            hfEmpArchiveList = hfEmpArchiveList.stream()
+                .filter(e -> e.getArchiveStatus() == null || e.getArchiveStatus() != HfEmpArchiveConstant.ARCHIVE_STATUS_CLOSED)
+                .collect(Collectors.toList());
+
+            if (hfEmpArchiveList.size() > 1) {
+                return JsonResultKit.ofError("该雇员的雇员档案数据不正确");
+            }
+        } else {
+            isNothing = true;
+        }
+
+        switch (params.getInteger("taskCategory")) {
+            case HfEmpTaskConstant.TASK_CATEGORY_IN_ADD:
+            case HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN:
+            case HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN:
+            case HfEmpTaskConstant.TASK_CATEGORY_IN_MULTI_TRANS_IN:
+                if (CollectionUtils.isNotEmpty(hfEmpArchiveList)) {
+                    return JsonResultKit.ofError("雇员档案已存在，且非封存状态");
+                }
+                break;
+            case HfEmpTaskConstant.TASK_CATEGORY_REPAIR:
+                if (CollectionUtils.isEmpty(hfEmpArchiveList)) {
+                    return JsonResultKit.ofError("非封存状态雇员档案不存在");
+                }
+                break;
+            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN:
+            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_CLOSE:
+            case HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT:
+            case HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE:
+            case HfEmpTaskConstant.TASK_CATEGORY_OUT_MULTI_TRANS_OUT:
+                if (isNothing) {
+                    return JsonResultKit.ofError("雇员档案不存在");
+                }
+                break;
+            case HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK:
+            case HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK:
+            case HfEmpTaskConstant.TASK_CATEGORY_TURN_OVER:
+                // TODO 这3种？这里不处理？
+                break;
+            default:
+                break;
+        }
+
+        return JsonResultKit.of();
+    }
+
+    /**
      * 雇员档案表数据处理
      *
      * @param params 画面传入参数
      * @param inputHfEmpTask 任务单表数据
      */
     private void handleEmpArchive(JSONObject params, HfEmpTask inputHfEmpTask) {
+
+
         HfEmpArchive hfEmpArchive = new HfEmpArchive();
         System.out.println("inputHfEmpTask.getEmpArchiveId() = " + inputHfEmpTask.getEmpArchiveId()); // TODO Log
         hfEmpArchive.setStartMonth(inputHfEmpTask.getStartMonth());
@@ -424,6 +544,64 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         hfEmpArchiveService.insertOrUpdate(hfEmpArchive);
         inputHfEmpTask.setEmpArchiveId(hfEmpArchive.getEmpArchiveId());
     }
+
+    /**
+     * 雇员公积金历史月份调整差异表数据处理
+     *
+     * @param hfArchiveBaseAdjustList 雇员公积金历史月份调整差异数据列表
+     * @param hfEmpTask 任务单表数据
+     * @param hfEmpTaskPeriod 雇员档案费用分段表数据
+     */
+    private void setHfArchiveBaseAdjust(List<HfArchiveBaseAdjust> hfArchiveBaseAdjustList,
+                                           HfEmpTask hfEmpTask,
+                                           HfEmpTaskPeriod hfEmpTaskPeriod,
+                                           HfArchiveBasePeriod hfArchiveBasePeriod) {
+        String startMonth = hfEmpTaskPeriod.getStartMonth();
+        String endMonth = hfEmpTaskPeriod.getEndMonth();
+        HfArchiveBaseAdjust hfArchiveBaseAdjust = new HfArchiveBaseAdjust();
+        hfArchiveBaseAdjust.setEmpTaskId(hfEmpTask.getEmpTaskId());
+        hfArchiveBaseAdjust.setHfMonth(hfEmpTaskPeriod.getHfMonth());
+        hfArchiveBaseAdjust.setCompanyId(hfEmpTask.getCompanyId());
+        hfArchiveBaseAdjust.setEmployeeId(hfEmpTask.getEmployeeId());
+        hfArchiveBaseAdjust.setEmpArchiveId(hfEmpTask.getEmpArchiveId());
+        hfArchiveBaseAdjust.setStartMonth(startMonth);
+        hfArchiveBaseAdjust.setEndMonth(endMonth);
+        hfArchiveBaseAdjust.setNewBaseAmount(hfEmpTaskPeriod.getBaseAmount());
+        hfArchiveBaseAdjust.setRatio(hfEmpTaskPeriod.getRatio());
+        hfArchiveBaseAdjust.setRatioCom(hfEmpTaskPeriod.getRatioCom());
+        hfArchiveBaseAdjust.setRatioEmp(hfEmpTaskPeriod.getRatioEmp());
+
+        BigDecimal months = BigDecimal.valueOf(YearMonth.parse(startMonth, formatter).until(YearMonth.parse(endMonth, formatter), ChronoUnit.MONTHS) + 1);
+        BigDecimal singleComDiffAmount = hfEmpTaskPeriod.getBaseAmount().multiply(hfEmpTaskPeriod.getRatioCom())
+            .subtract(hfArchiveBasePeriod.getBaseAmount().multiply(hfArchiveBasePeriod.getRatioCom()))
+            .setScale(2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal singleEmpDiffAmount = hfEmpTaskPeriod.getBaseAmount().multiply(hfEmpTaskPeriod.getRatioEmp())
+            .subtract(hfArchiveBasePeriod.getBaseAmount().multiply(hfArchiveBasePeriod.getRatioEmp()))
+            .setScale(2, BigDecimal.ROUND_HALF_UP);
+
+        BigDecimal comDiffAmount = singleComDiffAmount.multiply(months).setScale(2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal empDiffAmount = singleEmpDiffAmount.multiply(months).setScale(2, BigDecimal.ROUND_HALF_UP);
+        hfArchiveBaseAdjust.setComDiffSumAmount(comDiffAmount);
+        hfArchiveBaseAdjust.setEmpDiffSumAmount(empDiffAmount);
+        hfArchiveBaseAdjust.setComempSumDiffAmount(comDiffAmount.add(empDiffAmount).setScale(2, BigDecimal.ROUND_HALF_UP));
+        hfArchiveBaseAdjust.setCreatedBy("test"); //TODO
+        hfArchiveBaseAdjust.setModifiedBy("test"); //TODO
+        hfArchiveBaseAdjustList.add(hfArchiveBaseAdjust);
+
+        // 仅是为了提高执行效率，在后面生成雇员月度汇缴明细库时无需重新计算，借用该两个字段（差额补缴时不更新档案费用分段表）
+        hfArchiveBasePeriod.setComAmount(singleComDiffAmount);
+        hfArchiveBasePeriod.setAmountEmp(singleEmpDiffAmount);
+    }
+
+//    private BigDecimal[] caculateDiffAmount(YearMonth[] period, BigDecimal[] baseAmounts, BigDecimal[] ratioComs, BigDecimal[] ratioEmps) {
+//        BigDecimal[] diffAmounts = new BigDecimal[2];
+//        BigDecimal months = BigDecimal.valueOf(period[0].until(period[1], ChronoUnit.MONTHS) + 1);
+//        diffAmounts[0] = baseAmounts[1].multiply(ratioComs[1]).subtract(baseAmounts[0].multiply(ratioComs[0])).multiply(months)
+//                        .setScale(2, BigDecimal.ROUND_HALF_UP);
+//        diffAmounts[1] = baseAmounts[1].multiply(ratioEmps[1]).subtract(baseAmounts[0].multiply(ratioEmps[0])).multiply(months)
+//                        .setScale(2, BigDecimal.ROUND_HALF_UP);
+//        return diffAmounts;
+//    }
 
     /**
      * 根据任务单类型及雇员档案当前原始状态来设置雇员档案中的任务单状态及原始状态
