@@ -4,6 +4,7 @@ package com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmArchive;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmployment;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmRemark;
@@ -13,6 +14,8 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,6 +47,11 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
     @Autowired
     private IAmRemarkService amRemarkService;
+
+
+    @Autowired
+    private CommonApiUtils employeeInfoProxy;
+
 
     /**
      *用工资料任务单查询
@@ -114,24 +122,51 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @Log("用工办理查询")
     @RequestMapping("/employeeDetailInfoQuery")
-    public JsonResult employeeDetailInfoQuery(String employeeId,String companyId,String remarkType) {
+    public JsonResult employeeDetailInfoQuery(AmEmpTaskBO amEmpTaskBO) {
+        EmployeeQueryDTO var1 = new EmployeeQueryDTO();
+        var1.setIdNum(amEmpTaskBO.getIdNum());
+        var1.setIdCardType(amEmpTaskBO.getIdCardType());
+        var1.setBusinessType(1);
+
+       com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeInfoDTO> jsonResult = employeeInfoProxy.getEmployeeInfo(var1);
+
+        EmployeeInfoDTO employeeInfoDTO = jsonResult.getData();
+
+        AmEmpTaskBO amEmpTaskBO1 = new AmEmpTaskBO();
+        if(null!=employeeInfoDTO){
+            amEmpTaskBO1.setEmployeeId(employeeInfoDTO.getEmployeeId());
+            amEmpTaskBO1.setIdNum(employeeInfoDTO.getIdNum());
+            amEmpTaskBO1.setEmployeeName(employeeInfoDTO.getEmployeeName());
+            amEmpTaskBO1.setSex(employeeInfoDTO.getGender()==0?"男":"女");
+            amEmpTaskBO1.setMobile(employeeInfoDTO.getMobile());
+            amEmpTaskBO1.setResidenceAddress(employeeInfoDTO.getResidenceAddress());
+        }
+
+        AmEmpTaskBO accout = business.queryAccout(amEmpTaskBO.getCompanyId());
+
+        if(null!=accout){
+            amEmpTaskBO1.setUkey(accout.getUkey());
+            amEmpTaskBO1.setAccoutModified(accout.getAccoutModified());
+            amEmpTaskBO1.setSettlementArea(accout.getSettlementArea());
+            amEmpTaskBO1.setSsAccount(accout.getSsAccount());
+            amEmpTaskBO1.setSsPwd(accout.getSsPwd());
+        }
 
         AmEmpTaskBO bo = new AmEmpTaskBO();
-        bo.setEmployeeId(employeeId);
-        bo.setCompanyId(companyId);
+        bo.setEmployeeId(amEmpTaskBO.getEmployeeId());
+        bo.setCompanyId(amEmpTaskBO.getCompanyId());
         Map<String,Object> param = new HashMap<>();
-        param.put("employeeId",employeeId);
-        param.put("companyId",companyId);
+        param.put("employeeId",amEmpTaskBO.getEmployeeId());
+        param.put("companyId",amEmpTaskBO.getCompanyId());
 
-        List<AmEmpTaskBO> list = business.queryAmEmpTaskById(param);
-        AmEmpTaskBO amEmpTaskBO = list.get(0);
+//      List<AmEmpTaskBO> list = business.queryAmEmpTaskById(param);
 
         //用工材料
         PageInfo pageInfo = new PageInfo();
         JSONObject params = new JSONObject();
-        params.put("employeeId",employeeId);
-        params.put("remarkType",remarkType);
-        params.put("companyId",companyId);
+        params.put("employeeId",amEmpTaskBO.getEmployeeId());
+        params.put("remarkType",amEmpTaskBO.getRemarkType());
+        params.put("companyId",amEmpTaskBO.getCompanyId());
         pageInfo.setParams(params);
 
         PageRows<AmEmpMaterialBO> result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
@@ -149,11 +184,11 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         //用工备注
         PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);
         //客户信息
-        List<AmEmpTaskBO>  listCompany = business.queryCustom(companyId);
+        List<AmEmpTaskBO>  listCompany = business.queryCustom(amEmpTaskBO.getCompanyId());
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
         //雇员信息
-        resultMap.put("amEmpTaskBO",amEmpTaskBO);
+        resultMap.put("amEmpTaskBO",amEmpTaskBO1);
 
         resultMap.put("materialList",result);
 
@@ -261,12 +296,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     public JsonResult<Boolean>  deleteAmRemark(Long amRemarkId){
        boolean  result = amRemarkService.deleteAmRemark(amRemarkId);
         return JsonResultKit.of(result);
-    }
-
-    @RequestMapping("/queryEmployeeHository")
-    public JsonResult queryEmployeeHository(String  employeeId){
-        List<AmEmpTaskBO> list = business.queryEmployeeHository(employeeId);
-        return JsonResultKit.of(list);
     }
 
 

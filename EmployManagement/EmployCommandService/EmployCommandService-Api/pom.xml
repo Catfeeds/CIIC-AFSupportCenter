@@ -17,17 +17,6 @@
     <dependencies>
         <!-- spring cloud eureka -->
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-eureka</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <!-- spring cloud feign -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-feign</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.ciicsh.gt1.employeecenter</groupId>
             <artifactId>gt1.employeecenter.apiservice-api</artifactId>
             <version>1.0.0</version>
