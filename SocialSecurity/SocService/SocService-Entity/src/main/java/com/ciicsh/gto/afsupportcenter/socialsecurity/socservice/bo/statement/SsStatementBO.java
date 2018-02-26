@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.statement;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.statement;
 
 
 import java.time.LocalDateTime;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  * @author wengxk
  * @since 2017-12-08
  */
-public class SsStatementDTO {
+public class SsStatementBO {
 
     private static final long serialVersionUID = 1L;
 

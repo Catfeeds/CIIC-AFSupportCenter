@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.payment;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.payment;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * @author wengxk
  * @since 2017-12-08
  */
-public class SsPaymentSrarchDTO {
+public class SsPaymentSrarchBO {
 
     private static final long serialVersionUID = 1L;
 

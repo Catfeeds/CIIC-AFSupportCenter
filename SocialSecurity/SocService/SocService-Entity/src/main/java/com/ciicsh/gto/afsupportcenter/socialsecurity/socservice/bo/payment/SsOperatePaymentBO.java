@@ -1,11 +1,11 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.payment;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.payment;
 
 /**
  * <p>
  * 本地社保中，中智公司与社保局的对账单（各一条记录）
  * </p>
  */
-public class SsOperatePaymentDTO {
+public class SsOperatePaymentBO {
 
     private static final long serialVersionUID = 1L;
 

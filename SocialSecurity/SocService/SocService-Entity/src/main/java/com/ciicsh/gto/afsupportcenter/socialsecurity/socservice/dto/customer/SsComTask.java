@@ -1,234 +1,227 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.customer;
 
-
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.customer.SsComMaterial;
-
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 
-public class SsComTaskDTO{
-    /**
-     * 任务单编号
-     */
+/**
+ * <p>
+ * 独立库客户任务单
+ * </p>
+ */
+public class SsComTask implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private Long comTaskId;
     /**
      * 多租户Id
      */
+
     private String customerId;
     /**
      * 外键,企业社保账户Id
      */
+
     private Long comAccountId;
     /**
      * 客户Id
      */
+
     private String companyId;
     /**
      * 引用：DicItem.DicItemValue 1:开户：2：转移 3：变更 4：终止
      */
+
     private String taskCategory;
     /**
      * 发起人要求任务完成截止日期
      */
+
     private LocalDate expireDate;
     /**
      * 发起人id
      */
+
     private String submitterId;
     /**
      * 发起人姓名
      */
+
     private String submitterName;
     /**
      * 发起人当时所在部门Id
      */
+
     private String submitterDeptId;
     /**
      * 发起人当时所在部门名称
      */
+
     private String submitterDeptName;
     /**
      * 发起时间
      */
+
     private LocalDateTime submitTime;
     /**
      * 发起人备注信息
      */
+
     private String submitRemark;
     /**
      * 任务单上前道系统传递过来的内容，Json格式
      */
+
     private String taskFormContent;
     /**
      * 对话记录, Json,
-     格式：部门名称 姓名 时间 内容
+     * 格式：部门名称 姓名 时间 内容
      */
+
     private String chatHistory;
     /**
      * 动态扩展办理数据
      */
+
     private String dynamicExtend;
     /**
      * 任务单处理状态：0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
      */
+
     private Integer taskStatus;
     /**
      * 任务处理人用户Id
      */
+
     private String handleUserId;
+
     private String handleUserName;
     /**
      * 受理日期
      */
+
     private LocalDate startHandleDate;
     /**
      * 送审日期
      */
+
     private LocalDate sendCheckDate;
     /**
      * 完成日期
      */
+
     private LocalDate finishDate;
     /**
      * 办理备注
      */
+
     private String handleRemark;
     /**
      * 批退备注
      */
+
     private String rejectionRemark;
     /**
      * 业务接口ID
      */
+
     private String businessInterfaceId;
+
     private String taskId;
     /**
      * 参保户登记码（前道传递）
      */
+
     private String ssAccount;
     /**
      * 银行账号(牡丹卡号)（前道传递）
      */
+
     private String bankAccount;
     /**
      * 养老金账户公司名称（前道传递）
      */
+
     private String comAccountName;
     /**
      * 付款银行(一般情况是工商银行)（前道传递）
      */
+
     private String paymentBank;
     /**
      * 付款方式：.（前道传递）
-     1-我司代付款
-     2-客户自付
-     3-我司垫付
+     * 1-我司代付款
+     * 2-客户自付
+     * 3-我司垫付
      */
+
     private Integer paymentWay;
     /**
      * 社保帐单寄到哪里: 1 我司，2 客户公司（前道传递）
      */
+
     private Integer billReceiver;
     /**
      * 行业类别（前道传递）
      */
+
     private String industryCategory;
     /**
      * 开始月份（前道传递）
      */
+
     private String startMonth;
     /**
      * 客户交付社保费用给中智的截止日（前道传递）
      */
+
     private Integer expireDateFront;
     /**
      * 结算区县(社保局所在上海地区)（前道传递）
      */
+
     private String settlementArea;
     /**
      * 法人(前道传递)
      */
+
     private String legalPerson;
     /**
      * 联系地址(前道传递)
      */
+
     private String contactAddress;
+    /**
+     * 发出材料(前道传递):正式通知书、预生成通知书、收据、银行对账单、汇总表、实时表
+     */
+
+    private String dispatchMaterial;
     /**
      * 是否可用
      */
+
     private Boolean isActive;
     /**
      * 创建时间
      */
+
     private LocalDateTime createdTime;
     /**
      * 最后更新时间
      */
+
     private LocalDateTime modifiedTime;
     /**
      * 创建者登录名
      */
+
     private String createdBy;
     /**
      * 修改者登录名
      */
+
     private String modifiedBy;
-    //客户名称
-    private String companyName;
 
-    //任务发起时间段的 首段
-    private Date submitTimeStart;
-
-    //任务发起时间的 尾段
-    private Date submitTimeEnd;
-
-    //账户类型
-    private String accountType;
-
-    //结算区县
-    private String regionValue;
-
-    //客户经理
-    private String customerManager;
-
-    //材料清单
-     private List<SsComMaterial> materialList;
-
-    //账户
-    private SsComAccountDTO ssComAccountDTO;
-
-    //操作类型  1 开户 2 转移 3 变更 4 终止
-    private String operatorType;
-
-    //终止操作时 的终止日期
-    private LocalDate endDate;
-
-    //转移日期
-    private String transferDate;
-    //变更的type
-    private String changeContentValue;
-//    //变更的支付方式
-//    private String paymentWay;
-    //行业类型
-    private String belongsIndustry;
-    //企业工伤比例
-    private String companyWorkInjuryPercentage;
-    //开始年月
-//    private LocalDate startMonth;
-
-    //帐单接收方
-//    private String billReceiver;
-    //发出材料（前道传递）
-    private String dispatchMaterial;
-
-    /**
-     *  判断是否是完成状态即 在任务单办理页面时候查询没有完成的任务  在完成tab查看已完成的
-     *  如果为空则是在完成tab中查询，否则是在开户办理时查询信息（信息为任务状态!=3的）
-     */
-
-    private String isComplete;
 
     public Long getComTaskId() {
         return comTaskId;
@@ -530,8 +523,8 @@ public class SsComTaskDTO{
         return isActive;
     }
 
-    public void setActive(Boolean active) {
-        isActive = active;
+    public void setActive(Boolean isActive) {
+        this.isActive = isActive;
     }
 
     public LocalDateTime getCreatedTime() {
@@ -566,118 +559,6 @@ public class SsComTaskDTO{
         this.modifiedBy = modifiedBy;
     }
 
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public Date getSubmitTimeStart() {
-        return submitTimeStart;
-    }
-
-    public void setSubmitTimeStart(Date submitTimeStart) {
-        this.submitTimeStart = submitTimeStart;
-    }
-
-    public Date getSubmitTimeEnd() {
-        return submitTimeEnd;
-    }
-
-    public void setSubmitTimeEnd(Date submitTimeEnd) {
-        this.submitTimeEnd = submitTimeEnd;
-    }
-
-    public String getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(String accountType) {
-        this.accountType = accountType;
-    }
-
-    public String getRegionValue() {
-        return regionValue;
-    }
-
-    public void setRegionValue(String regionValue) {
-        this.regionValue = regionValue;
-    }
-
-    public String getCustomerManager() {
-        return customerManager;
-    }
-
-    public void setCustomerManager(String customerManager) {
-        this.customerManager = customerManager;
-    }
-
-    public List<SsComMaterial> getMaterialList() {
-        return materialList;
-    }
-
-    public void setMaterialList(List<SsComMaterial> materialList) {
-        this.materialList = materialList;
-    }
-
-    public SsComAccountDTO getSsComAccountDTO() {
-        return ssComAccountDTO;
-    }
-
-    public void setSsComAccountDTO(SsComAccountDTO ssComAccountDTO) {
-        this.ssComAccountDTO = ssComAccountDTO;
-    }
-
-    public String getOperatorType() {
-        return operatorType;
-    }
-
-    public void setOperatorType(String operatorType) {
-        this.operatorType = operatorType;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public String getTransferDate() {
-        return transferDate;
-    }
-
-    public void setTransferDate(String transferDate) {
-        this.transferDate = transferDate;
-    }
-
-    public String getChangeContentValue() {
-        return changeContentValue;
-    }
-
-    public void setChangeContentValue(String changeContentValue) {
-        this.changeContentValue = changeContentValue;
-    }
-
-    public String getBelongsIndustry() {
-        return belongsIndustry;
-    }
-
-    public void setBelongsIndustry(String belongsIndustry) {
-        this.belongsIndustry = belongsIndustry;
-    }
-
-    public String getCompanyWorkInjuryPercentage() {
-        return companyWorkInjuryPercentage;
-    }
-
-    public void setCompanyWorkInjuryPercentage(String companyWorkInjuryPercentage) {
-        this.companyWorkInjuryPercentage = companyWorkInjuryPercentage;
-    }
-
     public String getDispatchMaterial() {
         return dispatchMaterial;
     }
@@ -686,11 +567,52 @@ public class SsComTaskDTO{
         this.dispatchMaterial = dispatchMaterial;
     }
 
-    public String getIsComplete() {
-        return isComplete;
-    }
-
-    public void setIsComplete(String isComplete) {
-        this.isComplete = isComplete;
+    @Override
+    public String toString() {
+        return "SsComTask{" +
+            ", comTaskId=" + comTaskId +
+            ", customerId=" + customerId +
+            ", comAccountId=" + comAccountId +
+            ", companyId=" + companyId +
+            ", taskCategory=" + taskCategory +
+            ", expireDate=" + expireDate +
+            ", submitterId=" + submitterId +
+            ", submitterName=" + submitterName +
+            ", submitterDeptId=" + submitterDeptId +
+            ", submitterDeptName=" + submitterDeptName +
+            ", submitTime=" + submitTime +
+            ", submitRemark=" + submitRemark +
+            ", taskFormContent=" + taskFormContent +
+            ", chatHistory=" + chatHistory +
+            ", dynamicExtend=" + dynamicExtend +
+            ", taskStatus=" + taskStatus +
+            ", handleUserId=" + handleUserId +
+            ", handleUserName=" + handleUserName +
+            ", startHandleDate=" + startHandleDate +
+            ", sendCheckDate=" + sendCheckDate +
+            ", finishDate=" + finishDate +
+            ", handleRemark=" + handleRemark +
+            ", rejectionRemark=" + rejectionRemark +
+            ", businessInterfaceId=" + businessInterfaceId +
+            ", taskId=" + taskId +
+            ", ssAccount=" + ssAccount +
+            ", bankAccount=" + bankAccount +
+            ", comAccountName=" + comAccountName +
+            ", paymentBank=" + paymentBank +
+            ", paymentWay=" + paymentWay +
+            ", billReceiver=" + billReceiver +
+            ", industryCategory=" + industryCategory +
+            ", startMonth=" + startMonth +
+            ", expireDateFront=" + expireDateFront +
+            ", settlementArea=" + settlementArea +
+            ", legalPerson=" + legalPerson +
+            ", contactAddress=" + contactAddress +
+            ", dispatchMaterial=" + dispatchMaterial +
+            ", isActive=" + isActive +
+            ", createdTime=" + createdTime +
+            ", modifiedTime=" + modifiedTime +
+            ", createdBy=" + createdBy +
+            ", modifiedBy=" + modifiedBy +
+            "}";
     }
 }

@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.statement;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.statement;
 
 
 import java.math.BigDecimal;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * @author HuangXing
  * @since 2017-12-07
  */
-public class SsStatementResultDTO {
+public class SsStatementResultBO {
 
     private static final long serialVersionUID = 1L;
 

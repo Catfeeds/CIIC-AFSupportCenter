@@ -1,11 +1,16 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
  * Created by houwanhua on 2018/2/13.
  */
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class PayapplyEmployeeProxyDTO {
     private BigDecimal taxAmount;
     private Integer businessItemId;

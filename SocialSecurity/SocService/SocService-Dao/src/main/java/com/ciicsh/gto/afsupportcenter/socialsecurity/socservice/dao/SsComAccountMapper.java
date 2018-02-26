@@ -1,8 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountParamDTO;
-
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComAccountBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAccount;

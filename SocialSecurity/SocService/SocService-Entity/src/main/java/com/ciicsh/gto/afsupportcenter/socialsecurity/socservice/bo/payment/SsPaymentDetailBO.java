@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.payment;
+package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.payment;
 
 
 import java.math.BigDecimal;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
  * 本地社保应付金额交易记录明细表
  * </p>
  */
-public class SsPaymentDetailDTO  {
+public class SsPaymentDetailBO {
 
     private static final long serialVersionUID = 1L;
 
