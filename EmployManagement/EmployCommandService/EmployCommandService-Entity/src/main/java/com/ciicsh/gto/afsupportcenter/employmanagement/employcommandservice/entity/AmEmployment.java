@@ -99,6 +99,16 @@ public class AmEmployment implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+    @TableField("emp_task_id")
+    private Long  empTaskId;
+
+    public Long getEmpTaskId() {
+        return empTaskId;
+    }
+
+    public void setEmpTaskId(Long empTaskId) {
+        this.empTaskId = empTaskId;
+    }
 
 	public Long getEmploymentId() {
 		return employmentId;

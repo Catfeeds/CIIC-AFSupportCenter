@@ -15,6 +15,7 @@
 		<result column="employ_property" property="employProperty" />
 		<result column="employ_way" property="employWay" />
 		<result column="employ_operate_man" property="employOperateMan" />
+        <result column="emp_task_id" property="empTaskId" />
 		<result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />
 		<result column="modified_time" property="modifiedTime" />

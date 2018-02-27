@@ -1,9 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao.AmEmpTaskMapper;
@@ -18,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +70,11 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         return baseMapper.queryAmEmploymentById(param);
     }
 
+    @Override
+    public List<AmEmpTaskBO> queryCustom(String companyId) {
+        return null;
+    }
+
     /**
      * 保存数据到雇员任务单表
      *
@@ -111,12 +111,18 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     }
 
     @Override
-    public List<AmEmpTaskBO> queryEmployeeHository(String employeeId) {
-        return baseMapper.queryEmployeeHository(employeeId);
+    public AmEmpTaskBO queryAccout(String companyId) {
+
+        AmEmpTaskBO amEmpTaskBO = null;
+
+        try {
+            amEmpTaskBO = baseMapper.queryAccout(companyId);
+        } catch (Exception e) {
+
+        }
+
+        return amEmpTaskBO;
     }
 
-    @Override
-    public List<AmEmpTaskBO> queryCustom(String companyId) {
-        return   baseMapper.queryCustom(companyId);
-    }
+
 }

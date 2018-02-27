@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.Import;
 
@@ -18,7 +19,10 @@ import org.springframework.context.annotation.Import;
 @MapperScan("com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao")
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business","com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller"})
 @Import({CustomConfiguration.class, MybatisPlusConfig.class})
-@EnableFeignClients
+@EnableFeignClients({
+    "com.ciicsh.gto.employeecenter.apiservice.api"
+})
+@EnableDiscoveryClient
 public class MainApplication{
 
     private final static Logger logger = LoggerFactory.getLogger(MainApplication.class);
