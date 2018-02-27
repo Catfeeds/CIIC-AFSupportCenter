@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccount">
+		<id column="com_account_id" property="comAccountId" />
+		<result column="com_account_name" property="comAccountName" />
+		<result column="payment_way" property="paymentWay" />
+		<result column="hf_account_type" property="hfAccountType" />
+		<result column="close_day" property="closeDay" />
+		<result column="ukey_store" property="ukeyStore" />
+		<result column="payment_bank" property="paymentBank" />
+		<result column="remark" property="remark" />
+		<result column="state" property="state" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+		<result column="Column_15" property="Column15" />
+	</resultMap>
+
+</mapper>
