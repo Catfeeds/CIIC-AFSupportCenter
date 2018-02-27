@@ -121,6 +121,15 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                 hfEmpTaskPeriod.setRatioEmp(hfEmpTaskHandleBo.getRatioEmp());
                 hfEmpTaskPeriod.setAmount(hfEmpTaskHandleBo.getAmount());
                 hfEmpTaskPeriods.add(hfEmpTaskPeriod);
+            } else if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST_CLOSE
+                || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
+                || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT
+                || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_MULTI_TRANS_OUT
+                ) {
+                if (hfEmpTaskPeriods.size() > 1) {
+                    return JsonResultKit.ofError("当前雇员任务单费用段数据不正确");
+                }
+                hfEmpTaskHandleBo.setEndMonth(hfEmpTaskPeriods.get(0).getEndMonth());
             }
             hfEmpTaskHandleBo.setEmpTaskPeriods(hfEmpTaskPeriods);
 
