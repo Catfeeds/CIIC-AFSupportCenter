@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * 企业社保账户信息查询接口
  */
 @FeignClient("support-center-soc-api-service")
-@RequestMapping("/api/comaccount")
+@RequestMapping("/api/soc/comaccount")
 public interface SsComProxy {
 
     /**
