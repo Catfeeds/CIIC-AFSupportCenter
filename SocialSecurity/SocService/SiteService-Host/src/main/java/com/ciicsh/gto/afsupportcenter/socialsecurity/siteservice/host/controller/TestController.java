@@ -55,6 +55,6 @@ SsEmpTaskFrontService ssEmpTaskFrontService;
         companyDTO.setCompanyId("KH0000003");
         companyDTO.setEmployeeId("00000003044444444");
         dto.setEmployeeCompany(companyDTO);
-        ssEmpTaskFrontService.insertTaskTb(taskMsgDTO,taskCategory,0,dto);
+//        ssEmpTaskFrontService.insertTaskTb(taskMsgDTO,taskCategory,0,dto);
     }
 }
