@@ -1192,8 +1192,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         //更新任务单
         baseMapper.updateMyselfColumnById(bo);
 
+//        if(!Optional.ofNullable(bo.getWelfareUnit()).isPresent()){
+//            throw new BusinessException("缺少数据，在任务单中找不到社保办理方，系统无法继续执行！");
+//        }
         //获得进位方式
-        getRoundType(bo.getPolicyDetailId(),bo.getWelfareUnit(),bo.getStartMonth());
+        int unit=Optional.of(bo.getWelfareUnit()).orElse(1);
+        getRoundType(bo.getPolicyDetailId(),unit,bo.getStartMonth());
 
         //获得前端输入的缴纳费用段
         List<SsEmpTaskPeriod> taskPeriods = bo.getEmpTaskPeriods();

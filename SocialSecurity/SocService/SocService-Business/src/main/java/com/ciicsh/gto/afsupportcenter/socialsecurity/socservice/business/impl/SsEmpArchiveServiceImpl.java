@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * <p>
@@ -92,6 +94,19 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
     public SsEmpArchiveBO queryEmployeeDetailInfo(String empArchiveId) {
 
         return baseMapper.queryEmployeeDetailInfo(empArchiveId);
+    }
+
+    public String saveEmpSerial(Map<String,String> map) {
+        SsEmpArchive ssEmpArchive = new SsEmpArchive();
+        int checkRet= baseMapper.checkSerialDuplicate(map);
+        if(checkRet>0){
+            return "雇员社保序号重复！";
+        }
+        String ssSerial=   Optional.of(map.get("ssSerial")).orElse(" ");
+        ssEmpArchive.setSsSerial(ssSerial);
+        ssEmpArchive.setEmpArchiveId(Long.valueOf(map.get("empArchiveId")));
+        baseMapper.updateById(ssEmpArchive);
+        return "fail";
     }
 
     private void setEmlpoyeeInfo(SsEmpArchiveBO ssEmpArchiveBO, EmployeeInfoDTO employeeInfoDTO){
