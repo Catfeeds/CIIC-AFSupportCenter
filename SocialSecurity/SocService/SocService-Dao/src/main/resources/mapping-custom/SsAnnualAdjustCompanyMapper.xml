@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsAnnualAdjustCompanyMapper">
+
+    <select id="queryAnnualAdjustCompany" resultMap="BaseResultMap">
+        SELECT
+        saac.annual_adjust_company_id,
+        saac.company_id,
+        saac.company_name,
+        saac.adjust_year,
+        saac.data_collect_status,
+        saac.report_status,
+        saac.data_collect_time,
+        sca.com_account_id,
+        saac.account_avg_month_salary,
+        saac.account_salary_amount,
+        saac.account_emp_count
+        FROM ss_annual_adjust_company saac
+        INNER JOIN
+        ss_account_com_relation sacr
+        ON sacr.company_id=saac.company_id
+        AND sacr.is_active=1
+        INNER JOIN
+        ss_com_account sca
+        ON sca.com_account_id=sacr.com_account_id
+        AND sca.is_active=1
+        <where>
+            saac.is_active=1 AND saac.adjust_year = YEAR(NOW())
+            <if test="ssAccountType != null">
+                AND sca.ss_account_type=#{ssAccountType}
+            </if>
+            <if test="comAccountId != null">
+                AND sca.com_account_id=#{comAccountId}
+            </if>
+            <if test="companyId != null">
+                AND saac.company_id=#{companyId}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateAnnualAdjustCompanysByComAccountId">
+        UPDATE ss_annual_adjust_company saac
+        INNER JOIN ss_account_com_relation sacr
+        ON saac.company_id = sacr.company_id
+        AND sacr.is_active = 1
+        SET
+        <if test="accountAvgMonthSalary != null">
+            saac.account_avg_month_salary = #{accountAvgMonthSalary},
+        </if>
+        <if test="accountSalaryAmount != null">
+          saac.account_salary_amount = #{accountSalaryAmount},
+        </if>
+        <if test="accountEmpCount != null">
+          saac.account_emp_count = #{accountEmpCount},
+        </if>
+        saac.modified_time = NOW(),
+        saac.modified_by = #{modifiedBy}
+        WHERE saac.adjust_year = YEAR(NOW())
+        AND saac.is_active = 1
+        AND sacr.com_account_id = #{comAccountId}
+    </update>
+</mapper>

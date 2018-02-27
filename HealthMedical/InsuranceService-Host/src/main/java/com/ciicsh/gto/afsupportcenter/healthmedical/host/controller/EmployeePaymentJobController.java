@@ -36,7 +36,7 @@ public class EmployeePaymentJobController implements EmployeePaymentJobProxy {
      * @param
      * @return
      */
-    @Scheduled(cron = "0 0/30 * * * *")
+    @Scheduled(cron = "0 0/10 * * * *")
 //    @GetMapping(value = "/handle")
     public void handle() {
         try {

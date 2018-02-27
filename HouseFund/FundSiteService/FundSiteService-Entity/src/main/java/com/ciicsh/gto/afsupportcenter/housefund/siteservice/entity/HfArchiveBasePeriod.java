@@ -34,6 +34,16 @@ public class HfArchiveBasePeriod implements Serializable {
 	@TableField("emp_task_id")
 	private Long empTaskId;
     /**
+     * 客户主表ID
+     */
+    @TableField("company_id")
+    private String companyId;
+    /**
+     * 雇员主表ID
+     */
+    @TableField("employee_id")
+    private String employeeId;
+    /**
      * 基数
      */
 	@TableField("base_amount")
@@ -130,6 +140,8 @@ public class HfArchiveBasePeriod implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+	@TableField(exist = false)
+	private Boolean isDiffRepair;
 
 	public Long getArchiveBasePeriodId() {
 		return archiveBasePeriodId;
@@ -155,7 +167,23 @@ public class HfArchiveBasePeriod implements Serializable {
 		this.empTaskId = empTaskId;
 	}
 
-	public BigDecimal getBaseAmount() {
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public BigDecimal getBaseAmount() {
 		return baseAmount;
 	}
 
@@ -299,12 +327,22 @@ public class HfArchiveBasePeriod implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	@Override
+    public Boolean getDiffRepair() {
+        return isDiffRepair;
+    }
+
+    public void setDiffRepair(Boolean diffRepair) {
+        isDiffRepair = diffRepair;
+    }
+
+    @Override
 	public String toString() {
 		return "HfArchiveBasePeriod{" +
 			", archiveBasePeriodId=" + archiveBasePeriodId +
 			", empArchiveId=" + empArchiveId +
 			", empTaskId=" + empTaskId +
+            ", companyId=" + companyId +
+            ", employeeId=" + employeeId +
 			", baseAmount=" + baseAmount +
 			", startMonth=" + startMonth +
 			", endMonth=" + endMonth +

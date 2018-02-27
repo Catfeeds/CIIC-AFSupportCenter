@@ -343,11 +343,13 @@
     <modules>
         <module>AFSupportCenter-Util</module>
 
-        <module>./SocialSecurity/SocCommandService/SocCommandService-Host</module>
-        <module>./SocialSecurity/SocCommandService/SocCommandService-Api</module>
-        <module>./SocialSecurity/SocCommandService/SocCommandService-Dao</module>
-        <module>./SocialSecurity/SocCommandService/SocCommandService-Business</module>
-        <module>./SocialSecurity/SocCommandService/SocCommandService-Entity</module>
+        <module>./SocialSecurity/SocService/SiteService-Host</module>
+        <module>./SocialSecurity/SocService/SocService-Api</module>
+        <module>./SocialSecurity/SocService/SocService-Dao</module>
+        <module>./SocialSecurity/SocService/SocService-Business</module>
+        <module>./SocialSecurity/SocService/SocService-Entity</module>
+        <module>./SocialSecurity/SocService/ApiService-Host</module>
+        <module>./SocialSecurity/SocService/MessageService-Host</module>
 
         <!--<module>./HouseFund/FundQueryService/FundQueryService-Host</module>
         <module>./HouseFund/FundQueryService/FundQueryService-Api</module>
@@ -437,6 +439,7 @@
         <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Dao</module>
         <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Business</module>
         <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Host</module>
+
     </modules>
 
 </project>

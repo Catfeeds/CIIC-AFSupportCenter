@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpRefundMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpRefund">
+		<id column="emp_refund_id" property="empRefundId" />
+		<result column="emp_task_id" property="empTaskId" />
+		<result column="emp_archive_id" property="empArchiveId" />
+		<result column="ss_month" property="ssMonth" />
+		<result column="amount" property="amount" />
+		<result column="process_time" property="processTime" />
+		<result column="process_way" property="processWay" />
+		<result column="start_month" property="startMonth" />
+		<result column="end_month" property="endMonth" />
+		<result column="if_deductions" property="ifDeductions" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+</mapper>

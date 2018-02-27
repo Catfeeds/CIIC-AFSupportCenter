@@ -13,11 +13,14 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.Selec
 import com.ciicsh.gto.afsupportcenter.util.page.PageUtil;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeIdQueryDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -119,5 +122,22 @@ public class EmployeeCompanyController {
         EmployeeIdQueryDTO employeeIdQueryDTO = new EmployeeIdQueryDTO();
         String employeeId = employeeInfoProxy.getEmployeeId(employeeIdQueryDTO).getData();
         return employeeId;
+    }
+
+    /**
+     * 查询雇员详情
+     * @param idNum
+     * @param idCardType
+     * @param type
+     * @return
+     */
+    @GetMapping("/getItem")
+    public JsonResult getItem(Integer idCardType,String idNum,Integer type){
+        EmployeeQueryDTO employeeQueryDTO = new EmployeeQueryDTO();
+        employeeQueryDTO.setBusinessType(type);
+        employeeQueryDTO.setIdCardType(idCardType);
+        employeeQueryDTO.setIdNum(idNum);
+        EmployeeInfoDTO employeeInfo = employeeInfoProxy.getEmployeeInfo(employeeQueryDTO).getData();
+        return JsonResult.success(employeeInfo);
     }
 }

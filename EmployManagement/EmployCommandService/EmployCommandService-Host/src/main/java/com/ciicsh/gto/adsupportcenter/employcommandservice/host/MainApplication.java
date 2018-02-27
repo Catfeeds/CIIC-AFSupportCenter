@@ -1,6 +1,6 @@
 package com.ciicsh.gto.adsupportcenter.employcommandservice.host;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.soccommandservice.host.configuration.MybatisPlusConfig;
+import com.ciicsh.gto.adsupportcenter.employcommandservice.host.configuration.MybatisPlusConfig;
 import com.ciicsh.gto.afsupportcenter.util.config.CustomConfiguration;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;

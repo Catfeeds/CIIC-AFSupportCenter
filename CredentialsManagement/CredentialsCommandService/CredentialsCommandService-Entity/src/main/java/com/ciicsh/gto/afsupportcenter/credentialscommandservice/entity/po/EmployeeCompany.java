@@ -25,6 +25,11 @@ public class EmployeeCompany extends Model<EmployeeCompany> {
     @TableField("employee_name")
     private String employeeName;
     /**
+     * 证件类型
+     */
+    @TableField("id_card_type")
+    private Integer idCardType;
+    /**
      * 身份证号码
      */
     @TableField("id_num")
@@ -53,6 +58,14 @@ public class EmployeeCompany extends Model<EmployeeCompany> {
     @Override
     protected Serializable pkVal() {
         return employeeId;
+    }
+
+    public Integer getIdCardType() {
+        return idCardType;
+    }
+
+    public void setIdCardType(Integer idCardType) {
+        this.idCardType = idCardType;
     }
 
     public String getEmployeeId() {
@@ -116,6 +129,7 @@ public class EmployeeCompany extends Model<EmployeeCompany> {
         return "EmployeeCompany{" +
             "employeeId='" + employeeId + '\'' +
             ", employeeName='" + employeeName + '\'' +
+            ", idCardType='" + idCardType + '\'' +
             ", idNum='" + idNum + '\'' +
             ", companyId='" + companyId + '\'' +
             ", companyName='" + companyName + '\'' +

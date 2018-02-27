@@ -46,7 +46,7 @@ mybatis-plus:
     #自定义SQL注入器
     sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
   mapper-locations: classpath*:mapper/*.xml
-  type-aliases-package: com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po
+  type-aliases-package: com.ciicsh.gto.afsupportcenter.flexiblebenefit.customer.po
 
 server:
   port: 6019

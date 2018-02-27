@@ -132,6 +132,13 @@ public class SupplyMedicalAcceptanceServiceImpl extends ServiceImpl<SupplyMedica
                 logger.info("已审批的受理单数据" + supplyMedicalAcceptance.toString());
                 continue;
             }
+
+            // 根据公司编号查询公司名称
+            EmployeeBO employeeBO = supplyMedicalInvoiceService.queryEmployeeInfo(supplyMedicalAcceptance1.getEmployeeId());
+            if (employeeBO != null) {
+                supplyMedicalAcceptance1.setCompanyName(employeeBO.getCompanyName());
+            }
+
             baseMapper.insert(supplyMedicalAcceptance1);
             supplyMedicalInvoiceService.insertBatch(supplyMedicalInvoices);
         }
@@ -177,8 +184,13 @@ public class SupplyMedicalAcceptanceServiceImpl extends ServiceImpl<SupplyMedica
                 supplyMedicalAcceptance.setType(stringToTye(key));
                 // 查询出公司信息，添加到受理单实体
                 EmployeeBO employeeBO = supplyMedicalInvoiceService.queryEmployeeInfo(supplyMedicalAcceptance.getEmployeeId());
-                supplyMedicalAcceptance.setCompanyId(employeeBO.getCompanyId());
-                supplyMedicalAcceptance.setCompanyName(employeeBO.getCompanyName());
+                if (employeeBO != null) {
+                    supplyMedicalAcceptance.setCompanyId(employeeBO.getCompanyId());
+                    supplyMedicalAcceptance.setCompanyName(employeeBO.getCompanyName());
+                } else {
+                    supplyMedicalAcceptance.setCompanyId("");
+                    supplyMedicalAcceptance.setCompanyName("");
+                }
 
                 // 公司理赔总金额
                 BigDecimal totalCompanyAmount = BigDecimal.valueOf(0);

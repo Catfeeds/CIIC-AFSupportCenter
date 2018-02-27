@@ -166,7 +166,6 @@ public class EmpCredentialsDealController {
                 taskMaterial.setCreatedTime(new Date());
                 taskMaterial.setModifiedBy("gu");
                 taskMaterial.setModifiedTime(new Date());
-                //todo 获取新增的主键
                 taskMaterial.setTaskId(String.valueOf(task.getTaskId()));
                 return JsonResult.success(taskMaterialService.insert(taskMaterial));
             } else {

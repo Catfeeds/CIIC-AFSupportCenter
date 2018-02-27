@@ -34,6 +34,16 @@ public class HfArchiveBaseAdjust implements Serializable {
 	@TableField("emp_task_id")
 	private Long empTaskId;
     /**
+     * 客户主表ID
+     */
+    @TableField("company_id")
+    private String companyId;
+    /**
+     * 雇员主表ID
+     */
+    @TableField("employee_id")
+    private String employeeId;
+    /**
      * 调整新基数
      */
 	@TableField("new_base_amount")
@@ -57,6 +67,16 @@ public class HfArchiveBaseAdjust implements Serializable {
      * 比例
      */
 	private BigDecimal ratio;
+    /**
+     * 个人比例
+     */
+    @TableField("ratio_emp")
+    private BigDecimal ratioEmp;
+    /**
+     * 企业比例
+     */
+    @TableField("ratio_com")
+    private BigDecimal ratioCom;
     /**
      * 和上一次年调后的企业缴纳部分金额的差额合计
      */
@@ -123,7 +143,23 @@ public class HfArchiveBaseAdjust implements Serializable {
 		this.empTaskId = empTaskId;
 	}
 
-	public BigDecimal getNewBaseAmount() {
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public BigDecimal getNewBaseAmount() {
 		return newBaseAmount;
 	}
 
@@ -163,7 +199,23 @@ public class HfArchiveBaseAdjust implements Serializable {
 		this.ratio = ratio;
 	}
 
-	public BigDecimal getComDiffSumAmount() {
+    public BigDecimal getRatioEmp() {
+        return ratioEmp;
+    }
+
+    public void setRatioEmp(BigDecimal ratioEmp) {
+        this.ratioEmp = ratioEmp;
+    }
+
+    public BigDecimal getRatioCom() {
+        return ratioCom;
+    }
+
+    public void setRatioCom(BigDecimal ratioCom) {
+        this.ratioCom = ratioCom;
+    }
+
+    public BigDecimal getComDiffSumAmount() {
 		return comDiffSumAmount;
 	}
 
@@ -233,11 +285,15 @@ public class HfArchiveBaseAdjust implements Serializable {
 			", empBaseAdjustId=" + empBaseAdjustId +
 			", empArchiveId=" + empArchiveId +
 			", empTaskId=" + empTaskId +
+            ", companyId=" + companyId +
+            ", employeeId=" + employeeId +
 			", newBaseAmount=" + newBaseAmount +
 			", hfMonth=" + hfMonth +
 			", startMonth=" + startMonth +
 			", endMonth=" + endMonth +
 			", ratio=" + ratio +
+            ", ratioEmp=" + ratioEmp +
+            ", ratioCom=" + ratioCom +
 			", comDiffSumAmount=" + comDiffSumAmount +
 			", empDiffSumAmount=" + empDiffSumAmount +
 			", comempSumDiffAmount=" + comempSumDiffAmount +

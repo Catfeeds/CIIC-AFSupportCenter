@@ -1,6 +1,6 @@
 //package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.service;
 //
-//import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.ApplyRecordPO;
+//import com.ciicsh.gto.afsupportcenter.flexiblebenefit.customer.po.ApplyRecordPO;
 //import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.FlexibleCommandApplication;
 //import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.ApplyRecordCommandService;
 //import org.junit.Test;
