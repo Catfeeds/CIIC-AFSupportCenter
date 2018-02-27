@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
+package com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -12,6 +12,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccou
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpArchiveConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.constant.HfEmpTaskPeriodConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfMonthChargeConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskHandlePostBo;
@@ -100,10 +101,10 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         }
 
         inputHfEmpTask.setHfEmpAccount(params.getString("hfEmpAccount"));
-        String startMonth = params.getString("startMonth");
-        if (StringUtils.isNotEmpty(startMonth)) {
-            inputHfEmpTask.setStartMonth(startMonth);
-        }
+//        String startMonth = params.getString("startMonth");
+//        if (StringUtils.isNotEmpty(startMonth)) {
+//            inputHfEmpTask.setStartMonth(startMonth);
+//        }
         inputHfEmpTask.setOperationRemind(params.getInteger("operationRemind"));
         String operationRemindDateStr = params.getString("operationRemindDate");
         if (StringUtils.isNotBlank(operationRemindDateStr)) {
