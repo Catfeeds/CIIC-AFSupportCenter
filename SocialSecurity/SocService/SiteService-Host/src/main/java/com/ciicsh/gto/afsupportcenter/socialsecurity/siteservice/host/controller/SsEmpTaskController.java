@@ -94,7 +94,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             task.setTaskStatus(TaskStatusConst.REJECTION);
             list.add(task);
             //调用工作流
-            //TaskCommonUtils.completeTask(String.valueOf(task.getEmpTaskId()),commonApiUtils,"xsj");
+            TaskCommonUtils.completeTask(String.valueOf(task.getEmpTaskId()),commonApiUtils,"xsj");
         }
         boolean isSuccess = business.updateBatchById(list);
         return JsonResultKit.of(isSuccess);
@@ -121,10 +121,11 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         if(isNeedSerial==1 && dto.getTaskStatus()==1){
             String ssSerial = business.selectMaxSsSerialByTaskId(empTaskId);
             dto.setEmpSsSerial(ssSerial);
-            //任务单参考信息 用退工
-            AmEmpTaskDTO amEmpTaskDTO = amEmpTaskOfSsService.queryReworkInfo(empTaskId);
-            dto.setAmEmpTaskDTO(null==amEmpTaskDTO?new AmEmpTaskDTO():amEmpTaskDTO);
          }
+             //任务单参考信息 用退工
+             AmEmpTaskDTO amEmpTaskDTO = amEmpTaskOfSsService.queryReworkInfo(empTaskId);
+             dto.setAmEmpTaskDTO(null==amEmpTaskDTO?new AmEmpTaskDTO():amEmpTaskDTO);
+
         //查询该雇员是否还有其他已办理或者未办理的任务
        EntityWrapper<SsEmpTask> ew =  new EntityWrapper<SsEmpTask>();
         ew.where("employee_id={0}",dto.getEmployeeId())

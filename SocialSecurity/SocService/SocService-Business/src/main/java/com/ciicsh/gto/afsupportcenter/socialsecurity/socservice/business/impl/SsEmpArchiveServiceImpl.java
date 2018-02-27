@@ -44,8 +44,10 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
         try{
             if("1".equals(operatorType) || "2".equals(operatorType)){
                 SsEmpTask ssEmpTask = (SsEmpTask) ssEmpTaskService.selectById(empTaskId);
+                //查询证件号码
+               String idNum = ssEmpTaskService.selectIdNumByEmployeeId(ssEmpTask.getEmployeeId());
                 //调用外部接口 查询雇员信息
-                EmployeeInfoDTO employeeInfoDTO =TaskCommonUtils.getEmployeeInfo(commonApiUtils,ssEmpTask.getEmployeeId());
+                EmployeeInfoDTO employeeInfoDTO =TaskCommonUtils.getEmployeeInfo(commonApiUtils,idNum,1,1);
                 //获取雇员信息
                 if(null!=employeeInfoDTO){
                     setEmlpoyeeInfo(ssEmpArchiveBO,employeeInfoDTO);

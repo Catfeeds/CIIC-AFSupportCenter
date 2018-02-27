@@ -12,6 +12,7 @@ import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 
@@ -129,12 +130,16 @@ public class TaskCommonUtils {
     /**
      * 获取雇员信息（支持中心调用雇员中心）
      * @param commonApiUtils
-     * @param employeeId 传入employeeId和业务类型
+     * @param idNum 传入证件号码
+     * @param idCardType 传入证件类型
+     * @param businessType
      * @return
      */
-    public static EmployeeInfoDTO getEmployeeInfo(CommonApiUtils commonApiUtils,String employeeId){
+    public static EmployeeInfoDTO getEmployeeInfo(CommonApiUtils commonApiUtils, String idNum, Integer idCardType, Integer businessType){
         EmployeeQueryDTO var1 = new EmployeeQueryDTO();
-        var1.setEmployeeId(employeeId);
+        var1.setIdNum(idNum);
+        var1.setIdCardType(idCardType);
+        var1.setBusinessType(businessType);
         try {
             com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeInfoDTO> result = commonApiUtils.getEmployeeInfo(var1);
             EmployeeInfoDTO employeeInfoDTO =result.getData();
