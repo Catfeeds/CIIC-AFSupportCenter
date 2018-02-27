@@ -183,7 +183,7 @@ public class KafkaReceiver {
                 if (employeeBO != null) {
                     task.setCompanyName(employeeBO.getCompanyName());
                 } else {
-                    task.setCompanyName("");
+                    task.setCompanyName(" ");
                 }
                 task.setAfProductId(item.getProductId());
                 task.setProductName(item.getProductName());
