@@ -87,7 +87,7 @@ public class SupplyMedicalAcceptanceServiceImpl extends ServiceImpl<SupplyMedica
     @Override
     public boolean syncAcceptanceSummaryDetail() {
         TimeScope timeScope = new TimeScope("2018-1-26 14:00:00", "2018-1-26 15:00:00");
-        String summaryUrl = "http://10.17.3.1/MedicalTPA/FileOperationForJSON.svc/GetMedicalScheme";
+        String summaryUrl = "http://10.17.3.1:9999/FileOperationForJSON.svc/GetMedicalScheme";
         List list = restTemplate.postForEntity(summaryUrl, timeScope, List.class).getBody();
 //        String str = JSON.toJSONString(list);
 //        List<AcceptanceSummaryBO> acceptanceSummaryBOS = JSONObject.parseArray(str, AcceptanceSummaryBO.class);

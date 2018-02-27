@@ -113,7 +113,7 @@ public class KafkaReceiver {
                 // 2.1.2 如果有，获取读取亲属信息
                 // 2.2   查询，投保任务单数据完善和补充
                 // 投保任务单
-                if (serviceItem.contains("雇员")) {
+                if (serviceItem == null || serviceItem.contains("雇员")) {
                     task.setType(1);
                     task.setStatus(2);
                     task.setAssociatedInsurantId(empDTO.getEmployeeId());
@@ -121,7 +121,11 @@ public class KafkaReceiver {
                     task.setIdNum(empDTO.getIdNum());
                     task.setGender(empDTO.getGender());
                     task.setAge(12);
-                    task.setBirthDate(empDTO.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                    if (empDTO.getBirthday() != null) {
+                        task.setBirthDate(empDTO.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                    } else {
+                        task.setBirthDate(null);
+                    }
                 } else {
                     JsonResult<List<EmployeeMemberDTO>> employeeMemberInfoList = employeeInfoProxy.getEmployeeMemberInfo(empDTO.getEmployeeId());
 
@@ -143,7 +147,11 @@ public class KafkaReceiver {
                         task.setIdNum(employeeMemberDTO.getIdNum());
                         task.setGender(employeeMemberDTO.getGender());
                         task.setAge(12);
-                        task.setBirthDate(employeeMemberDTO.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                        if (employeeMemberDTO.getBirthday() != null) {
+                            task.setBirthDate(employeeMemberDTO.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                        } else {
+                            task.setBirthDate(null);
+                        }
                     } else if (serviceItem.contains("配偶")) {
                         task.setType(3);
                         task.setStatus(2);
@@ -160,7 +168,11 @@ public class KafkaReceiver {
                         task.setIdNum(employeeMemberDTO.getIdNum());
                         task.setGender(employeeMemberDTO.getGender());
                         task.setAge(12);
-                        task.setBirthDate(employeeMemberDTO.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                        if (employeeMemberDTO.getBirthday() != null) {
+                            task.setBirthDate(employeeMemberDTO.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                        } else {
+                            task.setBirthDate(null);
+                        }
                     }
                 }
                 task.setTaskType(taskMsgDTO.getTaskType());
@@ -176,14 +188,24 @@ public class KafkaReceiver {
                 task.setAfProductId(item.getProductId());
                 task.setProductName(item.getProductName());
                 // 投保日期
-                task.setStartConfirmDate(item.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-                task.setEndConfirmDate(item.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                if (item.getStartDate() != null) {
+                    task.setStartConfirmDate(item.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                } else {
+                    task.setStartConfirmDate(null);
+                }
+
+                if (item.getEndDate() != null) {
+                    task.setEndConfirmDate(item.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                } else {
+                    task.setEndConfirmDate(null);
+                }
+
                 task.setPrice(item.getPrice());
                 // </editor-fold>
 
                 //依据services_item确定status，type
                 task.setServiceItems(item.getServiceItems());
-                if (serviceItem.contains("固定金额")) {
+                if (serviceItem == null || serviceItem.contains("固定金额")) {
                     task.setKeyType(1);
                 } else {
                     task.setKeyType(2);
