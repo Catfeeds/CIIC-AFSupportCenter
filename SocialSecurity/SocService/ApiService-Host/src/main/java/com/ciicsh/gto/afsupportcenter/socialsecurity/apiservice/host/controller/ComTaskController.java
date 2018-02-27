@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
  * Created by houwanhua on 2018/2/26.
  */
 @RestController
-@RequestMapping("/api/comtask")
+@RequestMapping("/api/soc/comtask")
 public class ComTaskController implements SsComTaskProxy{
 
     @Autowired

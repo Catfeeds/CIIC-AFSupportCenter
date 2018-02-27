@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Import;
     "com.ciicsh.gto.afcompanycenter.queryservice.api",
     "com.ciicsh.gto.afcompanycenter.commandservice.api",
     "com.ciicsh.gto.employeecenter.apiservice.api",
+    "com.ciicsh.gto.logservice.api",
     "com.ciicsh.gto.afsystemmanagecenter.apiservice.api"
 })
 @MapperScan("com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao")

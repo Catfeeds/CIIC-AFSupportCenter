@@ -572,4 +572,8 @@
       ORDER BY ea.emp_archive_id DESC
       LIMIT 1
     </select>
+
+    <select id="selectIdNumByEmployeeId" resultType="java.lang.String">
+        SELECT id_num FROM emp_employee WHERE employee_id = #{employeeId}
+    </select>
 </mapper>

@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto;
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.customer.SsComMaterial;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComMaterial;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
