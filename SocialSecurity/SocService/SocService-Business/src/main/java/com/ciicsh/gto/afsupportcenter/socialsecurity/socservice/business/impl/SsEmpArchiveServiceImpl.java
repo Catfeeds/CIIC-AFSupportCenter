@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpArchiveBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpArchiveService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpArchiveMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpArchive;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
@@ -13,6 +15,7 @@ import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,19 +36,25 @@ import java.util.Optional;
 public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsEmpArchive> implements SsEmpArchiveService {
     @Autowired
     SsEmpTaskService ssEmpTaskService;
+    @Autowired
+    CommonApiUtils commonApiUtils;
     @Override
     public SsEmpArchiveBO  queryByEmpTaskId(String empTaskId,String operatorType) {
         SsEmpArchiveBO ssEmpArchiveBO =new SsEmpArchiveBO();
         try{
             if("1".equals(operatorType) || "2".equals(operatorType)){
-                //调用外部接口 查询雇员信息
-
                 SsEmpTask ssEmpTask = (SsEmpTask) ssEmpTaskService.selectById(empTaskId);
-                String taskFromContecxt = ssEmpTask.getTaskFormContent();
-                //获取JSON
-                if(!StringUtil.isEmpty(taskFromContecxt)){
-                    ssEmpArchiveBO = setEmlpoyeeInfo(ssEmpArchiveBO,ssEmpTask,taskFromContecxt);
+                //查询证件号码
+               String idNum = ssEmpTaskService.selectIdNumByEmployeeId(ssEmpTask.getEmployeeId());
+                //调用外部接口 查询雇员信息
+                EmployeeInfoDTO employeeInfoDTO =TaskCommonUtils.getEmployeeInfo(commonApiUtils,idNum,1,1);
+                //获取雇员信息
+                if(null!=employeeInfoDTO){
+                    setEmlpoyeeInfo(ssEmpArchiveBO,employeeInfoDTO);
                 }
+                ssEmpArchiveBO.setInDate(ssEmpTask.getInDate());
+                ssEmpArchiveBO.setEmployeeId(ssEmpTask.getEmployeeId());
+                ssEmpArchiveBO.setSsEmpTask(ssEmpTask);
                 return ssEmpArchiveBO;
             }else{
                 //先调用外部接口查询雇员信息
@@ -89,7 +98,6 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
         return baseMapper.queryEmployeeDetailInfo(empArchiveId);
     }
 
-
     public String saveEmpSerial(Map<String,String> map) {
         SsEmpArchive ssEmpArchive = new SsEmpArchive();
         int checkRet= baseMapper.checkSerialDuplicate(map);
@@ -103,10 +111,11 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
         return "fail";
     }
 
-    private SsEmpArchiveBO setEmlpoyeeInfo(SsEmpArchiveBO ssEmpArchiveBO, SsEmpTask ssEmpTask, String taskFromContecxt){
-        ssEmpArchiveBO = JSONObject.parseObject(ssEmpTask.getTaskFormContent(),SsEmpArchiveBO.class);
-        ssEmpArchiveBO.setEmployeeId(ssEmpTask.getEmployeeId());
-        ssEmpArchiveBO.setSsEmpTask(ssEmpTask);
-        return ssEmpArchiveBO;
+    private void setEmlpoyeeInfo(SsEmpArchiveBO ssEmpArchiveBO, EmployeeInfoDTO employeeInfoDTO){
+        ssEmpArchiveBO.setEmployeeName(null==employeeInfoDTO.getEmployeeName()?null:employeeInfoDTO.getEmployeeName());
+        ssEmpArchiveBO.setIdNum(null==employeeInfoDTO.getIdNum()?null:employeeInfoDTO.getIdNum());
+        ssEmpArchiveBO.setResidenceAddress(null==employeeInfoDTO.getResidenceAddress()?null:employeeInfoDTO.getResidenceAddress());
+        ssEmpArchiveBO.setResidenceAttribute(null==employeeInfoDTO.getResidentType()?null:String.valueOf(employeeInfoDTO.getResidentType()));
+        ssEmpArchiveBO.setContactAddress(null==employeeInfoDTO.getAddress()?null:employeeInfoDTO.getAddress());
     }
 }

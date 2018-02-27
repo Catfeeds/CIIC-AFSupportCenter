@@ -21,6 +21,7 @@ import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRe
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeSearchDTO;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.junit.Test;
@@ -94,14 +95,14 @@ public class SsEmpArchiveControllerTest {
 
     @Test
     public void getEmp() throws Exception {
-        EmployeeSearchDTO dd= new EmployeeSearchDTO();
+        EmployeeQueryDTO dd= new EmployeeQueryDTO();
         dd.setBusinessType(1);
-        dd.setPageSize(10);
-        dd.setCurrentPage(1);
-        dd.setTotalRecords(0);
-        dd.setEmployeeId("1");
-        com.ciicsh.gto.employeecenter.util.JsonResult<com.ciicsh.gto.employeecenter.apiservice.api.dto.Page<EmployeeInfoDTO>> res  = d2.searchEmployeeInfo(dd);
+        //dd.setEmployeeId("1805876");
+        dd.setIdNum("360111198808060501");
+       dd.setIdCardType(1);
+        com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeInfoDTO> res  = d2.getEmployeeInfo(dd);
         System.out.println(JSON.toJSONString(res));
+        System.out.println(JSON.toJSONString(res.getData()));
     }
 
 
