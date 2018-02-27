@@ -21,11 +21,8 @@ import org.springframework.context.annotation.Import;
     "com.ciicsh.gto.afcompanycenter.queryservice.api",
     "com.ciicsh.gto.afcompanycenter.commandservice.api",
     "com.ciicsh.gto.employeecenter.apiservice.api",
-<<<<<<< HEAD
-    "com.ciicsh.gto.logservice.api"
-=======
+    "com.ciicsh.gto.logservice.api",
     "com.ciicsh.gto.afsystemmanagecenter.apiservice.api"
->>>>>>> a894b67b6913f6365eb290c2c91eade691faac1d
 })
 @MapperScan("com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao")
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.socialsecurity.socservice","com.ciicsh.gto","com.ciicsh.common"})
