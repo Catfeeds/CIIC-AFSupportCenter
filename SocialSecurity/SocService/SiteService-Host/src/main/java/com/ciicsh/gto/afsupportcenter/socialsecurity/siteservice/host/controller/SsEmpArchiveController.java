@@ -1,15 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpArchiveService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpArchiveBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpArchiveService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpBasePeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpArchive;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBasePeriod;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.StatementExportArgs;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.StatementExportOpt;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.empSSSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
@@ -25,7 +22,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -112,13 +112,14 @@ public class SsEmpArchiveController extends BasicController<SsEmpArchiveService>
      * 修改社保序号
      * */
     @RequestMapping("/saveEmpSerial")
-    public void saveEmpSerial(@RequestParam Map<String,String> map) {
-        SsEmpArchive ssEmpArchive = new SsEmpArchive();
-        //TODO 此处需要判断社保序号是否已存在
-        String ssSerial= Optional.of(map.get("ssSerial")).orElse("");
-        ssEmpArchive.setSsSerial(ssSerial);
-        ssEmpArchive.setEmpArchiveId(Long.valueOf(map.get("empArchiveId")));
-        business.updateById(ssEmpArchive);
+    public JsonResult<Object> saveEmpSerial(@RequestParam Map<String,String> map) {
+       String ret= business.saveEmpSerial(map);
+       if(ret.equals("succ")){
+           return JsonResultKit.of(200,ret);
+       }else{
+           return JsonResultKit.of(-1,ret);
+       }
+
     }
 
 }

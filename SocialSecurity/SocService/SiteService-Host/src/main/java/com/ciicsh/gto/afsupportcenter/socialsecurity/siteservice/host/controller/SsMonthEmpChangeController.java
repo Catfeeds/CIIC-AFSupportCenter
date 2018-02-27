@@ -1,7 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.statement.SsMonthEmpChangeDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsMonthEmpChangeService;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
@@ -34,15 +33,15 @@ public class SsMonthEmpChangeController  extends BasicController<SsMonthEmpChang
      */
     @Log("社保汇总基本数据查询")
     @PostMapping("/serachMonthEmpChange")
-    public JsonResult<SsMonthEmpChangeDTO> serachMonthEmpChange(SsMonthEmpChangeDTO ssMonthEmpChangeDTO) {
+    public JsonResult<SsMonthEmpChangeBO> serachMonthEmpChange(SsMonthEmpChangeBO ssMonthEmpChangeDTO) {
 
         //转换格式
-        SsMonthEmpChangeBO ssMonthEmpChangeBO = CommonTransform.convertToEntity(ssMonthEmpChangeDTO,SsMonthEmpChangeBO.class);
+        com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeBO ssMonthEmpChangeBO = CommonTransform.convertToEntity(ssMonthEmpChangeDTO, com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeBO.class);
 
-        SsMonthEmpChangeBO resultBO = business.serachMonthEmpChangeByStatementId(ssMonthEmpChangeBO);
+        com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeBO resultBO = business.serachMonthEmpChangeByStatementId(ssMonthEmpChangeBO);
         //转换格式
-        SsMonthEmpChangeDTO resultDto =  CommonTransform.convertToDTO(resultBO,SsMonthEmpChangeDTO.class);
-        JsonResult<SsMonthEmpChangeDTO> result = new JsonResult<>();
+        SsMonthEmpChangeBO resultDto =  CommonTransform.convertToDTO(resultBO,SsMonthEmpChangeBO.class);
+        JsonResult<SsMonthEmpChangeBO> result = new JsonResult<>();
         result.setData(resultDto);
 
         return result;

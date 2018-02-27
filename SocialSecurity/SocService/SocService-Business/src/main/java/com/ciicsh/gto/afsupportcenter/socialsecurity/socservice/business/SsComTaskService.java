@@ -25,7 +25,7 @@ public interface SsComTaskService extends IService<SsComTask> {
      * xsj
      * @return
      */
-    public PageRows<SsComTaskBO>  queryNoProgressCompanyTask(PageInfo pageInfo);
+    PageRows<SsComTaskBO>  queryNoProgressCompanyTask(PageInfo pageInfo);
 
 
     /**
@@ -38,7 +38,7 @@ public interface SsComTaskService extends IService<SsComTask> {
      * @param pageInfo
      * @return
      */
-    public PageRows<SsComTaskBO> queryProgressingCompanyTask(PageInfo pageInfo);
+    PageRows<SsComTaskBO> queryProgressingCompanyTask(PageInfo pageInfo);
 
 
     /**
@@ -51,48 +51,48 @@ public interface SsComTaskService extends IService<SsComTask> {
      * @param pageInfo
      * @return
      */
-    public PageRows<SsComTaskBO> queryFinshedCompanyTask(PageInfo pageInfo);
+    PageRows<SsComTaskBO> queryFinshedCompanyTask(PageInfo pageInfo);
 
     /**
      * 获得企业任务单 批退
      * @param pageInfo
      * @return
      */
-    public PageRows<SsComTaskBO> queryRefusedCompanyTask(PageInfo pageInfo);
+    PageRows<SsComTaskBO> queryRefusedCompanyTask(PageInfo pageInfo);
 
     /**
      * 批量修改 批退任务
      * @param ssComTaskList
      * @return
      */
-    public boolean updatePatchRefuseTask(List<SsComTask> ssComTaskList);
+    boolean updatePatchRefuseTask(List<SsComTask> ssComTaskList);
 
     /**
      *  查询企业信息和材料信息
      * @param SsComTaskBO
      * @return
      */
-    public SsComTaskBO queryComInfoAndMaterial(SsComTaskBO SsComTaskBO);
+    SsComTaskBO queryComInfoAndMaterial(SsComTaskBO SsComTaskBO);
 
     /**
      *  查询企业信息和 前道传过来的JSON（包含社保截止和付款方式）
      * @param ssComTaskBO
      * @return
      */
-    public SsComTaskBO queryComInfoAndPayWay(SsComTaskBO ssComTaskBO);
+    SsComTaskBO queryComInfoAndPayWay(SsComTaskBO ssComTaskBO);
 
 
     /**
      * 企业任务开户办理 在内做事物
      */
-    public boolean addOrUpdateCompanyTask(SsComTask ssComTask, SsComAccount ssComAccount, SsAccountRatio ssAccountRatio,SsAccountComRelation ssAccountComRelation);
-    public String checkComAccountDuplicate(SsComAccount ssComAccount);
+    boolean addOrUpdateCompanyTask(SsComTask ssComTask, SsComAccount ssComAccount, SsAccountRatio ssAccountRatio,SsAccountComRelation ssAccountComRelation);
+    String checkComAccountDuplicate(SsComAccount ssComAccount);
     /**
      * 查询账户信息 和材料信息
      * @param ssComTaskBO
      * @return
      */
-    public SsComTaskBO queryAccountInfoAndMaterial(SsComTaskBO ssComTaskBO);
+    SsComTaskBO queryAccountInfoAndMaterial(SsComTaskBO ssComTaskBO);
 
     /**
      * 更新或者处理任务 终止 转移 变更
@@ -100,14 +100,14 @@ public interface SsComTaskService extends IService<SsComTask> {
      * @param object
      * @return
      */
-    public boolean updateOrHandlerTask(SsComTaskBO ssComTaskBO, Object object);
+    boolean updateOrHandlerTask(SsComTaskBO ssComTaskBO, Object object);
 
     /**
      * 任务单撤销
      * @param ssComTask
      * @return
      */
-    public int updateTaskStatusForRevoke(SsComTask ssComTask);
+    int updateTaskStatusForRevoke(SsComTask ssComTask);
 
     /**
      * 判断企业任务单是否存在
@@ -115,7 +115,7 @@ public interface SsComTaskService extends IService<SsComTask> {
      * @param ssComTask
      * @return
      */
-    public int countComTaskByCond(SsComTaskBO ssComTask);
+    int countComTaskByCond(SsComTaskBO ssComTask);
 
     boolean insertComTask(SsComTask ssComTask);
 }

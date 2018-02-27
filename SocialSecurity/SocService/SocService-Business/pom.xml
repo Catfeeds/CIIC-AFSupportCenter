@@ -14,9 +14,7 @@
     <packaging>jar</packaging>
     <version>1.0.0</version>
 
-    <build>
-        <finalName>gt1.afsupportcenter.socservice-business</finalName>
-    </build>
+
 
     <dependencies>
         <dependency>
@@ -36,11 +34,6 @@
             <version>1.0.0</version>
         </dependency>
 
-        <dependency>
-            <artifactId>afsupportcenter-socialsecurity-socservice-api</artifactId>
-            <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.ciicsh.gt1.commonservice</groupId>
             <artifactId>sheetservice-api</artifactId>
@@ -78,6 +71,13 @@
             <groupId>com.ciicsh.gt1.settlementcenter</groupId>
             <artifactId>invoicecommandservice-api</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.ciicsh.gt1.afsystemmanagecenter</groupId>
+            <artifactId>gt1.afsystemmanagecenter.apiservice-api</artifactId>
+        </dependency>
     </dependencies>
+
+    <build>
+        <finalName>gt1.afsupportcenter.socservice-business</finalName>
+    </build>
 </project>

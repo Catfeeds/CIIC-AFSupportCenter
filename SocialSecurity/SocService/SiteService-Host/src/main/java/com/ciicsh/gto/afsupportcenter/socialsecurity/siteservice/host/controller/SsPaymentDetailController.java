@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.payment.SsPaymentDetailDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentDetailBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsPaymentDetailService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPaymentDetail;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
@@ -35,15 +35,15 @@ public class SsPaymentDetailController  extends BasicController<SsPaymentDetailS
      */
     @Log("付款通知查询")
     @PostMapping("/paymentDetailQuery")
-    public JsonResult<List<SsPaymentDetailDTO>> statementResultQuery(SsPaymentDetailDTO ssPaymentDetailDTO) {
+    public JsonResult<List<SsPaymentDetailBO>> statementResultQuery(SsPaymentDetailBO ssPaymentDetailDTO) {
 
         SsPaymentDetail ssPaymentDetail = CommonTransform.convertToEntity(ssPaymentDetailDTO,SsPaymentDetail.class);
 
         List<SsPaymentDetail> resultList =business.paymentDetailQuery(ssPaymentDetail);
         //转换格式
-        List<SsPaymentDetailDTO> resultDTOList  = CommonTransform.convertToDTOs(resultList,SsPaymentDetailDTO.class);
+        List<SsPaymentDetailBO> resultDTOList  = CommonTransform.convertToDTOs(resultList,SsPaymentDetailBO.class);
 
-        JsonResult<List<SsPaymentDetailDTO>> jsonResult= new JsonResult<>();
+        JsonResult<List<SsPaymentDetailBO>> jsonResult= new JsonResult<>();
         jsonResult.setData(resultDTOList);
 
         return jsonResult;

@@ -55,7 +55,7 @@ public class MybatisPlusGeneratorRun {
                     String tableName = tableInfo.getName().toLowerCase();
                     // 添加指定前缀的表
                     if (tableName.startsWith("ss_") || ohtTable(tableInfo)) {
-                        // 移除 entity 前缀
+                        // 移除 customer 前缀
                         // tableInfo.setEntityName(this.getStrategy(), tableInfo.getEntityName().substring(2));
                         list.add(tableInfo);
                     }
@@ -170,7 +170,7 @@ public class MybatisPlusGeneratorRun {
 //        pc.setMapper("dao");
 //        pc.setXml("mapping");
 //        pc.setController("host.controller");
-//        pc.setEntity("entity");
+//        pc.setEntity("customer");
 //        pc.setService("business");
 //        pc.setServiceImpl("business.impl");
 //        return pc;
@@ -183,11 +183,11 @@ public class MybatisPlusGeneratorRun {
     static PackageConfig handlePackageInfo() {
         PackageConfig pc = new PackageConfig();
         pc.setParent("com.ciicsh.gto.afsupportcenter.socialsecurity");
-        pc.setModuleName("siteservice");
+        pc.setModuleName("fundservice");
         pc.setMapper("dao");
         pc.setXml("mapping");
         pc.setController("host.controller");
-        pc.setEntity("entity");
+        pc.setEntity("customer");
         pc.setService("business");
         pc.setServiceImpl("business.impl");
         return pc;

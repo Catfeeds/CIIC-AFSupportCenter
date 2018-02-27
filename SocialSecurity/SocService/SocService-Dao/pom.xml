@@ -12,20 +12,12 @@
 
     <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
     <artifactId>afsupportcenter-socialsecurity-socservice-dao</artifactId>
-    <build>
-        <finalName>gt1.afsupportcenter.socservice-dao</finalName>
-    </build>
+    <version>1.0.0</version>
 
     <dependencies>
         <dependency>
             <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
             <artifactId>afsupportcenter-socialsecurity-socservice-entity</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
-            <artifactId>afsupportcenter-socialsecurity-socservice-api</artifactId>
-            <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
             <version>1.0.0</version>
         </dependency>
 
@@ -38,5 +30,9 @@
             <artifactId>cat-client</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <finalName>gt1.afsupportcenter.socservice-dao</finalName>
+    </build>
 
 </project>

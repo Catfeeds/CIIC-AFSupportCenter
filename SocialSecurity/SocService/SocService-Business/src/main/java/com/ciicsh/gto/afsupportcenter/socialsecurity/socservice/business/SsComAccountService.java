@@ -1,9 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountParamDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComAccountBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAccount;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.ComAccountExtPO;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -61,11 +62,10 @@ public interface SsComAccountService extends IService<SsComAccount> {
 
     /**
      * 查询企业社保账户信息 接口用
-     *
-     * @param dto
+     * @param paramBO
      * @return
      */
-    List<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountDTO> getSsComAccountList(SsComAccountParamDTO dto);
+    List<ComAccountExtPO> getSsComAccountList(ComAccountParamBO paramBO);
 
     /**
      * 调用银行接口保存社保企业开户转入的银行信息

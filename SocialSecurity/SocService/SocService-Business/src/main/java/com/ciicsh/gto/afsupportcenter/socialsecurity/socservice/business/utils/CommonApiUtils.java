@@ -2,6 +2,9 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils;
 
 import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialUpdateDateDTO;
 import com.ciicsh.gto.afcompanycenter.commandservice.api.proxy.AfEmployeeSocialProxy;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.SSPolicyProxy;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsResposeDTO;
 import com.ciicsh.gto.basicdataservice.api.DicItemServiceProxy;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.basicdataservice.api.dto.EmptyDicItemDTO;
@@ -10,7 +13,6 @@ import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeSearchDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.Page;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
-import com.ciicsh.gto.employeecenter.util.JsonResult;
 import com.ciicsh.gto.sheetservice.api.SheetServiceProxy;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.slf4j.Logger;
@@ -39,6 +41,9 @@ public class CommonApiUtils {
 
     @Autowired
     EmployeeInfoProxy employeeInfoProxy;
+
+    @Autowired
+    SSPolicyProxy ssPolicyProxy;
 
     /**
      * 调用客服中心的完成任务接口
@@ -98,8 +103,17 @@ public class CommonApiUtils {
      * @param var1 传入employeeId和业务类型
      * @return
      */
-    public JsonResult<Page<EmployeeInfoDTO>> searchEmployeeInfo(
+    public com.ciicsh.gto.employeecenter.util.JsonResult<Page<EmployeeInfoDTO>> searchEmployeeInfo(
         @RequestBody EmployeeSearchDTO var1) throws Exception {
         return employeeInfoProxy.searchEmployeeInfo(var1);
+    }
+
+    /**
+     * 获取进位方式
+     * @param var1
+     * @return
+     */
+    public com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<GetSSPItemsResposeDTO> getRoundingType(GetSSPItemsRequestDTO var1){
+        return ssPolicyProxy.getSSPItems(var1);
     }
 }

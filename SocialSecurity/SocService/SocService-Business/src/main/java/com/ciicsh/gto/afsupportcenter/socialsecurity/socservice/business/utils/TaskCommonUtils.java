@@ -4,7 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialUpdateDateDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.enumeration.ItemCode;
+import com.ciicsh.gto.afsupportcenter.util.core.ResultCode;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsResposeDTO;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.SSPItemDTO;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
@@ -59,15 +63,15 @@ public class TaskCommonUtils {
     /**
      * 获得进位方式
      */
-    public static DicItemDTO getRoundTypeFromApi(CommonApiUtils commonApiUtils,String dicItemId) {
+    public static List<SSPItemDTO> getRoundTypeFromApi(CommonApiUtils commonApiUtils, GetSSPItemsRequestDTO getSSPItemsRequestDTO) {
         try {
-            DicItemDTO dicItemDTO = commonApiUtils.selectByDicItemId(dicItemId);
-            Assert.isNull(dicItemDTO,"进位方式为空");
-            // roundType = dicItemDTO.getDicId();
-            return dicItemDTO;
+            com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<GetSSPItemsResposeDTO> jsonResult = commonApiUtils.getRoundingType(getSSPItemsRequestDTO);
+            GetSSPItemsResposeDTO getSSPItemsResposeDTO = jsonResult.getData();
+            if(null==getSSPItemsResposeDTO)return null;
+            return getSSPItemsResposeDTO.getItems();
         } catch (Exception e) {
             e.printStackTrace();
-            throw new BusinessException("调用工作流异常");
+            throw new BusinessException("调用进位方式接口异常");
         }
 
     }

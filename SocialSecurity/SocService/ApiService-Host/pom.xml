@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
+    <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
     <artifactId>afsupportcenter-socialsecurity-apiservice-host</artifactId>
     <version>1.0.0</version>
 
@@ -83,11 +83,12 @@
             <version>1.0.0</version>
         </dependency>
 
-        <!--<dependency>
+        <dependency>
             <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
             <artifactId>afsupportcenter-socialsecurity-socservice-api</artifactId>
             <version>1.0.0</version>
-        </dependency>-->
+        </dependency>
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -96,6 +97,11 @@
         <dependency>
             <groupId>com.ciicsh.gt1</groupId>
             <artifactId>common-entity</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ciicsh.gt1.logservice</groupId>
+            <artifactId>logservice-api</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 

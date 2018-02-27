@@ -21,7 +21,7 @@ public class CalculateSocialUtils {
 	 * @param roundType       the round type
 	 * @return big decimal
 	 */
-	public static BigDecimal calculateAmount(BigDecimal base, BigDecimal ratio, BigDecimal fixedAmount, Integer calculateMethod, String roundType){
+	public static BigDecimal calculateAmount(BigDecimal base, BigDecimal ratio, BigDecimal fixedAmount, Integer calculateMethod, int roundType){
 	    switch (calculateMethod){
 			case 1:
 				return calculateByRoundType(fixedAmount,roundType);
@@ -34,21 +34,21 @@ public class CalculateSocialUtils {
 		}
 	}
 
-	public static BigDecimal calculateByRoundType(BigDecimal amount,String roundType){
+	public static BigDecimal calculateByRoundType(BigDecimal amount,int roundType){
 		BigDecimal ten = new BigDecimal(10);
 		BigDecimal hundred = new BigDecimal(100);
 		switch (roundType) {
 			// 见分进角
-			case "DIT00018":
+			case 1:
 				return new BigDecimal(Math.ceil(amount.multiply(ten).doubleValue())).divide(ten);
 			// 见角进元
-			case "DIT00019":
+			case 2:
 				return new BigDecimal(Math.ceil(amount.doubleValue()));
 			// 进位到元
-			case "DIT00020":
+			case 3:
 				return new BigDecimal(Math.ceil(amount.doubleValue()));
 			// 进位偶数
-			case "DIT00021":
+			case 4:
 				BigDecimal rs = new BigDecimal(Math.floor(amount.doubleValue()));
 				if (rs.intValue() % 2 == 0){
 					return rs;
@@ -56,22 +56,22 @@ public class CalculateSocialUtils {
 					return rs.add(new BigDecimal(1));
 				}
 			// 舍去角
-			case "DIT00022":
+			case 5:
 				return new BigDecimal(Math.floor(amount.doubleValue()));
 			// 舍去分
-			case "DIT00023":
+			case 6:
 				return new BigDecimal(Math.floor(amount.multiply(ten).doubleValue())).divide(ten);
 			// 舍去厘
-			case "DIT00024":
+			case 7:
 				return new BigDecimal(Math.floor(amount.multiply(hundred).doubleValue())).divide(hundred);
 			// 四舍五入到分
-			case "DIT00025":
+			case 8:
 				return new BigDecimal(Math.round(amount.multiply(hundred).doubleValue())).divide(hundred);
 			// 四舍五入到角
-			case "DIT00026":
+			case 9:
 				return new BigDecimal(Math.round(amount.multiply(ten).doubleValue())).divide(ten);
 			// 四舍五入到元
-			case "DIT00027":
+			case 10:
 				return new BigDecimal(Math.round(amount.doubleValue()));
 			default:
 				return amount;

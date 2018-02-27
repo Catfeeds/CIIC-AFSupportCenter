@@ -65,7 +65,7 @@ public class SsEmpTaskBO implements Serializable {
     private LocalDate outDate;
     private String businessInterfaceId;
     private String taskId;
-    private Integer policyDetailId;
+    private String policyDetailId;
     private Boolean isActive;
     private LocalDateTime createdTime;
     private LocalDateTime modifiedTime;
@@ -139,4 +139,8 @@ public class SsEmpTaskBO implements Serializable {
 
     //用退工信息
     private AmEmpTaskDTO amEmpTaskDTO;
+    /**
+     * 福利办理方
+     */
+    private Integer welfareUnit;
 }

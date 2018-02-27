@@ -6,104 +6,85 @@ server:
 ###################  spring 配置  ###################
 spring:
   application:
-    name: support-center-employ-command-service
+    name: support-center-employee-site-service
   profiles:
-    active: develop
-  datasource:
-    druid:
-      driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://172.16.9.15:3306/gtobusinessdb?useUnicode=true&useSSL=true&amp;characterEncoding=UTF-8
-      username: root
-      password: a111111
-      max-active: 20
-      min-idle: 8
-      initial-size: 10
-      validation-query: SELECT 'x'
-      filter:
-        stat:
-          enabled: true
+    active: dev
   cloud:
-          stream:
-            kafka:
-              binder:
-                brokers: 172.16.9.17:9092,172.16.9.18:9092
-                zk-nodes: 172.16.9.19:2181,172.16.9.20:2181,172.16.9.21:2181
-            bindings:
-              common_taskservice_af_empin-channel:
-                destination: common_taskservice_af_empin # topic name
-                group: ${spring.application.name}
-                content-type: application/json
-                consumer:
-                  partitioned: true
-              common_taskservice_af_empout-channel:
-                destination: common_taskservice_af_empout # topic name
-                group: ${spring.application.name}
-                content-type: application/json
-                consumer:
-                  partitioned: true
-              common_taskservice_af_charge_resume-channel:
-                destination: common_taskservice_af_charge_resume # topic name
-                group: ${spring.application.name}
-                content-type: application/json
-                consumer:
-                  partitioned: true
-              common_taskservice_af_charge_stop-channel:
-                destination: common_taskservice_af_charge_stop # topic name
-                group: ${spring.application.name}
-                content-type: application/json
-                consumer:
-                  partitioned: true
-              common_taskservice_af_nonlocal_to_sh-channel:
-                destination: common_taskservice_af_nonlocal_to_sh # topic name
-                group: ${spring.application.name}
-                content-type: application/json
-                consumer:
-                  partitioned: true
-              common_taskservice_af_sh_to_nonlocal-channel:
-                destination: common_taskservice_af_sh_to_nonlocal # topic name
-                group: ${spring.application.name}
-                content-type: application/json
-                consumer:
-                  partitioned: true
-              common_taskservice_af_emp_company_change-channel:
-                destination: common_taskservice_af_emp_company_change # topic name
-                group: ${spring.application.name}
-                content-type: application/json
-                consumer:
-                  partitioned: true
-          instance-count: 2 # The number of deployed instances of an application.
-                            # Must be set for partitioning and if using Kafka.
-                            # used to partition data across different consumers.
-          instance-index: 0
-  ###################  spring cloud eureka  ###################
-  eureka:
-    client:
-      serviceUrl:
-        defaultZone: "http://172.16.9.21:9602/eureka,http://172.16.9.20:9602/eureka,http://172.16.9.19:9602/eureka" #,http://172.16.9.21:9602/eureka
-                           #" #本地开发环境eureka,http://172.16.9.19:9602/eureka
-   #"http://172.16.9.21:9602/eureka,http://172.16.9.20:9602/eureka,http://172.16.9.19:9602/eureka" #本地开发环境eureka
-    instance:
-      lease-expiration-duration-in-seconds: 30
-      lease-renewal-interval-in-seconds: 40
-      prefer-ip-address: true
-      instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+    stream:
+      bindings:
+        common_taskservice_af_empin_channel:
+          destination: common_taskservice_af_empin # topic name
+          group: ${spring.application.name}
+          #content-type: application/json
+          consumer:
+            partitioned: true
+        common_taskservice_af_empout_channel:
+          destination: common_taskservice_af_empout # topic name
+          group: ${spring.application.name}
+          #content-type: application/json
+          consumer:
+            partitioned: true
+        common_taskservice_af_emp_make_up_channel:
+          destination: common_taskservice_af_emp_make_up # topic name
+          group: ${spring.application.name}
+          #content-type: application/json
+          consumer:
+            partitioned: true
+        common_taskservice_af_emp_company_change_channel:
+          destination: common_taskservice_af_emp_company_change # topic name
+          group: ${spring.application.name}
+          #content-type: application/json
+          consumer:
+            partitioned: true
+        common_taskservice_af_emp_agreement_adjust_channel:
+          destination: common_taskservice_af_emp_agreement_adjust # topic name
+          group: ${spring.application.name}
+          #content-type: application/json
+          consumer:
+            partitioned: true
+        common_taskservice_af_emp_agreement_update_channel:
+          destination: common_taskservice_af_emp_agreement_update # topic name
+          group: ${spring.application.name}
+          #content-type: application/json
+          consumer:
+            partitioned: true
+        pay_apply_pay_status_stream_channel:
+          destination: pay-apply-pay-status-stream # topic name
+          group: ${spring.application.name}
+          #content-type: application/json
+          consumer:
+            partitioned: true
+        common_taskservice_af_company_social_account_once_channel:
+          destination: common_taskservice_af_company_social_account_once # topic name
+          group: ${spring.application.name}
+          #content-type: application/json
+          consumer:
+            partitioned: true
+        soc_report_output_channel:
+          destination: af_soc_report_generate # topic name
+          content-type: application/json
+          producer:
+            partitionCount: 1
 
+  http:
+    multipart:
+      enabled: true
+      max-file-size: 2MB
 ###################  spring cloud eureka  ###################
-#eureka:
-# client:
-#    serviceUrl:
-#      defaultZone: "http://172.16.9.19:9600/eureka,http://172.16.9.20:9600/eureka,http://172.16.9.21:9600/eureka" #本地开发环境eureka
-#  instance:
-#    lease-expiration-duration-in-seconds: 30
-#    lease-renewal-interval-in-seconds: 40
-#    prefer-ip-address: true
-#    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+eureka:
+  instance:
+    lease-expiration-duration-in-seconds: 40
+    lease-renewal-interval-in-seconds: 30
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
 ###################  mybatis 配置  ###################
 #mybatis
 mybatis-plus:
   mapper-locations: classpath*:/mapping*/*Mapper.xml
   #实体扫描，多个package用逗号或者分号分隔
   typeAliasesPackage: com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity
+  plugins:
+    - catMybatisInterceptor
 #  typeEnumsPackage: com.baomidou.springboot.entity.enums
   global-config:
     #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
@@ -130,7 +111,7 @@ mybatis-plus:
     cache-enabled: false
 
 app:
-  id: 10006006
+  id: 10006002
 
 endpoints:
   shutdown:
@@ -147,3 +128,8 @@ management:
     enabled: false
   port: 6012
   context-path: /admin
+
+http:
+  multipart:
+  enabled: true
+  max-file-size: 2MB

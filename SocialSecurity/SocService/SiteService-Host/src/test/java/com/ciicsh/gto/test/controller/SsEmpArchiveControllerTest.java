@@ -1,10 +1,9 @@
 package com.ciicsh.gto.test.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialUpdateDateDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsAccountComRelationDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComTaskDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.payment.SsOperatePaymentDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsOperatePaymentBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComAccountService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskService;
@@ -15,7 +14,10 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller
 import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller.SsComTaskController;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller.SsEmpArchiveController;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller.SsPaymentController;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsAccountComRelationDTO;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsResposeDTO;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
@@ -68,17 +70,17 @@ public class SsEmpArchiveControllerTest {
     }
 
 
-    @Test
-    public void saveSsComTask() {
-        SsOperatePaymentDTO ssOperatePaymentDTO = new SsOperatePaymentDTO();
-        SsComTaskDTO ssComTaskDTO = new SsComTaskDTO();
-        ssComTaskDTO.setCompanyId("1");
-        ssComTaskDTO.setComAccountId(2L);
-        ssComTaskDTO.setTaskCategory("1");
-
-        com.ciicsh.common.entity.JsonResult json = d1.saveSsComTask(ssComTaskDTO);
-        System.out.println(JSON.toJSONString(json));
-    }
+//    @Test
+//    public void saveSsComTask() {
+//        SsOperatePaymentBO ssOperatePaymentDTO = new SsOperatePaymentBO();
+//        SsComTaskDTO ssComTaskDTO = new SsComTaskDTO();
+//        ssComTaskDTO.setCompanyId("1");
+//        ssComTaskDTO.setComAccountId(2L);
+//        ssComTaskDTO.setTaskCategory("1");
+//
+//        com.ciicsh.common.customer.JsonResult json = d1.saveSsComTask(ssComTaskDTO);
+//        System.out.println(JSON.toJSONString(json));
+//    }
 
     @Autowired
     CommonApiUtils d2;
@@ -105,7 +107,7 @@ public class SsEmpArchiveControllerTest {
 
     @Test
     public void testDoReviewdePass() {
-        SsOperatePaymentDTO ssOperatePaymentDTO = new SsOperatePaymentDTO();
+        SsOperatePaymentBO ssOperatePaymentDTO = new SsOperatePaymentBO();
         ssOperatePaymentDTO.setPaymentId(1L);
         ssOperatePaymentDTO.setApplyRemark("再申请");
         ssOperatePaymentDTO.setRejectionRemark("再批退");
@@ -190,5 +192,17 @@ public class SsEmpArchiveControllerTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testGetRoundType() {
+        GetSSPItemsRequestDTO getSSPItemsRequestDTO = new GetSSPItemsRequestDTO();
+        getSSPItemsRequestDTO.setSsPolicyId("201");
+        getSSPItemsRequestDTO.setPayAccountType(1);
+        getSSPItemsRequestDTO.setEffectiveMonth("201803");
+
+        com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<GetSSPItemsResposeDTO> jsonResult =commonApiUtils.getRoundingType(getSSPItemsRequestDTO);
+
+        System.out.println("结果"+JSONObject.toJSON(jsonResult).toString());
     }
 }

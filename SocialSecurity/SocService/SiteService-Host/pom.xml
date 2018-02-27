@@ -15,7 +15,6 @@
     <version>1.0.0</version>
 
     <dependencies>
-
         <!-- spring cloud eureka -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -84,24 +83,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
-            <artifactId>afsupportcenter-socialsecurity-socservice-api</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>com.ciicsh.gt1.commonservice</groupId>-->
-            <!--<artifactId>sheetservice-api</artifactId>-->
-            <!--<version>1.0.0</version>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-            <!--<groupId>com.ciicsh.gt1.settlementcenter.payment</groupId>-->
-            <!--<artifactId>settlementcenter-payment-command-api</artifactId>-->
-            <!--<version>1.0.0</version>-->
-        <!--</dependency>-->
-
-        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-stream-kafka</artifactId>
         </dependency>
@@ -124,6 +105,10 @@
         <dependency>
             <groupId>com.ciicsh.gt1</groupId>
             <artifactId>common-entity</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ciicsh.gt1.logservice</groupId>
+            <artifactId>logservice-api</artifactId>
         </dependency>
     </dependencies>
 

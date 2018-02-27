@@ -1,11 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountParamDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComAccountBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComAccountService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsComAccountMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAccount;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.ComAccountExtPO;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -81,14 +82,12 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
 
     /**
      * 查询企业社保账户信息表
-     *
-     * @param dto
+     * @param paramBO
      * @return
      */
     @Override
-    public List<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountDTO>
-    getSsComAccountList(SsComAccountParamDTO dto) {
-        return baseMapper.getSsComAccountList(dto);
+    public List<ComAccountExtPO> getSsComAccountList(ComAccountParamBO paramBO) {
+        return baseMapper.getSsComAccountList(paramBO);
     }
 
     /**
