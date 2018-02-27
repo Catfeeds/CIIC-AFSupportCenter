@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsAccountComRelationMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsAccountRatioMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsComAccountMapper;
@@ -20,9 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * <p>
@@ -43,6 +42,9 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
     public SsAccountRatioMapper ssAccountRatioMapper;
     @Autowired
     public SsAccountComRelationMapper ssAccountComRelationMapper;
+    @Autowired
+    public CommonApiUtils commonApiUtils;
+
     /**
      * 获得企业任务单 未处理
      * xsj
@@ -170,6 +172,26 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
             //添加账户下对应的公司
             ssAccountComRelation.setComAccountId(ssComAccount.getComAccountId());
             ssAccountComRelationMapper.insert(ssAccountComRelation);
+            Map<String,Object> bankAccountMap =new HashMap<String,Object>();
+
+            bankAccountMap.put("com_account_id", ssComAccount.getComAccountId());
+            bankAccountMap.put("account", ssComAccount.getBankAccount());
+            bankAccountMap.put("account_name", ssComAccount.getComAccountName());
+            bankAccountMap.put("bank_name", ssComAccount.getPaymentBank());
+            bankAccountMap.put("bank_id", "2");//默认工商银行
+//          bankAccountMap.put("province_code", "002");
+//          bankAccountMap.put("city_code", "01");
+            bankAccountMap.put("account_type", "4");
+            //bankAccountMap.put("subject_no", "1");
+            //插入银行账号信息并返回结果，如果接口返回0 表示 接口调用失败，正常返回 bankAccountId 主键
+           int bankAccountId= commonApiUtils.addBankAccount(bankAccountMap);
+            if(bankAccountId > 0){
+                ssComAccount.setBankAccountId((long) bankAccountId);
+                sComAccountMapper.updateById(ssComAccount);
+            }else{
+                return false;
+            }
+
         }
         return true;
     }

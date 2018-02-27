@@ -13,6 +13,8 @@ import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeSearchDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.Page;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
+import com.ciicsh.gto.settlementcenter.invoicecommandservice.api.ComeAccountCommandProxy;
+import com.ciicsh.gto.settlementcenter.invoicecommandservice.api.dto.JsonResult;
 import com.ciicsh.gto.sheetservice.api.SheetServiceProxy;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.slf4j.Logger;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by houwanhua on 2018/2/22.
@@ -44,6 +47,9 @@ public class CommonApiUtils {
 
     @Autowired
     SSPolicyProxy ssPolicyProxy;
+
+    @Autowired
+    ComeAccountCommandProxy comeAccountCommandProxy;
 
     /**
      * 调用客服中心的完成任务接口
@@ -116,4 +122,16 @@ public class CommonApiUtils {
     public com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<GetSSPItemsResposeDTO> getRoundingType(GetSSPItemsRequestDTO var1){
         return ssPolicyProxy.getSSPItems(var1);
     }
+
+    /**
+     * 新增银行账户信息
+     * */
+    public Integer addBankAccount(Map<String,Object> map){
+        JsonResult jr = comeAccountCommandProxy.addAccount(map);
+        if(jr.getErrorcode().equals("0")){
+            return  jr.getBankAccountId();
+        }
+        return 0;
+    }
+
 }

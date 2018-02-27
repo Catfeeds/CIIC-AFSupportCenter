@@ -56,6 +56,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
     @Autowired
     private CommonApiUtils commonApiUtils;
 
+
     @Log("查询未处理企业任务单")
     @RequestMapping(value = "getNoProgressTask")
     public JsonResult<List<SsComTaskBO>> getNoProgressCompanyTask(PageInfo pageInfo) {
@@ -211,6 +212,8 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
             ssAccountComRelation.setCreatedBy("xsj");
             ssAccountComRelation.setModifiedBy("xsj");
             ssAccountComRelation.setModifiedTime(LocalDateTime.now());
+            //Map<String,Object> bankAccountMap=new HashMap<>();
+           // commonApiUtils.addBankAccount(bankAccountMap);
         } else {
             //任务单 为初始，受理， 送审  账户为初始状态
             ssComAccount.setState(new Integer(0));
