@@ -140,6 +140,7 @@
         sea.ss_serial,
         sca.ss_account,
         sea.emp_classify,
+        sea.com_account_id,
         sea.out_date
         FROM ss_emp_archive sea
         LEFT JOIN sal_company sc ON sc.company_id=sea.company_id AND sc.is_active = 1
@@ -148,5 +149,9 @@
         WHERE  sea.is_active = 1
         AND emp_archive_id = #{empArchiveId}
     </select>
-
+    <!--检查雇员社保序号是否重复-->
+    <select id="checkSerialDuplicate" resultType="Integer">
+        SELECT count(1) FROM ss_emp_archive ea WHERE ea.emp_archive_id!=${empArchiveId}
+        AND ea.com_account_id=#{comAccountId} AND ea.ss_serial=#{ssSerial}
+    </select>
 </mapper>

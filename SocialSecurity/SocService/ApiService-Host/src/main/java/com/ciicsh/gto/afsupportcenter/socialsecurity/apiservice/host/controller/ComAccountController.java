@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * Created by houwanhua on 2018/2/26.
  */
 @RestController
-@RequestMapping("/api/comaccount")
+@RequestMapping("/api/soc/comaccount")
 public class ComAccountController implements SsComProxy {
 
     @Autowired

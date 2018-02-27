@@ -1,9 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.payment.SsAddPaymentBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.payment.SsDelPaymentBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.payment.SsPaymentComBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsAddPaymentBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsDelPaymentBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentComBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsPaymentComService;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;

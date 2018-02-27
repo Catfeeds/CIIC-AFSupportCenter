@@ -7,6 +7,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.em
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -40,4 +41,9 @@ public interface SsEmpArchiveMapper extends BaseMapper<SsEmpArchive> {
      * @return
      */
     public SsEmpArchiveBO queryEmployeeDetailInfo(@Param("empArchiveId") String empArchiveId);
+
+    /**
+     *
+     * */
+    public int checkSerialDuplicate(Map map);
 }

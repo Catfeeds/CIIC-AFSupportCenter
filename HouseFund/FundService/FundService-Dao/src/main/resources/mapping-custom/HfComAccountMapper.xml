@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="ComAccountExtMap" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo">
+    </resultMap>
+
+    <select id="getHfComAccountList" resultMap="ComAccountExtMap">
+        select ca.*
+        from hf_com_account ca
+        LEFT JOIN hf_account_com_relation ssac on ca.com_account_id = ssac.com_account_id
+        <where>
+            and ca.is_active = 1
+            <if test="companyId != null">
+                and ssac.is_active = 1
+                and ssac.company_id= #{companyId}
+            </if>
+            <if test="hfAccountType != null">
+                and ca.hf_account_type= #{hfAccountType}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -76,7 +76,107 @@ public class AmEmpTaskBO extends AmEmpTask {
 
     private String params;
 
+    private  String remarkType;
+
+    private Integer idCardType;
+
+    private  String sex;
+
+    private String mobile;
+
+    private String residenceAddress;
+
+    private String ssPwd;
+
+    private String ukey;
+
+    private LocalDate accoutModified;
+
+    private String ssAccount;
+
+    private  String settlementArea;
+
+    public String getUkey() {
+        return ukey;
+    }
+
+    public void setUkey(String ukey) {
+        this.ukey = ukey;
+    }
+
+    public LocalDate getAccoutModified() {
+        return accoutModified;
+    }
+
+    public void setAccoutModified(LocalDate accoutModified) {
+        this.accoutModified = accoutModified;
+    }
+
+    public String getSsAccount() {
+        return ssAccount;
+    }
+
+    public void setSsAccount(String ssAccount) {
+        this.ssAccount = ssAccount;
+    }
+
+    public String getSettlementArea() {
+        return settlementArea;
+    }
+
+    public void setSettlementArea(String settlementArea) {
+        this.settlementArea = settlementArea;
+    }
+
+    public String getSsPwd() {
+        return ssPwd;
+    }
+
+    public void setSsPwd(String ssPwd) {
+        this.ssPwd = ssPwd;
+    }
+
+    public String getResidenceAddress() {
+        return residenceAddress;
+    }
+
+    public void setResidenceAddress(String residenceAddress) {
+        this.residenceAddress = residenceAddress;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
     private List<String> param;
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public Integer getIdCardType() {
+        return idCardType;
+    }
+
+    public void setIdCardType(Integer idCardType) {
+        this.idCardType = idCardType;
+    }
+
+    public String getRemarkType() {
+        return remarkType;
+    }
+
+    public void setRemarkType(String remarkType) {
+        this.remarkType = remarkType;
+    }
 
     public LocalDate getResignDate() {
         return resignDate;

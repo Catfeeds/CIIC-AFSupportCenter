@@ -1,10 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao;
 
 
-import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.AmEmpTaskDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.AmEmpTask;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 
 /**
  * <p>
@@ -14,7 +14,9 @@ import org.apache.ibatis.annotations.Param;
  * @author xsj
  * @since 2018-02-25
  */
+@Mapper
+@Component
 public interface AmEmpTaskOfSsMapper{
 
-    public AmEmpTaskDTO queryReworkInfo(@Param("employeeId")String employeeId,  @Param("companyId")String companyId);
+    AmEmpTaskDTO queryReworkInfo(@Param("employeeId")String employeeId,  @Param("companyId")String companyId);
 }
