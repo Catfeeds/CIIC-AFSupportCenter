@@ -362,11 +362,13 @@
         <module>./HouseFund/FundQueryService/FundQueryService-Business</module>
         <module>./HouseFund/FundQueryService/FundQueryService-Entity</module>-->
 
-        <module>./HouseFund/FundSiteService/FundSiteService-Host</module>
-        <module>./HouseFund/FundSiteService/FundSiteService-Api</module>
-        <module>./HouseFund/FundSiteService/FundSiteService-Dao</module>
-        <module>./HouseFund/FundSiteService/FundSiteService-Business</module>
-        <module>./HouseFund/FundSiteService/FundSiteService-Entity</module>
+        <module>./HouseFund/FundService/SiteService-Host</module>
+        <module>./HouseFund/FundService/FundService-Api</module>
+        <module>./HouseFund/FundService/FundService-Dao</module>
+        <module>./HouseFund/FundService/FundService-Business</module>
+        <module>./HouseFund/FundService/FundService-Entity</module>
+        <module>./HouseFund/FundService/ApiService-Host</module>
+        <module>./HouseFund/FundService/MessageService-Host</module>
 
 
         <!--<module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Api</module>
@@ -444,6 +446,7 @@
         <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Dao</module>
         <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Business</module>
         <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Host</module>
+
 
     </modules>
 

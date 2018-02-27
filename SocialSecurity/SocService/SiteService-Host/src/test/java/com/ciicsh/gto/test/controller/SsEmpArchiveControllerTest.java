@@ -3,7 +3,7 @@ package com.ciicsh.gto.test.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialUpdateDateDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.payment.SsOperatePaymentBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsOperatePaymentBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComAccountService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskService;

@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
+    <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
     <artifactId>afsupportcenter-socialsecurity-messageservice-host</artifactId>
     <version>1.0.0</version>
 
@@ -77,7 +77,6 @@
             <version>1.0.0</version>
         </dependency>
         <dependency>
-
             <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
             <artifactId>afsupportcenter-socialsecurity-socservice-entity</artifactId>
             <version>1.0.0</version>

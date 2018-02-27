@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpArchiveMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="queryEmpArchiveResultMap" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpArchiveBo">
+        <result column="company_id" property="companyId"/>
+        <result column="title" property="title"/>
+        <result column="com_account_id" property="comAccountId"/>
+        <result column="belong_vendor" property="belongVendor"/>
+        <result column="hf_account_type" property="hfAccountType"/>
+        <result column="employee_id" property="employeeId"/>
+        <result column="employee_name" property="employeeName"/>
+        <result column="id_num" property="idNum"/>
+        <result column="custom_group" property="serviceCenter"/>
+        <result column="emp_status" property="empStatus"/>
+        <result column="hf_emp_account" property="hfEmpAccount"/>
+        <result column="archive_task_status" property="archiveTaskStatus"/>
+        <result column="hf_emp_account_bc" property="hfEmpAccountBc"/>
+        <result column="archive_task_status_bc" property="archiveTaskStatusBc"/>
+        <result column="emp_status" property="empStatus"/>
+        <result column="operation_remind" property="operationRemind"/>
+        <result column="operation_remind_date" property="operationRemindDate"/>
+        <result column="emp_archive_id_bc" property="empArchiveIdBc"/>
+    </resultMap>
+
+<!--雇员公积金查询-->
+    <select id="queryEmpArchive" resultMap="queryEmpArchiveResultMap">
+        SELECT
+        ea.emp_archive_id,eab.emp_archive_id_bc,com.company_id,com.title,ea.belong_vendor,
+        case ea.belong_vendor
+        WHEN 1 THEN
+        af.custom_group
+        WHEN 2 THEN
+        bpo.custom_group
+        END AS 'custom_group',
+        case ea.belong_vendor
+        WHEN 1 THEN
+        afemp.status
+        WHEN 2 THEN
+        bpoemp.status
+        END AS 'emp_status',
+        ca.hf_account_type,emp.employee_id,emp.employee_name,emp.id_num,ea.hf_emp_account,ea.archive_task_status
+        ,eab.hf_emp_account_bc,eab.archive_task_status_bc,ea.operation_remind,ea.operation_remind_date
+        FROM hf_emp_archive ea
+        LEFT JOIN sal_company com ON com.company_id=ea.company_id
+        INNER JOIN emp_employee emp ON emp.employee_id=ea.employee_id
+        INNER JOIN hf_com_account ca ON ca.com_account_id=ea.com_account_id
+        LEFT JOIN (SELECT hea.emp_archive_id as 'emp_archive_id_bc',hea.belong_emp_archive_id,hea.hf_emp_account as 'hf_emp_account_bc',hea.archive_task_status as 'archive_task_status_bc'
+        FROM hf_emp_archive hea WHERE hea.is_active=1 AND hea.hf_type=2)eab ON eab.belong_emp_archive_id=ea.emp_archive_id
+        LEFT JOIN sal_af_company af on ea.company_id=af.company_id
+        LEFT JOIN sal_bpo_company bpo on ea.company_id=bpo.company_id
+        LEFT JOIN emp_af_emp_company afemp on afemp.employee_id=ea.employee_id AND afemp.company_id=ea.company_id
+        LEFT JOIN emp_bpo_emp_company bpoemp on bpoemp.employee_id=ea.employee_id AND bpoemp.company_id=ea.company_id
+        WHERE
+        ea.is_active=1
+        AND ea.hf_type=1
+        <if test="employeeId !=null">
+            AND ea.employee_id=#{employeeId}
+        </if>
+        <if test="employeeName !=null">
+            AND emp.employee_name LIKE CONCAT('%',#{employeeName}, '%')
+        </if>
+        <if test="hfAccountType !=null">
+            AND ca.hf_account_type=#{hfAccountType}
+        </if>
+        <if test="paymentBank !=null">
+            AND ca.payment_bank=#{paymentBank}
+        </if>
+        <if test="serviceManager !=null">
+
+        </if>
+        <if test="idNum !=null">
+            AND emp.id_num LIKE CONCAT('%',#{idNum}, '%')
+        </if>
+        <if test="operationRemind !=null">
+            AND ea.operation_remind=#{operationRemind}
+        </if>
+        <if test="empStatus !=null">
+            AND
+            CASE ea.belong_vendor
+            WHEN 1 THEN
+            afemp.status=#{empStatus}
+            WHEN 2 THEN
+            bpoemp.status= #{empStatus}
+            END
+        </if>
+        <if test="serviceCenter !=null">
+            -- AND
+            -- CASE ea.belong_vendor
+            -- WHEN 1 THEN
+            -- af.custom_group=''
+            -- WHEN 2 THEN
+            -- bpo.custom_group=''
+            -- END
+        </if>
+    </select>
+
+    <resultMap id="viewEmpArchiveResultMap" extends="queryEmpArchiveResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpArchiveBo" >
+        <result column="in_date" property="inDate"/>
+        <result column="out_date" property="outDate"/>
+        <result column="archive_task_status_bc" property="archiveTaskStatusBc"/>
+        <result column="emp_archive_id_bc" property="empArchiveIdBc"/>
+    </resultMap>
+
+    <!--雇员公积金查询==>查看雇员公积金档案信息-->
+    <select id="viewEmpArchive" resultMap="viewEmpArchiveResultMap">
+        SELECT ea.emp_archive_id,emp.employee_id,emp.employee_name,emp.id_num,com.company_id,com.title,ea.hf_emp_account,ea.archive_task_status,
+        eab.hf_emp_account_bc,eab.archive_task_status_bc,eab.emp_archive_id_bc,
+         case ea.belong_vendor
+                    WHEN 1 THEN
+                    af.in_date
+                    WHEN 2 THEN
+                    bpo.in_date
+            END AS 'in_date',
+         case ea.belong_vendor
+                    WHEN 1 THEN
+                    af.out_date
+                    WHEN 2 THEN
+                    bpo.out_date
+            END AS 'out_date'
+        FROM
+        hf_emp_archive ea
+        INNER JOIN emp_employee emp ON ea.employee_id=emp.employee_id
+        INNER JOIN sal_company com ON com.company_id=ea.company_id
+        LEFT JOIN (SELECT hea.emp_archive_id as 'emp_archive_id_bc',hea.belong_emp_archive_id,hea.hf_emp_account as 'hf_emp_account_bc',hea.archive_task_status as 'archive_task_status_bc'
+        FROM hf_emp_archive hea WHERE hea.is_active=1 AND hea.hf_type=2)eab ON eab.belong_emp_archive_id=ea.emp_archive_id
+        LEFT JOIN emp_af_emp_company  af ON af.employee_id=ea.employee_id AND af.company_id=ea.company_id
+        LEFT JOIN emp_bpo_emp_company bpo ON bpo.employee_id=ea.employee_id AND bpo.company_id=ea.company_id
+        WHERE
+        ea.is_active=1
+        AND ea.hf_type=1
+        AND ea.emp_archive_id=#{empArchiveId}
+
+    </select>
+    <resultMap id="viewComAccountResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfComAccountBo" >
+        <result column="com_account_name" property="comAccountName"/>
+        <result column="payment_way" property="paymentWay"/>
+        <result column="hf_account_type" property="hfAccountType"/>
+        <result column="close_day" property="closeDay"/>
+        <result column="ukey_store" property="ukeyStore"/>
+        <result column="payment_bank" property="paymentBank"/>
+        <result column="state" property="state"/>
+        <result column="hf_type" property="hfType"/>
+        <result column="hf_com_account" property="hfComAccount"/>
+        <result column="com_start_month" property="comStartMonth"/>
+        <result column="end_month" property="endMonth"/>
+        <result column="com_hf_month" property="comHfMonth"/>
+        <result column="add_com_account" property="addComAccount"/>
+        <result column="company_id" property="companyId"/>
+        <result column="title" property="title"/>
+    </resultMap>
+    <!--雇员公积金查询==>查看企业公积金账户信息-->
+    <select id="viewComAccount" resultMap="viewComAccountResultMap">
+        SELECT ca.com_account_name,ca.payment_way,ca.hf_account_type,ca.close_day,ca.ukey_store,ca.payment_bank,ca.state,
+        cac.hf_type,cac.hf_com_account,cac.com_start_month,cac.end_month,cac.com_hf_month,addAc.add_com_account,
+        com.company_id,com.title
+        FROM
+        hf_com_account_class cac
+        INNER JOIN hf_com_account_sub_com caCom ON caCom.com_account_id=cac.com_account_id
+        INNER JOIN hf_com_account ca ON cac.com_account_id=ca.com_account_id
+        LEFT JOIN (SELECT cacs.hf_com_account as 'add_com_account',cacs.com_account_id
+        FROM hf_com_account_class cacs where cacs.is_active=1 and cacs.hf_type=2 ) addAc ON addAc.com_account_id=cac.com_account_id
+        LEFT JOIN sal_af_company af on af.company_id=caCom.company_id
+        LEFT JOIN sal_bpo_company bpo on bpo.company_id=caCom.company_id
+        INNER JOIN sal_company com on com.company_id=caCom.company_id
+        WHERE cac.hf_type = 1
+        AND caCom.company_id=#{companyId}
+    </select>
+
+    <resultMap id="viewEmpPeriodResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfArchiveBasePeriodBo">
+        <result column="hf_emp_account" property="hfEmpAccount"/>
+        <result column="archive_task_status" property="archiveTaskStatus"/>
+        <result column="base_amount" property="baseAmount"/>
+        <result column="start_month" property="startMonth"/>
+        <result column="end_month" property="endMonth"/>
+        <result column="ratio" property="ratio"/>
+        <result column="amount" property="amount"/>
+    </resultMap>
+    <!--雇员公积金查询==>查看雇员最近一次公积金汇缴段-->
+    <select id="viewEmpPeriod"  resultMap="viewEmpPeriodResultMap">
+    SELECT ea.hf_emp_account,ea.archive_task_status,abp.base_amount,abp.start_month,abp.end_month,abp.ratio_emp+ratio_com as 'ratio',abp.amount
+    from
+    hf_archive_base_period abp
+    INNER JOIN hf_emp_archive ea ON ea.emp_archive_id=abp.emp_archive_id
+    WHERE
+    abp.is_active=1
+    AND ea.emp_archive_id in(select emp_archive_id from hf_emp_archive where emp_archive_id=#{empArchiveId} OR belong_emp_archive_id=#{empArchiveId} )
+    <if test="hfType != null">
+        AND ea.hf_type=#{hfType}
+    </if>
+    AND (DATE_FORMAT(CURDATE(),'%Y%m') BETWEEN  abp.start_month AND abp.end_month OR IFNULL(abp.end_month,'') ='' )
+    </select>
+
+    <resultMap id="listEmpTaskPeriodResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskPeriodBo">
+        <result column="task_category" property="taskCategory"/>
+        <result column="base_amount" property="baseAmount"/>
+        <result column="start_month" property="startMonth"/>
+        <result column="end_month" property="endMonth"/>
+        <result column="ratio" property="ratio"/>
+        <result column="amount" property="amount"/>
+    </resultMap>
+    <!--雇员公积金查询==>列出雇员所有公积金任务单的汇缴段-->
+    <select id="listEmpTaskPeriod" resultMap="listEmpTaskPeriodResultMap">
+    SELECT et.task_category,etp.base_amount,etp.start_month,etp.end_month,etp.ratio,etp.amount
+    FROM hf_emp_task_period etp
+    INNER JOIN hf_emp_task et ON  et.emp_task_id =etp.emp_task_id
+    INNER JOIN hf_emp_archive ea ON ea.emp_archive_id=et.emp_archive_id
+    WHERE
+    et.is_active=1
+    AND ea.emp_archive_id=#{empArchiveId}
+    </select>
+    <resultMap id="listEmpTransferResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask">
+        <result column="task_category" property="taskCategory"/>
+        <result column="emp_base" property="empBase"/>
+        <result column="start_month" property="startMonth"/>
+        <result column="end_month" property="endMonth"/>
+        <result column="ratio" property="ratio"/>
+        <result column="amount" property="amount"/>
+    </resultMap>
+    <select id="listEmpTransfer" resultMap="listEmpTransferResultMap">
+        SELECT et.hf_type,et.transfer_out_unit,et.transfer_out_unit_account,et.transfer_in_unit,et.transfer_in_unit_account,
+        et.task_status,et.transfer_date,et.feedback_date,et.operate_date
+        from
+        hf_emp_task et
+        INNER JOIN hf_emp_archive ea ON ea.emp_archive_id=et.emp_archive_id
+        WHERE
+        et.is_active=1
+        and et.task_category=9
+        and et.emp_archive_id
+        in(select emp_archive_id from hf_emp_archive where emp_archive_id=#{empArchiveId} OR belong_emp_archive_id=#{empArchiveId} )
+    </select>
+    <select id="selectEmpByCardIdAndName" resultType="java.util.Map">
+        SELECT ea.emp_archive_id,ea.hf_emp_account FROM
+        emp_employee emp INNER JOIN hf_emp_archive ea on ea.employee_id=emp.employee_id
+        WHERE ea.is_active=1 and emp.employee_name = #{empName} and emp.id_num= #{idNum};
+    </select>
+</mapper>

@@ -14,9 +14,7 @@
     <packaging>jar</packaging>
     <version>1.0.0</version>
 
-    <build>
-        <finalName>gt1.afsupportcenter.socservice-business</finalName>
-    </build>
+
 
     <dependencies>
         <dependency>
@@ -78,4 +76,8 @@
             <artifactId>gt1.afsystemmanagecenter.apiservice-api</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <finalName>gt1.afsupportcenter.socservice-business</finalName>
+    </build>
 </project>
