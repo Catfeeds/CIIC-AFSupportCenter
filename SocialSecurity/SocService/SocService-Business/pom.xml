@@ -77,5 +77,10 @@
             <groupId>com.ciicsh.gt1.afsystemmanagecenter</groupId>
             <artifactId>gt1.afsystemmanagecenter.apiservice-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
+            <artifactId>afsupportcenter-util</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 </project>
