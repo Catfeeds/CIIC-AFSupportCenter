@@ -10,6 +10,7 @@ import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.basicdataservice.api.dto.EmptyDicItemDTO;
 import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeSearchDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.Page;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
@@ -103,9 +104,9 @@ public class CommonApiUtils {
      * @param var1 传入employeeId和业务类型
      * @return
      */
-    public com.ciicsh.gto.employeecenter.util.JsonResult<Page<EmployeeInfoDTO>> searchEmployeeInfo(
-        @RequestBody EmployeeSearchDTO var1) throws Exception {
-        return employeeInfoProxy.searchEmployeeInfo(var1);
+    public com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeInfoDTO> getEmployeeInfo(
+        @RequestBody EmployeeQueryDTO var1) throws Exception {
+        return employeeInfoProxy.getEmployeeInfo(var1);
     }
 
     /**

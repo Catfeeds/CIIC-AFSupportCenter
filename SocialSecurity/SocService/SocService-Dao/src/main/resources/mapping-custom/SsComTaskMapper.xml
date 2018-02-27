@@ -358,8 +358,12 @@
         sc.title,
         scm.*,
         sca.*
-        FROM ss_com_task sct
-        LEFT JOIN (
+        FROM
+        ss_com_task sct
+        LEFT JOIN ss_account_com_relation scr ON sct.company_id = scr.company_id AND scr.is_active=1
+
+        LEFT JOIN
+        (
         SELECT
         com_account_id AS com_account_id_acc,
         supplier_id,
@@ -388,10 +392,13 @@
         dispatch_material,
         remark AS remark_acc,
         state
-        FROM ss_com_account
-        )sca ON sct.com_account_id = sca.com_account_id_acc
+        FROM
+        ss_com_account
+        )sca
+        ON scr.com_account_id = sca.com_account_id_acc
         LEFT JOIN
-        (SELECT
+        (
+        SELECT
         com_material_id,
         com_task_id AS com_task_id_m,
         material_type,
@@ -401,17 +408,22 @@
         remark,
         `status`
         FROM
-        ss_com_material WHERE is_active = 1
-        )
-        scm ON sct.com_task_id = scm.com_task_id_m
-        LEFT JOIN (
+        ss_com_material
+        WHERE
+        is_active = 1
+        )         scm
+        ON sct.com_task_id = scm.com_task_id_m
+        LEFT JOIN
+        (
         SELECT
         company_id,
         title
         FROM
         sal_company
-        WHERE is_active = 1
-        )sc ON sct.company_id = sc.company_id
+        WHERE
+        is_active = 1
+        )sc
+        ON sct.company_id = sc.company_id
         WHERE
         sct.is_active =1
         AND sct.com_task_id = #{comTaskId}

@@ -1193,7 +1193,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         baseMapper.updateMyselfColumnById(bo);
 
         //获得进位方式
-        getRoundType(String.valueOf(bo.getPolicyDetailId()),bo.getWelfareUnit(),bo.getStartMonth());
+        getRoundType(bo.getPolicyDetailId(),bo.getWelfareUnit(),bo.getStartMonth());
 
         //获得前端输入的缴纳费用段
         List<SsEmpTaskPeriod> taskPeriods = bo.getEmpTaskPeriods();
