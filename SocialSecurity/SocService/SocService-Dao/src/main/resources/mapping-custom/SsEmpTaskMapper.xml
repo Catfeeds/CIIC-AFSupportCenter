@@ -9,7 +9,7 @@
         <result column="employee_name" property="employeeName"/>
         <result column="employee_id" property="employeeId"/>
         <result column="id_num" property="idNum"/>
-
+        <result column="id_card_type" property="idCardType"/>
         <!-- sal_company -->
         <result column="company_id" property="companyId"/>
         <result column="title" property="title"/>
@@ -573,7 +573,7 @@
       LIMIT 1
     </select>
 
-    <select id="selectIdNumByEmployeeId" resultType="java.lang.String">
-        SELECT id_num FROM emp_employee WHERE employee_id = #{employeeId}
+    <select id="selectIdNumByEmployeeId" resultMap="BaseResultMapDto">
+        SELECT id_num,id_card_type FROM emp_employee WHERE employee_id = #{employeeId}
     </select>
 </mapper>

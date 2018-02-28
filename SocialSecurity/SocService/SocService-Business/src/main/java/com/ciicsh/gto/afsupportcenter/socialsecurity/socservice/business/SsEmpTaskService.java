@@ -75,5 +75,5 @@ public interface SsEmpTaskService extends IService<SsEmpTask> {
      */
     List<SsEmpTaskBO> queryByTaskId(SsEmpTaskBO ssEmpTaskBO);
 
-    String selectIdNumByEmployeeId(String employeeId);
+    SsEmpTaskBO selectIdNumByEmployeeId(String employeeId);
 }
