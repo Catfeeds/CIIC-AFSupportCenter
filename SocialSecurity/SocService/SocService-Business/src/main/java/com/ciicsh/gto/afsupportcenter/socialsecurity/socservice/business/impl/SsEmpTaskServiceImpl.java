@@ -65,6 +65,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     SsMonthChargeService ssMonthChargeService;
     @Autowired
     SsMonthChargeItemService ssMonthChargeItemService;
+
     //进位方式
     private Map<String,Map<String, Integer>> roundTypeMap;
     //个人进位方式
