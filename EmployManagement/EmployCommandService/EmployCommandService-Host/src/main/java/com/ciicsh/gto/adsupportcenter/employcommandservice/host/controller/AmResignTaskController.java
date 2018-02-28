@@ -1,8 +1,10 @@
 package com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmResign;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -91,6 +93,21 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
     @RequestMapping("/queryAmResignDetail")
     public JsonResult queryAmResignDetail(AmResignBO bo){
+
+        AmEmpTaskBO customBO = new AmEmpTaskBO();//客户信息
+        AmEmpTaskBO employeeBO = new AmEmpTaskBO();//雇佣信息
+        AmEmpTask amEmpTask = null;
+
+        try {
+            amEmpTask =taskService.selectById(bo.getEmpTaskId());
+            Map<String, Object> map = JSON.parseObject(amEmpTask.getTaskFormContent(),Map.class);
+            String archiveDirection = (String)map.get("archiveDirection");
+            String employeeNature = (String)map.get("employeeNature");
+            employeeBO.setArchiveDirection(archiveDirection);
+            employeeBO.setEmployeeNature(employeeNature);
+        } catch (Exception e) {
+
+        }
 
         Map<String,Object> param = new HashMap<>();
         param.put("employeeId",bo.getEmployeeId());

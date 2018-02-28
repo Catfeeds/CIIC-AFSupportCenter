@@ -33,4 +33,11 @@ public interface CompanyExtMapper extends BaseMapper<CompanyExt> {
      * @return
      */
     CompanyExt selectItem(@Param("companyId") String companyId, @Param("credentialsType") String credentialsType);
+
+    /**
+     * 根据政策id查询客户
+     * @param id
+     * @return
+     */
+    List<CompanyExt> selecyByOrgpolicyId(Integer id);
 }

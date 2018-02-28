@@ -603,6 +603,7 @@
         task_def_key,
         pro_def_key,
         policy_detail_id,
+        welfare_unit,
         is_active,
         created_time,
         modified_time,
@@ -614,7 +615,8 @@
         #{handleRemarkDate},#{rejectionRemark},#{rejectionRemarkMan},#{rejectionRemarkDate},#{taskStatus},#{handleStatus},
         #{chatHistory},#{startHandleDate},#{sendCheckDate},#{finishDate},#{taskFormContent},#{salary},#{empClassify},#{empBase},
         #{startMonth},#{endMonth},#{inDate},#{outDate},#{businessInterfaceId},#{processId},#{taskId},#{taskDefKey},
-        #{proDefKey},#{policyDetailId},#{isActive},#{createdTime},#{modifiedTime},#{createdBy},#{modifiedBy})
+        #{proDefKey},#{policyDetailId},#{welfareUnit},
+        #{isActive},#{createdTime},#{modifiedTime},#{createdBy},#{modifiedBy})
     </insert>
     <!---->
     <select id="fetchEmpArchiveId" resultType="string">

@@ -92,7 +92,6 @@ public class Employee extends Model<Employee> {
     @TableField("modified_by")
     private String modifiedBy;
 
-
     public String getEmployeeId() {
         return employeeId;
     }

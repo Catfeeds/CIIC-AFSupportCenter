@@ -8,7 +8,7 @@ spring:
   application:
     name: support-center-soc-message-service
   profiles:
-    active: fat
+    active: dev
   cloud:
     stream:
       bindings:
@@ -30,12 +30,12 @@ spring:
           #content-type: application/json
           consumer:
             partitioned: true
-        #common_taskservice_af_emp_company_change_channel:
-        #  destination: common_taskservice_af_emp_company_change # topic name
-        #  group: ${spring.application.name}
-        #  #content-type: application/json
-        #  consumer:
-        #    partitioned: true
+#        common_taskservice_af_emp_company_change_channel:
+#          destination: common_taskservice_af_emp_company_change # topic name
+#          group: ${spring.application.name}
+#          #content-type: application/json
+#          consumer:
+#            partitioned: true
         common_taskservice_af_emp_agreement_adjust_channel:
           destination: common_taskservice_af_emp_agreement_adjust # topic name
           group: ${spring.application.name}

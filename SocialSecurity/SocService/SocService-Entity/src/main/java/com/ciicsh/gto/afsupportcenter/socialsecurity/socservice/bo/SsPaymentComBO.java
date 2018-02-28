@@ -30,6 +30,8 @@ public class SsPaymentComBO {
      */
     private String comAccountName;
 
+    private String ssAccount;
+
     /**
      * 客户名
      */
@@ -162,6 +164,14 @@ public class SsPaymentComBO {
 
     public void setComAccountId(Long comAccountId) {
         this.comAccountId = comAccountId;
+    }
+
+    public String getSsAccount() {
+        return ssAccount;
+    }
+
+    public void setSsAccount(String ssAccount) {
+        this.ssAccount = ssAccount;
     }
 
     public String getCompanyId() {
