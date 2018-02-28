@@ -76,4 +76,6 @@ public class ComTaskController implements SsComTaskProxy{
         taskService.insertComTask(ssComTask);
         return ssComTask.getComTaskId();
     }
+
+    //TODO 这里应新增查看企业账户接口
 }
