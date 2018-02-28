@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpArchiveBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpArchiveService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
@@ -45,9 +46,9 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
             if("1".equals(operatorType) || "2".equals(operatorType)){
                 SsEmpTask ssEmpTask = (SsEmpTask) ssEmpTaskService.selectById(empTaskId);
                 //查询证件号码
-               String idNum = ssEmpTaskService.selectIdNumByEmployeeId(ssEmpTask.getEmployeeId());
+                SsEmpTaskBO ssEmpTaskBO = ssEmpTaskService.selectIdNumByEmployeeId(ssEmpTask.getEmployeeId());
                 //调用外部接口 查询雇员信息
-                EmployeeInfoDTO employeeInfoDTO =TaskCommonUtils.getEmployeeInfo(commonApiUtils,idNum,1,1);
+                EmployeeInfoDTO employeeInfoDTO =TaskCommonUtils.getEmployeeInfo(commonApiUtils,ssEmpTaskBO.getIdNum(),ssEmpTaskBO.getIdCardType(),1);
                 //获取雇员信息
                 if(null!=employeeInfoDTO){
                     setEmlpoyeeInfo(ssEmpArchiveBO,employeeInfoDTO);

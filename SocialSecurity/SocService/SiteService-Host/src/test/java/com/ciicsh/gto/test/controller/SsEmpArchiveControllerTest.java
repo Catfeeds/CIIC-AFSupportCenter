@@ -98,8 +98,8 @@ public class SsEmpArchiveControllerTest {
         EmployeeQueryDTO dd= new EmployeeQueryDTO();
         dd.setBusinessType(1);
         //dd.setEmployeeId("1805876");
-        dd.setIdNum("360111198808060501");
-       dd.setIdCardType(1);
+        dd.setIdNum("1321");
+       dd.setIdCardType(2);
         com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeInfoDTO> res  = d2.getEmployeeInfo(dd);
         System.out.println(JSON.toJSONString(res));
         System.out.println(JSON.toJSONString(res.getData()));

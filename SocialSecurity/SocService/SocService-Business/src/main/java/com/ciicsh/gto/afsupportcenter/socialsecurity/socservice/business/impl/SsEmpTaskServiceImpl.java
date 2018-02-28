@@ -1452,7 +1452,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param employeeId
      */
     @Override
-    public String selectIdNumByEmployeeId(String employeeId) {
+    public SsEmpTaskBO selectIdNumByEmployeeId(String employeeId) {
         return baseMapper.selectIdNumByEmployeeId(employeeId);
     }
 
