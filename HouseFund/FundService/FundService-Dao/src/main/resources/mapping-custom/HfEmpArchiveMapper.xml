@@ -236,4 +236,15 @@
         emp_employee emp INNER JOIN hf_emp_archive ea on ea.employee_id=emp.employee_id
         WHERE ea.is_active=1 and emp.employee_name = #{empName} and emp.id_num= #{idNum};
     </select>
+
+    <delete id="deleteHfEmpArchiveByEmpTaskIds" parameterType="java.util.List">
+        DELETE hea
+        FROM hf_emp_archive hea INNER JOIN hf_emp_task het ON het.emp_archive_id = hea.emp_archive_id
+        AND hea.is_active = 1
+        <where>
+            <foreach collection="list" item="item" open="het.emp_task_id IN (" separator="," close=")">
+                #{item}
+            </foreach>
+        </where>
+    </delete>
 </mapper>
