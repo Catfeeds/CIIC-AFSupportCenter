@@ -267,6 +267,12 @@
             </dependency>
 
             <dependency>
+                <groupId>com.ciicsh.gt1.salecenter</groupId>
+                <artifactId>gt1.salecenter.apiservice-api</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.ciicsh.gt1.companycenter</groupId>
                 <artifactId>commandservice-api</artifactId>
                 <version>1.0.0</version>
@@ -306,6 +312,11 @@
                 <version>0.0.1</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.ciicsh.gt1.companycenter</groupId>
+                <artifactId>queryservice-api</artifactId>
+                <version>1.0.0</version>
+            </dependency>
             <dependency>
                 <groupId>com.ciicsh.gt1.afsystemmanagecenter</groupId>
                 <artifactId>gt1.afsystemmanagecenter.apiservice-api</artifactId>
@@ -362,12 +373,13 @@
         <module>./HouseFund/FundQueryService/FundQueryService-Business</module>
         <module>./HouseFund/FundQueryService/FundQueryService-Entity</module>-->
 
-        <module>./HouseFund/FundSiteService/FundSiteService-Host</module>
-        <module>./HouseFund/FundSiteService/FundSiteService-Api</module>
-        <module>./HouseFund/FundSiteService/FundSiteService-Dao</module>
-        <module>./HouseFund/FundSiteService/FundSiteService-Business</module>
-        <module>./HouseFund/FundSiteService/FundSiteService-Entity</module>
-
+        <module>./HouseFund/FundService/SiteService-Host</module>
+        <module>./HouseFund/FundService/FundService-Api</module>
+        <module>./HouseFund/FundService/FundService-Dao</module>
+        <module>./HouseFund/FundService/FundService-Business</module>
+        <module>./HouseFund/FundService/FundService-Entity</module>
+        <module>./HouseFund/FundService/ApiService-Host</module>
+        <module>./HouseFund/FundService/MessageService-Host</module>
 
         <!--<module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Api</module>
         <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Entity</module>
@@ -444,6 +456,7 @@
         <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Dao</module>
         <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Business</module>
         <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Host</module>
+
 
     </modules>
 

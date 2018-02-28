@@ -9,6 +9,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -45,6 +46,6 @@ public interface SsEmpArchiveService extends IService<SsEmpArchive> {
      */
     public SsEmpArchiveBO queryEmployeeDetailInfo(@Param("empArchiveId") String empArchiveId);
 
-
+    public String saveEmpSerial(Map<String,String> map);
 
 }

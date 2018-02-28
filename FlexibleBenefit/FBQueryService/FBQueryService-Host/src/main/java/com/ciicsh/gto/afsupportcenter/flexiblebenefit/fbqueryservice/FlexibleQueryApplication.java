@@ -5,6 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
 
 /**
  * @author xwz
@@ -12,6 +13,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  */
 @SpringBootApplication
 @EnableDiscoveryClient
+@EnableFeignClients({"com.ciicsh.gto.afcompanycenter.queryservice.api","com.ciicsh.gto.salecenter.apiservice.api"})
 @MapperScan("com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.dao")
 public class FlexibleQueryApplication extends SpringBootServletInitializer {
 

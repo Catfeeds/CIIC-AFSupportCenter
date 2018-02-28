@@ -2,7 +2,6 @@ package com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Company;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.EmployeeCompany;
 import org.springframework.stereotype.Repository;
 
@@ -22,5 +21,5 @@ public interface EmployeeCompanyMapper extends BaseMapper<EmployeeCompany> {
      * @param employeeCompany
      * @return
      */
-    List<Company> select(Page page, EmployeeCompany employeeCompany);
+    List<EmployeeCompany> select(Page page, EmployeeCompany employeeCompany);
 }

@@ -53,7 +53,26 @@ public interface SocialSecurityConst {
             put("3", "封存");
         }
     };
-
+    /**
+     * 未处理
+     */
+    String PROCESS_STATUS_1 = "1";
+    /**
+     * 处理中
+     */
+    String PROCESS_STATUS_2 = "2";
+    /**
+     * 已完成
+     */
+    String PROCESS_STATUS_3 = "3";
+    /**
+     * 批退
+     */
+    String PROCESS_STATUS_4 = "4";
+    /**
+     * 不需处理
+     */
+    String PROCESS_STATUS_5 = "5";
     //办理状态(已创建字典，请从字典服务取得)
     @Deprecated
     public static final Map<String, String> PROCESS_STATUS_MAP = new HashMap<String, String>() {
@@ -65,6 +84,39 @@ public interface SocialSecurityConst {
             put("5", "不需处理");
         }
     };
+
+    /**
+     * 新进
+     */
+    String TASK_TYPE_1 = "1";
+    /**
+     *转入
+     */
+    String TASK_TYPE_2 = "2";
+    /**
+     *调整
+     */
+    String TASK_TYPE_3 = "3";
+    /**
+     *补缴
+     */
+    String TASK_TYPE_4 = "4";
+    /**
+     *转出
+     */
+    String TASK_TYPE_5 = "5";
+    /**
+     *封存
+     */
+    String TASK_TYPE_6 = "6";
+    /**
+     *退账
+     */
+    String TASK_TYPE_7 = "7";
+    /**
+     *特殊操作
+     */
+    String TASK_TYPE_9 = "9";
 
     //任务类型(已创建字典，请从字典服务取得)
     @Deprecated
@@ -219,4 +271,17 @@ public interface SocialSecurityConst {
             add("中智外包");
         }
     };
+
+    /**
+     * 政策类型 1-社保 2-公积金 3-补充公积金（此定义从内控得来）
+     */
+    int POLICY_TYPE_SOCIAL_SECURITY = 1;
+    /**
+     * 政策类型 1-社保 2-公积金 3-补充公积金（此定义从内控得来）
+     */
+    int POLICY_TYPE_HOUSING_FUND = 2;
+    /**
+     * 政策类型 1-社保 2-公积金 3-补充公积金（此定义从内控得来）
+     */
+    int POLICY_TYPE_SUPPLEMENTARY_HOUSING_FUND = 3;
 }

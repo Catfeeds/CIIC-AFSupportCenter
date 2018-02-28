@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfMonthChargeMapper">
+
+	<update id="updateHfMonthCharge">
+        UPDATE hf_month_charge
+        SET
+        <if test="inactive != null and inactive == true">
+            active = 0,
+        </if>
+        <if test="chgPaymentType != null">
+            payment_type = #{chgPaymentType},
+        </if>
+        modified_time = NOW(),
+        modified_by = #{modifiedBy}
+        <where>
+            active = 1
+            <if test="empArchiveId != null">
+                AND emp_archive_id = #{empArchiveId}
+            </if>
+            <if test="companyId != null">
+                AND company_id = #{companyId}
+            </if>
+            <if test="employeeId != null">
+                AND employee_id = #{employeeId}
+            </if>
+            <if test="empTaskIdList != null">
+                <foreach collection="empTaskIdList" item="item" open="emp_task_id IN (" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="hfType != null">
+                AND hf_type = #{hfType}
+            </if>
+            <if test="hfMonth != null">
+                AND hf_month = #{hfMonth}
+            </if>
+            <if test="ssMonthBelongStart != null">
+                AND ss_month_belong >= #{ssMonthBelongStart}
+            </if>
+            <if test="ssMonthBelongEnd != null">
+                AND #{ssMonthBelongEnd} >= ss_month_belong
+            </if>
+            <if test="paymentTypes != null">
+                AND payment_type in (${paymentTypes})
+            </if>
+        </where>
+    </update>
+
+    <delete id="deleteHfMonthCharges" parameterType="java.util.List">
+        DELETE
+        FROM hf_month_charge
+        <where>
+            <foreach collection="list" item="item" open="emp_task_id IN (" separator="," close=")">
+                #{item}
+            </foreach>
+        </where>
+    </delete>
+</mapper>

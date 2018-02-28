@@ -9,7 +9,7 @@
         <result column="employee_name" property="employeeName"/>
         <result column="employee_id" property="employeeId"/>
         <result column="id_num" property="idNum"/>
-
+        <result column="id_card_type" property="idCardType"/>
         <!-- sal_company -->
         <result column="company_id" property="companyId"/>
         <result column="title" property="title"/>
@@ -552,6 +552,7 @@
         task_def_key,
         pro_def_key,
         policy_detail_id,
+        welfare_unit,
         is_active,
         created_time,
         modified_time,
@@ -563,7 +564,8 @@
         #{handleRemarkDate},#{rejectionRemark},#{rejectionRemarkMan},#{rejectionRemarkDate},#{taskStatus},#{handleStatus},
         #{chatHistory},#{startHandleDate},#{sendCheckDate},#{finishDate},#{taskFormContent},#{salary},#{empClassify},#{empBase},
         #{startMonth},#{endMonth},#{inDate},#{outDate},#{businessInterfaceId},#{processId},#{taskId},#{taskDefKey},
-        #{proDefKey},#{policyDetailId},#{isActive},#{createdTime},#{modifiedTime},#{createdBy},#{modifiedBy})
+        #{proDefKey},#{policyDetailId},#{welfareUnit},
+        #{isActive},#{createdTime},#{modifiedTime},#{createdBy},#{modifiedBy})
     </insert>
     <!---->
     <select id="fetchEmpArchiveId" resultType="string">
@@ -571,5 +573,9 @@
       and ea.company_id=#{companyId} and ea.employee_id=#{employeeId}
       ORDER BY ea.emp_archive_id DESC
       LIMIT 1
+    </select>
+
+    <select id="selectIdNumByEmployeeId" resultMap="BaseResultMapDto">
+        SELECT id_num,id_card_type FROM emp_employee WHERE employee_id = #{employeeId}
     </select>
 </mapper>

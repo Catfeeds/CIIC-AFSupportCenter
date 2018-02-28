@@ -111,4 +111,8 @@ public class SsComAccountBO {
     private List<SsAccountComRelationBO> ssAccountComRelationBOList;
     //企业工伤比例变更(查询) 1对多
     private List<SsAccountRatio> ssAccountRatioList;
+    //办理备注
+    private String handleRemark;
+    //批退备注
+    private String rejectionRemark;
 }

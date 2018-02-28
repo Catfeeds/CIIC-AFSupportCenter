@@ -8,6 +8,7 @@
 		<result column="employee_id" property="employeeId" />
 		<result column="employee_name" property="employeeName" />
 		<result column="company_name" property="companyName" />
+        <result column="id_card_type" property="idCardType"></result>
 		<result column="id_num" property="idNum" />
         <result column="type" property="type" />
         <result column="status" property="status" />
@@ -24,6 +25,7 @@
     <sql id="ALL_COLUMS">
         employee_id,
         employee_name,
+        id_card_type,
         id_num,
         company_id,
         company_name,
@@ -46,10 +48,13 @@
                 AND company_name LIKE concat(concat('%',#{companyName}),'%')
             </if>
             <if test="idNum != null and idNum != ''">
-                AND idNum LIKE concat(concat('%',#{idNum}),'%')
+                AND id_num LIKE concat(concat('%',#{idNum}),'%')
             </if>
             <if test="status != null and status != ''">
                 AND status LIKE concat(concat('%',#{status}),'%')
+            </if>
+            <if test="type != null and type != ''">
+                AND type LIKE concat(concat('%',#{type}),'%')
             </if>
         </trim>
     </sql>

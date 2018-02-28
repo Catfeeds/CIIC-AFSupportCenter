@@ -14,9 +14,7 @@
     <packaging>jar</packaging>
     <version>1.0.0</version>
 
-    <build>
-        <finalName>gt1.afsupportcenter.socservice-business</finalName>
-    </build>
+
 
     <dependencies>
         <dependency>
@@ -65,11 +63,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.ciicsh.gt1.employeecenter</groupId>
-            <artifactId>apiservice-api</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.ciicsh.gt1.settlementcenter</groupId>
             <artifactId>invoicecommandservice-api</artifactId>
         </dependency>
@@ -77,5 +70,13 @@
             <groupId>com.ciicsh.gt1.afsystemmanagecenter</groupId>
             <artifactId>gt1.afsystemmanagecenter.apiservice-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.ciicsh.gt1.employeecenter</groupId>
+            <artifactId>gt1.employeecenter.apiservice-api</artifactId>
+        </dependency>
     </dependencies>
+
+    <build>
+        <finalName>gt1.afsupportcenter.socservice-business</finalName>
+    </build>
 </project>
