@@ -170,47 +170,44 @@ public class KafkaReceiver {
 
     /**
      * 订阅财务付款申请回调任务单
-     *
      * @param message
      * @return
      */
     @StreamListener(TaskSink.PAY_APPLY_PAY_STATUS_STREAM)
-    public void rejectPayApplyIdStream(Message<PayApplyPayStatusDTO> message) {
+    public void applyFinancePayment(Message<PayApplyPayStatusDTO> message) {
         PayApplyPayStatusDTO taskMsgDTO = message.getPayload();
-        //社保
+        logger.info("start applyFinancePayment:" + JSON.toJSONString(taskMsgDTO));
         if (taskMsgDTO.getBusinessType() == 1) {
             try {
-                ssPaymentComService.saveRejectResult(taskMsgDTO.getBusinessPkId(), taskMsgDTO.getRemark(),taskMsgDTO.getPayStatus());
+                ssPaymentComService.savePaymentInfo(taskMsgDTO.getBusinessPkId(), taskMsgDTO.getRemark(),taskMsgDTO.getPayStatus());
+                logger.info("end applyFinancePayment:" + JSON.toJSONString(taskMsgDTO));
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }
-            logger.info("entering rejectPayApplyIdStream:" + JSON.toJSONString(taskMsgDTO));
         }
     }
 
     /**
      * 订阅客服中心调用更新企业任务单
-     *
      * @param message
      * @return
      */
     @StreamListener(TaskSink.AF_COMPANY_SOCIAL_ACCOUNT_ONCE)
-    public void receiveComTask(Message<TaskCreateMsgDTO> message) {
+    public void updateComTask(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
-        //社保
+        logger.info("start updateComTask: " + JSON.toJSONString(taskMsgDTO));
         try {
-            SsComTask ele = ssComTaskService.selectById(taskMsgDTO.getMissionId());
-            ele.setTaskId(taskMsgDTO.getTaskId());
-            ssComTaskService.updateById(ele);
+            SsComTask comTask = ssComTaskService.selectById(taskMsgDTO.getMissionId());
+            comTask.setTaskId(taskMsgDTO.getTaskId());
+            ssComTaskService.updateById(comTask);
+            logger.info("end updateComTask: " + JSON.toJSONString(comTask));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
-        logger.info("entering receiveComTask: " + JSON.toJSONString(taskMsgDTO));
     }
 
     /**
      * 从接口获取数据并保存到社保雇员任务单表
-     *
      * @param taskCreateMsgDTO
      * @return
      */
@@ -229,7 +226,6 @@ public class KafkaReceiver {
 
     /**
      * 从接口获取数据并保存到社保雇员任务单表
-     *
      * @param taskMsgDTO
      * @param socialType
      * @return
@@ -244,24 +240,4 @@ public class KafkaReceiver {
             logger.error(e.getMessage(), e);
         }
     }
-
-    /**
-     * 判断是否存在任务单ID
-     *
-     * @param taskMsgDTO
-     * @return
-     */
-//    private boolean checkDupSsEmpTask(TaskCreateMsgDTO taskMsgDTO) {
-//        boolean result = false;
-//
-//        SsEmpTaskBO qd = new SsEmpTaskBO();
-//        qd.setTaskId(taskMsgDTO.getTaskId());
-//
-//        //查询任务单
-//        List<SsEmpTaskBO> resList = ssEmpTaskService.queryByTaskId(qd);
-//        if (resList.size() == 0) {
-//            result = true;
-//        }
-//        return result;
-//    }
 }
