@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -332,48 +333,36 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
     }
 
     @Override
-    @Transactional(
-        rollbackFor = {Exception.class}
-    )
-    public boolean saveRejectResult(Long pkId, String remark, Integer payStatus) {
-        boolean bol = false;
+    @Transactional(rollbackFor = {Exception.class})
+    public boolean savePaymentInfo(Long pkId, String remark, Integer payStatus) {
         SsPayment ssPayment = new SsPayment();
         ssPayment.setPaymentId(pkId);
-        //根据ID获取到记录
         ssPayment = ssPaymentMapper.selectOne(ssPayment);
-
-        if (ssPayment != null) {
-            int paymentState = 0;
-
+        if (null != ssPayment) {
             //更新批次状态 支付状态:付款状态(-1:审核未过;9.支付成功;-9:支付失败;)
-            if (payStatus == 9) {
-                paymentState = 8;
-            } else {
-                //审核未过
-                paymentState = 7;
+            Integer paymentState = payStatus == 9 ? 8 : 7;
+            if(remark != null && remark != ""){
                 ssPayment.setRejectionRemark(remark);
             }
             ssPayment.setPaymentState(paymentState);
             ssPayment.setModifiedBy("system");
             ssPayment.setModifiedTime(LocalDateTime.now());
-            ssPaymentMapper.updateById(ssPayment);
-
-            //将批次下的客户费用明细的状态也改为已申请到财务部
-            //取出批次下所有的客户费用
-            List<SsPaymentCom> ssPaymentComList = baseMapper.getPaymentComByPaymentId(ssPayment.getPaymentId());
-            if (ssPaymentComList != null) {
-                SsPaymentCom ssPaymentCom = null;
-                for (int i = 0; i < ssPaymentComList.size(); i++) {
-                    //修改状态为已申请到财务部
-                    ssPaymentCom = ssPaymentComList.get(i);
-                    ssPaymentCom.setPaymentState(paymentState);
-                    ssPaymentCom.setModifiedBy("system");
-                    ssPaymentCom.setModifiedTime(LocalDateTime.now());
+            Integer res = ssPaymentMapper.updateById(ssPayment);
+            if(res > 0){
+                //将批次下的客户费用明细的状态也改为已申请到财务部
+                //取出批次下所有的客户费用
+                List<SsPaymentCom> paymentComs = baseMapper.getPaymentComByPaymentId(ssPayment.getPaymentId());
+                if(null != paymentComs && paymentComs.size() > 0){
+                    paymentComs.stream().map(x->{
+                        x.setPaymentState(paymentState);
+                        x.setModifiedBy("system");
+                        x.setModifiedTime(LocalDateTime.now());
+                        return x;
+                    }).collect(Collectors.toList());
+                    this.updateBatchById(paymentComs);
                 }
-                this.updateBatchById(ssPaymentComList);
             }
         }
-        bol = true;
-        return bol;
+        return true;
     }
 }
