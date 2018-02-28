@@ -27,15 +27,16 @@ public class SsEmpTaskBO implements Serializable {
     private String customerId;
     private Long empArchiveId;
     private Integer isChange;
-    @Excel(name = "任务单类型",replace = {"新开_1","转入_2","调整_3","补缴_4","转出_5","封存_6","退账_7","集体转入_10","集体转出_11"}, orderNum = "1")
+    @Excel(name = "任务单类型",replace = {"新进_1","转入_2","调整_3","补缴_4","转出_5","封存_6","退账_7","集体转入_10","集体转出_11"}, orderNum = "1")
     private Integer taskCategory;
     private Integer taskCategorySpecial;
-    @Excel(name = "是否加急", orderNum = "2")
+    @Excel(name = "是否加急",replace={"是_1","否_0","否_null"}, orderNum = "2")
     private Integer urgent;
     private String submitterId;
     private String submitterName;
     private String submitterDeptId;
     private String submitterDeptName;
+    @Excel(name = "发起时间", orderNum = "9")
     private LocalDateTime submitTime;
     private LocalDate expireDate;
     private String submitterRemark;
@@ -80,7 +81,7 @@ public class SsEmpTaskBO implements Serializable {
     // 任务类型
     private Integer[] taskCategories;
     // 任务发起开始时间
-    @Excel(name = "发起时间", orderNum = "9")
+
     private LocalDateTime beginSubmitTime;
     // 任务发起结束时间
     private LocalDateTime endSubmitTime;
