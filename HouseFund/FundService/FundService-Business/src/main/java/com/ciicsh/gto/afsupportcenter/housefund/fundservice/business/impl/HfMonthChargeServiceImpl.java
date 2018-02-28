@@ -7,10 +7,17 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfMonthChargeMap
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, HfMonthCharge> implements HfMonthChargeService {
     @Override
-    public int inactiveHfMonthCharge(HfMonthChargeBo hfMonthChargeBo) {
-        return baseMapper.inactiveHfMonthCharge(hfMonthChargeBo);
+    public int updateHfMonthCharge(HfMonthChargeBo hfMonthChargeBo) {
+        return baseMapper.updateHfMonthCharge(hfMonthChargeBo);
+    }
+
+    @Override
+    public int deleteHfMonthCharges(List<Long> empTaskIdList) {
+        return baseMapper.deleteHfMonthCharges(empTaskIdList);
     }
 }

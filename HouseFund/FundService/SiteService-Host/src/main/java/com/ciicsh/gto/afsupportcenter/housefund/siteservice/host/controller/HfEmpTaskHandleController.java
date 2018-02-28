@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
@@ -305,4 +306,20 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         return JsonResultKit.of();
     }
 
+    /**
+     * 雇员任务单撤销
+     *
+     * @param array 雇员任务单ID集合
+     * @return JSON格式处理结果
+     */
+    @RequestMapping("/empTaskHandleCancel")
+    public JsonResult empTaskHandleCancel(@RequestBody JSONArray array) {
+        List<Long> empTaskIdList = array.toJavaList(Long.class);
+
+        if (CollectionUtils.isNotEmpty(empTaskIdList)) {
+            return business.handleCancel(empTaskIdList);
+        } else {
+            return JsonResultKit.ofError("提交的雇员任务单ID集合为空");
+        }
+    }
 }

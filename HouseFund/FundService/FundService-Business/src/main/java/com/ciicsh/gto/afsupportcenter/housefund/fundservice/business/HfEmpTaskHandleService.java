@@ -18,4 +18,6 @@ public interface HfEmpTaskHandleService extends IService<HfEmpTask> {
     List<HfEmpTaskHandleBo> getEmpTaskHandleData(HfEmpTaskHandlePostBo hfEmpTaskHandleDTO);
 
     JsonResult inputDataSave(JSONObject params, boolean isHandle);
+
+    JsonResult handleCancel(List<Long> empTaskIdList);
 }

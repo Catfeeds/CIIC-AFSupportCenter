@@ -16,4 +16,5 @@ public interface HfEmpArchiveService extends IService<HfEmpArchive> {
     Map<String, Object> viewEmpArchiveInfo(String empArchiveId , String companyId);
     boolean saveComAccount(Map<String,String> updateDto);
     String xlsImportEmpAccount(List<EmpAccountImpXsl> opts,  String fileName);
+    int deleteHfEmpArchiveByEmpTaskIds(List<Long> empTaskIdList);
 }
