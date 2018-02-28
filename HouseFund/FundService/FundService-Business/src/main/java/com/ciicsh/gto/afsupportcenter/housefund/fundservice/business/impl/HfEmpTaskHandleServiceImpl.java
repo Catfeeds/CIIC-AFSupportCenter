@@ -265,6 +265,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         List<HfEmpTask> hfEmpTaskList = this.selectBatchIds(empTaskIdList);
         if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
             List<Long> outEmpTaskIdList = new ArrayList<>();
+            List<HfEmpArchive> adjustEmpArchiveIdList = new ArrayList<>();
             List<Long> repairEmpTaskIdList = new ArrayList<>();
             List<Long> inEmpTaskIdList = new ArrayList<>();
             List<HfEmpTask> updateHfEmpTaskList = new ArrayList<>(hfEmpTaskList.size());
@@ -297,9 +298,15 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                         )
                     );
                 }
-
+                HfEmpArchive hfEmpArchive;
                 switch (hfEmpTask.getTaskCategory()) {
                     case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_CLOSE:
+                        hfEmpArchive = new HfEmpArchive();
+                        hfEmpArchive.setEmpArchiveId(hfEmpTask.getEmpArchiveId());
+                        hfEmpArchive.setArchiveStatus(HfEmpArchiveConstant.ARCHIVE_STATUS_COMPLETED);
+                        adjustEmpArchiveIdList.add(hfEmpArchive);
+                        outEmpTaskIdList.add(hfEmpTask.getEmpTaskId());
+                        break;
                     case HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE:
                     case HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT:
                     case HfEmpTaskConstant.TASK_CATEGORY_OUT_MULTI_TRANS_OUT:
@@ -307,6 +314,13 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                         break;
                     case HfEmpTaskConstant.TASK_CATEGORY_REPAIR:
                         repairEmpTaskIdList.add(hfEmpTask.getEmpTaskId());
+                        break;
+                    case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN:
+                        hfEmpArchive = new HfEmpArchive();
+                        hfEmpArchive.setEmpArchiveId(hfEmpTask.getEmpArchiveId());
+                        hfEmpArchive.setArchiveStatus(HfEmpArchiveConstant.ARCHIVE_STATUS_CLOSED);
+                        adjustEmpArchiveIdList.add(hfEmpArchive);
+                        inEmpTaskIdList.add(hfEmpTask.getEmpTaskId());
                         break;
                     default:
                         inEmpTaskIdList.add(hfEmpTask.getEmpTaskId());
@@ -327,11 +341,20 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 hfMonthChargeBo.setChgPaymentType(HfMonthChargeConstant.PAYMENT_TYPE_NORMAL);
                 hfMonthChargeBo.setModifiedBy("test"); // TODO
                 hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
+
+                if (CollectionUtils.isNotEmpty(adjustEmpArchiveIdList)) {
+                    hfEmpArchiveService.updateBatchById(adjustEmpArchiveIdList);
+                }
             }
             if (CollectionUtils.isNotEmpty(inEmpTaskIdList)) {
                 hfMonthChargeService.deleteHfMonthCharges(inEmpTaskIdList);
                 hfArchiveBasePeriodService.deleteHfArchiveBasePeriods(inEmpTaskIdList);
-                hfEmpArchiveService.deleteHfEmpArchiveByEmpTaskIds(inEmpTaskIdList);
+
+                if (CollectionUtils.isNotEmpty(adjustEmpArchiveIdList)) {
+                    hfEmpArchiveService.updateBatchById(adjustEmpArchiveIdList);
+                } else {
+                    hfEmpArchiveService.deleteHfEmpArchiveByEmpTaskIds(inEmpTaskIdList);
+                }
             }
             if (CollectionUtils.isNotEmpty(repairEmpTaskIdList)) {
                 hfMonthChargeService.deleteHfMonthCharges(repairEmpTaskIdList);
@@ -795,6 +818,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 //        hfEmpArchive.setEndMonth(inputHfEmpTask.getEndMonth());
         hfEmpArchive.setOperationRemind(inputHfEmpTask.getOperationRemind());
         hfEmpArchive.setOperationRemindDate(inputHfEmpTask.getOperationRemindDate());
+
+        // 办理状态变更
         setEmpArchiveStatus(hfEmpArchive, inputHfEmpTask.getTaskCategory());
 
         hfEmpArchive.setModifiedBy("test"); // TODO
