@@ -5,9 +5,14 @@ import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocia
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.enumeration.ItemCode;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
-import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsResposeDTO;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.SSPItemDTO;
 import com.ciicsh.gto.commonservice.util.dto.Result;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 
@@ -20,7 +25,6 @@ import java.util.Date;
 import java.util.List;
 
 public class TaskCommonUtils {
-
     /**
      * 处理工作流结果
      * @param result
@@ -47,7 +51,6 @@ public class TaskCommonUtils {
         taskRequestDTO.setTaskId(taskId);
         taskRequestDTO.setAssignee(assignee);
         try {
-            System.out.println("------------"+taskRequestDTO);
             Result result =commonApiUtils.completeTask(taskRequestDTO);
             handleWorkflowResult(result);
         } catch (Exception e) {
@@ -59,17 +62,17 @@ public class TaskCommonUtils {
     /**
      * 获得进位方式
      */
-    public static DicItemDTO getRoundTypeFromApi(CommonApiUtils commonApiUtils,String dicItemId) {
+    public static List<SSPItemDTO> getRoundTypeFromApi(CommonApiUtils commonApiUtils, GetSSPItemsRequestDTO getSSPItemsRequestDTO) {
         try {
-            DicItemDTO dicItemDTO = commonApiUtils.selectByDicItemId(dicItemId);
-            Assert.isNull(dicItemDTO,"进位方式为空");
-            // roundType = dicItemDTO.getDicId();
-            return dicItemDTO;
+            com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<GetSSPItemsResposeDTO> jsonResult = commonApiUtils.getRoundingType(getSSPItemsRequestDTO);
+            GetSSPItemsResposeDTO getSSPItemsResposeDTO = jsonResult.getData();
+            if(null==getSSPItemsResposeDTO)return null;
+            return getSSPItemsResposeDTO.getItems();
         } catch (Exception e) {
             e.printStackTrace();
-            throw new BusinessException("调用工作流异常");
+            //throw new BusinessException("调用进位方式接口异常");
         }
-
+        return null;
     }
 
     /**
@@ -82,7 +85,6 @@ public class TaskCommonUtils {
         List<AfEmpSocialUpdateDateDTO> paramsList = confirmDateGetParams(ssEmpTaskBO);
         try {
             int result =commonApiUtils.updateConfirmDate(paramsList);
-            System.out.println("------------------------------------"+result);
         } catch (Exception e) {
             e.printStackTrace();
             throw new BusinessException("实缴金额回调异常");
@@ -124,6 +126,32 @@ public class TaskCommonUtils {
         paramsList.add(afEmpSocialUpdateDateDTO);
         return paramsList;
     }
+
+    /**
+     * 获取雇员信息（支持中心调用雇员中心）
+     * @param commonApiUtils
+     * @param idNum 传入证件号码
+     * @param idCardType 传入证件类型
+     * @param businessType
+     * @return
+     */
+    public static EmployeeInfoDTO getEmployeeInfo(CommonApiUtils commonApiUtils, String idNum, Integer idCardType, Integer businessType){
+        EmployeeQueryDTO var1 = new EmployeeQueryDTO();
+        var1.setIdNum(idNum);
+        var1.setIdCardType(idCardType);
+        var1.setBusinessType(businessType);
+        try {
+            com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeInfoDTO> result = commonApiUtils.getEmployeeInfo(var1);
+            EmployeeInfoDTO employeeInfoDTO =result.getData();
+            if (null==employeeInfoDTO)return new EmployeeInfoDTO();
+            return employeeInfoDTO;
+        } catch (Exception e) {
+            e.printStackTrace();
+            //throw new BusinessException("雇员信息查询异常");
+        }
+        return new EmployeeInfoDTO();
+    }
+
 
     /**
      * 字符串转date

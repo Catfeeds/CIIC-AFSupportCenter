@@ -192,7 +192,7 @@
                 AND hm_uninsured_medical.employee_id = #{employeeId,jdbcType=VARCHAR}
             </if>
             <if test="employeeName != null and employeeName != '' ">
-                AND employee_name = #{employeeName,jdbcType=VARCHAR}
+                AND hm_uninsured_medical.employee_name = #{employeeName,jdbcType=VARCHAR}
             </if>
             <if test="idNum != null and idNum != ''">
                 AND id_num = #{idNum,jdbcType=VARCHAR}

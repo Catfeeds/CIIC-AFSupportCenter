@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskRoll
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthChargeBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
@@ -15,12 +16,13 @@ import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.SSPItemDTO;
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.TaskCommonUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -63,8 +65,13 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     SsMonthChargeService ssMonthChargeService;
     @Autowired
     SsMonthChargeItemService ssMonthChargeItemService;
+
     //进位方式
-   // private static String  roundType;
+    private Map<String,Map<String, Integer>> roundTypeMap;
+    //个人进位方式
+    private final String PERSONROUNDTYPE="personRoundType";
+    //公司进位方式
+    private final String COMPANYROUNDTYPE="companyRoundType";
     @Override
     public PageRows<SsEmpTaskBO> employeeOperatorQuery(PageInfo pageInfo) {
         SsEmpTaskBO dto = pageInfo.toJavaObject(SsEmpTaskBO.class);
@@ -153,13 +160,10 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         // 处理中，正式把数据写入到 ss_emp_base_period and ss_emp_base_detail(雇员社)
         if (TaskStatusConst.PROCESSING == taskStatus || TaskStatusConst.FINISH==taskStatus) {
             if (TaskTypeConst.NEW == taskCategory || TaskTypeConst.INTO == taskCategory) {
-                //获得进位方式
-                //TaskCommonUtils.getRoundTypeFromApi(commonApiUtils,"DIC00005");
                 //新进和转入
                 newOrChangeInto(bo);
                 //任务单完成 回调
             } else if (TaskTypeConst.ADJUSTMENT == taskCategory) {
-               //TaskCommonUtils.getRoundTypeFromApi(commonApiUtils,"DIC00005");
                 //调整
                 handleAdjustmentTask(bo);
             } else if (TaskTypeConst.BACK == taskCategory) {
@@ -176,15 +180,20 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 //退账
                 handleRefundAccountTask(bo);
             }
+            //任务单完成 回调
+            taskCompletCallBack(bo);
         } else {
             //更新雇员任务信息
             baseMapper.updateMyselfColumnById(bo);
-            //任务单 回调 数据
-            bo.setCompanyConfirmAmount(new BigDecimal(0));
-            bo.setPersonalConfirmAmount(new BigDecimal(0));
+            //批退回调
+             if(TaskStatusConst.REJECTION==taskCategory){
+                 //任务单 回调 数据
+                 bo.setCompanyConfirmAmount(new BigDecimal(0));
+                 bo.setPersonalConfirmAmount(new BigDecimal(0));
+                 //任务单完成 回调
+                 taskCompletCallBack(bo);
+             }
         }
-        //任务单完成 回调
-        taskCompletCallBack(bo);
         return true;
     }
 
@@ -206,6 +215,10 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     private void handleAdjustmentTask(SsEmpTaskBO bo) {
         //修改任务单详细
         baseMapper.updateMyselfColumnById(bo);
+
+        //获得进位方式
+        getRoundType(String.valueOf(bo.getPolicyDetailId()),bo.getWelfareUnit(),bo.getStartMonth());
+
         //获得前端输入的缴纳费用段
         List<SsEmpTaskPeriod> taskPeriods = bo.getEmpTaskPeriods();
         if (taskPeriods == null || taskPeriods.size() == 0) throw new BusinessException("费用段为空");
@@ -762,18 +775,19 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                     //企业部分总额
                     //BigDecimal base, BigDecimal ratio, BigDecimal fixedAmount, Integer calculateMethod, String roundType
                     //通过进位方式进行 计算(原数据)
-                    BigDecimal comAmount = CalculateSocialUtils.calculateAmount(ssEmpBaseDetail.getComBase(),ssEmpBaseDetail.getComRatio(),null,2,"DIT00018");
+                    //如果调用为空 则 默认为 见分进角
+                    BigDecimal comAmount = CalculateSocialUtils.calculateAmount(ssEmpBaseDetail.getComBase(),ssEmpBaseDetail.getComRatio(),null,2,null==roundTypeMap?1:roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(COMPANYROUNDTYPE));
                     //System.out.println(ssEmpBaseDetail.getSsType()+"企业部分原数据额"+comAmount);
                     //企业部分总额
                     //通过进位方式进行 计算(前道传递)
-                    BigDecimal frontComAmount = CalculateSocialUtils.calculateAmount(ssEmpTaskFront.getCompanyBase(),ssEmpTaskFront.getCompanyRatio(),null,2,"DIT00018");
+                    BigDecimal frontComAmount = CalculateSocialUtils.calculateAmount(ssEmpTaskFront.getCompanyBase(),ssEmpTaskFront.getCompanyRatio(),null,2,null==roundTypeMap?1:roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(COMPANYROUNDTYPE));
                     //System.out.println(ssEmpBaseDetail.getSsType()+"企业部分前道数据额"+frontComAmount);
                     ssEmpBaseAdjustDetail.setComAmount(frontComAmount);
                     //雇员总额(原数据)
-                    BigDecimal empAmount  = CalculateSocialUtils.calculateAmount(ssEmpBaseDetail.getEmpBase(),ssEmpBaseDetail.getEmpRatio(),null,2,"DIT00018");
+                    BigDecimal empAmount  = CalculateSocialUtils.calculateAmount(ssEmpBaseDetail.getEmpBase(),ssEmpBaseDetail.getEmpRatio(),null,2,null==roundTypeMap?1:roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(PERSONROUNDTYPE));
                     //System.out.println(ssEmpBaseDetail.getSsType()+"雇员部分原数据额"+empAmount);
                     //雇员总额(前道传递)
-                    BigDecimal frontEmpAmount  = CalculateSocialUtils.calculateAmount(ssEmpBaseAdjustDetail.getEmpBase(),ssEmpBaseAdjustDetail.getEmpRatio(),null,2,"DIT00018");
+                    BigDecimal frontEmpAmount  = CalculateSocialUtils.calculateAmount(ssEmpBaseAdjustDetail.getEmpBase(),ssEmpBaseAdjustDetail.getEmpRatio(),null,2,null==roundTypeMap?1:roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(PERSONROUNDTYPE));
                     //System.out.println(ssEmpBaseDetail.getSsType()+"雇员部分前道数据额"+frontEmpAmount);
                     ssEmpBaseAdjustDetail.setEmpAmount(frontEmpAmount);
                     //企业+雇员
@@ -1021,6 +1035,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         baseMapper.updateMyselfColumnById(bo);
         //获得任务单信息
         SsEmpTask ssEmpTask = getSsEmpTask(bo);
+        //获得进位方式
+        getRoundType(String.valueOf(bo.getPolicyDetailId()),bo.getWelfareUnit(),bo.getStartMonth());
         //获得前端输入的补缴费用段
         List<SsEmpTaskPeriod> taskPeriods = bo.getEmpTaskPeriods();
         if (taskPeriods == null || taskPeriods.size() == 0) throw new BusinessException("费用段为空");
@@ -1177,6 +1193,13 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         //更新任务单
         baseMapper.updateMyselfColumnById(bo);
 
+//        if(!Optional.ofNullable(bo.getWelfareUnit()).isPresent()){
+//            throw new BusinessException("缺少数据，在任务单中找不到社保办理方，系统无法继续执行！");
+//        }
+        //获得进位方式
+        int unit=Optional.ofNullable(bo.getWelfareUnit()).orElse(1);
+        getRoundType(bo.getPolicyDetailId(),unit,bo.getStartMonth());
+
         //获得前端输入的缴纳费用段
         List<SsEmpTaskPeriod> taskPeriods = bo.getEmpTaskPeriods();
         if (taskPeriods == null) {
@@ -1242,11 +1265,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 detail.setEmpArchiveId(empArchiveId);
                 //个人金额 个人基数*个人比例
                 BigDecimal empRatio = detail.getEmpRatio() != null ? detail.getEmpRatio() : BigDecimal.valueOf(0);
-                BigDecimal empAmount  = CalculateSocialUtils.calculateAmount(detail.getEmpBase(),empRatio,null,2,"DIT00018");
+
+                BigDecimal empAmount  = CalculateSocialUtils.calculateAmount(detail.getEmpBase(),empRatio,null,2,null==roundTypeMap?1:roundTypeMap.get(detail.getSsType()).get(PERSONROUNDTYPE));
                 detail.setEmpAmount(empAmount);
                 //公司金额 个人基数*个人比例
                 BigDecimal comRatio = detail.getComRatio() != null ? detail.getComRatio() : BigDecimal.valueOf(0);
-                BigDecimal comAmount  = CalculateSocialUtils.calculateAmount(detail.getComBase(),comRatio,null,2,"DIT00018");
+                BigDecimal comAmount  = CalculateSocialUtils.calculateAmount(detail.getComBase(),comRatio,null,2,null==roundTypeMap?1:roundTypeMap.get(detail.getSsType()).get(PERSONROUNDTYPE));
                 detail.setComAmount(comAmount);
                 //个人+公司
                 detail.setComempAmount(detail.getEmpAmount().add(detail.getComAmount()));
@@ -1353,7 +1377,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         int PROCESSING = 2;// 处理中
         int FINISH = 3;// 已完成
         int REJECTION = 4;// 批退
-        int NOPROGRESS = 1;// 不需处理
+        int NOPROGRESS = 5;// 不需处理
     }
 
     /**
@@ -1424,6 +1448,15 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     }
 
     /**
+     * 查询 证件号码
+     * @param employeeId
+     */
+    @Override
+    public SsEmpTaskBO selectIdNumByEmployeeId(String employeeId) {
+        return baseMapper.selectIdNumByEmployeeId(employeeId);
+    }
+
+    /**
      * 非标
      * @param ssEmpTaskBO
      * @param ssEmpBasePeriod
@@ -1462,7 +1495,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 case 6:
                     ssEmpBasePeriod.setStartMonth(ssEmpTaskBO.getHandleMonth());
                     ssEmpBasePeriod.setEndMonth(ssEmpTaskBO.getHandleMonth());
-                    //新进转入 只有办理月份 需要做非标数据
+                    //转出 封存 只有办理月份 需要做非标数据
                     createNewOrIntoNonstandard(ssEmpTaskBO,ssEmpBasePeriod);
                     break ;
                 case 7:
@@ -1769,6 +1802,38 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         }
         //任务单完成接口调用
         TaskCommonUtils.completeTask(bo.getTaskId(),commonApiUtils,"xsj");
+    }
+
+    /**
+     * 请求进位方式 接口 获得各险种的 进位方式
+     * @param ssPolicyId
+     * @param payAccountType
+     * @param effectiveMonth
+     */
+    public void getRoundType(String ssPolicyId,int payAccountType,String effectiveMonth){
+        GetSSPItemsRequestDTO getSSPItemsRequestDTO = new GetSSPItemsRequestDTO();
+        getSSPItemsRequestDTO.setSsPolicyId(ssPolicyId);
+        getSSPItemsRequestDTO.setPayAccountType(payAccountType);
+        getSSPItemsRequestDTO.setEffectiveMonth(effectiveMonth);
+        List<SSPItemDTO>  resultList = TaskCommonUtils.getRoundTypeFromApi(commonApiUtils,getSSPItemsRequestDTO);
+        //将返回结果封装 成Map 对象 便于使用
+        handleRoundType(resultList);
+    }
+
+    /**
+     * 处理进位方式返回的结果
+     * @param resultList
+     */
+    private void handleRoundType(List<SSPItemDTO> resultList) {
+        if(null==resultList || resultList.size()==0) return;//throw new BusinessException("进位方式返回值为null")
+        roundTypeMap = new HashMap<>();
+        resultList.forEach(p->{
+            //某个险种下对用的 个人进位和公司进位方式
+            Map<String,Integer> map = new HashMap<>();
+            map.put(PERSONROUNDTYPE,p.getPersonRoundType());
+            map.put(COMPANYROUNDTYPE,p.getCompanyRoundType());
+            roundTypeMap.put(p.getItemcode(),map);
+        });
     }
 
 }

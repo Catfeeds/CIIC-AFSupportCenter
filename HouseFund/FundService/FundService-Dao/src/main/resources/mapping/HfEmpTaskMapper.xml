@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask">
+        <id column="emp_task_id" property="empTaskId" />
+        <result column="company_id" property="companyId" />
+        <result column="employee_id" property="employeeId" />
+        <result column="emp_archive_id" property="empArchiveId" />
+        <result column="in_date" property="inDate" />
+        <result column="is_change" property="isChange" />
+        <result column="hf_type" property="hfType" />
+        <result column="hf_emp_account" property="hfEmpAccount" />
+        <result column="task_category" property="taskCategory" />
+        <result column="urgent" property="urgent" />
+        <result column="operation_remind" property="operationRemind" />
+        <result column="operation_remind_date" property="operationRemindDate" />
+        <result column="submitter_id" property="submitterId" />
+        <result column="submitter_dept_name" property="submitterDeptName" />
+        <result column="submit_time" property="submitTime" />
+        <result column="expire_date" property="expireDate" />
+        <result column="submitter_remark" property="submitterRemark" />
+        <result column="task_form_content" property="taskFormContent" />
+        <result column="handle_user_id" property="handleUserId" />
+        <result column="handle_user_name" property="handleUserName" />
+        <result column="handle_date" property="handleDate" />
+        <result column="handle_remark" property="handleRemark" />
+        <result column="rejection_remark" property="rejectionRemark" />
+        <result column="material_sign_record" property="materialSignRecord" />
+        <result column="special_task" property="specialTask" />
+        <result column="task_status" property="taskStatus" />
+        <result column="handle_status" property="handleStatus" />
+        <result column="start_handle_date" property="startHandleDate" />
+        <result column="send_check_date" property="sendCheckDate" />
+        <result column="finish_date" property="finishDate" />
+        <result column="emp_base" property="empBase" />
+        <result column="start_month" property="startMonth" />
+        <result column="end_month" property="endMonth" />
+        <result column="ratio_emp" property="ratioEmp" />
+        <result column="ratio_com" property="ratioCom" />
+        <result column="amount" property="amount" />
+        <result column="transfer_out_unit" property="transferOutUnit" />
+        <result column="transfer_out_unit_account" property="transferOutUnitAccount" />
+        <result column="transfer_in_unit" property="transferInUnit" />
+        <result column="transfer_in_unit_account" property="transferInUnitAccount" />
+        <result column="transfer_date" property="transferDate" />
+        <result column="feedback_date" property="feedbackDate" />
+        <result column="operate_date" property="operateDate" />
+        <result column="welfare_unit" property="welfareUnit" />
+        <result column="business_interface_id" property="businessInterfaceId" />
+        <result column="policy_detail_id" property="policyDetailId" />
+        <result column="task_id" property="taskId" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+</mapper>

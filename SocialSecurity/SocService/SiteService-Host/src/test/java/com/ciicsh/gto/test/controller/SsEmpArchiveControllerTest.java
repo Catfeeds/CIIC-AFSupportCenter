@@ -1,8 +1,9 @@
 package com.ciicsh.gto.test.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialUpdateDateDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.payment.SsOperatePaymentBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsOperatePaymentBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComAccountService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskService;
@@ -15,9 +16,12 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller
 import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller.SsPaymentController;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsAccountComRelationDTO;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsResposeDTO;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeSearchDTO;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.junit.Test;
@@ -91,14 +95,14 @@ public class SsEmpArchiveControllerTest {
 
     @Test
     public void getEmp() throws Exception {
-        EmployeeSearchDTO dd= new EmployeeSearchDTO();
+        EmployeeQueryDTO dd= new EmployeeQueryDTO();
         dd.setBusinessType(1);
-        dd.setPageSize(10);
-        dd.setCurrentPage(1);
-        dd.setTotalRecords(0);
-        dd.setEmployeeId("1");
-        com.ciicsh.gto.employeecenter.util.JsonResult<com.ciicsh.gto.employeecenter.apiservice.api.dto.Page<EmployeeInfoDTO>> res  = d2.searchEmployeeInfo(dd);
+        //dd.setEmployeeId("1805876");
+        dd.setIdNum("1321");
+       dd.setIdCardType(2);
+        com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeInfoDTO> res  = d2.getEmployeeInfo(dd);
         System.out.println(JSON.toJSONString(res));
+        System.out.println(JSON.toJSONString(res.getData()));
     }
 
 
@@ -189,5 +193,17 @@ public class SsEmpArchiveControllerTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testGetRoundType() {
+        GetSSPItemsRequestDTO getSSPItemsRequestDTO = new GetSSPItemsRequestDTO();
+        getSSPItemsRequestDTO.setSsPolicyId("201");
+        getSSPItemsRequestDTO.setPayAccountType(1);
+        getSSPItemsRequestDTO.setEffectiveMonth("201803");
+
+        com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<GetSSPItemsResposeDTO> jsonResult =commonApiUtils.getRoundingType(getSSPItemsRequestDTO);
+
+        System.out.println("结果"+JSONObject.toJSON(jsonResult).toString());
     }
 }

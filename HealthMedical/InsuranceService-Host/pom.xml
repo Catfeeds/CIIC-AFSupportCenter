@@ -97,10 +97,6 @@
             <artifactId>sheetservice-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.ciicsh.gt1.employeecenter</groupId>
-            <artifactId>apiservice-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.ciicsh.gt1.companycenter</groupId>
             <artifactId>queryservice-api</artifactId>
         </dependency>

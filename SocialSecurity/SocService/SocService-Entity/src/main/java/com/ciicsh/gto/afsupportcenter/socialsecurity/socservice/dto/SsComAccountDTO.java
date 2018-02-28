@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.customer.SsAccountRatio;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.customer.SsComTask;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAccountRatio;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComTask;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
