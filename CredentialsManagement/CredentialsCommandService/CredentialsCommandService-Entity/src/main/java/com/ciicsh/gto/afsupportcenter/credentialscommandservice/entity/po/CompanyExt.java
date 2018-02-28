@@ -35,6 +35,11 @@ public class CompanyExt extends Model<CompanyExt> {
     @TableField("credentials_type")
     private Integer credentialsType;
     /**
+     * 机构政策id
+     */
+    @TableField("org_poilcy_id")
+    private Integer orgPoilcyId;
+    /**
      * 办理机构
      */
     private String name;
@@ -139,6 +144,13 @@ public class CompanyExt extends Model<CompanyExt> {
     @TableField("modified_by")
     private String modifiedBy;
 
+    public Integer getOrgPoilcyId() {
+        return orgPoilcyId;
+    }
+
+    public void setOrgPoilcyId(Integer orgPoilcyId) {
+        this.orgPoilcyId = orgPoilcyId;
+    }
 
     public Long getCompanyExtId() {
         return companyExtId;
@@ -343,6 +355,7 @@ public class CompanyExt extends Model<CompanyExt> {
             "companyExtId=" + companyExtId +
             ", companyId=" + companyId +
             ", credentialsType=" + credentialsType +
+            ", orgPoilcyId=" + orgPoilcyId +
             ", name=" + name +
             ", operateAccount=" + operateAccount +
             ", operatePwd=" + operatePwd +

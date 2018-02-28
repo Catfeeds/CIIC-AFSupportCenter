@@ -8,7 +8,7 @@ eureka:
   client:
     registerWithEureka: false
     serviceUrl:
-        defaultZone: http://172.16.9.19:9602/eureka,http://172.16.9.20:9602/eureka,http://172.16.9.21:9602/eureka
+        defaultZone: "http://172.16.9.21:9602/eureka/,http://172.16.9.20:9602/eureka/,http://172.16.9.19:9602/eureka/"  #开发注册中心eureka地址
 #      defaultZone: http://172.16.9.24:9602/eureka
   instance:
     lease-renewal-interval-in-seconds: 40

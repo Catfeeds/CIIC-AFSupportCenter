@@ -39,5 +39,5 @@ public interface OrgPolicyService extends IService<OrgPolicy> {
      * @param id
      * @return
      */
-    boolean deleteById(Integer id);
+    int deleteById(Integer id);
 }

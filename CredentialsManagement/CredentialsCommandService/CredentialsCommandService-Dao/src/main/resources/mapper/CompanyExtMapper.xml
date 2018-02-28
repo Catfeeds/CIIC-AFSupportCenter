@@ -7,6 +7,7 @@
 		<id column="company_ext_id" property="companyExtId" />
 		<result column="company_id" property="companyId" />
 		<result column="credentials_type" property="credentialsType" />
+        <result column="org_poilcy_id" property="orgPoilcyId"/>
 		<result column="name" property="name" />
 		<result column="operate_account" property="operateAccount" />
 		<result column="operate_pwd" property="operatePwd" />
@@ -51,6 +52,7 @@
     <update id="updateBycompanyIdAndType">
         UPDATE cm_company_ext
         <set>
+            <if test="org_poilcy_id != null and org_poilcy_id != null">org_poilcy_id = #{orgPoilcyId},</if>
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="operate_account != null and operate_account != ''">operate_account = #{operateAccount},</if>
             <if test="operate_pwd != null and operate_pwd != ''">operate_pwd = #{operatePwd},</if>
@@ -76,10 +78,20 @@
         credentials_type = #{credentialsType}
     </update>
 
+    <select id="selecyByOrgpolicyId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="SEL_ALL_COLUMNS"/>
+        FROM
+        cm_company_ext
+        WHERE
+        org_poilcy_id = #{id}
+    </select>
+
     <sql id="SEL_ALL_COLUMNS">
         company_ext_id,
         company_id,
         credentials_type,
+        org_poilcy_id,
         name,
         operate_account,
         operate_pwd,

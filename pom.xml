@@ -267,6 +267,12 @@
             </dependency>
 
             <dependency>
+                <groupId>com.ciicsh.gt1.salecenter</groupId>
+                <artifactId>gt1.salecenter.apiservice-api</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.ciicsh.gt1.companycenter</groupId>
                 <artifactId>commandservice-api</artifactId>
                 <version>1.0.0</version>

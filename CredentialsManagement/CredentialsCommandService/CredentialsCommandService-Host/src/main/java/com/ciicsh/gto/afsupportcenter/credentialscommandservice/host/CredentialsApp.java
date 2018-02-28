@@ -2,7 +2,6 @@ package com.ciicsh.gto.afsupportcenter.credentialscommandservice.host;
 
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.configuration.CorsConfiguration;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.configuration.MybatisPlusConfig;
-import com.ciicsh.gto.afsupportcenter.util.config.CustomConfiguration;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
