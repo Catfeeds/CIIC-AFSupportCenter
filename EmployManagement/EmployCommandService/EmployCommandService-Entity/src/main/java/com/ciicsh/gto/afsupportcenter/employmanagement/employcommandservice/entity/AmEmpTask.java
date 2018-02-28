@@ -116,8 +116,40 @@ public class AmEmpTask implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+    @TableField("task_form_content")
+    private  String  taskFormContent;
 
-	public Long getEmpTaskId() {
+    @TableField("employee_nature")
+    private  String employeeNature;
+
+    @TableField("archive_direction")
+    private  String archiveDirection;
+
+    public String getEmployeeNature() {
+        return employeeNature;
+    }
+
+    public void setEmployeeNature(String employeeNature) {
+        this.employeeNature = employeeNature;
+    }
+
+    public String getArchiveDirection() {
+        return archiveDirection;
+    }
+
+    public void setArchiveDirection(String archiveDirection) {
+        this.archiveDirection = archiveDirection;
+    }
+
+    public String getTaskFormContent() {
+        return taskFormContent;
+    }
+
+    public void setTaskFormContent(String taskFormContent) {
+        this.taskFormContent = taskFormContent;
+    }
+
+    public Long getEmpTaskId() {
 		return empTaskId;
 	}
 

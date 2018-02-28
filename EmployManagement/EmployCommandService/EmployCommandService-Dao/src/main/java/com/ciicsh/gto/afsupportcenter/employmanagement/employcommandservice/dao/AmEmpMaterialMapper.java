@@ -16,4 +16,5 @@ public interface AmEmpMaterialMapper extends BaseMapper<AmEmpMaterial> {
 
     List<AmEmpMaterialBO> queryAmEmpMaterial(AmEmpMaterialBO amEmpMaterialBO);
 
+
 }
