@@ -8,7 +8,10 @@ import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfFullEmploy
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.AfTpaTaskService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfTpaTask;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
+
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeReturnTicketDTO;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 import com.ciicsh.gto.sheetservice.api.MsgConstants;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
@@ -21,6 +24,7 @@ import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.util.web.convert.JsonUtil;
+import com.ciicsh.gto.afsupportcenter.healthmedical.host.messageBus.TaskSink;
 
 import java.math.BigDecimal;
 import java.time.ZoneId;
@@ -44,8 +48,9 @@ public class KafkaReceiver {
     @Autowired
     private EmployeeInfoProxy employeeInfoProxy;
 
+    // 雇员新进
     @StreamListener(MsgConstants.AFCompanyCenter.AF_EMP_IN)
-    public void receiveBaseAdjustYearlyNonlocal(Message<TaskCreateMsgDTO> message) {
+    public void receiveEmpIn(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         String missionID = taskMsgDTO.getMissionId();
         //   taskMsgDTO.getVariables("");
@@ -57,9 +62,22 @@ public class KafkaReceiver {
             // 读客服中心接口，插入任务单表
             res = insertTaskTb(taskMsgDTO, 1);
         }
+    }
 
-        // 判断是否退保任务单
+    //财务驳回
+    @StreamListener(TaskSink.Financial_Rejected)
+    public void receiveFinancialRejected(PayApplyPayStatusDTO dto)
+    {
+        String comid=dto.getRemark();
 
+    }
+
+
+    //银行退票
+    @StreamListener(TaskSink.Return_Ticket)
+    public void receiveReturn_Ticket(EmployeeReturnTicketDTO dto)
+    {
+        String comid=dto.getCompanyId();
 
     }
 
