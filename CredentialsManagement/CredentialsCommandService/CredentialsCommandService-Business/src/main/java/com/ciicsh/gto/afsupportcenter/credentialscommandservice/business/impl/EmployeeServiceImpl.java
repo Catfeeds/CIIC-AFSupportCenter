@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.EmployeeService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.EmployeeMapper;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Employee;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,4 +19,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> implements EmployeeService {
 
+    @Autowired
+    private EmployeeMapper employeeMapper;
+
+    @Override
+    public int addEmployee(Employee employee) {
+        return employeeMapper.insert(employee);
+    }
+
+    @Override
+    public boolean findEmpByIdCard(Integer idCardType, String idNum) {
+        return employeeMapper.findEmpByIdCard(idCardType, idNum) == null ? true : false;
+    }
 }

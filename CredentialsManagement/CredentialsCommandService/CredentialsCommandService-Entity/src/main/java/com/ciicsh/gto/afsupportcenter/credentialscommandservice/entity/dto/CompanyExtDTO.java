@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
@@ -24,6 +25,10 @@ public class CompanyExtDTO implements Serializable{
      * 证件类型
      */
     private Integer credentialsType;
+    /**
+     * 机构政策id
+     */
+    private Integer orgPoilcyId;
     /**
      * 办理机构
      */
@@ -127,6 +132,14 @@ public class CompanyExtDTO implements Serializable{
      *支付方式UI
      */
     private String payTypeN;
+
+    public Integer getOrgPoilcyId() {
+        return orgPoilcyId;
+    }
+
+    public void setOrgPoilcyId(Integer orgPoilcyId) {
+        this.orgPoilcyId = orgPoilcyId;
+    }
 
     public String getLab() {
         return lab;
@@ -358,6 +371,7 @@ public class CompanyExtDTO implements Serializable{
             "companyExtId=" + companyExtId +
             ", companyId='" + companyId + '\'' +
             ", credentialsType=" + credentialsType +
+            ", orgPoilcyId=" + orgPoilcyId +
             ", name='" + name + '\'' +
             ", operateAccount='" + operateAccount + '\'' +
             ", operatePwd='" + operatePwd + '\'' +
