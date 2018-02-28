@@ -14,6 +14,7 @@ public interface SsEmpTaskFrontService extends IService<SsEmpTaskFront> {
 
     /**
      * 保存数据到雇员任务单表
+     *
      * @param taskMsgDTO
      * @param taskCategory
      * @param isChange
@@ -36,13 +37,14 @@ public interface SsEmpTaskFrontService extends IService<SsEmpTaskFront> {
 
     /**
      * 保存数据到雇员任务单表
+     *
      * @param taskMsgDTO
-     * @param taskCategory
+     * @param socialType
      * @param isChange
      * @param dto
      * @return
      * @throws Exception
      */
-    boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer isChange,
-                         AfEmployeeInfoDTO dto) throws Exception;
+    boolean saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType, Integer isChange,
+                          AfEmployeeInfoDTO dto) throws Exception;
 }

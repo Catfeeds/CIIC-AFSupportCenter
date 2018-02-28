@@ -56,20 +56,21 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
     @Autowired
     private CommonApiUtils commonApiUtils;
 
+
     @Log("查询未处理企业任务单")
     @RequestMapping(value = "getNoProgressTask")
     public JsonResult<List<SsComTaskBO>> getNoProgressCompanyTask(PageInfo pageInfo) {
-        LogDTO logDTO = new LogDTO();
-        logDTO.setAppId("10006002");
-        logDTO.setContent("测试内容");
-        logDTO.setLogType(LogType.APP);
-        logDTO.setSource("外企支持中心");
-        logDTO.setTitle("测试标题"+System.currentTimeMillis());
-        Map<String,String> tags = new HashMap<>();
-        tags.put("sheetId","1");
-        tags.put("sheetName","任务单名称");
-        logDTO.setTags(tags);
-        logServiceProxy.info(logDTO);
+//        LogDTO logDTO = new LogDTO();
+//        logDTO.setAppId("10006002");
+//        logDTO.setContent("测试内容");
+//        logDTO.setLogType(LogType.APP);
+//        logDTO.setSource("外企支持中心");
+//        logDTO.setTitle("测试标题"+System.currentTimeMillis());
+//        Map<String,String> tags = new HashMap<>();
+//        tags.put("sheetId","1");
+//        tags.put("sheetName","任务单名称");
+//        logDTO.setTags(tags);
+//        logServiceProxy.info(logDTO);
         //mybatis 分页插件
         PageRows<SsComTaskBO> pageRows = business.queryNoProgressCompanyTask(pageInfo);
 
@@ -211,6 +212,8 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
             ssAccountComRelation.setCreatedBy("xsj");
             ssAccountComRelation.setModifiedBy("xsj");
             ssAccountComRelation.setModifiedTime(LocalDateTime.now());
+            //Map<String,Object> bankAccountMap=new HashMap<>();
+           // commonApiUtils.addBankAccount(bankAccountMap);
         } else {
             //任务单 为初始，受理， 送审  账户为初始状态
             ssComAccount.setState(new Integer(0));

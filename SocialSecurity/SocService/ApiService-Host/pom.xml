@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
+    <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
     <artifactId>afsupportcenter-socialsecurity-apiservice-host</artifactId>
     <version>1.0.0</version>
 

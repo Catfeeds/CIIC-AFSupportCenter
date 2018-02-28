@@ -8,10 +8,7 @@ import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfFullEmploy
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.AfTpaTaskService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfTpaTask;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
-
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeReturnTicketDTO;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 import com.ciicsh.gto.sheetservice.api.MsgConstants;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
@@ -24,7 +21,6 @@ import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.util.web.convert.JsonUtil;
-import com.ciicsh.gto.afsupportcenter.healthmedical.host.messageBus.TaskSink;
 
 import java.math.BigDecimal;
 import java.time.ZoneId;
@@ -32,7 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by songjt on 17/12/18.
+ * @author zhaogang
+ * @date 17/12/18
  */
 @EnableBinding(value = TaskSink.class)
 @Component
@@ -41,16 +38,17 @@ public class KafkaReceiver {
     @Autowired
     private AfTpaTaskService afTpaTaskService;
 
-    //   private final static Logger logger = LoggerFactory.getLogger(com.ciicsh.gto.customerservice.commandservice.host.message.KafkaReceiver.class);
     @Autowired
     private AfEmployeeCompanyProxy afEmployeeCompanyProxy;
 
     @Autowired
     private EmployeeInfoProxy employeeInfoProxy;
 
-    // 雇员新进
+    @Autowired
+    private SupplyMedicalInvoiceService supplyMedicalInvoiceService;
+
     @StreamListener(MsgConstants.AFCompanyCenter.AF_EMP_IN)
-    public void receiveEmpIn(Message<TaskCreateMsgDTO> message) {
+    public void receiveBaseAdjustYearlyNonlocal(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         String missionID = taskMsgDTO.getMissionId();
         //   taskMsgDTO.getVariables("");
@@ -58,11 +56,10 @@ public class KafkaReceiver {
 
         boolean res = false;
         // 判断是否投保任务单
-        if (taskMsgDTO.getTaskType() != "insurance_new") {
+        if ("insurance_new".equals(taskMsgDTO.getTaskType())) {
             // 读客服中心接口，插入任务单表
             res = insertTaskTb(taskMsgDTO, 1);
         }
-    }
 
     //财务驳回
     @StreamListener(TaskSink.Financial_Rejected)
@@ -81,8 +78,13 @@ public class KafkaReceiver {
 
     }
 
+    /**
+     * 获取雇员信息api
+     *
+     * @param taskMsgDTO
+     * @return
+     */
     private AfEmployeeInfoDTO callInf(TaskCreateMsgDTO taskMsgDTO) {
-
         AfEmployeeInfoDTO resDto = null;
         try {
             AfEmployeeQueryDTO taskRequestDTO = new AfEmployeeQueryDTO();
@@ -90,16 +92,14 @@ public class KafkaReceiver {
             taskRequestDTO.setEmpAgreementId(Long.parseLong(missionId));
             resDto = afEmployeeCompanyProxy.getEmployeeCompany(taskRequestDTO);
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         return resDto;
     }
 
     private boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) {
         boolean result = false;
-
         try {
-
             //<editor-fold desc=" 1 调用接口，获取前道过来的投保任务单数据">
             AfEmployeeInfoDTO dto = callInf(taskMsgDTO);
             AfFullEmployeeDTO empDTO = dto.getEmployee();
@@ -111,55 +111,116 @@ public class KafkaReceiver {
 
             empTaskList.forEach(item -> {
                 AfTpaTask task = new AfTpaTask();
-
                 // <editor-fold desc="2.0 转换service_item">
                 String serviceItem = item.getServiceItems();
-                // serviceItem="[{\"remark\": \"\", \"options\": [{\"title\": \"赔付比例\", \"values\": 90}, {\"title\": \"被保障人\", \"values\": [\"配偶\"]}], \"itemName\": \"特需医疗保障\", \"basicServiceItemId\": 12}]";
-                List<String> list = null;
-                try {
-                    list = JsonUtil.fromJsonToList(JsonUtil.fromJsonToObject(serviceItem, String.class), List.class, String.class);
-                } catch (Exception e) {
-
-                }
                 // </editor-fold>
 
                 // <editor-fold desc="2.1 通用字段赋值">
-                task.setCompanyId(item.getCompanyId());
-                // 投保任务单
-                task.setType(1);
-                task.setEmployeeId(empDTO.getEmployeeId());
-                task.setEmployeeName(empDTO.getEmployeeName());
-                task.setCompanyId(item.getCompanyId());
-                //通过接口依据companyID查companyName，现在暂时为固定值
-                task.setCompanyName("苹果公司");
-                task.setAfProductId(item.getProductId());
-                task.setProductName(item.getProductName());
-                // 投保日期
-                task.setStartConfirmDate(item.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-                task.setPrice(item.getPrice());
-                // </editor-fold>
-
-
-                // List<AfEmployeeInfoDTO> list = JsonUtil.fromJsonToList(JsonUtil.fromJsonToObject(serviceItem,String.class),List.class,String.class);
+                EmployeeBO employeeBO = supplyMedicalInvoiceService.queryEmployeeInfo(empDTO.getEmployeeId());
 
                 // 2.1   判断，如果是投保给子女或者配偶，需要判断是否有信息
                 // 2.1.1 如果没有，需要调用雇员中心接口新增一个任务单
                 // 2.1.2 如果有，获取读取亲属信息
                 // 2.2   查询，投保任务单数据完善和补充
+                // 投保任务单
+                if (serviceItem == null || serviceItem.contains("雇员")) {
+                    task.setType(1);
+                    task.setStatus(2);
+                    task.setAssociatedInsurantId(empDTO.getEmployeeId());
+                    task.setAssociatedInsurantName(empDTO.getEmployeeName());
+                    task.setIdNum(empDTO.getIdNum());
+                    task.setGender(empDTO.getGender());
+                    task.setAge(12);
+                    if (empDTO.getBirthday() != null) {
+                        task.setBirthDate(empDTO.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                    } else {
+                        task.setBirthDate(null);
+                    }
+                } else {
+                    JsonResult<List<EmployeeMemberDTO>> employeeMemberInfoList = employeeInfoProxy.getEmployeeMemberInfo(empDTO.getEmployeeId());
 
+                    /* 验证信息，如果存在，状态为-待处理
+                     * 如果不存在，状态为信息待完善*/
+                    if (serviceItem.contains("子女")) {
+                        task.setType(2);
+                        task.setStatus(2);
+                        // 数字 1 配偶，2 子女，3 父母，4 其他,接口中代表的含义
+                        List<EmployeeMemberDTO> employeeMemberDTOS = employeeMemberInfoList.getData().stream().filter(t -> t.getRelationShip() == 2).collect(Collectors.toList());
+                        if (employeeMemberDTOS.size() == 0) {
+                            //调用接口
+                            task.setStatus(1);
+                        }
+                        EmployeeMemberDTO employeeMemberDTO = employeeMemberDTOS.get(0);
 
-//                com.ciicsh.gto.employeecenter.util.JsonResult<List<EmployeeMemberDTO>> employeeMemberInfoList = employeeInfoProxy.getEmployeeMemberInfo("667064237877603");
+                        task.setAssociatedInsurantId(employeeMemberDTO.getEmployeeId());
+                        task.setAssociatedInsurantName(employeeMemberDTO.getName());
+                        task.setIdNum(employeeMemberDTO.getIdNum());
+                        task.setGender(employeeMemberDTO.getGender());
+                        task.setAge(12);
+                        if (employeeMemberDTO.getBirthday() != null) {
+                            task.setBirthDate(employeeMemberDTO.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                        } else {
+                            task.setBirthDate(null);
+                        }
+                    } else if (serviceItem.contains("配偶")) {
+                        task.setType(3);
+                        task.setStatus(2);
 
+                        List<EmployeeMemberDTO> employeeMemberDTOS = employeeMemberInfoList.getData().stream().filter(t -> t.getRelationShip() == 1).collect(Collectors.toList());
+                        if (employeeMemberDTOS.size() == 0) {
+                            //调用接口
+                            task.setStatus(1);
+                        }
+                        EmployeeMemberDTO employeeMemberDTO = employeeMemberDTOS.get(0);
 
+                        task.setAssociatedInsurantId(employeeMemberDTO.getEmployeeId());
+                        task.setAssociatedInsurantName(employeeMemberDTO.getName());
+                        task.setIdNum(employeeMemberDTO.getIdNum());
+                        task.setGender(employeeMemberDTO.getGender());
+                        task.setAge(12);
+                        if (employeeMemberDTO.getBirthday() != null) {
+                            task.setBirthDate(employeeMemberDTO.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                        } else {
+                            task.setBirthDate(null);
+                        }
+                    }
+                }
+                task.setTaskType(taskMsgDTO.getTaskType());
+                task.setProcessId(taskMsgDTO.getProcessId());
+                task.setEmployeeId(empDTO.getEmployeeId());
+                task.setEmployeeName(empDTO.getEmployeeName());
                 task.setCompanyId(item.getCompanyId());
+                if (employeeBO != null) {
+                    task.setCompanyName(employeeBO.getCompanyName());
+                } else {
+                    task.setCompanyName(" ");
+                }
+                task.setAfProductId(item.getProductId());
+                task.setProductName(item.getProductName());
+                // 投保日期
+                if (item.getStartDate() != null) {
+                    task.setStartConfirmDate(item.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                } else {
+                    task.setStartConfirmDate(null);
+                }
+
+                if (item.getEndDate() != null) {
+                    task.setEndConfirmDate(item.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                } else {
+                    task.setEndConfirmDate(null);
+                }
+
+                task.setPrice(item.getPrice());
+                // </editor-fold>
 
                 //依据services_item确定status，type
-
-
                 task.setServiceItems(item.getServiceItems());
+                if (serviceItem == null || serviceItem.contains("固定金额")) {
+                    task.setKeyType(1);
+                } else {
+                    task.setKeyType(2);
+                }
                 task.setKeyValue(item.getKeyValue());
-                // task.setStartConfirmDate(item.getStartDate());
-
 
                 afTaskList.add(task);
             });
@@ -175,6 +236,13 @@ public class KafkaReceiver {
         return result;
     }
 
+    public static void main(String[] args) {
+        String serviceItem = "{\"remark\":\"\",\"options\":[{\"title\":\"赔付比例\",\"values\":90},{\"title\":\"被保障人\",\"values\":[\"配偶\"]}],\"itemName\":\"特需医疗保障\",\"basicServiceItemId\":12}";
+        JSONObject jsonObject = JSON.parseObject(serviceItem);
+        JSONObject test = (JSONObject) ((JSONArray) jsonObject.get("options")).get(1);
+        System.out.println(serviceItem.contains("配偶"));
+        System.out.println(jsonObject.toString());
+    }
 
     /**
      * 接收任务完成消息

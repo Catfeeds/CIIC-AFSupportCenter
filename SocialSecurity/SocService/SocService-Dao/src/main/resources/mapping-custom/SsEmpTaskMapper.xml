@@ -9,7 +9,7 @@
         <result column="employee_name" property="employeeName"/>
         <result column="employee_id" property="employeeId"/>
         <result column="id_num" property="idNum"/>
-
+        <result column="id_card_type" property="idCardType"/>
         <!-- sal_company -->
         <result column="company_id" property="companyId"/>
         <result column="title" property="title"/>
@@ -571,5 +571,9 @@
       and ea.company_id=#{companyId} and ea.employee_id=#{employeeId}
       ORDER BY ea.emp_archive_id DESC
       LIMIT 1
+    </select>
+
+    <select id="selectIdNumByEmployeeId" resultMap="BaseResultMapDto">
+        SELECT id_num,id_card_type FROM emp_employee WHERE employee_id = #{employeeId}
     </select>
 </mapper>

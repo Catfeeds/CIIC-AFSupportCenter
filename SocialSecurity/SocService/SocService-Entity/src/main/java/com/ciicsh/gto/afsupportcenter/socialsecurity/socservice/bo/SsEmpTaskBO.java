@@ -143,4 +143,6 @@ public class SsEmpTaskBO implements Serializable {
      * 福利办理方
      */
     private Integer welfareUnit;
+    //证件类型
+    private Integer idCardType;
 }

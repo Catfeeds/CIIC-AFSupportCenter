@@ -183,7 +183,7 @@ public class MybatisPlusGeneratorRun {
     static PackageConfig handlePackageInfo() {
         PackageConfig pc = new PackageConfig();
         pc.setParent("com.ciicsh.gto.afsupportcenter.socialsecurity");
-        pc.setModuleName("siteservice");
+        pc.setModuleName("fundservice");
         pc.setMapper("dao");
         pc.setXml("mapping");
         pc.setController("host.controller");

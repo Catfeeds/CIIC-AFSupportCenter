@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.statement.SsStatementBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsStatementService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.StatementExportArgs;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.StatementExportOpt;

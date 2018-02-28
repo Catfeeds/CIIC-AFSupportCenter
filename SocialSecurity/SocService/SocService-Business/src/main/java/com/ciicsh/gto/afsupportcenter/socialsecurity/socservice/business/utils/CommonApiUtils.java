@@ -10,9 +10,12 @@ import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.basicdataservice.api.dto.EmptyDicItemDTO;
 import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeSearchDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.Page;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
+import com.ciicsh.gto.settlementcenter.invoicecommandservice.api.ComeAccountCommandProxy;
+import com.ciicsh.gto.settlementcenter.invoicecommandservice.api.dto.JsonResult;
 import com.ciicsh.gto.sheetservice.api.SheetServiceProxy;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.slf4j.Logger;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by houwanhua on 2018/2/22.
@@ -44,6 +48,9 @@ public class CommonApiUtils {
 
     @Autowired
     SSPolicyProxy ssPolicyProxy;
+
+    @Autowired
+    ComeAccountCommandProxy comeAccountCommandProxy;
 
     /**
      * 调用客服中心的完成任务接口
@@ -103,9 +110,9 @@ public class CommonApiUtils {
      * @param var1 传入employeeId和业务类型
      * @return
      */
-    public com.ciicsh.gto.employeecenter.util.JsonResult<Page<EmployeeInfoDTO>> searchEmployeeInfo(
-        @RequestBody EmployeeSearchDTO var1) throws Exception {
-        return employeeInfoProxy.searchEmployeeInfo(var1);
+    public com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeInfoDTO> getEmployeeInfo(
+        @RequestBody EmployeeQueryDTO var1) throws Exception {
+        return employeeInfoProxy.getEmployeeInfo(var1);
     }
 
     /**
@@ -116,4 +123,16 @@ public class CommonApiUtils {
     public com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<GetSSPItemsResposeDTO> getRoundingType(GetSSPItemsRequestDTO var1){
         return ssPolicyProxy.getSSPItems(var1);
     }
+
+    /**
+     * 新增银行账户信息
+     * */
+    public Integer addBankAccount(Map<String,Object> map){
+        JsonResult jr = comeAccountCommandProxy.addAccount(map);
+        if(jr.getErrorcode().equals("0")){
+            return  jr.getBankAccountId();
+        }
+        return 0;
+    }
+
 }
