@@ -1,11 +1,14 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComAccountPaymentWayBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComTaskBo;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComTaskTaskStatusBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfComTask;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -24,33 +27,53 @@ public interface HfComTaskService extends IService<HfComTask> {
      * @param pageInfo
      * @return
      */
-    public PageRows<HfComTaskBo> queryNoProgressCompanyTask(PageInfo pageInfo);
+    PageRows<HfComTaskBo> queryNoProgressCompanyTask(PageInfo pageInfo);
 
     /**
      * 获得企业任务单 处理中
      * @param pageInfo
      * @return
      */
-    public PageRows<HfComTaskBo> queryProgressingCompanyTask(PageInfo pageInfo);
+    PageRows<HfComTaskBo> queryProgressingCompanyTask(PageInfo pageInfo);
 
     /**
      * 获得企业任务单 已完成
      * @param pageInfo
      * @return
      */
-    public PageRows<HfComTaskBo> queryFinishedCompanyTask(PageInfo pageInfo);
+    PageRows<HfComTaskBo> queryFinishedCompanyTask(PageInfo pageInfo);
 
     /**
      * 获得企业任务单 批退
      * @param pageInfo
      * @return
      */
-    public PageRows<HfComTaskBo> queryRejectedCompanyTask(PageInfo pageInfo);
+    PageRows<HfComTaskBo> queryRejectedCompanyTask(PageInfo pageInfo);
 
     /**
-     * 添加/删除企业任务单
+     * 获得企业任务单支付方式数据
+     * @return
+     */
+    List<HfComAccountPaymentWayBo> queryComTaskPaymentWayData();
+
+    /**
+     * 获得企业任务单任务状态数据
+     * @return
+     */
+    List<HfComTaskTaskStatusBo> queryComTaskTaskStatusData();
+
+    /**
+     * 添加/更新企业任务单
      * @param map
      * @return
      */
-    public boolean upsertCompanyTaskRelated(Map<String, String> map);
+    boolean upsertCompanyTaskRelated(Map<String, String> map);
+
+    /**
+     * 添加/更新企业任务单（变更）
+     * @param map
+     * @return
+     */
+    boolean upsertCompanyTaskChangeInfoRelated(Map<String, String> map);
+
 }

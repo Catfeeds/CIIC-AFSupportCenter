@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.annotations.TableLogic;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 
 /**
@@ -137,11 +139,11 @@ public class HfComTask extends Model<HfComTask> {
     @TableField("com_account_name")
     private String comAccountName;
     /**
-     * 付款方式:
-     1 自付（客户自己汇缴给银行，雇员由中智办理）
-     2 我司付款（客户预付）
-     3 垫付（前道传递）
-     */
+        * 付款方式:
+        1 自付（客户自己汇缴给银行，雇员由中智办理）
+        2 我司付款（客户预付）
+        3 垫付（前道传递）
+        */
     @TableField("payment_way")
     private Integer paymentWay;
     /**

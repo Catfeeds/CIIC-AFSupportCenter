@@ -47,23 +47,48 @@
         <result column="task_category_name" property="taskCategoryName"/>
         <result column="hf_type_name" property="hfTypeName"/>
         <result column="com_task_payment_way_name" property="comTaskPaymentWayName"/>
+        <result column="hf_com_account" property="hfComAccount"/>
+        <result column="com_account_state_value" property="comAccountStateValue"/>
+        <result column="payment_bank_value" property="paymentBankValue"/>
+        <result column="end_month" property="endMonth"/>
+        <result column="ukstore_value" property="ukStoreValue"/>
+        <result column="type_value" property="typeValue"/>
     </resultMap>
 
     <!--查询公积金企业任务单 未处理状态-->
     <select id="queryNoProcessCompanyTask" resultMap="HfComTaskBOResultMap">
         SELECT
         hft.com_task_id,
+        hcac.hf_com_account,
         ctc.task_category_name,
         ht.hf_type_name,
+        hft.hf_type,
         hft.company_id,
         cc.title as company_name,
         hft.handle_user_id,
         hft.handle_user_name,
         hft.submitter_id,
         hft.submitter_name,
+        hft.submit_time,
+        hft.submit_remark,
+        hft.com_account_name,
+        hft.close_day,
         hft.payment_way,
-        ctpw.com_task_payment_way_name
+        ctpw.com_task_payment_way_name,
+        hcac.hf_com_account,
+        hcas.com_account_state_value,
+        hcapb.payment_bank_value,
+        hcac.end_month,
+        hcau.ukstore_value,
+        hcat.type_value,
+        hft.task_status
         FROM hf_com_task hft
+        LEFT JOIN hf_com_account hca ON hft.com_account_id = hca.com_account_id
+        LEFT JOIN hf_com_account_state hcas ON hca.state = hcas.com_account_state_code
+        LEFT JOIN hf_com_account_payment_bank hcapb ON hca.payment_bank = hcapb.payment_bank_code
+        LEFT JOIN hf_com_account_ukstore hcau ON hca.ukey_store = hcau.ukstore_code
+        LEFT JOIN hf_com_account_type hcat ON hca.hf_account_type = hcat.type_code
+        LEFT JOIN hf_com_account_class hcac ON hft.com_account_class_id = hcac.com_account_class_id
         LEFT JOIN sal_company cc ON hft.company_id = cc.company_id
         LEFT JOIN hf_com_task_category ctc ON hft.task_category = ctc.task_category_code
         LEFT JOIN hf_type ht ON hft.hf_type = ht.hf_type_code

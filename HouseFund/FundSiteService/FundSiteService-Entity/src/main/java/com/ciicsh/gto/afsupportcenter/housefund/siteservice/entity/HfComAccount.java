@@ -59,10 +59,12 @@ public class HfComAccount implements Serializable {
     /**
      * 备注
      */
+    @TableField("remark")
 	private String remark;
     /**
      * 账户状态:0初始 1有效 2 终止
      */
+    @TableField("state")
 	private Integer state;
     /**
      * 是否可用

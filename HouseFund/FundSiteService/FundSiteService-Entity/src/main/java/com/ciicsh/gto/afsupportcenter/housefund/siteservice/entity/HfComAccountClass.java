@@ -33,7 +33,7 @@ public class HfComAccountClass implements Serializable {
 	@TableField("hf_type")
 	private Integer hfType;
     /**
-     * 企业基本补充公积金账号
+     * 企业基本/补充公积金账号
      */
 	@TableField("hf_com_account")
 	private String hfComAccount;
