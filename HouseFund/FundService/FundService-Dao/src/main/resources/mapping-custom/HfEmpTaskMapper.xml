@@ -85,13 +85,23 @@
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
-        LEFT JOIN hf_account_com_relation hacr ON het.company_id = hacr.company_id AND hacr.is_active = 1
-        LEFT JOIN hf_com_account hca ON hacr.com_account_id = hca.com_account_id AND hca.is_active = 1
+        LEFT JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
+        LEFT JOIN hf_com_account hcas ON hcas.com_account_id = hacr.com_account_id AND hcas.is_active = 1 AND hcas.hf_account_type = 3
+        <if test="hfAccountType != null">
+            AND hcas.hf_account_type = #{hfAccountType}
+        </if>
+        <if test="hfType != null">
+            AND hcas.hf_type = #{hfType}
+        </if>
+        <if test="paymentBank != null">
+            AND hcas.payment_bank = #{paymentBank}
+        </if>
         <if test="hfComAccount != null">
-            LEFT JOIN hf_com_account_class hcac ON hca.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = het.hf_type
+            LEFT JOIN hf_com_account_class hcac ON hcas.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = het.hf_type
+            AND hcac.hf_com_account = #{hfComAccount}
         </if>
         <where>
-            het.is_active = 1 AND IFNULL(het.task_status, 1) != 5
+            het.is_active = 1  AND IFNULL(het.task_status, 1) != 5 AND het.welfare_unit = 1
             <if test="exceptTaskCategories != null">
                 AND het.task_category NOT IN (${exceptTaskCategories})
             </if>
@@ -109,15 +119,6 @@
             </if>
             <if test="companyId != null">
                 AND sc.company_id = #{companyId}
-            </if>
-            <if test="hfAccountType != null">
-                AND hca.hf_account_type = #{hfAccountType}
-            </if>
-            <if test="hfType != null">
-                AND hca.hf_type = #{hfType}
-            </if>
-            <if test="paymentBank != null">
-                AND hca.payment_bank = #{paymentBank}
             </if>
             <if test="urgent == 1">
                 AND het.urgent = #{urgent}
@@ -149,8 +150,88 @@
                 CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hca.close_day) END
                 )
             </if>
-            <if test="hfComAccount != null">
-                AND hcac.hf_com_account = #{hfComAccount}
+        </where>
+        UNION ALL
+        SELECT
+        het.emp_task_id,
+        het.task_category,
+        het.urgent,
+        het.employee_id,
+        ee.employee_name,
+        ee.id_num,
+        het.company_id,
+        sc.title company_name,
+        het.hf_type,
+        het.hf_emp_account,
+        het.submitter_id,
+        het.submit_time,
+        het.task_id
+        FROM hf_emp_task het
+        INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
+        INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
+        LEFT JOIN hf_com_account hcas ON hcas.is_active = 1 AND hcas.hf_account_type = 1
+        <if test="hfAccountType != null">
+            AND hcas.hf_account_type = #{hfAccountType}
+        </if>
+        <if test="hfType != null">
+            AND hcas.hf_type = #{hfType}
+        </if>
+        <if test="paymentBank != null">
+            AND hcas.payment_bank = #{paymentBank}
+        </if>
+        <if test="hfComAccount != null">
+            LEFT JOIN hf_com_account_class hcac ON hcas.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = het.hf_type
+            AND hcac.hf_com_account = #{hfComAccount}
+        </if>
+        <where>
+            het.is_active = 1  AND IFNULL(het.task_status, 1) != 5 AND het.welfare_unit = 2
+            <if test="exceptTaskCategories != null">
+                AND het.task_category NOT IN (${exceptTaskCategories})
+            </if>
+            <if test="taskCategory != null">
+                AND het.task_category = #{taskCategory}
+            </if>
+            <if test="employeeId != null">
+                AND ee.employee_id = #{employeeId}
+            </if>
+            <if test="employeeName != null">
+                AND ee.employee_name LIKE CONCAT('%',#{employeeName},'%')
+            </if>
+            <if test="idNum != null">
+                AND ee.id_num = #{idNum}
+            </if>
+            <if test="companyId != null">
+                AND sc.company_id = #{companyId}
+            </if>
+            <if test="urgent == 1">
+                AND het.urgent = #{urgent}
+            </if>
+            <if test="submitTimeStart != null">
+                AND het.submit_time >= #{submitTimeStart}
+            </if>
+            <if test="submitTimeEnd != null">
+                AND #{submitTimeEnd} >= het.submit_time
+            </if>
+            <if test="taskStatus != null">
+                AND IFNULL(het.task_status, 1) = #{taskStatus}
+            </if>
+            <if test="processStatus == 1">
+                AND het.submit_time <![CDATA[ <= ]]>
+                (
+                SELECT CASE WHEN DAY(CURDATE()) > hca.close_day THEN
+                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hca.close_day)
+                ELSE
+                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hca.close_day) END
+                )
+            </if>
+            <if test="processStatus == 2">
+                AND het.submit_time >
+                (
+                SELECT CASE WHEN DAY(CURDATE()) > hca.close_day THEN
+                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hca.close_day)
+                ELSE
+                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hca.close_day) END
+                )
             </if>
         </where>
     </select>
@@ -207,12 +288,23 @@
         FROM hf_emp_task het
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
-        LEFT JOIN hf_account_com_relation hacr ON het.company_id = hacr.company_id AND hacr.is_active = 1
-        LEFT JOIN hf_com_account hca ON hacr.com_account_id = hca.com_account_id AND hca.is_active = 1
+        LEFT JOIN
+        (
+        SELECT hcas.com_account_id,het.welfare_unit,hcas.payment_bank,hcas.state,hcas.payment_way,hcas.ukey_store,hcas.hf_account_type,hcas.com_account_name
+        FROM hf_emp_task het
+        LEFT JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
+        LEFT JOIN hf_com_account hcas ON hcas.com_account_id = hacr.com_account_id AND hcas.is_active = 1 AND hcas.hf_account_type = 3
+        WHERE het.is_active = 1 AND het.welfare_unit = 1 AND het.emp_task_id = #{empTaskId}
+        UNION ALL
+        SELECT hcas.com_account_id,2 AS welfare_unit,hcas.payment_bank,hcas.state,hcas.payment_way,hcas.ukey_store,hcas.hf_account_type,hcas.com_account_name
+        FROM hf_com_account hcas
+        LEFT JOIN hf_account_com_relation hacr ON hcas.com_account_id = hacr.com_account_id AND hacr.is_active = 1
+        WHERE hcas.is_active = 1 AND hcas.hf_account_type = 1
+        ) hca ON het.welfare_unit = hca.welfare_unit
         LEFT JOIN hf_com_account_class hcacb ON hca.com_account_id = hcacb.com_account_id AND hcacb.is_active = 1 AND hcacb.hf_type = 1
         LEFT JOIN hf_com_account_class hcaca ON hca.com_account_id = hcaca.com_account_id AND hcaca.is_active = 1 AND hcaca.hf_type = 2
-        LEFT JOIN hf_com_task hctb ON het.company_id = hctb.company_id AND hctb.is_active = 1 AND hctb.hf_type = 1 AND hctb.task_status <![CDATA[<]]> 3
-        LEFT JOIN hf_com_task hcta ON het.company_id = hcta.company_id AND hcta.is_active = 1 AND hcta.hf_type = 2 AND hcta.task_status <![CDATA[<]]> 3
+        LEFT JOIN hf_com_task hctb ON hca.com_account_id = hctb.com_account_id AND hctb.is_active = 1 AND hctb.hf_type = 1 AND IFNULL(hctb.task_status,1) = 1
+        LEFT JOIN hf_com_task hcta ON hca.com_account_id = hcta.com_account_id AND hcta.is_active = 1 AND hcta.hf_type = 2 AND IFNULL(hcta.task_status,1) = 1
         LEFT JOIN hf_emp_archive heab ON het.employee_id = heab.employee_id AND het.company_id = heab.company_id AND heab.is_active = 1 AND heab.hf_type = 1
         LEFT JOIN hf_emp_archive heaa ON het.employee_id = heaa.employee_id AND het.company_id = heaa.company_id AND heaa.is_active = 1 AND heaa.hf_type = 2
         <where>

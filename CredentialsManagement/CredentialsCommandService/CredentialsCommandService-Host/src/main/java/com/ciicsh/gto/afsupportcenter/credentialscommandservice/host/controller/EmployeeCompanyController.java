@@ -119,10 +119,9 @@ public class EmployeeCompanyController {
     }
 
     public String getEmpId() {
-        EmployeeIdQueryDTO employeeIdQueryDTO = new EmployeeIdQueryDTO();
-//        String employeeId = employeeInfoProxy.getEmployeeId(employeeIdQueryDTO).getData();
-//        return employeeId;
-        return "";
+        EmployeeQueryDTO employeeQueryDTO = new EmployeeQueryDTO();
+        EmployeeInfoDTO employeeInfoDTO = employeeInfoProxy.getEmployeeInfo(employeeQueryDTO).getData();
+        return employeeInfoDTO.getEmployeeId();
     }
 
     /**

@@ -2,7 +2,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://172.16.9.53:3306/gtobusinessdb?useUnicode=true&useSSL=true&amp;characterEncoding=UTF-8
+    url: jdbc:mysql://172.16.9.53:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
     username: root
     password: ciicit!#%
   cloud:
