@@ -451,11 +451,11 @@
         <module>CredentialsManagement/CredentialsCommandService/CredentialsCommandService-Business</module>
         <module>CredentialsManagement/CredentialsCommandService/CredentialsCommandService-Host</module>
 
-        <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Api</module>
-        <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Entity</module>
-        <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Dao</module>
-        <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Business</module>
-        <module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Host</module>
+        <!--<module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Api</module>-->
+        <!--<module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Entity</module>-->
+        <!--<module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Dao</module>-->
+        <!--<module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Business</module>-->
+        <!--<module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Host</module>-->
 
 
     </modules>
