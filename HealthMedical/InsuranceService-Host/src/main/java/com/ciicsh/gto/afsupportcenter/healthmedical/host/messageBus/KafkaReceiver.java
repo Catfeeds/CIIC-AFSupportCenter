@@ -10,7 +10,10 @@ import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeQu
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfFullEmployeeDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.AfTpaTaskService;
+import com.ciicsh.gto.afsupportcenter.healthmedical.business.EmployeePaymentJobService;
+import com.ciicsh.gto.afsupportcenter.healthmedical.business.HealthMedicalJobService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.SupplyMedicalInvoiceService;
+import com.ciicsh.gto.afsupportcenter.healthmedical.business.enums.SysConstants;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeeBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfTpaTask;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeMemberDTO;
@@ -18,6 +21,7 @@ import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import com.ciicsh.gto.employeecenter.util.JsonResult;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeReturnTicketDTO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyReturnTicketDTO;
 import com.ciicsh.gto.sheetservice.api.MsgConstants;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +57,12 @@ public class KafkaReceiver {
     private SupplyMedicalInvoiceService supplyMedicalInvoiceService;
     private Object PayApplyPayStatusDTO;
 
+    @Autowired
+    private EmployeePaymentJobService employeePaymentService;
+
+    @Autowired
+    private HealthMedicalJobService healthMedicalJobService;
+
     @StreamListener(MsgConstants.AFCompanyCenter.AF_EMP_IN)
     public void receiveBaseAdjustYearlyNonlocal(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
@@ -67,21 +77,31 @@ public class KafkaReceiver {
             res = insertTaskTb(taskMsgDTO, 1);
         }
     }
-    //财务驳回
-    @StreamListener(TaskSink.Financial_Rejected)
-    public void receiveFinancialRejected(PayApplyPayStatusDTO dto)
-    {
-        String comid=dto.getRemark();
 
+    /**
+     * 财务驳回
+     * @param dto
+     */
+    @StreamListener(TaskSink.Financial_Rejected)
+    public void receiveFinancialRejected(PayApplyPayStatusDTO dto) {
+        if(SysConstants.BusinessId.EMPLOYEE_PAYMENT.equals(dto.getBusinessType())) {
+            employeePaymentService.syncSettleCenterStatus(dto);
+        } else {
+            healthMedicalJobService.syncSettleCenterStatus(dto);
+        }
     }
 
-
-    //银行退票
+    /**
+     * 银行退票
+     * @param dto
+     */
     @StreamListener(TaskSink.Return_Ticket)
-    public void receiveReturn_Ticket(EmployeeReturnTicketDTO dto)
-    {
-        String comid=dto.getCompanyId();
-
+    public void receiveReturn_Ticket(PayApplyReturnTicketDTO dto) {
+        if(SysConstants.BusinessId.EMPLOYEE_PAYMENT.equals(dto.getBusinessType())) {
+            employeePaymentService.handlePaymentRefund(dto);
+        } else {
+            healthMedicalJobService.handlePaymentRefund(dto);
+        }
     }
 
     /**
