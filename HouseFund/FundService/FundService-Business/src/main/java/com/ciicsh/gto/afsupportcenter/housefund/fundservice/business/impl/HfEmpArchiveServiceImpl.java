@@ -30,24 +30,21 @@ import java.util.Optional;
 @Service
 public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfEmpArchive> implements HfEmpArchiveService {
 
-    @Autowired
-    HfEmpArchiveMapper hfEmpArchiveMapper;
-
    public PageRows<HfEmpArchiveBo> queryEmpArchive(PageInfo pageInfo){
        HfEmpArchiveBo dto = pageInfo.toJavaObject(HfEmpArchiveBo.class);
-       return  PageKit.doSelectPage(pageInfo, () ->  hfEmpArchiveMapper.queryEmpArchive(dto));
+       return  PageKit.doSelectPage(pageInfo, () ->  baseMapper.queryEmpArchive(dto));
     }
 
     public Map<String, Object> viewEmpArchiveInfo(String empArchiveId,String companyId){
         Map<String,Object> resultMap=new HashMap<String,Object>();
 
-        HfEmpArchiveBo viewEmpArchiveBo= hfEmpArchiveMapper.viewEmpArchive(empArchiveId);
-        HfArchiveBasePeriodBo viewEmpPeriodBo= hfEmpArchiveMapper.viewEmpPeriod(empArchiveId,"1");
-        HfArchiveBasePeriodBo viewEmpPeriodAddBo= hfEmpArchiveMapper.viewEmpPeriod(empArchiveId,"2");
-        HfComAccountBo viewComAccountBo= hfEmpArchiveMapper.viewComAccount(companyId);
-        List listEmpTaskPeriodBo=hfEmpArchiveMapper.listEmpTaskPeriod(empArchiveId,"1");//基本
-        List listEmpTaskPeriodAddBo=hfEmpArchiveMapper.listEmpTaskPeriod(empArchiveId,"2");//补充
-        List listEmpTransferBo= hfEmpArchiveMapper.listEmpTransfer(empArchiveId);
+        HfEmpArchiveBo viewEmpArchiveBo= baseMapper.viewEmpArchive(empArchiveId);
+        HfArchiveBasePeriodBo viewEmpPeriodBo= baseMapper.viewEmpPeriod(empArchiveId,"1");
+        HfArchiveBasePeriodBo viewEmpPeriodAddBo= baseMapper.viewEmpPeriod(empArchiveId,"2");
+        HfComAccountBo viewComAccountBo= baseMapper.viewComAccount(companyId);
+        List listEmpTaskPeriodBo=baseMapper.listEmpTaskPeriod(empArchiveId,"1");//基本
+        List listEmpTaskPeriodAddBo=baseMapper.listEmpTaskPeriod(empArchiveId,"2");//补充
+        List listEmpTransferBo= baseMapper.listEmpTransfer(empArchiveId);
         resultMap.put("viewEmpArchive",viewEmpArchiveBo);
         resultMap.put("viewEmpPeriod",viewEmpPeriodBo);
         resultMap.put("viewEmpPeriodAdd",viewEmpPeriodAddBo);
@@ -62,12 +59,12 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
             HfEmpArchive empArchive=new HfEmpArchive();
             empArchive.setEmpArchiveId(Long.valueOf(updateDto.get("empArchiveId")));
             empArchive.setHfEmpAccount(updateDto.get("hfEmpAccount"));
-            hfEmpArchiveMapper.updateById(empArchive);
+            baseMapper.updateById(empArchive);
             if (Optional.ofNullable(updateDto.get("empArchiveIdBc")).isPresent()){
                 empArchive=new HfEmpArchive();
                 empArchive.setEmpArchiveId(Long.valueOf(updateDto.get("empArchiveIdBc")));
                 empArchive.setHfEmpAccount(updateDto.get("hfEmpAccountBc"));
-                hfEmpArchiveMapper.updateById(empArchive);
+                baseMapper.updateById(empArchive);
             }
         }catch (Exception e){
             return false;
@@ -78,7 +75,7 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
         StringBuffer retStr= new StringBuffer();
         xls.forEach(
             xlsRecord->{
-                Map map=hfEmpArchiveMapper.selectEmpByCardIdAndName(xlsRecord.getEmpName(),xlsRecord.getIdNum());
+                Map map=baseMapper.selectEmpByCardIdAndName(xlsRecord.getEmpName(),xlsRecord.getIdNum());
                 if (map==null){
                     retStr.append(xlsRecord.getEmpName()).append("|");
                     return;
@@ -86,10 +83,15 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
                 HfEmpArchive hfEmpArchive=new HfEmpArchive();
                 hfEmpArchive.setHfEmpAccount(xlsRecord.getEmpAccount());
                 hfEmpArchive.setEmpArchiveId((Long) map.get("emp_archive_id"));
-                hfEmpArchiveMapper.updateById(hfEmpArchive);
+                baseMapper.updateById(hfEmpArchive);
                 System.out.println(xlsRecord.getEmpAccount());
             }
         );
         return retStr.toString();
+    }
+
+    @Override
+    public int deleteHfEmpArchiveByEmpTaskIds(List<Long> empTaskIdList) {
+        return baseMapper.deleteHfEmpArchiveByEmpTaskIds(empTaskIdList);
     }
 }

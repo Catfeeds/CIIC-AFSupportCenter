@@ -3,17 +3,17 @@ package com.ciicsh.gto.test.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialUpdateDateDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsOperatePaymentBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComAccountService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsPaymentComService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.SiteServiceApp;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller.SsAccountComRelationController;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller.SsComTaskController;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller.SsEmpArchiveController;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller.SsPaymentController;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsOperatePaymentBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComAccountService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsPaymentComService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsAccountComRelationDTO;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
@@ -22,7 +22,6 @@ import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeSearchDTO;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,7 +65,7 @@ public class SsEmpArchiveControllerTest {
 
     @Test
     public void queryByEmpTaskId() {
-        boolean bol = ssPaymentComService.saveRejectResult(1L, "未通过",1);
+        boolean bol = ssPaymentComService.savePaymentInfo(1L, "未通过",1);
         System.out.println(JSON.toJSONString(bol));
     }
 

@@ -6,6 +6,12 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfArchiveBasePer
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfArchiveBasePeriod;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class HfArchiveBasePeriodServiceImpl extends ServiceImpl<HfArchiveBasePeriodMapper, HfArchiveBasePeriod> implements HfArchiveBasePeriodService {
+    @Override
+    public int deleteHfArchiveBasePeriods(List<Long> empTaskIdList) {
+        return baseMapper.deleteHfArchiveBasePeriods(empTaskIdList);
+    }
 }

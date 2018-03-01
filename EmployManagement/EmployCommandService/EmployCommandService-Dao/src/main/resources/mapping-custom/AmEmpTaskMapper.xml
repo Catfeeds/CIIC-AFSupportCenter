@@ -25,6 +25,7 @@
         <result column="settlement_area" property="settlementArea"/>
         <result column="ss_account" property="ssAccount"/>
 
+
     </resultMap>
 
     <select id="queryAmEmpTask" resultMap="BaseResultMapDTO">
@@ -32,6 +33,8 @@
         a.emp_task_id,/*任务id */
         a.employee_id,/*雇员id */
         a.company_id,/*客户Id*/
+        a.employee_nature,
+        a.archive_direction,
         b.employ_way,/*用工方式 */
         b.employ_property,/*用工属性 */
         c.yuliu_doc_num,/*预留档案编号 */
@@ -189,5 +192,29 @@
         and
         a.is_active = 1
     </select>
+
+    <select id="selectEmployId" resultMap="BaseResultMapDTO">
+
+        SELECT  employee_id,company_id from emp_af_emp_company where emp_company_id = #{empCompanyId}
+
+    </select>
+
+    <select id="queryEmpTask" resultMap="BaseResultMapDTO">
+        SELECT
+        a.task_form_content,
+        a.created_time
+        FROM
+        am_emp_task a
+        where
+        task_category = '1'
+        and
+        a.company_id = #{companyId}
+        and
+        a.employee_id = #{employeeId}
+    </select>
+
+    <update id="updateTaskStatus">
+        UPDATE am_emp_task set task_status = 6 where emp_task_id = (SELECT a.emp_task_id from am_employment a where  a.employment_id = #{employmentId}  )
+    </update>
 
 </mapper>

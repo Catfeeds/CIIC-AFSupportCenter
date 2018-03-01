@@ -19,12 +19,12 @@ import java.util.List;
 @RequestMapping("/api/baseData")
 public class BaseDataApiController {
 
-//    @Autowired
-//    private CountryServiceProxy countryServiceProxy;
-//
-//    @GetMapping("/getCountry")
-//    public JsonResult getCountry(){
-//        List<CountryDTO> countryDTOS = countryServiceProxy.listAll();
-//        return JsonResult.success(countryDTOS);
-//    }
+    @Autowired
+    private CountryServiceProxy countryServiceProxy;
+
+    @GetMapping("/getCountry")
+    public JsonResult getCountry(){
+        List<CountryDTO> countryDTOS = countryServiceProxy.listAll();
+        return JsonResult.success(countryDTOS);
+    }
 }

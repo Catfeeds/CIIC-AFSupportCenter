@@ -191,7 +191,7 @@ public class KafkaReceiver {
                         }
                     }
                 }
-                task.setTaskType(taskMsgDTO.getTaskType());
+                task.setTaskType(taskCategory.toString());
                 task.setProcessId(taskMsgDTO.getProcessId());
                 task.setEmployeeId(empDTO.getEmployeeId());
                 task.setEmployeeName(empDTO.getEmployeeName());

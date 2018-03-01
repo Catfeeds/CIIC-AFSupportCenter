@@ -57,10 +57,6 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         try {
             //插入数据到雇员任务单表
             saveSsEmpTask(taskMsgDTO, taskCategory, isChange, dto);
-
-            //更新旧的雇员任务单
-//            updateEmpTaskTb(taskMsgDTO, dto);
-
             result = true;
         } catch (Exception e) {
             result = false;
@@ -226,6 +222,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         ssEmpTask.setTaskId(paramMap.get("oldEmpAgreementId").toString());
         ssEmpTask.setCompanyId(companyDto.getCompanyId());
         ssEmpTask.setEmployeeId(companyDto.getEmployeeId());
+        //更正时，不能更新businessInterfaceId
 //        ssEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
         ssEmpTask.setSubmitterName(companyDto.getCreatedBy());
         ssEmpTask.setSalary(companyDto.getSalary());

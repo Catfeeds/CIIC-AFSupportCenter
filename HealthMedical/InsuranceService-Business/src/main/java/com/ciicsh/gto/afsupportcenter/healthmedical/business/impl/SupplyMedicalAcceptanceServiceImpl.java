@@ -84,6 +84,8 @@ public class SupplyMedicalAcceptanceServiceImpl extends ServiceImpl<SupplyMedica
         return page;
     }
 
+
+
     @Override
     public boolean syncAcceptanceSummaryDetail() {
         TimeScope timeScope = new TimeScope("2018-1-26 14:00:00", "2018-1-26 15:00:00");

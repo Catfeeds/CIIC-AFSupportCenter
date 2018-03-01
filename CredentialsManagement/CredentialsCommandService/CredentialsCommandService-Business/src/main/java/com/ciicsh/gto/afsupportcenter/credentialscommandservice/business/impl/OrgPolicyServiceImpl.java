@@ -4,7 +4,9 @@ package com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.impl;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.OrgPolicyService;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.CompanyExtMapper;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.OrgPolicyMapper;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.CompanyExt;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.OrgPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,8 @@ public class OrgPolicyServiceImpl extends ServiceImpl<OrgPolicyMapper, OrgPolicy
 
     @Autowired
     private OrgPolicyMapper orgPolicyMapper;
+    @Autowired
+    private CompanyExtMapper companyExtMapper;
 
     @Override
     public List<OrgPolicy> select(Page page, OrgPolicy orgPolicy) {
@@ -31,8 +35,12 @@ public class OrgPolicyServiceImpl extends ServiceImpl<OrgPolicyMapper, OrgPolicy
     }
 
     @Override
-    public boolean deleteById(Integer id) {
-        int row = orgPolicyMapper.deleteByOrgPolicyId(id);
-        return row == 1?true : false;
+    public int deleteById(Integer id) {
+        List<CompanyExt> companyExts = companyExtMapper.selecyByOrgpolicyId(id);
+        if (companyExts != null && companyExts.size()>0) {
+            return 1;
+        }else {
+            return orgPolicyMapper.deleteByOrgPolicyId(id) == 1 ? 0 :2;
+        }
     }
 }

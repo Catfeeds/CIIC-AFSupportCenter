@@ -29,4 +29,13 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
     boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) throws Exception;
 
     AmEmpTaskBO queryAccout(String companyId);
+
+    AmEmpTaskBO queryEmpTask(AmEmpTaskBO amEmpTaskBO);
+
+    boolean updateTaskStatus(Map<String,Object> param);
+
+    AmEmpTask getAmEmpTaskById(Long amEmpTaskId);
+
+    List<Map<String,Object>>  getInformation(Map<String,Object> param);
+
 }

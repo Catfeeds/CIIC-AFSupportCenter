@@ -22,7 +22,11 @@ public class EmployeeCompanyDTO {
      */
     private String employeeName;
     /**
-     * 身份证号码
+     * 证件类型
+     */
+    private Integer idCardType;
+    /**
+     * 证件号码
      */
     private String idNum;
     /**
@@ -45,6 +49,14 @@ public class EmployeeCompanyDTO {
      * 雇员类型 1：af 2：bpo 3：fc
      */
     private String type;
+
+    public Integer getIdCardType() {
+        return idCardType;
+    }
+
+    public void setIdCardType(Integer idCardType) {
+        this.idCardType = idCardType;
+    }
 
     public String getEmployeeId() {
         return employeeId;
@@ -115,6 +127,7 @@ public class EmployeeCompanyDTO {
         return "EmployeeCompany{" +
             "employeeId='" + employeeId + '\'' +
             ", employeeName='" + employeeName + '\'' +
+            ", idCardType='" + idCardType + '\'' +
             ", idNum='" + idNum + '\'' +
             ", companyId='" + companyId + '\'' +
             ", companyName='" + companyName + '\'' +

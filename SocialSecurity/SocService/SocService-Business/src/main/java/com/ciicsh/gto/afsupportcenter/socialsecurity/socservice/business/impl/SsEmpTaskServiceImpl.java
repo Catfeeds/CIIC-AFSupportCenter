@@ -1448,6 +1448,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     }
 
     /**
+     * 查询任务单信息
+     * @param ssEmpTaskBO
+     */
+    public List<SsEmpTaskBO> queryByBusinessInterfaceId(SsEmpTaskBO ssEmpTaskBO) {
+        return baseMapper.queryByBusinessInterfaceId(ssEmpTaskBO);
+    }
+
+    /**
      * 查询 证件号码
      * @param employeeId
      */

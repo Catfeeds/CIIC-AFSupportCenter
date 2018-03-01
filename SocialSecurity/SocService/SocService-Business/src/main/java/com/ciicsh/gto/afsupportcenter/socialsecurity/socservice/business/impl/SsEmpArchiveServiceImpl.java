@@ -109,7 +109,7 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
         ssEmpArchive.setSsSerial(ssSerial);
         ssEmpArchive.setEmpArchiveId(Long.valueOf(map.get("empArchiveId")));
         baseMapper.updateById(ssEmpArchive);
-        return "fail";
+        return "SUCC";
     }
 
     private void setEmlpoyeeInfo(SsEmpArchiveBO ssEmpArchiveBO, EmployeeInfoDTO employeeInfoDTO){

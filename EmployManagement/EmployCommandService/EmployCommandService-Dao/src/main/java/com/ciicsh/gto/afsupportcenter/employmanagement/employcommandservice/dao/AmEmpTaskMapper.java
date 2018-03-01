@@ -24,4 +24,11 @@ public interface AmEmpTaskMapper extends BaseMapper<AmEmpTask> {
 
     AmEmpTaskBO  queryAccout(String companyId);
 
+    AmEmpTaskBO  selectEmployId(Map<String,Object> param);
+
+    AmEmpTaskBO  queryEmpTask(AmEmpTaskBO amEmpTaskBO);
+
+    Integer updateTaskStatus(Map<String,Object> param);
+
+
 }

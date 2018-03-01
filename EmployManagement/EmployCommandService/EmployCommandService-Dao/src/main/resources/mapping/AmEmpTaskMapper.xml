@@ -23,6 +23,7 @@
         <result column="modified_time" property="modifiedTime" />
         <result column="created_by" property="createdBy" />
         <result column="modified_by" property="modifiedBy" />
+        <result column="task_form_content" property="taskFormContent" />
 	</resultMap>
 
 </mapper>

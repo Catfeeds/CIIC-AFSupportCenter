@@ -91,6 +91,27 @@ public class AmResignBO extends AmResign {
     private Integer taskStatus;
 
     private String remarkType;
+
+    private Integer idCardType;
+
+    private Long empTaskId;
+
+    public Long getEmpTaskId() {
+        return empTaskId;
+    }
+
+    public void setEmpTaskId(Long empTaskId) {
+        this.empTaskId = empTaskId;
+    }
+
+    public Integer getIdCardType() {
+        return idCardType;
+    }
+
+    public void setIdCardType(Integer idCardType) {
+        this.idCardType = idCardType;
+    }
+
     /**
      * 用工反馈
      */

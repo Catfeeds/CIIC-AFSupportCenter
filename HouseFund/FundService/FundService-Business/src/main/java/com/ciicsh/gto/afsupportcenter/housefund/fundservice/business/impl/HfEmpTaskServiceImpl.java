@@ -53,6 +53,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
      *
      * @param hfEmpTask
      */
+    @Override
     public List<HfEmpTask> queryByTaskId(HfEmpTask hfEmpTask) {
         return baseMapper.queryByTaskId(hfEmpTask);
     }
