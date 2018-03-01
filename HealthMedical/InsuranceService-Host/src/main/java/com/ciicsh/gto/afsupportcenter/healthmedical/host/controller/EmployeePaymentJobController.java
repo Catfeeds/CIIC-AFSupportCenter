@@ -36,8 +36,8 @@ public class EmployeePaymentJobController implements EmployeePaymentJobProxy {
      * @param
      * @return
      */
-    @Scheduled(cron = "0 0/10 * * * *")
-//    @GetMapping(value = "/handle")
+//    @Scheduled(cron = "0 0/10 * * * *")
+    @GetMapping(value = "/handle")
     public void handle() {
         try {
             logger.info("+++++++++++++++++++++++++++ 雇员付款任务: 开始 +++++++++++++++++++++++++++ ");

@@ -78,6 +78,13 @@ public interface SupplyMedicalAcceptanceMapper extends BaseMapper<SupplyMedicalA
     List<EmpBankRefundBO> selectUnSync();
 
     /**
+     * 查询银行退票数据
+     * @param
+     * @return
+     */
+    List<EmpBankRefundBO> selectBankRefund();
+
+    /**
      * 批量更新受理单
      *
      * @param date

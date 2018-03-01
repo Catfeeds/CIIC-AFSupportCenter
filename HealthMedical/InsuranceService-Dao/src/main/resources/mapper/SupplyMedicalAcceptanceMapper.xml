@@ -72,6 +72,11 @@
         p.acceptance_id, 0 AS business_id, 1 AS business_type, p.company_id, p.employee_id, p.total_insurance_company_money AS pay_amount, p.created_by AS customer_manager, "健康医疗部" AS service_center, now() AS refund_date, "无卡" AS reason
     </sql>
 
+    <!-- 关联查询结果列 -->
+    <sql id="Refund_Column_List">
+        p.acceptance_id, 0 AS business_id, 1 AS business_type, p.company_id, p.employee_id, p.total_insurance_company_money AS pay_amount, p.created_by AS customer_manager, "健康医疗部" AS service_center, now() AS refund_date, "银行卡信息错误" AS reason
+    </sql>
+
     <select id="queryAcceptancePage"
             parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.SupplyMedicalAcceptanceDTO"
             resultMap="BaseResultMap">
@@ -330,6 +335,38 @@
         r.is_active = 1
         )
         AND p. status = 2
+        AND p.is_active = 1
+    </select>
+
+    <!-- 结算中心推送银行退票 -->
+    <select id="selectBankRefund" resultMap="PartialResultMap">
+        SELECT
+        <include refid="Refund_Column_List"></include>
+        FROM
+          hm_supply_medical_acceptance p
+        WHERE NOT EXISTS
+        (
+            SELECT
+              a.acceptance_id
+            FROM
+              gtobusinessdb.hm_supply_medical_acceptance a,
+              gtobusinessdb.emp_bank_refund r
+            WHERE
+              a.acceptance_id = p.acceptance_id
+            AND
+              a.acceptance_id = r.apply_id
+            AND
+              a.status = 6
+            AND
+              a.is_active = 1
+            AND
+              r.business_id = 2
+            AND
+              r.status = 0
+            AND
+              r.is_active = 1
+        )
+        AND p.status = 6
         AND p.is_active = 1
     </select>
 
