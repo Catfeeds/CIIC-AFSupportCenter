@@ -84,7 +84,7 @@ public class KafkaReceiver {
      */
     @StreamListener(TaskSink.Financial_Rejected)
     public void receiveFinancialRejected(PayApplyPayStatusDTO dto) {
-        if(SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.equals(dto.getBusinessType())) {
+        if(SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
             employeePaymentService.syncSettleCenterStatus(dto);
         } else {
             healthMedicalJobService.syncSettleCenterStatus(dto);
@@ -97,7 +97,7 @@ public class KafkaReceiver {
      */
     @StreamListener(TaskSink.Return_Ticket)
     public void receiveReturn_Ticket(PayApplyReturnTicketDTO dto) {
-        if(SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.equals(dto.getBusinessType())) {
+        if(SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
             employeePaymentService.handlePaymentRefund(dto);
         } else {
             healthMedicalJobService.handlePaymentRefund(dto);

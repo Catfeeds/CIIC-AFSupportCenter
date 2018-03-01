@@ -183,13 +183,22 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public void syncSettleCenterStatus (PayApplyPayStatusDTO dto) {
-        Integer businessId= paymentApplyDetailMapper.selectBusinessId(dto.getBusinessPkId().intValue());
+        Integer status = SysConstants.SupplyMedicalStatus.COMPLETE.getCode();
+        if (SysConstants.SettlementCenterStatus.BACK.getCode().equals(dto.getPayStatus())) {
+            status = SysConstants.SupplyMedicalStatus.BACK.getCode();
+        }
+        Integer businessId = paymentApplyDetailMapper.selectBusinessId(dto.getBusinessPkId().intValue());
         EmployeePaymentStatusBO statusBO = new EmployeePaymentStatusBO(
-            dto.getBusinessPkId().intValue(), businessId, dto.getPayStatus(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+            dto.getBusinessPkId().intValue(), businessId, status, dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
         );
         if(SysConstants.BusinessId.SUPPLY_MEDICAL.equals(businessId)) {
             supplyMedicalAcceptanceMapper.syncStatus(statusBO);
         } else if(SysConstants.BusinessId.UNINSURED_MEDICAL.equals(businessId)) {
+            if (SysConstants.SettlementCenterStatus.BACK.getCode().equals(dto.getPayStatus())) {
+                statusBO.setStatus(SysConstants.UninsuredMedicalStatus.BACK.getCode());
+            } else {
+                statusBO.setStatus(SysConstants.UninsuredMedicalStatus.COMPLETE.getCode());
+            }
             uninsuredMedicalMapper.syncStatus(statusBO);
         }
     }
