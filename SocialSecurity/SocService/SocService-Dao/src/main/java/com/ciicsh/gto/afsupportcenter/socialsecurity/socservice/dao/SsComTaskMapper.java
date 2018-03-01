@@ -29,4 +29,6 @@ public interface SsComTaskMapper extends BaseMapper<SsComTask> {
     int countComTaskByCond(SsComTaskBO ssComTask);
 
     boolean insertComTask(SsComTask ssComTask);
+
+    int countFinishComTaskByCond(SsComTaskBO ssComTask);
 }
