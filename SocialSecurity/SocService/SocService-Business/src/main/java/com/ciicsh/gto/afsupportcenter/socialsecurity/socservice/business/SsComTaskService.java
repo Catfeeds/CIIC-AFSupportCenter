@@ -121,5 +121,7 @@ public interface SsComTaskService extends IService<SsComTask> {
 
     boolean insertComTask(SsComTask ssComTask);
 
+    int countFinishComTaskByCond(SsComTaskBO ssComTask);
+
     SsComTaskExtPO getComTask(ComTaskParamBO paramBO);
 }

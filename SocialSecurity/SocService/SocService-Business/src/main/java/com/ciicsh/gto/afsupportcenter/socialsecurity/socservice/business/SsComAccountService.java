@@ -74,4 +74,6 @@ public interface SsComAccountService extends IService<SsComAccount> {
      * @return
      */
     boolean addBankAccount(@RequestBody Map<String, Object> map) throws Exception;
+
+    SsComAccount selectAccountByCompanyId(String companyId);
 }

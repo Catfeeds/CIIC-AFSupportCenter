@@ -393,7 +393,7 @@
         remark AS remark_acc,
         state
         FROM
-        ss_com_account WHERE i_active=1
+        ss_com_account WHERE is_active=1
         )sca
         ON scr.com_account_id = sca.com_account_id_acc
         LEFT JOIN
@@ -512,7 +512,7 @@
         FROM
         ss_account_ratio
         WHERE
-        is_active =1 AND
+        is_active =1
         )sat
         ON sca.com_account_id_acc = sat.com_account_id_sar
         WHERE
@@ -555,14 +555,23 @@
     <!--判断企业任务单是否存在-->
     <select id="countComTaskByCond" resultType="int">
         SELECT
-        COUNT(1)
+        COUNT(*)
         FROM ss_com_task sct
         where sct.is_active = 1
-        AND sct.com_account_id = #{comAccountId}
+        AND sct.company_id = #{companyId}
         AND sct.task_category=#{taskCategory}
         AND sct.task_status in (0,1,2)
     </select>
-
+    <!--查询 企业是否有已完成的开户任务单-->
+    <select id="countFinishComTaskByCond" resultType="int">
+        SELECT
+        COUNT(*)
+        FROM ss_com_task sct
+        where sct.is_active = 1
+        AND sct.company_id = #{companyId}
+        AND sct.task_category=#{taskCategory}
+        AND sct.task_status =3
+    </select>
     <insert id="insertComTask" useGeneratedKeys="true" keyProperty="comTaskId">
         INSERT
         INTO
@@ -592,6 +601,18 @@
        rejection_remark,
        business_interface_id,
        task_id,
+       ss_account,
+       bank_account,
+       com_account_name,
+       payment_bank,
+       payment_way,
+       bill_receiver,
+       industry_category,
+       expire_date_front,
+       settlement_area,
+       legal_person,
+       contact_address,
+       dispatch_material,
        is_active,
        created_time,
        modified_time,
@@ -623,6 +644,18 @@
         #{rejectionRemark},
         #{businessInterfaceId},
         #{taskId},
+        #{ssAccount},
+        #{bankAccount},
+        #{comAccountName},
+        #{paymentBank},
+        #{paymentWay},
+        #{billReceiver},
+        #{industryCategory},
+        #{expireDateFront},
+        #{settlementArea},
+        #{legalPerson},
+        #{contactAddress},
+        #{dispatchMaterial},
         #{isActive},
         #{createdTime},
         #{modifiedTime},

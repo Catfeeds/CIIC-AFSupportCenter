@@ -59,4 +59,6 @@ public interface SsComAccountMapper extends BaseMapper<SsComAccount> {
 
     int checkComAccountDuplicateaSSAccount(SsComAccount ssComAccount);
     int checkComAccountDuplicateaSSAccountName(SsComAccount ssComAccount);
+
+    SsComAccount selectAccountByCompanyId(@Param("companyId")String companyId);
 }
