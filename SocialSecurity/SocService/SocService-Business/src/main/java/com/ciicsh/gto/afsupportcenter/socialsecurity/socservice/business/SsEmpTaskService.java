@@ -56,13 +56,6 @@ public interface SsEmpTaskService extends IService<SsEmpTask> {
      */
     String selectMaxSsSerialByTaskId(Long empTaskId);
 
-//    /**
-//     * 调用客服中心的完成任务接口
-//     *
-//     * @param taskSheetRequestDTO
-//     * @return
-//     */
-//    com.ciicsh.gto.commonservice.util.bo.Result completeTask(@RequestBody TaskSheetRequestDTO taskSheetRequestDTO) throws Exception;
     /**
      * 批量查询任务单信息
      * @param ssEmpTaskBO
@@ -74,6 +67,12 @@ public interface SsEmpTaskService extends IService<SsEmpTask> {
      * @param ssEmpTaskBO
      */
     List<SsEmpTaskBO> queryByTaskId(SsEmpTaskBO ssEmpTaskBO);
+
+    /**
+     * 查询任务单信息
+     * @param ssEmpTaskBO
+     */
+    List<SsEmpTaskBO> queryByBusinessInterfaceId(SsEmpTaskBO ssEmpTaskBO);
 
     SsEmpTaskBO selectIdNumByEmployeeId(String employeeId);
 }

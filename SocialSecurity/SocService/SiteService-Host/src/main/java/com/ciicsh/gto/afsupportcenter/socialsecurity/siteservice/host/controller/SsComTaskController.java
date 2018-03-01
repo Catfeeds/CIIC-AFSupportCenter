@@ -151,7 +151,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
                 if (isNotNull(refuseReason))
                     ssComTask.setRejectionRemark(refuseReason);
                 //批退工作流
-                //TaskCommonUtils.completeTask(ssComTask.getTaskId(),commonApiUtils,"xsj");
+                TaskCommonUtils.completeTask(ssComTask.getTaskId(),commonApiUtils,"xsj");
                 dataList.add(ssComTask);
             }
         }
@@ -201,8 +201,6 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         SsAccountRatio ssAccountRatio = getSsAccountRatio(map);
         SsAccountComRelation ssAccountComRelation = null;
         if (3 == ssComTask.getTaskStatus()) {
-            //调用工作流
-            //  TaskCommonUtils.completeTask(ssComTask.getTaskId(),commonApiUtils,"xsj");
             //任务单为已完成状态 账户设置为可用
             ssComAccount.setState(new Integer(1));
             ssAccountComRelation = new SsAccountComRelation();
@@ -214,6 +212,8 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
             ssAccountComRelation.setModifiedTime(LocalDateTime.now());
             //Map<String,Object> bankAccountMap=new HashMap<>();
            // commonApiUtils.addBankAccount(bankAccountMap);
+            //调用工作流
+            TaskCommonUtils.completeTask(ssComTask.getTaskId(),commonApiUtils,"xsj");
         } else {
             //任务单 为初始，受理， 送审  账户为初始状态
             ssComAccount.setState(new Integer(0));
@@ -222,8 +222,14 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         if ( !retCheckResult.equals("")){//检查输入的内容是否重复
             return JsonResultKit.ofError(retCheckResult.substring(0,retCheckResult.length()-1));
         }
-        boolean result = business.addOrUpdateCompanyTask(ssComTask, ssComAccount, ssAccountRatio, ssAccountComRelation);
-        return JsonResultKit.of(result);
+        String result = business.addOrUpdateCompanyTask(ssComTask, ssComAccount, ssAccountRatio, ssAccountComRelation);
+        if (result.equals("SUCC")){
+            return JsonResultKit.of(true);
+        }else{
+            return JsonResultKit.ofError(result);
+        }
+
+
     }
 
     @Log("终止任务单的操作")
@@ -234,7 +240,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         SsComTaskBO ssComTaskBO = CommonTransform.convertToDTO(ssComTaskDTO, SsComTaskBO.class);
         if (ssComTaskBO.getTaskStatus() == 3) {
             //调用工作流
-            //TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,"xsj");
+            TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,"xsj");
             if (null != ssComTaskBO.getEndDate() && null != ssComTaskBO.getComAccountId()) {
                 SsComAccount ssComAccount = new SsComAccount();
                 //2 表示终止
@@ -272,7 +278,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         //0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
         if (ssComTaskBO.getTaskStatus() == 3) {
             //调用工作流
-            //TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,"xsj");
+            TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,"xsj");
             if (isNotNull(ssComTaskBO.getSettlementArea()) && null != ssComTaskBO.getComAccountId()) {
                 SsComAccount ssComAccount = new SsComAccount();
                 ssComAccount.setComAccountId(ssComTaskBO.getComAccountId());
@@ -321,7 +327,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         //0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
         if (ssComTaskBO.getTaskStatus() == 3) {
             //调用工作流
-            //TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,"xsj");
+            TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,"xsj");
             Object object = getObject(ssComTaskBO);
             //变更类型操作
             result = business.updateOrHandlerTask(ssComTaskBO, object);

@@ -5,9 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskHandleBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskPeriodInactiveBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfMonthChargeBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
@@ -16,7 +14,6 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskCo
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskPeriodConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfMonthChargeConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskHandlePostBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
@@ -273,6 +270,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             List<Long> inEmpTaskIdList = new ArrayList<>();
             List<HfEmpTask> updateHfEmpTaskList = new ArrayList<>(hfEmpTaskList.size());
 
+            Map<Long, Long> empTaskIdEmpArchiveIdMap = hfEmpArchiveService.queryHfEmpArchiveByEmpTaskIds(empTaskIdList);
+
             for (HfEmpTask hfEmpTask : hfEmpTaskList) {
                 if (!hfEmpTask.getActive()) {
                     String taskCategoryName = DictUtil.getInstance().getTextByItemValueAndTypeValue(
@@ -304,15 +303,18 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 HfEmpArchive hfEmpArchive;
                 switch (hfEmpTask.getTaskCategory()) {
                     case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_CLOSE:
-                        hfEmpArchive = new HfEmpArchive();
-                        hfEmpArchive.setEmpArchiveId(hfEmpTask.getEmpArchiveId());
-                        hfEmpArchive.setArchiveStatus(HfEmpArchiveConstant.ARCHIVE_STATUS_COMPLETED);
-                        adjustEmpArchiveIdList.add(hfEmpArchive);
-                        outEmpTaskIdList.add(hfEmpTask.getEmpTaskId());
-                        break;
                     case HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE:
                     case HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT:
                     case HfEmpTaskConstant.TASK_CATEGORY_OUT_MULTI_TRANS_OUT:
+                        hfEmpArchive = new HfEmpArchive();
+                        if (empTaskIdEmpArchiveIdMap != null && hfEmpTask.getEmpArchiveId() == null) {
+                            hfEmpArchive.setEmpArchiveId(empTaskIdEmpArchiveIdMap.get(hfEmpTask.getEmpArchiveId()));
+                        } else {
+                            hfEmpArchive.setEmpArchiveId(hfEmpTask.getEmpArchiveId());
+                        }
+
+                        hfEmpArchive.setArchiveStatus(HfEmpArchiveConstant.ARCHIVE_STATUS_COMPLETED);
+                        adjustEmpArchiveIdList.add(hfEmpArchive);
                         outEmpTaskIdList.add(hfEmpTask.getEmpTaskId());
                         break;
                     case HfEmpTaskConstant.TASK_CATEGORY_REPAIR:
@@ -320,7 +322,11 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                         break;
                     case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN:
                         hfEmpArchive = new HfEmpArchive();
-                        hfEmpArchive.setEmpArchiveId(hfEmpTask.getEmpArchiveId());
+                        if (empTaskIdEmpArchiveIdMap != null && hfEmpTask.getEmpArchiveId() == null) {
+                            hfEmpArchive.setEmpArchiveId(empTaskIdEmpArchiveIdMap.get(hfEmpTask.getEmpArchiveId()));
+                        } else {
+                            hfEmpArchive.setEmpArchiveId(hfEmpTask.getEmpArchiveId());
+                        }
                         hfEmpArchive.setArchiveStatus(HfEmpArchiveConstant.ARCHIVE_STATUS_CLOSED);
                         adjustEmpArchiveIdList.add(hfEmpArchive);
                         inEmpTaskIdList.add(hfEmpTask.getEmpTaskId());
@@ -344,6 +350,10 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 hfMonthChargeBo.setChgPaymentType(HfMonthChargeConstant.PAYMENT_TYPE_NORMAL);
                 hfMonthChargeBo.setModifiedBy("test"); // TODO
                 hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
+                HfArchiveBasePeriodUpdateBo hfArchiveBasePeriodUpdateBo = new HfArchiveBasePeriodUpdateBo();
+                hfArchiveBasePeriodUpdateBo.setEmpTaskIdList(outEmpTaskIdList);
+                hfArchiveBasePeriodUpdateBo.setModifiedBy("test"); // TODO
+                hfArchiveBasePeriodService.updateHfArchiveBasePeriods(hfArchiveBasePeriodUpdateBo);
 
                 if (CollectionUtils.isNotEmpty(adjustEmpArchiveIdList)) {
                     hfEmpArchiveService.updateBatchById(adjustEmpArchiveIdList);
@@ -464,7 +474,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         List<HfArchiveBasePeriod> hfArchiveBasePeriodList;
         List<HfArchiveBasePeriod> diffHfArchiveBasePeriodList;
         EntityWrapper<HfArchiveBasePeriod> wrapper = new EntityWrapper<>();
-        wrapper.where("employee_id={1} AND is_active = 1", hfEmpTask.getEmployeeId());
+        wrapper.where("employee_id={0} AND is_active = 1", hfEmpTask.getEmployeeId());
         wrapper.orderBy("start_month", true);
         List<HfArchiveBasePeriod> existHfArchiveBasePeriodList = hfArchiveBasePeriodService.selectList(wrapper);
 
@@ -576,13 +586,13 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
      */
     private HfArchiveBasePeriod stopEmpBasePeriod(HfEmpTask hfEmpTask, HfEmpTaskPeriod hfEmpTaskPeriod) {
         EntityWrapper<HfArchiveBasePeriod> wrapper = new EntityWrapper<>();
-        wrapper.where("employee_id={1} AND company_id={2} AND is_active = 1", hfEmpTask.getEmployeeId(), hfEmpTask.getCompanyId());
+        wrapper.where("employee_id={0} AND company_id={1} AND is_active = 1", hfEmpTask.getEmployeeId(), hfEmpTask.getCompanyId());
         wrapper.orderBy("start_month", false);
         List<HfArchiveBasePeriod> existHfArchiveBasePeriodList = hfArchiveBasePeriodService.selectList(wrapper);
 
         if (CollectionUtils.isNotEmpty(existHfArchiveBasePeriodList)) {
             HfArchiveBasePeriod lastHfArchiveBasePeriod = existHfArchiveBasePeriodList.get(0);
-            if (StringUtils.isEmpty(lastHfArchiveBasePeriod.getEndMonth())) {
+            if (StringUtils.isNotEmpty(lastHfArchiveBasePeriod.getEndMonth())) {
                 throw new BusinessException("当前雇员最后汇缴月份段的缴费截止月已经存在");
             }
             HfArchiveBasePeriod hfArchiveBasePeriod = new HfArchiveBasePeriod();
@@ -726,7 +736,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 hfMonthCharge.setModifiedBy("test"); // TODO
                 hfMonthChargeService.updateById(hfMonthCharge);
             } else {
-                throw new BusinessException("开票时自动生成的标准雇员月度汇缴明细记录不存在");
+                // TODO 新进或转入当月就转出或封存时？
+//                throw new BusinessException("开票时自动生成的标准雇员月度汇缴明细记录不存在");
             }
 
 //            HfMonthChargeBo hfMonthChargeBo = new HfMonthChargeBo();
@@ -754,15 +765,14 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         Long empArchiveId = null;
         List<HfEmpArchive> hfEmpArchiveList = hfEmpArchiveService.selectByMap(condition);
         if (CollectionUtils.isNotEmpty(hfEmpArchiveList)) {
-            hfEmpArchiveList = hfEmpArchiveList.stream()
-                .filter(e -> e.getArchiveStatus() == null || e.getArchiveStatus() != HfEmpArchiveConstant.ARCHIVE_STATUS_CLOSED)
-                .collect(Collectors.toList());
-
             if (hfEmpArchiveList.size() > 1) {
                 return JsonResultKit.ofError("该雇员的雇员档案数据不正确");
             }
-
             empArchiveId = hfEmpArchiveList.get(0).getEmpArchiveId();
+
+            hfEmpArchiveList = hfEmpArchiveList.stream()
+                .filter(e -> e.getArchiveStatus() == null || e.getArchiveStatus() != HfEmpArchiveConstant.ARCHIVE_STATUS_CLOSED)
+                .collect(Collectors.toList());
         } else {
             isNothing = true;
         }

@@ -114,7 +114,7 @@ public class SsEmpArchiveController extends BasicController<SsEmpArchiveService>
     @RequestMapping("/saveEmpSerial")
     public JsonResult<Object> saveEmpSerial(@RequestParam Map<String,String> map) {
        String ret= business.saveEmpSerial(map);
-       if(ret.equals("succ")){
+       if(ret.equals("SUCC")){
            return JsonResultKit.of(200,ret);
        }else{
            return JsonResultKit.of(-1,ret);

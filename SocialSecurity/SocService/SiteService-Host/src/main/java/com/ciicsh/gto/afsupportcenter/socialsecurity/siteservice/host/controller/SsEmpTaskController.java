@@ -71,7 +71,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     @RequestMapping("/employeeOperatorQueryExport")
     public void employeeOperatorQueryExport(HttpServletResponse response,PageInfo pageInfo) {
         Date date = new Date();
-        String fileNme = "雇员社保查询_"+ StringUtil.getDateString(date)+".xls";
+        String fileNme = "雇员日常社保_"+ StringUtil.getDateString(date)+".xls";
         PageRows<SsEmpTaskBO> pageRows= business.employeeOperatorQuery(pageInfo);
         ExcelUtil.exportExcel(pageRows.getRows(),SsEmpTaskBO.class,fileNme,response);
     }

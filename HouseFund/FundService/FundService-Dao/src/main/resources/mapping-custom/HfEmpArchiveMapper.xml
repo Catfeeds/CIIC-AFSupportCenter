@@ -242,9 +242,22 @@
         FROM hf_emp_archive hea INNER JOIN hf_emp_task het ON het.emp_archive_id = hea.emp_archive_id
         AND hea.is_active = 1
         <where>
-            <foreach collection="list" item="item" open="het.emp_task_id IN (" separator="," close=")">
+            <foreach collection="list" item="item" open="AND het.emp_task_id IN (" separator="," close=")">
                 #{item}
             </foreach>
         </where>
     </delete>
+
+    <select id="queryHfEmpArchiveByEmpTaskIds" parameterType="java.util.List" resultType="java.util.Map">
+        SELECT het.emp_task_id, hea.emp_archive_id
+        FROM hf_emp_archive hea
+        INNER JOIN hf_emp_task het
+        ON hea.company_id = het.company_id AND hea.employee_id = het.employee_id
+        <where>
+            hea.is_active = 1 AND het.is_active = 1
+            <foreach collection="list" item="item" open="AND het.emp_task_id IN (" separator="," close=")">
+                #{item}
+            </foreach>
+        </where>
+    </select>
 </mapper>

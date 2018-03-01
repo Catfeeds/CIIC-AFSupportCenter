@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfArchiveBasePeriodUpdateBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfArchiveBasePeriod;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
@@ -19,4 +20,11 @@ public interface HfArchiveBasePeriodMapper extends BaseMapper<HfArchiveBasePerio
      * @return
      */
     int deleteHfArchiveBasePeriods(List<Long> empTaskIdList);
+
+    /**
+     * 更新雇员公积金汇缴月份段记录
+     * @param hfArchiveBasePeriodUpdateBo
+     * @return
+     */
+    int updateHfArchiveBasePeriods(HfArchiveBasePeriodUpdateBo hfArchiveBasePeriodUpdateBo);
 }

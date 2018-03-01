@@ -1,6 +1,6 @@
 ###################  项目启动端口  ###################
 server:
-  port: 6007
+  port: 6005
   context-path: /
 
 ###################  spring 配置  ###################
@@ -50,7 +50,7 @@ mybatis-plus:
     cache-enabled: false
 
 app:
-  id: 10006004
+  id: 10006003
 
 endpoints:
   shutdown:
@@ -65,5 +65,5 @@ endpoints:
 management:
   security:
     enabled: false
-  port: 6008
+  port: 6006
   context-path: /admin

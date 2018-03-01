@@ -13,6 +13,16 @@ import org.springframework.stereotype.Service;
 public interface TaskSink {
 
     @Input(MsgConstants.AFCompanyCenter.AF_EMP_IN)
-    MessageChannel baseAdjustYearlyNonlocal();
+    MessageChannel EmpIn();
+
+
+    String Financial_Rejected="pay-apply-pay-status-stream-input-channel";
+    @Input(Financial_Rejected)
+    MessageChannel receiveFinancialRejected();
+
+    String Return_Ticket="pay-apply-return-ticket-stream_input_channel";
+    @Input(Return_Ticket)
+    MessageChannel receiveReturn_Ticket();
+
 
 }

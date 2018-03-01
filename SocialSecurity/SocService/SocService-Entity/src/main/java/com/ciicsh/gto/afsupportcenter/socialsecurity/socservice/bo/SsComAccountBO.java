@@ -83,7 +83,7 @@ public class SsComAccountBO {
     @Excel(name = "备注说明",orderNum = "7")
     private String remark;
 
-    @Excel(name = "状态", replace = {"初始_0","有效_1","封_2","终止_3"},orderNum = "3")
+    @Excel(name = "状态", replace = {"初始_0","有效_1","终止_2","封存_3"},orderNum = "3")
     private Integer state;
 
     private Boolean isActive;

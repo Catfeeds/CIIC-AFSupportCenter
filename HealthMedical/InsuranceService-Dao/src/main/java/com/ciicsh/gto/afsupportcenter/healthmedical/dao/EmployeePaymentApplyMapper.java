@@ -55,6 +55,13 @@ public interface EmployeePaymentApplyMapper extends BaseMapper<EmployeePaymentAp
     List<EmpBankRefundBO> selectUnSyncApply();
 
     /**
+     * 查询银行退票数据
+     * @param
+     * @return
+     */
+    List<EmpBankRefundBO> selectBankRefund();
+
+    /**
      * 更新付款申请状态
      * @param bo
      * @return

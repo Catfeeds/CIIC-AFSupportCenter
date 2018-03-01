@@ -159,8 +159,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
         // 处理中，正式把数据写入到 ss_emp_base_period and ss_emp_base_detail(雇员社)
         if (TaskStatusConst.PROCESSING == taskStatus || TaskStatusConst.FINISH==taskStatus) {
-            if (TaskTypeConst.NEW == taskCategory || TaskTypeConst.INTO == taskCategory) {
-                //新进和转入
+            if (TaskTypeConst.NEW == taskCategory || TaskTypeConst.INTO == taskCategory || TaskTypeConst.FLOPNEW==taskCategory || TaskTypeConst.FLOPINTO==taskCategory) {
+                //新进和转入 翻牌新进 翻牌转入
                 newOrChangeInto(bo);
                 //任务单完成 回调
             } else if (TaskTypeConst.ADJUSTMENT == taskCategory) {
@@ -170,11 +170,11 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                // TaskCommonUtils.getRoundTypeFromApi(commonApiUtils,"DIC00005");
                 //补缴
                 handleBackTask(bo);
-            } else if (TaskTypeConst.TURNOUT == taskCategory) {
-                //转出
+            } else if (TaskTypeConst.TURNOUT == taskCategory || TaskTypeConst.FLOPTURNOUT==taskCategory) {
+                //转出 翻牌转出
                 handleTurnOutTask(bo);
-            } else if (TaskTypeConst.SEALED == taskCategory) {
-                //封存
+            } else if (TaskTypeConst.SEALED == taskCategory || TaskTypeConst.FLOPSEALED ==taskCategory) {
+                //封存 翻牌封存
                 handleSealedTask(bo);
             } else if (TaskTypeConst.REFUNDACCOUNT == taskCategory) {
                 //退账
@@ -1391,6 +1391,11 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         int TURNOUT = 5;//转出
         int SEALED = 6;//封存
         int REFUNDACCOUNT = 7;//退账
+        int FLOPNEW = 12;// 翻牌新进
+        int FLOPINTO = 13;// 翻牌转入
+        int FLOPTURNOUT = 14;// 翻牌转出
+        int FLOPSEALED = 15;// 翻牌封存
+
     }
 
     interface TaskPeriodConst {
@@ -1445,6 +1450,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      */
     public List<SsEmpTaskBO> queryByTaskId(SsEmpTaskBO ssEmpTaskBO) {
         return baseMapper.queryByTaskId(ssEmpTaskBO);
+    }
+
+    /**
+     * 查询任务单信息
+     * @param ssEmpTaskBO
+     */
+    public List<SsEmpTaskBO> queryByBusinessInterfaceId(SsEmpTaskBO ssEmpTaskBO) {
+        return baseMapper.queryByBusinessInterfaceId(ssEmpTaskBO);
     }
 
     /**
