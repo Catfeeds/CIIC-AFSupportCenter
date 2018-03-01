@@ -88,4 +88,11 @@ public interface UninsuredMedicalMapper extends BaseMapper<UninsuredMedical> {
      * @return
      */
     List<EmpBankRefundBO> selectUnSync();
+
+    /**
+     * 查询银行退票数据
+     * @param
+     * @return
+     */
+    List<EmpBankRefundBO> selectBankRefund();
 }

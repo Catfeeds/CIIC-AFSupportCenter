@@ -4,12 +4,10 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.host.messageBus;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.company.AfCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpInsuranceDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeQueryDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfFullEmployeeDTO;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfCompanyProxy;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.AfTpaTaskService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.SupplyMedicalInvoiceService;
@@ -48,10 +46,17 @@ public class KafkaReceiver {
     private AfEmployeeCompanyProxy afEmployeeCompanyProxy;
 
     @Autowired
-    private AfCompanyProxy afCompanyProxy;
+    private EmployeeInfoProxy employeeInfoProxy;
 
     @Autowired
-    private EmployeeInfoProxy employeeInfoProxy;
+    private SupplyMedicalInvoiceService supplyMedicalInvoiceService;
+    private Object PayApplyPayStatusDTO;
+
+    @Autowired
+    private EmployeePaymentJobService employeePaymentService;
+
+    @Autowired
+    private HealthMedicalJobService healthMedicalJobService;
 
     @StreamListener(MsgConstants.AFCompanyCenter.AF_EMP_IN)
     public void receiveBaseAdjustYearlyNonlocal(Message<TaskCreateMsgDTO> message) {
@@ -66,8 +71,32 @@ public class KafkaReceiver {
             // 读客服中心接口，插入任务单表
             res = insertTaskTb(taskMsgDTO, 1);
         }
+    }
 
-        // 判断是否退保任务单
+    /**
+     * 财务驳回
+     * @param dto
+     */
+    @StreamListener(TaskSink.Financial_Rejected)
+    public void receiveFinancialRejected(PayApplyPayStatusDTO dto) {
+        if(SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
+            employeePaymentService.syncSettleCenterStatus(dto);
+        } else {
+            healthMedicalJobService.syncSettleCenterStatus(dto);
+        }
+    }
+
+    /**
+     * 银行退票
+     * @param dto
+     */
+    @StreamListener(TaskSink.Return_Ticket)
+    public void receiveReturn_Ticket(PayApplyReturnTicketDTO dto) {
+        if(SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
+            employeePaymentService.handlePaymentRefund(dto);
+        } else {
+            healthMedicalJobService.handlePaymentRefund(dto);
+        }
     }
 
     /**

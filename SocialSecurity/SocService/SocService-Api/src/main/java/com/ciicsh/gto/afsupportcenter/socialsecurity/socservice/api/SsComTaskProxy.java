@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api;
 
 import com.ciicsh.common.entity.JsonResult;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.ComTaskParamDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComTaskDTO;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,5 +24,8 @@ public interface SsComTaskProxy {
      */
     @PostMapping("/saveComTask")
     JsonResult saveSsComTask(@RequestBody SsComTaskDTO ssComTaskDTO);
+
+    @RequestMapping("/getComTask")
+    JsonResult getComTask(@RequestBody ComTaskParamDTO paramDTO);
 
 }
