@@ -73,7 +73,7 @@
           ON
             T2.month_emp_change_id = T1.month_emp_change_id
             AND T2.is_active = '1'
-            AND T2.statement_id = #{statementId,jdbcType=BIGINT}
+            AND T1.month_emp_change_id = #{monthEmpChangeId,jdbcType=BIGINT}
           LEFT JOIN
             emp_employee T3
             ON

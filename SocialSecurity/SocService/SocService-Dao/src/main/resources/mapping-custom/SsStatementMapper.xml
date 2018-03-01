@@ -6,6 +6,8 @@
     <!-- 表单展示查询映射结果 -->
     <resultMap id="DtoResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementBO">
         <id column="statement_id" property="statementId" />
+        <id column="month_emp_change_id" property="monthEmpChangeId" />
+
         <result column="com_account_id" property="comAccountId" />
         <result column="com_account_name" property="comAccountName" />
         <result column="ss_month" property="ssMonth" />
@@ -40,7 +42,7 @@
     <select id="statementQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementBO" resultMap="DtoResultMap">
 
         SELECT
-        s.statement_id,mec.com_account_id,mec.ss_month,mec.compute_type as 'imp_file_type',s.imp_file_name,
+        mec.month_emp_change_id,s.statement_id,mec.com_account_id,mec.ss_month,mec.compute_type as 'imp_file_type',s.imp_file_name,
         s.imp_file_path,s.statement_user_id,s.statement_time,s.imp_record_sum,s.diff_sum_by_emp,s.diff_sum_by_item
         ,ca.com_account_name
         FROM ss_month_emp_change mec
@@ -53,10 +55,10 @@
                 AND s.statement_id = #{statementId,jdbcType=VARCHAR}
             </if>
             <if test = "ssMonth != null and ssMonth != ''">
-                AND s.ss_month = #{ssMonth,jdbcType=VARCHAR}
+                AND mec.ss_month = #{ssMonth,jdbcType=VARCHAR}
             </if>
             <if test = "comAccountId != null and comAccountId != ''">
-                AND s.com_account_id = #{comAccountId,jdbcType=VARCHAR}
+                AND ca.ss_account = #{comAccountId,jdbcType=VARCHAR}
             </if>
             <if test = "impFileType != null and impFileType != ''">
                 AND s.imp_file_type = #{impFileType,jdbcType=VARCHAR}

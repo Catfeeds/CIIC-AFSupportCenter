@@ -108,7 +108,8 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         if(val <= 0){
             //新增支付信息
             boolean result = addPaymentCom(accountComExt,paymentMonth);
-            if(result){
+        }
+           // if(result){
                 /*****生成雇员社保明细****/
                 //如果数据已经存在，先删除已经存在的数据(标准数据)
                 this.delMonthChangeInfos(accountComExt.getComAccountId(),paymentMonth,1);
@@ -140,8 +141,11 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
                 paymentDetailMapper.delPaymentDetail(accountComExt.getComAccountId(),paymentMonth);
                 //第二步：生成数据
                 this.createPaymentDetail(allMonthChargeExts,accountComExt.getComAccountId(),paymentMonth);
-            }
-        }
+
+                /*****更新paymentCom表中的合计金额*****/
+                paymentComMapper.updateMonthChargeTotalAmount(accountComExt.getComAccountId(),paymentMonth);
+          //  }
+
     }
 
 
