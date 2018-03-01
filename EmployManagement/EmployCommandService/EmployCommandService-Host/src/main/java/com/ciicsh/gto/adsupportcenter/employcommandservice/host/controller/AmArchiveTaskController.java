@@ -57,6 +57,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     @Autowired
     private  IAmResignService amResignService;
 
+    @Autowired
+    private IAmEmpTaskService taskService;
+
     @RequestMapping("/queryAmArchive")
     public JsonResult<PageRows> queryAmArchive(PageInfo pageInfo){
         PageRows<AmEmploymentBO> result = business.queryAmArchive(pageInfo);
@@ -149,18 +152,22 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     }
 
     @RequestMapping("/archiveDetailInfoQuery")
-    public JsonResult archiveDetailInfoQuery(AmEmploymentBO amEmploymentBO){
+    public JsonResult archiveDetailInfoQuery(AmTaskParamBO amTaskParamBO){
+
+        Map<String,Object>  map = taskService.getInformation(amTaskParamBO);
+        AmEmpTaskBO customBO = (AmEmpTaskBO)map.get("customBO");//客户信息
+        AmEmpTaskBO employeeBO = (AmEmpTaskBO)map.get("employeeBO");//雇佣信息
 
         PageInfo pageInfo = new PageInfo();
         JSONObject params = new JSONObject();
-        params.put("employeeId",amEmploymentBO.getEmployeeId());
-        params.put("remarkType",amEmploymentBO.getRemarkType());
+        params.put("employeeId",amTaskParamBO.getEmployeeId());
+        params.put("remarkType",amTaskParamBO.getRemarkType());
         pageInfo.setParams(params);
 
         Map<String,Object>  param = new HashMap<>();
-        param.put("employmentId",amEmploymentBO.getEmploymentId());
-        param.put("employeeId",amEmploymentBO.getEmployeeId());
-        param.put("companyId",amEmploymentBO.getCompanyId());
+        param.put("employmentId",amTaskParamBO.getEmploymentId());
+        param.put("employeeId",amTaskParamBO.getEmployeeId());
+        param.put("companyId",amTaskParamBO.getCompanyId());
         //用工档案
         List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchiveList(param);
         //用工备注
@@ -174,6 +181,10 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
 
         Map<String, Object> resultMap = new HashMap<>();
+        //客户信息
+        resultMap.put("customerInfo",customBO);
+        //雇员信息
+        resultMap.put("amEmpTaskBO",employeeBO);
 
         if(null!=amArchiveBOList&&amArchiveBOList.size()>0)
         {

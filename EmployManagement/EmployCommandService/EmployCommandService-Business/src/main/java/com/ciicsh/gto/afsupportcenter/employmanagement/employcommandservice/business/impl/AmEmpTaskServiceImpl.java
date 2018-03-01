@@ -1,7 +1,13 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeQueryDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfFullEmployeeDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmpTaskBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmTaskParamBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpMaterialService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpMaterial;
@@ -18,6 +24,8 @@ import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoQueryDTO
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,11 +46,15 @@ import java.util.Map;
 @Service
 public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask> implements IAmEmpTaskService {
 
+    private final static Logger logger = LoggerFactory.getLogger(AmEmpTaskServiceImpl.class);
+
     @Autowired
     private IAmEmpMaterialService  amEmpMaterialService;
 
     @Autowired
     private CommonApiUtils employeeInfoProxy;
+
+
 
     @Override
     public PageRows<AmEmpTaskBO> queryAmEmpTask(PageInfo pageInfo) {
@@ -109,23 +121,18 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
         AmEmpTask amEmpTask = new AmEmpTask();
         amEmpTask.setTaskId(taskMsgDTO.getTaskId());
+        amEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
         //TODO 调用刘玉庭接口传入taskMsgDTO.getMissionId()返回数据
-        Integer empCompanyId = (Integer) taskMsgDTO.getVariables().get("empCompanyId");
+        AfEmployeeInfoDTO dto = employeeInfoProxy.callInf(taskMsgDTO);
+        AfFullEmployeeDTO empDTO = dto.getEmployee();
+        AfEmployeeCompanyDTO employeeCompany = dto.getEmployeeCompany();
 
-        Map<String,Object> param = new HashMap<>();
-        param.put("empCompanyId",empCompanyId);
-        AmEmpTaskBO bo = baseMapper.selectEmployId(param);
-
-        if(null!=bo){
-            amEmpTask.setCompanyId(bo.getCompanyId());
-            amEmpTask.setEmployeeId(bo.getEmployeeId());
-            amEmpTask.setTaskFormContent(JSON.toJSONString(taskMsgDTO.getVariables()));
-        }
+        amEmpTask.setEmployeeId(empDTO.getEmployeeId());
+        amEmpTask.setCompanyId(employeeCompany.getCompanyId());
+        amEmpTask.setTaskFormContent(JSON.toJSONString(taskMsgDTO.getVariables()));
 
         String archiveDirection = null;
         String employeeNature = null;
-
-        //
         try {
             Map<String, Object> map = taskMsgDTO.getVariables();
             List<String> list = (List<String>) map.get("materialList");
@@ -138,24 +145,21 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             {
                 AmEmpMaterial amEmpMaterial = new AmEmpMaterial();
                 amEmpMaterial.setMaterialName(str);
-                amEmpMaterial.setEmployeeId(bo.getEmployeeId());
+                amEmpMaterial.setEmployeeId(empDTO.getEmployeeId());
                 amEmpMaterial.setSubmitMan("sys");
                 amEmpMaterial.setActive(true);
                 amEmpMaterial.setCreatedBy("sys");
                 amEmpMaterial.setCreatedTime(LocalDateTime.now());
                 amEmpMaterial.setModifiedBy("sys");
                 amEmpMaterial.setSubmitDate(LocalDate.now());
-
                 amEmpMaterialsList.add(amEmpMaterial);
             }
             amEmpMaterialService.insertBatch(amEmpMaterialsList);
         } catch (Exception e) {
 
         }
-        //
 
         amEmpTask.setSubmitterId("system");
-
         amEmpTask.setTaskCategory(taskCategory);
         amEmpTask.setTaskStatus(1);
         amEmpTask.setActive(true);
@@ -209,36 +213,39 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     }
 
     @Override
-    public List<Map<String, Object>> getInformation(Map<String, Object> param) {
-        Long empTaskId = (Long)param.get("empTaskId");
-        String employeeId = (String)param.get("employeeId");
-        String companyId = (String)param.get("companyId");
-        String idNum = (String)param.get("idNum");
-        Integer idCardType = (Integer)param.get("idCardType");
+    public Map<String, Object> getInformation(AmTaskParamBO param) {
+
+        Map<String,Object> map = new HashMap<>();
 
         AmEmpTaskBO customBO = new AmEmpTaskBO();//客户信息
         AmEmpTaskBO employeeBO = new AmEmpTaskBO();//雇佣信息
         AmEmpTask amEmpTask = null;
 
         try {
-            amEmpTask = super.selectById(empTaskId);
-            Map<String, Object> map = JSON.parseObject(amEmpTask.getTaskFormContent(),Map.class);
-            String archiveDirection = (String)map.get("archiveDirection");
-            String employeeNature = (String)map.get("employeeNature");
+            amEmpTask = super.selectById(param.getEmpTaskId());
+            Map<String, Object> tempMap = JSON.parseObject(amEmpTask.getTaskFormContent(),Map.class);
+            String archiveDirection = (String)tempMap.get("archiveDirection");
+            String employeeNature = (String)tempMap.get("employeeNature");
             employeeBO.setArchiveDirection(archiveDirection);
             employeeBO.setEmployeeNature(employeeNature);
         } catch (Exception e) {
-
+            logger.error(e.getMessage(),e);
         }
 
         EmployeeQueryDTO var1 = new EmployeeQueryDTO();
         var1.setBusinessType(1);
-        var1.setIdCardType(idCardType);
-        var1.setIdNum(idNum);
-        com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeInfoDTO> jsonResult = employeeInfoProxy.getEmployeeInfo(var1);//雇佣信息接口
+        var1.setIdCardType(param.getIdCardType());
+        var1.setIdNum(param.getIdNum());
+        com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeInfoDTO> jsonResult = null;//雇佣信息接口
 
-        EmployeeInfoDTO employeeInfoDTO = jsonResult.getData();
-        if(null!=employeeInfoDTO){
+        try {
+            jsonResult = employeeInfoProxy.getEmployeeInfo(var1);
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+        }
+
+        if(null!=jsonResult&&null!=jsonResult.getData()){
+            EmployeeInfoDTO employeeInfoDTO = jsonResult.getData();
             employeeBO.setEmployeeId(employeeInfoDTO.getEmployeeId());
             employeeBO.setIdNum(employeeInfoDTO.getIdNum());
             employeeBO.setEmployeeName(employeeInfoDTO.getEmployeeName());
@@ -248,19 +255,25 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         }
 
         EmployeeHireInfoQueryDTO employeeHireInfoQueryDTO = new EmployeeHireInfoQueryDTO();
-        employeeHireInfoQueryDTO.setCompanyId(companyId);
-        employeeHireInfoQueryDTO.setEmployeeId(employeeId);
+        employeeHireInfoQueryDTO.setCompanyId(param.getCompanyId());
+        employeeHireInfoQueryDTO.setEmployeeId(param.getEmployeeId());
+        com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeHireInfoDTO> employeeHireInfo = null;//雇佣雇佣信息接口
 
-        com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeHireInfoDTO> employeeHireInfo = employeeInfoProxy.getEmployeeHireInfo(employeeHireInfoQueryDTO);//雇佣雇佣信息接口
+        try {
+            employeeHireInfo = employeeInfoProxy.getEmployeeHireInfo(employeeHireInfoQueryDTO);
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+        }
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         if(employeeHireInfo!=null&&null!=employeeHireInfo.getData()){
             EmployeeHireInfoDTO employeeHireInfoDTO = employeeHireInfo.getData();
-            employeeBO.setFirstInDate(sdf.format(employeeHireInfoDTO.getFirstInDate()));
-            employeeBO.setFirstInCompanyDate(sdf.format(employeeHireInfoDTO.getFirstInCompanyDate()));
+            employeeBO.setFirstInDate(employeeHireInfoDTO.getFirstInDate()==null?"":sdf.format(employeeHireInfoDTO.getFirstInDate()));
+            employeeBO.setFirstInCompanyDate(employeeHireInfoDTO.getFirstInCompanyDate()==null?"":sdf.format(employeeHireInfoDTO.getFirstInCompanyDate()));
             employeeBO.setOrganizationCode(employeeHireInfoDTO.getOrganizationCode());
             employeeBO.setPosition(employeeHireInfoDTO.getPosition());
-            employeeBO.setLaborStartDate(sdf.format(employeeHireInfoDTO.getLaborStartDate()));
-            employeeBO.setLaborEndDate(sdf.format(employeeHireInfoDTO.getLaborEndDate()));
+            employeeBO.setLaborStartDate(employeeHireInfoDTO.getLaborStartDate()==null?"":sdf.format(employeeHireInfoDTO.getLaborStartDate()));
+            employeeBO.setLaborEndDate(employeeHireInfoDTO.getLaborEndDate()==null?"":sdf.format(employeeHireInfoDTO.getLaborEndDate()));
 
             customBO.setServiceCenter(employeeHireInfoDTO.getServiceCenter());
             customBO.setEmployeeCenterOperator(employeeHireInfoDTO.getEmployeeCenterOperator());
@@ -268,7 +281,40 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             customBO.setCompanyName(employeeHireInfoDTO.getCompanyName());
             customBO.setCompanyId(employeeHireInfoDTO.getCompanyId());
         }
-        return null;
+
+        map.put("customBO",customBO);
+        map.put("employeeBO",employeeBO);
+
+        return map;
+    }
+
+    @Override
+    public boolean insertTaskFire(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) throws Exception {
+        AmEmpTask amEmpTask = new AmEmpTask();
+        amEmpTask.setTaskId(taskMsgDTO.getTaskId());
+        amEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
+
+        //TODO 调用刘玉庭接口传入taskMsgDTO.getMissionId()返回数据
+        AfEmployeeInfoDTO dto = employeeInfoProxy.callInf(taskMsgDTO);
+        AfFullEmployeeDTO empDTO = dto.getEmployee();
+        AfEmployeeCompanyDTO employeeCompany = dto.getEmployeeCompany();
+
+        amEmpTask.setOutReason(employeeCompany.getOutReason().toString());
+        amEmpTask.setOutDate(employeeCompany.getOutDate());
+        amEmpTask.setEmployeeId(empDTO.getEmployeeId());
+        amEmpTask.setCompanyId(employeeCompany.getCompanyId());
+        amEmpTask.setSubmitterId("system");
+        amEmpTask.setTaskCategory(taskCategory);
+        amEmpTask.setTaskStatus(1);
+        amEmpTask.setActive(true);
+        amEmpTask.setModifiedBy("system");
+        amEmpTask.setModifiedTime(LocalDateTime.now());
+        amEmpTask.setCreatedBy("system");
+        amEmpTask.setCreatedTime(LocalDateTime.now());
+
+        baseMapper.insert(amEmpTask);
+
+        return true;
     }
 
 
