@@ -99,15 +99,29 @@ public class KafkaReceiver {
      *
      * @param message
      */
-//    @StreamListener(TaskSink.AF_EMP_COMPANY_CHANGE)
-//    public void receiveEmpCompanyChange(Message<TaskCreateMsgDTO> message) {
-//        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
-//        //社保
-//        if (TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
-//            saveSsEmpTask(taskMsgDTO, 12);
-//            logger.info("receiveEmpCompanyChange: " + JSON.toJSONString(taskMsgDTO));
-//        }
-//    }
+    @StreamListener(TaskSink.AF_EMP_COMPANY_CHANGE)
+    public void receiveEmpCompanyChange(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
+        //社保翻牌新进或转入
+        if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())) {
+            //获取任务单参数
+            Map<String, Object> paramMap = taskMsgDTO.getVariables();
+            if (paramMap != null && paramMap.get("socialType") != null) {
+                int socialType = Integer.parseInt(paramMap.get("socialType").toString());
+                //新进转入判断，任务单保存时转换成支持中心的翻牌新进&翻牌转入类型
+                if (SocialSecurityConst.SOCIAL_TYPE_1 == socialType) {
+                    saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_12));
+                } else if (SocialSecurityConst.SOCIAL_TYPE_2 == socialType) {
+                    saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_13));
+                }
+            }
+            logger.info("receiveEmpCompanyChange: " + JSON.toJSONString(taskMsgDTO));
+            //翻牌转出
+        } else if (TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
+            saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_14));
+            logger.info("receiveEmpCompanyChange: " + JSON.toJSONString(taskMsgDTO));
+        }
+    }
 
     /**
      * 订阅雇员服务协议调整任务单
@@ -149,7 +163,7 @@ public class KafkaReceiver {
                     ssEmpTaskBO.setCompanyId(paramMap.get("companyId").toString());
                     List<SsEmpTaskBO> resList = ssEmpTaskService.queryByTaskId(ssEmpTaskBO);
                     //如果查询到历史任务单，则直接进行更新操作
-                    if(resList != null && resList.size()>0){
+                    if (resList != null && resList.size() > 0) {
                         ssEmpTaskFrontService.updateEmpTaskTc(taskMsgDTO, dto);
                     }
                     //已办理任务单
@@ -177,6 +191,7 @@ public class KafkaReceiver {
 
     /**
      * 订阅财务付款申请回调任务单
+     *
      * @param message
      * @return
      */
@@ -186,7 +201,7 @@ public class KafkaReceiver {
         logger.info("start applyFinancePayment:" + JSON.toJSONString(taskMsgDTO));
         if (taskMsgDTO.getBusinessType() == 1) {
             try {
-                ssPaymentComService.savePaymentInfo(taskMsgDTO.getBusinessPkId(), taskMsgDTO.getRemark(),taskMsgDTO.getPayStatus());
+                ssPaymentComService.savePaymentInfo(taskMsgDTO.getBusinessPkId(), taskMsgDTO.getRemark(), taskMsgDTO.getPayStatus());
                 logger.info("end applyFinancePayment:" + JSON.toJSONString(taskMsgDTO));
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
@@ -196,6 +211,7 @@ public class KafkaReceiver {
 
     /**
      * 订阅客服中心调用更新企业任务单
+     *
      * @param message
      * @return
      */
@@ -215,6 +231,7 @@ public class KafkaReceiver {
 
     /**
      * 从接口获取数据并保存到社保雇员任务单表
+     *
      * @param taskCreateMsgDTO
      * @return
      */
@@ -233,6 +250,7 @@ public class KafkaReceiver {
 
     /**
      * 从接口获取数据并保存到社保雇员任务单表
+     *
      * @param taskMsgDTO
      * @param socialType
      * @return

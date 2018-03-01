@@ -1,9 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.util.constant;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 常量类
@@ -117,19 +114,40 @@ public interface SocialSecurityConst {
      *特殊操作
      */
     String TASK_TYPE_9 = "9";
+    /**
+     *翻牌新进
+     */
+    String TASK_TYPE_12 = "12";
+    /**
+     *翻牌转入
+     */
+    String TASK_TYPE_13 = "13";
+    /**
+     *翻牌转出
+     */
+    String TASK_TYPE_14 = "14";
+    /**
+     *翻牌封存
+     */
+    String TASK_TYPE_15 = "15";
+
 
     //任务类型(已创建字典，请从字典服务取得)
     @Deprecated
-    public static final Map<String, String> TASK_TYPE_MAP = new HashMap<String, String>() {
+    public static final Map<String, String> TASK_TYPE_MAP = new LinkedHashMap<String, String>() {
         {
-            put("1", "新进");
-            put("2", "转入");
-            put("3", "调整");
-            put("4", "补缴");
-            put("5", "转出");
-            put("6", "封存");
-            put("7", "退账");
-            put("9", "特殊操作");
+            put(TASK_TYPE_1, "新进");
+            put(TASK_TYPE_2, "转入");
+            put(TASK_TYPE_3, "调整");
+            put(TASK_TYPE_4, "补缴");
+            put(TASK_TYPE_5, "转出");
+            put(TASK_TYPE_6, "封存");
+            put(TASK_TYPE_7, "退账");
+            put(TASK_TYPE_9, "特殊操作");
+            put(TASK_TYPE_12, "翻牌新进");
+            put(TASK_TYPE_13, "翻牌转入");
+            put(TASK_TYPE_14, "翻牌转出");
+            put(TASK_TYPE_15, "翻牌封存");
         }
     };
 
@@ -284,4 +302,13 @@ public interface SocialSecurityConst {
      * 政策类型 1-社保 2-公积金 3-补充公积金（此定义从内控得来）
      */
     int POLICY_TYPE_SUPPLEMENTARY_HOUSING_FUND = 3;
+
+    /**
+     * 任务单传递过来的社保办理类型 1-新进 2-转入
+     */
+    int SOCIAL_TYPE_1 = 1;
+    /**
+     * 任务单传递过来的社保办理类型 1-新进 2-转入
+     */
+    int SOCIAL_TYPE_2 = 2;
 }
