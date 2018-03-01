@@ -113,7 +113,7 @@ public class KafkaReceiver {
                 // 2.1.2 如果有，获取读取亲属信息
                 // 2.2   查询，投保任务单数据完善和补充
                 // 投保任务单
-                if (serviceItem == null || serviceItem.contains("雇员")) {
+                if (serviceItem == null || serviceItem.contains("本人")) {
                     task.setType(1);
                     task.setStatus(2);
                     task.setAssociatedInsurantId(empDTO.getEmployeeId());
