@@ -230,25 +230,27 @@
     <!-- 3：审核未同步 -->
     <select id="selectAudited" resultMap="PaymentResultMap">
         SELECT
-        <include refid="Payment_Column_List"/>
+          <include refid="Payment_Column_List"/>
         FROM
-        gtobusinessdb.hm_supply_medical_acceptance p, emp_company_bankcard_relation cbr, emp_bankcard b
+          gtobusinessdb.hm_supply_medical_acceptance p, emp_company_bankcard_relation cbr, emp_bankcard b
         WHERE
-        b.bankcard_id = cbr.bankcard_id
+          b.bankcard_id = cbr.bankcard_id
         AND
-        cbr.company_id = p.company_id
+          cbr.company_id = p.company_id
         AND
-        b.employee_id = p.employee_id
+          b.employee_id = p.employee_id
         AND
-        p.status = 2
+          p.total_insurance_company_money > 0
         AND
-        cbr.usage = 2
+          p.status = 2
         AND
-        b.status = 1
+          cbr.usage = 2
         AND
-        p.is_active = 1
+          b.status = 1
         AND
-        cbr.is_active = 1
+          p.is_active = 1
+        AND
+          cbr.is_active = 1
     </select>
 
     <!-- 6：银行退票 -->
@@ -256,38 +258,40 @@
         SELECT
         <include refid="Payment_Column_List"></include>
         FROM
-        gtobusinessdb.hm_supply_medical_acceptance p,
-        gtobusinessdb.emp_bank_refund r,
-        gtobusinessdb.emp_company_bankcard_relation cbr,
-        gtobusinessdb.emp_bankcard b
+            gtobusinessdb.hm_supply_medical_acceptance p,
+            gtobusinessdb.emp_bank_refund r,
+            gtobusinessdb.emp_company_bankcard_relation cbr,
+            gtobusinessdb.emp_bankcard b
         WHERE
-        p.status = 6
+          p.status = 6
         AND
-        p.acceptance_id = r.apply_id
+          p.acceptance_id = r.apply_id
         AND
-        r.business_id = 2
+          r.business_id = 2
         AND
-        r.modified_time <![CDATA[ >= ]]> DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s')
+          r.modified_time <![CDATA[ >= ]]> DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s')
         AND
-        r.modified_time <![CDATA[ <= ]]> DATE_ADD(CURDATE(), INTERVAL 86399 SECOND)
+          r.modified_time <![CDATA[ <= ]]> DATE_ADD(CURDATE(), INTERVAL 86399 SECOND)
         AND
-        r. status = 1
+          r. status = 1
         AND
-        r.company_id = cbr.company_id
+          r.company_id = cbr.company_id
         AND
-        cbr.bankcard_id = b.bankcard_id
+          cbr.bankcard_id = b.bankcard_id
         AND
-        r.employee_id = p.employee_id
+          r.employee_id = p.employee_id
         AND
-        cbr.usage = 2
+          cbr.usage = 2
         AND
-        p.is_active = 1
+          p.total_insurance_company_money > 0
         AND
-        r.is_active = 1
+          p.is_active = 1
         AND
-        cbr.is_active = 1
+          r.is_active = 1
         AND
-        b.status = 1
+          cbr.is_active = 1
+        AND
+          b.status = 1
     </select>
 
     <!-- 未同步 -->

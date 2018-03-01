@@ -165,6 +165,13 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
             }
         }
     }
+//    public void handlePaymentRefund (PayApplyReturnTicketDTO dto) {
+//        List<EmployeeReturnTicketDTO> detail = dto.getEmployeeReturnTicketDTOList();
+//        if (!detail.isEmpty()) {
+//            detail.forEach(pay->this.updateSupplyMedicalRefundStatus(dto.getBusinessPkId().intValue(), pay));
+//        }
+//    }
+
 
     /**
      * @description 同步结算中心驳回，支付成功状态
@@ -180,7 +187,7 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
         EmployeePaymentStatusBO statusBO = new EmployeePaymentStatusBO(
             dto.getBusinessPkId().intValue(), businessId, dto.getPayStatus(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
         );
-        if(SysConstants.BusinessId.SUPPLY_MEDICAL.equals(businessId)){
+        if(SysConstants.BusinessId.SUPPLY_MEDICAL.equals(businessId)) {
             supplyMedicalAcceptanceMapper.syncStatus(statusBO);
         } else if(SysConstants.BusinessId.UNINSURED_MEDICAL.equals(businessId)) {
             uninsuredMedicalMapper.syncStatus(statusBO);
