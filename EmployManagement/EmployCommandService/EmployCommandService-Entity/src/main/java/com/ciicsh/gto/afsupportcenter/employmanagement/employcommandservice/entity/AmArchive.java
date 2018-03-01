@@ -32,7 +32,7 @@ public class AmArchive implements Serializable {
      * 客户Id
      */
 	@TableField("company_id")
-	private Long companyId;
+	private String companyId;
     /**
      * 雇员id
      */
@@ -326,11 +326,11 @@ public class AmArchive implements Serializable {
 		this.employmentId = employmentId;
 	}
 
-	public Long getCompanyId() {
+	public String getCompanyId() {
 		return companyId;
 	}
 
-	public void setCompanyId(Long companyId) {
+	public void setCompanyId(String companyId) {
 		this.companyId = companyId;
 	}
 

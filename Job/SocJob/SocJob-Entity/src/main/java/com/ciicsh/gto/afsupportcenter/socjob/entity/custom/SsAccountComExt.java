@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 public class SsAccountComExt {
     private Long comAccountId;
     private String customerId;
-    private String companyId;
     private String supplierId;
     private Integer ssAccountType;
     private String ssAccount;

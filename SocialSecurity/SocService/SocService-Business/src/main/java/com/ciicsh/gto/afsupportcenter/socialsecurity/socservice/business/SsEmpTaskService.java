@@ -75,5 +75,11 @@ public interface SsEmpTaskService extends IService<SsEmpTask> {
      */
     List<SsEmpTaskBO> queryByTaskId(SsEmpTaskBO ssEmpTaskBO);
 
+    /**
+     * 查询任务单信息
+     * @param ssEmpTaskBO
+     */
+    List<SsEmpTaskBO> queryByBusinessInterfaceId(SsEmpTaskBO ssEmpTaskBO);
+
     SsEmpTaskBO selectIdNumByEmployeeId(String employeeId);
 }

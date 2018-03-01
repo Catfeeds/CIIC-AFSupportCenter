@@ -8,7 +8,7 @@ spring:
   application:
     name: support-center-employee-site-service
   profiles:
-    active: dev
+    active: fat
   cloud:
     stream:
       bindings:

@@ -48,6 +48,9 @@ public class AmEmpMaterial implements Serializable {
      */
 	@TableField("reject_date")
 	private LocalDate rejectDate;
+
+    @TableField("reject_reason")
+    private String rejectReason;
     /**
      * 批退人
      */
@@ -84,6 +87,25 @@ public class AmEmpMaterial implements Serializable {
      */
     @TableField("employee_id")
     private String employeeId;
+
+    @TableField("submit_man")
+    private  String submitMan;
+
+    public String getRejectReason() {
+        return rejectReason;
+    }
+
+    public void setRejectReason(String rejectReason) {
+        this.rejectReason = rejectReason;
+    }
+
+    public String getSubmitMan() {
+        return submitMan;
+    }
+
+    public void setSubmitMan(String submitMan) {
+        this.submitMan = submitMan;
+    }
 
     public String getEmployeeId() {
         return employeeId;

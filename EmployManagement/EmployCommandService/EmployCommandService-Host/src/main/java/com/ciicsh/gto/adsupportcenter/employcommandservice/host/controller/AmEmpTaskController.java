@@ -1,26 +1,27 @@
 package com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.CommonApiUtils;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmArchive;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmployment;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmRemark;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -123,33 +124,68 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     @Log("用工办理查询")
     @RequestMapping("/employeeDetailInfoQuery")
     public JsonResult employeeDetailInfoQuery(AmEmpTaskBO amEmpTaskBO) {
-        EmployeeQueryDTO var1 = new EmployeeQueryDTO();
-        var1.setIdNum(amEmpTaskBO.getIdNum());
-        var1.setIdCardType(amEmpTaskBO.getIdCardType());
-        var1.setBusinessType(1);
 
-       com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeInfoDTO> jsonResult = employeeInfoProxy.getEmployeeInfo(var1);
+        AmEmpTaskBO customBO = new AmEmpTaskBO();//客户信息
+        AmEmpTaskBO employeeBO = new AmEmpTaskBO();//雇佣信息
+        AmEmpTask amEmpTask = null;
 
-        EmployeeInfoDTO employeeInfoDTO = jsonResult.getData();
+        try {
+            amEmpTask =business.selectById(amEmpTaskBO.getEmpTaskId());
+            Map<String, Object> map = JSON.parseObject(amEmpTask.getTaskFormContent(),Map.class);
+            String archiveDirection = (String)map.get("archiveDirection");
+            String employeeNature = (String)map.get("employeeNature");
+            employeeBO.setArchiveDirection(archiveDirection);
+            employeeBO.setEmployeeNature(employeeNature);
+        } catch (Exception e) {
 
-        AmEmpTaskBO amEmpTaskBO1 = new AmEmpTaskBO();
-        if(null!=employeeInfoDTO){
-            amEmpTaskBO1.setEmployeeId(employeeInfoDTO.getEmployeeId());
-            amEmpTaskBO1.setIdNum(employeeInfoDTO.getIdNum());
-            amEmpTaskBO1.setEmployeeName(employeeInfoDTO.getEmployeeName());
-            amEmpTaskBO1.setSex(employeeInfoDTO.getGender()==0?"男":"女");
-            amEmpTaskBO1.setMobile(employeeInfoDTO.getMobile());
-            amEmpTaskBO1.setResidenceAddress(employeeInfoDTO.getResidenceAddress());
         }
 
-        AmEmpTaskBO accout = business.queryAccout(amEmpTaskBO.getCompanyId());
+        EmployeeQueryDTO var1 = new EmployeeQueryDTO();
+        var1.setBusinessType(1);
+        var1.setIdCardType(amEmpTaskBO.getIdCardType());
+        var1.setIdNum(amEmpTaskBO.getIdNum());
+        com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeInfoDTO> jsonResult = employeeInfoProxy.getEmployeeInfo(var1);//雇佣信息接口
+
+        EmployeeInfoDTO employeeInfoDTO = jsonResult.getData();
+        if(null!=employeeInfoDTO){
+            employeeBO.setEmployeeId(employeeInfoDTO.getEmployeeId());
+            employeeBO.setIdNum(employeeInfoDTO.getIdNum());
+            employeeBO.setEmployeeName(employeeInfoDTO.getEmployeeName());
+            employeeBO.setSex(employeeInfoDTO.getGender()==0?"男":"女");
+            employeeBO.setMobile(employeeInfoDTO.getMobile());
+            employeeBO.setResidenceAddress(employeeInfoDTO.getResidenceAddress());
+        }
+
+        EmployeeHireInfoQueryDTO  employeeHireInfoQueryDTO = new EmployeeHireInfoQueryDTO();
+        employeeHireInfoQueryDTO.setCompanyId(amEmpTaskBO.getCompanyId());
+        employeeHireInfoQueryDTO.setEmployeeId(amEmpTaskBO.getEmployeeId());
+
+        com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeHireInfoDTO> employeeHireInfo = employeeInfoProxy.getEmployeeHireInfo(employeeHireInfoQueryDTO);//雇佣雇佣信息接口
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        if(employeeHireInfo!=null&&null!=employeeHireInfo.getData()){
+            EmployeeHireInfoDTO employeeHireInfoDTO = employeeHireInfo.getData();
+            employeeBO.setFirstInDate(sdf.format(employeeHireInfoDTO.getFirstInDate()));
+            employeeBO.setFirstInCompanyDate(sdf.format(employeeHireInfoDTO.getFirstInCompanyDate()));
+            employeeBO.setOrganizationCode(employeeHireInfoDTO.getOrganizationCode());
+            employeeBO.setPosition(employeeHireInfoDTO.getPosition());
+            employeeBO.setLaborStartDate(sdf.format(employeeHireInfoDTO.getLaborStartDate()));
+            employeeBO.setLaborEndDate(sdf.format(employeeHireInfoDTO.getLaborEndDate()));
+
+            customBO.setServiceCenter(employeeHireInfoDTO.getServiceCenter());
+            customBO.setEmployeeCenterOperator(employeeHireInfoDTO.getEmployeeCenterOperator());
+            customBO.setCustomServiceOperator(employeeHireInfoDTO.getCustomServiceOperator());
+            customBO.setCompanyName(employeeHireInfoDTO.getCompanyName());
+            customBO.setCompanyId(employeeHireInfoDTO.getCompanyId());
+        }
+
+        AmEmpTaskBO accout = business.queryAccout(amEmpTaskBO.getCompanyId());//社保信息
 
         if(null!=accout){
-            amEmpTaskBO1.setUkey(accout.getUkey());
-            amEmpTaskBO1.setAccoutModified(accout.getAccoutModified());
-            amEmpTaskBO1.setSettlementArea(accout.getSettlementArea());
-            amEmpTaskBO1.setSsAccount(accout.getSsAccount());
-            amEmpTaskBO1.setSsPwd(accout.getSsPwd());
+            employeeBO.setUkey(accout.getUkey());
+            employeeBO.setAccoutModified(accout.getAccoutModified());
+            employeeBO.setSettlementArea(accout.getSettlementArea());
+            employeeBO.setSsAccount(accout.getSsAccount());
+            employeeBO.setSsPwd(accout.getSsPwd());
         }
 
         AmEmpTaskBO bo = new AmEmpTaskBO();
@@ -159,8 +195,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         param.put("employeeId",amEmpTaskBO.getEmployeeId());
         param.put("companyId",amEmpTaskBO.getCompanyId());
 
-//      List<AmEmpTaskBO> list = business.queryAmEmpTaskById(param);
-
         //用工材料
         PageInfo pageInfo = new PageInfo();
         JSONObject params = new JSONObject();
@@ -169,7 +203,14 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         params.put("companyId",amEmpTaskBO.getCompanyId());
         pageInfo.setParams(params);
 
+        //用工材料
+        List<AmEmpMaterialBO> empMaterialList = new ArrayList<>();
         PageRows<AmEmpMaterialBO> result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
+        if(result!=null&&result.getRows().size()>0)
+        {
+            empMaterialList.addAll(result.getRows());
+        }
+
         //用工信息
         List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(param);
         //用工档案
@@ -187,10 +228,13 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         List<AmEmpTaskBO>  listCompany = business.queryCustom(amEmpTaskBO.getCompanyId());
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        //雇员信息
-        resultMap.put("amEmpTaskBO",amEmpTaskBO1);
 
-        resultMap.put("materialList",result);
+        //客户信息
+        resultMap.put("customerInfo",customBO);
+        //雇员信息
+        resultMap.put("amEmpTaskBO",employeeBO);
+
+        resultMap.put("materialList",empMaterialList);
 
         if(null!= resultEmployList&&resultEmployList.size()>0)
         {
@@ -295,6 +339,38 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     @RequestMapping("/deleteAmRemark")
     public JsonResult<Boolean>  deleteAmRemark(Long amRemarkId){
        boolean  result = amRemarkService.deleteAmRemark(amRemarkId);
+        return JsonResultKit.of(result);
+    }
+
+    @PostMapping("/receiveMaterial")
+    public JsonResult<Boolean> receiveMaterial(@RequestBody List<AmEmpMaterial> list){
+        for(AmEmpMaterial material:list)
+        {
+            material.setReceiveDate(LocalDate.now());
+            material.setReceiveMan("sys");
+        }
+
+        boolean result =  iAmEmpMaterialService.updateBatchById(list);
+        return JsonResultKit.of(result);
+    }
+
+    @PostMapping("/rejectMaterial")
+    public JsonResult<Boolean> rejectMaterial(@RequestBody List<AmEmpMaterial> list){
+        for(AmEmpMaterial material:list)
+        {
+            material.setRejectDate(LocalDate.now());
+            material.setRejectMan("sys");
+        }
+
+        boolean result =  iAmEmpMaterialService.updateBatchById(list);
+        return JsonResultKit.of(result);
+    }
+
+    @RequestMapping("/updateTaskStatus")
+    public  JsonResult<Boolean>  updateTaskStatus(String employmentId){
+        Map<String,Object>  param = new HashMap<>();
+        param.put("employmentId",employmentId);
+       boolean result = business.updateTaskStatus(param);
         return JsonResultKit.of(result);
     }
 

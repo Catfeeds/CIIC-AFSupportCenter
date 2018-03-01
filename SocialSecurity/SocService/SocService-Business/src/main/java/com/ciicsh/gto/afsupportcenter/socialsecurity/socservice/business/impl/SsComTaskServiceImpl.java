@@ -142,7 +142,7 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
     @Transactional(
         rollbackFor = {Exception.class}
     )
-    public boolean addOrUpdateCompanyTask(SsComTask ssComTask, SsComAccount ssComAccount, SsAccountRatio ssAccountRatio,SsAccountComRelation ssAccountComRelation) {
+    public String addOrUpdateCompanyTask(SsComTask ssComTask, SsComAccount ssComAccount, SsAccountRatio ssAccountRatio,SsAccountComRelation ssAccountComRelation) {
         //如果 账户ID为空 则添加  否则修改
         if (null == ssComAccount.getComAccountId()) {
             ssComAccount.setActive(true);
@@ -189,11 +189,11 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
                 ssComAccount.setBankAccountId((long) bankAccountId);
                 sComAccountMapper.updateById(ssComAccount);
             }else{
-                return false;
+                return "办理失败！调用银行信息接口出现异常。";
             }
 
         }
-        return true;
+        return "SUCC";
     }
 
 

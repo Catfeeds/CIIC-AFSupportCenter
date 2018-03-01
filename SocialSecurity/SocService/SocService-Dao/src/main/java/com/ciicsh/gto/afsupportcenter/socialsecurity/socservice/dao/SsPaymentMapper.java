@@ -11,10 +11,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
- * <p>
  * 社保支付批次 Mapper 接口
- * </p>
- *
  * @author HuangXing
  * @since 2017-12-01
  */

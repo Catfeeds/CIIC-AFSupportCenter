@@ -222,8 +222,14 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         if ( !retCheckResult.equals("")){//检查输入的内容是否重复
             return JsonResultKit.ofError(retCheckResult.substring(0,retCheckResult.length()-1));
         }
-        boolean result = business.addOrUpdateCompanyTask(ssComTask, ssComAccount, ssAccountRatio, ssAccountComRelation);
-        return JsonResultKit.of(result);
+        String result = business.addOrUpdateCompanyTask(ssComTask, ssComAccount, ssAccountRatio, ssAccountComRelation);
+        if (result.equals("SUCC")){
+            return JsonResultKit.of(true);
+        }else{
+            return JsonResultKit.ofError(result);
+        }
+
+
     }
 
     @Log("终止任务单的操作")
