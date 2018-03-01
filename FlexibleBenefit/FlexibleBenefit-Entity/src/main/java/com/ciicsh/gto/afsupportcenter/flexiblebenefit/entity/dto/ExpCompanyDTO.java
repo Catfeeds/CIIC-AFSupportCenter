@@ -9,15 +9,146 @@ import java.io.Serializable;
  */
 public class ExpCompanyDTO implements Serializable {
 
+    /**
+     * 公司编号
+     */
     private String companyId;
-
+    /**
+     * 公司名称
+     */
     private String title;
-
+    /**
+     * 服务产品id
+     */
     private String productId;
-
+    /**
+     * 基础产品id
+     */
     private String basicProductId;
-
+    /**
+     * 服务产品名称
+     */
     private String productName;
+    /**
+     * 人数
+     */
+    private Long count;
+    /**
+     * 客户经理
+     */
+    private String manager;
+    /**
+     * 客户总监
+     */
+    private String majordomo;
+    /**
+     * 公司联系人
+     */
+    private String linkmanName;
+    /**
+     * 手机
+     */
+    private String mobile;
+    /**
+     * 电话
+     */
+    private String telNum;
+    /**
+     * 地址
+     */
+    private String address;
+    /**
+     * 邮编
+     */
+    private String postCode;
+    /**
+     * 电子邮箱
+     */
+    private String email;
+    /**
+     * 传真号码
+     */
+    private String telautogramNum;
+
+    public Long getCount() {
+        return count;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
+    }
+
+    public String getManager() {
+        return manager;
+    }
+
+    public void setManager(String manager) {
+        this.manager = manager;
+    }
+
+    public String getMajordomo() {
+        return majordomo;
+    }
+
+    public void setMajordomo(String majordomo) {
+        this.majordomo = majordomo;
+    }
+
+    public String getLinkmanName() {
+        return linkmanName;
+    }
+
+    public void setLinkmanName(String linkmanName) {
+        this.linkmanName = linkmanName;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getTelNum() {
+        return telNum;
+    }
+
+    public void setTelNum(String telNum) {
+        this.telNum = telNum;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPostCode() {
+        return postCode;
+    }
+
+    public void setPostCode(String postCode) {
+        this.postCode = postCode;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getTelautogramNum() {
+        return telautogramNum;
+    }
+
+    public void setTelautogramNum(String telautogramNum) {
+        this.telautogramNum = telautogramNum;
+    }
 
     public String getCompanyId() {
         return companyId;
@@ -67,6 +198,16 @@ public class ExpCompanyDTO implements Serializable {
             ", productId='" + productId + '\'' +
             ", basicProductId='" + basicProductId + '\'' +
             ", productName='" + productName + '\'' +
+            ", count=" + count +
+            ", manager='" + manager + '\'' +
+            ", majordomo='" + majordomo + '\'' +
+            ", linkmanName='" + linkmanName + '\'' +
+            ", mobile='" + mobile + '\'' +
+            ", telNum='" + telNum + '\'' +
+            ", address='" + address + '\'' +
+            ", postCode='" + postCode + '\'' +
+            ", email='" + email + '\'' +
+            ", telautogramNum='" + telautogramNum + '\'' +
             '}';
     }
 }

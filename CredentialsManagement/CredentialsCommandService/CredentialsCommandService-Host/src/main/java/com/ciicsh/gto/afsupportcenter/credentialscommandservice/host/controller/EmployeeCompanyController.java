@@ -12,9 +12,15 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Employ
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.SelectionUtils;
 import com.ciicsh.gto.afsupportcenter.util.page.PageUtil;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeCommonInfoDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoQueryDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeIdQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
+import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +50,8 @@ public class EmployeeCompanyController {
     private EmployeeOtherService employeeOtherService;
     @Autowired
     private EmployeeInfoProxy employeeInfoProxy;
+    @Autowired
+    private CompanyProxy companyProxy;
 
     /**
      * 获取雇员列表
@@ -107,7 +115,7 @@ public class EmployeeCompanyController {
                 employeeService.addEmployee(employee);
                 employeeOtherService.addEmployeeOther(employeeOther);
             } else {
-                return JsonResult.faultMessage("雇员已存在，保存失败！");
+                return JsonResult.errorsInfo("1","雇员已存在，保存失败！");
             }
             return JsonResult.success(null);
         } else {
@@ -116,25 +124,44 @@ public class EmployeeCompanyController {
     }
 
     public String getEmpId() {
-        EmployeeQueryDTO employeeQueryDTO = new EmployeeQueryDTO();
-        EmployeeInfoDTO employeeInfoDTO = employeeInfoProxy.getEmployeeInfo(employeeQueryDTO).getData();
+        EmployeeIdQueryDTO employeeIdQueryDTO = new EmployeeIdQueryDTO();
+        EmployeeCommonInfoDTO employeeInfoDTO = employeeInfoProxy.getEmployeeCommon(employeeIdQueryDTO).getData();
         return employeeInfoDTO.getEmployeeId();
     }
 
     /**
      * 查询雇员详情
-     * @param idNum
-     * @param idCardType
+     * @param companyId
+     * @param employeeId
      * @param type
      * @return
      */
-    @GetMapping("/getItem")
-    public JsonResult getItem(Integer idCardType,String idNum,Integer type){
-        EmployeeQueryDTO employeeQueryDTO = new EmployeeQueryDTO();
-        employeeQueryDTO.setBusinessType(type);
-        employeeQueryDTO.setIdCardType(idCardType);
-        employeeQueryDTO.setIdNum(idNum);
-        EmployeeInfoDTO employeeInfo = employeeInfoProxy.getEmployeeInfo(employeeQueryDTO).getData();
-        return JsonResult.success(employeeInfo);
+    @GetMapping("/getEmpInfo")
+    public JsonResult getEmpInfo(Integer idCardType,String idNum,String companyId,String employeeId,Integer type){
+        if (type == 1 || type == 2 || type==3) {
+            EmployeeHireInfoQueryDTO employeeHireInfoQueryDTO = new EmployeeHireInfoQueryDTO();
+            employeeHireInfoQueryDTO.setCompanyId(companyId);
+            employeeHireInfoQueryDTO.setEmployeeId(employeeId);
+            EmployeeHireInfoDTO data = employeeInfoProxy.getEmployeeHireInfo(employeeHireInfoQueryDTO).getData();
+            return JsonResult.success(data);
+        } else {
+            EmployeeIdQueryDTO employeeIdQueryDTO = new EmployeeIdQueryDTO();
+            employeeIdQueryDTO.setIdCardType(idCardType);
+            employeeIdQueryDTO.setIdNum(idNum);
+            EmployeeCommonInfoDTO employeeInfo = employeeInfoProxy.getEmployeeCommon(employeeIdQueryDTO).getData();
+            return JsonResult.success(employeeInfo);
+        }
     }
+
+    /**
+     * 查询客户详情
+     * @param companyId
+     * @return
+     */
+    @GetMapping("/getCompanyInfo")
+    public JsonResult getCompanyInfo(String companyId){
+        AfCompanyDetailResponseDTO afCompanyInfo = companyProxy.afDetail(companyId).getObject();
+        return JsonResult.success(afCompanyInfo);
+    }
+
 }

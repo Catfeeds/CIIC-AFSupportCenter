@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Import;
 @MapperScan("com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao")
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.credentialscommandservice"})
 @EnableDiscoveryClient
-@EnableFeignClients({"com.ciicsh.gto.basicdataservice.api","com.ciicsh.gto.employeecenter.apiservice.api"})
+@EnableFeignClients({"com.ciicsh.gto.basicdataservice.api","com.ciicsh.gto.employeecenter.apiservice.api","com.ciicsh.gto.salecenter.apiservice.api"})
 @Import({CorsConfiguration.class, MybatisPlusConfig.class})
 public class CredentialsApp extends SpringBootServletInitializer {
 

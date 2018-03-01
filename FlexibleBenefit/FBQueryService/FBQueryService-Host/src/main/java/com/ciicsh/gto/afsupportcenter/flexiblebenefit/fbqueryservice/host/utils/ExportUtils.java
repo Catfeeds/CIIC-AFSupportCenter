@@ -1,13 +1,16 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.host.utils;
 
+
+
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -33,8 +36,8 @@ public class ExportUtils {
      *  dtoList     需要显示的数据集合,集合中一定要放置符合javabean风格的类的对象
      *  out         与输出设备关联的流对象，可以将EXCEL文档导出到本地文件或者网络中
      */
-     public <T> void  exportExcel(String title, List<String> headersName, List<String> headersId,
-                             List<T> dtoList) {
+     public static  <T> void  exportExcel(String title, List<String> headersName, List<String> headersId,
+                                          List<T> dtoList, HttpServletResponse response) {
         /*（一）表头--标题栏*/
         Map<Integer, String> headersNameMap = new HashMap<>();
         int key=0;
@@ -56,11 +59,11 @@ public class ExportUtils {
         /* （三）声明一个工作薄：包括构建工作簿、表格、样式*/
         HSSFWorkbook wb = new HSSFWorkbook();
         HSSFSheet sheet = wb.createSheet(title);
-        sheet.setDefaultColumnWidth((short)15);
+//        sheet.setDefaultColumnWidth((short)15);
         // 生成一个样式
-        HSSFCellStyle style = wb.createCellStyle();
+//        HSSFCellStyle style = wb.createCellStyle();
         HSSFRow row = sheet.createRow(0);
-        style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+//        style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
         HSSFCell cell;
         Collection c = headersNameMap.values();
         Iterator<String> it = c.iterator();
@@ -70,7 +73,7 @@ public class ExportUtils {
         while (it.hasNext()) {
             cell = row.createCell(size);
             cell.setCellValue(it.next().toString());
-            cell.setCellStyle(style);
+//            cell.setCellStyle(style);
             size++;
         }
         //表格标题一行的字段的集合
@@ -81,7 +84,7 @@ public class ExportUtils {
             int zdCell = 0;
             zdRow++;
             row = sheet.createRow(zdRow);
-            T l = (T) labIt.next();
+            T l = labIt.next();
             // 利用反射，根据javabean属性的先后顺序，动态调用getXxx()方法得到属性值
             Field[] fields = l.getClass().getDeclaredFields();
             for (short i = 0; i < fields.length; i++) {
@@ -122,9 +125,11 @@ public class ExportUtils {
             }
         }
         try {
-            FileOutputStream exportXls = new FileOutputStream("CompanyList.xls");
-            wb.write(exportXls);
-            exportXls.close();
+            response.setHeader("Content-disposition","attachment;filename="+title);
+            response.setContentType("application/octet-stream;charset=UTF-8");
+            ServletOutputStream out = response.getOutputStream();
+            wb.write(out);
+            out.close();
             System.out.println("导出成功!");
         } catch (FileNotFoundException e) {
             System.out.println("导出失败!");
