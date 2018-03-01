@@ -127,8 +127,12 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public void syncSettleCenterStatus (PayApplyPayStatusDTO dto) {
+        Integer status = SysConstants.EmpApplyStatus.COMPLETE.getCode();
+        if (SysConstants.SettlementCenterStatus.BACK.getCode().equals(dto.getPayStatus())) {
+            status = SysConstants.EmpApplyStatus.BACK.getCode();
+        }
         employeePaymentApplyMapper.syncStatus(new EmployeePaymentStatusBO (
-            dto.getBusinessPkId().intValue(),  SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(), dto.getPayStatus(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+            dto.getBusinessPkId().intValue(),  SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(), status, dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
         ));
     }
 

@@ -78,7 +78,9 @@ public interface SysConstants {
      */
     enum SupplyMedicalStatus {
         SYNC(3, "已同步"),
-        REFUND(6, "已退票");
+        BACK(4, "财务退回"),
+        REFUND(6, "已退票"),
+        COMPLETE(7, "已完成");
         private Integer code;
         private String name;
         SupplyMedicalStatus(Integer code, String name) {
@@ -98,7 +100,9 @@ public interface SysConstants {
      */
     enum UninsuredMedicalStatus {
         SYNC(4, "已同步"),
-        REFUND(7, "已退票");
+        BACK(5, "财务退回"),
+        REFUND(7, "已退票"),
+        COMPLETE(8, "已完成");
         private Integer code;
         private String name;
         UninsuredMedicalStatus(Integer code, String name) {
@@ -151,6 +155,29 @@ public interface SysConstants {
 
         public Integer getId() {
             return this.id;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+    }
+
+    /**
+     * 结算中心状态
+     */
+    enum SettlementCenterStatus {
+        BACK(-1, "驳回");
+
+        private Integer code;
+        private String name;
+
+        SettlementCenterStatus(Integer code, String name) {
+            this.code = code;
+            this.name = name;
+        }
+
+        public Integer getCode() {
+            return this.code;
         }
 
         public String getName() {
