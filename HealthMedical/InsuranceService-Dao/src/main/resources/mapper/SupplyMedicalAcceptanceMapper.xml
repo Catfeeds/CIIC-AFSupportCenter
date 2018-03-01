@@ -224,6 +224,8 @@
               d.apply_batch_id = #{batchId, jdbcType=INTEGER}
             AND
               d.business_id = #{businessId, jdbcType=INTEGER}
+            AND
+              d.is_active = 1
         )
     </update>
 
