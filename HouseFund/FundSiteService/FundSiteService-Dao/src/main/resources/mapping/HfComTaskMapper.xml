@@ -78,7 +78,7 @@
         hcac.hf_com_account,
         hcas.com_account_state_value,
         hcapb.payment_bank_value,
-        hcac.end_month,
+        hft.end_month,
         hcau.ukstore_value,
         hcat.type_value,
         hft.task_status

@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.business;
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComAccountPaymentWayBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComTaskBo;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComTaskEndTypeBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComTaskTaskStatusBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfComTask;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -63,17 +64,23 @@ public interface HfComTaskService extends IService<HfComTask> {
     List<HfComTaskTaskStatusBo> queryComTaskTaskStatusData();
 
     /**
-     * 添加/更新企业任务单
+     * 获得企业任务单终止类型数据
+     * @return
+     */
+    List<HfComTaskEndTypeBo> queryComTaskEndTypeData();
+
+    /**
+     * 添加/更新企业任务单及相关表单
      * @param map
      * @return
      */
     boolean upsertCompanyTaskRelated(Map<String, String> map);
 
     /**
-     * 添加/更新企业任务单（变更）
+     * 添加/更新企业任务单
      * @param map
      * @return
      */
-    boolean upsertCompanyTaskChangeInfoRelated(Map<String, String> map);
+    boolean upsertCompanyTask(Map<String, String> map);
 
 }

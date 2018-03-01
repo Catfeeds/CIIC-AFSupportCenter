@@ -4,18 +4,21 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComAccountPaymentWayBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComTaskBo;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComTaskEndTypeBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComTaskTaskStatusBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.HfComTaskService;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao.HfAccountComRelationMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao.HfComAccountClassMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao.HfComAccountMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao.HfComAccountPaymentWayMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao.HfComTaskEndTypeMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao.HfComTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao.HfComTaskTaskStatusMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfAccountComRelation;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfComAccount;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfComAccountClass;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfComTask;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -63,6 +66,8 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
     private HfComAccountPaymentWayMapper hfComAccountPaymentWayMapper;
     @Autowired
     private HfComTaskTaskStatusMapper hfComTaskTaskStatusMapper;
+    @Autowired
+    private HfComTaskEndTypeMapper hfComTaskEndTypeMapper;
 
     /**
      * 获得企业任务单 未处理
@@ -125,7 +130,16 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
     }
 
     /**
-     * 添加/更新企业任务单
+     * 获得企业任务单终止类型数据
+     * @return
+     */
+    @Override
+    public List<HfComTaskEndTypeBo> queryComTaskEndTypeData(){
+        return hfComTaskEndTypeMapper.selectAllComTaskEndTypeData();
+    }
+
+    /**
+     * 添加/更新企业任务单及相关表单
      * @param map
      * @return
      */
@@ -172,12 +186,14 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
                 hfComAccountClass.setHfComAccount(map.get("comAccountNum"));
             }
             if (StringUtils.isNotBlank(map.get("comStartMonth"))) {
-                hfComAccountClass.setComStartMonth(map.get("comStartMonth"));
-                hfComAccountClass.setComHfMonth(map.get("comStartMonth"));
+                String yearMonthString = StringUtil.dateStringToYearMonthString(map.get("comStartMonth"));
+                hfComAccountClass.setComStartMonth(yearMonthString);
+                hfComAccountClass.setComHfMonth(yearMonthString);
             }
             hfComAccountClass.setEndMonth(hfComTask.getEndMonth());
             if (StringUtils.isNotBlank(map.get("operateStartMonth"))) {
-                hfComAccountClass.setOperateStartMonth(map.get("operateStartMonth"));
+                String yearMonthString = StringUtil.dateStringToYearMonthString(map.get("operateStartMonth"));
+                hfComAccountClass.setOperateStartMonth(yearMonthString);
             }
             if (StringUtils.isNotBlank(map.get("accountTempStore"))) {
                 hfComAccountClass.setAccountTempStore(Integer.parseInt(map.get("accountTempStore")));
@@ -206,11 +222,31 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             hfAccountComRelation.setModifiedTime(new Date());
             hfAccountComRelationMapper.insert(hfAccountComRelation);
 
-            //将账户主从表ID更新回任务单表中
+            //更新ComTask表
             hfComTask.setComAccountId(hfComAccount.getComAccountId());
             hfComTask.setComAccountClassId(hfComAccountClass.getComAccountClassId());
+            if (StringUtils.isNotBlank(map.get("acceptDate"))) {
+                try {
+                    hfComTask.setStrartHandleDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("acceptDate")));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (StringUtils.isNotBlank(map.get("approvalDate"))) {
+                try {
+                    hfComTask.setSendCheckDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("approvalDate")));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (StringUtils.isNotBlank(map.get("finishDate"))) {
+                try {
+                    hfComTask.setFinishDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("finishDate")));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             hfComTaskMapper.updateById(hfComTask);
-
             return true;
         } else {
             return false;
@@ -218,12 +254,12 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
     }
 
     /**
-     * 添加/更新企业任务单（变更）
+     * 添加/更新企业任务单
      * @param map
      * @return
      */
     @Override
-    public boolean upsertCompanyTaskChangeInfoRelated(Map<String, String> map){
+    public boolean upsertCompanyTask(Map<String, String> map){
         if (StringUtils.isNotBlank(map.get("comTaskId"))) {
             //取得企业任务单
             HfComTask hfComTask = hfComTaskMapper.selectById(map.get("comTaskId"));
@@ -235,6 +271,12 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             }
             if (StringUtils.isNotBlank(map.get("taskStatus"))) {
                 hfComTask.setTaskStatus(Integer.parseInt(map.get("taskStatus")));
+            }
+            if (StringUtils.isNotBlank(map.get("endMonth"))) {
+                hfComTask.setEndMonth(map.get("endMonth"));
+            }
+            if (StringUtils.isNotBlank(map.get("endType"))) {
+                hfComTask.setEndType(Integer.parseInt(map.get("endType")));
             }
             if (StringUtils.isNotBlank(map.get("acceptDate"))) {
                 try {

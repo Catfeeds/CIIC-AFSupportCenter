@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.controller;
 
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComAccountPaymentWayBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComTaskBo;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComTaskEndTypeBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComTaskTaskStatusBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.HfComTaskService;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
@@ -57,7 +58,14 @@ public class HfComTaskController {
     @Log("更新未处理企业任务单（变更）")
     @PostMapping("/updateCompanyTaskChangeInfo")
     public JsonResult<Boolean> updateCompanyTaskChangeInfo(@RequestParam Map<String, String> map) {
-        boolean result = hfComTaskService.upsertCompanyTaskChangeInfoRelated(map);
+        boolean result = hfComTaskService.upsertCompanyTask(map);
+        return JsonResultKit.of(result);
+    }
+
+    @Log("更新未处理企业任务单（终止）")
+    @PostMapping("/updateCompanyTaskEndInfo")
+    public JsonResult<Boolean> updateCompanyTaskEndInfo(@RequestParam Map<String, String> map) {
+        boolean result = hfComTaskService.upsertCompanyTask(map);
         return JsonResultKit.of(result);
     }
 
@@ -72,6 +80,13 @@ public class HfComTaskController {
     @GetMapping("/getCompanyTaskTaskStatusData")
     public JsonResult<List<HfComTaskTaskStatusBo>> queryComTaskTaskStatusData() {
         List<HfComTaskTaskStatusBo> result = hfComTaskService.queryComTaskTaskStatusData();
+        return JsonResultKit.of(result);
+    }
+
+    @Log("查询企业任务单终止类型数据")
+    @GetMapping("/getCompanyTaskEndTypeData")
+    public JsonResult<List<HfComTaskEndTypeBo>> queryComTaskEndTypeData() {
+        List<HfComTaskEndTypeBo> result = hfComTaskService.queryComTaskEndTypeData();
         return JsonResultKit.of(result);
     }
 
