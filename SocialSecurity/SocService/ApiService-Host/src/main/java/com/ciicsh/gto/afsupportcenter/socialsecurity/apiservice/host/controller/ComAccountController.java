@@ -32,7 +32,7 @@ public class ComAccountController implements SsComProxy {
     @Override
     @RequestMapping("/getAccountList")
     @Log("获取企业社保账户信息表")
-    public JsonResult getSsComAccountList(@RequestBody SsComAccountParamDTO paramDto) {
+    public JsonResult<List<SsComAccountDTO>> getSsComAccountList(@RequestBody SsComAccountParamDTO paramDto) {
 
         ComAccountParamBO paramBO = new ComAccountParamBO();
         BeanUtils.copyProperties(paramDto,paramBO);
