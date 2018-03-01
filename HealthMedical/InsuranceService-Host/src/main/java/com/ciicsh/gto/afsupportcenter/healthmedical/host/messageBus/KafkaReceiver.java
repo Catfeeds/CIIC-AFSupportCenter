@@ -4,19 +4,26 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.host.messageBus;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.company.AfCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpInsuranceDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeQueryDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfFullEmployeeDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfCompanyProxy;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.AfTpaTaskService;
+import com.ciicsh.gto.afsupportcenter.healthmedical.business.EmployeePaymentJobService;
+import com.ciicsh.gto.afsupportcenter.healthmedical.business.HealthMedicalJobService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.SupplyMedicalInvoiceService;
+import com.ciicsh.gto.afsupportcenter.healthmedical.business.enums.SysConstants;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeeBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfTpaTask;
 import com.ciicsh.gto.afsupportcenter.util.web.convert.JsonUtil;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeMemberDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import com.ciicsh.gto.employeecenter.util.JsonResult;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyReturnTicketDTO;
 import com.ciicsh.gto.sheetservice.api.MsgConstants;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import com.google.gson.JsonObject;
@@ -46,11 +53,10 @@ public class KafkaReceiver {
     private AfEmployeeCompanyProxy afEmployeeCompanyProxy;
 
     @Autowired
-    private EmployeeInfoProxy employeeInfoProxy;
+    private AfCompanyProxy afCompanyProxy;
 
     @Autowired
-    private SupplyMedicalInvoiceService supplyMedicalInvoiceService;
-    private Object PayApplyPayStatusDTO;
+    private EmployeeInfoProxy employeeInfoProxy;
 
     @Autowired
     private EmployeePaymentJobService employeePaymentService;
@@ -75,11 +81,12 @@ public class KafkaReceiver {
 
     /**
      * 财务驳回
+     *
      * @param dto
      */
     @StreamListener(TaskSink.Financial_Rejected)
     public void receiveFinancialRejected(PayApplyPayStatusDTO dto) {
-        if(SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
+        if (SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
             employeePaymentService.syncSettleCenterStatus(dto);
         } else {
             healthMedicalJobService.syncSettleCenterStatus(dto);
@@ -88,11 +95,12 @@ public class KafkaReceiver {
 
     /**
      * 银行退票
+     *
      * @param dto
      */
     @StreamListener(TaskSink.Return_Ticket)
     public void receiveReturn_Ticket(PayApplyReturnTicketDTO dto) {
-        if(SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
+        if (SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
             employeePaymentService.handlePaymentRefund(dto);
         } else {
             healthMedicalJobService.handlePaymentRefund(dto);
