@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfArchiveBasePeriodUpdateBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfArchiveBasePeriod;
 
 import java.util.List;
@@ -14,4 +15,11 @@ public interface HfArchiveBasePeriodService extends IService<HfArchiveBasePeriod
      * @return
      */
     int deleteHfArchiveBasePeriods(List<Long> empTaskIdList);
+
+    /**
+     * 更新雇员公积金汇缴月份段记录
+     * @param hfArchiveBasePeriodUpdateBo
+     * @return
+     */
+    int updateHfArchiveBasePeriods(HfArchiveBasePeriodUpdateBo hfArchiveBasePeriodUpdateBo);
 }

@@ -11,4 +11,23 @@
             </foreach>
         </where>
     </delete>
+
+    <update id="updateHfArchiveBasePeriods">
+        UPDATE hf_archive_base_period habp
+        <if test="empTaskIdList != null">
+            INNER JOIN hf_emp_archive hea ON hea.emp_archive_id = habp.emp_archive_id AND hea.is_active = 1
+            INNER JOIN hf_emp_task het ON hea.company_id = het.company_id AND hea.employee_id = het.employee_id
+        </if>
+        SET habp.end_month = NULL,
+        habp.modified_time = NOW(),
+        habp.modified_by = #{modifiedBy}
+        <where>
+            habp.is_active = 1
+            <if test="empTaskIdList != null">
+                <foreach collection="empTaskIdList" item="item" open="AND het.emp_task_id IN (" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </update>
 </mapper>
