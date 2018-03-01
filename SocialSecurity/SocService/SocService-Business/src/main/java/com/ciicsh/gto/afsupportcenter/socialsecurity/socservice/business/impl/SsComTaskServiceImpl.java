@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComTaskBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComTaskParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsAccountComRelationMapper;
@@ -12,6 +13,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAccount
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAccountRatio;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComTask;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.SsComTaskExtPO;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -286,5 +288,10 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
 
     public boolean insertComTask(SsComTask ssComTask) {
         return baseMapper.insertComTask(ssComTask);
+    }
+
+    @Override
+    public SsComTaskExtPO getComTask(ComTaskParamBO paramBO) {
+        return baseMapper.getComTask(paramBO);
     }
 }
