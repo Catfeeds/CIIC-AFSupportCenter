@@ -190,16 +190,16 @@
 
     <update id="updateStatus" parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentStatusBO">
         UPDATE
-        gtobusinessdb.hm_supply_medical_acceptance m
+          gtobusinessdb.hm_supply_medical_acceptance m
         SET
-        m.status = #{status, jdbcType=INTEGER},
-        <if test="remark != null and remark != ''">
-            p.remark = #{remark},
-        </if>
-        m.modified_by = #{modifiedBy, jdbcType=VARCHAR},
-        m.modified_time= now()
+          m.status = #{status, jdbcType=INTEGER},
+          <if test="remark != null and remark != ''">
+              m.remark = #{remark},
+          </if>
+          m.modified_by = #{modifiedBy, jdbcType=VARCHAR},
+          m.modified_time= now()
         WHERE
-        m.acceptance_id = #{acceptanceId, jdbcType=VARCHAR}
+          m.acceptance_id = #{acceptanceId, jdbcType=VARCHAR}
     </update>
 
     <update id="syncStatus" parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentStatusBO">
