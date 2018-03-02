@@ -24,8 +24,4 @@ public interface SsComTaskProxy {
      */
     @PostMapping("/saveComTask")
     JsonResult saveSsComTask(@RequestBody SsComTaskDTO ssComTaskDTO);
-
-    @RequestMapping("/getComTask")
-    JsonResult getComTask(@RequestBody ComTaskParamDTO paramDTO);
-
 }
