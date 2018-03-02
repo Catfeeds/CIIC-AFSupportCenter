@@ -150,10 +150,11 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public void handlePaymentRefund (PayApplyReturnTicketDTO dto) {
+        Integer businessId = dto.getBusinessItemId();
         List<EmployeeReturnTicketDTO> detail = dto.getEmployeeReturnTicketDTOList();
         if (!detail.isEmpty()) {
             List<EmpBankRefundBO> refund = null;
-            if (SysConstants.BusinessId.SUPPLY_MEDICAL.equals(dto.getBusinessType())) {
+            if (SysConstants.BusinessId.SUPPLY_MEDICAL.equals(businessId)) {
                 detail.forEach(pay->this.updateSupplyMedicalRefundStatus(dto.getBusinessPkId().intValue(), pay));
                 refund = this.selectSupplyMedicalBankRefund();
             } else {
@@ -183,17 +184,17 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public void syncSettleCenterStatus (PayApplyPayStatusDTO dto) {
+        Integer businessId = dto.getBusinessItemId();
         Integer status = SysConstants.SupplyMedicalStatus.COMPLETE.getCode();
         if (SysConstants.SettlementCenterStatus.BACK.getCode().equals(dto.getPayStatus())) {
             status = SysConstants.SupplyMedicalStatus.BACK.getCode();
         }
-        Integer businessId = paymentApplyDetailMapper.selectBusinessId(dto.getBusinessPkId().intValue());
         EmployeePaymentStatusBO statusBO = new EmployeePaymentStatusBO(
             dto.getBusinessPkId().intValue(), businessId, status, dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
         );
         if(SysConstants.BusinessId.SUPPLY_MEDICAL.equals(businessId)) {
             supplyMedicalAcceptanceMapper.syncStatus(statusBO);
-        } else if(SysConstants.BusinessId.UNINSURED_MEDICAL.equals(businessId)) {
+        } else {
             if (SysConstants.SettlementCenterStatus.BACK.getCode().equals(dto.getPayStatus())) {
                 statusBO.setStatus(SysConstants.UninsuredMedicalStatus.BACK.getCode());
             } else {
