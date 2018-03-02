@@ -14,19 +14,16 @@ import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyPr
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.AfTpaTaskService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.EmployeePaymentJobService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.HealthMedicalJobService;
-import com.ciicsh.gto.afsupportcenter.healthmedical.business.SupplyMedicalInvoiceService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.enums.SysConstants;
-import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeeBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfTpaTask;
-import com.ciicsh.gto.afsupportcenter.util.web.convert.JsonUtil;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeMemberDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import com.ciicsh.gto.employeecenter.util.JsonResult;
+import com.ciicsh.gto.productcenter.apiservice.api.proxy.ProductProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyReturnTicketDTO;
 import com.ciicsh.gto.sheetservice.api.MsgConstants;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
-import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
@@ -54,6 +51,9 @@ public class KafkaReceiver {
 
     @Autowired
     private AfCompanyProxy afCompanyProxy;
+
+    @Autowired
+    private ProductProxy productProxy;
 
     @Autowired
     private EmployeeInfoProxy employeeInfoProxy;
@@ -141,7 +141,11 @@ public class KafkaReceiver {
             empTaskList.forEach(item -> {
                 AfTpaTask task = new AfTpaTask();
                 // <editor-fold desc="2.0 转换service_item">
-                String serviceItem = item.getServiceItems();
+                /* 获取serviceItems */
+                List<String> ids = new ArrayList<>();
+                ids.add(item.getProductId());
+                com.ciicsh.gto.productcenter.apiservice.api.dto.JsonResult jsonResult = productProxy.getProductByProductIDs(ids);
+                String serviceItem = (String) jsonResult.getData();
                 // </editor-fold>
 
                 // <editor-fold desc="2.1 通用字段赋值">
