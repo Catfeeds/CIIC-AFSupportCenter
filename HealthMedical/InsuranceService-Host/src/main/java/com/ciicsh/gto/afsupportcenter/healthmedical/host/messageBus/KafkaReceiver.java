@@ -86,10 +86,14 @@ public class KafkaReceiver {
      */
     @StreamListener(TaskSink.Financial_Rejected)
     public void receiveFinancialRejected(PayApplyPayStatusDTO dto) {
-        if (SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
-            employeePaymentService.syncSettleCenterStatus(dto);
-        } else if(SysConstants.JobConstants.MEDICAL_CLAIMS.getCode().equals(dto.getBusinessType())) {
-            healthMedicalJobService.syncSettleCenterStatus(dto);
+        try {
+            if (SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
+                employeePaymentService.syncSettleCenterStatus(dto);
+            } else if(SysConstants.JobConstants.MEDICAL_CLAIMS.getCode().equals(dto.getBusinessType())) {
+                healthMedicalJobService.syncSettleCenterStatus(dto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -100,10 +104,14 @@ public class KafkaReceiver {
      */
     @StreamListener(TaskSink.Return_Ticket)
     public void receiveReturn_Ticket(PayApplyReturnTicketDTO dto) {
-        if (SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
-            employeePaymentService.handlePaymentRefund(dto);
-        } else if(SysConstants.JobConstants.MEDICAL_CLAIMS.getCode().equals(dto.getBusinessType())) {
-            healthMedicalJobService.handlePaymentRefund(dto);
+        try {
+            if (SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
+                employeePaymentService.handlePaymentRefund(dto);
+            } else if(SysConstants.JobConstants.MEDICAL_CLAIMS.getCode().equals(dto.getBusinessType())) {
+                healthMedicalJobService.handlePaymentRefund(dto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -154,7 +154,7 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
         List<EmployeeReturnTicketDTO> detail = dto.getEmployeeReturnTicketDTOList();
         if (!detail.isEmpty()) {
             List<EmpBankRefundBO> refund = null;
-            if (SysConstants.BusinessId.SUPPLY_MEDICAL.equals(businessId)) {
+            if (SysConstants.BusinessId.SUPPLY_MEDICAL.getId().equals(businessId)) {
                 detail.forEach(pay->this.updateSupplyMedicalRefundStatus(dto.getBusinessPkId().intValue(), pay));
                 refund = this.selectSupplyMedicalBankRefund();
             } else {
@@ -166,13 +166,6 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
             }
         }
     }
-//    public void handlePaymentRefund (PayApplyReturnTicketDTO dto) {
-//        List<EmployeeReturnTicketDTO> detail = dto.getEmployeeReturnTicketDTOList();
-//        if (!detail.isEmpty()) {
-//            detail.forEach(pay->this.updateSupplyMedicalRefundStatus(dto.getBusinessPkId().intValue(), pay));
-//        }
-//    }
-
 
     /**
      * @description 同步结算中心驳回，支付成功状态
@@ -192,7 +185,7 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
         EmployeePaymentStatusBO statusBO = new EmployeePaymentStatusBO(
             dto.getBusinessPkId().intValue(), businessId, status, SysConstants.SupplyMedicalStatus.SYNC.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
         );
-        if(SysConstants.BusinessId.SUPPLY_MEDICAL.equals(businessId)) {
+        if(SysConstants.BusinessId.SUPPLY_MEDICAL.getId().equals(businessId)) {
             supplyMedicalAcceptanceMapper.syncStatus(statusBO);
         } else {
             statusBO.setCurrentStatus(SysConstants.UninsuredMedicalStatus.SYNC.getCode());
