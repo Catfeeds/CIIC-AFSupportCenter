@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccount;
@@ -28,5 +29,10 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
     @Override
     public List<ComAccountExtBo> getHfComAccountList(ComAccountParamExtBo extBo) {
         return baseMapper.getHfComAccountList(extBo);
+    }
+
+    @Override
+    public List<ComAccountTransBo> queryComAccountTransBoList(ComAccountTransBo comAccountTransBo) {
+        return baseMapper.queryComAccountTransBoList(comAccountTransBo);
     }
 }

@@ -8,6 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class DictUtil {
+    public static final String DICT_ID_SOCIAL = "DIT00136";
+    public static final String DICT_ID_FUND = "DIT00137";
     public static final String DICT_ID_SOC_LOCAL_TASK_CATEGORY = "DIC00007";
     public static final String DICT_ID_SOCIAL_SECURITY_ACCOUNT_TYPE = "DIC00062";
     public static final String DICT_ID_SOCIAL_SECURITY_STATUS = "DIC00063";

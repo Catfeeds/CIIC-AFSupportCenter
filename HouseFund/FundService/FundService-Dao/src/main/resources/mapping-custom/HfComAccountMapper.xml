@@ -7,6 +7,13 @@
                type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo">
     </resultMap>
 
+    <resultMap id="ComAccountTransBo" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo">
+        <result column="com_account_id" property="comAccountId" />
+        <result column="com_account_name" property="comAccountName" />
+        <result column="com_account_class_id" property="comAccountClassId" />
+        <result column="hf_com_account" property="hfComAccount" />
+    </resultMap>
+
     <select id="getHfComAccountList" resultMap="ComAccountExtMap">
         select ca.*
         from hf_com_account ca
@@ -23,4 +30,20 @@
         </where>
     </select>
 
+    <select id="queryComAccountTransBoList" resultMap="ComAccountTransBo">
+        SELECT
+        hca.com_account_id,
+        hca.com_account_name,
+        hcac.com_account_class_id,
+        hcac.hf_com_account
+        FROM hf_com_account hca
+        LEFT JOIN hf_com_account_class hcac
+        ON hca.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = #{hfType}
+        <where>
+            hca.is_active = 1
+            AND hca.com_account_name like CONCAT('%', #{comAccountName}, '%')
+        </where>
+        ORDER BY hca.com_account_name, hca.com_account_id
+        LIMIT 0, 5
+    </select>
 </mapper>
