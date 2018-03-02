@@ -190,11 +190,12 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
             status = SysConstants.SupplyMedicalStatus.BACK.getCode();
         }
         EmployeePaymentStatusBO statusBO = new EmployeePaymentStatusBO(
-            dto.getBusinessPkId().intValue(), businessId, status, dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+            dto.getBusinessPkId().intValue(), businessId, status, SysConstants.SupplyMedicalStatus.SYNC.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
         );
         if(SysConstants.BusinessId.SUPPLY_MEDICAL.equals(businessId)) {
             supplyMedicalAcceptanceMapper.syncStatus(statusBO);
         } else {
+            statusBO.setCurrentStatus(SysConstants.UninsuredMedicalStatus.SYNC.getCode());
             if (SysConstants.SettlementCenterStatus.BACK.getCode().equals(dto.getPayStatus())) {
                 statusBO.setStatus(SysConstants.UninsuredMedicalStatus.BACK.getCode());
             } else {
