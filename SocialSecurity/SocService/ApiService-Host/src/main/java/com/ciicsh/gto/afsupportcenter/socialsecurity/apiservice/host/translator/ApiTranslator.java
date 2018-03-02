@@ -10,7 +10,7 @@ import org.springframework.beans.BeanUtils;
 public class ApiTranslator {
     public static SsComAccountDTO toComAccountDTO(ComAccountExtPO accountExtPO){
         SsComAccountDTO accountDTO = new SsComAccountDTO();
-        BeanUtils.copyProperties(accountDTO,accountExtPO);
+        BeanUtils.copyProperties(accountExtPO,accountDTO);
         return accountDTO;
     }
 }

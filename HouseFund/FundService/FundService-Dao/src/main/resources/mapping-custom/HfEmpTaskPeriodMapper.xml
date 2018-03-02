@@ -5,7 +5,7 @@
     <update id="inactiveHfEmpTaskPeriods">
         UPDATE hf_emp_task_period
         SET
-        active = 0,
+        is_active = 0,
         modified_time = NOW(),
         modified_by = #{modifiedBy}
         <where>

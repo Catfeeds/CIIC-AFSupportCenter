@@ -15,8 +15,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableFeignClients({"com.ciicsh.gto.sheetservice.api",
     "com.ciicsh.gto.afcompanycenter.queryservice.api",
     "com.ciicsh.gto.employeecenter.apiservice.api",
-    "com.ciicsh.gto.settlementcenter.payment.cmdapi",
-    "com.ciicsh.gto.employeecenter.apiservice.api.proxy"
+    "com.ciicsh.gto.productcenter.apiservice.api",
+    "com.ciicsh.gto.settlementcenter.payment.cmdapi"
 })
 @SpringBootApplication
 @EnableDiscoveryClient

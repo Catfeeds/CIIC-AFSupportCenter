@@ -29,12 +29,19 @@ public class TestController {
 
 
     @RequestMapping("/createPaymentCom")
-    public String createPaymentCom(@RequestParam String ssMonth) throws ParseException{
+    public String createPaymentCom(@RequestParam String ssMonth,@RequestParam Long comAccountId) throws ParseException{
         String paymentMonth = CommonUtils.getPaymentMonth(); //默认当前系统年月
         if(Optional.ofNullable(ssMonth).isPresent()){
             paymentMonth=ssMonth;
         }
-        paymentComService.generateSocPaymentInfo(paymentMonth);
+        if(Optional.ofNullable(comAccountId).isPresent()){
+            paymentComService.generateSocPaymentInfo(comAccountId,paymentMonth);
+        }else{
+            paymentComService.generateSocPaymentInfo(paymentMonth);
+        }
+
+
+
         return "完成";
     }
     /*

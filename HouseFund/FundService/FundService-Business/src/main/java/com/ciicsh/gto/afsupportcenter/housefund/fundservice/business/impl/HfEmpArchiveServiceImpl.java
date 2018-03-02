@@ -94,4 +94,9 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
     public int deleteHfEmpArchiveByEmpTaskIds(List<Long> empTaskIdList) {
         return baseMapper.deleteHfEmpArchiveByEmpTaskIds(empTaskIdList);
     }
+
+    @Override
+    public Map queryHfEmpArchiveByEmpTaskIds(List<Long> empTaskIdList) {
+        return baseMapper.queryHfEmpArchiveByEmpTaskIds(empTaskIdList);
+    }
 }

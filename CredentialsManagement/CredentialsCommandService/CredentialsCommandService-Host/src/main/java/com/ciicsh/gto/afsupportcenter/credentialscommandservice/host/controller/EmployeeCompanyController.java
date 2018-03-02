@@ -16,8 +16,6 @@ import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeCommonInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeIdQueryDTO;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
@@ -32,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * @Author: guwei

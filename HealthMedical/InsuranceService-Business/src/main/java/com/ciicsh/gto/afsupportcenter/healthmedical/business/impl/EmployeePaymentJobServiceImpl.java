@@ -15,6 +15,7 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.PaymentApplyDetail
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.EmployeePaymentApplyPO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.PaymentApplyBatchPO;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.BankCardRefundDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.BankCardInfoProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult;
@@ -84,7 +85,6 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
         if (!audited.isEmpty()) {
             PaymentApplyBatchPO batchPO = this.addPaymentApply(audited);
             JsonResult jsonResult = this.syncPaymentData(batchPO);
-            System.out.println("--> " + JSON.toJSONString(jsonResult));
             if(JsonResult.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())) {
                 this.updateSyncStatus(batchPO.getApplyBatchId());
             } else {
@@ -112,6 +112,9 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
         if (!detail.isEmpty()) {
             detail.forEach(pay->this.updateRefundStatus(dto.getBusinessPkId().intValue(), pay));
         }
+        //同步银行退票信息到雇员中心
+        List<EmpBankRefundBO> refund = this.selectBankRefund();
+        this.syncIncompleteBankCardInfoApply (refund);
     }
 
     /**
@@ -124,8 +127,12 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public void syncSettleCenterStatus (PayApplyPayStatusDTO dto) {
-        employeePaymentApplyMapper.syncStatus(new EmployeePaymentStatusBO(
-            dto.getBusinessPkId().intValue(),  SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(), dto.getPayStatus(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+        Integer status = SysConstants.EmpApplyStatus.COMPLETE.getCode();
+        if (SysConstants.SettlementCenterStatus.BACK.getCode().equals(dto.getPayStatus())) {
+            status = SysConstants.EmpApplyStatus.BACK.getCode();
+        }
+        employeePaymentApplyMapper.syncStatus(new EmployeePaymentStatusBO (
+            dto.getBusinessPkId().intValue(),  SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(), status, SysConstants.EmpApplyStatus.SYNC.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
         ));
     }
 
@@ -137,8 +144,10 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
      * @return
      */
     private void syncIncompleteBankCardInfoApply (List<EmpBankRefundBO> refund) {
-//        com.ciicsh.gto.employeecenter.util.JsonResult jsonResult = bankCardInfoProxy.createBankRefund(refund);
-        System.out.println("--> " + JSON.toJSONString(refund));
+        List<BankCardRefundDTO> list = CommonTransform.convertToDTOs(refund, BankCardRefundDTO.class);
+        System.out.println(JSON.toJSONString(list));
+        com.ciicsh.gto.employeecenter.util.JsonResult jsonResult = bankCardInfoProxy.createBankRefund(list);
+        System.out.println(JSON.toJSONString(jsonResult));
     }
 
     /**
@@ -156,7 +165,7 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
         if(!list.isEmpty()) {
             employeePaymentApplyMapper.updateApplyStatus(
                 new EmployeePaymentStatusBO(
-                    Integer.getInteger(list.get(0).getPaymentApplyId()), SysConstants.EmpApplyStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+                    Integer.valueOf(list.get(0).getPaymentApplyId()), SysConstants.EmpApplyStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
                 )
             );
         }
@@ -219,6 +228,17 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
     }
 
     /**
+     * @description 查询银行退票数据
+     * @author chenpb
+     * @since 2018-03-01
+     * @param
+     * @return
+     */
+    private List<EmpBankRefundBO> selectBankRefund () {
+        return employeePaymentApplyMapper.selectBankRefund();
+    }
+
+    /**
      * @description 更新付款申请状态
      * @author chenpb
      * @since 2018-02-01
@@ -226,7 +246,7 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
      * @return
      */
     private Integer updateSyncStatus (Integer batchId) {
-        return employeePaymentApplyMapper.syncStatus(new EmployeePaymentStatusBO(
+        return employeePaymentApplyMapper.syncStatus(new EmployeePaymentStatusBO (
             batchId,  SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(), SysConstants.EmpApplyStatus.SYNC.getCode(), StringUtils.EMPTY,  SysConstants.JobConstants.SYSTEM_ZH.getName()
         ));
     }

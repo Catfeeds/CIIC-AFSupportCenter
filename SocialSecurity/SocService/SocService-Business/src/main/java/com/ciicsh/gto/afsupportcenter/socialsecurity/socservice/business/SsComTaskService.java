@@ -2,6 +2,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComTaskBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountExtBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComTaskParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAccountComRelation;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAccountRatio;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAccount;
@@ -118,4 +120,8 @@ public interface SsComTaskService extends IService<SsComTask> {
     int countComTaskByCond(SsComTaskBO ssComTask);
 
     boolean insertComTask(SsComTask ssComTask);
+
+    int countFinishComTaskByCond(SsComTaskBO ssComTask);
+
+    ComAccountExtBO getComAccountInfo(ComTaskParamBO paramBO);
 }

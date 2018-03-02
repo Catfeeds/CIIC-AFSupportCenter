@@ -95,6 +95,28 @@ public class AmResignBO extends AmResign {
     private Integer idCardType;
 
     private Long empTaskId;
+    /**
+     * 用工反馈
+     */
+    private  String employFeedback;
+
+    private String matchEmployIndex;
+    /**
+     * 首次进中智日期
+     */
+    private String firstInDate;
+
+    private String params;
+
+    private List<String> param;
+
+    public String getFirstInDate() {
+        return firstInDate;
+    }
+
+    public void setFirstInDate(String firstInDate) {
+        this.firstInDate = firstInDate;
+    }
 
     public Long getEmpTaskId() {
         return empTaskId;
@@ -112,13 +134,6 @@ public class AmResignBO extends AmResign {
         this.idCardType = idCardType;
     }
 
-    /**
-     * 用工反馈
-     */
-    private  String employFeedback;
-
-    private String matchEmployIndex;
-
     public String getMatchEmployIndex() {
         return matchEmployIndex;
     }
@@ -134,10 +149,6 @@ public class AmResignBO extends AmResign {
     public void setEmployFeedback(String employFeedback) {
         this.employFeedback = employFeedback;
     }
-
-    private String params;
-
-    private List<String> param;
 
     public String getRemarkType() {
         return remarkType;

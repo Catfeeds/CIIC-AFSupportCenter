@@ -16,6 +16,8 @@ public class EmployeePaymentStatusBO {
     private Integer businessId;
     /** 申请状态 */
     private Integer status;
+    /** 当前状态 */
+    private Integer currentStatus;
     /** 备注 */
     private String remark;
     /** 修改者 */
@@ -79,6 +81,23 @@ public class EmployeePaymentStatusBO {
 
     public void setApplyId(Integer applyId) {
         applyId = applyId;
+    }
+
+    public Integer getCurrentStatus() {
+        return currentStatus;
+    }
+
+    public void setCurrentStatus(Integer currentStatus) {
+        this.currentStatus = currentStatus;
+    }
+
+    public EmployeePaymentStatusBO(Integer batchId, Integer businessId, Integer status, Integer currentStatus, String remark, String modifiedBy) {
+        this.batchId = batchId;
+        this.businessId = businessId;
+        this.status = status;
+        this.currentStatus = currentStatus;
+        this.remark = remark;
+        this.modifiedBy = modifiedBy;
     }
 
     public EmployeePaymentStatusBO(Integer batchId, Integer businessId, Integer status, String remark, String modifiedBy) {

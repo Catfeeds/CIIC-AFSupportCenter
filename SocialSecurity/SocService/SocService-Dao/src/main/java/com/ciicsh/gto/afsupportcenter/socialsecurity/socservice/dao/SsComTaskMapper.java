@@ -2,6 +2,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComTaskBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountExtBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComTaskParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComTask;
 
 import java.util.List;
@@ -29,4 +31,8 @@ public interface SsComTaskMapper extends BaseMapper<SsComTask> {
     int countComTaskByCond(SsComTaskBO ssComTask);
 
     boolean insertComTask(SsComTask ssComTask);
+
+    int countFinishComTaskByCond(SsComTaskBO ssComTask);
+
+    List<ComAccountExtBO> getComTaskByCompanyId(ComTaskParamBO paramBO);
 }

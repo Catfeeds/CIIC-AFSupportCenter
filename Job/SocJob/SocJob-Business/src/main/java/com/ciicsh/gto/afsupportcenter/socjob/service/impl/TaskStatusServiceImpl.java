@@ -25,6 +25,7 @@ public class TaskStatusServiceImpl implements TaskStatusService {
 
     @Override
     public void updateTaskStatus(String ssMonth) {
+
         List<Map> empTaskList= taskStatusMapper.getEmpTaskList(ssMonth);
         empTaskList.stream().forEach(map->{
             int taskCategory=(int) map.get("task_category");

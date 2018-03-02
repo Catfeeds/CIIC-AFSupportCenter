@@ -118,6 +118,7 @@
             sca.dispatch_material,
             sca.deliver_way_remark,
             sct.com_account_id_t,
+            sct.com_task_id,
             sct.task_category,
             sct.task_status,
             sct.submitter_name,
@@ -161,7 +162,7 @@
             </if>
         </where>
     </select>
-    <select id="checkComAccountDuplicateaSSAccount" resultType="Integer">
+    <select id="checkComAccountDuplicateaSSAccount" resultType="java.lang.Integer">
         SELECT count(1)
         FROM ss_com_account ca
         WHERE 1=1
@@ -170,7 +171,7 @@
             AND ca.com_account_id !=#{comAccountId}
         </if>
     </select>
-    <select id="checkComAccountDuplicateaSSAccountName" resultType="Integer">
+    <select id="checkComAccountDuplicateaSSAccountName" resultType="java.lang.Integer">
         SELECT count(1)
         FROM ss_com_account ca
         WHERE 1=1
@@ -178,5 +179,15 @@
         <if test="comAccountId != null">
             AND ca.com_account_id !=#{comAccountId}
         </if>
+    </select>
+    <!-- 获得企业开户任务 查询是否有开户账号和账号状态-->
+    <select id="selectAccountByCompanyId" resultMap="BaseResultMap">
+        SELECT
+        sca.*
+        FROM
+        ss_com_account sca
+        LEFT JOIN ss_account_com_relation sacr ON sca.com_account_id = sca.com_account_id
+        WHERE sacr.company_id =#{companyId}
+
     </select>
 </mapper>

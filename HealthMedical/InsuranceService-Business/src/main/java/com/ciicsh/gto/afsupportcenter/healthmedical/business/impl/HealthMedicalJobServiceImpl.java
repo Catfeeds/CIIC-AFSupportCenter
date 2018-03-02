@@ -14,6 +14,8 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentSta
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.PaymentApplyDetailBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.PaymentApplyBatchPO;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.BankCardRefundDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.proxy.BankCardInfoProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.*;
@@ -44,6 +46,11 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
      */
     @Autowired
     private PayapplyServiceProxy payapplyServiceProxy;
+    /**
+     *  雇员中心补全银行卡信息处理
+     */
+    @Autowired
+    private BankCardInfoProxy bankCardInfoProxy;
     /**
      *  支付批次记录表
      */
@@ -143,9 +150,20 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public void handlePaymentRefund (PayApplyReturnTicketDTO dto) {
+        Integer businessId = dto.getBusinessItemId();
         List<EmployeeReturnTicketDTO> detail = dto.getEmployeeReturnTicketDTOList();
         if (!detail.isEmpty()) {
-            detail.forEach(pay->this.updateRefundStatus(dto.getBusinessPkId().intValue(), pay));
+            List<EmpBankRefundBO> refund = null;
+            if (SysConstants.BusinessId.SUPPLY_MEDICAL.getId().equals(businessId)) {
+                detail.forEach(pay->this.updateSupplyMedicalRefundStatus(dto.getBusinessPkId().intValue(), pay));
+                refund = this.selectSupplyMedicalBankRefund();
+            } else {
+                detail.forEach(pay->this.updateUninsuredMedicalRefundStatus(dto.getBusinessPkId().intValue(), pay));
+                refund = this.selectUninsuredMedicalBankRefund();
+            }
+            if (!refund.isEmpty()) {
+                this.syncIncompleteBankCardInfoApply (refund);
+            }
         }
     }
 
@@ -159,13 +177,23 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public void syncSettleCenterStatus (PayApplyPayStatusDTO dto) {
-        Integer businessId= paymentApplyDetailMapper.selectBusinessId(dto.getBusinessPkId().intValue());
+        Integer businessId = dto.getBusinessItemId();
+        Integer status = SysConstants.SupplyMedicalStatus.COMPLETE.getCode();
+        if (SysConstants.SettlementCenterStatus.BACK.getCode().equals(dto.getPayStatus())) {
+            status = SysConstants.SupplyMedicalStatus.BACK.getCode();
+        }
         EmployeePaymentStatusBO statusBO = new EmployeePaymentStatusBO(
-            dto.getBusinessPkId().intValue(), businessId, dto.getPayStatus(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+            dto.getBusinessPkId().intValue(), businessId, status, SysConstants.SupplyMedicalStatus.SYNC.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
         );
-        if(SysConstants.BusinessId.SUPPLY_MEDICAL.equals(businessId)){
+        if(SysConstants.BusinessId.SUPPLY_MEDICAL.getId().equals(businessId)) {
             supplyMedicalAcceptanceMapper.syncStatus(statusBO);
-        } else if(SysConstants.BusinessId.UNINSURED_MEDICAL.equals(businessId)) {
+        } else {
+            statusBO.setCurrentStatus(SysConstants.UninsuredMedicalStatus.SYNC.getCode());
+            if (SysConstants.SettlementCenterStatus.BACK.getCode().equals(dto.getPayStatus())) {
+                statusBO.setStatus(SysConstants.UninsuredMedicalStatus.BACK.getCode());
+            } else {
+                statusBO.setStatus(SysConstants.UninsuredMedicalStatus.COMPLETE.getCode());
+            }
             uninsuredMedicalMapper.syncStatus(statusBO);
         }
     }
@@ -174,37 +202,53 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
      * @description 添加补全银行卡信息申请到雇员中心
      * @author chenpb
      * @since 2018-02-06
-     * @param emp: 雇员信息
+     * @param refund: 雇员信息
      * @return
      */
-    private void syncIncompleteBankCardInfoApply (List<EmpBankRefundBO> emp) {
-        System.out.println(emp.size());
+    private void syncIncompleteBankCardInfoApply (List<EmpBankRefundBO> refund) {
+        List<BankCardRefundDTO> list = CommonTransform.convertToDTOs(refund, BankCardRefundDTO.class);
+        com.ciicsh.gto.employeecenter.util.JsonResult jsonResult = bankCardInfoProxy.createBankRefund(list);
+        System.out.println(JSON.toJSONString(jsonResult));
     }
 
     /**
-     * @description 更新付款申请退票状态
+     * @description 更新退票状态
      * @author chenpb
      * @since 2018-02-06
      * @param batchId
      * @param dto
      */
-    private void updateRefundStatus (Integer batchId, EmployeeReturnTicketDTO dto) {
+    private void updateSupplyMedicalRefundStatus (Integer batchId, EmployeeReturnTicketDTO dto) {
         PaymentApplyDetailBO bo = new PaymentApplyDetailBO();
         BeanUtils.copyProperties(dto, bo);
         bo.setApplyBatchId(batchId);
         List<PaymentApplyDetailBO> list = paymentApplyDetailMapper.selectRefundDetail(bo);
         if(!list.isEmpty()){
-            if (SysConstants.BusinessId.SUPPLY_MEDICAL.equals(list.get(0).getBusinessItemId())) {
-                supplyMedicalAcceptanceMapper.updateStatus(new EmployeePaymentStatusBO(
-                    list.get(0).getPaymentApplyId().toString(), SysConstants.SupplyMedicalStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
-                ));
-            } else {
-                uninsuredMedicalMapper.updateStatus(new EmployeePaymentStatusBO(
-                    Integer.getInteger(list.get(0).getPaymentApplyId()), SysConstants.UninsuredMedicalStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
-                ));
-            }
+            supplyMedicalAcceptanceMapper.updateStatus(new EmployeePaymentStatusBO (
+                list.get(0).getPaymentApplyId().toString(), SysConstants.SupplyMedicalStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+            ));
         }
     }
+
+    /**
+     * @description 更新退票状态
+     * @author chenpb
+     * @since 2018-02-06
+     * @param batchId
+     * @param dto
+     */
+    private void updateUninsuredMedicalRefundStatus (Integer batchId, EmployeeReturnTicketDTO dto) {
+        PaymentApplyDetailBO bo = new PaymentApplyDetailBO();
+        BeanUtils.copyProperties(dto, bo);
+        bo.setApplyBatchId(batchId);
+        List<PaymentApplyDetailBO> list = paymentApplyDetailMapper.selectRefundDetail(bo);
+        if(!list.isEmpty()){
+            uninsuredMedicalMapper.updateStatus(new EmployeePaymentStatusBO(
+                Integer.valueOf(list.get(0).getPaymentApplyId()), SysConstants.UninsuredMedicalStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+            ));
+        }
+    }
+
     /**
      * @description 同步支付申请信息到结算中心
      * @author chenpb
@@ -268,6 +312,17 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
     }
 
     /**
+     * @description 查询银行退票数据
+     * @author chenpb
+     * @since 2018-03-01
+     * @param
+     * @return
+     */
+    private List<EmpBankRefundBO> selectSupplyMedicalBankRefund () {
+        return supplyMedicalAcceptanceMapper.selectBankRefund();
+    }
+
+    /**
      * @description 查询未投保医疗已审核未同步数据
      * @author chenpb
      * @since 2018-02-07
@@ -276,6 +331,17 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
      */
     private List<EmpBankRefundBO> selectUnSyncUninsuredMedical () {
         return uninsuredMedicalMapper.selectUnSync();
+    }
+
+    /**
+     * @description 查询银行退票数据
+     * @author chenpb
+     * @since 2018-03-01
+     * @param
+     * @return
+     */
+    private List<EmpBankRefundBO> selectUninsuredMedicalBankRefund () {
+        return uninsuredMedicalMapper.selectBankRefund();
     }
 
     /**

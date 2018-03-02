@@ -6,7 +6,7 @@
         UPDATE hf_month_charge
         SET
         <if test="inactive != null and inactive == true">
-            active = 0,
+            is_active = 0,
         </if>
         <if test="chgPaymentType != null">
             payment_type = #{chgPaymentType},
@@ -14,7 +14,7 @@
         modified_time = NOW(),
         modified_by = #{modifiedBy}
         <where>
-            active = 1
+            is_active = 1
             <if test="empArchiveId != null">
                 AND emp_archive_id = #{empArchiveId}
             </if>
@@ -25,7 +25,7 @@
                 AND employee_id = #{employeeId}
             </if>
             <if test="empTaskIdList != null">
-                <foreach collection="empTaskIdList" item="item" open="emp_task_id IN (" separator="," close=")">
+                <foreach collection="empTaskIdList" item="item" open="AND emp_task_id IN (" separator="," close=")">
                     #{item}
                 </foreach>
             </if>

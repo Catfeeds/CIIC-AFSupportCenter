@@ -2,7 +2,7 @@ spring:
   datasource:
     druid:
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://172.16.9.15:3306/gtobusinessdb?useUnicode=true&useSSL=true&amp;characterEncoding=UTF-8
+      url: jdbc:mysql://172.16.9.15:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
       username: root
       password: a111111
       max-active: 20
@@ -12,12 +12,12 @@ spring:
       filter:
         stat:
           enabled: true
-  cloud:
-    stream:
-      kafka:
-        binder:
-          brokers: 172.16.9.11:9092
-          zk-nodes: 172.16.9.11:2181,172.16.9.16:2181
+#  cloud:
+#    stream:
+#      kafka:
+#        binder:
+#          brokers: 172.16.9.11:9092
+#          zk-nodes: 172.16.9.11:2181,172.16.9.16:2181
 #spring cloud eureka
 eureka:
   client:

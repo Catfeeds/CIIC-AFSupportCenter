@@ -25,10 +25,10 @@ public interface TaskSink {
      */
     String AF_EMP_MAKE_UP = "common_taskservice_af_emp_make_up_channel";
 
-//    /**
-//     * 雇员翻牌
-//     */
-//    String AF_EMP_COMPANY_CHANGE = "common_taskservice_af_emp_company_change_channel";
+    /**
+     * 雇员翻牌
+     */
+    String AF_EMP_COMPANY_CHANGE = "common_taskservice_af_emp_company_change_channel";
 
     /**
      * 雇员服务协议调整
