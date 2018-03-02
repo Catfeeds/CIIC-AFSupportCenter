@@ -267,7 +267,10 @@
                 d.apply_batch_id = #{batchId, jdbcType=INTEGER}
             AND
                 d.business_id = #{businessId, jdbcType=INTEGER}
+            AND
+                d.is_active = 1
         )
+        AND p.status = 4
     </update>
 
     <update id="updateApplyStatus" parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentStatusBO">

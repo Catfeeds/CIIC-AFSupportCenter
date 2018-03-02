@@ -12,6 +12,7 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Employ
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.SelectionUtils;
 import com.ciicsh.gto.afsupportcenter.util.page.PageUtil;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeIdQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
@@ -19,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @Author: guwei

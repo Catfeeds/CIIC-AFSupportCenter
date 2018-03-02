@@ -164,7 +164,7 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
         if(!list.isEmpty()) {
             employeePaymentApplyMapper.updateApplyStatus(
                 new EmployeePaymentStatusBO(
-                    Integer.getInteger(list.get(0).getPaymentApplyId()), SysConstants.EmpApplyStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+                    Integer.valueOf(list.get(0).getPaymentApplyId()), SysConstants.EmpApplyStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
                 )
             );
         }

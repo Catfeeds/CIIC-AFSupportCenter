@@ -53,7 +53,11 @@ public class KafkaReceiver {
         //退工
         boolean res = false;
         if (TaskSink.FIRE.equals(taskMsgDTO.getTaskType())) {
-            res = insertAmEmpTaskTb(taskMsgDTO, 2);
+            try {
+                res = iAmEmpTaskService.insertTaskFire(taskMsgDTO, 2);
+            } catch (Exception e) {
+                logger.error(e.getMessage(),e);
+            }
             logger.info("收到消息 退工: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
         }
     }

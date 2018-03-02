@@ -88,7 +88,7 @@ public class KafkaReceiver {
     public void receiveFinancialRejected(PayApplyPayStatusDTO dto) {
         if (SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
             employeePaymentService.syncSettleCenterStatus(dto);
-        } else {
+        } else if(SysConstants.JobConstants.MEDICAL_CLAIMS.getCode().equals(dto.getBusinessType())) {
             healthMedicalJobService.syncSettleCenterStatus(dto);
         }
     }
@@ -102,7 +102,7 @@ public class KafkaReceiver {
     public void receiveReturn_Ticket(PayApplyReturnTicketDTO dto) {
         if (SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
             employeePaymentService.handlePaymentRefund(dto);
-        } else {
+        } else if(SysConstants.JobConstants.MEDICAL_CLAIMS.getCode().equals(dto.getBusinessType())) {
             healthMedicalJobService.handlePaymentRefund(dto);
         }
     }
