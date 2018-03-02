@@ -40,7 +40,7 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
-    <resultMap id="ComAccountExtMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountExtBO">
+    <resultMap id="AccountExtMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountExtBO">
         <result column="customer_id" property="customerId" />
         <result column="com_account_id" property="comAccountId" />
         <result column="com_account_name" property="comAccountName" />
@@ -59,7 +59,7 @@
         <result column="remark" property="remark" />
     </resultMap>
 
-    <select id="getComAccountByCompanyId" resultMap="ComTaskExtMap">
+    <select id="getComAccountByCompanyId" resultMap="AccountExtMap">
         SELECT
           <include refid="ComAccount_Ext_Columns"/>
         FROM

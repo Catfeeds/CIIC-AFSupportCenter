@@ -3,7 +3,6 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.host.controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gt1.FileHandler;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.UninsuredMedicalAuditService;
-import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.UninsuredMedicalAuditBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.core.Result;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.core.ResultGenerator;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.UninsuredMedicalAuditDTO;
@@ -46,13 +45,12 @@ public class UninsuredAuditController {
     @PostMapping("/queryAcceptanceList")
     public Result queryUninsuredList(@RequestBody UninsuredMedicalAuditDTO uninsuredMedicalAuditDTO) {
         try {
+            Page<UninsuredMedical> page = new Page<>(uninsuredMedicalAuditDTO.getCurrent(), uninsuredMedicalAuditDTO.getSize());
             if (uninsuredMedicalAuditDTO.getStatus()) {
-                Page<UninsuredMedicalAuditBO> page = new Page<>(uninsuredMedicalAuditDTO.getCurrent(), uninsuredMedicalAuditDTO.getSize());
                 page = uninsuredMedicalAuditService.queryAcceptanceAuditList(page, uninsuredMedicalAuditDTO);
                 logger.info("查询受理单分页列表");
                 return ResultGenerator.genSuccessResult(page);
             } else {
-                Page<UninsuredMedical> page = new Page<>(uninsuredMedicalAuditDTO.getCurrent(), uninsuredMedicalAuditDTO.getSize());
                 page = uninsuredMedicalAuditService.queryAcceptanceList(page, uninsuredMedicalAuditDTO);
                 logger.info("查询受理单分页列表");
                 return ResultGenerator.genSuccessResult(page);
