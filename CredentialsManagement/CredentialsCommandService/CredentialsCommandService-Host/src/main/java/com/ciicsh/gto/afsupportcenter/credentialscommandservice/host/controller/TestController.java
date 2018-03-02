@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.controller;
 
+import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeCommonInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeIdQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
@@ -25,5 +26,14 @@ public class TestController {
         EmployeeIdQueryDTO employeeIdQueryDTO = new EmployeeIdQueryDTO();
         EmployeeCommonInfoDTO employeeInfoDTO = employeeInfoProxy.getEmployeeCommon(employeeIdQueryDTO).getData();
         System.out.println(employeeInfoDTO.getEmployeeId());
+    }
+
+    @GetMapping("/getemp")
+    public JsonResult test1(){
+        EmployeeIdQueryDTO employeeIdQueryDTO = new EmployeeIdQueryDTO();
+        employeeIdQueryDTO.setIdNum("213");
+        employeeIdQueryDTO.setIdCardType(2);
+        EmployeeCommonInfoDTO employeeInfoDTO = employeeInfoProxy.getEmployeeCommon(employeeIdQueryDTO).getData();
+        return JsonResult.success(employeeIdQueryDTO);
     }
 }
