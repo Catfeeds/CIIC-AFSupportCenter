@@ -211,7 +211,7 @@
         SET
             m.status = #{status, jdbcType=INTEGER},
         <if test="remark != null and remark != ''">
-            p.remark = #{remark},
+            m.remark = #{remark},
         </if>
             m.modified_by = #{modifiedBy, jdbcType=VARCHAR},
             m.modified_time= now()
@@ -241,7 +241,12 @@
               d.apply_batch_id = #{batchId, jdbcType=INTEGER}
             AND
               d.business_id = #{businessId, jdbcType=INTEGER}
+            AND
+              d.is_active = 1
         )
+        <if test="currentStatus > 0">
+            AND p.status = 4
+        </if>
     </update>
 
     <!-- 3：审核未同步 -->

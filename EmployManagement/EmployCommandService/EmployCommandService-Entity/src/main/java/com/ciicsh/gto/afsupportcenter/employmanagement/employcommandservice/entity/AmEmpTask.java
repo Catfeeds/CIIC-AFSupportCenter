@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -124,6 +125,39 @@ public class AmEmpTask implements Serializable {
 
     @TableField("archive_direction")
     private  String archiveDirection;
+
+    @TableField("out_date")
+    private Date outDate;
+
+    @TableField("out_reason")
+    private String  outReason;
+
+    public Date getOutDate() {
+        return outDate;
+    }
+
+    public void setOutDate(Date outDate) {
+        this.outDate = outDate;
+    }
+
+    public String getOutReason() {
+        return outReason;
+    }
+
+    public void setOutReason(String outReason) {
+        this.outReason = outReason;
+    }
+
+    public String getBusinessInterfaceId() {
+        return businessInterfaceId;
+    }
+
+    public void setBusinessInterfaceId(String businessInterfaceId) {
+        this.businessInterfaceId = businessInterfaceId;
+    }
+
+    @TableField("business_interface_id")
+    private  String businessInterfaceId;
 
     public String getEmployeeNature() {
         return employeeNature;

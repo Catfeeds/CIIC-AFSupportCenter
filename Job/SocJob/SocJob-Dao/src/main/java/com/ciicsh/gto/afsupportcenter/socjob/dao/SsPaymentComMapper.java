@@ -43,4 +43,5 @@ public interface SsPaymentComMapper extends BaseMapper<SsPaymentCom> {
 
     //查询 客户下有多少 不可付的记录
     Integer countByEmpPaymentStatus(Map map);
+    void updateMonthChargeTotalAmount(@Param("comAccountId") long comAccountId, @Param("paymentMonth") String paymentMonth);
 }

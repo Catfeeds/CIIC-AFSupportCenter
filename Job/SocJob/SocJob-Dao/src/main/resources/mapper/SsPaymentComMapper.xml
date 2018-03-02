@@ -92,4 +92,37 @@
       SELECT COUNT(*) FROM ss_payment_com WHERE com_account_id = #{comAccountId} AND payment_month = #{paymentMonth} AND is_active = 1
     </select>
 
+    <update id="updateMonthChargeTotalAmount">
+        UPDATE ss_payment_com pc
+        SET pc.total_com_pay_amount = (
+        SELECT
+        sum(mci.com_amount)
+        FROM
+        ss_month_charge_item mci
+        INNER JOIN ss_month_charge mc ON mc.month_charge_id = mci.month_charge_id
+        LEFT JOIN ss_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+        WHERE
+        mc.is_active = 1
+        AND mci.is_active = 1
+        AND ea.company_id = pc.company_id
+        ),
+        pc.total_emp_pay_amount = (
+        SELECT
+        sum(mci.emp_amount)
+        FROM
+        ss_month_charge_item mci
+        INNER JOIN ss_month_charge mc ON mc.month_charge_id = mci.month_charge_id
+        LEFT JOIN ss_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+        WHERE
+        mc.is_active = 1
+        AND mci.is_active = 1
+        AND ea.company_id = pc.company_id
+        ),
+        pc.total_pay_amount = pc.total_com_pay_amount + pc.total_emp_pay_amount
+        WHERE
+        pc.is_active = 1
+        AND pc.payment_month = #{paymentMonth}
+        AND pc.com_account_id=#{comAccountId}
+
+    </update>
 </mapper>

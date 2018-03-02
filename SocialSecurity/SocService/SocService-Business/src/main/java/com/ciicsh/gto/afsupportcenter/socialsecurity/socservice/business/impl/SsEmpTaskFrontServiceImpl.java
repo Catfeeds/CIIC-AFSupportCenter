@@ -13,6 +13,8 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +35,8 @@ import java.util.Optional;
 @Service
 public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper, SsEmpTaskFront> implements
     SsEmpTaskFrontService {
+
+    private final static Logger logger = LoggerFactory.getLogger(SsEmpTaskFrontServiceImpl.class);
     @Autowired
     private SsEmpTaskMapper ssEmpTaskMapper;
 
@@ -102,8 +106,13 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                                  AfEmployeeInfoDTO dto) throws Exception {
         //基本信息
         AfEmployeeCompanyDTO afEmployeeCompanyDTO = dto.getEmployeeCompany();
+
         //险种明细
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
+
+        logger.info("afEmployeeCompanyDTO:"+afEmployeeCompanyDTO);
+        logger.info("socialList:"+socialList);
+
 
         SsEmpTask ssEmpTask = new SsEmpTask();
         ssEmpTask.setTaskId(taskMsgDTO.getTaskId());

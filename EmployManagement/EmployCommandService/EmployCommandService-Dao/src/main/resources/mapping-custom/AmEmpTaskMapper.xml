@@ -161,22 +161,6 @@
         b.company_id = #{companyId}
     </select>
 
-    <select id="queryCustom" resultMap="BaseResultMapDTO">
-        SELECT
-        a.company_id,/**客户id*/
-        b.title,/**公司名称*/
-        c.service_center,/**服务中心*/
-        c.custom /**客服*/
-        FROM
-        am_emp_task a
-        LEFT JOIN sal_company b ON a.company_id = b.company_id
-        LEFT JOIN sal_fc_company c on c.company_id = b.company_id
-        where
-        task_category = '1'
-        and
-        a.company_id = #{companyId}
-    </select>
-
     <select id="queryAccout" resultMap="BaseResultMapDTO">
         SELECT
         a.ss_pwd,

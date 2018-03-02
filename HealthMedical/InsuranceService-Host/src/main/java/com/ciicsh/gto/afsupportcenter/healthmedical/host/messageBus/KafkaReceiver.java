@@ -4,22 +4,22 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.host.messageBus;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.company.AfCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpInsuranceDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeQueryDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfFullEmployeeDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfCompanyProxy;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.AfTpaTaskService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.EmployeePaymentJobService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.HealthMedicalJobService;
-import com.ciicsh.gto.afsupportcenter.healthmedical.business.SupplyMedicalInvoiceService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.enums.SysConstants;
-import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeeBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfTpaTask;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeMemberDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import com.ciicsh.gto.employeecenter.util.JsonResult;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeReturnTicketDTO;
+import com.ciicsh.gto.productcenter.apiservice.api.proxy.ProductProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyReturnTicketDTO;
 import com.ciicsh.gto.sheetservice.api.MsgConstants;
@@ -34,7 +34,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 /**
  * @author zhaogang
@@ -51,11 +50,13 @@ public class KafkaReceiver {
     private AfEmployeeCompanyProxy afEmployeeCompanyProxy;
 
     @Autowired
-    private EmployeeInfoProxy employeeInfoProxy;
+    private AfCompanyProxy afCompanyProxy;
 
     @Autowired
-    private SupplyMedicalInvoiceService supplyMedicalInvoiceService;
-    private Object PayApplyPayStatusDTO;
+    private ProductProxy productProxy;
+
+    @Autowired
+    private EmployeeInfoProxy employeeInfoProxy;
 
     @Autowired
     private EmployeePaymentJobService employeePaymentService;
@@ -80,27 +81,37 @@ public class KafkaReceiver {
 
     /**
      * 财务驳回
+     *
      * @param dto
      */
     @StreamListener(TaskSink.Financial_Rejected)
     public void receiveFinancialRejected(PayApplyPayStatusDTO dto) {
-        if(SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
-            employeePaymentService.syncSettleCenterStatus(dto);
-        } else {
-            healthMedicalJobService.syncSettleCenterStatus(dto);
+        try {
+            if (SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
+                employeePaymentService.syncSettleCenterStatus(dto);
+            } else if(SysConstants.JobConstants.MEDICAL_CLAIMS.getCode().equals(dto.getBusinessType())) {
+                healthMedicalJobService.syncSettleCenterStatus(dto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     /**
      * 银行退票
+     *
      * @param dto
      */
     @StreamListener(TaskSink.Return_Ticket)
     public void receiveReturn_Ticket(PayApplyReturnTicketDTO dto) {
-        if(SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
-            employeePaymentService.handlePaymentRefund(dto);
-        } else {
-            healthMedicalJobService.handlePaymentRefund(dto);
+        try {
+            if (SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
+                employeePaymentService.handlePaymentRefund(dto);
+            } else if(SysConstants.JobConstants.MEDICAL_CLAIMS.getCode().equals(dto.getBusinessType())) {
+                healthMedicalJobService.handlePaymentRefund(dto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -138,31 +149,23 @@ public class KafkaReceiver {
             empTaskList.forEach(item -> {
                 AfTpaTask task = new AfTpaTask();
                 // <editor-fold desc="2.0 转换service_item">
-                String serviceItem = item.getServiceItems();
+                /* 获取serviceItems */
+                List<String> ids = new ArrayList<>();
+                ids.add(item.getProductId());
+                com.ciicsh.gto.productcenter.apiservice.api.dto.JsonResult jsonResult = productProxy.getProductByProductIDs(ids);
+                String serviceItem = (String) jsonResult.getData();
                 // </editor-fold>
 
                 // <editor-fold desc="2.1 通用字段赋值">
-                EmployeeBO employeeBO = supplyMedicalInvoiceService.queryEmployeeInfo(empDTO.getEmployeeId());
+                // 通过api接口查询公司信息
+                AfCompanyDTO afCompanyDTO = afCompanyProxy.getCompanyByCompanyId(item.getCompanyId());
 
                 // 2.1   判断，如果是投保给子女或者配偶，需要判断是否有信息
                 // 2.1.1 如果没有，需要调用雇员中心接口新增一个任务单
                 // 2.1.2 如果有，获取读取亲属信息
                 // 2.2   查询，投保任务单数据完善和补充
                 // 投保任务单
-                if (serviceItem == null || serviceItem.contains("雇员")) {
-                    task.setType(1);
-                    task.setStatus(2);
-                    task.setAssociatedInsurantId(empDTO.getEmployeeId());
-                    task.setAssociatedInsurantName(empDTO.getEmployeeName());
-                    task.setIdNum(empDTO.getIdNum());
-                    task.setGender(empDTO.getGender());
-                    task.setAge(12);
-                    if (empDTO.getBirthday() != null) {
-                        task.setBirthDate(empDTO.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-                    } else {
-                        task.setBirthDate(null);
-                    }
-                } else {
+                if (serviceItem.contains("子女") || serviceItem.contains("配偶")) {
                     JsonResult<List<EmployeeMemberDTO>> employeeMemberInfoList = employeeInfoProxy.getEmployeeMemberInfo(empDTO.getEmployeeId());
 
                     /* 验证信息，如果存在，状态为-待处理
@@ -210,17 +213,27 @@ public class KafkaReceiver {
                             task.setBirthDate(null);
                         }
                     }
+                } else {
+                    task.setType(1);
+                    task.setStatus(2);
+                    task.setAssociatedInsurantId(empDTO.getEmployeeId());
+                    task.setAssociatedInsurantName(empDTO.getEmployeeName());
+                    task.setIdNum(empDTO.getIdNum());
+                    task.setGender(empDTO.getGender());
+                    task.setAge(12);
+                    if (empDTO.getBirthday() != null) {
+                        task.setBirthDate(empDTO.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                    } else {
+                        task.setBirthDate(null);
+                    }
                 }
                 task.setTaskType(taskCategory.toString());
                 task.setProcessId(taskMsgDTO.getProcessId());
                 task.setEmployeeId(empDTO.getEmployeeId());
                 task.setEmployeeName(empDTO.getEmployeeName());
                 task.setCompanyId(item.getCompanyId());
-                if (employeeBO != null) {
-                    task.setCompanyName(employeeBO.getCompanyName());
-                } else {
-                    task.setCompanyName(" ");
-                }
+                task.setCompanyName(afCompanyDTO.getTitle());
+
                 task.setAfProductId(item.getProductId());
                 task.setProductName(item.getProductName());
                 // 投保日期

@@ -49,136 +49,55 @@
         <result column="modified_by" property="modifiedBy" />
 	</resultMap>
     
-    <resultMap id="ComTaskExtMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.SsComTaskExtPO">
-        <result column="com_task_id" property="comTaskId" />
+    <resultMap id="ComTaskExtMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountExtBO">
         <result column="customer_id" property="customerId" />
         <result column="com_account_id" property="comAccountId" />
+        <result column="com_account_name" property="comAccountName" />
         <result column="company_id" property="companyId" />
-        <result column="task_category" property="taskCategory" />
-        <result column="expire_date" property="expireDate" />
-        <result column="submitter_id" property="submitterId" />
-        <result column="submitter_name" property="submitterName" />
-        <result column="submitter_dept_id" property="submitterDeptId" />
-        <result column="submitter_dept_name" property="submitterDeptName" />
-        <result column="submit_time" property="submitTime" />
-        <result column="submit_remark" property="submitRemark" />
-        <result column="task_form_content" property="taskFormContent" />
-        <result column="chat_history" property="chatHistory" />
-        <result column="dynamic_extend" property="dynamicExtend" />
-        <result column="task_status" property="taskStatus" />
-        <result column="handle_user_id" property="handleUserId" />
-        <result column="handle_user_name" property="handleUserName" />
-        <result column="start_handle_date" property="startHandleDate" />
-        <result column="send_check_date" property="sendCheckDate" />
-        <result column="finish_date" property="finishDate" />
-        <result column="handle_remark" property="handleRemark" />
-        <result column="rejection_remark" property="rejectionRemark" />
-        <result column="business_interface_id" property="businessInterfaceId" />
-        <result column="task_id" property="taskId" />
+        <result column="company_name" property="companyName" />
         <result column="ss_account" property="ssAccount" />
         <result column="bank_account" property="bankAccount" />
-        <result column="com_account_name" property="comAccountName" />
+        <result column="settlement_area" property="settlementArea" />
         <result column="payment_bank" property="paymentBank" />
         <result column="payment_way" property="paymentWay" />
         <result column="bill_receiver" property="billReceiver" />
-        <result column="industry_category" property="industryCategory" />
-        <result column="start_month" property="startMonth" />
-        <result column="expire_date_front" property="expireDateFront" />
-        <result column="settlement_area" property="settlementArea" />
+        <result column="expire_date" property="expireDate" />
         <result column="legal_person" property="legalPerson" />
         <result column="contact_address" property="contactAddress" />
         <result column="dispatch_material" property="dispatchMaterial" />
-        <result column="major_com" property="majorCom" />
-        <result column="supplier_id" property="supplierId" />
-        <result column="ss_account_type" property="ssAccountType" />
-        <result column="bank_account_id" property="bankAccountId" />
-        <result column="ss_username" property="ssUsername" />
-        <result column="ss_pwd" property="ssPwd" />
-        <result column="initial_balance" property="initialBalance" />
-        <result column="initial_debt" property="initialDebt" />
-        <result column="origin_place" property="originPlace" />
-        <result column="origin_place_remark" property="originPlaceRemark" />
-        <result column="query_account" property="queryAccount" />
-        <result column="deliver_way" property="deliverWay" />
-        <result column="deliver_way_remark" property="deliverWayRemark" />
-        <result column="provide_certificate_time" property="provideCertificateTime" />
-        <result column="change_time" property="changeTime" />
-        <result column="receive_date" property="receiveDate" />
-        <result column="into_date" property="intoDate" />
-        <result column="end_date" property="endDate" />
         <result column="remark" property="remark" />
-        <result column="state" property="state" />
     </resultMap>
 
-    <select id="getComTask" resultMap="ComTaskExtMap">
+    <select id="getComTaskByCompanyId" resultMap="ComTaskExtMap">
         SELECT
           <include refid="ComTask_Ext_Columns"/>
-        FROM ss_com_task a
-          LEFT JOIN ss_account_com_relation b ON a.company_id = b.company_id
-          LEFT JOIN ss_com_account c on b.com_account_id = c.com_account_id
+        FROM
+          ss_com_task a
+        INNER JOIN sal_company b ON a.company_id = b.company_id
         WHERE
-          a.is_active = 1 AND com_task_id = #{comTaskId}
+          a.is_active = 1
+        AND b.is_active = 1
+        AND a.task_category = '1'
+        AND a.company_id = #{companyId}
     </select>
 
     <sql id="ComTask_Ext_Columns">
-        a.com_task_id,
         a.customer_id,
         a.com_account_id,
+        a.com_account_name,
         a.company_id,
-        a.task_category,
-        a.expire_date,
-        a.submitter_id,
-        a.submitter_name,
-        a.submitter_dept_id,
-        a.submitter_dept_name,
-        a.submit_time,
-        a.submit_remark,
-        a.task_form_content,
-        a.chat_history,
-        a.dynamic_extend,
-        a.task_status,
-        a.handle_user_id,
-        a.handle_user_name,
-        a.start_handle_date,
-        a.send_check_date,
-        a.finish_date,
-        a.handle_remark,
-        a.rejection_remark,
-        a.business_interface_id,
-        a.task_id,
+        b.title AS 'company_ame',
         a.ss_account,
         a.bank_account,
-        a.com_account_name,
+        a.settlement_area,
         a.payment_bank,
         a.payment_way,
         a.bill_receiver,
-        a.industry_category,
-        a.start_month,
-        a.expire_date_front,
-        a.settlement_area,
+        a.expire_date,
         a.legal_person,
         a.contact_address,
         a.dispatch_material,
-        b.major_com,
-        c.supplier_id,
-        c.ss_account_type,
-        c.bank_account_id,
-        c.ss_username,
-        c.ss_pwd,
-        c.initial_balance,
-        c.initial_debt,
-        c.origin_place,
-        c.origin_place_remark,
-        c.query_account,
-        c.deliver_way,
-        c.deliver_way_remark,
-        c.provide_certificate_time,
-        c.change_time,
-        c.receive_date,
-        c.into_date,
-        c.end_date,
-        c.remark,
-        c.state
+        a.submit_remark AS 'remark'
     </sql>
 
 </mapper>

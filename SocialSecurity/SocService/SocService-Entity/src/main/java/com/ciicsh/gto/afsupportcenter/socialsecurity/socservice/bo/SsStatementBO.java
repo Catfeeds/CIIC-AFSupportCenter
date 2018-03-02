@@ -31,6 +31,15 @@ public class SsStatementBO {
      */
     private Integer maxDiffSumByEmp;
 
+    private  Long monthEmpChangeId;
+
+    public Long getMonthEmpChangeId() {
+        return monthEmpChangeId;
+    }
+
+    public void setMonthEmpChangeId(Long monthEmpChangeId) {
+        this.monthEmpChangeId = monthEmpChangeId;
+    }
 
     /**
      * 对账单Id
@@ -39,7 +48,7 @@ public class SsStatementBO {
     /**
      * 外键, 企业社保账户Id
      */
-    private Long comAccountId;
+    private String comAccountId;
     /**
      * 社保月份
      */
@@ -106,11 +115,11 @@ public class SsStatementBO {
         this.statementId = statementId;
     }
 
-    public Long getComAccountId() {
+    public String getComAccountId() {
         return comAccountId;
     }
 
-    public void setComAccountId(Long comAccountId) {
+    public void setComAccountId(String comAccountId) {
         this.comAccountId = comAccountId;
     }
 

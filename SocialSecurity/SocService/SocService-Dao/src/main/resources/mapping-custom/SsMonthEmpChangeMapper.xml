@@ -22,18 +22,18 @@
 
     <select id="serachMonthEmpChangeByStatementId" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeBO" resultMap="DtoResultMap">
         SELECT
-          T1.*,T2.com_account_name
+          mec.*,ca.com_account_name
         FROM
-          ss_month_emp_change T1
+          ss_month_emp_change mec
           LEFT JOIN
-            ss_com_account T2
-          ON
-            T2.com_account_id = T1.com_account_id
-            AND T2.is_active = '1'
+            ss_com_account ca
+          ON mec.com_account_id = ca.com_account_id
+            AND ca.is_active = '1'
         WHERE
           1=1
-          AND T1.is_active = '1'
-          AND T1.statement_id = #{statementId,jdbcType=VARCHAR}
+          AND mec.is_active = '1'
+
+        AND  mec.month_emp_change_id=#{monthEmpChangeId,jdbcType=VARCHAR}
     </select>
 
 

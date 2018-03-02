@@ -132,7 +132,7 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
             status = SysConstants.EmpApplyStatus.BACK.getCode();
         }
         employeePaymentApplyMapper.syncStatus(new EmployeePaymentStatusBO (
-            dto.getBusinessPkId().intValue(),  SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(), status, dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+            dto.getBusinessPkId().intValue(),  SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(), status, SysConstants.EmpApplyStatus.SYNC.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
         ));
     }
 
@@ -145,6 +145,7 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
      */
     private void syncIncompleteBankCardInfoApply (List<EmpBankRefundBO> refund) {
         List<BankCardRefundDTO> list = CommonTransform.convertToDTOs(refund, BankCardRefundDTO.class);
+        System.out.println(JSON.toJSONString(list));
         com.ciicsh.gto.employeecenter.util.JsonResult jsonResult = bankCardInfoProxy.createBankRefund(list);
         System.out.println(JSON.toJSONString(jsonResult));
     }
@@ -164,7 +165,7 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
         if(!list.isEmpty()) {
             employeePaymentApplyMapper.updateApplyStatus(
                 new EmployeePaymentStatusBO(
-                    Integer.getInteger(list.get(0).getPaymentApplyId()), SysConstants.EmpApplyStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+                    Integer.valueOf(list.get(0).getPaymentApplyId()), SysConstants.EmpApplyStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
                 )
             );
         }
@@ -245,7 +246,7 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
      * @return
      */
     private Integer updateSyncStatus (Integer batchId) {
-        return employeePaymentApplyMapper.syncStatus(new EmployeePaymentStatusBO(
+        return employeePaymentApplyMapper.syncStatus(new EmployeePaymentStatusBO (
             batchId,  SysConstants.BusinessId.EMPLOYEE_PAYMENT.getId(), SysConstants.EmpApplyStatus.SYNC.getCode(), StringUtils.EMPTY,  SysConstants.JobConstants.SYSTEM_ZH.getName()
         ));
     }

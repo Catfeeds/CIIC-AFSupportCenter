@@ -123,84 +123,26 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @Log("用工办理查询")
     @RequestMapping("/employeeDetailInfoQuery")
-    public JsonResult employeeDetailInfoQuery(AmEmpTaskBO amEmpTaskBO) {
+    public JsonResult employeeDetailInfoQuery(AmTaskParamBO amTaskParamBO) {
 
-        AmEmpTaskBO customBO = new AmEmpTaskBO();//客户信息
-        AmEmpTaskBO employeeBO = new AmEmpTaskBO();//雇佣信息
-        AmEmpTask amEmpTask = null;
+        Map<String,Object>  map = business.getInformation(amTaskParamBO);
 
-        try {
-            amEmpTask =business.selectById(amEmpTaskBO.getEmpTaskId());
-            Map<String, Object> map = JSON.parseObject(amEmpTask.getTaskFormContent(),Map.class);
-            String archiveDirection = (String)map.get("archiveDirection");
-            String employeeNature = (String)map.get("employeeNature");
-            employeeBO.setArchiveDirection(archiveDirection);
-            employeeBO.setEmployeeNature(employeeNature);
-        } catch (Exception e) {
-
-        }
-
-        EmployeeQueryDTO var1 = new EmployeeQueryDTO();
-        var1.setBusinessType(1);
-        var1.setIdCardType(amEmpTaskBO.getIdCardType());
-        var1.setIdNum(amEmpTaskBO.getIdNum());
-        com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeInfoDTO> jsonResult = employeeInfoProxy.getEmployeeInfo(var1);//雇佣信息接口
-
-        EmployeeInfoDTO employeeInfoDTO = jsonResult.getData();
-        if(null!=employeeInfoDTO){
-            employeeBO.setEmployeeId(employeeInfoDTO.getEmployeeId());
-            employeeBO.setIdNum(employeeInfoDTO.getIdNum());
-            employeeBO.setEmployeeName(employeeInfoDTO.getEmployeeName());
-            employeeBO.setSex(employeeInfoDTO.getGender()==0?"男":"女");
-            employeeBO.setMobile(employeeInfoDTO.getMobile());
-            employeeBO.setResidenceAddress(employeeInfoDTO.getResidenceAddress());
-        }
-
-        EmployeeHireInfoQueryDTO  employeeHireInfoQueryDTO = new EmployeeHireInfoQueryDTO();
-        employeeHireInfoQueryDTO.setCompanyId(amEmpTaskBO.getCompanyId());
-        employeeHireInfoQueryDTO.setEmployeeId(amEmpTaskBO.getEmployeeId());
-
-        com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeHireInfoDTO> employeeHireInfo = employeeInfoProxy.getEmployeeHireInfo(employeeHireInfoQueryDTO);//雇佣雇佣信息接口
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        if(employeeHireInfo!=null&&null!=employeeHireInfo.getData()){
-            EmployeeHireInfoDTO employeeHireInfoDTO = employeeHireInfo.getData();
-            employeeBO.setFirstInDate(sdf.format(employeeHireInfoDTO.getFirstInDate()));
-            employeeBO.setFirstInCompanyDate(sdf.format(employeeHireInfoDTO.getFirstInCompanyDate()));
-            employeeBO.setOrganizationCode(employeeHireInfoDTO.getOrganizationCode());
-            employeeBO.setPosition(employeeHireInfoDTO.getPosition());
-            employeeBO.setLaborStartDate(sdf.format(employeeHireInfoDTO.getLaborStartDate()));
-            employeeBO.setLaborEndDate(sdf.format(employeeHireInfoDTO.getLaborEndDate()));
-
-            customBO.setServiceCenter(employeeHireInfoDTO.getServiceCenter());
-            customBO.setEmployeeCenterOperator(employeeHireInfoDTO.getEmployeeCenterOperator());
-            customBO.setCustomServiceOperator(employeeHireInfoDTO.getCustomServiceOperator());
-            customBO.setCompanyName(employeeHireInfoDTO.getCompanyName());
-            customBO.setCompanyId(employeeHireInfoDTO.getCompanyId());
-        }
-
-        AmEmpTaskBO accout = business.queryAccout(amEmpTaskBO.getCompanyId());//社保信息
-
-        if(null!=accout){
-            employeeBO.setUkey(accout.getUkey());
-            employeeBO.setAccoutModified(accout.getAccoutModified());
-            employeeBO.setSettlementArea(accout.getSettlementArea());
-            employeeBO.setSsAccount(accout.getSsAccount());
-            employeeBO.setSsPwd(accout.getSsPwd());
-        }
+        AmEmpTaskBO customBO = (AmEmpTaskBO)map.get("customBO");//客户信息
+        AmEmpTaskBO employeeBO = (AmEmpTaskBO)map.get("employeeBO");//雇佣信息
 
         AmEmpTaskBO bo = new AmEmpTaskBO();
-        bo.setEmployeeId(amEmpTaskBO.getEmployeeId());
-        bo.setCompanyId(amEmpTaskBO.getCompanyId());
+        bo.setEmployeeId(amTaskParamBO.getEmployeeId());
+        bo.setCompanyId(amTaskParamBO.getCompanyId());
         Map<String,Object> param = new HashMap<>();
-        param.put("employeeId",amEmpTaskBO.getEmployeeId());
-        param.put("companyId",amEmpTaskBO.getCompanyId());
+        param.put("employeeId",amTaskParamBO.getEmployeeId());
+        param.put("companyId",amTaskParamBO.getCompanyId());
 
         //用工材料
         PageInfo pageInfo = new PageInfo();
         JSONObject params = new JSONObject();
-        params.put("employeeId",amEmpTaskBO.getEmployeeId());
-        params.put("remarkType",amEmpTaskBO.getRemarkType());
-        params.put("companyId",amEmpTaskBO.getCompanyId());
+        params.put("employeeId",amTaskParamBO.getEmployeeId());
+        params.put("remarkType",amTaskParamBO.getRemarkType());
+        params.put("companyId",amTaskParamBO.getCompanyId());
         pageInfo.setParams(params);
 
         //用工材料
@@ -225,7 +167,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         //用工备注
         PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);
         //客户信息
-        List<AmEmpTaskBO>  listCompany = business.queryCustom(amEmpTaskBO.getCompanyId());
+        List<AmEmpTaskBO>  listCompany = business.queryCustom(amTaskParamBO.getCompanyId());
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
 

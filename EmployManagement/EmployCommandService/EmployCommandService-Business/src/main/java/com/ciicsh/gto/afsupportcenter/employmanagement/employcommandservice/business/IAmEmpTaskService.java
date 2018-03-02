@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bus
 
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmpTaskBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmTaskParamBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -36,6 +37,8 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
 
     AmEmpTask getAmEmpTaskById(Long amEmpTaskId);
 
-    List<Map<String,Object>>  getInformation(Map<String,Object> param);
+    Map<String, Object>  getInformation(AmTaskParamBO param);
+
+    boolean insertTaskFire(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) throws Exception;
 
 }
