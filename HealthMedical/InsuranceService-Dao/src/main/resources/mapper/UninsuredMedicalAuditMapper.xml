@@ -60,7 +60,7 @@
         JOIN sal_management
         ON sal_management.management_id = emp_af_emp_company.management_id
         <where>
-            hm_uninsured_medical.status NOT IN (0, 2)
+            hm_uninsured_medical.status = 1
             <if test="umAcceptanceId != null">
                 AND um_acceptance_id = #{umAcceptanceId,jdbcType=INTEGER}
             </if>
@@ -123,7 +123,7 @@
 
     <select id="queryAcceptanceAuditList"
             parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.UninsuredMedicalAuditDTO"
-            resultMap="UninsuredAuditResultMap">
+            resultMap="AcceptanceResultMap">
         SELECT hm_uninsured_medical.*
         FROM hm_uninsured_medical
         JOIN emp_employee
@@ -137,6 +137,7 @@
         JOIN sal_management
         ON sal_management.management_id = emp_af_emp_company.management_id
         <where>
+            hm_uninsured_medical.status NOT IN (0,1,2)
             <if test="umAcceptanceId != null">
                 AND um_acceptance_id = #{umAcceptanceId,jdbcType=INTEGER}
             </if>
