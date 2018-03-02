@@ -150,7 +150,7 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public void handlePaymentRefund (PayApplyReturnTicketDTO dto) {
-        Integer businessId = paymentApplyDetailMapper.selectBusinessId(dto.getBusinessPkId().intValue());
+        Integer businessId = dto.getBusinessItemId();
         List<EmployeeReturnTicketDTO> detail = dto.getEmployeeReturnTicketDTOList();
         if (!detail.isEmpty()) {
             List<EmpBankRefundBO> refund = null;
@@ -184,7 +184,7 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public void syncSettleCenterStatus (PayApplyPayStatusDTO dto) {
-        Integer businessId = paymentApplyDetailMapper.selectBusinessId(dto.getBusinessPkId().intValue());
+        Integer businessId = dto.getBusinessItemId();
         Integer status = SysConstants.SupplyMedicalStatus.COMPLETE.getCode();
         if (SysConstants.SettlementCenterStatus.BACK.getCode().equals(dto.getPayStatus())) {
             status = SysConstants.SupplyMedicalStatus.BACK.getCode();
@@ -194,7 +194,7 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
         );
         if(SysConstants.BusinessId.SUPPLY_MEDICAL.equals(businessId)) {
             supplyMedicalAcceptanceMapper.syncStatus(statusBO);
-        } else if(SysConstants.BusinessId.UNINSURED_MEDICAL.equals(businessId)) {
+        } else {
             if (SysConstants.SettlementCenterStatus.BACK.getCode().equals(dto.getPayStatus())) {
                 statusBO.setStatus(SysConstants.UninsuredMedicalStatus.BACK.getCode());
             } else {
