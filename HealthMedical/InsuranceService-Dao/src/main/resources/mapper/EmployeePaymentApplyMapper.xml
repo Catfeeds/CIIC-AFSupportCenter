@@ -270,6 +270,7 @@
             AND
                 d.is_active = 1
         )
+        AND p.status = 4
     </update>
 
     <update id="updateApplyStatus" parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentStatusBO">

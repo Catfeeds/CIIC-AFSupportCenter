@@ -227,6 +227,7 @@
             AND
               d.is_active = 1
         )
+        AND p.status = 3
     </update>
 
     <!-- 3：审核未同步 -->
