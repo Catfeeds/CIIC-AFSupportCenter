@@ -40,4 +40,56 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
+    <resultMap id="ComAccountExtMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountExtBO">
+        <result column="customer_id" property="customerId" />
+        <result column="com_account_id" property="comAccountId" />
+        <result column="com_account_name" property="comAccountName" />
+        <result column="company_id" property="companyId" />
+        <result column="company_name" property="companyName" />
+        <result column="ss_account" property="ssAccount" />
+        <result column="bank_account" property="bankAccount" />
+        <result column="settlement_area" property="settlementArea" />
+        <result column="payment_bank" property="paymentBank" />
+        <result column="payment_way" property="paymentWay" />
+        <result column="bill_receiver" property="billReceiver" />
+        <result column="expire_date" property="expireDate" />
+        <result column="legal_person" property="legalPerson" />
+        <result column="contact_address" property="contactAddress" />
+        <result column="dispatch_material" property="dispatchMaterial" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <select id="getComAccountByCompanyId" resultMap="ComTaskExtMap">
+        SELECT
+          <include refid="ComAccount_Ext_Columns"/>
+        FROM
+          ss_com_account a
+        INNER JOIN ss_account_com_relation b ON a.com_account_id = b.com_account_id
+        INNER JOIN sal_company c ON b.company_id = c.company_id
+        WHERE
+          a.is_active = 1
+        AND b.is_active = 1
+        AND c.is_active = 1
+        AND b.company_id = #{companyId}
+    </select>
+
+    <sql id="ComAccount_Ext_Columns">
+        a.customer_id,
+        a.com_account_id,
+        a.com_account_name,
+        b.company_id,
+        c.title AS 'company_ame',
+        a.ss_account,
+        a.bank_account,
+        a.settlement_area,
+        a.payment_bank,
+        a.payment_way,
+        a.bill_receiver,
+        a.expire_date,
+        a.legal_person,
+        a.contact_address,
+        a.dispatch_material,
+        a.remark
+    </sql>
+
 </mapper>

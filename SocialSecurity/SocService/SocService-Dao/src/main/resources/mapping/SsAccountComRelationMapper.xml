@@ -15,4 +15,8 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
+    <select id="isExistCompany" resultType="int">
+      SELECT count(*) FROM ss_account_com_relation WHERE company_id = #{companyId} AND is_active = 1
+    </select>
+
 </mapper>

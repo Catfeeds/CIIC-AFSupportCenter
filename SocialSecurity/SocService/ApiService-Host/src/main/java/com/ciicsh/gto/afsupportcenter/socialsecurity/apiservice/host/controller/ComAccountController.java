@@ -3,10 +3,15 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.apiservice.host.controller
 import com.ciicsh.common.entity.JsonResult;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.apiservice.host.translator.ApiTranslator;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.SsComProxy;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.ComAccountExtDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.ComTaskParamDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountParamDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountExtBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountParamBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComTaskParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComAccountService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.ComAccountExtPO;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import org.springframework.beans.BeanUtils;
@@ -29,6 +34,9 @@ public class ComAccountController implements SsComProxy {
     @Autowired
     private SsComAccountService accountService;
 
+    @Autowired
+    private SsComTaskService taskService;
+
     @Override
     @RequestMapping("/getAccountList")
     @Log("获取企业社保账户信息表")
@@ -43,5 +51,18 @@ public class ComAccountController implements SsComProxy {
             accountDTOS = ssComAccountList.stream().map(ApiTranslator::toComAccountDTO).collect(Collectors.toList());
         }
         return JsonResult.success(accountDTOS);
+    }
+
+    @Override
+    @RequestMapping("/getAccountByCompany")
+    public JsonResult getAccountByCompany(ComTaskParamDTO paramDTO) {
+        ComTaskParamBO paramBO = new ComTaskParamBO();
+        BeanUtils.copyProperties(paramDTO,paramBO);
+        ComAccountExtBO extBO = taskService.getComAccountInfo(paramBO);
+        ComAccountExtDTO extDTO = new ComAccountExtDTO();
+        if(null != extBO){
+            BeanUtils.copyProperties(extBO,extDTO);
+        }
+        return JsonResult.success(extDTO);
     }
 }

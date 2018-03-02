@@ -4,13 +4,13 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer;
  * Created by houwanhua on 2018/3/1.
  */
 public class ComTaskParamBO {
-    private Long comTaskId;
+    private String companyId;
 
-    public Long getComTaskId() {
-        return comTaskId;
+    public String getCompanyId() {
+        return companyId;
     }
 
-    public void setComTaskId(Long comTaskId) {
-        this.comTaskId = comTaskId;
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
 }
