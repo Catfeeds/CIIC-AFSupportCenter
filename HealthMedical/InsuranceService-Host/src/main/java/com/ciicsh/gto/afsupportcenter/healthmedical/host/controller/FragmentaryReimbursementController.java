@@ -78,34 +78,10 @@ import java.util.Optional;
     }
 
 
-  /**  public JsonResult<List<FragmentaryReimbursementPO>> getEntityList(@RequestBody PageInfo pageInfo) {
-        PageRows<FragmentaryReimbursementPO> pageRows = business.getEntityList(pageInfo);
-        long count = pageRows.getTotal();
-        if (count == 0) {
-            return JsonResultKit.of(400, "未查找到数据", (List) null);
-        } else {
-            return JsonResultKit.ofPage(pageRows);
-        }
-    }
-
-
-   try {
-   Page<SupplyMedicalAcceptance> page = new Page<>(supplyMedicalAcceptanceDTO.getCurrent(), supplyMedicalAcceptanceDTO.getSize());
-   page = supplyMedicalAcceptanceService.queryAcceptancePage(page, supplyMedicalAcceptanceDTO);
-   logger.info("补充医疗分页查询");
-   return ResultGenerator.genSuccessResult(page);
-   } catch (Exception e) {
-   return ResultGenerator.genServerFailResult();
-   }
-
-
-   **/
-
     @PostMapping("/getEntityList")
     public Result getEntityList(@RequestBody FragmentaryReimbursementDTO fragmentaryReimbursementDTO) {
         try {
-          //  Page<FragmentaryReimbursementPO> page = new Page<>(fragmentaryReimbursementDTO.getCurrent(), fragmentaryReimbursementDTO.getSize());
-            Page<FragmentaryReimbursementPO> page = new Page<>(1, 5);
+            Page<FragmentaryReimbursementPO> page = new Page<>(fragmentaryReimbursementDTO.getCurrent(), fragmentaryReimbursementDTO.getSize());
             page = fragmentaryReimbursementQueryService.getEntityList(page, fragmentaryReimbursementDTO);
             logger.info("零星报销分页查询");
             return ResultGenerator.genSuccessResult(page);

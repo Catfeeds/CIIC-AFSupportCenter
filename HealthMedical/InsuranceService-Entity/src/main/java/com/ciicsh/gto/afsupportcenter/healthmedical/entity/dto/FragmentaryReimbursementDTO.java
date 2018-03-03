@@ -17,7 +17,6 @@ public class FragmentaryReimbursementDTO extends CommonEntity {
      * 雇员终身编号
      */
 	private String employeeId;
-
     private String employeeName;
     private String IDNum;
     private String companyId;
