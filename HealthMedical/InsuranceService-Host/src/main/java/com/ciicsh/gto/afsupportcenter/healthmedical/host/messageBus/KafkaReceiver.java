@@ -12,7 +12,7 @@ import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyPr
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.AfTpaTaskService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.SupplyMedicalInvoiceService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeeBO;
-import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfTpaTask;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfTpaTaskPO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeMemberDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import com.ciicsh.gto.employeecenter.util.JsonResult;
@@ -113,10 +113,10 @@ public class KafkaReceiver {
             //</editor-fold>
 
             // <editor-fold desc="2 循环，处理前道投退任务单">
-            List<AfTpaTask> afTaskList = new ArrayList<>();
+            List<AfTpaTaskPO> afTaskList = new ArrayList<>();
 
             empTaskList.forEach(item -> {
-                AfTpaTask task = new AfTpaTask();
+                AfTpaTaskPO task = new AfTpaTaskPO();
                 // <editor-fold desc="2.0 转换service_item">
                 String serviceItem = item.getServiceItems();
                 // </editor-fold>

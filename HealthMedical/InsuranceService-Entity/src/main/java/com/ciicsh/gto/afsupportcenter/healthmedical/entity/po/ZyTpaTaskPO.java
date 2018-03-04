@@ -16,7 +16,7 @@ import java.io.Serializable;
  * @since 2018-02-11
  */
 @TableName("hm_zy_tpa_task")
-public class ZyTpaTask implements Serializable {
+public class ZyTpaTaskPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -206,7 +206,7 @@ public class ZyTpaTask implements Serializable {
 
 	@Override
 	public String toString() {
-		return "ZyTpaTask{" +
+		return "ZyTpaTaskPO{" +
 			", afTaskId=" + afTaskId +
 			", employeeId=" + employeeId +
 			", companyId=" + companyId +
