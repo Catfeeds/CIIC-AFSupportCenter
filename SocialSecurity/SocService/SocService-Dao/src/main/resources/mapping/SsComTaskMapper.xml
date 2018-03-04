@@ -93,7 +93,7 @@
         a.payment_bank,
         a.payment_way,
         a.bill_receiver,
-        a.expire_date,
+        a.expire_date_front AS 'expire_date',
         a.legal_person,
         a.contact_address,
         a.dispatch_material,

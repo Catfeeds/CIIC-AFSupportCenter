@@ -1,8 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto;
 
-
-import java.util.Date;
-
 /**
  * Created by houwanhua on 2018/3/2.
  */
@@ -64,7 +61,7 @@ public class ComAccountExtDTO {
     /**
      * 发起人要求任务完成截止日期
      */
-    private Date expireDate;
+    private Integer expireDate;
     /**
      * 法人
      */
@@ -172,11 +169,11 @@ public class ComAccountExtDTO {
         this.billReceiver = billReceiver;
     }
 
-    public Date getExpireDate() {
+    public Integer getExpireDate() {
         return expireDate;
     }
 
-    public void setExpireDate(Date expireDate) {
+    public void setExpireDate(Integer expireDate) {
         this.expireDate = expireDate;
     }
 
