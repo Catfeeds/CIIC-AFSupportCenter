@@ -1,6 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.business.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.AcceptanceDetailedService;
@@ -25,7 +24,6 @@ import com.ciicsh.gto.afsupportcenter.util.poi.model.CellSettings;
 import com.ciicsh.gto.afsupportcenter.util.poi.model.DatePattern;
 import com.ciicsh.gto.afsupportcenter.util.poi.model.SheetSettings;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -33,19 +31,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.xml.crypto.Data;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -85,10 +79,18 @@ public class SupplyMedicalAcceptanceServiceImpl extends ServiceImpl<SupplyMedica
     }
 
 
-
     @Override
     public boolean syncAcceptanceSummaryDetail() {
-        TimeScope timeScope = new TimeScope("2018-1-26 14:00:00", "2018-1-26 15:00:00");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String endTime = simpleDateFormat.format(new Date());
+
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.add(Calendar.HOUR, -2);
+
+        String beginTime = simpleDateFormat.format(c.getTime());
+        TimeScope timeScope = new TimeScope(beginTime, endTime);
+
         String summaryUrl = "http://10.17.3.1:9999/FileOperationForJSON.svc/GetMedicalScheme";
         List list = restTemplate.postForEntity(summaryUrl, timeScope, List.class).getBody();
 //        String str = JSON.toJSONString(list);
@@ -155,7 +157,7 @@ public class SupplyMedicalAcceptanceServiceImpl extends ServiceImpl<SupplyMedica
         return acceptanceStatisticsBO;
     }
 
-    public static Date getUpdateTiem() {
+    public static Date getUpdateTime() {
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
         c.add(Calendar.DAY_OF_MONTH, -2);
@@ -164,7 +166,7 @@ public class SupplyMedicalAcceptanceServiceImpl extends ServiceImpl<SupplyMedica
 
     @Override
     public void updateAcceptanceStatus() {
-        baseMapper.updateByEntity(getUpdateTiem());
+        baseMapper.updateByEntity(getUpdateTime());
     }
 
     @Override

@@ -1,9 +1,9 @@
 package com.ciicsh.gto.test.service;
 
 import com.alibaba.fastjson.JSON;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.SiteServiceApp;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComAccountService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpArchiveService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.SiteServiceApp;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

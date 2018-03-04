@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComTaskBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountExtBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComTaskParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
@@ -13,11 +14,11 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAccount
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAccountRatio;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComTask;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.SsComTaskExtPO;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -298,7 +299,16 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
     }
 
     @Override
-    public SsComTaskExtPO getComTask(ComTaskParamBO paramBO) {
-        return baseMapper.getComTask(paramBO);
+    public ComAccountExtBO getComAccountInfo(ComTaskParamBO paramBO) {
+        ComAccountExtBO accountExtBO = new ComAccountExtBO();
+        Integer result = ssAccountComRelationMapper.isExistCompany(paramBO.getCompanyId());
+        List<ComAccountExtBO> extBOS = result > 0 ? sComAccountMapper.getComAccountByCompanyId(paramBO) : baseMapper.getComTaskByCompanyId(paramBO);
+
+        if(null != extBOS && extBOS.size() > 0){
+            accountExtBO = extBOS.get(0);
+        }
+        return accountExtBO;
     }
+
+
 }

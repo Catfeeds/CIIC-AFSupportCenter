@@ -32,15 +32,15 @@ public interface SsMonthEmpChangeDetailService extends IService<SsMonthEmpChange
 
     /**
      * 养老、医疗和失业变更明细导出
-     * @param statementId 对账ID
+     * @param monthEmpChangeId 对账ID
      * @return 返回变更明细数据
      */
-    List<YysExportOpt> yysExportQuery(Long statementId);
+    List<YysExportOpt> yysExportQuery(Long monthEmpChangeId);
 
     /**
      * 工伤和生育变更明细导出
-     * @param statementId 对账ID
+     * @param monthEmpChangeId 对账ID
      * @return 返回变更明细数据
      */
-    List<GsyExportOpt> gsyExportQuery(Long statementId);
+    List<GsyExportOpt> gsyExportQuery(Long monthEmpChangeId);
 }

@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBatchRejectBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskHandleBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskHandlePostBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
@@ -19,5 +20,7 @@ public interface HfEmpTaskHandleService extends IService<HfEmpTask> {
 
     JsonResult inputDataSave(JSONObject params, boolean isHandle);
 
-    JsonResult handleCancel(List<Long> empTaskIdList);
+    JsonResult handleCancel(List<Long> empTaskIdList, String currentUser);
+
+    JsonResult handleReject(HfEmpTaskBatchRejectBo hfEmpTaskBatchRejectBo);
 }

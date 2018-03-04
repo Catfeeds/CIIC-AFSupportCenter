@@ -8,7 +8,7 @@ spring:
   application:
     name: support-center-soc-site-service
   profiles:
-    active: dev
+    active: fat
   cloud:
     stream:
       bindings:
@@ -80,8 +80,3 @@ management:
     enabled: false
   port: 6004
   context-path: /admin
-
-http:
-  multipart:
-  enabled: true
-  max-file-size: 2MB

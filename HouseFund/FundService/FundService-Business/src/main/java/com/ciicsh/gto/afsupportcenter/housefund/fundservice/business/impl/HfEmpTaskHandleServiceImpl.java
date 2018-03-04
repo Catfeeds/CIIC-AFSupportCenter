@@ -5,20 +5,25 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
+import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialUpdateDateDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpArchiveConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskPeriodConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfMonthChargeConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
+import com.ciicsh.gto.afsupportcenter.util.kit.DateKit;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.commonservice.util.dto.Result;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,6 +55,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
     private HfComAccountService hfComAccountService;
     @Autowired
     private HfArchiveBaseAdjustService hfArchiveBaseAdjustService;
+    @Autowired
+    private CommonApiUtils commonApiUtils;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
@@ -76,6 +83,9 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         }
         if (StringUtils.isEmpty(hfEmpTask.getTaskId())) {
             return JsonResultKit.ofError("当前任务单TaskId为空");
+        }
+        if (StringUtils.isEmpty(hfEmpTask.getBusinessInterfaceId())) {
+            return JsonResultKit.ofError("当前任务单BusinessInterfaceId为空");
         }
         if ((hfEmpTask.getTaskStatus() != null && !hfEmpTask.getTaskStatus().equals(taskStatus))
             || (hfEmpTask.getTaskStatus() == null && taskStatus != HfEmpTaskConstant.TASK_STATUS_UNHANDLED)) {
@@ -164,14 +174,17 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             inputHfEmpTask.setHfType(hfEmpTask.getHfType());
             inputHfEmpTask.setCompanyId(hfEmpTask.getCompanyId());
             inputHfEmpTask.setEmployeeId(hfEmpTask.getEmployeeId());
+            inputHfEmpTask.setTaskId(hfEmpTask.getTaskId());
+            inputHfEmpTask.setBusinessInterfaceId(hfEmpTask.getBusinessInterfaceId());
         } else {
             this.updateById(inputHfEmpTask);
         }
 
-        List<HfArchiveBasePeriod> hfArchiveBasePeriodList;
+        List<HfArchiveBasePeriod> hfArchiveBasePeriodList = null;
+        List<HfEmpTaskPeriod> hfEmpTaskPeriodList;
         // 任务单费用段操作处理
         if (operatorListData != null) {
-            List<HfEmpTaskPeriod> hfEmpTaskPeriodList = operatorListData.toJavaList(HfEmpTaskPeriod.class);
+            hfEmpTaskPeriodList = operatorListData.toJavaList(HfEmpTaskPeriod.class);
             if (hfEmpTaskPeriodList.size() > 0) {
                 hfEmpTaskPeriodList.stream().forEach(e -> {
                     if (e.getEmpTaskPeriodId() != null) {
@@ -186,7 +199,6 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 hfEmpTaskPeriodService.insertOrUpdateBatch(hfEmpTaskPeriodList);
 
                 if (isHandle) {
-
                     switch (inputHfEmpTask.getTaskCategory()) {
                         case HfEmpTaskConstant.TASK_CATEGORY_IN_ADD:
                         case HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN:
@@ -219,7 +231,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             hfEmpTaskPeriod.setCreatedBy("test"); // TODO
             hfEmpTaskPeriod.setEndMonth(endMonth);
 
-            List<HfEmpTaskPeriod> hfEmpTaskPeriodList = hfEmpTaskPeriodService.selectByMap(condition);
+            hfEmpTaskPeriodList = hfEmpTaskPeriodService.selectByMap(condition);
             if (CollectionUtils.isNotEmpty(hfEmpTaskPeriodList)) {
                 if (hfEmpTaskPeriodList.size() > 1) {
                     return JsonResultKit.ofError("当前雇员任务单费用段数据不正确");
@@ -251,7 +263,75 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 }
             }
         }
-        return JsonResultKit.of(hfEmpTask.getTaskId());
+        if (isHandle) {
+            try {
+                int rtnCode = apiUpdateConfirmDate(inputHfEmpTask.getCompanyId(),
+                    Long.valueOf(inputHfEmpTask.getBusinessInterfaceId()),
+                    hfArchiveBasePeriodList,
+                    false);
+            } catch (Exception e) {
+                e.printStackTrace(); // TODO log
+                throw new BusinessException("访问客服中心的雇员任务单实缴金额回调接口失败");
+            }
+            try {
+                Result result = apiCompleteTask(inputHfEmpTask.getTaskId(),
+                    "test"); // TODO currentUser
+            } catch (Exception e) {
+                e.printStackTrace(); // TODO log
+                throw new BusinessException("访问客服中心的完成任务接口失败");
+            }
+        }
+        return JsonResultKit.of();
+    }
+
+    /**
+     * 雇员任务单批退处理
+     *
+     * @param hfEmpTaskBatchRejectBo 页面提交参数对象
+     * @return 处理结果
+     */
+    @Transactional(rollbackFor = BusinessException.class)
+    @Override
+    public JsonResult handleReject(HfEmpTaskBatchRejectBo hfEmpTaskBatchRejectBo) {
+        Long empTaskId = hfEmpTaskBatchRejectBo.getSelectedData()[0];
+        HfEmpTask hfEmpTask = this.selectById(empTaskId);
+        if (hfEmpTask == null || !hfEmpTask.getActive()) {
+            return JsonResultKit.ofError("当前任务单已不存在");
+        }
+        if (StringUtils.isEmpty(hfEmpTask.getTaskId())) {
+            return JsonResultKit.ofError("当前任务单TaskId为空");
+        }
+        if (StringUtils.isEmpty(hfEmpTask.getBusinessInterfaceId())) {
+            return JsonResultKit.ofError("当前任务单BusinessInterfaceId为空");
+        }
+
+        hfEmpTask = new HfEmpTask();
+        hfEmpTask.setEmpTaskId(empTaskId);
+        hfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_REJECTED);
+        hfEmpTask.setRejectionRemark(hfEmpTaskBatchRejectBo.getRejectionRemark());
+        hfEmpTask.setModifiedTime(LocalDateTime.now());
+        hfEmpTask.setModifiedBy("test"); // TODO currentUser
+
+        this.updateById(hfEmpTask);
+
+        try {
+            int rtnCode = apiUpdateConfirmDate(hfEmpTask.getCompanyId(),
+                Long.valueOf(hfEmpTask.getBusinessInterfaceId()),
+                new ArrayList<HfArchiveBasePeriod>(1) { { add(new HfArchiveBasePeriod()); } },
+                true);
+        } catch (Exception e) {
+            e.printStackTrace(); // TODO log
+            throw new BusinessException("访问客服中心的雇员任务单实缴金额回调接口失败");
+        }
+        try {
+            Result result = apiCompleteTask(hfEmpTask.getTaskId(),
+                "test"); // TODO currentUser
+        } catch (Exception e) {
+            e.printStackTrace(); // TODO log
+            throw new BusinessException("访问客服中心的完成任务接口失败");
+        }
+
+        return JsonResultKit.of();
     }
 
     /**
@@ -261,7 +341,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
      */
     @Transactional(rollbackFor = BusinessException.class)
     @Override
-    public JsonResult handleCancel(List<Long> empTaskIdList) {
+    public JsonResult handleCancel(List<Long> empTaskIdList, String currentUser) {
         List<HfEmpTask> hfEmpTaskList = this.selectBatchIds(empTaskIdList);
         if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
             List<Long> outEmpTaskIdList = new ArrayList<>();
@@ -810,7 +890,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         }
 
         inputHfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_HANDLED);
-        inputHfEmpTask.setHandleStatus(2); // TODO 1.收缴材料 skip？
+//        inputHfEmpTask.setHandleStatus(2); //
         inputHfEmpTask.setHandleDate(YearMonth.now().format(formatter));
         inputHfEmpTask.setHandleUserId("test"); // TODO
         inputHfEmpTask.setHandleUserName("test"); // TODO
@@ -911,6 +991,63 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         // 仅是为了提高执行效率，在后面生成雇员月度汇缴明细库时无需重新计算，借用该两个字段（差额补缴时不更新档案费用分段表）
         hfArchiveBasePeriod.setComAmount(singleComDiffAmount);
         hfArchiveBasePeriod.setAmountEmp(singleEmpDiffAmount);
+    }
+
+    /**
+     * 访问客服中心的完成任务接口
+     *
+     * @param taskId 任务单ID
+     * @param assignee 办理人
+     * @return 接口返回结果
+     * @throws Exception 接口throws出的Exception
+     */
+    public Result apiCompleteTask(String taskId, String assignee) throws Exception {
+        TaskSheetRequestDTO taskSheetRequestDTO = new TaskSheetRequestDTO();
+        taskSheetRequestDTO.setTaskId(taskId);
+        taskSheetRequestDTO.setAssignee(assignee);
+        return commonApiUtils.completeTask(taskSheetRequestDTO); // TODO return code?
+    }
+
+    /**
+     * 访问雇员任务单实缴金额回调接口（支持中心调用客服中心）
+     *
+     * @param companyId 客户编号
+     * @param empAgreementId 业务接口ID
+     * @param hfArchiveBasePeriodList 雇员费用段列表
+     * @param isReject 是否批退
+     * @return 接口返回结果
+     * @throws Exception 接口throws出的Exception
+     */
+    public int apiUpdateConfirmDate(String companyId,
+                                       Long empAgreementId,
+                                       List<HfArchiveBasePeriod> hfArchiveBasePeriodList,
+                                       boolean isReject) throws Exception {
+        if (CollectionUtils.isNotEmpty(hfArchiveBasePeriodList)) {
+            List<AfEmpSocialUpdateDateDTO> afEmpSocialUpdateDateDTOList = new ArrayList<>(hfArchiveBasePeriodList.size());
+            DateKit.setDatePattern("yyyyMMdd");
+            hfArchiveBasePeriodList.stream().forEach(e -> {
+                AfEmpSocialUpdateDateDTO afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
+                afEmpSocialUpdateDateDTO.setCompanyId(companyId);
+                afEmpSocialUpdateDateDTO.setEmpAgreementId(empAgreementId);
+                afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ID_FUND);
+                if (isReject) {
+                    afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(BigDecimal.ZERO);
+                    afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(BigDecimal.ZERO);
+                } else {
+                    afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(e.getComAmount());
+                    afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(e.getAmountEmp());
+                    if (StringUtils.isNotEmpty(e.getStartMonth())) {
+                        afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(e.getStartMonth() + "01"));
+                    }
+                    if (StringUtils.isNotEmpty(e.getEndMonth())) {
+                        afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(e.getEndMonth() + "01"));
+                    }
+                }
+                afEmpSocialUpdateDateDTOList.add(afEmpSocialUpdateDateDTO);
+            });
+            return commonApiUtils.updateConfirmDate(afEmpSocialUpdateDateDTOList); // TODO return code?
+        }
+        return 0;
     }
 
     /**

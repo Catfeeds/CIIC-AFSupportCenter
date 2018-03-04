@@ -283,7 +283,7 @@ public interface SocialSecurityConst {
 
     public static final List<String> FUND_OUT_UNIT_LIST = new ArrayList<String>() {
         {
-            add("原单位");
+//            add("原单位");
             add("市公积金封存办(中心)");
             add("中智大库");
             add("中智外包");

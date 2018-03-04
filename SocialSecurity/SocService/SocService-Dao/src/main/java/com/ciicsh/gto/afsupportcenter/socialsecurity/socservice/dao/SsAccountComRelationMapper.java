@@ -40,4 +40,6 @@ public interface SsAccountComRelationMapper extends BaseMapper<SsAccountComRelat
      */
     AccountCompanyRelationOpt getAccountCompanyRelationByAccountId(@Param("comAccountId") Long comAccountId);
 
+    Integer isExistCompany(@Param("companyId") String companyId);
+
 }
