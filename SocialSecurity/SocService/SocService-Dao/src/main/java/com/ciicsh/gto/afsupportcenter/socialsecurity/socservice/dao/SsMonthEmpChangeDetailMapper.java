@@ -46,13 +46,13 @@ public interface SsMonthEmpChangeDetailMapper extends BaseMapper<SsMonthEmpChang
      * @param statementId 对账ID
      * @return 返回变更明细数据
      */
-    List<YysExportOpt> yysExportQuery(@Param("statementId")Long statementId);
+    List<YysExportOpt> yysExportQuery(@Param("monthEmpChangeId")Long statementId);
 
     /**
      * 工伤和生育变更明细导出
      * @param statementId 对账ID
      * @return 返回变更明细数据
      */
-    List<GsyExportOpt> gsyExportQuery(@Param("statementId")Long statementId);
+    List<GsyExportOpt> gsyExportQuery(@Param("monthEmpChangeId")Long statementId);
 
 }
