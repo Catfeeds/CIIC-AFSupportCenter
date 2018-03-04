@@ -7,6 +7,9 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dto.
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmArchiveUse;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpMaterial;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmInjury;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.archiveSearchExportOpt;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -19,11 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by zhangzhiwen on 2018/2/6.
@@ -353,6 +354,32 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         return JsonResultKit.of(result);
 
+    }
+
+    @RequestMapping("/archiveSearchExportOpt")
+    public void archiveSearchExportOpt(HttpServletResponse response, AmEmploymentBO amEmploymentBO) {
+        List<String> param = new ArrayList<String>();
+
+        if(!StringUtil.isEmpty(amEmploymentBO.getParams()))
+        {
+            String arr[] = amEmploymentBO.getParams().split(",");
+            for(int i=0;i<arr.length;i++) {
+                param.add(arr[i]);
+            }
+        }
+
+        amEmploymentBO.setParam(param);
+
+        if(null!=amEmploymentBO.getTaskStatus()&&amEmploymentBO.getTaskStatus()==0){
+            amEmploymentBO.setTaskStatus(null);
+        }
+
+        Date date = new Date();
+        String fileNme = "用工档案任务单_"+ StringUtil.getDateString(date)+".xls";
+
+        List<archiveSearchExportOpt> opts = business.queryAmArchiveList(amEmploymentBO);
+
+        ExcelUtil.exportExcel(opts,archiveSearchExportOpt.class,fileNme,response);
     }
 
 }
