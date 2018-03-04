@@ -1205,19 +1205,43 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         if (taskPeriods == null) {
             throw new BusinessException("任务单信息不正确");
         }
+        if(taskPeriods.size()>1){
+            throw new BusinessException("暂不支持多段");
+        }
         //任务单Id
         Long empTaskId = bo.getEmpTaskId();
-        //缴纳费用段
+
+        //缴纳费用段 startMonth 等于当前月
         List<SsEmpBasePeriod> basePeriods = new ArrayList<>(taskPeriods.size());
+
+        //缴纳费用段 在当前月之前 （例如 在3月份 报 1月份入职  那么 1-2月的时间段在这里）
+        List<SsEmpBasePeriod> backPeriods =  new ArrayList<>(taskPeriods.size());
+
         // 删除 old 费用段和明细
         ssEmpBasePeriodService.deleteByEmpTaskId(empTaskId);
         // 更新任务单费用段
         String handleMonth = bo.getHandleMonth();
 
+        //获取缴纳费用段
+        SsEmpTaskPeriod ssEmpTaskPeriod = taskPeriods.get(0);
+
+
+
         //task表对应的费用段 转 档案表对应的费用段
-        taskPeriods.forEach(p -> {
-            //获得费用段 用于插入数据库
-            SsEmpBasePeriod basePeriod = Adapter.ssEmpBasePeriod(p);
+//        taskPeriods.forEach(p -> {
+//            //获得费用段 用于插入数据库
+//            SsEmpBasePeriod basePeriod = Adapter.ssEmpBasePeriod(p);
+//            basePeriod.setEmpArchiveId(empArchiveId);
+//            basePeriod.setEmpTaskId(empTaskId);
+//            //办理月份
+//            basePeriod.setSsMonth(handleMonth);
+//            //设置创建人和修改人
+//            by(basePeriod);
+//            basePeriods.add(basePeriod);
+//        });
+        //判断是否
+        //获得费用段 用于插入数据库
+            SsEmpBasePeriod basePeriod = Adapter.ssEmpBasePeriod(ssEmpTaskPeriod);
             basePeriod.setEmpArchiveId(empArchiveId);
             basePeriod.setEmpTaskId(empTaskId);
             //办理月份
@@ -1225,7 +1249,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             //设置创建人和修改人
             by(basePeriod);
             basePeriods.add(basePeriod);
-        });
+
         ssEmpBasePeriodService.saveForEmpTaskId(basePeriods, empTaskId);
         // 险种
         // 更新雇员社保汇缴基数明细
