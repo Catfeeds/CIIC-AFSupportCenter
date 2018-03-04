@@ -21,6 +21,7 @@
             <result column="payment_bank" property="paymentBank"/>
             <result column="payment_way" property="paymentWay"/>
             <result column="expire_date_acc" property="expireDate"/>
+            <result column="bill_receiver" property="billReceiver"/>
             <result column="ss_username" property="ssUsername"/>
             <result column="ss_pwd" property="ssPwd"/>
             <result column="initial_balance" property="initialBalance"/>
@@ -83,6 +84,7 @@
             <result column="settlement_area" property="settlementArea"/>
             <result column="payment_bank" property="paymentBank"/>
             <result column="payment_way" property="paymentWay"/>
+            <result column="bill_receiver" property="billReceiver"/>
             <result column="expire_date_acc" property="expireDate"/>
             <result column="ss_username" property="ssUsername"/>
             <result column="ss_pwd" property="ssPwd"/>
@@ -374,6 +376,7 @@
         settlement_area,
         payment_bank,
         payment_way,
+        billReceiver,
         expire_date AS expire_date_acc,
         ss_username,
         ss_pwd,
@@ -477,6 +480,7 @@
         settlement_area,
         payment_bank,
         payment_way,
+        bill_receiver,
         expire_date AS expire_date_acc,
         ss_username,
         ss_pwd,
