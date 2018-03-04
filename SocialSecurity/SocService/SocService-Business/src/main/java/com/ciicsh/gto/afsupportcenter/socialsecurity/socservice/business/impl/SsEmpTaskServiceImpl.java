@@ -20,6 +20,7 @@ import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRe
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.SSPItemDTO;
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -972,16 +973,13 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 ssEmpTaskPeriod.setRemitWay(3);
             }else if(type==TaskPeriodConst.SUPPLEMENTARYPAYTYPE){
                 ssEmpTaskPeriod.setRemitWay(2);
+            }else{
+                ssEmpTaskPeriod.setRemitWay(1);
             }
             //将前端emptask 转empBase
-            SsEmpBasePeriod basePeriod = Adapter.ssEmpBasePeriod(ssEmpTaskPeriod);
-            basePeriod.setEmpArchiveId(bo.getEmpArchiveId());
-            basePeriod.setEmpTaskId(bo.getEmpTaskId());
-            //办理月份
-            basePeriod.setSsMonth(bo.getHandleMonth());
-            //设置创建人和修改人
+            SsEmpBasePeriod basePeriod = Adapter.ssEmpBasePeriod(ssEmpTaskPeriod, bo);
             by(basePeriod);
-            //更新原来时间段和添加新时间段
+            //用于更新原来时间段和添加新时间段
             newEmpBasePeriodList.add(basePeriod);
         }
         return newEmpBasePeriodList;
@@ -1205,28 +1203,51 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         if (taskPeriods == null) {
             throw new BusinessException("任务单信息不正确");
         }
+        if(taskPeriods.size()>1){
+            throw new BusinessException("暂不支持多段");
+        }
         //任务单Id
         Long empTaskId = bo.getEmpTaskId();
-        //缴纳费用段
-        List<SsEmpBasePeriod> basePeriods = new ArrayList<>(taskPeriods.size());
+
+        //缴纳费用段 startMonth 等于当前月
+        List<SsEmpTaskPeriod> baseTaskPeriods = new ArrayList<>();
+
+        //缴纳费用段 在当前月之前 （例如 在3月份 报 1月份入职  那么 1-2月的时间段在这里）
+        List<SsEmpTaskPeriod> backPeriods =  new ArrayList<>();
         // 删除 old 费用段和明细
         ssEmpBasePeriodService.deleteByEmpTaskId(empTaskId);
         // 更新任务单费用段
         String handleMonth = bo.getHandleMonth();
 
-        //task表对应的费用段 转 档案表对应的费用段
-        taskPeriods.forEach(p -> {
-            //获得费用段 用于插入数据库
-            SsEmpBasePeriod basePeriod = Adapter.ssEmpBasePeriod(p);
-            basePeriod.setEmpArchiveId(empArchiveId);
-            basePeriod.setEmpTaskId(empTaskId);
-            //办理月份
-            basePeriod.setSsMonth(handleMonth);
-            //设置创建人和修改人
-            by(basePeriod);
-            basePeriods.add(basePeriod);
-        });
+        //获取缴纳费用段
+        SsEmpTaskPeriod ssEmpTaskPeriod = taskPeriods.get(0);
+        //起缴月份
+        String startMonth = ssEmpTaskPeriod.getStartMonth();
+
+
+        Integer handleMonthInt = Integer.valueOf(handleMonth);
+        Integer startMonthInt = Integer.valueOf(startMonth);
+
+        //如果起缴月份在办理月份之前 如 3月份 报 1月份入职
+        if(startMonthInt<handleMonthInt){
+            //获得办理月份上月的月份值
+            String endMonth = TaskCommonUtils.getLastMonth(handleMonthInt);
+            SsEmpTaskPeriod cloneObj = new SsEmpTaskPeriod();
+            BeanUtils.copyProperties(ssEmpTaskPeriod,cloneObj);
+            cloneObj.setEndMonth(endMonth);
+            ssEmpTaskPeriod.setStartMonth(handleMonth);
+            //新增做补缴的任务单
+            backPeriods.add(cloneObj);
+        }
+
+
+        //获得费用段 用于插入数据库
+        baseTaskPeriods.add(ssEmpTaskPeriod);
+        //-1 代表新进 task表对应的费用段 转 福利段对应的费用段
+        List<SsEmpBasePeriod> basePeriods =  taskPeriodTranserEmpBase(baseTaskPeriods,bo,-1);
+
         ssEmpBasePeriodService.saveForEmpTaskId(basePeriods, empTaskId);
+
         // 险种
         // 更新雇员社保汇缴基数明细
         // 险种的数据段 （前道传递过来的）
@@ -1239,6 +1260,10 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             String now = TaskCommonUtils.getMonthStr(LocalDate.now()).toString();
             SsEmpBasePeriod ssEmpBasePeriod= basePeriods.get(0);
             createNonstandardData(bo,ssEmpBasePeriod,null,null,null);
+        }
+        if(backPeriods.size()!=0){
+            bo.setTaskCategory(4);
+            supplementaryPayment(backPeriods,bo);
         }
     }
 
@@ -1344,15 +1369,20 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
          * 适配《雇员正常汇缴社保的基数分段》
          *
          * @param taskPeriod
-         * @return
+         * @param bo
+         *@param  @return
          */
-        public static SsEmpBasePeriod ssEmpBasePeriod(SsEmpTaskPeriod taskPeriod) {
+        public static SsEmpBasePeriod ssEmpBasePeriod(SsEmpTaskPeriod taskPeriod, SsEmpTaskBO bo) {
             SsEmpBasePeriod basePeriod = new SsEmpBasePeriod();
             basePeriod.setBaseAmount(taskPeriod.getBaseAmount());
             basePeriod.setEmpTaskId(taskPeriod.getEmpTaskId());
             basePeriod.setEndMonth(taskPeriod.getEndMonth());
             basePeriod.setStartMonth(taskPeriod.getStartMonth());
             basePeriod.setRemitWay(taskPeriod.getRemitWay());
+            basePeriod.setEmpArchiveId(bo.getEmpArchiveId());
+            basePeriod.setEmpTaskId(bo.getEmpTaskId());
+            //办理月份
+            basePeriod.setSsMonth(bo.getHandleMonth());
             return basePeriod;
         }
     }
