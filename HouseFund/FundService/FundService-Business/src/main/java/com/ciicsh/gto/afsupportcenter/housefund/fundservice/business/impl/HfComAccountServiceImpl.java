@@ -71,7 +71,7 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
      */
     @Override
     public List<ComFundAccountCompanyPO> getComFundAccountCompanyList(int comAccountId) {
-        return null;
+        return baseMapper.getComFundAccountCompanyList(comAccountId);
     }
 
     @Override

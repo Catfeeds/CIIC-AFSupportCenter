@@ -41,7 +41,10 @@
     </resultMap>
 
     <resultMap id="ComFundAccountCompanyMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountCompanyPO">
-
+        <result column="company_id" jdbcType="VARCHAR" property="companyId"/>
+        <result column="company_name" jdbcType="VARCHAR" property="companyName"/>
+        <result column="account_manager" jdbcType="VARCHAR" property="accountManager"/>
+        <result column="binded_time" jdbcType="VARCHAR" property="bindedTime"/>
     </resultMap>
 
     <resultMap id="ComAccountTransBo"
