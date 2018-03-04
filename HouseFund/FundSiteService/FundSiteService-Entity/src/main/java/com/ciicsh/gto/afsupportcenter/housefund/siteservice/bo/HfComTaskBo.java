@@ -58,7 +58,7 @@ public class HfComTaskBo extends HfComTask {
     /**
      * 发起时间
      */
-    private Date submitTime;
+    private String submitTimeString;
 
     /**
      * 任务发起人备注
@@ -117,5 +117,30 @@ public class HfComTaskBo extends HfComTask {
      * 1 独立户 2 大库、3 外包
      */
     private String typeValue;
+
+    /**
+     * 1 销户 2 公司自做 3 转其他代理商（前道传递）
+     */
+    private String endTypeValue;
+
+    /**
+     * 任务单状态条件字符串
+     */
+    private String taskStatusString;
+
+    /**
+     * 受审时间
+     */
+    private String startHandleDateString;
+
+    /**
+     * 送审时间
+     */
+    private String sendCheckDateString;
+
+    /**
+     * 完成时间
+     */
+    private String finishDateString;
 
 }

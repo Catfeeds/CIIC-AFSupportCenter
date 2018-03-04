@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 
-import static com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit.ofPage;
-
 /**
  * <p>
  * 企业任务单控制器：公积金企业任务单所有相关的操作都集中于此控制器
@@ -39,11 +37,11 @@ public class HfComTaskController {
     @Autowired
     private HfComTaskService hfComTaskService;
 
-    @Log("查询未处理企业任务单")
-    @PostMapping("/postNoProcessTask")
-    public JsonResult<List<HfComTaskBo>> postNoProcessTask(PageInfo pageInfo) {
+    @Log("查询企业任务单列表")
+    @PostMapping("/postComTasks")
+    public JsonResult<List<HfComTaskBo>> postComTasks(PageInfo pageInfo) {
 
-        PageRows<HfComTaskBo> pageRows = hfComTaskService.queryNoProgressCompanyTask(pageInfo);
+        PageRows<HfComTaskBo> pageRows = hfComTaskService.queryCompanyTasks(pageInfo);
 
         return JsonResultKit.ofPage(pageRows);
     }

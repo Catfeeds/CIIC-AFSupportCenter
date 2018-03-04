@@ -24,32 +24,11 @@ Com：公司简写 服务类
  */
 public interface HfComTaskService extends IService<HfComTask> {
     /**
-     * 获得企业任务单 未处理
+     * 获得企业任务单列表
      * @param pageInfo
      * @return
      */
-    PageRows<HfComTaskBo> queryNoProgressCompanyTask(PageInfo pageInfo);
-
-    /**
-     * 获得企业任务单 处理中
-     * @param pageInfo
-     * @return
-     */
-    PageRows<HfComTaskBo> queryProgressingCompanyTask(PageInfo pageInfo);
-
-    /**
-     * 获得企业任务单 已完成
-     * @param pageInfo
-     * @return
-     */
-    PageRows<HfComTaskBo> queryFinishedCompanyTask(PageInfo pageInfo);
-
-    /**
-     * 获得企业任务单 批退
-     * @param pageInfo
-     * @return
-     */
-    PageRows<HfComTaskBo> queryRejectedCompanyTask(PageInfo pageInfo);
+    PageRows<HfComTaskBo> queryCompanyTasks(PageInfo pageInfo);
 
     /**
      * 获得企业任务单支付方式数据

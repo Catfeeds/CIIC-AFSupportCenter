@@ -53,10 +53,15 @@
         <result column="end_month" property="endMonth"/>
         <result column="ukstore_value" property="ukStoreValue"/>
         <result column="type_value" property="typeValue"/>
+        <result column="end_type_value" property="endTypeValue"/>
+        <result column="submit_time_string" property="submitTimeString"/>
+        <result column="strart_handle_date_string" property="startHandleDateString"/>
+        <result column="send_check_date_string" property="sendCheckDateString"/>
+        <result column="finish_date_string" property="finishDateString"/>
     </resultMap>
 
     <!--查询公积金企业任务单 未处理状态-->
-    <select id="queryNoProcessCompanyTask" resultMap="HfComTaskBOResultMap">
+    <select id="queryCompanyTask" resultMap="HfComTaskBOResultMap">
         SELECT
         hft.com_task_id,
         hcac.hf_com_account,
@@ -69,7 +74,7 @@
         hft.handle_user_name,
         hft.submitter_id,
         hft.submitter_name,
-        hft.submit_time,
+        DATE_FORMAT(hft.submit_time, '%Y-%m-%d %H:%i') AS submit_time_string,
         hft.submit_remark,
         hft.com_account_name,
         hft.close_day,
@@ -81,7 +86,10 @@
         hft.end_month,
         hcau.ukstore_value,
         hcat.type_value,
-        hft.task_status
+        hctet.end_type_value,
+        DATE_FORMAT(hft.strart_handle_date, '%Y-%m-%d %H:%i') AS strart_handle_date_string,
+        DATE_FORMAT(hft.send_check_date, '%Y-%m-%d %H:%i') AS send_check_date_string,
+        DATE_FORMAT(hft.finish_date, '%Y-%m-%d %H:%i') AS finish_date_string
         FROM hf_com_task hft
         LEFT JOIN hf_com_account hca ON hft.com_account_id = hca.com_account_id
         LEFT JOIN hf_com_account_state hcas ON hca.state = hcas.com_account_state_code
@@ -93,9 +101,9 @@
         LEFT JOIN hf_com_task_category ctc ON hft.task_category = ctc.task_category_code
         LEFT JOIN hf_type ht ON hft.hf_type = ht.hf_type_code
         LEFT JOIN hf_com_task_payment_way ctpw ON hft.payment_way = ctpw.com_task_payment_way_code
+        LEFT JOIN hf_com_task_end_type hctet ON hft.end_type = hctet.end_type_code
         <where>
             AND hft.is_active = 1
-            AND hft.task_status = 0
             <if test="companyName!= null">
                 AND cc.title LIKE CONCAT('%', #{companyName}, '%')
             </if>
@@ -107,6 +115,9 @@
             </if>
             <if test="hfTypeName!= null">
                 AND ht.hf_type_name = TRIM(#{hfTypeName})
+            </if>
+            <if test="taskStatusString!= null">
+                AND hft.task_status IN (${taskStatusString})
             </if>
         </where>
     </select>

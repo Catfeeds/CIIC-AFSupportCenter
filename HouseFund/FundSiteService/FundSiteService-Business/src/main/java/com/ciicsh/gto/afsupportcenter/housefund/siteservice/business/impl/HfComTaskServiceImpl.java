@@ -75,40 +75,10 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
      * @return
      */
     @Override
-    public PageRows<HfComTaskBo> queryNoProgressCompanyTask(PageInfo pageInfo) {
+    public PageRows<HfComTaskBo> queryCompanyTasks(PageInfo pageInfo) {
         //将PageInfo对象转DTO对象
         HfComTaskBo hfComTaskBo = pageInfo.toJavaObject(HfComTaskBo.class);
-        return PageKit.doSelectPage(pageInfo, () -> hfComTaskMapper.queryNoProcessCompanyTask(hfComTaskBo));
-    }
-
-    /**
-     * 获得企业任务单 处理中
-     * @param pageInfo
-     * @return
-     */
-    @Override
-    public PageRows<HfComTaskBo> queryProgressingCompanyTask(PageInfo pageInfo) {
-        return null;
-    }
-
-    /**
-     * 获得企业任务单 已完成
-     * @param pageInfo
-     * @return
-     */
-    @Override
-    public PageRows<HfComTaskBo> queryFinishedCompanyTask(PageInfo pageInfo) {
-        return null;
-    }
-
-    /**
-     * 获得企业任务单 批退
-     * @param pageInfo
-     * @return
-     */
-    @Override
-    public PageRows<HfComTaskBo> queryRejectedCompanyTask(PageInfo pageInfo) {
-        return null;
+        return PageKit.doSelectPage(pageInfo, () -> hfComTaskMapper.queryCompanyTask(hfComTaskBo));
     }
 
     /**
@@ -225,6 +195,9 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             //更新ComTask表
             hfComTask.setComAccountId(hfComAccount.getComAccountId());
             hfComTask.setComAccountClassId(hfComAccountClass.getComAccountClassId());
+            if (StringUtils.isNotBlank(map.get("paymentWay"))) {
+                hfComTask.setPaymentWay(Integer.parseInt(map.get("paymentWay")));
+            }
             if (StringUtils.isNotBlank(map.get("acceptDate"))) {
                 try {
                     hfComTask.setStrartHandleDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("acceptDate")));
