@@ -27,6 +27,20 @@
 
     <resultMap id="ComFundAccountDetailMap"
                type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountDetailPO">
+        <result column="payment_bank" jdbcType="TINYINT" property="paymentBank"/>
+        <result column="payment_way" jdbcType="TINYINT" property="paymentWay"/>
+        <result column="basic_com_account" jdbcType="VARCHAR" property="basicComAccount"/>
+        <result column="compensative_com_account" jdbcType="VARCHAR" property="compensativeComAccount"/>
+        <result column="ukey_store" jdbcType="TINYINT" property="ukeyStore"/>
+        <result column="close_day" jdbcType="TINYINT" property="closeDay"/>
+        <result column="com_start_month" jdbcType="VARCHAR" property="comStartMonth"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="basic_account_temp_store" jdbcType="TINYINT" property="basicAccountTempStore"/>
+        <result column="compensative_account_temp_store" jdbcType="TINYINT" property="compensativeAccountTempStore"/>
+
+    </resultMap>
+
+    <resultMap id="ComFundAccountCompanyMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountCompanyPO">
 
     </resultMap>
 
@@ -124,6 +138,22 @@
         AND b.is_active = 1
         AND c.is_active = 1
 
+    </select>
+
+    <select id="getComFundAccountCompanyList" resultMap="ComFundAccountCompanyMap">
+        SELECT
+            a.company_id,
+            b.title company_name,
+            '' AS account_manager,
+            DATE_FORMAT(
+                a.created_time,
+                '%Y-%m-%d %h:%i'
+            ) AS binded_time
+        FROM
+            hf_account_com_relation a
+        INNER JOIN sal_company b ON a.company_id = b.company_id
+        WHERE
+            a.com_account_id = #{comAccountId}
     </select>
 
     <select id="queryComAccountTransBoList" resultMap="ComAccountTransBo">
