@@ -7,11 +7,21 @@
                type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo">
     </resultMap>
 
-    <resultMap id="ComAccountTransBo" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo">
-        <result column="com_account_id" property="comAccountId" />
-        <result column="com_account_name" property="comAccountName" />
-        <result column="com_account_class_id" property="comAccountClassId" />
-        <result column="hf_com_account" property="hfComAccount" />
+    <resultMap id="ComFundAccountMap"
+               type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO">
+        <id column="com_account_id" jdbcType="INTEGER" property="comAccountId"/>
+        <result column="com_account_name" jdbcType="VARCHAR" property="comAccountName"/>
+        <result column="hf_type" jdbcType="TINYINT" property="hfType"/>
+        <result column="payment_Way" jdbcType="TINYINT" property="paymentWay"/>
+        <result column="hf_account_type" jdbcType="TINYINT" property="accountType"/>
+        <result column="close_day" jdbcType="TINYINT" property="closeDay"/>
+        <result column="ukey_store" jdbcType="VARCHAR" property="ukeyStore"/>
+        <result column="payment_Bank" jdbcType="TINYINT" property="paymentBank"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="com_account" jdbcType="VARCHAR" property="comAccount"/>
+        <result column="pay_start_month" jdbcType="VARCHAR" property="payStartMonth"/>
+        <result column="pay_end_month" jdbcType="VARCHAR" property="payEndMonth"/>
+        <result column="account_temp_store" jdbcType="TINYINT" property="accountTempStore"/>
     </resultMap>
 
     <select id="getHfComAccountList" resultMap="ComAccountExtMap">
@@ -30,20 +40,43 @@
         </where>
     </select>
 
-    <select id="queryComAccountTransBoList" resultMap="ComAccountTransBo">
+    <select id="getComFundAccountList" resultMap="ComFundAccountMap">
         SELECT
-        hca.com_account_id,
-        hca.com_account_name,
-        hcac.com_account_class_id,
-        hcac.hf_com_account
-        FROM hf_com_account hca
-        LEFT JOIN hf_com_account_class hcac
-        ON hca.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = #{hfType}
-        <where>
-            hca.is_active = 1
-            AND hca.com_account_name like CONCAT('%', #{comAccountName}, '%')
-        </where>
-        ORDER BY hca.com_account_name, hca.com_account_id
-        LIMIT 0, 5
+        b.com_account_id,
+        b.com_account_name,
+        a.hf_type,
+        b.payment_way,
+        b.hf_account_type,
+        b.close_day,
+        b.ukey_store,
+        b.payment_bank,
+        b.remark,
+        a.hf_com_account com_account,
+        a.com_start_month pay_start_month,
+        a.end_month pay_end_month,
+        a.account_temp_store
+        FROM
+        hf_com_account_class a
+        INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
+        LEFT JOIN hf_account_com_relation c ON b.com_account_id = c.com_account_id
+        LEFT JOIN sal_company d ON d.company_id = c.company_id
+        WHERE
+        a.is_active = 1
+        AND b.is_active = 1
+        <if test="companyId != null and companyId != ''">
+            AND c.company_id = #{companyId}
+        </if>
+        <if test="companyName != null and companyName != ''">
+            AND d.title LIKE CONCAT('%',#{companyName},'%')
+        </if>
+        <if test="comHfMonth != null and comHfMonth != ''">
+            AND a.com_hf_month = #{comHfMonth}
+        </if>
+        <if test="hfType != null and hfType != 0">
+            AND a.hf_type = #{hfType}
+        </if>
+        <if test="accountNumber != null and accountNumber != '' and accountType==2">
+            AND a.hf_com_account = #{accountNumber}
+        </if>
     </select>
 </mapper>
