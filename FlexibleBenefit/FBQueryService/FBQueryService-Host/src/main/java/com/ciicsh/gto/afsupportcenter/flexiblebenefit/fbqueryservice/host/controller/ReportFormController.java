@@ -5,8 +5,11 @@ import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.company.AfProductWith
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfProductWithEmployeeDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.request.AfProductParamsDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfProductPublicProxy;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.dto.ExpBirthday1DTO;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.dto.ExpBirthday2DTO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.dto.ExpCompanyDTO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.dto.ExpEmployeeDTO;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.dto.ExpLiteratureDTO;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.linkman.LinkmanListRequestDTO;
@@ -99,5 +102,81 @@ public class ReportFormController {
         ExcelUtil.exportExcel(expEmployeeDTOS,"参加活动的雇员","sheet1",ExpEmployeeDTO.class,"参加活动雇员报表.xls",response);
         return JsonResult.success(null);
     }
+
+    /**
+     * 生日基础
+     * @return
+     */
+    @GetMapping("/get2")
+    public JsonResult exportBirthday1(String companyId, String companyName,
+                                      String manager,String birthday,
+                                      HttpServletResponse response){
+        AfProductParamsDTO afProductParamsDTO = new AfProductParamsDTO();
+        //todo birthday
+        afProductParamsDTO.setCompanyId(companyId);
+        afProductParamsDTO.setProductId("CPDFL1800059");
+        List<AfProductWithEmployeeDTO> productWithEmployee = afProductPublicProxy.getProductWithEmployee(afProductParamsDTO);
+        List<ExpBirthday1DTO> expBirthday1DTOS = new ArrayList<>();
+        productWithEmployee.stream().forEach( i -> {
+            ExpBirthday1DTO expBirthday1DTO = new ExpBirthday1DTO();
+            BeanUtils.copyProperties(i,expBirthday1DTO);
+            expBirthday1DTOS.add(expBirthday1DTO);
+        });
+        ExcelUtil.exportExcel(expBirthday1DTOS,"参加生日基础服务的雇员","sheet1",ExpBirthday1DTO.class,"参加生日基础服务雇员报表.xls",response);
+        return JsonResult.success(null);
+    }
+
+    /**
+     * 生日标准
+     * @return
+     */
+    @GetMapping("/get3")
+    public JsonResult exportBirthday2(String companyId, String companyName,
+                                      String manager,String birthday,
+                                      HttpServletResponse response){
+        AfProductParamsDTO afProductParamsDTO = new AfProductParamsDTO();
+        //todo birthday
+        afProductParamsDTO.setCompanyId(companyId);
+        afProductParamsDTO.setProductId("CPDFL1800060");
+        List<AfProductWithEmployeeDTO> productWithEmployee = afProductPublicProxy.getProductWithEmployee(afProductParamsDTO);
+        List<ExpBirthday2DTO> expBirthday2DTOS = new ArrayList<>();
+        productWithEmployee.stream().forEach( i -> {
+            ExpBirthday2DTO expBirthday2DTO = new ExpBirthday2DTO();
+            BeanUtils.copyProperties(i,expBirthday2DTO);
+            expBirthday2DTOS.add(expBirthday2DTO);
+        });
+        ExcelUtil.exportExcel(expBirthday2DTOS,"参加生日标准服务的雇员","sheet1",ExpBirthday2DTO.class,"参加生日标准服务雇员报表.xls",response);
+        return JsonResult.success(null);
+    }
+
+    /**
+     * 文艺欣赏
+     * @return
+     */
+    @GetMapping("/get7")
+    public JsonResult exportBirthday2(String companyId, String companyName,
+                                      String employeeId,HttpServletResponse response){
+        AfProductParamsDTO afProductParamsDTO = new AfProductParamsDTO();
+        afProductParamsDTO.setCompanyId(companyId);
+        afProductParamsDTO.setProductId("CPDFL1800088");
+        List<AfProductWithEmployeeDTO> productWithEmployee1 = afProductPublicProxy.getProductWithEmployee(afProductParamsDTO);
+        AfProductParamsDTO afProductParamsDTO1 = new AfProductParamsDTO();
+        afProductParamsDTO1.setCompanyId(companyId);
+        afProductParamsDTO1.setProductId("CPDFL1800089");
+        List<AfProductWithEmployeeDTO> productWithEmployee2 = afProductPublicProxy.getProductWithEmployee(afProductParamsDTO);
+        List<AfProductWithEmployeeDTO> productWithEmployee = new ArrayList<>();
+        boolean b = productWithEmployee.addAll(productWithEmployee1);
+        boolean b1 = productWithEmployee.addAll(productWithEmployee2);
+
+        List<ExpLiteratureDTO> expLiteratureDTOs = new ArrayList<>();
+        productWithEmployee.stream().forEach( i -> {
+            ExpLiteratureDTO expLiteratureDTO = new ExpLiteratureDTO();
+            BeanUtils.copyProperties(i,expLiteratureDTO);
+            expLiteratureDTOs.add(expLiteratureDTO);
+        });
+        ExcelUtil.exportExcel(expLiteratureDTOs,"参加文艺欣赏服务的雇员","sheet1",ExpLiteratureDTO.class,"参加文艺欣赏服务雇员报表.xls",response);
+        return JsonResult.success(null);
+    }
+
 
 }
