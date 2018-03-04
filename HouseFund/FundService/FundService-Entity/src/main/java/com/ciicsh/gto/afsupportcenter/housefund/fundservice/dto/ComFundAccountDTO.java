@@ -81,6 +81,22 @@ public class ComFundAccountDTO {
      * */
     private Byte accountTempStore;
 
+    public ComFundAccountDTO()
+    {
+        accountTempStore = 0;
+        accountType = 0;
+        closeDay = 0;
+        comAccount = "";
+        comAccountId = 0;
+        comAccountName = "";
+        hfType = 0;
+        payEndMonth = "";
+        paymentBank = 0;
+        paymentWay = 0;
+        payStartMonth = "";
+        remark = "";
+        ukeyStore = 0;
+    }
 
     public int getComAccountId() {
         return comAccountId;

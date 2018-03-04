@@ -6,6 +6,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccou
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccount;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -29,8 +30,10 @@ public interface HfComAccountMapper extends BaseMapper<HfComAccount> {
      * 查询企业公积金账户信息表,Site用
      * @return
      */
-    List<ComFundAccountPO> getComFundAccountList(String companyId, String companyName, Byte hfType,
-                                                 String comHfMonth, String accountNumber);
+    List<ComFundAccountPO> getComFundAccountList(@Param("companyId") String companyId, @Param("companyName") String companyName,
+                                                 @Param("hfType") Byte hfType,
+                                                 @Param("comHfMonth") String comHfMonth,
+                                                 @Param("accountNumber") String accountNumber);
 
     /**
      * 查询企业公积金账户信息

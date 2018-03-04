@@ -5,6 +5,10 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccoun
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.GetComFundAccountListRequestDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO;
+import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
+import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
+import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
+import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
@@ -26,26 +30,22 @@ public class CompanyFundAccountController extends BasicController<HfComAccountSe
     /**
      * 根据查询条件获取企业公积金账户信息
      *
-     * @param request
+     * @param pageInfo
      * @return
      */
     @PostMapping("/getComFundAccountList")
-    public JsonResult<List<ComFundAccountDTO>> GetComFundAccountList(@RequestBody GetComFundAccountListRequestDTO request) {
-        List<ComFundAccountPO> lst = business.getComFundAccountList(request);
-        List<ComFundAccountDTO> result = new ArrayList<>();
-        for (ComFundAccountPO po : lst) {
-            ComFundAccountDTO dto = new ComFundAccountDTO();
-            BeanUtils.copyProperties(po, dto);
-            result.add(dto);
-        }
-        return JsonResultKit.ofList(result);
-    }
+    public JsonResult<List<ComFundAccountDTO>> GetComFundAccountList(PageInfo pageInfo) {
+        GetComFundAccountListRequestDTO request = (GetComFundAccountListRequestDTO)pageInfo.getParams().get("requestParam");
+        PageRows<ComFundAccountPO> lst = PageKit.doSelectPage(pageInfo,()->business.getComFundAccountList(request));
+        List<ComFundAccountDTO> dtos = JsonKit.castToList(lst.getRows(), ComFundAccountDTO.class);
 
-
-    @GetMapping("/get")
-    public JsonResult<String> GetComFundAccountList(@RequestParam("param1") String param1) {
-
-        return JsonResultKit.of(param1);
+        PageRows<ComFundAccountDTO> result = new PageRows<>();
+        result.setRows(dtos);
+        result.setTotal(dtos.size());
+        return JsonResultKit.ofPage(result);
 
     }
+
+
+
 }
