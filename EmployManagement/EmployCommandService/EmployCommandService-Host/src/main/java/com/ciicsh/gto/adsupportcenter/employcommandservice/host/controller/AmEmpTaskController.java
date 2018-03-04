@@ -104,7 +104,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             }else if(5==status){
                 amEmpTaskCountBO.setEmployCancel(amEmpTaskBO.getCount());
                 num = num + amEmpTaskBO.getCount();
-            }else if(6==status){
+            }else{
                 amEmpTaskCountBO.setOther(amEmpTaskBO.getCount());
                 num = num + amEmpTaskBO.getCount();
             }
@@ -241,6 +241,13 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             entity.setModifiedTime(now);
             entity.setModifiedBy("sys");
         }
+        if(!StringUtil.isEmpty(entity.getEmployFeedback())){
+            AmEmployment amEmployment = amEmploymentService.selectById(entity.getEmploymentId());
+            AmEmpTask amEmpTask = business.selectById(amEmployment.getEmpTaskId());
+            amEmpTask.setTaskStatus(Integer.parseInt(entity.getEmployFeedback()));
+            business.insertOrUpdate(amEmpTask);
+        }
+
         boolean result = amArchiveService.insertOrUpdate(entity);
         return JsonResultKit.of(result);
     }

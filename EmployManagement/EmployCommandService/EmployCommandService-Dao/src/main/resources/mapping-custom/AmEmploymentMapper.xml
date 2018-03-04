@@ -24,6 +24,22 @@
         <result column="employee_nature" property="employeeNature"/>
     </resultMap>
 
+    <resultMap id="RM_archiveSearchExportOpt" type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.archiveSearchExportOpt">
+        <result column="employee_id" property="employeeId" />
+        <result column="employ_style" property="employStyle" />
+        <result column="handle_type" property="handleType" />
+        <result column="employ_property" property="employProperty" />
+        <result column="employ_way" property="employWay" />
+        <result column="yuliu_doc_num" property="yuliuDocNum" />
+        <result column="doc_num" property="docNum" />
+        <result column="title" property="title" />
+        <result column="employee_name" property="employeeName"/>
+        <result column="id_num" property="idNum"/>
+        <result column="license_code" property="licenseCode" />
+        <result column="service_center" property="serviceCenter"/>
+        <result column="diaodang_feedback_opt_date" property="diaodangFeedbackOptDate" />
+    </resultMap>
+
     <select id="queryAmEmployment" resultMap="BaseResultMapDTO">
         SELECT  *  FROM  am_employment
         where
@@ -129,5 +145,53 @@
         )  t
         GROUP BY
         t.task_status
+    </select>
+    <select id="queryAmArchiveList" resultMap="RM_archiveSearchExportOpt">
+        SELECT
+        a.emp_task_id,
+        b.employment_id,
+        b.employee_id,
+        b.company_id,
+        /**用工属性*/
+        b.employ_property,
+        /**用工属性*/
+        b.employ_way,
+        b.handle_type,
+        c.doc_num,
+        c.yuliu_doc_num,
+        c.archive_place,
+        /**出库日期*/
+        c.storage_out_date,
+        c.archive_id,
+        d.id_num,/*证件号 */
+        d.id_card_type,
+        b.employ_date,
+        /**退工日期*/
+        f.resign_date,
+        /**用工反馈*/
+        c.employ_feedback,
+        f.resign_feedback1,
+        f.resign_feedback2,
+        /**退档日期*/
+        f.return_doc_date,
+        /**退工送办日期*/
+        f.resign_handle_date
+
+        FROM
+        am_employment b
+        LEFT JOIN am_emp_task a on a.emp_task_id = b.emp_task_id
+        LEFT JOIN am_archive c ON b.employment_id = c.employment_id
+        LEFT JOIN am_resign f ON f.employment_id = b.employment_id
+        LEFT JOIN emp_employee d  on  b.employee_id = d.employee_id
+        where  1= 1
+        <if test="taskStatus!=null">
+            and  a.task_status = ${taskStatus}
+        </if>
+        <if test="taskCategory!=null">
+            and  a.task_category = ${taskCategory}
+        </if>
+        <foreach collection="param" item="plid" open="" close="" separator="">
+            and  ${plid}
+        </foreach>
     </select>
 </mapper>
