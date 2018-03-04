@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.GetComFundAccountListRequestDTO;
@@ -34,8 +35,22 @@ public class CompanyFundAccountController extends BasicController<HfComAccountSe
      * @return
      */
     @PostMapping("/getComFundAccountList")
-    public JsonResult<List<ComFundAccountDTO>> GetComFundAccountList(PageInfo pageInfo) {
-        GetComFundAccountListRequestDTO request = (GetComFundAccountListRequestDTO)pageInfo.getParams().get("requestParam");
+    public JsonResult<List<ComFundAccountDTO>> GetComFundAccountList(@RequestBody PageInfo pageInfo) {
+
+        JSONObject params = pageInfo.getParams();
+        GetComFundAccountListRequestDTO request = new GetComFundAccountListRequestDTO();
+        /**
+         * "companyId": "KH0000002",
+         "companyName": "",
+         "hfType": 0,
+         "comHfMonth": "",
+         "accountNumber": ""
+         */
+        request.setCompanyId(params.getString("companyId"));
+        request.setCompanyName(params.getString("companyName"));
+        request.setHfType(params.getByte("hfType"));
+        request.setComHfMonth(params.getString("comHfMonth"));
+        request.setAccountNumber(params.getString("accountNumber"));
         PageRows<ComFundAccountPO> lst = PageKit.doSelectPage(pageInfo,()->business.getComFundAccountList(request));
         List<ComFundAccountDTO> dtos = JsonKit.castToList(lst.getRows(), ComFundAccountDTO.class);
 
