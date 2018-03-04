@@ -1,9 +1,9 @@
 package com.ciicsh.gto.test.service;
 
 import com.alibaba.fastjson.JSON;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.SiteServiceApp;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComAccountService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpArchiveService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.SocSiteServiceApp;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import java.util.Map;
  * <p>Description: 雇员档案 service Test</p>
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = SocSiteServiceApp.class)
+@SpringBootTest(classes = SiteServiceApp.class)
 public class SsEmpArchiveServiceTest {
 
     @Autowired
