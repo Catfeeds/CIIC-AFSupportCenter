@@ -9,7 +9,8 @@
 
     <resultMap id="ComFundAccountMap"
                type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO">
-        <id column="com_account_id" jdbcType="INTEGER" property="comAccountId"/>
+        <id column="com_account_class_id" jdbcType="INTEGER" property="comAccountClassId"/>
+        <result column="com_account_id" jdbcType="INTEGER" property="comAccountId"/>
         <result column="com_account_name" jdbcType="VARCHAR" property="comAccountName"/>
         <result column="hf_type" jdbcType="TINYINT" property="hfType"/>
         <result column="payment_Way" jdbcType="TINYINT" property="paymentWay"/>
@@ -24,11 +25,17 @@
         <result column="account_temp_store" jdbcType="TINYINT" property="accountTempStore"/>
     </resultMap>
 
-    <resultMap id="ComAccountTransBo" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo">
-        <result column="com_account_id" property="comAccountId" />
-        <result column="com_account_name" property="comAccountName" />
-        <result column="com_account_class_id" property="comAccountClassId" />
-        <result column="hf_com_account" property="hfComAccount" />
+    <resultMap id="ComFundAccountDetailMap"
+               type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountDetailPO">
+
+    </resultMap>
+
+    <resultMap id="ComAccountTransBo"
+               type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo">
+        <result column="com_account_id" property="comAccountId"/>
+        <result column="com_account_name" property="comAccountName"/>
+        <result column="com_account_class_id" property="comAccountClassId"/>
+        <result column="hf_com_account" property="hfComAccount"/>
     </resultMap>
 
     <select id="getHfComAccountList" resultMap="ComAccountExtMap">
@@ -49,6 +56,7 @@
 
     <select id="getComFundAccountList" resultMap="ComFundAccountMap">
         SELECT
+        a.com_account_class_id,
         b.com_account_id,
         b.com_account_name,
         a.hf_type,
@@ -85,6 +93,37 @@
         <if test="accountNumber != null and accountNumber != '' and accountType==2">
             AND a.hf_com_account = #{accountNumber}
         </if>
+    </select>
+
+    <select id="getComFundAccountDetail" resultMap="ComFundAccountDetailMap">
+        SELECT
+            b.payment_bank,
+            b.payment_way,
+            a.hf_com_account basic_com_account,
+            c.hf_com_account compensative_com_account,
+            b.ukey_store,
+            b.close_day,
+            <if test="hfType == 1">
+                a.com_start_month,
+            </if>
+            <if test="hfType == 2">
+                c.com_start_month,
+            </if>
+            b.remark,
+            IFNULL(a.account_temp_store, 0) basic_account_temp_store,
+            IFNULL(c.account_temp_store, 0) compensative_account_temp_store
+        FROM
+            hf_com_account_class a
+        INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
+        AND a.hf_type = 1
+        INNER JOIN hf_com_account_class c ON c.com_account_id = b.com_account_id
+        AND c.hf_type = 2
+        WHERE
+            b.com_account_id = #{comAccountId}
+        AND a.is_active = 1
+        AND b.is_active = 1
+        AND c.is_active = 1
+
     </select>
 
     <select id="queryComAccountTransBoList" resultMap="ComAccountTransBo">
