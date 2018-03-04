@@ -57,6 +57,46 @@ public class AmEmploymentBO extends AmEmployment {
 
     private  Integer count;
 
+    private  String archiveDirection;
+
+    private String employeeNature;
+
+    private String idNum;
+
+    private Integer idCardType;
+
+    public String getIdNum() {
+        return idNum;
+    }
+
+    public void setIdNum(String idNum) {
+        this.idNum = idNum;
+    }
+
+    public Integer getIdCardType() {
+        return idCardType;
+    }
+
+    public void setIdCardType(Integer idCardType) {
+        this.idCardType = idCardType;
+    }
+
+    public String getArchiveDirection() {
+        return archiveDirection;
+    }
+
+    public void setArchiveDirection(String archiveDirection) {
+        this.archiveDirection = archiveDirection;
+    }
+
+    public String getEmployeeNature() {
+        return employeeNature;
+    }
+
+    public void setEmployeeNature(String employeeNature) {
+        this.employeeNature = employeeNature;
+    }
+
     public Integer getRemarkType() {
         return remarkType;
     }

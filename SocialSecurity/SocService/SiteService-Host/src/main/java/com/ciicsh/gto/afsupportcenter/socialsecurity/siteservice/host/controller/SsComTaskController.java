@@ -442,6 +442,26 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
             dateFormatter) : null);
         //办理备注
         ssComTask.setHandleRemark(isNotNull(map.get("handleRemark")) ? map.get("handleRemark") : null);
+
+        ssComTask.setSsAccount(isNotNull(map.get("ssAccount")) ? map.get("ssAccount") : null);
+
+        ssComTask.setBankAccount(isNotNull(map.get("bankAccount")) ? map.get("bankAccount") : null);
+
+        ssComTask.setComAccountName(isNotNull(map.get("comAccountName")) ? map.get("comAccountName") : null);
+
+        ssComTask.setPaymentBank(isNotNull(map.get("paymentBank")) ? map.get("paymentBank") : null);
+
+        ssComTask.setPaymentWay(isNotNull(map.get("paymentWay")) ? Integer.valueOf(map.get("paymentWay")) : null);
+
+        ssComTask.setBillReceiver(isNotNull(map.get("billReceiver")) ? Integer.valueOf(map.get("billReceiver")) : null);
+
+        ssComTask.setIndustryCategory(isNotNull(map.get("industryCategory")) ? map.get("industryCategory") : null);
+
+        ssComTask.setExpireDateFront(isNotNull(map.get("expireDate")) ? Integer.valueOf(map.get("expireDate")):null);
+
+        ssComTask.setSettlementArea(isNotNull(map.get("settlementArea"))?map.get("settlementArea"):null);
+
+        ssComTask.setDispatchMaterial(isNotNull(map.get("dispatchMaterial"))?map.get("dispatchMaterial"):null);
         ssComTask.setModifiedBy("xsj");
         ssComTask.setModifiedTime(LocalDateTime.now());
         return ssComTask;
@@ -508,7 +528,6 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
             ssComAccount.setComAccountId(ssComTaskBO.getComAccountId());
             ssComAccount.setPaymentWay(ssComTaskBO.getPaymentWay());
             ssComAccount.setBillReceiver(ssComTaskBO.getBillReceiver());
-
             return ssComAccount;
         } else if ("3".equals(ssComTaskBO.getChangeContentValue())) {//公司名称变更
             ssComAccount.setComAccountId(ssComTaskBO.getComAccountId());

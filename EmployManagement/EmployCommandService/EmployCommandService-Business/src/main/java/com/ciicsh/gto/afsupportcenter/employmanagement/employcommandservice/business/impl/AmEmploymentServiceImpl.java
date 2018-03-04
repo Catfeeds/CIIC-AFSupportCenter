@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.enti
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao.AmEmploymentMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmploymentService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.archiveSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
@@ -85,6 +86,11 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
 
         amEmploymentBO.setParam(param);
         return baseMapper.taskCountResign(amEmploymentBO);
+    }
+
+    @Override
+    public List<archiveSearchExportOpt> queryAmArchiveList(AmEmploymentBO amEmploymentBO) {
+        return baseMapper.queryAmArchiveList(amEmploymentBO);
     }
 
 }

@@ -1,8 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer;
 
 
-import java.util.Date;
-
 /**
  * Created by houwanhua on 2018/3/2.
  */
@@ -59,9 +57,9 @@ public class ComAccountExtBO {
     private Integer billReceiver;
 
     /**
-     * 发起人要求任务完成截止日期
+     * 客户交付社保费用给中智的截止日期
      */
-    private Date expireDate;
+    private Integer expireDate;
     /**
      * 法人
      */
@@ -169,11 +167,11 @@ public class ComAccountExtBO {
         this.billReceiver = billReceiver;
     }
 
-    public Date getExpireDate() {
+    public Integer getExpireDate() {
         return expireDate;
     }
 
-    public void setExpireDate(Date expireDate) {
+    public void setExpireDate(Integer expireDate) {
         this.expireDate = expireDate;
     }
 
