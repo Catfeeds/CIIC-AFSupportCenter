@@ -3,9 +3,11 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountCompanyDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountDetailDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.GetComFundAccountListRequestDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountCompanyPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountDetailPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
@@ -80,8 +82,17 @@ public class CompanyFundAccountController extends BasicController<HfComAccountSe
     }
 
 
-
-
+    /**
+     * 获取企业公积金账户绑定的客户列表
+     * @param comAccountId
+     * @return
+     */
+    @GetMapping("/getComFundAccountCompanyList/{comAccountId}")
+    public JsonResult<List<ComFundAccountCompanyDTO>> getComFundAccountCompanyList(@PathVariable("comAccountId") int comAccountId){
+        List<ComFundAccountCompanyPO> lst = business.getComFundAccountCompanyList(comAccountId);
+        List<ComFundAccountCompanyDTO> result = JsonKit.castToList(lst,ComFundAccountCompanyDTO.class);
+        return JsonResultKit.ofList(result);
+    }
 
 
 
