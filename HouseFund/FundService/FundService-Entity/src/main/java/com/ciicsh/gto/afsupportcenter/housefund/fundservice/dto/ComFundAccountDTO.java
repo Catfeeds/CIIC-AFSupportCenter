@@ -6,6 +6,11 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto;
 public class ComFundAccountDTO {
 
     /**
+     * 企业公积金账户分类Id
+     */
+    private int comAccountClassId;
+
+    /**
      * 企业公积金账户Id
      */
     private int comAccountId;
@@ -81,6 +86,31 @@ public class ComFundAccountDTO {
      * */
     private Byte accountTempStore;
 
+    public ComFundAccountDTO()
+    {
+        comAccountClassId = 0;
+        accountTempStore = 0;
+        accountType = 0;
+        closeDay = 0;
+        comAccount = "";
+        comAccountId = 0;
+        comAccountName = "";
+        hfType = 0;
+        payEndMonth = "";
+        paymentBank = 0;
+        paymentWay = 0;
+        payStartMonth = "";
+        remark = "";
+        ukeyStore = 0;
+    }
+
+    public int getComAccountClassId() {
+        return comAccountClassId;
+    }
+
+    public void setComAccountClassId(int comAccountClassId) {
+        this.comAccountClassId = comAccountClassId;
+    }
 
     public int getComAccountId() {
         return comAccountId;

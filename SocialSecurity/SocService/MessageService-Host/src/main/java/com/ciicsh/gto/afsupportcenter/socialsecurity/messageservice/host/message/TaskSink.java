@@ -74,8 +74,8 @@ public interface TaskSink {
     @Input(AF_EMP_MAKE_UP)
     MessageChannel afEmpMakeUp();
 
-//    @Input(AF_EMP_COMPANY_CHANGE)
-//    MessageChannel afEmpCompanyChange();
+    @Input(AF_EMP_COMPANY_CHANGE)
+    MessageChannel afEmpCompanyChange();
 
     @Input(AF_EMP_AGREEMENT_ADJUST)
     MessageChannel afEmpAgreementAdjust();
