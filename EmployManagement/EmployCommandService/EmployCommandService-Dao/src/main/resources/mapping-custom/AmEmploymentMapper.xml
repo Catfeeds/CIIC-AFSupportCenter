@@ -20,6 +20,8 @@
         <result column="task_status" property="taskStatus" />
         <result column="task_category" property="taskCategory" />
         <result column="archive_id" property="archiveId" />
+        <result column="archive_direction" property="archiveDirection"/>
+        <result column="employee_nature" property="employeeNature"/>
     </resultMap>
 
     <select id="queryAmEmployment" resultMap="BaseResultMapDTO">
@@ -36,6 +38,7 @@
 
     <select id="queryAmArchive" resultMap="BaseResultMapDTO">
         SELECT
+        a.emp_task_id,
         b.employment_id,
         b.employee_id,
         b.company_id,
@@ -50,6 +53,8 @@
         /**出库日期*/
         c.storage_out_date,
         c.archive_id,
+        d.id_num,/*证件号 */
+        d.id_card_type,
         b.employ_date,
         /**退工日期*/
         f.resign_date,
@@ -61,11 +66,13 @@
         f.return_doc_date,
         /**退工送办日期*/
         f.resign_handle_date
+
         FROM
         am_employment b
-        LEFT JOIN am_emp_task a on  a.company_id = b.company_id and a.employee_id = b.employee_id
+        LEFT JOIN am_emp_task a on a.emp_task_id = b.emp_task_id
         LEFT JOIN am_archive c ON b.employment_id = c.employment_id
         LEFT JOIN am_resign f ON f.employment_id = b.employment_id
+        LEFT JOIN emp_employee d  on  b.employee_id = d.employee_id
         where  1= 1
         <if test="taskStatus!=null">
             and  a.task_status = ${taskStatus}
