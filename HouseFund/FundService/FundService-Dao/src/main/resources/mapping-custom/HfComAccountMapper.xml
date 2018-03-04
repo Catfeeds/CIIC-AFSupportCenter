@@ -98,9 +98,10 @@
         ON hca.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = #{hfType}
         <where>
             hca.is_active = 1
-            AND hca.com_account_name like CONCAT('%', #{comAccountName}, '%')
+            <if test="comAccountName != null">
+                AND hca.com_account_name like CONCAT('%', #{comAccountName}, '%')
+            </if>
         </where>
         ORDER BY hca.com_account_name, hca.com_account_id
-        LIMIT 0, 5
     </select>
 </mapper>
