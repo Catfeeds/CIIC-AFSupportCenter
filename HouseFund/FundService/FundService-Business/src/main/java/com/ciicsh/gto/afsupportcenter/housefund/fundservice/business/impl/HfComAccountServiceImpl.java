@@ -5,6 +5,9 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccou
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.GetComFundAccountListRequestDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccount;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +31,18 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
     @Override
     public List<ComAccountExtBo> getHfComAccountList(ComAccountParamExtBo extBo) {
         return baseMapper.getHfComAccountList(extBo);
+    }
+
+    /**
+     * 根据查询条件获取企业公积金账户信息，Site用
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public List<ComFundAccountPO> getComFundAccountList(GetComFundAccountListRequestDTO request) {
+        return baseMapper.getComFundAccountList(request.getCompanyId(),request.getCompanyName(),request.getHfType(),
+                        request.getComHfMonth(),request.getAccountNumber());
+
     }
 }

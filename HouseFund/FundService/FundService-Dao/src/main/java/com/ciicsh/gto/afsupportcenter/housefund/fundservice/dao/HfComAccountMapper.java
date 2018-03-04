@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccount;
 
 import java.util.List;
@@ -16,9 +17,18 @@ HF：House Fun Mapper 接口
 public interface HfComAccountMapper extends BaseMapper<HfComAccount> {
 
     /**
-     * 查询企业社保账户信息表
+     * 查询企业公积金账户信息表
+     *
      * @param extBo
      * @return
      */
-    List<ComAccountExtBo> getHfComAccountList(ComAccountParamExtBo extBo) ;
+    List<ComAccountExtBo> getHfComAccountList(ComAccountParamExtBo extBo);
+
+    /**
+     * 查询企业公积金账户信息表,Site用
+     * @return
+     */
+    List<ComFundAccountPO> getComFundAccountList(String companyId, String companyName, Byte hfType,
+                                                 String comHfMonth, String accountNumber);
+
 }
