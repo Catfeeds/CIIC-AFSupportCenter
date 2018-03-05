@@ -61,7 +61,7 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @return
      * @throws Exception
      */
-    boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer isChange,
+    boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer isChange,
                          AfEmployeeInfoDTO dto) throws Exception;
 
 

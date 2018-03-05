@@ -300,7 +300,7 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
 
     @Override
     public ComAccountExtBO getComAccountInfo(ComTaskParamBO paramBO) {
-        ComAccountExtBO accountExtBO = new ComAccountExtBO();
+        ComAccountExtBO accountExtBO = null;
         Integer result = ssAccountComRelationMapper.isExistCompany(paramBO.getCompanyId());
         List<ComAccountExtBO> extBOS = result > 0 ? sComAccountMapper.getComAccountByCompanyId(paramBO) : baseMapper.getComTaskByCompanyId(paramBO);
 
