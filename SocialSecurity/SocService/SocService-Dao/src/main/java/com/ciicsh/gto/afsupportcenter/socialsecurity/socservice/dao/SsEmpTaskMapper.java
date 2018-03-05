@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -64,5 +65,5 @@ public interface SsEmpTaskMapper extends BaseMapper<SsEmpTask> {
 
     SsEmpTaskBO selectIdNumByEmployeeId(@Param("employeeId") String employeeId);
 
-    BigDecimal fetchInjuryRatio(@Param("empArchiveId")Long empArchiveId, @Param("startMonth")String startMonth);
+    List<Map<String,BigDecimal>> fetchInjuryRatio(@Param("empArchiveId")Long empArchiveId, @Param("startMonth")String startMonth);
 }

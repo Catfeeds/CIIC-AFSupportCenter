@@ -8,7 +8,7 @@ public interface SsPaymentComService {
      * 生成社保支付账号信息
      * @param paymentMonth 支付年月
      */
-    void generateSocPaymentInfo(String paymentMonth);
+    void generateSocPaymentInfo(String paymentMonth) throws Exception;
 
 
     /**
@@ -16,5 +16,5 @@ public interface SsPaymentComService {
      * @param comAccountId 社保账号
      * @param paymentMonth 支付年月
      */
-    void generateSocPaymentInfo(Long comAccountId,String paymentMonth);
+    void generateSocPaymentInfo(Long comAccountId,String paymentMonth)throws Exception;
 }
