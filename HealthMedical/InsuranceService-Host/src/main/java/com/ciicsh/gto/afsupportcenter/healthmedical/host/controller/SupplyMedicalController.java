@@ -155,7 +155,8 @@ public class SupplyMedicalController {
     public Result queryMedicalInvoiceDetail(@PathVariable String acceptanceId) {
         try {
             SupplyAcceptanceDetailDTO supplyMedicalInvoice = new SupplyAcceptanceDetailDTO();
-            supplyMedicalInvoice.setEmployee(supplyMedicalInvoiceService.queryEmployeeInfo(acceptanceId));
+            SupplyMedicalAcceptance supplyMedicalAcceptance = supplyMedicalAcceptanceService.selectById(acceptanceId);
+            supplyMedicalInvoice.setSupplyMedicalAcceptance(supplyMedicalAcceptance);
             supplyMedicalInvoice.setSupplyMedicalInvoices(supplyMedicalInvoiceService.queryMedicalInvoiceList(acceptanceId));
 
             return ResultGenerator.genSuccessResult(supplyMedicalInvoice);
