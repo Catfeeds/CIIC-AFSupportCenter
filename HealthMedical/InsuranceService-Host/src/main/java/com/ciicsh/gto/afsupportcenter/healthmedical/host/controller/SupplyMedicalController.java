@@ -16,7 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -163,18 +165,52 @@ public class SupplyMedicalController {
     }
 
     /**
+     * 查询发票详情数据
+     *
+     * @param file
+     * @return
+     */
+    @PostMapping("/importAcceptanceXls")
+    public Result importAcceptanceXls(MultipartFile file) {
+        try {
+            supplyMedicalAcceptanceService.importAcceptanceXls(file.getInputStream());
+            return ResultGenerator.genSuccessResult();
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
+        }
+    }
+
+    /**
      * 同步智灵通受理单、发票数据
      *
      * @return
      */
-    @GetMapping("/syncAcceptanceSummaryDetail")
+    @Scheduled(cron = "0 0 */2 * * ?")
     public Result syncAcceptanceSummaryDetail() {
         try {
             boolean flag = supplyMedicalAcceptanceService.syncAcceptanceSummaryDetail();
-            logger.info("定时同步智灵通数据");
+            logger.info("同步智灵通受理单、发票数据");
             return ResultGenerator.genSuccessResult(flag);
         } catch (Exception e) {
             return ResultGenerator.genServerFailResult();
         }
     }
+
+    /**
+     * 定时更新数据
+     *
+     * @return
+     */
+    @Scheduled(cron = "0 0 2 * * ?")
+    public Result updateAcceptanceStatus() {
+        try {
+            supplyMedicalAcceptanceService.updateAcceptanceStatus();
+            logger.info("定时更新受理单状态");
+            return ResultGenerator.genSuccessResult();
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
+        }
+    }
+
+
 }

@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpTask;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public class AmEmpTaskBO extends AmEmpTask {
@@ -74,6 +75,238 @@ public class AmEmpTaskBO extends AmEmpTask {
      */
     private LocalDate employDate;
 
+    private String params;
+
+    private  String remarkType;
+    /**
+     *  证件类型
+     */
+    private Integer idCardType;
+
+    private  String sex;
+
+    private String mobile;
+    /**
+     * 户籍地址
+     */
+    private String residenceAddress;
+
+    private String ssPwd;
+
+    private String ukey;
+
+    private LocalDate accoutModified;
+    /**
+     * 公司社保登记码
+     */
+    private String ssAccount;
+    /**
+     * 缴费区县
+     */
+    private  String settlementArea;
+    /**
+     * 首次进中智日期
+     */
+    private String firstInDate;
+    /**
+     * 首月合同生效日期
+     */
+    private String firstInCompanyDate;
+    /**
+     * 合同起始日期
+     */
+    private String  laborStartDate;
+    /**
+     * 合同截至日期
+     */
+    private String  laborEndDate;
+    /**
+     * 岗位
+     */
+    private String position;
+
+    private String organizationCode;
+
+    private Integer empCompanyId;
+    /**
+     * 客服专员
+     */
+    private String customServiceOperator;
+    /**
+     * 雇员服务专员
+     */
+    private String employeeCenterOperator;
+    /**
+     * 客户名称
+     */
+    private String companyName;
+    /**
+     * 空、Ukey、集体转入,用工自办、翻牌、无材料用工、网办无材料、转人员性质、新进转人员性质、送外区办、修改信息、外来新进、外来转入
+     */
+    private String employWay;
+
+    public String getLaborStartDate() {
+        return laborStartDate;
+    }
+
+    public void setLaborStartDate(String laborStartDate) {
+        this.laborStartDate = laborStartDate;
+    }
+
+    public String getLaborEndDate() {
+        return laborEndDate;
+    }
+
+    public void setLaborEndDate(String laborEndDate) {
+        this.laborEndDate = laborEndDate;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getCustomServiceOperator() {
+        return customServiceOperator;
+    }
+
+    public void setCustomServiceOperator(String customServiceOperator) {
+        this.customServiceOperator = customServiceOperator;
+    }
+
+    public String getEmployeeCenterOperator() {
+        return employeeCenterOperator;
+    }
+
+    public void setEmployeeCenterOperator(String employeeCenterOperator) {
+        this.employeeCenterOperator = employeeCenterOperator;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public Integer getEmpCompanyId() {
+        return empCompanyId;
+    }
+
+    public void setEmpCompanyId(Integer empCompanyId) {
+        this.empCompanyId = empCompanyId;
+    }
+
+    public String getFirstInDate() {
+        return firstInDate;
+    }
+
+    public void setFirstInDate(String firstInDate) {
+        this.firstInDate = firstInDate;
+    }
+
+    public String getFirstInCompanyDate() {
+        return firstInCompanyDate;
+    }
+
+    public void setFirstInCompanyDate(String firstInCompanyDate) {
+        this.firstInCompanyDate = firstInCompanyDate;
+    }
+
+    public String getOrganizationCode() {
+        return organizationCode;
+    }
+
+    public void setOrganizationCode(String organizationCode) {
+        this.organizationCode = organizationCode;
+    }
+
+    public String getUkey() {
+        return ukey;
+    }
+
+    public void setUkey(String ukey) {
+        this.ukey = ukey;
+    }
+
+    public LocalDate getAccoutModified() {
+        return accoutModified;
+    }
+
+    public void setAccoutModified(LocalDate accoutModified) {
+        this.accoutModified = accoutModified;
+    }
+
+    public String getSsAccount() {
+        return ssAccount;
+    }
+
+    public void setSsAccount(String ssAccount) {
+        this.ssAccount = ssAccount;
+    }
+
+    public String getSettlementArea() {
+        return settlementArea;
+    }
+
+    public void setSettlementArea(String settlementArea) {
+        this.settlementArea = settlementArea;
+    }
+
+    public String getSsPwd() {
+        return ssPwd;
+    }
+
+    public void setSsPwd(String ssPwd) {
+        this.ssPwd = ssPwd;
+    }
+
+    public String getResidenceAddress() {
+        return residenceAddress;
+    }
+
+    public void setResidenceAddress(String residenceAddress) {
+        this.residenceAddress = residenceAddress;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    private List<String> param;
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public Integer getIdCardType() {
+        return idCardType;
+    }
+
+    public void setIdCardType(Integer idCardType) {
+        this.idCardType = idCardType;
+    }
+
+    public String getRemarkType() {
+        return remarkType;
+    }
+
+    public void setRemarkType(String remarkType) {
+        this.remarkType = remarkType;
+    }
+
     public LocalDate getResignDate() {
         return resignDate;
     }
@@ -122,9 +355,6 @@ public class AmEmpTaskBO extends AmEmpTask {
         this.count = count;
     }
 
-
-
-
     public LocalDate getEmployFeedbackOptDate() {
         return employFeedbackOptDate;
     }
@@ -148,10 +378,6 @@ public class AmEmpTaskBO extends AmEmpTask {
     public void setDiaodangFeedbackOptDate(LocalDate diaodangFeedbackOptDate) {
         this.diaodangFeedbackOptDate = diaodangFeedbackOptDate;
     }
-
-    private String params;
-
-    private List<String> param;
 
     public List<String> getParam() {
         return param;
@@ -216,11 +442,6 @@ public class AmEmpTaskBO extends AmEmpTask {
     public void setEmployWay(String employWay) {
         this.employWay = employWay;
     }
-
-    /**
-     * 空、Ukey、集体转入,用工自办、翻牌、无材料用工、网办无材料、转人员性质、新进转人员性质、送外区办、修改信息、外来新进、外来转入
-     */
-    private String employWay;
 
     public String getHandleType() {
         return handleType;

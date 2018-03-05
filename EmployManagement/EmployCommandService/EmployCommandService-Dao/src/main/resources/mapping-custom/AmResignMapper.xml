@@ -27,45 +27,63 @@
         <result column="doc_code" property="docCode" />
         <result column="archive_place_additional" property="archivePlaceAdditional" />
         <result column="archive_card_state" property="archiveCardState" />
+        <result column="remark_type" property="remarkType" />
+        <result column="employ_feedback" property="employFeedback" />
+    </resultMap>
+
+    <resultMap id="RM_resignSearchExportOpt" type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.resignSearchExportOpt">
+        <result column="employ_property" property="employProperty" />
+        <result column="handle_type" property="handleType" />
+        <result column="employee_id" property="employeeId" />
+        <result column="employee_name" property="employeeName"/>
+        <result column="id_num" property="idNum"/>
+        <result column="company_id" property="companyId" />
+        <result column="title" property="title" />
+
     </resultMap>
 
     <select id="queryAmResign" resultMap="BaseResultMapDTO">
-
         SELECT
+        a.emp_task_id,
         a.employee_id,
         a.company_id,
         b.employment_id,
-        b.employ_property,/**用工属性*/
-        b.employ_date,/**实际录用日期*/
-        b.handle_type,/**办理类型*/
-        f.resign_date,/**退工日期*/
-        f.resign_feedback1,/**退工反馈*/
-        f.resign_reason,/**退工原因*/
-        d.employee_id,/**雇员编号*/
-        d.employee_name,/**雇员姓名*/
-        d.id_num,/*证件号 */
-        e.title,/*公司名称 */
+        b.employ_property,
+        /**用工属性*/
+        b.employ_date,
+        /**实际录用日期*/
+        b.handle_type,
+        /**办理类型*/
+        f.resign_date,
+        /**退工日期*/
+        f.resign_feedback1,
+        /**退工反馈*/
+        f.resign_reason,
+        /**退工原因*/
+        d.employee_id,
+        /**雇员编号*/
+        d.employee_name,
+        /**雇员姓名*/
+        d.id_num,
+        /*证件号 */
+        d.id_card_type,
+        e.title,
+        /*公司名称 */
         c.doc_num,
         c.yuliu_doc_num,
         c.archive_place,
-        c.storage_out_date
+        c.storage_out_date,
+        c.employ_feedback
         FROM
         am_emp_task a
-        INNER JOIN
-        am_employment b
-        ON a.employee_id = b.employee_id and a.company_id = b.company_id
-        LEFT JOIN
-        am_resign  f
-        ON b.employment_id = f.employment_id
-        LEFT JOIN
-        emp_employee  d
-        on  b.employee_id = d.employee_id
-        LEFT JOIN
-        sal_company e
-        on e.company_id = a.company_id
-        LEFT JOIN
-        am_archive c on c.employment_id = b.employment_id
-        where a.task_category = '2'
+        LEFT JOIN am_employment b  ON a.employee_id = b.employee_id
+        AND a.company_id = b.company_id
+        LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
+        LEFT JOIN sal_company e ON e.company_id = a.company_id
+        LEFT JOIN am_archive c ON c.employment_id = b.employment_id
+        LEFT JOIN am_resign f on  f.employment_id = b.employment_id
+        WHERE
+        a.task_category = '2'
         <if test="taskStatus!=null">
             and a.task_status = ${taskStatus}
         </if>
@@ -85,21 +103,14 @@
         a.task_status
         FROM
         am_emp_task a
-        INNER JOIN
-        am_employment b
-        ON a.employee_id = b.employee_id and a.company_id = b.company_id
-        LEFT JOIN
-        am_resign  f
-        ON b.employment_id = f.employment_id
-        LEFT JOIN
-        emp_employee  d
-        on  b.employee_id = d.employee_id
-        LEFT JOIN
-        sal_company e
-        on e.company_id = a.company_id
-        LEFT JOIN
-        am_archive c on c.employment_id = b.employment_id
-        where a.task_category = '2'
+        LEFT JOIN am_employment b  ON a.employee_id = b.employee_id
+        AND a.company_id = b.company_id
+        LEFT JOIN emp_employee d ON b.employee_id = d.employee_id
+        LEFT JOIN sal_company e ON e.company_id = b.company_id
+        LEFT JOIN am_archive c ON c.employment_id = b.employment_id
+        LEFT JOIN am_resign f on  f.employment_id = b.employment_id
+        WHERE
+        a.task_category = '2'
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
         </foreach>
@@ -136,6 +147,56 @@
         a.company_id = #{companyId}
         and
         a.employee_id = #{employeeId}
+    </select>
+
+    <select id="queryAmResignList" resultMap="RM_resignSearchExportOpt">
+        SELECT
+        a.emp_task_id,
+        a.employee_id,
+        a.company_id,
+        b.employment_id,
+        b.employ_property,
+        /**用工属性*/
+        b.employ_date,
+        /**实际录用日期*/
+        b.handle_type,
+        /**办理类型*/
+        f.resign_date,
+        /**退工日期*/
+        f.resign_feedback1,
+        /**退工反馈*/
+        f.resign_reason,
+        /**退工原因*/
+        d.employee_id,
+        /**雇员编号*/
+        d.employee_name,
+        /**雇员姓名*/
+        d.id_num,
+        /*证件号 */
+        d.id_card_type,
+        e.title,
+        /*公司名称 */
+        c.doc_num,
+        c.yuliu_doc_num,
+        c.archive_place,
+        c.storage_out_date,
+        c.employ_feedback
+        FROM
+        am_emp_task a
+        LEFT JOIN am_employment b  ON a.employee_id = b.employee_id
+        AND a.company_id = b.company_id
+        LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
+        LEFT JOIN sal_company e ON e.company_id = a.company_id
+        LEFT JOIN am_archive c ON c.employment_id = b.employment_id
+        LEFT JOIN am_resign f on  f.employment_id = b.employment_id
+        WHERE
+        a.task_category = '2'
+        <if test="taskStatus!=null">
+            and a.task_status = ${taskStatus}
+        </if>
+        <foreach collection="param" item="plid" open="" close="" separator="">
+            and  ${plid}
+        </foreach>
     </select>
 
 </mapper>

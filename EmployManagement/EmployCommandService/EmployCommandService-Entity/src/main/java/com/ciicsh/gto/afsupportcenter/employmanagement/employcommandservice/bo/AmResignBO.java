@@ -90,10 +90,73 @@ public class AmResignBO extends AmResign {
 
     private Integer taskStatus;
 
+    private String remarkType;
+
+    private Integer idCardType;
+
+    private Long empTaskId;
+    /**
+     * 用工反馈
+     */
+    private  String employFeedback;
+
+    private String matchEmployIndex;
+    /**
+     * 首次进中智日期
+     */
+    private String firstInDate;
 
     private String params;
 
     private List<String> param;
+
+    public String getFirstInDate() {
+        return firstInDate;
+    }
+
+    public void setFirstInDate(String firstInDate) {
+        this.firstInDate = firstInDate;
+    }
+
+    public Long getEmpTaskId() {
+        return empTaskId;
+    }
+
+    public void setEmpTaskId(Long empTaskId) {
+        this.empTaskId = empTaskId;
+    }
+
+    public Integer getIdCardType() {
+        return idCardType;
+    }
+
+    public void setIdCardType(Integer idCardType) {
+        this.idCardType = idCardType;
+    }
+
+    public String getMatchEmployIndex() {
+        return matchEmployIndex;
+    }
+
+    public void setMatchEmployIndex(String matchEmployIndex) {
+        this.matchEmployIndex = matchEmployIndex;
+    }
+
+    public String getEmployFeedback() {
+        return employFeedback;
+    }
+
+    public void setEmployFeedback(String employFeedback) {
+        this.employFeedback = employFeedback;
+    }
+
+    public String getRemarkType() {
+        return remarkType;
+    }
+
+    public void setRemarkType(String remarkType) {
+        this.remarkType = remarkType;
+    }
 
     public String getArchiveCardState() {
         return archiveCardState;

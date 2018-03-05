@@ -8,12 +8,20 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class DictUtil {
+    public static final String DICT_ID_SOCIAL = "DIT00136";
+    public static final String DICT_ID_FUND = "DIT00137";
+    public static final String DICT_ID_SOC_LOCAL_TASK_CATEGORY = "DIC00007";
     public static final String DICT_ID_SOCIAL_SECURITY_ACCOUNT_TYPE = "DIC00062";
     public static final String DICT_ID_SOCIAL_SECURITY_STATUS = "DIC00063";
     public static final String DICT_ID_SOCIAL_SECURITY_EMPLOYEE_CLASSIFY = "DIC00064";
+    public static final String DICT_ID_TASK_PROCESS_STATUS = "DIC00065";
+    public static final String DICT_ID_HF_LOCAL_TASK_CATEGORY = "DIC00066";
+    public static final String TYPE_VALUE_SOC_LOCAL_TASK_CATEGORY = "SOCLocalTaskCategory";
     public static final String TYPE_VALUE_SOCIAL_SECURITY_ACCOUNT_TYPE = "SocialSecurityAccountType";
     public static final String TYPE_VALUE_SOCIAL_SECURITY_STATUS = "SocialSecurityStatus";
     public static final String TYPE_VALUE_SOCIAL_SECURITY_EMPLOYEE_CLASSIFY = "SocialSecurityEmployeeClassify";
+    public static final String TYPE_VALUE_TASK_PROCESS_STATUS = "TaskProcessStatus";
+    public static final String TYPE_VALUE_HF_LOCAL_TASK_CATEGORY = "HFLocalTaskCategory";
 
     private static DictUtil instance;
     private static ConcurrentMap<String, Map<String, String>> dict;
@@ -64,8 +72,8 @@ public class DictUtil {
         return null;
     }
 
-    public Map<String, List<KeyValue>> getDictItemList() {
-        Map<String, List<KeyValue>> rtn = new HashMap<>();
+    public Map<String, List<?>> getDictItemList() {
+        Map<String, List<?>> rtn = new HashMap<>();
 
         if (dict.size() > 0) {
             dict.entrySet().stream().forEach(e -> {

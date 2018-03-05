@@ -22,6 +22,8 @@ public interface SysConstants {
         FINANCE_NOT(0, "否"),
         AF_EMPLOYEE_PAYMENT(11, "AF雇员报销"),
         MEDICAL_CLAIMS(12, "医疗理赔报销"),
+        SUPPLY_MEDICAL(0, "补充医疗理赔"),
+        UNINSURED_MEDICAL(1, "未投保医疗理赔"),
         PAY_WAY(3, "转账"),
         ACTIVE(1, "可用"),
         DATE_FORMAT(1, "yyyy-MM-dd"),
@@ -31,13 +33,13 @@ public interface SysConstants {
         DEPARTMENT_MANAGER(1, "部门经理"),
         REVIEWER(1, "审核人");
 
-        private int code;
+        private Integer code;
         private String name;
-        JobConstants(int code, String name) {
+        JobConstants(Integer code, String name) {
             this.code = code;
             this.name = name;
         }
-        public int getCode() {
+        public Integer getCode() {
             return code;
         }
         public String getName() {
@@ -76,7 +78,9 @@ public interface SysConstants {
      */
     enum SupplyMedicalStatus {
         SYNC(3, "已同步"),
-        REFUND(6, "已退票");
+        BACK(4, "财务退回"),
+        REFUND(6, "已退票"),
+        COMPLETE(7, "已完成");
         private Integer code;
         private String name;
         SupplyMedicalStatus(Integer code, String name) {
@@ -96,7 +100,9 @@ public interface SysConstants {
      */
     enum UninsuredMedicalStatus {
         SYNC(4, "已同步"),
-        REFUND(7, "已退票");
+        BACK(5, "财务退回"),
+        REFUND(7, "已退票"),
+        COMPLETE(8, "已完成");
         private Integer code;
         private String name;
         UninsuredMedicalStatus(Integer code, String name) {
@@ -139,16 +145,39 @@ public interface SysConstants {
         UNINSURED_MEDICAL(1, "未投保医疗理赔"),
         EMPLOYEE_PAYMENT(2, "雇员付款");
 
-        private int id;
+        private Integer id;
         private String name;
 
-        BusinessId(int id, String name) {
+        BusinessId(Integer id, String name) {
             this.id = id;
             this.name = name;
         }
 
-        public int getId() {
+        public Integer getId() {
             return this.id;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+    }
+
+    /**
+     * 结算中心状态
+     */
+    enum SettlementCenterStatus {
+        BACK(-1, "驳回");
+
+        private Integer code;
+        private String name;
+
+        SettlementCenterStatus(Integer code, String name) {
+            this.code = code;
+            this.name = name;
+        }
+
+        public Integer getCode() {
+            return this.code;
         }
 
         public String getName() {

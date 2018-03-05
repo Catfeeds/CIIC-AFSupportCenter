@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://172.16.9.53:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
+      username: root
+      password: ciicit!#%
+      max-active: 20
+      min-idle: 8
+      initial-size: 10
+      validation-query: SELECT 'x'
+      filter:
+        stat:
+          enabled: true
+#spring cloud eureka
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: "http://172.16.9.56:9602/eureka"  #prod注册中心eureka地址ureka

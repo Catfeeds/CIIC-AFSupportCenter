@@ -25,7 +25,14 @@
             <artifactId>socjob-entity</artifactId>
             <version>1.0.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.dianping.cat</groupId>
+            <artifactId>cat-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.dianping.cat</groupId>
+            <artifactId>cat-client</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

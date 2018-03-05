@@ -1,28 +1,33 @@
 package com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmArchive;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmployment;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmRemark;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.CommonApiUtils;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.*;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.employSearchExportOpt;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -44,6 +49,11 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
     @Autowired
     private IAmRemarkService amRemarkService;
+
+
+    @Autowired
+    private CommonApiUtils employeeInfoProxy;
+
 
     /**
      *用工资料任务单查询
@@ -94,7 +104,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             }else if(5==status){
                 amEmpTaskCountBO.setEmployCancel(amEmpTaskBO.getCount());
                 num = num + amEmpTaskBO.getCount();
-            }else if(6==status){
+            }else{
                 amEmpTaskCountBO.setOther(amEmpTaskBO.getCount());
                 num = num + amEmpTaskBO.getCount();
             }
@@ -114,35 +124,64 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @Log("用工办理查询")
     @RequestMapping("/employeeDetailInfoQuery")
-    public JsonResult employeeDetailInfoQuery(String employeeId,String companyId) {
+    public JsonResult employeeDetailInfoQuery(AmTaskParamBO amTaskParamBO) {
 
-        List<AmEmpTaskBO> list = business.queryAmEmpTaskById(employeeId);
+        Map<String,Object>  map = business.getInformation(amTaskParamBO);
 
-        AmEmpTaskBO amEmpTaskBO = list.get(0);
+        AmEmpTaskBO customBO = (AmEmpTaskBO)map.get("customBO");//客户信息
+        AmEmpTaskBO employeeBO = (AmEmpTaskBO)map.get("employeeBO");//雇佣信息
+
+        AmEmpTaskBO bo = new AmEmpTaskBO();
+        bo.setEmployeeId(amTaskParamBO.getEmployeeId());
+        bo.setCompanyId(amTaskParamBO.getCompanyId());
+        Map<String,Object> param = new HashMap<>();
+        param.put("employeeId",amTaskParamBO.getEmployeeId());
+        param.put("companyId",amTaskParamBO.getCompanyId());
+
         //用工材料
         PageInfo pageInfo = new PageInfo();
         JSONObject params = new JSONObject();
-        params.put("employeeId",employeeId);
+        params.put("employeeId",amTaskParamBO.getEmployeeId());
+        params.put("remarkType",amTaskParamBO.getRemarkType());
+        params.put("companyId",amTaskParamBO.getCompanyId());
         pageInfo.setParams(params);
+
+        //用工材料
+        List<AmEmpMaterialBO> empMaterialList = new ArrayList<>();
         PageRows<AmEmpMaterialBO> result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
+        if(result!=null&&result.getRows().size()>0)
+        {
+            empMaterialList.addAll(result.getRows());
+        }
+
         //用工信息
-        PageRows<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(pageInfo);
+        List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(param);
         //用工档案
-        List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchive(employeeId);
+        List<AmArchiveBO> amArchiveBOList = null;
+
+        if(null!=resultEmployList&&resultEmployList.size()>0)
+        {
+            params.put("employmentId",resultEmployList.get(0).getEmploymentId());
+            amArchiveBOList = amArchiveService.queryAmArchiveList(params);
+        }
+
         //用工备注
         PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);
-        //雇佣历史查询
-//        List<AmEmpTaskBO> listHistory = business.queryEmployeeHository(employeeId);
         //客户信息
-        List<AmEmpTaskBO>  listCompany = business.queryCustom(companyId);
+        List<AmEmpTaskBO>  listCompany = business.queryCustom(amTaskParamBO.getCompanyId());
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        resultMap.put("amEmpTaskBO",amEmpTaskBO);
-        resultMap.put("materialList",result);
 
-        if(null!= resultEmployList&&resultEmployList.getRows().size()>0)
+        //客户信息
+        resultMap.put("customerInfo",customBO);
+        //雇员信息
+        resultMap.put("amEmpTaskBO",employeeBO);
+
+        resultMap.put("materialList",empMaterialList);
+
+        if(null!= resultEmployList&&resultEmployList.size()>0)
         {
-            resultMap.put("amEmploymentBO",resultEmployList.getRows().get(0));
+            resultMap.put("amEmploymentBO",resultEmployList.get(0));
         }
         if(null!=amArchiveBOList&&amArchiveBOList.size()>0)
         {
@@ -152,10 +191,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         {
             resultMap.put("amRemarkBo",amRemarkBOPageRows);
         }
-//        if(null!=listHistory)
-//        {
-//            resultMap.put("listHistory",listHistory);
-//        }
+
         if(null!=listCompany&&listCompany.size()>0)
         {
             resultMap.put("company",listCompany.get(0));
@@ -205,6 +241,13 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             entity.setModifiedTime(now);
             entity.setModifiedBy("sys");
         }
+        if(!StringUtil.isEmpty(entity.getEmployFeedback())){
+            AmEmployment amEmployment = amEmploymentService.selectById(entity.getEmploymentId());
+            AmEmpTask amEmpTask = business.selectById(amEmployment.getEmpTaskId());
+            amEmpTask.setTaskStatus(Integer.parseInt(entity.getEmployFeedback()));
+            business.insertOrUpdate(amEmpTask);
+        }
+
         boolean result = amArchiveService.insertOrUpdate(entity);
         return JsonResultKit.of(result);
     }
@@ -221,20 +264,20 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
              bo.setModifiedTime(now);
              bo.setCreatedBy("sys");
              bo.setModifiedBy("sys");
-             data.add(bo);
+             if(bo.getRemarkId()==null){
+                 data.add(bo);
+             }
          }
 
         boolean result = false;
         try {
-            result = amRemarkService.insertBatch(list);
+            result = amRemarkService.insertOrUpdateBatch(data);
         } catch (Exception e) {
 
         }
-
         return JsonResultKit.of(result);
 
     }
-
 
     @Log("用工备注查询")
     @RequestMapping("/queryAmRemark")
@@ -249,13 +292,66 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         return JsonResultKit.of(result);
     }
 
-    @RequestMapping("/queryEmployeeHository")
-    public JsonResult queryEmployeeHository(String  employeeId){
-        List<AmEmpTaskBO> list = business.queryEmployeeHository(employeeId);
-        return JsonResultKit.of(list);
+    @PostMapping("/receiveMaterial")
+    public JsonResult<Boolean> receiveMaterial(@RequestBody List<AmEmpMaterial> list){
+        for(AmEmpMaterial material:list)
+        {
+            material.setReceiveDate(LocalDate.now());
+            material.setReceiveMan("sys");
+        }
+
+        boolean result =  iAmEmpMaterialService.updateBatchById(list);
+        return JsonResultKit.of(result);
     }
 
+    @PostMapping("/rejectMaterial")
+    public JsonResult<Boolean> rejectMaterial(@RequestBody List<AmEmpMaterial> list){
+        for(AmEmpMaterial material:list)
+        {
+            material.setRejectDate(LocalDate.now());
+            material.setRejectMan("sys");
+        }
 
+        boolean result =  iAmEmpMaterialService.updateBatchById(list);
+        return JsonResultKit.of(result);
+    }
+
+    @RequestMapping("/updateTaskStatus")
+    public  JsonResult<Boolean>  updateTaskStatus(String employmentId){
+        Map<String,Object>  param = new HashMap<>();
+        param.put("employmentId",employmentId);
+       boolean result = business.updateTaskStatus(param);
+        return JsonResultKit.of(result);
+    }
+
+    /**
+     * 雇员社保查询查询导出
+     */
+    @RequestMapping("/employSearchExportOpt")
+    public void employSearchExportOpt(HttpServletResponse response, AmEmpTaskBO amEmpTaskBO) {
+
+        List<String> param = new ArrayList<String>();
+
+        if (!StringUtil.isEmpty(amEmpTaskBO.getParams())) {
+            String arr[] = amEmpTaskBO.getParams().split(",");
+            for (int i = 0; i < arr.length; i++) {
+                param.add(arr[i]);
+            }
+        }
+
+        amEmpTaskBO.setParam(param);
+
+        if (null != amEmpTaskBO.getTaskStatus() && amEmpTaskBO.getTaskStatus() == 0) {
+            amEmpTaskBO.setTaskStatus(null);
+        }
+
+        Date date = new Date();
+        String fileNme = "用工任务单_"+ StringUtil.getDateString(date)+".xls";
+
+        List<employSearchExportOpt> opts = business.queryAmEmpTaskList(amEmpTaskBO);
+
+        ExcelUtil.exportExcel(opts,employSearchExportOpt.class,fileNme,response);
+    }
 
 
 }

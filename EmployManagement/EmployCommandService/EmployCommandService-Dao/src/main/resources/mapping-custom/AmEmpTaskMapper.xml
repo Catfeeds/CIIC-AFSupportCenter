@@ -19,6 +19,28 @@
         <result column="custom" property="custom"/>
         <result column="employ_date" property="employDate" />
         <result column="resign_date" property="resignDate" />
+        <result column="ss_pwd" property="ssPwd"/>
+        <result column="ukey" property="ukey"/>
+        <result column="accout_modified" property="accoutModified"/>
+        <result column="settlement_area" property="settlementArea"/>
+        <result column="ss_account" property="ssAccount"/>
+
+    </resultMap>
+
+    <resultMap id="RM_empSSSearchExportOpt" type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.employSearchExportOpt">
+        <result column="employee_id" property="employeeId" />
+        <result column="employ_style" property="employStyle" />
+        <result column="handle_type" property="handleType" />
+        <result column="employ_property" property="employProperty" />
+        <result column="employ_way" property="employWay" />
+        <result column="yuliu_doc_num" property="yuliuDocNum" />
+        <result column="doc_num" property="docNum" />
+        <result column="title" property="title" />
+        <result column="employee_name" property="employeeName"/>
+        <result column="id_num" property="idNum"/>
+        <result column="license_code" property="licenseCode" />
+        <result column="service_center" property="serviceCenter"/>
+        <result column="diaodang_feedback_opt_date" property="diaodangFeedbackOptDate" />
     </resultMap>
 
     <select id="queryAmEmpTask" resultMap="BaseResultMapDTO">
@@ -26,6 +48,8 @@
         a.emp_task_id,/*任务id */
         a.employee_id,/*雇员id */
         a.company_id,/*客户Id*/
+        a.employee_nature,
+        a.archive_direction,
         b.employ_way,/*用工方式 */
         b.employ_property,/*用工属性 */
         c.yuliu_doc_num,/*预留档案编号 */
@@ -35,6 +59,7 @@
         c.diaodang_feedback_opt_date,/*调档反馈操作日期 */
         d.employee_name,/*雇员姓名 */
         d.id_num,/*证件号 */
+        d.id_card_type,
         e.title,/*公司名称 */
         e.license_code,/*营业执照编号 */
         h.service_center,/*服务中心 */
@@ -44,15 +69,13 @@
         LEFT JOIN
         am_employment b
         ON a.employee_id = b.employee_id
+        and a.company_id = b.company_id
         LEFT JOIN
-        am_archive c
-        ON b.employment_id = c.employment_id
-        LEFT JOIN
-        emp_employee  d
-        on  b.employee_id = d.employee_id
+        emp_employee d
+        on  a.employee_id = d.employee_id
         LEFT JOIN
         sal_company e
-        on e.company_id = b.company_id
+        on e.company_id = a.company_id
         LEFT JOIN
         am_resign f
         on a.employee_id = f.employee_id
@@ -60,8 +83,11 @@
         am_archive_use g
         on a.employee_id = g.employee_id
         LEFT JOIN
-        sal_fc_company h on h.company_id = b.company_id
-where   task_category = '1'
+        sal_fc_company h on h.company_id = a.company_id
+        LEFT JOIN
+        am_archive c
+        ON b.employment_id = c.employment_id
+        where   a.task_category = '1'
         <if test="taskStatus!=null">
             and a.task_status = ${taskStatus}
         </if>
@@ -75,7 +101,6 @@ where   task_category = '1'
         t.task_status,
         COUNT(t.task_status) AS count
         FROM
-
         (
         SELECT
         a.task_status
@@ -84,15 +109,13 @@ where   task_category = '1'
         LEFT JOIN
         am_employment b
         ON a.employee_id = b.employee_id
+        and a.company_id = b.company_id
         LEFT JOIN
-        am_archive c
-        ON b.employment_id = c.employment_id
-        LEFT JOIN
-        emp_employee  d
-        on  b.employee_id = d.employee_id
+        emp_employee d
+        on  a.employee_id = d.employee_id
         LEFT JOIN
         sal_company e
-        on e.company_id = b.company_id
+        on e.company_id = a.company_id
         LEFT JOIN
         am_resign f
         on a.employee_id = f.employee_id
@@ -100,9 +123,11 @@ where   task_category = '1'
         am_archive_use g
         on a.employee_id = g.employee_id
         LEFT JOIN
-        sal_fc_company h on h.company_id = b.company_id
-        WHERE
-        task_category = '1'
+        sal_fc_company h on h.company_id = a.company_id
+        LEFT JOIN
+        am_archive c
+        ON b.employment_id = c.employment_id
+        where   a.task_category = '1'
         <foreach collection = "param" item = "plid"  open=""  close=""  separator="" >
           AND  ${ plid }
         </foreach >
@@ -147,39 +172,101 @@ where   task_category = '1'
         task_category = '1'
         and
         b.employee_id = #{employeeId}
+        AND
+        b.company_id = #{companyId}
     </select>
 
-    <select id="queryEmployeeHository" resultMap="BaseResultMapDTO">
+    <select id="queryAccout" resultMap="BaseResultMapDTO">
         SELECT
-        a.company_id,
-        b.title,
-        c.employ_date,
-        d.resign_date
+        a.ss_pwd,
+        a.ss_username ukey,
+        a.modified_time accout_modified,
+        a.settlement_area,
+        a.ss_account
         FROM
-        am_emp_task a
-        LEFT JOIN sal_company b ON a.company_id = b.company_id
-        LEFT JOIN am_employment c on  a.employee_id =  c.employee_id
-        LEFT JOIN am_resign  d  on  c.employment_id = d.employment_id
-        where
-        task_category = '1'
+        ss_com_account a
+        INNER JOIN ss_account_com_relation b ON a.com_account_id = b.account_com_relation_id
+        WHERE
+        b.company_id = #{companyId}
         and
-        a.employee_id = #{employeeId}
+        a.is_active = 1
     </select>
 
-    <select id="queryCustom" resultMap="BaseResultMapDTO">
+    <select id="selectEmployId" resultMap="BaseResultMapDTO">
+
+        SELECT  employee_id,company_id from emp_af_emp_company where emp_company_id = #{empCompanyId}
+
+    </select>
+
+    <select id="queryEmpTask" resultMap="BaseResultMapDTO">
         SELECT
-        a.company_id,/**客户id*/
-        b.title,/**公司名称*/
-        c.service_center,/**服务中心*/
-        c.custom /**客服*/
+        a.task_form_content,
+        a.created_time
         FROM
         am_emp_task a
-        LEFT JOIN sal_company b ON a.company_id = b.company_id
-        LEFT JOIN sal_fc_company c on c.company_id = b.company_id
         where
         task_category = '1'
         and
         a.company_id = #{companyId}
+        and
+        a.employee_id = #{employeeId}
+    </select>
+
+    <update id="updateTaskStatus">
+        UPDATE am_emp_task set task_status = 6 where emp_task_id = (SELECT a.emp_task_id from am_employment a where  a.employment_id = #{employmentId}  )
+    </update>
+
+    <select id="queryAmEmpTaskList" resultMap="RM_empSSSearchExportOpt">
+        SELECT
+        a.emp_task_id,/*任务id */
+        a.employee_id,/*雇员id */
+        a.company_id,/*客户Id*/
+        a.employee_nature,
+        a.archive_direction,
+        b.employ_way,/*用工方式 */
+        b.employ_property,/*用工属性 */
+        c.yuliu_doc_num,/*预留档案编号 */
+        c.doc_num,/*档案编号 */
+        c.diaodang_feedback,/*调档反馈 */
+        c.employ_feedback_opt_date,/*用工反馈操作日期 */
+        c.diaodang_feedback_opt_date,/*调档反馈操作日期 */
+        d.employee_name,/*雇员姓名 */
+        d.id_num,/*证件号 */
+        d.id_card_type,
+        e.title,/*公司名称 */
+        e.license_code,/*营业执照编号 */
+        h.service_center,/*服务中心 */
+        h.custom /*客服*/
+        FROM
+        am_emp_task a
+        LEFT JOIN
+        am_employment b
+        ON a.employee_id = b.employee_id
+        and a.company_id = b.company_id
+        LEFT JOIN
+        emp_employee d
+        on  a.employee_id = d.employee_id
+        LEFT JOIN
+        sal_company e
+        on e.company_id = a.company_id
+        LEFT JOIN
+        am_resign f
+        on a.employee_id = f.employee_id
+        LEFT JOIN
+        am_archive_use g
+        on a.employee_id = g.employee_id
+        LEFT JOIN
+        sal_fc_company h on h.company_id = a.company_id
+        LEFT JOIN
+        am_archive c
+        ON b.employment_id = c.employment_id
+        where   a.task_category = '1'
+        <if test="taskStatus!=null">
+            and a.task_status = ${taskStatus}
+        </if>
+        <foreach collection="param" item="plid" open="" close="" separator="">
+            and  ${plid}
+        </foreach>
     </select>
 
 </mapper>

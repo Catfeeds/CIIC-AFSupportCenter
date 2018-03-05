@@ -4,11 +4,11 @@
 #  configuration:
 #    # map-underscore-to-camel-case: true
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-#  type-aliases-package: com.ciicsh.gto.salarymanagement.entity
+#  type-aliases-package: com.ciicsh.gto.salarymanagement.customer
 
 mybatis-plus:
   mapper-locations: classpath*:mapper/**.xml
-  type-aliases-package: com.ciicsh.gto.afsupportcenter.credentialsqueryservice.entity.po
+  type-aliases-package: com.ciicsh.gto.afsupportcenter.credentialsqueryservice.customer.po
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true

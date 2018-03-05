@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsPaymentComMapper">
+
+    <!-- 页面展示查询映射结果 -->
+    <resultMap id="DtoResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentComBO">
+        <id column="payment_com_id" property="paymentComId" />
+        <result column="payment_id" property="paymentId" />
+        <result column="payment_batch_num" property="paymentBatchNum" />
+        <result column="com_account_id" property="comAccountId" />
+        <result column="company_id" property="companyId" />
+        <result column="payment_month" property="paymentMonth" />
+        <result column="ought_amount" property="oughtAmount" />
+        <result column="total_pay_amount" property="totalPayAmount" />
+        <result column="total_com_pay_amount" property="totalComPayAmount" />
+        <result column="total_emp_pay_amount" property="totalEmpPayAmount" />
+        <result column="refund_deducted" property="refundDeducted" />
+        <result column="adjust_deducted" property="adjustDeducted" />
+        <result column="extra_amount" property="extraAmount" />
+        <result column="if_deducted_into_pay" property="ifDeductedIntoPay" />
+        <result column="join_payment_user" property="joinPaymentUser" />
+        <result column="join_payment_date" property="joinPaymentDate" />
+        <result column="remark" property="remark" />
+        <result column="actual_payment_date" property="actualPaymentDate" />
+        <result column="emp_count" property="empCount" />
+        <result column="payment_state" property="paymentState" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+        <result column="title" property="title" />
+        <result column="ss_account_type" property="ssAccountType" />
+        <result column="com_account_name" property="comAccountName" />
+        <result column="ss_account" property="ssAccount" />
+    </resultMap>
+
+    <select id="paymentComQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentComBO" resultMap="DtoResultMap">
+        SELECT
+          SPC.*,SCA.ss_account_type,SCA.com_account_name,SC.title,SP.payment_batch_num,SCA.ss_account
+        FROM
+          ss_payment_com SPC
+          INNER JOIN
+            ss_com_account SCA
+          ON
+            SCA.com_account_id = SPC.com_account_id
+            AND SCA.is_active = '1'
+            <if test = "ssAccountType != null and ssAccountType != ''">
+              AND SCA.ss_account_type = #{ssAccountType}
+            </if>
+          LEFT JOIN
+            sal_company SC
+          ON
+            SC.company_id = SPC.company_id
+            AND SC.is_active = '1'
+
+          LEFT JOIN
+            ss_payment SP
+          ON
+            SP.payment_id = SPC.payment_id
+            AND SP.is_active = '1'
+        WHERE
+            SPC.is_active = '1'
+            <if test = "companyId != null and companyId != ''">
+              AND SPC.company_id = #{companyId}
+            </if>
+            <if test = "paymentMonthMin != null and paymentMonthMin != ''">
+              <![CDATA[
+                AND SPC.payment_month >= #{paymentMonthMin}
+              ]]>
+            </if>
+            <if test = "paymentMonthMax != null and paymentMonthMax != ''">
+              <![CDATA[
+                AND SPC.payment_month <= #{paymentMonthMax}
+              ]]>
+            </if>
+            <if test = "paymentState != null and paymentState != ''">
+              AND SPC.payment_state = #{paymentState}
+            </if>
+            <if test = "comAccountId != null and comAccountId != ''">
+              AND SPC.com_account_id = #{comAccountId}
+            </if>
+            <if test = "ssAccount != null and ssAccount != ''">
+                AND SCA.ss_account LIKE concat(concat('%',#{ssAccount}),'%')
+            </if>
+
+        <if test = "paymentId != null and paymentId != ''">
+                AND SPC.payment_id = #{paymentId}
+            </if>
+            <if test = "paymentBatchNum != null and paymentBatchNum != ''">
+                AND SP.payment_batch_num = #{paymentBatchNum}
+            </if>
+    </select>
+
+    <select id="getPaymentComByPaymentId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        SPC.*
+        FROM
+        ss_payment_com SPC
+        WHERE
+        SPC.is_active = '1'
+          AND SPC.payment_id = #{paymentId}
+    </select>
+
+    <select id="getPaymentComBoByPaymentId" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentComBO" resultMap="DtoResultMap">
+        SELECT
+          SPC.*,SCA.ss_account_type,SCA.com_account_name,SCA.ss_account,SC.title,SP.payment_batch_num
+        FROM
+          ss_payment_com SPC
+        INNER JOIN
+          ss_com_account SCA
+        ON
+          SCA.com_account_id = SPC.com_account_id
+          AND SCA.is_active = '1'
+        LEFT JOIN
+          sal_company SC
+        ON
+          SC.company_id = SPC.company_id
+          AND SC.is_active = '1'
+        LEFT JOIN
+          ss_payment SP
+        ON
+          SP.payment_id = SPC.payment_id
+          AND SP.is_active = '1'
+        WHERE
+          SPC.is_active = '1'
+          AND SPC.payment_com_id = #{paymentComId}
+    </select>
+
+    <select id="getAccountIdByPaymentId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT
+            DISTINCT SPC.com_account_id
+        FROM
+            ss_payment_com SPC
+        WHERE
+            SPC.is_active = '1'
+            AND SPC.payment_id = #{paymentId}
+    </select>
+
+    <select id="getPaymentComCountNotInPayment" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPaymentCom" resultType="java.lang.Integer">
+        SELECT
+            Count(*)
+        FROM
+            ss_payment_com SPC
+        WHERE
+            SPC.is_active = '1'
+            AND (
+                SPC.payment_id != #{paymentId}
+                OR	SPC.payment_id IS NULL
+            )
+            AND SPC.payment_month = #{paymentMonth}
+            AND SPC.com_account_id = #{comAccountId}
+    </select>
+</mapper>

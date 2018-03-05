@@ -5,48 +5,193 @@
 	<!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMapDTO" extends="BaseResultMap"
                type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmploymentBO">
+        <result column="yuliu_doc_num" property="yuliuDocNum" />
+        <result column="doc_num" property="docNum" />
+        <result column="resign_handle_date" property="resignHandleDate" />
+        <result column="return_doc_date" property="returnDocDate" />
+        <result column="resign_feedback1" property="resignFeedback1" />
+        <result column="resign_feedback2" property="resignFeedback2" />
+        <result column="employ_feedback" property="employFeedback" />
+        <result column="storage_out_date" property="storageOutDate" />
+        <result column="archive_place" property="archivePlace" />
+        <result column="return_doc_date" property="returnDocDate" />
+        <result column="resign_handle_date" property="resignHandleDate" />
+        <result column="employ_feedback" property="employFeedback" />
+        <result column="task_status" property="taskStatus" />
+        <result column="task_category" property="taskCategory" />
+        <result column="archive_id" property="archiveId" />
+        <result column="archive_direction" property="archiveDirection"/>
+        <result column="employee_nature" property="employeeNature"/>
+    </resultMap>
+
+    <resultMap id="RM_archiveSearchExportOpt" type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.archiveSearchExportOpt">
+        <result column="employee_id" property="employeeId" />
+        <result column="employ_style" property="employStyle" />
+        <result column="handle_type" property="handleType" />
+        <result column="employ_property" property="employProperty" />
+        <result column="employ_way" property="employWay" />
+        <result column="yuliu_doc_num" property="yuliuDocNum" />
+        <result column="doc_num" property="docNum" />
+        <result column="title" property="title" />
+        <result column="employee_name" property="employeeName"/>
+        <result column="id_num" property="idNum"/>
+        <result column="license_code" property="licenseCode" />
+        <result column="service_center" property="serviceCenter"/>
+        <result column="diaodang_feedback_opt_date" property="diaodangFeedbackOptDate" />
     </resultMap>
 
     <select id="queryAmEmployment" resultMap="BaseResultMapDTO">
-        SELECT  *  FROM  am_employment  where  employee_id = #{employeeId}
-
-    </select>
-
-    <select id="queryAmEmploymentById" resultMap="BaseResultMapDTO">
-        SELECT
-        a.emp_task_id,/*任务id */
-        a.employee_id,/*雇员id */
-        b.employ_way,/*用工方式 */
-        b.employ_property,/*用工属性 */
-        c.yuliu_doc_num,/*预留档案编号 */
-        c.doc_num,/*档案编号 */
-        c.diaodang_feedback,/*调档反馈 */
-        c.employ_feedback_opt_date,/*用工反馈操作日期 */
-        c.diaodang_feedback_opt_date,/*调档反馈操作日期 */
-        d.employee_name,/*雇员姓名 */
-        d.id_num,/*证件号 */
-        e.title,/*公司名称 */
-        e.license_code
-        FROM
-        am_emp_task a
-        LEFT JOIN
-        am_employment b
-        ON a.employee_id = b.employee_id
-        LEFT JOIN
-        am_archive c
-        ON b.employment_id = c.employment_id
-        LEFT JOIN
-        emp_employee  d
-        on  b.employee_id = d.employee_id
-        LEFT JOIN
-        sal_company e
-        on e.company_id = b.company_id
-        LEFT JOIN
-        am_resign f
-        on a.employee_id = f.employee_id
+        SELECT  *  FROM  am_employment
         where
-        b.employment_id = #{amEmploymentId}
-
+          is_active = 1
+        <if test="employeeId!=null">
+            and  employee_id = #{employeeId}
+        </if>
+        <if test="employmentId!=null">
+            and  employment_id = #{employmentId}
+        </if>
     </select>
 
+    <select id="queryAmArchive" resultMap="BaseResultMapDTO">
+        SELECT
+        a.emp_task_id,
+        b.employment_id,
+        b.employee_id,
+        b.company_id,
+        /**用工属性*/
+        b.employ_property,
+        /**用工属性*/
+        b.employ_way,
+        b.handle_type,
+        c.doc_num,
+        c.yuliu_doc_num,
+        c.archive_place,
+        /**出库日期*/
+        c.storage_out_date,
+        c.archive_id,
+        d.id_num,/*证件号 */
+        d.id_card_type,
+        b.employ_date,
+        /**退工日期*/
+        f.resign_date,
+        /**用工反馈*/
+        c.employ_feedback,
+        f.resign_feedback1,
+        f.resign_feedback2,
+        /**退档日期*/
+        f.return_doc_date,
+        /**退工送办日期*/
+        f.resign_handle_date
+
+        FROM
+        am_employment b
+        LEFT JOIN am_emp_task a on a.emp_task_id = b.emp_task_id
+        LEFT JOIN am_archive c ON b.employment_id = c.employment_id
+        LEFT JOIN am_resign f ON f.employment_id = b.employment_id
+        LEFT JOIN emp_employee d  on  b.employee_id = d.employee_id
+        where  1= 1
+        <if test="taskStatus!=null">
+            and  a.task_status = ${taskStatus}
+        </if>
+        <if test="taskCategory!=null">
+            and  a.task_category = ${taskCategory}
+        </if>
+        <foreach collection="param" item="plid" open="" close="" separator="">
+            and  ${plid}
+        </foreach>
+    </select>
+
+    <select id="taskCountEmployee"  resultMap="BaseResultMapDTO">
+        SELECT
+        t.task_status,
+        COUNT(t.task_status) AS count
+        FROM
+        (
+        SELECT
+        a.task_status
+        FROM
+        am_employment b
+        LEFT JOIN am_emp_task a on  a.company_id = b.company_id and a.employee_id = b.employee_id
+        LEFT JOIN am_archive c ON b.employment_id = c.employment_id
+        LEFT JOIN am_resign f ON f.employment_id = b.employment_id
+        WHERE
+        task_category = '1'
+        <foreach collection = "param" item = "plid"  open=""  close=""  separator="" >
+            AND  ${ plid }
+        </foreach >
+        )  t
+        GROUP BY
+        t.task_status
+    </select>
+
+    <select id="taskCountResign"  resultMap="BaseResultMapDTO">
+        SELECT
+        t.task_status,
+        COUNT(t.task_status) AS count
+        FROM
+        (
+        SELECT
+        a.task_status
+        FROM
+        am_employment b
+        LEFT JOIN am_emp_task a on  a.company_id = b.company_id and a.employee_id = b.employee_id
+        LEFT JOIN am_archive c ON b.employment_id = c.employment_id
+        LEFT JOIN am_resign f ON f.employment_id = b.employment_id
+        WHERE
+        task_category = '2'
+        <foreach collection = "param" item = "plid"  open=""  close=""  separator="" >
+            AND  ${ plid }
+        </foreach >
+        )  t
+        GROUP BY
+        t.task_status
+    </select>
+    <select id="queryAmArchiveList" resultMap="RM_archiveSearchExportOpt">
+        SELECT
+        a.emp_task_id,
+        b.employment_id,
+        b.employee_id,
+        b.company_id,
+        /**用工属性*/
+        b.employ_property,
+        /**用工属性*/
+        b.employ_way,
+        b.handle_type,
+        c.doc_num,
+        c.yuliu_doc_num,
+        c.archive_place,
+        /**出库日期*/
+        c.storage_out_date,
+        c.archive_id,
+        d.id_num,/*证件号 */
+        d.id_card_type,
+        b.employ_date,
+        /**退工日期*/
+        f.resign_date,
+        /**用工反馈*/
+        c.employ_feedback,
+        f.resign_feedback1,
+        f.resign_feedback2,
+        /**退档日期*/
+        f.return_doc_date,
+        /**退工送办日期*/
+        f.resign_handle_date
+
+        FROM
+        am_employment b
+        LEFT JOIN am_emp_task a on a.emp_task_id = b.emp_task_id
+        LEFT JOIN am_archive c ON b.employment_id = c.employment_id
+        LEFT JOIN am_resign f ON f.employment_id = b.employment_id
+        LEFT JOIN emp_employee d  on  b.employee_id = d.employee_id
+        where  1= 1
+        <if test="taskStatus!=null">
+            and  a.task_status = ${taskStatus}
+        </if>
+        <if test="taskCategory!=null">
+            and  a.task_category = ${taskCategory}
+        </if>
+        <foreach collection="param" item="plid" open="" close="" separator="">
+            and  ${plid}
+        </foreach>
+    </select>
 </mapper>

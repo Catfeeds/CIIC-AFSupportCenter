@@ -87,6 +87,13 @@ public class OrgPolicyController {
      */
     @DeleteMapping("/delete/{id}")
     public JsonResult deleteItem(@PathVariable("id") Integer id){
-        return JsonResult.success(orgPolicyService.deleteById(id));
+        int b = orgPolicyService.deleteById(id);
+        if (b==0) {
+            return JsonResult.success(null);
+        }
+        if (b ==1 ) {
+            return JsonResult.errorsInfo("1","此政策正在使用中，删除失败！");
+        }
+        return JsonResult.faultMessage();
     }
 }

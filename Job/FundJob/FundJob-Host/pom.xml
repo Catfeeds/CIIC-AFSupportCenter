@@ -20,20 +20,26 @@
             <artifactId>fundjob-business</artifactId>
             <version>1.0.0</version>
         </dependency>
-
-
+        <!-- spring cloud eureka -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-eureka</artifactId>
+        </dependency>
+        <!-- spring cloud feign -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-feign</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <finalName>gt1.afsupportcenter.fundjob-host</finalName>
         <resources>
-            <resource>
-                <directory>../FundJob-Dao/src/main/resources/</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/mapper/*.xml</include>
-                </includes>
-            </resource>
             <resource>
                 <directory>src/main/resources/</directory>
                 <filtering>true</filtering>

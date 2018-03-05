@@ -15,9 +15,9 @@ public class PaymentApplyDetailBO {
     /** 支付批次号 */
     private Integer applyBatchId;
     /** 受理单类型（0-补充医疗理赔，1-未投保医疗理赔，2-雇员付款）*/
-    private Integer businessId;
+    private Integer businessItemId;
     /** 付款申请记录编号 */
-    private Integer paymentApplyId;
+    private String paymentApplyId;
     /** 公司编号 */
     private String companyId;
     /** 公司名称 */
@@ -28,6 +28,8 @@ public class PaymentApplyDetailBO {
     private String employeeName;
     /** 支付金额 */
     private BigDecimal payAmount;
+    /** 税金 */
+    private BigDecimal taxAmount;
     /** 雇员银行账号 */
     private String employeeBankAccount;
     /** 开户名 */
@@ -51,19 +53,19 @@ public class PaymentApplyDetailBO {
         this.applyBatchId = applyBatchId;
     }
 
-    public Integer getBusinessId() {
-        return businessId;
+    public Integer getBusinessItemId() {
+        return businessItemId;
     }
 
-    public void setBusinessId(Integer businessId) {
-        this.businessId = businessId;
+    public void setBusinessItemId(Integer businessItemId) {
+        this.businessItemId = businessItemId;
     }
 
-    public Integer getPaymentApplyId() {
+    public String getPaymentApplyId() {
         return paymentApplyId;
     }
 
-    public void setPaymentApplyId(Integer paymentApplyId) {
+    public void setPaymentApplyId(String paymentApplyId) {
         this.paymentApplyId = paymentApplyId;
     }
 
@@ -105,6 +107,14 @@ public class PaymentApplyDetailBO {
 
     public void setPayAmount(BigDecimal payAmount) {
         this.payAmount = payAmount;
+    }
+
+    public BigDecimal getTaxAmount() {
+        return taxAmount;
+    }
+
+    public void setTaxAmount(BigDecimal taxAmount) {
+        this.taxAmount = taxAmount;
     }
 
     public String getEmployeeBankAccount() {

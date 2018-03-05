@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsMonthEmpChangeDetailMapper">
+
+
+    <resultMap id="DtoResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO">
+        <id column="month_emp_change_detail_id" property="monthEmpChangeDetailId" />
+        <result column="month_emp_change_id" property="monthEmpChangeId" />
+        <result column="employee_id" property="employeeId" />
+        <result column="employee_name" property="employeeName" />
+        <result column="change_type" property="changeType" />
+        <result column="change_type_name" property="changeTypeName" />
+        <result column="base_amount" property="baseAmount" />
+        <result column="ss_type" property="ssType" />
+        <result column="ss_type_name" property="ssTypeName" />
+        <result column="com_amount" property="comAmount" />
+        <result column="emp_amount" property="empAmount" />
+        <result column="com_compensate_amount" property="comCompensateAmount" />
+        <result column="emp_compensate_amount" property="empCompensateAmount" />
+        <result column="one_payment" property="onePayment" />
+    </resultMap>
+
+    <resultMap id="YYSExportMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.YysExportOpt">
+        <result column="month_emp_change_id" property="monthEmpChangeId" />
+        <result column="ss_month" property="ssMonth" />
+        <result column="com_account_id" property="comAccountId" />
+        <result column="com_account_name" property="comAccountName" />
+        <result column="employee_id" property="employeeId" />
+        <result column="employee_name" property="employeeName" />
+        <result column="change_type" property="changeType" />
+        <result column="change_type_name" property="changeTypeName" />
+        <result column="base_amount" property="baseAmount" />
+        <result column="pension_com_amount" property="pensionComAmount" />
+        <result column="pension_emp_amount" property="pensionEmpAmount" />
+        <result column="pension_com_repay_amount" property="pensionComRepayAmount" />
+        <result column="pension_emp_repay_amount" property="pensionEmpRepayAmount" />
+        <result column="pension_one_payment" property="pensionOnePayment" />
+        <result column="medical_com_amount" property="medicalComAmount" />
+        <result column="medical_emp_amount" property="medicalEmpAmount" />
+        <result column="medical_com_repay_amount" property="medicalComRepayAmount" />
+        <result column="medical_emp_repay_amount" property="medicalEmpRepayAmount" />
+        <result column="unemployment_com_amount" property="unemploymentComAmount" />
+        <result column="unemployment_emp_amount" property="unemploymentEmpAmount" />
+        <result column="unemployment_com_repay_amount" property="unemploymentComRepayAmount" />
+        <result column="unemployment_emp_repay_amount" property="unemploymentEmpRepayAmount" />
+    </resultMap>
+
+
+    <resultMap id="GSYExportMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.GsyExportOpt">
+        <result column="month_emp_change_id" property="monthEmpChangeId" />
+        <result column="ss_month" property="ssMonth" />
+        <result column="com_account_id" property="comAccountId" />
+        <result column="com_account_name" property="comAccountName" />
+        <result column="employee_id" property="employeeId" />
+        <result column="employee_name" property="employeeName" />
+        <result column="change_type" property="changeType" />
+        <result column="change_type_name" property="changeTypeName" />
+        <result column="base_amount" property="baseAmount" />
+        <result column="accident_com_amount" property="accidentComAmount" />
+        <result column="accident_com_repay_amount" property="accidentComRepayAmount" />
+        <result column="maternity_com_amount" property="maternityComAmount" />
+        <result column="maternity_com_repay_amount" property="maternityComRepayAmount" />
+    </resultMap>
+
+
+    <select id="serachMonthEmpChangeDetailByStatementId" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeBO" resultMap="DtoResultMap">
+        SELECT
+          T1.*,T3.employee_name
+        FROM
+          ss_month_emp_change_detail T1
+          INNER JOIN
+            ss_month_emp_change T2
+          ON
+            T2.month_emp_change_id = T1.month_emp_change_id
+            AND T2.is_active = '1'
+            AND T1.month_emp_change_id = #{monthEmpChangeId,jdbcType=BIGINT}
+          LEFT JOIN
+            emp_employee T3
+            ON
+            T1.employee_id = T3.employee_id
+        WHERE
+            1=1
+            AND T1.is_active = '1'
+        ORDER BY
+            T1.employee_id,T1.change_type,T1.ss_type
+    </select>
+
+    <select id="serachMonthEmpChangeDetailPOByStatementId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+          T1.*
+        FROM
+          ss_month_emp_change_detail T1
+          INNER JOIN
+            ss_month_emp_change T2
+          ON
+            T2.month_emp_change_id = T1.month_emp_change_id
+          AND T2.is_active = '1'
+          AND T1.month_emp_change_id = #{monthEmpChangeId,jdbcType=BIGINT}
+        WHERE
+          1=1
+          AND T1.is_active = '1'
+    </select>
+
+    <select id="yysExportQuery" resultMap="YYSExportMap">
+        SELECT
+          <include refid="YYS_Export_Columns"/>
+        FROM ss_month_emp_change a
+        INNER JOIN ss_com_account b ON a.com_account_id = b.com_account_id
+        INNER JOIN (
+            SELECT
+                month_emp_change_id,
+                employee_id,
+                change_type,
+                change_type_name,
+                base_amount,
+                MAX(IF(ss_type='DIT00042',com_amount,'')) AS 'pension_com_amount',
+                MAX(IF(ss_type='DIT00042',emp_amount,'')) AS 'pension_emp_amount',
+                MAX(IF(ss_type='DIT00042',com_compensate_amount,'')) AS 'pension_com_repay_amount',
+                MAX(IF(ss_type='DIT00042',emp_compensate_amount,'')) AS 'pension_emp_repay_amount',
+                MAX(IF(ss_type='DIT00042',one_payment,'')) AS 'pension_one_payment',
+                MAX(IF(ss_type='DIT00043',com_amount,'')) AS 'medical_com_amount',
+                MAX(IF(ss_type='DIT00043',emp_amount,'')) AS 'medical_emp_amount',
+                MAX(IF(ss_type='DIT00043',com_compensate_amount,'')) AS 'medical_com_repay_amount',
+                MAX(IF(ss_type='DIT00043',emp_compensate_amount,'')) AS 'medical_emp_repay_amount',
+                MAX(IF(ss_type='DIT00046',com_amount,'')) AS 'unemployment_com_amount',
+                MAX(IF(ss_type='DIT00046',emp_amount,'')) AS 'unemployment_emp_amount',
+                MAX(IF(ss_type='DIT00046',com_compensate_amount,'')) AS 'unemployment_com_repay_amount',
+                MAX(IF(ss_type='DIT00046',emp_compensate_amount,'')) AS 'unemployment_emp_repay_amount'
+            FROM
+            ss_month_emp_change_detail
+            WHERE
+            is_active = 1
+            GROUP BY
+            month_emp_change_id,
+            employee_id,
+            change_type,
+            change_type_name,
+            base_amount
+        ) c ON a.month_emp_change_id = c.month_emp_change_id
+        LEFT JOIN emp_employee d ON c.employee_id = d.employee_id
+        WHERE a.is_active = 1 AND b.is_active = 1
+        AND a.month_emp_change_id = #{monthEmpChangeId,jdbcType=BIGINT}
+    </select>
+
+    <select id="gsyExportQuery" resultMap="GSYExportMap">
+        SELECT
+          <include refid="GSY_Export_Columns"/>
+        FROM ss_month_emp_change a
+        INNER JOIN ss_com_account b ON a.com_account_id = b.com_account_id
+        INNER JOIN (
+            SELECT
+                month_emp_change_id,
+                employee_id,
+                change_type,
+                change_type_name,
+                base_amount,
+                MAX(IF(ss_type='DIT00044',com_amount,'')) AS 'accident_com_amount',
+                MAX(IF(ss_type='DIT00044',com_compensate_amount,'')) AS 'accident_com_repay_amount',
+                MAX(IF(ss_type='DIT00045',com_amount,'')) AS 'maternity_com_amount',
+                MAX(IF(ss_type='DIT00045',com_compensate_amount,'')) AS 'maternity_com_repay_amount'
+            FROM
+            ss_month_emp_change_detail
+            WHERE
+            is_active = 1
+            GROUP BY
+            month_emp_change_id,
+            employee_id,
+            change_type,
+            change_type_name,
+            base_amount
+        ) c ON a.month_emp_change_id = c.month_emp_change_id
+        LEFT JOIN emp_employee d ON c.employee_id = d.employee_id
+        WHERE a.is_active = 1 AND b.is_active = 1
+        AND a.month_emp_change_id = #{monthEmpChangeId,jdbcType=BIGINT}
+
+    </select>
+
+
+    <sql id="YYS_Export_Columns">
+        a.month_emp_change_id,
+        a.ss_month,
+        a.com_account_id,
+        b.com_account_name,
+        c.employee_id,
+        d.employee_name,
+        c.change_type,
+        c.change_type_name,
+        c.base_amount,
+        c.pension_com_amount,
+        c.pension_emp_amount,
+        c.pension_com_repay_amount,
+        c.pension_emp_repay_amount,
+        c.pension_one_payment,
+        c.medical_com_amount,
+        c.medical_emp_amount,
+        c.medical_com_repay_amount,
+        c.medical_emp_repay_amount,
+        c.unemployment_com_amount,
+        c.unemployment_emp_amount,
+        c.unemployment_com_repay_amount,
+        c.unemployment_emp_repay_amount
+    </sql>
+
+    <sql id="GSY_Export_Columns">
+        a.month_emp_change_id,
+        a.ss_month,
+        a.com_account_id,
+        b.com_account_name,
+        c.employee_id,
+        d.employee_name,
+        c.change_type,
+        c.change_type_name,
+        c.base_amount,
+        c.accident_com_amount,
+        c.accident_com_repay_amount,
+        c.maternity_com_amount,
+        c.maternity_com_repay_amount
+    </sql>
+
+
+</mapper>

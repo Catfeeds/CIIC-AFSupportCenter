@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.healthmedical.dao.ZyTpaTaskMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.ZyTpaTaskPO">
+		<result column="af_task_id" property="afTaskId" />
+		<result column="employee_id" property="employeeId" />
+		<result column="company_id" property="companyId" />
+		<result column="zy_product_id" property="zyProductId" />
+		<result column="product_name" property="productName" />
+		<result column="service_items" property="serviceItems" />
+		<result column="key_value" property="keyValue" />
+		<result column="start_confirm_date" property="startConfirmDate" />
+		<result column="end_confirm_date" property="endConfirmDate" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+</mapper>

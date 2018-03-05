@@ -1,16 +1,21 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.business.impl;
 
-
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.HealthMedicalJobService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.enums.SysConstants;
-import com.ciicsh.gto.afsupportcenter.healthmedical.dao.*;
+import com.ciicsh.gto.afsupportcenter.healthmedical.dao.PaymentApplyBatchMapper;
+import com.ciicsh.gto.afsupportcenter.healthmedical.dao.PaymentApplyDetailMapper;
+import com.ciicsh.gto.afsupportcenter.healthmedical.dao.SupplyMedicalAcceptanceMapper;
+import com.ciicsh.gto.afsupportcenter.healthmedical.dao.UninsuredMedicalMapper;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmpBankRefundBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentBO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentStatusBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.PaymentApplyDetailBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.PaymentApplyBatchPO;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.BankCardRefundDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.proxy.BankCardInfoProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.*;
@@ -24,10 +29,11 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
- * 雇员付款服务实现类
+ * 健康医疗服务实现类
  * </p>
  *
  * @author chenpb
@@ -41,10 +47,10 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
     @Autowired
     private PayapplyServiceProxy payapplyServiceProxy;
     /**
-     *  雇员付款申请
+     *  雇员中心补全银行卡信息处理
      */
     @Autowired
-    private EmployeePaymentApplyMapper employeePaymentApplyMapper;
+    private BankCardInfoProxy bankCardInfoProxy;
     /**
      *  支付批次记录表
      */
@@ -77,20 +83,24 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
     @Override
     public void handleSupplyMedical () {
         /** 审核未同步 */
-        List<EmployeePaymentBO> audited = employeePaymentApplyMapper.selectAudited();
+        List<EmployeePaymentBO> audited = supplyMedicalAcceptanceMapper.selectAudited();
         /** 退票已处理 */
-        audited.addAll(employeePaymentApplyMapper.selectRefund());
+        audited.addAll(supplyMedicalAcceptanceMapper.selectRefund());
         if (!audited.isEmpty()) {
             PaymentApplyBatchPO batchPO = this.addPaymentApply(audited);
             JsonResult jsonResult = this.syncPaymentData(batchPO);
             System.out.println(JSON.toJSONString(jsonResult));
             if(JsonResult.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())) {
-                supplyMedicalAcceptanceMapper.syncStatus(batchPO.getApplyBatchId(), SysConstants.BusinessId.SUPPLY_MEDICAL.getId(), SysConstants.SupplyMedicalStatus.SYNC.getCode(), SysConstants.JobConstants.SYSTEM_ZH.getName());
+                supplyMedicalAcceptanceMapper.syncStatus(new EmployeePaymentStatusBO(
+                    batchPO.getApplyBatchId(), SysConstants.BusinessId.SUPPLY_MEDICAL.getId(),
+                    SysConstants.SupplyMedicalStatus.SYNC.getCode(), StringUtils.EMPTY,
+                    SysConstants.JobConstants.SYSTEM_ZH.getName()
+                ));
             } else {
                 this.delBathData(batchPO.getApplyBatchId());
             }
         }
-        List<EmpBankRefundBO> unSync = this.selectUnSyncApply();
+        List<EmpBankRefundBO> unSync = this.selectUnSyncSupplyMedical();
         if (!unSync.isEmpty()) {
             this.syncIncompleteBankCardInfoApply(unSync);
         }
@@ -107,20 +117,24 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
     @Override
     public void handleUninsuredMedical () {
         /** 审核未同步 */
-        List<EmployeePaymentBO> audited = employeePaymentApplyMapper.selectAudited();
+        List<EmployeePaymentBO> audited = uninsuredMedicalMapper.selectAudited();
         /** 退票已处理 */
-        audited.addAll(employeePaymentApplyMapper.selectRefund());
+        audited.addAll(uninsuredMedicalMapper.selectRefund());
         if (!audited.isEmpty()) {
             PaymentApplyBatchPO batchPO = this.addPaymentApply(audited);
             JsonResult jsonResult = this.syncPaymentData(batchPO);
             System.out.println(JSON.toJSONString(jsonResult));
             if(JsonResult.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())) {
-                uninsuredMedicalMapper.syncStatus(batchPO.getApplyBatchId(), SysConstants.BusinessId.UNINSURED_MEDICAL.getId(), SysConstants.UninsuredMedicalStatus.SYNC.getCode(), SysConstants.JobConstants.SYSTEM_ZH.getName());
+                uninsuredMedicalMapper.syncStatus(new EmployeePaymentStatusBO(
+                    batchPO.getApplyBatchId(), SysConstants.BusinessId.UNINSURED_MEDICAL.getId(),
+                    SysConstants.UninsuredMedicalStatus.SYNC.getCode(), StringUtils.EMPTY,
+                    SysConstants.JobConstants.SYSTEM_ZH.getName()
+                ));
             } else {
                 this.delBathData(batchPO.getApplyBatchId());
             }
         }
-        List<EmpBankRefundBO> unSync = this.selectUnSyncApply();
+        List<EmpBankRefundBO> unSync = this.selectUnSyncUninsuredMedical();
         if (!unSync.isEmpty()) {
             this.syncIncompleteBankCardInfoApply(unSync);
         }
@@ -136,61 +150,105 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public void handlePaymentRefund (PayApplyReturnTicketDTO dto) {
+        Integer businessId = dto.getBusinessItemId();
         List<EmployeeReturnTicketDTO> detail = dto.getEmployeeReturnTicketDTOList();
         if (!detail.isEmpty()) {
-            detail.forEach(pay->this.updateRefundStatus(dto.getBusinessPkId().intValue(), pay));
+            List<EmpBankRefundBO> refund = null;
+            if (SysConstants.BusinessId.SUPPLY_MEDICAL.getId().equals(businessId)) {
+                detail.forEach(pay->this.updateSupplyMedicalRefundStatus(dto.getBusinessPkId().intValue(), pay));
+                refund = this.selectSupplyMedicalBankRefund();
+            } else {
+                detail.forEach(pay->this.updateUninsuredMedicalRefundStatus(dto.getBusinessPkId().intValue(), pay));
+                refund = this.selectUninsuredMedicalBankRefund();
+            }
+            if (!refund.isEmpty()) {
+                this.syncIncompleteBankCardInfoApply (refund);
+            }
         }
     }
 
     /**
      * @description 同步结算中心驳回，支付成功状态
      * @author chenpb
-     * @since 2018-02-06
+     * @since 2018-02-07
      * @param dto: 结算中心处理结果
      * @return
      */
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public void syncSettleCenterStatus (PayApplyPayStatusDTO dto) {
-        employeePaymentApplyMapper.syncStatus(dto.getBusinessPkId().intValue(),
-            dto.getBusinessType(),
-            dto.getPayStatus(),
-            dto.getRemark(),
-            SysConstants.JobConstants.SYSTEM_ZH.getName());
+        Integer businessId = dto.getBusinessItemId();
+        Integer status = SysConstants.SupplyMedicalStatus.COMPLETE.getCode();
+        if (SysConstants.SettlementCenterStatus.BACK.getCode().equals(dto.getPayStatus())) {
+            status = SysConstants.SupplyMedicalStatus.BACK.getCode();
+        }
+        EmployeePaymentStatusBO statusBO = new EmployeePaymentStatusBO(
+            dto.getBusinessPkId().intValue(), businessId, status, SysConstants.SupplyMedicalStatus.SYNC.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+        );
+        if(SysConstants.BusinessId.SUPPLY_MEDICAL.getId().equals(businessId)) {
+            supplyMedicalAcceptanceMapper.syncStatus(statusBO);
+        } else {
+            statusBO.setCurrentStatus(SysConstants.UninsuredMedicalStatus.SYNC.getCode());
+            if (SysConstants.SettlementCenterStatus.BACK.getCode().equals(dto.getPayStatus())) {
+                statusBO.setStatus(SysConstants.UninsuredMedicalStatus.BACK.getCode());
+            } else {
+                statusBO.setStatus(SysConstants.UninsuredMedicalStatus.COMPLETE.getCode());
+            }
+            uninsuredMedicalMapper.syncStatus(statusBO);
+        }
     }
 
     /**
      * @description 添加补全银行卡信息申请到雇员中心
      * @author chenpb
      * @since 2018-02-06
-     * @param emp: 雇员信息
+     * @param refund: 雇员信息
      * @return
      */
-    private void syncIncompleteBankCardInfoApply (List<EmpBankRefundBO> emp) {
-        System.out.println(emp.size());
+    private void syncIncompleteBankCardInfoApply (List<EmpBankRefundBO> refund) {
+        List<BankCardRefundDTO> list = CommonTransform.convertToDTOs(refund, BankCardRefundDTO.class);
+        com.ciicsh.gto.employeecenter.util.JsonResult jsonResult = bankCardInfoProxy.createBankRefund(list);
+        System.out.println(JSON.toJSONString(jsonResult));
     }
 
     /**
-     * @description 更新付款申请退票状态
+     * @description 更新退票状态
      * @author chenpb
      * @since 2018-02-06
      * @param batchId
      * @param dto
      */
-    private void updateRefundStatus (Integer batchId, EmployeeReturnTicketDTO dto) {
+    private void updateSupplyMedicalRefundStatus (Integer batchId, EmployeeReturnTicketDTO dto) {
         PaymentApplyDetailBO bo = new PaymentApplyDetailBO();
         BeanUtils.copyProperties(dto, bo);
         bo.setApplyBatchId(batchId);
         List<PaymentApplyDetailBO> list = paymentApplyDetailMapper.selectRefundDetail(bo);
         if(!list.isEmpty()){
-            Integer businessId = list.get(0).getBusinessId();
-            if (SysConstants.BusinessId.SUPPLY_MEDICAL.equals(businessId)) {
-                supplyMedicalAcceptanceMapper.updateStatus(list.get(0).getPaymentApplyId().toString(), SysConstants.SupplyMedicalStatus.REFUND.getCode(), SysConstants.JobConstants.SYSTEM_ZH.getName());
-            } else {
-                uninsuredMedicalMapper.updateStatus(list.get(0).getPaymentApplyId(), SysConstants.UninsuredMedicalStatus.REFUND.getCode(), SysConstants.JobConstants.SYSTEM_ZH.getName());
-            }
+            supplyMedicalAcceptanceMapper.updateStatus(new EmployeePaymentStatusBO (
+                list.get(0).getPaymentApplyId().toString(), SysConstants.SupplyMedicalStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+            ));
         }
     }
+
+    /**
+     * @description 更新退票状态
+     * @author chenpb
+     * @since 2018-02-06
+     * @param batchId
+     * @param dto
+     */
+    private void updateUninsuredMedicalRefundStatus (Integer batchId, EmployeeReturnTicketDTO dto) {
+        PaymentApplyDetailBO bo = new PaymentApplyDetailBO();
+        BeanUtils.copyProperties(dto, bo);
+        bo.setApplyBatchId(batchId);
+        List<PaymentApplyDetailBO> list = paymentApplyDetailMapper.selectRefundDetail(bo);
+        if(!list.isEmpty()){
+            uninsuredMedicalMapper.updateStatus(new EmployeePaymentStatusBO(
+                Integer.valueOf(list.get(0).getPaymentApplyId()), SysConstants.UninsuredMedicalStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+            ));
+        }
+    }
+
     /**
      * @description 同步支付申请信息到结算中心
      * @author chenpb
@@ -215,13 +273,19 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
      * @return PaymentApplyBatchPO: 申请支付批次记录
      */
     private PaymentApplyBatchPO addPaymentApply (List<EmployeePaymentBO> list) {
+        String title;
         Date now = new Date();
-        String title = SysConstants.JobConstants.MEDICAL_CLAIMS.getName();
+        if(SysConstants.JobConstants.SUPPLY_MEDICAL.getCode().equals(list.get(0).getBusinessId())){
+            title = SysConstants.JobConstants.SUPPLY_MEDICAL.getName();
+        } else {
+            title = SysConstants.JobConstants.UNINSURED_MEDICAL.getName();
+        }
         BigDecimal payAmount = list.stream().map(p->p.getPayAmount()).reduce(BigDecimal.ZERO, (x,y)->x.add(y));
+        list.stream().map((x) -> setAreaInfo(x)).collect(Collectors.toList());
         PaymentApplyBatchPO batchPO = new PaymentApplyBatchPO (
             SysConstants.JobConstants.HEALTH_MEDICAL_DEPT.getName(),
             SysConstants.JobConstants.FINANCE_NOT.getCode(),
-            SysConstants.JobConstants.HEALTH_MEDICAL_DEPT.getCode(),
+            SysConstants.JobConstants.MEDICAL_CLAIMS.getCode(),
             SysConstants.JobConstants.PAY_WAY.getCode(),
             payAmount,
             SysConstants.JobConstants.INDIVIDUAL.getName(),
@@ -237,14 +301,47 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
     }
 
     /**
-     * @description 查询已审核未同步数据
+     * @description 查询补充医疗已审核未同步数据
      * @author chenpb
-     * @since 2018-02-06
+     * @since 2018-02-07
      * @param
      * @return
      */
-    private List<EmpBankRefundBO> selectUnSyncApply () {
-        return employeePaymentApplyMapper.selectUnSyncApply();
+    private List<EmpBankRefundBO> selectUnSyncSupplyMedical() {
+        return supplyMedicalAcceptanceMapper.selectUnSync();
+    }
+
+    /**
+     * @description 查询银行退票数据
+     * @author chenpb
+     * @since 2018-03-01
+     * @param
+     * @return
+     */
+    private List<EmpBankRefundBO> selectSupplyMedicalBankRefund () {
+        return supplyMedicalAcceptanceMapper.selectBankRefund();
+    }
+
+    /**
+     * @description 查询未投保医疗已审核未同步数据
+     * @author chenpb
+     * @since 2018-02-07
+     * @param
+     * @return
+     */
+    private List<EmpBankRefundBO> selectUnSyncUninsuredMedical () {
+        return uninsuredMedicalMapper.selectUnSync();
+    }
+
+    /**
+     * @description 查询银行退票数据
+     * @author chenpb
+     * @since 2018-03-01
+     * @param
+     * @return
+     */
+    private List<EmpBankRefundBO> selectUninsuredMedicalBankRefund () {
+        return uninsuredMedicalMapper.selectBankRefund();
     }
 
     /**
@@ -276,6 +373,17 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
         dto.setDepartmentManager(SysConstants.JobConstants.DEPARTMENT_MASTER.getName());
         dto.setReviewer(SysConstants.JobConstants.REVIEWER.getName());
         return dto;
+    }
+
+    /**
+     * 根据城市code查询省份名和城市名
+     * @param bo
+     * @return
+     */
+    private EmployeePaymentBO setAreaInfo (EmployeePaymentBO bo) {
+        bo.setProvinceCode("上海");
+        bo.setCityCode("上海市");
+        return bo;
     }
 
 }

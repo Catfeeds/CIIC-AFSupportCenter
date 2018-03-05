@@ -8,14 +8,20 @@
         <version>1.0.0</version>
         <relativePath>../../../pom.xml</relativePath>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>employcommandservice-api</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0</version>
 
+    <dependencies>
+
+    </dependencies>
+
     <build>
         <finalName>gt1.afsupportcenter.employcommandservice-api</finalName>
     </build>
+
 
 </project>

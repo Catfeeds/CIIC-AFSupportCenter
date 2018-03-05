@@ -4,24 +4,28 @@
 
 	<!-- 通用查询映射结果 -->
 	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpTask">
-		<id column="emp_task_id" property="empTaskId" />
-		<result column="employee_id" property="employeeId" />
-		<result column="company_id" property="companyId" />
-		<result column="task_category" property="taskCategory" />
-		<result column="submitter_id" property="submitterId" />
-		<result column="submitter_dept_id" property="submitterDeptId" />
-		<result column="submit_time" property="submitTime" />
-		<result column="submitter_remark" property="submitterRemark" />
-		<result column="task_status" property="taskStatus" />
-		<result column="handle_user_id" property="handleUserId" />
-		<result column="handle_time" property="handleTime" />
-		<result column="handle_remark" property="handleRemark" />
-		<result column="rejection_remark" property="rejectionRemark" />
-		<result column="is_active" property="isActive" />
-		<result column="created_time" property="createdTime" />
-		<result column="modified_time" property="modifiedTime" />
-		<result column="created_by" property="createdBy" />
-		<result column="modified_by" property="modifiedBy" />
+        <id column="emp_task_id" property="empTaskId" />
+        <result column="employee_id" property="employeeId" />
+        <result column="company_id" property="companyId" />
+        <result column="task_category" property="taskCategory" />
+        <result column="submitter_id" property="submitterId" />
+        <result column="submitter_dept_id" property="submitterDeptId" />
+        <result column="submit_time" property="submitTime" />
+        <result column="submitter_remark" property="submitterRemark" />
+        <result column="task_status" property="taskStatus" />
+        <result column="handle_user_id" property="handleUserId" />
+        <result column="handle_time" property="handleTime" />
+        <result column="handle_remark" property="handleRemark" />
+        <result column="rejection_remark" property="rejectionRemark" />
+        <result column="task_id" property="taskId" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+        <result column="task_form_content" property="taskFormContent" />
+        <result column="archive_direction" property="archiveDirection"/>
+        <result column="employee_nature" property="employeeNature"/>
 	</resultMap>
 
 </mapper>

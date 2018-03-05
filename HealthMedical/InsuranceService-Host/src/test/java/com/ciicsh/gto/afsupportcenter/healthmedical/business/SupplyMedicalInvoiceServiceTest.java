@@ -2,7 +2,7 @@
 //
 //import com.alibaba.fastjson.JSON;
 //import com.ciicsh.gto.afsupportcenter.healthmedical.InsuranceApplication;
-//import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.SupplyMedicalInvoice;
+//import com.ciicsh.gto.afsupportcenter.healthmedical.customer.po.SupplyMedicalInvoice;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;

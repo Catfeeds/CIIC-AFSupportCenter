@@ -1,13 +1,17 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business;
 
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmpTaskBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpTask;
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmpTaskBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmTaskParamBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpTask;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.employSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -20,10 +24,24 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
 
     List<AmEmpTaskBO> taskCount(PageInfo pageInfo);
 
-    List<AmEmpTaskBO> queryAmEmpTaskById(@Param("AmEmploymentId") String AmEmploymentId);
+    List<AmEmpTaskBO> queryAmEmpTaskById(Map<String,Object> param);
 
-    List<AmEmpTaskBO>  queryEmployeeHository(String employeeId);
+    List<AmEmpTaskBO> queryCustom(String companyId);
 
-    List<AmEmpTaskBO>  queryCustom(String companyId);
+    boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) throws Exception;
+
+    AmEmpTaskBO queryAccout(String companyId);
+
+    AmEmpTaskBO queryEmpTask(AmEmpTaskBO amEmpTaskBO);
+
+    boolean updateTaskStatus(Map<String,Object> param);
+
+    AmEmpTask getAmEmpTaskById(Long amEmpTaskId);
+
+    Map<String, Object>  getInformation(AmTaskParamBO param);
+
+    boolean insertTaskFire(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) throws Exception;
+
+    List<employSearchExportOpt>  queryAmEmpTaskList(AmEmpTaskBO amEmpTaskBO);
 
 }

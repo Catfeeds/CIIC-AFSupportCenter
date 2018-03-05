@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpMaterialMapper">
+
+    <!--雇员特殊任务办理材料页面详细信息-->
+    <select id="accAndEmpDetailQuery" resultMap="BaseResultMap">
+        SELECT
+        sem.emp_material_id,
+        sem.emp_task_id,
+        sem.material_type,
+        sem.material_name,
+        sem.submit_time,
+        sem.receive_time,
+        sem.`status`,
+        sem.remark
+        FROM
+        ss_emp_material sem
+        WHERE
+        sem.emp_task_id = #{empTaskId}
+    </select>
+</mapper>

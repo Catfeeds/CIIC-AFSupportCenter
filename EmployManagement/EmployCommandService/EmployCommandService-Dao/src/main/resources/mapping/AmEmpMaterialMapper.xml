@@ -7,6 +7,7 @@
 		<id column="emp_material_id" property="empMaterialId" />
 		<result column="material_name" property="materialName" />
 		<result column="submit_date" property="submitDate" />
+        <result column="submit_man" property="submitMan" />
 		<result column="receive_date" property="receiveDate" />
 		<result column="receive_man" property="receiveMan" />
 		<result column="reject_date" property="rejectDate" />

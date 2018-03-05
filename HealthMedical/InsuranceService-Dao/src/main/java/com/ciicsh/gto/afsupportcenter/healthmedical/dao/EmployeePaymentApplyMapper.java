@@ -4,8 +4,8 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmpBankRefundBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentBO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentStatusBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.EmployeePaymentApplyPO;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -42,12 +42,10 @@ public interface EmployeePaymentApplyMapper extends BaseMapper<EmployeePaymentAp
 
     /**
      * 更新申请状态为已同步
-     * @param batchId
-     * @param businessId
-     * @param modifiedBy
+     * @param bo
      * @return
      */
-    Integer syncStatus(@Param("batchId") Integer batchId, @Param("businessId") Integer businessId, @Param("status") Integer status, @Param("remark") String remark, @Param("modifiedBy") String modifiedBy);
+    Integer syncStatus(EmployeePaymentStatusBO bo);
 
     /**
      * 查询信息有误未同步数据
@@ -57,11 +55,16 @@ public interface EmployeePaymentApplyMapper extends BaseMapper<EmployeePaymentAp
     List<EmpBankRefundBO> selectUnSyncApply();
 
     /**
-     * 更新付款申请状态
-     * @param paymentApplyId
-     * @param status
-     * @param modifiedBy
+     * 查询银行退票数据
+     * @param
      * @return
      */
-    Integer updateApplyStatus(@Param("paymentApplyId") Integer paymentApplyId, @Param("status") Integer status, @Param("modifiedBy") String modifiedBy);
+    List<EmpBankRefundBO> selectBankRefund();
+
+    /**
+     * 更新付款申请状态
+     * @param bo
+     * @return
+     */
+    Integer updateApplyStatus(EmployeePaymentStatusBO bo);
 }

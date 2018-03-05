@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsMonthEmpChangeMapper">
+
+
+    <!-- 画面展示查询映射结果 -->
+    <resultMap id="DtoResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeBO">
+        <id column="month_emp_change_id" property="monthEmpChangeId" />
+        <result column="statement_id" property="statementId" />
+        <result column="ss_month" property="ssMonth" />
+        <result column="last_compute_time" property="lastComputeTime" />
+        <result column="compute_type" property="computeType" />
+        <result column="compute_user_id" property="computeUserId" />
+        <result column="com_account_id" property="comAccountId" />
+        <result column="com_account_name" property="comAccountName" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
+
+    <select id="serachMonthEmpChangeByStatementId" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeBO" resultMap="DtoResultMap">
+        SELECT
+          mec.*,ca.com_account_name
+        FROM
+          ss_month_emp_change mec
+          LEFT JOIN
+            ss_com_account ca
+          ON mec.com_account_id = ca.com_account_id
+            AND ca.is_active = '1'
+        WHERE
+          1=1
+          AND mec.is_active = '1'
+
+        AND  mec.month_emp_change_id=#{monthEmpChangeId,jdbcType=VARCHAR}
+    </select>
+
+
+
+
+</mapper>

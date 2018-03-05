@@ -3,9 +3,13 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bus
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmploymentBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmployment;
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.archiveSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -13,7 +17,15 @@ import org.apache.ibatis.annotations.Param;
  * </p>
  */
 public interface IAmEmploymentService extends IService<AmEmployment> {
-    PageRows<AmEmploymentBO> queryAmEmployment(PageInfo pageInfo);
 
-    AmEmploymentBO queryAmEmployment(@Param("AmEmploymentId") String AmEmploymentId);
+    List<AmEmploymentBO> queryAmEmployment(Map<String,Object> param);
+
+    PageRows<AmEmploymentBO> queryAmArchive(PageInfo pageInfo);
+
+    List<AmEmploymentBO> taskCountEmployee(PageInfo pageInfo);
+
+    List<AmEmploymentBO> taskCountResign(PageInfo pageInfo);
+
+    List<archiveSearchExportOpt>  queryAmArchiveList(AmEmploymentBO amEmploymentBO);
+
 }

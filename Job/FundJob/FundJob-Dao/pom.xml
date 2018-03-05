@@ -14,10 +14,6 @@
     <artifactId>fundjob-dao</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0</version>
-    <build>
-        <finalName>gt1.afsupportcenter.fundjob-dao</finalName>
-    </build>
-
 
     <dependencies>
         <dependency>
@@ -25,6 +21,18 @@
             <artifactId>fundjob-entity</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.dianping.cat</groupId>
+            <artifactId>cat-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.dianping.cat</groupId>
+            <artifactId>cat-client</artifactId>
+        </dependency>
     </dependencies>
+
+    <build>
+        <finalName>gt1.afsupportcenter.fundjob-dao</finalName>
+    </build>
 
 </project>

@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.enti
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -14,5 +15,6 @@ import java.util.List;
 public interface AmEmpMaterialMapper extends BaseMapper<AmEmpMaterial> {
 
     List<AmEmpMaterialBO> queryAmEmpMaterial(AmEmpMaterialBO amEmpMaterialBO);
+
 
 }

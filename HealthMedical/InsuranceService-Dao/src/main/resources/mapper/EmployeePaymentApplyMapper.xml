@@ -34,6 +34,7 @@
         <result column="employee_id" property="employeeId" />
         <result column="employee_name" property="employeeName" />
         <result column="pay_amount" property="payAmount" />
+        <result column="tax_amount" property="taxAmount" />
         <result column="bank_account" property="bankAccount" />
         <result column="account_name" property="accountName" />
         <result column="bank_id" property="bankId" />
@@ -47,13 +48,14 @@
     <resultMap id="PartialResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmpBankRefundBO">
         <result column="payment_apply_id" property="applyId" />
         <result column="business_id" property="businessId" />
+        <result column="business_type" property="businessType" />
         <result column="company_id" property="companyId" />
         <result column="employee_id" property="employeeId" />
-        <result column="customer_Manager" property="customerManager" />
+        <result column="customer_manager" property="customerManager" />
         <result column="service_center" property="serviceCenter" />
-        <result column="bankcard_id" property="bankcardId" />
         <result column="pay_amount" property="payAmount" />
-        <result column="remark" property="remark" />
+        <result column="refund_date" property="refundDate" />
+        <result column="reason" property="reason" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -63,12 +65,17 @@
 
     <!-- 关联查询结果列 -->
     <sql id="Join_Column_List">
-        p.payment_apply_id, 2 AS business_id, p.company_id, p.company_name, p.employee_id, p.employee_name, p.pay_total_amount AS pay_amount, b.card_num AS bank_account, b.account_name, b.bankcard_type AS bank_id, b.bank_code, b.deposit_bank AS bank_name, b.province_code, b.city_code
+        p.payment_apply_id, 2 AS business_id, p.company_id, p.company_name, p.employee_id, p.employee_name, p.pay_total_amount AS pay_amount, p.tax_amount, b.card_num AS bank_account, b.account_name, b.bankcard_type AS bank_id, b.bank_code, b.deposit_bank AS bank_name, b.province_code, b.city_code
     </sql>
 
     <!-- 关联查询结果列 -->
     <sql id="Partial_Column_List">
-        p.payment_apply_id, 2 AS business_id, p.company_id, p.employee_id, p.pay_total_amount AS pay_amount, p.created_by AS customer_manager, "外企内控中心" AS service_center, "无银行卡" AS remark
+        p.payment_apply_id, 2 AS business_id, 1 AS business_type, p.company_id, p.employee_id, p.pay_total_amount AS pay_amount, p.created_by AS customer_manager, "外企内控中心" AS service_center, now() AS refund_date, "无卡" AS reason
+    </sql>
+
+    <!-- 关联查询结果列 -->
+    <sql id="Refund_Column_List">
+        p.payment_apply_id, 2 AS business_id, 1 AS business_type, p.company_id, p.employee_id, p.pay_total_amount AS pay_amount, p.created_by AS customer_manager, "外企内控中心" AS service_center, now() AS refund_date, "银行卡信息错误" AS reason
     </sql>
 
     <!-- 需同步数据 -->
@@ -188,12 +195,57 @@
                     a.is_active = 1
                 AND
                     cbr.is_active = 1
+            UNION
+                SELECT
+                    r.apply_id
+                FROM
+                    gtobusinessdb.emp_bank_refund r
+                WHERE
+                    r.apply_id = p.payment_apply_id
+                AND
+                    r.business_id = 2
+                AND
+                    r.status = 0
+                AND
+                    r.is_active = 1
             )
         AND p. status = 3
         AND p.is_active = 1
     </select>
 
-    <update id="syncStatus">
+    <!-- 结算中心推送银行退票 -->
+    <select id="selectBankRefund" resultMap="PartialResultMap">
+        SELECT
+          <include refid="Refund_Column_List"></include>
+        FROM
+          cmy_af_employee_payment_apply p
+        WHERE NOT EXISTS
+        (
+            SELECT
+              a.payment_apply_id
+            FROM
+              gtobusinessdb.cmy_af_employee_payment_apply a,
+              gtobusinessdb.emp_bank_refund r
+            WHERE
+              a.payment_apply_id = p.payment_apply_id
+            AND
+              a.payment_apply_id = r.apply_id
+            AND
+              a.status = 7
+            AND
+              a.is_active = 1
+            AND
+              r.business_id = 2
+            AND
+              r.status = 0
+            AND
+              r.is_active = 1
+        )
+        AND p.status = 7
+        AND p.is_active = 1
+    </select>
+
+    <update id="syncStatus" parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentStatusBO">
         UPDATE
             gtobusinessdb.cmy_af_employee_payment_apply p
         SET
@@ -215,18 +267,26 @@
                 d.apply_batch_id = #{batchId, jdbcType=INTEGER}
             AND
                 d.business_id = #{businessId, jdbcType=INTEGER}
+            AND
+                d.is_active = 1
         )
+        <if test="currentStatus > 0">
+            AND p.status = 4
+        </if>
     </update>
 
-    <update id="updateApplyStatus">
+    <update id="updateApplyStatus" parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentStatusBO">
         UPDATE
             gtobusinessdb.cmy_af_employee_payment_apply p
         SET
             p.status = #{status, jdbcType=INTEGER},
+        <if test="remark != null and remark != ''">
+            p.remark = #{remark},
+        </if>
             p.modified_by = #{modifiedBy, jdbcType=VARCHAR},
             p.modified_time= now()
         WHERE
-            p.payment_apply_id = #{paymentApplyId, jdbcType=INTEGER}
+            p.payment_apply_id = #{applyId, jdbcType=INTEGER}
     </update>
 
 </mapper>

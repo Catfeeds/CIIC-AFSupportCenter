@@ -87,7 +87,7 @@ public class SupplyMedicalAcceptanceDTO extends CommonEntity {
      * 公司编号
      */
     @TableField("company_id")
-    private Integer companyId;
+    private String companyId;
     /**
      * 公司名称
      */
@@ -221,11 +221,11 @@ public class SupplyMedicalAcceptanceDTO extends CommonEntity {
         this.employeeName = employeeName;
     }
 
-    public Integer getCompanyId() {
+    public String getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(Integer companyId) {
+    public void setCompanyId(String companyId) {
         this.companyId = companyId;
     }
 

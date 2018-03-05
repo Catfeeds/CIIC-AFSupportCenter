@@ -140,7 +140,7 @@ public class UninsuredController {
                 UninsuredMedical uninsuredMedical = new UninsuredMedical();
                 BeanUtils.copyProperties(uninsuredMedicalDTO, uninsuredMedical);
                 boolean flag = uninsuredMedicalService.updateById(uninsuredMedical);
-                t = flag ? t++ : t;
+                t = flag ? ++t : t;
             }
             boolean flag = t == uninsuredMedicalList.size();
             logger.info("受理单更新");

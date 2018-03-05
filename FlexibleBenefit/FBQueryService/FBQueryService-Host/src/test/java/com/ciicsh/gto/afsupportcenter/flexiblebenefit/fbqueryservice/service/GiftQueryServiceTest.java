@@ -1,7 +1,7 @@
 //package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.service;
 //
 //import com.baomidou.mybatisplus.plugins.Page;
-//import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.GiftPO;
+//import com.ciicsh.gto.afsupportcenter.flexiblebenefit.customer.po.GiftPO;
 //import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.FlexibleQueryApplication;
 //import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.business.GiftQueryService;
 //import org.junit.Test;
@@ -20,9 +20,9 @@
 //    @Test
 //    public void selectByIdTest() {
 //        Page<GiftPO> page = new Page<>(1, 5);
-//        GiftPO entity = new GiftPO();
-//        entity.setStatus(1);
-//        page = giftQueryService.queryGiftList(page, entity);
+//        GiftPO customer = new GiftPO();
+//        customer.setStatus(1);
+//        page = giftQueryService.queryGiftList(page, customer);
 //        System.out.println(page.toString());
 //    }
 //

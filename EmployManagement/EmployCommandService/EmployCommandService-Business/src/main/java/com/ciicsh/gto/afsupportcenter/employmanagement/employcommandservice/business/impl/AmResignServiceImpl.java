@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.enti
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao.AmResignMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmResignService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.resignSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -63,7 +65,12 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
     }
 
     @Override
-    public List<AmResignBO> queryAmResignDetail(AmResignBO bo) {
-        return  baseMapper.queryAmResignDetail(bo);
+    public List<AmResignBO> queryAmResignDetail(Map<String,Object> param) {
+        return  baseMapper.queryAmResignDetail(param);
+    }
+
+    @Override
+    public List<resignSearchExportOpt> queryAmResignList(AmResignBO amResignBO) {
+        return baseMapper.queryAmResignList(amResignBO);
     }
 }

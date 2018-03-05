@@ -1,5 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socjob.service.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.ciicsh.gto.afsupportcenter.socjob.dao.SsAccountComRelationMapper;
 import com.ciicsh.gto.afsupportcenter.socjob.dao.SsComAccountMapper;
 import com.ciicsh.gto.afsupportcenter.socjob.dao.SsEmpBaseAdjustDetailMapper;
 import com.ciicsh.gto.afsupportcenter.socjob.dao.SsEmpBaseDetailMapper;
@@ -10,6 +12,7 @@ import com.ciicsh.gto.afsupportcenter.socjob.dao.SsMonthEmpChangeDetailMapper;
 import com.ciicsh.gto.afsupportcenter.socjob.dao.SsMonthEmpChangeMapper;
 import com.ciicsh.gto.afsupportcenter.socjob.dao.SsPaymentComMapper;
 import com.ciicsh.gto.afsupportcenter.socjob.dao.SsPaymentDetailMapper;
+import com.ciicsh.gto.afsupportcenter.socjob.entity.SsAccountComRelation;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.SsEmpBaseAdjustDetail;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.SsEmpBaseDetail;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.SsMonthCharge;
@@ -48,6 +51,9 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
 
     @Autowired
     private SsComAccountMapper accountMapper;
+
+    @Autowired
+    private SsAccountComRelationMapper comRelationMapper;
 
     @Autowired
     private SsPaymentComMapper paymentComMapper;
@@ -101,8 +107,9 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         Integer val = paymentComMapper.ifExistPayment(accountComExt.getComAccountId(),paymentMonth);
         if(val <= 0){
             //新增支付信息
-            Integer result = addPaymentCom(accountComExt,paymentMonth);
-            if(result > 0){
+            boolean result = addPaymentCom(accountComExt,paymentMonth);
+        }
+           // if(result){
                 /*****生成雇员社保明细****/
                 //如果数据已经存在，先删除已经存在的数据(标准数据)
                 this.delMonthChangeInfos(accountComExt.getComAccountId(),paymentMonth,1);
@@ -114,10 +121,10 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
                 }
 //
                 //生成非标准明细
-                List<SsEmpBasePeriodExt> empBasePeriodExts = convertNewEmpBasePeriodExt(accountComExt.getComAccountId(),paymentMonth);
-                if(null != empBasePeriodExts && empBasePeriodExts.size()>0){
-                    empBasePeriodExts.forEach(ext->this.createNoStandardMonthChange(ext));
-                }
+//                List<SsEmpBasePeriodExt> empBasePeriodExts = convertNewEmpBasePeriodExt(accountComExt.getComAccountId(),paymentMonth);
+//                if(null != empBasePeriodExts && empBasePeriodExts.size()>0){
+//                    empBasePeriodExts.forEach(ext->this.createNoStandardMonthChange(ext));
+//                }
 
 
                 // 获取除退账之外的雇员社保明细扩展信息
@@ -134,8 +141,11 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
                 paymentDetailMapper.delPaymentDetail(accountComExt.getComAccountId(),paymentMonth);
                 //第二步：生成数据
                 this.createPaymentDetail(allMonthChargeExts,accountComExt.getComAccountId(),paymentMonth);
-            }
-        }
+
+                /*****更新paymentCom表中的合计金额*****/
+                paymentComMapper.updateMonthChargeTotalAmount(accountComExt.getComAccountId(),paymentMonth);
+          //  }
+
     }
 
 
@@ -145,18 +155,37 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
      * @param paymentMonth 支付年月
      * @return
      */
-    private Integer addPaymentCom(SsAccountComExt ext, String paymentMonth){
-        SsPaymentCom paymentCom = new SsPaymentCom();
-        paymentCom.setComAccountId(ext.getComAccountId());
-        paymentCom.setCompanyId(ext.getCompanyId());
-        paymentCom.setPaymentMonth(paymentMonth);
-        paymentCom.setPaymentState(1);
-        paymentCom.setActive(true);
-        paymentCom.setCreatedTime(LocalDateTime.now());
-        paymentCom.setCreatedBy("system");
-        paymentCom.setModifiedTime(LocalDateTime.now());
-        paymentCom.setModifiedBy("system");
-        return paymentComMapper.insert(paymentCom);
+    private boolean addPaymentCom(SsAccountComExt ext, String paymentMonth){
+        try {
+            List<SsAccountComRelation> comRelations = this.getAccountComRelation(ext.getComAccountId());
+            if(null != comRelations && comRelations.size() > 0){
+                comRelations.forEach(rel->{
+                    SsPaymentCom paymentCom = new SsPaymentCom();
+                    paymentCom.setComAccountId(ext.getComAccountId());
+                    paymentCom.setCompanyId(rel.getCompanyId());
+                    paymentCom.setPaymentMonth(paymentMonth);
+                    paymentCom.setPaymentState(ext.getPaymentWay()==2 ? 2 : 1);//付款方式 = 2 客户自付
+                    paymentCom.setActive(true);
+                    paymentCom.setCreatedTime(LocalDateTime.now());
+                    paymentCom.setCreatedBy("system");
+                    paymentCom.setModifiedTime(LocalDateTime.now());
+                    paymentCom.setModifiedBy("system");
+                    paymentComMapper.insert(paymentCom);
+                });
+            }
+            return true;
+        }catch (Exception ex){
+            return false;
+        }
+    }
+
+    private List<SsAccountComRelation> getAccountComRelation(Long comAccountId){
+        SsAccountComRelation comRelation = new SsAccountComRelation();
+        comRelation.setComAccountId(comAccountId);
+        comRelation.setActive(true);
+        EntityWrapper<SsAccountComRelation> entityWrapper = new EntityWrapper<>(comRelation);
+        List<SsAccountComRelation> comRelations = comRelationMapper.selectList(entityWrapper);
+        return comRelations;
     }
 
     /**

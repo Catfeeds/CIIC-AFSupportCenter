@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -86,6 +87,11 @@ public class AmEmpTask implements Serializable {
 	@TableField("rejection_remark")
 	private String rejectionRemark;
     /**
+     * TaskService 反馈的 task_id  流程下的任务ID
+     */
+	@TableField("task_id")
+	private String taskId;
+    /**
      * 是否可用
      */
 	@TableField("is_active")
@@ -111,8 +117,73 @@ public class AmEmpTask implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+    @TableField("task_form_content")
+    private  String  taskFormContent;
 
-	public Long getEmpTaskId() {
+    @TableField("employee_nature")
+    private  String employeeNature;
+
+    @TableField("archive_direction")
+    private  String archiveDirection;
+
+    @TableField("out_date")
+    private Date outDate;
+
+    @TableField("out_reason")
+    private String  outReason;
+
+    public Date getOutDate() {
+        return outDate;
+    }
+
+    public void setOutDate(Date outDate) {
+        this.outDate = outDate;
+    }
+
+    public String getOutReason() {
+        return outReason;
+    }
+
+    public void setOutReason(String outReason) {
+        this.outReason = outReason;
+    }
+
+    public String getBusinessInterfaceId() {
+        return businessInterfaceId;
+    }
+
+    public void setBusinessInterfaceId(String businessInterfaceId) {
+        this.businessInterfaceId = businessInterfaceId;
+    }
+
+    @TableField("business_interface_id")
+    private  String businessInterfaceId;
+
+    public String getEmployeeNature() {
+        return employeeNature;
+    }
+
+    public void setEmployeeNature(String employeeNature) {
+        this.employeeNature = employeeNature;
+    }
+
+    public String getArchiveDirection() {
+        return archiveDirection;
+    }
+
+    public void setArchiveDirection(String archiveDirection) {
+        this.archiveDirection = archiveDirection;
+    }
+
+    public String getTaskFormContent() {
+        return taskFormContent;
+    }
+
+    public void setTaskFormContent(String taskFormContent) {
+        this.taskFormContent = taskFormContent;
+    }
+
+    public Long getEmpTaskId() {
 		return empTaskId;
 	}
 
@@ -216,6 +287,14 @@ public class AmEmpTask implements Serializable {
 		this.rejectionRemark = rejectionRemark;
 	}
 
+	public String getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
+	}
+
 	public Boolean getActive() {
 		return isActive;
 	}
@@ -272,6 +351,7 @@ public class AmEmpTask implements Serializable {
 			", handleTime=" + handleTime +
 			", handleRemark=" + handleRemark +
 			", rejectionRemark=" + rejectionRemark +
+			", taskId=" + taskId +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

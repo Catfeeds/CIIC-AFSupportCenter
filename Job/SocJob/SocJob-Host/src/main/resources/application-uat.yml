@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://172.16.9.53:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
+    username: root
+    password: ciicit!#%
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: 172.16.9.55:9092
+          zk-nodes: 172.16.9.55:2181,172.16.9.56:2181,172.16.9.57:2181
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: "http://172.16.9.56:9602/eureka"  #uat注册中心eureka地址

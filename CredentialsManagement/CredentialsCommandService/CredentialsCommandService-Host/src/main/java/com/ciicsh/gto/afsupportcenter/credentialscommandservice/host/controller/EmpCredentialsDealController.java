@@ -1,7 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.controller;
 
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.CompanyExtService;
-import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.MaterialTypeRelationService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskFollowService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskMaterialService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskService;
@@ -10,7 +9,6 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskD
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskFollowDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskListDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.CompanyExt;
-import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.MaterialTypeRelation;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Task;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskFollow;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMaterial;
@@ -28,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -48,8 +45,6 @@ public class EmpCredentialsDealController {
     private CompanyExtService companyExtService;
     @Autowired
     private TaskMaterialService taskMaterialService;
-    @Autowired
-    private MaterialTypeRelationService materialTypeRelationService;
 
     /**
      * 查询任务单跟进记录
@@ -149,7 +144,7 @@ public class EmpCredentialsDealController {
             task.setCredentialsType(Integer.parseInt(taskDetialDTO.getCredentialsType()));
         }
         if (StringUtils.isNotBlank(taskDetialDTO.getCredentialsDealType())) {
-            task.setCredentialsType(Integer.parseInt(taskDetialDTO.getCredentialsDealType()));
+            task.setCredentialsDealType(Integer.parseInt(taskDetialDTO.getCredentialsDealType()));
         }
         //TODO
         if (taskDetialDTO.getTaskId() == null) {
@@ -171,7 +166,6 @@ public class EmpCredentialsDealController {
                 taskMaterial.setCreatedTime(new Date());
                 taskMaterial.setModifiedBy("gu");
                 taskMaterial.setModifiedTime(new Date());
-                //todo 获取新增的主键
                 taskMaterial.setTaskId(String.valueOf(task.getTaskId()));
                 return JsonResult.success(taskMaterialService.insert(taskMaterial));
             } else {
@@ -180,57 +174,8 @@ public class EmpCredentialsDealController {
                 return JsonResult.success(taskMaterialService.updateTaskMaterials(taskMaterial));
             }
         } else {
-            return JsonResult.faultMessage();
+            return JsonResult.faultMessage("基础信息保存错误");
         }
     }
 
-    /**
-     * 获取任务单材料收缴信息{level:[materialsId],...}
-     * @param taskId
-     * @return
-     */
-    @GetMapping("/find/meterials/{taskId}")
-    public JsonResult getMaterials(@PathVariable("taskId") String taskId) {
-        TaskMaterial taskMaterial = taskMaterialService.selectByTaskId(taskId);
-        HashMap<String, List<String>> resultMap = new HashMap<>(7);
-        List list00 = new ArrayList<>();
-        List list11 = new ArrayList<>();
-        List list12 = new ArrayList<>();
-        List list21 = new ArrayList<>();
-        List list22 = new ArrayList<>();
-        List list30 = new ArrayList<>();
-        List list40 = new ArrayList<>();
-        if (taskMaterial != null) {
-            List<MaterialTypeRelation> materials = materialTypeRelationService.selectList(taskMaterial.getMaterialIds());
-            materials.stream().forEach(i -> {
-                if ("0-0".equals(i.getLevel())) { list00.add(i.getMaterialId());}
-                if ("1-1".equals(i.getLevel())) { list11.add(i.getMaterialId());}
-                if ("1-2".equals(i.getLevel())) { list12.add(i.getMaterialId());}
-                if ("2-1".equals(i.getLevel())) { list21.add(i.getMaterialId());}
-                if ("2-2".equals(i.getLevel())) { list22.add(i.getMaterialId());}
-                if ("3-0".equals(i.getLevel())) { list30.add(i.getMaterialId());}
-                if ("4-0".equals(i.getLevel())) { list40.add(i.getMaterialId());}
-            });
-        }
-        resultMap.put("main",list00);
-        resultMap.put("dh",list11);
-        resultMap.put("zh",list12);
-        resultMap.put("marryWithoutChild",list21);
-        resultMap.put("marryWithChild",list22);
-        resultMap.put("remarry",list30);
-        resultMap.put("settle",list40);
-        return JsonResult.success(resultMap);
-    }
-
-    /**
-     * 生成材料收缴菜单
-     * @param credentialsType
-     * @param credentialsDealType
-     * @return
-     */
-    @GetMapping("/find/meterialsMenu")
-    public JsonResult materialsMenu(String credentialsType, String credentialsDealType) {
-        List<MaterialTypeRelation> materials = materialTypeRelationService.selectMaterials(credentialsType,credentialsDealType);
-        return JsonResult.success(materials);
-    }
 }

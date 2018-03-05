@@ -8,10 +8,10 @@
     </resultMap>
 
      <select id="queryAmRemark" resultMap="BaseResultMapDTO">
-         SELECT  *  from am_remark where employee_id = #{employeeId}
+         SELECT  *  from am_remark where employee_id = #{employeeId}  and remark_type = #{remarkType} and  is_active = 1
      </select>
 
-    <delete id="deleteAmRemark">
-        DELETE FROM am_remark WHERE remark_id = #{remarkId}
-    </delete>
+    <update id="deleteAmRemark">
+        update  am_remark set is_active = 0 where  remark_id = #{remarkId}
+    </update>
 </mapper>

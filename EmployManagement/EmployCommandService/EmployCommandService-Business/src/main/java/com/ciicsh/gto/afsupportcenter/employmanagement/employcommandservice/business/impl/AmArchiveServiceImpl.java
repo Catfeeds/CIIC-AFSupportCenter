@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.enti
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhangzhiwen on 2018/1/29.
@@ -15,8 +16,9 @@ import java.util.List;
 
 @Service
 public class AmArchiveServiceImpl  extends ServiceImpl<AmArchiveMapper, AmArchive> implements IAmArchiveService {
+
     @Override
-    public List<AmArchiveBO> queryAmArchive(String employeeId) {
-        return baseMapper.queryAmArchive(employeeId);
+    public List<AmArchiveBO> queryAmArchiveList(Map<String, Object> param) {
+        return  baseMapper.queryAmArchiveList(param);
     }
 }
