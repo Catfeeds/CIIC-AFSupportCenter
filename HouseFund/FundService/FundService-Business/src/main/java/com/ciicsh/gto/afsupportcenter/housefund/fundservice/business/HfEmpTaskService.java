@@ -37,7 +37,7 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @param dto
      * @return
      */
-    boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer isChange, AfEmployeeInfoDTO dto);
+    boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer taskCategory, Integer isChange, AfEmployeeInfoDTO dto);
 
     /**
      * 更新旧的雇员任务单
@@ -48,8 +48,7 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @author zhangxj
      * @date 2017-12-28
      */
-    boolean updateEmpTaskTc(TaskCreateMsgDTO taskMsgDTO,
-                            AfEmployeeInfoDTO dto);
+    boolean updateEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, String fundCategory, AfEmployeeInfoDTO dto);
 
     /**
      * 保存数据到雇员任务单表
@@ -61,7 +60,7 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @return
      * @throws Exception
      */
-    boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer isChange,
+    boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory,Integer taskCategory, Integer isChange,
                          AfEmployeeInfoDTO dto) throws Exception;
 
 
