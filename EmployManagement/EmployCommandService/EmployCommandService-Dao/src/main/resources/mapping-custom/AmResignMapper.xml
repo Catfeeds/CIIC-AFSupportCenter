@@ -29,6 +29,8 @@
         <result column="archive_card_state" property="archiveCardState" />
         <result column="remark_type" property="remarkType" />
         <result column="employ_feedback" property="employFeedback" />
+        <result column="out_reason" property="outReason" />
+        <result column="luyong_handle_end" property="luyongHandleEnd" />
     </resultMap>
 
     <resultMap id="RM_resignSearchExportOpt" type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.resignSearchExportOpt">
@@ -57,9 +59,12 @@
         f.resign_date,
         /**退工日期*/
         f.resign_feedback1,
+        f.resign_feedback2,
         /**退工反馈*/
-        f.resign_reason,
+        a.out_reason,
+        a.out_date,
         /**退工原因*/
+        f.job_centre_feedback_date,
         d.employee_id,
         /**雇员编号*/
         d.employee_name,
@@ -73,7 +78,8 @@
         c.yuliu_doc_num,
         c.archive_place,
         c.storage_out_date,
-        c.employ_feedback
+        c.employ_feedback,
+        c.luyong_handle_end
         FROM
         am_emp_task a
         LEFT JOIN am_employment b  ON a.employee_id = b.employee_id

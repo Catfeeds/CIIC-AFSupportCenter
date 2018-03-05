@@ -3,6 +3,7 @@ package com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dto.AmArchiveDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmArchiveUse;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpMaterial;
@@ -64,6 +65,13 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     @RequestMapping("/queryAmArchive")
     public JsonResult<PageRows> queryAmArchive(PageInfo pageInfo){
         PageRows<AmEmploymentBO> result = business.queryAmArchive(pageInfo);
+        List<AmEmploymentBO> data = result.getRows();
+        for(AmEmploymentBO amEmploymentBO:data)
+        {
+            if(!StringUtil.isEmpty(amEmploymentBO.getResignFeedback1())){
+                amEmploymentBO.setResignFeedback1(ReasonUtil.getTgfk(amEmploymentBO.getResignFeedback1()));
+            }
+        }
         return JsonResultKit.of(result);
     }
 

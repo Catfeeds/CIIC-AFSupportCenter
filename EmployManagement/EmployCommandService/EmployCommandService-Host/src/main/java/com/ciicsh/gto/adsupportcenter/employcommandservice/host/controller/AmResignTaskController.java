@@ -3,8 +3,9 @@ package com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.ReasonUtil;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmResign;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.employSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.resignSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
@@ -45,6 +46,24 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
     @RequestMapping("/queryAmResign")
     public JsonResult<PageRows>  queryAmResign(PageInfo pageInfo){
         PageRows<AmResignBO> result = business.queryAmResign(pageInfo);
+
+       List<AmResignBO> data = result.getRows();
+
+       for(AmResignBO amResignBO:data)
+       {
+           if(!StringUtil.isEmpty(amResignBO.getLuyongHandleEnd())){
+               if("1".equals(amResignBO.getLuyongHandleEnd())){
+                   amResignBO.setLuyongHandleEnd("是");
+               }else {
+                   amResignBO.setLuyongHandleEnd("否");
+               }
+           }
+
+           if(!StringUtil.isEmpty(amResignBO.getResignFeedback1())){
+               amResignBO.setResignFeedback1(ReasonUtil.getTgfk(amResignBO.getResignFeedback1()));
+           }
+       }
+
         return JsonResultKit.of(result);
     }
 
@@ -65,7 +84,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
                 amEmpTaskCountBO.setNoFeedback(amResignBO.getCount());
                 num = num + amResignBO.getCount();
             }else if(2==status){
-                amEmpTaskCountBO.setRefuseFailed(amResignBO.getCount());
+                amEmpTaskCountBO.setRefuseFinished(amResignBO.getCount());
                 num = num + amResignBO.getCount();
             }else if(3==status){
                 amEmpTaskCountBO.setRefuseBeforeWithFile(amResignBO.getCount());
@@ -78,7 +97,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
                 num = num + amResignBO.getCount();
             }else if(6==status){
                 amEmpTaskCountBO.setBeforeBatchNeedRefuse(amResignBO.getCount());
-            }else if(7==status){
+            }else{
                 amEmpTaskCountBO.setOther(amResignBO.getCount());
                 num = num + amResignBO.getCount();
             }
@@ -193,6 +212,14 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             entity.setModifiedTime(now);
             entity.setModifiedBy("sys");
         }
+
+        if(!StringUtil.isEmpty(bo.getResignFeedback1()))
+        {
+            AmEmpTask amEmpTask = taskService.selectById(bo.getEmpTaskId());
+            amEmpTask.setTaskStatus(Integer.parseInt(bo.getResignFeedback1()));
+            taskService.insertOrUpdate(amEmpTask);
+        }
+
 
         boolean result =  business.insertOrUpdate(entity);
         return JsonResultKit.of(result);
