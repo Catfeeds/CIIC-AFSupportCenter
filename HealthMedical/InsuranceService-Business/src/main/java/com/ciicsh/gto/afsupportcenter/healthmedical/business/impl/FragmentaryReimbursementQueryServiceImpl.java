@@ -1,8 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.business.impl;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.FragmentaryReimbursementQueryService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.dao.FragmentaryReimbursementMapper;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.FragmentaryReimbursementDTO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.FragmentaryReimbursementPO;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
@@ -52,12 +54,19 @@ public class FragmentaryReimbursementQueryServiceImpl extends ServiceImpl<Fragme
         return fragmentaryReimbursementMapper.getById(id);
     }
 
-    @Override
-    public PageRows<FragmentaryReimbursementPO> getEntityList(PageInfo pageInfo) {
+    /*
 
-        FragmentaryReimbursementPO po = pageInfo.toJavaObject(FragmentaryReimbursementPO.class);
-        PageRows<FragmentaryReimbursementPO> pageRow = PageKit.doSelectPage(pageInfo, () -> baseMapper.fragmentaryReimbursementMapperQuery(po) );
-        return pageRow;
+        public Page<SupplyMedicalAcceptance> queryAcceptancePage(Page<SupplyMedicalAcceptance> page, SupplyMedicalAcceptanceDTO supplyMedicalAcceptanceDTO) {
+        page.setRecords(baseMapper.queryAcceptancePage(page, supplyMedicalAcceptanceDTO));
+        return page;
+    }
+     */
+
+
+    @Override
+    public Page<FragmentaryReimbursementPO> getEntityList(Page<FragmentaryReimbursementPO> page, FragmentaryReimbursementDTO fragmentaryReimbursementDTO) {
+           page.setRecords(baseMapper.fragmentaryReimbursementMapperQuery(page,fragmentaryReimbursementDTO));
+           return page;
 
     }
 
