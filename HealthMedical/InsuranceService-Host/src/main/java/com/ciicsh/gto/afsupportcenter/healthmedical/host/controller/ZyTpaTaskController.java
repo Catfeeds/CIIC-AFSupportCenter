@@ -27,7 +27,7 @@ public class ZyTpaTaskController extends BasicController<ZyTpaTaskService> {
     @GetMapping("/getEntityById")
     public void getEntityById(String id) {
 
-        List<ZyTpaTaskPO> po = zyTpaTaskService.getZyTpaTaskListBymonth("", "");
+      zyTpaTaskService.getZyTpaTaskListBymonth("", "");
 
     }
 }

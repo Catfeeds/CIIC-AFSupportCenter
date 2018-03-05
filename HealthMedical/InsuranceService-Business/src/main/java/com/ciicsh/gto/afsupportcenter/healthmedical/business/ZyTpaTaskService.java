@@ -13,5 +13,5 @@ import java.util.List;
  * @since 2018-02-11
  */
 public interface ZyTpaTaskService {
-    List<ZyTpaTaskPO> getZyTpaTaskListBymonth(String month,String zyProductID);
+    void getZyTpaTaskListBymonth(String month,String zyProductID);
 }
