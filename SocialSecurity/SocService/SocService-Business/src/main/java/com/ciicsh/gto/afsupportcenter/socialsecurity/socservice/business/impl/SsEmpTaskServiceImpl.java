@@ -20,6 +20,7 @@ import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRe
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.SSPItemDTO;
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.Test;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -1236,7 +1237,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             BeanUtils.copyProperties(ssEmpTaskPeriod,cloneObj);
             cloneObj.setEndMonth(endMonth);
             ssEmpTaskPeriod.setStartMonth(handleMonth);
-            //新增做补缴的任务单
+            //新增做补缴的福利段
             backPeriods.add(cloneObj);
         }
 
@@ -1295,17 +1296,23 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 detail.setEmpAmount(empAmount);
                 //公司金额 个人基数*个人比例
                 BigDecimal comRatio = detail.getComRatio() != null ? detail.getComRatio() : BigDecimal.valueOf(0);
-                if(empSocial.getItemDicId().equals("DIT00044")){//工伤保险
-                    BigDecimal ssComRatio=  baseMapper.fetchInjuryRatio(empArchiveId,p.getStartMonth());
-//                    if(ssComRatio.compareTo( comRatio) != 0) {  //和前道比例比较
-//                        throw new BusinessException("工伤保险的比例和前道存在差异");
+//                if(empSocial.getItemDicId().equals("DIT00044")){//工伤保险
+//                    List<Map<String,BigDecimal>> ratioList =  baseMapper.fetchInjuryRatio(empArchiveId,p.getStartMonth());
+//                    if (ratioList.size()!=1){
+//                        throw new BusinessException("在企业社保账户中找不到或存在多个工伤比例,请维护基础数据");
 //                    }
-                    if(ssComRatio.compareTo( new BigDecimal("0")) ==1 ) { //大于0
-                        comRatio = ssComRatio;
-                    }
-                }
+//                    BigDecimal ssComRatio=ratioList.get(0).get("com_ratio");
+////                    if(ssComRatio.compareTo( comRatio) != 0) {  //和前道比例比较
+////                        throw new BusinessException("工伤保险的比例和前道存在差异");
+////                    }
+//                    if(ssComRatio.compareTo( new BigDecimal("0")) ==1 ) { //大于0
+//                        comRatio = ssComRatio;
+//                    }
+//                }
+                BigDecimal comAmount  = CalculateSocialUtils.calculateAmount(
+                    detail.getComBase(),comRatio,null,2,
+                    null==roundTypeMap ? 1: roundTypeMap.get(detail.getSsType()).get(COMPANYROUNDTYPE));
 
-                BigDecimal comAmount  = CalculateSocialUtils.calculateAmount(detail.getComBase(),comRatio,null,2,null==roundTypeMap?1:roundTypeMap.get(detail.getSsType()).get(PERSONROUNDTYPE));
                 detail.setComAmount(comAmount);
                 //个人+公司
                 detail.setComempAmount(detail.getEmpAmount().add(detail.getComAmount()));
