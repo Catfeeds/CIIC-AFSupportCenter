@@ -1,11 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskHandleBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskHandlePostBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.util.List;
 
@@ -18,17 +16,24 @@ public interface HfEmpTaskMapper extends BaseMapper<HfEmpTask> {
 
     /**
      * 查询雇员任务单信息
-     * @param hfEmpTaskDTO
+     * @param hfEmpTaskBo
      * @return
      */
-    List<HfEmpTaskExportBo> queryHfEmpTask(HfEmpTaskBo hfEmpTaskDTO);
+    List<HfEmpTaskExportBo> queryHfEmpTask(HfEmpTaskBo hfEmpTaskBo);
+
+    /**
+     * 查询批退雇员任务单信息
+     * @param hfEmpTaskBo
+     * @return
+     */
+    List<HfEmpTaskRejectExportBo> queryHfEmpTaskReject(HfEmpTaskBo hfEmpTaskBo);
 
     /**
      * 查询雇员任务单办理信息
-     * @param hfEmpTaskHandleDTO
+     * @param hfEmpTaskHandleBo
      * @return
      */
-    List<HfEmpTaskHandleBo> getEmpTaskHandleData(HfEmpTaskHandlePostBo hfEmpTaskHandleDTO);
+    List<HfEmpTaskHandleBo> getEmpTaskHandleData(HfEmpTaskHandlePostBo hfEmpTaskHandleBo);
     /**
      * 查询任务单信息
      *

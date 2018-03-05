@@ -34,13 +34,13 @@ public class SsMonthEmpChangeDetailServiceImpl extends ServiceImpl<SsMonthEmpCha
     }
 
     @Override
-    public List<YysExportOpt> yysExportQuery(Long statementId) {
-        return baseMapper.yysExportQuery(statementId);
+    public List<YysExportOpt> yysExportQuery(Long monthEmpChangeId) {
+        return baseMapper.yysExportQuery(monthEmpChangeId);
     }
 
     @Override
-    public List<GsyExportOpt> gsyExportQuery(Long statementId) {
-        return baseMapper.gsyExportQuery(statementId);
+    public List<GsyExportOpt> gsyExportQuery(Long monthEmpChangeId) {
+        return baseMapper.gsyExportQuery(monthEmpChangeId);
     }
 
     /**

@@ -23,30 +23,12 @@
         from gtobusinessdb.hm_fragmentary_reimbursement
         where id = #{id}
     </select>
-    <select id="fragmentaryReimbursementMapperQuery" resultMap="BaseResultMap">
+    <select id="fragmentaryReimbursementMapperQuery" parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.FragmentaryReimbursementDTO" resultMap="BaseResultMap">
         select  `id`, `employee_id`, `case_money`, `invoice_number`, `medical_remark`, `medical_clearing_money`, `medical_clearing_feed_back`, `is_active`, `created_time`, `modified_time`, `created_by`, `modified_by`
         from  gtobusinessdb.hm_fragmentary_reimbursement
         <where>
-            <if test="id != null">
-                and id = #{id}
-            </if>
             <if test="employeeId != null">
                 and employee_id LIKE CONCAT('%',#{employeeId},'%')
-            </if>
-            <if test="caseMoney != null">
-                and case_money = #{caseMoney}
-            </if>
-            <if test="invoiceNumber != null">
-                and invoice_number = #{invoiceNumber}
-            </if>
-            <if test="medicalRemark != null">
-                and medical_remark = #{medicalRemark}
-            </if>
-            <if test="medicalClearingMoney != null">
-                and medical_clearing_money = #{medicalClearingMoney}
-            </if>
-            <if test="medicalClearingFeedBack != null">
-                and medical_clearing_feed_back = #{medicalClearingFeedBack}
             </if>
 
         </where>

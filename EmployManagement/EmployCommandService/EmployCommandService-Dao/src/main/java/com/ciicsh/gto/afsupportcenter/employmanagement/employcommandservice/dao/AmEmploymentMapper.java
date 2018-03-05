@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmploymentBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmployment;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.archiveSearchExportOpt;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -23,5 +24,6 @@ public interface AmEmploymentMapper extends BaseMapper<AmEmployment> {
 
      List<AmEmploymentBO>  taskCountResign(AmEmploymentBO amEmploymentBO);
 
+     List<archiveSearchExportOpt>  queryAmArchiveList(AmEmploymentBO amEmploymentBO);
 
 }
