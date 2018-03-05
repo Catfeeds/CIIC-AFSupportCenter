@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api;
 
 import com.ciicsh.common.entity.JsonResult;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.ComAccountExtDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.ComTaskParamDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountParamDTO;
@@ -28,6 +29,6 @@ public interface SsComProxy {
 
 
     @RequestMapping("/getAccountByCompany")
-    JsonResult getAccountByCompany(@RequestBody ComTaskParamDTO paramDTO);
+    JsonResult<ComAccountExtDTO> getAccountByCompany(@RequestBody ComTaskParamDTO paramDTO);
 
 }

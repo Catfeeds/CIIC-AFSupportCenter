@@ -9,6 +9,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskSe
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
+import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.FundCategory;
+import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.TaskCategory;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.apache.commons.lang.StringUtils;
@@ -42,41 +44,34 @@ public class KafkaReceiver {
      * @param message
      */
     @StreamListener(TaskSink.AF_EMP_IN)
-    public void receiveEmpIn(Message<TaskCreateMsgDTO> message) {
+    public void fundEmpIn(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
-        //公积金
-        boolean res = false;
-        if (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType())
-            || TaskSink.ADD_FUND_NEW.equals(taskMsgDTO.getTaskType())) {
+        logger.info("start fundEmpIn: " + JSON.toJSONString(taskMsgDTO));
+        //判断是否是公积金或者补充公积金
+        if (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) || TaskSink.ADD_FUND_NEW.equals(taskMsgDTO.getTaskType())) {
+
             Map<String, Object> paramMap = taskMsgDTO.getVariables();
-            if (paramMap.get("fundType") != null) {
-                boolean bolRes = checkDupSsEmpTask(taskMsgDTO);
-                if (bolRes) {
-                    String sType = paramMap.get("fundType").toString();
-                    res = insertHfEmpTaskTb(taskMsgDTO, Integer.parseInt(sType));
-                    logger.info("收到消息 公积金雇员新增: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
-                }
+            if (null != paramMap && paramMap.get("fundType") != null) {
+                String taskCategory = paramMap.get("fundType").toString();
+                String fundCategory = TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
+                boolean result = saveEmpTask(taskMsgDTO, fundCategory, Integer.parseInt(taskCategory));
+                logger.info("end fundEmpIn: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (result ? "成功!" : "失败!"));
             }
         }
     }
 
     /**
-     * 订阅雇员终止任务单
-     *
+     * 公积金雇员终止任务单
      * @param message
      */
     @StreamListener(TaskSink.AF_EMP_OUT)
-    public void receiveEmpOut(Message<TaskCreateMsgDTO> message) {
+    public void fundEmpOut(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
-        //公积金
-        boolean res = false;
-        if (TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())
-            || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
-            boolean bolRes = checkDupSsEmpTask(taskMsgDTO);
-            if (bolRes) {
-                res = insertHfEmpTaskTb(taskMsgDTO, 7);
-                logger.info("收到消息 公积金雇员终止: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
-            }
+        logger.info("start fundEmpOut: " + JSON.toJSONString(taskMsgDTO));
+        if (TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
+            String fundCategory = TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
+            boolean res = saveEmpTask(taskMsgDTO, fundCategory,TaskCategory.LEAVETURNOUT.getCategory());
+            logger.info("end fundEmpOut:" + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
         }
     }
 
@@ -94,7 +89,8 @@ public class KafkaReceiver {
             || TaskSink.ADD_FUND_MAKE_UP.equals(taskMsgDTO.getTaskType())) {
             boolean bolRes = checkDupSsEmpTask(taskMsgDTO);
             if (bolRes) {
-                res = insertHfEmpTaskTb(taskMsgDTO, 6);
+                String fundCategory = TaskSink.FUND_MAKE_UP.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
+                res = saveEmpTask(taskMsgDTO, fundCategory, TaskCategory.REPAY.getCategory());
                 logger.info("收到消息 公积金雇员补缴: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
             }
         }
@@ -102,7 +98,6 @@ public class KafkaReceiver {
 
     /**
      * 订阅雇员翻牌任务单
-     *
      * @param message
      */
     @StreamListener(TaskSink.AF_EMP_COMPANY_CHANGE)
@@ -114,7 +109,8 @@ public class KafkaReceiver {
             || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
             boolean bolRes = checkDupSsEmpTask(taskMsgDTO);
             if (bolRes) {
-                res = insertHfEmpTaskTb(taskMsgDTO, 13);
+                String fundCategory = TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
+                res = saveEmpTask(taskMsgDTO, fundCategory, TaskCategory.FLOP.getCategory());
                 logger.info("收到消息 公积金雇员翻牌: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
             }
         }
@@ -137,7 +133,8 @@ public class KafkaReceiver {
             || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
             boolean bolRes = checkDupSsEmpTask(taskMsgDTO);
             if (bolRes) {
-                res = insertHfEmpTaskTb(taskMsgDTO, 4);
+                String fundCategory = (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType())|| TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
+                res = saveEmpTask(taskMsgDTO, fundCategory, TaskCategory.ADJUSTSEALED.getCategory());
                 logger.info("收到消息 公积金雇员服务协议调整: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
             }
         }
@@ -161,11 +158,12 @@ public class KafkaReceiver {
             || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
             try {
                 //调用接口
-                AfEmployeeInfoDTO dto = callInf(taskMsgDTO);
+                AfEmployeeInfoDTO dto = getEmpInfo(taskMsgDTO);
+                String fundCategory = (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType())|| TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
 
                 //未办理任务单
                 if (StringUtils.isBlank(taskMsgDTO.getTaskId())) {
-                    res = hfEmpTaskService.updateEmpTaskTc(taskMsgDTO, dto);
+                    res = hfEmpTaskService.updateEmpTaskTc(taskMsgDTO, fundCategory,dto);
                     logger.info("收到消息 公积金雇员服务协议更正:" + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
 
                     //已办理任务单
@@ -185,7 +183,7 @@ public class KafkaReceiver {
                             HfEmpTask hfEmpTask = resList.get(0);
                             taskCategory = hfEmpTask.getTaskCategory();
                         }
-                        res = hfEmpTaskService.saveEmpTaskTc(taskMsgDTO, taskCategory, 1, dto);
+                        res = hfEmpTaskService.saveEmpTaskTc(taskMsgDTO, fundCategory, taskCategory, 1, dto);
                         logger.info("收到消息 公积金雇员服务协议更正:" + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" :
                             "失败"));
                     }
@@ -243,58 +241,51 @@ public class KafkaReceiver {
     }
 
     /**
-     * 调用获取当前雇员信息接口
-     *
+     * 获取当前雇员信息接口
      * @param taskMsgDTO
      * @return
      */
-    private AfEmployeeInfoDTO callInf(TaskCreateMsgDTO taskMsgDTO) {
-        logger.info("公积金 当前雇员信息获取接口 开始调用：" + JSON.toJSONString(taskMsgDTO));
+    private AfEmployeeInfoDTO getEmpInfo(TaskCreateMsgDTO taskMsgDTO) {
+        logger.info("fund get employee info start ,request:" + JSON.toJSONString(taskMsgDTO));
         AfEmployeeInfoDTO resDto = null;
         try {
             AfEmployeeQueryDTO taskRequestDTO = new AfEmployeeQueryDTO();
             taskRequestDTO.setEmpAgreementId(Long.parseLong(taskMsgDTO.getMissionId()));
-
             resDto = afEmployeeCompanyProxy.getEmployeeCompany(taskRequestDTO);
-
-            logger.info("公积金 当前雇员信息获取接口 结束调用");
+            logger.info("fund get employee info end, response:" + JSON.toJSONString(resDto));
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            logger.error("fund get employee info exception:" + e.getMessage(),e);
         }
         return resDto;
     }
 
     /**
-     * 从接口获取数据并保存到社保雇员任务单表
-     *
+     * 保存公积金雇员任务单
      * @param taskMsgDTO
      * @param taskCategory
      * @return
      */
-    private boolean insertHfEmpTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) {
-        boolean result = false;
-
+    private boolean saveEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer taskCategory) {
         try {
             //调用当前雇员信息获取接口
-            AfEmployeeInfoDTO dto = callInf(taskMsgDTO);
+            AfEmployeeInfoDTO dto = getEmpInfo(taskMsgDTO);
 
             if (dto != null) {
                 //插入数据到雇员任务单表
-                result = hfEmpTaskService.insertTaskTb(taskMsgDTO, taskCategory, 0, dto);
-            } else {
-                result = false;
-                logger.error("公积金 雇员信息获取失败！");
+                return hfEmpTaskService.addEmpTask(taskMsgDTO, fundCategory, taskCategory, 0, dto);
+            }
+            else {
+                logger.error("error:公积金雇员信息获取失败！");
+                return false;
             }
         } catch (Exception e) {
-            result = false;
-            logger.error(e.getMessage(), e);
+            logger.error("exception:" + e.getMessage(), e);
+            return false;
         }
-        return result;
     }
 
     /**
      * 判断是否存在任务单ID
-     *
      * @param taskMsgDTO
      * @return
      */
