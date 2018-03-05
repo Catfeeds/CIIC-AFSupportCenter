@@ -1,13 +1,18 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpAgreementDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpArchiveService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskFrontService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpArchiveMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpTaskFrontMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpTaskMapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpArchive;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTaskFront;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
@@ -18,12 +23,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.InetAddress;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * <p>
@@ -35,7 +38,8 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
     SsEmpTaskFrontService {
     @Autowired
     private SsEmpTaskMapper ssEmpTaskMapper;
-
+    @Autowired
+    private SsEmpArchiveService ssEmpArchiveService;
     /**
      * <p>Description: 保存数据到雇员任务单表</p>
      *
@@ -102,9 +106,12 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                                  AfEmployeeInfoDTO dto) throws Exception {
         //基本信息
         AfEmployeeCompanyDTO afEmployeeCompanyDTO = dto.getEmployeeCompany();
+
         //险种明细
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
 
+        //获得社保截止月份
+        AfEmpAgreementDTO afEmpAgreementDTO = dto.getNowAgreement();
         SsEmpTask ssEmpTask = new SsEmpTask();
         ssEmpTask.setTaskId(taskMsgDTO.getTaskId());
         ssEmpTask.setCompanyId(afEmployeeCompanyDTO.getCompanyId());
@@ -122,6 +129,18 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         }
         if (afEmployeeCompanyDTO.getOutDate() != null) {
             ssEmpTask.setOutDate(LocalDateTime.ofInstant(afEmployeeCompanyDTO.getOutDate().toInstant(), ZoneId.systemDefault()).toLocalDate());
+        }
+        //如果inDate 为空 则判断任务单状态 不是新进和转入的 任务单 则查询档案表中的入职日期
+        if(null==ssEmpTask.getInDate() && (1!=socialType && 2!=socialType)){
+            EntityWrapper<SsEmpArchive> ew = new EntityWrapper<SsEmpArchive>();
+            ew.where("employee_id={0}",ssEmpTask.getEmployeeId())
+                .where("archive_status!=3")
+                .where("is_active=1");
+            SsEmpArchive ssEmpArchive = ssEmpArchiveService.selectOne(ew);
+            //设置入职日期
+            if(null!=ssEmpArchive){
+                if(null!=ssEmpArchive.getInDate())ssEmpTask.setInDate(ssEmpArchive.getInDate());
+            }
         }
         //任务单类型不是 新进 和 转入 就要补充雇员社保档案主表ID
 //        if (socialType != 1 && socialType != 2) {
@@ -161,10 +180,20 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                 break;
             }
         }
-
-        boolean insertRes = ssEmpTaskMapper.insertEmpTask(ssEmpTask);
-
-        if (insertRes) {
+        //转出需要设置 终止时间
+        if(socialType==5){
+            if(null != afEmpAgreementDTO){
+                Date endMonth = afEmpAgreementDTO.getEndDate();
+                if(null!=endMonth){
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+                    //社保截止月份 转出会有
+                    ssEmpTask.setEndMonth(simpleDateFormat.format(endMonth));
+                }
+            }
+        }
+        //boolean insertRes = ssEmpTaskMapper.insertEmpTask(ssEmpTask);
+        Integer insertRes = ssEmpTaskMapper.insert(ssEmpTask);
+        if (insertRes>0) {
             List<SsEmpTaskFront> ssEmpTaskFrontList = new ArrayList<>();
             SsEmpTaskFront ssEmpTaskFront;
             if (socialList != null) {
@@ -236,7 +265,6 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
             ssEmpTask.setOutDate(LocalDateTime.ofInstant(companyDto.getOutDate().toInstant(), ZoneId.systemDefault())
                 .toLocalDate());
         }
-
         ssEmpTask.setTaskFormContent(JSON.toJSONString(dto));
 
         if (dto.getNowAgreement() != null && dto.getNowAgreement().getSocialRuleId() != null) {

@@ -609,7 +609,8 @@
         modified_time,
         created_by,
         modified_by) VALUES
-        (#{companyId},#{employeeId},#{customerId},#{empArchiveId},#{isChange},#{taskCategory},#{taskCategorySpecial},#{urgent},
+        (
+        #{companyId},#{employeeId},#{customerId},#{empArchiveId},#{isChange},#{taskCategory},#{taskCategorySpecial},#{urgent},
         #{submitterId},#{submitterName},#{submitterDeptId},#{submitterDeptName},#{submitTime},#{expireDate},#{submitterRemark},
         #{handleUserId},#{handleUserName},#{empSsSerial},#{handleWay},#{handleMonth},#{handleRemark},#{handleRemarkMan},
         #{handleRemarkDate},#{rejectionRemark},#{rejectionRemarkMan},#{rejectionRemarkDate},#{taskStatus},#{handleStatus},
