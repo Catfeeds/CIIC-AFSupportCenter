@@ -19,6 +19,12 @@
 		<result column="task_id" property="taskId" />
 	</resultMap>
 
+    <resultMap id="RejectResultMapBo" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo" extends="BaseResultMapBo">
+        <result column="modified_by" property="modifiedBy" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="rejection_remark" property="rejectionRemark" />
+    </resultMap>
+
     <resultMap id="BaseResultHandleBo" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskHandleBo">
         <result column="emp_task_id" property="empTaskId" />
         <result column="emp_archive_id" property="empArchiveId" />
@@ -66,6 +72,175 @@
         <result column="operation_remind" property="operationRemind" />
         <result column="operation_remind_date" property="operationRemindDate" />
     </resultMap>
+
+    <select id="queryHfEmpTaskReject" resultMap="RejectResultMapBo">
+        SELECT
+        het.emp_task_id,
+        het.task_category,
+        het.urgent,
+        het.employee_id,
+        ee.employee_name,
+        ee.id_num,
+        het.company_id,
+        sc.title company_name,
+        het.hf_type,
+        het.hf_emp_account,
+        het.submitter_id,
+        het.submit_time,
+        het.task_id,
+        het.modified_by,
+        het.modified_time,
+        het.rejection_remark
+        FROM hf_emp_task het
+        INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
+        INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
+        LEFT JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
+        LEFT JOIN hf_com_account hcas ON hcas.com_account_id = hacr.com_account_id AND hcas.is_active = 1 AND hcas.hf_account_type = 3
+        <if test="hfAccountType != null">
+            AND hcas.hf_account_type = #{hfAccountType}
+        </if>
+        <if test="hfType != null">
+            AND hcas.hf_type = #{hfType}
+        </if>
+        <if test="paymentBank != null">
+            AND hcas.payment_bank = #{paymentBank}
+        </if>
+        <if test="hfComAccount != null">
+            LEFT JOIN hf_com_account_class hcac ON hcas.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = het.hf_type
+            AND hcac.hf_com_account = #{hfComAccount}
+        </if>
+        <where>
+            het.is_active = 1  AND IFNULL(het.task_status, 1) = 4 AND het.welfare_unit = 1
+            <if test="exceptTaskCategories != null">
+                AND het.task_category NOT IN (${exceptTaskCategories})
+            </if>
+            <if test="taskCategory != null">
+                AND het.task_category = #{taskCategory}
+            </if>
+            <if test="employeeId != null">
+                AND ee.employee_id = #{employeeId}
+            </if>
+            <if test="employeeName != null">
+                AND ee.employee_name LIKE CONCAT('%',#{employeeName},'%')
+            </if>
+            <if test="idNum != null">
+                AND ee.id_num = #{idNum}
+            </if>
+            <if test="companyId != null">
+                AND sc.company_id = #{companyId}
+            </if>
+            <if test="urgent == 1">
+                AND het.urgent = #{urgent}
+            </if>
+            <if test="submitTimeStart != null">
+                AND het.submit_time >= #{submitTimeStart}
+            </if>
+            <if test="submitTimeEnd != null">
+                AND #{submitTimeEnd} >= het.submit_time
+            </if>
+            <if test="processStatus == 1">
+                AND het.submit_time <![CDATA[ <= ]]>
+                (
+                SELECT CASE WHEN DAY(CURDATE()) > hca.close_day THEN
+                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hca.close_day)
+                ELSE
+                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hca.close_day) END
+                )
+            </if>
+            <if test="processStatus == 2">
+                AND het.submit_time >
+                (
+                SELECT CASE WHEN DAY(CURDATE()) > hca.close_day THEN
+                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hca.close_day)
+                ELSE
+                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hca.close_day) END
+                )
+            </if>
+        </where>
+        UNION ALL
+        SELECT
+        het.emp_task_id,
+        het.task_category,
+        het.urgent,
+        het.employee_id,
+        ee.employee_name,
+        ee.id_num,
+        het.company_id,
+        sc.title company_name,
+        het.hf_type,
+        het.hf_emp_account,
+        het.submitter_id,
+        het.submit_time,
+        het.task_id,
+        het.modified_by,
+        het.modified_time,
+        het.rejection_remark
+        FROM hf_emp_task het
+        INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
+        INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
+        LEFT JOIN hf_com_account hcas ON hcas.is_active = 1 AND hcas.hf_account_type = 1
+        <if test="hfAccountType != null">
+            AND hcas.hf_account_type = #{hfAccountType}
+        </if>
+        <if test="hfType != null">
+            AND hcas.hf_type = #{hfType}
+        </if>
+        <if test="paymentBank != null">
+            AND hcas.payment_bank = #{paymentBank}
+        </if>
+        <if test="hfComAccount != null">
+            LEFT JOIN hf_com_account_class hcac ON hcas.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = het.hf_type
+            AND hcac.hf_com_account = #{hfComAccount}
+        </if>
+        <where>
+            het.is_active = 1  AND IFNULL(het.task_status, 1) = 4 AND het.welfare_unit = 2
+            <if test="exceptTaskCategories != null">
+                AND het.task_category NOT IN (${exceptTaskCategories})
+            </if>
+            <if test="taskCategory != null">
+                AND het.task_category = #{taskCategory}
+            </if>
+            <if test="employeeId != null">
+                AND ee.employee_id = #{employeeId}
+            </if>
+            <if test="employeeName != null">
+                AND ee.employee_name LIKE CONCAT('%',#{employeeName},'%')
+            </if>
+            <if test="idNum != null">
+                AND ee.id_num = #{idNum}
+            </if>
+            <if test="companyId != null">
+                AND sc.company_id = #{companyId}
+            </if>
+            <if test="urgent == 1">
+                AND het.urgent = #{urgent}
+            </if>
+            <if test="submitTimeStart != null">
+                AND het.submit_time >= #{submitTimeStart}
+            </if>
+            <if test="submitTimeEnd != null">
+                AND #{submitTimeEnd} >= het.submit_time
+            </if>
+            <if test="processStatus == 1">
+                AND het.submit_time <![CDATA[ <= ]]>
+                (
+                SELECT CASE WHEN DAY(CURDATE()) > hca.close_day THEN
+                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hca.close_day)
+                ELSE
+                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hca.close_day) END
+                )
+            </if>
+            <if test="processStatus == 2">
+                AND het.submit_time >
+                (
+                SELECT CASE WHEN DAY(CURDATE()) > hca.close_day THEN
+                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hca.close_day)
+                ELSE
+                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hca.close_day) END
+                )
+            </if>
+        </where>
+    </select>
 
     <select id="queryHfEmpTask" resultMap="BaseResultMapBo">
         SELECT
