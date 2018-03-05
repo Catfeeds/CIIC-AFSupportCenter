@@ -106,9 +106,39 @@ public class AmResignBO extends AmResign {
      */
     private String firstInDate;
 
+    private String  outReason;
+
+    private LocalDate outDate;
+
     private String params;
 
+    private String luyongHandleEnd;
+
+    public String getLuyongHandleEnd() {
+        return luyongHandleEnd;
+    }
+
+    public void setLuyongHandleEnd(String luyongHandleEnd) {
+        this.luyongHandleEnd = luyongHandleEnd;
+    }
+
     private List<String> param;
+
+    public LocalDate getOutDate() {
+        return outDate;
+    }
+
+    public void setOutDate(LocalDate outDate) {
+        this.outDate = outDate;
+    }
+
+    public String getOutReason() {
+        return outReason;
+    }
+
+    public void setOutReason(String outReason) {
+        this.outReason = outReason;
+    }
 
     public String getFirstInDate() {
         return firstInDate;

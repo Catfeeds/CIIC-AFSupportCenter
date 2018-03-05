@@ -10,6 +10,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.A
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmTaskParamBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpMaterialService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.CommonApiUtils;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpMaterial;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao.AmEmpTaskMapper;
@@ -300,7 +301,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         AfFullEmployeeDTO empDTO = dto.getEmployee();
         AfEmployeeCompanyDTO employeeCompany = dto.getEmployeeCompany();
 
-        amEmpTask.setOutReason(employeeCompany.getOutReason().toString());
+        if(null!=employeeCompany.getOutReason()){
+            amEmpTask.setOutReason(ReasonUtil.getReasonOut(employeeCompany.getOutReason().toString()));
+        }
         amEmpTask.setOutDate(employeeCompany.getOutDate());
         amEmpTask.setEmployeeId(empDTO.getEmployeeId());
         amEmpTask.setCompanyId(employeeCompany.getCompanyId());
