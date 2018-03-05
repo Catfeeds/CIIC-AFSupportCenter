@@ -23,9 +23,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by songjt on 17/12/18.
- */
 @EnableBinding(value = TaskSink.class)
 @Component
 public class KafkaReceiver {
@@ -41,8 +38,7 @@ public class KafkaReceiver {
     private AfEmployeeCompanyProxy afEmployeeCompanyProxy;
 
     /**
-     * 订阅雇员新增任务单
-     *
+     * 公积金雇员新进任务单
      * @param message
      */
     @StreamListener(TaskSink.AF_EMP_IN)
