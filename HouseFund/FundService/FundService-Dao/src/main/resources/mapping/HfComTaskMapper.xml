@@ -41,7 +41,7 @@
 	</resultMap>
 
     <resultMap id="HfComTaskBOResultMap"
-               type="com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComTaskBo"
+               type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfComTaskBo"
                extends="BaseResultMap">
         <result column="company_name" property="companyName"/>
         <result column="task_category_name" property="taskCategoryName"/>
