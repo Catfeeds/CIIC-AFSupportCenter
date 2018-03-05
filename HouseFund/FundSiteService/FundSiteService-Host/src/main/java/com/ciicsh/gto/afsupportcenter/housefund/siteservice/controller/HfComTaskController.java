@@ -6,6 +6,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComTaskBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComTaskEndTypeBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComTaskTaskStatusBo;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.business.HfComTaskService;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +48,19 @@ public class HfComTaskController {
         PageRows<HfComTaskBo> pageRows = hfComTaskService.queryCompanyTasks(pageInfo);
 
         return JsonResultKit.ofPage(pageRows);
+    }
+
+    /**
+     * 未处理企业任务单导出
+     */
+    @Log("未处理企业任务单导出")
+    @RequestMapping("/noProcessTaskExport")
+    public void noProgressTaskExport(HttpServletResponse response, PageInfo pageInfo) {
+        Date date = new Date();
+        String fileNme = "企业任务单未处理_" + StringUtil.getDateString(date) + ".xls";
+        HfComTaskBo hfComTaskBo = pageInfo.toJavaObject(HfComTaskBo.class);
+        List<HfComTaskBo> hfComTaskBos = hfComTaskService.getNoProcessCompanyTasks(hfComTaskBo);
+        ExcelUtil.exportExcel(hfComTaskBos, HfComTaskBo.class, fileNme, response);
     }
 
     @Log("更新未处理企业任务单")
