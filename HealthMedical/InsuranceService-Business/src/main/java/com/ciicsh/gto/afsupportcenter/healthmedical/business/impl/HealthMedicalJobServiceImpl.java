@@ -89,7 +89,6 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
         if (!audited.isEmpty()) {
             PaymentApplyBatchPO batchPO = this.addPaymentApply(audited);
             JsonResult jsonResult = this.syncPaymentData(batchPO);
-            System.out.println(JSON.toJSONString(jsonResult));
             if(JsonResult.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())) {
                 supplyMedicalAcceptanceMapper.syncStatus(new EmployeePaymentStatusBO(
                     batchPO.getApplyBatchId(), SysConstants.BusinessId.SUPPLY_MEDICAL.getId(),
@@ -166,6 +165,13 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
             }
         }
     }
+//    public void handlePaymentRefund (PayApplyReturnTicketDTO dto) {
+//        List<EmployeeReturnTicketDTO> detail = dto.getEmployeeReturnTicketDTOList();
+//        if (!detail.isEmpty()) {
+//            detail.forEach(pay->this.updateSupplyMedicalRefundStatus(dto.getBusinessPkId().intValue(), pay));
+//        }
+//    }
+
 
     /**
      * @description 同步结算中心驳回，支付成功状态
@@ -208,7 +214,6 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
     private void syncIncompleteBankCardInfoApply (List<EmpBankRefundBO> refund) {
         List<BankCardRefundDTO> list = CommonTransform.convertToDTOs(refund, BankCardRefundDTO.class);
         com.ciicsh.gto.employeecenter.util.JsonResult jsonResult = bankCardInfoProxy.createBankRefund(list);
-        System.out.println(JSON.toJSONString(jsonResult));
     }
 
     /**

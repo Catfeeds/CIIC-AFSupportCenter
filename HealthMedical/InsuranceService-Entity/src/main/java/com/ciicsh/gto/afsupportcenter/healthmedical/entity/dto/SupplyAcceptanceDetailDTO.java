@@ -1,25 +1,25 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto;
 
-import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeeBO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.SupplyMedicalAcceptance;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.SupplyMedicalInvoice;
 
 import java.util.List;
 
 /**
- * 补充医疗--受理单详情
+ * 补充医疗--理单详情
  *
  * @author xiweizhen
  */
 public class SupplyAcceptanceDetailDTO {
-    private EmployeeBO employee;
+    private SupplyMedicalAcceptance supplyMedicalAcceptance;
     private List<SupplyMedicalInvoice> supplyMedicalInvoices;
 
-    public EmployeeBO getEmployee() {
-        return employee;
+    public SupplyMedicalAcceptance getSupplyMedicalAcceptance() {
+        return supplyMedicalAcceptance;
     }
 
-    public void setEmployee(EmployeeBO employee) {
-        this.employee = employee;
+    public void setSupplyMedicalAcceptance(SupplyMedicalAcceptance supplyMedicalAcceptance) {
+        this.supplyMedicalAcceptance = supplyMedicalAcceptance;
     }
 
     public List<SupplyMedicalInvoice> getSupplyMedicalInvoices() {
@@ -33,7 +33,7 @@ public class SupplyAcceptanceDetailDTO {
     @Override
     public String toString() {
         return "SupplyAcceptanceDetailDTO{" +
-            "employee=" + employee +
+            "supplyMedicalAcceptance=" + supplyMedicalAcceptance +
             ", supplyMedicalInvoices=" + supplyMedicalInvoices +
             '}';
     }

@@ -9,6 +9,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccoun
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccount;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
 HF：House Fun Mapper 接口
  * </p>
  */
+@Repository
 public interface HfComAccountMapper extends BaseMapper<HfComAccount> {
 
     /**

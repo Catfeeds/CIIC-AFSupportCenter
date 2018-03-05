@@ -13,6 +13,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +21,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.InetAddress;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * <p>
@@ -171,7 +171,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                 break;
             }
         }
-
+        resetTaskSubmitTime(ssEmpTask);//
         boolean insertRes = ssEmpTaskMapper.insertEmpTask(ssEmpTask);
 
         if (insertRes) {
@@ -221,29 +221,29 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
      *
      * */
     private void resetTaskSubmitTime(SsEmpTask ssEmpTask){
-            String submitMonth="";
-            LocalDateTime submitTime;
-            String today=LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd"));
-            if(ssEmpTask.getTaskCategory()==5){//转出任务单
-                submitMonth=ssEmpTask.getEndMonth()+today+" 00:00:00";
-            }else {
-                submitMonth=ssEmpTask.getStartMonth()+today+" 00:00:00";
-            }
-        submitTime=LocalDateTime.parse(submitMonth, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
-        }
-
-    public static void main(String[] args){
-        SsEmpTask ssEmpTask=new SsEmpTask();
+        String submitMonth="";
         LocalDateTime submitTime;
         String today=LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd"));
-        submitTime= LocalDateTime.parse("2015-01-"+today+" 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        System.out.println( LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd")));
-        System.out.println(submitTime);
+            if(ssEmpTask.getTaskCategory()==5){//转出任务单
+                if(ssEmpTask.getEndMonth()==null || ssEmpTask.getEndMonth().equals(""))
+                    return;
+                submitMonth=ssEmpTask.getEndMonth()+today;
+            }else {
+                if(ssEmpTask.getStartMonth()==null || ssEmpTask.getStartMonth().equals(""))
+                    return;
+                submitMonth=ssEmpTask.getStartMonth()+today;
+            }
+        SimpleDateFormat sf1 = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat sf2 = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            submitMonth=sf2.format(sf1.parse(submitMonth));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        submitTime=LocalDateTime.parse(submitMonth+" 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         ssEmpTask.setSubmitTime(submitTime);
-        DateTimeFormatter.ofPattern("dd");
+        }
 
-    }
     /**
      * 更新旧的雇员任务单
      *

@@ -148,9 +148,8 @@ public class MarketCommandController {
                 missionRequestDTO.setMissionId(applyRecordDetailPO.getApplyRecordDetailId().toString());
                 missionRequestDTO.setProcessDefinitionKey("gift_apply");
                 com.ciicsh.gto.commonservice.util.dto.Result restResult = sheetServiceProxy.startProcess(missionRequestDTO);
-                Map<String, String> startProcessResponseMap = (Map<String, String>) restResult.getObject();
                 logger.info(String.valueOf("code:" + restResult.getCode() + ",message:") + restResult.getMessage());
-                logger.info(startProcessResponseMap.toString());
+                logger.info(restResult.getObject().toString());
                 logger.info("sale系统收到启动流程接口返回：" + missionRequestDTO.toString());
 
                 t++;
