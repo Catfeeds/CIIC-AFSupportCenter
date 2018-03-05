@@ -1,8 +1,9 @@
-package com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao;
+package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo.HfComAccountPaymentWayBo;
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfComAccountPaymentWay;
+
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfComAccountPaymentWayBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccountPaymentWay;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

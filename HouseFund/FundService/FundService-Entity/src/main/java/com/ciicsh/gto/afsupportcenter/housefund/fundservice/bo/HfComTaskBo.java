@@ -1,10 +1,9 @@
-package com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo;
+package com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo;
 
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfComTask;
+
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.util.Date;
 
 @Data
 @EqualsAndHashCode(callSuper = false)

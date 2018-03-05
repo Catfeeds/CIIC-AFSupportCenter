@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity;
+package com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity;
 
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;

@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity;
+package com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity;
 
 import java.io.Serializable;
 

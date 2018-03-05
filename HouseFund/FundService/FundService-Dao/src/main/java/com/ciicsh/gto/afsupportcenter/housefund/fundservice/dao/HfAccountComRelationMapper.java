@@ -1,7 +1,8 @@
-package com.ciicsh.gto.afsupportcenter.housefund.siteservice.dao;
+package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfAccountComRelation;
+
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfAccountComRelation;
 import org.springframework.stereotype.Repository;
 
 /**

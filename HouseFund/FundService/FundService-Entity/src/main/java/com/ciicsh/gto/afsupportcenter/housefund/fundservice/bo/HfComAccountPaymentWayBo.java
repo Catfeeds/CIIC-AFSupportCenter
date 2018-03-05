@@ -1,6 +1,6 @@
-package com.ciicsh.gto.afsupportcenter.housefund.siteservice.bo;
+package com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo;
 
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.entity.HfComAccountPaymentWay;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccountPaymentWay;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
