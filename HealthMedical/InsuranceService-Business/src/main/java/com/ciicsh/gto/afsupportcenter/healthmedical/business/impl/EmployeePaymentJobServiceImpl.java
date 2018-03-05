@@ -1,7 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.business.impl;
 
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.EmployeePaymentJobService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.enums.SysConstants;
@@ -145,9 +144,7 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
      */
     private void syncIncompleteBankCardInfoApply (List<EmpBankRefundBO> refund) {
         List<BankCardRefundDTO> list = CommonTransform.convertToDTOs(refund, BankCardRefundDTO.class);
-        System.out.println(JSON.toJSONString(list));
         com.ciicsh.gto.employeecenter.util.JsonResult jsonResult = bankCardInfoProxy.createBankRefund(list);
-        System.out.println(JSON.toJSONString(jsonResult));
     }
 
     /**

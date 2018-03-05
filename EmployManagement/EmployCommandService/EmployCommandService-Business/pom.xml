@@ -38,11 +38,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.ciicsh.gt1.companycenter</groupId>
-            <artifactId>queryservice-api</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.ciicsh.gt1.commonservice</groupId>
             <artifactId>sheetservice-api</artifactId>
         </dependency>
@@ -54,7 +49,7 @@
 
         <dependency>
             <groupId>com.ciicsh.gt1.companycenter</groupId>
-            <artifactId>queryservice-api</artifactId>
+            <artifactId>gt1.companycenter.queryservice-api</artifactId>
         </dependency>
 
     </dependencies>

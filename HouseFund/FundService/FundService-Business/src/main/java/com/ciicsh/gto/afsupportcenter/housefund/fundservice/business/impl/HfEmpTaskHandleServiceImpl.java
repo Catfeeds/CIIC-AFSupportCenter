@@ -305,14 +305,14 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             return JsonResultKit.ofError("当前任务单BusinessInterfaceId为空");
         }
 
-        hfEmpTask = new HfEmpTask();
-        hfEmpTask.setEmpTaskId(empTaskId);
-        hfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_REJECTED);
-        hfEmpTask.setRejectionRemark(hfEmpTaskBatchRejectBo.getRejectionRemark());
-        hfEmpTask.setModifiedTime(LocalDateTime.now());
-        hfEmpTask.setModifiedBy("test"); // TODO currentUser
+        HfEmpTask inputHfEmpTask = new HfEmpTask();
+        inputHfEmpTask.setEmpTaskId(empTaskId);
+        inputHfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_REJECTED);
+        inputHfEmpTask.setRejectionRemark(hfEmpTaskBatchRejectBo.getRejectionRemark());
+        inputHfEmpTask.setModifiedTime(LocalDateTime.now());
+        inputHfEmpTask.setModifiedBy("test"); // TODO currentUser
 
-        this.updateById(hfEmpTask);
+        this.updateById(inputHfEmpTask);
 
         try {
             int rtnCode = apiUpdateConfirmDate(hfEmpTask.getCompanyId(),

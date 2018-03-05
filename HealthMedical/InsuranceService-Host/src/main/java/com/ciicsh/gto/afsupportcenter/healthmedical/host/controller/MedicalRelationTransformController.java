@@ -1,11 +1,14 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.host.controller;
 
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.MedicalRelationTransformQueryService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.MedicalRelationTransformPO;
-
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.MedicalRelationTransformDTO;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.core.Result;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.core.ResultGenerator;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -72,13 +75,14 @@ public class MedicalRelationTransformController  extends BasicController<Medical
 
     @Log("医疗关系转移查询")
     @PostMapping("/getEntityList")
-    public JsonResult<List<MedicalRelationTransformPO>> getEntityList(PageInfo pageInfo) {
-        PageRows<MedicalRelationTransformPO> pageRows = business.medicalRelationTransformMapperQuery(pageInfo);
-        long count = pageRows.getTotal();
-        if (count == 0) {
-            return JsonResultKit.of(400, "未查找到数据", (List) null);
-        } else {
-            return JsonResultKit.ofPage(pageRows);
+
+    public Result getEntityList(@RequestBody MedicalRelationTransformDTO  medicalRelationTransformDTO) {
+        try {
+            Page<MedicalRelationTransformPO> page = new Page<>(medicalRelationTransformDTO.getCurrent(), medicalRelationTransformDTO.getSize());
+            page = business.medicalRelationTransformMapperQuery(page, medicalRelationTransformDTO);
+            return ResultGenerator.genSuccessResult(page);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
         }
 
     }
