@@ -1,8 +1,11 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.host.controller;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.FragmentaryReimbursementQueryService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.FragmentaryReimbursementPO;
-
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.FragmentaryReimbursementDTO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.core.Result;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.core.ResultGenerator;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
@@ -12,6 +15,8 @@ import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
@@ -33,54 +38,53 @@ import java.util.Optional;
 @RequestMapping("/api/afsupportcenter/healthmedical/FragmentaryReimbursement")
 
     public class FragmentaryReimbursementController extends BasicController<FragmentaryReimbursementQueryService> {
-
+    private static Logger logger = LoggerFactory.getLogger(SupplyMedicalController.class);
     @Autowired
     private FragmentaryReimbursementQueryService fragmentaryReimbursementQueryService;
 
     @Log("新增")
-    @RequestMapping(value = "/save", method = {RequestMethod.POST})
-    public JsonResult<Integer> save(FragmentaryReimbursementPO po) {
-        int code = business.save(po);
-        if(code == 0){
-            return JsonResultKit.of(400, "无数据更新",  (Integer) null);
-        }else{
-            return JsonResultKit.of(400, "操作成功",  (Integer) null);
+    @PostMapping("/save")
+    public Result save(@RequestBody FragmentaryReimbursementPO po) {
+        try {
+            Boolean code = fragmentaryReimbursementQueryService.insert(po);
+            return ResultGenerator.genSuccessResult(code);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
         }
     }
 
     @Log("更新")
-    @RequestMapping(value = "/edit", method = {RequestMethod.POST})
-    public JsonResult<Integer> edit(FragmentaryReimbursementPO po) {
-        int code = business.edit(po);
-        if(code == 0){
-            return JsonResultKit.of(400, "无数据更新",  (Integer) null);
-        }else{
-            return JsonResultKit.of(400, "操作成功",  (Integer) null);
+    @PostMapping("/edit")
+    public Result edit(@RequestBody FragmentaryReimbursementPO po) {
+        try {
+            Boolean code = fragmentaryReimbursementQueryService.updateAllColumnById(po);
+            return ResultGenerator.genSuccessResult(code);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
         }
     }
 
     @Log("零星报销单条记录查询")
     @GetMapping("/getEntityById")
-    public JsonResult getEntityById(String id) {
-        JsonResult jr = new JsonResult();
-        FragmentaryReimbursementPO po = fragmentaryReimbursementQueryService.getById(id);
-        if (po == null) {
-            return JsonResultKit.of(400, "未查找到数据", (List) null);
-        } else {
-            jr.setData(po);
+    public Result getEntityById(@RequestBody String id) {
+        try {
+            FragmentaryReimbursementPO code = fragmentaryReimbursementQueryService.getById(id);
+            return ResultGenerator.genSuccessResult(code);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
         }
-        return jr;
     }
 
-    @Log("零星报销查询")
+
     @PostMapping("/getEntityList")
-    public JsonResult<List<FragmentaryReimbursementPO>> getEntityList(PageInfo pageInfo) {
-        PageRows<FragmentaryReimbursementPO> pageRows = business.getEntityList(pageInfo);
-        long count = pageRows.getTotal();
-        if (count == 0) {
-            return JsonResultKit.of(400, "未查找到数据", (List) null);
-        } else {
-            return JsonResultKit.ofPage(pageRows);
+    public Result getEntityList(@RequestBody FragmentaryReimbursementDTO fragmentaryReimbursementDTO) {
+        try {
+            Page<FragmentaryReimbursementPO> page = new Page<>(fragmentaryReimbursementDTO.getCurrent(), fragmentaryReimbursementDTO.getSize());
+            page = fragmentaryReimbursementQueryService.getEntityList(page, fragmentaryReimbursementDTO);
+            logger.info("零星报销分页查询");
+            return ResultGenerator.genSuccessResult(page);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
         }
     }
 }

@@ -164,7 +164,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
                     paymentCom.setComAccountId(ext.getComAccountId());
                     paymentCom.setCompanyId(rel.getCompanyId());
                     paymentCom.setPaymentMonth(paymentMonth);
-                    paymentCom.setPaymentState(1);
+                    paymentCom.setPaymentState(ext.getPaymentWay()==2 ? 2 : 1);//付款方式 = 2 客户自付
                     paymentCom.setActive(true);
                     paymentCom.setCreatedTime(LocalDateTime.now());
                     paymentCom.setCreatedBy("system");

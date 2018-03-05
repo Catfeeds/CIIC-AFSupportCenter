@@ -8,16 +8,7 @@ spring:
   application:
     name: support-center-soc-site-service
   profiles:
-    active: fat
-  cloud:
-    stream:
-      bindings:
-        soc_report_output_channel:
-          destination: af_soc_report_generate # topic name
-          content-type: application/json
-          producer:
-            partitionCount: 1
-
+    active: dev
   http:
     multipart:
       enabled: true

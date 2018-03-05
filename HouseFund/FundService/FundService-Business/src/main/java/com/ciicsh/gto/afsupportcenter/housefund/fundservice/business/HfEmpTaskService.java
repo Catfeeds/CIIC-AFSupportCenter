@@ -3,10 +3,13 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business;
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskHandlePostBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.util.List;
 
@@ -24,9 +27,18 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * 分页查询雇员任务单信息
      *
      * @param pageInfo
+     * @param exceptTaskCategories
      * @return
      */
     PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo, String exceptTaskCategories);
+
+    /**
+     * 分页查询批退雇员任务单信息
+     *
+     * @param pageInfo
+     * @return
+     */
+    PageRows<HfEmpTaskRejectExportBo> queryHfEmpTaskRejectInPage(PageInfo pageInfo, String exceptTaskCategories);
 
     /**
      * 保存数据到雇员任务单表
@@ -37,7 +49,7 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @param dto
      * @return
      */
-    boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer isChange, AfEmployeeInfoDTO dto);
+    boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer taskCategory, Integer isChange, AfEmployeeInfoDTO dto);
 
     /**
      * 更新旧的雇员任务单
@@ -48,8 +60,7 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @author zhangxj
      * @date 2017-12-28
      */
-    boolean updateEmpTaskTc(TaskCreateMsgDTO taskMsgDTO,
-                            AfEmployeeInfoDTO dto);
+    boolean updateEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, String fundCategory, AfEmployeeInfoDTO dto);
 
     /**
      * 保存数据到雇员任务单表
@@ -61,7 +72,7 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @return
      * @throws Exception
      */
-    boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer isChange,
+    boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory,Integer taskCategory, Integer isChange,
                          AfEmployeeInfoDTO dto) throws Exception;
 
 
@@ -71,5 +82,4 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @param ssEmpTask
      */
     List<HfEmpTask> queryByTaskId(HfEmpTask ssEmpTask);
-
 }

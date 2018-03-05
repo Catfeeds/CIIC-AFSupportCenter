@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Import;
     "com.ciicsh.gto.afcompanycenter.commandservice.api"})
 @MapperScan("com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao")
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.housefund.fundservice",
-                                            "com.ciicsh.gto.afsupportcenter.housefund.siteservice.host",
+                                            "com.ciicsh.gto",
                                             "com.ciicsh.common"})
 @EnableDiscoveryClient
 @Import({CustomConfiguration.class, MybatisPlusConfig.class})

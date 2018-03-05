@@ -1,7 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.business;
 
-import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.ZyTpaTask;
-import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.ZyTpaTaskPO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -11,6 +12,6 @@ import com.baomidou.mybatisplus.service.IService;
  * @author zhaogang
  * @since 2018-02-11
  */
-public interface ZyTpaTaskService extends IService<ZyTpaTask> {
-	
+public interface ZyTpaTaskService {
+    void getZyTpaTaskListBymonth(String month,String zyProductID);
 }

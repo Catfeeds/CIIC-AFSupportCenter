@@ -1,7 +1,11 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfComTaskBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * <p>
@@ -9,6 +13,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 Com：公司简写 Mapper 接口
  * </p>
  */
+@Repository
 public interface HfComTaskMapper extends BaseMapper<HfComTask> {
 
     /**
@@ -26,4 +31,12 @@ public interface HfComTaskMapper extends BaseMapper<HfComTask> {
      * @return
      */
     int countComTaskByCond(HfComTask hfComTask);
+
+    /**
+     * 获取企业任务单列表
+     *
+     * @param hfComTaskBo
+     * @return
+     */
+    List<HfComTaskBo> queryCompanyTask(HfComTaskBo hfComTaskBo);
 }

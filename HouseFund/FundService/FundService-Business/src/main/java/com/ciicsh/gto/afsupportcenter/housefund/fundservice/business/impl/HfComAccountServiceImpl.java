@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccoun
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.GetComFundAccountListRequestDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountCompanyPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountDetailPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccount;
@@ -51,13 +52,26 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
     /**
      * 获取企业公积金账户详情信息,Site用
      *
-     * @param comAccountId     账户主记录id
-     * @param hfType 1-基本公积金 2-补充公积金
+     * @param comAccountId 账户主记录id
+     * @param hfType       1-基本公积金 2-补充公积金
      * @return
      */
     @Override
     public ComFundAccountDetailPO getComFundAccountDetail(int comAccountId, Byte hfType) {
-        return baseMapper.getComFundAccountDetail(comAccountId, hfType);
+        ComFundAccountDetailPO po = baseMapper.getComFundAccountDetail(comAccountId, hfType);
+
+        return po;
+    }
+
+    /**
+     * 获取企业公积金账户绑定的公司列表
+     *
+     * @param comAccountId
+     * @return
+     */
+    @Override
+    public List<ComFundAccountCompanyPO> getComFundAccountCompanyList(int comAccountId) {
+        return baseMapper.getComFundAccountCompanyList(comAccountId);
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
+import com.ciicsh.gto.RedisManager;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
@@ -17,6 +18,7 @@ import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.util.ExpireTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/fundcommandservice/hfEmpTaskHandle")
@@ -298,7 +301,68 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
      */
     @RequestMapping("/comAccountQuery")
     public JsonResult comAccountQuery(ComAccountTransBo comAccountTransBo) {
-        List<ComAccountTransBo> comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
-        return JsonResultKit.of(comAccountTransBoList);
+        String key = "-HfEmpTaskHandleController-comAccountQuery-ComAccountTransBo-list-";
+        List<ComAccountTransBo> rtnList = null;
+        List<ComAccountTransBo> comAccountTransBoList = ( List<ComAccountTransBo>) RedisManager.getObj(key);
+        if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
+            rtnList = comAccountTransBoList.stream().filter(e ->
+                e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
+        }
+
+        if (CollectionUtils.isEmpty(rtnList)) {
+            comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
+        }
+
+        if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
+            RedisManager.set(key, comAccountTransBoList, ExpireTime.TEN_MIN);
+            rtnList = comAccountTransBoList.stream().filter(e ->
+                e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
+        }
+
+        return JsonResultKit.of(rtnList);
+    }
+
+    @RequestMapping("/transEmpTaskQuery")
+    public JsonResult<HfEmpTask> transEmpTaskQuery(@RequestBody HfEmpTaskCreateTransBo hfEmpTaskCreateTransBo) {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("company_id", hfEmpTaskCreateTransBo.getCompanyId());
+        condition.put("employee_id", hfEmpTaskCreateTransBo.getEmployeeId());
+        condition.put("task_category", 9);
+        condition.put("hf_type", hfEmpTaskCreateTransBo.getHfType());
+        condition.put("is_active", 1);
+        List<HfEmpTask> hfEmpTaskList = business.selectByMap(condition);
+        if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
+            if (hfEmpTaskList.size() > 1) {
+                return JsonResultKit.ofError("该雇员的转移任务单数据有重复记录");
+            }
+            return JsonResultKit.of(hfEmpTaskList.get(0));
+        }
+        return JsonResultKit.of();
+    }
+
+    @RequestMapping("/createTransEmpTask")
+    public JsonResult<HfEmpTask> createTransEmpTask(@RequestBody HfEmpTaskCreateTransBo hfEmpTaskCreateTransBo) {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("company_id", hfEmpTaskCreateTransBo.getCompanyId());
+        condition.put("employee_id", hfEmpTaskCreateTransBo.getEmployeeId());
+        condition.put("task_category", 9);
+        condition.put("hf_type", hfEmpTaskCreateTransBo.getHfType());
+        condition.put("is_active", 1);
+        List<HfEmpTask> hfEmpTaskList = business.selectByMap(condition);
+        if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
+            if (hfEmpTaskList.size() > 1) {
+                return JsonResultKit.ofError("该雇员的转移任务单数据有重复记录");
+            }
+            return JsonResultKit.of(hfEmpTaskList.get(0));
+        } else {
+            hfEmpTaskCreateTransBo.setCreatedBy("test"); // TODO currentUser
+            int rtn = business.createTransEmpTask(hfEmpTaskCreateTransBo);
+            if (rtn == 1) {
+                hfEmpTaskList = business.selectByMap(condition);
+                return JsonResultKit.of(hfEmpTaskList.get(0));
+            }
+        }
+
+        return JsonResultKit.ofError("该雇员的转移任务单数据不存在");
     }
 }

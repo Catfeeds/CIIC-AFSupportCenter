@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.business;
 
-import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfTpaTask;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfTpaTaskPO;
 import com.baomidou.mybatisplus.service.IService;
 
 import java.util.List;
@@ -13,6 +13,6 @@ import java.util.List;
  * @author zhaogang
  * @since 2018-02-11
  */
-public interface AfTpaTaskService extends IService<AfTpaTask> {
-
+public interface AfTpaTaskService extends IService<AfTpaTaskPO> {
+      List<AfTpaTaskPO> getAfTpaTaskByInsureDate(String startInsureDate,String endInsureDate,String zyInsurance_Policy_ID);
 }

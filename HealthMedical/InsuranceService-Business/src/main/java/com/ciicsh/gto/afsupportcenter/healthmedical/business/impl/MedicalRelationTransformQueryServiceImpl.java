@@ -1,6 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.business.impl;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.MedicalRelationTransformPO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.MedicalRelationTransformDTO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.dao.MedicalRelationTransformMapper;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.MedicalRelationTransformQueryService;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -45,10 +47,9 @@ public class MedicalRelationTransformQueryServiceImpl extends ServiceImpl<Medica
     }
 
     @Override
-    public PageRows<MedicalRelationTransformPO> medicalRelationTransformMapperQuery(PageInfo pageInfo) {
-        MedicalRelationTransformPO po = pageInfo.toJavaObject(MedicalRelationTransformPO.class);
-        PageRows<MedicalRelationTransformPO> pageRow = PageKit.doSelectPage(pageInfo, () -> baseMapper.medicalRelationTransformMapperQuery(po) );
-        return pageRow;
+    public Page<MedicalRelationTransformPO> medicalRelationTransformMapperQuery(Page<MedicalRelationTransformPO> page, MedicalRelationTransformDTO medicalRelationTransformDTO) {
+        page.setRecords(baseMapper.medicalRelationTransformMapperQuery(page,medicalRelationTransformDTO));
+        return page;
     }
 
 }

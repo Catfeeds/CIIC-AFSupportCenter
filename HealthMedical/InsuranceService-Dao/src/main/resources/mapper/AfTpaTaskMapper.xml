@@ -4,7 +4,7 @@
 
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfTpaTask">
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfTpaTaskPO">
         <result column="af_task_id" property="afTaskId" />
         <result column="task_type" property="taskType" />
         <result column="status" property="status" />
@@ -34,5 +34,24 @@
         <result column="created_by" property="createdBy" />
         <result column="modified_by" property="modifiedBy" />
     </resultMap>
+    <select id="getAfTpaTaskByInsureDate"  parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        `task_type`, `process_id`, `status`, `employee_id`, `employee_name`, `company_id`, `company_name`, `af_product_id`, `product_name`, `start_confirm_date`,
+        `end_confirm_date`, `type`, `associated_insurant_id`, `associated_insurant_name`, `id_num`, `gender`, `age`, `birth_date`, `price`, `service_items`, `key_type`, `key_value`,
+        `remark`, `is_active`, `created_time`, `modified_time`, `created_by`, `modified_by`
+        From  gtobusinessdb.hm_af_tpa_task
+        WHERE
+        af_product_id IN (
+        SELECT
+        product_id
+        FROM
+        hm_product_correspond
+        <where>
+            <if test="zyInsurance_Policy_ID != null">
+                insurance_policy_id = #{zyInsurance_Policy_ID})
+            </if>
+        </where>
+    </select>
+
 
 </mapper>

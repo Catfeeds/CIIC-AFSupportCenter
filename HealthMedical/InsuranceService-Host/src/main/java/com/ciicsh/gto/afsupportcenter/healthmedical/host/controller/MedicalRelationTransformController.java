@@ -1,11 +1,14 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.host.controller;
 
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.MedicalRelationTransformQueryService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.MedicalRelationTransformPO;
-
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.MedicalRelationTransformDTO;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.core.Result;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.core.ResultGenerator;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -36,49 +39,48 @@ public class MedicalRelationTransformController  extends BasicController<Medical
     private MedicalRelationTransformQueryService medicalRelationTransformQueryService;
 
     @Log("新增")
-    @RequestMapping(value = "/save", method = { RequestMethod.POST})
-    public JsonResult<Integer> save(MedicalRelationTransformPO po) {
-        int code = business.save(po);
-        if(code == 0){
-            return JsonResultKit.of(400, "无数据更新",  (Integer) null);
-        }else{
-            return JsonResultKit.of(400, "操作成功",  (Integer) null);
+    @PostMapping("/save")
+    public Result save(@RequestBody MedicalRelationTransformPO po) {
+        try {
+            Boolean code = medicalRelationTransformQueryService.insert(po);
+            return ResultGenerator.genSuccessResult(code);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
         }
     }
 
     @Log("更新")
-    @RequestMapping(value = "/edit", method = { RequestMethod.POST})
-    public  JsonResult<Integer>  edit(MedicalRelationTransformPO po) {
-        int code = business.edit(po);
-        if(code == 0){
-            return JsonResultKit.of(400, "无数据更新",  (Integer) null);
-        }else{
-            return JsonResultKit.of(400, "操作成功",  (Integer) null);
+    @PostMapping("/edit")
+    public  Result edit(@RequestBody MedicalRelationTransformPO po) {
+        try {
+            Boolean code = medicalRelationTransformQueryService.updateAllColumnById(po);
+            return ResultGenerator.genSuccessResult(code);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
         }
     }
 
     @Log("医疗关系转移单条记录查询")
     @GetMapping("/getEntityById")
-    public JsonResult getEntityById(String id) {
-        JsonResult jr = new JsonResult();
-        MedicalRelationTransformPO po = medicalRelationTransformQueryService.getById(id);
-        if (po == null) {
-            return JsonResultKit.of(400, "未查找到数据", (List) null);
-        } else {
-            jr.setData(po);
+    public Result getEntityById(@RequestBody String id) {
+        try {
+            MedicalRelationTransformPO code = medicalRelationTransformQueryService.getById(id);
+            return ResultGenerator.genSuccessResult(code);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
         }
-        return jr;
     }
 
     @Log("医疗关系转移查询")
     @PostMapping("/getEntityList")
-    public JsonResult<List<MedicalRelationTransformPO>> getEntityList(PageInfo pageInfo) {
-        PageRows<MedicalRelationTransformPO> pageRows = business.medicalRelationTransformMapperQuery(pageInfo);
-        long count = pageRows.getTotal();
-        if (count == 0) {
-            return JsonResultKit.of(400, "未查找到数据", (List) null);
-        } else {
-            return JsonResultKit.ofPage(pageRows);
+
+    public Result getEntityList(@RequestBody MedicalRelationTransformDTO  medicalRelationTransformDTO) {
+        try {
+            Page<MedicalRelationTransformPO> page = new Page<>(medicalRelationTransformDTO.getCurrent(), medicalRelationTransformDTO.getSize());
+            page = business.medicalRelationTransformMapperQuery(page, medicalRelationTransformDTO);
+            return ResultGenerator.genSuccessResult(page);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
         }
 
     }

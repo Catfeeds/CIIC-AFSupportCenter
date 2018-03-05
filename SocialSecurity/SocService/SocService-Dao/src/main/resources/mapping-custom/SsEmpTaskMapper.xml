@@ -629,4 +629,14 @@
     <select id="selectIdNumByEmployeeId" resultMap="BaseResultMapDto">
         SELECT id_num,id_card_type FROM emp_employee WHERE employee_id = #{employeeId}
     </select>
+
+    <select id="fetchInjuryRatio" resultType="BigDecimal" >
+        select com_ratio from ss_account_ratio ar
+        INNER JOIN ss_emp_archive ea ON ar.com_account_id=ar.com_account_id
+        where ar.is_active=1
+        and ea.emp_archive_id = #{empArchiveId}
+        and (#{startMonth} BETWEEN ar.start_month and ar.end_month or
+        ( #{startMonth}>=ar.start_month and ar.end_month is null))
+    </select>
+
 </mapper>

@@ -59,19 +59,19 @@ public class SsMonthEmpChangeDetailController  extends BasicController<SsMonthEm
     }
     @Log("变更总汇明细(养保、医保、失保)导出")
     @RequestMapping("/yysExport")
-    public void yysExport(HttpServletResponse response, @RequestParam Long statementId){
+    public void yysExport(HttpServletResponse response, @RequestParam Long monthEmpChangeId){
         Date date = new Date();
         String fileNme = "YYS_"+ StringUtil.getDateString(date)+".xls";
-        List<YysExportOpt> opts = business.yysExportQuery(statementId);
+        List<YysExportOpt> opts = business.yysExportQuery(monthEmpChangeId);
         ExcelUtil.exportExcel(opts,YysExportOpt.class,fileNme,response);
     }
 
     @Log("变更总汇明细(养保、医保、失保)导出")
     @RequestMapping("/gsyExport")
-    public void gsyExport(HttpServletResponse response,@RequestParam Long statementId){
+    public void gsyExport(HttpServletResponse response,@RequestParam Long monthEmpChangeId){
         Date date = new Date();
         String fileNme = "GSY_"+ StringUtil.getDateString(date)+".xls";
-        List<GsyExportOpt> opts = business.gsyExportQuery(statementId);
+        List<GsyExportOpt> opts = business.gsyExportQuery(monthEmpChangeId);
         ExcelUtil.exportExcel(opts,GsyExportOpt.class,fileNme,response);
     }
 }
