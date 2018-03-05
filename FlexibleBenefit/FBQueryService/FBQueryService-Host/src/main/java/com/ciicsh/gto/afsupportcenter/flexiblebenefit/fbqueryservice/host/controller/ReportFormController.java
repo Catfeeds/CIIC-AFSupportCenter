@@ -1,13 +1,16 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.host.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.company.AfProductWithCompanyDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfProductWithEmployeeDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.request.AfProductParamsDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfProductPublicProxy;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.dto.ExpCompanyDTO;
-import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.host.utils.ExportUtils;
+import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.dto.ExpEmployeeDTO;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
-import com.ciicsh.gto.salecenter.apiservice.api.dto.LinkmanDTO;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.linkman.LinkmanListRequestDTO;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.linkman.LinkmanListResponseDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.proxy.SalLinkmanProxy;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +18,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author: guwei
@@ -36,11 +38,13 @@ public class ReportFormController {
     private SalLinkmanProxy salLinkmanProxy;
 
     /**
-     * 获取参加活动公司清单
+     * 导出参加活动公司清单
      * @return
      */
-    @GetMapping("/get")
-    public JsonResult getCompanyPage(String companyId, String companyName, String majordomo, String manager, String productId){
+    @GetMapping("/get4")
+    public JsonResult getCompanyPage(String companyId, String companyName,
+                                     String majordomo, String manager,
+                                     String productId, HttpServletResponse response){
         AfProductParamsDTO afProductParamsDTO = new AfProductParamsDTO();
         afProductParamsDTO.setCompanyId(companyId);
         afProductParamsDTO.setProductId(productId);
@@ -49,32 +53,51 @@ public class ReportFormController {
         productWithCompany.stream().forEach( i -> {
             ExpCompanyDTO expCompanyDTO = new ExpCompanyDTO();
             BeanUtils.copyProperties(i,expCompanyDTO);
-            LinkmanDTO linkmanDTO = new LinkmanDTO();
-            linkmanDTO.setCompanyName(i.getTitle());
-            linkmanDTO = salLinkmanProxy.getContacts(linkmanDTO).getObject().get(0);
-            BeanUtils.copyProperties(linkmanDTO,expCompanyDTO);
+            LinkmanListRequestDTO linkmanListRequestDTO = new LinkmanListRequestDTO();
+            linkmanListRequestDTO.setId(i.getCompanyId());
+            linkmanListRequestDTO.setType(2);
+            LinkmanListResponseDTO linkman = salLinkmanProxy.list(linkmanListRequestDTO).getObject().getRecords().get(0);
+            BeanUtils.copyProperties(linkman,expCompanyDTO);
+            expCompanyDTO.setTelautogramNum(linkman.getFax());
+            expCompanyDTO.setTelNum(linkman.getCompanyTelNum());
+            expCompanyDTO.setPostCode(linkman.getCompanyZip());
+            expCompanyDTO.setAddress(linkman.getCompanyAddr());
             expCompanyDTOS.add(expCompanyDTO);
         });
-        List<String> names = new ArrayList<>();
-        names.add("客户经理");
-        names.add("客户总监");
-        names.add("公司编号");
-        names.add("公司名称");
-        names.add("公司联系人");
-        names.add("电话");
-        names.add("地址");
-        names.add("邮编");
-        names.add("服务产品");
-        names.add("人数");
-        names.add("电子邮箱");
-        names.add("联系电话");
-        names.add("手机");
-        names.add("传真号码");
-        List<String> fields = new ArrayList<>();
 
-        final ExportUtils exportUtils = new ExportUtils();
-        exportUtils.exportExcel("参加活动公司清单",names,fields,expCompanyDTOS);
-        return JsonResult.success(productWithCompany);
+        ExcelUtil.exportExcel(expCompanyDTOS,"参加活动的公司","sheet1",ExpCompanyDTO.class,"参加活动公司报表.xls",response);
+        return JsonResult.success(null);
+    }
+
+    /**
+     * 导出参加活动雇员清单
+     * @return
+     */
+    @GetMapping("/get5")
+    public JsonResult exportEmployee(String companyId, String companyName,
+                                     String majordomo, String manager,
+                                     String productId, HttpServletResponse response){
+        AfProductParamsDTO afProductParamsDTO = new AfProductParamsDTO();
+        afProductParamsDTO.setCompanyId(companyId);
+        afProductParamsDTO.setProductId(productId);
+        List<AfProductWithEmployeeDTO> productWithEmployee = afProductPublicProxy.getProductWithEmployee(afProductParamsDTO);
+        ArrayList<ExpEmployeeDTO> expEmployeeDTOS = new ArrayList<>();
+        productWithEmployee.stream().forEach( i -> {
+            ExpEmployeeDTO expEmployeeDTO = new ExpEmployeeDTO();
+            BeanUtils.copyProperties(i,expEmployeeDTO);
+            //todo cityCode => city
+
+            LinkmanListRequestDTO linkmanListRequestDTO = new LinkmanListRequestDTO();
+            linkmanListRequestDTO.setId(i.getCompanyId());
+            linkmanListRequestDTO.setType(2);
+            LinkmanListResponseDTO linkman = salLinkmanProxy.list(linkmanListRequestDTO).getObject().getRecords().get(0);
+            BeanUtils.copyProperties(linkman,expEmployeeDTO);
+
+            expEmployeeDTOS.add(expEmployeeDTO);
+        });
+
+        ExcelUtil.exportExcel(expEmployeeDTOS,"参加活动的雇员","sheet1",ExpEmployeeDTO.class,"参加活动雇员报表.xls",response);
+        return JsonResult.success(null);
     }
 
 }

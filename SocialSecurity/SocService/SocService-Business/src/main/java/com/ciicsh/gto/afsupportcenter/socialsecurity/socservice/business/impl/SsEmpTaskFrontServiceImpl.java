@@ -13,6 +13,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.InetAddress;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 /**
  * <p>
@@ -170,7 +171,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                 break;
             }
         }
-
+        resetTaskSubmitTime(ssEmpTask);//
         boolean insertRes = ssEmpTaskMapper.insertEmpTask(ssEmpTask);
 
         if (insertRes) {
@@ -212,6 +213,36 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         }
         return true;
     }
+    /**
+     * add by linhui
+     * 根据不同任务单类型，把前道传递的社保起缴月份（业务老师们都习惯叫执行日期）
+     * submitTime=startMonth+系统日
+     * submitTime:任务发起日期
+     *
+     * */
+    private void resetTaskSubmitTime(SsEmpTask ssEmpTask){
+        String submitMonth="";
+        LocalDateTime submitTime;
+        String today=LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd"));
+            if(ssEmpTask.getTaskCategory()==5){//转出任务单
+                if(ssEmpTask.getEndMonth()==null || ssEmpTask.getEndMonth().equals(""))
+                    return;
+                submitMonth=ssEmpTask.getEndMonth()+today;
+            }else {
+                if(ssEmpTask.getStartMonth()==null || ssEmpTask.getStartMonth().equals(""))
+                    return;
+                submitMonth=ssEmpTask.getStartMonth()+today;
+            }
+        SimpleDateFormat sf1 = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat sf2 = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            submitMonth=sf2.format(sf1.parse(submitMonth));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        submitTime=LocalDateTime.parse(submitMonth+" 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        ssEmpTask.setSubmitTime(submitTime);
+        }
 
     /**
      * 更新旧的雇员任务单

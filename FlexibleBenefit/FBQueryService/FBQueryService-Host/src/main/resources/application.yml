@@ -4,17 +4,7 @@ endpoints:
   shutdown:
     enabled: true
     sensitive: false
-eureka:
-  client:
-    registerWithEureka: false
-    serviceUrl:
-        defaultZone: "http://172.16.9.21:9602/eureka/,http://172.16.9.20:9602/eureka/,http://172.16.9.19:9602/eureka/"  #开发注册中心eureka地址
-#      defaultZone: http://172.16.9.24:9602/eureka
-  instance:
-    lease-renewal-interval-in-seconds: 40
-    lease-expiration-duration-in-seconds: 30
-    prefer-ip-address: true
-    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+
 management:
   context-path: /admin
   port: 6018
@@ -56,6 +46,8 @@ server:
 spring:
   application:
     name: afsupportcenter-center-query-service
+  profiles:
+      active: fat
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     tomcat:
@@ -63,9 +55,7 @@ spring:
       max-active: 20
       max-idle: 8
       min-idle: 8
-    password: a111111
-    url: jdbc:mysql://172.16.9.15:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
-    username: root
+
   cloud:
     stream:
       kafka:

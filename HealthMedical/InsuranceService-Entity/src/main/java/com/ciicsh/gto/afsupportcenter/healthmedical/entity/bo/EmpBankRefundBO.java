@@ -30,7 +30,7 @@ public class EmpBankRefundBO {
     /** 银行卡ID */
     private String bankcardId;
     /** 支付金额 */
-    private BigDecimal payAmount;
+    private BigDecimal payamount;
     /** 退票日期 */
     private Date refundDate;
     /** 退票原因 */
@@ -100,12 +100,12 @@ public class EmpBankRefundBO {
         this.bankcardId = bankcardId;
     }
 
-    public BigDecimal getPayAmount() {
-        return payAmount;
+    public BigDecimal getPayamount() {
+        return payamount;
     }
 
-    public void setPayAmount(BigDecimal payAmount) {
-        this.payAmount = payAmount;
+    public void setPayamount(BigDecimal payamount) {
+        this.payamount = payamount;
     }
 
     public Date getRefundDate() {
@@ -134,7 +134,7 @@ public class EmpBankRefundBO {
             ", customerManager='" + customerManager + '\'' +
             ", serviceSenter='" + serviceCenter + '\'' +
             ", bankcardId='" + bankcardId + '\'' +
-            ", payAmount=" + payAmount +
+            ", payAmount=" + payamount +
             ", remark='" + reason + '\'' +
             '}';
     }

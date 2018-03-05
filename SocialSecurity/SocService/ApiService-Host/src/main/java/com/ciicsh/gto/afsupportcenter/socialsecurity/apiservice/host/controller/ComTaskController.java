@@ -3,16 +3,12 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.apiservice.host.controller
 import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.common.entity.JsonResult;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.SsComTaskProxy;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.ComTaskExtDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.ComTaskParamDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComTaskBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComTaskParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComAccountService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComTask;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.SsComTaskExtPO;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import org.apache.commons.lang3.StringUtils;
@@ -75,19 +71,6 @@ public class ComTaskController implements SsComTaskProxy{
         } catch (Exception e) {
             return JsonResult.faultMessage(e.getMessage());
         }
-    }
-
-    @Override
-    @RequestMapping("/getComTask")
-    public JsonResult getComTask(ComTaskParamDTO paramDTO) {
-        ComTaskParamBO paramBO = new ComTaskParamBO();
-        BeanUtils.copyProperties(paramDTO,paramBO);
-        SsComTaskExtPO extPO = taskService.getComTask(paramBO);
-        ComTaskExtDTO extDTO = new ComTaskExtDTO();
-        if(null != extPO){
-            BeanUtils.copyProperties(extPO,extDTO);
-        }
-        return JsonResult.success(extDTO);
     }
 
     //保存企业任务单

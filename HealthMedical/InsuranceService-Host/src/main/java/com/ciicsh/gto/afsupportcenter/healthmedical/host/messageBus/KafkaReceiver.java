@@ -15,7 +15,7 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.business.AfTpaTaskService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.EmployeePaymentJobService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.HealthMedicalJobService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.enums.SysConstants;
-import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfTpaTask;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfTpaTaskPO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeMemberDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import com.ciicsh.gto.employeecenter.util.JsonResult;
@@ -86,10 +86,14 @@ public class KafkaReceiver {
      */
     @StreamListener(TaskSink.Financial_Rejected)
     public void receiveFinancialRejected(PayApplyPayStatusDTO dto) {
-        if (SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
-            employeePaymentService.syncSettleCenterStatus(dto);
-        } else if(SysConstants.JobConstants.MEDICAL_CLAIMS.getCode().equals(dto.getBusinessType())) {
-            healthMedicalJobService.syncSettleCenterStatus(dto);
+        try {
+            if (SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
+                employeePaymentService.syncSettleCenterStatus(dto);
+            } else if(SysConstants.JobConstants.MEDICAL_CLAIMS.getCode().equals(dto.getBusinessType())) {
+                healthMedicalJobService.syncSettleCenterStatus(dto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -100,10 +104,14 @@ public class KafkaReceiver {
      */
     @StreamListener(TaskSink.Return_Ticket)
     public void receiveReturn_Ticket(PayApplyReturnTicketDTO dto) {
-        if (SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
-            employeePaymentService.handlePaymentRefund(dto);
-        } else if(SysConstants.JobConstants.MEDICAL_CLAIMS.getCode().equals(dto.getBusinessType())) {
-            healthMedicalJobService.handlePaymentRefund(dto);
+        try {
+            if (SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
+                employeePaymentService.handlePaymentRefund(dto);
+            } else if(SysConstants.JobConstants.MEDICAL_CLAIMS.getCode().equals(dto.getBusinessType())) {
+                healthMedicalJobService.handlePaymentRefund(dto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -136,10 +144,10 @@ public class KafkaReceiver {
             //</editor-fold>
 
             // <editor-fold desc="2 循环，处理前道投退任务单">
-            List<AfTpaTask> afTaskList = new ArrayList<>();
+            List<AfTpaTaskPO> afTaskList = new ArrayList<>();
 
             empTaskList.forEach(item -> {
-                AfTpaTask task = new AfTpaTask();
+                AfTpaTaskPO task = new AfTpaTaskPO();
                 // <editor-fold desc="2.0 转换service_item">
                 /* 获取serviceItems */
                 List<String> ids = new ArrayList<>();

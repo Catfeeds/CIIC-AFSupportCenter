@@ -7,7 +7,7 @@ import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocia
 //import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.ResultDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.CommonApiUtils;
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.SiteServiceApp;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.FundSiteServiceApp;
 //import com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller.HfApiController;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller.HfEmpArchiveController;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment;
@@ -26,7 +26,7 @@ import java.util.List;
  * <p>Description: 雇员档案 controller Test</p>
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = SiteServiceApp.class)
+@SpringBootTest(classes = FundSiteServiceApp.class)
 public class HfApiControllerTest {
 
     @Autowired

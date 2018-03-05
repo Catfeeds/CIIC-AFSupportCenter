@@ -61,7 +61,7 @@
                 AND ca.ss_account = #{comAccountId,jdbcType=VARCHAR}
             </if>
             <if test = "impFileType != null and impFileType != ''">
-                AND s.imp_file_type = #{impFileType,jdbcType=VARCHAR}
+                AND mec.compute_type = #{impFileType,jdbcType=VARCHAR}
             </if>
             <if test = "maxDiffSumByEmp != null and maxDiffSumByEmp != ''">
                 <![CDATA[
@@ -126,7 +126,7 @@
                 AND a.com_account_id = #{comAccountId}
             </if>
             <if test="impFileType != null and impFileType !=''">
-                AND c.imp_file_type = #{impFileType}
+                AND a.compute_type = #{impFileType}
             </if>
             <if test="minDiffSumByEmp != null and minDiffSumByEmp != '' and minDiffSumByEmp != 0">
                 <![CDATA[

@@ -46,24 +46,12 @@
         from gtobusinessdb.hm_medical_relation_transform
         where transform_id = #{transformId}
     </select>
-    <select id="medicalRelationTransformMapperQuery" resultMap="BaseResultMap">
+    <select id="medicalRelationTransformMapperQuery" parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.MedicalRelationTransformDTO" resultMap="BaseResultMap">
         select `transform_id`, `employee_id`, `turn_out_date`, `turn_out_address`, `turn_back_date`, `remark`, `is_active`, `created_time`, `modified_time`, `created_by`, `modified_by`
         from  gtobusinessdb.hm_medical_relation_transform
         <where>
-            <if test="transformId != null">
-                and transform_id = #{transformId}
-            </if>
             <if test="employeeId != null">
                 and employee_id LIKE CONCAT('%',#{employeeId},'%')
-            </if>
-            <if test="turnOutDate != null">
-                and turn_out_date = #{turnOutDate}
-            </if>
-            <if test="turnBackDate != null">
-                and turn_back_date = #{turnBackDate}
-            </if>
-            <if test="remark != null">
-                and remark = #{remark}
             </if>
         </where>
     </select>

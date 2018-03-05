@@ -89,7 +89,6 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
         if (!audited.isEmpty()) {
             PaymentApplyBatchPO batchPO = this.addPaymentApply(audited);
             JsonResult jsonResult = this.syncPaymentData(batchPO);
-            System.out.println(JSON.toJSONString(jsonResult));
             if(JsonResult.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())) {
                 supplyMedicalAcceptanceMapper.syncStatus(new EmployeePaymentStatusBO(
                     batchPO.getApplyBatchId(), SysConstants.BusinessId.SUPPLY_MEDICAL.getId(),
@@ -154,7 +153,7 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
         List<EmployeeReturnTicketDTO> detail = dto.getEmployeeReturnTicketDTOList();
         if (!detail.isEmpty()) {
             List<EmpBankRefundBO> refund = null;
-            if (SysConstants.BusinessId.SUPPLY_MEDICAL.equals(businessId)) {
+            if (SysConstants.BusinessId.SUPPLY_MEDICAL.getId().equals(businessId)) {
                 detail.forEach(pay->this.updateSupplyMedicalRefundStatus(dto.getBusinessPkId().intValue(), pay));
                 refund = this.selectSupplyMedicalBankRefund();
             } else {
@@ -190,11 +189,12 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
             status = SysConstants.SupplyMedicalStatus.BACK.getCode();
         }
         EmployeePaymentStatusBO statusBO = new EmployeePaymentStatusBO(
-            dto.getBusinessPkId().intValue(), businessId, status, dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+            dto.getBusinessPkId().intValue(), businessId, status, SysConstants.SupplyMedicalStatus.SYNC.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
         );
-        if(SysConstants.BusinessId.SUPPLY_MEDICAL.equals(businessId)) {
+        if(SysConstants.BusinessId.SUPPLY_MEDICAL.getId().equals(businessId)) {
             supplyMedicalAcceptanceMapper.syncStatus(statusBO);
         } else {
+            statusBO.setCurrentStatus(SysConstants.UninsuredMedicalStatus.SYNC.getCode());
             if (SysConstants.SettlementCenterStatus.BACK.getCode().equals(dto.getPayStatus())) {
                 statusBO.setStatus(SysConstants.UninsuredMedicalStatus.BACK.getCode());
             } else {
@@ -214,7 +214,6 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
     private void syncIncompleteBankCardInfoApply (List<EmpBankRefundBO> refund) {
         List<BankCardRefundDTO> list = CommonTransform.convertToDTOs(refund, BankCardRefundDTO.class);
         com.ciicsh.gto.employeecenter.util.JsonResult jsonResult = bankCardInfoProxy.createBankRefund(list);
-        System.out.println(JSON.toJSONString(jsonResult));
     }
 
     /**
@@ -250,7 +249,7 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
         List<PaymentApplyDetailBO> list = paymentApplyDetailMapper.selectRefundDetail(bo);
         if(!list.isEmpty()){
             uninsuredMedicalMapper.updateStatus(new EmployeePaymentStatusBO(
-                Integer.getInteger(list.get(0).getPaymentApplyId()), SysConstants.UninsuredMedicalStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
+                Integer.valueOf(list.get(0).getPaymentApplyId()), SysConstants.UninsuredMedicalStatus.REFUND.getCode(), dto.getRemark(), SysConstants.JobConstants.SYSTEM_ZH.getName()
             ));
         }
     }

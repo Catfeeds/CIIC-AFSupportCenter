@@ -1,8 +1,23 @@
 spring:
   datasource:
+<<<<<<< HEAD
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://172.16.9.15:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
+      username: root
+      password: a111111
+      max-active: 20
+      min-idle: 8
+      initial-size: 10
+      validation-query: SELECT 'x'
+      filter:
+        stat:
+          enabled: true
+=======
     url: jdbc:mysql://172.16.9.15:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
     username: root
     password: a111111
+>>>>>>> 8a2520b35d3b6aa5b2425235efe3b413dcf57ead
   cloud:
     stream:
       kafka:

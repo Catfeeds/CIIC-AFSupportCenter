@@ -21,4 +21,5 @@
 		<result column="Column_15" property="Column15" />
 	</resultMap>
 
+
 </mapper>

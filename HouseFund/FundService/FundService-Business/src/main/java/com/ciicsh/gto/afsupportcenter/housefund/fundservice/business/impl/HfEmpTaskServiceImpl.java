@@ -6,6 +6,7 @@ import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialD
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBo;
@@ -41,11 +42,20 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
 
     @Override
     public PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo, String exceptTaskCategories) {
-        HfEmpTaskBo hfEmpTaskDTO = pageInfo.toJavaObject(HfEmpTaskBo.class);
+        HfEmpTaskBo hfEmpTaskBo = pageInfo.toJavaObject(HfEmpTaskBo.class);
         if (StringUtils.isNotBlank(exceptTaskCategories)) {
-            hfEmpTaskDTO.setExceptTaskCategories(exceptTaskCategories);
+            hfEmpTaskBo.setExceptTaskCategories(exceptTaskCategories);
         }
-        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryHfEmpTask(hfEmpTaskDTO));
+        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryHfEmpTask(hfEmpTaskBo));
+    }
+
+    @Override
+    public PageRows<HfEmpTaskRejectExportBo> queryHfEmpTaskRejectInPage(PageInfo pageInfo, String exceptTaskCategories) {
+        HfEmpTaskBo hfEmpTaskBo = pageInfo.toJavaObject(HfEmpTaskBo.class);
+        if (StringUtils.isNotBlank(exceptTaskCategories)) {
+            hfEmpTaskBo.setExceptTaskCategories(exceptTaskCategories);
+        }
+        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryHfEmpTaskReject(hfEmpTaskBo));
     }
 
     /**
