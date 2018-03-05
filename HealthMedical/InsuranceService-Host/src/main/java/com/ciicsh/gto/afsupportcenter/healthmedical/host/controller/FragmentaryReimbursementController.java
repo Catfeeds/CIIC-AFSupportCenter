@@ -43,7 +43,7 @@ import java.util.Optional;
     private FragmentaryReimbursementQueryService fragmentaryReimbursementQueryService;
 
     @Log("新增")
-    @RequestMapping(value = "/save", method = {RequestMethod.POST})
+    @PostMapping("/save")
     public JsonResult<Integer> save(@RequestBody FragmentaryReimbursementPO po) {
         int code = business.save(po);
         if(code == 0){
@@ -54,7 +54,7 @@ import java.util.Optional;
     }
 
     @Log("更新")
-    @RequestMapping(value = "/edit", method = {RequestMethod.POST})
+    @PostMapping("/edit")
     public JsonResult<Integer> edit(@RequestBody FragmentaryReimbursementPO po) {
         int code = business.edit(po);
         if(code == 0){
@@ -66,7 +66,7 @@ import java.util.Optional;
 
     @Log("零星报销单条记录查询")
     @GetMapping("/getEntityById")
-    public JsonResult getEntityById(String id) {
+    public JsonResult getEntityById(@RequestBody String id) {
         JsonResult jr = new JsonResult();
         FragmentaryReimbursementPO po = fragmentaryReimbursementQueryService.getById(id);
         if (po == null) {

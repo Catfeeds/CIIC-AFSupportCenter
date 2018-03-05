@@ -39,8 +39,8 @@ public class MedicalRelationTransformController  extends BasicController<Medical
     private MedicalRelationTransformQueryService medicalRelationTransformQueryService;
 
     @Log("新增")
-    @RequestMapping(value = "/save", method = { RequestMethod.POST})
-    public JsonResult<Integer> save(MedicalRelationTransformPO po) {
+    @PostMapping("/save")
+    public JsonResult<Integer> save(@RequestBody MedicalRelationTransformPO po) {
         int code = business.save(po);
         if(code == 0){
             return JsonResultKit.of(400, "无数据更新",  (Integer) null);
@@ -50,8 +50,8 @@ public class MedicalRelationTransformController  extends BasicController<Medical
     }
 
     @Log("更新")
-    @RequestMapping(value = "/edit", method = { RequestMethod.POST})
-    public  JsonResult<Integer>  edit(MedicalRelationTransformPO po) {
+    @PostMapping("/edit")
+    public  JsonResult<Integer>  edit(@RequestBody MedicalRelationTransformPO po) {
         int code = business.edit(po);
         if(code == 0){
             return JsonResultKit.of(400, "无数据更新",  (Integer) null);
@@ -62,7 +62,7 @@ public class MedicalRelationTransformController  extends BasicController<Medical
 
     @Log("医疗关系转移单条记录查询")
     @GetMapping("/getEntityById")
-    public JsonResult getEntityById(String id) {
+    public JsonResult getEntityById(@RequestBody String id) {
         JsonResult jr = new JsonResult();
         MedicalRelationTransformPO po = medicalRelationTransformQueryService.getById(id);
         if (po == null) {
