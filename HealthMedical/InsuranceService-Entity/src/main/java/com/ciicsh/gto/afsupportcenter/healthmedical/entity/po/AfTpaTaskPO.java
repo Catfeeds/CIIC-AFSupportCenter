@@ -18,7 +18,7 @@ import java.io.Serializable;
  * @since 2018-02-20
  */
 @TableName("hm_af_tpa_task")
-public class AfTpaTask implements Serializable {
+public class AfTpaTaskPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -397,7 +397,7 @@ public class AfTpaTask implements Serializable {
 
     @Override
     public String toString() {
-        return "AfTpaTask{" +
+        return "AfTpaTaskPO{" +
             ", afTaskId=" + afTaskId +
             ", taskType=" + taskType +
             ", status=" + status +
