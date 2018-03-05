@@ -322,6 +322,24 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         return JsonResultKit.of(rtnList);
     }
 
+    @RequestMapping("/transEmpTaskQuery")
+    public JsonResult<HfEmpTask> transEmpTaskQuery(@RequestBody HfEmpTaskCreateTransBo hfEmpTaskCreateTransBo) {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("company_id", hfEmpTaskCreateTransBo.getCompanyId());
+        condition.put("employee_id", hfEmpTaskCreateTransBo.getEmployeeId());
+        condition.put("task_category", 9);
+        condition.put("hf_type", hfEmpTaskCreateTransBo.getHfType());
+        condition.put("is_active", 1);
+        List<HfEmpTask> hfEmpTaskList = business.selectByMap(condition);
+        if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
+            if (hfEmpTaskList.size() > 1) {
+                return JsonResultKit.ofError("该雇员的转移任务单数据有重复记录");
+            }
+            return JsonResultKit.of(hfEmpTaskList.get(0));
+        }
+        return JsonResultKit.of();
+    }
+
     @RequestMapping("/createTransEmpTask")
     public JsonResult<HfEmpTask> createTransEmpTask(@RequestBody HfEmpTaskCreateTransBo hfEmpTaskCreateTransBo) {
         Map<String, Object> condition = new HashMap<>();
@@ -345,6 +363,6 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
             }
         }
 
-        return JsonResultKit.ofError("该雇员的转移任务单数据");
+        return JsonResultKit.ofError("该雇员的转移任务单数据不存在");
     }
 }
