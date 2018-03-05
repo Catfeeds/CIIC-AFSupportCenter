@@ -53,7 +53,7 @@
         <result column="employee_id" property="employeeId" />
         <result column="customer_manager" property="customerManager" />
         <result column="service_center" property="serviceCenter" />
-        <result column="pay_amount" property="payAmount" />
+        <result column="pay_amount" property="payamount" />
         <result column="refund_date" property="refundDate" />
         <result column="reason" property="reason" />
     </resultMap>
