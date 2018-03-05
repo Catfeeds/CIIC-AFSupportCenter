@@ -376,7 +376,7 @@
         settlement_area,
         payment_bank,
         payment_way,
-        billReceiver,
+        bill_receiver,
         expire_date AS expire_date_acc,
         ss_username,
         ss_pwd,
