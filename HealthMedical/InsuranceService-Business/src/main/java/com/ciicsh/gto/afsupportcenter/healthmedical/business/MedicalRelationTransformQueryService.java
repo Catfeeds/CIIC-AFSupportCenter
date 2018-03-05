@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.business;
 
 import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.MedicalRelationTransformPO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.MedicalRelationTransformDTO;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -14,7 +15,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
  * @author zhaogang
  * @since 2017-12-04
  */
-public interface MedicalRelationTransformQueryService {
+public interface MedicalRelationTransformQueryService extends IService<MedicalRelationTransformPO> {
     int save(MedicalRelationTransformPO medicalRelationTransform);
 
     int edit(MedicalRelationTransformPO medicalRelationTransform);

@@ -27,6 +27,9 @@ public class StringUtil {
 	public StringUtil() {
 	}
 
+    //前端日期时间格式
+    private static final String DATA_FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+
 	/**
 	 * 得到字符串中某个字符的个数
 	 * @param str  字符串
@@ -971,6 +974,22 @@ public class StringUtil {
 		}
 		return false;
 	}
+
+    /**
+     * 日期字符串转年月字符串
+     *
+     * @param dateString
+     * @return
+     */
+    public static String dateStringToYearMonthString(String dateString) {
+        Date date = new Date();
+        try {
+            date = new SimpleDateFormat(DATA_FORMAT_STRING).parse(dateString);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return getYear_Month(date);
+    }
 
 
 }

@@ -43,38 +43,36 @@ import java.util.Optional;
     private FragmentaryReimbursementQueryService fragmentaryReimbursementQueryService;
 
     @Log("新增")
-    @RequestMapping(value = "/save", method = {RequestMethod.POST})
-    public JsonResult<Integer> save(@RequestBody FragmentaryReimbursementPO po) {
-        int code = business.save(po);
-        if(code == 0){
-            return JsonResultKit.of(400, "无数据更新",  (Integer) null);
-        }else{
-            return JsonResultKit.of(400, "操作成功",  (Integer) null);
+    @PostMapping("/save")
+    public Result save(@RequestBody FragmentaryReimbursementPO po) {
+        try {
+            Boolean code = fragmentaryReimbursementQueryService.insert(po);
+            return ResultGenerator.genSuccessResult(code);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
         }
     }
 
     @Log("更新")
-    @RequestMapping(value = "/edit", method = {RequestMethod.POST})
-    public JsonResult<Integer> edit(@RequestBody FragmentaryReimbursementPO po) {
-        int code = business.edit(po);
-        if(code == 0){
-            return JsonResultKit.of(400, "无数据更新",  (Integer) null);
-        }else{
-            return JsonResultKit.of(400, "操作成功",  (Integer) null);
+    @PostMapping("/edit")
+    public Result edit(@RequestBody FragmentaryReimbursementPO po) {
+        try {
+            Boolean code = fragmentaryReimbursementQueryService.updateAllColumnById(po);
+            return ResultGenerator.genSuccessResult(code);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
         }
     }
 
     @Log("零星报销单条记录查询")
     @GetMapping("/getEntityById")
-    public JsonResult getEntityById(String id) {
-        JsonResult jr = new JsonResult();
-        FragmentaryReimbursementPO po = fragmentaryReimbursementQueryService.getById(id);
-        if (po == null) {
-            return JsonResultKit.of(400, "未查找到数据", (List) null);
-        } else {
-            jr.setData(po);
+    public Result getEntityById(@RequestBody String id) {
+        try {
+            FragmentaryReimbursementPO code = fragmentaryReimbursementQueryService.getById(id);
+            return ResultGenerator.genSuccessResult(code);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
         }
-        return jr;
     }
 
 

@@ -1295,9 +1295,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 detail.setEmpAmount(empAmount);
                 //公司金额 个人基数*个人比例
                 BigDecimal comRatio = detail.getComRatio() != null ? detail.getComRatio() : BigDecimal.valueOf(0);
-                if(empSocial.getItemDicId().equals("DIT00044")){
+                if(empSocial.getItemDicId().equals("DIT00044")){//工伤保险
                     BigDecimal ssComRatio=  baseMapper.fetchInjuryRatio(empArchiveId,p.getStartMonth());
-                    if(ssComRatio.compareTo(new BigDecimal("0")) ==1) {
+//                    if(ssComRatio.compareTo( comRatio) != 0) {  //和前道比例比较
+//                        throw new BusinessException("工伤保险的比例和前道存在差异");
+//                    }
+                    if(ssComRatio.compareTo( new BigDecimal("0")) ==1 ) { //大于0
                         comRatio = ssComRatio;
                     }
                 }
@@ -1885,15 +1888,6 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             roundTypeMap.put(p.getItemcode(),map);
         });
     }
-    /**
-     * 获取社保工伤的企业部分比例
-     * */
-//    private BigDecimal fetchInjuryRatio(Long empArchiveId, String startMonth){
-//
-//         baseMapper.fetchInjuryRatio(empArchiveId,startMonth);
-//
-//        return null;
-//    }
 
 }
 

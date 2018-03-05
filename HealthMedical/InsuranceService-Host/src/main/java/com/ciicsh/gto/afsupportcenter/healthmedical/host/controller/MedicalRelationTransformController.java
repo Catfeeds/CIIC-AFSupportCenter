@@ -39,38 +39,36 @@ public class MedicalRelationTransformController  extends BasicController<Medical
     private MedicalRelationTransformQueryService medicalRelationTransformQueryService;
 
     @Log("新增")
-    @RequestMapping(value = "/save", method = { RequestMethod.POST})
-    public JsonResult<Integer> save(MedicalRelationTransformPO po) {
-        int code = business.save(po);
-        if(code == 0){
-            return JsonResultKit.of(400, "无数据更新",  (Integer) null);
-        }else{
-            return JsonResultKit.of(400, "操作成功",  (Integer) null);
+    @PostMapping("/save")
+    public Result save(@RequestBody MedicalRelationTransformPO po) {
+        try {
+            Boolean code = medicalRelationTransformQueryService.insert(po);
+            return ResultGenerator.genSuccessResult(code);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
         }
     }
 
     @Log("更新")
-    @RequestMapping(value = "/edit", method = { RequestMethod.POST})
-    public  JsonResult<Integer>  edit(MedicalRelationTransformPO po) {
-        int code = business.edit(po);
-        if(code == 0){
-            return JsonResultKit.of(400, "无数据更新",  (Integer) null);
-        }else{
-            return JsonResultKit.of(400, "操作成功",  (Integer) null);
+    @PostMapping("/edit")
+    public  Result edit(@RequestBody MedicalRelationTransformPO po) {
+        try {
+            Boolean code = medicalRelationTransformQueryService.updateAllColumnById(po);
+            return ResultGenerator.genSuccessResult(code);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
         }
     }
 
     @Log("医疗关系转移单条记录查询")
     @GetMapping("/getEntityById")
-    public JsonResult getEntityById(String id) {
-        JsonResult jr = new JsonResult();
-        MedicalRelationTransformPO po = medicalRelationTransformQueryService.getById(id);
-        if (po == null) {
-            return JsonResultKit.of(400, "未查找到数据", (List) null);
-        } else {
-            jr.setData(po);
+    public Result getEntityById(@RequestBody String id) {
+        try {
+            MedicalRelationTransformPO code = medicalRelationTransformQueryService.getById(id);
+            return ResultGenerator.genSuccessResult(code);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
         }
-        return jr;
     }
 
     @Log("医疗关系转移查询")
