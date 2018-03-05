@@ -94,19 +94,18 @@
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
-        LEFT JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
-        LEFT JOIN hf_com_account hcas ON hcas.com_account_id = hacr.com_account_id AND hcas.is_active = 1 AND hcas.hf_account_type = 3
+        <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
+            INNER JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
+            INNER JOIN hf_com_account hcas ON hcas.com_account_id = hacr.com_account_id AND hcas.is_active = 1 AND hcas.hf_account_type = 3
+        </if>
         <if test="hfAccountType != null">
             AND hcas.hf_account_type = #{hfAccountType}
-        </if>
-        <if test="hfType != null">
-            AND hcas.hf_type = #{hfType}
         </if>
         <if test="paymentBank != null">
             AND hcas.payment_bank = #{paymentBank}
         </if>
         <if test="hfComAccount != null">
-            LEFT JOIN hf_com_account_class hcac ON hcas.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = het.hf_type
+            INNER JOIN hf_com_account_class hcac ON hcas.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = het.hf_type
             AND hcac.hf_com_account = #{hfComAccount}
         </if>
         <where>
@@ -129,6 +128,9 @@
             <if test="companyId != null">
                 AND sc.company_id = #{companyId}
             </if>
+            <if test="hfType != null">
+                AND het.hf_type = #{hfType}
+            </if>
             <if test="urgent == 1">
                 AND het.urgent = #{urgent}
             </if>
@@ -141,19 +143,19 @@
             <if test="processStatus == 1">
                 AND het.submit_time <![CDATA[ <= ]]>
                 (
-                SELECT CASE WHEN DAY(CURDATE()) > hca.close_day THEN
-                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hca.close_day)
+                SELECT CASE WHEN DAY(CURDATE()) > hcas.close_day THEN
+                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hcas.close_day)
                 ELSE
-                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hca.close_day) END
+                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hcas.close_day) END
                 )
             </if>
             <if test="processStatus == 2">
                 AND het.submit_time >
                 (
-                SELECT CASE WHEN DAY(CURDATE()) > hca.close_day THEN
-                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hca.close_day)
+                SELECT CASE WHEN DAY(CURDATE()) > hcas.close_day THEN
+                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hcas.close_day)
                 ELSE
-                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hca.close_day) END
+                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hcas.close_day) END
                 )
             </if>
         </where>
@@ -178,18 +180,17 @@
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
-        LEFT JOIN hf_com_account hcas ON hcas.is_active = 1 AND hcas.hf_account_type = 1
+        <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
+          INNER JOIN hf_com_account hcas ON hcas.is_active = 1 AND hcas.hf_account_type = 1
+        </if>
         <if test="hfAccountType != null">
             AND hcas.hf_account_type = #{hfAccountType}
-        </if>
-        <if test="hfType != null">
-            AND hcas.hf_type = #{hfType}
         </if>
         <if test="paymentBank != null">
             AND hcas.payment_bank = #{paymentBank}
         </if>
         <if test="hfComAccount != null">
-            LEFT JOIN hf_com_account_class hcac ON hcas.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = het.hf_type
+            INNER JOIN hf_com_account_class hcac ON hcas.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = het.hf_type
             AND hcac.hf_com_account = #{hfComAccount}
         </if>
         <where>
@@ -212,6 +213,9 @@
             <if test="companyId != null">
                 AND sc.company_id = #{companyId}
             </if>
+            <if test="hfType != null">
+                AND het.hf_type = #{hfType}
+            </if>
             <if test="urgent == 1">
                 AND het.urgent = #{urgent}
             </if>
@@ -224,19 +228,19 @@
             <if test="processStatus == 1">
                 AND het.submit_time <![CDATA[ <= ]]>
                 (
-                SELECT CASE WHEN DAY(CURDATE()) > hca.close_day THEN
-                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hca.close_day)
+                SELECT CASE WHEN DAY(CURDATE()) > hcas.close_day THEN
+                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hcas.close_day)
                 ELSE
-                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hca.close_day) END
+                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hcas.close_day) END
                 )
             </if>
             <if test="processStatus == 2">
                 AND het.submit_time >
                 (
-                SELECT CASE WHEN DAY(CURDATE()) > hca.close_day THEN
-                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hca.close_day)
+                SELECT CASE WHEN DAY(CURDATE()) > hcas.close_day THEN
+                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hcas.close_day)
                 ELSE
-                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hca.close_day) END
+                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hcas.close_day) END
                 )
             </if>
         </where>
@@ -260,19 +264,18 @@
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
-        LEFT JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
-        LEFT JOIN hf_com_account hcas ON hcas.com_account_id = hacr.com_account_id AND hcas.is_active = 1 AND hcas.hf_account_type = 3
+        <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
+            INNER JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
+            INNER JOIN hf_com_account hcas ON hcas.com_account_id = hacr.com_account_id AND hcas.is_active = 1 AND hcas.hf_account_type = 3
+        </if>
         <if test="hfAccountType != null">
             AND hcas.hf_account_type = #{hfAccountType}
-        </if>
-        <if test="hfType != null">
-            AND hcas.hf_type = #{hfType}
         </if>
         <if test="paymentBank != null">
             AND hcas.payment_bank = #{paymentBank}
         </if>
         <if test="hfComAccount != null">
-            LEFT JOIN hf_com_account_class hcac ON hcas.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = het.hf_type
+            INNER JOIN hf_com_account_class hcac ON hcas.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = het.hf_type
             AND hcac.hf_com_account = #{hfComAccount}
         </if>
         <where>
@@ -295,6 +298,9 @@
             <if test="companyId != null">
                 AND sc.company_id = #{companyId}
             </if>
+            <if test="hfType != null">
+                AND het.hf_type = #{hfType}
+            </if>
             <if test="urgent == 1">
                 AND het.urgent = #{urgent}
             </if>
@@ -310,19 +316,19 @@
             <if test="processStatus == 1">
                 AND het.submit_time <![CDATA[ <= ]]>
                 (
-                SELECT CASE WHEN DAY(CURDATE()) > hca.close_day THEN
-                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hca.close_day)
+                SELECT CASE WHEN DAY(CURDATE()) > hcas.close_day THEN
+                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hcas.close_day)
                 ELSE
-                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hca.close_day) END
+                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hcas.close_day) END
                 )
             </if>
             <if test="processStatus == 2">
                 AND het.submit_time >
                 (
-                SELECT CASE WHEN DAY(CURDATE()) > hca.close_day THEN
-                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hca.close_day)
+                SELECT CASE WHEN DAY(CURDATE()) > hcas.close_day THEN
+                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hcas.close_day)
                 ELSE
-                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hca.close_day) END
+                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hcas.close_day) END
                 )
             </if>
         </where>
@@ -344,18 +350,17 @@
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
-        LEFT JOIN hf_com_account hcas ON hcas.is_active = 1 AND hcas.hf_account_type = 1
+        <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
+            INNER JOIN hf_com_account hcas ON hcas.is_active = 1 AND hcas.hf_account_type = 1
+        </if>
         <if test="hfAccountType != null">
             AND hcas.hf_account_type = #{hfAccountType}
-        </if>
-        <if test="hfType != null">
-            AND hcas.hf_type = #{hfType}
         </if>
         <if test="paymentBank != null">
             AND hcas.payment_bank = #{paymentBank}
         </if>
         <if test="hfComAccount != null">
-            LEFT JOIN hf_com_account_class hcac ON hcas.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = het.hf_type
+            INNER JOIN hf_com_account_class hcac ON hcas.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = het.hf_type
             AND hcac.hf_com_account = #{hfComAccount}
         </if>
         <where>
@@ -378,6 +383,9 @@
             <if test="companyId != null">
                 AND sc.company_id = #{companyId}
             </if>
+            <if test="hfType != null">
+                AND het.hf_type = #{hfType}
+            </if>
             <if test="urgent == 1">
                 AND het.urgent = #{urgent}
             </if>
@@ -393,19 +401,19 @@
             <if test="processStatus == 1">
                 AND het.submit_time <![CDATA[ <= ]]>
                 (
-                SELECT CASE WHEN DAY(CURDATE()) > hca.close_day THEN
-                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hca.close_day)
+                SELECT CASE WHEN DAY(CURDATE()) > hcas.close_day THEN
+                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hcas.close_day)
                 ELSE
-                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hca.close_day) END
+                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hcas.close_day) END
                 )
             </if>
             <if test="processStatus == 2">
                 AND het.submit_time >
                 (
-                SELECT CASE WHEN DAY(CURDATE()) > hca.close_day THEN
-                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hca.close_day)
+                SELECT CASE WHEN DAY(CURDATE()) > hcas.close_day THEN
+                CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hcas.close_day)
                 ELSE
-                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hca.close_day) END
+                CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hcas.close_day) END
                 )
             </if>
         </where>
