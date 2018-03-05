@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.net.InetAddress;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -212,7 +213,37 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         }
         return true;
     }
+    /**
+     * add by linhui
+     * 根据不同任务单类型，把前道传递的社保起缴月份（业务老师们都习惯叫执行日期）
+     * submitTime=startMonth+系统日
+     * submitTime:任务发起日期
+     *
+     * */
+    private void resetTaskSubmitTime(SsEmpTask ssEmpTask){
+            String submitMonth="";
+            LocalDateTime submitTime;
+            String today=LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd"));
+            if(ssEmpTask.getTaskCategory()==5){//转出任务单
+                submitMonth=ssEmpTask.getEndMonth()+today+" 00:00:00";
+            }else {
+                submitMonth=ssEmpTask.getStartMonth()+today+" 00:00:00";
+            }
+        submitTime=LocalDateTime.parse(submitMonth, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
+        }
+
+    public static void main(String[] args){
+        SsEmpTask ssEmpTask=new SsEmpTask();
+        LocalDateTime submitTime;
+        String today=LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd"));
+        submitTime= LocalDateTime.parse("2015-01-"+today+" 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        System.out.println( LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd")));
+        System.out.println(submitTime);
+        ssEmpTask.setSubmitTime(submitTime);
+        DateTimeFormatter.ofPattern("dd");
+
+    }
     /**
      * 更新旧的雇员任务单
      *

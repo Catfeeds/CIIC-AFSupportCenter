@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -62,4 +63,6 @@ public interface SsEmpTaskMapper extends BaseMapper<SsEmpTask> {
     String fetchEmpArchiveId(@Param("companyId") String companyId,@Param("employeeId") String employeeId);
 
     SsEmpTaskBO selectIdNumByEmployeeId(@Param("employeeId") String employeeId);
+
+    BigDecimal fetchInjuryRatio(@Param("empArchiveId")Long empArchiveId, @Param("startMonth")String startMonth);
 }
