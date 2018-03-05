@@ -2,10 +2,10 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity;
 
 import com.baomidou.mybatisplus.enums.IdType;
 import com.baomidou.mybatisplus.annotations.TableId;
-import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -26,14 +26,14 @@ public class HfComAccountClass implements Serializable {
      * 外键：企业公积金账户
      */
 	@TableField("com_account_id")
-	private String comAccountId;
+	private Long comAccountId;
     /**
      * 1 基本公积金、2 补充公积金
      */
 	@TableField("hf_type")
 	private Integer hfType;
     /**
-     * 企业基本补充公积金账号
+     * 企业基本/补充公积金账号
      */
 	@TableField("hf_com_account")
 	private String hfComAccount;
@@ -61,7 +61,7 @@ public class HfComAccountClass implements Serializable {
      * 王莺说:有小部分客户的基本和补充的末次汇缴月是不相同的,比如有些客户的补充公积金原来中智代缴，后来改成自己缴
      */
 	@TableField("com_hf_month")
-	private Integer comHfMonth;
+	private String comHfMonth;
     /**
      * 1 销户 2 公司自做 3 转其他代理商
      */
@@ -76,12 +76,12 @@ public class HfComAccountClass implements Serializable {
      * 创建时间
      */
 	@TableField("created_time")
-	private LocalDateTime createdTime;
+	private Date createdTime;
     /**
      * 最后更新时间
      */
 	@TableField("modified_time")
-	private LocalDateTime modifiedTime;
+	private Date modifiedTime;
     /**
      * 创建者登录名
      */
@@ -102,11 +102,11 @@ public class HfComAccountClass implements Serializable {
 		this.comAccountClassId = comAccountClassId;
 	}
 
-	public String getComAccountId() {
+	public Long getComAccountId() {
 		return comAccountId;
 	}
 
-	public void setComAccountId(String comAccountId) {
+	public void setComAccountId(Long comAccountId) {
 		this.comAccountId = comAccountId;
 	}
 
@@ -158,11 +158,11 @@ public class HfComAccountClass implements Serializable {
 		this.accountTempStore = accountTempStore;
 	}
 
-	public Integer getComHfMonth() {
+	public String getComHfMonth() {
 		return comHfMonth;
 	}
 
-	public void setComHfMonth(Integer comHfMonth) {
+	public void setComHfMonth(String comHfMonth) {
 		this.comHfMonth = comHfMonth;
 	}
 
@@ -182,19 +182,19 @@ public class HfComAccountClass implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public LocalDateTime getCreatedTime() {
+	public Date getCreatedTime() {
 		return createdTime;
 	}
 
-	public void setCreatedTime(LocalDateTime createdTime) {
+	public void setCreatedTime(Date createdTime) {
 		this.createdTime = createdTime;
 	}
 
-	public LocalDateTime getModifiedTime() {
+	public Date getModifiedTime() {
 		return modifiedTime;
 	}
 
-	public void setModifiedTime(LocalDateTime modifiedTime) {
+	public void setModifiedTime(Date modifiedTime) {
 		this.modifiedTime = modifiedTime;
 	}
 
