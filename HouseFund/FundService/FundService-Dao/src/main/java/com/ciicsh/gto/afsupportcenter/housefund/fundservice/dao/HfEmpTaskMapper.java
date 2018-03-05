@@ -47,4 +47,11 @@ public interface HfEmpTaskMapper extends BaseMapper<HfEmpTask> {
      * @return
      */
     int insertHfEmpTask(HfEmpTask hfEmpTask);
+
+    /**
+     *  根据现有的任务单创建转移任务单
+     *  @param hfEmpTaskCreateTransBo
+     * @return
+     */
+    int createTransEmpTask(HfEmpTaskCreateTransBo hfEmpTaskCreateTransBo);
 }

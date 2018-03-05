@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business;
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskHandlePostBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -82,5 +83,4 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @param ssEmpTask
      */
     List<HfEmpTask> queryByTaskId(HfEmpTask ssEmpTask);
-
 }
