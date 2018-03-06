@@ -100,12 +100,12 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
     }
 
     /**
-     * 获得未处理企业任务单列表
+     * 获得企业任务单列表
      * @param hfComTaskBo
      * @return
      */
     @Override
-    public List<HfComTaskBo> getNoProcessCompanyTasks(HfComTaskBo hfComTaskBo) {
+    public List<HfComTaskBo> getCompanyTasks(HfComTaskBo hfComTaskBo) {
         return hfComTaskMapper.queryCompanyTask(hfComTaskBo);
     }
 

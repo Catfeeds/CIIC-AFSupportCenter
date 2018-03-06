@@ -120,6 +120,7 @@
                 AND hft.task_status IN (${taskStatusString})
             </if>
         </where>
+        ORDER BY hft.com_task_id
     </select>
 
 </mapper>

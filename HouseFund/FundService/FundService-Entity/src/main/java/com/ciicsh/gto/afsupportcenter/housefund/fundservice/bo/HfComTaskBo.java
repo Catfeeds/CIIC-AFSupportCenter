@@ -1,22 +1,27 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo;
 
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
+@ExcelTarget("HfComTaskBo")
 public class HfComTaskBo extends HfComTask {
 
     /**
      * 任务单id
      */
+    @Excel(name = "任务单编号", orderNum = "1")
     private Long comTaskId;
 
     /**
      * 1 开户 2 转入  3 变更 4 终止 5销户
      */
+    @Excel(name = "任务单类型", orderNum = "2")
     private String taskCategoryName;
 
     /**
@@ -27,11 +32,13 @@ public class HfComTaskBo extends HfComTask {
     /**
      * 客户Id
      */
+    @Excel(name = "客户编号", orderNum = "3")
     private String companyId;
 
     /**
      * 客户名称
      */
+    @Excel(name = "客户名称", orderNum = "4")
     private String companyName;
 
     /**
@@ -52,16 +59,19 @@ public class HfComTaskBo extends HfComTask {
     /**
      * 发起人姓名
      */
+    @Excel(name = "发起人",orderNum = "5")
     private String submitterName;
 
     /**
      * 发起时间
      */
+    @Excel(name = "发起时间", orderNum = "6")
     private String submitTimeString;
 
     /**
      * 任务发起人备注
      */
+    @Excel(name = "备注",orderNum = "7")
     private String submitRemark;
 
     /**
