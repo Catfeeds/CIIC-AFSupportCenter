@@ -30,5 +30,5 @@ public interface SsComAccountMapper extends BaseMapper<SsComAccount> {
      * @param comAccountId 企业账户ID
      * @return
      */
-    SsAccountComExt getSsComAccount(@Param("comAccountId") long comAccountId);
+    List<SsAccountComExt> getSsComAccount(@Param("comAccountId") long comAccountId);
 }

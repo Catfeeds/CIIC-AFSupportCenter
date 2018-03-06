@@ -119,4 +119,14 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
         ssEmpArchiveBO.setResidenceAttribute(null==employeeInfoDTO.getResidentType()?null:String.valueOf(employeeInfoDTO.getResidentType()));
         ssEmpArchiveBO.setContactAddress(null==employeeInfoDTO.getAddress()?null:employeeInfoDTO.getAddress());
     }
+
+    /**
+     * 批量办理时 查询 新进任务 雇员是否已经有过新进
+     * @param empTaskId
+     * @return
+     */
+    @Override
+    public SsEmpArchiveBO queryEmployeeIsnewOrChangeInto(String empTaskId){
+        return baseMapper.queryByEmpTaskId(empTaskId);
+    }
 }

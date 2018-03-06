@@ -148,7 +148,8 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     @Log("雇员任务办理")
     @PostMapping("/handle")
     public JsonResult<Boolean> handle(@RequestBody SsEmpTaskBO bo) {
-       boolean result =  business.saveHandleData(bo);
+        //false 表示单个办理
+       boolean result =  business.saveHandleData(bo,false);
         return JsonResultKit.of(result);
     }
 
@@ -235,7 +236,8 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             p.setHandleMonth(handleMonth.toString());
             p.setModifiedTime(LocalDateTime.now());
             p.setModifiedBy("xsj");
-            business.saveHandleData(p);
+            //true 表示批量办理
+            business.saveHandleData(p,true);
         });
         return JsonResultKit.of(true);
     }
