@@ -92,6 +92,8 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
             hfEmpTask.setEmployeeId(companyDto.getEmployeeId());
             hfEmpTask.setSubmitterId(companyDto.getCreatedBy());
             hfEmpTask.setSubmitterRemark(companyDto.getRemark());
+            //福利办理方
+            hfEmpTask.setWelfareUnit(companyDto.getFundUnit());
         }
         hfEmpTask.setSubmitTime(LocalDate.now());
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
@@ -102,9 +104,6 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         //是否更正 1 是 0 否
         hfEmpTask.setIsChange(isChange);
         hfEmpTask.setTaskFormContent(JSON.toJSONString(dto));
-
-        //福利办理方
-        hfEmpTask.setWelfareUnit(companyDto.getFundUnit());
 
         //前道传递的政策明细ID,用它调用系统中心获取进位方式
         if (dto.getNowAgreement() != null && dto.getNowAgreement().getFundSocialRuleId() != null) {
