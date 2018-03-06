@@ -18,6 +18,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
     "com.ciicsh.gto.productcenter.apiservice.api",
     "com.ciicsh.gto.settlementcenter.payment.cmdapi"
 })
+
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gt1","com.ciicsh.gto.afsupportcenter.healthmedical"})
 @EnableDiscoveryClient
 @MapperScan(basePackages = {"com.ciicsh.gto.afsupportcenter.healthmedical.dao"})

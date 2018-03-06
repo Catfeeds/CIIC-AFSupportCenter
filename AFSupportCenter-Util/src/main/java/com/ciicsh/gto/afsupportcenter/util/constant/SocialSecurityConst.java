@@ -17,6 +17,7 @@ public interface SocialSecurityConst {
     public static final String REPAIR_REASON_KEY = "RepairReason";
     public static final String HANDLE_STATUS_KEY = "HandleStatus";
     public static final String FUND_OUT_UNIT_KEY = "FundOutUnit";
+    public static final String REMIT_WAY_KEY = "RemitWay";
 
     //结算区县
     public static final Map<String, String> DISTRICT_MAP = new HashMap<String, String>() {
@@ -287,6 +288,14 @@ public interface SocialSecurityConst {
             add("市公积金封存办(中心)");
             add("中智大库");
             add("中智外包");
+        }
+    };
+
+    Map<String, String> REMIT_WAY_MAP = new HashMap<String, String>() {
+        {
+            put("1", "正常");
+            put("2", "补缴");
+            put("3", "调整");
         }
     };
 

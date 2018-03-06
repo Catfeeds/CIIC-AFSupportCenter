@@ -119,7 +119,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     YearMonth endMonthDate = YearMonth.parse(params.getString("endMonth"), formatter);
 
                     if (hfMonthDate.isBefore(endMonthDate) || hfMonthDate.equals(endMonthDate)) {
-                        return JsonResultKit.ofError("请于缴费月到达截止缴费月前一个月来办理当前任务单");
+                        return JsonResultKit.ofError("请于客户汇缴月到达截止缴费月前一个月来办理当前任务单");
                     } else if (hfMonthDate.isAfter(endMonthDate.plusMonths(1))) {
                         return JsonResultKit.ofError("当前任务单已逾期，不能办理");
                     }
@@ -206,7 +206,25 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                         case HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN:
                         case HfEmpTaskConstant.TASK_CATEGORY_IN_MULTI_TRANS_IN:
                         case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN:
-                            hfArchiveBasePeriodList = createEmpBasePeriod(inputHfEmpTask, hfEmpTaskPeriodList);
+                            List<HfEmpTaskPeriod> createEmpBasePeriodList =  hfEmpTaskPeriodList.stream().filter(e
+                                -> e.getRemitWay() != HfEmpTaskPeriodConstant.REMIT_WAY_REPAIR).collect(Collectors.toList());
+                            if (CollectionUtils.isNotEmpty(createEmpBasePeriodList)) {
+                                hfArchiveBasePeriodList = createEmpBasePeriod(inputHfEmpTask, createEmpBasePeriodList);
+                            } else {
+                                throw new BusinessException("正常汇缴或调整的任务单费用段数据创建失败");
+                            }
+                            List<HfEmpTaskPeriod> repairEmpBasePeriodList =  hfEmpTaskPeriodList.stream().filter(e
+                                -> e.getRemitWay() == HfEmpTaskPeriodConstant.REMIT_WAY_REPAIR).collect(Collectors.toList());
+                            if (CollectionUtils.isNotEmpty(repairEmpBasePeriodList)) {
+                                List<HfArchiveBasePeriod> repairArchiveBasePeriodList = repairEmpBasePeriod(inputHfEmpTask, repairEmpBasePeriodList);
+                                if (CollectionUtils.isNotEmpty(repairArchiveBasePeriodList)) {
+                                    hfArchiveBasePeriodList.addAll(repairArchiveBasePeriodList);
+                                } else {
+                                    // TODO log.error uncovered logic
+                                    System.out.println("Creation type emp task, repairArchiveBasePeriodList is empty, it caused by uncovered logic");
+                                    throw new BusinessException("补缴公积金费用段数据取得失败");
+                                }
+                            }
                             createHfMonthCharge(inputHfEmpTask, hfArchiveBasePeriodList);
                             break;
                         case HfEmpTaskConstant.TASK_CATEGORY_REPAIR:
@@ -708,19 +726,6 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 break;
             case HfEmpTaskConstant.TASK_CATEGORY_REPAIR:
                 paymentType[0] = HfMonthChargeConstant.PAYMENT_TYPE_REPAIR;
-                // 如果是补缴任务单，雇员月度汇缴明细库数据可能会被覆盖（某些年月被多次补缴）
-                HfMonthChargeBo hfMonthChargeBo = new HfMonthChargeBo();
-                hfMonthChargeBo.setInactive(true);
-                hfMonthChargeBo.setEmpArchiveId(hfEmpTask.getEmpArchiveId());
-                hfMonthChargeBo.setHfType(hfEmpTask.getHfType());
-                hfMonthChargeBo.setSsMonthBelongStart(hfEmpTask.getStartMonth());
-                hfMonthChargeBo.setSsMonthBelongEnd(hfEmpTask.getEndMonth());
-                hfMonthChargeBo.setPaymentTypes(StringUtils.join(new Integer[] {
-                    HfMonthChargeConstant.PAYMENT_TYPE_REPAIR,
-                    HfMonthChargeConstant.PAYMENT_TYPE_DIFF_REPAIR
-                }, ','));
-                hfMonthChargeBo.setModifiedBy("test"); // TODO
-                hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
                 break;
             case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN:
                 paymentType[0] = HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_OPEN;
@@ -758,6 +763,24 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 BigDecimal empAmount = e.getAmountEmp();
                 BigDecimal amount = e.getAmount();
 
+                if (e.getRemitWay() == HfEmpTaskPeriodConstant.REMIT_WAY_REPAIR) {
+                    paymentType[0] = HfMonthChargeConstant.PAYMENT_TYPE_REPAIR;
+                    // 如果是补缴任务单，雇员月度汇缴明细库数据可能会被覆盖（某些年月被多次补缴）
+                    HfMonthChargeBo hfMonthChargeBo = new HfMonthChargeBo();
+                    hfMonthChargeBo.setInactive(true);
+                    hfMonthChargeBo.setEmpArchiveId(e.getEmpArchiveId());
+                    hfMonthChargeBo.setHfType(e.getHfType());
+//                hfMonthChargeBo.setHfMonth(e.getHfMonth()); // 是否按汇缴月份来覆盖？如果是，那么非相同汇缴月份保留，新增数据需计算与原有雇员所属公积金月份相同数据的差额
+                    hfMonthChargeBo.setSsMonthBelongStart(e.getStartMonth());
+                    hfMonthChargeBo.setSsMonthBelongEnd(e.getEndMonth());
+                    hfMonthChargeBo.setPaymentTypes(StringUtils.join(new Integer[] {
+                        HfMonthChargeConstant.PAYMENT_TYPE_REPAIR,
+                        HfMonthChargeConstant.PAYMENT_TYPE_DIFF_REPAIR
+                    }, ','));
+                    hfMonthChargeBo.setModifiedBy(hfEmpTask.getCreatedBy());
+                    hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
+                }
+
                 if (e.getDiffRepair() != null && e.getDiffRepair()) {
                     paymentType[0] = HfMonthChargeConstant.PAYMENT_TYPE_DIFF_REPAIR;
 //            } else {
@@ -784,8 +807,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     hfMonthCharge.setRatioCom(e.getRatioCom());
                     hfMonthCharge.setRatioEmp(e.getRatioEmp());
                     hfMonthCharge.setPaymentType(paymentType[0]);
-                    hfMonthCharge.setCreatedBy("test"); // TODO
-                    hfMonthCharge.setModifiedBy("test"); // TODO
+                    hfMonthCharge.setCreatedBy(hfEmpTask.getCreatedBy());
+                    hfMonthCharge.setModifiedBy(hfEmpTask.getCreatedBy());
                     hfMonthChargeList.add(hfMonthCharge);
                 }
                 hfMonthChargeService.insertBatch(hfMonthChargeList);
@@ -814,7 +837,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 hfMonthCharge.setMonthChargeId(hfMonthChargeList.get(0).getMonthChargeId());
                 hfMonthCharge.setEmpTaskId(hfEmpTask.getEmpTaskId());
                 hfMonthCharge.setPaymentType(paymentType[0]);
-                hfMonthCharge.setModifiedBy("test"); // TODO
+                hfMonthCharge.setModifiedBy(hfEmpTask.getCreatedBy());
                 hfMonthChargeService.updateById(hfMonthCharge);
             } else {
                 // TODO 新进或转入当月就转出或封存时？

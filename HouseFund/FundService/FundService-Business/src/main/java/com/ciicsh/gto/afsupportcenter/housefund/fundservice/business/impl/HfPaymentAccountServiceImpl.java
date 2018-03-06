@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -27,25 +28,17 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
     HfPaymentMapper hfPaymentMapper;
 
     @Override
-    @Transactional(
-        rollbackFor = {Exception.class}
-    )
-    public boolean saveRejectResult(Long pkId, String remark, Integer payStatus) {
-        boolean bol = false;
+    @Transactional(rollbackFor = {Exception.class})
+    public boolean updatePaymentInfo(Long pkId, String remark, Integer payStatus) {
         HfPayment hfPayment = new HfPayment();
         hfPayment.setPaymentId(pkId.intValue());
         //根据ID获取到记录
         hfPayment = hfPaymentMapper.selectOne(hfPayment);
 
         if (hfPayment != null) {
-            int paymentState = 0;
-
             //更新批次状态 支付状态:付款状态(-1:审核未过;9.支付成功;-9:支付失败;)
-            if (payStatus == 9) {
-                paymentState = 8;
-            } else {
-                //审核未过
-                paymentState = 7;
+            int paymentState = payStatus == 9 ? 8 :7;
+            if(null != remark){
                 hfPayment.setRejectionRemark(remark);
             }
             hfPayment.setPaymentState(paymentState);
@@ -56,19 +49,18 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
             //将批次下的客户费用明细的状态也改为已申请到财务部
             //取出批次下所有的客户费用
             List<HfPaymentAccount> ssPaymentComList = baseMapper.getByPaymentId(hfPayment.getPaymentId());
-            if (ssPaymentComList != null) {
-                HfPaymentAccount hfPaymentAcc = null;
-                for (int i = 0; i < ssPaymentComList.size(); i++) {
-                    //修改状态为已申请到财务部
-                    hfPaymentAcc = ssPaymentComList.get(i);
-                    hfPaymentAcc.setPaymentStatus(paymentState);
-                    hfPaymentAcc.setModifiedBy("system");
-                    hfPaymentAcc.setModifiedTime(LocalDateTime.now());
-                }
+            if (null != ssPaymentComList && ssPaymentComList.size() > 0) {
+                ssPaymentComList
+                    .stream()
+                    .map(x->{
+                        x.setPaymentStatus(paymentState);
+                        x.setModifiedBy("system");
+                        x.setModifiedTime(LocalDateTime.now());
+                        return x;})
+                    .collect(Collectors.toList());
                 this.updateBatchById(ssPaymentComList);
             }
         }
-        bol = true;
-        return bol;
+        return true;
     }
 }
