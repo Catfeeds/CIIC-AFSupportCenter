@@ -6,7 +6,6 @@ import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialD
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskHandlePostBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
@@ -62,7 +61,6 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
 
     /**
      * 查询任务单信息
-     *
      * @param hfEmpTask
      */
     @Override
@@ -71,56 +69,9 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
     }
 
     /**
-     * <p>Description: 保存数据到雇员任务单表</p>
-     *
-     * @param taskMsgDTO   消息队列接受的对象
-     * @param taskCategory 任务类型
-     * @param isChange     是否更正任务单1 是 0 否
-     * @param dto          取得的雇员信息
-     * @return
-     * @author zhangxj
-     * @date 2017-12-28
-     */
-    @Transactional(rollbackFor = {Exception.class})
-    @Override
-    public boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer taskCategory, Integer isChange,
-                                 AfEmployeeInfoDTO dto) {
-        boolean result = false;
-        try {
-            //插入数据到雇员任务单表
-            addEmpTask(taskMsgDTO, fundCategory, taskCategory, isChange, dto);
-
-            //更新旧的雇员任务单
-//            updateEmpTaskTb(taskMsgDTO, dto);
-
-            result = true;
-        } catch (Exception e) {
-            result = false;
-            throw new RuntimeException("保存到雇员任务单表处理异常");
-        }
-        return result;
-    }
-
-    /**
-     * 更新旧的雇员任务单
-     *
-     * @param taskMsgDTO 消息队列接受的对象
-     * @param dto        取得的雇员信息
-     * @return
-     * @author zhangxj
-     * @date 2017-12-28
-     */
-    @Transactional(rollbackFor = {Exception.class})
-    @Override
-    public boolean updateEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, String fundCategory, AfEmployeeInfoDTO dto) {
-        //更新旧的雇员任务单
-        return updateEmpTask(taskMsgDTO, fundCategory, dto);
-    }
-
-    /**
-     * 保存数据到雇员任务单表
-     *
+     * 添加数据到雇员任务单表
      * @param taskMsgDTO
+     * @param fundCategory
      * @param taskCategory
      * @param isChange
      * @param dto
@@ -187,13 +138,15 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
     }
 
     /**
-     * 更新旧的雇员任务单
-     *
-     * @param taskMsgDTO
-     * @param dto
+     * 修改数据到雇员任务单表
+     * @param taskMsgDTO 消息队列接受的对象
+     * @param fundCategory 公积金类别（基本或者补充公积金）
+     * @param dto        取得的雇员信息
      * @return
      */
-    private boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, AfEmployeeInfoDTO dto) {
+    @Transactional(rollbackFor = {Exception.class})
+    @Override
+    public boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, AfEmployeeInfoDTO dto) {
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
 
         AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();

@@ -40,7 +40,7 @@ public class KafkaReceiver {
     private AfEmployeeCompanyProxy afEmployeeCompanyProxy;
 
     /**
-     * 公积金雇员新进任务单
+     * 雇员公积金新进任务单
      * @param message
      */
     @StreamListener(TaskSink.AF_EMP_IN)
@@ -54,14 +54,14 @@ public class KafkaReceiver {
             if (null != paramMap && paramMap.get("fundType") != null) {
                 String taskCategory = paramMap.get("fundType").toString();
                 String fundCategory = TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
-                boolean result = saveEmpTask(taskMsgDTO, fundCategory, Integer.parseInt(taskCategory));
-                logger.info("end fundEmpIn: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (result ? "成功!" : "失败!"));
+                boolean result = saveEmpTask(taskMsgDTO, fundCategory, Integer.parseInt(taskCategory),0);
+                logger.info("end fundEmpIn: " + JSON.toJSONString(taskMsgDTO) + "，result：" + (result ? "Success!" : "Fail!"));
             }
         }
     }
 
     /**
-     * 公积金雇员终止任务单
+     * 雇员公积金终止任务单
      * @param message
      */
     @StreamListener(TaskSink.AF_EMP_OUT)
@@ -70,174 +70,145 @@ public class KafkaReceiver {
         logger.info("start fundEmpOut: " + JSON.toJSONString(taskMsgDTO));
         if (TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
             String fundCategory = TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
-            boolean res = saveEmpTask(taskMsgDTO, fundCategory,TaskCategory.LEAVETURNOUT.getCategory());
-            logger.info("end fundEmpOut:" + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
+            boolean res = saveEmpTask(taskMsgDTO, fundCategory,TaskCategory.LEAVETURNOUT.getCategory(),0);
+            logger.info("end fundEmpOut:" + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
         }
     }
 
     /**
-     * 订阅雇员补缴任务单
-     *
+     * 雇员公积金补缴任务单
      * @param message
      */
     @StreamListener(TaskSink.AF_EMP_MAKE_UP)
-    public void receiveChargeResume(Message<TaskCreateMsgDTO> message) {
+    public void funEmpRepay(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
-        //公积金
-        boolean res = false;
-        if (TaskSink.FUND_MAKE_UP.equals(taskMsgDTO.getTaskType())
-            || TaskSink.ADD_FUND_MAKE_UP.equals(taskMsgDTO.getTaskType())) {
-            boolean bolRes = checkDupSsEmpTask(taskMsgDTO);
-            if (bolRes) {
-                String fundCategory = TaskSink.FUND_MAKE_UP.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
-                res = saveEmpTask(taskMsgDTO, fundCategory, TaskCategory.REPAY.getCategory());
-                logger.info("收到消息 公积金雇员补缴: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
-            }
+        logger.info("start funEmpRepay: " + JSON.toJSONString(taskMsgDTO));
+        if (TaskSink.FUND_MAKE_UP.equals(taskMsgDTO.getTaskType()) || TaskSink.ADD_FUND_MAKE_UP.equals(taskMsgDTO.getTaskType())) {
+            String fundCategory = TaskSink.FUND_MAKE_UP.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
+            boolean res = saveEmpTask(taskMsgDTO, fundCategory, TaskCategory.REPAY.getCategory(),0);
+            logger.info("end funEmpRepay: " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
         }
     }
 
     /**
-     * 订阅雇员翻牌任务单
+     * 雇员公积金翻牌任务单
      * @param message
      */
     @StreamListener(TaskSink.AF_EMP_COMPANY_CHANGE)
-    public void receiveEmpCompanyChange(Message<TaskCreateMsgDTO> message) {
+    public void fundEmpFlop(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
-        //公积金
-        boolean res = false;
-        if (TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())
-            || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
-            boolean bolRes = checkDupSsEmpTask(taskMsgDTO);
-            if (bolRes) {
-                String fundCategory = TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
-                res = saveEmpTask(taskMsgDTO, fundCategory, TaskCategory.FLOP.getCategory());
-                logger.info("收到消息 公积金雇员翻牌: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
-            }
+        logger.info("start fundEmpFlop: " + JSON.toJSONString(taskMsgDTO));
+        if (TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
+            String fundCategory = TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
+            boolean res = saveEmpTask(taskMsgDTO, fundCategory, TaskCategory.FLOP.getCategory(),0);
+            logger.info("end fundEmpFlop:  " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
         }
     }
 
     /**
-     * 订阅雇员服务协议调整任务单
-     *
+     * 雇员公积金服务协议调整任务单
      * @param message
      */
     @StreamListener(TaskSink.AF_EMP_AGREEMENT_ADJUST)
-    public void receiveNonlocalToSh(Message<TaskCreateMsgDTO> message) {
+    public void fundEmpAgreementAdjust(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
-
-        //公积金
-        boolean res = false;
+        logger.info("start fundEmpAgreementAdjust: " + JSON.toJSONString(taskMsgDTO));
         if (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType())
             || TaskSink.ADD_FUND_NEW.equals(taskMsgDTO.getTaskType())
             || TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())
             || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
-            boolean bolRes = checkDupSsEmpTask(taskMsgDTO);
-            if (bolRes) {
-                String fundCategory = (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType())|| TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
-                res = saveEmpTask(taskMsgDTO, fundCategory, TaskCategory.ADJUSTSEALED.getCategory());
-                logger.info("收到消息 公积金雇员服务协议调整: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
-            }
+            String fundCategory = (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType())|| TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
+            boolean res = saveEmpTask(taskMsgDTO, fundCategory, TaskCategory.ADJUSTSEALED.getCategory(),0);
+            logger.info("end fundEmpAgreementAdjust: " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
         }
     }
 
     /**
-     * 订阅雇员服务协议更正任务单
-     *
+     * 雇员公积金服务协议更正任务单
      * @param message
      * @return
      */
     @StreamListener(TaskSink.AF_EMP_AGREEMENT_UPDATE)
-    public void receiveSh(Message<TaskCreateMsgDTO> message) {
+    public void fundEmpAgreementCorrect(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
-
-        //公积金
-        boolean res = false;
+        logger.info("start fundEmpAgreementCorrect: " + JSON.toJSONString(taskMsgDTO));
         if (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType())
             || TaskSink.ADD_FUND_NEW.equals(taskMsgDTO.getTaskType())
             || TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())
             || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
             try {
-                //调用接口
-                AfEmployeeInfoDTO dto = getEmpInfo(taskMsgDTO);
                 String fundCategory = (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType())|| TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
-
                 //未办理任务单
                 if (StringUtils.isBlank(taskMsgDTO.getTaskId())) {
-                    res = hfEmpTaskService.updateEmpTaskTc(taskMsgDTO, fundCategory,dto);
-                    logger.info("收到消息 公积金雇员服务协议更正:" + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
+                    logger.info("start fundEmpAgreementCorrect(not handled): " + JSON.toJSONString(taskMsgDTO));
+                    boolean res = updateEmpTask(taskMsgDTO,fundCategory);
+                    logger.info("end fundEmpAgreementCorrect(not handled):" + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
+                } //已办理任务单
+                else {
+                    logger.info("start fundEmpAgreementCorrect(already handled): " + JSON.toJSONString(taskMsgDTO));
+                    Integer taskCategory = 0;
+                    Map<String, Object> paramMap = taskMsgDTO.getVariables();
+                    HfEmpTask qd = new HfEmpTask();
+                    qd.setTaskId(paramMap.get("oldEmpAgreementId").toString());
+                    qd.setEmployeeId(paramMap.get("employeeId").toString());
+                    qd.setCompanyId(paramMap.get("companyId").toString());
 
-                    //已办理任务单
-                } else {
-                    boolean bolRes = checkDupSsEmpTask(taskMsgDTO);
-                    if (bolRes) {
-                        Integer taskCategory = 0;
-                        Map<String, Object> paramMap = taskMsgDTO.getVariables();
-                        HfEmpTask qd = new HfEmpTask();
-                        qd.setTaskId(paramMap.get("oldEmpAgreementId").toString());
-                        qd.setEmployeeId(paramMap.get("employeeId").toString());
-                        qd.setCompanyId(paramMap.get("companyId").toString());
-
-                        //查询旧的任务类型保存到新的任务单
-                        List<HfEmpTask> resList = hfEmpTaskService.queryByTaskId(qd);
-                        if (resList.size() > 0) {
-                            HfEmpTask hfEmpTask = resList.get(0);
-                            taskCategory = hfEmpTask.getTaskCategory();
-                        }
-                        res = hfEmpTaskService.saveEmpTaskTc(taskMsgDTO, fundCategory, taskCategory, 1, dto);
-                        logger.info("收到消息 公积金雇员服务协议更正:" + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" :
-                            "失败"));
+                    //查询旧的任务类型保存到新的任务单
+                    List<HfEmpTask> resList = hfEmpTaskService.queryByTaskId(qd);
+                    if (resList.size() > 0) {
+                        HfEmpTask hfEmpTask = resList.get(0);
+                        taskCategory = hfEmpTask.getTaskCategory();
                     }
+                    boolean res = saveEmpTask(taskMsgDTO, fundCategory, taskCategory, 1);
+                    logger.info("end fundEmpAgreementCorrect(already handled): " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
                 }
             } catch (Exception e) {
-                res = false;
-                logger.error(e.getMessage(), e);
+                logger.error("fundEmpAgreementCorrect exception: " + e.getMessage(),e);
             }
         }
+        logger.info("end fundEmpAgreementCorrect!");
     }
 
     /**
-     * 订阅财务付款申请回调任务单
-     *
+     * 公积金财务付款申请回调任务单
      * @param message
      * @return
      */
     @StreamListener(TaskSink.PAY_APPLY_PAY_STATUS_STREAM)
-    public void rejectPayApplyIdStream(Message<PayApplyPayStatusDTO> message) {
+    public void applyFinancePayment(Message<PayApplyPayStatusDTO> message) {
         PayApplyPayStatusDTO taskMsgDTO = message.getPayload();
-        boolean res = false;
-        //公积金
-        if (taskMsgDTO.getBusinessType() == 2) {
-            try {
-                res = hfPaymentAccountService.saveRejectResult(taskMsgDTO.getBusinessPkId(), taskMsgDTO.getRemark(),
-                    taskMsgDTO.getPayStatus());
-            } catch (Exception e) {
-                res = false;
-                logger.error(e.getMessage(), e);
+        logger.info("start applyFinancePayment: " + JSON.toJSONString(taskMsgDTO));
+        try{
+            if(taskMsgDTO.getBusinessType() == 2){
+                boolean res = hfPaymentAccountService.updatePaymentInfo(taskMsgDTO.getBusinessPkId(), taskMsgDTO.getRemark(),taskMsgDTO.getPayStatus());
+                logger.info("applyFinancePayment result: " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
             }
-            logger.info("收到消息 公积金财务付款申请回调:" + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
         }
+        catch (Exception e){
+            logger.error("applyFinancePayment exception: " + e.getMessage(),e);
+        }
+        logger.info("end applyFinancePayment!");
     }
 
     /**
-     * 订阅客服中心调用更新企业任务单
-     *
+     * 客服中心调用更新企业任务单
      * @param message
      * @return
      */
     @StreamListener(TaskSink.AF_COMPANY_SOCIAL_ACCOUNT_ONCE11)
-    public void receiveComTask(Message<TaskCreateMsgDTO> message) {
+    public void updateComTask(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
+        logger.info("start updateComTask: " + JSON.toJSONString(taskMsgDTO));
         //公积金
-        boolean res = false;
         try {
             HfComTask ele = hfComTaskService.selectById(taskMsgDTO.getMissionId());
             ele.setTaskId(taskMsgDTO.getTaskId());
-            res = hfComTaskService.updateById(ele);
+            boolean res = hfComTaskService.updateById(ele);
+            logger.info("updateComTask result: " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
         } catch (Exception e) {
-            res = false;
-            logger.error(e.getMessage(), e);
+            logger.error("updateComTask exception: "+e.getMessage(), e);
         }
-        logger.info("收到消息 公积金客服中心调用更新企业任务单: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
+        logger.info("end updateComTask!");
     }
 
     /**
@@ -265,14 +236,39 @@ public class KafkaReceiver {
      * @param taskCategory
      * @return
      */
-    private boolean saveEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer taskCategory) {
+    private boolean saveEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer taskCategory,Integer isChange) {
         try {
             //调用当前雇员信息获取接口
             AfEmployeeInfoDTO dto = getEmpInfo(taskMsgDTO);
 
             if (dto != null) {
                 //插入数据到雇员任务单表
-                return hfEmpTaskService.addEmpTask(taskMsgDTO, fundCategory, taskCategory, 0, dto);
+                return hfEmpTaskService.addEmpTask(taskMsgDTO, fundCategory, taskCategory, isChange, dto);
+            }
+            else {
+                logger.error("error:公积金雇员信息获取失败！");
+                return false;
+            }
+        } catch (Exception e) {
+            logger.error("exception:" + e.getMessage(), e);
+            return false;
+        }
+    }
+
+
+    /**
+     * 修改公积金雇员任务单
+     * @param taskMsgDTO
+     * @param fundCategory
+     * @return
+     */
+    private boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory){
+        try {
+            //调用当前雇员信息获取接口
+            AfEmployeeInfoDTO dto = getEmpInfo(taskMsgDTO);
+            if (dto != null) {
+                //更新任务单表信息
+                return hfEmpTaskService.updateEmpTask(taskMsgDTO, fundCategory, dto);
             }
             else {
                 logger.error("error:公积金雇员信息获取失败！");

@@ -38,32 +38,20 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      */
     PageRows<HfEmpTaskRejectExportBo> queryHfEmpTaskRejectInPage(PageInfo pageInfo, String exceptTaskCategories);
 
+
     /**
-     * 保存数据到雇员任务单表
-     *
+     * 更新数据到雇员任务单表
      * @param taskMsgDTO
-     * @param taskCategory
-     * @param isChange
+     * @param fundCategory
      * @param dto
      * @return
      */
-    boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer taskCategory, Integer isChange, AfEmployeeInfoDTO dto);
+    boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, AfEmployeeInfoDTO dto);
 
     /**
-     * 更新旧的雇员任务单
-     *
-     * @param taskMsgDTO 消息队列接受的对象
-     * @param dto        取得的雇员信息
-     * @return
-     * @author zhangxj
-     * @date 2017-12-28
-     */
-    boolean updateEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, String fundCategory, AfEmployeeInfoDTO dto);
-
-    /**
-     * 保存数据到雇员任务单表
-     *
+     * 添加数据到雇员任务单表
      * @param taskMsgDTO
+     * @param fundCategory
      * @param taskCategory
      * @param isChange
      * @param dto
