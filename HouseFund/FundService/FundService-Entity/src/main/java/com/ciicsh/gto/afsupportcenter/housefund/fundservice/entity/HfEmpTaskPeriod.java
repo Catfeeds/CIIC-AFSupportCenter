@@ -7,6 +7,9 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
+import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
+
 import java.io.Serializable;
 
 /**
@@ -90,6 +93,8 @@ public class HfEmpTaskPeriod implements Serializable {
      */
 	@TableField("remit_way")
 	private Integer remitWay;
+	@TableField(exist = false)
+	private String remitWayName;
     /**
      * 是否可用
      */
@@ -261,6 +266,14 @@ public class HfEmpTaskPeriod implements Serializable {
 
     public void setArchiveBasePeriodId(Long archiveBasePeriodId) {
         this.archiveBasePeriodId = archiveBasePeriodId;
+    }
+
+    public String getRemitWayName() {
+        return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.remitWay), SocialSecurityConst.REMIT_WAY_KEY, false);
+    }
+
+    public void setRemitWayName(String remitWayName) {
+        this.remitWayName = remitWayName;
     }
 
     @Override
