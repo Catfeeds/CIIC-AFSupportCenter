@@ -7,6 +7,8 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Employ
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 雇员基本信息表
@@ -29,6 +31,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 
     @Override
     public boolean findEmpByIdCard(Integer idCardType, String idNum) {
-        return employeeMapper.findEmpByIdCard(idCardType, idNum) == null ? true : false;
+        List<Employee> employees = employeeMapper.findEmpByIdCard(idCardType, idNum);
+        return employees == null || employees.size() == 0 ? true : false;
     }
 }
