@@ -258,22 +258,24 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         LocalDateTime submitTime;
         String today=LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd"));
             if(ssEmpTask.getTaskCategory()==5){//转出任务单
-                if(ssEmpTask.getEndMonth()==null || ssEmpTask.getEndMonth().equals(""))
+                if(ssEmpTask.getEndMonth()==null || ssEmpTask.getEndMonth().equals("")){
                     return;
+                }
                 submitMonth=ssEmpTask.getEndMonth()+today;
             }else {
-                if(ssEmpTask.getStartMonth()==null || ssEmpTask.getStartMonth().equals(""))
+                if(ssEmpTask.getStartMonth()==null || ssEmpTask.getStartMonth().equals("")){
                     return;
+                }
                 submitMonth=ssEmpTask.getStartMonth()+today;
             }
-        SimpleDateFormat sf1 = new SimpleDateFormat("yyyyMMdd");
-        SimpleDateFormat sf2 = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            submitMonth=sf2.format(sf1.parse(submitMonth));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        submitTime=LocalDateTime.parse(submitMonth+" 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+//        SimpleDateFormat sf1 = new SimpleDateFormat("yyyyMMdd");
+//        SimpleDateFormat sf2 = new SimpleDateFormat("yyyy-MM-dd");
+//        try {
+//            submitMonth=sf2.format(sf1.parse(submitMonth));
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+        submitTime=LocalDateTime.parse(submitMonth+" 00:00:00", DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss"));
         ssEmpTask.setSubmitTime(submitTime);
         }
 

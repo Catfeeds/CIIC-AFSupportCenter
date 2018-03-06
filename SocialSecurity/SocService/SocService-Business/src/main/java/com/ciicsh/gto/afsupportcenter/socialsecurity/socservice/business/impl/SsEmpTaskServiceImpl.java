@@ -94,7 +94,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 //            return PageKit.doSelectPage(pageInfo, () -> baseMapper.employeeDailyOperatorQuery(dto));
 //        }
 //    }
-
+/**雇员日常操作盘片导出
+ * */
     @Override
     public <T> PageRows<T> employeeDailyOperatorQueryForDisk(PageInfo pageInfo, boolean isRollIn) {
         SsEmpTaskBO ssEmpTaskBO = pageInfo.toJavaObject(SsEmpTaskBO.class);
@@ -134,7 +135,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     }
 
     /**
-     * 雇员日常操作 做事物控制
+     * 雇员日常操作 做事务控制
      *
      * @param bo
      * @return
@@ -1160,7 +1161,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     }
 
     /**
-     * 新进或者转入
+     * 雇员任务单新进或者转入办理
      *
      * @param bo
      */
@@ -1300,19 +1301,6 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 //公司金额 个人基数*个人比例
                 BigDecimal comRatio = detail.getComRatio() != null ? detail.getComRatio() : BigDecimal.valueOf(0);
                 //resetComRatio(BigDecimal comRatio);//工伤保险
-//                if(empSocial.getItemDicId().equals("DIT00044")){//工伤保险
-//                    List<Map<String,BigDecimal>> ratioList =  baseMapper.fetchInjuryRatio(empArchiveId,p.getStartMonth());
-//                    if (ratioList.size()!=1){
-//                        throw new BusinessException("在企业社保账户中找不到或存在多个工伤比例,请维护基础数据");
-//                    }
-//                    BigDecimal ssComRatio=ratioList.get(0).get("com_ratio");
-////                    if(ssComRatio.compareTo( comRatio) != 0) {  //和前道比例比较
-////                        throw new BusinessException("工伤保险的比例和前道存在差异");
-////                    }
-//                    if(ssComRatio.compareTo( new BigDecimal("0")) ==1 ) { //大于0
-//                        comRatio = ssComRatio;
-//                    }
-//                }
                 BigDecimal comAmount  = CalculateSocialUtils.calculateAmount(
                     detail.getComBase(),comRatio,null,2,
                     null==roundTypeMap ? 1: roundTypeMap.get(detail.getSsType()).get(COMPANYROUNDTYPE));
@@ -1851,7 +1839,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param bo
      */
     void taskCompletCallBack(SsEmpTaskBO bo){
-        //新开_1","转入_2","调整_3","补缴_4","转出_5","封存_6","退账_7","集体转入_10","集体转出_11
+        // 1新进  2  转入 3  调整 4 补缴 5 转出 6封存 7退账  9 特殊操作  10 集体转入   11 集体转出 12翻牌新进13翻牌转入14翻牌转出15翻牌封存
+
         switch (bo.getTaskCategory()){
             case 1:
             case 2:

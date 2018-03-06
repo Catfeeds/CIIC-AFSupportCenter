@@ -96,9 +96,11 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void generateSocPaymentInfo(Long comAccountId,String paymentMonth)throws Exception {
-        SsAccountComExt accountComExt = accountMapper.getSsComAccount(comAccountId);
-        if(null != accountComExt){
+        List<SsAccountComExt> accountComExts  = accountMapper.getSsComAccount(comAccountId);
+        if(null != accountComExts && accountComExts.size() > 0){
+            accountComExts.forEach(accountComExt -> {
                 this.generateInfo(accountComExt,paymentMonth);
+            });
         }
     }
 
