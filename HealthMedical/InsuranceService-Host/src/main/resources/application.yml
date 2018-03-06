@@ -117,3 +117,6 @@ spring:
     multipart:
       enabled: true
       max-file-size: 2MB
+
+seaweed:
+  masterHost: 172.16.9.19:9333
