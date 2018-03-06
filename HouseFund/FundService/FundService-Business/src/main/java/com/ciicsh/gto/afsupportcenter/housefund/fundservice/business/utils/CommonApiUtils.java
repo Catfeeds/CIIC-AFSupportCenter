@@ -44,7 +44,6 @@ public class CommonApiUtils {
         taskRequestDTO.setAssignee(taskSheetRequestDTO.getAssignee());
         taskRequestDTO.setVariables(taskSheetRequestDTO.getVariable());
         Result restResult = sheetServiceProxy.completeTask(taskRequestDTO);
-
         logger.info("customer系统收到完成任务接口返回：" + String.valueOf("code:" + restResult.getCode() + "message:") +
             restResult.getMessage());
         return restResult;
