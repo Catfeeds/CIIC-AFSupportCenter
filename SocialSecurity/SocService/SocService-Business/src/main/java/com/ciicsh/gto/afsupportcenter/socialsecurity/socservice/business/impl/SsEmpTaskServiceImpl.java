@@ -1299,6 +1299,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 detail.setEmpAmount(empAmount);
                 //公司金额 个人基数*个人比例
                 BigDecimal comRatio = detail.getComRatio() != null ? detail.getComRatio() : BigDecimal.valueOf(0);
+                //resetComRatio(BigDecimal comRatio);//工伤保险
 //                if(empSocial.getItemDicId().equals("DIT00044")){//工伤保险
 //                    List<Map<String,BigDecimal>> ratioList =  baseMapper.fetchInjuryRatio(empArchiveId,p.getStartMonth());
 //                    if (ratioList.size()!=1){
@@ -1897,6 +1898,22 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             map.put(COMPANYROUNDTYPE,p.getCompanyRoundType());
             roundTypeMap.put(p.getItemcode(),map);
         });
+    }
+    //工伤保险
+    private void resetComRatio(BigDecimal comRatio){
+     /*   if(empSocial.getItemDicId().equals("DIT00044")){//工伤保险
+                    List<Map<String,BigDecimal>> ratioList =  baseMapper.fetchInjuryRatio(empArchiveId,p.getStartMonth());
+                    if (ratioList.size()!=1){
+                        throw new BusinessException("在企业社保账户中找不到或存在多个工伤比例,请维护基础数据");
+                    }
+                    BigDecimal ssComRatio=ratioList.get(0).get("com_ratio");
+//                    if(ssComRatio.compareTo( comRatio) != 0) {  //和前道比例比较
+//                        throw new BusinessException("工伤保险的比例和前道存在差异");
+//                    }
+                    if(ssComRatio.compareTo( new BigDecimal("0")) ==1 ) { //大于0
+                        comRatio = ssComRatio;
+                    }
+                }*/
     }
 
 }
