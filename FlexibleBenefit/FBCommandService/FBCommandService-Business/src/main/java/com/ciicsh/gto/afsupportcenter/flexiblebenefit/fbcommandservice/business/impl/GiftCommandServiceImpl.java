@@ -52,10 +52,6 @@ public class GiftCommandServiceImpl extends ServiceImpl<GiftCommandMapper, GiftP
 
     @Override
     public void deletePicture(String filePath) {
-        try {
-            FileHandler.deleteFile(filePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        FileHandler.deleteFile(filePath);
     }
 }

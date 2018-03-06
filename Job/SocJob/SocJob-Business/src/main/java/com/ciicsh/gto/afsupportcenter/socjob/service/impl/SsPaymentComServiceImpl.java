@@ -84,21 +84,21 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void generateSocPaymentInfo(String paymentMonth) {
+    public void generateSocPaymentInfo(String paymentMonth)throws Exception {
         List<SsAccountComExt> accountComExts = accountMapper.getSsComAccounts();
         if(null != accountComExts && accountComExts.size() > 0){
             accountComExts.forEach(accountComExt -> {
-                this.generateInfo(accountComExt,paymentMonth);
+                    this.generateInfo(accountComExt,paymentMonth);
             });
         }
     }
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void generateSocPaymentInfo(Long comAccountId,String paymentMonth) {
+    public void generateSocPaymentInfo(Long comAccountId,String paymentMonth)throws Exception {
         SsAccountComExt accountComExt = accountMapper.getSsComAccount(comAccountId);
         if(null != accountComExt){
-            this.generateInfo(accountComExt,paymentMonth);
+                this.generateInfo(accountComExt,paymentMonth);
         }
     }
 
@@ -134,7 +134,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
                 //如果变更汇总表已经存在，先删除存在的数据
                 this.delMonthEmpChangeInfos(accountComExt.getComAccountId(),paymentMonth);
                 //生成变更汇总表
-                this.createMonthEmpCharge(allMonthChargeExts,accountComExt.getComAccountId(),paymentMonth);
+                this.createMonthEmpChange(allMonthChargeExts,accountComExt.getComAccountId(),paymentMonth);
 
                 /*****生成社保通知书*****/
                 //第一步：如果已经存在数据，先删除
@@ -514,7 +514,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
      * @param comAccountId 企业社保账户
      * @param paymentMonth
      */
-    private void createMonthEmpCharge(List<SsMonthChargeExt> allMonthChargeExts, long comAccountId,String paymentMonth){
+    private void createMonthEmpChange(List<SsMonthChargeExt> allMonthChargeExts, long comAccountId,String paymentMonth){
         List<SsMonthChargeExt> monthChargeExts = allMonthChargeExts.stream().filter(x->x.getCategory() != 1).collect(Collectors.toList());
         List<SsMonthChargeExt> yysMonthChargeExts = new ArrayList<>();
         List<SsMonthChargeExt> gsyMonthChargeExts = new ArrayList<>();

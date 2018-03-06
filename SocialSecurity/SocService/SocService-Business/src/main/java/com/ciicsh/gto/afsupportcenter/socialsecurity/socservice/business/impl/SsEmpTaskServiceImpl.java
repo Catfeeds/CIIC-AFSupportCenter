@@ -20,6 +20,7 @@ import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRe
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.SSPItemDTO;
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.Test;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -168,7 +169,6 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 //调整
                 handleAdjustmentTask(bo);
             } else if (TaskTypeConst.BACK == taskCategory) {
-               // TaskCommonUtils.getRoundTypeFromApi(commonApiUtils,"DIC00005");
                 //补缴
                 handleBackTask(bo);
             } else if (TaskTypeConst.TURNOUT == taskCategory || TaskTypeConst.FLOPTURNOUT==taskCategory) {
@@ -218,11 +218,13 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         baseMapper.updateMyselfColumnById(bo);
 
         //获得进位方式
-        getRoundType(String.valueOf(bo.getPolicyDetailId()),bo.getWelfareUnit(),bo.getStartMonth());
-
+        getRoundType(bo.getPolicyDetailId(),bo.getWelfareUnit(),bo.getStartMonth());
         //获得前端输入的缴纳费用段
         List<SsEmpTaskPeriod> taskPeriods = bo.getEmpTaskPeriods();
-        if (taskPeriods == null || taskPeriods.size() == 0) throw new BusinessException("费用段为空");
+        if (taskPeriods == null || taskPeriods.size() == 0){
+            SsEmpTaskPeriod ssEmpTaskPeriod =getSsEmpTaskObjWhenHasNot(bo);
+            taskPeriods.add(ssEmpTaskPeriod);
+        }
         /**
          * 现在需求 调整 时间段与之前没有交叉，则直接接上
          * 如果有交叉则交叉部分体现在差异表中
@@ -848,18 +850,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         //if(sizeIsOne){}
         SsEmpTaskPeriod ssEmpTaskPeriod = (SsEmpTaskPeriod) map.get(TaskPeriodConst.SSEMPTASKPERIOD);
         if(StringUtils.isBlank(ssEmpTaskPeriod.getEndMonth()))throw new BusinessException("截止时间不能为空");
-        {//当前月 (判断补缴只能补半年之内的)
-//            LocalDate now = LocalDate.now();
-//            String currentMonth = getMonthStr(now).toString();
-//            //半年内
-//            LocalDate sixMonthAgoDate = now.minusMonths(6);
-//            String sixMonthAgo = getMonthStr(sixMonthAgoDate).toString();
-//            int startMonth = Integer.parseInt(ssEmpTaskPeriod.getStartMonth());
-//            int endMonth = Integer.parseInt(ssEmpTaskPeriod.getEndMonth());
-//            //判断是否在半年之内(补缴只能缴半年之内的)
-//            if (!(startMonth >= Integer.parseInt(sixMonthAgo) && endMonth < Integer.parseInt(currentMonth)))
-//                throw new BusinessException("补缴时间只能在半年之内。");
-        }
+        //当前月 (判断补缴只能补半年之内的)
+
         LocalDate now = LocalDate.now();
         String currentMonth = TaskCommonUtils.getMonthStr(now).toString();
         int endMonth = Integer.parseInt(ssEmpTaskPeriod.getEndMonth());
@@ -874,9 +866,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         if(overLappingList.size()==0){
             //表示没有交叉月份
             //补缴
-            //throw new BusinessException("没有交叉");
             supplementaryPayment(taskPeriods,bo);
-
         }else{
             /**
              * 现在暂时传递到前端为有过缴纳不能补缴，之后 走调整逻辑在这里开始
@@ -1034,10 +1024,13 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         //获得任务单信息
         SsEmpTask ssEmpTask = getSsEmpTask(bo);
         //获得进位方式
-        getRoundType(String.valueOf(bo.getPolicyDetailId()),bo.getWelfareUnit(),bo.getStartMonth());
+        getRoundType(bo.getPolicyDetailId(),bo.getWelfareUnit(),bo.getStartMonth());
         //获得前端输入的补缴费用段
         List<SsEmpTaskPeriod> taskPeriods = bo.getEmpTaskPeriods();
-        if (taskPeriods == null || taskPeriods.size() == 0) throw new BusinessException("费用段为空");
+        if (taskPeriods == null || taskPeriods.size() == 0){
+            SsEmpTaskPeriod ssEmpTaskPeriod =getSsEmpTaskObjWhenHasNot(bo);
+            taskPeriods.add(ssEmpTaskPeriod);
+        }
         /**
          * 获取原来的数据检测是否有交叉
          */
@@ -1200,8 +1193,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
         //获得前端输入的缴纳费用段
         List<SsEmpTaskPeriod> taskPeriods = bo.getEmpTaskPeriods();
-        if (taskPeriods == null) {
-            throw new BusinessException("任务单信息不正确");
+        if (taskPeriods == null || taskPeriods.size()==0) {
+            SsEmpTaskPeriod ssEmpTaskPeriod =getSsEmpTaskObjWhenHasNot(bo);
+            taskPeriods.add(ssEmpTaskPeriod);
         }
         if(taskPeriods.size()>1){
             throw new BusinessException("暂不支持多段");
@@ -1236,7 +1230,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             BeanUtils.copyProperties(ssEmpTaskPeriod,cloneObj);
             cloneObj.setEndMonth(endMonth);
             ssEmpTaskPeriod.setStartMonth(handleMonth);
-            //新增做补缴的任务单
+            //新增做补缴的福利段
             backPeriods.add(cloneObj);
         }
 
@@ -1267,6 +1261,16 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         }
     }
 
+    private SsEmpTaskPeriod getSsEmpTaskObjWhenHasNot(SsEmpTaskBO bo) {
+        SsEmpTaskPeriod ssEmpTaskPeriod = new SsEmpTaskPeriod();
+        ssEmpTaskPeriod.setEmpTaskId(bo.getEmpTaskId());
+        ssEmpTaskPeriod.setStartMonth(bo.getStartMonth());
+        ssEmpTaskPeriod.setEndMonth(bo.getEndMonth());
+        ssEmpTaskPeriod.setRemitWay(1);
+        ssEmpTaskPeriod.setBaseAmount(bo.getEmpBase());
+        return ssEmpTaskPeriod;
+    }
+
     /**
      * 添加时间段明细表
      *
@@ -1295,17 +1299,24 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 detail.setEmpAmount(empAmount);
                 //公司金额 个人基数*个人比例
                 BigDecimal comRatio = detail.getComRatio() != null ? detail.getComRatio() : BigDecimal.valueOf(0);
-                if(empSocial.getItemDicId().equals("DIT00044")){//工伤保险
-                    BigDecimal ssComRatio=  baseMapper.fetchInjuryRatio(empArchiveId,p.getStartMonth());
-//                    if(ssComRatio.compareTo( comRatio) != 0) {  //和前道比例比较
-//                        throw new BusinessException("工伤保险的比例和前道存在差异");
+                //resetComRatio(BigDecimal comRatio);//工伤保险
+//                if(empSocial.getItemDicId().equals("DIT00044")){//工伤保险
+//                    List<Map<String,BigDecimal>> ratioList =  baseMapper.fetchInjuryRatio(empArchiveId,p.getStartMonth());
+//                    if (ratioList.size()!=1){
+//                        throw new BusinessException("在企业社保账户中找不到或存在多个工伤比例,请维护基础数据");
 //                    }
-                    if(ssComRatio.compareTo( new BigDecimal("0")) ==1 ) { //大于0
-                        comRatio = ssComRatio;
-                    }
-                }
+//                    BigDecimal ssComRatio=ratioList.get(0).get("com_ratio");
+////                    if(ssComRatio.compareTo( comRatio) != 0) {  //和前道比例比较
+////                        throw new BusinessException("工伤保险的比例和前道存在差异");
+////                    }
+//                    if(ssComRatio.compareTo( new BigDecimal("0")) ==1 ) { //大于0
+//                        comRatio = ssComRatio;
+//                    }
+//                }
+                BigDecimal comAmount  = CalculateSocialUtils.calculateAmount(
+                    detail.getComBase(),comRatio,null,2,
+                    null==roundTypeMap ? 1: roundTypeMap.get(detail.getSsType()).get(COMPANYROUNDTYPE));
 
-                BigDecimal comAmount  = CalculateSocialUtils.calculateAmount(detail.getComBase(),comRatio,null,2,null==roundTypeMap?1:roundTypeMap.get(detail.getSsType()).get(PERSONROUNDTYPE));
                 detail.setComAmount(comAmount);
                 //个人+公司
                 detail.setComempAmount(detail.getEmpAmount().add(detail.getComAmount()));
@@ -1887,6 +1898,22 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             map.put(COMPANYROUNDTYPE,p.getCompanyRoundType());
             roundTypeMap.put(p.getItemcode(),map);
         });
+    }
+    //工伤保险
+    private void resetComRatio(BigDecimal comRatio){
+     /*   if(empSocial.getItemDicId().equals("DIT00044")){//工伤保险
+                    List<Map<String,BigDecimal>> ratioList =  baseMapper.fetchInjuryRatio(empArchiveId,p.getStartMonth());
+                    if (ratioList.size()!=1){
+                        throw new BusinessException("在企业社保账户中找不到或存在多个工伤比例,请维护基础数据");
+                    }
+                    BigDecimal ssComRatio=ratioList.get(0).get("com_ratio");
+//                    if(ssComRatio.compareTo( comRatio) != 0) {  //和前道比例比较
+//                        throw new BusinessException("工伤保险的比例和前道存在差异");
+//                    }
+                    if(ssComRatio.compareTo( new BigDecimal("0")) ==1 ) { //大于0
+                        comRatio = ssComRatio;
+                    }
+                }*/
     }
 
 }

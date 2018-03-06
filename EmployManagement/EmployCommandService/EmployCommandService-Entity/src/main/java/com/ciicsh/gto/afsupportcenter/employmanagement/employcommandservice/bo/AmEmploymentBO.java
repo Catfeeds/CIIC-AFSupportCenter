@@ -65,6 +65,56 @@ public class AmEmploymentBO extends AmEmployment {
 
     private Integer idCardType;
 
+    private  String employeeName;
+
+    private String title;
+
+    private LocalDate jobCentreFeedbackDate;
+
+    private  String outReason;
+
+    private LocalDate outDate;
+
+    public String getOutReason() {
+        return outReason;
+    }
+
+    public void setOutReason(String outReason) {
+        this.outReason = outReason;
+    }
+
+    public LocalDate getOutDate() {
+        return outDate;
+    }
+
+    public void setOutDate(LocalDate outDate) {
+        this.outDate = outDate;
+    }
+
+    public LocalDate getJobCentreFeedbackDate() {
+        return jobCentreFeedbackDate;
+    }
+
+    public void setJobCentreFeedbackDate(LocalDate jobCentreFeedbackDate) {
+        this.jobCentreFeedbackDate = jobCentreFeedbackDate;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
+
     public String getIdNum() {
         return idNum;
     }

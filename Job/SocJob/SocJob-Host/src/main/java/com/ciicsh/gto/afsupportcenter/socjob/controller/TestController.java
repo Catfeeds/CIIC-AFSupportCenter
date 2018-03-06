@@ -25,7 +25,7 @@ public class TestController {
     @Autowired
     private PaymentService paymentService;
     @RequestMapping("/createPaymentCom")
-    public String createPaymentCom(@RequestParam String ssMonth,@RequestParam Long comAccountId) throws ParseException{
+    public String createPaymentCom(@RequestParam String ssMonth,@RequestParam Long comAccountId) throws Exception{
         String paymentMonth = CommonUtils.getPaymentMonth(); //默认当前系统年月
         if(Optional.ofNullable(ssMonth).isPresent()){
             paymentMonth=ssMonth;

@@ -8,7 +8,7 @@ spring:
   application:
     name: support-center-soc-site-service
   profiles:
-    active: dev
+    active: fat
   http:
     multipart:
       enabled: true
