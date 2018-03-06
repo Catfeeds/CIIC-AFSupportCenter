@@ -19,6 +19,7 @@ import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import com.ciicsh.gto.util.ExpireTime;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,6 +42,8 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
     private HfEmpTaskPeriodService hfEmpTaskPeriodService;
     @Autowired
     private HfComAccountService hfComAccountService;
+
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
     /**
      * 雇员任务单办理信息查询
@@ -94,32 +99,80 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
             condition.put("is_active", 1);
             List<HfEmpTaskPeriod> hfEmpTaskPeriods = hfEmpTaskPeriodService.selectByMap(condition);
             if (CollectionUtils.isEmpty(hfEmpTaskPeriods)) {
-                HfEmpTaskPeriod hfEmpTaskPeriod = new HfEmpTaskPeriod();
-                hfEmpTaskPeriod.setEmpTaskId(hfEmpTaskHandleBo.getEmpTaskId());
-                if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST_CLOSE || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN) {
-                    hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_ADJUST);
-                } else if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_REPAIR) {
-                    hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_REPAIR);
-                } else {
-                    hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_NORMAL);
-                }
-
-                hfEmpTaskPeriod.setStartMonth(hfEmpTaskHandleBo.getStartMonth());
-                hfEmpTaskPeriod.setEndMonth(hfEmpTaskHandleBo.getEndMonth());
+                String hfMonth = null;
+                String startMonth = hfEmpTaskHandleBo.getStartMonth();
                 if (hfEmpTaskHandlePostBo.getHfType() == 1) {
                     if (hfEmpTaskHandleBo.getBasicComHfMonth() != null) {
-                        hfEmpTaskPeriod.setHfMonth(String.valueOf(hfEmpTaskHandleBo.getBasicComHfMonth()));
+                        hfMonth = String.valueOf(hfEmpTaskHandleBo.getBasicComHfMonth());
                     }
                 } else {
                     if (hfEmpTaskHandleBo.getAddedComHfMonth() != null) {
-                        hfEmpTaskPeriod.setHfMonth(String.valueOf(hfEmpTaskHandleBo.getAddedComHfMonth()));
+                        hfMonth = String.valueOf(hfEmpTaskHandleBo.getAddedComHfMonth());
                     }
                 }
-                hfEmpTaskPeriod.setBaseAmount(hfEmpTaskHandleBo.getEmpBase());
-                hfEmpTaskPeriod.setRatioCom(hfEmpTaskHandleBo.getRatioCom());
-                hfEmpTaskPeriod.setRatioEmp(hfEmpTaskHandleBo.getRatioEmp());
-                hfEmpTaskPeriod.setAmount(hfEmpTaskHandleBo.getAmount());
-                hfEmpTaskPeriods.add(hfEmpTaskPeriod);
+
+                if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_ADD
+                    || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN
+                    || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN
+                    || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_MULTI_TRANS_IN
+                    || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN) {
+                    if (StringUtils.isNotEmpty(hfMonth) && StringUtils.isNotEmpty(startMonth)) {
+                        YearMonth hfMonthDate = YearMonth.parse(hfMonth, formatter);
+                        YearMonth startMonthDate = YearMonth.parse(startMonth, formatter);
+
+                        if (startMonthDate.isBefore(hfMonthDate)) {
+                            YearMonth endMonthDate = hfMonthDate.minusMonths(1);
+
+                            HfEmpTaskPeriod hfEmpTaskPeriod = new HfEmpTaskPeriod();
+                            hfEmpTaskPeriod.setEmpTaskId(hfEmpTaskHandleBo.getEmpTaskId());
+                            if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN) {
+                                hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_ADJUST);
+                            } else {
+                                hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_NORMAL);
+                            }
+                            hfEmpTaskPeriod.setStartMonth(hfMonth);
+                            hfEmpTaskPeriod.setHfMonth(hfMonth);
+                            hfEmpTaskPeriod.setBaseAmount(hfEmpTaskHandleBo.getEmpBase());
+                            hfEmpTaskPeriod.setRatioCom(hfEmpTaskHandleBo.getRatioCom());
+                            hfEmpTaskPeriod.setRatioEmp(hfEmpTaskHandleBo.getRatioEmp());
+                            hfEmpTaskPeriod.setAmount(hfEmpTaskHandleBo.getAmount());
+                            hfEmpTaskPeriods.add(hfEmpTaskPeriod);
+
+                            hfEmpTaskPeriod = new HfEmpTaskPeriod();
+                            hfEmpTaskPeriod.setEmpTaskId(hfEmpTaskHandleBo.getEmpTaskId());
+                            hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_REPAIR);
+                            hfEmpTaskPeriod.setStartMonth(startMonth);
+                            hfEmpTaskPeriod.setEndMonth(endMonthDate.format(formatter));
+                            hfEmpTaskPeriod.setHfMonth(hfMonth);
+                            hfEmpTaskPeriod.setBaseAmount(hfEmpTaskHandleBo.getEmpBase());
+                            hfEmpTaskPeriod.setRatioCom(hfEmpTaskHandleBo.getRatioCom());
+                            hfEmpTaskPeriod.setRatioEmp(hfEmpTaskHandleBo.getRatioEmp());
+                            hfEmpTaskPeriod.setAmount(hfEmpTaskHandleBo.getAmount());
+                            hfEmpTaskPeriods.add(hfEmpTaskPeriod);
+                        }
+                    }
+                }
+
+                if (hfEmpTaskPeriods.size() == 0) {
+                    HfEmpTaskPeriod hfEmpTaskPeriod = new HfEmpTaskPeriod();
+                    hfEmpTaskPeriod.setEmpTaskId(hfEmpTaskHandleBo.getEmpTaskId());
+                    if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST_CLOSE || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN) {
+                        hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_ADJUST);
+                    } else if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_REPAIR) {
+                        hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_REPAIR);
+                    } else {
+                        hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_NORMAL);
+                    }
+
+                    hfEmpTaskPeriod.setStartMonth(hfEmpTaskHandleBo.getStartMonth());
+                    hfEmpTaskPeriod.setEndMonth(hfEmpTaskHandleBo.getEndMonth());
+                    hfEmpTaskPeriod.setHfMonth(hfMonth);
+                    hfEmpTaskPeriod.setBaseAmount(hfEmpTaskHandleBo.getEmpBase());
+                    hfEmpTaskPeriod.setRatioCom(hfEmpTaskHandleBo.getRatioCom());
+                    hfEmpTaskPeriod.setRatioEmp(hfEmpTaskHandleBo.getRatioEmp());
+                    hfEmpTaskPeriod.setAmount(hfEmpTaskHandleBo.getAmount());
+                    hfEmpTaskPeriods.add(hfEmpTaskPeriod);
+                }
             } else if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST_CLOSE
                 || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
                 || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT
