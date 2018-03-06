@@ -94,6 +94,11 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
             hfEmpTask.setSubmitterRemark(companyDto.getRemark());
             //福利办理方
             hfEmpTask.setWelfareUnit(companyDto.getFundUnit());
+            if (companyDto.getInDate() != null) {
+                hfEmpTask.setInDate(LocalDateTime.ofInstant(companyDto.getInDate().toInstant(), ZoneId.systemDefault()));
+            }
+            hfEmpTask.setCreatedBy(companyDto.getCreatedBy() != null ? companyDto.getCreatedBy() : "system");
+            hfEmpTask.setModifiedBy(companyDto.getModifiedBy() != null ? companyDto.getModifiedBy() : "system");
         }
         hfEmpTask.setSubmitTime(LocalDate.now());
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
@@ -114,13 +119,9 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         //办理状态：1、未处理 2 、处理中(已办)  3 已完成(已做) 4、批退 5、不需处理
         hfEmpTask.setTaskStatus(1);
         //入职日期
-        if (companyDto.getInDate() != null) {
-            hfEmpTask.setInDate(LocalDateTime.ofInstant(companyDto.getInDate().toInstant(), ZoneId.systemDefault()));
-        }
+
         hfEmpTask.setActive(true);
-        hfEmpTask.setModifiedBy(companyDto.getCreatedBy());
         hfEmpTask.setModifiedTime(LocalDateTime.now());
-        hfEmpTask.setCreatedBy(companyDto.getCreatedBy());
         hfEmpTask.setCreatedTime(LocalDateTime.now());
         hfEmpTask.setAmount(new BigDecimal(0));
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
@@ -153,36 +154,32 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
 
         HfEmpTask hfEmpTask = new HfEmpTask();
         hfEmpTask.setTaskId(paramMap.get("oldEmpAgreementId").toString());
-        hfEmpTask.setCompanyId(companyDto.getCompanyId());
-        hfEmpTask.setEmployeeId(companyDto.getEmployeeId());
-//        hfEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
-        hfEmpTask.setSubmitterId(companyDto.getCreatedBy());
-        hfEmpTask.setSubmitterRemark(companyDto.getRemark());
+        if(null != companyDto){
+            hfEmpTask.setCompanyId(companyDto.getCompanyId());
+            hfEmpTask.setEmployeeId(companyDto.getEmployeeId());
+            hfEmpTask.setSubmitterId(companyDto.getCreatedBy());
+            hfEmpTask.setSubmitterRemark(companyDto.getRemark());
+            //福利办理方
+            hfEmpTask.setWelfareUnit(companyDto.getFundUnit());
+            //入职日期
+            if (companyDto.getInDate() != null) {
+                hfEmpTask.setInDate(LocalDateTime.ofInstant(companyDto.getInDate().toInstant(), ZoneId.systemDefault()));
+            }
+            hfEmpTask.setModifiedBy(companyDto.getModifiedBy() != null ? companyDto.getModifiedBy() : "system");
+        }
 
+        hfEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
         hfEmpTask.setTaskFormContent(JSON.toJSONString(dto));
-
         //转出单位(来源地)
         hfEmpTask.setTransferOutUnit(this.getTransUnit(paramMap));
-
-        //福利办理方
-        hfEmpTask.setWelfareUnit(companyDto.getFundUnit());
-
         //前道传递的政策明细ID,用它调用系统中心获取进位方式
         if (dto.getNowAgreement() != null && dto.getNowAgreement().getFundSocialRuleId() != null) {
             hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getFundSocialRuleId().intValue());
         }
         //TODO 表中加字段
-//        hfEmpTask.setProcessId(taskMsgDTO.getProcessId());
-        //入职日期
-        if (companyDto.getInDate() != null) {
-            hfEmpTask.setInDate(LocalDateTime.ofInstant(companyDto.getInDate().toInstant(), ZoneId.systemDefault()));
-        }
-
-        hfEmpTask.setModifiedBy(companyDto.getCreatedBy());
+        //hfEmpTask.setProcessId(taskMsgDTO.getProcessId());
         hfEmpTask.setModifiedTime(LocalDateTime.now());
-
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
-
         if(null != socialList && socialList.size() > 0){
             this.setEmpTask(hfEmpTask,socialList,fundCategory);
         }
