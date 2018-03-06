@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.host.controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gt1.FileHandler;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.UninsuredMedicalAuditService;
+import com.ciicsh.gto.afsupportcenter.healthmedical.business.UninsuredMedicalService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.core.Result;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.core.ResultGenerator;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.UninsuredMedicalAuditDTO;
@@ -36,6 +37,9 @@ public class UninsuredAuditController {
     @Autowired
     private UninsuredMedicalAuditService uninsuredMedicalAuditService;
 
+    @Autowired
+    private UninsuredMedicalService uninsuredMedicalService;
+
     /**
      * 查询受理单列表
      *
@@ -61,13 +65,13 @@ public class UninsuredAuditController {
     }
 
     /**
-     * 未投保审核
+     * 未投保审核,同事更新未投保状态
      *
      * @param uninsuredMedicalAuditDTO
      * @return
      */
     @PostMapping("/addUninsuredAudit")
-    public Result addUninsuredAudit(@RequestBody UninsuredMedicalAuditDTO uninsuredMedicalAuditDTO) {
+    public Result addUninsuredAudit(UninsuredMedicalAuditDTO uninsuredMedicalAuditDTO) {
         try {
             MultipartFile file = uninsuredMedicalAuditDTO.getAttachment();
             String filePathUrl = null;
@@ -81,6 +85,13 @@ public class UninsuredAuditController {
                 uninsuredMedicalAudit.setAttachment(filePathUrl);
             }
             boolean flag = uninsuredMedicalAuditService.insert(uninsuredMedicalAudit);
+            if (flag) {
+                UninsuredMedical uninsuredMedical = new UninsuredMedical();
+                uninsuredMedical.setUmAcceptanceId(uninsuredMedicalAuditDTO.getUmAcceptanceId());
+                // 状态为--已审核未同步
+                uninsuredMedical.setStatus(3);
+                flag = uninsuredMedicalService.updateById(uninsuredMedical);
+            }
             logger.info("未投保审核");
             return ResultGenerator.genSuccessResult(flag);
         } catch (Exception e) {
