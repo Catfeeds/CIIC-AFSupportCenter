@@ -1049,26 +1049,48 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         if (CollectionUtils.isNotEmpty(hfArchiveBasePeriodList)) {
             List<AfEmpSocialUpdateDateDTO> afEmpSocialUpdateDateDTOList = new ArrayList<>(hfArchiveBasePeriodList.size());
             DateKit.setDatePattern("yyyyMMdd");
-            hfArchiveBasePeriodList.stream().forEach(e -> {
-                AfEmpSocialUpdateDateDTO afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
-                afEmpSocialUpdateDateDTO.setCompanyId(companyId);
-                afEmpSocialUpdateDateDTO.setEmpAgreementId(empAgreementId);
-                afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ID_FUND);
-                if (isReject) {
-                    afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(BigDecimal.ZERO);
-                    afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(BigDecimal.ZERO);
-                } else {
-                    afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(e.getComAmount());
-                    afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(e.getAmountEmp());
-                    if (StringUtils.isNotEmpty(e.getStartMonth())) {
-                        afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(e.getStartMonth() + "01"));
-                    }
-                    if (StringUtils.isNotEmpty(e.getEndMonth())) {
-                        afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(e.getEndMonth() + "01"));
-                    }
+            BigDecimal companyConfirmAmount = BigDecimal.ZERO;
+            BigDecimal personalConfirmAmount = BigDecimal.ZERO;
+            String startMonth = "999912";
+            String endMonth = "190001";
+
+            for (HfArchiveBasePeriod hfArchiveBasePeriod : hfArchiveBasePeriodList) {
+                if (!isReject && companyConfirmAmount == BigDecimal.ZERO) {
+                    companyConfirmAmount = hfArchiveBasePeriod.getBaseAmount().multiply(hfArchiveBasePeriod.getRatioCom()).setScale(2, BigDecimal.ROUND_HALF_UP);
+                    personalConfirmAmount = hfArchiveBasePeriod.getBaseAmount().multiply(hfArchiveBasePeriod.getRatioEmp()).setScale(2, BigDecimal.ROUND_HALF_UP);
                 }
-                afEmpSocialUpdateDateDTOList.add(afEmpSocialUpdateDateDTO);
-            });
+
+                if (StringUtils.isNotEmpty(hfArchiveBasePeriod.getStartMonth())) {
+                    if (Integer.valueOf(startMonth) > Integer.valueOf(hfArchiveBasePeriod.getStartMonth())) {
+                        startMonth = hfArchiveBasePeriod.getStartMonth();
+                    }
+                } else {
+                    startMonth = "190001";
+                }
+
+                if (StringUtils.isNotEmpty(hfArchiveBasePeriod.getEndMonth())) {
+                    if (Integer.valueOf(endMonth) < Integer.valueOf(hfArchiveBasePeriod.getEndMonth())) {
+                        endMonth = hfArchiveBasePeriod.getEndMonth();
+                    }
+                } else {
+                    endMonth = "999912";
+                }
+            }
+
+            AfEmpSocialUpdateDateDTO afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
+
+            if (!"190001".equals(startMonth)) {
+                afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(startMonth + "01"));
+            }
+            if (!"999912".equals(endMonth)) {
+                afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(endMonth + "01"));
+            }
+            afEmpSocialUpdateDateDTO.setCompanyId(companyId);
+            afEmpSocialUpdateDateDTO.setEmpAgreementId(empAgreementId);
+            afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ID_FUND);
+            afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(companyConfirmAmount);
+            afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(personalConfirmAmount);
+            afEmpSocialUpdateDateDTOList.add(afEmpSocialUpdateDateDTO);
             return commonApiUtils.updateConfirmDate(afEmpSocialUpdateDateDTOList); // TODO return code?
         }
         return 0;
