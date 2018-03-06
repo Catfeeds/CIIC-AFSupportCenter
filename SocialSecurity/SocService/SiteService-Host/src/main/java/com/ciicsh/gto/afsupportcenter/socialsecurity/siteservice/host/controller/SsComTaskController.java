@@ -204,8 +204,6 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         SsAccountComRelation ssAccountComRelation = null;
         //关系表中有则 不添加
         if (resList.size()==0) {
-            //任务单为已完成状态 账户设置为可用
-            ssComAccount.setState(new Integer(1));
             ssAccountComRelation = new SsAccountComRelation();
             ssAccountComRelation.setCompanyId(map.get("companyId"));
             ssAccountComRelation.setMajorCom(new Integer(1));
@@ -216,6 +214,8 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         }
         //表示完成
         if(3 == ssComTask.getTaskStatus()){
+            //任务单为已完成状态 账户设置为可用
+            ssComAccount.setState(new Integer(1));
             //Map<String,Object> bankAccountMap=new HashMap<>();
             // commonApiUtils.addBankAccount(bankAccountMap);
             //调用工作流

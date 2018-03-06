@@ -12,10 +12,10 @@ import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
-import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
-
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,6 +25,8 @@ import java.util.Date;
 import java.util.List;
 
 public class TaskCommonUtils {
+
+    private final static Logger logger = LoggerFactory.getLogger(TaskCommonUtils.class);
     /**
      * 处理工作流结果
      * @param result
@@ -81,10 +83,14 @@ public class TaskCommonUtils {
      * @param ssEmpTaskBO
      */
     public static void updateConfirmDate(CommonApiUtils commonApiUtils, SsEmpTaskBO ssEmpTaskBO){
+        System.out.println("--------------------------------------------进入调用实缴金额接口");
         //根据不同类型 组装不同参数
         List<AfEmpSocialUpdateDateDTO> paramsList = confirmDateGetParams(ssEmpTaskBO);
         try {
+            logger.info("任务单ID{"+ssEmpTaskBO.getEmpTaskId()+"}:调用实缴金额接口start");
             int result =commonApiUtils.updateConfirmDate(paramsList);
+            logger.info("实缴金额结果:{"+result+"}");
+            logger.info("任务单ID{"+ssEmpTaskBO.getEmpTaskId()+"}:调用实缴金额接口end");
         } catch (Exception e) {
             e.printStackTrace();
             throw new BusinessException("实缴金额回调异常");

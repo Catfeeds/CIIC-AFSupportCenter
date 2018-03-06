@@ -47,7 +47,7 @@ public interface SsEmpTaskService extends IService<SsEmpTask> {
      * @param bo
      * @return
      */
-    boolean saveHandleData(SsEmpTaskBO bo);
+    boolean saveHandleData(SsEmpTaskBO bo,boolean isBatch);
 
     /**
      * 查询最大社保序号
