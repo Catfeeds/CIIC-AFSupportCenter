@@ -9,24 +9,54 @@
 		<result column="employee_id" property="employeeId" />
 		<result column="company_id" property="companyId" />
 		<result column="material_ids" property="materialIds" />
-		<result column="is_active" property="isActive" />
+        <result column="comp" property="comp" />
+        <result column="marry_status" property="marryStatus" />
+        <result column="has_follower" property="hasFollower" />
+        <result column="familer_materials" property="familerMaterials" />
+        <result column="apply_addr_change" property="applyAddrChange" />
+        <result column="addr" property="addr" />
+        <result column="follower_type" property="followerType" />
+        <result column="follower" property="follower" />
+        <result column="has_child_follow" property="hasChildFollow" />
+        <result column="has_spouse_follow" property="hasSpouseFollow" />
+        <result column="married" property="married" />
+        <result column="job_materials" property="jobMaterials" />
+        <result column="has_gooder" property="hasGooder" />
+        <result column="educate" property="educate" />
+        <result column="follow_materials" property="followMaterials" />
+        <result column="not_follow_materials" property="notFollowMaterials" />
+        <result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />
 		<result column="modified_time" property="modifiedTime" />
 		<result column="created_by" property="createdBy" />
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
-    <update id="updateTaskMaterials">
+    <update id="updateTaskMaterials" parameterType="com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMaterial">
         UPDATE cm_task_material
-        SET
-        material_ids = #{materialIds},
-        modified_by = #{modifiedBy},
-        modified_time = sysdate()
-        <!--<set>-->
-            <!--<if test="material_ids != null and material_ids != ''">material_ids = #{materialIds},</if>-->
-            <!--modified_by = #{modifiedBy},-->
-            <!--modified_time = sysdate()-->
-        <!--</set>-->
+        <set>
+            <if test="material_ids != null and material_ids != ''">material_ids = #{materialIds},</if>
+            <if test="employee_id != null and employee_id != ''">employee_id = #{employeeId},</if>
+            <if test="company_id != null and company_id != ''">company_id = #{companyId},</if>
+            <if test="comp != null and comp != ''">comp = #{comp},</if>
+            <if test="marry_status != null and marry_status != ''">marry_status = #{marryStatus},</if>
+            <if test="has_follower != null and has_follower != ''">has_follower = #{hasFollower},</if>
+            <if test="familer_materials != null and familer_materials != ''">familer_materials = #{familerMaterials},</if>
+            <if test="apply_addr_change != null and apply_addr_change != ''">apply_addr_change = #{applyAddrChange},</if>
+            <if test="addr != null and addr != ''">addr = #{addr},</if>
+            <if test="follower_type != null and follower_type != ''">follower_type = #{followerType},</if>
+            <if test="follower != null and follower != ''">follower = #{follower},</if>
+            <if test="has_child_follow != null and has_child_follow != ''">has_child_follow = #{hasChildFollow},</if>
+            <if test="has_spouse_follow != null and has_spouse_follow != ''">has_spouse_follow = #{hasSpouseFollow},</if>
+            <if test="married != null and married != ''">married = #{married},</if>
+            <if test="job_materials != null and job_materials != ''">job_materials = #{jobMaterials},</if>
+            <if test="has_gooder != null and has_gooder != ''">has_gooder = #{hasGooder},</if>
+            <if test="educate != null and educate != ''">educate = #{educate},</if>
+            <if test="follow_materials != null and follow_materials != ''">follow_materials = #{followMaterials},</if>
+            <if test="not_follow_materials != null and not_follow_materials != ''">not_follow_materials = #{notFollowMaterials},</if>
+            modified_by = #{modifiedBy},
+            modified_time = sysdate()
+        </set>
         where
         task_id = #{taskId}
     </update>

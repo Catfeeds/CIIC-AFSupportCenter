@@ -165,4 +165,15 @@ public class MaterialsCollectController {
         List<MaterialTypeRelation> materials = materialTypeRelationService.selectMaterials(credentialsType,credentialsDealType);
         return JsonResult.success(materials);
     }
+
+    /**
+     * 获取选中的二级菜单
+     * @param taskId
+     * @return
+     */
+    @GetMapping("/findMenu/{taskId}")
+    public JsonResult getlv2Menu(@PathVariable("taskId") String taskId) {
+        TaskMaterial taskMaterial = taskMaterialService.selectByTaskId(taskId);
+        return JsonResult.success(taskMaterial);
+    }
 }

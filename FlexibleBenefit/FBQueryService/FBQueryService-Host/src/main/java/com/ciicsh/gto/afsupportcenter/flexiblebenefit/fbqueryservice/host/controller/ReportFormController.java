@@ -1,6 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.host.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.company.AfProductWithCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfProductWithEmployeeDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.request.AfProductParamsDTO;

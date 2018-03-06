@@ -30,6 +30,70 @@ public class TaskDetialDTO implements Serializable{
      */
     private String materialIds;
     /**
+     * 公司材料
+     */
+    private String comp;
+    /**
+     * 婚姻状况
+     */
+    private String marryStatus;
+    /**
+     * 是否有随员
+     */
+    private String hasFollower;
+    /**
+     * 配偶及子女相关材料
+     */
+    private String familerMaterials;
+    /**
+     * 申请地址变更材料
+     */
+    private String applyAddrChange;
+    /**
+     * 随员类型
+     */
+    private String followerType;
+    /**
+     * 住所证明
+     */
+    private String addr;
+    /**
+     * 随员
+     */
+    private String follower;
+    /**
+     * 子女是否随迁
+     */
+    private String hasChildFollow;
+    /**
+     * 配偶是否随迁
+     */
+    private String hasSpouseFollow;
+    /**
+     * 婚育状况
+     */
+    private String married;
+    /**
+     * 职称材料
+     */
+    private String jobMaterials;
+    /**
+     * 是否为科创人才
+     */
+    private String hasGooder;
+    /**
+     * 教育经历材料
+     */
+    private String educate;
+    /**
+     * 随迁材料
+     */
+    private String followMaterials;
+    /**
+     *  不随迁材料
+     */
+    private String notFollowMaterials;
+    /**
      * 证件类型
      */
     private String credentialsType;
@@ -145,6 +209,134 @@ public class TaskDetialDTO implements Serializable{
      * 修改者登录名
      */
     private String modifiedBy;
+
+    public String getComp() {
+        return comp;
+    }
+
+    public void setComp(String comp) {
+        this.comp = comp;
+    }
+
+    public String getMarryStatus() {
+        return marryStatus;
+    }
+
+    public void setMarryStatus(String marryStatus) {
+        this.marryStatus = marryStatus;
+    }
+
+    public String getHasFollower() {
+        return hasFollower;
+    }
+
+    public void setHasFollower(String hasFollower) {
+        this.hasFollower = hasFollower;
+    }
+
+    public String getFamilerMaterials() {
+        return familerMaterials;
+    }
+
+    public void setFamilerMaterials(String familerMaterials) {
+        this.familerMaterials = familerMaterials;
+    }
+
+    public String getApplyAddrChange() {
+        return applyAddrChange;
+    }
+
+    public void setApplyAddrChange(String applyAddrChange) {
+        this.applyAddrChange = applyAddrChange;
+    }
+
+    public String getFollowerType() {
+        return followerType;
+    }
+
+    public void setFollowerType(String followerType) {
+        this.followerType = followerType;
+    }
+
+    public String getAddr() {
+        return addr;
+    }
+
+    public void setAddr(String addr) {
+        this.addr = addr;
+    }
+
+    public String getFollower() {
+        return follower;
+    }
+
+    public void setFollower(String follower) {
+        this.follower = follower;
+    }
+
+    public String getHasChildFollow() {
+        return hasChildFollow;
+    }
+
+    public void setHasChildFollow(String hasChildFollow) {
+        this.hasChildFollow = hasChildFollow;
+    }
+
+    public String getHasSpouseFollow() {
+        return hasSpouseFollow;
+    }
+
+    public void setHasSpouseFollow(String hasSpouseFollow) {
+        this.hasSpouseFollow = hasSpouseFollow;
+    }
+
+    public String getMarried() {
+        return married;
+    }
+
+    public void setMarried(String married) {
+        this.married = married;
+    }
+
+    public String getJobMaterials() {
+        return jobMaterials;
+    }
+
+    public void setJobMaterials(String jobMaterials) {
+        this.jobMaterials = jobMaterials;
+    }
+
+    public String getHasGooder() {
+        return hasGooder;
+    }
+
+    public void setHasGooder(String hasGooder) {
+        this.hasGooder = hasGooder;
+    }
+
+    public String getEducate() {
+        return educate;
+    }
+
+    public void setEducate(String educate) {
+        this.educate = educate;
+    }
+
+    public String getFollowMaterials() {
+        return followMaterials;
+    }
+
+    public void setFollowMaterials(String followMaterials) {
+        this.followMaterials = followMaterials;
+    }
+
+    public String getNotFollowMaterials() {
+        return notFollowMaterials;
+    }
+
+    public void setNotFollowMaterials(String notFollowMaterials) {
+        this.notFollowMaterials = notFollowMaterials;
+    }
 
     public Long getTaskId() {
         return taskId;
@@ -393,6 +585,22 @@ public class TaskDetialDTO implements Serializable{
             ", employeeId='" + employeeId + '\'' +
             ", companyId='" + companyId + '\'' +
             ", materialIds='" + materialIds + '\'' +
+            ", comp='" + comp + '\'' +
+            ", marryStatus='" + marryStatus + '\'' +
+            ", hasFollower='" + hasFollower + '\'' +
+            ", familerMaterials='" + familerMaterials + '\'' +
+            ", applyAddrChange='" + applyAddrChange + '\'' +
+            ", followerType='" + followerType + '\'' +
+            ", addr='" + addr + '\'' +
+            ", follower='" + follower + '\'' +
+            ", hasChildFollow='" + hasChildFollow + '\'' +
+            ", hasSpouseFollow='" + hasSpouseFollow + '\'' +
+            ", married='" + married + '\'' +
+            ", jobMaterials='" + jobMaterials + '\'' +
+            ", hasGooder='" + hasGooder + '\'' +
+            ", educate='" + educate + '\'' +
+            ", followMaterials='" + followMaterials + '\'' +
+            ", notFollowMaterials='" + notFollowMaterials + '\'' +
             ", credentialsType='" + credentialsType + '\'' +
             ", credentialsDealType='" + credentialsDealType + '\'' +
             ", education='" + education + '\'' +

@@ -27,7 +27,27 @@ public class EmployeeDTO implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "+8")
     private Date birthday;
 
+    private Integer marriageStatus;
+
+    private String address;
+
     private String remark;
+
+    public Integer getMarriageStatus() {
+        return marriageStatus;
+    }
+
+    public void setMarriageStatus(Integer marriageStatus) {
+        this.marriageStatus = marriageStatus;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public String getCompanyId() {
         return companyId;
