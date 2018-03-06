@@ -37,11 +37,11 @@ public interface HfComTaskService extends IService<HfComTask> {
     PageRows<HfComTaskBo> queryCompanyTasks(PageInfo pageInfo);
 
     /**
-     * 获得未处理企业任务单列表
+     * 获得企业任务单列表
      * @param hfComTaskBo
      * @return
      */
-    List<HfComTaskBo> getNoProcessCompanyTasks(HfComTaskBo hfComTaskBo);
+    List<HfComTaskBo> getCompanyTasks(HfComTaskBo hfComTaskBo);
 
     /**
      * 获得企业任务单支付方式数据
