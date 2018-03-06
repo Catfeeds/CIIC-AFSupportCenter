@@ -132,7 +132,8 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         //公积金类型:1 基本 2 补充
         Integer hfType = fundCategory.equals("DIT00057") ? 1 : 2;
         hfEmpTask.setHfType(hfType);
-        baseMapper.insertHfEmpTask(hfEmpTask);
+        //baseMapper.insertHfEmpTask(hfEmpTask);
+        baseMapper.insert(hfEmpTask);
 
         return true;
     }
