@@ -609,7 +609,8 @@
         modified_time,
         created_by,
         modified_by) VALUES
-        (#{companyId},#{employeeId},#{customerId},#{empArchiveId},#{isChange},#{taskCategory},#{taskCategorySpecial},#{urgent},
+        (
+        #{companyId},#{employeeId},#{customerId},#{empArchiveId},#{isChange},#{taskCategory},#{taskCategorySpecial},#{urgent},
         #{submitterId},#{submitterName},#{submitterDeptId},#{submitterDeptName},#{submitTime},#{expireDate},#{submitterRemark},
         #{handleUserId},#{handleUserName},#{empSsSerial},#{handleWay},#{handleMonth},#{handleRemark},#{handleRemarkMan},
         #{handleRemarkDate},#{rejectionRemark},#{rejectionRemarkMan},#{rejectionRemarkDate},#{taskStatus},#{handleStatus},
@@ -629,4 +630,15 @@
     <select id="selectIdNumByEmployeeId" resultMap="BaseResultMapDto">
         SELECT id_num,id_card_type FROM emp_employee WHERE employee_id = #{employeeId}
     </select>
+
+    <select id="fetchInjuryRatio" resultType="java.util.HashMap" >
+        select com_ratio from ss_account_ratio ar
+        INNER JOIN ss_emp_archive ea ON ea.com_account_id=ar.com_account_id
+        where ar.is_active=1
+        and ea.emp_archive_id = #{empArchiveId}
+        and (#{startMonth} BETWEEN ar.start_month and ar.end_month or
+        ( #{startMonth}>=ar.start_month and ar.end_month is null))
+
+     </select>
+
 </mapper>

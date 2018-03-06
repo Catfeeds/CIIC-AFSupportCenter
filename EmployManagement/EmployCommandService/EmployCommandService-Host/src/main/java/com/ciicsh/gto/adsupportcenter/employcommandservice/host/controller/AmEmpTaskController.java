@@ -1,32 +1,30 @@
 package com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller;
 
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.*;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.employSearchExportOpt;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.SimpleDateFormat;
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -103,7 +101,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             }else if(5==status){
                 amEmpTaskCountBO.setEmployCancel(amEmpTaskBO.getCount());
                 num = num + amEmpTaskBO.getCount();
-            }else if(6==status){
+            }else{
                 amEmpTaskCountBO.setOther(amEmpTaskBO.getCount());
                 num = num + amEmpTaskBO.getCount();
             }
@@ -240,6 +238,13 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             entity.setModifiedTime(now);
             entity.setModifiedBy("sys");
         }
+        if(!StringUtil.isEmpty(entity.getEmployFeedback())){
+            AmEmployment amEmployment = amEmploymentService.selectById(entity.getEmploymentId());
+            AmEmpTask amEmpTask = business.selectById(amEmployment.getEmpTaskId());
+            amEmpTask.setTaskStatus(Integer.parseInt(entity.getEmployFeedback()));
+            business.insertOrUpdate(amEmpTask);
+        }
+
         boolean result = amArchiveService.insertOrUpdate(entity);
         return JsonResultKit.of(result);
     }
@@ -314,6 +319,35 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         param.put("employmentId",employmentId);
        boolean result = business.updateTaskStatus(param);
         return JsonResultKit.of(result);
+    }
+
+    /**
+     * 雇员社保查询查询导出
+     */
+    @RequestMapping("/employSearchExportOpt")
+    public void employSearchExportOpt(HttpServletResponse response, AmEmpTaskBO amEmpTaskBO) {
+
+        List<String> param = new ArrayList<String>();
+
+        if (!StringUtil.isEmpty(amEmpTaskBO.getParams())) {
+            String arr[] = amEmpTaskBO.getParams().split(",");
+            for (int i = 0; i < arr.length; i++) {
+                param.add(arr[i]);
+            }
+        }
+
+        amEmpTaskBO.setParam(param);
+
+        if (null != amEmpTaskBO.getTaskStatus() && amEmpTaskBO.getTaskStatus() == 0) {
+            amEmpTaskBO.setTaskStatus(null);
+        }
+
+        Date date = new Date();
+        String fileNme = "用工任务单_"+ StringUtil.getDateString(date)+".xls";
+
+        List<employSearchExportOpt> opts = business.queryAmEmpTaskList(amEmpTaskBO);
+
+        ExcelUtil.exportExcel(opts,employSearchExportOpt.class,fileNme,response);
     }
 
 

@@ -55,12 +55,13 @@ public class ComAccountController implements SsComProxy {
 
     @Override
     @RequestMapping("/getAccountByCompany")
-    public JsonResult getAccountByCompany(ComTaskParamDTO paramDTO) {
+    public JsonResult<ComAccountExtDTO> getAccountByCompany(@RequestBody ComTaskParamDTO paramDTO) {
         ComTaskParamBO paramBO = new ComTaskParamBO();
         BeanUtils.copyProperties(paramDTO,paramBO);
         ComAccountExtBO extBO = taskService.getComAccountInfo(paramBO);
-        ComAccountExtDTO extDTO = new ComAccountExtDTO();
+        ComAccountExtDTO extDTO = null;
         if(null != extBO){
+            extDTO = new ComAccountExtDTO();
             BeanUtils.copyProperties(extBO,extDTO);
         }
         return JsonResult.success(extDTO);

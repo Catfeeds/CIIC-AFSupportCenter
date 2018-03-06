@@ -98,7 +98,7 @@
         </dependency>
         <dependency>
             <groupId>com.ciicsh.gt1.companycenter</groupId>
-            <artifactId>queryservice-api</artifactId>
+            <artifactId>gt1.companycenter.queryservice-api</artifactId>
         </dependency>
 
         <dependency>
@@ -112,7 +112,10 @@
             <artifactId>gt1.productcenter.apiservice-api</artifactId>
             <version>1.0.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.ciicsh.gt1</groupId>
+            <artifactId>seaweedFS-client</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

@@ -1,10 +1,14 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.business.impl;
 
-import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfTpaTask;
 import com.ciicsh.gto.afsupportcenter.healthmedical.dao.AfTpaTaskMapper;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfTpaTaskPO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.dao.AfTpaTaskMapper;
+import com.ciicsh.gto.afsupportcenter.healthmedical.business.ZyTpaTaskService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.AfTpaTaskService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,8 +21,18 @@ import java.util.List;
  * @since 2018-02-11
  */
 @Service
-public class AfTpaTaskServiceImpl extends ServiceImpl<AfTpaTaskMapper, AfTpaTask> implements AfTpaTaskService {
+@Transactional
+public class AfTpaTaskServiceImpl extends ServiceImpl<AfTpaTaskMapper, AfTpaTaskPO> implements AfTpaTaskService {
+    @Autowired
+    private AfTpaTaskMapper afTpaTaskMapper;
 
+    @Autowired
+    private ZyTpaTaskService zyTpaTaskService;
 
+    @Override
+    public List<AfTpaTaskPO> getAfTpaTaskByInsureDate(String startInsureDate, String endInsureDate, String zyInsurance_Policy_ID) {
+            List<AfTpaTaskPO> poList = afTpaTaskMapper.getAfTpaTaskByInsureDate(startInsureDate,endInsureDate,zyInsurance_Policy_ID);
+           return  poList;
+    }
 
 }

@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Import;
 
 /**
  * Created by houwanhua on 2018/1/24.
+ * @author
  */
 @EnableFeignClients({"com.ciicsh.gto.sheetservice.api",
     "com.ciicsh.gto.settlementcenter.payment.cmdapi",
@@ -18,11 +19,13 @@ import org.springframework.context.annotation.Import;
     "com.ciicsh.gto.afcompanycenter.queryservice.api",
     "com.ciicsh.gto.afcompanycenter.commandservice.api"})
 @MapperScan("com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao")
-@SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.housefund.fundservice","com.ciicsh.gto.afsupportcenter.housefund.siteservice.host","com.ciicsh.common"})
+@SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.housefund.fundservice",
+                                            "com.ciicsh.gto",
+                                            "com.ciicsh.common"})
 @EnableDiscoveryClient
 @Import({CustomConfiguration.class, MybatisPlusConfig.class})
-public class SiteServiceApp {
+public class FundSiteServiceApp {
     public static void main(String[] args) {
-        SpringApplication.run(SiteServiceApp.class, args);
+        SpringApplication.run(FundSiteServiceApp.class, args);
     }
 }

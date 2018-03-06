@@ -8,16 +8,7 @@ spring:
   application:
     name: support-center-soc-site-service
   profiles:
-    active: dev
-  cloud:
-    stream:
-      bindings:
-        soc_report_output_channel:
-          destination: af_soc_report_generate # topic name
-          content-type: application/json
-          producer:
-            partitionCount: 1
-
+    active: fat
   http:
     multipart:
       enabled: true
@@ -80,8 +71,3 @@ management:
     enabled: false
   port: 6004
   context-path: /admin
-
-http:
-  multipart:
-  enabled: true
-  max-file-size: 2MB

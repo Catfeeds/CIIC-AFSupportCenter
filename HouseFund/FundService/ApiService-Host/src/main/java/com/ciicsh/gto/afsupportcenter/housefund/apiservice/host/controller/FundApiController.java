@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,8 +74,8 @@ public class FundApiController implements FundApiProxy{
         HfComTask hfComTask = CommonTransform.convertToEntity(hfComTaskDTO, HfComTask.class);
         hfComTask.setTaskStatus(0);
         hfComTask.setActive(true);
-        hfComTask.setCreatedTime(LocalDateTime.now());
-        hfComTask.setModifiedTime(LocalDateTime.now());
+        hfComTask.setCreatedTime(new Date());
+        hfComTask.setModifiedTime(new Date());
         hfComTask.setCreatedBy("system");
         hfComTask.setModifiedBy("system");
 

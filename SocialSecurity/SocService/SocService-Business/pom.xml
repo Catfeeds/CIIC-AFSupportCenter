@@ -49,17 +49,16 @@
         </dependency>
         <dependency>
             <groupId>com.ciicsh.gt1.companycenter</groupId>
-            <artifactId>commandservice-api</artifactId>
+            <artifactId>gt1.companycenter.commandservice-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ciicsh.gt1.companycenter</groupId>
+            <artifactId>gt1.companycenter.queryservice-api</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.ciicsh.gt1.commonservice</groupId>
             <artifactId>sheetservice-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ciicsh.gt1.companycenter</groupId>
-            <artifactId>queryservice-api</artifactId>
         </dependency>
 
         <dependency>
@@ -73,6 +72,10 @@
         <dependency>
             <groupId>com.ciicsh.gt1.employeecenter</groupId>
             <artifactId>gt1.employeecenter.apiservice-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ciicsh.gt1</groupId>
+            <artifactId>seaweedFS-client</artifactId>
         </dependency>
     </dependencies>
 

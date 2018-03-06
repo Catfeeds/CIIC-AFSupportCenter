@@ -4,8 +4,11 @@ import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCo
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskFrontService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl.SsEmpTaskServiceImpl;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 本 controller 测试专用，不做其他业务处理使用
@@ -25,6 +31,8 @@ import java.io.IOException;
 @RequestMapping("/api/soccommandservice/test")
 @Log("demo 测试")
 public class TestController {
+    @Autowired
+    SsEmpTaskMapper empTaskService;
 
     @RequestMapping(value = "/exprot")
     public void download(HttpServletRequest request, HttpServletResponse response, SsEmpTaskBO dto) {
@@ -57,4 +65,14 @@ SsEmpTaskFrontService ssEmpTaskFrontService;
         dto.setEmployeeCompany(companyDTO);
 //        ssEmpTaskFrontService.insertTaskTb(taskMsgDTO,taskCategory,0,dto);
     }
+
+    @Test
+    @RequestMapping(value = "/test1")
+    public void test1(){
+        long id=231;
+        BigDecimal d;
+        List<Map<String,BigDecimal>> list=empTaskService.fetchInjuryRatio(id ,"201712");
+        System.out.println(list.size());
+    }
+
 }

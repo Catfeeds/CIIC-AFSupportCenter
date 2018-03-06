@@ -1,7 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComTaskBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAccountComRelationService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.TaskCommonUtils;
@@ -20,8 +22,6 @@ import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import com.ciicsh.gto.logservice.api.LogServiceProxy;
-import com.ciicsh.gto.logservice.api.dto.LogDTO;
-import com.ciicsh.gto.logservice.api.dto.LogType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +34,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -55,6 +51,8 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
     private LogServiceProxy logServiceProxy;
     @Autowired
     private CommonApiUtils commonApiUtils;
+    @Autowired
+    private SsAccountComRelationService ssAccountComRelationService;
 
 
     @Log("查询未处理企业任务单")
@@ -199,8 +197,13 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         SsComTask ssComTask = getSsComTask(map);
         //获得工伤变更信息
         SsAccountRatio ssAccountRatio = getSsAccountRatio(map);
+        //查询是否有
+       EntityWrapper<SsAccountComRelation> ew = new EntityWrapper<SsAccountComRelation>();
+        ew.where("company_id={0}",map.get("companyId")).and("is_active=1");
+        List<SsAccountComRelation> resList = ssAccountComRelationService.selectList(ew);
         SsAccountComRelation ssAccountComRelation = null;
-        if (3 == ssComTask.getTaskStatus()) {
+        //关系表中有则 不添加
+        if (resList.size()==0) {
             //任务单为已完成状态 账户设置为可用
             ssComAccount.setState(new Integer(1));
             ssAccountComRelation = new SsAccountComRelation();
@@ -210,11 +213,14 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
             ssAccountComRelation.setCreatedBy("xsj");
             ssAccountComRelation.setModifiedBy("xsj");
             ssAccountComRelation.setModifiedTime(LocalDateTime.now());
+        }
+        //表示完成
+        if(3 == ssComTask.getTaskStatus()){
             //Map<String,Object> bankAccountMap=new HashMap<>();
-           // commonApiUtils.addBankAccount(bankAccountMap);
+            // commonApiUtils.addBankAccount(bankAccountMap);
             //调用工作流
             TaskCommonUtils.completeTask(ssComTask.getTaskId(),commonApiUtils,"xsj");
-        } else {
+        }else{
             //任务单 为初始，受理， 送审  账户为初始状态
             ssComAccount.setState(new Integer(0));
         }
@@ -442,6 +448,26 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
             dateFormatter) : null);
         //办理备注
         ssComTask.setHandleRemark(isNotNull(map.get("handleRemark")) ? map.get("handleRemark") : null);
+
+        ssComTask.setSsAccount(isNotNull(map.get("ssAccount")) ? map.get("ssAccount") : null);
+
+        ssComTask.setBankAccount(isNotNull(map.get("bankAccount")) ? map.get("bankAccount") : null);
+
+        ssComTask.setComAccountName(isNotNull(map.get("comAccountName")) ? map.get("comAccountName") : null);
+
+        ssComTask.setPaymentBank(isNotNull(map.get("paymentBank")) ? map.get("paymentBank") : null);
+
+        ssComTask.setPaymentWay(isNotNull(map.get("paymentWay")) ? Integer.valueOf(map.get("paymentWay")) : null);
+
+        ssComTask.setBillReceiver(isNotNull(map.get("billReceiver")) ? Integer.valueOf(map.get("billReceiver")) : null);
+
+        ssComTask.setIndustryCategory(isNotNull(map.get("industryCategory")) ? map.get("industryCategory") : null);
+
+        ssComTask.setExpireDateFront(isNotNull(map.get("expireDate")) ? Integer.valueOf(map.get("expireDate")):null);
+
+        ssComTask.setSettlementArea(isNotNull(map.get("settlementArea"))?map.get("settlementArea"):null);
+
+        ssComTask.setDispatchMaterial(isNotNull(map.get("dispatchMaterial"))?map.get("dispatchMaterial"):null);
         ssComTask.setModifiedBy("xsj");
         ssComTask.setModifiedTime(LocalDateTime.now());
         return ssComTask;
@@ -508,7 +534,6 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
             ssComAccount.setComAccountId(ssComTaskBO.getComAccountId());
             ssComAccount.setPaymentWay(ssComTaskBO.getPaymentWay());
             ssComAccount.setBillReceiver(ssComTaskBO.getBillReceiver());
-
             return ssComAccount;
         } else if ("3".equals(ssComTaskBO.getChangeContentValue())) {//公司名称变更
             ssComAccount.setComAccountId(ssComTaskBO.getComAccountId());

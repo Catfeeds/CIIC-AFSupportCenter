@@ -3,23 +3,22 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
+import com.ciicsh.gto.RedisManager;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.TaskSheetRequestDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBatchRejectBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskHandleBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRemarkBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskPeriodConstant;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskHandlePostBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.util.ExpireTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/fundcommandservice/hfEmpTaskHandle")
@@ -39,19 +39,17 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
     private HfEmpTaskPeriodService hfEmpTaskPeriodService;
     @Autowired
     private HfComAccountService hfComAccountService;
-    @Autowired
-    private CommonApiUtils commonApiUtils;
 
     /**
      * 雇员任务单办理信息查询
      *
-     * @param hfEmpTaskHandleDTO 前端提交参数
+     * @param hfEmpTaskHandlePostBo 前端提交参数
      * @return JSON格式处理结果
      */
     @RequestMapping("/empTaskHandleDataQuery")
-    public JsonResult<HfEmpTaskHandleBo> empTaskHandleDataQuery(HfEmpTaskHandlePostBo hfEmpTaskHandleDTO) {
+    public JsonResult<HfEmpTaskHandleBo> empTaskHandleDataQuery(HfEmpTaskHandlePostBo hfEmpTaskHandlePostBo) {
         // 获取当前任务单主体信息
-        List<HfEmpTaskHandleBo> list = business.getEmpTaskHandleData(hfEmpTaskHandleDTO);
+        List<HfEmpTaskHandleBo> list = business.getEmpTaskHandleData(hfEmpTaskHandlePostBo);
         if (CollectionUtils.isNotEmpty(list)) {
             if (list.size() > 1) {
                 return JsonResultKit.ofError("当前雇员任务单相关数据有问题，请检查");
@@ -61,8 +59,8 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
             if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK) {
                 return JsonResultKit.ofError("当前雇员任务单的任务类型不正确");
             }
-            if ((hfEmpTaskHandleBo.getTaskStatus() != null && !hfEmpTaskHandleBo.getTaskStatus().equals(hfEmpTaskHandleDTO.getTaskStatus()))
-                || (hfEmpTaskHandleBo.getTaskStatus() == null && hfEmpTaskHandleDTO.getTaskStatus() != HfEmpTaskConstant.TASK_STATUS_UNHANDLED)) {
+            if ((hfEmpTaskHandleBo.getTaskStatus() != null && !hfEmpTaskHandleBo.getTaskStatus().equals(hfEmpTaskHandlePostBo.getTaskStatus()))
+                || (hfEmpTaskHandleBo.getTaskStatus() == null && hfEmpTaskHandlePostBo.getTaskStatus() != HfEmpTaskConstant.TASK_STATUS_UNHANDLED)) {
                 return JsonResultKit.ofError("当前雇员任务单状态已变更，请到其他状态页签中查找");
             }
 
@@ -108,7 +106,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
 
                 hfEmpTaskPeriod.setStartMonth(hfEmpTaskHandleBo.getStartMonth());
                 hfEmpTaskPeriod.setEndMonth(hfEmpTaskHandleBo.getEndMonth());
-                if (hfEmpTaskHandleDTO.getHfType() == 1) {
+                if (hfEmpTaskHandlePostBo.getHfType() == 1) {
                     if (hfEmpTaskHandleBo.getBasicComHfMonth() != null) {
                         hfEmpTaskPeriod.setHfMonth(String.valueOf(hfEmpTaskHandleBo.getBasicComHfMonth()));
                     }
@@ -185,26 +183,10 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
     @RequestMapping("/empTaskHandle")
     public JsonResult empTaskHandle(@RequestBody JSONObject params) {
         try {
-            JsonResult result = business.inputDataSave(params, true);
-            if (result.getCode() == 200) {
-                if (result.getData() != null) {
-                    String taskId = result.getData().toString();
-                    System.out.println("empTaskHandle.taskId = " + taskId); // TODO log
-                    TaskSheetRequestDTO taskSheetRequestDTO = new TaskSheetRequestDTO();
-                    taskSheetRequestDTO.setTaskId(taskId);
-                    taskSheetRequestDTO.setAssignee("test"); // TODO currentUser
-                    commonApiUtils.completeTask(taskSheetRequestDTO);
-                }
-            } else {
-                return result;
-            }
+            return business.inputDataSave(params, true);
         } catch (BusinessException e) {
             return JsonResultKit.ofError(e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace(); // TODO log
-            return JsonResultKit.ofError("雇员任务单办理出现异常");
         }
-        return  JsonResultKit.of();
     }
 
     /**
@@ -287,23 +269,11 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
      */
     @RequestMapping("/empTaskHandleReject")
     public JsonResult empTaskHandleReject(@RequestBody HfEmpTaskBatchRejectBo hfEmpTaskBatchRejectBo) {
-        Long empTaskId = hfEmpTaskBatchRejectBo.getSelectedData()[0];
-        HfEmpTask hfEmpTask = business.selectById(empTaskId);
-        if (hfEmpTask == null || !hfEmpTask.getActive()) {
-            return JsonResultKit.ofError("当前任务单已不存在");
+        try {
+            return business.handleReject(hfEmpTaskBatchRejectBo);
+        } catch (BusinessException e) {
+            return JsonResultKit.ofError(e.getMessage());
         }
-
-        hfEmpTask = new HfEmpTask();
-        hfEmpTask.setEmpTaskId(empTaskId);
-        hfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_REJECTED);
-        hfEmpTask.setRejectionRemark(hfEmpTaskBatchRejectBo.getRejectionRemark());
-        hfEmpTask.setModifiedTime(LocalDateTime.now());
-        hfEmpTask.setModifiedBy("test"); // TODO current user
-
-        if (!business.updateById(hfEmpTask)) {
-            return JsonResultKit.ofError("当前任务单数据更新失败");
-        }
-        return JsonResultKit.of();
     }
 
     /**
@@ -317,9 +287,82 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         List<Long> empTaskIdList = array.toJavaList(Long.class);
 
         if (CollectionUtils.isNotEmpty(empTaskIdList)) {
-            return business.handleCancel(empTaskIdList);
+            return business.handleCancel(empTaskIdList, "test"); // TODO currentUser
         } else {
             return JsonResultKit.ofError("提交的雇员任务单ID集合为空");
         }
+    }
+
+    /**
+     * 查询转出单位（或转入单位）的企业公积金账户
+     *
+     * @param comAccountTransBo
+     * @return
+     */
+    @RequestMapping("/comAccountQuery")
+    public JsonResult comAccountQuery(ComAccountTransBo comAccountTransBo) {
+        String key = "-HfEmpTaskHandleController-comAccountQuery-ComAccountTransBo-list-";
+        List<ComAccountTransBo> rtnList = null;
+        List<ComAccountTransBo> comAccountTransBoList = ( List<ComAccountTransBo>) RedisManager.getObj(key);
+        if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
+            rtnList = comAccountTransBoList.stream().filter(e ->
+                e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
+        }
+
+        if (CollectionUtils.isEmpty(rtnList)) {
+            comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
+        }
+
+        if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
+            RedisManager.set(key, comAccountTransBoList, ExpireTime.TEN_MIN);
+            rtnList = comAccountTransBoList.stream().filter(e ->
+                e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
+        }
+
+        return JsonResultKit.of(rtnList);
+    }
+
+    @RequestMapping("/transEmpTaskQuery")
+    public JsonResult<HfEmpTask> transEmpTaskQuery(@RequestBody HfEmpTaskCreateTransBo hfEmpTaskCreateTransBo) {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("company_id", hfEmpTaskCreateTransBo.getCompanyId());
+        condition.put("employee_id", hfEmpTaskCreateTransBo.getEmployeeId());
+        condition.put("task_category", 9);
+        condition.put("hf_type", hfEmpTaskCreateTransBo.getHfType());
+        condition.put("is_active", 1);
+        List<HfEmpTask> hfEmpTaskList = business.selectByMap(condition);
+        if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
+            if (hfEmpTaskList.size() > 1) {
+                return JsonResultKit.ofError("该雇员的转移任务单数据有重复记录");
+            }
+            return JsonResultKit.of(hfEmpTaskList.get(0));
+        }
+        return JsonResultKit.of();
+    }
+
+    @RequestMapping("/createTransEmpTask")
+    public JsonResult<HfEmpTask> createTransEmpTask(@RequestBody HfEmpTaskCreateTransBo hfEmpTaskCreateTransBo) {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("company_id", hfEmpTaskCreateTransBo.getCompanyId());
+        condition.put("employee_id", hfEmpTaskCreateTransBo.getEmployeeId());
+        condition.put("task_category", 9);
+        condition.put("hf_type", hfEmpTaskCreateTransBo.getHfType());
+        condition.put("is_active", 1);
+        List<HfEmpTask> hfEmpTaskList = business.selectByMap(condition);
+        if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
+            if (hfEmpTaskList.size() > 1) {
+                return JsonResultKit.ofError("该雇员的转移任务单数据有重复记录");
+            }
+            return JsonResultKit.of(hfEmpTaskList.get(0));
+        } else {
+            hfEmpTaskCreateTransBo.setCreatedBy("test"); // TODO currentUser
+            int rtn = business.createTransEmpTask(hfEmpTaskCreateTransBo);
+            if (rtn == 1) {
+                hfEmpTaskList = business.selectByMap(condition);
+                return JsonResultKit.of(hfEmpTaskList.get(0));
+            }
+        }
+
+        return JsonResultKit.ofError("该雇员的转移任务单数据不存在");
     }
 }

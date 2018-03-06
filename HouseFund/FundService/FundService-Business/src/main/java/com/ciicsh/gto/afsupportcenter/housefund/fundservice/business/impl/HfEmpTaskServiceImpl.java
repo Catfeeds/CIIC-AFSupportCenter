@@ -6,6 +6,7 @@ import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialD
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBo;
@@ -25,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -41,16 +43,24 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
 
     @Override
     public PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo, String exceptTaskCategories) {
-        HfEmpTaskBo hfEmpTaskDTO = pageInfo.toJavaObject(HfEmpTaskBo.class);
+        HfEmpTaskBo hfEmpTaskBo = pageInfo.toJavaObject(HfEmpTaskBo.class);
         if (StringUtils.isNotBlank(exceptTaskCategories)) {
-            hfEmpTaskDTO.setExceptTaskCategories(exceptTaskCategories);
+            hfEmpTaskBo.setExceptTaskCategories(exceptTaskCategories);
         }
-        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryHfEmpTask(hfEmpTaskDTO));
+        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryHfEmpTask(hfEmpTaskBo));
+    }
+
+    @Override
+    public PageRows<HfEmpTaskRejectExportBo> queryHfEmpTaskRejectInPage(PageInfo pageInfo, String exceptTaskCategories) {
+        HfEmpTaskBo hfEmpTaskBo = pageInfo.toJavaObject(HfEmpTaskBo.class);
+        if (StringUtils.isNotBlank(exceptTaskCategories)) {
+            hfEmpTaskBo.setExceptTaskCategories(exceptTaskCategories);
+        }
+        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryHfEmpTaskReject(hfEmpTaskBo));
     }
 
     /**
      * 查询任务单信息
-     *
      * @param hfEmpTask
      */
     @Override
@@ -59,94 +69,34 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
     }
 
     /**
-     * <p>Description: 保存数据到雇员任务单表</p>
-     *
-     * @param taskMsgDTO   消息队列接受的对象
-     * @param taskCategory 任务类型
-     * @param isChange     是否更正任务单1 是 0 否
-     * @param dto          取得的雇员信息
-     * @return
-     * @author zhangxj
-     * @date 2017-12-28
-     */
-    @Transactional(
-        rollbackFor = {Exception.class}
-    )
-    @Override
-    public boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer isChange,
-                                 AfEmployeeInfoDTO dto) {
-        boolean result = false;
-        try {
-            //插入数据到雇员任务单表
-            insertTaskTb(taskMsgDTO, taskCategory, isChange, dto);
-
-            //更新旧的雇员任务单
-//            updateEmpTaskTb(taskMsgDTO, dto);
-
-            result = true;
-        } catch (Exception e) {
-            result = false;
-            throw new RuntimeException("保存到雇员任务单表处理异常");
-        }
-        return result;
-    }
-
-    /**
-     * 更新旧的雇员任务单
-     *
-     * @param taskMsgDTO 消息队列接受的对象
-     * @param dto        取得的雇员信息
-     * @return
-     * @author zhangxj
-     * @date 2017-12-28
-     */
-    @Transactional(
-        rollbackFor = {Exception.class}
-    )
-    @Override
-    public boolean updateEmpTaskTc(TaskCreateMsgDTO taskMsgDTO,
-                                   AfEmployeeInfoDTO dto) {
-        //更新旧的雇员任务单
-        return updateEmpTaskTb(taskMsgDTO, dto);
-    }
-
-    /**
-     * 保存数据到雇员任务单表
-     *
+     * 添加数据到雇员任务单表
      * @param taskMsgDTO
+     * @param fundCategory
      * @param taskCategory
      * @param isChange
      * @param dto
      * @return
      * @throws Exception
      */
-    @Transactional(
-        rollbackFor = {Exception.class}
-    )
+    @Transactional(rollbackFor = {Exception.class})
     @Override
-    public boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer isChange,
+    public boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer taskCategory, Integer isChange,
                                 AfEmployeeInfoDTO dto) throws Exception {
         AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
 
         HfEmpTask hfEmpTask = new HfEmpTask();
         hfEmpTask.setTaskId(taskMsgDTO.getTaskId());
-        hfEmpTask.setCompanyId(companyDto.getCompanyId());
-        hfEmpTask.setEmployeeId(companyDto.getEmployeeId());
         hfEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
-        hfEmpTask.setSubmitterId(companyDto.getCreatedBy());
-        hfEmpTask.setSubmitterRemark(companyDto.getRemark());
+        if(null != companyDto){
+            hfEmpTask.setCompanyId(companyDto.getCompanyId());
+            hfEmpTask.setEmployeeId(companyDto.getEmployeeId());
+            hfEmpTask.setSubmitterId(companyDto.getCreatedBy());
+            hfEmpTask.setSubmitterRemark(companyDto.getRemark());
+        }
         hfEmpTask.setSubmitTime(LocalDate.now());
-
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
         //转出单位(来源地)
-        if (paramMap.get("source") != null) {
-            String sSource = paramMap.get("source").toString();
-            if ("1".equals(sSource)) {
-                hfEmpTask.setTransferOutUnit("中心");
-            } else if ("2".equals(sSource)) {
-                hfEmpTask.setTransferOutUnit("原单位");
-            }
-        }
+        hfEmpTask.setTransferOutUnit(this.getTransUnit(paramMap));
         //任务类型
         hfEmpTask.setTaskCategory(taskCategory);
         //是否更正 1 是 0 否
@@ -173,56 +123,31 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         hfEmpTask.setModifiedTime(LocalDateTime.now());
         hfEmpTask.setCreatedBy(companyDto.getCreatedBy());
         hfEmpTask.setCreatedTime(LocalDateTime.now());
-
-        List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
-        //缴费段开始月份YYYYMM
-        for (AfEmpSocialDTO socialDto : socialList) {
-            if (socialDto.getPolicyName() != null && socialDto.getPolicyName().contains("公积金")) {
-                hfEmpTask.setEmpBase(socialDto.getPersonalBase());
-                if (socialDto.getStartDate() != null) {
-                    hfEmpTask.setStartMonth(StringUtil.dateToString(socialDto
-                            .getStartDate(),
-                        "yyyyMM"));
-                }
-                if (socialDto.getEndDate() != null) {
-                    hfEmpTask.setEndMonth(StringUtil.dateToString(socialDto.getEndDate(),
-                        "yyyyMM"));
-                }
-                break;
-            }
-        }
         hfEmpTask.setAmount(new BigDecimal(0));
-        for (AfEmpSocialDTO socialDto : socialList) {
-            if (socialDto.getPolicyName() != null) {
-                if (taskMsgDTO.getTaskType().startsWith("fund") && socialDto.getPolicyName().contains("基本公积金")
-                    || (taskMsgDTO.getTaskType().startsWith("add_fund") && socialDto.getPolicyName().contains
-                    ("补充公积金"))) {
-                    hfEmpTask.setAmount(socialDto.getTotal());
-                    break;
-                }
-            }
-        }
-        //公积金类型:1 基本 2 补充
-        if (taskMsgDTO.getTaskType().startsWith("fund")) {
-            hfEmpTask.setHfType(1);
-        } else if (taskMsgDTO.getTaskType().startsWith("add_fund")) {
-            hfEmpTask.setHfType(2);
+        List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
+        if(null != socialList && socialList.size() > 0){
+            this.setEmpTask(hfEmpTask,socialList,fundCategory);
         }
 
-        baseMapper.insertHfEmpTask(hfEmpTask);
+        //公积金类型:1 基本 2 补充
+        Integer hfType = fundCategory.equals("DIT00057") ? 1 : 2;
+        hfEmpTask.setHfType(hfType);
+        //baseMapper.insertHfEmpTask(hfEmpTask);
+        baseMapper.insert(hfEmpTask);
 
         return true;
     }
 
     /**
-     * 更新旧的雇员任务单
-     *
-     * @param taskMsgDTO
-     * @param dto
+     * 修改数据到雇员任务单表
+     * @param taskMsgDTO 消息队列接受的对象
+     * @param fundCategory 公积金类别（基本或者补充公积金）
+     * @param dto        取得的雇员信息
      * @return
      */
-    private boolean updateEmpTaskTb(TaskCreateMsgDTO taskMsgDTO,
-                                    AfEmployeeInfoDTO dto) {
+    @Transactional(rollbackFor = {Exception.class})
+    @Override
+    public boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, AfEmployeeInfoDTO dto) {
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
 
         AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
@@ -238,14 +163,8 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         hfEmpTask.setTaskFormContent(JSON.toJSONString(dto));
 
         //转出单位(来源地)
-        if (paramMap.get("source") != null) {
-            String sSource = paramMap.get("source").toString();
-            if ("1".equals(sSource)) {
-                hfEmpTask.setTransferOutUnit("中心");
-            } else if ("2".equals(sSource)) {
-                hfEmpTask.setTransferOutUnit("原单位");
-            }
-        }
+        hfEmpTask.setTransferOutUnit(this.getTransUnit(paramMap));
+
         //福利办理方
         hfEmpTask.setWelfareUnit(companyDto.getFundUnit());
 
@@ -264,35 +183,74 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         hfEmpTask.setModifiedTime(LocalDateTime.now());
 
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
-        //缴费段开始月份YYYYMM
-        for (AfEmpSocialDTO socialDto : socialList) {
-            if (socialDto.getPolicyName() != null && socialDto.getPolicyName().contains("公积金")) {
-                hfEmpTask.setEmpBase(socialDto.getPersonalBase());
-                if (socialDto.getStartDate() != null) {
-                    hfEmpTask.setStartMonth(StringUtil.dateToString(socialDto
-                            .getStartDate(),
-                        "yyyyMM"));
-                }
-                if (socialDto.getEndDate() != null) {
-                    hfEmpTask.setEndMonth(StringUtil.dateToString(socialDto.getEndDate(),
-                        "yyyyMM"));
-                }
-                break;
-            }
-        }
-        hfEmpTask.setAmount(new BigDecimal(0));
-        for (AfEmpSocialDTO socialDto : socialList) {
-            if (socialDto.getPolicyName() != null) {
-                if (taskMsgDTO.getTaskType().startsWith("fund") && socialDto.getPolicyName().contains("基本公积金")
-                    || (taskMsgDTO.getTaskType().startsWith("add_fund") && socialDto.getPolicyName().contains
-                    ("补充公积金"))) {
-                    hfEmpTask.setAmount(socialDto.getTotal());
-                    break;
-                }
-            }
+
+        if(null != socialList && socialList.size() > 0){
+            this.setEmpTask(hfEmpTask,socialList,fundCategory);
         }
         baseMapper.updateById(hfEmpTask);
 
         return true;
+    }
+
+
+    /**
+     * 设置EmpTask的值
+     * @param empTask
+     * @param socialDTOS
+     * @param fundCategory
+     */
+    private void setEmpTask(HfEmpTask empTask,List<AfEmpSocialDTO> socialDTOS,String fundCategory){
+        AfEmpSocialDTO socialDTO = this.getAfEmpSocialByType(socialDTOS,fundCategory);
+        if(null != socialDTO){
+            empTask.setEmpBase(socialDTO.getPersonalBase());
+            //缴费段开始月份YYYYMM
+            if(null != socialDTO.getStartDate()){
+                empTask.setStartMonth(StringUtil.dateToString(socialDTO.getStartDate(),"yyyyMM"));
+            }
+            if(null != socialDTO.getEndDate()){
+                empTask.setEndMonth(StringUtil.dateToString(socialDTO.getEndDate(),"yyyyMM"));
+            }
+            if(null != socialDTO.getTotal()){
+                empTask.setAmount(socialDTO.getTotal());
+            }
+        }
+    }
+
+    /**
+     * 根据公积金类型获取AfEmpSocialDTO
+     * @param socialDTOS
+     * @param fundCategory
+     * @return
+     */
+    private AfEmpSocialDTO getAfEmpSocialByType(List<AfEmpSocialDTO> socialDTOS,String fundCategory){
+        AfEmpSocialDTO socialDTO = null;
+        List<AfEmpSocialDTO> fundInfos = socialDTOS
+            .stream()
+            .filter(x->null != x.getPolicyType() && x.getPolicyType().equals(2) && x.getItemCode().equals(fundCategory))
+            .collect(Collectors.toList());
+        if(null != fundInfos && fundInfos.size() > 0){
+            socialDTO = fundInfos.get(0);
+        }
+        return socialDTO;
+    }
+
+
+    /**
+     * 转出单位(来源地)
+     * @param paramMap
+     * @return
+     */
+    private String getTransUnit(Map<String, Object> paramMap){
+        String transUnit = "";
+        if (null != paramMap.get("source")) {
+            String source = paramMap.get("source").toString();
+            if ("1".equals(source)) {
+                transUnit = "中心";
+            }
+            else if ("2".equals(source)) {
+                transUnit ="原单位";
+            }
+        }
+        return transUnit;
     }
 }

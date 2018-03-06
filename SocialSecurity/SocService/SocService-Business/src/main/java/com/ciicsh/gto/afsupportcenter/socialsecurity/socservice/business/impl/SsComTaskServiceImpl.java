@@ -18,7 +18,6 @@ import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
-import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -300,7 +299,7 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
 
     @Override
     public ComAccountExtBO getComAccountInfo(ComTaskParamBO paramBO) {
-        ComAccountExtBO accountExtBO = new ComAccountExtBO();
+        ComAccountExtBO accountExtBO = null;
         Integer result = ssAccountComRelationMapper.isExistCompany(paramBO.getCompanyId());
         List<ComAccountExtBO> extBOS = result > 0 ? sComAccountMapper.getComAccountByCompanyId(paramBO) : baseMapper.getComTaskByCompanyId(paramBO);
 

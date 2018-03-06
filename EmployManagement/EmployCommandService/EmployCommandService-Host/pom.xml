@@ -85,7 +85,7 @@
 
         <dependency>
             <groupId>com.ciicsh.gt1.companycenter</groupId>
-            <artifactId>commandservice-api</artifactId>
+            <artifactId>gt1.companycenter.commandservice-api</artifactId>
         </dependency>
 
         <dependency>

@@ -57,6 +57,96 @@ public class AmEmploymentBO extends AmEmployment {
 
     private  Integer count;
 
+    private  String archiveDirection;
+
+    private String employeeNature;
+
+    private String idNum;
+
+    private Integer idCardType;
+
+    private  String employeeName;
+
+    private String title;
+
+    private LocalDate jobCentreFeedbackDate;
+
+    private  String outReason;
+
+    private LocalDate outDate;
+
+    public String getOutReason() {
+        return outReason;
+    }
+
+    public void setOutReason(String outReason) {
+        this.outReason = outReason;
+    }
+
+    public LocalDate getOutDate() {
+        return outDate;
+    }
+
+    public void setOutDate(LocalDate outDate) {
+        this.outDate = outDate;
+    }
+
+    public LocalDate getJobCentreFeedbackDate() {
+        return jobCentreFeedbackDate;
+    }
+
+    public void setJobCentreFeedbackDate(LocalDate jobCentreFeedbackDate) {
+        this.jobCentreFeedbackDate = jobCentreFeedbackDate;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
+
+    public String getIdNum() {
+        return idNum;
+    }
+
+    public void setIdNum(String idNum) {
+        this.idNum = idNum;
+    }
+
+    public Integer getIdCardType() {
+        return idCardType;
+    }
+
+    public void setIdCardType(Integer idCardType) {
+        this.idCardType = idCardType;
+    }
+
+    public String getArchiveDirection() {
+        return archiveDirection;
+    }
+
+    public void setArchiveDirection(String archiveDirection) {
+        this.archiveDirection = archiveDirection;
+    }
+
+    public String getEmployeeNature() {
+        return employeeNature;
+    }
+
+    public void setEmployeeNature(String employeeNature) {
+        this.employeeNature = employeeNature;
+    }
+
     public Integer getRemarkType() {
         return remarkType;
     }

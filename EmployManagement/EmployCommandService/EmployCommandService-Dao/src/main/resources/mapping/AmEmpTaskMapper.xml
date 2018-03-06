@@ -24,6 +24,8 @@
         <result column="created_by" property="createdBy" />
         <result column="modified_by" property="modifiedBy" />
         <result column="task_form_content" property="taskFormContent" />
+        <result column="archive_direction" property="archiveDirection"/>
+        <result column="employee_nature" property="employeeNature"/>
 	</resultMap>
 
 </mapper>

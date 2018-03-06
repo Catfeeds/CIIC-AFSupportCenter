@@ -94,7 +94,7 @@ public class KafkaReceiver {
         }
     }
 
-    /**
+     /**
      * 订阅雇员翻牌任务单
      *
      * @param message
@@ -122,6 +122,7 @@ public class KafkaReceiver {
             logger.info("receiveEmpCompanyChange: " + JSON.toJSONString(taskMsgDTO));
         }
     }
+
 
     /**
      * 订阅雇员服务协议调整任务单
