@@ -21,12 +21,22 @@ public interface SocialSecurityConst {
     //结算区县
     public static final Map<String, String> DISTRICT_MAP = new HashMap<String, String>() {
         {
-            put("1", "徐汇");
-            put("2", "长宁");
-            put("3", "浦东");
-            put("4", "卢湾");
-            put("5", "静安");
-            put("6", "黄浦");
+            put("0", "徐汇");
+            put("1", "长宁");
+            put("2", "浦东");
+            put("3", "静安");
+            put("4", "黄浦");
+            put("5", "杨浦");
+            put("6", "普陀");
+            put("7", "宝山");
+            put("8", "虹口");
+            put("9", "闵行");
+            put("10", "松江");
+            put("11", "嘉定");
+            put("12", "青浦");
+            put("13", "奉贤");
+            put("14", "崇明");
+            put("15", "金山");
         }
     };
 
