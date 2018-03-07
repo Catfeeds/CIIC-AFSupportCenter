@@ -60,6 +60,19 @@
         <result column="finish_date_string" property="finishDateString"/>
     </resultMap>
 
+    <resultMap id="ComTaskInfoMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountInfoBO">
+        <result column="com_account_name" property="comAccountName" />
+        <result column="payment_way" property="paymentWay" />
+        <result column="close_day" property="closeDay" />
+        <result column="company_id" property="companyId" />
+        <result column="hf_type" property="hfType" />
+        <result column="hf_com_account" property="hfComAccount" />
+        <result column="com_start_month" property="comStartMonth" />
+        <result column="end_month" property="endMonth" />
+        <result column="end_type" property="endType" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
     <!--查询公积金企业任务单 未处理状态-->
     <select id="queryCompanyTask" resultMap="HfComTaskBOResultMap">
         SELECT
@@ -120,6 +133,28 @@
                 AND hft.task_status IN (${taskStatusString})
             </if>
         </where>
+        ORDER BY hft.com_task_id
+    </select>
+
+    <select id="getAccountsByCompany" resultMap="ComTaskInfoMap">
+        SELECT
+            com_account_name,
+            payment_way,
+            close_day,
+            company_id,
+            hf_type,
+            hf_com_account,
+            com_start_month,
+            end_month,
+            end_type,
+            remark
+        FROM
+            hf_com_task
+        WHERE
+            is_active = 1
+        AND task_category = 1
+        AND company_id = #{companyId}
+        AND hf_type = #{hfType}
     </select>
 
 </mapper>

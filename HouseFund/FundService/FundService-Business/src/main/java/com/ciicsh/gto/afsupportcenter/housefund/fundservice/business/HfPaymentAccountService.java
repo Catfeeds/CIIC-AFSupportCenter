@@ -5,5 +5,5 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentAcco
 
 public interface HfPaymentAccountService extends IService<HfPaymentAccount> {
 
-    boolean saveRejectResult(Long pkId, String remark, Integer payStatus);
+    boolean updatePaymentInfo(Long pkId, String remark, Integer payStatus);
 }

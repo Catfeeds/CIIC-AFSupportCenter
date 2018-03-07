@@ -54,6 +54,7 @@
         <result column="added_com_hf_month" property="addedComHfMonth" />
         <result column="added_end_month" property="addedEndMonth" />
         <result column="in_date" property="inDate" />
+        <result column="out_date" property="outDate" />
         <result column="hf_emp_account" property="hfEmpAccount" />
         <result column="start_month" property="startMonth" />
         <result column="end_month" property="endMonth" />
@@ -449,6 +450,7 @@
         ee.employee_name,
         ee.id_num,
         het.in_date,
+        het.out_date,
         het.hf_emp_account,
         het.task_status,
         het.start_month,
@@ -546,7 +548,8 @@
         created_by,
         modified_by,
         hf_emp_account,
-        in_date
+        in_date,
+        out_date
         FROM
         hf_emp_task et
         <where>

@@ -60,7 +60,7 @@
         from hf_com_account ca
         LEFT JOIN hf_account_com_relation ssac on ca.com_account_id = ssac.com_account_id
         <where>
-            and ca.is_active = 1
+            ca.is_active = 1
             <if test="companyId != null">
                 and ssac.is_active = 1
                 and ssac.company_id= #{companyId}

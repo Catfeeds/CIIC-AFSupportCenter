@@ -1,6 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.housefund.fundservice.host.controller;
-
-
+package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfComAccountPaymentWayBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfComTaskBo;
@@ -53,15 +51,15 @@ public class HfComTaskController {
     }
 
     /**
-     * 未处理企业任务单导出
+     * 导出企业任务单
      */
-    @Log("未处理企业任务单导出")
-    @RequestMapping("/noProcessTaskExport")
-    public void noProgressTaskExport(HttpServletResponse response, PageInfo pageInfo) {
+    @Log("导出企业任务单")
+    @RequestMapping("/exportCompanyTasks")
+    public void exportCompanyTasks(HttpServletResponse response, PageInfo pageInfo) {
         Date date = new Date();
-        String fileNme = "企业任务单未处理_" + StringUtil.getDateString(date) + ".xls";
+        String fileNme = "企业任务单_" + StringUtil.getDateString(date) + ".xls";
         HfComTaskBo hfComTaskBo = pageInfo.toJavaObject(HfComTaskBo.class);
-        List<HfComTaskBo> hfComTaskBos = hfComTaskService.getNoProcessCompanyTasks(hfComTaskBo);
+        List<HfComTaskBo> hfComTaskBos = hfComTaskService.getCompanyTasks(hfComTaskBo);
         ExcelUtil.exportExcel(hfComTaskBos, HfComTaskBo.class, fileNme, response);
     }
 

@@ -72,19 +72,18 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
      * @return
      */
     @Override
-    public boolean insertComTask(HfComTask hfComTask) {
-        return baseMapper.insertComTask(hfComTask);
+    public Integer addComTask(HfComTask hfComTask) {
+        //return baseMapper.insertComTask(hfComTask);
+        return baseMapper.insert(hfComTask);
     }
 
     /**
      * 判断企业任务单是否存在
-     *
-     * @param hfComTask
      * @return
      */
     @Override
-    public int countComTaskByCond(HfComTask hfComTask) {
-        return baseMapper.countComTaskByCond(hfComTask);
+    public Integer isExistComTask(String companyId, Integer hfType, Integer taskCategory) {
+        return baseMapper.isExistComTask(companyId,hfType,taskCategory);
     }
 
     /**
@@ -100,12 +99,12 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
     }
 
     /**
-     * 获得未处理企业任务单列表
+     * 获得企业任务单列表
      * @param hfComTaskBo
      * @return
      */
     @Override
-    public List<HfComTaskBo> getNoProcessCompanyTasks(HfComTaskBo hfComTaskBo) {
+    public List<HfComTaskBo> getCompanyTasks(HfComTaskBo hfComTaskBo) {
         return hfComTaskMapper.queryCompanyTask(hfComTaskBo);
     }
 

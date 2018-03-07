@@ -15,6 +15,9 @@ import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoQueryDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +44,8 @@ import java.util.Optional;
     private static Logger logger = LoggerFactory.getLogger(SupplyMedicalController.class);
     @Autowired
     private FragmentaryReimbursementQueryService fragmentaryReimbursementQueryService;
+    @Autowired
+    private EmployeeInfoProxy employeeInfoProxy;
 
     @Log("新增")
     @PostMapping("/save")
@@ -66,7 +71,7 @@ import java.util.Optional;
 
     @Log("零星报销单条记录查询")
     @GetMapping("/getEntityById")
-    public Result getEntityById(@RequestBody String id) {
+    public Result getEntityById(String id) {
         try {
             FragmentaryReimbursementPO code = fragmentaryReimbursementQueryService.getById(id);
             return ResultGenerator.genSuccessResult(code);
@@ -75,6 +80,18 @@ import java.util.Optional;
         }
     }
 
+    @GetMapping("/getEmployeeInfo")
+    public Result getEmployeeInfo(String employeeId,String companyId) {
+        try {
+            EmployeeHireInfoQueryDTO queryDTO = new EmployeeHireInfoQueryDTO();
+            queryDTO.setCompanyId(companyId);
+            queryDTO.setEmployeeId(employeeId);
+            com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeHireInfoDTO> info = employeeInfoProxy.getEmployeeHireInfo(queryDTO);
+            return ResultGenerator.genSuccessResult(info);
+        } catch (Exception e) {
+            return ResultGenerator.genServerFailResult();
+        }
+    }
 
     @PostMapping("/getEntityList")
     public Result getEntityList(@RequestBody FragmentaryReimbursementDTO fragmentaryReimbursementDTO) {

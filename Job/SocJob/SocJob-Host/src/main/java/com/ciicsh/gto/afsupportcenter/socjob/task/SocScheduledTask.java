@@ -38,7 +38,11 @@ public class SocScheduledTask {
     public void generateSocPayment() throws InterruptedException{
         logger.info("开始，当前时间：" + dateFormat.format(new Date()));
         String paymentMonth = CommonUtils.getPaymentMonth();
-        paymentComService.generateSocPaymentInfo(paymentMonth);
+        try {
+            paymentComService.generateSocPaymentInfo(paymentMonth);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         logger.info("结束，当前时间：" + dateFormat.format(new Date()));
     }
 

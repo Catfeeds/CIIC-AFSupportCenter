@@ -47,7 +47,7 @@
     <select id="queryAcceptanceList"
             parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.UninsuredMedicalAuditDTO"
             resultMap="AcceptanceResultMap">
-        SELECT hm_uninsured_medical.*
+        SELECT DISTINCT hm_uninsured_medical.*
         FROM hm_uninsured_medical
         JOIN emp_employee
         ON emp_employee.employee_id = hm_uninsured_medical.employee_id
@@ -124,7 +124,7 @@
     <select id="queryAcceptanceAuditList"
             parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.UninsuredMedicalAuditDTO"
             resultMap="AcceptanceResultMap">
-        SELECT hm_uninsured_medical.*
+        SELECT DISTINCT hm_uninsured_medical.*
         FROM hm_uninsured_medical
         JOIN emp_employee
         ON emp_employee.employee_id = hm_uninsured_medical.employee_id
