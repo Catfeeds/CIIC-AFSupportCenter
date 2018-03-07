@@ -216,8 +216,6 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         if(3 == ssComTask.getTaskStatus()){
             //任务单为已完成状态 账户设置为可用
             ssComAccount.setState(new Integer(1));
-            //Map<String,Object> bankAccountMap=new HashMap<>();
-            // commonApiUtils.addBankAccount(bankAccountMap);
             //调用工作流
             TaskCommonUtils.completeTask(ssComTask.getTaskId(),commonApiUtils,"xsj");
         }else{
