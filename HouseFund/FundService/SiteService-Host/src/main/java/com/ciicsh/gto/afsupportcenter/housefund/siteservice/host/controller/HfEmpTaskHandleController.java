@@ -3,7 +3,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.RedisManager;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
@@ -42,6 +42,8 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
     private HfEmpTaskPeriodService hfEmpTaskPeriodService;
     @Autowired
     private HfComAccountService hfComAccountService;
+    @Autowired
+    private HfEmpArchiveService hfEmpArchiveService;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
@@ -75,6 +77,16 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                     hfEmpTaskHandleBo.setCanHandle(true);
                 } else if (hfEmpTaskHandleBo.getHfType() == HfEmpTaskConstant.HF_TYPE_ADDED && hfEmpTaskHandleBo.getAddedComAccountClassId() != null) {
                     hfEmpTaskHandleBo.setCanHandle(true);
+                }
+            }
+
+            if (StringUtils.isEmpty(hfEmpTaskHandleBo.getHfEmpAccount())) {
+                Wrapper<HfEmpArchive> wrapper = new EntityWrapper<>();
+                wrapper.where(" is_active = 1 AND employee_id={0} AND hf_type={1}", hfEmpTaskHandleBo.getEmployeeId(), hfEmpTaskHandleBo.getHfType());
+                wrapper.orderBy("created_time", false);
+                List<HfEmpArchive> hfEmpArchiveList = hfEmpArchiveService.selectList(wrapper);
+                if (CollectionUtils.isNotEmpty(hfEmpArchiveList)) {
+                    hfEmpTaskHandleBo.setHfEmpAccount(hfEmpArchiveList.get(0).getHfEmpAccount());
                 }
             }
 
