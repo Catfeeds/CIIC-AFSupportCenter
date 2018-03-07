@@ -11,6 +11,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccou
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfComAccountConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskPeriodConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
@@ -131,11 +132,12 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                     if (StringUtils.isNotEmpty(hfMonth) && StringUtils.isNotEmpty(startMonth)) {
                         YearMonth hfMonthDate = YearMonth.parse(hfMonth, formatter);
                         YearMonth startMonthDate = YearMonth.parse(startMonth, formatter);
+                        HfEmpTaskPeriod hfEmpTaskPeriod = new HfEmpTaskPeriod();
 
+                        // 如果任务单起缴月份小于客户汇缴月，则小于的月份自动分成一个补缴的费用段
                         if (startMonthDate.isBefore(hfMonthDate)) {
                             YearMonth endMonthDate = hfMonthDate.minusMonths(1);
-
-                            HfEmpTaskPeriod hfEmpTaskPeriod = new HfEmpTaskPeriod();
+                            // 正常汇缴费用段
                             hfEmpTaskPeriod.setEmpTaskId(hfEmpTaskHandleBo.getEmpTaskId());
                             if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN) {
                                 hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_ADJUST);
@@ -149,13 +151,33 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                             hfEmpTaskPeriod.setRatioEmp(hfEmpTaskHandleBo.getRatioEmp());
                             hfEmpTaskPeriod.setAmount(hfEmpTaskHandleBo.getAmount());
                             hfEmpTaskPeriods.add(hfEmpTaskPeriod);
-
+                            // 补缴费用段
                             hfEmpTaskPeriod = new HfEmpTaskPeriod();
                             hfEmpTaskPeriod.setEmpTaskId(hfEmpTaskHandleBo.getEmpTaskId());
                             hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_REPAIR);
                             hfEmpTaskPeriod.setStartMonth(startMonth);
                             hfEmpTaskPeriod.setEndMonth(endMonthDate.format(formatter));
-                            hfEmpTaskPeriod.setHfMonth(hfMonth);
+                            // 如果账户分类是独立户则客户汇缴月=企业末次汇缴月 + 1
+                            if (hfEmpTaskHandleBo.getHfAccountType() == HfComAccountConstant.HF_ACCOUNT_TYPE_INDEPENDENT) {
+                                hfEmpTaskPeriod.setHfMonth(hfMonthDate.plusMonths(1).format(formatter));
+                            } else {
+                                // 如果账户分类非独立户则客户汇缴月=企业末次汇缴月
+                                hfEmpTaskPeriod.setHfMonth(hfMonth);
+                            }
+                            hfEmpTaskPeriod.setBaseAmount(hfEmpTaskHandleBo.getEmpBase());
+                            hfEmpTaskPeriod.setRatioCom(hfEmpTaskHandleBo.getRatioCom());
+                            hfEmpTaskPeriod.setRatioEmp(hfEmpTaskHandleBo.getRatioEmp());
+                            hfEmpTaskPeriod.setAmount(hfEmpTaskHandleBo.getAmount());
+                            hfEmpTaskPeriods.add(hfEmpTaskPeriod);
+                        } else {
+                            hfEmpTaskPeriod.setEmpTaskId(hfEmpTaskHandleBo.getEmpTaskId());
+                            if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN) {
+                                hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_ADJUST);
+                            } else {
+                                hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_NORMAL);
+                            }
+                            hfEmpTaskPeriod.setStartMonth(startMonth);
+                            hfEmpTaskPeriod.setHfMonth(startMonth);
                             hfEmpTaskPeriod.setBaseAmount(hfEmpTaskHandleBo.getEmpBase());
                             hfEmpTaskPeriod.setRatioCom(hfEmpTaskHandleBo.getRatioCom());
                             hfEmpTaskPeriod.setRatioEmp(hfEmpTaskHandleBo.getRatioEmp());
