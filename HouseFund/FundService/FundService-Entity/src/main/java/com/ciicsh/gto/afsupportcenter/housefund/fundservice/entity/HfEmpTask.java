@@ -45,6 +45,12 @@ public class HfEmpTask implements Serializable {
 	@TableField("in_date")
 	private LocalDateTime inDate;
     /**
+     * 离职时间
+     */
+    @TableField("out_date")
+    private LocalDateTime outDate;
+
+    /**
      * 是否更正 1 是 0 否
      */
 	@TableField("is_change")
@@ -336,7 +342,15 @@ public class HfEmpTask implements Serializable {
 		this.inDate = inDate;
 	}
 
-	public Integer getIsChange() {
+    public LocalDateTime getOutDate() {
+        return outDate;
+    }
+
+    public void setOutDate(LocalDateTime outDate) {
+        this.outDate = outDate;
+    }
+
+    public Integer getIsChange() {
 		return isChange;
 	}
 
@@ -720,6 +734,7 @@ public class HfEmpTask implements Serializable {
 			", employeeId=" + employeeId +
 			", empArchiveId=" + empArchiveId +
 			", inDate=" + inDate +
+            ", outDate" + outDate +
 			", isChange=" + isChange +
 			", hfType=" + hfType +
 			", hfEmpAccount=" + hfEmpAccount +

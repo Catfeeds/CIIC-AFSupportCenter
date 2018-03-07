@@ -52,6 +52,7 @@ public class HfEmpTaskHandleBo implements Serializable {
     private String employeeName;
     private String idNum;
     private LocalDate inDate;
+    private LocalDate outDate;
     private String hfEmpAccount;
     private String startMonth;
     private String endMonth;
