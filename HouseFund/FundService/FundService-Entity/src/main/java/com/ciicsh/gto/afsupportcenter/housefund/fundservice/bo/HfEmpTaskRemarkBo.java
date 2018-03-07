@@ -1,11 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo;
 
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class HfEmpTaskRemarkBo implements Serializable {
@@ -18,9 +19,11 @@ public class HfEmpTaskRemarkBo implements Serializable {
     private String taskCategoryName;
     private Integer taskStatus;
     private String taskStatusName;
-    private String submitterId;
-    private LocalDate submitTime;
-    private String submitterRemark;
+    private String modifiedBy;
+    private LocalDateTime modifiedTime;
+    private String handleRemark;
+    private String rejectionRemark;
+    private String remark;
 
     public String getHfTypeName() {
         return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.hfType), SocialSecurityConst.FUND_TYPE_KEY, false);
@@ -32,5 +35,13 @@ public class HfEmpTaskRemarkBo implements Serializable {
 
     public String getTaskStatusName() {
         return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.taskStatus), DictUtil.TYPE_VALUE_TASK_PROCESS_STATUS, false);
+    }
+
+    public String getRemark() {
+        if (taskStatus == HfEmpTaskConstant.TASK_STATUS_REJECTED) {
+            return this.handleRemark;
+        } else {
+            return this.rejectionRemark;
+        }
     }
 }
