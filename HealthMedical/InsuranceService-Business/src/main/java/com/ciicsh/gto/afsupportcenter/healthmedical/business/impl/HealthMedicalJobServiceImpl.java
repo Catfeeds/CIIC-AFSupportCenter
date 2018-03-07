@@ -122,7 +122,6 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
         if (!audited.isEmpty()) {
             PaymentApplyBatchPO batchPO = this.addPaymentApply(audited);
             JsonResult jsonResult = this.syncPaymentData(batchPO);
-            System.out.println(JSON.toJSONString(jsonResult));
             if(JsonResult.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())) {
                 uninsuredMedicalMapper.syncStatus(new EmployeePaymentStatusBO(
                     batchPO.getApplyBatchId(), SysConstants.BusinessId.UNINSURED_MEDICAL.getId(),
