@@ -387,7 +387,7 @@
             <if test="hfType != null">
                 AND het.hf_type = #{hfType}
             </if>
-            <if test="urgent == 1">
+            <if test="urgent != null">
                 AND het.urgent = #{urgent}
             </if>
             <if test="submitTimeStart != null">
