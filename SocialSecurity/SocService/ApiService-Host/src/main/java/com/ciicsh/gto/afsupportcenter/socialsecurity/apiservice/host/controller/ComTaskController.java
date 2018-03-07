@@ -11,6 +11,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAcco
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComTask;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
+import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,11 @@ public class ComTaskController implements SsComTaskProxy{
                     if(null!=ssComAccount && ssComAccount.getState()!=2)
                         return JsonResult.faultMessage("该企业已存在有效开户信息，不能再次开户！");
                 }
+            }
+            //结算中心转变成字符串
+            if(StringUtils.isNotBlank(ssComTaskDTO.getSettlementArea())){
+                String settlementArea = SocialSecurityConst.DISTRICT_MAP.get(ssComTaskDTO.getSettlementArea());
+                if(StringUtils.isNotBlank(settlementArea))ssComTaskDTO.setSettlementArea(settlementArea);
             }
             Long newComTaskId = insertSsComTask(ssComTaskDTO);
             return JsonResult.success(newComTaskId);

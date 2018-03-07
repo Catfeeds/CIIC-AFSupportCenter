@@ -185,6 +185,12 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         //DTO转BO
         SsComTaskBO ssComTask = CommonTransform.convertToDTO(ssComTaskDTO, SsComTaskBO.class);
         SsComTaskBO ssComTaskBO = business.queryComInfoAndPayWay(ssComTask);
+        if(null==ssComTaskBO.getComAccountId()){
+            SsComTask ssComTask1 =business.selectById(ssComTask.getComTaskId());
+            SsComTaskBO ssComTaskBO1 =  new SsComTaskBO();
+            BeanUtils.copyProperties(ssComTask1,ssComTaskBO1);
+            return JsonResultKit.of(ssComTaskBO1);
+        }
         return JsonResultKit.of(ssComTaskBO);
     }
 
