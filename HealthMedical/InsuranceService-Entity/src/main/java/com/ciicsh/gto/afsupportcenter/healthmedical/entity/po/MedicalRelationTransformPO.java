@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.enums.IdType;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -36,7 +37,7 @@ public class MedicalRelationTransformPO implements Serializable {
      * 转出日期
      */
 	@TableField("turn_out_date")
-	private LocalDate turnOutDate;
+	private Date turnOutDate;
     /**
      * 转出地址
      */
@@ -46,7 +47,7 @@ public class MedicalRelationTransformPO implements Serializable {
      * 转回日期
      */
 	@TableField("turn_back_date")
-	private LocalDate turnBackDate;
+	private Date turnBackDate;
     /**
      * 备注
      */
@@ -60,12 +61,12 @@ public class MedicalRelationTransformPO implements Serializable {
      * 创建时间
      */
 	@TableField("created_time")
-	private LocalTime createdTime;
+	private Date createdTime;
     /**
      * 最后更新时间
      */
 	@TableField("modified_time")
-	private LocalTime modifiedTime;
+	private Date modifiedTime;
     /**
      * 创建者登录名
      */
@@ -94,11 +95,11 @@ public class MedicalRelationTransformPO implements Serializable {
 		this.employeeId = employeeId;
 	}
 
-	public LocalDate getTurnOutDate() {
+	public Date getTurnOutDate() {
 		return turnOutDate;
 	}
 
-	public void setTurnOutDate(LocalDate turnOutDate) {
+	public void setTurnOutDate(Date turnOutDate) {
 		this.turnOutDate = turnOutDate;
 	}
 
@@ -110,11 +111,11 @@ public class MedicalRelationTransformPO implements Serializable {
 		this.turnOutAddress = turnOutAddress;
 	}
 
-	public LocalDate getTurnBackDate() {
+	public Date getTurnBackDate() {
 		return turnBackDate;
 	}
 
-	public void setTurnBackDate(LocalDate turnBackDate) {
+	public void setTurnBackDate(Date turnBackDate) {
 		this.turnBackDate = turnBackDate;
 	}
 
@@ -134,19 +135,19 @@ public class MedicalRelationTransformPO implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public LocalTime getCreatedTime() {
+	public Date getCreatedTime() {
 		return createdTime;
 	}
 
-	public void setCreatedTime(LocalTime createdTime) {
+	public void setCreatedTime(Date createdTime) {
 		this.createdTime = createdTime;
 	}
 
-	public LocalTime getModifiedTime() {
+	public Date getModifiedTime() {
 		return modifiedTime;
 	}
 
-	public void setModifiedTime(LocalTime modifiedTime) {
+	public void setModifiedTime(Date modifiedTime) {
 		this.modifiedTime = modifiedTime;
 	}
 
