@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountInfoBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
@@ -61,4 +62,8 @@ public interface HfComAccountMapper extends BaseMapper<HfComAccount> {
      * @return
      */
     List<ComAccountTransBo> queryComAccountTransBoList(ComAccountTransBo comAccountTransBo);
+
+    Integer isExistAccount(@Param("companyId") String companyId,@Param("hfType") Integer hfType);
+
+    List<AccountInfoBO> getAccountsByCompany(@Param("companyId") String companyId,@Param("hfType") Integer hfType);
 }
