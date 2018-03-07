@@ -1,17 +1,19 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountInfoBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountMapper;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.GetComFundAccountListRequestDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountCompanyPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountDetailPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccount;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +26,9 @@ import java.util.List;
  */
 @Service
 public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfComAccount> implements HfComAccountService {
+
+    @Autowired
+    private HfComTaskMapper comTaskMapper;
 
     /**
      * 查询企业社保账户信息表
@@ -77,5 +82,21 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
     @Override
     public List<ComAccountTransBo> queryComAccountTransBoList(ComAccountTransBo comAccountTransBo) {
         return baseMapper.queryComAccountTransBoList(comAccountTransBo);
+    }
+
+    @Override
+    public Integer isExistAccount(String companyId, Integer hfType) {
+        return baseMapper.isExistAccount(companyId,hfType);
+    }
+
+    @Override
+    public AccountInfoBO getAccountByCompany(String companyId, Integer hfType) {
+        AccountInfoBO info = null;
+        Integer result = baseMapper.isExistAccount(companyId,hfType);
+        List<AccountInfoBO> infos =  result > 0 ? baseMapper.getAccountsByCompany(companyId,hfType) : comTaskMapper.getAccountsByCompany(companyId,hfType);
+        if(null != infos && infos.size() > 0){
+            info = infos.get(0);
+        }
+        return info;
     }
 }

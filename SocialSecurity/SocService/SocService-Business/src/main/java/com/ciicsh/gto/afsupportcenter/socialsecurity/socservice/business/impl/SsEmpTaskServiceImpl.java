@@ -333,6 +333,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             if(empSocials.size()==0) throw new BusinessException("前道传递险种详细信息为空");
             //添加明细
             addEmpBaseDetail(newEmpBasePeriodList, empSocials, bo.getEmpArchiveId());
+            bo.setListEmpBasePeriod(newEmpBasePeriodList);
             {//顺调的逻辑
                 //表示顺调
                 bo.setAdustType(1);
@@ -347,6 +348,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
              */
             //判断正常缴纳时间段是否连续 返回不连续的两个下标   1代表 调整走调整
             judgeDateIsContinuity(ssEmpBasePeriodList, ssEmpTaskPeriod, bo, 1);
+
         }
     }
 
@@ -898,6 +900,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         if(empSocials.size()==0) throw new BusinessException("前道传递险种详细信息为空");
         //添加明细 （养 医 失 工 生育 险种）
         addEmpBaseDetail(newEmpBasePeriodList, empSocials, bo.getEmpArchiveId());
+        bo.setListEmpBasePeriod(newEmpBasePeriodList);
         //创建非标 数据
         SsEmpBasePeriod ssEmpBasePeriod =newEmpBasePeriodList.get(0);
         createNonstandardData(bo,ssEmpBasePeriod,null,null,null);
@@ -1265,7 +1268,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         if(empSocials.size()==0) throw new BusinessException("前道传递险种详细信息为空");
         //添加明细 （养 医 失 工 生育 险种）
         addEmpBaseDetail(basePeriods, empSocials, empArchiveId);
-
+        bo.setListEmpBasePeriod(basePeriods);
         {//生成非标数据
             String now = TaskCommonUtils.getMonthStr(LocalDate.now()).toString();
             SsEmpBasePeriod ssEmpBasePeriod= basePeriods.get(0);
@@ -1314,7 +1317,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
     /**
      * 添加时间段明细表
-     *
+     * ss_emp_base_detail
      * @param basePeriods
      * @param empSocials
      * @param empArchiveId
@@ -1352,6 +1355,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 by(detail);
                 detailsList.add(detail);
             });
+            p.setListEmpBaseDetail(detailsList);
             SsEmpBaseDetail detail = new SsEmpBaseDetail();
             detail.setEmpArchiveId(empArchiveId);
             detail.setEmpBasePeriodId(empBasePeriodId);
