@@ -302,6 +302,7 @@ public class KafkaReceiver {
      */
     private void saveSsEmpMakeUp(TaskCreateMsgDTO taskMsgDTO, Integer socialType) {
         try {
+            logger.info("entering saveSsEmpMakeUp");
             //调用客服中心接口获取任务单表单信息
             AfEmployeeInfoDTO dto = callEmpAgreement(taskMsgDTO);
             //保存雇员任务单表数据
