@@ -9,6 +9,7 @@
         <result column="employee_id" property="employeeId" />
         <result column="emp_archive_id" property="empArchiveId" />
         <result column="in_date" property="inDate" />
+        <result column="out_date" property="outDate" />
         <result column="is_change" property="isChange" />
         <result column="hf_type" property="hfType" />
         <result column="hf_emp_account" property="hfEmpAccount" />

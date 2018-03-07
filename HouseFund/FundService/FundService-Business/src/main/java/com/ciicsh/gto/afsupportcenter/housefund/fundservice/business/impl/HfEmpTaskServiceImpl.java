@@ -97,6 +97,11 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
             if (companyDto.getInDate() != null) {
                 hfEmpTask.setInDate(LocalDateTime.ofInstant(companyDto.getInDate().toInstant(), ZoneId.systemDefault()));
             }
+
+            if(null != companyDto.getOutDate()){
+                hfEmpTask.setOutDate(LocalDateTime.ofInstant(companyDto.getOutDate().toInstant(), ZoneId.systemDefault()));
+            }
+
             hfEmpTask.setCreatedBy(companyDto.getCreatedBy() != null ? companyDto.getCreatedBy() : "system");
             hfEmpTask.setModifiedBy(companyDto.getModifiedBy() != null ? companyDto.getModifiedBy() : "system");
         }
@@ -161,9 +166,11 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
             hfEmpTask.setSubmitterRemark(companyDto.getRemark());
             //福利办理方
             hfEmpTask.setWelfareUnit(companyDto.getFundUnit());
-            //入职日期
             if (companyDto.getInDate() != null) {
                 hfEmpTask.setInDate(LocalDateTime.ofInstant(companyDto.getInDate().toInstant(), ZoneId.systemDefault()));
+            }
+            if(null != companyDto.getOutDate()){
+                hfEmpTask.setOutDate(LocalDateTime.ofInstant(companyDto.getOutDate().toInstant(), ZoneId.systemDefault()));
             }
             hfEmpTask.setModifiedBy(companyDto.getModifiedBy() != null ? companyDto.getModifiedBy() : "system");
         }
@@ -199,7 +206,6 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         AfEmpSocialDTO socialDTO = this.getAfEmpSocialByType(socialDTOS,fundCategory);
         if(null != socialDTO){
             empTask.setEmpBase(socialDTO.getPersonalBase());
-            //缴费段开始月份YYYYMM
             if(null != socialDTO.getStartDate()){
                 empTask.setStartMonth(StringUtil.dateToString(socialDTO.getStartDate(),"yyyyMM"));
             }
@@ -208,6 +214,15 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
             }
             if(null != socialDTO.getTotal()){
                 empTask.setAmount(socialDTO.getTotal());
+            }
+            if(null != socialDTO.getPersonalRatio()){
+                empTask.setRatioEmp(socialDTO.getPersonalRatio());
+            }
+            if(null != socialDTO.getPersonalRatio()){
+                empTask.setRatioCom(socialDTO.getCompanyRatio());
+            }
+            if(null != socialDTO.getAccount()){
+                empTask.setHfEmpAccount(socialDTO.getAccount());
             }
         }
     }
