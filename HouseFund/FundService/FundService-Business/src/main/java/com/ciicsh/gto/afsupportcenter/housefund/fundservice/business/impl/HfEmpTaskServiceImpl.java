@@ -206,7 +206,6 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         AfEmpSocialDTO socialDTO = this.getAfEmpSocialByType(socialDTOS,fundCategory);
         if(null != socialDTO){
             empTask.setEmpBase(socialDTO.getPersonalBase());
-            //缴费段开始月份YYYYMM
             if(null != socialDTO.getStartDate()){
                 empTask.setStartMonth(StringUtil.dateToString(socialDTO.getStartDate(),"yyyyMM"));
             }
@@ -221,6 +220,9 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
             }
             if(null != socialDTO.getPersonalRatio()){
                 empTask.setRatioCom(socialDTO.getCompanyRatio());
+            }
+            if(null != socialDTO.getAccount()){
+                empTask.setHfEmpAccount(socialDTO.getAccount());
             }
         }
     }
