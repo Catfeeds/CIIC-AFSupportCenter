@@ -14,6 +14,8 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.PaymentApplyDetail
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.EmployeePaymentApplyPO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.PaymentApplyBatchPO;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.basicdataservice.api.CityServiceProxy;
+import com.ciicsh.gto.basicdataservice.api.dto.FullCityDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.BankCardRefundDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.BankCardInfoProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
@@ -51,6 +53,11 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
      */
     @Autowired
     private BankCardInfoProxy bankCardInfoProxy;
+    /**
+     *  公共服务
+     */
+    @Autowired
+    private CityServiceProxy cityServiceProxy;
     /**
      *  雇员付款申请
      */
@@ -285,9 +292,9 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
      * @return
      */
     private EmployeePaymentBO setAreaInfo (EmployeePaymentBO bo) {
-        //TODO ： 调用基础服务接口查询省份和城市名
-        bo.setProvinceCode("上海");
-        bo.setCityCode("上海市");
+        FullCityDTO dto = cityServiceProxy.selectFullByCityCode(bo.getCityCode());
+        bo.setProvinceCode(dto.getProvinceName());
+        bo.setCityCode(dto.getCityName());
         return bo;
     }
 

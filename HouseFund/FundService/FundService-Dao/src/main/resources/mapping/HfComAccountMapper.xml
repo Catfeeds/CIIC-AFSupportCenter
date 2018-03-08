@@ -18,8 +18,59 @@
 		<result column="modified_time" property="modifiedTime" />
 		<result column="created_by" property="createdBy" />
 		<result column="modified_by" property="modifiedBy" />
-		<result column="Column_15" property="Column15" />
 	</resultMap>
+
+    <resultMap id="AccountInfoMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountInfoBO">
+        <result column="com_account_name" property="comAccountName" />
+        <result column="payment_way" property="paymentWay" />
+        <result column="close_day" property="closeDay" />
+        <result column="company_id" property="companyId" />
+        <result column="hf_type" property="hfType" />
+        <result column="hf_com_account" property="hfComAccount" />
+        <result column="com_start_month" property="comStartMonth" />
+        <result column="end_month" property="endMonth" />
+        <result column="end_type" property="endType" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <select id="isExistAccount" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            hf_account_com_relation a
+        INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
+        INNER JOIN hf_com_account_class c ON a.com_account_id = b.com_account_id
+        WHERE
+            a.is_active = 1
+        AND b.is_active = 1
+        AND c.is_active = 1
+        AND a.company_id = #{companyId}
+        AND c.hf_type = #{hfType}
+    </select>
+
+    <select id="getAccountsByCompany" resultMap="AccountInfoMap">
+        SELECT
+            b.com_account_name,
+            b.payment_way,
+            b.close_day,
+            a.company_id,
+            c.hf_type,
+            c.hf_com_account,
+            c.com_start_month,
+            c.end_month,
+            c.end_type,
+            b.remark
+        FROM
+            hf_account_com_relation a
+        INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
+        INNER JOIN hf_com_account_class c ON a.com_account_id = c.com_account_id
+        WHERE
+            a.is_active = 1
+        AND b.is_active = 1
+        AND c.is_active = 1
+        AND a.company_id = #{companyId}
+        AND c.hf_type = #{hfType}
+    </select>
 
 
 </mapper>

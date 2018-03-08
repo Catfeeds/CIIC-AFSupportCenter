@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfMonthChargeMapper">
+    <resultMap id="ResultMapDiffBo" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfMonthChargeDiffBo">
+        <result column="amount" property="amount" />
+        <result column="emp_amount" property="empAmount" />
+        <result column="com_amount" property="comAmount" />
+    </resultMap>
 
 	<update id="updateHfMonthCharge">
         UPDATE hf_month_charge
@@ -56,4 +61,34 @@
             </foreach>
         </where>
     </delete>
+
+    <select id="getHfMonthChargeDiffSum" resultMap="ResultMapDiffBo">
+        SELECT
+            IFNULL(SUM(amount),0) AS amount,
+            IFNULL(SUM(emp_amount),0) AS emp_amount,
+            IFNULL(SUM(com_amount),0) AS com_amount
+        FROM hf_month_charge
+        <where>
+            is_active = 1
+            AND payment_type = 11
+            <if test="companyId != null">
+                AND company_id = #{companyId}
+            </if>
+            <if test="employeeId != null">
+                AND employee_id = #{employeeId}
+            </if>
+            <if test="hfType != null">
+                AND hf_type = #{hfType}
+            </if>
+            <if test="hfMonth != null">
+                AND #{hfMonth} > hf_month
+            </if>
+            <if test="ssMonthBelongStart != null">
+                AND ss_month_belong >= #{ssMonthBelongStart}
+            </if>
+            <if test="ssMonthBelongEnd != null">
+                AND #{ssMonthBelongEnd} >= ss_month_belong
+            </if>
+        </where>
+    </select>
 </mapper>

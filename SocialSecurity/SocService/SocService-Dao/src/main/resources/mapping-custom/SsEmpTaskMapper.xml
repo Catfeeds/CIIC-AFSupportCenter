@@ -386,7 +386,7 @@
     </update>
 
     <select id="selectMaxSsSerialByTaskId" resultType="java.lang.String">
-        SELECT IFNULL(max(ss_serial),0)+1 AS ss_serial FROM ss_emp_archive WHERE com_account_id =
+        SELECT IFNULL(max(cast(ss_serial as SIGNED INTEGER)),0)+1 AS ss_serial FROM ss_emp_archive WHERE com_account_id =
         (
         SELECT sacr.com_account_id FROM ss_emp_task et
         LEFT JOIN ss_account_com_relation sacr
@@ -435,6 +435,9 @@
         et.in_date,
         et.emp_base,
         et.chat_history,
+        et.task_id,
+        et.welfare_unit,
+        et.policy_detail_id,
         et.business_interface_id,
         e.employee_name,
         e.employee_id,
@@ -450,6 +453,7 @@
         <foreach collection="empTaskIdList" item="empTaskId" open="(" close=")" separator=",">
             #{empTaskId}
         </foreach>
+        AND et.task_status = 1
     </select>
 
     <!--通过TASKID等条件查询任务单-->

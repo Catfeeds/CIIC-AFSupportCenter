@@ -3,7 +3,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.RedisManager;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
@@ -11,6 +11,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccou
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfComAccountConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskPeriodConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
@@ -19,7 +20,7 @@ import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import com.ciicsh.gto.util.ExpireTime;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +43,8 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
     private HfEmpTaskPeriodService hfEmpTaskPeriodService;
     @Autowired
     private HfComAccountService hfComAccountService;
+    @Autowired
+    private HfEmpArchiveService hfEmpArchiveService;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
@@ -75,6 +78,16 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                     hfEmpTaskHandleBo.setCanHandle(true);
                 } else if (hfEmpTaskHandleBo.getHfType() == HfEmpTaskConstant.HF_TYPE_ADDED && hfEmpTaskHandleBo.getAddedComAccountClassId() != null) {
                     hfEmpTaskHandleBo.setCanHandle(true);
+                }
+            }
+
+            if (StringUtils.isEmpty(hfEmpTaskHandleBo.getHfEmpAccount())) {
+                Wrapper<HfEmpArchive> wrapper = new EntityWrapper<>();
+                wrapper.where(" is_active = 1 AND employee_id={0} AND hf_type={1}", hfEmpTaskHandleBo.getEmployeeId(), hfEmpTaskHandleBo.getHfType());
+                wrapper.orderBy("created_time", false);
+                List<HfEmpArchive> hfEmpArchiveList = hfEmpArchiveService.selectList(wrapper);
+                if (CollectionUtils.isNotEmpty(hfEmpArchiveList)) {
+                    hfEmpTaskHandleBo.setHfEmpAccount(hfEmpArchiveList.get(0).getHfEmpAccount());
                 }
             }
 
@@ -119,11 +132,12 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                     if (StringUtils.isNotEmpty(hfMonth) && StringUtils.isNotEmpty(startMonth)) {
                         YearMonth hfMonthDate = YearMonth.parse(hfMonth, formatter);
                         YearMonth startMonthDate = YearMonth.parse(startMonth, formatter);
+                        HfEmpTaskPeriod hfEmpTaskPeriod = new HfEmpTaskPeriod();
 
+                        // 如果任务单起缴月份小于客户汇缴月，则小于的月份自动分成一个补缴的费用段
                         if (startMonthDate.isBefore(hfMonthDate)) {
                             YearMonth endMonthDate = hfMonthDate.minusMonths(1);
-
-                            HfEmpTaskPeriod hfEmpTaskPeriod = new HfEmpTaskPeriod();
+                            // 正常汇缴费用段
                             hfEmpTaskPeriod.setEmpTaskId(hfEmpTaskHandleBo.getEmpTaskId());
                             if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN) {
                                 hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_ADJUST);
@@ -137,13 +151,33 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                             hfEmpTaskPeriod.setRatioEmp(hfEmpTaskHandleBo.getRatioEmp());
                             hfEmpTaskPeriod.setAmount(hfEmpTaskHandleBo.getAmount());
                             hfEmpTaskPeriods.add(hfEmpTaskPeriod);
-
+                            // 补缴费用段
                             hfEmpTaskPeriod = new HfEmpTaskPeriod();
                             hfEmpTaskPeriod.setEmpTaskId(hfEmpTaskHandleBo.getEmpTaskId());
                             hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_REPAIR);
                             hfEmpTaskPeriod.setStartMonth(startMonth);
                             hfEmpTaskPeriod.setEndMonth(endMonthDate.format(formatter));
-                            hfEmpTaskPeriod.setHfMonth(hfMonth);
+                            // 如果账户分类是独立户则客户汇缴月=企业末次汇缴月 + 1
+                            if (hfEmpTaskHandleBo.getHfAccountType() == HfComAccountConstant.HF_ACCOUNT_TYPE_INDEPENDENT) {
+                                hfEmpTaskPeriod.setHfMonth(hfMonthDate.plusMonths(1).format(formatter));
+                            } else {
+                                // 如果账户分类非独立户则客户汇缴月=企业末次汇缴月
+                                hfEmpTaskPeriod.setHfMonth(hfMonth);
+                            }
+                            hfEmpTaskPeriod.setBaseAmount(hfEmpTaskHandleBo.getEmpBase());
+                            hfEmpTaskPeriod.setRatioCom(hfEmpTaskHandleBo.getRatioCom());
+                            hfEmpTaskPeriod.setRatioEmp(hfEmpTaskHandleBo.getRatioEmp());
+                            hfEmpTaskPeriod.setAmount(hfEmpTaskHandleBo.getAmount());
+                            hfEmpTaskPeriods.add(hfEmpTaskPeriod);
+                        } else {
+                            hfEmpTaskPeriod.setEmpTaskId(hfEmpTaskHandleBo.getEmpTaskId());
+                            if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN) {
+                                hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_ADJUST);
+                            } else {
+                                hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_NORMAL);
+                            }
+                            hfEmpTaskPeriod.setStartMonth(startMonth);
+                            hfEmpTaskPeriod.setHfMonth(startMonth);
                             hfEmpTaskPeriod.setBaseAmount(hfEmpTaskHandleBo.getEmpBase());
                             hfEmpTaskPeriod.setRatioCom(hfEmpTaskHandleBo.getRatioCom());
                             hfEmpTaskPeriod.setRatioEmp(hfEmpTaskHandleBo.getRatioEmp());
@@ -198,9 +232,11 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                     bo.setEmpTaskId(e.getEmpTaskId());
                     bo.setHfType(e.getHfType());
                     bo.setTaskCategory(e.getTaskCategory());
-                    bo.setSubmitterId(e.getSubmitterId());
-                    bo.setSubmitTime(e.getSubmitTime());
-                    bo.setSubmitterRemark(e.getSubmitterRemark());
+                    bo.setTaskStatus(e.getTaskStatus());
+                    bo.setModifiedBy(e.getModifiedBy());
+                    bo.setModifiedTime(e.getModifiedTime());
+                    bo.setHandleRemark(e.getHandleRemark());
+                    bo.setRejectionRemark(e.getRejectionRemark());
                     hfEmpTaskRemarkBos.add(bo);
                 });
                 hfEmpTaskHandleBo.setEmpTaskRemarks(hfEmpTaskRemarkBos);

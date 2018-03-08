@@ -185,6 +185,12 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         //DTO转BO
         SsComTaskBO ssComTask = CommonTransform.convertToDTO(ssComTaskDTO, SsComTaskBO.class);
         SsComTaskBO ssComTaskBO = business.queryComInfoAndPayWay(ssComTask);
+        if(null==ssComTaskBO.getComAccountId()){
+            SsComTask ssComTask1 =business.selectById(ssComTask.getComTaskId());
+            SsComTaskBO ssComTaskBO1 =  new SsComTaskBO();
+            BeanUtils.copyProperties(ssComTask1,ssComTaskBO1);
+            return JsonResultKit.of(ssComTaskBO1);
+        }
         return JsonResultKit.of(ssComTaskBO);
     }
 
@@ -204,8 +210,6 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         SsAccountComRelation ssAccountComRelation = null;
         //关系表中有则 不添加
         if (resList.size()==0) {
-            //任务单为已完成状态 账户设置为可用
-            ssComAccount.setState(new Integer(1));
             ssAccountComRelation = new SsAccountComRelation();
             ssAccountComRelation.setCompanyId(map.get("companyId"));
             ssAccountComRelation.setMajorCom(new Integer(1));
@@ -216,8 +220,8 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         }
         //表示完成
         if(3 == ssComTask.getTaskStatus()){
-            //Map<String,Object> bankAccountMap=new HashMap<>();
-            // commonApiUtils.addBankAccount(bankAccountMap);
+            //任务单为已完成状态 账户设置为可用
+            ssComAccount.setState(new Integer(1));
             //调用工作流
             TaskCommonUtils.completeTask(ssComTask.getTaskId(),commonApiUtils,"xsj");
         }else{

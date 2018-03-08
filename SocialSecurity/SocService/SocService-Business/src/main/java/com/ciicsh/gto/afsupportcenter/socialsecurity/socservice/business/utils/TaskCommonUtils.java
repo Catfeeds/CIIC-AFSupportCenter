@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils;
 import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialUpdateDateDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBasePeriod;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.enumeration.ItemCode;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
@@ -13,17 +14,23 @@ import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
-
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class TaskCommonUtils {
+
+    private final static Logger logger = LoggerFactory.getLogger(TaskCommonUtils.class);
     /**
      * 处理工作流结果
      * @param result
@@ -80,10 +87,14 @@ public class TaskCommonUtils {
      * @param ssEmpTaskBO
      */
     public static void updateConfirmDate(CommonApiUtils commonApiUtils, SsEmpTaskBO ssEmpTaskBO){
+        System.out.println("--------------------------------------------进入调用实缴金额接口");
         //根据不同类型 组装不同参数
         List<AfEmpSocialUpdateDateDTO> paramsList = confirmDateGetParams(ssEmpTaskBO);
         try {
+            logger.info("任务单ID{"+ssEmpTaskBO.getEmpTaskId()+"}:调用实缴金额接口start");
             int result =commonApiUtils.updateConfirmDate(paramsList);
+             logger.info("实缴金额结果:{"+result+"}");
+            logger.info("任务单ID{"+ssEmpTaskBO.getEmpTaskId()+"}:调用实缴金额接口end");
         } catch (Exception e) {
             e.printStackTrace();
             throw new BusinessException("实缴金额回调异常");
@@ -105,24 +116,37 @@ public class TaskCommonUtils {
      */
     private static List<AfEmpSocialUpdateDateDTO> taskCallBackParam(SsEmpTaskBO ssEmpTaskBO) {
         List<AfEmpSocialUpdateDateDTO> paramsList = new ArrayList<>();
-        AfEmpSocialUpdateDateDTO afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
-        if(StringUtils.isBlank(ssEmpTaskBO.getBusinessInterfaceId())) throw new BusinessException("messionId 为空.");
-        afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(ssEmpTaskBO.getBusinessInterfaceId())); //messionId
-        afEmpSocialUpdateDateDTO.setCompanyId(ssEmpTaskBO.getCompanyId());//企业Id
-        afEmpSocialUpdateDateDTO.setItemCode(ItemCode.SOCIAL_ITEM_CODE.getItemCode());//社保 的code
-        switch (ssEmpTaskBO.getTaskStatus()) {
-            case 4: //批退
-                afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(new BigDecimal(0));
-                afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(new BigDecimal(0));
-                break;
-            default: //任务办理
-                afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(ssEmpTaskBO.getCompanyConfirmAmount());
-                afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(ssEmpTaskBO.getPersonalConfirmAmount());
-                afEmpSocialUpdateDateDTO.setStartConfirmDate(stringTranserDate(ssEmpTaskBO.getEmpTaskPeriods().get(0).getStartMonth()));
-                afEmpSocialUpdateDateDTO.setEndConfirmDate(stringTranserDate(ssEmpTaskBO.getEmpTaskPeriods().get(0).getEndMonth()));
-                break;
+
+        if(StringUtils.isBlank(ssEmpTaskBO.getBusinessInterfaceId())){
+            throw new BusinessException("messionId 为空.");
         }
-        paramsList.add(afEmpSocialUpdateDateDTO);
+
+        if(ssEmpTaskBO.getListEmpBasePeriod()==null){//说明是逆向调整，没有福利段
+            return paramsList;
+        }
+        //回调前道合同协议，迭代每一个险种,目前的需求福利段只有一条福利段
+        ssEmpTaskBO.getListEmpBasePeriod().get(0).getListEmpBaseDetail().forEach(SsEmpBaseDetail->{
+                AfEmpSocialUpdateDateDTO afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
+                afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(ssEmpTaskBO.getBusinessInterfaceId())); //messionId
+                afEmpSocialUpdateDateDTO.setCompanyId(ssEmpTaskBO.getCompanyId());//企业Id
+
+                switch (ssEmpTaskBO.getTaskStatus()) {
+                    case 4: //批退
+                        afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(new BigDecimal(0));
+                        afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(new BigDecimal(0));
+                        break;
+                    default: //任务办理
+                        afEmpSocialUpdateDateDTO.setItemCode( SsEmpBaseDetail.getSsType());//社保险种
+                        afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(SsEmpBaseDetail.getComAmount());
+                        afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(SsEmpBaseDetail.getEmpAmount());
+                        //afEmpSocialUpdateDateDTO.setStartConfirmDate(stringTranserDate(ssEmpTaskBO.getEmpTaskPeriods().get(0).getStartMonth()));
+                        afEmpSocialUpdateDateDTO.setStartConfirmDate(stringTranserDate(ssEmpTaskBO.getListEmpBasePeriod().get(0).getStartMonth()));
+                        afEmpSocialUpdateDateDTO.setEndConfirmDate(stringTranserDateEndMonth(ssEmpTaskBO.getListEmpBasePeriod().get(0).getEndMonth()));
+                        break;
+                }
+                paramsList.add(afEmpSocialUpdateDateDTO);
+            }
+        );
         return paramsList;
     }
 
@@ -167,7 +191,16 @@ public class TaskCommonUtils {
             throw new BusinessException();
         }
     }
-
+    private static Date stringTranserDateEndMonth(String endMonth) {
+        if(StringUtils.isBlank(endMonth)) return null;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+        try {
+            Date date =simpleDateFormat.parse(endMonth+"28");//临时做法，应取最后一天
+            return date;
+        } catch (ParseException e) {
+            throw new BusinessException();
+        }
+    }
     /**
      *  任务单 完成 实缴金额  回调
      * @param ssEmpTaskBO

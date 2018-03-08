@@ -3,22 +3,28 @@ package com.ciicsh.gto.afsupportcenter.housefund.apiservice.host.controller;
 import com.ciicsh.common.entity.JsonResult;
 import com.ciicsh.gto.afsupportcenter.housefund.apiservice.host.translator.ApiTranslator;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.FundApiProxy;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.ComAccountExtDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccountDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccountParamDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComTaskDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountInfoBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComTaskService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask;
-import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -31,6 +37,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/api/fund")
+@Api(value = "fund-api-service",description = "support interface for other center")
 public class FundApiController implements FundApiProxy{
     @Autowired
     HfComAccountService hfComAccountService;
@@ -40,56 +47,63 @@ public class FundApiController implements FundApiProxy{
 
     /**
      * 企业社保账户开户、变更、转移、转出的 创建任务单接口
-     * @param hfComTaskDTO
+     * @param comTaskDTO
      * @return
      */
-    @Log("企业社保账户开户、变更、转移、转出的 创建任务单接口")
     @Override
+    @ApiOperation(value = "企业社保账户开户、变更、转移、转出的 创建任务单接口",notes = "根据ComTask对象创建")
+    @ApiImplicitParam(name = "comTaskDTO",value = "企业任务单对象 comTaskDTO",required = true,dataType = "HfComTaskDTO")
     @PostMapping("/saveComTask")
-    public JsonResult saveHfComTask(@RequestBody HfComTaskDTO hfComTaskDTO) {
+    public JsonResult saveComTask(@RequestBody HfComTaskDTO comTaskDTO) {
         try {
-            if (StringUtils.isBlank(hfComTaskDTO.getCompanyId())) {
+            if (StringUtils.isBlank(comTaskDTO.getCompanyId())) {
                 return JsonResult.faultMessage("客户Id不能为空！");
             }
-            if (hfComTaskDTO.getTaskCategory() == null || hfComTaskDTO.getTaskCategory() == 0) {
-                return com.ciicsh.common.entity.JsonResult.faultMessage("任务类型不能为空！");
+            if (comTaskDTO.getTaskCategory() == null || comTaskDTO.getTaskCategory() == 0) {
+                return JsonResult.faultMessage("任务类型不能为空！");
             }
-            HfComTask ssComTask = new HfComTask();
-            BeanUtils.copyProperties(hfComTaskDTO, ssComTask);
-            int cnt = hfComTaskService.countComTaskByCond(ssComTask);
-            if (cnt > 0) {
+            boolean flag = checkIsExistAccount(comTaskDTO);
+            if(flag){
                 return JsonResult.faultMessage("该企业已存在相同类型的处理中任务单，不能重复添加！");
             }
-            Long newComTaskId = insertHfComTask(hfComTaskDTO);
-            return JsonResult.success(newComTaskId);
+            else{
+                HfComTask ssComTask = new HfComTask();
+                BeanUtils.copyProperties(comTaskDTO, ssComTask);
+                Long newComTaskId = addComTask(comTaskDTO);
+                return JsonResult.success(newComTaskId);
+            }
         } catch (Exception e) {
-            return JsonResult.faultMessage(e.getMessage());
+            return JsonResult.faultMessage("exception: "+e.getMessage());
         }
     }
 
+    private boolean checkIsExistAccount(HfComTaskDTO comTask){
+        Integer isExist = hfComAccountService.isExistAccount(comTask.getCompanyId(),comTask.getHfType());
+        if(isExist <= 0){
+            isExist = hfComTaskService.isExistComTask(comTask.getCompanyId(),comTask.getHfType(),comTask.getTaskCategory());
+        }
+        return isExist > 0 ? true : false;
+    }
+
     //保存企业任务单
-    private Long insertHfComTask(@RequestBody HfComTaskDTO hfComTaskDTO) {
-        boolean result = false;
-        //数据转换
-        HfComTask hfComTask = CommonTransform.convertToEntity(hfComTaskDTO, HfComTask.class);
+    private Long addComTask(HfComTaskDTO hfComTaskDTO) {
+        HfComTask hfComTask = new HfComTask();
+        BeanUtils.copyProperties(hfComTaskDTO,hfComTask);
         hfComTask.setTaskStatus(0);
         hfComTask.setActive(true);
         hfComTask.setCreatedTime(new Date());
         hfComTask.setModifiedTime(new Date());
         hfComTask.setCreatedBy("system");
         hfComTask.setModifiedBy("system");
-
-        //任务单上前道系统传递过来的内容，Json格式
-//        hfComTask.setTaskFormContent(JSONObject.toJSONString(hfComTaskDTO));
-
-        hfComTaskService.insertComTask(hfComTask);
+        hfComTaskService.addComTask(hfComTask);
         return hfComTask.getComTaskId();
     }
 
     @Override
-    @RequestMapping("/getAccountList")
-    @Log("获取企业社保账户信息表")
-    public JsonResult getHfComAccountList(@RequestBody HfComAccountParamDTO paramDto) {
+    @ApiOperation(value = "获取企业社保账户信息",notes = "根据HfComAccountParamDTO对象获取")
+    @ApiImplicitParam(name = "paramDto",value = "企业任务单对象 paramDto",required = true,dataType = "HfComAccountParamDTO")
+    @PostMapping("/getAccountList")
+    public JsonResult<List<HfComAccountDTO>> getComAccountList(@RequestBody HfComAccountParamDTO paramDto) {
 
         ComAccountParamExtBo paramBO = new ComAccountParamExtBo();
         BeanUtils.copyProperties(paramDto,paramBO);
@@ -101,5 +115,28 @@ public class FundApiController implements FundApiProxy{
             accountDTOS = ssComAccountList.stream().map(ApiTranslator::toComAccountDTO).collect(Collectors.toList());
         }
         return JsonResult.success(accountDTOS);
+    }
+
+    /**
+     * 根据公司ID和公积金类别获取公积金账户信息
+     * @param companyId 公司ID
+     * @param hfType 公积金类型（基本公积金或者补充公积金）
+     * @return
+     */
+    @Override
+    @ApiOperation(value = "获取公积金账户信息",notes = "根据公司ID和公积金类别获取公积金账户信息")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "companyId", value = "公司ID", required = true, dataType = "String"),
+        @ApiImplicitParam(name = "hfType", value = "公积金类型(基本公积金或者补充公积金)", required = true, dataType = "int")
+    })
+    @GetMapping("/getAccountByCompany")
+    public JsonResult<ComAccountExtDTO> getAccountByCompany(@RequestParam("companyId") String companyId, @RequestParam("hfType") Integer hfType) {
+        AccountInfoBO info = hfComAccountService.getAccountByCompany(companyId,hfType);
+        ComAccountExtDTO extDTO = null;
+        if(null != info){
+            extDTO = new ComAccountExtDTO();
+            BeanUtils.copyProperties(info,extDTO);
+        }
+        return JsonResult.success(extDTO);
     }
 }

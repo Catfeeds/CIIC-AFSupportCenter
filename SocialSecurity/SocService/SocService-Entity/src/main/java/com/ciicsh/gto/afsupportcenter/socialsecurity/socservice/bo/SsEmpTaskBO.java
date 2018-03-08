@@ -3,6 +3,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo;
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.AmEmpTaskDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBaseDetail;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBasePeriod;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTaskPeriod;
 import lombok.Data;
@@ -72,7 +74,8 @@ public class SsEmpTaskBO implements Serializable {
     private LocalDateTime modifiedTime;
     private String createdBy;
     private String modifiedBy;
-
+    //费用段
+    private List<SsEmpBasePeriod> listEmpBasePeriod;
     // ohter
     // 操作类型，用于区分操作
     // operatorType 操作类型，1 常规操作、2 特殊操作，默认常规操作

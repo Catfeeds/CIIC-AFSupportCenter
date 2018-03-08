@@ -1,9 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.messageservice.host.message;
 
 import com.alibaba.fastjson.JSON;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeQueryDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeSocialQueryDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeSocialProxy;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskFrontService;
@@ -13,6 +16,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComTask
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
+import com.netflix.discovery.converters.Auto;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +47,9 @@ public class KafkaReceiver {
     private SsPaymentComService ssPaymentComService;
     @Autowired
     private AfEmployeeCompanyProxy afEmployeeCompanyProxy;
+
+    @Autowired
+    private AfEmployeeSocialProxy afEmployeeSocialProxy;
 
     /**
      * 订阅社保新进任务单
@@ -90,7 +97,7 @@ public class KafkaReceiver {
         logger.info("entering receiveChargeResume: " + JSON.toJSONString(taskMsgDTO));
         //判断taskType是否是社保新进(social_make_up)，如果不是则无需处理
         if (TaskSink.SOCIAL_MAKE_UP.equals(taskMsgDTO.getTaskType())) {
-            saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_4));
+            saveSsEmpMakeUp(taskMsgDTO,Integer.parseInt(SocialSecurityConst.TASK_TYPE_4));
         }
     }
 
@@ -154,7 +161,7 @@ public class KafkaReceiver {
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType()) || TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
             try {
                 //调用接口-调用客服中心接口，获取任务单表单信息
-                AfEmployeeInfoDTO dto = callEmployeeCompany(taskMsgDTO);
+                AfEmployeeInfoDTO dto = callEmpAgreement(taskMsgDTO);
                 //taskId为空，该消息则是由af客服中心发出，表示支持中心历史任务单未完成
                 if (StringUtils.isBlank(taskMsgDTO.getTaskId())) {
                     Map<String, Object> paramMap = taskMsgDTO.getVariables();
@@ -230,19 +237,38 @@ public class KafkaReceiver {
         }
     }
 
+//    /**
+//     * 从接口获取数据并保存到社保雇员任务单表
+//     *
+//     * @param taskCreateMsgDTO
+//     * @return
+//     */
+//    private AfEmployeeInfoDTO callEmployeeCompany(TaskCreateMsgDTO taskCreateMsgDTO) {
+//        logger.info("entering callEmployeeCompany：" + JSON.toJSONString(taskCreateMsgDTO));
+//        AfEmployeeInfoDTO afEmployeeInfoDTO = null;
+//        try {
+//            AfEmployeeQueryDTO taskRequestDTO = new AfEmployeeQueryDTO();
+//            taskRequestDTO.setEmpAgreementId(Long.parseLong(taskCreateMsgDTO.getMissionId()));
+//            afEmployeeInfoDTO = afEmployeeSocialProxy.getByEmpAgreement(Long.parseLong(taskCreateMsgDTO.getMissionId()));
+//        } catch (Exception e) {
+//            logger.error(e.getMessage(), e);
+//        }
+//        return afEmployeeInfoDTO;
+//    }
+
     /**
      * 从接口获取数据并保存到社保雇员任务单表
      *
      * @param taskCreateMsgDTO
      * @return
      */
-    private AfEmployeeInfoDTO callEmployeeCompany(TaskCreateMsgDTO taskCreateMsgDTO) {
+    private AfEmployeeInfoDTO callEmpAgreement(TaskCreateMsgDTO taskCreateMsgDTO) {
         logger.info("entering callEmployeeCompany：" + JSON.toJSONString(taskCreateMsgDTO));
         AfEmployeeInfoDTO afEmployeeInfoDTO = null;
         try {
             AfEmployeeQueryDTO taskRequestDTO = new AfEmployeeQueryDTO();
             taskRequestDTO.setEmpAgreementId(Long.parseLong(taskCreateMsgDTO.getMissionId()));
-            afEmployeeInfoDTO = afEmployeeCompanyProxy.getEmployeeCompany(taskRequestDTO);
+            afEmployeeInfoDTO = afEmployeeSocialProxy.getByEmpAgreement(Long.parseLong(taskCreateMsgDTO.getMissionId()));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -259,7 +285,26 @@ public class KafkaReceiver {
     private void saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType) {
         try {
             //调用客服中心接口获取任务单表单信息
-            AfEmployeeInfoDTO dto = callEmployeeCompany(taskMsgDTO);
+            AfEmployeeInfoDTO dto = callEmpAgreement(taskMsgDTO);
+            //保存雇员任务单表数据
+            ssEmpTaskFrontService.saveSsEmpTask(taskMsgDTO, socialType, 0, dto);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 从接口获取数据并保存到社保雇员任务单表
+     *
+     * @param taskMsgDTO
+     * @param socialType
+     * @return
+     */
+    private void saveSsEmpMakeUp(TaskCreateMsgDTO taskMsgDTO, Integer socialType) {
+        try {
+            logger.info("entering saveSsEmpMakeUp");
+            //调用客服中心接口获取任务单表单信息
+            AfEmployeeInfoDTO dto = callEmpAgreement(taskMsgDTO);
             //保存雇员任务单表数据
             ssEmpTaskFrontService.saveSsEmpTask(taskMsgDTO, socialType, 0, dto);
         } catch (Exception e) {

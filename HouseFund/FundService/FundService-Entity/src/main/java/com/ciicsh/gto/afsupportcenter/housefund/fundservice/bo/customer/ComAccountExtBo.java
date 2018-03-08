@@ -3,7 +3,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * Created by houwanhua on 2018/2/27.
@@ -57,11 +57,11 @@ public class ComAccountExtBo {
     /**
      * 创建时间
      */
-    private LocalDateTime createdTime;
+    private Date createdTime;
     /**
      * 最后更新时间
      */
-    private LocalDateTime modifiedTime;
+    private Date modifiedTime;
     /**
      * 创建者登录名
      */
@@ -70,10 +70,31 @@ public class ComAccountExtBo {
      * 修改者登录名
      */
     private String modifiedBy;
-    private String Column15;
 
     // 客户编号
     private String companyId;
     // 客户名称
     private String title;
+    /**
+     * 1 基本公积金、2 补充公积金
+     */
+    private Integer hfType;
+
+    /**
+     * 企业基本补充公积金账号（前道传递）
+     */
+    private String hfComAccount;
+    /**
+     * 客户缴费起始年月（前道传递）
+     */
+    private String comStartMonth;
+    /**
+     * 截止缴费年月（截单日）（前道传递）
+     */
+    private String endMonth;
+
+    /**
+     * 1 销户 2 公司自做 3 转其他代理商（前道传递）
+     */
+    private Integer endType;
 }

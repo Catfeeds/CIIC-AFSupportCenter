@@ -14,6 +14,8 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentSta
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.PaymentApplyDetailBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.PaymentApplyBatchPO;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.basicdataservice.api.CityServiceProxy;
+import com.ciicsh.gto.basicdataservice.api.dto.FullCityDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.BankCardRefundDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.BankCardInfoProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
@@ -51,6 +53,11 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
      */
     @Autowired
     private BankCardInfoProxy bankCardInfoProxy;
+    /**
+     *  公共服务
+     */
+    @Autowired
+    private CityServiceProxy cityServiceProxy;
     /**
      *  支付批次记录表
      */
@@ -122,7 +129,6 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
         if (!audited.isEmpty()) {
             PaymentApplyBatchPO batchPO = this.addPaymentApply(audited);
             JsonResult jsonResult = this.syncPaymentData(batchPO);
-            System.out.println(JSON.toJSONString(jsonResult));
             if(JsonResult.MsgCode.SUCCESS.getCode().equals(jsonResult.getCode())) {
                 uninsuredMedicalMapper.syncStatus(new EmployeePaymentStatusBO(
                     batchPO.getApplyBatchId(), SysConstants.BusinessId.UNINSURED_MEDICAL.getId(),
@@ -386,8 +392,9 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
      * @return
      */
     private EmployeePaymentBO setAreaInfo (EmployeePaymentBO bo) {
-        bo.setProvinceCode("上海");
-        bo.setCityCode("上海市");
+        FullCityDTO dto = cityServiceProxy.selectFullByCityCode(bo.getCityCode());
+        bo.setProvinceCode(dto.getProvinceName());
+        bo.setCityCode(dto.getCityName());
         return bo;
     }
 

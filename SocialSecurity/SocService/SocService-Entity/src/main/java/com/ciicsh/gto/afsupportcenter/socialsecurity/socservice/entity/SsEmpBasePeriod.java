@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <p>
@@ -89,8 +90,19 @@ public class SsEmpBasePeriod implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+    //费用段明细 ss_emp_base_detail
+    @TableField(exist = false)
+	private List<SsEmpBaseDetail> listEmpBaseDetail;
 
-	public Long getEmpBasePeriodId() {
+    public List<SsEmpBaseDetail> getListEmpBaseDetail() {
+        return listEmpBaseDetail;
+    }
+
+    public void setListEmpBaseDetail(List<SsEmpBaseDetail> listEmpBaseDetail) {
+        this.listEmpBaseDetail = listEmpBaseDetail;
+    }
+
+    public Long getEmpBasePeriodId() {
 		return empBasePeriodId;
 	}
 

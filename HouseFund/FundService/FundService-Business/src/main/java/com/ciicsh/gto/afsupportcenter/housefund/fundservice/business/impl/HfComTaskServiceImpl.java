@@ -72,19 +72,18 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
      * @return
      */
     @Override
-    public boolean insertComTask(HfComTask hfComTask) {
-        return baseMapper.insertComTask(hfComTask);
+    public Integer addComTask(HfComTask hfComTask) {
+        //return baseMapper.insertComTask(hfComTask);
+        return baseMapper.insert(hfComTask);
     }
 
     /**
      * 判断企业任务单是否存在
-     *
-     * @param hfComTask
      * @return
      */
     @Override
-    public int countComTaskByCond(HfComTask hfComTask) {
-        return baseMapper.countComTaskByCond(hfComTask);
+    public Integer isExistComTask(String companyId, Integer hfType, Integer taskCategory) {
+        return baseMapper.isExistComTask(companyId,hfType,taskCategory);
     }
 
     /**

@@ -14,6 +14,7 @@
         <result column="hf_emp_account" property="hfEmpAccount" />
 		<result column="task_category" property="taskCategory" />
 		<result column="urgent" property="urgent" />
+        <result column="is_change" property="isChange" />
 		<result column="submitter_id" property="submitterId" />
         <result column="submit_time" property="submitTime" />
 		<result column="task_id" property="taskId" />
@@ -54,6 +55,7 @@
         <result column="added_com_hf_month" property="addedComHfMonth" />
         <result column="added_end_month" property="addedEndMonth" />
         <result column="in_date" property="inDate" />
+        <result column="out_date" property="outDate" />
         <result column="hf_emp_account" property="hfEmpAccount" />
         <result column="start_month" property="startMonth" />
         <result column="end_month" property="endMonth" />
@@ -78,6 +80,7 @@
         het.emp_task_id,
         het.task_category,
         het.urgent,
+        het.is_change,
         het.employee_id,
         ee.employee_name,
         ee.id_num,
@@ -131,8 +134,11 @@
             <if test="hfType != null">
                 AND het.hf_type = #{hfType}
             </if>
-            <if test="urgent == 1">
+            <if test="urgent != null">
                 AND het.urgent = #{urgent}
+            </if>
+            <if test="isChange != null">
+                AND IFNULL(het.is_change,0) = #{isChange}
             </if>
             <if test="submitTimeStart != null">
                 AND het.submit_time >= #{submitTimeStart}
@@ -164,6 +170,7 @@
         het.emp_task_id,
         het.task_category,
         het.urgent,
+        het.is_change,
         het.employee_id,
         ee.employee_name,
         ee.id_num,
@@ -216,8 +223,11 @@
             <if test="hfType != null">
                 AND het.hf_type = #{hfType}
             </if>
-            <if test="urgent == 1">
+            <if test="urgent != null">
                 AND het.urgent = #{urgent}
+            </if>
+            <if test="isChange != null">
+                AND IFNULL(het.is_change,0) = #{isChange}
             </if>
             <if test="submitTimeStart != null">
                 AND het.submit_time >= #{submitTimeStart}
@@ -251,6 +261,7 @@
         het.emp_task_id,
         het.task_category,
         het.urgent,
+        het.is_change,
         het.employee_id,
         ee.employee_name,
         ee.id_num,
@@ -301,8 +312,11 @@
             <if test="hfType != null">
                 AND het.hf_type = #{hfType}
             </if>
-            <if test="urgent == 1">
+            <if test="urgent != null">
                 AND het.urgent = #{urgent}
+            </if>
+            <if test="isChange != null">
+                AND IFNULL(het.is_change,0) = #{isChange}
             </if>
             <if test="submitTimeStart != null">
                 AND het.submit_time >= #{submitTimeStart}
@@ -337,6 +351,7 @@
         het.emp_task_id,
         het.task_category,
         het.urgent,
+        het.is_change,
         het.employee_id,
         ee.employee_name,
         ee.id_num,
@@ -386,8 +401,11 @@
             <if test="hfType != null">
                 AND het.hf_type = #{hfType}
             </if>
-            <if test="urgent == 1">
+            <if test="urgent != null">
                 AND het.urgent = #{urgent}
+            </if>
+            <if test="isChange != null">
+                AND IFNULL(het.is_change,0) = #{isChange}
             </if>
             <if test="submitTimeStart != null">
                 AND het.submit_time >= #{submitTimeStart}
@@ -449,6 +467,7 @@
         ee.employee_name,
         ee.id_num,
         het.in_date,
+        het.out_date,
         het.hf_emp_account,
         het.task_status,
         het.start_month,
@@ -546,7 +565,8 @@
         created_by,
         modified_by,
         hf_emp_account,
-        in_date
+        in_date,
+        out_date
         FROM
         hf_emp_task et
         <where>
