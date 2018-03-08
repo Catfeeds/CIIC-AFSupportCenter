@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.messageservice.host.message;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeQueryDTO;
@@ -167,8 +168,8 @@ public class KafkaReceiver {
                     Map<String, Object> paramMap = taskMsgDTO.getVariables();
                     SsEmpTaskBO ssEmpTaskBO = new SsEmpTaskBO();
                     ssEmpTaskBO.setTaskId(paramMap.get("oldTaskId").toString());
-                    ssEmpTaskBO.setEmployeeId(paramMap.get("employeeId").toString());
-                    ssEmpTaskBO.setCompanyId(paramMap.get("companyId").toString());
+                    ssEmpTaskBO.setEmployeeId(dto.getEmployeeCompany().getEmployeeId());
+                    ssEmpTaskBO.setCompanyId(dto.getEmployeeCompany().getCompanyId());
                     List<SsEmpTaskBO> resList = ssEmpTaskService.queryByTaskId(ssEmpTaskBO);
                     //如果查询到历史任务单，则直接进行更新操作
                     if (resList != null && resList.size() > 0) {
@@ -179,9 +180,9 @@ public class KafkaReceiver {
                     Integer taskCategory = 0;
                     Map<String, Object> paramMap = taskMsgDTO.getVariables();
                     SsEmpTaskBO ssEmpTaskBO = new SsEmpTaskBO();
-                    ssEmpTaskBO.setBusinessInterfaceId(paramMap.get("oldEmpAgreementId").toString());
-                    ssEmpTaskBO.setEmployeeId(paramMap.get("employeeId").toString());
-                    ssEmpTaskBO.setCompanyId(paramMap.get("companyId").toString());
+                    ssEmpTaskBO.setTaskId(paramMap.get("oldTaskId").toString());
+//                    ssEmpTaskBO.setEmployeeId(paramMap.get("employeeId").toString());
+//                    ssEmpTaskBO.setCompanyId(paramMap.get("companyId").toString());
 
                     //查询旧的任务类型保存到新的任务单
                     List<SsEmpTaskBO> resList = ssEmpTaskService.queryByBusinessInterfaceId(ssEmpTaskBO);
@@ -263,7 +264,7 @@ public class KafkaReceiver {
      * @return
      */
     private AfEmployeeInfoDTO callEmpAgreement(TaskCreateMsgDTO taskCreateMsgDTO) {
-        logger.info("entering callEmployeeCompany：" + JSON.toJSONString(taskCreateMsgDTO));
+        logger.info("entering callEmpAgreement：" + JSON.toJSONString(taskCreateMsgDTO));
         AfEmployeeInfoDTO afEmployeeInfoDTO = null;
         try {
             AfEmployeeQueryDTO taskRequestDTO = new AfEmployeeQueryDTO();
