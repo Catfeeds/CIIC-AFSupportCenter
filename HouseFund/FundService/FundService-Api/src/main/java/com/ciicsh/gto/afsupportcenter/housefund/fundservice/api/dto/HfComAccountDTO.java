@@ -1,12 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto;
 
-
-import java.io.Serializable;
 import java.util.Date;
 
-public class HfComAccountDTO implements Serializable {
-
-    private static final long serialVersionUID = 4237696411983562922L;
+public class HfComAccountDTO {
     /**
      * 主键
      */
@@ -66,12 +62,33 @@ public class HfComAccountDTO implements Serializable {
      * 修改者登录名
      */
     private String modifiedBy;
-    private String Column15;
 
     // 客户编号
     private String companyId;
     // 客户名称
     private String title;
+    /**
+     * 1 基本公积金、2 补充公积金
+     */
+    private Integer hfType;
+
+    /**
+     * 企业基本补充公积金账号（前道传递）
+     */
+    private String hfComAccount;
+    /**
+     * 客户缴费起始年月（前道传递）
+     */
+    private String comStartMonth;
+    /**
+     * 截止缴费年月（截单日）（前道传递）
+     */
+    private String endMonth;
+
+    /**
+     * 1 销户 2 公司自做 3 转其他代理商（前道传递）
+     */
+    private Integer endType;
 
     public String getCompanyId() {
         return companyId;
@@ -201,11 +218,43 @@ public class HfComAccountDTO implements Serializable {
         this.modifiedBy = modifiedBy;
     }
 
-    public String getColumn15() {
-        return Column15;
+    public Integer getHfType() {
+        return hfType;
     }
 
-    public void setColumn15(String column15) {
-        Column15 = column15;
+    public void setHfType(Integer hfType) {
+        this.hfType = hfType;
+    }
+
+    public String getHfComAccount() {
+        return hfComAccount;
+    }
+
+    public void setHfComAccount(String hfComAccount) {
+        this.hfComAccount = hfComAccount;
+    }
+
+    public String getComStartMonth() {
+        return comStartMonth;
+    }
+
+    public void setComStartMonth(String comStartMonth) {
+        this.comStartMonth = comStartMonth;
+    }
+
+    public String getEndMonth() {
+        return endMonth;
+    }
+
+    public void setEndMonth(String endMonth) {
+        this.endMonth = endMonth;
+    }
+
+    public Integer getEndType() {
+        return endType;
+    }
+
+    public void setEndType(Integer endType) {
+        this.endType = endType;
     }
 }

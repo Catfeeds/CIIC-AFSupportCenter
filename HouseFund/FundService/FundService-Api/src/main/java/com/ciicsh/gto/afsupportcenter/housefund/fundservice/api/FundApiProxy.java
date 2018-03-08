@@ -25,7 +25,7 @@ public interface FundApiProxy {
      * @param paramDto
      * @return
      */
-    @GetMapping("/getAccountList")
+    @PostMapping("/getAccountList")
     JsonResult<List<HfComAccountDTO>> getComAccountList(@RequestBody HfComAccountParamDTO paramDto);
 
     /**

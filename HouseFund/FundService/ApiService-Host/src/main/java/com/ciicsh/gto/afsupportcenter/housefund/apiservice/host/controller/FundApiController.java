@@ -102,7 +102,7 @@ public class FundApiController implements FundApiProxy{
     @Override
     @ApiOperation(value = "获取企业社保账户信息",notes = "根据HfComAccountParamDTO对象获取")
     @ApiImplicitParam(name = "paramDto",value = "企业任务单对象 paramDto",required = true,dataType = "HfComAccountParamDTO")
-    @GetMapping("/getAccountList")
+    @PostMapping("/getAccountList")
     public JsonResult<List<HfComAccountDTO>> getComAccountList(@RequestBody HfComAccountParamDTO paramDto) {
 
         ComAccountParamExtBo paramBO = new ComAccountParamExtBo();
