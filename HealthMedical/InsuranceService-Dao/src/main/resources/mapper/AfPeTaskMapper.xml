@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.healthmedical.dao.AfPeTaskMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfPeTask">
+        <id column="pe_task_id" property="peTaskId" />
+        <result column="process_id" property="processId" />
+        <result column="pe_rule_id" property="peRuleId" />
+        <result column="status" property="status" />
+        <result column="product_id" property="productId" />
+        <result column="com_no" property="comNo" />
+        <result column="company_id" property="companyId" />
+        <result column="company_name" property="companyName" />
+        <result column="employee_id" property="employeeId" />
+        <result column="employee_name" property="employeeName" />
+        <result column="gender" property="gender" />
+        <result column="id_type" property="idType" />
+        <result column="id_num" property="idNum" />
+        <result column="birthday" property="birthday" />
+        <result column="email" property="email" />
+        <result column="marital" property="marital" />
+        <result column="pay_type" property="payType" />
+        <result column="pe_type" property="peType" />
+        <result column="effect_start_date" property="effectStartDate" />
+        <result column="effect_end_date" property="effectEndDate" />
+        <result column="company_report" property="companyReport" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
+
+    <select id="selectListByBespeakPeIds" resultMap="BaseResultMap">
+      SELECT
+      <include refid="SEL_ALL_COLUMN"></include>
+      FROM
+      hm_af_pe_task
+      <where>
+      <if test="bespeak_pe_id != '' and bespeak_pe_id != null and status == 1">modified_time > NOW() - INTERVAL 2 DAY</if>
+      <if test="bespeak_pe_id != '' and bespeak_pe_id != null and status == 2">created_time > NOW() - INTERVAL 2 DAY</if>
+      <if test="bespeak_pe_id == '' or bespeak_pe_id == null ">1 = 2</if>
+      </where>
+    </select>
+
+    <select id="selectListByStatus" resultMap="BaseResultMap">
+        SELECT
+        <include refid="SEL_ALL_COLUMN"></include>
+        FROM
+        hm_af_pe_task
+        WHERE
+        status in (3,4,5,6)
+    </select>
+
+    <sql id="SEL_ALL_COLUMN">
+        pe_task_id,
+        process_id,
+        pe_rule_id,
+        status,
+        com_no,
+        bespeak_pe_id,
+        product_id,
+        company_id,
+        company_name,
+        employee_id,
+        employee_name,
+        gender,
+        id_type,
+        id_num,
+        birthday,
+        email,
+        marital,
+        pay_type,
+        pe_type,
+        effect_start_date,
+        effect_end_date,
+        company_report,
+        is_active,
+        created_time,
+        modified_time,
+        created_by,
+        modified_by
+    </sql>
+
+</mapper>

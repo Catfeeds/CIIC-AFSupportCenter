@@ -134,7 +134,7 @@ public class TaskListDTO implements Serializable {
     /**
      * 创建时间
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "+8")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "+8")
     private Date createdTime;
     /**
      * 创建者登录名

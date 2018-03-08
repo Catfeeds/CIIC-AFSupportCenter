@@ -11,8 +11,12 @@ import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.dto.ExpEmployeeDTO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.dto.ExpLiteratureDTO;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
+import com.ciicsh.gto.basicdataservice.api.CityServiceProxy;
+import com.ciicsh.gto.basicdataservice.api.dto.CityDTO;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.linkman.LinkmanListRequestDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.linkman.LinkmanListResponseDTO;
+import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
 import com.ciicsh.gto.salecenter.apiservice.api.proxy.SalLinkmanProxy;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +42,12 @@ public class ReportFormController {
 
     @Autowired
     private SalLinkmanProxy salLinkmanProxy;
+
+    @Autowired
+    private CompanyProxy companyProxy;
+
+    @Autowired
+    private CityServiceProxy cityServiceProxy;
 
     /**
      * 导出参加活动公司清单
@@ -87,14 +97,14 @@ public class ReportFormController {
         productWithEmployee.stream().forEach( i -> {
             ExpEmployeeDTO expEmployeeDTO = new ExpEmployeeDTO();
             BeanUtils.copyProperties(i,expEmployeeDTO);
-            //todo cityCode => city
+            CityDTO city = cityServiceProxy.selectByCityCode(i.getWorkCityCode());
+            expEmployeeDTO.setCity(city.getCityName());
 
             LinkmanListRequestDTO linkmanListRequestDTO = new LinkmanListRequestDTO();
             linkmanListRequestDTO.setId(i.getCompanyId());
             linkmanListRequestDTO.setType(2);
             LinkmanListResponseDTO linkman = salLinkmanProxy.list(linkmanListRequestDTO).getObject().getRecords().get(0);
             BeanUtils.copyProperties(linkman,expEmployeeDTO);
-
             expEmployeeDTOS.add(expEmployeeDTO);
         });
 
@@ -119,6 +129,10 @@ public class ReportFormController {
         productWithEmployee.stream().forEach( i -> {
             ExpBirthday1DTO expBirthday1DTO = new ExpBirthday1DTO();
             BeanUtils.copyProperties(i,expBirthday1DTO);
+
+            AfCompanyDetailResponseDTO companyDetail = companyProxy.afDetail(i.getCompanyId()).getObject();
+            BeanUtils.copyProperties(companyDetail,expBirthday1DTO);
+            expBirthday1DTO.setCompanyAddr(companyDetail.getRegisteredAddress());
             expBirthday1DTOS.add(expBirthday1DTO);
         });
         ExcelUtil.exportExcel(expBirthday1DTOS,"参加生日基础服务的雇员","sheet1",ExpBirthday1DTO.class,"参加生日基础服务雇员报表.xls",response);
