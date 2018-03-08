@@ -13,10 +13,14 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccou
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComTaskService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +37,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/api/fund")
+@Api(value = "fund-api-service",description = "support interface for other center")
 public class FundApiController implements FundApiProxy{
     @Autowired
     HfComAccountService hfComAccountService;
@@ -45,8 +50,9 @@ public class FundApiController implements FundApiProxy{
      * @param comTaskDTO
      * @return
      */
-    @Log("企业社保账户开户、变更、转移、转出的 创建任务单接口")
     @Override
+    @ApiOperation(value = "企业社保账户开户、变更、转移、转出的 创建任务单接口",notes = "根据ComTask对象创建")
+    @ApiImplicitParam(name = "comTaskDTO",value = "企业任务单对象 comTaskDTO",required = true,dataType = "HfComTaskDTO")
     @PostMapping("/saveComTask")
     public JsonResult saveComTask(@RequestBody HfComTaskDTO comTaskDTO) {
         try {
@@ -94,8 +100,9 @@ public class FundApiController implements FundApiProxy{
     }
 
     @Override
-    @RequestMapping("/getAccountList")
-    @Log("获取企业社保账户信息表")
+    @ApiOperation(value = "获取企业社保账户信息",notes = "根据HfComAccountParamDTO对象获取")
+    @ApiImplicitParam(name = "paramDto",value = "企业任务单对象 paramDto",required = true,dataType = "HfComAccountParamDTO")
+    @PostMapping("/getAccountList")
     public JsonResult<List<HfComAccountDTO>> getComAccountList(@RequestBody HfComAccountParamDTO paramDto) {
 
         ComAccountParamExtBo paramBO = new ComAccountParamExtBo();
@@ -116,8 +123,13 @@ public class FundApiController implements FundApiProxy{
      * @param hfType 公积金类型（基本公积金或者补充公积金）
      * @return
      */
-    @RequestMapping("/getAccountByCompany")
     @Override
+    @ApiOperation(value = "获取公积金账户信息",notes = "根据公司ID和公积金类别获取公积金账户信息")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "companyId", value = "公司ID", required = true, dataType = "String"),
+        @ApiImplicitParam(name = "hfType", value = "公积金类型(基本公积金或者补充公积金)", required = true, dataType = "int")
+    })
+    @GetMapping("/getAccountByCompany")
     public JsonResult<ComAccountExtDTO> getAccountByCompany(@RequestParam("companyId") String companyId, @RequestParam("hfType") Integer hfType) {
         AccountInfoBO info = hfComAccountService.getAccountByCompany(companyId,hfType);
         ComAccountExtDTO extDTO = null;
