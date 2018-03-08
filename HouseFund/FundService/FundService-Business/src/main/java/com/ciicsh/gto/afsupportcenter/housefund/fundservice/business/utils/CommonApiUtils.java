@@ -3,6 +3,9 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils;
 import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialUpdateDateDTO;
 import com.ciicsh.gto.afcompanycenter.commandservice.api.proxy.AfEmployeeSocialProxy;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.TaskSheetRequestDTO;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.SSPolicyProxy;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsResposeDTO;
 import com.ciicsh.gto.basicdataservice.api.DicItemServiceProxy;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.basicdataservice.api.dto.EmptyDicItemDTO;
@@ -30,6 +33,9 @@ public class CommonApiUtils {
 
     @Autowired
     AfEmployeeSocialProxy afEmployeeSocialProxy;
+
+    @Autowired
+    SSPolicyProxy ssPolicyProxy;
 
     /**
      * 调用客服中心的完成任务接口
@@ -89,4 +95,12 @@ public class CommonApiUtils {
         dicItemServiceProxy.fresh2Redis(dicItemDto);
     }
 
+    /**
+     * 获取进位方式
+     * @param var1
+     * @return
+     */
+    public com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<GetSSPItemsResposeDTO> getRoundingType(GetSSPItemsRequestDTO var1){
+        return ssPolicyProxy.getSSPItems(var1);
+    }
 }
