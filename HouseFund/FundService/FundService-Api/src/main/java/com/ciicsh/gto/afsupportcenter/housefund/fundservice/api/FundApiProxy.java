@@ -6,6 +6,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccount
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccountParamDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComTaskDTO;
 import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +25,7 @@ public interface FundApiProxy {
      * @param paramDto
      * @return
      */
-    @RequestMapping("/getAccountList")
+    @GetMapping("/getAccountList")
     JsonResult<List<HfComAccountDTO>> getComAccountList(@RequestBody HfComAccountParamDTO paramDto);
 
     /**
@@ -42,6 +43,6 @@ public interface FundApiProxy {
      * @param hfType 公积金类型（基本公积金或者补充公积金）
      * @return
      */
-    @RequestMapping("/getAccountByCompany")
+    @GetMapping("/getAccountByCompany")
     JsonResult<ComAccountExtDTO> getAccountByCompany(@RequestParam("companyId") String companyId, @RequestParam("hfType") Integer hfType);
 }
