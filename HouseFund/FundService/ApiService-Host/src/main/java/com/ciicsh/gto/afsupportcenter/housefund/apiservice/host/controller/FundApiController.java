@@ -46,12 +46,12 @@ public class FundApiController implements FundApiProxy{
     HfComTaskService hfComTaskService;
 
     /**
-     * 企业社保账户开户、变更、转移、转出的 创建任务单接口
+     * 企业公积金账户开户、变更、转移、转出的 创建任务单接口
      * @param comTaskDTO
      * @return
      */
     @Override
-    @ApiOperation(value = "企业社保账户开户、变更、转移、转出的 创建任务单接口",notes = "根据ComTask对象创建")
+    @ApiOperation(value = "企业公积金账户开户、变更、转移、转出的 创建任务单接口",notes = "根据ComTask对象创建")
     @ApiImplicitParam(name = "comTaskDTO",value = "企业任务单对象 comTaskDTO",required = true,dataType = "HfComTaskDTO")
     @PostMapping("/saveComTask")
     public JsonResult saveComTask(@RequestBody HfComTaskDTO comTaskDTO) {
@@ -100,7 +100,7 @@ public class FundApiController implements FundApiProxy{
     }
 
     @Override
-    @ApiOperation(value = "获取企业社保账户信息",notes = "根据HfComAccountParamDTO对象获取")
+    @ApiOperation(value = "获取企业公积金账户信息",notes = "根据HfComAccountParamDTO对象获取")
     @ApiImplicitParam(name = "paramDto",value = "企业任务单对象 paramDto",required = true,dataType = "HfComAccountParamDTO")
     @PostMapping("/getAccountList")
     public JsonResult<List<HfComAccountDTO>> getComAccountList(@RequestBody HfComAccountParamDTO paramDto) {
