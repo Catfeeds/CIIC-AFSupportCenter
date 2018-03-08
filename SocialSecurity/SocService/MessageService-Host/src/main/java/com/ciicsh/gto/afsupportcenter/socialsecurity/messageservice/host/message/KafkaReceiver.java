@@ -59,13 +59,15 @@ public class KafkaReceiver {
     @StreamListener(TaskSink.AF_EMP_IN)
     public void receiveSocialNew(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
-        logger.info("receiveSocialNew: " + JSON.toJSONString(taskMsgDTO));
+        logger.info(TaskSink.AF_EMP_IN+" receiveSocialNew JSON: " + JSON.toJSONString(taskMsgDTO));
         //判断taskType是否是社保新进(social_new)，如果不是则无需处理
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())) {
+            logger.info(TaskSink.SOCIAL_NEW +" receiveSocialNew1 JSON: " + JSON.toJSONString(taskMsgDTO));
             //获取任务单参数
             Map<String, Object> paramMap = taskMsgDTO.getVariables();
             if (paramMap != null && paramMap.get("socialType") != null) {
                 String socialType = paramMap.get("socialType").toString();
+                logger.info(socialType +" receiveSocialNew2 JSON: " + JSON.toJSONString(taskMsgDTO));
                 saveSsEmpTask(taskMsgDTO, Integer.parseInt(socialType));
             }
         }

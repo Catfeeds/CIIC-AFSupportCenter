@@ -32,9 +32,19 @@ public class MessageReceiver {
     public void receive(SocReportMessage message){
         logger.info("开始，当前时间：" + dateFormat.format(new Date()));
         logger.info("received from comAccountId : " + message.getComAccountId()+", received from ssMonth: " + message.getSsMonth());
-        String key = "-com-account-"+message.getComAccountId()+"-"+message.getSsMonth()+"-";
+        String key = "-com-account-"+message.getComAccountId()+"-"+message.getSsMonth()+"-"+message.getGeneralMethod();
         try {
-            paymentComService.generateSocPaymentInfo(message.getComAccountId(),message.getSsMonth());
+            switch (message.getGeneralMethod()){
+               case "generateSocPaymentInfo":
+                    paymentComService.generateSocPaymentInfo(message.getComAccountId(),message.getSsMonth());
+                    break;
+               case "generateMonthEmpChangeReport":
+                    paymentComService.generateMonthEmpChangeReport(message.getComAccountId(),message.getSsMonth());
+                    break;
+                case "generatePaymentDetailReport":
+                    paymentComService.generatePaymentDetailReport(message.getComAccountId(),message.getSsMonth());
+                    break;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }finally {

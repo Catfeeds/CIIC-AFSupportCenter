@@ -46,7 +46,7 @@ public class SocScheduledTask {
         logger.info("结束，当前时间：" + dateFormat.format(new Date()));
     }
 
-    @Scheduled(cron = "0 1/3 * * * ?") // 每天凌晨启动一次，"0 0 0 * * ?"
+    @Scheduled(cron = "0 0 4 ? * *") //暂定每天上午4:00触发
     public void execEnquireFinanceComAccount() {
         logger.info("社保每日询问财务是否可付定时任务启动，当前时间：" + dateFormat.format(new Date()));
         paymentService.enquireFinanceComAccount(StringUtil.getYear_Month(new Date()));
