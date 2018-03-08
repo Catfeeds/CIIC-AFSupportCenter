@@ -13,7 +13,7 @@ import org.springframework.cloud.netflix.feign.EnableFeignClients;
  */
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients({"com.ciicsh.gto.afcompanycenter.queryservice.api","com.ciicsh.gto.salecenter.apiservice.api"})
+@EnableFeignClients({"com.ciicsh.gto.afcompanycenter.queryservice.api","com.ciicsh.gto.salecenter.apiservice.api","com.ciicsh.gto.basicdataservice.api"})
 @MapperScan("com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbqueryservice.dao")
 public class FlexibleQueryApplication extends SpringBootServletInitializer {
 

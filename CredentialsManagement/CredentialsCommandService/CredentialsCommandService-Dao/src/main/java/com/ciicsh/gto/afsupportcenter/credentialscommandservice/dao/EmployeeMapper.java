@@ -5,6 +5,8 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Employ
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * <p>
  * 雇员基本信息表
@@ -22,5 +24,5 @@ public interface EmployeeMapper extends BaseMapper<Employee> {
      * @param idNum
      * @return
      */
-    Employee findEmpByIdCard(@Param("idCardType") Integer idCardType, @Param("idNum") String idNum);
+    List<Employee> findEmpByIdCard(@Param("idCardType") Integer idCardType, @Param("idNum") String idNum);
 }

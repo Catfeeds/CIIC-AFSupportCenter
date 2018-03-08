@@ -1,9 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.host.messageBus;
 
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.company.AfCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpInsuranceDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
@@ -15,7 +12,6 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.business.AfTpaTaskService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.EmployeePaymentJobService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.HealthMedicalJobService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.enums.SysConstants;
-
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfTpaTaskPO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeMemberDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
@@ -90,7 +86,7 @@ public class KafkaReceiver {
         try {
             if (SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
                 employeePaymentService.syncSettleCenterStatus(dto);
-            } else if(SysConstants.JobConstants.MEDICAL_CLAIMS.getCode().equals(dto.getBusinessType())) {
+            } else if (SysConstants.JobConstants.MEDICAL_CLAIMS.getCode().equals(dto.getBusinessType())) {
                 healthMedicalJobService.syncSettleCenterStatus(dto);
             }
         } catch (Exception e) {
@@ -108,7 +104,7 @@ public class KafkaReceiver {
         try {
             if (SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getCode().equals(dto.getBusinessType())) {
                 employeePaymentService.handlePaymentRefund(dto);
-            } else if(SysConstants.JobConstants.MEDICAL_CLAIMS.getCode().equals(dto.getBusinessType())) {
+            } else if (SysConstants.JobConstants.MEDICAL_CLAIMS.getCode().equals(dto.getBusinessType())) {
                 healthMedicalJobService.handlePaymentRefund(dto);
             }
         } catch (Exception e) {
@@ -274,14 +270,6 @@ public class KafkaReceiver {
             result = false;
         }
         return result;
-    }
-
-    public static void main(String[] args) {
-        String serviceItem = "{\"remark\":\"\",\"options\":[{\"title\":\"赔付比例\",\"values\":90},{\"title\":\"被保障人\",\"values\":[\"配偶\"]}],\"itemName\":\"特需医疗保障\",\"basicServiceItemId\":12}";
-        JSONObject jsonObject = JSON.parseObject(serviceItem);
-        JSONObject test = (JSONObject) ((JSONArray) jsonObject.get("options")).get(1);
-        System.out.println(serviceItem.contains("配偶"));
-        System.out.println(jsonObject.toString());
     }
 
     /**

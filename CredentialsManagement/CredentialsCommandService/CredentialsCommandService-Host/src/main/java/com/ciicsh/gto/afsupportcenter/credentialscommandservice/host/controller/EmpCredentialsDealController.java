@@ -160,6 +160,21 @@ public class EmpCredentialsDealController {
             taskMaterial.setTaskId(String.valueOf(taskDetialDTO.getTaskId()));
             taskMaterial.setCompanyId(taskDetialDTO.getCompanyId());
             taskMaterial.setEmployeeId(taskDetialDTO.getEmployeeId());
+            taskMaterial.setComp(taskDetialDTO.getComp());
+            taskMaterial.setMarryStatus(taskDetialDTO.getMarryStatus());
+            taskMaterial.setHasFollower(taskDetialDTO.getHasFollower());
+            taskMaterial.setFamilerMaterials(taskDetialDTO.getFamilerMaterials());
+            taskMaterial.setApplyAddrChange(taskDetialDTO.getApplyAddrChange());
+            taskMaterial.setAddr(taskDetialDTO.getAddr());
+            taskMaterial.setFollowerType(taskDetialDTO.getFollowerType());
+            taskMaterial.setFollower(taskDetialDTO.getFollower());
+            taskMaterial.setHasChildFollow(taskDetialDTO.getHasChildFollow());
+            taskMaterial.setHasSpouseFollow(taskDetialDTO.getHasSpouseFollow());
+            taskMaterial.setMarried(taskDetialDTO.getMarried());
+            taskMaterial.setJobMaterials(taskDetialDTO.getJobMaterials());
+            taskMaterial.setEducate(taskDetialDTO.getEducate());
+            taskMaterial.setFollowMaterials(taskDetialDTO.getFollowMaterials());
+            taskMaterial.setNotFollowMaterials(taskDetialDTO.getNotFollowMaterials());
             //TODO
             if (taskDetialDTO.getTaskId() == null) {
                 taskMaterial.setCreatedBy("gu");

@@ -13,9 +13,9 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.Selec
 import com.ciicsh.gto.afsupportcenter.util.page.PageUtil;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeCommonInfoDTO;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeIdQueryDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoForCredentialsDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
@@ -137,19 +137,11 @@ public class EmployeeCompanyController {
      */
     @GetMapping("/getEmpInfo")
     public JsonResult getEmpInfo(Integer idCardType,String idNum,String companyId,String employeeId,Integer type){
-        if (type == 1 || type == 2 || type==3) {
-            EmployeeHireInfoQueryDTO employeeHireInfoQueryDTO = new EmployeeHireInfoQueryDTO();
-            employeeHireInfoQueryDTO.setCompanyId(companyId);
-            employeeHireInfoQueryDTO.setEmployeeId(employeeId);
-            EmployeeHireInfoDTO data = employeeInfoProxy.getEmployeeHireInfo(employeeHireInfoQueryDTO).getData();
-            return JsonResult.success(data);
-        } else {
-            EmployeeIdQueryDTO employeeIdQueryDTO = new EmployeeIdQueryDTO();
-            employeeIdQueryDTO.setIdCardType(idCardType);
-            employeeIdQueryDTO.setIdNum(idNum);
-            EmployeeCommonInfoDTO employeeInfo = employeeInfoProxy.getEmployeeCommon(employeeIdQueryDTO).getData();
-            return JsonResult.success(employeeInfo);
-        }
+        EmployeeHireInfoQueryDTO employeeHireInfoQueryDTO = new EmployeeHireInfoQueryDTO();
+        employeeHireInfoQueryDTO.setEmployeeId(employeeId);
+        employeeHireInfoQueryDTO.setCompanyId(companyId);
+        EmployeeInfoForCredentialsDTO data = employeeInfoProxy.getEmployeeInfoForCredentials(employeeHireInfoQueryDTO).getData();
+        return JsonResult.success(data);
     }
 
     /**

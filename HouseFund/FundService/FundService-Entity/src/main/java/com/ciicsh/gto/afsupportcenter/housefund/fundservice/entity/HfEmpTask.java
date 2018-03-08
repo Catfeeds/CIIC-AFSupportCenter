@@ -269,7 +269,7 @@ public class HfEmpTask implements Serializable {
      * 前道传递的政策明细ID,用它调用系统中心获取进位方式
      */
 	@TableField("policy_detail_id")
-	private Integer policyDetailId;
+	private String policyDetailId;
     /**
      * TaskService 反馈的 task_id  流程下的任务ID
      */
@@ -670,11 +670,11 @@ public class HfEmpTask implements Serializable {
 		this.businessInterfaceId = businessInterfaceId;
 	}
 
-	public Integer getPolicyDetailId() {
+	public String getPolicyDetailId() {
 		return policyDetailId;
 	}
 
-	public void setPolicyDetailId(Integer policyDetailId) {
+	public void setPolicyDetailId(String policyDetailId) {
 		this.policyDetailId = policyDetailId;
 	}
 
