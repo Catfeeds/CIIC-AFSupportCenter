@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto;
 
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class HfComAccountDTO implements Serializable {
 
@@ -53,11 +53,11 @@ public class HfComAccountDTO implements Serializable {
     /**
      * 创建时间
      */
-    private LocalDateTime createdTime;
+    private Date createdTime;
     /**
      * 最后更新时间
      */
-    private LocalDateTime modifiedTime;
+    private Date modifiedTime;
     /**
      * 创建者登录名
      */
@@ -169,19 +169,19 @@ public class HfComAccountDTO implements Serializable {
         isActive = active;
     }
 
-    public LocalDateTime getCreatedTime() {
+    public Date getCreatedTime() {
         return createdTime;
     }
 
-    public void setCreatedTime(LocalDateTime createdTime) {
+    public void setCreatedTime(Date createdTime) {
         this.createdTime = createdTime;
     }
 
-    public LocalDateTime getModifiedTime() {
+    public Date getModifiedTime() {
         return modifiedTime;
     }
 
-    public void setModifiedTime(LocalDateTime modifiedTime) {
+    public void setModifiedTime(Date modifiedTime) {
         this.modifiedTime = modifiedTime;
     }
 

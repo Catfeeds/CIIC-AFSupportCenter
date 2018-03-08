@@ -3,7 +3,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * Created by houwanhua on 2018/2/27.
@@ -57,11 +57,11 @@ public class ComAccountExtBo {
     /**
      * 创建时间
      */
-    private LocalDateTime createdTime;
+    private Date createdTime;
     /**
      * 最后更新时间
      */
-    private LocalDateTime modifiedTime;
+    private Date modifiedTime;
     /**
      * 创建者登录名
      */

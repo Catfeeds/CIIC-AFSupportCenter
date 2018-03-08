@@ -3,14 +3,17 @@
 <mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComTaskMapper">
 
     <!--判断企业任务单是否存在-->
-    <select id="countComTaskByCond" resultType="int">
+    <select id="isExistComTask" resultType="int">
         SELECT
-        COUNT(1)
-        FROM hf_com_task sct
-        where sct.is_active = 1
-        AND sct.com_account_id = #{comAccountId}
-        AND sct.task_category=#{taskCategory}
-        AND sct.task_status in (0,1,2)
+            COUNT(*)
+        FROM
+            hf_com_task
+        WHERE
+            is_active = 1
+        AND task_status IN (0, 1, 2)
+        AND company_id = #{companyId}
+        AND hf_type = #{hfType}
+        AND task_category = #{taskCategory}
     </select>
 
     <insert id="insertComTask" useGeneratedKeys="true" keyProperty="comTaskId">
