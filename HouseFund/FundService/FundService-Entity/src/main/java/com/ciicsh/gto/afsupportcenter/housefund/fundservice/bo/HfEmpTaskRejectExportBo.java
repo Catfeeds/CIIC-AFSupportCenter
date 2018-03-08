@@ -33,8 +33,10 @@ public class HfEmpTaskRejectExportBo implements Serializable{
     @Excel(name = "任务单类型", width = 15)
     private String taskCategoryName;
     private Integer urgent;
-    @Excel(name = "加急", orderNum = "1",  width = 8)
     private String urgentName;
+    private Integer isChange;
+    @Excel(name = "更正", orderNum = "1",  width = 8)
+    private String isChangeName;
     @Excel(name = "发起人", orderNum = "9",  width = 20)
     private String submitterId;
     @Excel(name = "发起时间", orderNum = "10",  width = 20)
@@ -211,5 +213,25 @@ public class HfEmpTaskRejectExportBo implements Serializable{
 
     public void setRejectionRemark(String rejectionRemark) {
         this.rejectionRemark = rejectionRemark;
+    }
+
+    public Integer getIsChange() {
+        return isChange;
+    }
+
+    public void setIsChange(Integer isChange) {
+        this.isChange = isChange;
+    }
+    public String getIsChangeName() {
+        if (isChange != null && isChange == 1) {
+            isChangeName = "是";
+        } else {
+            isChangeName = "否";
+        }
+        return isChangeName;
+    }
+
+    public void setIsChangeName(String isChangeName) {
+        this.isChangeName = isChangeName;
     }
 }

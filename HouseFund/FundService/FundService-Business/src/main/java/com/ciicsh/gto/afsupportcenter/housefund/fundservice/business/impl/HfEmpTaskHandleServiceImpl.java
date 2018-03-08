@@ -795,28 +795,34 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 
                 if (e.getRemitWay() == HfEmpTaskPeriodConstant.REMIT_WAY_REPAIR) {
                     paymentType[0] = HfMonthChargeConstant.PAYMENT_TYPE_REPAIR;
-                    // 如果是补缴任务单，雇员月度汇缴明细库数据可能会被覆盖（某些年月被多次补缴）
-                    HfMonthChargeBo hfMonthChargeBo = new HfMonthChargeBo();
-                    hfMonthChargeBo.setInactive(true);
-                    hfMonthChargeBo.setEmpArchiveId(e.getEmpArchiveId());
-                    hfMonthChargeBo.setHfType(e.getHfType());
-//                hfMonthChargeBo.setHfMonth(e.getHfMonth()); // 是否按汇缴月份来覆盖？如果是，那么非相同汇缴月份保留，新增数据需计算与原有雇员所属公积金月份相同数据的差额
-                    hfMonthChargeBo.setSsMonthBelongStart(e.getStartMonth());
-                    hfMonthChargeBo.setSsMonthBelongEnd(e.getEndMonth());
-                    hfMonthChargeBo.setPaymentTypes(StringUtils.join(new Integer[] {
-                        HfMonthChargeConstant.PAYMENT_TYPE_REPAIR,
-                        HfMonthChargeConstant.PAYMENT_TYPE_DIFF_REPAIR
-                    }, ','));
-                    hfMonthChargeBo.setModifiedBy(hfEmpTask.getModifiedBy());
-                    hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
                 }
 
                 if (e.getDiffRepair() != null && e.getDiffRepair()) {
                     paymentType[0] = HfMonthChargeConstant.PAYMENT_TYPE_DIFF_REPAIR;
-//            } else {
-//                comAmount = e.getBaseAmount().multiply(e.getRatioCom()).setScale(2, BigDecimal.ROUND_HALF_UP);
-//                empAmount = e.getBaseAmount().multiply(e.getRatioEmp()).setScale(2, BigDecimal.ROUND_HALF_UP);
-//                amount = comAmount.add(empAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
+
+                    // 如果是补缴任务单，雇员月度汇缴明细库差额数据可能会被覆盖（某些年月被多次补缴）
+                    HfMonthChargeBo hfMonthChargeBo = new HfMonthChargeBo();
+                    hfMonthChargeBo.setInactive(true);
+                    hfMonthChargeBo.setEmpArchiveId(e.getEmpArchiveId());
+                    hfMonthChargeBo.setHfType(e.getHfType());
+                    hfMonthChargeBo.setHfMonth(e.getHfMonth()); // 按汇缴月份来覆盖
+                    hfMonthChargeBo.setSsMonthBelongStart(e.getStartMonth());
+                    hfMonthChargeBo.setSsMonthBelongEnd(e.getEndMonth());
+//                    hfMonthChargeBo.setPaymentTypes(StringUtils.join(new Integer[] {
+//                        HfMonthChargeConstant.PAYMENT_TYPE_REPAIR,
+//                        HfMonthChargeConstant.PAYMENT_TYPE_DIFF_REPAIR
+//                    }, ','));
+                    hfMonthChargeBo.setPaymentTypes(String.valueOf(HfMonthChargeConstant.PAYMENT_TYPE_DIFF_REPAIR));
+                    hfMonthChargeBo.setModifiedBy(hfEmpTask.getModifiedBy());
+                    hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
+
+                    HfMonthChargeDiffBo hfMonthChargeDiffBo = hfMonthChargeService.getHfMonthChargeDiffSum(hfMonthChargeBo);
+                    if (hfMonthChargeDiffBo != null) {
+                        // 往期汇缴月份保留，新增数据需计算与原有雇员所属公积金月份相同数据的差额
+                        amount = amount.subtract(hfMonthChargeDiffBo.getAmount()).setScale(2, BigDecimal.ROUND_HALF_UP);
+                        comAmount = comAmount.subtract(hfMonthChargeDiffBo.getComAmount()).setScale(2, BigDecimal.ROUND_HALF_UP);
+                        empAmount = empAmount.subtract(hfMonthChargeDiffBo.getEmpAmount()).setScale(2, BigDecimal.ROUND_HALF_UP);
+                    }
                 }
 
                 // 根据雇员费用段期间，每月生成一条雇员月度汇缴明细记录

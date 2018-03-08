@@ -14,6 +14,7 @@
         <result column="hf_emp_account" property="hfEmpAccount" />
 		<result column="task_category" property="taskCategory" />
 		<result column="urgent" property="urgent" />
+        <result column="is_change" property="isChange" />
 		<result column="submitter_id" property="submitterId" />
         <result column="submit_time" property="submitTime" />
 		<result column="task_id" property="taskId" />
@@ -79,6 +80,7 @@
         het.emp_task_id,
         het.task_category,
         het.urgent,
+        het.is_change,
         het.employee_id,
         ee.employee_name,
         ee.id_num,
@@ -132,8 +134,11 @@
             <if test="hfType != null">
                 AND het.hf_type = #{hfType}
             </if>
-            <if test="urgent == 1">
+            <if test="urgent != null">
                 AND het.urgent = #{urgent}
+            </if>
+            <if test="isChange != null">
+                AND IFNULL(het.is_change,0) = #{isChange}
             </if>
             <if test="submitTimeStart != null">
                 AND het.submit_time >= #{submitTimeStart}
@@ -165,6 +170,7 @@
         het.emp_task_id,
         het.task_category,
         het.urgent,
+        het.is_change,
         het.employee_id,
         ee.employee_name,
         ee.id_num,
@@ -217,8 +223,11 @@
             <if test="hfType != null">
                 AND het.hf_type = #{hfType}
             </if>
-            <if test="urgent == 1">
+            <if test="urgent != null">
                 AND het.urgent = #{urgent}
+            </if>
+            <if test="isChange != null">
+                AND IFNULL(het.is_change,0) = #{isChange}
             </if>
             <if test="submitTimeStart != null">
                 AND het.submit_time >= #{submitTimeStart}
@@ -252,6 +261,7 @@
         het.emp_task_id,
         het.task_category,
         het.urgent,
+        het.is_change,
         het.employee_id,
         ee.employee_name,
         ee.id_num,
@@ -302,8 +312,11 @@
             <if test="hfType != null">
                 AND het.hf_type = #{hfType}
             </if>
-            <if test="urgent == 1">
+            <if test="urgent != null">
                 AND het.urgent = #{urgent}
+            </if>
+            <if test="isChange != null">
+                AND IFNULL(het.is_change,0) = #{isChange}
             </if>
             <if test="submitTimeStart != null">
                 AND het.submit_time >= #{submitTimeStart}
@@ -338,6 +351,7 @@
         het.emp_task_id,
         het.task_category,
         het.urgent,
+        het.is_change,
         het.employee_id,
         ee.employee_name,
         ee.id_num,
@@ -389,6 +403,9 @@
             </if>
             <if test="urgent != null">
                 AND het.urgent = #{urgent}
+            </if>
+            <if test="isChange != null">
+                AND IFNULL(het.is_change,0) = #{isChange}
             </if>
             <if test="submitTimeStart != null">
                 AND het.submit_time >= #{submitTimeStart}
