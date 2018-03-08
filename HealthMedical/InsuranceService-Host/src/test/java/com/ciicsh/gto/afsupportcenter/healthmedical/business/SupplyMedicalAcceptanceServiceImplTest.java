@@ -1,14 +1,17 @@
 //package com.ciicsh.gto.afsupportcenter.healthmedical.business;
 //
 //import com.ciicsh.gto.afsupportcenter.healthmedical.InsuranceApplication;
-//import com.ciicsh.gto.afsupportcenter.healthmedical.customer.po.SupplyMedicalAcceptance;
+//import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.SupplyMedicalAcceptance;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.test.context.SpringBootTest;
 //import org.springframework.test.context.junit4.SpringRunner;
 //
-//import java.io.*;
+//import java.io.File;
+//import java.io.FileInputStream;
+//import java.io.FileNotFoundException;
+//import java.io.InputStream;
 //
 //@RunWith(SpringRunner.class)
 //@SpringBootTest(classes = InsuranceApplication.class)
