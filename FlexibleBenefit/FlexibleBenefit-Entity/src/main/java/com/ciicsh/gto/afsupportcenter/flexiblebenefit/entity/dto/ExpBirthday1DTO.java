@@ -73,12 +73,11 @@ public class ExpBirthday1DTO {
     /**
      * 资深雇员编号
      */
-    @Excel(name = "资深雇员编号")
     private String oldEmpId;
     /**
      * 电子邮箱
      */
-    @Excel(name = "联系人电子邮箱")
+    @Excel(name = "电子邮箱")
     private String email;
     /**
      * 服务中心
@@ -94,7 +93,7 @@ public class ExpBirthday1DTO {
      * 员工工号
      */
     @Excel(name = "员工工号")
-    private String companyNum;
+    private String empCode;
 
     public String getCompanyId() {
         return companyId;
@@ -216,12 +215,12 @@ public class ExpBirthday1DTO {
         this.productName = productName;
     }
 
-    public String getCompanyNum() {
-        return companyNum;
+    public String getEmpCode() {
+        return empCode;
     }
 
-    public void setCompanyNum(String companyNum) {
-        this.companyNum = companyNum;
+    public void setEmpCode(String empCode) {
+        this.empCode = empCode;
     }
 
     @Override
@@ -242,7 +241,7 @@ public class ExpBirthday1DTO {
             ", email='" + email + '\'' +
             ", serviceCenter='" + serviceCenter + '\'' +
             ", productName='" + productName + '\'' +
-            ", companyNum='" + companyNum + '\'' +
+            ", empCode='" + empCode + '\'' +
             '}';
     }
 }
