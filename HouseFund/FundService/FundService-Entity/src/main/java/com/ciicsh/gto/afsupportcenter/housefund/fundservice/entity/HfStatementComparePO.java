@@ -13,7 +13,7 @@ import java.io.Serializable;
  * </p>
  */
 @TableName("hf_statement_compare")
-public class HfStatementCompare implements Serializable {
+public class HfStatementComparePO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -217,7 +217,7 @@ public class HfStatementCompare implements Serializable {
 
 	@Override
 	public String toString() {
-		return "HfStatementCompare{" +
+		return "HfStatementComparePO{" +
 			", statementCompareId=" + statementCompareId +
 			", hfMonth=" + hfMonth +
 			", impPath=" + impPath +
