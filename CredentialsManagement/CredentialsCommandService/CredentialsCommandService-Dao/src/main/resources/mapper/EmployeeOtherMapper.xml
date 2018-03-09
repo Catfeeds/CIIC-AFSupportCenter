@@ -7,6 +7,8 @@
         <id column="other_employee_id" property="otherEmployeeId" />
         <result column="employee_id" property="employeeId" />
         <result column="company_id" property="companyId" />
+        <result column="marriage_status" property="marriageStatus" />
+        <result column="address" property="address" />
         <result column="remark" property="remark" />
         <result column="is_active" property="isActive" />
         <result column="created_time" property="createdTime" />

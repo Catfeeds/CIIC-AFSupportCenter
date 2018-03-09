@@ -33,6 +33,16 @@ public class EmployeeOther extends Model<EmployeeOther> {
     @TableField("company_id")
     private String companyId;
     /**
+     * 婚姻状况
+     */
+    @TableField("marriage_status")
+    private Integer marriageStatus;
+    /**
+     * 现居地址
+     */
+    @TableField("address")
+    private String address;
+    /**
      * 备注
      */
     @TableField("remark")
@@ -62,6 +72,22 @@ public class EmployeeOther extends Model<EmployeeOther> {
      */
     @TableField("modified_by")
     private String modifiedBy;
+
+    public Integer getMarriageStatus() {
+        return marriageStatus;
+    }
+
+    public void setMarriageStatus(Integer marriageStatus) {
+        this.marriageStatus = marriageStatus;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public String getOtherEmployeeId() {
         return otherEmployeeId;
@@ -148,6 +174,8 @@ public class EmployeeOther extends Model<EmployeeOther> {
             ", companyId='" + companyId + '\'' +
             ", remark='" + remark + '\'' +
             ", isActive=" + isActive +
+            ", address=" + address +
+            ", marryStatus=" + marriageStatus +
             ", createdTime=" + createdTime +
             ", modifiedTime=" + modifiedTime +
             ", createdBy='" + createdBy + '\'' +

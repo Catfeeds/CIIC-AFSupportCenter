@@ -1,6 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.impl;
 
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskMaterialService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.TaskMaterialMapper;
@@ -31,6 +33,7 @@ public class TaskMaterialServiceImpl extends ServiceImpl<TaskMaterialMapper, Tas
 
     @Override
     public int updateTaskMaterials(TaskMaterial taskMaterial) {
-        return taskMaterialMapper.updateTaskMaterials(taskMaterial);
+        Wrapper<TaskMaterial> wr = new EntityWrapper<TaskMaterial>().eq("task_id",taskMaterial.getTaskId());
+        return taskMaterialMapper.update(taskMaterial, wr);
     }
 }

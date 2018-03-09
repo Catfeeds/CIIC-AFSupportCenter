@@ -45,7 +45,7 @@
         AND b.is_active = 1
         AND c.is_active = 1
         AND a.company_id = #{companyId}
-        AND a.hf_type = #{hfType}
+        AND c.hf_type = #{hfType}
     </select>
 
     <select id="getAccountsByCompany" resultMap="AccountInfoMap">

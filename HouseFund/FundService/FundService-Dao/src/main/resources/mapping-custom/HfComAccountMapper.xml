@@ -3,8 +3,28 @@
 <mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="ComAccountExtMap" extends="BaseResultMap"
-               type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo">
+    <resultMap id="ComAccountExtMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo">
+        <result column="com_account_id" property="comAccountId" />
+        <result column="com_account_name" property="comAccountName" />
+        <result column="payment_way" property="paymentWay" />
+        <result column="hf_account_type" property="hfAccountType" />
+        <result column="close_day" property="closeDay" />
+        <result column="ukey_store" property="ukeyStore" />
+        <result column="payment_bank" property="paymentBank" />
+        <result column="remark" property="remark" />
+        <result column="state" property="state" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+        <result column="company_id" property="companyId" />
+        <result column="title" property="title" />
+        <result column="hf_type" property="hfType" />
+        <result column="hf_com_account" property="hfComAccount" />
+        <result column="com_start_month" property="comStartMonth" />
+        <result column="end_month" property="endMonth" />
+        <result column="end_type" property="endType" />
     </resultMap>
 
     <resultMap id="ComFundAccountMap"
@@ -56,17 +76,30 @@
     </resultMap>
 
     <select id="getHfComAccountList" resultMap="ComAccountExtMap">
-        select ca.*
-        from hf_com_account ca
-        LEFT JOIN hf_account_com_relation ssac on ca.com_account_id = ssac.com_account_id
+        SELECT
+            ca.*,
+            ssac.company_id,
+            com.title,
+            class.hf_type,
+            class.hf_com_account,
+            class.com_start_month,
+            class.end_month,
+            class.end_type
+        FROM
+          hf_com_account ca
+        INNER JOIN hf_account_com_relation ssac ON ca.com_account_id = ssac.com_account_id
+        INNER JOIN sal_company com ON ssac.company_id = com.company_id
+        INNER JOIN hf_com_account_class class ON  ca.com_account_id = class.com_account_id
         <where>
-            ca.is_active = 1
+                ca.is_active = 1
+            AND ssac.is_active = 1
+            AND com.is_active = 1
+            AND class.is_active = 1
             <if test="companyId != null">
-                and ssac.is_active = 1
-                and ssac.company_id= #{companyId}
+                AND ssac.company_id= #{companyId}
             </if>
             <if test="hfAccountType != null">
-                and ca.hf_account_type= #{hfAccountType}
+                AND ca.hf_account_type= #{hfAccountType}
             </if>
         </where>
     </select>

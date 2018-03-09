@@ -38,10 +38,10 @@ public class HfEmpTaskRemarkBo implements Serializable {
     }
 
     public String getRemark() {
-        if (taskStatus == HfEmpTaskConstant.TASK_STATUS_REJECTED) {
-            return this.handleRemark;
-        } else {
+        if (taskStatus != null && taskStatus == HfEmpTaskConstant.TASK_STATUS_REJECTED) {
             return this.rejectionRemark;
+        } else {
+            return this.handleRemark;
         }
     }
 }

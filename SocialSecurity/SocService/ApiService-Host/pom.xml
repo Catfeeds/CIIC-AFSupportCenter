@@ -92,7 +92,14 @@
         <dependency>
             <groupId>com.ciicsh.gt1.logservice</groupId>
             <artifactId>logservice-api</artifactId>
-            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
         </dependency>
     </dependencies>
 

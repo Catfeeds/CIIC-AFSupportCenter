@@ -16,7 +16,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
     "com.ciicsh.gto.afcompanycenter.queryservice.api",
     "com.ciicsh.gto.employeecenter.apiservice.api",
     "com.ciicsh.gto.productcenter.apiservice.api",
-    "com.ciicsh.gto.settlementcenter.payment.cmdapi"
+    "com.ciicsh.gto.settlementcenter.payment.cmdapi",
+    "com.ciicsh.gto.basicdataservice.api"
 })
 
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gt1","com.ciicsh.gto.afsupportcenter.healthmedical"})

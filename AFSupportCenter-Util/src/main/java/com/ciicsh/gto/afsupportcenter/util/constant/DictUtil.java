@@ -16,6 +16,8 @@ public class DictUtil {
     public static final String DICT_ID_SOCIAL_SECURITY_EMPLOYEE_CLASSIFY = "DIC00064";
     public static final String DICT_ID_TASK_PROCESS_STATUS = "DIC00065";
     public static final String DICT_ID_HF_LOCAL_TASK_CATEGORY = "DIC00066";
+    public static final String DICT_ID_FUND_BASIC = "DIC00057";
+    public static final String DICT_ID_FUND_ADDED = "DIC00058";
     public static final String TYPE_VALUE_SOC_LOCAL_TASK_CATEGORY = "SOCLocalTaskCategory";
     public static final String TYPE_VALUE_SOCIAL_SECURITY_ACCOUNT_TYPE = "SocialSecurityAccountType";
     public static final String TYPE_VALUE_SOCIAL_SECURITY_STATUS = "SocialSecurityStatus";
