@@ -23,6 +23,7 @@ import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.kit.DateKit;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
 import com.ciicsh.gto.commonservice.util.dto.Result;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,8 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,6 +60,9 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
     private CommonApiUtils commonApiUtils;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
+
+//    private BlockingQueue<GetSSPItemsRequestDTO> getRoundingTypeParamsQueue = new LinkedBlockingDeque<>();
+//    private BlockingQueue<Map<String, Integer>> getRoundingTypeResultQueue = new LinkedBlockingDeque<>();
 
     @Override
     public List<HfEmpTaskHandleBo> getEmpTaskHandleData(HfEmpTaskHandlePostBo hfEmpTaskHandleDTO) {
@@ -177,7 +183,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         if (isHandle) {
             ComAccountParamExtBo comAccountParamExtBo = new ComAccountParamExtBo();
             comAccountParamExtBo.setCompanyId(hfEmpTask.getCompanyId());
-            List<ComAccountExtBo> hfComAccountList = hfComAccountService.getHfComAccountList(comAccountParamExtBo);
+            List<ComAccountExtBo> hfComAccountList = hfComAccountService.queryHfComAccountList(comAccountParamExtBo);
             if (CollectionUtils.isNotEmpty(hfComAccountList)) {
                 if (hfComAccountList.size() > 1) {
                     return JsonResultKit.ofError("当前雇员任务单所属的企业账户数据有误");

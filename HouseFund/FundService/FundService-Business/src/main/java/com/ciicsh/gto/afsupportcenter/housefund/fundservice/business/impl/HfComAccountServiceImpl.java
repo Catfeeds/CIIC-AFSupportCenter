@@ -99,4 +99,9 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
         }
         return info;
     }
+
+    @Override
+    public List<ComAccountExtBo> queryHfComAccountList(ComAccountParamExtBo extBo) {
+        return baseMapper.queryHfComAccountList(extBo);
+    }
 }

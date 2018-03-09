@@ -1,13 +1,13 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.entity.po;
 
-import com.baomidou.mybatisplus.activerecord.Model;
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
-import com.baomidou.mybatisplus.enums.IdType;
-
 import java.io.Serializable;
+
+import com.baomidou.mybatisplus.enums.IdType;
 import java.util.Date;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableName;
 
 /**
  * <p>
@@ -25,210 +25,213 @@ public class MedicalRelationTransformPO extends Model<MedicalRelationTransformPO
     /**
      * 序号
      */
-    @TableId(value = "transform_id", type = IdType.AUTO)
-    private Integer transformId;
+	@TableId(value="transform_id", type= IdType.AUTO)
+	private Integer transformId;
     /**
      * 雇员终身编号
      */
-    @TableField("employee_id")
-    private String employeeId;
-    @TableField("employee_name")
-    private String employeeName;
-    @TableField("company_id")
-    private String companyId;
-    @TableField("company_name")
-    private String companyName;
-    @TableField("id_num")
-    private String idNum;
-
-    public String getIdNum() {
-        return idNum;
-    }
-
-    public void setIdNum(String idNum) {
-        this.idNum = idNum;
-    }
-
+	@TableField("employee_id")
+	private String employeeId;
+	@TableField("employee_name")
+	private String employeeName;
+    /**
+     * 证件号码
+     */
+	@TableField("id_num")
+	private String idNum;
+	@TableField("company_id")
+	private String companyId;
+	@TableField("company_name")
+	private String companyName;
     /**
      * 转出日期
      */
-    @TableField("turn_out_date")
-    private Date turnOutDate;
+	@TableField("turn_out_date")
+	private Date turnOutDate;
     /**
      * 转出地址
      */
-    @TableField("turn_out_address")
-    private String turnOutAddress;
+	@TableField("turn_out_address")
+	private String turnOutAddress;
     /**
      * 转回日期
      */
-    @TableField("turn_back_date")
-    private Date turnBackDate;
+	@TableField("turn_back_date")
+	private Date turnBackDate;
     /**
      * 备注
      */
-    private String remark;
+	private String remark;
     /**
      * 是否可用
      */
-    @TableField("is_active")
-    private Boolean isActive;
+	@TableField("is_active")
+	private Boolean isActive;
     /**
      * 创建时间
      */
-    @TableField("created_time")
-    private Date createdTime;
+	@TableField("created_time")
+	private Date createdTime;
     /**
      * 最后更新时间
      */
-    @TableField("modified_time")
-    private Date modifiedTime;
+	@TableField("modified_time")
+	private Date modifiedTime;
     /**
      * 创建者登录名
      */
-    @TableField("created_by")
-    private String createdBy;
+	@TableField("created_by")
+	private String createdBy;
     /**
      * 修改者登录名
      */
-    @TableField("modified_by")
-    private String modifiedBy;
+	@TableField("modified_by")
+	private String modifiedBy;
 
 
-    public Integer getTransformId() {
-        return transformId;
-    }
+	public Integer getTransformId() {
+		return transformId;
+	}
 
-    public void setTransformId(Integer transformId) {
-        this.transformId = transformId;
-    }
+	public void setTransformId(Integer transformId) {
+		this.transformId = transformId;
+	}
 
-    public String getEmployeeId() {
-        return employeeId;
-    }
+	public String getEmployeeId() {
+		return employeeId;
+	}
 
-    public void setEmployeeId(String employeeId) {
-        this.employeeId = employeeId;
-    }
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
+	}
 
-    public String getEmployeeName() {
-        return employeeName;
-    }
+	public String getEmployeeName() {
+		return employeeName;
+	}
 
-    public void setEmployeeName(String employeeName) {
-        this.employeeName = employeeName;
-    }
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
 
-    public String getCompanyId() {
-        return companyId;
-    }
+	public String getIdNum() {
+		return idNum;
+	}
 
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
+	public void setIdNum(String idNum) {
+		this.idNum = idNum;
+	}
 
-    public String getCompanyName() {
-        return companyName;
-    }
+	public String getCompanyId() {
+		return companyId;
+	}
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
 
-    public Date getTurnOutDate() {
-        return turnOutDate;
-    }
+	public String getCompanyName() {
+		return companyName;
+	}
 
-    public void setTurnOutDate(Date turnOutDate) {
-        this.turnOutDate = turnOutDate;
-    }
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
 
-    public String getTurnOutAddress() {
-        return turnOutAddress;
-    }
+	public Date getTurnOutDate() {
+		return turnOutDate;
+	}
 
-    public void setTurnOutAddress(String turnOutAddress) {
-        this.turnOutAddress = turnOutAddress;
-    }
+	public void setTurnOutDate(Date turnOutDate) {
+		this.turnOutDate = turnOutDate;
+	}
 
-    public Date getTurnBackDate() {
-        return turnBackDate;
-    }
+	public String getTurnOutAddress() {
+		return turnOutAddress;
+	}
 
-    public void setTurnBackDate(Date turnBackDate) {
-        this.turnBackDate = turnBackDate;
-    }
+	public void setTurnOutAddress(String turnOutAddress) {
+		this.turnOutAddress = turnOutAddress;
+	}
 
-    public String getRemark() {
-        return remark;
-    }
+	public Date getTurnBackDate() {
+		return turnBackDate;
+	}
 
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
+	public void setTurnBackDate(Date turnBackDate) {
+		this.turnBackDate = turnBackDate;
+	}
 
-    public Boolean getActive() {
-        return isActive;
-    }
+	public String getRemark() {
+		return remark;
+	}
 
-    public void setActive(Boolean isActive) {
-        this.isActive = isActive;
-    }
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 
-    public Date getCreatedTime() {
-        return createdTime;
-    }
+	public Boolean getActive() {
+		return isActive;
+	}
 
-    public void setCreatedTime(Date createdTime) {
-        this.createdTime = createdTime;
-    }
+	public void setActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
 
-    public Date getModifiedTime() {
-        return modifiedTime;
-    }
+	public Date getCreatedTime() {
+		return createdTime;
+	}
 
-    public void setModifiedTime(Date modifiedTime) {
-        this.modifiedTime = modifiedTime;
-    }
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
+	}
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
+	public Date getModifiedTime() {
+		return modifiedTime;
+	}
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
+	public void setModifiedTime(Date modifiedTime) {
+		this.modifiedTime = modifiedTime;
+	}
 
-    public String getModifiedBy() {
-        return modifiedBy;
-    }
+	public String getCreatedBy() {
+		return createdBy;
+	}
 
-    public void setModifiedBy(String modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
 
-    @Override
-    protected Serializable pkVal() {
-        return this.transformId;
-    }
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
 
-    @Override
-    public String toString() {
-        return "MedicalRelationTransformPO{" +
-            ", transformId=" + transformId +
-            ", employeeId=" + employeeId +
-            ", employeeName=" + employeeName +
-            ", companyId=" + companyId +
-            ", companyName=" + companyName +
-            ", turnOutDate=" + turnOutDate +
-            ", turnOutAddress=" + turnOutAddress +
-            ", turnBackDate=" + turnBackDate +
-            ", remark=" + remark +
-            ", isActive=" + isActive +
-            ", createdTime=" + createdTime +
-            ", modifiedTime=" + modifiedTime +
-            ", createdBy=" + createdBy +
-            ", modifiedBy=" + modifiedBy +
-            "}";
-    }
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	@Override
+	protected Serializable pkVal() {
+		return this.transformId;
+	}
+
+	@Override
+	public String toString() {
+		return "MedicalRelationTransformPO{" +
+			", transformId=" + transformId +
+			", employeeId=" + employeeId +
+			", employeeName=" + employeeName +
+			", idNum=" + idNum +
+			", companyId=" + companyId +
+			", companyName=" + companyName +
+			", turnOutDate=" + turnOutDate +
+			", turnOutAddress=" + turnOutAddress +
+			", turnBackDate=" + turnBackDate +
+			", remark=" + remark +
+			", isActive=" + isActive +
+			", createdTime=" + createdTime +
+			", modifiedTime=" + modifiedTime +
+			", createdBy=" + createdBy +
+			", modifiedBy=" + modifiedBy +
+			"}";
+	}
 }

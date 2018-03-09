@@ -7,6 +7,7 @@
         <id column="id" property="id" />
         <result column="employee_id" property="employeeId" />
         <result column="employee_name" property="employeeName" />
+        <result column="id_num" property="idNum" />
         <result column="company_id" property="companyId" />
         <result column="company_name" property="companyName" />
         <result column="case_money" property="caseMoney" />
@@ -22,12 +23,12 @@
 	</resultMap>
 
     <select id="getById" resultMap="BaseResultMap">
-        SELECT `id`, `employee_id`, `employee_name`,`company_id`,`company_name`, `case_money`, `invoice_number`, `medical_remark`, `medical_clearing_money`, `medical_clearing_feed_back`, `is_active`, `created_time`, `modified_time`, `created_by`, `modified_by`
+        SELECT `id`, `employee_id`, `employee_name`,`id_num`,`company_id`,`company_name`, `case_money`, `invoice_number`, `medical_remark`, `medical_clearing_money`, `medical_clearing_feed_back`, `is_active`, `created_time`, `modified_time`, `created_by`, `modified_by`
         from gtobusinessdb.hm_fragmentary_reimbursement
         where id = #{id}
     </select>
     <select id="fragmentaryReimbursementMapperQuery" parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.FragmentaryReimbursementDTO" resultMap="BaseResultMap">
-        select  `id`, `employee_id`, `employee_name`,`company_id`,`company_name`,`case_money`, `invoice_number`, `medical_remark`, `medical_clearing_money`, `medical_clearing_feed_back`, `is_active`, `created_time`, `modified_time`, `created_by`, `modified_by`
+        select  `id`, `employee_id`, `employee_name`,`id_num`,`company_id`,`company_name`,`case_money`, `invoice_number`, `medical_remark`, `medical_clearing_money`, `medical_clearing_feed_back`, `is_active`, `created_time`, `modified_time`, `created_by`, `modified_by`
         from  gtobusinessdb.hm_fragmentary_reimbursement
         <where>
             <if test="employeeId != null">
