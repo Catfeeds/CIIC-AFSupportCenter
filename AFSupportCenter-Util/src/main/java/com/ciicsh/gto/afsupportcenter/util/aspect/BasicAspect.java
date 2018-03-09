@@ -26,7 +26,7 @@ public class BasicAspect {
         return methodSignature.getMethod();
     }
 
-    @Pointcut("execution (* com.ciicsh.gto.afsupportcenter.*.*())")
+    @Pointcut("execution (* com.ciicsh.gto.afsupportcenter.*.*.host.controller..*.*(..))")
     public void controllerPointcut() {
     }
 

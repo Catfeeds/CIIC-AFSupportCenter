@@ -11,4 +11,5 @@ import lombok.EqualsAndHashCode;
 public class SocReportMessage {
     private String ssMonth;
     private Long comAccountId;
+    private String generalMethod;
 }
