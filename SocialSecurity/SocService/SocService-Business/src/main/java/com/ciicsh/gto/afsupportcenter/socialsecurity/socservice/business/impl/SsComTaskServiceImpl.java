@@ -187,12 +187,14 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
             bankAccountMap.put("account_type", "4");
             //bankAccountMap.put("subject_no", "1");
             //插入银行账号信息并返回结果，如果接口返回0 表示 接口调用失败，正常返回 bankAccountId 主键
-           int bankAccountId= commonApiUtils.addBankAccount(bankAccountMap);
-            if(bankAccountId > 0){
-                ssComAccount.setBankAccountId((long) bankAccountId);
+            Map<String,String> mp=new HashMap<>();
+            mp= commonApiUtils.addBankAccount(bankAccountMap);
+
+            if(Integer.parseInt(mp.get("code")) == 0){//成功
+                ssComAccount.setBankAccountId(Long.valueOf(mp.get("ret")));
                 sComAccountMapper.updateById(ssComAccount);
             }else{
-                throw  new BusinessException("办理失败！调用银行信息接口出现异常。");
+                throw new BusinessException("调用财务银行信息接口反馈的信息："+mp.get("ret"));
                // return "办理失败！调用银行信息接口出现异常。";
             }
 

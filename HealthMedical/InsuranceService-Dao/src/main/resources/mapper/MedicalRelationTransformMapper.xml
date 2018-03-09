@@ -7,7 +7,6 @@
         <id column="transform_id" property="transformId" />
         <result column="employee_id" property="employeeId" />
         <result column="employee_name" property="employeeName" />
-        <result column="id_num" property="idNum" />
         <result column="company_id" property="companyId" />
         <result column="company_name" property="companyName" />
         <result column="turn_out_date" property="turnOutDate" />
@@ -27,8 +26,8 @@
         from gtobusinessdb.hm_medical_relation_transform
         where transform_id = #{transformId}
     </select>
-    <select id="medicalRelationTransformMapperQuery" parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.MedicalRelationTransformDTO" resultMap="BaseResultMap">
-        select `transform_id`, `employee_id`, `employee_name`,`id_num`,`company_id`,`company_name`, `turn_out_date`, `turn_out_address`, `turn_back_date`, `remark`, `is_active`, `created_time`, `modified_time`, `created_by`, `modified_by`
+    <select id="medicalRelationTransformMapperQuery" parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.MedicalRelationTransformPO" resultMap="BaseResultMap">
+        select `transform_id`, `employee_id`, `employee_name`,`company_id`,`company_name`, `turn_out_date`, `turn_out_address`, `turn_back_date`,`id_num`, `remark`, `is_active`, `created_time`, `modified_time`, `created_by`, `modified_by`
         from  gtobusinessdb.hm_medical_relation_transform
         <where>
             <if test="employeeId != null">

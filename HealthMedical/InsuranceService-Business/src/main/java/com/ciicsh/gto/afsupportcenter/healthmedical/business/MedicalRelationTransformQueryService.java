@@ -3,9 +3,6 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.business;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.MedicalRelationTransformPO;
-import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.MedicalRelationTransformDTO;
-import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
-import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 
 /**
  * <p>
@@ -22,6 +19,6 @@ public interface MedicalRelationTransformQueryService extends IService<MedicalRe
 
     MedicalRelationTransformPO getById(String id);
 
-    Page<MedicalRelationTransformPO> medicalRelationTransformMapperQuery(Page<MedicalRelationTransformPO> page, MedicalRelationTransformDTO dto);
+    Page<MedicalRelationTransformPO> medicalRelationTransformMapperQuery(Page<MedicalRelationTransformPO> page, MedicalRelationTransformPO dto);
 
 }

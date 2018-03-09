@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -127,12 +128,16 @@ public class CommonApiUtils {
     /**
      * 新增银行账户信息
      * */
-    public Integer addBankAccount(Map<String,Object> map){
+    public Map<String,String> addBankAccount(Map<String,Object> map){
         JsonResult jr = comeAccountCommandProxy.addAccount(map);
+        Map<String,String> mp= new HashMap<>();
+        mp.put("code",jr.getErrorcode());
         if(jr.getErrorcode().equals("0")){
-            return  jr.getBankAccountId();
+            mp.put("ret",jr.getBankAccountId().toString());
+        }else {
+            mp.put("ret",jr.getErrormsg());
         }
-        return 0;
+        return mp;
     }
 
 }
