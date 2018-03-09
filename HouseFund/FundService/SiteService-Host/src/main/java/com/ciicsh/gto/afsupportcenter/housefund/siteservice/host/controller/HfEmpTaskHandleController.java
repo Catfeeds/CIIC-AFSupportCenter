@@ -316,7 +316,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         }
         ComAccountParamExtBo paramExtBo = new ComAccountParamExtBo();
         paramExtBo.setCompanyId(hfEmpTask.getCompanyId());
-        List<ComAccountExtBo> hfComAccountList = hfComAccountService.getHfComAccountList(paramExtBo);
+        List<ComAccountExtBo> hfComAccountList = hfComAccountService.queryHfComAccountList(paramExtBo);
         if (CollectionUtils.isNotEmpty(hfComAccountList)) {
             if (hfComAccountList.size() > 1) {
                 return JsonResultKit.ofError("当前雇员任务单所属的企业账户数据有误");
