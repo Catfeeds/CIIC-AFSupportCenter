@@ -7,6 +7,7 @@
         <id column="id" property="id" />
         <result column="employee_id" property="employeeId" />
         <result column="employee_name" property="employeeName" />
+        <result column="id_num" property="idNum" />
         <result column="company_id" property="companyId" />
         <result column="company_name" property="companyName" />
         <result column="case_money" property="caseMoney" />

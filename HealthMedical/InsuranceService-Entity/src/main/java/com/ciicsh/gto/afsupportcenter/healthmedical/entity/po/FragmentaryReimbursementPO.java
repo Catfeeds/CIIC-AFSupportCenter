@@ -35,6 +35,8 @@ public class FragmentaryReimbursementPO extends Model<FragmentaryReimbursementPO
 	private String employeeId;
 	@TableField("employee_name")
 	private String employeeName;
+	@TableField("id_num")
+	private String idNum;
 	@TableField("company_id")
 	private String companyId;
 	@TableField("company_name")
@@ -113,6 +115,14 @@ public class FragmentaryReimbursementPO extends Model<FragmentaryReimbursementPO
 
 	public void setEmployeeName(String employeeName) {
 		this.employeeName = employeeName;
+	}
+
+	public String getIdNum() {
+		return idNum;
+	}
+
+	public void setIdNum(String idNum) {
+		this.idNum = idNum;
 	}
 
 	public String getCompanyId() {
@@ -222,6 +232,7 @@ public class FragmentaryReimbursementPO extends Model<FragmentaryReimbursementPO
 			", id=" + id +
 			", employeeId=" + employeeId +
 			", employeeName=" + employeeName +
+			", idNum=" + idNum +
 			", companyId=" + companyId +
 			", companyName=" + companyName +
 			", caseMoney=" + caseMoney +

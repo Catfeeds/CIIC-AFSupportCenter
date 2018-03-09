@@ -335,7 +335,7 @@
     </dependencyManagement>
 
     <build>
-        <finalName>gt1.productcenter</finalName>
+        <finalName>gt1.afsupportcenter</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

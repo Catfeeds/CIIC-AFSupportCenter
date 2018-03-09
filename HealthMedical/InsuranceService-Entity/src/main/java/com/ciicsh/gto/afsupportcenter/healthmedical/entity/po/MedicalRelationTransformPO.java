@@ -34,6 +34,11 @@ public class MedicalRelationTransformPO extends Model<MedicalRelationTransformPO
 	private String employeeId;
 	@TableField("employee_name")
 	private String employeeName;
+    /**
+     * 证件号码
+     */
+	@TableField("id_num")
+	private String idNum;
 	@TableField("company_id")
 	private String companyId;
 	@TableField("company_name")
@@ -106,6 +111,14 @@ public class MedicalRelationTransformPO extends Model<MedicalRelationTransformPO
 
 	public void setEmployeeName(String employeeName) {
 		this.employeeName = employeeName;
+	}
+
+	public String getIdNum() {
+		return idNum;
+	}
+
+	public void setIdNum(String idNum) {
+		this.idNum = idNum;
 	}
 
 	public String getCompanyId() {
@@ -207,6 +220,7 @@ public class MedicalRelationTransformPO extends Model<MedicalRelationTransformPO
 			", transformId=" + transformId +
 			", employeeId=" + employeeId +
 			", employeeName=" + employeeName +
+			", idNum=" + idNum +
 			", companyId=" + companyId +
 			", companyName=" + companyName +
 			", turnOutDate=" + turnOutDate +

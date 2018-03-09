@@ -7,6 +7,7 @@
         <id column="transform_id" property="transformId" />
         <result column="employee_id" property="employeeId" />
         <result column="employee_name" property="employeeName" />
+        <result column="id_num" property="idNum" />
         <result column="company_id" property="companyId" />
         <result column="company_name" property="companyName" />
         <result column="turn_out_date" property="turnOutDate" />
