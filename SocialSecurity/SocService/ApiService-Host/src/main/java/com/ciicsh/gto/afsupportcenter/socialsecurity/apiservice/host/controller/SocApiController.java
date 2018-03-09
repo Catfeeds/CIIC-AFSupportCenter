@@ -15,7 +15,6 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComA
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComTaskParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComAccountService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComTaskService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.ComAccountExtPO;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
@@ -66,29 +65,32 @@ public class SocApiController implements SocApiProxy{
             SsComTaskBO ssComTask = new SsComTaskBO();
             BeanUtils.copyProperties(ssComTaskDTO, ssComTask);
             //查询是否有处理中的任务单
-            int cnt = taskService.countComTaskByCond(ssComTask);
-            if (cnt > 0) {
-                return JsonResult.faultMessage("该企业已存在相同类型的处理中任务单，不能重复添加！");
-            }else{
-                //查找是否有已完成的任务单
-                int result = taskService.countFinishComTaskByCond(ssComTask);
-                if(result>0){
-                    //查询企业账户状态
-                    SsComAccount ssComAccount = accountService.selectAccountByCompanyId(ssComTaskDTO.getCompanyId());
-                    if(null!=ssComAccount && ssComAccount.getState()!=2)
-                        return JsonResult.faultMessage("该企业已存在有效开户信息，不能再次开户！");
+
+            boolean flag = checkIsExistAccount(ssComTask);
+            if(flag){
+                return JsonResult.faultMessage("该企业已存在有效开户信息，不能再次开户！");
+            }
+            else{
+                //结算中心转变成字符串
+                if(StringUtils.isNotBlank(ssComTaskDTO.getSettlementArea())){
+                    String settlementArea = SocialSecurityConst.DISTRICT_MAP.get(ssComTaskDTO.getSettlementArea());
+                    if(StringUtils.isNotBlank(settlementArea))ssComTaskDTO.setSettlementArea(settlementArea);
                 }
+                Long newComTaskId = addComTask(ssComTaskDTO);
+                return JsonResult.success(newComTaskId);
             }
-            //结算中心转变成字符串
-            if(StringUtils.isNotBlank(ssComTaskDTO.getSettlementArea())){
-                String settlementArea = SocialSecurityConst.DISTRICT_MAP.get(ssComTaskDTO.getSettlementArea());
-                if(StringUtils.isNotBlank(settlementArea))ssComTaskDTO.setSettlementArea(settlementArea);
-            }
-            Long newComTaskId = addComTask(ssComTaskDTO);
-            return JsonResult.success(newComTaskId);
         } catch (Exception e) {
             return JsonResult.faultMessage(e.getMessage());
         }
+    }
+
+
+    private boolean checkIsExistAccount(SsComTaskBO comTask){
+        Integer isExist = accountService.isExistAccountInfo(comTask.getCompanyId());
+        if(isExist <= 0){
+            isExist = taskService.isExistComTask(comTask);
+        }
+        return isExist > 0 ? true : false;
     }
 
     //保存企业任务单
@@ -113,7 +115,7 @@ public class SocApiController implements SocApiProxy{
     @ApiOperation(value = "获取企业社保账户信息列表",notes = "根据SsComAccountParamDTO对象获取")
     @ApiImplicitParam(name = "paramDto",value = "企业任务单对象 paramDto",required = true,dataType = "SsComAccountParamDTO")
     @PostMapping("/getAccountList")
-    public JsonResult<List<SsComAccountDTO>> getSsComAccountList(@RequestBody SsComAccountParamDTO paramDto) {
+    public JsonResult<List<SsComAccountDTO>> getComAccountList(@RequestBody SsComAccountParamDTO paramDto) {
         ComAccountParamBO paramBO = new ComAccountParamBO();
         BeanUtils.copyProperties(paramDto,paramBO);
         // 根据 客户ID和账户类型查询

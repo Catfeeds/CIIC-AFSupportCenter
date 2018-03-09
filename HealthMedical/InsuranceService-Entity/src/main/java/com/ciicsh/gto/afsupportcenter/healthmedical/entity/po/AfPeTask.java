@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -39,6 +40,11 @@ public class AfPeTask extends Model<AfPeTask> {
      */
     private Integer status;
     /**
+     * 老系统公司id
+     */
+    @TableField("com_no")
+    private String comNo;
+    /**
      * 体检预约id
      */
     @TableField("bespeak_pe_id")
@@ -48,11 +54,6 @@ public class AfPeTask extends Model<AfPeTask> {
      */
     @TableField("product_id")
     private String productId;
-    /**
-     * 老系统客户编号
-     */
-    @TableField("com_no")
-    private String comNo;
     /**
      * 客户编号
      */
@@ -125,6 +126,46 @@ public class AfPeTask extends Model<AfPeTask> {
     @TableField("company_report")
     private Boolean companyReport;
     /**
+     * 预约体检日期
+     */
+    @TableField("ti_jian_date")
+    private Date tiJianDate;
+    /**
+     * 到检日期
+     */
+    @TableField("dao_jian_date")
+    private Date daoJianDate;
+    /**
+     * 出报告日期
+     */
+    @TableField("report_date")
+    private Date reportDate;
+    /**
+     * 发送通知时间
+     */
+    @TableField("send_time")
+    private Date sendTime;
+    /**
+     * 体检产品名称
+     */
+    @TableField("product_name")
+    private String productName;
+    /**
+     * 结算价格（成本价）
+     */
+    @TableField("sale_value")
+    private BigDecimal saleValue;
+    /**
+     * 体检机构
+     */
+    @TableField("pe_orginzation")
+    private String peOrginzation;
+    /**
+     * 体检地址
+     */
+    @TableField("pe_address")
+    private String peAddress;
+    /**
      * 是否可用
      */
     @TableField("is_active")
@@ -150,21 +191,6 @@ public class AfPeTask extends Model<AfPeTask> {
     @TableField("modified_by")
     private String modifiedBy;
 
-    public String getComNo() {
-        return comNo;
-    }
-
-    public void setComNo(String comNo) {
-        this.comNo = comNo;
-    }
-
-    public String getBespeakPeId() {
-        return bespeakPeId;
-    }
-
-    public void setBespeakPeId(String bespeakPeId) {
-        this.bespeakPeId = bespeakPeId;
-    }
 
     public Integer getPeTaskId() {
         return peTaskId;
@@ -196,6 +222,22 @@ public class AfPeTask extends Model<AfPeTask> {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getComNo() {
+        return comNo;
+    }
+
+    public void setComNo(String comNo) {
+        this.comNo = comNo;
+    }
+
+    public String getBespeakPeId() {
+        return bespeakPeId;
+    }
+
+    public void setBespeakPeId(String bespeakPeId) {
+        this.bespeakPeId = bespeakPeId;
     }
 
     public String getProductId() {
@@ -326,11 +368,75 @@ public class AfPeTask extends Model<AfPeTask> {
         this.companyReport = companyReport;
     }
 
-    public Boolean getIsActive() {
+    public Date getTiJianDate() {
+        return tiJianDate;
+    }
+
+    public void setTiJianDate(Date tiJianDate) {
+        this.tiJianDate = tiJianDate;
+    }
+
+    public Date getDaoJianDate() {
+        return daoJianDate;
+    }
+
+    public void setDaoJianDate(Date daoJianDate) {
+        this.daoJianDate = daoJianDate;
+    }
+
+    public Date getReportDate() {
+        return reportDate;
+    }
+
+    public void setReportDate(Date reportDate) {
+        this.reportDate = reportDate;
+    }
+
+    public Date getSendTime() {
+        return sendTime;
+    }
+
+    public void setSendTime(Date sendTime) {
+        this.sendTime = sendTime;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public BigDecimal getSaleValue() {
+        return saleValue;
+    }
+
+    public void setSaleValue(BigDecimal saleValue) {
+        this.saleValue = saleValue;
+    }
+
+    public String getPeOrginzation() {
+        return peOrginzation;
+    }
+
+    public void setPeOrginzation(String peOrginzation) {
+        this.peOrginzation = peOrginzation;
+    }
+
+    public String getPeAddress() {
+        return peAddress;
+    }
+
+    public void setPeAddress(String peAddress) {
+        this.peAddress = peAddress;
+    }
+
+    public Boolean getActive() {
         return isActive;
     }
 
-    public void setIsActive(Boolean isActive) {
+    public void setActive(Boolean isActive) {
         this.isActive = isActive;
     }
 
@@ -375,10 +481,11 @@ public class AfPeTask extends Model<AfPeTask> {
     public String toString() {
         return "AfPeTask{" +
             "peTaskId=" + peTaskId +
-            ", bespeakPeId=" + bespeakPeId +
             ", processId=" + processId +
             ", peRuleId=" + peRuleId +
             ", status=" + status +
+            ", comNo=" + comNo +
+            ", bespeakPeId=" + bespeakPeId +
             ", productId=" + productId +
             ", companyId=" + companyId +
             ", companyName=" + companyName +
@@ -395,6 +502,14 @@ public class AfPeTask extends Model<AfPeTask> {
             ", effectStartDate=" + effectStartDate +
             ", effectEndDate=" + effectEndDate +
             ", companyReport=" + companyReport +
+            ", tiJianDate=" + tiJianDate +
+            ", daoJianDate=" + daoJianDate +
+            ", reportDate=" + reportDate +
+            ", sendTime=" + sendTime +
+            ", productName=" + productName +
+            ", saleValue=" + saleValue +
+            ", peOrginzation=" + peOrginzation +
+            ", peAddress=" + peAddress +
             ", isActive=" + isActive +
             ", createdTime=" + createdTime +
             ", modifiedTime=" + modifiedTime +

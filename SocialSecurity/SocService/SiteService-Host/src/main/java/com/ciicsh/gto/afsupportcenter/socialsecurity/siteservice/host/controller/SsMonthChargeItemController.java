@@ -85,7 +85,8 @@ public class SsMonthChargeItemController extends BasicController<SsMonthChargeIt
      */
     private void groupingMap (Map<String,List<SsMonthChargeItemBO>> map, SsMonthChargeItemBO bo){
         //拼装key
-        String key = bo.getEmployeeId();
+        //String key = bo.getEmployeeId();
+        String key = bo.getMonthChargeId().toString();
         //查看map中是否存在该key的节点
         if(map.containsKey(key)){
             //存在则返回已经在map中的节点

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfStatementCompareMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="StatementMap" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFStatementCompareBO">
+        <result column="com_account_name" property="comAccountName"/>
+        <result column="hf_com_account" property="hfComAccount"/>
+    </resultMap>
+
+    <select id="getHFStatementCompareRecord" resultMap="StatementMap">
+        SELECT
+            a.statement_compare_id,
+            a.hf_month,
+            b.com_account_name,
+            c.hf_com_account,
+            a.imp_path,
+            a.hf_type,
+            a.compare_man,
+            a.compare_time
+        FROM
+            hf_statement_compare a
+        INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
+        INNER JOIN hf_com_account_class c ON a.com_account_id = c.com_account_id
+        AND a.hf_type = c.hf_type
+        <where>
+            a.is_active=1
+            <if test="hfMonth != null and hfMonth != ''">
+                AND a.hf_month = #{hfMonth}
+            </if>
+            <if test="hfComAccount != null and hfComAccount != ''">
+                AND c.hf_com_account = #{hfComAccount}
+            </if>
+        </where>
+    </select>
+</mapper>

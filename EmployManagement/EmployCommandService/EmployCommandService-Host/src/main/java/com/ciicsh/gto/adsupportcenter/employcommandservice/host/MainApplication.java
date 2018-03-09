@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Import;
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business","com.ciicsh.gto.adsupportcenter.employcommandservice.host"})
 @Import({CustomConfiguration.class, MybatisPlusConfig.class})
 @EnableFeignClients({
+    "com.ciicsh.gto.sheetservice.api",
     "com.ciicsh.gto.employeecenter.apiservice.api",
     "com.ciicsh.gto.afcompanycenter.queryservice.api"
 })

@@ -22,12 +22,12 @@
 
 
     <select id="getById" resultMap="BaseResultMap">
-        SELECT `transform_id`, `employee_id`, `employee_name`,`company_id`,`company_name`, `turn_out_date`, `turn_out_address`, `turn_back_date`, `remark`, `is_active`, `created_time`, `modified_time`, `created_by`, `modified_by`
+        SELECT `transform_id`, `employee_id`, `employee_name`,`id_num`,`company_id`,`company_name`, `turn_out_date`, `turn_out_address`, `turn_back_date`, `remark`, `is_active`, `created_time`, `modified_time`, `created_by`, `modified_by`
         from gtobusinessdb.hm_medical_relation_transform
         where transform_id = #{transformId}
     </select>
-    <select id="medicalRelationTransformMapperQuery" parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.MedicalRelationTransformDTO" resultMap="BaseResultMap">
-        select `transform_id`, `employee_id`, `employee_name`,`company_id`,`company_name`, `turn_out_date`, `turn_out_address`, `turn_back_date`, `remark`, `is_active`, `created_time`, `modified_time`, `created_by`, `modified_by`
+    <select id="medicalRelationTransformMapperQuery" parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.MedicalRelationTransformPO" resultMap="BaseResultMap">
+        select `transform_id`, `employee_id`, `employee_name`,`company_id`,`company_name`, `turn_out_date`, `turn_out_address`, `turn_back_date`,`id_num`, `remark`, `is_active`, `created_time`, `modified_time`, `created_by`, `modified_by`
         from  gtobusinessdb.hm_medical_relation_transform
         <where>
             <if test="employeeId != null">

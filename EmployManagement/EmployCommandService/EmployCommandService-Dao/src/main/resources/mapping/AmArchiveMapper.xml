@@ -45,7 +45,6 @@
 		<result column="budiao_doc_date2" property="budiaoDocDate2" />
 		<result column="budiao_doc_man2" property="budiaoDocMan2" />
 		<result column="employ_material_remark" property="employMaterialRemark" />
-		<result column="__退工档案办理区域__" property="退工档案办理区域" />
 		<result column="storage_out_date" property="storageOutDate" />
 		<result column="storage_out_man" property="storageOutMan" />
 		<result column="post_letter_date" property="postLetterDate" />
@@ -57,11 +56,14 @@
 		<result column="resign_doc_date" property="resignDocDate" />
 		<result column="resign_return_date" property="resignReturnDate" />
 		<result column="no_stub" property="noStub" />
+        <result column="in_file_date" property="inFileDate" />
 		<result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />
 		<result column="modified_time" property="modifiedTime" />
 		<result column="created_by" property="createdBy" />
 		<result column="modified_by" property="modifiedBy" />
+        <result column="manual_storage_man" property="manualStorageMan" />
+
 	</resultMap>
 
 </mapper>

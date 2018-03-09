@@ -33,7 +33,7 @@ public interface SocApiProxy {
      * @return
      */
     @PostMapping("/getAccountList")
-    JsonResult<List<SsComAccountDTO>> getSsComAccountList(@RequestBody SsComAccountParamDTO paramDto);
+    JsonResult<List<SsComAccountDTO>> getComAccountList(@RequestBody SsComAccountParamDTO paramDto);
 
 
     @PostMapping("/getAccountByCompany")

@@ -75,5 +75,5 @@ public interface SsComAccountService extends IService<SsComAccount> {
      */
     boolean addBankAccount(@RequestBody Map<String, Object> map) throws Exception;
 
-    SsComAccount selectAccountByCompanyId(String companyId);
+    Integer isExistAccountInfo(String companyId);
 }

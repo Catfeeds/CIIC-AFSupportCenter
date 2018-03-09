@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -98,6 +99,38 @@ public class AfPeTaskDTO {
      */
     private Boolean companyReport;
     /**
+     * 预约体检日期
+     */
+    private Date tiJianDate;
+    /**
+     * 到检日期
+     */
+    private Date daoJianDate;
+    /**
+     * 出报告日期
+     */
+    private Date reportDate;
+    /**
+     * 发送通知时间
+     */
+    private Date sendTime;
+    /**
+     * 体检产品名称
+     */
+    private String productName;
+    /**
+     * 结算价格（成本价）
+     */
+    private BigDecimal saleValue;
+    /**
+     * 体检机构
+     */
+    private String peOrginzation;
+    /**
+     * 体检地址
+     */
+    private String peAddress;
+    /**
      * 是否可用
      */
     private Boolean isActive;
@@ -120,6 +153,70 @@ public class AfPeTaskDTO {
 
     public String getComNo() {
         return comNo;
+    }
+
+    public Date getTiJianDate() {
+        return tiJianDate;
+    }
+
+    public void setTiJianDate(Date tiJianDate) {
+        this.tiJianDate = tiJianDate;
+    }
+
+    public Date getDaoJianDate() {
+        return daoJianDate;
+    }
+
+    public void setDaoJianDate(Date daoJianDate) {
+        this.daoJianDate = daoJianDate;
+    }
+
+    public Date getReportDate() {
+        return reportDate;
+    }
+
+    public void setReportDate(Date reportDate) {
+        this.reportDate = reportDate;
+    }
+
+    public Date getSendTime() {
+        return sendTime;
+    }
+
+    public void setSendTime(Date sendTime) {
+        this.sendTime = sendTime;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public BigDecimal getSaleValue() {
+        return saleValue;
+    }
+
+    public void setSaleValue(BigDecimal saleValue) {
+        this.saleValue = saleValue;
+    }
+
+    public String getPeOrginzation() {
+        return peOrginzation;
+    }
+
+    public void setPeOrginzation(String peOrginzation) {
+        this.peOrginzation = peOrginzation;
+    }
+
+    public String getPeAddress() {
+        return peAddress;
+    }
+
+    public void setPeAddress(String peAddress) {
+        this.peAddress = peAddress;
     }
 
     public void setComNo(String comNo) {
@@ -338,11 +435,12 @@ public class AfPeTaskDTO {
     public String toString() {
         return "AfPeTaskDTO{" +
             "peTaskId=" + peTaskId +
-            ", bespeakPeId='" + bespeakPeId + '\'' +
             ", processId='" + processId + '\'' +
             ", peRuleId=" + peRuleId +
             ", status=" + status +
+            ", bespeakPeId='" + bespeakPeId + '\'' +
             ", productId='" + productId + '\'' +
+            ", comNo='" + comNo + '\'' +
             ", companyId='" + companyId + '\'' +
             ", companyName='" + companyName + '\'' +
             ", employeeId='" + employeeId + '\'' +
@@ -358,6 +456,14 @@ public class AfPeTaskDTO {
             ", effectStartDate=" + effectStartDate +
             ", effectEndDate=" + effectEndDate +
             ", companyReport=" + companyReport +
+            ", tiJianDate=" + tiJianDate +
+            ", daoJianDate=" + daoJianDate +
+            ", reportDate=" + reportDate +
+            ", sendTime=" + sendTime +
+            ", productName='" + productName + '\'' +
+            ", saleValue=" + saleValue +
+            ", peOrginzation='" + peOrginzation + '\'' +
+            ", peAddress='" + peAddress + '\'' +
             ", isActive=" + isActive +
             ", createdTime=" + createdTime +
             ", modifiedTime=" + modifiedTime +

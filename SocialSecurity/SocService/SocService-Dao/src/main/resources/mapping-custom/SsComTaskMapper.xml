@@ -557,14 +557,14 @@
     </update>
 
     <!--判断企业任务单是否存在-->
-    <select id="countComTaskByCond" resultType="int">
+    <select id="isExistComTask" resultType="int">
         SELECT
         COUNT(*)
         FROM ss_com_task sct
         where sct.is_active = 1
         AND sct.company_id = #{companyId}
         AND sct.task_category=#{taskCategory}
-        AND sct.task_status in (0,1,2)
+        AND sct.task_status in (0,1,2,3)
     </select>
     <!--查询 企业是否有已完成的开户任务单-->
     <select id="countFinishComTaskByCond" resultType="int">

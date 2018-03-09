@@ -181,13 +181,16 @@
         </if>
     </select>
     <!-- 获得企业开户任务 查询是否有开户账号和账号状态-->
-    <select id="selectAccountByCompanyId" resultMap="BaseResultMap">
+    <select id="isExistAccountInfo" resultType="java.lang.Integer">
         SELECT
-        sca.*
+            COUNT(*)
         FROM
-        ss_com_account sca
-        LEFT JOIN ss_account_com_relation sacr ON sca.com_account_id = sca.com_account_id
-        WHERE sacr.company_id =#{companyId}
-
+            ss_com_account a
+        INNER JOIN ss_account_com_relation b ON a.com_account_id = b.com_account_id
+        WHERE
+            a.is_active = 1
+        AND b.is_active = 1
+        AND a.state != 2
+        AND b.company_id = #{companyId}
     </select>
 </mapper>

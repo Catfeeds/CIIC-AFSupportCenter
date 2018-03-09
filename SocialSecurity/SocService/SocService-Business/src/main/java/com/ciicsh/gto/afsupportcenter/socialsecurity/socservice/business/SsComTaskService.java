@@ -117,7 +117,7 @@ public interface SsComTaskService extends IService<SsComTask> {
      * @param ssComTask
      * @return
      */
-    int countComTaskByCond(SsComTaskBO ssComTask);
+    Integer isExistComTask(SsComTaskBO ssComTask);
 
     boolean insertComTask(SsComTask ssComTask);
 
