@@ -113,8 +113,8 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
     }
 
     @Override
-    public SsComAccount selectAccountByCompanyId(String companyId) {
-        return baseMapper.selectAccountByCompanyId(companyId);
+    public Integer isExistAccountInfo(String companyId) {
+        return baseMapper.isExistAccountInfo(companyId);
     }
 
 }

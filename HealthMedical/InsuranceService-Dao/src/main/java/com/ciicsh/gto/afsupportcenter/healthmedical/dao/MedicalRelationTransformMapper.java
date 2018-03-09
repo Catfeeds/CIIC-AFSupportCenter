@@ -1,10 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.dao;
 
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.MedicalRelationTransformPO;
-import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.MedicalRelationTransformDTO;
-import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 /**
@@ -22,5 +22,5 @@ public interface MedicalRelationTransformMapper  extends BaseMapper<MedicalRelat
     MedicalRelationTransformPO getById(String id);
 
 
-    List<MedicalRelationTransformPO> medicalRelationTransformMapperQuery(Page<MedicalRelationTransformPO> page, MedicalRelationTransformDTO fragmentaryReimbursementDTO);
+    List<MedicalRelationTransformPO> medicalRelationTransformMapperQuery(Page<MedicalRelationTransformPO> page, MedicalRelationTransformPO fragmentaryReimbursementDTO);
 }
