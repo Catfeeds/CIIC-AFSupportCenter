@@ -45,13 +45,13 @@ public class FragmentaryReimbursementQueryServiceImpl extends ServiceImpl<Fragme
     @Override
     public int edit(FragmentaryReimbursementPO fragmentaryReimbursement)
     {
-        Integer returnNum= fragmentaryReimbursementMapper.updateById(fragmentaryReimbursement);
+        Integer returnNum= fragmentaryReimbursementMapper.updateAllColumnById(fragmentaryReimbursement);
         return returnNum;
 
     }
     @Override
     public FragmentaryReimbursementPO getById(String id) {
-        return fragmentaryReimbursementMapper.getById(id);
+        return fragmentaryReimbursementMapper.selectById(id);
     }
 
     /*
