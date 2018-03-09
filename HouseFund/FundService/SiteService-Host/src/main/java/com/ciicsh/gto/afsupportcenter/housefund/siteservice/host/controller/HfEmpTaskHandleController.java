@@ -390,25 +390,28 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
      */
     @RequestMapping("/comAccountQuery")
     public JsonResult comAccountQuery(ComAccountTransBo comAccountTransBo) {
-        String key = "-HfEmpTaskHandleController-comAccountQuery-ComAccountTransBo-list-";
-        List<ComAccountTransBo> rtnList = null;
-        List<ComAccountTransBo> comAccountTransBoList = ( List<ComAccountTransBo>) RedisManager.getObj(key);
-        if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
-            rtnList = comAccountTransBoList.stream().filter(e ->
-                e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
-        }
+        //TODO: 这个给公共对话框用的查询
 
-        if (CollectionUtils.isEmpty(rtnList)) {
-            comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
-        }
+        //        String key = "-HfEmpTaskHandleController-comAccountQuery-ComAccountTransBo-list-";
+//        List<ComAccountTransBo> rtnList = null;
+//        List<ComAccountTransBo> comAccountTransBoList = ( List<ComAccountTransBo>) RedisManager.getObj(key);
+//        if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
+//            rtnList = comAccountTransBoList.stream().filter(e ->
+//                e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
+//        }
+//
+//        if (CollectionUtils.isEmpty(rtnList)) {
+//            comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
+//        }
+//
+//        if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
+//            RedisManager.set(key, comAccountTransBoList, ExpireTime.TEN_MIN);
+//            rtnList = comAccountTransBoList.stream().filter(e ->
+//                e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
+//        }
 
-        if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
-            RedisManager.set(key, comAccountTransBoList, ExpireTime.TEN_MIN);
-            rtnList = comAccountTransBoList.stream().filter(e ->
-                e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
-        }
-
-        return JsonResultKit.of(rtnList);
+//        return JsonResultKit.of(rtnList);
+        return null;
     }
 
     @RequestMapping("/transEmpTaskQuery")
