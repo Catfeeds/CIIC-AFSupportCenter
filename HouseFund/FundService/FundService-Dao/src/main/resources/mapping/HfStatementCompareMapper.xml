@@ -3,7 +3,7 @@
 <mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfStatementCompareMapper">
 
 	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfStatementCompare">
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfStatementComparePO">
 		<id column="statement_compare_id" property="statementCompareId" />
 		<result column="hf_month" property="hfMonth" />
 		<result column="imp_path" property="impPath" />

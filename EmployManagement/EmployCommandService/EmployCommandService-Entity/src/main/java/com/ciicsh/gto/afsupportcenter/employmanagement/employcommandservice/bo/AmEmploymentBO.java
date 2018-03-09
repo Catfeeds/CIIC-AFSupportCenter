@@ -75,6 +75,16 @@ public class AmEmploymentBO extends AmEmployment {
 
     private LocalDate outDate;
 
+    private  String employNotes;
+
+    public String getEmployNotes() {
+        return employNotes;
+    }
+
+    public void setEmployNotes(String employNotes) {
+        this.employNotes = employNotes;
+    }
+
     public String getOutReason() {
         return outReason;
     }

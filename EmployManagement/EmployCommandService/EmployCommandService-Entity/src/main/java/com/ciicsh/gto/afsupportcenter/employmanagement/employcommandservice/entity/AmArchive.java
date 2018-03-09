@@ -224,11 +224,6 @@ public class AmArchive implements Serializable {
 	@TableField("employ_material_remark")
 	private String employMaterialRemark;
     /**
-     * __退工档案办理区域__
-     */
-	@TableField("__退工档案办理区域__")
-	private String 退工档案办理区域;
-    /**
      * 出库日期
      */
 	@TableField("storage_out_date")
@@ -309,8 +304,29 @@ public class AmArchive implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+    @TableField("in_file_date")
+	private LocalDate inFileDate;
 
-	public Long getArchiveId() {
+    @TableField("manual_storage_man")
+    private  String  manualStorageMan;
+
+    public String getManualStorageMan() {
+        return manualStorageMan;
+    }
+
+    public void setManualStorageMan(String manualStorageMan) {
+        this.manualStorageMan = manualStorageMan;
+    }
+
+    public LocalDate getInFileDate() {
+        return inFileDate;
+    }
+
+    public void setInFileDate(LocalDate inFileDate) {
+        this.inFileDate = inFileDate;
+    }
+
+    public Long getArchiveId() {
 		return archiveId;
 	}
 
@@ -638,14 +654,6 @@ public class AmArchive implements Serializable {
 		this.employMaterialRemark = employMaterialRemark;
 	}
 
-	public String get退工档案办理区域() {
-		return 退工档案办理区域;
-	}
-
-	public void set退工档案办理区域(String 退工档案办理区域) {
-		this.退工档案办理区域 = 退工档案办理区域;
-	}
-
 	public LocalDate getStorageOutDate() {
 		return storageOutDate;
 	}
@@ -818,7 +826,6 @@ public class AmArchive implements Serializable {
 			", budiaoDocDate2=" + budiaoDocDate2 +
 			", budiaoDocMan2=" + budiaoDocMan2 +
 			", employMaterialRemark=" + employMaterialRemark +
-			", 退工档案办理区域=" + 退工档案办理区域 +
 			", storageOutDate=" + storageOutDate +
 			", storageOutMan=" + storageOutMan +
 			", postLetterDate=" + postLetterDate +

@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao
 
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmInjuryBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmInjury;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  */
 public interface AmInjuryMapper extends BaseMapper<AmInjury> {
 
-    List<AmInjury> queryAmInjury(AmInjury amInjury);
+    List<AmInjuryBO> queryAmInjury(AmInjuryBO amInjury);
 
     int  deleteAmInjury(Long injuryId);
 

@@ -26,8 +26,6 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
 
     List<AmEmpTaskBO> queryAmEmpTaskById(Map<String,Object> param);
 
-    List<AmEmpTaskBO> queryCustom(String companyId);
-
     boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) throws Exception;
 
     AmEmpTaskBO queryAccout(String companyId);

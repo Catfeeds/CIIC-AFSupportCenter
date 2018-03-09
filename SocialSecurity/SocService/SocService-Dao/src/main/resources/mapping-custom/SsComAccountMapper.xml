@@ -181,7 +181,7 @@
         </if>
     </select>
     <!-- 获得企业开户任务 查询是否有开户账号和账号状态-->
-    <select id="isExistAccountInfo" resultMap="int">
+    <select id="isExistAccountInfo" resultType="java.lang.Integer">
         SELECT
             COUNT(*)
         FROM

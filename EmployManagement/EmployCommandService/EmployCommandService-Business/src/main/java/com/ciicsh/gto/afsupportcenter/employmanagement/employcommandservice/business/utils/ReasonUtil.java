@@ -12,6 +12,12 @@ public class ReasonUtil {
 
     private static Map<String,String> tg_param = new HashMap<>();
 
+    private static Map<String,String> yg_param = new HashMap<>();
+
+    private static Map<String,String> yw_param = new HashMap<>();
+
+    private static Map<String,String> istj_param = new HashMap<>();
+
     static {
         param.put("1","辞职");
         param.put("2","协商解除");
@@ -49,6 +55,23 @@ public class ReasonUtil {
         tg_param.put("18","等修改备案表");
 
 
+        yg_param.put("2","已开F单未完成");
+        yg_param.put("3","用工成功");
+        yg_param.put("4","用工失败");
+        yg_param.put("5","前道要求撤销用工");
+        yg_param.put("6","用工已办查无档");
+        yg_param.put("7","Ukey外借");
+        yg_param.put("8","重复任务单");
+        yg_param.put("9","用工已办");
+        yg_param.put("10","前道已中止");
+
+        yw_param.put("1","全日制");
+        yw_param.put("2","其他");
+
+        istj_param.put("0","已交");
+        istj_param.put("1","未交");
+
+
     }
 
     public  static  String  getReasonOut(String code){
@@ -56,8 +79,27 @@ public class ReasonUtil {
 
     }
 
+    /**
+     * 退工反馈
+     * @param code
+     * @return
+     */
     public static  String  getTgfk(String code){
         return  tg_param.get(code);
     }
+
+    /**
+     * 用工反馈
+     * @param code
+     * @return
+     */
+    public static  String  getYgfk(String code){
+
+        return  yg_param.get(code);
+    }
+
+    public static  String getYgfs(String code){ return  yw_param.get(code); }
+
+    public static  String getIsTj(String code){ return  istj_param.get(code); }
 
 }
