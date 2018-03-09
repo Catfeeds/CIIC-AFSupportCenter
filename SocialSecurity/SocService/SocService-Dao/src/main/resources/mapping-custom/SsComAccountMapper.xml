@@ -191,6 +191,6 @@
             a.is_active = 1
         AND b.is_active = 1
         AND a.state != 2
-        AND sacr.company_id = #{companyId}
+        AND b.company_id = #{companyId}
     </select>
 </mapper>
