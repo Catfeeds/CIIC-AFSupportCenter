@@ -88,7 +88,7 @@ public class ExpBirthday2DTO {
      * 员工工号
      */
     @Excel(name = "员工工号")
-    private String companyNum;
+    private String empCode;
     /**
      * 服务类型
      */
@@ -207,12 +207,12 @@ public class ExpBirthday2DTO {
         this.serviceCenter = serviceCenter;
     }
 
-    public String getCompanyNum() {
-        return companyNum;
+    public String getEmpCode() {
+        return empCode;
     }
 
-    public void setCompanyNum(String companyNum) {
-        this.companyNum = companyNum;
+    public void setEmpCode(String empCode) {
+        this.empCode = empCode;
     }
 
     public String getServiceType() {
@@ -240,7 +240,7 @@ public class ExpBirthday2DTO {
             ", oldEmpId='" + oldEmpId + '\'' +
             ", email='" + email + '\'' +
             ", serviceCenter='" + serviceCenter + '\'' +
-            ", companyNum='" + companyNum + '\'' +
+            ", empCode='" + empCode + '\'' +
             ", serviceType='" + serviceType + '\'' +
             '}';
     }

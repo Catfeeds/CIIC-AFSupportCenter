@@ -25,7 +25,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -120,9 +123,12 @@ public class ReportFormController {
     @GetMapping("/get2")
     public JsonResult exportBirthday1(String companyId, String companyName,
                                       String manager,String birthday,
-                                      HttpServletResponse response){
+                                      HttpServletResponse response) throws ParseException {
         AfProductParamsDTO afProductParamsDTO = new AfProductParamsDTO();
         //todo birthday
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = sdf.parse(birthday);
+
         afProductParamsDTO.setCompanyId(companyId);
         afProductParamsDTO.setProductId("CPDFL1800059");
         List<AfProductWithEmployeeDTO> productWithEmployee = afProductPublicProxy.getProductWithEmployee(afProductParamsDTO);
@@ -147,8 +153,10 @@ public class ReportFormController {
     @GetMapping("/get3")
     public JsonResult exportBirthday2(String companyId, String companyName,
                                       String manager,String birthday,
-                                      HttpServletResponse response){
+                                      HttpServletResponse response) throws ParseException {
         AfProductParamsDTO afProductParamsDTO = new AfProductParamsDTO();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = sdf.parse(birthday);
         //todo birthday
         afProductParamsDTO.setCompanyId(companyId);
         afProductParamsDTO.setProductId("CPDFL1800060");
