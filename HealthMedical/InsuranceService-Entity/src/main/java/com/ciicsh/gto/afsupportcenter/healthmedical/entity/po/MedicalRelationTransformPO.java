@@ -1,25 +1,24 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.entity.po;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
-import com.baomidou.mybatisplus.enums.IdType;
-
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalTime;
+
+import com.baomidou.mybatisplus.enums.IdType;
 import java.util.Date;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableName;
 
 /**
  * <p>
  * 医疗关系转移表
  * </p>
  *
- * @author zhaogang
- * @since 2017-12-29
+ * @author 赵刚
+ * @since 2018-03-09
  */
 @TableName("hm_medical_relation_transform")
-public class MedicalRelationTransformPO implements Serializable {
+public class MedicalRelationTransformPO extends Model<MedicalRelationTransformPO> {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,6 +32,17 @@ public class MedicalRelationTransformPO implements Serializable {
      */
 	@TableField("employee_id")
 	private String employeeId;
+	@TableField("employee_name")
+	private String employeeName;
+    /**
+     * 证件号码
+     */
+	@TableField("id_num")
+	private String idNum;
+	@TableField("company_id")
+	private String companyId;
+	@TableField("company_name")
+	private String companyName;
     /**
      * 转出日期
      */
@@ -93,6 +103,38 @@ public class MedicalRelationTransformPO implements Serializable {
 
 	public void setEmployeeId(String employeeId) {
 		this.employeeId = employeeId;
+	}
+
+	public String getEmployeeName() {
+		return employeeName;
+	}
+
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
+
+	public String getIdNum() {
+		return idNum;
+	}
+
+	public void setIdNum(String idNum) {
+		this.idNum = idNum;
+	}
+
+	public String getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
 	}
 
 	public Date getTurnOutDate() {
@@ -168,10 +210,19 @@ public class MedicalRelationTransformPO implements Serializable {
 	}
 
 	@Override
+	protected Serializable pkVal() {
+		return this.transformId;
+	}
+
+	@Override
 	public String toString() {
-		return "MedicalRelationTransform{" +
+		return "MedicalRelationTransformPO{" +
 			", transformId=" + transformId +
 			", employeeId=" + employeeId +
+			", employeeName=" + employeeName +
+			", idNum=" + idNum +
+			", companyId=" + companyId +
+			", companyName=" + companyName +
 			", turnOutDate=" + turnOutDate +
 			", turnOutAddress=" + turnOutAddress +
 			", turnBackDate=" + turnBackDate +

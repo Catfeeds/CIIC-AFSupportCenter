@@ -286,8 +286,8 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
      * @param ssComTask
      * @return
      */
-    public int countComTaskByCond(SsComTaskBO ssComTask) {
-        return baseMapper.countComTaskByCond(ssComTask);
+    public Integer isExistComTask(SsComTaskBO ssComTask) {
+        return baseMapper.isExistComTask(ssComTask);
     }
 
     public boolean insertComTask(SsComTask ssComTask) {

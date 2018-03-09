@@ -1,25 +1,25 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.entity.po;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
-import com.baomidou.mybatisplus.enums.IdType;
-
 import java.io.Serializable;
+
+import com.baomidou.mybatisplus.enums.IdType;
 import java.math.BigDecimal;
-import java.time.LocalTime;
 import java.util.Date;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableName;
 
 /**
  * <p>
  * 零星报销表
  * </p>
  *
- * @author zhaogang
- * @since 2017-12-29
+ * @author 赵刚
+ * @since 2018-03-09
  */
 @TableName("hm_fragmentary_reimbursement")
-public class FragmentaryReimbursementPO implements Serializable {
+public class FragmentaryReimbursementPO extends Model<FragmentaryReimbursementPO> {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,6 +33,14 @@ public class FragmentaryReimbursementPO implements Serializable {
      */
 	@TableField("employee_id")
 	private String employeeId;
+	@TableField("employee_name")
+	private String employeeName;
+	@TableField("id_num")
+	private String idNum;
+	@TableField("company_id")
+	private String companyId;
+	@TableField("company_name")
+	private String companyName;
     /**
      * 受理金额
      */
@@ -99,6 +107,38 @@ public class FragmentaryReimbursementPO implements Serializable {
 
 	public void setEmployeeId(String employeeId) {
 		this.employeeId = employeeId;
+	}
+
+	public String getEmployeeName() {
+		return employeeName;
+	}
+
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
+
+	public String getIdNum() {
+		return idNum;
+	}
+
+	public void setIdNum(String idNum) {
+		this.idNum = idNum;
+	}
+
+	public String getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
 	}
 
 	public BigDecimal getCaseMoney() {
@@ -182,10 +222,19 @@ public class FragmentaryReimbursementPO implements Serializable {
 	}
 
 	@Override
+	protected Serializable pkVal() {
+		return this.id;
+	}
+
+	@Override
 	public String toString() {
-		return "FragmentaryReimbursement{" +
+		return "FragmentaryReimbursementPO{" +
 			", id=" + id +
 			", employeeId=" + employeeId +
+			", employeeName=" + employeeName +
+			", idNum=" + idNum +
+			", companyId=" + companyId +
+			", companyName=" + companyName +
 			", caseMoney=" + caseMoney +
 			", invoiceNumber=" + invoiceNumber +
 			", medicalRemark=" + medicalRemark +

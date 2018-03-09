@@ -66,4 +66,12 @@ public interface HfComAccountMapper extends BaseMapper<HfComAccount> {
     Integer isExistAccount(@Param("companyId") String companyId,@Param("hfType") Integer hfType);
 
     List<AccountInfoBO> getAccountsByCompany(@Param("companyId") String companyId,@Param("hfType") Integer hfType);
+
+    /**
+     * 查询企业公积金账户信息
+     *
+     * @param extBo
+     * @return
+     */
+    List<ComAccountExtBo> queryHfComAccountList(ComAccountParamExtBo extBo);
 }

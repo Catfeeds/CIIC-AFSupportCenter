@@ -80,12 +80,12 @@ import java.util.Optional;
         }
     }
 
-    @GetMapping("/getEmployeeInfo")
-    public Result getEmployeeInfo(String employeeId,String companyId) {
+    @PostMapping("/getEmployeeInfo")
+    public Result getEmployeeInfo(@RequestBody FragmentaryReimbursementDTO fragmentaryReimbursementDTO) {
         try {
             EmployeeHireInfoQueryDTO queryDTO = new EmployeeHireInfoQueryDTO();
-            queryDTO.setCompanyId(companyId);
-            queryDTO.setEmployeeId(employeeId);
+            queryDTO.setCompanyId(fragmentaryReimbursementDTO.getCompanyId());
+            queryDTO.setEmployeeId(fragmentaryReimbursementDTO.getEmployeeId());
             com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeHireInfoDTO> info = employeeInfoProxy.getEmployeeHireInfo(queryDTO);
             return ResultGenerator.genSuccessResult(info);
         } catch (Exception e) {
