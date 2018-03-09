@@ -10,6 +10,8 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by zhangzhiwen on 2018/1/30.
  */
@@ -31,5 +33,10 @@ public class AmRemarkServiceImpl extends ServiceImpl<AmRemarkMapper, AmRemark> i
        }
 
         return false;
+    }
+
+    @Override
+    public List<AmRemarkBO> getAmRemakList(AmRemarkBO amRemarkBO) {
+        return baseMapper.queryAmRemark(amRemarkBO);
     }
 }

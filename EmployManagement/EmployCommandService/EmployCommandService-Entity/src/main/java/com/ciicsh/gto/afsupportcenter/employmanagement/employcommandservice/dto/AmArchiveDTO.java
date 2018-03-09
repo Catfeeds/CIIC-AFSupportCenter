@@ -252,6 +252,11 @@ public class AmArchiveDTO implements Serializable {
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "+8")
     private LocalDateTime modifiedTime;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "+8")
+    private LocalDate inFileDate;
+
+    private  String manualStorageMan;
     /**
      * 创建者登录名
      */
@@ -260,6 +265,22 @@ public class AmArchiveDTO implements Serializable {
      * 修改者登录名
      */
     private String modifiedBy;
+
+    public String getManualStorageMan() {
+        return manualStorageMan;
+    }
+
+    public void setManualStorageMan(String manualStorageMan) {
+        this.manualStorageMan = manualStorageMan;
+    }
+
+    public LocalDate getInFileDate() {
+        return inFileDate;
+    }
+
+    public void setInFileDate(LocalDate inFileDate) {
+        this.inFileDate = inFileDate;
+    }
 
     public Long getArchiveId() {
         return archiveId;

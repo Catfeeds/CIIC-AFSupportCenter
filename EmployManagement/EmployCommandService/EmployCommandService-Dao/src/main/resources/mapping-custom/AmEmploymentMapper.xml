@@ -60,9 +60,9 @@
 
     <select id="queryAmArchive" resultMap="BaseResultMapDTO">
         SELECT
-        a.out_reason,
-        a.out_date,
-        a.emp_task_id,
+        w.out_reason,
+        w.out_date,
+        w.emp_task_id,
         b.employment_id,
         b.employee_id,
         b.company_id,
@@ -93,7 +93,6 @@
         f.resign_handle_date,
         f.job_centre_feedback_date,
         e.title
-
         FROM
         am_employment b
         LEFT JOIN am_emp_task a on a.emp_task_id = b.emp_task_id
@@ -101,6 +100,7 @@
         LEFT JOIN am_resign f ON f.employment_id = b.employment_id
         LEFT JOIN emp_employee d  on  b.employee_id = d.employee_id
         LEFT JOIN sal_company e ON e.company_id = b.company_id
+        LEFT JOIN am_emp_task w on a.company_id = w.company_id and a.employee_id = w.employee_id and w.task_category = 2
         where  1= 1
         <if test="taskStatus!=null">
             and  a.task_status = ${taskStatus}
@@ -160,6 +160,8 @@
     </select>
     <select id="queryAmArchiveList" resultMap="RM_archiveSearchExportOpt">
         SELECT
+        w.out_reason,
+        w.out_date,
         a.emp_task_id,
         b.employment_id,
         b.employee_id,
@@ -177,6 +179,7 @@
         c.archive_id,
         d.id_num,/*证件号 */
         d.id_card_type,
+        d.employee_name,
         b.employ_date,
         /**退工日期*/
         f.resign_date,
@@ -187,14 +190,17 @@
         /**退档日期*/
         f.return_doc_date,
         /**退工送办日期*/
-        f.resign_handle_date
-
+        f.resign_handle_date,
+        f.job_centre_feedback_date,
+        e.title
         FROM
         am_employment b
         LEFT JOIN am_emp_task a on a.emp_task_id = b.emp_task_id
         LEFT JOIN am_archive c ON b.employment_id = c.employment_id
         LEFT JOIN am_resign f ON f.employment_id = b.employment_id
         LEFT JOIN emp_employee d  on  b.employee_id = d.employee_id
+        LEFT JOIN sal_company e ON e.company_id = b.company_id
+        LEFT JOIN am_emp_task w on a.company_id = w.company_id and a.employee_id = w.employee_id and w.task_category = 2
         where  1= 1
         <if test="taskStatus!=null">
             and  a.task_status = ${taskStatus}

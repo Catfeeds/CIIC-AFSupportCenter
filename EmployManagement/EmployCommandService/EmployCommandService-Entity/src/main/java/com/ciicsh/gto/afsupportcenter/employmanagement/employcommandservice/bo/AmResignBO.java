@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmResign;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public class AmResignBO extends AmResign {
@@ -108,11 +109,21 @@ public class AmResignBO extends AmResign {
 
     private String  outReason;
 
-    private LocalDate outDate;
+    private String outDate;
 
     private String params;
 
     private String luyongHandleEnd;
+
+    private  String ifLaborManualReturnStr;
+
+    public String getIfLaborManualReturnStr() {
+        return ifLaborManualReturnStr;
+    }
+
+    public void setIfLaborManualReturnStr(String ifLaborManualReturnStr) {
+        this.ifLaborManualReturnStr = ifLaborManualReturnStr;
+    }
 
     public String getLuyongHandleEnd() {
         return luyongHandleEnd;
@@ -124,11 +135,11 @@ public class AmResignBO extends AmResign {
 
     private List<String> param;
 
-    public LocalDate getOutDate() {
+    public String getOutDate() {
         return outDate;
     }
 
-    public void setOutDate(LocalDate outDate) {
+    public void setOutDate(String outDate) {
         this.outDate = outDate;
     }
 

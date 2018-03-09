@@ -14,10 +14,10 @@ import lombok.EqualsAndHashCode;
 public class resignSearchExportOpt {
 
     @Excel(name = "职介反馈日期", orderNum = "1")
-    private String intermediaryFeedbackDate;
+    private String jobCentreFeedbackDate;
 
     @Excel(name = "退工原因", orderNum = "2")
-    private String refuseReason;
+    private String outReason;
 
     @Excel(name = "用工属性", orderNum = "3")
     private String employProperty;
