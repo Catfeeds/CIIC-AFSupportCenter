@@ -92,6 +92,7 @@ public class ReportFormController {
         AfProductParamsDTO afProductParamsDTO = new AfProductParamsDTO();
         afProductParamsDTO.setCompanyId(companyId);
         afProductParamsDTO.setProductId(productId);
+//        afProductParamsDTO.set
         List<AfProductWithEmployeeDTO> productWithEmployee = afProductPublicProxy.getProductWithEmployee(afProductParamsDTO);
         ArrayList<ExpEmployeeDTO> expEmployeeDTOS = new ArrayList<>();
         productWithEmployee.stream().forEach( i -> {
@@ -192,4 +193,7 @@ public class ReportFormController {
     }
 
 
+    /**
+     * 获取产品列表
+     */
 }
