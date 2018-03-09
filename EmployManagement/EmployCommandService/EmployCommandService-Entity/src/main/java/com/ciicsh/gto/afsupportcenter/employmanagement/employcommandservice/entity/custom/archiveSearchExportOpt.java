@@ -22,10 +22,10 @@ public class archiveSearchExportOpt {
     private String employProperty;
 
     @Excel(name = "职介反馈日期", orderNum = "3")
-    private String intermediaryFeedbackDate;
+    private String jobCentreFeedbackDate;
 
     @Excel(name = "退工原因", orderNum = "4")
-    private String refuseReason;
+    private String outReason;
 
     @Excel(name = "办理类型", orderNum = "5")
     private String handleType;
@@ -64,7 +64,7 @@ public class archiveSearchExportOpt {
     private String employDate;
 
     @Excel(name = "退工日期", orderNum = "17")
-    private  String refuseDate;
+    private  String outDate;
 
     @Excel(name = "出库日期", orderNum = "18")
     private  String storageOutDate;

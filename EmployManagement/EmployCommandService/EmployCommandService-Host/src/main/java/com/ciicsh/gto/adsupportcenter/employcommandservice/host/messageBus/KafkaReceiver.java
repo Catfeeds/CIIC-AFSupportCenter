@@ -37,7 +37,12 @@ public class KafkaReceiver {
         //用工办理
         boolean res = false;
         if (TaskSink.HIRE.equals(taskMsgDTO.getTaskType())) {
-            res = insertAmEmpTaskTb(taskMsgDTO, 1);
+            logger.info("receive empIn: " + JSON.toJSONString(taskMsgDTO));
+            try {
+                res = insertAmEmpTaskTb(taskMsgDTO, 1);
+            } catch (Exception e) {
+                logger.error(e.getMessage(),e);
+            }
             logger.info("收到消息 用工办理: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
         }
     }
@@ -53,6 +58,7 @@ public class KafkaReceiver {
         //退工
         boolean res = false;
         if (TaskSink.FIRE.equals(taskMsgDTO.getTaskType())) {
+            logger.info("receive empOut: " + JSON.toJSONString(taskMsgDTO));
             try {
                 res = iAmEmpTaskService.insertTaskFire(taskMsgDTO, 2);
             } catch (Exception e) {
@@ -60,6 +66,66 @@ public class KafkaReceiver {
             }
             logger.info("收到消息 退工: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
         }
+    }
+
+    @StreamListener(TaskSink.AF_EMP_COMPANY_CHANGE )
+    public void companyChange(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
+
+        boolean res = false;
+        //用工办理
+        if (TaskSink.HIRE.equals(taskMsgDTO.getTaskType())) {
+            logger.info("receive empIn: " + JSON.toJSONString(taskMsgDTO));
+            try {
+                res = insertAmEmpTaskTb(taskMsgDTO, 1);
+            } catch (Exception e) {
+                logger.error(e.getMessage(),e);
+            }
+            logger.info("收到消息 用工办理: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
+        }
+
+        //退工
+
+        if (TaskSink.FIRE.equals(taskMsgDTO.getTaskType())) {
+            logger.info("receive empOut: " + JSON.toJSONString(taskMsgDTO));
+            try {
+                res = iAmEmpTaskService.insertTaskFire(taskMsgDTO, 2);
+            } catch (Exception e) {
+                logger.error(e.getMessage(),e);
+            }
+            logger.info("收到消息 退工: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
+        }
+
+    }
+
+    @StreamListener(TaskSink.AF_EMP_AGREEMENT_ADJUST)
+    public void agreementAdjust(Message<TaskCreateMsgDTO> message) {
+        TaskCreateMsgDTO taskMsgDTO = message.getPayload();
+
+        boolean res = false;
+        //用工办理
+        if (TaskSink.HIRE.equals(taskMsgDTO.getTaskType())) {
+            logger.info("receive empIn: " + JSON.toJSONString(taskMsgDTO));
+            try {
+                res = insertAmEmpTaskTb(taskMsgDTO, 1);
+            } catch (Exception e) {
+                logger.error(e.getMessage(),e);
+            }
+            logger.info("收到消息 用工办理: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
+        }
+
+        //退工
+
+        if (TaskSink.FIRE.equals(taskMsgDTO.getTaskType())) {
+            logger.info("receive empOut: " + JSON.toJSONString(taskMsgDTO));
+            try {
+                res = iAmEmpTaskService.insertTaskFire(taskMsgDTO, 2);
+            } catch (Exception e) {
+                logger.error(e.getMessage(),e);
+            }
+            logger.info("收到消息 退工: " + JSON.toJSONString(taskMsgDTO) + "，处理结果：" + (res ? "成功" : "失败"));
+        }
+
     }
 
     /**

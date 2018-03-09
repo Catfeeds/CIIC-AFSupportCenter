@@ -34,13 +34,27 @@
     </resultMap>
 
     <resultMap id="RM_resignSearchExportOpt" type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.resignSearchExportOpt">
-        <result column="employ_property" property="employProperty" />
-        <result column="handle_type" property="handleType" />
         <result column="employee_id" property="employeeId" />
+        <result column="company_id" property="companyId" />
+        <result column="employ_style" property="employStyle" />
+        <result column="handle_type" property="handleType" />
+        <result column="employ_property" property="employProperty" />
+        <result column="employ_way" property="employWay" />
+        <result column="yuliu_doc_num" property="yuliuDocNum" />
+        <result column="doc_num" property="docNum" />
+        <result column="title" property="title" />
         <result column="employee_name" property="employeeName"/>
         <result column="id_num" property="idNum"/>
-        <result column="company_id" property="companyId" />
-        <result column="title" property="title" />
+        <result column="license_code" property="licenseCode" />
+        <result column="service_center" property="serviceCenter"/>
+        <result column="custom" property="custom"/>
+        <result column="employ_date" property="employDate" />
+        <result column="archive_place" property="archivePlace" />
+        <result column="storage_out_date" property="storageOutDate" />
+        <result column="doc_code" property="docCode" />
+        <result column="archive_place_additional" property="archivePlaceAdditional" />
+        <result column="archive_card_state" property="archiveCardState" />
+        <result column="out_reason" property="outReason" />
 
     </resultMap>
 
@@ -90,6 +104,10 @@
         LEFT JOIN am_resign f on  f.employment_id = b.employment_id
         WHERE
         a.task_category = '2'
+        and
+        a.employee_id is not null
+        AND
+        a.company_id  is not null
         <if test="taskStatus!=null">
             and a.task_status = ${taskStatus}
         </if>
@@ -117,6 +135,10 @@
         LEFT JOIN am_resign f on  f.employment_id = b.employment_id
         WHERE
         a.task_category = '2'
+        and
+        a.employee_id is not null
+        AND
+        a.company_id  is not null
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
         </foreach>
@@ -141,18 +163,17 @@
         b.archive_card_state,
         b.doc_code,
         b.diaodang_feedback,
+        t.out_reason,
+        t.out_date,
         c.*
-        FROM
-        am_employment a
-        INNER JOIN
-        am_archive b
-        ON a.company_id = b.company_id
-        AND a.employee_id = b.employee_id
-        LEFT JOIN am_resign c on c.employment_id = a.employment_id
+        from am_resign c
+        LEFT JOIN  am_employment a on c.employment_id = a.employment_id
+        LEFT JOIN  am_archive b on a.employment_id = a.employment_id
+        LEFT JOIN  am_emp_task  t on t.company_id = c.company_id and c.employee_id =t.employee_id
         where
-        a.company_id = #{companyId}
+        c.company_id = #{companyId}
         and
-        a.employee_id = #{employeeId}
+        c.employee_id = #{employeeId}
     </select>
 
     <select id="queryAmResignList" resultMap="RM_resignSearchExportOpt">
@@ -170,9 +191,12 @@
         f.resign_date,
         /**退工日期*/
         f.resign_feedback1,
+        f.resign_feedback2,
         /**退工反馈*/
-        f.resign_reason,
+        a.out_reason,
+        a.out_date,
         /**退工原因*/
+        f.job_centre_feedback_date,
         d.employee_id,
         /**雇员编号*/
         d.employee_name,
@@ -186,7 +210,8 @@
         c.yuliu_doc_num,
         c.archive_place,
         c.storage_out_date,
-        c.employ_feedback
+        c.employ_feedback,
+        c.luyong_handle_end
         FROM
         am_emp_task a
         LEFT JOIN am_employment b  ON a.employee_id = b.employee_id
@@ -197,12 +222,17 @@
         LEFT JOIN am_resign f on  f.employment_id = b.employment_id
         WHERE
         a.task_category = '2'
+        and
+        a.employee_id is not null
+        AND
+        a.company_id  is not null
         <if test="taskStatus!=null">
             and a.task_status = ${taskStatus}
         </if>
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
         </foreach>
+
     </select>
 
 </mapper>

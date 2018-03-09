@@ -50,7 +50,7 @@ public class ExpEmployeeDTO implements Serializable{
     /**
      * 人数
      */
-    @Excel(name = "")
+    @Excel(name = "人数")
     private Long count;
 
     /**

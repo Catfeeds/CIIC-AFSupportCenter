@@ -33,6 +33,10 @@ public class AmInjury implements Serializable {
      */
 	@TableField("affirm_date")
 	private LocalDate affirmDate;
+
+    @TableField("evaluation_date")
+    private LocalDate evaluationDate;
+
     /**
      * 鉴定结论
      */
@@ -88,8 +92,15 @@ public class AmInjury implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+    public LocalDate getEvaluationDate() {
+        return evaluationDate;
+    }
 
-	public Long getInjuryId() {
+    public void setEvaluationDate(LocalDate evaluationDate) {
+        this.evaluationDate = evaluationDate;
+    }
+
+    public Long getInjuryId() {
 		return injuryId;
 	}
 

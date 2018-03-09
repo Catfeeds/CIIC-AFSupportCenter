@@ -2,6 +2,7 @@ package com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.CommonApiUtils;
@@ -46,7 +47,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
     @Autowired
     private IAmRemarkService amRemarkService;
-
 
     @Autowired
     private CommonApiUtils employeeInfoProxy;
@@ -164,8 +164,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         //用工备注
         PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);
-        //客户信息
-        List<AmEmpTaskBO>  listCompany = business.queryCustom(amTaskParamBO.getCompanyId());
+
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
@@ -189,10 +188,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             resultMap.put("amRemarkBo",amRemarkBOPageRows);
         }
 
-        if(null!=listCompany&&listCompany.size()>0)
-        {
-            resultMap.put("company",listCompany.get(0));
-        }
 
         return JsonResultKit.of(resultMap);
 
