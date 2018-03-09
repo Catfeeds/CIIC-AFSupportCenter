@@ -21,18 +21,18 @@ public class MessageController {
     private KafkaSender sender;
 
     @RequestMapping(value = "/summarycalculate")
-    public JsonResult<String> summaryCalculate(@RequestParam Long comAccountId, @RequestParam String ssMonth){
-        String key = "-com-account-"+comAccountId+"-"+ssMonth+"-";
+    public JsonResult<String> summaryCalculate(@RequestParam Long comAccountId, @RequestParam String ssMonth, @RequestParam String generalMethod){
+        String key = "-com-account-"+comAccountId+"-"+ssMonth+"-"+generalMethod;
         SocReportMessage message = RedisManager.get(key,SocReportMessage.class);
-        JsonResult<String> json = new JsonResult<String>();
+        JsonResult<String> json = new JsonResult();
         if(null != message){
             json.setCode(1);
             json.setMessage("正在计算中，请稍后再试！");
-        }
-        else{
+        }else{
             message = new SocReportMessage();
             message.setComAccountId(comAccountId);
             message.setSsMonth(ssMonth);
+            message.setGeneralMethod(generalMethod);
             sender.sendSocReportMsg(message);
             RedisManager.set(key,message, ExpireTime.NONE);
             json.setCode(0);

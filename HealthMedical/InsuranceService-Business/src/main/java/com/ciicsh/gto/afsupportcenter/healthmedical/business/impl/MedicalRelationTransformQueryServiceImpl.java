@@ -39,11 +39,11 @@ public class MedicalRelationTransformQueryServiceImpl extends ServiceImpl<Medica
 
     @Override
     public int edit(MedicalRelationTransformPO medicalRelationTransform){
-        return  medicalRelationTransformMapper.updateById(medicalRelationTransform);
+        return  medicalRelationTransformMapper.updateAllColumnById(medicalRelationTransform);
     }
     @Override
     public MedicalRelationTransformPO getById(String id) {
-        return medicalRelationTransformMapper.getById(id);
+        return medicalRelationTransformMapper.selectById(id);
     }
 
     @Override

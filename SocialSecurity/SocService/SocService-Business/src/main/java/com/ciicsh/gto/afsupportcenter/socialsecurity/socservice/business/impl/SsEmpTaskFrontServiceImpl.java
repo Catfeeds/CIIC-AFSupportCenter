@@ -2,17 +2,21 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpAgreementDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpArchiveService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskFrontService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpArchiveMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpTaskFrontMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpArchive;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpRefund;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTaskFront;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
@@ -49,6 +53,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
     private SsEmpTaskMapper ssEmpTaskMapper;
     @Autowired
     private SsEmpArchiveService ssEmpArchiveService;
+
     /**
      * <p>Description: 保存数据到雇员任务单表</p>
      *
@@ -167,9 +172,9 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         ssEmpTask.setIsChange(isChange);
         ssEmpTask.setTaskFormContent(JSON.toJSONString(dto));
         //前道传递的政策明细ID,用它调用内控中心获取计算方式
-        if (dto.getNowAgreement() != null && dto.getNowAgreement().getSocialRuleId() != null) {
-            ssEmpTask.setPolicyDetailId(dto.getNowAgreement().getSocialPolicyId());
-        }
+//        if (dto.getNowAgreement() != null && dto.getNowAgreement().getSocialRuleId() != null) {
+//            ssEmpTask.setPolicyDetailId(dto.getNowAgreement().getSocialPolicyId());
+//        }
         ssEmpTask.setProcessId(taskMsgDTO.getProcessId());
         ssEmpTask.setTaskStatus(Integer.parseInt(SocialSecurityConst.PROCESS_STATUS_1));
         ssEmpTask.setActive(true);
@@ -184,6 +189,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         for (AfEmpSocialDTO socialDto : socialList) {
             if (socialDto.getPolicyType() != null && socialDto.getPolicyType() == SocialSecurityConst.POLICY_TYPE_SOCIAL_SECURITY) {
                 ssEmpTask.setEmpBase(socialDto.getPersonalBase());
+                ssEmpTask.setPolicyDetailId(socialDto.getPolicyId());
                 if (socialDto.getStartDate() != null) {
                     ssEmpTask.setStartMonth(StringUtil.dateToString(socialDto.getStartDate(),"yyyyMM"));
                 }
@@ -290,13 +296,17 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
 
         AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
-
+        //根据oldTaskId获取SsEmpTask对象
+        String oldTaskId = paramMap.get("oldTaskId").toString();
         SsEmpTask ssEmpTask = new SsEmpTask();
-        ssEmpTask.setTaskId(paramMap.get("oldEmpAgreementId").toString());
+        ssEmpTask.setTaskId(oldTaskId);
+        ssEmpTask =  ssEmpTaskMapper.selectOne(ssEmpTask);
+        //由于是更正任务单，因此不需要设置taskId
+//        ssEmpTask.setTaskId(taskMsgDTO.getTaskId());
         ssEmpTask.setCompanyId(companyDto.getCompanyId());
         ssEmpTask.setEmployeeId(companyDto.getEmployeeId());
-        //更正时，不能更新businessInterfaceId
-//        ssEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
+        //未处理任务单更正时，由于前道生成的新的雇员服务协议记录，因此需要更新businessInterfaceId
+        ssEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
         ssEmpTask.setSubmitterName(companyDto.getCreatedBy());
         ssEmpTask.setSalary(companyDto.getSalary());
         ssEmpTask.setSubmitterRemark(companyDto.getRemark());
@@ -337,40 +347,47 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         ssEmpTask.setModifiedTime(LocalDateTime.now());
         ssEmpTaskMapper.updateById(ssEmpTask);
 
+        //先删除字表的明细数据
+        EntityWrapper<SsEmpTaskFront> ew = new EntityWrapper<SsEmpTaskFront>();
+        ew.where("emp_task_id={0}",ssEmpTask.getEmpTaskId());
+        delete(ew);
+
         List<SsEmpTaskFront> eleList = new ArrayList<>();
         SsEmpTaskFront ssEmpTaskFront = null;
         if (socialList != null) {
             for (AfEmpSocialDTO socialDto : socialList) {
-                ssEmpTaskFront = new SsEmpTaskFront();
-                ssEmpTaskFront.setEmpTaskId(Long.parseLong(paramMap.get("oldEmpAgreementId").toString()));
-                ssEmpTaskFront.setItemDicId(socialDto.getItemCode());
-                ssEmpTaskFront.setEmpCompanyBase(socialDto.getEmpCompanyBase());
-                ssEmpTaskFront.setPolicyId(socialDto.getPolicyId());
+                if (socialDto.getPolicyType() != null && socialDto.getPolicyType() == SocialSecurityConst.POLICY_TYPE_SOCIAL_SECURITY) {
+                    ssEmpTaskFront = new SsEmpTaskFront();
+                    ssEmpTaskFront.setEmpTaskId(ssEmpTask.getEmpTaskId());
+                    ssEmpTaskFront.setItemDicId(socialDto.getItemCode());
+                    ssEmpTaskFront.setEmpCompanyBase(socialDto.getEmpCompanyBase());
+                    ssEmpTaskFront.setPolicyId(socialDto.getPolicyId());
 
-                ssEmpTaskFront.setPolicyName(socialDto.getPolicyName());
-                ssEmpTaskFront.setCompanyRatio(socialDto.getCompanyRatio());
-                ssEmpTaskFront.setCompanyBase(socialDto.getCompanyBase());
-                ssEmpTaskFront.setCompanyAmount(socialDto.getCompanyAmount());
+                    ssEmpTaskFront.setPolicyName(socialDto.getPolicyName());
+                    ssEmpTaskFront.setCompanyRatio(socialDto.getCompanyRatio());
+                    ssEmpTaskFront.setCompanyBase(socialDto.getCompanyBase());
+                    ssEmpTaskFront.setCompanyAmount(socialDto.getCompanyAmount());
 
-                ssEmpTaskFront.setPersonalRatio(socialDto.getPersonalRatio());
-                ssEmpTaskFront.setPersonalBase(socialDto.getPersonalBase());
-                ssEmpTaskFront.setPersonalAmount(socialDto.getPersonalAmount());
+                    ssEmpTaskFront.setPersonalRatio(socialDto.getPersonalRatio());
+                    ssEmpTaskFront.setPersonalBase(socialDto.getPersonalBase());
+                    ssEmpTaskFront.setPersonalAmount(socialDto.getPersonalAmount());
 
-                if (socialDto.getStartDate() != null) {
-                    ssEmpTaskFront.setStartMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getStartDate(),
-                        "yyyyMM")));
+                    if (socialDto.getStartDate() != null) {
+                        ssEmpTaskFront.setStartMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getStartDate(),
+                            "yyyyMM")));
+                    }
+                    if (socialDto.getEndDate() != null) {
+                        ssEmpTaskFront.setEndMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getEndDate(),
+                            "yyyyMM")));
+                    }
+
+                    ssEmpTaskFront.setModifiedBy(companyDto.getCreatedBy());
+                    ssEmpTaskFront.setModifiedTime(LocalDateTime.now());
+                    eleList.add(ssEmpTaskFront);
                 }
-                if (socialDto.getEndDate() != null) {
-                    ssEmpTaskFront.setEndMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getEndDate(),
-                        "yyyyMM")));
-                }
-
-                ssEmpTaskFront.setModifiedBy(companyDto.getCreatedBy());
-                ssEmpTaskFront.setModifiedTime(LocalDateTime.now());
-                eleList.add(ssEmpTaskFront);
             }
             if (eleList.size() > 0) {
-                this.updateBatchById(eleList);
+                this.insertOrUpdateBatch(eleList);
             }
         }
         return true;

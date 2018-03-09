@@ -1,5 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socjob.service;
 
+import com.ciicsh.gto.afsupportcenter.socjob.entity.custom.SsAccountComExt;
+
 /**
  * Created by houwanhua on 2018/1/11.
  */
@@ -17,4 +19,8 @@ public interface SsPaymentComService {
      * @param paymentMonth 支付年月
      */
     void generateSocPaymentInfo(Long comAccountId,String paymentMonth)throws Exception;
+
+    void generateMonthEmpChangeReport(Long comAccountId,String paymentMonth)throws Exception;
+
+    void generatePaymentDetailReport(Long comAccountId,String paymentMonth)throws Exception;
 }

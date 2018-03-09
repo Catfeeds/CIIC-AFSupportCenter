@@ -97,6 +97,7 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
                 result.setDiffHeadcount(diffHeadMap.get(result.getEmployeeId()));
 
                 //放入基本信息
+
                 result.setStatementId(statementId);
                 result.setActive(true);
                 result.setModifiedBy(null);

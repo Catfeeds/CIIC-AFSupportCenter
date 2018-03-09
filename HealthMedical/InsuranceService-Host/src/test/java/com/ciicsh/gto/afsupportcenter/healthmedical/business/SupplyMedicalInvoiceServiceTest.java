@@ -1,9 +1,11 @@
 //package com.ciicsh.gto.afsupportcenter.healthmedical.business;
 //
-//import com.alibaba.fastjson.JSON;
 //import com.ciicsh.gto.afsupportcenter.healthmedical.InsuranceApplication;
 //import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.SupplyMedicalInvoice;
+//import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeMemberDTO;
+//import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 //import com.ciicsh.gto.productcenter.apiservice.api.dto.JsonResult;
+//import com.ciicsh.gto.productcenter.apiservice.api.dto.ProductExtDTO;
 //import com.ciicsh.gto.productcenter.apiservice.api.proxy.ProductProxy;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
@@ -13,6 +15,7 @@
 //
 //import java.util.ArrayList;
 //import java.util.List;
+//import java.util.stream.Collectors;
 //
 //@RunWith(SpringRunner.class)
 //@SpringBootTest(classes = InsuranceApplication.class)
@@ -21,6 +24,8 @@
 //    private SupplyMedicalInvoiceService supplyMedicalInvoiceService;
 //    @Autowired
 //    private ProductProxy productProxy;
+//    @Autowired
+//    private EmployeeInfoProxy employeeInfoProxy;
 //
 //    @Test
 //    public void deleteByEntity() {
@@ -31,8 +36,9 @@
 //
 //    @Test
 //    public void queryMedicalInvoiceList() {
-//        List<SupplyMedicalInvoice> supplyMedicalInvoiceList = supplyMedicalInvoiceService.queryMedicalInvoiceList("201801150281-2");
-//        String str = JSON.toJSONString(supplyMedicalInvoiceList);
+//        List<SupplyMedicalInvoice> supplyMedicalInvoiceList = supplyMedicalInvoiceService.queryMedicalInvoiceList(null);
+//        List<SupplyMedicalInvoice> sdsd = supplyMedicalInvoiceList.stream().filter(t -> "201801310392".equals(t.getAcceptanceId())).collect(Collectors.toList());
+//        String str = "sodas";
 //        System.out.println(str);
 //    }
 //
@@ -41,6 +47,15 @@
 //        List<String> ids = new ArrayList<>();
 //        ids.add("CPDFL1800006");
 //        JsonResult jsonResult = productProxy.getProductByProductIDs(ids);
-//        System.out.println(jsonResult.getData().toString());
+//        List<ProductExtDTO> productExtDTOS = (List<ProductExtDTO>) jsonResult.getData();
+//        String serviceItem = productExtDTOS.get(0).getServiceItems();
+//        System.out.println(serviceItem);
+//    }
+//
+//    @Test
+//    public void getEmployeeMemberInfo() {
+//        com.ciicsh.gto.employeecenter.util.JsonResult<List<EmployeeMemberDTO>> jsonResult = employeeInfoProxy.getEmployeeMemberInfo("1806940");
+//        List<EmployeeMemberDTO> employeeMemberDTOS = jsonResult.getData();
+//        System.out.println(employeeMemberDTOS.toString());
 //    }
 //}

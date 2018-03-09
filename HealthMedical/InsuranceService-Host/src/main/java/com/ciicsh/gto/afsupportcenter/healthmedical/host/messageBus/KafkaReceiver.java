@@ -16,6 +16,7 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.AfTpaTaskPO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeMemberDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import com.ciicsh.gto.employeecenter.util.JsonResult;
+import com.ciicsh.gto.productcenter.apiservice.api.dto.ProductExtDTO;
 import com.ciicsh.gto.productcenter.apiservice.api.proxy.ProductProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyReturnTicketDTO;
@@ -150,7 +151,8 @@ public class KafkaReceiver {
                 List<String> ids = new ArrayList<>();
                 ids.add(item.getProductId());
                 com.ciicsh.gto.productcenter.apiservice.api.dto.JsonResult jsonResult = productProxy.getProductByProductIDs(ids);
-                String serviceItem = (String) jsonResult.getData();
+                List<ProductExtDTO> productExtDTOS = (List<ProductExtDTO>) jsonResult.getData();
+                String serviceItem = productExtDTOS.get(0).getServiceItems();
                 // </editor-fold>
 
                 // <editor-fold desc="2.1 通用字段赋值">
@@ -171,7 +173,10 @@ public class KafkaReceiver {
                         task.setType(2);
                         task.setStatus(2);
                         // 数字 1 配偶，2 子女，3 父母，4 其他,接口中代表的含义
-                        List<EmployeeMemberDTO> employeeMemberDTOS = employeeMemberInfoList.getData().stream().filter(t -> t.getRelationShip() == 2).collect(Collectors.toList());
+                        List<EmployeeMemberDTO> employeeMemberDTOS = new ArrayList<>();
+                        if (employeeMemberInfoList.getData() != null) {
+                            employeeMemberDTOS = employeeMemberInfoList.getData().stream().filter(t -> t.getRelationShip() == 2).collect(Collectors.toList());
+                        }
                         if (employeeMemberDTOS.size() == 0) {
                             //调用接口
                             task.setStatus(1);
@@ -192,7 +197,10 @@ public class KafkaReceiver {
                         task.setType(3);
                         task.setStatus(2);
 
-                        List<EmployeeMemberDTO> employeeMemberDTOS = employeeMemberInfoList.getData().stream().filter(t -> t.getRelationShip() == 1).collect(Collectors.toList());
+                        List<EmployeeMemberDTO> employeeMemberDTOS = new ArrayList<>();
+                        if (employeeMemberInfoList.getData() != null) {
+                            employeeMemberDTOS = employeeMemberInfoList.getData().stream().filter(t -> t.getRelationShip() == 1).collect(Collectors.toList());
+                        }
                         if (employeeMemberDTOS.size() == 0) {
                             //调用接口
                             task.setStatus(1);
@@ -251,7 +259,7 @@ public class KafkaReceiver {
 
                 //依据services_item确定status，type
                 task.setServiceItems(item.getServiceItems());
-                if (serviceItem == null || serviceItem.contains("固定金额")) {
+                if (serviceItem.contains("固定金额")) {
                     task.setKeyType(1);
                 } else {
                     task.setKeyType(2);
