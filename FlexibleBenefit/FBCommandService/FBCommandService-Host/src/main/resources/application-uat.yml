@@ -1,40 +1,43 @@
 app:
-  id: 10006009
+  id: 10006010
 endpoints:
   shutdown:
     enabled: true
     sensitive: false
-
+eureka:
+  client:
+    registerWithEureka: false
+    serviceUrl:
+      defaultZone: http://172.16.9.56:9602/eureka
+  instance:
+    lease-renewal-interval-in-seconds: 40
+    lease-expiration-duration-in-seconds: 30
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
 management:
   context-path: /admin
-  port: 6018
+  port: 6020
   security:
     enabled: false
 
+
 mybatis-plus:
   configuration:
-      cache-enabled: false
-      map-underscore-to-camel-case: true
+    cache-enabled: false
+    map-underscore-to-camel-case: true
   global-config:
-      #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
-      id-type: 1
-      #驼峰下划线转换
-      db-column-underline: true
-      #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
-      field-strategy: 2
-      #刷新mapper 调试神器
-      refresh-mapper: true
-      #逻辑删除配置
-      logic-delete-value: 0
-      logic-not-delete-value: 1
-      #自定义SQL注入器
-      sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
+    id-type: 1
+    db-column-underline: true
+    field-strategy: 2
+    refresh-mapper: true
+    logic-delete-value: 0
+    logic-not-delete-value: 1
+    sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
   mapper-locations: classpath*:mapper/*.xml
   type-aliases-package: com.ciicsh.gto.afsupportcenter.flexiblebenefit.customer.po
 
 server:
-  port: 6017
-  # session timeout in seconds
+  port: 6019
   session:
     timeout: 300
   tomcat:
@@ -45,9 +48,7 @@ server:
     remote-ip-header: x-forwarded-for
 spring:
   application:
-    name: afsupportcenter-center-query-service
-  profiles:
-      active: fat
+    name: afsupportcenter-center-command-service
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     tomcat:
@@ -55,13 +56,15 @@ spring:
       max-active: 20
       max-idle: 8
       min-idle: 8
-
+    password: ciicit!#%
+    url: jdbc:mysql://172.16.9.53:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
+    username: root
   cloud:
     stream:
       kafka:
         binder:
-          brokers: 172.16.9.17:9092,172.16.9.18:9092
-          zk-nodes: 172.16.9.19:2181,172.16.9.20:2181,172.16.9.21:2181
+          brokers: 172.16.9.55:9092
+          zk-nodes: 172.16.9.55:2181,172.16.9.56:2181,172.16.9.57:2181
       bindings:
         taskService-employeeEntry-useWorker-channel:
           destination: taskService-employeeEntry-useWorker # topic name
@@ -88,3 +91,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  http:
+    multipart:
+      enabled: true
+      max-file-size: 2MB
