@@ -33,6 +33,14 @@
         <result column="remark" property="remark" />
     </resultMap>
 
+    <resultMap id="AccountNameMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountNamePO">
+        <result column="com_account_name" property="comAccountName" />
+        <result column="hf_com_account" property="hfComAccount" />
+        <result column="hf_type" property="hfType" />
+
+    </resultMap>
+
+
     <select id="isExistAccount" resultType="int">
         SELECT
             COUNT(*)
@@ -72,5 +80,22 @@
         AND c.hf_type = #{hfType}
     </select>
 
+    <select id="getComFundAccountNameList" resultMap="AccountNameMap">
+        SELECT
+            b.com_account_name,
+            a.hf_com_account,
+            a.hf_type
+        FROM
+            hf_com_account_class a
+        INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
+        <where>
+            <if test="comAccountName != null and comAccountName != ''">
+                AND b.com_account_name LIKE CONCAT('%', #{comAccountName}, '%')
+            </if>
+            <if test="hfComAccount != null and hfComAccount != ''">
+                AND a.hf_com_account LIKE CONCAT('%', #{hfComAccount}, '%')
+            </if>
+        </where>
 
+    </select>
 </mapper>

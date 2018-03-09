@@ -224,7 +224,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
             wrapper.where("company_id={0} AND employee_id={1} AND emp_task_id != {2} AND is_active = 1",
                 hfEmpTaskHandleBo.getCompanyId(), hfEmpTaskHandleBo.getEmployeeId(), hfEmpTaskHandleBo.getEmpTaskId());
             wrapper.orderBy("emp_task_id", false);
-            List<HfEmpTask> hfEmpTasks =  business.selectList(wrapper);
+            List<HfEmpTask> hfEmpTasks = business.selectList(wrapper);
             if (CollectionUtils.isNotEmpty(hfEmpTasks)) {
                 List<HfEmpTaskRemarkBo> hfEmpTaskRemarkBos = new ArrayList<>();
                 hfEmpTasks.stream().forEach((e) -> {
@@ -384,34 +384,32 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
 
     /**
      * 查询转出单位（或转入单位）的企业公积金账户
-     *
+     * 此接口有性能问题，不建议调用 MDF by Max Yu 2018-03-09
      * @param comAccountTransBo
      * @return
      */
+    @Deprecated
     @RequestMapping("/comAccountQuery")
     public JsonResult comAccountQuery(ComAccountTransBo comAccountTransBo) {
-        //TODO: 这个给公共对话框用的查询
+        String key = "-HfEmpTaskHandleController-comAccountQuery-ComAccountTransBo-list-";
+        List<ComAccountTransBo> rtnList = null;
+        List<ComAccountTransBo> comAccountTransBoList = (List<ComAccountTransBo>) RedisManager.getObj(key);
+        if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
+            rtnList = comAccountTransBoList.stream().filter(e ->
+                e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
+        }
 
-        //        String key = "-HfEmpTaskHandleController-comAccountQuery-ComAccountTransBo-list-";
-//        List<ComAccountTransBo> rtnList = null;
-//        List<ComAccountTransBo> comAccountTransBoList = ( List<ComAccountTransBo>) RedisManager.getObj(key);
-//        if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
-//            rtnList = comAccountTransBoList.stream().filter(e ->
-//                e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
-//        }
-//
-//        if (CollectionUtils.isEmpty(rtnList)) {
-//            comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
-//        }
-//
-//        if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
-//            RedisManager.set(key, comAccountTransBoList, ExpireTime.TEN_MIN);
-//            rtnList = comAccountTransBoList.stream().filter(e ->
-//                e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
-//        }
+        if (CollectionUtils.isEmpty(rtnList)) {
+            comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
+        }
 
-//        return JsonResultKit.of(rtnList);
-        return null;
+        if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
+            RedisManager.set(key, comAccountTransBoList, ExpireTime.TEN_MIN);
+            rtnList = comAccountTransBoList.stream().filter(e ->
+                e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
+        }
+
+        return JsonResultKit.of(rtnList);
     }
 
     @RequestMapping("/transEmpTaskQuery")
