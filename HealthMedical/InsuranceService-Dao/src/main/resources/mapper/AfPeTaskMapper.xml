@@ -8,8 +8,9 @@
         <result column="process_id" property="processId" />
         <result column="pe_rule_id" property="peRuleId" />
         <result column="status" property="status" />
-        <result column="product_id" property="productId" />
         <result column="com_no" property="comNo" />
+        <result column="bespeak_pe_id" property="bespeakPeId" />
+        <result column="product_id" property="productId" />
         <result column="company_id" property="companyId" />
         <result column="company_name" property="companyName" />
         <result column="employee_id" property="employeeId" />
@@ -25,6 +26,14 @@
         <result column="effect_start_date" property="effectStartDate" />
         <result column="effect_end_date" property="effectEndDate" />
         <result column="company_report" property="companyReport" />
+        <result column="ti_jian_date" property="tiJianDate" />
+        <result column="dao_jian_date" property="daoJianDate" />
+        <result column="report_date" property="reportDate" />
+        <result column="send_time" property="sendTime" />
+        <result column="product_name" property="productName" />
+        <result column="sale_value" property="saleValue" />
+        <result column="pe_orginzation" property="peOrginzation" />
+        <result column="pe_address" property="peAddress" />
         <result column="is_active" property="isActive" />
         <result column="created_time" property="createdTime" />
         <result column="modified_time" property="modifiedTime" />
@@ -54,12 +63,6 @@
     </select>
 
     <sql id="SEL_ALL_COLUMN">
-        pe_task_id,
-        process_id,
-        pe_rule_id,
-        status,
-        com_no,
-        bespeak_pe_id,
         product_id,
         company_id,
         company_name,
@@ -76,6 +79,14 @@
         effect_start_date,
         effect_end_date,
         company_report,
+        ti_jian_date,
+        dao_jian_date,
+        report_date,
+        send_time,
+        product_name,
+        sale_value,
+        pe_orginzation,
+        pe_address,
         is_active,
         created_time,
         modified_time,

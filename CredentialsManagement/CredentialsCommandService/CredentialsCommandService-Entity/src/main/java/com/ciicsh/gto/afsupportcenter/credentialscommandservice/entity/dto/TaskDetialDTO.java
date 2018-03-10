@@ -42,6 +42,10 @@ public class TaskDetialDTO implements Serializable{
      */
     private String hasFollower;
     /**
+     * 是否上海户籍
+     */
+    private String hasShPerson;
+    /**
      * 配偶及子女相关材料
      */
     private String familerMaterials;
@@ -209,6 +213,14 @@ public class TaskDetialDTO implements Serializable{
      * 修改者登录名
      */
     private String modifiedBy;
+
+    public String getHasShPerson() {
+        return hasShPerson;
+    }
+
+    public void setHasShPerson(String hasShPerson) {
+        this.hasShPerson = hasShPerson;
+    }
 
     public String getComp() {
         return comp;

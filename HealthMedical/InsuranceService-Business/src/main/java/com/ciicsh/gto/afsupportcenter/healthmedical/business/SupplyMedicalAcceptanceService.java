@@ -9,6 +9,7 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.SupplyMedicalAccep
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * <p>
@@ -54,4 +55,5 @@ public interface SupplyMedicalAcceptanceService extends IService<SupplyMedicalAc
      * @param inputStream
      */
     void importAcceptanceXls(InputStream inputStream);
+
 }

@@ -13,7 +13,10 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Task;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskFollow;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMaterial;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.SelectionUtils;
+import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
+import com.ciicsh.gto.billcenter.afmodule.cmd.api.dto.AfDisposableChargeDTO;
+import com.ciicsh.gto.billcenter.afmodule.cmd.api.proxy.CommandAfDisposableChargeProxy;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -45,6 +49,8 @@ public class EmpCredentialsDealController {
     private CompanyExtService companyExtService;
     @Autowired
     private TaskMaterialService taskMaterialService;
+    @Autowired
+    private CommandAfDisposableChargeProxy commandAfDisposableChargeProxy;
 
     /**
      * 查询任务单跟进记录
@@ -168,6 +174,7 @@ public class EmpCredentialsDealController {
             taskMaterial.setAddr(taskDetialDTO.getAddr());
             taskMaterial.setFollowerType(taskDetialDTO.getFollowerType());
             taskMaterial.setFollower(taskDetialDTO.getFollower());
+            taskMaterial.setHasShPerson(taskDetialDTO.getHasShPerson());
             taskMaterial.setHasChildFollow(taskDetialDTO.getHasChildFollow());
             taskMaterial.setHasSpouseFollow(taskDetialDTO.getHasSpouseFollow());
             taskMaterial.setMarried(taskDetialDTO.getMarried());
@@ -182,7 +189,23 @@ public class EmpCredentialsDealController {
                 taskMaterial.setModifiedBy("gu");
                 taskMaterial.setModifiedTime(new Date());
                 taskMaterial.setTaskId(String.valueOf(task.getTaskId()));
-                return JsonResult.success(taskMaterialService.insert(taskMaterial));
+                boolean insert = taskMaterialService.insert(taskMaterial);
+//                if (insert) {
+//                    //调用账单中心
+//                    AfDisposableChargeDTO afDisposableChargeDTO = new AfDisposableChargeDTO();
+//                    Calendar c = Calendar.getInstance();
+//                    afDisposableChargeDTO.setBillMonth(c.get(Calendar.MONTH)+1);
+//                    afDisposableChargeDTO.setActualChargeMonth(c.get(Calendar.MONTH)+1);
+//                    afDisposableChargeDTO.setChargeObject(2);
+//                    //todo 雇员类型（应收类型）:1-派遣;2-代理;3-外包
+//                    afDisposableChargeDTO.setEmployeeType(1);
+//                    afDisposableChargeDTO.setSubjectId();
+//                    commandAfDisposableChargeProxy.save();
+//                    return JsonResult.success();
+//                } else {
+//                    return JsonResult.faultMessage("未录入账单中心");
+//                }
+                return JsonResult.success(insert);
             } else {
                 taskMaterial.setModifiedBy("gu");
                 taskMaterial.setModifiedTime(new Date());

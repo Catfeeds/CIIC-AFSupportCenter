@@ -21,6 +21,16 @@ public interface TaskSink {
     String AF_EMP_OUT = "common_taskservice_af_empout_channel";
 
     /**
+     * 雇员翻牌
+     */
+    String AF_EMP_COMPANY_CHANGE = "common_taskservice_af_emp_company_change_channel";
+
+    /**
+     * 雇员服务协议调整
+     */
+    String AF_EMP_AGREEMENT_ADJUST = "common_taskservice_af_emp_agreement_adjust_channel";
+
+    /**
      * 用工办理
      */
     String HIRE = "hire";
@@ -34,5 +44,13 @@ public interface TaskSink {
 
     @Input(AF_EMP_OUT)
     MessageChannel afEmpOut();
+
+    @Input(AF_EMP_COMPANY_CHANGE)
+    MessageChannel afEmpCompanyChange();
+
+    @Input(AF_EMP_AGREEMENT_ADJUST)
+    MessageChannel afEmpAgreementAdjust();
+
+
 
 }

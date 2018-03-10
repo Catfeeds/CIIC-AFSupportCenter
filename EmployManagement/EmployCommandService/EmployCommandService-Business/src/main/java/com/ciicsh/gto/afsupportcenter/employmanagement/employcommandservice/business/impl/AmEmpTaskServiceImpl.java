@@ -1,10 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeQueryDTO;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfFullEmployeeDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.*;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmTaskParamBO;
@@ -56,6 +53,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     @Autowired
     private CommonApiUtils employeeInfoProxy;
 
+    @Autowired
+    AfEmployeeCompanyProxy afEmployeeCompanyProxy;
+
 
 
     @Override
@@ -101,12 +101,6 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     public List<AmEmpTaskBO> queryAmEmpTaskById(Map<String, Object> param) {
         return baseMapper.queryAmEmploymentById(param);
     }
-
-    @Override
-    public List<AmEmpTaskBO> queryCustom(String companyId) {
-        return null;
-    }
-
     /**
      * 保存数据到雇员任务单表
      *
@@ -119,19 +113,29 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         rollbackFor = {Exception.class}
     )
     @Override
-    public boolean insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) throws Exception {
+    public boolean  insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) throws Exception {
 
         AmEmpTask amEmpTask = new AmEmpTask();
         amEmpTask.setTaskId(taskMsgDTO.getTaskId());
         amEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
-        //TODO 调用刘玉庭接口传入taskMsgDTO.getMissionId()返回数据
-        AfEmployeeInfoDTO dto = employeeInfoProxy.callInf(taskMsgDTO);
-        AfFullEmployeeDTO empDTO = dto.getEmployee();
-        AfEmployeeCompanyDTO employeeCompany = dto.getEmployeeCompany();
+        //TODO 调用吴敬磊接口传入taskMsgDTO.getMissionId()返回数据
+        AfEmployeeInfoDTO dto = null;
 
-        amEmpTask.setEmployeeId(empDTO.getEmployeeId());
-        amEmpTask.setCompanyId(employeeCompany.getCompanyId());
-        amEmpTask.setTaskFormContent(JSON.toJSONString(taskMsgDTO.getVariables()));
+        Map<String,Object> param = new HashMap<>();
+
+        if(StringUtil.isEmpty(taskMsgDTO.getVariables().get("empCompanyId")))
+        {
+            logger.info("empCompanyId is null ...");
+            return false;
+        }
+        param.put("empCompanyId",taskMsgDTO.getVariables().get("empCompanyId"));
+        AmEmpTaskBO bo = baseMapper.selectEmployId(param);
+
+        if(null!=bo){
+            amEmpTask.setCompanyId(bo.getCompanyId());
+            amEmpTask.setEmployeeId(bo.getEmployeeId());
+            amEmpTask.setTaskFormContent(JSON.toJSONString(taskMsgDTO.getVariables()));
+        }
 
         String archiveDirection = null;
         String employeeNature = null;
@@ -147,7 +151,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             {
                 AmEmpMaterial amEmpMaterial = new AmEmpMaterial();
                 amEmpMaterial.setMaterialName(str);
-                amEmpMaterial.setEmployeeId(empDTO.getEmployeeId());
+                amEmpMaterial.setEmployeeId(bo.getEmployeeId());
                 amEmpMaterial.setSubmitMan("sys");
                 amEmpMaterial.setActive(true);
                 amEmpMaterial.setCreatedBy("sys");
@@ -158,7 +162,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             }
             amEmpMaterialService.insertBatch(amEmpMaterialsList);
         } catch (Exception e) {
-
+            logger.error(e.getMessage(), e);
         }
 
         amEmpTask.setSubmitterId("system");
@@ -169,6 +173,55 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         amEmpTask.setModifiedTime(LocalDateTime.now());
         amEmpTask.setCreatedBy("system");
         amEmpTask.setCreatedTime(LocalDateTime.now());
+        baseMapper.insert(amEmpTask);
+
+        return true;
+    }
+
+    @Override
+    public boolean insertTaskFire(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) throws Exception {
+
+        AmEmpTask amEmpTask = new AmEmpTask();
+        amEmpTask.setTaskId(taskMsgDTO.getTaskId());
+        amEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
+
+        //TODO 调用吴敬磊接口传入taskMsgDTO.getMissionId()返回数据
+        AfEmployeeInfoDTO dto = null;
+        try {
+            dto = employeeInfoProxy.callInf(taskMsgDTO);
+            AfFullEmployeeDTO empDTO  = dto.getEmployee();
+            AfEmpAgreementDTO afEmpAgreementDTO = dto.getNowAgreement();
+            AfEmployeeCompanyDTO employeeCompany = dto.getEmployeeCompany();
+            if(null!=empDTO){
+                amEmpTask.setEmployeeId(empDTO.getEmployeeId());
+            }else{
+                logger.info("AfFullEmployeeDTO is null "+" MissionId is "+taskMsgDTO.getMissionId());
+                if(null!=afEmpAgreementDTO){
+                    amEmpTask.setEmployeeId(afEmpAgreementDTO.getEmployeeId());
+                }
+            }
+            amEmpTask.setCompanyId(employeeCompany.getCompanyId());
+            amEmpTask.setTaskFormContent(JSON.toJSONString(taskMsgDTO.getVariables()));
+            amEmpTask.setOutDate(employeeCompany.getOutDate());
+            if(null!=employeeCompany.getOutReason()){
+                amEmpTask.setOutReason(ReasonUtil.getReasonOut(employeeCompany.getOutReason().toString()));
+            }else{
+                logger.info("outReason is null "+"  MissionId is "+taskMsgDTO.getMissionId());
+            }
+        } catch (Exception e) {
+            logger.error("callOut interface error ......");
+            logger.error(e.getMessage(), e);
+        }
+
+        amEmpTask.setSubmitterId("system");
+        amEmpTask.setTaskCategory(taskCategory);
+        amEmpTask.setTaskStatus(1);
+        amEmpTask.setActive(true);
+        amEmpTask.setModifiedBy("system");
+        amEmpTask.setModifiedTime(LocalDateTime.now());
+        amEmpTask.setCreatedBy("system");
+        amEmpTask.setCreatedTime(LocalDateTime.now());
+
         baseMapper.insert(amEmpTask);
 
         return true;
@@ -251,7 +304,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             employeeBO.setEmployeeId(employeeInfoDTO.getEmployeeId());
             employeeBO.setIdNum(employeeInfoDTO.getIdNum());
             employeeBO.setEmployeeName(employeeInfoDTO.getEmployeeName());
-            employeeBO.setSex(employeeInfoDTO.getGender()==0?"男":"女");
+            employeeBO.setSex(employeeInfoDTO.getGender()==0?"女":"男");
             employeeBO.setMobile(employeeInfoDTO.getMobile());
             employeeBO.setResidenceAddress(employeeInfoDTO.getResidenceAddress());
         }
@@ -290,36 +343,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         return map;
     }
 
-    @Override
-    public boolean insertTaskFire(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) throws Exception {
-        AmEmpTask amEmpTask = new AmEmpTask();
-        amEmpTask.setTaskId(taskMsgDTO.getTaskId());
-        amEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
 
-        //TODO 调用刘玉庭接口传入taskMsgDTO.getMissionId()返回数据
-        AfEmployeeInfoDTO dto = employeeInfoProxy.callInf(taskMsgDTO);
-        AfFullEmployeeDTO empDTO = dto.getEmployee();
-        AfEmployeeCompanyDTO employeeCompany = dto.getEmployeeCompany();
-
-        if(null!=employeeCompany.getOutReason()){
-            amEmpTask.setOutReason(ReasonUtil.getReasonOut(employeeCompany.getOutReason().toString()));
-        }
-        amEmpTask.setOutDate(employeeCompany.getOutDate());
-        amEmpTask.setEmployeeId(empDTO.getEmployeeId());
-        amEmpTask.setCompanyId(employeeCompany.getCompanyId());
-        amEmpTask.setSubmitterId("system");
-        amEmpTask.setTaskCategory(taskCategory);
-        amEmpTask.setTaskStatus(1);
-        amEmpTask.setActive(true);
-        amEmpTask.setModifiedBy("system");
-        amEmpTask.setModifiedTime(LocalDateTime.now());
-        amEmpTask.setCreatedBy("system");
-        amEmpTask.setCreatedTime(LocalDateTime.now());
-
-        baseMapper.insert(amEmpTask);
-
-        return true;
-    }
 
     @Override
     public List<employSearchExportOpt> queryAmEmpTaskList(AmEmpTaskBO amEmpTaskBO) {

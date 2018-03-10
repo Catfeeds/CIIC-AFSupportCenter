@@ -5,9 +5,11 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountI
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountNameDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.GetComFundAccountListRequestDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountCompanyPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountDetailPO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountNamePO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccount;
 
@@ -30,6 +32,15 @@ public interface HfComAccountService extends IService<HfComAccount> {
      * @return
      */
     List<ComFundAccountPO> getComFundAccountList(GetComFundAccountListRequestDTO request);
+
+    /**
+     * 根据企业
+     * @param comAccountName
+     * @param hfComAccount
+     * @return
+     */
+    List<ComFundAccountNamePO> getComFundAccountNameList(String comAccountName, String hfComAccount);
+
 
     /**
      * 获取企业公积金账户详情信息

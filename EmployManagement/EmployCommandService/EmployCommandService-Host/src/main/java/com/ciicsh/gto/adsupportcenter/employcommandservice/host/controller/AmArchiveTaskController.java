@@ -7,6 +7,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.busi
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dto.AmArchiveDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmArchiveUse;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpMaterial;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmInjury;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.archiveSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
@@ -71,6 +72,10 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             if(!StringUtil.isEmpty(amEmploymentBO.getResignFeedback1())){
                 amEmploymentBO.setResignFeedback1(ReasonUtil.getTgfk(amEmploymentBO.getResignFeedback1()));
             }
+
+            if(!StringUtil.isEmpty(amEmploymentBO.getEmployFeedback())){
+                amEmploymentBO.setEmployFeedback(ReasonUtil.getYgfk(amEmploymentBO.getEmployFeedback()));
+            }
         }
         return JsonResultKit.of(result);
     }
@@ -103,7 +108,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             }else if(5==status){
                 amEmpTaskCountBO.setEmployCancel(amEmploymentBO.getCount());
                 num = num + amEmploymentBO.getCount();
-            }else if(6==status){
+            }else{
                 amEmpTaskCountBO.setOther(amEmploymentBO.getCount());
                 num = num + amEmploymentBO.getCount();
             }
@@ -147,7 +152,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
                 num = num + amEmploymentBO.getCount();
             }else if(6==status){
                 amEmpTaskCountBO.setBeforeBatchNeedRefuse(amEmploymentBO.getCount());
-            }else if(7==status){
+            }else{
                 amEmpTaskCountBO.setOther(amEmploymentBO.getCount());
                 num = num + amEmploymentBO.getCount();
             }
@@ -167,6 +172,8 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         AmEmpTaskBO customBO = (AmEmpTaskBO)map.get("customBO");//客户信息
         AmEmpTaskBO employeeBO = (AmEmpTaskBO)map.get("employeeBO");//雇佣信息
 
+        AmResignBO amResignBO = new AmResignBO();
+
         PageInfo pageInfo = new PageInfo();
         JSONObject params = new JSONObject();
         params.put("employeeId",amTaskParamBO.getEmployeeId());
@@ -179,8 +186,17 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         param.put("companyId",amTaskParamBO.getCompanyId());
         //用工档案
         List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchiveList(param);
-        //用工备注
+        //档案备注
         PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);
+
+        AmEmpTask amEmpTask = taskService.selectById(amTaskParamBO.getEmpTaskId());
+
+        //用工备注
+        AmRemarkBO queryBo = new AmRemarkBO();
+        queryBo.setRemarkType(1);
+        queryBo.setEmployeeId(amTaskParamBO.getEmployeeId());
+
+        List<AmRemarkBO> amRemarkBOList = amRemarkService.getAmRemakList(queryBo);
         //退工归还材料签收
         PageRows<AmEmpMaterialBO> result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
         //用工信息
@@ -188,12 +204,45 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         List<AmResignBO> listResignBO = amResignService.queryAmResignDetail(param);
 
+        //退工信息
+        if(null!=listResignBO&&listResignBO.size()>0){
+            amResignBO = listResignBO.get(0);
+            if(!StringUtil.isEmpty(amResignBO.getResignFeedback1())){
+                amResignBO.setResignFeedback1(ReasonUtil.getYgfk(amResignBO.getResignFeedback1()));
+            }
+            if(!StringUtil.isEmpty(amResignBO.getIfLaborManualReturn())){
+                amResignBO.setIfLaborManualReturnStr(ReasonUtil.getIsTj(amResignBO.getIfLaborManualReturn().toString()));
+            }
+
+            if(null!=amEmpTask){
+                java.text.DateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+                if(null!=amEmpTask.getOutDate()){
+                    amResignBO.setOutDate(sdf.format(amEmpTask.getOutDate()));
+                }
+                amResignBO.setOutReason(amEmpTask.getOutReason());
+            }
+        }
+
+        AmEmploymentBO amEmploymentBO = resultEmployList.get(0);
+
+        if(!StringUtil.isEmpty(amEmploymentBO.getEmployStyle()))
+        {
+            amEmploymentBO.setEmployStyle(ReasonUtil.getYgfs(amEmploymentBO.getEmployStyle()));
+        }
+
+        //用工信息里边的用工备注  取最新一条
+        if(null!= amRemarkBOList&& amRemarkBOList.size()>0)
+        {
+            amEmploymentBO.setEmployNotes(amRemarkBOList.get(0).getRemarkContent());
+        }
 
         Map<String, Object> resultMap = new HashMap<>();
         //客户信息
         resultMap.put("customerInfo",customBO);
         //雇员信息
         resultMap.put("amEmpTaskBO",employeeBO);
+
+        resultMap.put("resignBO",amResignBO);
 
         if(null!=amArchiveBOList&&amArchiveBOList.size()>0)
         {
@@ -205,19 +254,20 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             params.put("archiveId",amArchiveBO.getArchiveId());
             pageInfo.setParams(params);
 
-            PageRows<AmInjury> amInjuryPageRows = amInjuryService.queryAmInjury(pageInfo);
+            AmInjuryBO amInjuryBO = new AmInjuryBO();
 
-            if(null!=amInjuryPageRows&&amInjuryPageRows.getRows().size()>0)
+            amInjuryBO.setArchiveId(amArchiveBO.getArchiveId().toString());
+
+            List<AmInjuryBO>  amInjuryBOList = amInjuryService.queryAmInjury(amInjuryBO);
+
+            if(null!=amInjuryBOList&&amInjuryBOList.size()>0)
             {
-                resultMap.put("amInjuryPageRows",amInjuryPageRows);
+                resultMap.put("amInjuryBOList",amInjuryBOList);
             }
 
         }
 
-        if(null!= resultEmployList&&resultEmployList.size()>0)
-        {
-            resultMap.put("amEmploymentBO",resultEmployList.get(0));
-        }
+        resultMap.put("amEmploymentBO",resultEmployList.get(0));
 
         if(null!=amRemarkBOPageRows)
         {
@@ -227,7 +277,6 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         if(null!=result&&result.getRows().size()>0){
             resultMap.put("materialList",result);
         }
-
 
         return  JsonResultKit.of(resultMap);
     }

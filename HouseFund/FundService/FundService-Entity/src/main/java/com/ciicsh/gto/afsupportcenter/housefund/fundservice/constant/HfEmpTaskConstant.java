@@ -4,8 +4,8 @@ public interface HfEmpTaskConstant {
     int TASK_CATEGORY_IN_ADD = 1; // 任务类型：新增（新开）
     int TASK_CATEGORY_IN_TRANS_IN = 2; // 任务类型：新增（转入）
     int TASK_CATEGORY_IN_OPEN = 3; // 任务类型：新增（启封）
-    int TASK_CATEGORY_ADJUST_CLOSE = 4; // 任务类型：调整（封存）
-    int TASK_CATEGORY_ADJUST_OPEN = 5; // 任务类型：调整（启封）
+    int TASK_CATEGORY_ADJUST = 4; // 任务类型：调整
+    int TASK_CATEGORY_ADJUST_OPEN = 5; // 任务类型：(待定)
     int TASK_CATEGORY_REPAIR = 6; // 任务类型：补缴
     int TASK_CATEGORY_OUT_TRANS_OUT = 7; // 任务类型：离职（转出）
     int TASK_CATEGORY_OUT_CLOSE = 8; // 任务类型：离职（封存）

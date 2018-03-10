@@ -9,9 +9,11 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.entity.core.ResultGenerator;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.SupplyAcceptanceDetailDTO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.SupplyMedicalAcceptanceDTO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.SupplyMedicalInvoiceDTO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.excel.SupplyMedicalAcceptanceExcelDTO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.SupplyMedicalAcceptance;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.SupplyMedicalInvoice;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -20,6 +22,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,6 +61,28 @@ public class SupplyMedicalController {
         } catch (Exception e) {
             return ResultGenerator.genServerFailResult();
         }
+    }
+
+    /**
+     * 导出补充医疗理赔
+     *
+     * @param supplyMedicalAcceptanceDTO
+     * @return
+     */
+    @GetMapping("/export")
+    public Result export(SupplyMedicalAcceptanceDTO supplyMedicalAcceptanceDTO, HttpServletResponse response) {
+        Page<SupplyMedicalAcceptance> page = new Page<>(supplyMedicalAcceptanceDTO.getCurrent(), supplyMedicalAcceptanceDTO.getTotal());
+        List<SupplyMedicalAcceptance> list = supplyMedicalAcceptanceService.queryAcceptancePage(page, supplyMedicalAcceptanceDTO).getRecords();
+
+        List<SupplyMedicalAcceptanceExcelDTO> dtos = new ArrayList<>();
+        list.stream().forEach(i -> {
+            SupplyMedicalAcceptanceExcelDTO supplyMedicalAcceptanceExcelDTO = new SupplyMedicalAcceptanceExcelDTO();
+            BeanUtils.copyProperties(i,supplyMedicalAcceptanceExcelDTO);
+            dtos.add(supplyMedicalAcceptanceExcelDTO);
+        });
+
+        ExcelUtil.exportExcel(dtos,SupplyMedicalAcceptanceExcelDTO.class,"补充医疗理赔.xls", response);
+        return ResultGenerator.genSuccessResult(null);
     }
 
     /**
