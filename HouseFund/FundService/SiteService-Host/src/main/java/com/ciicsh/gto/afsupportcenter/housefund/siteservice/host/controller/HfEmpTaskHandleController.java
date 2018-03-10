@@ -397,8 +397,9 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
             rtnList = comAccountTransBoList.stream().filter(e ->
                 e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
-            return JsonResultKit.of(rtnList);
-        } else {
+        }
+
+        if (CollectionUtils.isEmpty(rtnList)) {
             comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
 
             if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
