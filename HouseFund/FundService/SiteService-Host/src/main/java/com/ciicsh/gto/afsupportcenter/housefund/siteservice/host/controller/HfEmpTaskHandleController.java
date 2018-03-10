@@ -157,12 +157,16 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                             hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_REPAIR);
                             hfEmpTaskPeriod.setStartMonth(startMonth);
                             hfEmpTaskPeriod.setEndMonth(endMonthDate.format(formatter));
-                            // 如果账户分类是独立户则客户汇缴月=企业末次汇缴月 + 1
-                            if (hfEmpTaskHandleBo.getHfAccountType() == HfComAccountConstant.HF_ACCOUNT_TYPE_INDEPENDENT) {
-                                hfEmpTaskPeriod.setHfMonth(hfMonthDate.plusMonths(1).format(formatter));
-                            } else {
-                                // 如果账户分类非独立户则客户汇缴月=企业末次汇缴月
+                            if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST) {
                                 hfEmpTaskPeriod.setHfMonth(hfMonth);
+                            } else {
+                                // 如果账户分类是独立户则客户汇缴月=企业末次汇缴月 + 1
+                                if (hfEmpTaskHandleBo.getHfAccountType() == HfComAccountConstant.HF_ACCOUNT_TYPE_INDEPENDENT) {
+                                    hfEmpTaskPeriod.setHfMonth(hfMonthDate.plusMonths(1).format(formatter));
+                                } else {
+                                    // 如果账户分类非独立户则客户汇缴月=企业末次汇缴月
+                                    hfEmpTaskPeriod.setHfMonth(hfMonth);
+                                }
                             }
                             hfEmpTaskPeriod.setBaseAmount(hfEmpTaskHandleBo.getEmpBase());
                             hfEmpTaskPeriod.setRatioCom(hfEmpTaskHandleBo.getRatioCom());
@@ -177,7 +181,11 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                                 hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_NORMAL);
                             }
                             hfEmpTaskPeriod.setStartMonth(startMonth);
-                            hfEmpTaskPeriod.setHfMonth(startMonth);
+                            if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST) {
+                                hfEmpTaskPeriod.setHfMonth(hfMonth);
+                            } else {
+                                hfEmpTaskPeriod.setHfMonth(startMonth);
+                            }
                             hfEmpTaskPeriod.setBaseAmount(hfEmpTaskHandleBo.getEmpBase());
                             hfEmpTaskPeriod.setRatioCom(hfEmpTaskHandleBo.getRatioCom());
                             hfEmpTaskPeriod.setRatioEmp(hfEmpTaskHandleBo.getRatioEmp());
