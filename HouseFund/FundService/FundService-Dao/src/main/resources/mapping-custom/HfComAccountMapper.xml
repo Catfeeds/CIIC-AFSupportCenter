@@ -208,6 +208,7 @@
             </if>
         </where>
         ORDER BY hca.com_account_name, hca.com_account_id
+        LIMIT 0, 100
     </select>
 
     <select id="queryHfComAccountList" resultMap="ComAccountExtMap">

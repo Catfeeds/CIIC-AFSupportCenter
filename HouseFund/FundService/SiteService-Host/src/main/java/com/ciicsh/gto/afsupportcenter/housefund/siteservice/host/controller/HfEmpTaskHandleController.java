@@ -128,7 +128,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                     || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN
                     || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN
                     || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_MULTI_TRANS_IN
-                    || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN) {
+                    || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST) {
                     if (StringUtils.isNotEmpty(hfMonth) && StringUtils.isNotEmpty(startMonth)) {
                         YearMonth hfMonthDate = YearMonth.parse(hfMonth, formatter);
                         YearMonth startMonthDate = YearMonth.parse(startMonth, formatter);
@@ -139,7 +139,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                             YearMonth endMonthDate = hfMonthDate.minusMonths(1);
                             // 正常汇缴费用段
                             hfEmpTaskPeriod.setEmpTaskId(hfEmpTaskHandleBo.getEmpTaskId());
-                            if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN) {
+                            if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST) {
                                 hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_ADJUST);
                             } else {
                                 hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_NORMAL);
@@ -171,7 +171,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                             hfEmpTaskPeriods.add(hfEmpTaskPeriod);
                         } else {
                             hfEmpTaskPeriod.setEmpTaskId(hfEmpTaskHandleBo.getEmpTaskId());
-                            if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN) {
+                            if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST) {
                                 hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_ADJUST);
                             } else {
                                 hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_NORMAL);
@@ -190,7 +190,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                 if (hfEmpTaskPeriods.size() == 0) {
                     HfEmpTaskPeriod hfEmpTaskPeriod = new HfEmpTaskPeriod();
                     hfEmpTaskPeriod.setEmpTaskId(hfEmpTaskHandleBo.getEmpTaskId());
-                    if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST_CLOSE || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN) {
+                    if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST) {
                         hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_ADJUST);
                     } else if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_REPAIR) {
                         hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_REPAIR);
@@ -207,8 +207,8 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                     hfEmpTaskPeriod.setAmount(hfEmpTaskHandleBo.getAmount());
                     hfEmpTaskPeriods.add(hfEmpTaskPeriod);
                 }
-            } else if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST_CLOSE
-                || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
+            } else if (
+                hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
                 || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT
                 || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_MULTI_TRANS_OUT
                 ) {
@@ -397,16 +397,15 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
             rtnList = comAccountTransBoList.stream().filter(e ->
                 e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
-        }
-
-        if (CollectionUtils.isEmpty(rtnList)) {
+            return JsonResultKit.of(rtnList);
+        } else {
             comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
-        }
 
-        if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
-            RedisManager.set(key, comAccountTransBoList, ExpireTime.TEN_MIN);
-            rtnList = comAccountTransBoList.stream().filter(e ->
-                e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
+            if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
+                RedisManager.set(key, comAccountTransBoList, ExpireTime.TEN_MIN);
+                rtnList = comAccountTransBoList.stream().filter(e ->
+                    e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
+            }
         }
 
         return JsonResultKit.of(rtnList);
