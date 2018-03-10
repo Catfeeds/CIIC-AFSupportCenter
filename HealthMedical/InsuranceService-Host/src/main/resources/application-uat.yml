@@ -86,19 +86,16 @@ spring:
         taskService-employeeEntry-useWorker-channel:
           destination: taskService-employeeEntry-useWorker # topic name
           group: ${spring.application.name}
-          content-type: application/json
           consumer:
             partitioned: true
         taskService-employeeEntry-socialSecurity-channel:
           destination: taskService-employeeEntry-socialSecurity # topic name
           group: ${spring.application.name}
-          content-type: application/json
           consumer:
             partitioned: true
         taskService-employeeEntry-contract-channel:
           destination: taskService-employeeEntry-contract # topic name
           group: ${spring.application.name}
-          content-type: application/json
           consumer:
             partitioned: true
       instance-count: 2
