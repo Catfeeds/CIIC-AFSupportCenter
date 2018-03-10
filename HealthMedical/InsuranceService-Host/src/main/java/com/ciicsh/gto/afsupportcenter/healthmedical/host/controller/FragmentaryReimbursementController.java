@@ -2,10 +2,13 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.host.controller;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.FragmentaryReimbursementQueryService;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.excel.FragmentaryReimbursementExcelDTO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.excel.SupplyMedicalAcceptanceExcelDTO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.FragmentaryReimbursementPO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.FragmentaryReimbursementDTO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.core.Result;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.core.ResultGenerator;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
@@ -20,9 +23,12 @@ import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoQueryDTO
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
+
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -103,6 +109,28 @@ import java.util.Optional;
         } catch (Exception e) {
             return ResultGenerator.genServerFailResult();
         }
+    }
+
+    /**
+     * 零星报销导出
+     * @param fragmentaryReimbursementDTO
+     * @param response
+     * @return
+     */
+    @GetMapping("/export")
+    public Result export(FragmentaryReimbursementDTO fragmentaryReimbursementDTO, HttpServletResponse response) {
+        Page<FragmentaryReimbursementPO> page = new Page<>(fragmentaryReimbursementDTO.getCurrent(), fragmentaryReimbursementDTO.getTotal());
+        List<FragmentaryReimbursementPO> list = fragmentaryReimbursementQueryService.getEntityList(page, fragmentaryReimbursementDTO).getRecords();
+
+        ArrayList<FragmentaryReimbursementExcelDTO> dtos = new ArrayList<>();
+        list.stream().forEach(i -> {
+            FragmentaryReimbursementExcelDTO  fragmentaryReimbursementExcelDTO= new FragmentaryReimbursementExcelDTO();
+            BeanUtils.copyProperties(i,fragmentaryReimbursementExcelDTO);
+            dtos.add(fragmentaryReimbursementExcelDTO);
+        });
+
+        ExcelUtil.exportExcel(dtos,FragmentaryReimbursementExcelDTO.class,"零星报销.xls", response);
+        return ResultGenerator.genSuccessResult(null);
     }
 }
 

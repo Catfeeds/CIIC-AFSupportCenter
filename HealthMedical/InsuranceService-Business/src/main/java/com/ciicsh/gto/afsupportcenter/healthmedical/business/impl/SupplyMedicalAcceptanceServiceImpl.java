@@ -247,24 +247,6 @@ public class SupplyMedicalAcceptanceServiceImpl extends ServiceImpl<SupplyMedica
         }
     }
 
-    @Override
-    public List<SupplyMedicalAcceptance> queryAcceptance(SupplyMedicalAcceptance entity) {
-        Wrapper<SupplyMedicalAcceptance> wr = new EntityWrapper<SupplyMedicalAcceptance>();
-//            .eq("input_date",entity.getInputDate())
-//            .eq("audit_time",entity.getAuditTime())
-//            .eq("status",entity.getStatus())
-//            .like("acceptance_id",entity)
-//            .like("dossier_number",)
-//            .like("employee_id",)
-//            .like("employee_name",)
-//            .like("company_id",)
-//            .like("company_name",)
-//            .like("employee_name",)
-//            .like("employee_name",)
-//            .like("employee_name",);
-        return baseMapper.selectList(wr);
-    }
-
 
     private static Integer msgTran(String str) {
         if (EMPLOYEE.equals(str)) {

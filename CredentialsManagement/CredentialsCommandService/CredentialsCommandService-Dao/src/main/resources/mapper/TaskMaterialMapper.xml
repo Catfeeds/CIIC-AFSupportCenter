@@ -17,6 +17,7 @@
         <result column="addr" property="addr" />
         <result column="follower_type" property="followerType" />
         <result column="follower" property="follower" />
+        <result column="has_sh_person" property="hasShPerson" />
         <result column="has_child_follow" property="hasChildFollow" />
         <result column="has_spouse_follow" property="hasSpouseFollow" />
         <result column="married" property="married" />
@@ -46,6 +47,7 @@
             <if test="addr != null and addr != ''">addr = #{addr},</if>
             <if test="follower_type != null and follower_type != ''">follower_type = #{followerType},</if>
             <if test="follower != null and follower != ''">follower = #{follower},</if>
+            <if test="has_sh_person != null and has_sh_person != ''">has_sh_person = #{hasShPerson},</if>
             <if test="has_child_follow != null and has_child_follow != ''">has_child_follow = #{hasChildFollow},</if>
             <if test="has_spouse_follow != null and has_spouse_follow != ''">has_spouse_follow = #{hasSpouseFollow},</if>
             <if test="married != null and married != ''">married = #{married},</if>

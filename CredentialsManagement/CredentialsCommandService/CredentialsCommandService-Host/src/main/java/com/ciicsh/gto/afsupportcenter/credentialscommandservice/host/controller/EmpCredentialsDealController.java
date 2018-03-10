@@ -174,6 +174,7 @@ public class EmpCredentialsDealController {
             taskMaterial.setAddr(taskDetialDTO.getAddr());
             taskMaterial.setFollowerType(taskDetialDTO.getFollowerType());
             taskMaterial.setFollower(taskDetialDTO.getFollower());
+            taskMaterial.setHasShPerson(taskDetialDTO.getHasShPerson());
             taskMaterial.setHasChildFollow(taskDetialDTO.getHasChildFollow());
             taskMaterial.setHasSpouseFollow(taskDetialDTO.getHasSpouseFollow());
             taskMaterial.setMarried(taskDetialDTO.getMarried());
