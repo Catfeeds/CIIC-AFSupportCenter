@@ -1,5 +1,5 @@
 app:
-  id: 10006009
+  id: 10006008
 endpoints:
   shutdown:
     enabled: true
@@ -10,16 +10,19 @@ eureka:
     serviceUrl:
       defaultZone: http://172.16.9.56:9602/eureka
   instance:
-    lease-renewal-interval-in-seconds: 30
-    lease-expiration-duration-in-seconds: 10
+    lease-renewal-interval-in-seconds: 40
+    lease-expiration-duration-in-seconds: 30
     prefer-ip-address: true
     instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+
+ribbon:
+  ReadTimeout: 60000
+
 management:
   context-path: /admin
-  port: 6018
+  port: 6016
   security:
     enabled: false
-
 
 mybatis-plus:
   configuration:
@@ -34,10 +37,10 @@ mybatis-plus:
     logic-not-delete-value: 1
     sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
   mapper-locations: classpath*:mapper/*.xml
-  type-aliases-package: com.ciicsh.gto.afsupportcenter.flexiblebenefit.customer.po
+  type-aliases-package: com.ciicsh.gto.afsupportcenter.healthmedical.customer.po
 
 server:
-  port: 6017
+  port: 6015
   session:
     timeout: 300
   tomcat:
@@ -48,24 +51,38 @@ server:
     remote-ip-header: x-forwarded-for
 spring:
   application:
-    name: afsupportcenter-center-query-service
+    name: afsupportcenter-insurance-service
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
+    password: ciicit!#%
+    url: jdbc:mysql://172.16.9.53:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
+    username: root
     tomcat:
       initial-size: 10
       max-active: 20
       max-idle: 8
       min-idle: 8
-    password: ciicit!#%
-    url: jdbc:mysql://172.16.9.53:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
-    username: root
   cloud:
     stream:
       kafka:
         binder:
           brokers: 172.16.9.55:9092
           zk-nodes: 172.16.9.55:2181,172.16.9.56:2181,172.16.9.57:2181
+          autoAddPartitions: true
+          replicationFactor: 2
       bindings:
+        pay-apply-pay-status-stream-input-channel:
+          destination: pay-apply-pay-status-stream
+          content-type: application/json
+          group: ${spring.application.name}
+          consumer:
+            partitioned: true
+        pay-apply-return-ticket-stream_input_channel:
+          destination: pay-apply-return-ticket-stream
+          content-type: application/json
+          group: ${spring.application.name}
+          consumer:
+            partitioned: true
         taskService-employeeEntry-useWorker-channel:
           destination: taskService-employeeEntry-useWorker # topic name
           group: ${spring.application.name}
@@ -83,3 +100,11 @@ spring:
             partitioned: true
       instance-count: 2
       instance-index: 0
+
+  http:
+    multipart:
+      enabled: true
+      max-file-size: 2MB
+
+seaweed:
+  masterHost: 172.16.9.58:9333
