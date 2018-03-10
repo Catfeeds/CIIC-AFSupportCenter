@@ -19,7 +19,7 @@ public class SupplyMedicalAcceptanceExcelDTO implements Serializable{
     private String acceptanceId;
     @Excel(name = "案卷号")
     private String dossierNumber;
-    @Excel(name = "导入日期")
+    @Excel(name = "导入日期",format = "yyyy-MM-dd")
     private Date inputDate;
     @Excel(name = "雇员编号")
     private String employeeId;
@@ -29,9 +29,9 @@ public class SupplyMedicalAcceptanceExcelDTO implements Serializable{
     private String companyId;
     @Excel(name = "公司名称")
     private String companyName;
-    @Excel(name = "状态")
+    @Excel(name = "状态",replace = {"未审批_0", "已批退_1", "已审核未同步_2", "以同步未支付_3", "财务退回_4", "已同步已支付_5", "已退票_6", "已完成_7"})
     private Integer status;
-    @Excel(name = "处理日期")
+    @Excel(name = "处理日期",format = "yyyy-MM-dd")
     private Date auditTime;
     @Excel(name = "发票合计")
     private Integer invoiceNumber;

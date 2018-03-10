@@ -71,10 +71,8 @@ public class SupplyMedicalController {
      */
     @GetMapping("/export")
     public Result export(SupplyMedicalAcceptanceDTO supplyMedicalAcceptanceDTO, HttpServletResponse response) {
-        SupplyMedicalAcceptance supplyMedicalAcceptance = new SupplyMedicalAcceptance();
-        BeanUtils.copyProperties(supplyMedicalAcceptanceDTO,supplyMedicalAcceptance);
-
-        List<SupplyMedicalAcceptance> list = supplyMedicalAcceptanceService.queryAcceptance(supplyMedicalAcceptance);
+        Page<SupplyMedicalAcceptance> page = new Page<>(supplyMedicalAcceptanceDTO.getCurrent(), supplyMedicalAcceptanceDTO.getTotal());
+        List<SupplyMedicalAcceptance> list = supplyMedicalAcceptanceService.queryAcceptancePage(page, supplyMedicalAcceptanceDTO).getRecords();
 
         List<SupplyMedicalAcceptanceExcelDTO> dtos = new ArrayList<>();
         list.stream().forEach(i -> {
