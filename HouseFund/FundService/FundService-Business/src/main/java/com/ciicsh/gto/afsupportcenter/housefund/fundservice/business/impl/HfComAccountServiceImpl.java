@@ -8,9 +8,11 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccou
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComTaskMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountNameDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.GetComFundAccountListRequestDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountCompanyPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountDetailPO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountNamePO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccount;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +53,18 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
     public List<ComFundAccountPO> getComFundAccountList(GetComFundAccountListRequestDTO request) {
         return baseMapper.getComFundAccountList(request.getCompanyId(), request.getCompanyName(), request.getHfType(),
             request.getComHfMonth(), request.getAccountNumber());
+    }
+
+    /**
+     * 根据筛选条件查询企业公积金账户名称信息
+     *
+     * @param comAccountName
+     * @param hfComAccount
+     * @return
+     */
+    @Override
+    public List<ComFundAccountNamePO> getComFundAccountNameList(String comAccountName, String hfComAccount) {
+        return baseMapper.getComFundAccountNameList(comAccountName, hfComAccount);
 
     }
 
@@ -86,15 +100,15 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
 
     @Override
     public Integer isExistAccount(String companyId, Integer hfType) {
-        return baseMapper.isExistAccount(companyId,hfType);
+        return baseMapper.isExistAccount(companyId, hfType);
     }
 
     @Override
     public AccountInfoBO getAccountByCompany(String companyId, Integer hfType) {
         AccountInfoBO info = null;
-        Integer result = baseMapper.isExistAccount(companyId,hfType);
-        List<AccountInfoBO> infos =  result > 0 ? baseMapper.getAccountsByCompany(companyId,hfType) : comTaskMapper.getAccountsByCompany(companyId,hfType);
-        if(null != infos && infos.size() > 0){
+        Integer result = baseMapper.isExistAccount(companyId, hfType);
+        List<AccountInfoBO> infos = result > 0 ? baseMapper.getAccountsByCompany(companyId, hfType) : comTaskMapper.getAccountsByCompany(companyId, hfType);
+        if (null != infos && infos.size() > 0) {
             info = infos.get(0);
         }
         return info;

@@ -6,9 +6,11 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccoun
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountCompanyDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountDetailDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountNameDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.GetComFundAccountListRequestDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountCompanyPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountDetailPO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountNamePO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -41,7 +43,6 @@ public class CompanyFundAccountController extends BasicController<HfComAccountSe
      */
     @PostMapping("/getComFundAccountList")
     public JsonResult<List<ComFundAccountDTO>> getComFundAccountList(@RequestBody PageInfo pageInfo) {
-
         JSONObject params = pageInfo.getParams();
         GetComFundAccountListRequestDTO request = new GetComFundAccountListRequestDTO();
         /**
@@ -61,11 +62,30 @@ public class CompanyFundAccountController extends BasicController<HfComAccountSe
 
         PageRows<ComFundAccountDTO> result = new PageRows<>();
         result.setRows(dtos);
-        result.setTotal(dtos.size());
+        result.setTotal(lst.getTotal());
         return JsonResultKit.ofPage(result);
 
     }
 
+    /**
+     * 根据筛选条件检索企业公积金账户名称信息
+     * @param pageInfo
+     * @return
+     */
+    @PostMapping("/getComFundAccountNameList")
+    public JsonResult<List<ComFundAccountNameDTO>> getComFundAccountNameList(@RequestBody PageInfo pageInfo){
+        //企业公积金账户名称
+        String comAccountName = pageInfo.getParams().getString("comAccountName").trim();
+        //企业公积金账号
+        String hfComAccount = pageInfo.getParams().getString("hfComAccount").trim();
+        PageRows<ComFundAccountNamePO> lst = PageKit.doSelectPage(pageInfo,()->business.getComFundAccountNameList(comAccountName,hfComAccount));
+        List<ComFundAccountNameDTO> dtos = JsonKit.castToList(lst.getRows(), ComFundAccountNameDTO.class);
+
+        PageRows<ComFundAccountNameDTO> result = new PageRows<>();
+        result.setRows(dtos);
+        result.setTotal(lst.getTotal());
+        return JsonResultKit.ofPage(result);
+    }
 
     /**
      * 获取企业公积金账户明细

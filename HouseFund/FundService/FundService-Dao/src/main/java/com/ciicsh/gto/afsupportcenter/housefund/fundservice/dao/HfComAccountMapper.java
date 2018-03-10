@@ -5,8 +5,10 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountI
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountNameDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountCompanyPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountDetailPO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountNamePO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccount;
 import org.apache.ibatis.annotations.Param;
@@ -39,6 +41,14 @@ public interface HfComAccountMapper extends BaseMapper<HfComAccount> {
                                                  @Param("hfType") Byte hfType,
                                                  @Param("comHfMonth") String comHfMonth,
                                                  @Param("accountNumber") String accountNumber);
+
+    /**
+     * 根据查询条件获取企业公积金账户名称列表
+     * @param comAccountName
+     * @param hfComAccount
+     * @return
+     */
+    List<ComFundAccountNamePO> getComFundAccountNameList(@Param("comAccountName") String comAccountName, @Param("hfComAccount") String hfComAccount);
 
     /**
      * 获取企业公积金账户明细信息,Site用
