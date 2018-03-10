@@ -3,6 +3,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controlle
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthChargeItemBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsMonthChargeItemService;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -11,8 +13,10 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /**
@@ -38,6 +42,19 @@ public class SsMonthChargeItemController extends BasicController<SsMonthChargeIt
 
         return JsonResultKit.of(ssMonthChargeItemBOList);
     }
+
+    @Log("导出雇员月度缴费明细")
+    @RequestMapping("monthChargeExport")
+    public void monthChargeExport(HttpServletResponse response, SsMonthChargeItemBO ssMonthChargeItemBO){
+        Date date = new Date();
+        String fileNme = "月度缴费明细_"+ StringUtil.getDateString(date)+".xls";
+        if(StringUtils.isBlank(ssMonthChargeItemBO.getSsMonth()) || null == ssMonthChargeItemBO.getSsAccount())
+            throw new BusinessException("条件不足");
+        ssMonthChargeItemBO.setSsMonth(ssMonthChargeItemBO.getSsMonth().substring(0,6));
+        List<SsMonthChargeItemBO> ssMonthChargeItemBOList = dealEmpChangeDetailDTO(business.queryEmlpyeeMonthFeeDetail(ssMonthChargeItemBO));
+        ExcelUtil.exportExcel(ssMonthChargeItemBOList,SsMonthChargeItemBO.class,fileNme,response);
+    }
+    ;
 
     /**
      * <p>Description: 将PO通过业务逻辑转换成页面展示的DTO</p>

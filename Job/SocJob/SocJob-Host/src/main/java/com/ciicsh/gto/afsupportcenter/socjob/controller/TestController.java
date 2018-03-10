@@ -4,6 +4,11 @@ import com.ciicsh.gto.afsupportcenter.socjob.service.PaymentService;
 import com.ciicsh.gto.afsupportcenter.socjob.service.SsPaymentComService;
 import com.ciicsh.gto.afsupportcenter.socjob.service.TaskStatusService;
 import com.ciicsh.gto.afsupportcenter.socjob.util.CommonUtils;
+import com.ciicsh.gto.entityidservice.api.EntityIdServiceProxy;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.EmployeeMonthlyDataProxy;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeMonthlyDataProxyDTO;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyProxyDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,5 +65,25 @@ public class TestController {
         }else{
             return "请传参数";
         }
+    }
+
+
+    @Autowired
+    private EmployeeMonthlyDataProxy employeeMonthlyDataProxy;
+
+    @Autowired
+    PayapplyServiceProxy PayapplyServiceProxy;
+
+    @RequestMapping("mytesthaihai")
+    public  String mytesthaihai() throws ParseException{
+        PayApplyProxyDTO aaa = new PayApplyProxyDTO();
+        Object aaaaaa = PayapplyServiceProxy.addShSocialInsurancePayApply(aaa);
+
+
+        //String bbb =  EntityIdServiceProxy.getEntityId("AP");
+
+//        EmployeeMonthlyDataProxyDTO a = new EmployeeMonthlyDataProxyDTO();
+//        Object o = employeeMonthlyDataProxy.employeeCanPay(a);
+        return "";
     }
 }

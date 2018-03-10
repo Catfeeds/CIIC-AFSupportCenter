@@ -1,10 +1,14 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo;
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsMonthChargeItem;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,6 +20,7 @@ import java.time.LocalDateTime;
  * </p>
  */
 
+@ExcelTarget("SsMonthChargeItemBO")
 public class SsMonthChargeItemBO extends SsMonthChargeItem{
     //企业账户ID
     private Long comAccountId;
@@ -24,8 +29,10 @@ public class SsMonthChargeItemBO extends SsMonthChargeItem{
     //社保序号
     private String ssSerial;
     //雇员姓名
+    @Excel(name = "雇员姓名", orderNum = "2")
     private String employeeName;
     //雇员ID
+    @Excel(name = "雇员编号", orderNum = "1")
     private String employeeId;
     //公司编号
     private String companyId;
