@@ -339,25 +339,25 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 }
             }
         }
-//        if (isHandle) {
-//            try {
-//                int rtnCode = apiUpdateConfirmDate(inputHfEmpTask.getCompanyId(),
-//                    Long.valueOf(inputHfEmpTask.getBusinessInterfaceId()),
-//                    inputHfEmpTask,
-//                    hfArchiveBasePeriodList,
-//                    false);
-//            } catch (Exception e) {
-//                e.printStackTrace(); // TODO log
-//                throw new BusinessException("访问客服中心的雇员任务单实缴金额回调接口失败");
-//            }
-//            try {
-//                Result result = apiCompleteTask(inputHfEmpTask.getTaskId(),
-//                    inputHfEmpTask.getModifiedBy());
-//            } catch (Exception e) {
-//                e.printStackTrace(); // TODO log
-//                throw new BusinessException("访问客服中心的完成任务接口失败");
-//            }
-//        }
+        if (isHandle) {
+            try {
+                int rtnCode = apiUpdateConfirmDate(inputHfEmpTask.getCompanyId(),
+                    Long.valueOf(inputHfEmpTask.getBusinessInterfaceId()),
+                    inputHfEmpTask,
+                    hfArchiveBasePeriodList,
+                    false);
+            } catch (Exception e) {
+                e.printStackTrace(); // TODO log
+                throw new BusinessException("访问客服中心的雇员任务单实缴金额回调接口失败");
+            }
+            try {
+                Result result = apiCompleteTask(inputHfEmpTask.getTaskId(),
+                    inputHfEmpTask.getModifiedBy());
+            } catch (Exception e) {
+                e.printStackTrace(); // TODO log
+                throw new BusinessException("访问客服中心的完成任务接口失败");
+            }
+        }
         return JsonResultKit.of();
     }
 
