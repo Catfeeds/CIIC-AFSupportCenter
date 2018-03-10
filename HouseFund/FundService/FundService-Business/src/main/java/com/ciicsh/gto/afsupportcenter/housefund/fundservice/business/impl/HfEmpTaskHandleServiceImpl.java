@@ -151,7 +151,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             case HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE:
             case HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT:
             case HfEmpTaskConstant.TASK_CATEGORY_OUT_MULTI_TRANS_OUT:
-            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_CLOSE:
+//            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_CLOSE:
                 if (isHandle) {
                     YearMonth hfMonthDate = YearMonth.parse(params.getString("hfMonth"), formatter);
                     YearMonth endMonthDate = YearMonth.parse(params.getString("endMonth"), formatter);
@@ -317,7 +317,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             if (isHandle) {
                 // 转出或封存任务单时，没有任务单费用段信息
                 switch (inputHfEmpTask.getTaskCategory()) {
-                    case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_CLOSE:
+//                    case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_CLOSE:
                     case HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE:
                     case HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT:
                     case HfEmpTaskConstant.TASK_CATEGORY_OUT_MULTI_TRANS_OUT:
@@ -454,7 +454,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 }
                 HfEmpArchive hfEmpArchive;
                 switch (hfEmpTask.getTaskCategory()) {
-                    case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_CLOSE:
+//                    case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_CLOSE:
                     case HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE:
                     case HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT:
                     case HfEmpTaskConstant.TASK_CATEGORY_OUT_MULTI_TRANS_OUT:
@@ -472,16 +472,16 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     case HfEmpTaskConstant.TASK_CATEGORY_REPAIR:
                         repairEmpTaskIdList.add(hfEmpTask.getEmpTaskId());
                         break;
-                    case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN:
-                        hfEmpArchive = new HfEmpArchive();
-                        if (empTaskIdEmpArchiveIdMap != null && hfEmpTask.getEmpArchiveId() == null) {
-                            hfEmpArchive.setEmpArchiveId(empTaskIdEmpArchiveIdMap.get(hfEmpTask.getEmpArchiveId()));
-                        } else {
-                            hfEmpArchive.setEmpArchiveId(hfEmpTask.getEmpArchiveId());
-                        }
-                        hfEmpArchive.setArchiveStatus(HfEmpArchiveConstant.ARCHIVE_STATUS_CLOSED);
-                        adjustEmpArchiveIdList.add(hfEmpArchive);
-                        inEmpTaskIdList.add(hfEmpTask.getEmpTaskId());
+                    case HfEmpTaskConstant.TASK_CATEGORY_ADJUST:
+//                        hfEmpArchive = new HfEmpArchive();
+//                        if (empTaskIdEmpArchiveIdMap != null && hfEmpTask.getEmpArchiveId() == null) {
+//                            hfEmpArchive.setEmpArchiveId(empTaskIdEmpArchiveIdMap.get(hfEmpTask.getEmpArchiveId()));
+//                        } else {
+//                            hfEmpArchive.setEmpArchiveId(hfEmpTask.getEmpArchiveId());
+//                        }
+//                        hfEmpArchive.setArchiveStatus(HfEmpArchiveConstant.ARCHIVE_STATUS_CLOSED);
+//                        adjustEmpArchiveIdList.add(hfEmpArchive);
+//                        inEmpTaskIdList.add(hfEmpTask.getEmpTaskId());
                         break;
                     default:
                         inEmpTaskIdList.add(hfEmpTask.getEmpTaskId());
@@ -905,11 +905,11 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             case HfEmpTaskConstant.TASK_CATEGORY_REPAIR:
                 paymentType = HfMonthChargeConstant.PAYMENT_TYPE_REPAIR;
                 break;
-            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN:
+//            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN:
+//                paymentType = HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_OPEN;
+//                break;
+            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST:
                 paymentType = HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_OPEN;
-                break;
-            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_CLOSE:
-                paymentType = HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_CLOSE;
                 break;
             case HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE:
             case HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT:
@@ -929,7 +929,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 String endMonth = e.getEndMonth();
                 if (e.getRemitWay() == HfEmpTaskPeriodConstant.REMIT_WAY_ADJUST) {
                     if (StringUtils.isNotEmpty(endMonth)) {
-                        addCloseMonthRecharge(hfEmpTask, e.getHfMonth(), paymentType);
+                        addCloseMonthRecharge(hfEmpTask, e.getHfMonth(), HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_CLOSE);
                         continue;
                     }
                 }
@@ -1095,12 +1095,12 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 }
                 break;
             case HfEmpTaskConstant.TASK_CATEGORY_REPAIR:
-            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN:
+            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST:
                 if (isNothing) {
                     return JsonResultKit.ofError("雇员档案不存在");
                 }
                 break;
-            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_CLOSE:
+//            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_CLOSE:
             case HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT:
             case HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE:
             case HfEmpTaskConstant.TASK_CATEGORY_OUT_MULTI_TRANS_OUT:
@@ -1302,14 +1302,14 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 hfEmpArchive.setArchiveTaskStatus(HfEmpArchiveConstant.ARCHIVE_TASK_STATUS_HANDLED);
                 hfEmpArchive.setArchiveStatus(HfEmpArchiveConstant.ARCHIVE_STATUS_HANDLED);
                 break;
-            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_CLOSE:
-                hfEmpArchive.setArchiveTaskStatus(HfEmpArchiveConstant.ARCHIVE_TASK_STATUS_CLOSED);
-                hfEmpArchive.setArchiveStatus(HfEmpArchiveConstant.ARCHIVE_STATUS_CLOSED);
-                break;
-            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN:
-                hfEmpArchive.setArchiveTaskStatus(HfEmpArchiveConstant.ARCHIVE_TASK_STATUS_HANDLED);
-                hfEmpArchive.setArchiveStatus(HfEmpArchiveConstant.ARCHIVE_STATUS_HANDLED);
-                break;
+//            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_CLOSE:
+//                hfEmpArchive.setArchiveTaskStatus(HfEmpArchiveConstant.ARCHIVE_TASK_STATUS_CLOSED);
+//                hfEmpArchive.setArchiveStatus(HfEmpArchiveConstant.ARCHIVE_STATUS_CLOSED);
+//                break;
+//            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST_OPEN:
+//                hfEmpArchive.setArchiveTaskStatus(HfEmpArchiveConstant.ARCHIVE_TASK_STATUS_HANDLED);
+//                hfEmpArchive.setArchiveStatus(HfEmpArchiveConstant.ARCHIVE_STATUS_HANDLED);
+//                break;
             case HfEmpTaskConstant.TASK_CATEGORY_REPAIR:
                 if (origStatus == null || origStatus == HfEmpArchiveConstant.ARCHIVE_STATUS_CLOSED) {
                     hfEmpArchive.setArchiveTaskStatus(HfEmpArchiveConstant.ARCHIVE_TASK_STATUS_CLOSED);
