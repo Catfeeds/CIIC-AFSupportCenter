@@ -14,7 +14,6 @@
     <artifactId>socjob-host</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
-
     <dependencies>
         <dependency>
             <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
@@ -26,7 +25,14 @@
             <artifactId>socjob-util</artifactId>
             <version>1.0.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-eureka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-feign</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-stream-kafka</artifactId>
