@@ -8,10 +8,10 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccou
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComTaskMapper;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountNameDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.GetComFundAccountListRequestDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountCompanyPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountDetailPO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountClassNamePO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountNamePO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccount;
@@ -63,9 +63,21 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
      * @return
      */
     @Override
-    public List<ComFundAccountNamePO> getComFundAccountNameList(String comAccountName, String hfComAccount) {
-        return baseMapper.getComFundAccountNameList(comAccountName, hfComAccount);
+    public List<ComFundAccountClassNamePO> getComFundAccountClassNameList(String comAccountName, String hfComAccount) {
+        return baseMapper.getComFundAccountClassNameList(comAccountName, hfComAccount);
 
+    }
+
+    /**
+     * 根据企业账户名称和账户类型筛选公积金账户
+     *
+     * @param comAccountName
+     * @param hfAccountType  1 大库 2 外包 3 独立户
+     * @return
+     */
+    @Override
+    public List<ComFundAccountNamePO> getComFundAccountNameList(String comAccountName, Byte hfAccountType) {
+        return baseMapper.getComFundAccountNameList(comAccountName,hfAccountType);
     }
 
     /**

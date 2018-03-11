@@ -1,24 +1,33 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity;
 
+/**
+ * 企业账户名称(不包含基本公积金或补充公积金账号)
+ */
 public class ComFundAccountNamePO
 {
+    /**
+     * 企业账户Id
+     */
+    private int comAccountId;
 
     /**
      * 企业账户名称
      */
     private String comAccountName;
 
-
     /**
-     * 企业公积金账号
+     * 企业账户类型，1 大库 2 外包 3 独立户
      */
-    private String hfComAccount;
+    private Byte hfAccountType;
 
-    /**
-     * 1 基本公积金、2 补充公积金
-     */
-    private Byte hfType;
 
+    public int getComAccountId() {
+        return comAccountId;
+    }
+
+    public void setComAccountId(int comAccountId) {
+        this.comAccountId = comAccountId;
+    }
 
     public String getComAccountName() {
         return comAccountName;
@@ -28,19 +37,11 @@ public class ComFundAccountNamePO
         this.comAccountName = comAccountName;
     }
 
-    public String getHfComAccount() {
-        return hfComAccount;
+    public Byte getHfAccountType() {
+        return hfAccountType;
     }
 
-    public void setHfComAccount(String hfComAccount) {
-        this.hfComAccount = hfComAccount;
-    }
-
-    public Byte getHfType() {
-        return hfType;
-    }
-
-    public void setHfType(Byte hfType) {
-        this.hfType = hfType;
+    public void setHfAccountType(Byte hfAccountType) {
+        this.hfAccountType = hfAccountType;
     }
 }

@@ -41,7 +41,11 @@ public class StatementCompareController extends BasicController<HFStatementCompa
         result.setRows(dtos);
         result.setTotal(users.getTotal());
         return JsonResultKit.ofPage(result);
+    }
 
 
+    @PostMapping("/addStatement")
+    public JsonResult<Boolean> addStatement(){
+        return null;
     }
 }

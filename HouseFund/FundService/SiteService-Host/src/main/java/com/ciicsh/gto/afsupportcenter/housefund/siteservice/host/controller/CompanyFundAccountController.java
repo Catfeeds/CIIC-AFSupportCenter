@@ -6,10 +6,12 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccoun
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountCompanyDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountDetailDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountClassNameDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountNameDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.GetComFundAccountListRequestDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountCompanyPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountDetailPO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountClassNamePO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountNamePO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
@@ -25,10 +27,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -73,12 +73,28 @@ public class CompanyFundAccountController extends BasicController<HfComAccountSe
      * @return
      */
     @PostMapping("/getComFundAccountNameList")
-    public JsonResult<List<ComFundAccountNameDTO>> getComFundAccountNameList(@RequestBody PageInfo pageInfo){
+    public JsonResult<List<ComFundAccountClassNameDTO>> getComFundAccountClassNameList(@RequestBody PageInfo pageInfo){
         //企业公积金账户名称
         String comAccountName = pageInfo.getParams().getString("comAccountName").trim();
         //企业公积金账号
         String hfComAccount = pageInfo.getParams().getString("hfComAccount").trim();
-        PageRows<ComFundAccountNamePO> lst = PageKit.doSelectPage(pageInfo,()->business.getComFundAccountNameList(comAccountName,hfComAccount));
+        PageRows<ComFundAccountClassNamePO> lst = PageKit.doSelectPage(pageInfo,()->business.getComFundAccountClassNameList(comAccountName,hfComAccount));
+        List<ComFundAccountClassNameDTO> dtos = JsonKit.castToList(lst.getRows(), ComFundAccountClassNameDTO.class);
+
+        PageRows<ComFundAccountClassNameDTO> result = new PageRows<>();
+        result.setRows(dtos);
+        result.setTotal(lst.getTotal());
+        return JsonResultKit.ofPage(result);
+    }
+
+
+    @PostMapping("/getComFundAccountNames")
+    public JsonResult<List<ComFundAccountNameDTO>> getComFundAccountNameList(@RequestBody PageInfo pageInfo) {
+        //企业公积金账户名称
+        String comAccountName = pageInfo.getParams().getString("comAccountName").trim();
+        //企业账户类型 1 大库 2 外包 3 独立户
+        Byte hfAccountType = pageInfo.getParams().getByteValue("hfAccountType");
+        PageRows<ComFundAccountNamePO> lst = PageKit.doSelectPage(pageInfo,()->business.getComFundAccountNameList(comAccountName,hfAccountType));
         List<ComFundAccountNameDTO> dtos = JsonKit.castToList(lst.getRows(), ComFundAccountNameDTO.class);
 
         PageRows<ComFundAccountNameDTO> result = new PageRows<>();
@@ -87,12 +103,13 @@ public class CompanyFundAccountController extends BasicController<HfComAccountSe
         return JsonResultKit.ofPage(result);
     }
 
-    /**
-     * 获取企业公积金账户明细
-     * @param comAccountId
-     * @param hfType
-     * @return
-     */
+
+        /**
+         * 获取企业公积金账户明细
+         * @param comAccountId
+         * @param hfType
+         * @return
+         */
     @GetMapping("/getConFundAccountDetail/{comAccountId}/{hfType}")
     public JsonResult<ComFundAccountDetailDTO> getComFundAccountDetail(@PathVariable("comAccountId") int comAccountId,@PathVariable ("hfType") Byte hfType){
         ComFundAccountDetailPO po = business.getComFundAccountDetail(comAccountId,hfType);
@@ -113,7 +130,6 @@ public class CompanyFundAccountController extends BasicController<HfComAccountSe
         List<ComFundAccountCompanyDTO> result = JsonKit.castToList(lst,ComFundAccountCompanyDTO.class);
         return JsonResultKit.ofList(result);
     }
-
 
 
 
