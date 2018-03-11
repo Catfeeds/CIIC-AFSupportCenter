@@ -31,6 +31,7 @@
                type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO">
         <id column="com_account_class_id" jdbcType="INTEGER" property="comAccountClassId"/>
         <result column="com_account_id" jdbcType="INTEGER" property="comAccountId"/>
+        <result column="state" jdbcType="TINYINT" property="state"/>
         <result column="com_account_name" jdbcType="VARCHAR" property="comAccountName"/>
         <result column="hf_type" jdbcType="TINYINT" property="hfType"/>
         <result column="payment_Way" jdbcType="TINYINT" property="paymentWay"/>
@@ -75,6 +76,18 @@
         <result column="hf_com_account" property="hfComAccount"/>
     </resultMap>
 
+    <resultMap id="AccountClassNameMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountClassNamePO">
+        <result column="com_account_name" property="comAccountName" />
+        <result column="hf_com_account" property="hfComAccount" />
+        <result column="hf_type" property="hfType" />
+    </resultMap>
+
+    <resultMap id="AccountNameMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountNamePO">
+        <result column="com_account_id" property="comAccountId" />
+        <result column="com_account_name" property="comAccountName" />
+        <result column="hf_account_type" property="hfAccountType" />
+    </resultMap>
+
     <select id="getHfComAccountList" resultMap="ComAccountExtMap">
         SELECT
             ca.*,
@@ -108,6 +121,7 @@
         SELECT
         a.com_account_class_id,
         b.com_account_id,
+        b.state,
         b.com_account_name,
         a.hf_type,
         b.payment_way,
@@ -143,6 +157,43 @@
         <if test="accountNumber != null and accountNumber != '' and accountType==2">
             AND a.hf_com_account = #{accountNumber}
         </if>
+    </select>
+
+    <select id="getComFundAccountClassNameList" resultMap="AccountClassNameMap">
+        SELECT
+        b.com_account_name,
+        a.hf_com_account,
+        a.hf_type
+        FROM
+        hf_com_account_class a
+        INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
+        <where>
+            <if test="comAccountName != null and comAccountName != ''">
+                AND b.com_account_name LIKE CONCAT('%', #{comAccountName}, '%')
+            </if>
+            <if test="hfComAccount != null and hfComAccount != ''">
+                AND a.hf_com_account LIKE CONCAT('%', #{hfComAccount}, '%')
+            </if>
+        </where>
+
+    </select>
+
+    <select id="getComFundAccountNameList" resultMap="AccountNameMap">
+        SELECT
+        a.com_account_id,
+        a.com_account_name,
+        a.hf_account_type
+        FROM
+        hf_com_account a
+        <where>
+            <if test="comAccountName != null and comAccountName != ''">
+                AND a.com_account_name LIKE CONCAT('%', #{comAccountName}, '%')
+            </if>
+            <if test="hfAccountType != null and hfAccountType > 0">
+                AND a.hf_account_type=#{hfAccountType}
+            </if>
+        </where>
+
     </select>
 
     <select id="getComFundAccountDetail" resultMap="ComFundAccountDetailMap">

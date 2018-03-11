@@ -1,9 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto;
 
-public class ComFundAccountNameDTO
-{
+/**
+ * 公司公积金账户名称数据传输对象
+ */
+public class ComFundAccountClassNameDTO {
+
     /**
-     * 企业账户Id
+     * 企业公积金账户Id
      */
     private int comAccountId;
 
@@ -12,11 +15,16 @@ public class ComFundAccountNameDTO
      */
     private String comAccountName;
 
-    /**
-     * 企业账户类型，1 大库 2 外包 3 独立户
-     */
-    private Byte hfAccountType;
 
+    /**
+     * 企业公积金账号
+     */
+    private String hfComAccount;
+
+    /**
+     * 1 基本公积金、2 补充公积金
+     */
+    private Byte hfType;
 
     public int getComAccountId() {
         return comAccountId;
@@ -34,11 +42,19 @@ public class ComFundAccountNameDTO
         this.comAccountName = comAccountName;
     }
 
-    public Byte getHfAccountType() {
-        return hfAccountType;
+    public String getHfComAccount() {
+        return hfComAccount;
     }
 
-    public void setHfAccountType(Byte hfAccountType) {
-        this.hfAccountType = hfAccountType;
+    public void setHfComAccount(String hfComAccount) {
+        this.hfComAccount = hfComAccount;
+    }
+
+    public Byte getHfType() {
+        return hfType;
+    }
+
+    public void setHfType(Byte hfType) {
+        this.hfType = hfType;
     }
 }

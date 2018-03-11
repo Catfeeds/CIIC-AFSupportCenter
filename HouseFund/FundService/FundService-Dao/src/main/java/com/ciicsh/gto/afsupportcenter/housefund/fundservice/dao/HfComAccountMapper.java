@@ -5,9 +5,9 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountI
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountNameDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountCompanyPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountDetailPO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountClassNamePO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountNamePO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccount;
@@ -48,7 +48,15 @@ public interface HfComAccountMapper extends BaseMapper<HfComAccount> {
      * @param hfComAccount
      * @return
      */
-    List<ComFundAccountNamePO> getComFundAccountNameList(@Param("comAccountName") String comAccountName, @Param("hfComAccount") String hfComAccount);
+    List<ComFundAccountClassNamePO> getComFundAccountClassNameList(@Param("comAccountName") String comAccountName, @Param("hfComAccount") String hfComAccount);
+
+    /**
+     * 根据查询条件获取企业公积金账户名称列表
+     * @param comAccountName
+     * @param hfAccountType 1 大库 2 外包 3 独立户
+     * @return
+     */
+    List<ComFundAccountNamePO> getComFundAccountNameList(@Param("comAccountName")String comAccountName, @Param("hfAccountType") Byte hfAccountType);
 
     /**
      * 获取企业公积金账户明细信息,Site用

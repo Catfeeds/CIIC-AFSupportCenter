@@ -5,10 +5,10 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountI
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountNameDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.GetComFundAccountListRequestDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountCompanyPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountDetailPO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountClassNamePO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountNamePO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccount;
@@ -34,13 +34,20 @@ public interface HfComAccountService extends IService<HfComAccount> {
     List<ComFundAccountPO> getComFundAccountList(GetComFundAccountListRequestDTO request);
 
     /**
-     * 根据企业
+     * 根据企业账户名称和账号筛选公积金账户和账号
      * @param comAccountName
      * @param hfComAccount
      * @return
      */
-    List<ComFundAccountNamePO> getComFundAccountNameList(String comAccountName, String hfComAccount);
+    List<ComFundAccountClassNamePO> getComFundAccountClassNameList(String comAccountName, String hfComAccount);
 
+    /**
+     * 根据企业账户名称和账户类型筛选公积金账户
+     * @param comAccountName
+     * @param hfAccountType  1 大库 2 外包 3 独立户
+     * @return
+     */
+    List<ComFundAccountNamePO> getComFundAccountNameList(String comAccountName,Byte hfAccountType);
 
     /**
      * 获取企业公积金账户详情信息

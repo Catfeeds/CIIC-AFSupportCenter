@@ -88,12 +88,12 @@ public class ExcelUtil {
     /********************导出相关(结束)***************************/
 
     /********************导入相关(开始)***************************/
-    public static <T> List<T> importExcel(String filePath,Integer titleRows,Integer headerRows, Class<T> pojoClass,boolean needVerfiy) throws Exception {
+    public static <T> List<T> importExcel(String filePath,Integer titleRows,Integer headerRows, Class<T> pojoClass,boolean needVerify) throws Exception {
         if (StringUtils.isBlank(filePath)){
             return null;
         }
         ImportParams params = new ImportParams();
-        if(needVerfiy){
+        if(needVerify){
             params.setNeedVerfiy(true);
         }
         params.setTitleRows(titleRows);
@@ -102,14 +102,15 @@ public class ExcelUtil {
         try {
             list = ExcelImportUtil.importExcel(new File(filePath), pojoClass, params);
         }catch (NoSuchElementException e){
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new NoSuchElementException("模板不能为空");
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new Exception(e.getMessage());
         }
         return list;
     }
+
     public static <T> List<T> importExcel(MultipartFile file, Integer titleRows, Integer headerRows, Class<T> pojoClass,boolean needVerfiy) throws Exception {
         if (file == null){
             return null;
