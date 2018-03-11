@@ -168,6 +168,7 @@
         hf_com_account_class a
         INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
         <where>
+            AND b.is_active=1
             <if test="comAccountName != null and comAccountName != ''">
                 AND b.com_account_name LIKE CONCAT('%', #{comAccountName}, '%')
             </if>
@@ -186,6 +187,7 @@
         FROM
         hf_com_account a
         <where>
+            AND a.state=1 AND a.is_active=1
             <if test="comAccountName != null and comAccountName != ''">
                 AND a.com_account_name LIKE CONCAT('%', #{comAccountName}, '%')
             </if>

@@ -87,7 +87,11 @@ public class CompanyFundAccountController extends BasicController<HfComAccountSe
         return JsonResultKit.ofPage(result);
     }
 
-
+    /**
+     * 根据筛选条件取出有效的对账单记录，新建对账用
+     * @param pageInfo
+     * @return
+     */
     @PostMapping("/getComFundAccountNames")
     public JsonResult<List<ComFundAccountNameDTO>> getComFundAccountNameList(@RequestBody PageInfo pageInfo) {
         //企业公积金账户名称
