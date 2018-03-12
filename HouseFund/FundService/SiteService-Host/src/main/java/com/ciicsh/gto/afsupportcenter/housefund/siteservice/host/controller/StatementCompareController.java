@@ -65,8 +65,8 @@ public class StatementCompareController extends BasicController<HFStatementCompa
      * @param file
      * @return
      */
-    @PostMapping(value = "/addStatement",consumes = "multipart/form-data")
-    public JsonResult<Boolean> addStatement(@RequestBody NewStatementDTO newStatement, MultipartFile file){
+    @PostMapping(value = "/addStatement")
+    public JsonResult<Boolean> addStatement(NewStatementDTO newStatement, MultipartFile file){
         try {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSSS");
             LocalDateTime ldt = LocalDateTime.now();
