@@ -663,6 +663,50 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
     }
 
     /**
+     * 将雇员费用段时间段连续的组合到一个对象中
+     *
+     * @param existsHfArchiveBasePeriodList 雇员费用段列表
+     * @return 雇员费用段组合对象列表
+     */
+    public List<ComposedEmpBasePeriodBO> composeEmpBasePeriod(List<HfArchiveBasePeriod> existsHfArchiveBasePeriodList) {
+        String startMonth;
+        String endMonth = null;
+        YearMonth startMonthDate = null;
+        YearMonth endMonthDate;
+        List<ComposedEmpBasePeriodBO> composedEmpBasePeriodBOList = new ArrayList<>();
+
+        for(HfArchiveBasePeriod hfArchiveBasePeriod : existsHfArchiveBasePeriodList) {
+            startMonth = hfArchiveBasePeriod.getStartMonth();
+
+            if (StringUtils.isNotEmpty(endMonth)) {
+                endMonthDate = YearMonth.parse(endMonth, formatter);
+                ComposedEmpBasePeriodBO composedEmpBasePeriodBO = composedEmpBasePeriodBOList.get(composedEmpBasePeriodBOList.size() - 1);
+
+                if (endMonthDate.plusMonths(1).equals(startMonthDate)) {
+                    endMonth = hfArchiveBasePeriod.getEndMonth();
+                } else {
+                    composedEmpBasePeriodBO.setEndMonth(endMonthDate);
+                    endMonth = null;
+                }
+                composedEmpBasePeriodBO.getContainsHfArchiveBasePeriods().add(hfArchiveBasePeriod);
+            } else if (StringUtils.isNotEmpty(startMonth)) {
+                startMonthDate = YearMonth.parse(startMonth, formatter);
+
+                ComposedEmpBasePeriodBO composedEmpBasePeriodBO = new ComposedEmpBasePeriodBO();
+                composedEmpBasePeriodBO.setStartMonth(startMonthDate);
+                composedEmpBasePeriodBOList.add(composedEmpBasePeriodBO);
+                endMonth = hfArchiveBasePeriod.getEndMonth();
+
+                if (StringUtils.isEmpty(endMonth)) {
+                    composedEmpBasePeriodBO.getContainsHfArchiveBasePeriods().add(hfArchiveBasePeriod);
+                }
+            }
+        }
+
+        return composedEmpBasePeriodBOList;
+    }
+
+    /**
      * 补缴任务时雇员档案费用分段表数据处理
      * 分全额补缴及差额补缴
      *
@@ -698,21 +742,29 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 YearMonth[] permitYearMonth = new YearMonth[1];
                 boolean isMatch = false;
 
-                for (HfArchiveBasePeriod hfArchiveBasePeriod : existHfArchiveBasePeriodList) {
-                    YearMonth startMonth = YearMonth.parse(hfArchiveBasePeriod.getStartMonth(), formatter);
-                    YearMonth endMonth = hfMonth;
-                    if (StringUtils.isNotEmpty(hfArchiveBasePeriod.getEndMonth())) {
-                        endMonth = YearMonth.parse(hfArchiveBasePeriod.getEndMonth(), formatter);
+                List<ComposedEmpBasePeriodBO> composedEmpBasePeriodBOList = composeEmpBasePeriod(existHfArchiveBasePeriodList);
+                for (ComposedEmpBasePeriodBO composedEmpBasePeriodBO : composedEmpBasePeriodBOList) {
+                    YearMonth startMonth = composedEmpBasePeriodBO.getStartMonth();
+                    YearMonth endMonth = composedEmpBasePeriodBO.getEndMonth();
+                    if (endMonth == null) {
+                        endMonth = hfMonth;
                     }
+                    List<HfArchiveBasePeriod> containsHfArchiveBasePeriodList = composedEmpBasePeriodBO.getContainsHfArchiveBasePeriods();
+//                    if (StringUtils.isNotEmpty(hfArchiveBasePeriod.getEndMonth())) {
+//                        endMonth = YearMonth.parse(hfArchiveBasePeriod.getEndMonth(), formatter);
+//                    }
                     // 匹配费用段，如果任务单费用段包含在雇员档案费用段中，那么支持差额补缴；
                     // 差额补缴时，雇员档案费用段不变，增加雇员调整差异数据
                     if ((repairStartMonth.isAfter(startMonth) || repairStartMonth.equals(startMonth))
                         && (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth))) {
-                        if (!hfEmpTask.getCompanyId().equals(hfArchiveBasePeriod.getCompanyId())) {
-                            throw new BusinessException("补缴任务费用分段中缴费期间与所匹配的费用段不属于同一个客户");
+
+                        for (HfArchiveBasePeriod hfArchiveBasePeriod : containsHfArchiveBasePeriodList) {
+                            if (!hfEmpTask.getCompanyId().equals(hfArchiveBasePeriod.getCompanyId())) {
+                                throw new BusinessException("补缴任务费用分段中缴费期间与所匹配的费用段不属于同一个客户");
+                            }
+                            setHfArchiveBaseAdjust(hfArchiveBaseAdjustList, hfEmpTask, e, hfArchiveBasePeriod, roundTypes);
+                            setHfArchiveBasePeriodList(diffHfArchiveBasePeriodList, hfEmpTask, e, hfArchiveBasePeriod, roundTypes);
                         }
-                        setHfArchiveBaseAdjust(hfArchiveBaseAdjustList, hfEmpTask, e, hfArchiveBasePeriod, roundTypes);
-                        setHfArchiveBasePeriodList(diffHfArchiveBasePeriodList, hfEmpTask, e, hfArchiveBasePeriod, roundTypes);
                         isMatch = true;
                         break;
                     } else {
@@ -721,7 +773,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                         if (permitYearMonth[0] == null) {
                             // 匹配最早的费用段，判断补缴段的截止年月是否早于雇员档案费用段的起始年月
                             if (repairEndMonth.isBefore(startMonth)) {
-                                if (!hfEmpTask.getCompanyId().equals(hfArchiveBasePeriod.getCompanyId())) {
+                                if (!hfEmpTask.getCompanyId().equals(containsHfArchiveBasePeriodList.get(0).getCompanyId())) {
                                     throw new BusinessException("补缴任务费用分段中缴费期间与所匹配的费用段不属于同一个客户");
                                 }
                                 permitYearMonth[0] = endMonth;
@@ -733,7 +785,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                             // 如果雇员档案费用段的截止年月早于当前年月
                             // 那么判断补缴段是否属于两个雇员档案费用段之间的空档期间
                             if (repairStartMonth.isAfter(permitYearMonth[0]) && repairEndMonth.isBefore(startMonth)) {
-                                if (!hfEmpTask.getCompanyId().equals(hfArchiveBasePeriod.getCompanyId())) {
+                                if (!hfEmpTask.getCompanyId().equals(containsHfArchiveBasePeriodList.get(0).getCompanyId())) {
                                     throw new BusinessException("补缴任务费用分段中缴费期间与所匹配的费用段不属于同一个客户");
                                 }
                                 permitYearMonth[0] = endMonth;
@@ -848,7 +900,6 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                         throw new BusinessException("当前雇员的雇员汇缴月份段数据不正确，已封存或转出的雇员不能进行调整");
                     }
                 } else { // 调整任务费用分段中补缴段处理（差额补缴）
-
                     if (StringUtils.isEmpty(e.getEndMonth())) {
                         throw new BusinessException("调整任务费用分段中补缴段的缴费截止年月为空");
                     }
@@ -856,6 +907,17 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 
                     if (!adjustEndMonth.equals(hfMonth.minusMonths(1))) {
                         throw new BusinessException("调整任务费用分段中补缴段的缴费截止年月必须等于汇缴年月的前月");
+                    }
+
+                    List<ComposedEmpBasePeriodBO> composedEmpBasePeriodBOList = this.composeEmpBasePeriod(existHfArchiveBasePeriodList);
+                    for (ComposedEmpBasePeriodBO composedEmpBasePeriodBO : composedEmpBasePeriodBOList) {
+                        if ((
+                            composedEmpBasePeriodBO.getStartMonth().isBefore(adjustStartMonth)
+                            || composedEmpBasePeriodBO.getStartMonth().equals(adjustStartMonth)
+                            )
+                            && adjustEndMonth.isAfter(composedEmpBasePeriodBO.getEndMonth())) {
+                            throw new BusinessException("调整任务费用分段中补缴段的缴费截止年月必须不大于当前连续费用段的截止年月");
+                        }
                     }
 
                     YearMonth startMonth;
@@ -1430,6 +1492,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         return baseMapper.createTransEmpTask(hfEmpTaskCreateTransBo);
     }
 
+    @Override
     public int[] getRoundTypeProxy(String policyId, Integer payAccountType, String effectiveMonth, String hfTypeDicItemCode) {
         GetSSPItemsRequestDTO getSSPItemsRequestDTO = new GetSSPItemsRequestDTO();
         getSSPItemsRequestDTO.setSsPolicyId(policyId);

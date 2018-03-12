@@ -137,20 +137,43 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                         // 如果任务单起缴月份小于客户汇缴月，则小于的月份自动分成一个补缴的费用段
                         if (startMonthDate.isBefore(hfMonthDate)) {
                             YearMonth endMonthDate = hfMonthDate.minusMonths(1);
-                            // 正常汇缴费用段
-                            hfEmpTaskPeriod.setEmpTaskId(hfEmpTaskHandleBo.getEmpTaskId());
+                            boolean isBreak = false;
+
                             if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST) {
-                                hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_ADJUST);
-                            } else {
-                                hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_NORMAL);
+                                EntityWrapper<HfArchiveBasePeriod> wrapper = new EntityWrapper<>();
+                                wrapper.where("employee_id={0} AND is_active = 1 AND start_month >= {1}", hfEmpTaskHandleBo.getEmployeeId(), startMonth);
+                                wrapper.orderBy("start_month", true);
+                                List<HfArchiveBasePeriod> existHfArchiveBasePeriodList = hfArchiveBasePeriodService.selectList(wrapper);
+                                if (CollectionUtils.isNotEmpty(existHfArchiveBasePeriodList)) {
+                                    List<ComposedEmpBasePeriodBO> composedEmpBasePeriodBOList = business.composeEmpBasePeriod(existHfArchiveBasePeriodList);
+                                    for (ComposedEmpBasePeriodBO composedEmpBasePeriodBO : composedEmpBasePeriodBOList) {
+                                        if ((
+                                            composedEmpBasePeriodBO.getStartMonth().isBefore(startMonthDate)
+                                            || composedEmpBasePeriodBO.getStartMonth().equals(startMonthDate)
+                                            )
+                                            && composedEmpBasePeriodBO.getEndMonth() != null) {
+                                            endMonthDate = composedEmpBasePeriodBO.getEndMonth();
+                                            isBreak = true;
+                                        }
+                                    }
+                                }
                             }
-                            hfEmpTaskPeriod.setStartMonth(hfMonth);
-                            hfEmpTaskPeriod.setHfMonth(hfMonth);
-                            hfEmpTaskPeriod.setBaseAmount(hfEmpTaskHandleBo.getEmpBase());
-                            hfEmpTaskPeriod.setRatioCom(hfEmpTaskHandleBo.getRatioCom());
-                            hfEmpTaskPeriod.setRatioEmp(hfEmpTaskHandleBo.getRatioEmp());
-                            hfEmpTaskPeriod.setAmount(hfEmpTaskHandleBo.getAmount());
-                            hfEmpTaskPeriods.add(hfEmpTaskPeriod);
+                            if (!isBreak) {
+                                // 正常汇缴费用段
+                                hfEmpTaskPeriod.setEmpTaskId(hfEmpTaskHandleBo.getEmpTaskId());
+                                if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST) {
+                                    hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_ADJUST);
+                                } else {
+                                    hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_NORMAL);
+                                }
+                                hfEmpTaskPeriod.setStartMonth(hfMonth);
+                                hfEmpTaskPeriod.setHfMonth(hfMonth);
+                                hfEmpTaskPeriod.setBaseAmount(hfEmpTaskHandleBo.getEmpBase());
+                                hfEmpTaskPeriod.setRatioCom(hfEmpTaskHandleBo.getRatioCom());
+                                hfEmpTaskPeriod.setRatioEmp(hfEmpTaskHandleBo.getRatioEmp());
+                                hfEmpTaskPeriod.setAmount(hfEmpTaskHandleBo.getAmount());
+                                hfEmpTaskPeriods.add(hfEmpTaskPeriod);
+                            }
                             // 补缴费用段
                             hfEmpTaskPeriod = new HfEmpTaskPeriod();
                             hfEmpTaskPeriod.setEmpTaskId(hfEmpTaskHandleBo.getEmpTaskId());
