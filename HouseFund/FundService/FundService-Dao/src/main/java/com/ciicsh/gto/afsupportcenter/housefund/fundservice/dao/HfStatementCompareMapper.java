@@ -28,13 +28,13 @@ public interface HfStatementCompareMapper extends BaseMapper<HfStatementCompareP
      * @param statementId
      * @return
      */
-    int delStatement(@Param("StatementId") long statementId);
+    int delStatement(@Param("statementId") long statementId);
 
     /**
      * 根据对账单Id获取对账单详情
      * @param statementId
      * @return
      */
-    List<FundStatementItemPO> getStatementItems(@Param("StatementId") long statementId);
+    List<FundStatementItemPO> getStatementItems(@Param("statementId") long statementId);
 
 }

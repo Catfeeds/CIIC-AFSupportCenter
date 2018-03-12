@@ -198,7 +198,7 @@ public class TaskDetialDTO implements Serializable{
     /**
      * 创建时间
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "+8")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "+8")
     private Date createdTime;
     /**
      * 最后更新时间

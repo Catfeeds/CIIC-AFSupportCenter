@@ -73,8 +73,8 @@
         FROM
             hf_statement_compare_imp a
         INNER JOIN hf_statement_compare b ON a.statement_compare_id = b.statement_compare_id
-        INNER JOIN hf_com_account c ON b.com_account_id = c.com_account_id
-        INNER JOIN hf_statement_compare_result d ON b.statement_compare_id = d.statement_compare_id
+        LEFT JOIN hf_com_account c ON b.com_account_id = c.com_account_id
+        LEFT JOIN hf_statement_compare_result d ON b.statement_compare_id = d.statement_compare_id
         WHERE b.statement_compare_id=#{statementId};
 
     </select>

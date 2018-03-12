@@ -262,7 +262,7 @@ public class KafkaReceiver {
                 // </editor-fold>
 
                 //依据services_item确定status，type
-                task.setServiceItems(item.getServiceItems());
+                task.setServiceItems(serviceItem);
                 if (serviceItem.contains("固定金额")) {
                     task.setKeyType(1);
                 } else {
