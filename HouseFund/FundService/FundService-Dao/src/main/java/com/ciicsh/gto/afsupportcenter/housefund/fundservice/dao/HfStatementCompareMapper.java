@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFStatementCompareBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.FundStatementItemPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfStatementComparePO;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
@@ -21,5 +22,19 @@ public interface HfStatementCompareMapper extends BaseMapper<HfStatementCompareP
      * @return
      */
     List<HFStatementCompareBO> getHFStatementCompareRecord(@Param("hfMonth") String hfMonth, @Param("hfComAccount") String hfComAccount);
+
+    /**
+     * 删除对账单
+     * @param statementId
+     * @return
+     */
+    int delStatement(@Param("statementId") long statementId);
+
+    /**
+     * 根据对账单Id获取对账单详情
+     * @param statementId
+     * @return
+     */
+    List<FundStatementItemPO> getStatementItems(@Param("statementId") long statementId);
 
 }

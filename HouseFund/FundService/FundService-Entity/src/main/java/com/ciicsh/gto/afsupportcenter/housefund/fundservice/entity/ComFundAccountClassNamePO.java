@@ -19,6 +19,11 @@ public class ComFundAccountClassNamePO
      */
     private Byte hfType;
 
+    /**
+     * 账户状态:0初始 1有效 2 终止
+     */
+    private Byte state;
+
 
     public String getComAccountName() {
         return comAccountName;
@@ -42,5 +47,13 @@ public class ComFundAccountClassNamePO
 
     public void setHfType(Byte hfType) {
         this.hfType = hfType;
+    }
+
+    public Byte getState() {
+        return state;
+    }
+
+    public void setState(Byte state) {
+        this.state = state;
     }
 }
