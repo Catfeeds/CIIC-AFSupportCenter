@@ -26,6 +26,11 @@ public class ComFundAccountClassNameDTO {
      */
     private Byte hfType;
 
+    /**
+     * 账户状态:0初始 1有效 2 终止
+     */
+    private Byte state;
+
     public int getComAccountId() {
         return comAccountId;
     }
@@ -56,5 +61,13 @@ public class ComFundAccountClassNameDTO {
 
     public void setHfType(Byte hfType) {
         this.hfType = hfType;
+    }
+
+    public Byte getState() {
+        return state;
+    }
+
+    public void setState(Byte state) {
+        this.state = state;
     }
 }

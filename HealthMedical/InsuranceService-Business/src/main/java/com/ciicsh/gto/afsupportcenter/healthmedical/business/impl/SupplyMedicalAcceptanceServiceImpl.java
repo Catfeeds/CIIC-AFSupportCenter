@@ -1,7 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.business.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.AcceptanceDetailedService;
@@ -246,7 +244,7 @@ public class SupplyMedicalAcceptanceServiceImpl extends ServiceImpl<SupplyMedica
                 out.close();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.info(e.getMessage());
         }
     }
 
