@@ -72,7 +72,7 @@ public class CompanyFundAccountController extends BasicController<HfComAccountSe
      * @param pageInfo
      * @return
      */
-    @PostMapping("/getComFundAccountNameList")
+    @PostMapping("/getComFundAccountClassNameList")
     public JsonResult<List<ComFundAccountClassNameDTO>> getComFundAccountClassNameList(@RequestBody PageInfo pageInfo){
         //企业公积金账户名称
         String comAccountName = pageInfo.getParams().getString("comAccountName").trim();
@@ -92,7 +92,7 @@ public class CompanyFundAccountController extends BasicController<HfComAccountSe
      * @param pageInfo
      * @return
      */
-    @PostMapping("/getComFundAccountNames")
+    @PostMapping("/getComFundAccountNameList")
     public JsonResult<List<ComFundAccountNameDTO>> getComFundAccountNameList(@RequestBody PageInfo pageInfo) {
         //企业公积金账户名称
         String comAccountName = pageInfo.getParams().getString("comAccountName").trim();

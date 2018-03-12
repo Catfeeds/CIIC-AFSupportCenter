@@ -1,17 +1,14 @@
-package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto;
+package com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
-/**
- * 对账单详情
- */
-public class FundStatementDetailDTO {
-
+public class FundStatementDetailPO
+{
     /**
      * 对账单Id
      */
     private long statementId;
+
 
     /**
      * 公积金月份
@@ -32,22 +29,6 @@ public class FundStatementDetailDTO {
      * 差异总数
      */
     private int diffCount;
-
-    /**
-     * 对账单详情上的项目
-     */
-    private List<FundStatementItemDTO> items = new ArrayList<>();
-
-    public FundStatementDetailDTO(){}
-
-    public FundStatementDetailDTO(long statementId,String hfMonth, String comAccountName, int impRecordCount, int diffCount) {
-        this.statementId = statementId;
-        this.hfMonth = hfMonth;
-        this.comAccountName = comAccountName;
-        this.impRecordCount = impRecordCount;
-        this.diffCount = diffCount;
-    }
-
 
     public long getStatementId() {
         return statementId;
@@ -89,11 +70,21 @@ public class FundStatementDetailDTO {
         this.diffCount = diffCount;
     }
 
-    public List<FundStatementItemDTO> getItems() {
-        return items;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FundStatementDetailPO that = (FundStatementDetailPO) o;
+        return statementId == that.statementId &&
+            impRecordCount == that.impRecordCount &&
+            diffCount == that.diffCount &&
+            Objects.equals(hfMonth, that.hfMonth) &&
+            Objects.equals(comAccountName, that.comAccountName);
     }
 
-    public void setItems(List<FundStatementItemDTO> items) {
-        this.items = items;
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(statementId, hfMonth, comAccountName, impRecordCount, diffCount);
     }
 }

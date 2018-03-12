@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import org.springframework.web.multipart.MultipartFile;
@@ -60,20 +62,28 @@ public class StatementCompareController extends BasicController<HFStatementCompa
     @PostMapping("/addStatement")
     public JsonResult<Boolean> addStatement(@RequestParam("file") MultipartFile file){
         try {
-            BufferedOutputStream out = new BufferedOutputStream(
-                new FileOutputStream(new File(file.getOriginalFilename())));
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSSS");
+            LocalDateTime ldt = LocalDateTime.now();
+            String strDateTime = dtf.format(ldt);
+            String filePath = strDateTime + new File(file.getOriginalFilename());
+            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(new File(filePath)));
             out.write(file.getBytes());
             out.flush();
             out.close();
-            //TODO: 对账文件导入
 
+            business.addStatement(filePath);
 
         }
         catch (FileNotFoundException e) {
             return JsonResultKit.of(500,"上传失败," + e.getMessage(),false);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             return JsonResultKit.of(500,"上传失败," + e.getMessage(),false);
         }
+        catch (Exception e){
+            return JsonResultKit.ofError("导入文件失败");
+        }
+
         return JsonResultKit.of(0,"上传成功",true);
     }
 
@@ -84,7 +94,8 @@ public class StatementCompareController extends BasicController<HFStatementCompa
      */
     @GetMapping("/delStatement")
     public JsonResult<Boolean> delStatement(@PathVariable("statementId") long statementId){
-        return JsonResultKit.of(0,"上传成功",true);
+        Boolean result = business.delStatement(statementId) > 0;
+        return JsonResultKit.of(0,result ? "删除成功" : "删除失败",result);
     }
 
     /**
@@ -94,8 +105,9 @@ public class StatementCompareController extends BasicController<HFStatementCompa
      */
     @GetMapping("/getStatementDetail")
     public JsonResult<FundStatementDetailDTO> getStatementDetail(@PathVariable("statementId") long statementId){
-        FundStatementDetailDTO result = new FundStatementDetailDTO();
-        return JsonResultKit.of(0,"上传成功",result);
+        FundStatementDetailDTO result = business.getStatementDetail(statementId);
+
+        return JsonResultKit.of(0,"获取对账单详情成功",result);
 
     }
 
