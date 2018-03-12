@@ -1,17 +1,22 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.business.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.FragmentaryReimbursementQueryService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.dao.FragmentaryReimbursementMapper;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.FragmentaryReimbursementDTO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.FragmentaryReimbursementPO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.MedicalRelationTransformPO;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * <p>
@@ -68,6 +73,17 @@ public class FragmentaryReimbursementQueryServiceImpl extends ServiceImpl<Fragme
            page.setRecords(baseMapper.fragmentaryReimbursementMapperQuery(page,fragmentaryReimbursementDTO));
            return page;
 
+    }
+
+    @Override
+    public List<FragmentaryReimbursementPO> selectAll(FragmentaryReimbursementPO params) {
+        Wrapper<FragmentaryReimbursementPO> wr = new EntityWrapper<FragmentaryReimbursementPO>()
+            .like("employee_id", params.getEmployeeId())
+            .like("employee_name", params.getEmployeeName())
+            .like("id_num", params.getIdNum())
+            .like("company_id", params.getCompanyId())
+            .like("company_name", params.getCompanyName());
+        return fragmentaryReimbursementMapper.selectList(wr);
     }
 
 }

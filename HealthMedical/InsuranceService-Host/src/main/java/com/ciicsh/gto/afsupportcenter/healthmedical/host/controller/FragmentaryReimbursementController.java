@@ -119,8 +119,11 @@ import java.util.Optional;
      */
     @GetMapping("/export")
     public Result export(FragmentaryReimbursementDTO fragmentaryReimbursementDTO, HttpServletResponse response) {
-        Page<FragmentaryReimbursementPO> page = new Page<>(fragmentaryReimbursementDTO.getCurrent(), fragmentaryReimbursementDTO.getTotal());
-        List<FragmentaryReimbursementPO> list = fragmentaryReimbursementQueryService.getEntityList(page, fragmentaryReimbursementDTO).getRecords();
+//        Page<FragmentaryReimbursementPO> page = new Page<>(fragmentaryReimbursementDTO.getCurrent(), fragmentaryReimbursementDTO.getTotal());
+//        List<FragmentaryReimbursementPO> list = fragmentaryReimbursementQueryService.getEntityList(page, fragmentaryReimbursementDTO).getRecords();
+        FragmentaryReimbursementPO params = new FragmentaryReimbursementPO();
+        BeanUtils.copyProperties(fragmentaryReimbursementDTO,params);
+        List<FragmentaryReimbursementPO> list = fragmentaryReimbursementQueryService.selectAll(params);
 
         ArrayList<FragmentaryReimbursementExcelDTO> dtos = new ArrayList<>();
         list.stream().forEach(i -> {

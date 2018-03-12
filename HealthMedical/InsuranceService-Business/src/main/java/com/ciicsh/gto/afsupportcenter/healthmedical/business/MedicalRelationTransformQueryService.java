@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.MedicalRelationTransformPO;
 
+import java.util.List;
+
 /**
  * <p>
  * 医疗关系转移表 服务类
@@ -21,4 +23,5 @@ public interface MedicalRelationTransformQueryService extends IService<MedicalRe
 
     Page<MedicalRelationTransformPO> medicalRelationTransformMapperQuery(Page<MedicalRelationTransformPO> page, MedicalRelationTransformPO dto);
 
+    List<MedicalRelationTransformPO> selectAll(MedicalRelationTransformPO params);
 }

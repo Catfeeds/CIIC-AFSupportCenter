@@ -93,10 +93,13 @@ public class MedicalRelationTransformController  extends BasicController<Medical
      */
     @GetMapping("/export")
     public Result export(MedicalRelationTransformDTO  medicalRelationTransformDTO, HttpServletResponse response) {
-        Page<MedicalRelationTransformPO> page = new Page<>(medicalRelationTransformDTO.getCurrent(), medicalRelationTransformDTO.getTotal());
-        MedicalRelationTransformPO medicalRelationTransformPO = new MedicalRelationTransformPO();
-        BeanUtils.copyProperties(medicalRelationTransformDTO, medicalRelationTransformPO);
-        List<MedicalRelationTransformPO> list = business.medicalRelationTransformMapperQuery(page, medicalRelationTransformPO).getRecords();
+//        Page<MedicalRelationTransformPO> page = new Page<>(medicalRelationTransformDTO.getCurrent(), medicalRelationTransformDTO.getTotal());
+//        MedicalRelationTransformPO medicalRelationTransformPO = new MedicalRelationTransformPO();
+//        BeanUtils.copyProperties(medicalRelationTransformDTO, medicalRelationTransformPO);
+//        List<MedicalRelationTransformPO> list = business.medicalRelationTransformMapperQuery(page, medicalRelationTransformPO).getRecords();
+        MedicalRelationTransformPO params = new MedicalRelationTransformPO();
+        BeanUtils.copyProperties(medicalRelationTransformDTO,params);
+        List<MedicalRelationTransformPO> list = business.selectAll(params);
 
         ArrayList<MedicalRelationTransformExcelDTO> dtos = new ArrayList<>();
         list.stream().forEach(i -> {
