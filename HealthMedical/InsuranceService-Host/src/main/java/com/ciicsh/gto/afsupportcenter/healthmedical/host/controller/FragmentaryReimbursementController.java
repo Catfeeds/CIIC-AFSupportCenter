@@ -2,22 +2,14 @@ package com.ciicsh.gto.afsupportcenter.healthmedical.host.controller;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.FragmentaryReimbursementQueryService;
-import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.excel.FragmentaryReimbursementExcelDTO;
-import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.excel.SupplyMedicalAcceptanceExcelDTO;
-import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.FragmentaryReimbursementPO;
-import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.FragmentaryReimbursementDTO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.core.Result;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.core.ResultGenerator;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.FragmentaryReimbursementDTO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.excel.FragmentaryReimbursementExcelDTO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.FragmentaryReimbursementPO;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
-import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
-import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
-import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
-import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
-import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
-import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
-
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
@@ -25,14 +17,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * <p>
@@ -119,8 +112,6 @@ import java.util.Optional;
      */
     @GetMapping("/export")
     public Result export(FragmentaryReimbursementDTO fragmentaryReimbursementDTO, HttpServletResponse response) {
-//        Page<FragmentaryReimbursementPO> page = new Page<>(fragmentaryReimbursementDTO.getCurrent(), fragmentaryReimbursementDTO.getTotal());
-//        List<FragmentaryReimbursementPO> list = fragmentaryReimbursementQueryService.getEntityList(page, fragmentaryReimbursementDTO).getRecords();
         FragmentaryReimbursementPO params = new FragmentaryReimbursementPO();
         BeanUtils.copyProperties(fragmentaryReimbursementDTO,params);
         List<FragmentaryReimbursementPO> list = fragmentaryReimbursementQueryService.selectAll(params);

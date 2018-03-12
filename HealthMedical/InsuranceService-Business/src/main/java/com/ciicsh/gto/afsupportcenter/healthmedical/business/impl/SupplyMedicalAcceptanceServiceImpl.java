@@ -252,17 +252,6 @@ public class SupplyMedicalAcceptanceServiceImpl extends ServiceImpl<SupplyMedica
 
     @Override
     public List<SupplyMedicalAcceptance> selectAll(SupplyMedicalAcceptance params) {
-//        Wrapper<SupplyMedicalAcceptance> wr = new EntityWrapper<SupplyMedicalAcceptance>()
-//            .eq("input_date", params.getInputDate())
-//            .eq("audit_time", params.getAuditTime())
-//            .eq("status", params.getStatus())
-//            .like("dossier_number", params.getDossierNumber())
-//            .like("acceptance_id", params.getAcceptanceId())
-//            .like("employee_id", params.getEmployeeId())
-//            .like("employee_name", params.getEmployeeName())
-//            .like("company_id", params.getCompanyId())
-//            .like("company_name", params.getCompanyName())
-//            .like("insured_name", params.getInsuredName());
         return supplyMedicalAcceptanceMapper.selectAll(params);
     }
 

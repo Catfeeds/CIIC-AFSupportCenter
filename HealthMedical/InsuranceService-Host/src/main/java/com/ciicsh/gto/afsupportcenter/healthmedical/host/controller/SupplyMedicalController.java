@@ -71,8 +71,6 @@ public class SupplyMedicalController {
      */
     @GetMapping("/export")
     public Result export(SupplyMedicalAcceptanceDTO supplyMedicalAcceptanceDTO, HttpServletResponse response) {
-//        Page<SupplyMedicalAcceptance> page = new Page<>(supplyMedicalAcceptanceDTO.getCurrent(), supplyMedicalAcceptanceDTO.getTotal());
-//        List<SupplyMedicalAcceptance> list = supplyMedicalAcceptanceService.queryAcceptancePage(page, supplyMedicalAcceptanceDTO).getRecords();
 
         SupplyMedicalAcceptance params = new SupplyMedicalAcceptance();
         BeanUtils.copyProperties(supplyMedicalAcceptanceDTO,params);
