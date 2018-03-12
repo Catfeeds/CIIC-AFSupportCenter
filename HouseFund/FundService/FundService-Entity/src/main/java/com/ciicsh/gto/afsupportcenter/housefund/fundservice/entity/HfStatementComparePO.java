@@ -57,7 +57,7 @@ public class HfStatementComparePO implements Serializable {
      * 1 独立户 2 大库、3 外包
      */
 	@TableField("hf_account_type")
-	private Integer hfAccountType;
+	private Byte hfAccountType;
     /**
      * 导入记录总数
      */
@@ -151,11 +151,11 @@ public class HfStatementComparePO implements Serializable {
 		this.comAccountId = comAccountId;
 	}
 
-	public Integer getHfAccountType() {
+	public Byte getHfAccountType() {
 		return hfAccountType;
 	}
 
-	public void setHfAccountType(Integer hfAccountType) {
+	public void setHfAccountType(Byte hfAccountType) {
 		this.hfAccountType = hfAccountType;
 	}
 

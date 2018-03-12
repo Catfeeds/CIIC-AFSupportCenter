@@ -4,6 +4,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFStatementCompar
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountDetailDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.FundStatementDetailDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.NewStatementDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public interface HFStatementCompareService
      * @param
      * @return
      */
-    void addStatement(String filePath);
+    void addStatement(NewStatementDTO newStatement, MultipartFile file) throws Exception;
 
     /**
      * 获取对账单明细记录
