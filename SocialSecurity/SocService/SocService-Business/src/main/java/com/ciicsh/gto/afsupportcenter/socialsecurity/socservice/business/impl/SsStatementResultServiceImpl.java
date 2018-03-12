@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementResultBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementResultCompareBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsMonthEmpChangeDetailMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsStatementImpMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsStatementMapper;
@@ -85,18 +86,21 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
         List<SsStatementResult> resultPoList = calculateResultDiff(resultPOMap);
 
         //统计差异人头数
-        Map<String,Integer> diffHeadMap = calculateDiffHead(impDetailPOList,changeDetailPOList);
+        Map<String,SsStatementResultCompareBO> diffHeadMap = calculateDiffHead(impDetailPOList,changeDetailPOList);
 
 
         //批量插入对比结果
         if(Optional.ofNullable(resultPoList).isPresent()){
             for(int i = 0;i < resultPoList.size();i++){
                 SsStatementResult result = resultPoList.get(i);
-
+                SsStatementResultCompareBO ssStatementResultCompareBO=diffHeadMap.get(result.getEmployeeId());
                 //放入人头差异
-                result.setDiffHeadcount(diffHeadMap.get(result.getEmployeeId()));
+                result.setDiffHeadcount(ssStatementResultCompareBO.getDiffHeadcount());
 
                 //放入基本信息
+                if(diffHeadMap.get(result.getEmployeeId()).getDiffHeadcount()==1){
+                    result.setEmployeeId(ssStatementResultCompareBO.getEmployeeName());
+                }
 
                 result.setStatementId(statementId);
                 result.setActive(true);
@@ -451,15 +455,21 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
      * @param changeDetailPOList 汇总数据
      * @return Map<String,String> 人头差异结果 key:employeeId value:0 正常差异 1 系统不存在  2 导入不存在
      */
-    private Map<String,Integer> calculateDiffHead(List<SsStatementImp> impDetailPOList,List<SsMonthEmpChangeDetail> changeDetailPOList){
-        Map<String,Integer> diffHeadMap = new HashMap<>();
+    private Map<String,SsStatementResultCompareBO> calculateDiffHead(List<SsStatementImp> impDetailPOList, List<SsMonthEmpChangeDetail> changeDetailPOList){
+        Map<String,SsStatementResultCompareBO> diffHeadMap = new HashMap<>();
+
         //先循环处理导入的信息
         if(Optional.ofNullable(impDetailPOList).isPresent()) {
             for (int i = 0; i < impDetailPOList.size(); i++) {
-                String employeeId = impDetailPOList.get(i).getEmployeeId();
+                SsStatementImp ssStatementImp=impDetailPOList.get(i);
+                String employeeId = ssStatementImp.getEmployeeId();
                 //将员工ID去重加入map
                 if(!diffHeadMap.containsKey(employeeId)){
-                    diffHeadMap.put(employeeId,1);
+                    SsStatementResultCompareBO cbo=new SsStatementResultCompareBO();
+                    cbo.setDiffHeadcount(1);
+                    cbo.setEmployeeId(ssStatementImp.getEmployeeId());
+                    cbo.setEmployeeName(ssStatementImp.getEmpName());
+                    diffHeadMap.put(employeeId,cbo);
                 }
             }
         }
@@ -470,13 +480,17 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
                 //判断是否已存在
                 if(!diffHeadMap.containsKey(employeeId)) {
                     //不存在的话直接加入map,
-                    diffHeadMap.put(employeeId,2);
+                    SsStatementResultCompareBO cbo=new SsStatementResultCompareBO();
+                    cbo.setDiffHeadcount(2);
+                    diffHeadMap.put(employeeId,cbo);
                 }else{
                     //存在的话判断是系统数据还是导入数据还是2者都有
-                    Integer diffHead = diffHeadMap.get(employeeId);
+                    SsStatementResultCompareBO cbo = diffHeadMap.get(employeeId);
+                    Integer diffHead=cbo.getDiffHeadcount();
                     //只有当原先状态是1 系统不存在情况下,变更map中的状态,别的时候保持不变
                     if(diffHead == 1 ){
-                        diffHeadMap.put(employeeId,0);
+                        cbo.setDiffHeadcount(0);
+                        diffHeadMap.put(employeeId,cbo);
                     }
                 }
             }
