@@ -72,6 +72,9 @@ public class SupplyMedicalAcceptanceServiceImpl extends ServiceImpl<SupplyMedica
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private SupplyMedicalAcceptanceMapper supplyMedicalAcceptanceMapper;
+
     @Override
     public Page<SupplyMedicalAcceptance> queryAcceptancePage(Page<SupplyMedicalAcceptance> page, SupplyMedicalAcceptanceDTO supplyMedicalAcceptanceDTO) {
         page.setRecords(baseMapper.queryAcceptancePage(page, supplyMedicalAcceptanceDTO));
@@ -243,6 +246,11 @@ public class SupplyMedicalAcceptanceServiceImpl extends ServiceImpl<SupplyMedica
         } catch (IOException e) {
             logger.info(e.getMessage());
         }
+    }
+
+    @Override
+    public List<SupplyMedicalAcceptance> selectAll(SupplyMedicalAcceptance params) {
+        return supplyMedicalAcceptanceMapper.selectAll(params);
     }
 
 

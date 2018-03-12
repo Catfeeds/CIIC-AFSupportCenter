@@ -9,6 +9,7 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentStatusBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.SupplyMedicalAcceptanceDTO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.SupplyMedicalAcceptance;
+import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.List;
  *
  * @author xiweizhen
  */
+@Repository
 public interface SupplyMedicalAcceptanceMapper extends BaseMapper<SupplyMedicalAcceptance> {
 
     /**
@@ -91,4 +93,11 @@ public interface SupplyMedicalAcceptanceMapper extends BaseMapper<SupplyMedicalA
      * @return
      */
     Integer updateByEntity(Date date);
+
+    /**
+     * 条件查询所有补充医疗
+     * @param params
+     * @return
+     */
+    List<SupplyMedicalAcceptance> selectAll(SupplyMedicalAcceptance params);
 }

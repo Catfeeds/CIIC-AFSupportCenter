@@ -56,4 +56,10 @@ public interface SupplyMedicalAcceptanceService extends IService<SupplyMedicalAc
      */
     void importAcceptanceXls(InputStream inputStream);
 
+    /**
+     * 条件查询所有的补充医疗
+     * @param params
+     * @return
+     */
+    List<SupplyMedicalAcceptance> selectAll(SupplyMedicalAcceptance params);
 }
