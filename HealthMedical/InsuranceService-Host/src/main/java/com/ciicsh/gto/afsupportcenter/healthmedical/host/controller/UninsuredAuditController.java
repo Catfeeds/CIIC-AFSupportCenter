@@ -51,12 +51,14 @@ public class UninsuredAuditController {
         try {
             Page<UninsuredMedical> page = new Page<>(uninsuredMedicalAuditDTO.getCurrent(), uninsuredMedicalAuditDTO.getSize());
             if (uninsuredMedicalAuditDTO.getStatus()) {
+                // 查询已审核数据
                 page = uninsuredMedicalAuditService.queryAcceptanceAuditList(page, uninsuredMedicalAuditDTO);
-                logger.info("查询受理单分页列表");
+                logger.info("查询受已审核理单分页列表");
                 return ResultGenerator.genSuccessResult(page);
             } else {
+                // 查询未审核数据
                 page = uninsuredMedicalAuditService.queryAcceptanceList(page, uninsuredMedicalAuditDTO);
-                logger.info("查询受理单分页列表");
+                logger.info("查询未审核受理单分页列表");
                 return ResultGenerator.genSuccessResult(page);
             }
         } catch (Exception e) {
