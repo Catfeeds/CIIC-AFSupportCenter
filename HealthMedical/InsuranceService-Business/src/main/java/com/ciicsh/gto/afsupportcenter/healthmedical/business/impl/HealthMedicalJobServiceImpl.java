@@ -1,6 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.healthmedical.business.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.HealthMedicalJobService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.business.enums.SysConstants;
@@ -14,6 +13,7 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentSta
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.PaymentApplyDetailBO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.PaymentApplyBatchPO;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.basicdataservice.api.CityServiceProxy;
 import com.ciicsh.gto.basicdataservice.api.dto.FullCityDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.BankCardRefundDTO;
@@ -392,9 +392,12 @@ public class HealthMedicalJobServiceImpl extends ServiceImpl<PaymentApplyBatchMa
      * @return
      */
     private EmployeePaymentBO setAreaInfo (EmployeePaymentBO bo) {
-        FullCityDTO dto = cityServiceProxy.selectFullByCityCode(bo.getCityCode());
-        bo.setProvinceCode(dto.getProvinceName());
-        bo.setCityCode(dto.getCityName());
+        String cityCode = bo.getCityCode();
+        if (!StringUtil.isEmpty(cityCode)) {
+            FullCityDTO dto = cityServiceProxy.selectFullByCityCode(cityCode);
+            bo.setProvinceCode(dto.getProvinceName());
+            bo.setCityCode(dto.getCityName());
+        }
         return bo;
     }
 

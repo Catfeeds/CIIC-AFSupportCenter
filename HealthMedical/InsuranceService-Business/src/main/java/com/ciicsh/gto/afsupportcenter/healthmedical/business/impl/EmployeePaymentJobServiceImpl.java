@@ -14,6 +14,7 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.PaymentApplyDetail
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.EmployeePaymentApplyPO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.PaymentApplyBatchPO;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.basicdataservice.api.CityServiceProxy;
 import com.ciicsh.gto.basicdataservice.api.dto.FullCityDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.BankCardRefundDTO;
@@ -292,9 +293,12 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
      * @return
      */
     private EmployeePaymentBO setAreaInfo (EmployeePaymentBO bo) {
-        FullCityDTO dto = cityServiceProxy.selectFullByCityCode(bo.getCityCode());
-        bo.setProvinceCode(dto.getProvinceName());
-        bo.setCityCode(dto.getCityName());
+        String cityCode = bo.getCityCode();
+        if (!StringUtil.isEmpty(cityCode)) {
+            FullCityDTO dto = cityServiceProxy.selectFullByCityCode(cityCode);
+            bo.setProvinceCode(dto.getProvinceName());
+            bo.setCityCode(dto.getCityName());
+        }
         return bo;
     }
 
