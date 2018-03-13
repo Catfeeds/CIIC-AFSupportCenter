@@ -84,15 +84,18 @@
 
     <select id="searchPaymentByAccountTypeAndState" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentSrarchBO" resultMap="DtoResultMap">
         SELECT
-        SP.*
+        p.*
         FROM
-        ss_payment SP
+        ss_payment p
         WHERE
-        SP.is_active = '1'
+        p.is_active = '1'
         <if test = "accountType != null and accountType != ''">
-            AND SP.account_type = #{accountType}
+            AND p.account_type = #{accountType}
         </if>
-        AND SP.payment_state IN
+        <if test = "paymentMonth != null and paymentMonth != ''">
+            AND p.payment_month = #{paymentMonth}
+        </if>
+        AND p.payment_state IN
         <foreach collection="paymentStateList" item="paymentState" open="(" close=")" separator=",">
             #{paymentState}
         </foreach>

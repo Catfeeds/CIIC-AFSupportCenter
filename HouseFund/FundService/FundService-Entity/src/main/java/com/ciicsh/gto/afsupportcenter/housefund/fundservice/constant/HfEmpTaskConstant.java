@@ -23,4 +23,7 @@ public interface HfEmpTaskConstant {
 
     int HF_TYPE_BASIC = 1; // 公积金类型：基本公积金
     int HF_TYPE_ADDED = 2; // 公积金类型：补充公积金
+
+    int WELFARE_UNIT_INDEPENDENT = 1; // 福利办理方：独立户
+    int WELFARE_UNIT_CIIC_LARGE_STORAGE = 2; // 福利办理方：中智大库
 }

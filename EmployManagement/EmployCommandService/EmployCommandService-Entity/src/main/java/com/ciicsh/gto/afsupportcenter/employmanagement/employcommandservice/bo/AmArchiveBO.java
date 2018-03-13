@@ -7,4 +7,13 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.enti
  */
 public class AmArchiveBO extends AmArchive {
 
+    private  Integer  isEnd;
+
+    public Integer getIsEnd() {
+        return isEnd;
+    }
+
+    public void setIsEnd(Integer isEnd) {
+        this.isEnd = isEnd;
+    }
 }

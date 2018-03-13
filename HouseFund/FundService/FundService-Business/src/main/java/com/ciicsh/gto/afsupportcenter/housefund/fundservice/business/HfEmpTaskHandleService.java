@@ -2,10 +2,8 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.service.IService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBatchRejectBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskCreateTransBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskHandleBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskHandlePostBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfArchiveBasePeriod;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 
@@ -31,4 +29,8 @@ public interface HfEmpTaskHandleService extends IService<HfEmpTask> {
      * @return
      */
     int createTransEmpTask(HfEmpTaskCreateTransBo hfEmpTaskCreateTransBo);
+
+    int[] getRoundTypeProxy(String policyId, Integer payAccountType, String effectiveMonth, String hfTypeDicItemCode);
+
+    public List<ComposedEmpBasePeriodBO> composeEmpBasePeriod(List<HfArchiveBasePeriod> existsHfArchiveBasePeriodList);
 }
