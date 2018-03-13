@@ -157,7 +157,7 @@
         <if test="hfType != null and hfType != 0">
             AND a.hf_type = #{hfType}
         </if>
-        <if test="accountNumber != null and accountNumber != '' and accountType==2">
+        <if test="accountNumber != null and accountNumber != ''">
             AND a.hf_com_account = #{accountNumber}
         </if>
     </select>
