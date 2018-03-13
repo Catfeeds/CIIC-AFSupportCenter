@@ -157,7 +157,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         //用工信息
         List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(param);
         //用工档案
-        AmArchiveBO amArchiveBO = new AmArchiveBO();
+        AmArchiveBO amArchiveBO = null;
         if(null!=resultEmployList&&resultEmployList.size()>0)
         {
             params.put("employmentId",resultEmployList.get(0).getEmploymentId());
@@ -187,7 +187,10 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         resultMap.put("materialList",empMaterialList);
 
-        resultMap.put("amArchaiveBo",amArchiveBO);
+        if(null!=amArchiveBO){
+            resultMap.put("amArchaiveBo",amArchiveBO);
+        }
+
 
         if(null!= resultEmployList&&resultEmployList.size()>0)
         {
