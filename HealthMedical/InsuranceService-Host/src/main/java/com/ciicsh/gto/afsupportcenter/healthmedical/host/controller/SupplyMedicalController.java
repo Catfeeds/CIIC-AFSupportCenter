@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,17 +72,19 @@ public class SupplyMedicalController {
      */
     @GetMapping("/export")
     public Result export(SupplyMedicalAcceptanceDTO supplyMedicalAcceptanceDTO, HttpServletResponse response) {
-        Page<SupplyMedicalAcceptance> page = new Page<>(supplyMedicalAcceptanceDTO.getCurrent(), supplyMedicalAcceptanceDTO.getTotal());
-        List<SupplyMedicalAcceptance> list = supplyMedicalAcceptanceService.queryAcceptancePage(page, supplyMedicalAcceptanceDTO).getRecords();
+
+        SupplyMedicalAcceptance params = new SupplyMedicalAcceptance();
+        BeanUtils.copyProperties(supplyMedicalAcceptanceDTO,params);
+        List<SupplyMedicalAcceptance> list = supplyMedicalAcceptanceService.selectAll(params);
 
         List<SupplyMedicalAcceptanceExcelDTO> dtos = new ArrayList<>();
         list.stream().forEach(i -> {
             SupplyMedicalAcceptanceExcelDTO supplyMedicalAcceptanceExcelDTO = new SupplyMedicalAcceptanceExcelDTO();
-            BeanUtils.copyProperties(i,supplyMedicalAcceptanceExcelDTO);
+            BeanUtils.copyProperties(i, supplyMedicalAcceptanceExcelDTO);
             dtos.add(supplyMedicalAcceptanceExcelDTO);
         });
 
-        ExcelUtil.exportExcel(dtos,SupplyMedicalAcceptanceExcelDTO.class,"补充医疗理赔.xls", response);
+        ExcelUtil.exportExcel(dtos, SupplyMedicalAcceptanceExcelDTO.class, "补充医疗理赔.xls", response);
         return ResultGenerator.genSuccessResult(null);
     }
 
@@ -164,6 +167,12 @@ public class SupplyMedicalController {
         try {
             SupplyMedicalInvoice supplyMedicalInvoice = new SupplyMedicalInvoice();
             BeanUtils.copyProperties(supplyMedicalInvoiceDTO, supplyMedicalInvoice);
+            SupplyMedicalAcceptance supplyMedicalAcceptance = supplyMedicalAcceptanceService.selectById(supplyMedicalInvoice.getAcceptanceId());
+            SupplyMedicalInvoice invoice = supplyMedicalInvoiceService.selectById(supplyMedicalInvoice.getInvoiceId());
+            BigDecimal result = supplyMedicalAcceptance.getTotalInsuranceCompanyMoney().subtract(invoice.getInsuranceCompanyMoney()).add(supplyMedicalInvoice.getInsuranceCompanyMoney());
+            supplyMedicalAcceptance.setTotalInsuranceCompanyMoney(result);
+
+            supplyMedicalAcceptanceService.updateById(supplyMedicalAcceptance);
             boolean flag = supplyMedicalInvoiceService.updateById(supplyMedicalInvoice);
             return ResultGenerator.genSuccessResult(flag);
         } catch (Exception e) {

@@ -126,8 +126,10 @@ public class ReportFormController {
                                       HttpServletResponse response) throws ParseException {
         AfProductParamsDTO afProductParamsDTO = new AfProductParamsDTO();
         //todo birthday
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = sdf.parse(birthday);
+        if (birthday != "") {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse(birthday);
+        }
 
         afProductParamsDTO.setCompanyId(companyId);
         afProductParamsDTO.setProductId("CPDFL1800059");
@@ -155,8 +157,11 @@ public class ReportFormController {
                                       String manager,String birthday,
                                       HttpServletResponse response) throws ParseException {
         AfProductParamsDTO afProductParamsDTO = new AfProductParamsDTO();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = sdf.parse(birthday);
+        if (birthday != "") {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse(birthday);
+        }
+
         //todo birthday
         afProductParamsDTO.setCompanyId(companyId);
         afProductParamsDTO.setProductId("CPDFL1800060");

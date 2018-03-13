@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.FragmentaryReimbursementDTO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.FragmentaryReimbursementPO;
 
+import java.util.List;
+
 
 /**
  * <p>
@@ -22,4 +24,6 @@ public interface FragmentaryReimbursementQueryService extends IService<Fragmenta
     FragmentaryReimbursementPO getById(String id);
 
     Page<FragmentaryReimbursementPO> getEntityList(Page<FragmentaryReimbursementPO> page, FragmentaryReimbursementDTO dto);
+
+    List<FragmentaryReimbursementPO> selectAll(FragmentaryReimbursementPO params);
 }
