@@ -79,4 +79,8 @@
 
     </select>
 
+    <delete id="delStatementResult">
+        DELETE FROM hf_statement_compare_result WHERE statement_compare_id=#{statementId}
+    </delete>
+
 </mapper>

@@ -37,4 +37,11 @@ public interface HfStatementCompareMapper extends BaseMapper<HfStatementCompareP
      */
     List<FundStatementItemPO> getStatementItems(@Param("statementId") long statementId);
 
+    /**
+     * 删除对账单结果数据
+     * @param statementId
+     * @return
+     */
+    int delStatementResult(@Param("statementId") long statementId);
+
 }

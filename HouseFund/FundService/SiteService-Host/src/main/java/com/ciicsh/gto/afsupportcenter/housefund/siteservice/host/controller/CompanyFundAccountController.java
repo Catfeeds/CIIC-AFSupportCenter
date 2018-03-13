@@ -98,7 +98,9 @@ public class CompanyFundAccountController extends BasicController<HfComAccountSe
         String comAccountName = pageInfo.getParams().getString("comAccountName").trim();
         //企业账户类型 1 大库 2 外包 3 独立户
         Byte hfAccountType = pageInfo.getParams().getByteValue("hfAccountType");
-        PageRows<ComFundAccountNamePO> lst = PageKit.doSelectPage(pageInfo,()->business.getComFundAccountNameList(comAccountName,hfAccountType));
+        // 公积金类型 1 基本公积金、2 补充公积金
+        Byte hfType = pageInfo.getParams().getByteValue("hfType");
+        PageRows<ComFundAccountNamePO> lst = PageKit.doSelectPage(pageInfo,()->business.getComFundAccountNameList(comAccountName,hfType, hfAccountType));
         List<ComFundAccountNameDTO> dtos = JsonKit.castToList(lst.getRows(), ComFundAccountNameDTO.class);
 
         PageRows<ComFundAccountNameDTO> result = new PageRows<>();

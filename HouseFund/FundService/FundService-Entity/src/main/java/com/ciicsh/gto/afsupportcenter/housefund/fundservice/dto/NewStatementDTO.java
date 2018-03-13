@@ -16,6 +16,11 @@ public class NewStatementDTO
     private int comAccountId;
 
     /**
+     * 企业基本/补充公积金账号
+     */
+    private String hfComAccount;
+
+    /**
      * 1 大库 2 外包 3 独立户
      */
     private Byte hfAccountType;
@@ -45,6 +50,14 @@ public class NewStatementDTO
 
     public void setComAccountId(int comAccountId) {
         this.comAccountId = comAccountId;
+    }
+
+    public String getHfComAccount() {
+        return hfComAccount;
+    }
+
+    public void setHfComAccount(String hfComAccount) {
+        this.hfComAccount = hfComAccount;
     }
 
     public Byte getHfAccountType() {
