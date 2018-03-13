@@ -65,18 +65,24 @@ public class AfPeTaskJob {
     public JsonResult updateAfPeTaskByBespeakPeId() {
         //<editor-fold desc=" 1 调用中盈接口，获取体检订单信息">
         List<AfPeTask> afPeTaskList = afPeTaskService.getListByStatus();
-        //todo 调方法获取sign
         afPeTaskList.stream().forEach((AfPeTask i) -> {
-            String url = "http://51joying.iyaoshow.com/api/physical/GetTijianInfoByTijianEmployeeID?ComNo="+i.getComNo()+"&TiJianEmployeeID="
-                +i.getBespeakPeId()+"&_time="+System.currentTimeMillis()+"&_sign=";
-            //<editor-fold desc=" 2 更新 gt1预约体检订单">
-            JSONObject jo = restTemplate.getForObject(url, JSONObject.class);
-            JSONArray data = jo.getJSONObject("data").getJSONArray("data");
-            //体检信息
-            JSONObject obj = data.getJSONObject(0).getJSONArray("PhysicalInfo").getJSONObject(0);
+            String timeUrl = "http://172.16.4.184:8081/Service1.svc/GetTime";
+            String time = restTemplate.getForObject(timeUrl, String.class);
+
+            String keyUrl = "http://172.16.4.184:8081/Service1.svc/GetData";
+            String key = restTemplate.getForObject(keyUrl, String.class);
+
+            String url = "http://51joying.iyaoshow.com/api/physical/GetTijianInfoByTijianEmployeeID?ComNo="+i.getComNo()
+                +"TiJianEmployeeID="+i.getBespeakPeId()+"&_time="+time+"&_sign="+key;
+            JSONObject response = restTemplate.getForObject(url, JSONObject.class);
+            JSONArray data = response.getJSONArray("data");
+            JSONObject jsonObject = data.getJSONObject(0);
+            JSONArray PhysicalInfos = jsonObject.getJSONArray("PhysicalInfo");
+            JSONObject obj = PhysicalInfos.getJSONObject(0);
             AfPeTask afPeTask = new AfPeTask();
             afPeTask.setStatus(changeStatus(obj.getInteger("IsArrived")));
             afPeTask.setTiJianDate(changeDate(obj.getString("TiJianDate")));
+            afPeTask.setEffectEndDate(changeDate(obj.getString("TijianEndDate")));
             afPeTask.setDaoJianDate(changeDate(obj.getString("DaoJianDate")));
             afPeTask.setReportDate(changeDate(obj.getString("ReportDate")));
             afPeTask.setSendTime(changeDate(obj.getString("SendTime")));
@@ -121,6 +127,8 @@ public class AfPeTaskJob {
         else if (3 == status) {return 9;}
         else if (4 == status) {return 8;}
         else if (5 == status) {return 7;}
+        else if (6 == status) {return 5;}
+        else if (7 == status) {return 10;}
         return null;
     }
 
