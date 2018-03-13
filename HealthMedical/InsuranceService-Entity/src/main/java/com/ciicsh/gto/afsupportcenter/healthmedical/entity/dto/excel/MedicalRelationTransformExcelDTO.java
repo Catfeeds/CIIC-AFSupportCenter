@@ -18,7 +18,6 @@ public class MedicalRelationTransformExcelDTO implements Serializable{
     private String employeeId;
     @Excel(name = "雇员姓名")
     private String employeeName;
-    @Excel(name = "中止日期", format = "yyyy-MM-dd")
     private Date stopDate;
     @Excel(name = "证件号码")
     private String idNum;
@@ -26,7 +25,6 @@ public class MedicalRelationTransformExcelDTO implements Serializable{
     private String companyId;
     @Excel(name = "公司名称")
     private String companyName;
-    @Excel(name = "客户经理")
     private String manager;
     @Excel(name = "转出日期", format = "yyyy-MM-dd")
     private Date turnOutDate;
