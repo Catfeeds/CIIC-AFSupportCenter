@@ -16,6 +16,11 @@ public class ComFundAccountDTO {
     private int comAccountId;
 
     /**
+     * 账户状态:0初始 1有效 2 终止
+     */
+    private Byte state;
+
+    /**
      * 企业账户名称
      */
     private String comAccountName;
@@ -89,6 +94,7 @@ public class ComFundAccountDTO {
     public ComFundAccountDTO()
     {
         comAccountClassId = 0;
+        state = 0;
         accountTempStore = 0;
         accountType = 0;
         closeDay = 0;
@@ -118,6 +124,14 @@ public class ComFundAccountDTO {
 
     public void setComAccountId(int comAccountId) {
         this.comAccountId = comAccountId;
+    }
+
+    public Byte getState() {
+        return state;
+    }
+
+    public void setState(Byte state) {
+        this.state = state;
     }
 
     public String getComAccountName() {

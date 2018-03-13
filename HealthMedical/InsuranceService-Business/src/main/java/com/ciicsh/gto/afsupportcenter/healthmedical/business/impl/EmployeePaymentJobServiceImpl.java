@@ -14,6 +14,7 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.PaymentApplyDetail
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.EmployeePaymentApplyPO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.PaymentApplyBatchPO;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.basicdataservice.api.CityServiceProxy;
 import com.ciicsh.gto.basicdataservice.api.dto.FullCityDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.BankCardRefundDTO;
@@ -28,8 +29,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -198,6 +202,7 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
      * @return PaymentApplyBatchPO: 申请支付批次记录
      */
     private PaymentApplyBatchPO addPaymentApply (List<EmployeePaymentBO> list) {
+        String ip = getLocalHostAddress().getHostAddress();
         Date now = new Date();
         String title = SysConstants.JobConstants.AF_EMPLOYEE_PAYMENT.getName();
         BigDecimal payAmount = list.stream().map(p->p.getPayAmount()).reduce(BigDecimal.ZERO, (x,y)->x.add(y));
@@ -213,7 +218,8 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
             SysConstants.BatchStatus.ADD.getCode(),
             SysConstants.JobConstants.ACTIVE.getCode(), now, now,
             SysConstants.JobConstants.SYSTEM_ZH.getName(),
-            SysConstants.JobConstants.SYSTEM_ZH.getName()
+            ip
+            //SysConstants.JobConstants.SYSTEM_ZH.getName()
         );
         paymentApplyBatchMapper.insert(batchPO);
         paymentApplyDetailMapper.insertDetails(list, batchPO.getApplyBatchId(), batchPO.getModifiedBy());
@@ -292,10 +298,39 @@ public class EmployeePaymentJobServiceImpl extends ServiceImpl<EmployeePaymentAp
      * @return
      */
     private EmployeePaymentBO setAreaInfo (EmployeePaymentBO bo) {
-        FullCityDTO dto = cityServiceProxy.selectFullByCityCode(bo.getCityCode());
-        bo.setProvinceCode(dto.getProvinceName());
-        bo.setCityCode(dto.getCityName());
+        String cityCode = bo.getCityCode();
+        if (!StringUtil.isEmpty(cityCode)) {
+            FullCityDTO dto = cityServiceProxy.selectFullByCityCode(cityCode);
+            bo.setProvinceCode(dto.getProvinceName());
+            bo.setCityCode(dto.getCityName());
+        }
         return bo;
     }
 
+    private InetAddress getLocalHostAddress() {
+        InetAddress candidateAddress = null;
+        try {
+            /**遍历所有的网络接口*/
+            for (Enumeration ifaces = NetworkInterface.getNetworkInterfaces(); ifaces.hasMoreElements();) {
+                NetworkInterface iface = (NetworkInterface) ifaces.nextElement();
+                /**在所有的接口下再遍历IP*/
+                for (Enumeration inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements();) {
+                    InetAddress inetAddr = (InetAddress) inetAddrs.nextElement();
+                    if (!inetAddr.isLoopbackAddress()) {
+                        if (inetAddr.isSiteLocalAddress()) {
+                            /**如果是site-local地址，就是它了*/
+                            return inetAddr;
+                        } else if (candidateAddress == null) {
+                             /**site-local类型的地址未被发现，先记录候选地址*/
+                            candidateAddress = inetAddr;
+                        }
+                    }
+                }
+            }
+            if (candidateAddress == null) {
+                candidateAddress = InetAddress.getLocalHost();
+            }
+        } catch (Exception e) {}
+        return candidateAddress;
+    }
 }

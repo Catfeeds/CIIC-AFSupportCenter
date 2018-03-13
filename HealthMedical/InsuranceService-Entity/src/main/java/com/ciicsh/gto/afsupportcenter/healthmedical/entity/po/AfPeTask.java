@@ -36,7 +36,7 @@ public class AfPeTask extends Model<AfPeTask> {
     @TableField("pe_rule_id")
     private Integer peRuleId;
     /**
-     * 任务单状态（1-待发放，2-已同步至中盈，3-未预约，4-已预约，5-预约失败，6-已到检，7-已出报告，8-已过期，9-已退订）
+     * 任务单状态（1-待发放，2-已同步至中盈，3-未预约，4-已预约，5-预约失败，6-已到检，7-已出报告，8-已过期，9-已退订，10-过期作废）
      */
     private Integer status;
     /**

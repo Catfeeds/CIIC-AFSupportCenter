@@ -3,6 +3,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpArchive;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
 
+import java.math.BigDecimal;
+
 public class SsEmpArchiveBO extends SsEmpArchive {
 
     // 来源表 emp_employee
@@ -32,6 +34,8 @@ public class SsEmpArchiveBO extends SsEmpArchive {
     private String employeeAttribute;
     //新增和转入 对应一些雇员信息，比如人员属性和工资等
     private SsEmpTask SsEmpTask;
+    //旧基数
+    private BigDecimal oldEmpBase;
     public String getEmployeeName() {
         return employeeName;
     }
@@ -134,5 +138,13 @@ public class SsEmpArchiveBO extends SsEmpArchive {
 
     public void setSsEmpTask(com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask ssEmpTask) {
         SsEmpTask = ssEmpTask;
+    }
+
+    public BigDecimal getOldEmpBase() {
+        return oldEmpBase;
+    }
+
+    public void setOldEmpBase(BigDecimal oldEmpBase) {
+        this.oldEmpBase = oldEmpBase;
     }
 }

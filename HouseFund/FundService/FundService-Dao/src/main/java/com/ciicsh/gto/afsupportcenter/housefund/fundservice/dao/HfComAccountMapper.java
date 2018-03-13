@@ -56,7 +56,7 @@ public interface HfComAccountMapper extends BaseMapper<HfComAccount> {
      * @param hfAccountType 1 大库 2 外包 3 独立户
      * @return
      */
-    List<ComFundAccountNamePO> getComFundAccountNameList(@Param("comAccountName")String comAccountName, @Param("hfAccountType") Byte hfAccountType);
+    List<ComFundAccountNamePO> getComFundAccountNameList(@Param("comAccountName")String comAccountName, @Param("hfType") Byte hfType, @Param("hfAccountType") Byte hfAccountType);
 
     /**
      * 获取企业公积金账户明细信息,Site用

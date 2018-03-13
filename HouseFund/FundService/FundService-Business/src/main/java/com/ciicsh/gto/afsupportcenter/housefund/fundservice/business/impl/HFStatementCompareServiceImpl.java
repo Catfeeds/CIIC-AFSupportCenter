@@ -4,14 +4,18 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFStatementCompar
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HFStatementCompareService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfStatementCompareImpMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfStatementCompareMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfStatementCompareResultMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.FundStatementDetailDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.FundStatementItemDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.NewStatementDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.NewStatementExcelItemDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.EmployeeIdPO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.EmployeeSysAmountPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.FundStatementDetailPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.FundStatementItemPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfStatementCompareImpPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfStatementComparePO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfStatementCompareResultPO;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -40,6 +46,10 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
     @Autowired
     private HfStatementCompareImpMapper statementImpMapper;
 
+    @Autowired
+    private HfStatementCompareResultMapper statementResultMapper;
+
+
     /**
      * 根据筛选条件获取公积金对账单记录
      *
@@ -58,11 +68,13 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
      * @param file
      */
     @Override
-    public void addStatement(NewStatementDTO newStatement, MultipartFile file) throws Exception {
+    public long addStatement(NewStatementDTO newStatement, MultipartFile file) throws Exception {
         List<NewStatementExcelItemDTO> lst = ExcelUtil.importExcel(file,0,1,NewStatementExcelItemDTO.class,true);
         if(lst == null) {
             throw new Exception("文件记录读取为空");
         }
+        long statementId = 0;
+
         HfStatementComparePO po = new HfStatementComparePO();
         po.setHfMonth(newStatement.getHfMonth());
         po.setHfType(newStatement.getHfType());
@@ -75,20 +87,22 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
 
 
         baseMapper.insert(po);
-        long statementId = po.getStatementCompareId();
+        statementId = po.getStatementCompareId();
         for(NewStatementExcelItemDTO item : lst) {
             HfStatementCompareImpPO po2 = new HfStatementCompareImpPO();
             po2.setStatementCompareId(statementId);
-            //TODO: 取comAccount 公积金客户账号
-            po2.setComAccount("");
+            po2.setComAccount(newStatement.getHfComAccount());
+            po2.setEmpAccount(item.getPersonalAccount());
             po2.setEmpName(item.getEmpName());
             po2.setEmpCardNum(item.getIdNum());
-            po2.setMonthlyAmount(BigDecimal.valueOf(item.getMonthlyAmount()));
+            po2.setMonthlyAmount(item.getMonthlyAmount());
             po2.setActive(true);
             po2.setCreatedBy(newStatement.getCreatedBy());
             po2.setModifiedBy(newStatement.getCreatedBy());
             statementImpMapper.insert(po2);
         } //for
+
+        return statementId;
 
     }
 
@@ -133,7 +147,60 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
      * @return
      */
     @Override
-    public boolean execStatementDetail(long statementId) {
-        return false;
+    public void execStatement(long statementId,String compareMan) throws Exception{
+
+        // 取出导入的对账单明细条目数据
+        try {
+            Map<String, Object> condition = new HashMap<>(1);
+            condition.put("statement_compare_id", statementId);
+            List<HfStatementCompareImpPO> compareImpPOList = statementImpMapper.selectByMap(condition);
+            baseMapper.delStatementResult(statementId);
+            HfStatementComparePO statementPO = baseMapper.selectById(statementId);
+            if(statementPO == null) {
+                throw new Exception("对账单记录不存在");
+            }
+
+            Map<String,EmployeeSysAmountPO> empSysAmountMap = baseMapper.getEmployeeSysAmount(statementPO.getComAccountId(),statementPO.getHfMonth());
+            int diffCount = 0;
+
+            for (HfStatementCompareImpPO impPO : compareImpPOList) {
+                EmployeeIdPO empPO = baseMapper.getEmployeeIdFromArchive(impPO.getEmpName(),impPO.getEmpCardNum(),impPO.getEmpAccount());
+
+                HfStatementCompareResultPO resultPO = new HfStatementCompareResultPO();
+                resultPO.setStatementCompareId(statementId);
+                resultPO.setImpAmount(impPO.getMonthlyAmount());
+                resultPO.setActive(true);
+                resultPO.setCreatedBy(compareMan);
+                resultPO.setModifiedBy(compareMan);
+                if(empPO != null){
+                    resultPO.setEmployeeId(empPO.getEmployeeId());
+                    EmployeeSysAmountPO sysAmountPO = empSysAmountMap.get(empPO.getEmployeeId());
+                    resultPO.setSysAmount(sysAmountPO != null ? sysAmountPO.getSysAmount() : BigDecimal.ZERO);
+
+                }
+                else{
+                    resultPO.setEmployeeId("");
+                    resultPO.setSysAmount(BigDecimal.ZERO);
+                }
+                BigDecimal diffAmount = resultPO.getSysAmount().subtract(resultPO.getImpAmount());
+                resultPO.setDiffAmount(diffAmount);
+                if(diffAmount.compareTo(BigDecimal.ZERO) != 0) {
+                    diffCount ++;
+                }
+                statementResultMapper.insert(resultPO);
+            } //for
+
+            statementPO.setDiffCount(diffCount);
+            statementPO.setCompareMan(compareMan);
+            statementPO.setCompareTime(LocalDateTime.now());
+            statementPO.setModifiedBy(compareMan);
+            statementPO.setModifiedTime(LocalDateTime.now());
+            baseMapper.updateById(statementPO);
+
+        }
+        catch (Exception e){
+            throw new Exception("对账异常");
+        }
+
     }
 }
