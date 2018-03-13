@@ -7,14 +7,19 @@ import com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.UninsuredMedicalBO
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.core.Result;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.core.ResultGenerator;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.UninsuredMedicalDTO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.excel.SupplyMedicalAcceptanceExcelDTO;
+import com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.excel.UninsuredMedicalExcelDTO;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.CompanyConsultantRelation;
 import com.ciicsh.gto.afsupportcenter.healthmedical.entity.po.UninsuredMedical;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,6 +57,27 @@ public class UninsuredController {
         } catch (Exception e) {
             return ResultGenerator.genServerFailResult();
         }
+    }
+
+    /**
+     * 导出受理单
+     * @param uninsuredMedicalDTO
+     * @param response
+     * @return
+     */
+    @GetMapping("/export")
+    public Result export(UninsuredMedicalDTO uninsuredMedicalDTO, HttpServletResponse response) {
+        List<UninsuredMedical> list = uninsuredMedicalService.selectAll(uninsuredMedicalDTO);
+
+        List<UninsuredMedicalExcelDTO> dtos = new ArrayList<>();
+        list.stream().forEach(i -> {
+            UninsuredMedicalExcelDTO uninsuredMedicalExcelDTO = new UninsuredMedicalExcelDTO();
+            BeanUtils.copyProperties(i,uninsuredMedicalExcelDTO);
+            dtos.add(uninsuredMedicalExcelDTO);
+        });
+
+        ExcelUtil.exportExcel(dtos,UninsuredMedicalExcelDTO.class,"受理单.xls", response);
+        return ResultGenerator.genSuccessResult();
     }
 
     /**

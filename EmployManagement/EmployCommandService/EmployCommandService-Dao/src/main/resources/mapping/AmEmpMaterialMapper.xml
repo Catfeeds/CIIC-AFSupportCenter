@@ -12,6 +12,7 @@
 		<result column="receive_man" property="receiveMan" />
 		<result column="reject_date" property="rejectDate" />
 		<result column="reject_man" property="rejectMan" />
+        <result column="operate_type" property="operateType" />
 		<result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />
 		<result column="modified_time" property="modifiedTime" />

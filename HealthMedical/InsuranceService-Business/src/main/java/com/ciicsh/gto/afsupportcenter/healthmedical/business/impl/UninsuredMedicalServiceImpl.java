@@ -45,4 +45,9 @@ public class UninsuredMedicalServiceImpl extends ServiceImpl<UninsuredMedicalMap
     public List<EmpMemberBO> queryEmpMember(String employeeId) {
         return baseMapper.queryEmpMember(employeeId);
     }
+
+    @Override
+    public List<UninsuredMedical> selectAll(UninsuredMedicalDTO uninsuredMedicalDTO) {
+        return baseMapper.selectAll(uninsuredMedicalDTO);
+    }
 }

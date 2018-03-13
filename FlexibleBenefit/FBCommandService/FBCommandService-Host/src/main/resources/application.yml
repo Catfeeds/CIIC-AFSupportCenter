@@ -24,11 +24,8 @@ management:
   #禁用安全验证
   security:
     enabled: false
-#pagehelper:
-#  reasonable: true
 server:
   port: 6019
-  session-timeout: "# session timeout in seconds"
   tomcat:
     background-processor-delay: 30
     basedir: /tmp
@@ -53,8 +50,6 @@ spring:
     default-property-inclusion: non_null
     deserialization:
       FAIL_ON_UNKNOWN_PROPERTIES: false
-#    time-zone: GMT+8
-#    date-format: yyyy-MM-dd HH:mm:ss
   datasource:
         url: jdbc:mysql://${database.host}:${database.port}/${database.databasename}?characterEncoding=utf8&useSSL=true
         username: ${database.username}
@@ -82,8 +77,6 @@ spring:
             group: ${spring.application.name}
             consumer:
               partitioned: true
-        instance-count: 2
-        instance-index: 0
 mybatis-plus:
   configuration:
     cache-enabled: false

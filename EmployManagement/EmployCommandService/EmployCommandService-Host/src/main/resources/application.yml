@@ -6,7 +6,7 @@ spring:
   application:
     name: support-center-employee-site-service
   profiles:
-    active: uat
+    active: dev
   cloud:
     stream:
       bindings:

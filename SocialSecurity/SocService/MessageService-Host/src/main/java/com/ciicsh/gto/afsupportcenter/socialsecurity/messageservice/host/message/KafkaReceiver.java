@@ -269,9 +269,10 @@ public class KafkaReceiver {
         logger.info("entering callEmpAgreement：" + JSON.toJSONString(taskCreateMsgDTO));
         AfEmployeeInfoDTO afEmployeeInfoDTO = null;
         try {
-            AfEmployeeQueryDTO taskRequestDTO = new AfEmployeeQueryDTO();
-            taskRequestDTO.setEmpAgreementId(Long.parseLong(taskCreateMsgDTO.getMissionId()));
-            afEmployeeInfoDTO = afEmployeeSocialProxy.getByEmpAgreement(Long.parseLong(taskCreateMsgDTO.getMissionId()));
+            Long empAgreementId = Long.parseLong(taskCreateMsgDTO.getMissionId());
+            logger.info("empAgreementId:"+empAgreementId);
+            afEmployeeInfoDTO = afEmployeeSocialProxy.getByEmpAgreement(empAgreementId);
+            logger.info("afEmployeeInfoDTO:" + JSON.toJSONString(afEmployeeInfoDTO));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
