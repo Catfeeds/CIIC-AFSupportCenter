@@ -3,7 +3,6 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
-import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
@@ -212,29 +211,19 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
     }
 
     @RequestMapping("/newEmpTaskTxtExport")
-    public void newEmpTaskTxtExport(HttpServletResponse response, HttpServletRequest request) throws Exception {
-//        List<Long> empTaskIdList = array.toJavaList(Long.class);
-        String queryString =  request.getQueryString();
-        String[] queryStringParams = queryString.split("&");
-        Long[] selectedData = null;
-        if (queryStringParams != null && queryStringParams.length > 0) {
-            selectedData = new Long[queryStringParams.length];
-            for(String queryStringParam : queryStringParams) {
-                String[] params = queryStringParam.split("=");
-                selectedData[Integer.valueOf(params[0])] = Long.valueOf(params[1]);
-            }
-        }
+    public void newEmpTaskTxtExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
+        Collection<Object> objects = pageInfo.getParams().values();
 
         Writer writer = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
         String title = "序号|1|||姓名|单边比例|单边比例 |||缴费金额|1010|身份证号码|出生日期|性别|单边金额|单边金额 ||缴费基数|||||||||-1|";
         String template = "%1$d|1|||{%2$s}.{employeeName}|%3$s|%4$s|||%5$s|1010|{%2$s}.{idNum}|{%2$s}.{birthday}|{%2$s}.{gender}|%6$s|%7$s||%8$s|||||||||-1|";
 
 
-        if (selectedData != null) {
-            List<String> outputList = new ArrayList<>(selectedData.length);
+        if (objects != null) {
+            List<String> outputList = new ArrayList<>(objects.size());
             Set<String> employeeIdSet = new HashSet<>();
             Wrapper<HfEmpTask> wrapper = new EntityWrapper<>();
-            wrapper.in("emp_task_id", selectedData);
+            wrapper.in("emp_task_id", StringUtils.join(objects, ','));
             wrapper.eq("task_category", 1);
             wrapper.eq("is_active", 1);
 
