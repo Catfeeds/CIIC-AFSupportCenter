@@ -19,6 +19,11 @@ public class ComFundAccountPO {
     private int comAccountId;
 
     /**
+     * 账户状态:0初始 1有效 2 终止
+     */
+    private Byte state;
+
+    /**
      * 企业账户名称
      */
     private String comAccountName;
@@ -95,6 +100,7 @@ public class ComFundAccountPO {
         closeDay = 0;
         comAccount = "";
         comAccountId = 0;
+        state = 0;
         comAccountName = "";
         hfType = 0;
         payEndMonth = "";
@@ -119,6 +125,14 @@ public class ComFundAccountPO {
 
     public void setComAccountId(int comAccountId) {
         this.comAccountId = comAccountId;
+    }
+
+    public Byte getState() {
+        return state;
+    }
+
+    public void setState(Byte state) {
+        this.state = state;
     }
 
     public String getComAccountName() {
