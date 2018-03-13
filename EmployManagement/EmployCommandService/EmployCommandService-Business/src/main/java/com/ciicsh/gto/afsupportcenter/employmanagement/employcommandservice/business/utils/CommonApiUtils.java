@@ -56,6 +56,9 @@ public class CommonApiUtils {
             AfEmployeeQueryDTO taskRequestDTO = new AfEmployeeQueryDTO();
             Map<String, Object> variables = taskMsgDTO.getVariables();
             taskRequestDTO.setEmployeeCompanyId(Long.parseLong(variables.get("empCompanyId").toString()));
+            logger.info("sleep 2000 millis start");
+            Thread.sleep(2000);
+            logger.info("sleep 2000 millis end");
             resDto = afEmployeeCompanyProxy.getEmployeeCompany(taskRequestDTO);
         } catch (Exception e) {
             logger.error("call kehuzhongxin jiekou error!");
