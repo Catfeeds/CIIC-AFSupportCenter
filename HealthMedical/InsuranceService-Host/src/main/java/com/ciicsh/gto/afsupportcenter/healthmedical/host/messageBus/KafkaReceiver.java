@@ -22,6 +22,8 @@ import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyReturnTicketDTO;
 import com.ciicsh.gto.sheetservice.api.MsgConstants;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
@@ -40,6 +42,8 @@ import java.util.stream.Collectors;
 @EnableBinding(value = TaskSink.class)
 @Component
 public class KafkaReceiver {
+    private static Logger logger = LoggerFactory.getLogger(KafkaReceiver.class);
+
 
     @Autowired
     private AfTpaTaskService afTpaTaskService;
@@ -91,7 +95,7 @@ public class KafkaReceiver {
                 healthMedicalJobService.syncSettleCenterStatus(dto);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.info(e.getMessage());
         }
     }
 
@@ -109,7 +113,7 @@ public class KafkaReceiver {
                 healthMedicalJobService.handlePaymentRefund(dto);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.info(e.getMessage());
         }
     }
 
@@ -127,7 +131,7 @@ public class KafkaReceiver {
             taskRequestDTO.setEmpAgreementId(Long.parseLong(missionId));
             resDto = afEmployeeCompanyProxy.getEmployeeCompany(taskRequestDTO);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.info(e.getMessage());
         }
         return resDto;
     }
@@ -258,7 +262,7 @@ public class KafkaReceiver {
                 // </editor-fold>
 
                 //依据services_item确定status，type
-                task.setServiceItems(item.getServiceItems());
+                task.setServiceItems(serviceItem);
                 if (serviceItem.contains("固定金额")) {
                     task.setKeyType(1);
                 } else {

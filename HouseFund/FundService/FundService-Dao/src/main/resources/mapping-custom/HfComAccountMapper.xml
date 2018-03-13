@@ -80,6 +80,8 @@
         <result column="com_account_name" property="comAccountName" />
         <result column="hf_com_account" property="hfComAccount" />
         <result column="hf_type" property="hfType" />
+        <result column="state" property="state" />
+
     </resultMap>
 
     <resultMap id="AccountNameMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountNamePO">
@@ -163,7 +165,8 @@
         SELECT
         b.com_account_name,
         a.hf_com_account,
-        a.hf_type
+        a.hf_type,
+        b.state
         FROM
         hf_com_account_class a
         INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id

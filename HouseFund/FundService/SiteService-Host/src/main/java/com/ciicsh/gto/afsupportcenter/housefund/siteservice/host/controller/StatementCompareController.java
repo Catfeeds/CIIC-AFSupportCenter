@@ -4,6 +4,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFStatementCompar
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HFStatementCompareService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.FundStatementDetailDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.HFStatementCompareDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.NewStatementDTO;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -23,9 +24,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 @RestController
@@ -54,59 +61,57 @@ public class StatementCompareController extends BasicController<HFStatementCompa
 
     /**
      * 新建对账
+     *
      * @param file
      * @return
      */
-    @PostMapping("/addStatement")
-    public JsonResult<Boolean> addStatement(@RequestParam("file") MultipartFile file){
+    @PostMapping(value = "/addStatement")
+    public JsonResult<Boolean> addStatement(NewStatementDTO newStatement, MultipartFile file) {
         try {
-            BufferedOutputStream out = new BufferedOutputStream(
-                new FileOutputStream(new File(file.getOriginalFilename())));
-            out.write(file.getBytes());
-            out.flush();
-            out.close();
-            //TODO: 对账文件导入
-
-
+            business.addStatement(newStatement, file);
         }
-        catch (FileNotFoundException e) {
-            return JsonResultKit.of(500,"上传失败," + e.getMessage(),false);
-        } catch (IOException e) {
-            return JsonResultKit.of(500,"上传失败," + e.getMessage(),false);
+        catch (Exception e) {
+            return JsonResultKit.ofError(e.getMessage());
         }
-        return JsonResultKit.of(0,"上传成功",true);
+
+        return JsonResultKit.of(0, "添加对账单成功", true);
     }
 
     /**
      * 删除对账单记录
+     *
      * @param statementId
      * @return
      */
-    @GetMapping("/delStatement")
-    public JsonResult<Boolean> delStatement(@PathVariable("statementId") long statementId){
-        return JsonResultKit.of(0,"上传成功",true);
+    @GetMapping("/delStatement/{statementId}")
+    public JsonResult<Boolean> delStatement(@PathVariable("statementId") long statementId) {
+        Boolean result = business.delStatement(statementId) > 0;
+        return JsonResultKit.of(0, result ? "删除成功" : "删除失败", result);
     }
 
     /**
      * 获取对账单记录详情
+     *
      * @param statementId
      * @return
      */
-    @GetMapping("/getStatementDetail")
-    public JsonResult<FundStatementDetailDTO> getStatementDetail(@PathVariable("statementId") long statementId){
-        FundStatementDetailDTO result = new FundStatementDetailDTO();
-        return JsonResultKit.of(0,"上传成功",result);
+    @GetMapping("/getStatementDetail/{statementId}")
+    public JsonResult<FundStatementDetailDTO> getStatementDetail(@PathVariable("statementId") long statementId) {
+        FundStatementDetailDTO result = business.getStatementDetail(statementId);
+
+        return JsonResultKit.of(0, "获取对账单详情成功", result);
 
     }
 
     /**
      * 执行对账
+     *
      * @param statementId
      * @return
      */
-    @GetMapping("/execStatement")
-    public JsonResult<Boolean> execStatementDetail(@PathVariable("statementId") long statementId){
-        return JsonResultKit.of(0,"对账成功",true);
+    @GetMapping("/execStatement/{statementId}")
+    public JsonResult<Boolean> execStatementDetail(@PathVariable("statementId") long statementId) {
+        return JsonResultKit.of(0, "对账成功", true);
 
     }
 

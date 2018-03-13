@@ -124,7 +124,11 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
          }
              //任务单参考信息 用退工
              AmEmpTaskDTO amEmpTaskDTO = amEmpTaskOfSsService.queryReworkInfo(empTaskId);
-             dto.setAmEmpTaskDTO(null==amEmpTaskDTO?new AmEmpTaskDTO():amEmpTaskDTO);
+        if(amEmpTaskDTO==null){
+            amEmpTaskDTO=new AmEmpTaskDTO();
+            amEmpTaskDTO.setTaskStatus(1);//设置默认状态
+        }
+             dto.setAmEmpTaskDTO(amEmpTaskDTO);
 
         //查询该雇员是否还有其他已办理或者未办理的任务
        EntityWrapper<SsEmpTask> ew =  new EntityWrapper<SsEmpTask>();

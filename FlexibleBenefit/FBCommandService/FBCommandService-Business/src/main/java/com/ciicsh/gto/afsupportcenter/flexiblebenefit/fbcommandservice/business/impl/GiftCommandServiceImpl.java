@@ -6,6 +6,8 @@ import com.ciicsh.gt1.FileHandler;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.entity.po.GiftPO;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.business.GiftCommandService;
 import com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.dao.GiftCommandMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -21,6 +23,7 @@ import java.io.InputStream;
  */
 @Service
 public class GiftCommandServiceImpl extends ServiceImpl<GiftCommandMapper, GiftPO> implements GiftCommandService {
+    private static Logger logger = LoggerFactory.getLogger(GiftCommandServiceImpl.class);
 
     @Override
     public GiftPO findById(Integer id) {
@@ -45,7 +48,7 @@ public class GiftCommandServiceImpl extends ServiceImpl<GiftCommandMapper, GiftP
         try {
             filepath = FileHandler.uploadFile(stream);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.info(e.getMessage());
         }
         return filepath;
     }
