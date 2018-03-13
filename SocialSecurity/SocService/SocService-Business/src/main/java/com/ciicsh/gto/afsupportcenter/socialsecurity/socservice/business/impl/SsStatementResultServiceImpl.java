@@ -98,10 +98,11 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
                 result.setDiffHeadcount(ssStatementResultCompareBO.getDiffHeadcount());
 
                 //放入基本信息
-                if(diffHeadMap.get(result.getEmployeeId()).getDiffHeadcount()==1){
-                    result.setEmployeeId(ssStatementResultCompareBO.getEmployeeName());
-                }
-
+              //  if(diffHeadMap.get(result.getEmployeeId()).getDiffHeadcount()==1){
+                   // result.setEmployeeId(ssStatementResultCompareBO.getEmployeeName());
+               // }
+                result.setEmployeeId(ssStatementResultCompareBO.getEmployeeId());
+                result.setEmployeeName(ssStatementResultCompareBO.getEmployeeName());
                 result.setStatementId(statementId);
                 result.setActive(true);
                 result.setModifiedBy(null);
@@ -481,6 +482,7 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
                 if(!diffHeadMap.containsKey(employeeId)) {
                     //不存在的话直接加入map,
                     SsStatementResultCompareBO cbo=new SsStatementResultCompareBO();
+                    cbo.setEmployeeId(employeeId);
                     cbo.setDiffHeadcount(2);
                     diffHeadMap.put(employeeId,cbo);
                 }else{

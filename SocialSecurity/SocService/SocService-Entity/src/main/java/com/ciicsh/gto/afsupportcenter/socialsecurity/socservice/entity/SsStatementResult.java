@@ -31,6 +31,9 @@ public class SsStatementResult implements Serializable {
      */
 	@TableField("statement_id")
 	private Long statementId;
+
+    @TableField("employee_name")
+    private String employeeName;
     /**
      * 外键:雇员Id
      */
@@ -86,8 +89,11 @@ public class SsStatementResult implements Serializable {
      */
 	@TableField("diff_headcount")
 	private Integer diffHeadcount;
+
+
     /**
      * 是否有效
+
      */
 	@TableField("is_active")
 	private Boolean isActive;
@@ -256,6 +262,12 @@ public class SsStatementResult implements Serializable {
 	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
+    public String getEmployeeName() {
+        return employeeName;
+    }
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
 
 	@Override
 	public String toString() {
@@ -263,6 +275,7 @@ public class SsStatementResult implements Serializable {
 			", statementResultId=" + statementResultId +
 			", statementId=" + statementId +
 			", employeeId=" + employeeId +
+            ", employeeName=" + employeeName +
 			", changeType=" + changeType +
 			", changeTypeName=" + changeTypeName +
 			", projectType=" + projectType +
