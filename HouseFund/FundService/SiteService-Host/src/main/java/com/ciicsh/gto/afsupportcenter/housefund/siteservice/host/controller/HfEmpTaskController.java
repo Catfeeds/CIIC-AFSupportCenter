@@ -229,8 +229,9 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
         String title = "序号|1|||姓名|单边比例|单边比例 |||缴费金额|1010|身份证号码|出生日期|性别|单边金额|单边金额 ||缴费基数|||||||||-1|";
         String template = "%1$d|1|||{%2$s}.{employeeName}|%3$s|%4$s|||%5$s|1010|{%2$s}.{idNum}|{%2$s}.{birthday}|{%2$s}.{gender}|%6$s|%7$s||%8$s|||||||||-1|";
 
-        List<String> outputList = new ArrayList<>(selectedData.length);
+
         if (selectedData != null) {
+            List<String> outputList = new ArrayList<>(selectedData.length);
             Set<String> employeeIdSet = new HashSet<>();
             Wrapper<HfEmpTask> wrapper = new EntityWrapper<>();
             wrapper.in("emp_task_id", selectedData);
@@ -276,36 +277,46 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
                     roundTypesMap.put(hfEmpTask.getEmpTaskId(), roundTypes);
                     BigDecimal comRatio = hfEmpTask.getRatioCom();
                     BigDecimal empRatio = hfEmpTask.getRatioEmp();
-                    BigDecimal amount = hfEmpTask.getAmount();
+                    BigDecimal amount = CalculateSocialUtils.calculateByRoundType(hfEmpTask.getAmount(),
+                        CalculateSocialUtils.getRoundTypeInWeight(roundTypesMap.get(hfEmpTask.getEmpTaskId())[0], roundTypesMap.get(hfEmpTask.getEmpTaskId())[1]));
                     BigDecimal comAmount = amount.multiply(comRatio).divide(comRatio.add(empRatio), 3, BigDecimal.ROUND_HALF_UP);
                     BigDecimal empAmount = amount.multiply(comRatio).divide(comRatio.add(empRatio), 3, BigDecimal.ROUND_HALF_UP);
                     comAmount = CalculateSocialUtils.calculateByRoundType(comAmount, roundTypesMap.get(hfEmpTask.getEmpTaskId())[0]);
                     empAmount = CalculateSocialUtils.calculateByRoundType(empAmount, roundTypesMap.get(hfEmpTask.getEmpTaskId())[1]);
-                    outputList.add(String.format(template, i, hfEmpTask.getEmployeeId(), comRatio.toString(), empRatio.toString(), amount.toString(), comAmount.toString(), empAmount.toString(), hfEmpTask.getEmpBase().toString()));
+                    String comRatioStr = CalculateSocialUtils.digitInSimpleFormat(comRatio.multiply(BigDecimal.valueOf(100)));
+                    String empRatioStr = CalculateSocialUtils.digitInSimpleFormat(empRatio.multiply(BigDecimal.valueOf(100)));
+                    String baseAmount = CalculateSocialUtils.digitInSimpleFormat(hfEmpTask.getEmpBase());
+                    outputList.add(String.format(template, i, hfEmpTask.getEmployeeId(), comRatioStr, empRatioStr, amount.toString(), comAmount.toString(), empAmount.toString(), baseAmount));
                 }
             }
 
-            Wrapper<EmpEmployee> empWrapper = new EntityWrapper<>();
-            empWrapper.in("employee_id", employeeIdSet);
-            List<EmpEmployee> empList = empEmployeeService.selectList(empWrapper);
-
-            String employeeIdKey;
             writer.append(title);
-            writer.append("\r\n");
-            for (String output : outputList) {
-                for (EmpEmployee emp : empList) {
-                    employeeIdKey = "{" + emp.getEmployeeId() + "}";
-                    if (output.contains(employeeIdKey)) {
-                        output = output.replace(employeeIdKey + ".{employeeName}", emp.getEmployeeName())
-                            .replace(employeeIdKey + ".{idNum}", emp.getIdNum())
-                            .replace(employeeIdKey + ".{birthday}", emp.getBirthday().format(formatter))
-                            .replace(employeeIdKey + ".{gender}", (emp.getGender() != null && emp.getGender()) ? "01":"02");
-                        writer.append(output);
-                        writer.append("\r\n");
-                        break;
+            if (CollectionUtils.isNotEmpty(outputList)) {
+                if (!employeeIdSet.isEmpty()) {
+                    Wrapper<EmpEmployee> empWrapper = new EntityWrapper<>();
+                    empWrapper.in("employee_id", employeeIdSet);
+                    List<EmpEmployee> empList = empEmployeeService.selectList(empWrapper);
+
+                    writer.append("\r\n");
+                    String employeeIdKey;
+                    for (String output : outputList) {
+                        for (EmpEmployee emp : empList) {
+                            employeeIdKey = "{" + emp.getEmployeeId() + "}";
+                            if (output.contains(employeeIdKey)) {
+                                output = output.replace(employeeIdKey + ".{employeeName}", emp.getEmployeeName())
+                                    .replace(employeeIdKey + ".{idNum}", emp.getIdNum())
+                                    .replace(employeeIdKey + ".{birthday}", emp.getBirthday().format(formatter))
+                                    .replace(employeeIdKey + ".{gender}", (emp.getGender() != null && emp.getGender()) ? "01" : "02");
+                                writer.append(output);
+                                writer.append("\r\n");
+                                break;
+                            }
+                        }
                     }
                 }
             }
+        } else {
+            writer.append(title);
         }
 
         String fileName = URLEncoder.encode("开户文件.txt", "UTF-8");

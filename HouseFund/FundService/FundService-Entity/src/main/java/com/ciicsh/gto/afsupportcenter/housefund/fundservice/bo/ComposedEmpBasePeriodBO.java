@@ -4,6 +4,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfArchiveBase
 import lombok.Data;
 
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,5 +15,5 @@ import java.util.List;
 public class ComposedEmpBasePeriodBO {
     YearMonth startMonth;
     YearMonth endMonth;
-    List<HfArchiveBasePeriod> containsHfArchiveBasePeriods;
+    List<HfArchiveBasePeriod> containsHfArchiveBasePeriods = new ArrayList<>();
 }
