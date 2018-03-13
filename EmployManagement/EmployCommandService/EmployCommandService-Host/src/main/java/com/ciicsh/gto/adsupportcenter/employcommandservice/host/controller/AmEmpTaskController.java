@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.CommonApiUtils;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.ReasonUtil;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.employSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
@@ -49,6 +51,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
     @Autowired
     private CommonApiUtils employeeInfoProxy;
+
 
 
     /**
@@ -154,12 +157,21 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         //用工信息
         List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(param);
         //用工档案
-        List<AmArchiveBO> amArchiveBOList = null;
-
+        AmArchiveBO amArchiveBO = new AmArchiveBO();
         if(null!=resultEmployList&&resultEmployList.size()>0)
         {
             params.put("employmentId",resultEmployList.get(0).getEmploymentId());
-            amArchiveBOList = amArchiveService.queryAmArchiveList(params);
+            List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchiveList(params);
+            if(null!=amArchiveBOList&&amArchiveBOList.size()>0)
+            {
+                amArchiveBO = amArchiveBOList.get(0);
+                if(!StringUtil.isEmpty(amArchiveBO.getEmployFeedback()))
+                {
+                   if(!"7".equals(amArchiveBO.getEmployFeedback())){
+                       amArchiveBO.setIsEnd(0);
+                   }
+                }
+            }
         }
 
         //用工备注
@@ -175,14 +187,13 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         resultMap.put("materialList",empMaterialList);
 
+        resultMap.put("amArchaiveBo",amArchiveBO);
+
         if(null!= resultEmployList&&resultEmployList.size()>0)
         {
             resultMap.put("amEmploymentBO",resultEmployList.get(0));
         }
-        if(null!=amArchiveBOList&&amArchiveBOList.size()>0)
-        {
-            resultMap.put("amArchaiveBo",amArchiveBOList.get(0));
-        }
+
         if(null!=amRemarkBOPageRows)
         {
             resultMap.put("amRemarkBo",amRemarkBOPageRows);
@@ -233,14 +244,31 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             entity.setModifiedTime(now);
             entity.setModifiedBy("sys");
         }
+        AmEmpTask amEmpTask = null;
         if(!StringUtil.isEmpty(entity.getEmployFeedback())){
             AmEmployment amEmployment = amEmploymentService.selectById(entity.getEmploymentId());
-            AmEmpTask amEmpTask = business.selectById(amEmployment.getEmpTaskId());
+            amEmpTask = business.selectById(amEmployment.getEmpTaskId());
             amEmpTask.setTaskStatus(Integer.parseInt(entity.getEmployFeedback()));
             business.insertOrUpdate(amEmpTask);
         }
 
         boolean result = amArchiveService.insertOrUpdate(entity);
+        if(result&&!StringUtil.isEmpty(entity.getEmployFeedback()))
+        {
+            /**
+             * u盘外借 不会调用complateTask,只发kafaka消息
+             */
+            if("7".equals(entity.getEmployFeedback()))
+            {
+
+            }else{
+                Map<String,Object> variables = new HashMap<>();
+                variables.put("status", ReasonUtil.getYgResult(entity.getEmployFeedback()));
+                variables.put("remark",ReasonUtil.getYgfk(entity.getEmployFeedback()));
+                TaskCommonUtils.completeTask(amEmpTask.getTaskId(),employeeInfoProxy,variables);
+            }
+
+        }
         return JsonResultKit.of(result);
     }
 
