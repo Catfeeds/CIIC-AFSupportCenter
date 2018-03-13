@@ -202,8 +202,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
             }
             amEmpTask.setTaskFormContent(JSON.toJSONString(taskMsgDTO.getVariables()));
-            amEmpTask.setOutDate(employeeCompany.getOutDate());
-            if(null!=employeeCompany.getOutReason()){
+            amEmpTask.setOutDate(employeeCompany==null?null:employeeCompany.getOutDate());
+            if(null!=employeeCompany&&null!=employeeCompany.getOutReason()){
                 amEmpTask.setOutReason(ReasonUtil.getReasonOut(employeeCompany.getOutReason().toString()));
             }else{
                 logger.info("outReason is null "+"  MissionId is "+taskMsgDTO.getMissionId());
