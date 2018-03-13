@@ -26,6 +26,20 @@ public class UninsuredMedicalAuditBO {
     @TableField("employee_id")
     private String employeeId;
     /**
+     * 雇员姓名
+     */
+    private String employeeName;
+    /**
+     * 公司编号
+     */
+    @TableField("company_id")
+    private String companyId;
+    /**
+     * 公司名称
+     */
+    @TableField("company_name")
+    private String companyName;
+    /**
      * 款项类型:1-医疗费,2-体检费用,3-住院补贴,4-大额理赔款,5-其他
      */
     @TableField("money_type")
@@ -153,6 +167,30 @@ public class UninsuredMedicalAuditBO {
      */
     @TableField("audit_date")
     private Date auditDate;
+
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
 
     public Integer getUmAcceptanceId() {
         return umAcceptanceId;
