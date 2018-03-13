@@ -7,6 +7,9 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTa
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl.SsEmpTaskServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.EmployeeMonthlyDataProxy;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeMonthlyDataProxyDTO;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyProxyDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -73,6 +77,22 @@ SsEmpTaskFrontService ssEmpTaskFrontService;
         BigDecimal d;
         List<Map<String,BigDecimal>> list=empTaskService.fetchInjuryRatio(id ,"201712");
         System.out.println(list.size());
+    }
+
+    @Autowired
+    private EmployeeMonthlyDataProxy employeeMonthlyDataProxy;
+
+    @Autowired
+    com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy PayapplyServiceProxy;
+
+    @RequestMapping(value = "/mytest")
+    public  void mytest() {
+//        PayApplyProxyDTO aaa = new PayApplyProxyDTO();
+//        Object aaaaaa = PayapplyServiceProxy.addShSocialInsurancePayApply(aaa);
+
+        EmployeeMonthlyDataProxyDTO a = new EmployeeMonthlyDataProxyDTO();
+        Object o = employeeMonthlyDataProxy.employeeCanPay(a);
+     System.out.println("=============");
     }
 
 }

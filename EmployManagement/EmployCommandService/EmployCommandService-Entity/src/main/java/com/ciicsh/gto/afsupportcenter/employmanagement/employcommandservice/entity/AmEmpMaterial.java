@@ -91,6 +91,17 @@ public class AmEmpMaterial implements Serializable {
     @TableField("submit_man")
     private  String submitMan;
 
+    @TableField("operate_type")
+    private Integer operateType;
+
+    public Integer getOperateType() {
+        return operateType;
+    }
+
+    public void setOperateType(Integer operateType) {
+        this.operateType = operateType;
+    }
+
     public String getRejectReason() {
         return rejectReason;
     }

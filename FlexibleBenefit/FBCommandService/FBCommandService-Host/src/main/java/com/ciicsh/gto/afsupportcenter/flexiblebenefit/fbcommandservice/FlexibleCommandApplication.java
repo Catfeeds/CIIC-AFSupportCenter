@@ -11,7 +11,7 @@ import org.springframework.cloud.netflix.feign.EnableFeignClients;
  */
 @EnableDiscoveryClient
 @EnableFeignClients({"com.ciicsh.gto.sheetservice.api"})
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.ciicsh.gt1","com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice"})
 @MapperScan("com.ciicsh.gto.afsupportcenter.flexiblebenefit.fbcommandservice.dao")
 public class FlexibleCommandApplication {
 

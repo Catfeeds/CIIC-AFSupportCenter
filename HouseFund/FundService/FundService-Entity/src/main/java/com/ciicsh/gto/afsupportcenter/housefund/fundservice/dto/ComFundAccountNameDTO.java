@@ -13,6 +13,11 @@ public class ComFundAccountNameDTO
     private String comAccountName;
 
     /**
+     * 公积金账号
+     */
+    private String hfComAccount;
+
+    /**
      * 企业账户类型，1 大库 2 外包 3 独立户
      */
     private Byte hfAccountType;
@@ -32,6 +37,14 @@ public class ComFundAccountNameDTO
 
     public void setComAccountName(String comAccountName) {
         this.comAccountName = comAccountName;
+    }
+
+    public String getHfComAccount() {
+        return hfComAccount;
+    }
+
+    public void setHfComAccount(String hfComAccount) {
+        this.hfComAccount = hfComAccount;
     }
 
     public Byte getHfAccountType() {

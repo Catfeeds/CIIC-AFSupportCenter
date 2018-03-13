@@ -66,28 +66,15 @@ public class StatementCompareController extends BasicController<HFStatementCompa
      * @return
      */
     @PostMapping(value = "/addStatement")
-    public JsonResult<Boolean> addStatement(NewStatementDTO newStatement, MultipartFile file){
+    public JsonResult<Boolean> addStatement(NewStatementDTO newStatement, MultipartFile file) {
         try {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSSS");
-            LocalDateTime ldt = LocalDateTime.now();
-            String strDateTime = dtf.format(ldt);
-            String filePath = strDateTime + new File(file.getOriginalFilename());
-            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(new File(filePath)));
-            out.write(file.getBytes());
-            out.flush();
-            out.close();
-
-            business.addStatement(filePath);
-
-        } catch (FileNotFoundException e) {
-            return JsonResultKit.of(500, "上传失败," + e.getMessage(), false);
-        } catch (IOException e) {
-            return JsonResultKit.of(500, "上传失败," + e.getMessage(), false);
-        } catch (Exception e) {
-            return JsonResultKit.ofError("导入文件失败");
+            business.addStatement(newStatement, file);
+        }
+        catch (Exception e) {
+            return JsonResultKit.ofError(e.getMessage());
         }
 
-        return JsonResultKit.of(0, "上传成功", true);
+        return JsonResultKit.of(0, "添加对账单成功", true);
     }
 
     /**
