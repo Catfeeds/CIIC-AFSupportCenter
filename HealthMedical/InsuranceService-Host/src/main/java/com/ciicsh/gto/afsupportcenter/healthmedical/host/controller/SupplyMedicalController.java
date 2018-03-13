@@ -74,7 +74,7 @@ public class SupplyMedicalController {
     public Result export(SupplyMedicalAcceptanceDTO supplyMedicalAcceptanceDTO, HttpServletResponse response) {
 
         SupplyMedicalAcceptance params = new SupplyMedicalAcceptance();
-        BeanUtils.copyProperties(supplyMedicalAcceptanceDTO,params);
+        BeanUtils.copyProperties(supplyMedicalAcceptanceDTO, params);
         List<SupplyMedicalAcceptance> list = supplyMedicalAcceptanceService.selectAll(params);
 
         List<SupplyMedicalAcceptanceExcelDTO> dtos = new ArrayList<>();
@@ -218,6 +218,7 @@ public class SupplyMedicalController {
 
     /**
      * 同步智灵通受理单、发票数据
+     * 同步时间--每两小时同步一次
      *
      * @return
      */
@@ -234,6 +235,8 @@ public class SupplyMedicalController {
 
     /**
      * 定时更新数据
+     * 补充医疗理赔受理单状态定时更新
+     * 更新数据时间--凌晨2点
      *
      * @return
      */
