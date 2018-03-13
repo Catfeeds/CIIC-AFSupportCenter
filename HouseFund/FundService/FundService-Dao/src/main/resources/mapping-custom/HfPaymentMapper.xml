@@ -16,7 +16,7 @@
     </select>
 
     <select id="getPaymentEmpList" resultMap="PaymentEmpDtoResultMap">
-        SELECT emp.employee_id,emp.employee_name,pc.company_id,hp.payment_month,pc.total_pay_amount,mc.emp_payment_status
+        SELECT emp.employee_id,emp.employee_name,pc.company_id,mc.ss_month_belong AS payment_month,pc.total_pay_amount,mc.emp_payment_status
         FROM hf_month_charge mc
         INNER JOIN emp_employee emp ON mc.employee_id=mc.employee_id
         INNER JOIN hf_emp_archive ea ON ea.emp_archive_id=mc.emp_archive_id

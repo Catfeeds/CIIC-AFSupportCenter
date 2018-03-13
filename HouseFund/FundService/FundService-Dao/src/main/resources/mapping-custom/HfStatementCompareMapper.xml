@@ -52,8 +52,8 @@
         DELETE a.*, b.*, c.*
         FROM
             hf_statement_compare a
-        INNER JOIN hf_statement_compare_imp b ON a.statement_compare_id = b.statement_compare_id
-        INNER JOIN hf_statement_compare_result c ON b.statement_compare_id = c.statement_compare_id
+        LEFT JOIN hf_statement_compare_imp b ON a.statement_compare_id = b.statement_compare_id
+        LEFT JOIN hf_statement_compare_result c ON a.statement_compare_id = c.statement_compare_id
         WHERE
             a.statement_compare_id = #{statementId};
     </delete>
@@ -78,5 +78,9 @@
         WHERE b.statement_compare_id=#{statementId};
 
     </select>
+
+    <delete id="delStatementResult">
+        DELETE FROM hf_statement_compare_result WHERE statement_compare_id=#{statementId}
+    </delete>
 
 </mapper>

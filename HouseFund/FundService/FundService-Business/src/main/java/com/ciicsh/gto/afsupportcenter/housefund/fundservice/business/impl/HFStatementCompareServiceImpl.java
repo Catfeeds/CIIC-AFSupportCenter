@@ -79,8 +79,8 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
         for(NewStatementExcelItemDTO item : lst) {
             HfStatementCompareImpPO po2 = new HfStatementCompareImpPO();
             po2.setStatementCompareId(statementId);
-            //TODO: 取comAccount 公积金客户账号
-            po2.setComAccount("");
+            po2.setComAccount(newStatement.getHfComAccount());
+            po2.setEmpAccount(item.getPersonalAccount());
             po2.setEmpName(item.getEmpName());
             po2.setEmpCardNum(item.getIdNum());
             po2.setMonthlyAmount(BigDecimal.valueOf(item.getMonthlyAmount()));

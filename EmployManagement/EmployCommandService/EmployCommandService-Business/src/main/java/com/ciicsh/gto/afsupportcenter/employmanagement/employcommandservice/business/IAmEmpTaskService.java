@@ -42,4 +42,6 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
 
     List<employSearchExportOpt>  queryAmEmpTaskList(AmEmpTaskBO amEmpTaskBO);
 
+    AmEmpTaskBO queryAmEmpTaskBO(Object empCompanyId);
+
 }

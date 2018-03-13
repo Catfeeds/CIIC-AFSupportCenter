@@ -47,7 +47,7 @@ public interface HfComAccountService extends IService<HfComAccount> {
      * @param hfAccountType  1 大库 2 外包 3 独立户
      * @return
      */
-    List<ComFundAccountNamePO> getComFundAccountNameList(String comAccountName,Byte hfAccountType);
+    List<ComFundAccountNamePO> getComFundAccountNameList(String comAccountName,Byte hfType,Byte hfAccountType);
 
     /**
      * 获取企业公积金账户详情信息

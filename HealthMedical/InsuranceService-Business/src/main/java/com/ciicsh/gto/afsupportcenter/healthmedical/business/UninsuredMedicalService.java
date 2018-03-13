@@ -53,4 +53,11 @@ public interface UninsuredMedicalService extends IService<UninsuredMedical> {
      * @return
      */
     List<EmpMemberBO> queryEmpMember(String employeeId);
+
+    /**
+     * 条件查询所有受理单
+     * @param uninsuredMedicalDTO
+     * @return
+     */
+    List<UninsuredMedical> selectAll(UninsuredMedicalDTO uninsuredMedicalDTO);
 }

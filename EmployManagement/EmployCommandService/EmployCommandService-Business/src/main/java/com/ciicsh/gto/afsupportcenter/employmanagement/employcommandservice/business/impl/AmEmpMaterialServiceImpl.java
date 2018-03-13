@@ -10,6 +10,9 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by zhangzhiwen on 2018/1/26.
  */
@@ -20,5 +23,10 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
     public PageRows<AmEmpMaterialBO> queryAmEmpMaterial(PageInfo pageInfo) {
         AmEmpMaterialBO amEmpMaterialBO = pageInfo.toJavaObject(AmEmpMaterialBO.class);
         return PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmEmpMaterial(amEmpMaterialBO));
+    }
+
+    @Override
+    public List<AmEmpMaterialBO> queryAmEmpMaterialList(AmEmpMaterialBO amEmpMaterialBO) {
+        return baseMapper.queryAmEmpMaterial(amEmpMaterialBO);
     }
 }

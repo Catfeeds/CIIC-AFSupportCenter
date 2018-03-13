@@ -90,7 +90,10 @@
           AND T1.is_active = '1'
           AND T1.statement_id = #{statementId,jdbcType=VARCHAR}
     </select>
-
+    <!--<select id="fetchEmpInfo" resultType="Integer">-->
+        <!--SELECT count(1) FROM ss_emp_archive ea INNER JOIN emp_employee emp ON ea.employee_id=emp.employee_id-->
+        <!--where ea.ss_serial='1' and emp.employee_name ='Z001'-->
+    <!--</select>-->
 
     <select id="statementExportQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.StatementExportArgs" resultMap="StatementExportMap">
         SELECT
