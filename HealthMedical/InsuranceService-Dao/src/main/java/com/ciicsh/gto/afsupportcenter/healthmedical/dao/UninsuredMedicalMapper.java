@@ -95,4 +95,12 @@ public interface UninsuredMedicalMapper extends BaseMapper<UninsuredMedical> {
      * @return
      */
     List<EmpBankRefundBO> selectBankRefund();
+
+    /**
+     * 查询受理单列表数据
+     *
+     * @param entity
+     * @return
+     */
+    List<UninsuredMedical> selectAll(UninsuredMedicalDTO entity);
 }

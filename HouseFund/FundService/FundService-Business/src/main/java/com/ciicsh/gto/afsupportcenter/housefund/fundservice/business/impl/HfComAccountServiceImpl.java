@@ -52,7 +52,8 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
     @Override
     public List<ComFundAccountPO> getComFundAccountList(GetComFundAccountListRequestDTO request) {
         return baseMapper.getComFundAccountList(request.getCompanyId(), request.getCompanyName(), request.getHfType(),
-            request.getComHfMonth(), request.getAccountNumber());
+                request.getComHfMonth(), request.getAccountNumber());
+
     }
 
     /**
@@ -72,12 +73,13 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
      * 根据企业账户名称和账户类型筛选公积金账户
      *
      * @param comAccountName
+     * @param hfType 1 基本公积金、2 补充公积金
      * @param hfAccountType  1 大库 2 外包 3 独立户
      * @return
      */
     @Override
-    public List<ComFundAccountNamePO> getComFundAccountNameList(String comAccountName, Byte hfAccountType) {
-        return baseMapper.getComFundAccountNameList(comAccountName,hfAccountType);
+    public List<ComFundAccountNamePO> getComFundAccountNameList(String comAccountName, Byte hfType,Byte hfAccountType) {
+        return baseMapper.getComFundAccountNameList(comAccountName,hfType,hfAccountType);
     }
 
     /**
