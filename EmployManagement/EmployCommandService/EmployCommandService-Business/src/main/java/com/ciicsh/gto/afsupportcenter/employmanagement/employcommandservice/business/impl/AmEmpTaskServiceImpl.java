@@ -120,16 +120,12 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         amEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
         //TODO 调用吴敬磊接口传入taskMsgDTO.getMissionId()返回数据
         AfEmployeeInfoDTO dto = null;
-
-        Map<String,Object> param = new HashMap<>();
-
         if(StringUtil.isEmpty(taskMsgDTO.getVariables().get("empCompanyId")))
         {
             logger.info("empCompanyId is null ...");
             return false;
         }
-        param.put("empCompanyId",taskMsgDTO.getVariables().get("empCompanyId"));
-        AmEmpTaskBO bo = baseMapper.selectEmployId(param);
+        AmEmpTaskBO bo = this.queryAmEmpTaskBO(taskMsgDTO.getVariables().get("empCompanyId"));
 
         if(null!=bo){
             amEmpTask.setCompanyId(bo.getCompanyId());
@@ -152,6 +148,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 AmEmpMaterial amEmpMaterial = new AmEmpMaterial();
                 amEmpMaterial.setMaterialName(str);
                 amEmpMaterial.setEmployeeId(bo.getEmployeeId());
+                amEmpMaterial.setOperateType(1);
                 amEmpMaterial.setSubmitMan("sys");
                 amEmpMaterial.setActive(true);
                 amEmpMaterial.setCreatedBy("sys");
@@ -190,17 +187,20 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         try {
             dto = employeeInfoProxy.callInf(taskMsgDTO);
             AfFullEmployeeDTO empDTO  = dto.getEmployee();
-            AfEmpAgreementDTO afEmpAgreementDTO = dto.getNowAgreement();
             AfEmployeeCompanyDTO employeeCompany = dto.getEmployeeCompany();
-            if(null!=empDTO){
+            if(null!=empDTO&&null!=employeeCompany){
                 amEmpTask.setEmployeeId(empDTO.getEmployeeId());
+                amEmpTask.setCompanyId(employeeCompany.getCompanyId());
             }else{
                 logger.info("AfFullEmployeeDTO is null "+" MissionId is "+taskMsgDTO.getMissionId());
-                if(null!=afEmpAgreementDTO){
-                    amEmpTask.setEmployeeId(afEmpAgreementDTO.getEmployeeId());
+                //自己手动的从数据库拉取employeeId,接口过来数据为空
+                AmEmpTaskBO bo = this.queryAmEmpTaskBO(taskMsgDTO.getVariables().get("empCompanyId"));
+                if(null!=bo){
+                    amEmpTask.setCompanyId(bo.getCompanyId());
+                    amEmpTask.setEmployeeId(bo.getEmployeeId());
                 }
+
             }
-            amEmpTask.setCompanyId(employeeCompany.getCompanyId());
             amEmpTask.setTaskFormContent(JSON.toJSONString(taskMsgDTO.getVariables()));
             amEmpTask.setOutDate(employeeCompany.getOutDate());
             if(null!=employeeCompany.getOutReason()){
@@ -348,6 +348,14 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     @Override
     public List<employSearchExportOpt> queryAmEmpTaskList(AmEmpTaskBO amEmpTaskBO) {
         return  baseMapper.queryAmEmpTaskList(amEmpTaskBO);
+    }
+
+    @Override
+    public AmEmpTaskBO queryAmEmpTaskBO(Object empCompanyId) {
+        Map<String,Object> param = new HashMap<>();
+        param.put("empCompanyId",empCompanyId);
+        AmEmpTaskBO bo = baseMapper.selectEmployId(param);
+        return  bo;
     }
 
 

@@ -2,7 +2,6 @@ package com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.CommonApiUtils;
@@ -141,6 +140,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         params.put("employeeId",amTaskParamBO.getEmployeeId());
         params.put("remarkType",amTaskParamBO.getRemarkType());
         params.put("companyId",amTaskParamBO.getCompanyId());
+        params.put("operateType",new Integer(1));
         pageInfo.setParams(params);
 
         //用工材料

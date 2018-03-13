@@ -6,9 +6,14 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.enti
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by zhangzhiwen on 2018/1/26.
  */
 public interface IAmEmpMaterialService extends IService<AmEmpMaterial> {
     PageRows<AmEmpMaterialBO> queryAmEmpMaterial(PageInfo pageInfo);
+
+    List<AmEmpMaterialBO> queryAmEmpMaterialList(AmEmpMaterialBO amEmpMaterialBO);
 }

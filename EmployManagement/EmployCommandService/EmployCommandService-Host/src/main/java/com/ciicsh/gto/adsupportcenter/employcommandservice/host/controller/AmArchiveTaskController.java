@@ -178,12 +178,14 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         JSONObject params = new JSONObject();
         params.put("employeeId",amTaskParamBO.getEmployeeId());
         params.put("remarkType",amTaskParamBO.getRemarkType());
+        params.put("operateType",new Integer(2));
         pageInfo.setParams(params);
 
         Map<String,Object>  param = new HashMap<>();
         param.put("employmentId",amTaskParamBO.getEmploymentId());
         param.put("employeeId",amTaskParamBO.getEmployeeId());
         param.put("companyId",amTaskParamBO.getCompanyId());
+
         //用工档案
         List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchiveList(param);
         //档案备注
@@ -275,8 +277,10 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         }
 
         if(null!=result&&result.getRows().size()>0){
-            resultMap.put("materialList",result);
+            resultMap.put("materialList",result.getRows());
         }
+
+
 
         return  JsonResultKit.of(resultMap);
     }
@@ -311,6 +315,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         List<AmEmpMaterial>  data = new ArrayList<AmEmpMaterial>();
         for(AmEmpMaterial bo:list)
         {
+            bo.setOperateType(2);
             LocalDateTime now = LocalDateTime.now();
             bo.setCreatedTime(now);
             bo.setModifiedTime(now);
