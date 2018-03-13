@@ -57,7 +57,7 @@ public class SsMonthEmpChangeDetailServiceImpl extends ServiceImpl<SsMonthEmpCha
             return detailDTOList;
         }
         //用于合并的Map
-        Map<String,SsMonthEmpChangeDetailBO> dealMap = new HashMap<>(detailDTOList.size());
+        Map<String,SsMonthEmpChangeDetailBO> dealMap = new LinkedHashMap<>(detailDTOList.size());
         //用于返回的
         List<SsMonthEmpChangeDetailBO> resultDTOList = new ArrayList<>();
         //循环处理
