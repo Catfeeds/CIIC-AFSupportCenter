@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementResultBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementResultCompareBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsMonthEmpChangeDetailMapper;
@@ -76,24 +77,24 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
 
 
         //取出汇总结果
-        List<SsMonthEmpChangeDetail> changeDetailPOList = ssMonthEmpChangeDetailMapper.serachMonthEmpChangeDetailPOByStatementId(statementId);
+        List<SsMonthEmpChangeDetailBO> changeDetailBOList = ssMonthEmpChangeDetailMapper.serachMonthEmpChangeDetailPOByStatementId(statementId);
 
         //将汇总结果进行拆解
-        dealChangeDetailToResultModle(resultPOMap,changeDetailPOList);
+        dealChangeDetailToResultModle(resultPOMap,changeDetailBOList);
 
 
         //对比数据产生对比结果
         List<SsStatementResult> resultPoList = calculateResultDiff(resultPOMap);
 
         //统计差异人头数
-        Map<String,SsStatementResultCompareBO> diffHeadMap = calculateDiffHead(impDetailPOList,changeDetailPOList);
+        Map<String,SsStatementResultCompareBO> diffHeadMap = calculateDiffHead(impDetailPOList,changeDetailBOList);
 
 
         //批量插入对比结果
         if(Optional.ofNullable(resultPoList).isPresent()){
             for(int i = 0;i < resultPoList.size();i++){
                 SsStatementResult result = resultPoList.get(i);
-                SsStatementResultCompareBO ssStatementResultCompareBO=diffHeadMap.get(result.getEmployeeId());
+                SsStatementResultCompareBO ssStatementResultCompareBO=diffHeadMap.get(result.getSsSerial());
                 //放入人头差异
                 result.setDiffHeadcount(ssStatementResultCompareBO.getDiffHeadcount());
 
@@ -132,10 +133,10 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
             Map<String,String> map = new HashMap<>();
             int diffSumByEmp = 0;
             for(int i = 0;i < resultPoList.size();i++){
-                String empId = resultPoList.get(i).getEmployeeId();
-                if(!map.containsKey(empId)){
+                String ssSerial = resultPoList.get(i).getSsSerial();
+                if(!map.containsKey(ssSerial)){
                     diffSumByEmp++;
-                    map.put(empId,null);
+                    map.put(ssSerial,null);
                 }
              }
             ssStatement.setDiffSumByEmp(diffSumByEmp);
@@ -168,8 +169,8 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
             if(BigDecimal.ZERO.compareTo(impPO.getEmpAmount()) != 0){
                 //费用不为0则拆出一份对比节点
                 SsStatementResult resultPO;
-                //key的结构  employeeId-changeType-ssType-projectType
-                String key = impPO.getEmployeeId() + "-" + impPO.getChangeType() + "-" + impPO.getSsType() + "-" + "1";
+                //key的结构  ssSerial-changeType-ssType-projectType
+                String key = impPO.getSsSerial() + "-" + impPO.getChangeType() + "-" + impPO.getSsType() + "-" + "1";
                 //从map中取出节点,如果没有则new一个
                 if(resultPOMap.containsKey(key)){
                     resultPO = resultPOMap.get(key);
@@ -191,8 +192,8 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
             if(BigDecimal.ZERO.compareTo(impPO.getComAmount()) != 0){
                 //费用不为0则拆出一份对比节点
                 SsStatementResult resultPO;
-                //key的结构  employeeId-changeType-ssType-projectType
-                String key = impPO.getEmployeeId() + "-" + impPO.getChangeType() + "-" + impPO.getSsType() + "-" + "2";
+                //key的结构  ssSerial-changeType-ssType-projectType
+                String key = impPO.getSsSerial() + "-" + impPO.getChangeType() + "-" + impPO.getSsType() + "-" + "2";
                 //从map中取出节点,如果没有则new一个
                 if(resultPOMap.containsKey(key)){
                     resultPO = resultPOMap.get(key);
@@ -214,8 +215,8 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
             if(BigDecimal.ZERO.compareTo(impPO.getEmpCompensateAmount()) != 0){
                 //费用不为0则拆出一份对比节点
                 SsStatementResult resultPO;
-                //key的结构  employeeId-changeType-ssType-projectType
-                String key = impPO.getEmployeeId() + "-" + impPO.getChangeType() + "-" + impPO.getSsType() + "-" + "3";
+                //key的结构  ssSerial-changeType-ssType-projectType
+                String key = impPO.getSsSerial() + "-" + impPO.getChangeType() + "-" + impPO.getSsType() + "-" + "3";
                 //从map中取出节点,如果没有则new一个
                 if(resultPOMap.containsKey(key)){
                     resultPO = resultPOMap.get(key);
@@ -237,8 +238,8 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
             if(BigDecimal.ZERO.compareTo(impPO.getComCompensateAmount()) != 0){
                 //费用不为0则拆出一份对比节点
                 SsStatementResult resultPO;
-                //key的结构  employeeId-changeType-ssType-projectType
-                String key = impPO.getEmployeeId() + "-" + impPO.getChangeType() + "-" + impPO.getSsType() + "-" + "4";
+                //key的结构  ssSerial-changeType-ssType-projectType
+                String key = impPO.getSsSerial() + "-" + impPO.getChangeType() + "-" + impPO.getSsType() + "-" + "4";
                 //从map中取出节点,如果没有则new一个
                 if(resultPOMap.containsKey(key)){
                     resultPO = resultPOMap.get(key);
@@ -260,8 +261,8 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
             if(BigDecimal.ZERO.compareTo(impPO.getOnePayment()) != 0){
                 //费用不为0则拆出一份对比节点
                 SsStatementResult resultPO;
-                //key的结构  employeeId-changeType-ssType-projectType
-                String key = impPO.getEmployeeId() + "-" + impPO.getChangeType() + "-" + impPO.getSsType() + "-" + "5";
+                //key的结构  ssSerial-changeType-ssType-projectType
+                String key = impPO.getSsSerial() + "-" + impPO.getChangeType() + "-" + impPO.getSsType() + "-" + "5";
                 //从map中取出节点,如果没有则new一个
                 if(resultPOMap.containsKey(key)){
                     resultPO = resultPOMap.get(key);
@@ -293,19 +294,19 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
      * @param changeDetailPOList 系统结果List
      * @return dealImpDetailToResultModle 对账单主表ID
      */
-    private void dealChangeDetailToResultModle(Map<String,SsStatementResult> resultPOMap, List<SsMonthEmpChangeDetail> changeDetailPOList){
+    private void dealChangeDetailToResultModle(Map<String,SsStatementResult> resultPOMap, List<SsMonthEmpChangeDetailBO> changeDetailPOList){
         if(!Optional.ofNullable(changeDetailPOList).isPresent()){
             return;
         }
         //循环拆解
         for(int i = 0;i < changeDetailPOList.size(); i++){
-            SsMonthEmpChangeDetail changePO = changeDetailPOList.get(i);
+            SsMonthEmpChangeDetailBO changePO = changeDetailPOList.get(i);
             //个人缴费部分
             if(BigDecimal.ZERO.compareTo(changePO.getEmpAmount()) != 0){
                 //费用不为0则拆出一份对比节点
                 SsStatementResult resultPO;
-                //key的结构  employeeId-changeType-ssType-projectType
-                String key = changePO.getEmployeeId() + "-" + changePO.getChangeType() + "-" + changePO.getSsType() + "-" + "1";
+                //key的结构  ssSerial-changeType-ssType-projectType
+                String key = changePO.getSsSerial() + "-" + changePO.getChangeType() + "-" + changePO.getSsType() + "-" + "1";
                 //从map中取出节点,如果没有则new一个
                 if(resultPOMap.containsKey(key)){
                     resultPO = resultPOMap.get(key);
@@ -327,8 +328,8 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
             if(BigDecimal.ZERO.compareTo(changePO.getComAmount()) != 0){
                 //费用不为0则拆出一份对比节点
                 SsStatementResult resultPO;
-                //key的结构  employeeId-changeType-ssType-projectType
-                String key = changePO.getEmployeeId() + "-" + changePO.getChangeType() + "-" + changePO.getSsType() + "-" + "2";
+                //key的结构  ssSerial-changeType-ssType-projectType
+                String key = changePO.getSsSerial() + "-" + changePO.getChangeType() + "-" + changePO.getSsType() + "-" + "2";
                 //从map中取出节点,如果没有则new一个
                 if(resultPOMap.containsKey(key)){
                     resultPO = resultPOMap.get(key);
@@ -350,8 +351,8 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
             if(BigDecimal.ZERO.compareTo(changePO.getEmpCompensateAmount()) != 0){
                 //费用不为0则拆出一份对比节点
                 SsStatementResult resultPO;
-                //key的结构  employeeId-changeType-ssType-projectType
-                String key = changePO.getEmployeeId() + "-" + changePO.getChangeType() + "-" + changePO.getSsType() + "-" + "3";
+                //key的结构  ssSerial-changeType-ssType-projectType
+                String key = changePO.getSsSerial() + "-" + changePO.getChangeType() + "-" + changePO.getSsType() + "-" + "3";
                 //从map中取出节点,如果没有则new一个
                 if(resultPOMap.containsKey(key)){
                     resultPO = resultPOMap.get(key);
@@ -373,8 +374,8 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
             if(BigDecimal.ZERO.compareTo(changePO.getComCompensateAmount()) != 0){
                 //费用不为0则拆出一份对比节点
                 SsStatementResult resultPO;
-                //key的结构  employeeId-changeType-ssType-projectType
-                String key = changePO.getEmployeeId() + "-" + changePO.getChangeType() + "-" + changePO.getSsType() + "-" + "4";
+                //key的结构  ssSerial-changeType-ssType-projectType
+                String key = changePO.getSsSerial() + "-" + changePO.getChangeType() + "-" + changePO.getSsType() + "-" + "4";
                 //从map中取出节点,如果没有则new一个
                 if(resultPOMap.containsKey(key)){
                     resultPO = resultPOMap.get(key);
@@ -396,8 +397,8 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
             if(BigDecimal.ZERO.compareTo(changePO.getOnePayment()) != 0){
                 //费用不为0则拆出一份对比节点
                 SsStatementResult resultPO;
-                //key的结构  employeeId-changeType-ssType-projectType
-                String key = changePO.getEmployeeId() + "-" + changePO.getChangeType() + "-" + changePO.getSsType() + "-" + "5";
+                //key的结构  ssSerial-changeType-ssType-projectType
+                String key = changePO.getSsSerial() + "-" + changePO.getChangeType() + "-" + changePO.getSsType() + "-" + "5";
                 //从map中取出节点,如果没有则new一个
                 if(resultPOMap.containsKey(key)){
                     resultPO = resultPOMap.get(key);
@@ -456,43 +457,45 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
      * @param changeDetailPOList 汇总数据
      * @return Map<String,String> 人头差异结果 key:employeeId value:0 正常差异 1 系统不存在  2 导入不存在
      */
-    private Map<String,SsStatementResultCompareBO> calculateDiffHead(List<SsStatementImp> impDetailPOList, List<SsMonthEmpChangeDetail> changeDetailPOList){
+    private Map<String,SsStatementResultCompareBO> calculateDiffHead(List<SsStatementImp> impDetailPOList, List<SsMonthEmpChangeDetailBO> changeDetailPOList){
         Map<String,SsStatementResultCompareBO> diffHeadMap = new HashMap<>();
 
         //先循环处理导入的信息
         if(Optional.ofNullable(impDetailPOList).isPresent()) {
             for (int i = 0; i < impDetailPOList.size(); i++) {
                 SsStatementImp ssStatementImp=impDetailPOList.get(i);
-                String employeeId = ssStatementImp.getEmployeeId();
+                //String employeeId = ssStatementImp.getEmployeeId();
+                String ssSerial = ssStatementImp.getSsSerial();
+
                 //将员工ID去重加入map
-                if(!diffHeadMap.containsKey(employeeId)){
+                if(!diffHeadMap.containsKey(ssSerial)){
                     SsStatementResultCompareBO cbo=new SsStatementResultCompareBO();
                     cbo.setDiffHeadcount(1);
                     cbo.setEmployeeId(ssStatementImp.getEmployeeId());
-                    cbo.setEmployeeName(ssStatementImp.getEmpName());
-                    diffHeadMap.put(employeeId,cbo);
+                    cbo.setEmployeeName(ssStatementImp.getEmployeeName());
+                    diffHeadMap.put(ssSerial,cbo);
                 }
             }
         }
         //再循环处理系统汇总信息
         if(Optional.ofNullable(changeDetailPOList).isPresent()) {
             for (int i = 0; i < changeDetailPOList.size(); i++) {
-                String employeeId = changeDetailPOList.get(i).getEmployeeId();
+                String ssSerial = changeDetailPOList.get(i).getSsSerial();
                 //判断是否已存在
-                if(!diffHeadMap.containsKey(employeeId)) {
+                if(!diffHeadMap.containsKey(ssSerial)) {
                     //不存在的话直接加入map,
                     SsStatementResultCompareBO cbo=new SsStatementResultCompareBO();
-                    cbo.setEmployeeId(employeeId);
+                    cbo.setEmployeeId(changeDetailPOList.get(i).getEmployeeId());
                     cbo.setDiffHeadcount(2);
-                    diffHeadMap.put(employeeId,cbo);
+                    diffHeadMap.put(ssSerial,cbo);
                 }else{
                     //存在的话判断是系统数据还是导入数据还是2者都有
-                    SsStatementResultCompareBO cbo = diffHeadMap.get(employeeId);
+                    SsStatementResultCompareBO cbo = diffHeadMap.get(ssSerial);
                     Integer diffHead=cbo.getDiffHeadcount();
                     //只有当原先状态是1 系统不存在情况下,变更map中的状态,别的时候保持不变
                     if(diffHead == 1 ){
                         cbo.setDiffHeadcount(0);
-                        diffHeadMap.put(employeeId,cbo);
+                        diffHeadMap.put(ssSerial,cbo);
                     }
                 }
             }

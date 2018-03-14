@@ -27,9 +27,9 @@ public interface SsMonthEmpChangeDetailMapper extends BaseMapper<SsMonthEmpChang
      * @author wengxk
      * @date 2017-12-13
      * @param ssMonthEmpChangeBO 社保汇总数据主表
-     * @return   List<SsMonthEmpChangeDetailBO>
+     * @return   List<SsMonthEmpChangeDetail>
      */
-    List<SsMonthEmpChangeDetailBO> serachMonthEmpChangeDetailByStatementId(SsMonthEmpChangeBO ssMonthEmpChangeBO);
+    List<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO> serachMonthEmpChangeDetailByStatementId(SsMonthEmpChangeBO ssMonthEmpChangeBO);
 
     /**
      * <p>Description: 根据对账单ID查询社保汇总数据明细表</p>
@@ -39,7 +39,7 @@ public interface SsMonthEmpChangeDetailMapper extends BaseMapper<SsMonthEmpChang
      * @param statementId 社保汇总数据主表ID
      * @return   List<SsMonthEmpChangeDetail>
      */
-    List<SsMonthEmpChangeDetail> serachMonthEmpChangeDetailPOByStatementId(Long statementId);
+    List<SsMonthEmpChangeDetailBO> serachMonthEmpChangeDetailPOByStatementId(Long statementId);
 
     /**
      * 养老、医疗和失业变更明细导出
