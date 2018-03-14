@@ -99,17 +99,6 @@ public class AmArchiveUse implements Serializable {
 	@TableField("archive_id")
 	private String archiveId;
 
-    @TableField("type")
-    private Integer type;
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
     public Long getArchiveUseId() {
 		return archiveUseId;
 	}

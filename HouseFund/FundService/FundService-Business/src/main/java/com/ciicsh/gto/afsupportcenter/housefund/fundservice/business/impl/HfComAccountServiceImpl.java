@@ -52,7 +52,8 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
     @Override
     public List<ComFundAccountPO> getComFundAccountList(GetComFundAccountListRequestDTO request) {
         return baseMapper.getComFundAccountList(request.getCompanyId(), request.getCompanyName(), request.getHfType(),
-            request.getComHfMonth(), request.getAccountNumber());
+                request.getComHfMonth(), request.getAccountNumber());
+
     }
 
     /**

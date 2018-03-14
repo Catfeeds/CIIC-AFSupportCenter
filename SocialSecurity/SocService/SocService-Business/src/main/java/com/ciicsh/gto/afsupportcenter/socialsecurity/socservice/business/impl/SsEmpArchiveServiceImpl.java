@@ -1,15 +1,18 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpArchiveBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpArchiveService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpBasePeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpArchiveMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpArchive;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBasePeriod;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.empSSSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
@@ -39,6 +42,8 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
     SsEmpTaskService ssEmpTaskService;
     @Autowired
     CommonApiUtils commonApiUtils;
+    @Autowired
+    SsEmpBasePeriodService ssEmpBasePeriodService;
     @Override
     public SsEmpArchiveBO  queryByEmpTaskId(String empTaskId,String operatorType) {
         SsEmpArchiveBO ssEmpArchiveBO =new SsEmpArchiveBO();
@@ -56,12 +61,21 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
                 ssEmpArchiveBO.setInDate(ssEmpTask.getInDate());
                 ssEmpArchiveBO.setEmployeeId(ssEmpTask.getEmployeeId());
                 ssEmpArchiveBO.setSsEmpTask(ssEmpTask);
+                ssEmpArchiveBO.setOldEmpBase(ssEmpTask.getEmpBase());
                 return ssEmpArchiveBO;
             }else{
                 //先调用外部接口查询雇员信息
 
                 //再查询本地数据库中已存在的数据
-                return baseMapper.queryByEmpTaskId(empTaskId);
+                ssEmpArchiveBO = baseMapper.queryByEmpTaskId(empTaskId);
+                //查询旧基数
+                if(null!=ssEmpArchiveBO.getEmpArchiveId()){
+                    EntityWrapper<SsEmpBasePeriod> ew = new EntityWrapper<>();
+                    ew.where("emp_archive_id={0}",ssEmpArchiveBO.getEmpArchiveId()).and("is_active=1").orderBy("created_time",false).last("LIMIT 1");
+                    SsEmpBasePeriod ssEmpBasePeriod = ssEmpBasePeriodService.selectOne(ew);
+                    ssEmpArchiveBO.setOldEmpBase(ssEmpBasePeriod.getBaseAmount());
+                }
+                return ssEmpArchiveBO;
             }
         }catch (Exception e){
             e.printStackTrace();

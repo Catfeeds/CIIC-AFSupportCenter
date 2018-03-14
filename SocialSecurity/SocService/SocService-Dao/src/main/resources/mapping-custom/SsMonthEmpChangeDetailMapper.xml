@@ -87,18 +87,16 @@
 
     <select id="serachMonthEmpChangeDetailPOByStatementId" parameterType="java.lang.Long" resultMap="BaseResultMap">
         SELECT
-          T1.*
+        mecd.*
         FROM
-          ss_month_emp_change_detail T1
-          INNER JOIN
-            ss_month_emp_change T2
-          ON
-            T2.month_emp_change_id = T1.month_emp_change_id
-          AND T2.is_active = '1'
-          AND T1.month_emp_change_id = #{monthEmpChangeId,jdbcType=BIGINT}
+        ss_month_emp_change_detail mecd
+        INNER JOIN
+        ss_month_emp_change mec
+        ON
+        mec.month_emp_change_id = mecd.month_emp_change_id
         WHERE
-          1=1
-          AND T1.is_active = '1'
+        mecd.is_active = 1
+        AND mec.statement_id = #{statementId,jdbcType=BIGINT}
     </select>
 
     <select id="yysExportQuery" resultMap="YYSExportMap">

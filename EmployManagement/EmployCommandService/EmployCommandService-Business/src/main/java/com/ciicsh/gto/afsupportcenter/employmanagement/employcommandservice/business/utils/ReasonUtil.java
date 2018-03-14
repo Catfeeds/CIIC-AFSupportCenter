@@ -102,4 +102,15 @@ public class ReasonUtil {
 
     public static  String getIsTj(String code){ return  istj_param.get(code); }
 
+    public static  boolean  getYgResult(String code){
+
+        if("3".equals(code)||"8".equals(code)||"9".equals(code)||"10".equals(code))
+        {
+            return  true;
+        }else {
+            return  false;
+        }
+
+    }
+
 }

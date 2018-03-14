@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfStatementCompareResult;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfStatementCompareResultPO;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**
@@ -8,6 +8,6 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * 对账差异结果 Mapper 接口
  * </p>
  */
-public interface HfStatementCompareResultMapper extends BaseMapper<HfStatementCompareResult> {
+public interface HfStatementCompareResultMapper extends BaseMapper<HfStatementCompareResultPO> {
 
 }

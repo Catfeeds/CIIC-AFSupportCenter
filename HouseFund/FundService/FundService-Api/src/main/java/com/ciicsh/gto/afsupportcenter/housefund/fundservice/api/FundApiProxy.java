@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by houwanhua on 2018/2/27.
  */
-@FeignClient("gt1-af-support-center-fund-api-service")
+@FeignClient("support-center-housefund-api-service")
 @RequestMapping("/api/fund")
 public interface FundApiProxy {
     /**

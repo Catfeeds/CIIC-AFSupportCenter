@@ -78,4 +78,38 @@ public class CalculateSocialUtils {
 		}
 	}
 
+	public static int getRoundTypeInWeight(int comRoundType, int empRoundType) {
+	    if (comRoundType == empRoundType) return comRoundType;
+
+	    int[] roundTypeInWeight = { 8, 7, 9, 6, 1, 10, 5, 2, 3, 4 };
+	    int comIndex = -1;
+	    int empIndex = -1;
+
+	    for (int i = 0; i < roundTypeInWeight.length; i++) {
+	        if (roundTypeInWeight[i] == comRoundType) {
+                comIndex = i;
+            } else if (roundTypeInWeight[i] == empRoundType) {
+                empIndex = i;
+            }
+            if (comIndex >= 0 && empIndex >= 0) {
+	            if (comIndex > empIndex) {
+	                return empRoundType;
+                } else {
+	                return comRoundType;
+                }
+            }
+        }
+
+        return empRoundType;
+    }
+
+    public static String digitInSimpleFormat(BigDecimal val) {
+	    String valStr = val.toString();
+
+        if(valStr.indexOf(".") > 0){
+            valStr = valStr.replaceAll("0+?$", "");
+            valStr = valStr.replaceAll("[.]$", "");
+        }
+        return  valStr;
+    }
 }

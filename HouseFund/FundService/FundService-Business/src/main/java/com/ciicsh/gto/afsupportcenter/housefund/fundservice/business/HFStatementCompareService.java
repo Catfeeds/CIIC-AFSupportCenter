@@ -26,7 +26,7 @@ public interface HFStatementCompareService
      * @param
      * @return
      */
-    void addStatement(NewStatementDTO newStatement, MultipartFile file) throws Exception;
+    long addStatement(NewStatementDTO newStatement, MultipartFile file) throws Exception;
 
     /**
      * 获取对账单明细记录
@@ -47,5 +47,5 @@ public interface HFStatementCompareService
      * @param statementId
      * @return
      */
-    boolean execStatementDetail(long statementId);
+    void execStatement(long statementId,String compareMan) throws Exception;
 }
