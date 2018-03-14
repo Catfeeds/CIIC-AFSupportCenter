@@ -45,10 +45,19 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryHfMonthChargeReport(hfMonthChargeQueryBO));
     }
 
+    /**
+     * 整理补缴清册数据
+     *
+     * @param hfMonthChargeReportBOList 雇员每月汇缴明细数据列表
+     * @param weightRoundType 权重进位方式
+     * @return 补缴清册数据列表
+     */
     private List<HFMonthChargeRepairDetailBO> getRepairDetailList(List<HFMonthChargeReportBO> hfMonthChargeReportBOList, int weightRoundType) {
         List<HFMonthChargeRepairDetailBO> hfMonthChargeRepairDetailBOList = new ArrayList<>();
-        // TODO 添加一个临时非正式HFMonthChargeReportBO对象，方便处理最后的正式数据
-
+        // 添加一个临时非正式HFMonthChargeReportBO对象，方便处理最后的正式数据
+        HFMonthChargeReportBO tempHfMonthChargeReportBO = new HFMonthChargeReportBO();
+        tempHfMonthChargeReportBO.setEmployeeId("");
+        hfMonthChargeReportBOList.add(tempHfMonthChargeReportBO);
 
         HFMonthChargeReportBO hfMonthChargeReportBO = hfMonthChargeReportBOList.get(0);
         HFMonthChargeRepairDetailBO hfMonthChargeRepairDetailBO = new HFMonthChargeRepairDetailBO();
@@ -129,7 +138,8 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             }
         }
 
-
+        // 去除最后一个临时的对象
+        hfMonthChargeRepairDetailBOList.remove(hfMonthChargeRepairDetailBOList.size() - 1);
         return  hfMonthChargeRepairDetailBOList;
     }
 }
