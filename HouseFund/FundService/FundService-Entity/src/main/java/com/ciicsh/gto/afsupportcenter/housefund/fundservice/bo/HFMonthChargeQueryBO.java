@@ -3,7 +3,6 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 @Data
 public class HFMonthChargeQueryBO implements Serializable {
@@ -14,7 +13,7 @@ public class HFMonthChargeQueryBO implements Serializable {
     private String basicHfEmpAccount;
     private String addedHfEmpAccount;
     private Integer hfAccountType;
-    private LocalDate hfMonth;
+    private String hfMonth;
     private String companyId;
     private String companyName;
     private String basicHfComAccount;

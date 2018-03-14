@@ -7,6 +7,23 @@
         <result column="com_amount" property="comAmount" />
     </resultMap>
 
+    <resultMap id="ResultMapReportBO" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFMonthChargeReportBO">
+        <result column="hf_type" property="hfType" />
+        <result column="employee_id" property="employeeId" />
+        <result column="employee_name" property="employeeName" />
+        <result column="hf_emp_account" property="hfEmpAccount" />
+        <result column="id_num" property="idNum" />
+        <result column="hf_month" property="hfMonth" />
+        <result column="ss_month_belong" property="ssMonthBelong" />
+        <result column="payment_type" property="paymentType" />
+        <result column="base" property="base" />
+        <result column="ratio" property="ratio" />
+        <result column="amount" property="amount" />
+        <result column="company_id" property="companyId" />
+        <result column="company_name" property="companyName" />
+        <result column="hf_com_account" property="hfComAccount" />
+    </resultMap>
+
 	<update id="updateHfMonthCharge">
         UPDATE hf_month_charge
         SET
@@ -88,6 +105,67 @@
             </if>
             <if test="ssMonthBelongEnd != null">
                 AND #{ssMonthBelongEnd} >= ss_month_belong
+            </if>
+        </where>
+    </select>
+
+    <select id="queryHfMonthChargeReport" resultMap="ResultMapReportBO">
+        SELECT
+        hmc.hf_type,
+        hmc.employee_id,
+        ee.employee_name,
+        CASE WHEN hmc.hf_type = 1 THEN heab.hf_emp_account ELSE heaa.hf_emp_account END hf_emp_account,
+        ee.id_num,
+        hmc.hf_month,
+        hmc.ss_month_belong,
+        hmc.payment_type,
+        hmc.base,
+        hmc.ratio,
+        hmc.amount,
+        hmc.company_id,
+        sc.title AS company_name,
+        CASE WHEN hmc.hf_type = 1 THEN hcacb.hf_com_account ELSE hcaca.hf_com_account END hf_com_account
+        FROM hf_month_charge hmc
+        INNER JOIN sal_company sc ON hmc.company_id = sc.company_id AND sc.is_active = 1
+        INNER JOIN emp_employee ee ON hmc.employee_id = ee.employee_id
+        LEFT JOIN hf_emp_archive heab ON hmc.emp_archive_id = heab.emp_archive_id AND heab.hf_type = 1 AND heab.is_active = 1
+        LEFT JOIN hf_com_account hcab ON heab.com_account_id = hcab.com_account_id AND hcab.is_active = 1
+        LEFT JOIN hf_com_account_class hcacb ON heab.com_account_id = hcacb.com_account_id AND hcacb.hf_type = 1 AND hcab.is_active = 1
+        LEFT JOIN hf_emp_archive heaa ON hmc.emp_archive_id = heaa.emp_archive_id AND heaa.hf_type = 2 AND heaa.is_active = 1
+        LEFT JOIN hf_com_account hcaa ON heaa.com_account_id = hcaa.com_account_id AND hcaa.is_active = 1
+        LEFT JOIN hf_com_account_class hcaca ON heaa.com_account_id = hcaca.com_account_id AND hcaca.hf_type = 2 AND hcaa.is_active = 1
+        <where>
+            hmc.is_active = 1
+            <if test="employeeId != null">
+                AND hmc.employee_id = #{employeeId}
+            </if>
+            <if test="employeeName != null">
+                AND ee.employee_name LIKE CONCAT('%', #{employeeName}, '%')
+            </if>
+            <if test="companyId">
+                AND hmc.company_id = #{companyId}
+            </if>
+            <if test="companyName != null">
+                AND sc.title LIKE CONCAT('%', #{companyName}, '%')
+            </if>
+            <if test="hfMonth != null">
+                AND hmc.hf_month = #{hfMonth}
+            </if>
+            <if test="basicHfEmpAccount != null">
+                AND heab.hf_emp_account = #{basicHfEmpAccount}
+            </if>
+            <if test="hfAccountType">
+                AND hcab.hf_account_type = #{hfAccountType}
+                OR hcaa.hf_account_type = #{hfAccountType}
+            </if>
+            <if test="basicHfComAccount">
+                AND hcacb.hf_com_account = #{basicHfComAccount}
+            </if>
+            <if test="addedHfEmpAccount != null">
+                AND heaa.hf_emp_account = #{addedHfEmpAccount}
+            </if>
+            <if test="addedHfComAccount">
+                AND hcaca.hf_com_account = #{addedHfComAccount}
             </if>
         </where>
     </select>
