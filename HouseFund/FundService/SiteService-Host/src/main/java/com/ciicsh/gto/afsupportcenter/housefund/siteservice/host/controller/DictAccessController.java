@@ -52,6 +52,7 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.COM_ACCOUNT_STATE_KEY, SocialSecurityConst.COM_ACCOUNT_STATE_MAP, false);
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.HANDLE_STATUS_KEY, SocialSecurityConst.HANDLE_STATUS_MAP, false);
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.REMIT_WAY_KEY, SocialSecurityConst.REMIT_WAY_MAP, false);
+            DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.PAYMENT_TYPE_KEY, SocialSecurityConst.PAYMENT_TYPE_MAP, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
