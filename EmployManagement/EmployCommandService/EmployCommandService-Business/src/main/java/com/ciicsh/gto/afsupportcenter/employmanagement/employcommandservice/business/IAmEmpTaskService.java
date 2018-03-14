@@ -44,4 +44,6 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
 
     AmEmpTaskBO queryAmEmpTaskBO(Object empCompanyId);
 
+    AmEmpTaskBO getDefualtEmployBO(AmEmpTaskBO amEmpTaskBO);
+
 }

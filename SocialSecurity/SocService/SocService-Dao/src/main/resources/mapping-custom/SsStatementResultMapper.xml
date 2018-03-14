@@ -46,7 +46,7 @@
             AND sr.is_active = '1'
             AND sr.statement_id = #{statementId,jdbcType=BIGINT}
         ORDER BY
-            emp.employee_id,sr.change_type,sr.ss_type,sr.project_type
+            emp.employee_id,sr.ss_serial,sr.change_type,sr.ss_type,sr.project_type
 
 
 

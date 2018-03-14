@@ -17,6 +17,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -235,7 +236,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @Log("保存用工档案")
     @RequestMapping("/saveAmArchive")
-    public  JsonResult<Boolean>  saveAmArchive(AmArchive entity){
+    public  JsonResult<Boolean>  saveAmArchive(AmArchiveBO amArchiveBO){
+        AmArchive entity = new AmArchive();
+        BeanUtils.copyProperties(amArchiveBO,entity);
         LocalDateTime now = LocalDateTime.now();
         if(entity.getArchiveId()==null){
             entity.setCreatedTime(now);
@@ -256,22 +259,25 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         }
 
         boolean result = amArchiveService.insertOrUpdate(entity);
-        if(result&&!StringUtil.isEmpty(entity.getEmployFeedback()))
-        {
-            /**
-             * u盘外借 不会调用complateTask,只发kafaka消息
-             */
-            if("7".equals(entity.getEmployFeedback()))
+        if("0".equals(amArchiveBO.getIsFrist()))
+        {//如果满足在用工办理页面提交
+            if(result&&!StringUtil.isEmpty(entity.getEmployFeedback()))
             {
+                /**
+                 * u盘外借 不会调用complateTask,只发kafaka消息
+                 */
+                if("7".equals(entity.getEmployFeedback()))
+                {
 
-            }else{
-                Map<String,Object> variables = new HashMap<>();
-                variables.put("status", ReasonUtil.getYgResult(entity.getEmployFeedback()));
-                variables.put("remark",ReasonUtil.getYgfk(entity.getEmployFeedback()));
-                TaskCommonUtils.completeTask(amEmpTask.getTaskId(),employeeInfoProxy,variables);
+                }else{
+                    Map<String,Object> variables = new HashMap<>();
+                    variables.put("status", ReasonUtil.getYgResult(entity.getEmployFeedback()));
+                    variables.put("remark",ReasonUtil.getYgfk(entity.getEmployFeedback()));
+                    TaskCommonUtils.completeTask(amEmpTask.getTaskId(),employeeInfoProxy,variables);
+                }
             }
-
         }
+
         return JsonResultKit.of(result);
     }
 

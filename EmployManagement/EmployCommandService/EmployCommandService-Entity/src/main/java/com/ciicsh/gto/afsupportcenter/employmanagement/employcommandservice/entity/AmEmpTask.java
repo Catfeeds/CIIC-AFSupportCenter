@@ -132,6 +132,31 @@ public class AmEmpTask implements Serializable {
     @TableField("out_reason")
     private String  outReason;
 
+    @TableField("employ_property")
+    private String employProperty;
+
+    @TableField("business_interface_id")
+    private  String businessInterfaceId;
+
+    @TableField("employ_code")
+    private Integer employCode;
+
+    public Integer getEmployCode() {
+        return employCode;
+    }
+
+    public void setEmployCode(Integer employCode) {
+        this.employCode = employCode;
+    }
+
+    public String getEmployProperty() {
+        return employProperty;
+    }
+
+    public void setEmployProperty(String employProperty) {
+        this.employProperty = employProperty;
+    }
+
     public Date getOutDate() {
         return outDate;
     }
@@ -155,9 +180,6 @@ public class AmEmpTask implements Serializable {
     public void setBusinessInterfaceId(String businessInterfaceId) {
         this.businessInterfaceId = businessInterfaceId;
     }
-
-    @TableField("business_interface_id")
-    private  String businessInterfaceId;
 
     public String getEmployeeNature() {
         return employeeNature;

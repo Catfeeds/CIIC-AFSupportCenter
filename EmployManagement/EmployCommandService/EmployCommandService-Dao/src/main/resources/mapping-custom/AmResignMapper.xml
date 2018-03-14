@@ -101,7 +101,8 @@
         LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
         LEFT JOIN sal_company e ON e.company_id = a.company_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
-        LEFT JOIN am_resign f on  f.employment_id = b.employment_id
+        LEFT JOIN am_resign f  ON f.employee_id = a.employee_id
+        AND f.company_id = a.company_id
         WHERE
         a.task_category = '2'
         and
@@ -132,7 +133,8 @@
         LEFT JOIN emp_employee d ON b.employee_id = d.employee_id
         LEFT JOIN sal_company e ON e.company_id = b.company_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
-        LEFT JOIN am_resign f on  f.employment_id = b.employment_id
+        LEFT JOIN am_resign f  ON f.employee_id = a.employee_id
+        AND f.company_id = a.company_id
         WHERE
         a.task_category = '2'
         and
@@ -219,7 +221,8 @@
         LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
         LEFT JOIN sal_company e ON e.company_id = a.company_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
-        LEFT JOIN am_resign f on  f.employment_id = b.employment_id
+        LEFT JOIN am_resign f  ON f.employee_id = a.employee_id
+        AND f.company_id = a.company_id
         WHERE
         a.task_category = '2'
         and
