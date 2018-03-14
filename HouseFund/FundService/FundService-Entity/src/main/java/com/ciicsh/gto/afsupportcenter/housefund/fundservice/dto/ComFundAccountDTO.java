@@ -82,8 +82,10 @@ public class ComFundAccountDTO {
      * 公积金缴费截止年月
      */
     private String payEndMonth;
-
-
+    /**
+     * 客户汇缴年月
+     */
+    private String comHfMonth;
     /**
      * 公积金账号是否属于临时保管
      * 1-临时保管状态 0-非临时保管状态
@@ -108,6 +110,15 @@ public class ComFundAccountDTO {
         payStartMonth = "";
         remark = "";
         ukeyStore = 0;
+        comHfMonth="";
+    }
+
+    public String getComHfMonth() {
+        return comHfMonth;
+    }
+
+    public void setComHfMonth(String comHfMonth) {
+        this.comHfMonth = comHfMonth;
     }
 
     public int getComAccountClassId() {
