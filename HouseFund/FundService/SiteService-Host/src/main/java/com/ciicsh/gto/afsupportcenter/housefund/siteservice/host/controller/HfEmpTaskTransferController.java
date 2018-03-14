@@ -3,23 +3,14 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBatchRejectBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.EmpEmployeeService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskHandleService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskTransferService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.EmpEmployee;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
-import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
-import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
-import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -34,9 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -45,7 +33,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/fundcommandservice/hfEmpTaskTransfer")
-public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransferService> {
+public class HfEmpTaskTransferController extends BasicController<HfEmpTaskService> {
     @Autowired
     HfEmpTaskService hfEmpTaskHandleService;
     @Autowired
@@ -54,11 +42,13 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 
     /**
+/*
      * 雇员公积金任务查询
      *
      * @param pageInfo
      * @return
-     */
+     *//*
+
     @RequestMapping("/hfEmpTaskQuery")
     @Log("雇员公积金任务查询")
     public JsonResult<PageRows> hfEmpTaskQuery(@RequestBody PageInfo pageInfo) {
@@ -69,12 +59,14 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
             }, ',')));
     }
 
-    /**
+    */
+/**
      * 雇员公积金任务导出
      *
      * @param
      * @return
-     */
+     *//*
+
     @RequestMapping("/hfEmpTaskExport")
     @Log("雇员公积金任务导出")
     public void hfEmpTaskExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
@@ -119,12 +111,14 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
         workbook.close();
     }
 
-    /**
+    */
+/**
      * 批退雇员公积金任务查询
      *
      * @param pageInfo
      * @return
-     */
+     *//*
+
     @RequestMapping("/hfEmpTaskRejectQuery")
     @Log("雇员公积金任务查询")
     public JsonResult<PageRows> hfEmpTaskRejectQuery(@RequestBody PageInfo pageInfo) {
@@ -135,12 +129,14 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
             }, ',')));
     }
 
-    /**
+    */
+/**
      * 批退雇员公积金任务导出
      *
      * @param
      * @return
-     */
+     *//*
+
     @RequestMapping("/hfEmpTaskRejectExport")
     @Log("雇员公积金任务导出")
     public void hfEmpTaskRejectExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
@@ -208,6 +204,7 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
 
         return JsonResultKit.of();
     }
+*/
 
 
 }
