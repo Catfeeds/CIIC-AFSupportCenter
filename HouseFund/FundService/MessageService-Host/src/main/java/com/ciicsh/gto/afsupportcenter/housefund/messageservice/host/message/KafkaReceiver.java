@@ -225,7 +225,7 @@ public class KafkaReceiver {
     private AfEmployeeInfoDTO getEmpInfo(TaskCreateMsgDTO taskMsgDTO,Integer taskCategory) {
         AfEmployeeInfoDTO resDto = null;
         try {
-            Thread.sleep(500);
+            Thread.sleep(2000);
             logger.info("fund get employee info start, request:" + JSON.toJSONString(taskMsgDTO));
             AfEmployeeQueryDTO taskRequestDTO = new AfEmployeeQueryDTO();
             taskRequestDTO.setEmpAgreementId(Long.parseLong(taskMsgDTO.getMissionId()));
