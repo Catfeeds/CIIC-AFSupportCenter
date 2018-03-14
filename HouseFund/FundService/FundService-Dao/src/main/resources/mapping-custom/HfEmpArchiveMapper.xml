@@ -158,7 +158,7 @@
         com.company_id,com.title
         FROM
         hf_com_account_class cac
-        INNER JOIN hf_com_account_sub_com caCom ON caCom.com_account_id=cac.com_account_id
+        INNER JOIN hf_account_com_relation caCom ON caCom.com_account_id=cac.com_account_id
         INNER JOIN hf_com_account ca ON cac.com_account_id=ca.com_account_id
         LEFT JOIN (SELECT cacs.hf_com_account as 'add_com_account',cacs.com_account_id
         FROM hf_com_account_class cacs where cacs.is_active=1 and cacs.hf_type=2 ) addAc ON addAc.com_account_id=cac.com_account_id
@@ -166,6 +166,7 @@
         LEFT JOIN sal_bpo_company bpo on bpo.company_id=caCom.company_id
         INNER JOIN sal_company com on com.company_id=caCom.company_id
         WHERE cac.hf_type = 1
+        AND  and ca.state=1
         AND caCom.company_id=#{companyId}
     </select>
 

@@ -144,9 +144,15 @@ public class KafkaReceiver {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         logger.info("receiveAdjust: " + JSON.toJSONString(taskMsgDTO));
         //判断taskType是否是社保新进或停办(social_new或social_stop)，如果不是则无需处理
-        //注：只有当社保缴纳地从上海变成外地时，才会收到social_stop类型，其他都是social_new
-        if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType()) || TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
-            saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_3));
+        //注：客服中心调整基数从0变非0时，收到的任务单是调整还是新开或转入，根据雇员中心传入的参数确定
+        // 客服中心调整基数从非0变0时，收到的任务单就是社保停办任务单
+        if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())) {
+            Map<String, Object> paramMap = taskMsgDTO.getVariables();
+            //获取社保办理类型
+            String socialType = paramMap.get("socialType").toString();
+            saveSsEmpTask(taskMsgDTO, Integer.parseInt(socialType));
+        }else if(TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())){
+            saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_5));
         }
     }
 
@@ -164,7 +170,7 @@ public class KafkaReceiver {
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType()) || TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
             try {
                 //调用接口-调用客服中心接口，获取任务单表单信息
-                AfEmployeeInfoDTO dto = callEmpAgreement(taskMsgDTO);
+                AfEmployeeInfoDTO dto = callEmpAgreement(Long.parseLong(taskMsgDTO.getMissionId()));
                 //taskId为空，该消息则是由af客服中心发出，表示支持中心历史任务单未完成
                 if (StringUtils.isBlank(taskMsgDTO.getTaskId())) {
                     Map<String, Object> paramMap = taskMsgDTO.getVariables();
@@ -261,16 +267,16 @@ public class KafkaReceiver {
 
     /**
      * 从接口获取数据并保存到社保雇员任务单表
-     *
-     * @param taskCreateMsgDTO
+     * @param empAgreementId
      * @return
      */
-    private AfEmployeeInfoDTO callEmpAgreement(TaskCreateMsgDTO taskCreateMsgDTO) {
-        logger.info("entering callEmpAgreement：" + JSON.toJSONString(taskCreateMsgDTO));
+    private AfEmployeeInfoDTO callEmpAgreement(Long empAgreementId) {
+        logger.info("entering empAgreementId：" + empAgreementId);
         AfEmployeeInfoDTO afEmployeeInfoDTO = null;
         try {
-            Long empAgreementId = Long.parseLong(taskCreateMsgDTO.getMissionId());
-            logger.info("empAgreementId:"+empAgreementId);
+            logger.info("sleep 2000 millis start");
+            Thread.sleep(2000);
+            logger.info("sleep 2000 millis end");
             afEmployeeInfoDTO = afEmployeeSocialProxy.getByEmpAgreement(empAgreementId);
             logger.info("afEmployeeInfoDTO:" + JSON.toJSONString(afEmployeeInfoDTO));
         } catch (Exception e) {
@@ -289,7 +295,15 @@ public class KafkaReceiver {
     private void saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType) {
         try {
             //调用客服中心接口获取任务单表单信息
-            AfEmployeeInfoDTO dto = callEmpAgreement(taskMsgDTO);
+            String empAgreementId = null;
+            //如果是翻盘转出，需要取oldEmpAgreementId，作为call接口的参数
+            if(Integer.parseInt(SocialSecurityConst.TASK_TYPE_14) == socialType){
+                Map<String, Object> paramMap = taskMsgDTO.getVariables();
+                empAgreementId = paramMap.get("oldEmpAgreementId").toString();
+            }else{
+                empAgreementId = taskMsgDTO.getMissionId();
+            }
+            AfEmployeeInfoDTO dto = callEmpAgreement(Long.parseLong(empAgreementId));
             //保存雇员任务单表数据
             ssEmpTaskFrontService.saveSsEmpTask(taskMsgDTO, socialType, 0, dto);
         } catch (Exception e) {
@@ -308,7 +322,8 @@ public class KafkaReceiver {
         try {
             logger.info("entering saveSsEmpMakeUp");
             //调用客服中心接口获取任务单表单信息
-            AfEmployeeInfoDTO dto = callEmpAgreement(taskMsgDTO);
+            String empAgreementId = taskMsgDTO.getMissionId();
+            AfEmployeeInfoDTO dto = callEmpAgreement(Long.parseLong(empAgreementId));
             //保存雇员任务单表数据
             ssEmpTaskFrontService.saveSsEmpTask(taskMsgDTO, socialType, 0, dto);
         } catch (Exception e) {
