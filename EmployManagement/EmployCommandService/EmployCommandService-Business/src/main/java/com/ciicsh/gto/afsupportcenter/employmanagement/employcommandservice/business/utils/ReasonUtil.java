@@ -18,6 +18,8 @@ public class ReasonUtil {
 
     private static Map<String,String> istj_param = new HashMap<>();
 
+    private static Map<String,String> ygsx_param = new HashMap<>();
+
     static {
         param.put("1","辞职");
         param.put("2","协商解除");
@@ -54,7 +56,6 @@ public class ReasonUtil {
         tg_param.put("17","重复任务单");
         tg_param.put("18","等修改备案表");
 
-
         yg_param.put("2","已开F单未完成");
         yg_param.put("3","用工成功");
         yg_param.put("4","用工失败");
@@ -70,6 +71,10 @@ public class ReasonUtil {
 
         istj_param.put("0","已交");
         istj_param.put("1","未交");
+
+        ygsx_param.put("1","派遣");
+        ygsx_param.put("2","代理");
+        ygsx_param.put("3","业务外包");
 
 
     }
@@ -110,6 +115,17 @@ public class ReasonUtil {
         }else {
             return  false;
         }
+
+    }
+
+    public static  String getYgsx(String code){
+
+        if(ygsx_param.containsKey(code))
+        {
+            return  ygsx_param.get(code);
+        }
+
+        return "";
 
     }
 

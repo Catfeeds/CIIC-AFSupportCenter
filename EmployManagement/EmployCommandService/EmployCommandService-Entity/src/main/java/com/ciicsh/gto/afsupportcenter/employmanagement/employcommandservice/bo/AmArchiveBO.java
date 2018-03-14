@@ -9,6 +9,16 @@ public class AmArchiveBO extends AmArchive {
 
     private  Integer  isEnd;
 
+    private  String isFrist;
+
+    public String getIsFrist() {
+        return isFrist;
+    }
+
+    public void setIsFrist(String isFrist) {
+        this.isFrist = isFrist;
+    }
+
     public Integer getIsEnd() {
         return isEnd;
     }
