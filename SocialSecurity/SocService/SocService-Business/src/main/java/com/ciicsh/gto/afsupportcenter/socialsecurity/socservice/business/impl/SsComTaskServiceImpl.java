@@ -182,6 +182,7 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
             bankAccountMap.put("account_name", ssComAccount.getComAccountName());
             bankAccountMap.put("bank_name", ssComAccount.getPaymentBank());
             bankAccountMap.put("bank_id", "2");//默认工商银行
+            bankAccountMap.put("company_id",ssComTask.getCompanyId() );//客户ID
 //          bankAccountMap.put("province_code", "002");
 //          bankAccountMap.put("city_code", "01");
             bankAccountMap.put("account_type", "4");

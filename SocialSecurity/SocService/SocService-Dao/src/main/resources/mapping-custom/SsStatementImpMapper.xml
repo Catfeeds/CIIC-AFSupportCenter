@@ -5,12 +5,12 @@
 
     <select id="getImpDetailByStatementId" parameterType="java.lang.Long" resultMap="BaseResultMap">
         SELECT
-            *
+            si.*
         FROM
-            ss_statement_imp T1
+            ss_statement_imp si
         WHERE
-            T1.is_active = '1'
-            AND T1.statement_id = #{statementId,jdbcType=BIGINT}
+            si.is_active = '1'
+            AND si.statement_id = #{statementId,jdbcType=BIGINT}
     </select>
 
 

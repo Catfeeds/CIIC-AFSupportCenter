@@ -218,22 +218,23 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
             ssAccountComRelation.setModifiedBy("xsj");
             ssAccountComRelation.setModifiedTime(LocalDateTime.now());
         }
-        //表示完成
-        if(3 == ssComTask.getTaskStatus()){
-            //任务单为已完成状态 账户设置为可用
-            ssComAccount.setState(new Integer(1));
-            //调用工作流
-            TaskCommonUtils.completeTask(ssComTask.getTaskId(),commonApiUtils,"xsj");
-        }else{
-            //任务单 为初始，受理， 送审  账户为初始状态
-            ssComAccount.setState(new Integer(0));
-        }
+
         String retCheckResult=business.checkComAccountDuplicate(ssComAccount);
         if ( !retCheckResult.equals("")){//检查输入的内容是否重复
             return JsonResultKit.ofError(retCheckResult.substring(0,retCheckResult.length()-1));
         }
         String result = business.addOrUpdateCompanyTask(ssComTask, ssComAccount, ssAccountRatio, ssAccountComRelation);
         if (result.equals("SUCC")){
+            //表示完成
+            if(3 == ssComTask.getTaskStatus()){
+                //任务单为已完成状态 账户设置为可用
+                ssComAccount.setState(new Integer(1));
+                //调用工作流
+                TaskCommonUtils.completeTask(ssComTask.getTaskId(),commonApiUtils,"xsj");
+            }else{
+                //任务单 为初始，受理， 送审  账户为初始状态
+                ssComAccount.setState(new Integer(0));
+            }
             return JsonResultKit.of(true);
         }else{
             return JsonResultKit.ofError(result);
@@ -434,6 +435,8 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         SsComTask ssComTask = new SsComTask();
         //企业任务单id
         ssComTask.setComTaskId(isNotNull(map.get("comTaskId")) ? Long.parseLong(map.get("comTaskId")) : null);
+
+        ssComTask.setCompanyId(isNotNull(map.get("companyId")) ? map.get("companyId") : null);
         //任务单类型
         ssComTask.setTaskCategory(isNotNull(map.get("taskCategory")) ? map.get("taskCategory") : null);
         //前道传过来的截止日期和支付方式
