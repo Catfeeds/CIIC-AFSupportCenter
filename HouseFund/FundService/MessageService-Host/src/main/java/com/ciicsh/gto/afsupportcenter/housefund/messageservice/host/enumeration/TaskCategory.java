@@ -8,7 +8,7 @@ public enum TaskCategory {
     NEWCHANGEINTO(2,"新增(转入)"),
     NEWREOPEN(3,"新增(启封)"),
     ADJUSTSEALED(4,"调整"),
-    ADJUSTREOPEN(5,"(待定)"),
+    ADJUSTREOPEN(5,"待定"),
     REPAY(6,"补缴"),
     LEAVETURNOUT(7,"离职(转出)"),
     LEAVESEALED(8,"离职(封存)"),
