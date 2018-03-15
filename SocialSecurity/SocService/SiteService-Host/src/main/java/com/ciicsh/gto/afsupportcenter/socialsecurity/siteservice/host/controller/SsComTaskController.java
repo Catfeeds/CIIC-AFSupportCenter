@@ -224,17 +224,9 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
             return JsonResultKit.ofError(retCheckResult.substring(0,retCheckResult.length()-1));
         }
         String result = business.addOrUpdateCompanyTask(ssComTask, ssComAccount, ssAccountRatio, ssAccountComRelation);
+
         if (result.equals("SUCC")){
-            //表示完成
-            if(3 == ssComTask.getTaskStatus()){
-                //任务单为已完成状态 账户设置为可用
-                ssComAccount.setState(new Integer(1));
-                //调用工作流
-                TaskCommonUtils.completeTask(ssComTask.getTaskId(),commonApiUtils,"xsj");
-            }else{
-                //任务单 为初始，受理， 送审  账户为初始状态
-                ssComAccount.setState(new Integer(0));
-            }
+
             return JsonResultKit.of(true);
         }else{
             return JsonResultKit.ofError(result);

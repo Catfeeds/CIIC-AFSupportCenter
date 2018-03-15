@@ -8,10 +8,8 @@ import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeIn
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskTransferService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskTransferMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -36,7 +34,7 @@ import java.util.stream.Collectors;
  * </p>
  */
 @Service
-public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskTransferMapper, HfEmpTask> implements HfEmpTaskTransferService {
+public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask> implements HfEmpTaskTransferService {
 
     @Override
     public PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo) {

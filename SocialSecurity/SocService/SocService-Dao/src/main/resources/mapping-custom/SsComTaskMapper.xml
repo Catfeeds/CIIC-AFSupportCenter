@@ -446,7 +446,7 @@
     <select id="queryComInfoAndPayWay" resultMap="getComAccountResultMap">
         SELECT
         sct.company_id,
-        sacr.com_account_id,
+        sct.com_account_id,
         sct.com_task_id,
         sct.task_category,
         sct.customer_id,
@@ -462,66 +462,47 @@
         sct.handle_remark,
         sct.rejection_remark,
         sc.title,
-        sca.*,
-        sat.*
+        sca.com_account_id AS com_account_id_acc,
+        sca.supplier_id,
+        sca.ss_account_type,
+        sca.ss_account,
+        sca.bank_account,
+        sca.com_account_name,
+        sca.settlement_area,
+        sca.payment_bank,
+        sca.payment_way,
+        sca.bill_receiver,
+        sca.expire_date AS expire_date_acc,
+        sca.ss_username,
+        sca.ss_pwd,
+        sca.initial_balance,
+        sca.initial_debt,
+        sca.origin_place,
+        sca.origin_place_remark,
+        sca.query_account,
+        sca.deliver_way,
+        sca.deliver_way_remark,
+        sca.provide_certificate_time,
+        sca.change_time,
+        sca.receive_date,
+        sca.into_date,
+        sca.end_date,
+        sca.dispatch_material,
+        sca.state,
+        sca.remark AS remark_acc,
+        sar.ss_account_ratio_id,
+        sar.com_account_id AS com_account_id_sar,
+        sar.industry_category,
+        sar.com_ratio,
+        sar.start_month,
+        sar.end_month
         FROM
         ss_com_task sct
         LEFT JOIN sal_company sc ON sct.company_id = sc.company_id AND sc.is_active = 1
-        LEFT JOIN ss_account_com_relation sacr ON sct.company_id = sacr.company_id AND sacr.is_active =1
-
-        LEFT JOIN
-        (
-        SELECT
-        com_account_id AS com_account_id_acc,
-        supplier_id,
-        ss_account_type,
-        ss_account,
-        bank_account,
-        com_account_name,
-        settlement_area,
-        payment_bank,
-        payment_way,
-        bill_receiver,
-        expire_date AS expire_date_acc,
-        ss_username,
-        ss_pwd,
-        initial_balance,
-        initial_debt,
-        origin_place,
-        origin_place_remark,
-        query_account,
-        deliver_way,
-        deliver_way_remark,
-        provide_certificate_time,
-        change_time,
-        receive_date,
-        into_date,
-        end_date,
-        dispatch_material,
-        remark AS remark_acc
-        FROM
-        ss_com_account
+        LEFT JOIN ss_com_account sca ON sca.com_account_id = sct.com_account_id and sca.is_active = 1
+        LEFT JOIN ss_account_ratio sar ON sca.com_account_id = sar.com_account_id
         WHERE
-        is_active = 1
-        )sca
-        ON sacr.com_account_id = sca.com_account_id_acc
-        LEFT JOIN
-        (
-        SELECT
-        ss_account_ratio_id,
-        com_account_id AS com_account_id_sar,
-        industry_category,
-        com_ratio,
-        start_month,
-        end_month
-        FROM
-        ss_account_ratio
-        WHERE
-        is_active =1
-        )sat
-        ON sca.com_account_id_acc = sat.com_account_id_sar
-        WHERE
-        sct.is_active =1
+        sct.is_active = 1
         AND sct.com_task_id = #{comTaskId}
         <if test="isComplete ==0 ">
             AND sct.task_status != 3

@@ -719,4 +719,106 @@
         WHERE emp_task_id = #{empTaskId}
         AND is_active = 1
     </insert>
+
+    <resultMap id="EmpTaskTransferRM" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTaskTransferBo">
+        <result column="emp_task_id" property="empTaskId"/>
+        <result column="hf_type" property="hfType"/>
+        <result column="company_id" property="companyId"/>
+        <result column="title" property="title"/>
+        <result column="employee_id" property="employeeId"/>
+        <result column="employee_name" property="employeeName"/>
+        <result column="id_num" property="idNum"/>
+        <result column="status" property="status"/>
+        <result column="task_status" property="taskStatus"/>
+        <result column="in_date" property="inDate"/>
+        <result column="submit_time" property="submitTime"/>
+        <result column="submitter_id" property="submitterId"/>
+        <result column="transfer_in_unit" property="transferInUnit"/>
+        <result column="transfer_out_unit" property="transferOutUnit"/>
+        <result column="com_account_id" property="comAccountId"/>
+        <result column="ss_account_type" property="ssAccountType"/>
+        <result column="hf_emp_account" property="hfEmpAccount"/>
+        <result column="emp_archive_id" property="empArchiveId"/>
+    </resultMap>
+
+    <select id="queryEmpTaskTransfer" resultMap="EmpTaskTransferRM">
+        SELECT
+        et.emp_task_id,et.hf_type,com.company_id,com.title,emp.employee_id,emp.employee_name,emp.id_num,eoop.`status`,et.task_status,eoop.in_date,et.submit_time,et.submitter_id,
+        et.transfer_in_unit,et.transfer_out_unit,ea.com_account_id,ca.hf_account_type,ea.hf_emp_account,ea.emp_archive_id
+        from hf_emp_task et
+        LEFT JOIN hf_emp_archive ea  ON ea.emp_archive_id=et.emp_archive_id
+        INNER JOIN emp_af_emp_company eoop ON eoop.company_id=ea.company_id and eoop.employee_id=ea.employee_id
+        INNER JOIN emp_employee emp ON emp.employee_id=eoop.employee_id
+        INNER JOIN sal_company com ON com.company_id=eoop.company_id
+        INNER JOIN hf_com_account ca ON ca.com_account_id=ea.com_account_id
+        WHERE et.is_active=1 and et.task_category = 9
+
+        <if test="empTaskId != null">
+            ANDet.emp_task_id = #{empTaskId}
+        </if>
+        <if test="hfType != null">
+            ANDet.hf_type = #{hfType}
+        </if>
+        <if test="companyId != null">
+            ANDcom.company_id = #{companyId}
+        </if>
+        <if test="title != null">
+            ANDcom.title = #{title}
+        </if>
+        <if test="employeeId != null">
+            ANDemp.employee_id = #{employeeId}
+        </if>
+        <if test="employeeName != null">
+            ANDemp.employee_name = #{employeeName}
+        </if>
+        <if test="idNum != null">
+            ANDemp.id_num = #{idNum}
+        </if>
+        <if test="status != null">
+            ANDeoop.status = #{status}
+        </if>
+        <if test="taskStatus != null">
+            ANDet.task_status = #{taskStatus}
+        </if>
+        <if test="inDate != null">
+            ANDeoop.in_date = #{inDate}
+        </if>
+        <if test="submitTime != null">
+            ANDet.submit_time = #{submitTime}
+        </if>
+        <if test="submitterId != null">
+            ANDet.submitter_id = #{submitterId}
+        </if>
+        <if test="transferInUnit != null">
+            ANDet.transfer_in_unit = #{transferInUnit}
+        </if>
+        <if test="transferOutUnit != null">
+            ANDet.transfer_out_unit = #{transferOutUnit}
+        </if>
+        <if test="hfEmpAccount != null">
+            ANDea.hf_emp_account = #{hfEmpAccount}
+        </if>
+        <if test="comAccountId != null">
+            ANDea.com_account_id = #{comAccountId}
+        </if>
+        <if test="ssAccountType != null">
+            ANDca.ss_account_type = #{ssAccountType}
+        </if>
+        <if test="hfEmpAccount != null">
+            ANDea.hf_emp_account = #{hfEmpAccount}
+        </if>
+        <if test="empArchiveId != null">
+            ANDea.emp_archive_id = #{empArchiveId}
+        </if>
+    </select>
+
+    <select id="queryTransferNewTask" resultMap="EmpTaskTransferRM">
+    SELECT
+    com.company_id,com.title,emp.employee_id,emp.employee_name,emp.id_num,eoop.`status`
+    from emp_af_emp_company eoop
+    INNER JOIN emp_employee emp ON emp.employee_id=eoop.employee_id
+    INNER JOIN sal_company com ON com.company_id=eoop.company_id
+    WHERE eoop.is_active=1
+    </select>
+
 </mapper>
