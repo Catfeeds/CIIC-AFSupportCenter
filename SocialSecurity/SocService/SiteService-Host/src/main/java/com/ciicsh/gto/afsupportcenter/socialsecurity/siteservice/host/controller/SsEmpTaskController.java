@@ -216,7 +216,13 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         List<SsEmpTaskBO> result =business.queryBatchEmpArchiveByEmpTaskIds(ssEmpTaskBO);
         return JsonResultKit.of(result);
     }
-    @Log("查询批量任务信息")
+    @Log("通过条件查询批量任务信息")
+    @RequestMapping("/queryBatchTaskByCondition")
+    public JsonResult<Object> queryBatchTaskByCondition(@RequestBody SsEmpTaskBO ssEmpTaskBO){
+        List<SsEmpTaskBO> result =business.queryBatchTaskByCondition(ssEmpTaskBO);
+        return JsonResultKit.of(result);
+    }
+    @Log("批量任务办理")
     @RequestMapping("/handleBatchTask")
     public JsonResult<Object> handleBatchTask(@RequestBody EmpTaskBatchParameter empTaskBatchParameter){
         Assert.notNull(empTaskBatchParameter,"参数异常");

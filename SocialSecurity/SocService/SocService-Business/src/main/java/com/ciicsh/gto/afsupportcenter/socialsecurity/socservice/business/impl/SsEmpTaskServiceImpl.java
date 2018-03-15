@@ -208,6 +208,11 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
        return baseMapper.queryBatchEmpArchiveByEmpTaskIds(ssEmpTaskBO);
     }
 
+    @Override
+    public List<SsEmpTaskBO> queryBatchTaskByCondition(SsEmpTaskBO ssEmpTaskBO) {
+        return baseMapper.queryBatchTaskByCondition(ssEmpTaskBO);
+    }
+
     /**
      * 调整
      *
