@@ -193,4 +193,24 @@
         AND a.state != 2
         AND b.company_id = #{companyId}
     </select>
+    <!-- 社保序号增1 -->
+    <update id="addSerial">
+        UPDATE
+            ss_com_account CA
+        SET
+            CA.ss_serial = CA.ss_serial + 1
+        WHERE
+            CA.com_account_id = #{comAccountId}
+            AND CA.is_active = '1'
+    </update>
+
+    <!-- 根据社保账号获得社保序号 -->
+    <select id="getSerialByComAccountId" resultType="java.lang.Integer">
+        SELECT
+            CA.ss_serial
+        FROM
+            ss_com_account CA
+        WHERE
+            CA.com_account_id = #{comAccountId}
+    </select>
 </mapper>

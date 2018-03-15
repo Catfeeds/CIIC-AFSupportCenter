@@ -199,8 +199,18 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     }
 
     @Override
+    @Deprecated
     public String selectMaxSsSerialByTaskId(Long empTaskId) {
         return baseMapper.selectMaxSsSerialByTaskId(empTaskId);
+    }
+
+    @Override
+    public Integer getSerial(Integer comAccountId){
+        //社保序号增1
+        ssComAccountService.addSerial(comAccountId);
+        //取出序号
+        Integer ssSerial = ssComAccountService.getSerialByComAccountId(comAccountId);
+        return ssSerial;
     }
 
     @Override
@@ -1188,6 +1198,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             queryConpanyIsOpenAccount(bo);
             //查询雇员 是否已经新进了
             queryEmployeeIsnewOrChangeInto(bo);
+        }
+        //检查社保序号是否有重复
+        //根据企业社保账户Id 和 employeeId 判断重复
+        boolean serialCheckFlag = ssEmpArchiveService.checkSerial(bo.getComAccountId(),bo.getEmployeeId(),bo.getEmpSsSerial());
+        if(!serialCheckFlag){
+            throw new BusinessException("社保序号已存在");
         }
         {//首先添加社保档案表数据
             //先查询是否存在档案ID

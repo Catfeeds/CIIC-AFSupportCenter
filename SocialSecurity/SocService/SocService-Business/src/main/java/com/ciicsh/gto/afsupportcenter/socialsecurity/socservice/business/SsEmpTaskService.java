@@ -54,7 +54,15 @@ public interface SsEmpTaskService extends IService<SsEmpTask> {
      * @param empTaskId
      * @return
      */
+    @Deprecated
     String selectMaxSsSerialByTaskId(Long empTaskId);
+
+    /**
+     * 获得社保序号
+     * @param comAccountId
+     * @return
+     */
+    Integer getSerial(Integer comAccountId);
 
     /**
      * 批量查询任务单信息
