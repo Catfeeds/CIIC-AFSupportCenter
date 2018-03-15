@@ -117,11 +117,11 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             List<SsEmpTaskPeriod> periods = ssEmpTaskPeriodService.queryByEmpTaskId(empTaskId);
             dto.setEmpTaskPeriods(periods);
         }
-        //表示新进和转入 需要社保序号 并且任务单为 初始状态
-        if(isNeedSerial==1 && dto.getTaskStatus()==1){
-            String ssSerial = business.selectMaxSsSerialByTaskId(empTaskId);
-            dto.setEmpSsSerial(ssSerial);
-         }
+//        //表示新进和转入 需要社保序号 并且任务单为 初始状态
+//        if(isNeedSerial==1 && dto.getTaskStatus()==1){
+//            String ssSerial = business.selectMaxSsSerialByTaskId(empTaskId);
+//            dto.setEmpSsSerial(ssSerial);
+//         }
              //任务单参考信息 用退工
              AmEmpTaskDTO amEmpTaskDTO = amEmpTaskOfSsService.queryReworkInfo(empTaskId);
         if(amEmpTaskDTO==null){
@@ -157,6 +157,15 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         return JsonResultKit.of(result);
     }
 
+    /**
+     * 获得社保序号
+     */
+    @Log("获得社保序号")
+    @PostMapping("/getSerial")
+    public JsonResult<Integer> getSerial(Integer comAccountId) {
+        Integer ssSerial =  business.getSerial(comAccountId);
+        return JsonResultKit.of(ssSerial);
+    }
 
     /**
      * 特殊任务查询
