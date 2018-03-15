@@ -119,14 +119,22 @@ public class KafkaReceiver {
     @StreamListener(TaskSink.AF_EMP_AGREEMENT_ADJUST)
     public void fundEmpAgreementAdjust(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
-        if (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType())
-            || TaskSink.ADD_FUND_NEW.equals(taskMsgDTO.getTaskType())
-            || TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())
-            || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
-            logger.info("start fundEmpAgreementAdjust: " + JSON.toJSONString(taskMsgDTO));
+        //调整和新进（新开、转入和启封）
+        if (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) || TaskSink.ADD_FUND_NEW.equals(taskMsgDTO.getTaskType())) {
+            logger.info("start in fundEmpAgreementAdjust: " + JSON.toJSONString(taskMsgDTO));
+            Map<String, Object> paramMap = taskMsgDTO.getVariables();
+            if (null != paramMap && paramMap.get("fundType") != null) {
+                String taskCategory = paramMap.get("fundType").toString();
+                String fundCategory = (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType())|| TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
+                boolean res = saveEmpTask(taskMsgDTO, fundCategory, Integer.parseInt(taskCategory),0);
+                logger.info("end in fundEmpAgreementAdjust: " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
+            }
+        }//离职封存()
+        else{
+            logger.info("start out fundEmpAgreementAdjust: " + JSON.toJSONString(taskMsgDTO));
             String fundCategory = (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType())|| TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
-            boolean res = saveEmpTask(taskMsgDTO, fundCategory, TaskCategory.ADJUSTSEALED.getCategory(),0);
-            logger.info("end fundEmpAgreementAdjust: " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
+            boolean res = saveEmpTask(taskMsgDTO, fundCategory, TaskCategory.LEAVESEALED.getCategory(),0);
+            logger.info("end out fundEmpAgreementAdjust: " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
         }
     }
 
