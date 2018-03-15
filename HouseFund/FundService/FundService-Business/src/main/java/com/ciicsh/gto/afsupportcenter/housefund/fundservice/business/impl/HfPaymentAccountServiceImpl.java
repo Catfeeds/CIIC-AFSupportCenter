@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,7 +44,7 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
             }
             hfPayment.setPaymentState(paymentState);
             hfPayment.setModifiedBy("system");
-            hfPayment.setModifiedTime(LocalDateTime.now());
+            hfPayment.setModifiedTime(new Date());
             hfPaymentMapper.updateById(hfPayment);
 
             //将批次下的客户费用明细的状态也改为已申请到财务部
