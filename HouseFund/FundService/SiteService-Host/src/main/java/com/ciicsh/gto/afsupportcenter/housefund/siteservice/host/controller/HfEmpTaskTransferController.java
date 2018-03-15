@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.EmpEmployeeService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskTransferService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
@@ -33,7 +34,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/fundcommandservice/hfEmpTaskTransfer")
-public class HfEmpTaskTransferController extends BasicController<HfEmpTaskService> {
+public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransferService> {
     @Autowired
     HfEmpTaskService hfEmpTaskHandleService;
     @Autowired
