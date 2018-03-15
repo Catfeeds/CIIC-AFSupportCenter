@@ -140,7 +140,7 @@ public class KafkaReceiver {
         String socialType;
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())) {
             Map<String, Object> paramMap = taskMsgDTO.getVariables();
-            boolean social_stopAndStop = paramMap.get("social_stopAndStop") != null ? (boolean)paramMap.get("social_stopAndStop") : false;
+            boolean social_stopAndStop = paramMap.get("social_startAndStop") != null ? (boolean)paramMap.get("social_startAndStop") : false;
             //客服中心参数判断，如果为true，就能确认任务单类型是转入；否则取雇员中心传过来的任务类型
             if(social_stopAndStop){
                 socialType = SocialSecurityConst.TASK_TYPE_2;
@@ -306,7 +306,8 @@ public class KafkaReceiver {
             //保存雇员任务单表数据
             ssEmpTaskFrontService.saveSsEmpTask(taskMsgDTO, socialType, 0, dto);
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            e.printStackTrace();
+//            logger.error(e.getMessage(), e);
         }
     }
 
