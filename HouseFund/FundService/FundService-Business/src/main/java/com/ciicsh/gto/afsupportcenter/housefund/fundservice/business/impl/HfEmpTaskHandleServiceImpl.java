@@ -618,11 +618,11 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             hfArchiveBasePeriod.setAmount(CalculateSocialUtils.calculateByRoundType(hfEmpTaskPeriod.getAmount(), roundTypeInWeight));
             hfArchiveBasePeriod.setAmountEmp(
                 CalculateSocialUtils.calculateByRoundType(
-                    amount.multiply(ratioEmp.divide(hfArchiveBasePeriod.getRatio())).setScale(3, BigDecimal.ROUND_HALF_UP),
+                    amount.multiply(ratioEmp.divide(hfArchiveBasePeriod.getRatio(), 3, BigDecimal.ROUND_HALF_UP)),
                     roundTypes[1]));
             hfArchiveBasePeriod.setComAmount(
                 CalculateSocialUtils.calculateByRoundType(
-                    amount.multiply(ratioCom.divide(hfArchiveBasePeriod.getRatio())).setScale(3, BigDecimal.ROUND_HALF_UP),
+                    amount.multiply(ratioCom.divide(hfArchiveBasePeriod.getRatio(), 3, BigDecimal.ROUND_HALF_UP)),
                     roundTypes[0]));
         } else {
             // 代码特殊处理，仅为了差额补缴时，不重新计算单月差额
@@ -781,7 +781,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                                 if (!hfEmpTask.getCompanyId().equals(hfArchiveBasePeriod.getCompanyId())) {
                                     throw new BusinessException("补缴任务费用分段中缴费期间与所匹配的费用段不属于同一个客户");
                                 }
-                                setHfArchiveBaseAdjust(hfArchiveBaseAdjustList, hfEmpTask, e, hfArchiveBasePeriod, roundTypes);
+                                setHfArchiveBaseAdjust(hfArchiveBaseAdjustList, hfEmpTask, e, hfArchiveBasePeriod, roundTypes, roundTypeInWeight);
                                 setHfArchiveBasePeriodList(diffHfArchiveBasePeriodList, hfEmpTask, e, hfArchiveBasePeriod, roundTypes, roundTypeInWeight);
                             }
                         }
@@ -981,7 +981,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                             hfEmpTaskPeriod.setEndMonth(e.getEndMonth());
                             isEnd = true;
                         }
-                        setHfArchiveBaseAdjust(hfArchiveBaseAdjustList, hfEmpTask, hfEmpTaskPeriod, existHfArchiveBasePeriod, roundTypes);
+                        setHfArchiveBaseAdjust(hfArchiveBaseAdjustList, hfEmpTask, hfEmpTaskPeriod, existHfArchiveBasePeriod, roundTypes, roundTypeInWeight);
                         setHfArchiveBasePeriodList(diffHfArchiveBasePeriodList, hfEmpTask, hfEmpTaskPeriod, existHfArchiveBasePeriod, roundTypes, roundTypeInWeight);
 
                         if (isEnd) {
@@ -1363,12 +1363,14 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
      * @param hfEmpTask 任务单表数据
      * @param hfEmpTaskPeriod 雇员档案费用分段表数据
      * @param roundTypes 进位方式
+     * @param roundTypeInWeight 权重进位方式
      */
     private void setHfArchiveBaseAdjust(List<HfArchiveBaseAdjust> hfArchiveBaseAdjustList,
                                         HfEmpTask hfEmpTask,
                                         HfEmpTaskPeriod hfEmpTaskPeriod,
                                         HfArchiveBasePeriod hfArchiveBasePeriod,
-                                        int[] roundTypes) {
+                                        int[] roundTypes,
+                                        int roundTypeInWeight) {
         String startMonth = hfEmpTaskPeriod.getStartMonth();
         String endMonth = hfEmpTaskPeriod.getEndMonth();
         HfArchiveBaseAdjust hfArchiveBaseAdjust = new HfArchiveBaseAdjust();
@@ -1395,11 +1397,11 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         singleComDiffAmount = CalculateSocialUtils.calculateByRoundType(singleComDiffAmount, roundTypes[0]);
         singleEmpDiffAmount = CalculateSocialUtils.calculateByRoundType(singleEmpDiffAmount, roundTypes[1]);
 
-        BigDecimal comDiffAmount = CalculateSocialUtils.calculateByRoundType(singleComDiffAmount.multiply(months).setScale(3, BigDecimal.ROUND_HALF_UP), roundTypes[0]);
-        BigDecimal empDiffAmount = CalculateSocialUtils.calculateByRoundType(singleEmpDiffAmount.multiply(months).setScale(3, BigDecimal.ROUND_HALF_UP), roundTypes[1]);
+        BigDecimal comDiffAmount = CalculateSocialUtils.calculateByRoundType(singleComDiffAmount.multiply(months), roundTypes[0]);
+        BigDecimal empDiffAmount = CalculateSocialUtils.calculateByRoundType(singleEmpDiffAmount.multiply(months), roundTypes[1]);
         hfArchiveBaseAdjust.setComDiffSumAmount(comDiffAmount);
         hfArchiveBaseAdjust.setEmpDiffSumAmount(empDiffAmount);
-        hfArchiveBaseAdjust.setComempSumDiffAmount(comDiffAmount.add(empDiffAmount).setScale(2, BigDecimal.ROUND_HALF_UP));
+        hfArchiveBaseAdjust.setComempSumDiffAmount(CalculateSocialUtils.calculateByRoundType(comDiffAmount.add(empDiffAmount), roundTypeInWeight));
         hfArchiveBaseAdjust.setCreatedBy(hfEmpTask.getModifiedBy());
         hfArchiveBaseAdjust.setModifiedBy(hfEmpTask.getModifiedBy());
         hfArchiveBaseAdjustList.add(hfArchiveBaseAdjust);
@@ -1464,7 +1466,11 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             }
             afEmpSocialUpdateDateDTO.setCompanyId(companyId);
             afEmpSocialUpdateDateDTO.setEmpAgreementId(empAgreementId);
-            afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ID_FUND);
+            if (hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
+                afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ID_FUND_BASIC);
+            } else {
+                afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ID_FUND_ADDED);
+            }
             afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(companyConfirmAmount);
             afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(personalConfirmAmount);
             afEmpSocialUpdateDateDTOList.add(afEmpSocialUpdateDateDTO);
