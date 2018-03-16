@@ -99,9 +99,9 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         inputHfEmpTask.setEmpTaskId(empTaskId);
         inputHfEmpTask.setTaskCategory(params.getInteger("taskCategory"));
 
-        String dicItemCode = DictUtil.DICT_ID_FUND_BASIC;
+        String dicItemCode = DictUtil.DICT_ITEM_ID_FUND_BASIC;
         if (hfEmpTask.getHfType() == 2) {
-            dicItemCode = DictUtil.DICT_ID_FUND_ADDED;
+            dicItemCode = DictUtil.DICT_ITEM_ID_FUND_ADDED;
         }
         String policyId = hfEmpTask.getPolicyDetailId();
         Integer welfareUnit = hfEmpTask.getWelfareUnit();
@@ -1467,9 +1467,9 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             afEmpSocialUpdateDateDTO.setCompanyId(companyId);
             afEmpSocialUpdateDateDTO.setEmpAgreementId(empAgreementId);
             if (hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
-                afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ID_FUND_BASIC);
+                afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ITEM_ID_FUND_BASIC);
             } else {
-                afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ID_FUND_ADDED);
+                afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ITEM_ID_FUND_ADDED);
             }
             afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(companyConfirmAmount);
             afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(personalConfirmAmount);

@@ -239,9 +239,9 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
                     if (StringUtils.isEmpty(effectiveMonth)) {
                         effectiveMonth = hfEmpTask.getEndMonth();
                     }
-                    String hfTypeDicItemCode = DictUtil.DICT_ID_FUND_BASIC;
+                    String hfTypeDicItemCode = DictUtil.DICT_ITEM_ID_FUND_BASIC;
                     if (hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_ADDED) {
-                        hfTypeDicItemCode = DictUtil.DICT_ID_FUND_ADDED;
+                        hfTypeDicItemCode = DictUtil.DICT_ITEM_ID_FUND_ADDED;
                     }
                     int[] roundTypes = null;
                     if (StringUtils.isNotEmpty(policyId)) {
