@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfMonthChargeService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfMonthChargeConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfMonthChargeMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
@@ -43,6 +44,68 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
     public PageRows<HFMonthChargeReportBO> queryHfMonthChargeReport(PageInfo pageInfo) {
         HFMonthChargeQueryBO hfMonthChargeQueryBO = pageInfo.toJavaObject(HFMonthChargeQueryBO.class);
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryHfMonthChargeReport(hfMonthChargeQueryBO));
+    }
+
+    private String getChangeTypeByPaymentType(int paymentType) {
+        String changeType = "";
+        switch (paymentType) {
+            case HfMonthChargeConstant.PAYMENT_TYPE_NEW:
+                changeType = HfMonthChargeConstant.DETAIL_LIST_TYPE_NEW;
+                break;
+            case HfMonthChargeConstant.PAYMENT_TYPE_TRANS_IN:
+                changeType = HfMonthChargeConstant.DETAIL_LIST_TYPE_TRANS_IN;
+                break;
+            case HfMonthChargeConstant.PAYMENT_TYPE_OPEN:
+            case HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_OPEN:
+                changeType = HfMonthChargeConstant.DETAIL_LIST_TYPE_OPEN;
+                break;
+            case HfMonthChargeConstant.PAYMENT_TYPE_TRANS_OUT:
+                changeType = HfMonthChargeConstant.DETAIL_LIST_TYPE_TRANS_OUT;
+                break;
+            case HfMonthChargeConstant.PAYMENT_TYPE_CLOSE:
+            case HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_CLOSE:
+                changeType = HfMonthChargeConstant.DETAIL_LIST_TYPE_CLOSE;
+                break;
+            case HfMonthChargeConstant.PAYMENT_TYPE_DEL:
+                changeType = HfMonthChargeConstant.DETAIL_LIST_TYPE_DEL;
+                break;
+            default:
+                break;
+        }
+        return changeType;
+    }
+
+    private List<HFMonthChargeBasChgDetailBO> getBasChgDetailList(List<HFMonthChargeReportBO> inHfMonthChargeReportBOList, List<HFMonthChargeReportBO> outHfMonthChargeReportBOList) {
+        List<HFMonthChargeBasChgDetailBO> hfMonthChargeBasChgDetailBOList = new ArrayList<>();
+
+        int length = inHfMonthChargeReportBOList.size();
+        if (length < outHfMonthChargeReportBOList.size()) {
+            for (HFMonthChargeReportBO hfMonthChargeReportBO : outHfMonthChargeReportBOList) {
+                HFMonthChargeBasChgDetailBO hfMonthChargeBasChgDetailBO = new HFMonthChargeBasChgDetailBO();
+                hfMonthChargeBasChgDetailBO.setOutEmployeeName(hfMonthChargeReportBO.getEmployeeName());
+                hfMonthChargeBasChgDetailBO.setOutHfEmpAccount(hfMonthChargeReportBO.getHfEmpAccount());
+                hfMonthChargeBasChgDetailBO.setOutChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType()));
+                // TODO out ...
+            }
+
+            for (int i = 0; i < inHfMonthChargeReportBOList.size(); i++) {
+                hfMonthChargeBasChgDetailBOList.get(i).setInEmployeeName(inHfMonthChargeReportBOList.get(i).getEmployeeName());
+                // TODO in ...
+            }
+        } else {
+            for (HFMonthChargeReportBO hfMonthChargeReportBO : inHfMonthChargeReportBOList) {
+                HFMonthChargeBasChgDetailBO hfMonthChargeBasChgDetailBO = new HFMonthChargeBasChgDetailBO();
+                hfMonthChargeBasChgDetailBO.setInEmployeeName(hfMonthChargeReportBO.getEmployeeName());
+                // TODO in ...
+            }
+
+            for (int i = 0; i < outHfMonthChargeReportBOList.size(); i++) {
+                hfMonthChargeBasChgDetailBOList.get(i).setOutEmployeeName(outHfMonthChargeReportBOList.get(i).getEmployeeName());
+                // TODO out ...
+            }
+        }
+
+        return hfMonthChargeBasChgDetailBOList;
     }
 
     /**

@@ -22,14 +22,15 @@ public class PdfUtil {
      * @param templateFilePath 模板文档路径（支持相对路径）
      * @param fontName 字体名
      * @param isInSystemFontFolder 是否系统目录下字体
-     * @param fillDataList 充填数据列表
+     * @param fillDataMapList 充填数据Map列表（表体之外部分：属性名请与Pdf模板一致；
+     *                        表体部分：key:"fillDataList"; value:List<T>; 属性名请与Pdf模板一致，名称后的数字不需定义）
      * @param outputStream 输出流
-     * @throws BusinessException
+     * @throws BusinessException 封装后异常
      */
     public static void createPdfByTemplate(String templateFilePath,
                                            String fontName,
                                            boolean isInSystemFontFolder,
-                                           List<T> fillDataList,
+                                           List<Map<String, Object>> fillDataMapList,
                                            OutputStream outputStream) throws BusinessException {
         InputStream is = null;
         ByteArrayOutputStream bos = null;
@@ -47,28 +48,35 @@ public class PdfUtil {
             ArrayList<BaseFont> fontList = new ArrayList<>();
             fontList.add(baseFont);
             byte[] bytes = IOUtils.toByteArray(is);
+            int pageSize = fillDataMapList.size();
 
-            for (T t : fillDataList) {
+            for (int page = 0; page < pageSize; page++) {
                 PdfReader reader = new PdfReader(bytes);
                 PdfStamper stamper = new PdfStamper(reader, bos);
                 AcroFields form = stamper.getAcroFields();
                 form.setSubstitutionFonts(fontList);
-                Field[] fields = t.getClass().getDeclaredFields();
-                List<Field> fieldList = Arrays.asList(fields);
-                Iterator<String> iterator = form.getFields().keySet().iterator();
+                Set<String> formKeySet = form.getFields().keySet();
+                Map<String, Object> fillDataMap = fillDataMapList.get(page);
+                List<T> fillDataList = (List<T>) fillDataMap.get("fillDataList");
 
-                while (iterator.hasNext()) {
-                    String name = iterator.next();
-//                    form.setFieldProperty(name, "textsize", 9, null);
+                form.setField("pageTotal",String.valueOf(pageSize));
+                form.setField("page", String.valueOf(page + 1));
 
-                    for (Iterator<Field> iter = fieldList.iterator(); iter.hasNext();) {
-                        Field field = iter.next();
-                        String fieldName = field.getName();
+                for (String key : fillDataMap.keySet()) {
+                    if (formKeySet.contains(key)) {
+                        form.setField(key, String.valueOf(fillDataMap.get(key)));
+                    }
+                }
 
-                        if (name.equals(fieldName)) {
-                            form.setField(name, String.valueOf(field.get(t)));
-                            iter.remove();
-                            break;
+                for (int i = 0; i < fillDataList.size(); i++) {
+                    T t = fillDataList.get(i);
+                    Field[] fields = t.getClass().getDeclaredFields();
+
+                    for (Field field : fields) {
+                        String fieldName = field.getName() + (i + 1);
+
+                        if (formKeySet.contains(fieldName)) {
+                            form.setField(fieldName, String.valueOf(field.get(t)));
                         }
                     }
                 }
@@ -78,11 +86,7 @@ public class PdfUtil {
                 copy.addPage(importedPage);
             }
             doc.close();
-        } catch (IOException e) {
-            throw new BusinessException(e);
-        } catch (DocumentException e) {
-            throw new BusinessException(e);
-        } catch (IllegalAccessException e) {
+        } catch (IOException | DocumentException | IllegalAccessException e) {
             throw new BusinessException(e);
         } finally {
             if (doc != null && doc.isOpen()) {
@@ -117,7 +121,7 @@ public class PdfUtil {
         Properties prop = System.getProperties();
         String osName = prop.getProperty("os.name").toLowerCase();
 
-        if (osName.indexOf("linux") > -1) {
+        if (osName.contains("linux")) {
             fontPath = "/usr/share/fonts/" + fontName;
         }
         if(!new File(fontPath).exists()){
