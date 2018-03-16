@@ -5,6 +5,8 @@ import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.springframework.util.Assert;
 
+import java.util.Map;
+
 
 public class TaskCommonUtils {
     /**
@@ -27,11 +29,11 @@ public class TaskCommonUtils {
      * @param assignee
      * @return
      */
-    public static void completeTask(String taskId,CommonApiUtils commonApiUtils,String assignee){
+    public static void completeTask(String taskId, CommonApiUtils commonApiUtils, Map<String, Object> variables){
 
         TaskRequestDTO taskRequestDTO = new TaskRequestDTO();
         taskRequestDTO.setTaskId(taskId);
-        taskRequestDTO.setAssignee(assignee);
+        taskRequestDTO.setVariables(variables);
         try {
             Result result =commonApiUtils.completeTask(taskRequestDTO);
             handleWorkflowResult(result);

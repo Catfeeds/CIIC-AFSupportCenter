@@ -9,31 +9,43 @@
         <result column="hf_com_account" property="hfComAccount"/>
     </resultMap>
 
-    <resultMap id="StatementItemMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.FundStatementItemPO">
+    <resultMap id="StatementItemMap"
+               type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.FundStatementItemPO">
         <result column="statementId" property="statementId" jdbcType="INTEGER"/>
         <result column="hf_month" property="hfMonth" jdbcType="VARCHAR"/>
         <result column="com_account_name" property="comAccountName" jdbcType="VARCHAR"/>
         <result column="imp_record_count" property="impRecordCount" jdbcType="INTEGER"/>
         <result column="diff_count" property="diffCount" jdbcType="INTEGER"/>
         <result column="com_account" property="comAccount" jdbcType="VARCHAR"/>
-        <result column="emp_name" property="empName"  jdbcType="VARCHAR"/>
-        <result column="imp_amount" property="impAmount"  jdbcType="DECIMAL"/>
+        <result column="emp_name" property="empName" jdbcType="VARCHAR"/>
+        <result column="imp_amount" property="impAmount" jdbcType="DECIMAL"/>
         <result column="sys_amount" property="sysAmount" jdbcType="DECIMAL"/>
-        <result column="diff_amount" property="diffAmount"  jdbcType="DECIMAL"/>
+        <result column="diff_amount" property="diffAmount" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <resultMap id="EmployeeIdMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.EmployeeIdPO">
+        <result column="employee_id" property="EmployeeId"/>
+        <result column="employee_name" property="EmployeeName"/>
+    </resultMap>
+
+    <resultMap id="EmployeeSysAmountMap"
+               type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.EmployeeSysAmountPO">
+        <result column="employee_id" property="employeeId"/>
+        <result column="sys_amount" property="sysAmount"/>
     </resultMap>
 
     <select id="getHFStatementCompareRecord" resultMap="StatementMap">
         SELECT
-            a.statement_compare_id,
-            a.hf_month,
-            b.com_account_name,
-            c.hf_com_account,
-            a.imp_path,
-            a.hf_type,
-            a.compare_man,
-            a.compare_time
+        a.statement_compare_id,
+        a.hf_month,
+        b.com_account_name,
+        c.hf_com_account,
+        a.imp_path,
+        a.hf_type,
+        a.compare_man,
+        a.compare_time
         FROM
-            hf_statement_compare a
+        hf_statement_compare a
         INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
         INNER JOIN hf_com_account_class c ON a.com_account_id = c.com_account_id
         AND a.hf_type = c.hf_type
@@ -83,4 +95,35 @@
         DELETE FROM hf_statement_compare_result WHERE statement_compare_id=#{statementId}
     </delete>
 
+    <select id="getEmployeeIdFromArchive" resultType="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.EmployeeIdPO">
+        SELECT
+            ea.employee_id,
+            emp.employee_name
+        FROM
+            hf_emp_archive ea
+        INNER JOIN hf_com_account ca ON ca.com_account_id = ea.com_account_id
+        INNER JOIN emp_employee emp ON emp.employee_id = ea.employee_id
+        WHERE
+            ea.is_active = 1
+        AND emp.employee_name = #{employeeName}
+        AND emp.id_num = #{idNum}
+        AND ea.hf_emp_account = #{empAccount}
+        LIMIT 1
+    </select>
+
+    <select id="getEmployeeSysAmount" resultMap="EmployeeSysAmountMap">
+        SELECT
+        ea.employee_id,
+        abp.amount sys_amount
+        FROM
+        hf_archive_base_period abp
+        INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = abp.emp_archive_id
+        INNER JOIN hf_com_account ca ON ca.com_account_id = ea.com_account_id
+        INNER JOIN emp_employee emp ON emp.employee_id = ea.employee_id
+        <where>
+            ea.is_active = 1 AND abp.is_active = 1 AND ca.com_account_id=#{comAccountId}
+            AND (abp.start_month &lt;= #{hfMonth} AND abp.end_month >= #{hfMonth}
+            OR ( abp.start_month &lt;= #{hfMonth} AND abp.end_month IS NULL))
+        </where>
+    </select>
 </mapper>

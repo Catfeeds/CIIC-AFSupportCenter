@@ -222,9 +222,12 @@
     <update id="updateByEntity" parameterType="java.util.Date">
         UPDATE
         hm_supply_medical_acceptance
-        SET status = 1
+        SET status = 2
         WHERE input_date &lt; #{date,jdbcType=TIMESTAMP}
         AND status = 0
+        AND acceptance_id IN (SELECT acceptance_id
+                            FROM hm_supply_medical_invoice
+                            WHERE insurance_company_money > 0)
     </update>
 
     <update id="updateStatus" parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.EmployeePaymentStatusBO">

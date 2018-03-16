@@ -22,7 +22,7 @@ public class MessageController {
 
     @RequestMapping(value = "/summarycalculate")
     public JsonResult<String> summaryCalculate(@RequestParam Long comAccountId, @RequestParam String ssMonth, @RequestParam String generalMethod){
-        String key = "-com-account-"+comAccountId+"-"+ssMonth+"-"+generalMethod;
+        String key = "-com-account-"+comAccountId+"-"+ssMonth+"-"+generalMethod+"-";
         SocReportMessage message = RedisManager.get(key,SocReportMessage.class);
         JsonResult<String> json = new JsonResult();
         if(null != message){

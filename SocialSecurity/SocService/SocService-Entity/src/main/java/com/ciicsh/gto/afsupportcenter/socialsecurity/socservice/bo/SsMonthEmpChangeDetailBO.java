@@ -23,6 +23,12 @@ public class SsMonthEmpChangeDetailBO {
      */
     private String employeeName;
 
+
+    /**
+     * 社保序号
+     */
+    private String ssSerial;
+
 	/*--------页面展示字段----------------------------------------------------------*/
 
 	/*-------养老保险-Pension-------*/
@@ -516,5 +522,13 @@ public class SsMonthEmpChangeDetailBO {
 
     public void setEmployeeName(String employeeName) {
         this.employeeName = employeeName;
+    }
+
+    public String getSsSerial() {
+        return ssSerial;
+    }
+
+    public void setSsSerial(String ssSerial) {
+        this.ssSerial = ssSerial;
     }
 }

@@ -46,4 +46,11 @@ public interface SsEmpArchiveMapper extends BaseMapper<SsEmpArchive> {
      *
      * */
     public int checkSerialDuplicate(Map map);
+
+
+    /**
+     * 检查社保序号重复
+     * @param ssEmpArchive :comAccountId employeeId empSsSerial
+     */
+    int checkSerial(SsEmpArchive ssEmpArchive);
 }

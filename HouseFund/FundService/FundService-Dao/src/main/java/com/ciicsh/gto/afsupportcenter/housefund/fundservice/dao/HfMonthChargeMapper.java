@@ -1,5 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFMonthChargeQueryBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFMonthChargeReportBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfMonthChargeBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfMonthChargeDiffBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
@@ -37,4 +39,12 @@ public interface HfMonthChargeMapper extends BaseMapper<HfMonthCharge> {
      * @return
      */
     HfMonthChargeDiffBo getHfMonthChargeDiffSum(HfMonthChargeBo hfMonthChargeBo);
+
+    /**
+     * 查询雇员月度汇缴明细库
+     *
+     * @param hfMonthChargeQueryBO
+     * @return
+     */
+    List<HFMonthChargeReportBO> queryHfMonthChargeReport(HFMonthChargeQueryBO hfMonthChargeQueryBO);
 }

@@ -54,13 +54,28 @@ public interface SsEmpTaskService extends IService<SsEmpTask> {
      * @param empTaskId
      * @return
      */
+    @Deprecated
     String selectMaxSsSerialByTaskId(Long empTaskId);
+
+    /**
+     * 获得社保序号
+     * @param comAccountId
+     * @return
+     */
+    Integer getSerial(Integer comAccountId);
 
     /**
      * 批量查询任务单信息
      * @param ssEmpTaskBO
      */
     List<SsEmpTaskBO> queryBatchEmpArchiveByEmpTaskIds(SsEmpTaskBO ssEmpTaskBO);
+
+    /**
+     * 通过条件查询批量任务信息
+     * @param ssEmpTaskBO
+     * @return
+     */
+    List<SsEmpTaskBO> queryBatchTaskByCondition(SsEmpTaskBO ssEmpTaskBO);
 
     /**
      * 查询任务单信息

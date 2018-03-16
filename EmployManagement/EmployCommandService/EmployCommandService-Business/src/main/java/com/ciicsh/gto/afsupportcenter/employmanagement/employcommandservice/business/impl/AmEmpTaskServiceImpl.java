@@ -208,6 +208,11 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             }else{
                 logger.info("outReason is null "+"  MissionId is "+taskMsgDTO.getMissionId());
             }
+            if(employeeCompany!=null&&employeeCompany.getTemplateType()!=null)
+            {
+                amEmpTask.setEmployCode(employeeCompany.getTemplateType());
+                amEmpTask.setEmployProperty(ReasonUtil.getYgsx(employeeCompany.getTemplateType().toString()));
+            }
         } catch (Exception e) {
             logger.error("callOut interface error ......");
             logger.error(e.getMessage(), e);
@@ -281,6 +286,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amEmpTask = super.selectById(param.getEmpTaskId());
                 employeeBO.setArchiveDirection(amEmpTask==null?"":amEmpTask.getArchiveDirection());
                 employeeBO.setEmployeeNature(amEmpTask==null?"":amEmpTask.getEmployeeNature());
+                employeeBO.setEmployProperty(amEmpTask==null?"":amEmpTask.getEmployProperty());
             }
 
         } catch (Exception e) {
@@ -356,6 +362,11 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         param.put("empCompanyId",empCompanyId);
         AmEmpTaskBO bo = baseMapper.selectEmployId(param);
         return  bo;
+    }
+
+    @Override
+    public AmEmpTaskBO getDefualtEmployBO(AmEmpTaskBO amEmpTaskBO) {
+        return null;
     }
 
 

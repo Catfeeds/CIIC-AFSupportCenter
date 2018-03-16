@@ -441,6 +441,12 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         List<archiveSearchExportOpt> opts = business.queryAmArchiveList(amEmploymentBO);
 
+        for(archiveSearchExportOpt temp:opts)
+        {
+            temp.setEmployFeedback(ReasonUtil.getYgfk(temp.getEmployFeedback()));
+            temp.setResignFeedback1(ReasonUtil.getTgfk(temp.getResignFeedback1()));
+        }
+
         ExcelUtil.exportExcel(opts,archiveSearchExportOpt.class,fileNme,response);
     }
 

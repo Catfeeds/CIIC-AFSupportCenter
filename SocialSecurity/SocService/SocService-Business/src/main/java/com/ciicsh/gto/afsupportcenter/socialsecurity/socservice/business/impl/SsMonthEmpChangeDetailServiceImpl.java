@@ -1,7 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsMonthEmpChangeDetail;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsMonthEmpChangeDetailMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsMonthEmpChangeDetailService;
@@ -24,12 +23,12 @@ import java.util.*;
 @Service
 public class SsMonthEmpChangeDetailServiceImpl extends ServiceImpl<SsMonthEmpChangeDetailMapper, SsMonthEmpChangeDetail> implements SsMonthEmpChangeDetailService {
     @Override
-    public List<SsMonthEmpChangeDetailBO> showMonthEmpChangeDetailByStatementId(SsMonthEmpChangeBO ssMonthEmpChangeBO) {
+    public List<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO> showMonthEmpChangeDetailByStatementId(SsMonthEmpChangeBO ssMonthEmpChangeBO) {
         //通过条件获得社保汇总明细数据
-        List<SsMonthEmpChangeDetailBO> detailDTOList = baseMapper.serachMonthEmpChangeDetailByStatementId(ssMonthEmpChangeBO);
+        List<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO> detailDTOList = baseMapper.serachMonthEmpChangeDetailByStatementId(ssMonthEmpChangeBO);
 
         //将原始DTO通过业务逻辑转换成页面展示的DTO
-        List<SsMonthEmpChangeDetailBO> resulrDTOList = dealEmpChangeDetailDTO(detailDTOList);
+        List<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO> resulrDTOList = dealEmpChangeDetailDTO(detailDTOList);
         return resulrDTOList;
     }
 
@@ -49,27 +48,27 @@ public class SsMonthEmpChangeDetailServiceImpl extends ServiceImpl<SsMonthEmpCha
      * @author wengxk
      * @date 2017-12-13
      * @param detailDTOList 社保汇总明细数据
-     * @return   List<SsMonthEmpChangeDetailBO>
+     * @return   List<SsMonthEmpChangeDetail>
      */
-    private List<SsMonthEmpChangeDetailBO> dealEmpChangeDetailDTO(List<SsMonthEmpChangeDetailBO> detailDTOList){
+    private List<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO> dealEmpChangeDetailDTO(List<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO> detailDTOList){
         //如果为空则直接返回
         if(!Optional.ofNullable(detailDTOList).isPresent()){
             return detailDTOList;
         }
         //用于合并的Map
-        Map<String,SsMonthEmpChangeDetailBO> dealMap = new HashMap<>(detailDTOList.size());
+        Map<String, com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO> dealMap = new LinkedHashMap<>(detailDTOList.size());
         //用于返回的
-        List<SsMonthEmpChangeDetailBO> resultDTOList = new ArrayList<>();
+        List<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO> resultDTOList = new ArrayList<>();
         //循环处理
         for(int i = 0;i < detailDTOList.size();i++){
-            SsMonthEmpChangeDetailBO dto = detailDTOList.get(i);
+            com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO dto = detailDTOList.get(i);
             //从map中获取需要操作的节点
-            SsMonthEmpChangeDetailBO doDto = getDtoOfMap(dealMap,dto);
+            com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO doDto = getDtoOfMap(dealMap,dto);
             //将该节点的值写入需要操作的节点中
             putDetailValue(doDto,dto);
         }
         //将map中的值返给resultDTOList
-        for (SsMonthEmpChangeDetailBO value : dealMap.values()) {
+        for (com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO value : dealMap.values()) {
             resultDTOList.add(value);
         }
 
@@ -82,9 +81,9 @@ public class SsMonthEmpChangeDetailServiceImpl extends ServiceImpl<SsMonthEmpCha
      * @date 2017-12-13
      * @param map 存放数据集的map
      * @param dto 放入的dto
-     * @return   SsMonthEmpChangeDetailBO
+     * @return   SsMonthEmpChangeDetail
      */
-    private SsMonthEmpChangeDetailBO getDtoOfMap (Map<String,SsMonthEmpChangeDetailBO> map, SsMonthEmpChangeDetailBO dto){
+    private com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO getDtoOfMap (Map<String, com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO> map, com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO dto){
         //拼装key
         String key = dto.getEmployeeId() + '-' + dto.getChangeType();
         //查看map中是否存在该key的节点
@@ -105,7 +104,7 @@ public class SsMonthEmpChangeDetailServiceImpl extends ServiceImpl<SsMonthEmpCha
      * @param putDto 存放值节点
      * @param getDto 取值节点
      */
-    private void putDetailValue(SsMonthEmpChangeDetailBO putDto, SsMonthEmpChangeDetailBO getDto){
+    private void putDetailValue(com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO putDto, com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO getDto){
         //定义社保类型
         //养老保险
         final String PENSION = "DIT00042";

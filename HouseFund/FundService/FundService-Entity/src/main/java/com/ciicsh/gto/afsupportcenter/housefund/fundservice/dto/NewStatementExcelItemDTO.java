@@ -14,7 +14,7 @@ public class NewStatementExcelItemDTO {
     @Excel(name = "身份证号码",orderNum = "3")
     private String idNum;
     @Excel(name = "月缴额",orderNum = "4")
-    private int monthlyAmount;
+    private BigDecimal monthlyAmount;
 
 
     public String getPersonalAccount() {
@@ -41,11 +41,11 @@ public class NewStatementExcelItemDTO {
         this.idNum = idNum;
     }
 
-    public int getMonthlyAmount() {
+    public BigDecimal getMonthlyAmount() {
         return monthlyAmount;
     }
 
-    public void setMonthlyAmount(int monthlyAmount) {
+    public void setMonthlyAmount(BigDecimal monthlyAmount) {
         this.monthlyAmount = monthlyAmount;
     }
 }

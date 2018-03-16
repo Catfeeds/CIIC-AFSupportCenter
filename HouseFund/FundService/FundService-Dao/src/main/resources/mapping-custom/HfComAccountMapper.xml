@@ -43,6 +43,7 @@
         <result column="com_account" jdbcType="VARCHAR" property="comAccount"/>
         <result column="pay_start_month" jdbcType="VARCHAR" property="payStartMonth"/>
         <result column="pay_end_month" jdbcType="VARCHAR" property="payEndMonth"/>
+        <result column="com_hf_month" jdbcType="VARCHAR" property="comHfMonth"/>
         <result column="account_temp_store" jdbcType="TINYINT" property="accountTempStore"/>
     </resultMap>
 
@@ -136,7 +137,8 @@
         a.hf_com_account com_account,
         a.com_start_month pay_start_month,
         a.end_month pay_end_month,
-        a.account_temp_store
+        a.account_temp_store,
+        a.com_hf_month
         FROM
         hf_com_account_class a
         INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
@@ -157,7 +159,7 @@
         <if test="hfType != null and hfType != 0">
             AND a.hf_type = #{hfType}
         </if>
-        <if test="accountNumber != null and accountNumber != '' and accountType==2">
+        <if test="accountNumber != null and accountNumber != ''">
             AND a.hf_com_account = #{accountNumber}
         </if>
     </select>

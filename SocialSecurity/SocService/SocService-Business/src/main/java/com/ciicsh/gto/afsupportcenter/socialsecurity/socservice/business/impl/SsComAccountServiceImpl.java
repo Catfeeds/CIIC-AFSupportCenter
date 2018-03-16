@@ -117,4 +117,14 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
         return baseMapper.isExistAccountInfo(companyId);
     }
 
+    @Override
+    public void addSerial(Integer comAccountId) {
+        baseMapper.addSerial(comAccountId);
+    }
+
+    @Override
+    public Integer getSerialByComAccountId(Integer comAccountId) {
+        return baseMapper.getSerialByComAccountId(comAccountId);
+    }
+
 }

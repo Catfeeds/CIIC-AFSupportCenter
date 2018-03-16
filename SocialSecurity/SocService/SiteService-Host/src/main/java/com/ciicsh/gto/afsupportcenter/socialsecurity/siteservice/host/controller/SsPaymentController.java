@@ -80,10 +80,9 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
 
         //将要检索的状态写入查询条件
         List<String> paymentStateList = new ArrayList<>();
-        //3 ,可付
-        paymentStateList.add("3");
-        //5,内部审批批退
-        paymentStateList.add("5");
+        paymentStateList.add("3");//3 ,可付
+        paymentStateList.add("5");//5,内部审批批退
+        paymentStateList.add("7");//财务部批退
         ssPaymentSrarchBO.setPaymentStateList(paymentStateList);
 
         List<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentBO> resultList = business.showAddBatch(ssPaymentSrarchBO);

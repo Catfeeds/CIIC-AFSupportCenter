@@ -102,6 +102,9 @@
                type="com.ciicsh.gto.afsupportcenter.healthmedical.entity.bo.UninsuredMedicalAuditBO">
         <id column="um_acceptance_id" property="umAcceptanceId"/>
         <result column="employee_id" property="employeeId"/>
+        <result column="employee_name" property="employeeName"/>
+        <result column="company_id" property="companyId"/>
+        <result column="company_name" property="companyName"/>
         <result column="money_type" property="moneyType"/>
         <result column="case_type" property="caseType"/>
         <result column="dimission_date" property="dimissionDate"/>
@@ -123,9 +126,22 @@
 
     <select id="queryAcceptanceAuditList"
             parameterType="com.ciicsh.gto.afsupportcenter.healthmedical.entity.dto.UninsuredMedicalAuditDTO"
-            resultMap="AcceptanceResultMap">
-        SELECT DISTINCT hm_uninsured_medical.*
+            resultMap="UninsuredAuditResultMap">
+        SELECT DISTINCT
+        hm_uninsured_medical.um_acceptance_id,
+        hm_uninsured_medical.employee_id,
+        hm_uninsured_medical.employee_name,
+        hm_uninsured_medical.company_id,
+        hm_uninsured_medical.company_name,
+        hm_uninsured_medical.case_type,
+        hm_uninsured_medical.money_type,
+        hm_uninsured_medical.joint_person_name,
+        audit_amount,
+        auditor,
+        audit_date
         FROM hm_uninsured_medical
+        JOIN hm_uninsured_medical_audit
+        ON hm_uninsured_medical.um_acceptance_id = hm_uninsured_medical_audit.um_acceptance_id
         JOIN emp_employee
         ON emp_employee.employee_id = hm_uninsured_medical.employee_id
         JOIN emp_af_employee

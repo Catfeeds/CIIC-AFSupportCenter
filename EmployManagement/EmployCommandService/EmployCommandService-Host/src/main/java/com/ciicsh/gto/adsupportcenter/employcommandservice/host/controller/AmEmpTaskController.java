@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.CommonApiUtils;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.ReasonUtil;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.employSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
@@ -15,6 +17,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,6 +52,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
     @Autowired
     private CommonApiUtils employeeInfoProxy;
+
 
 
     /**
@@ -154,12 +158,21 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         //用工信息
         List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(param);
         //用工档案
-        List<AmArchiveBO> amArchiveBOList = null;
-
+        AmArchiveBO amArchiveBO = null;
         if(null!=resultEmployList&&resultEmployList.size()>0)
         {
             params.put("employmentId",resultEmployList.get(0).getEmploymentId());
-            amArchiveBOList = amArchiveService.queryAmArchiveList(params);
+            List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchiveList(params);
+            if(null!=amArchiveBOList&&amArchiveBOList.size()>0)
+            {
+                amArchiveBO = amArchiveBOList.get(0);
+                if(!StringUtil.isEmpty(amArchiveBO.getEmployFeedback()))
+                {
+                   if(!"7".equals(amArchiveBO.getEmployFeedback())){
+                       amArchiveBO.setIsEnd(0);
+                   }
+                }
+            }
         }
 
         //用工备注
@@ -175,14 +188,16 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         resultMap.put("materialList",empMaterialList);
 
+        if(null!=amArchiveBO){
+            resultMap.put("amArchaiveBo",amArchiveBO);
+        }
+
+
         if(null!= resultEmployList&&resultEmployList.size()>0)
         {
             resultMap.put("amEmploymentBO",resultEmployList.get(0));
         }
-        if(null!=amArchiveBOList&&amArchiveBOList.size()>0)
-        {
-            resultMap.put("amArchaiveBo",amArchiveBOList.get(0));
-        }
+
         if(null!=amRemarkBOPageRows)
         {
             resultMap.put("amRemarkBo",amRemarkBOPageRows);
@@ -221,7 +236,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @Log("保存用工档案")
     @RequestMapping("/saveAmArchive")
-    public  JsonResult<Boolean>  saveAmArchive(AmArchive entity){
+    public  JsonResult<Boolean>  saveAmArchive(AmArchiveBO amArchiveBO){
+        AmArchive entity = new AmArchive();
+        BeanUtils.copyProperties(amArchiveBO,entity);
         LocalDateTime now = LocalDateTime.now();
         if(entity.getArchiveId()==null){
             entity.setCreatedTime(now);
@@ -233,14 +250,34 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             entity.setModifiedTime(now);
             entity.setModifiedBy("sys");
         }
+        AmEmpTask amEmpTask = null;
         if(!StringUtil.isEmpty(entity.getEmployFeedback())){
             AmEmployment amEmployment = amEmploymentService.selectById(entity.getEmploymentId());
-            AmEmpTask amEmpTask = business.selectById(amEmployment.getEmpTaskId());
+            amEmpTask = business.selectById(amEmployment.getEmpTaskId());
             amEmpTask.setTaskStatus(Integer.parseInt(entity.getEmployFeedback()));
             business.insertOrUpdate(amEmpTask);
         }
 
         boolean result = amArchiveService.insertOrUpdate(entity);
+        if("0".equals(amArchiveBO.getIsFrist()))
+        {//如果满足在用工办理页面提交
+            if(result&&!StringUtil.isEmpty(entity.getEmployFeedback()))
+            {
+                /**
+                 * u盘外借 不会调用complateTask,只发kafaka消息
+                 */
+                if("7".equals(entity.getEmployFeedback()))
+                {
+
+                }else{
+                    Map<String,Object> variables = new HashMap<>();
+                    variables.put("status", ReasonUtil.getYgResult(entity.getEmployFeedback()));
+                    variables.put("remark",ReasonUtil.getYgfk(entity.getEmployFeedback()));
+                    TaskCommonUtils.completeTask(amEmpTask.getTaskId(),employeeInfoProxy,variables);
+                }
+            }
+        }
+
         return JsonResultKit.of(result);
     }
 

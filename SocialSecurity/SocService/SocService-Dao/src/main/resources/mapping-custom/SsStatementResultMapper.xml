@@ -27,20 +27,29 @@
     </resultMap>
 
     <select id="statementResultQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementResultBO" resultMap="DtoResultMap">
-        SELECT
-          T1.*,T2.employee_name
+         SELECT
+        sr.statement_result_id,sr.employee_id,sr.change_type,sr.change_type_name,sr.project_type,sr.project_type_name,sr.ss_type,sr.ss_type_name,
+        sr.imp_amount,sr.ss_amount,sr.diff_amount,sr.diff_headcount,
+        CASE when sr.employee_name is null then
+        emp.employee_name
+        ELSE
+        sr.employee_name
+        END as employee_name
         FROM
-          ss_statement_result T1
+            ss_statement_result sr
         LEFT JOIN
-          emp_employee T2
+            emp_employee emp
         ON
-          T1.employee_id = T2.employee_id
+             emp.employee_id = sr.employee_id
         WHERE
-          1=1
-          AND T1.is_active = '1'
-          AND T1.statement_id = #{statementId,jdbcType=BIGINT}
+            1=1
+            AND sr.is_active = '1'
+            AND sr.statement_id = #{statementId,jdbcType=BIGINT}
         ORDER BY
-          T1.employee_id,T1.change_type,T1.ss_type,T1.project_type
+            emp.employee_id,sr.ss_serial,sr.change_type,sr.ss_type,sr.project_type
+
+
+
     </select>
     <update id="cleanResultByStatementId" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementResultBO">
         UPDATE

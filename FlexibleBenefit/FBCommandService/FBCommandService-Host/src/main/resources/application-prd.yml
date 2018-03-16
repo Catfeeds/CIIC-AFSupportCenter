@@ -13,6 +13,5 @@ eureka:
     lease-renewal-interval-in-seconds: 10
     prefer-ip-address: true
     instance-id: ${spring.cloud.client.ipAddress}:${server.port}
-
 seaweed:
   masterHost: 172.16.9.19:9333

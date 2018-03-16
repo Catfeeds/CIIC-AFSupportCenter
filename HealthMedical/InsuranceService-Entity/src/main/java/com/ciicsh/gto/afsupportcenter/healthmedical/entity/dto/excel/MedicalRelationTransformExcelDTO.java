@@ -12,22 +12,18 @@ import java.util.Date;
  * @Date: Created in 14:34 2018/3/10
  */
 @ExcelTarget("MedicalRelationTransformExcel")
-public class MedicalRelationTransformExcelDTO implements Serializable{
+public class MedicalRelationTransformExcelDTO implements Serializable {
 
     @Excel(name = "雇员编号")
     private String employeeId;
     @Excel(name = "雇员姓名")
     private String employeeName;
-    @Excel(name = "中止日期", format = "yyyy-MM-dd")
-    private Date stopDate;
     @Excel(name = "证件号码")
     private String idNum;
     @Excel(name = "公司编号")
     private String companyId;
     @Excel(name = "公司名称")
     private String companyName;
-    @Excel(name = "客户经理")
-    private String manager;
     @Excel(name = "转出日期", format = "yyyy-MM-dd")
     private Date turnOutDate;
     @Excel(name = "转出地点")
@@ -53,13 +49,6 @@ public class MedicalRelationTransformExcelDTO implements Serializable{
         this.employeeName = employeeName;
     }
 
-    public Date getStopDate() {
-        return stopDate;
-    }
-
-    public void setStopDate(Date stopDate) {
-        this.stopDate = stopDate;
-    }
 
     public String getIdNum() {
         return idNum;
@@ -83,14 +72,6 @@ public class MedicalRelationTransformExcelDTO implements Serializable{
 
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
-    }
-
-    public String getManager() {
-        return manager;
-    }
-
-    public void setManager(String manager) {
-        this.manager = manager;
     }
 
     public Date getTurnOutDate() {
@@ -130,11 +111,9 @@ public class MedicalRelationTransformExcelDTO implements Serializable{
         return "MedicalRelationTransformExcelDTO{" +
             "employeeId='" + employeeId + '\'' +
             ", employeeName='" + employeeName + '\'' +
-            ", stopDate=" + stopDate +
             ", idNum='" + idNum + '\'' +
             ", companyId='" + companyId + '\'' +
             ", companyName='" + companyName + '\'' +
-            ", manager='" + manager + '\'' +
             ", turnOutDate=" + turnOutDate +
             ", turnOutAddress='" + turnOutAddress + '\'' +
             ", turnBackDate=" + turnBackDate +

@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by houwanhua on 2018/3/8.
  */
-@FeignClient("gt1-af-support-center-soc-api-service")
+@FeignClient("support-center-soc-api-service")
 @RequestMapping("/api/soc")
 public interface SocApiProxy {
     /**

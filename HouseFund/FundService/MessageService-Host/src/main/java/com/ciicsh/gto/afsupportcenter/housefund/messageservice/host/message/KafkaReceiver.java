@@ -71,9 +71,14 @@ public class KafkaReceiver {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         if (TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
             logger.info("start fundEmpOut: " + JSON.toJSONString(taskMsgDTO));
-            String fundCategory = TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
-            boolean res = saveEmpTask(taskMsgDTO, fundCategory,TaskCategory.LEAVETURNOUT.getCategory(),0);
-            logger.info("end fundEmpOut:" + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
+            Map<String, Object> paramMap = taskMsgDTO.getVariables();
+            if(null != paramMap && paramMap.get("fundType") != null){
+                String taskCategory = paramMap.get("fundType").toString();
+                String fundCategory = TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
+                boolean res = saveEmpTask(taskMsgDTO, fundCategory,Integer.parseInt(taskCategory),0);
+                logger.info("end fundEmpOut:" + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
+            }
+
         }
     }
 
@@ -114,14 +119,22 @@ public class KafkaReceiver {
     @StreamListener(TaskSink.AF_EMP_AGREEMENT_ADJUST)
     public void fundEmpAgreementAdjust(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
-        if (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType())
-            || TaskSink.ADD_FUND_NEW.equals(taskMsgDTO.getTaskType())
-            || TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())
-            || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
-            logger.info("start fundEmpAgreementAdjust: " + JSON.toJSONString(taskMsgDTO));
-            String fundCategory = (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType())|| TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
-            boolean res = saveEmpTask(taskMsgDTO, fundCategory, TaskCategory.ADJUSTSEALED.getCategory(),0);
-            logger.info("end fundEmpAgreementAdjust: " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
+        //调整和新进（新开、转入和启封）
+        if (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) || TaskSink.ADD_FUND_NEW.equals(taskMsgDTO.getTaskType())) {
+            logger.info("start in fundEmpAgreementAdjust: " + JSON.toJSONString(taskMsgDTO));
+            Map<String, Object> paramMap = taskMsgDTO.getVariables();
+            if (null != paramMap && paramMap.get("fundType") != null) {
+                String taskCategory = paramMap.get("fundType").toString();
+                String fundCategory = TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
+                boolean res = saveEmpTask(taskMsgDTO, fundCategory, Integer.parseInt(taskCategory),0);
+                logger.info("end in fundEmpAgreementAdjust: " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
+            }
+        }//离职封存()
+        else{
+            logger.info("start out fundEmpAgreementAdjust: " + JSON.toJSONString(taskMsgDTO));
+            String fundCategory = TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
+            boolean res = saveEmpTask(taskMsgDTO, fundCategory, TaskCategory.LEAVESEALED.getCategory(),0);
+            logger.info("end out fundEmpAgreementAdjust: " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
         }
     }
 
@@ -225,6 +238,7 @@ public class KafkaReceiver {
     private AfEmployeeInfoDTO getEmpInfo(TaskCreateMsgDTO taskMsgDTO,Integer taskCategory) {
         AfEmployeeInfoDTO resDto = null;
         try {
+            Thread.sleep(2000);
             logger.info("fund get employee info start, request:" + JSON.toJSONString(taskMsgDTO));
             AfEmployeeQueryDTO taskRequestDTO = new AfEmployeeQueryDTO();
             taskRequestDTO.setEmpAgreementId(Long.parseLong(taskMsgDTO.getMissionId()));

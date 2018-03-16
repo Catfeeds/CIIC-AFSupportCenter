@@ -66,15 +66,16 @@ public class StatementCompareController extends BasicController<HFStatementCompa
      * @return
      */
     @PostMapping(value = "/addStatement")
-    public JsonResult<Boolean> addStatement(NewStatementDTO newStatement, MultipartFile file) {
+    public JsonResult<Long> addStatement(NewStatementDTO newStatement, MultipartFile file) {
+        long statementId = 0;
         try {
-            business.addStatement(newStatement, file);
+            statementId = business.addStatement(newStatement, file);
         }
         catch (Exception e) {
             return JsonResultKit.ofError(e.getMessage());
         }
 
-        return JsonResultKit.of(0, "添加对账单成功", true);
+        return JsonResultKit.of(0, "添加对账单成功", statementId);
     }
 
     /**
@@ -110,7 +111,15 @@ public class StatementCompareController extends BasicController<HFStatementCompa
      * @return
      */
     @GetMapping("/execStatement/{statementId}")
-    public JsonResult<Boolean> execStatementDetail(@PathVariable("statementId") long statementId) {
+    public JsonResult<Boolean> execStatement(@PathVariable("statementId") long statementId,@RequestParam("compareMan") String compareMan) {
+        try{
+            business.execStatement(statementId,compareMan);
+        }
+        catch (Exception ex){
+            return JsonResultKit.of(0, ex.getMessage(), false);
+
+        }
+
         return JsonResultKit.of(0, "对账成功", true);
 
     }

@@ -19,6 +19,15 @@ public class SsPaymentSrarchBO {
      * 企业社保账户分类
      */
     private String accountType;
+    private String paymentMonth;
+
+    public String getPaymentMonth() {
+        return paymentMonth;
+    }
+
+    public void setPaymentMonth(String paymentMonth) {
+        this.paymentMonth = paymentMonth;
+    }
 
     /**
      * 支付状态List

@@ -6,6 +6,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComA
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComTaskParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsAccountComRelationMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsAccountRatioMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsComAccountMapper;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -171,17 +173,17 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
             ssAccountRatioMapper.updateById(ssAccountRatio);
         }
         //表示完成
-        if(null!=ssAccountComRelation){
+        if(3 == ssComTask.getTaskStatus()){
             //添加账户下对应的公司
             ssAccountComRelation.setComAccountId(ssComAccount.getComAccountId());
             ssAccountComRelationMapper.insert(ssAccountComRelation);
             Map<String,Object> bankAccountMap =new HashMap<String,Object>();
-
             bankAccountMap.put("com_account_id", ssComAccount.getComAccountId());
             bankAccountMap.put("account", ssComAccount.getBankAccount());
             bankAccountMap.put("account_name", ssComAccount.getComAccountName());
             bankAccountMap.put("bank_name", ssComAccount.getPaymentBank());
             bankAccountMap.put("bank_id", "2");//默认工商银行
+            bankAccountMap.put("company_id",ssComTask.getCompanyId() );//客户ID
 //          bankAccountMap.put("province_code", "002");
 //          bankAccountMap.put("city_code", "01");
             bankAccountMap.put("account_type", "4");
@@ -189,9 +191,17 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
             //插入银行账号信息并返回结果，如果接口返回0 表示 接口调用失败，正常返回 bankAccountId 主键
             Map<String,String> mp=new HashMap<>();
             mp= commonApiUtils.addBankAccount(bankAccountMap);
-
             if(Integer.parseInt(mp.get("code")) == 0){//成功
                 ssComAccount.setBankAccountId(Long.valueOf(mp.get("ret")));
+                //任务单为已完成状态 账户设置为可用
+                ssComAccount.setState(new Integer(1));
+                try {
+                    //调用工作流
+                    String taskId = baseMapper.selectById(ssComTask.getComTaskId()).getTaskId();
+                    TaskCommonUtils.completeTask(taskId, commonApiUtils, "xsj");
+                }catch (BusinessException e){
+                    //如果工作流异常，则跳过
+                }
                 sComAccountMapper.updateById(ssComAccount);
             }else{
                 throw new BusinessException("调用财务银行信息接口反馈的信息："+mp.get("ret"));

@@ -50,6 +50,7 @@
         a.company_id,/*客户Id*/
         a.employee_nature,
         a.archive_direction,
+        b.employment_id,
         b.employ_way,/*用工方式 */
         b.employ_property,/*用工属性 */
         c.yuliu_doc_num,/*预留档案编号 */

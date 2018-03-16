@@ -1,9 +1,13 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFMonthChargeQueryBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFMonthChargeReportBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfMonthChargeBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfMonthChargeDiffBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
+import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
+import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 
 import java.util.List;
 
@@ -30,4 +34,12 @@ public interface HfMonthChargeService extends IService<HfMonthCharge> {
      * @return
      */
     HfMonthChargeDiffBo getHfMonthChargeDiffSum(HfMonthChargeBo hfMonthChargeBo);
+
+    /**
+     * 查询公积金报表
+     *
+     * @param pageInfo
+     * @return
+     */
+    PageRows<HFMonthChargeReportBO> queryHfMonthChargeReport(PageInfo pageInfo);
 }
