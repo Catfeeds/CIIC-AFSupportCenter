@@ -46,11 +46,15 @@
       <include refid="SEL_ALL_COLUMN"></include>
       FROM
       hm_af_pe_task
-      <where>
-      <if test="bespeak_pe_id != '' and bespeak_pe_id != null and status == 1">modified_time > NOW() - INTERVAL 2 DAY</if>
-      <if test="bespeak_pe_id != '' and bespeak_pe_id != null and status == 2">created_time > NOW() - INTERVAL 2 DAY</if>
-      <if test="bespeak_pe_id == '' or bespeak_pe_id == null ">1 = 2</if>
-      </where>
+      WHERE
+      status = 1 AND modified_time > NOW() - INTERVAL 2 DAY
+      UNION
+        SELECT
+        <include refid="SEL_ALL_COLUMN"></include>
+        FROM
+        hm_af_pe_task
+        WHERE
+        status = 2 AND created_time > NOW() - INTERVAL 2 DAY
     </select>
 
     <select id="selectListByStatus" resultMap="BaseResultMap">
@@ -59,10 +63,18 @@
         FROM
         hm_af_pe_task
         WHERE
-        status in (3,4,5,6)
+        bespeak_pe_id != ''
+        AND
+        status in (1,2,3,4,5,6)
     </select>
 
     <sql id="SEL_ALL_COLUMN">
+        pe_task_id,
+        process_id,
+        pe_rule_id,
+        status,
+        com_no,
+        bespeak_pe_id,
         product_id,
         company_id,
         company_name,

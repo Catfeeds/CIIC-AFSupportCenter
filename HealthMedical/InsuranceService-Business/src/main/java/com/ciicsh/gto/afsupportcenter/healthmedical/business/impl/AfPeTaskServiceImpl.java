@@ -25,31 +25,6 @@ public class AfPeTaskServiceImpl extends ServiceImpl<AfPeTaskMapper, AfPeTask> i
 
     @Autowired
     private AfPeTaskMapper afPeTaskMapper;
-    /**
-     * 普通体检
-     */
-    private final static int PE_COMMON = 1;
-    /**
-     * 入职体检
-     */
-    private final static int PE_ENTRY = 2;
-
-    @Override
-    public boolean insertBatchTask(List<AfPeTask> list) {
-        try {
-            list.stream().forEach(i -> {
-                if (PE_COMMON == i.getPeType()) {
-                    i.setStatus(1);
-                } else if (PE_ENTRY == i.getPeType()) {
-                    i.setStatus(2);
-                }
-                afPeTaskMapper.insert(i);
-            });
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
-    }
 
     @Override
     public boolean update(AfPeTask afPeTask) {

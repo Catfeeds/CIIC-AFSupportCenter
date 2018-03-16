@@ -22,7 +22,8 @@ public interface AfPeTaskService extends IService<AfPeTask> {
      * @param list
      * @return
      */
-    boolean insertBatchTask(List<AfPeTask> list);
+    @Override
+    boolean insertBatch(List<AfPeTask> list);
 
     /**
      * 更新体检任务单

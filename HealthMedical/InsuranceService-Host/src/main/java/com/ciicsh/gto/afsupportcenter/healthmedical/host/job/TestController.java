@@ -40,7 +40,7 @@ public class TestController {
         String keyUrl = "http://172.16.4.184:8081/Service1.svc/GetData";
         String key = restTemplate.getForObject(keyUrl, String.class);
 
-        String url = "http://51joying.iyaoshow.com/api/physical/GetTijianInfoByTijianEmployeeID?ComNo=3671&TiJianEmployeeID=81217&_time="
+        String url = "http://51joying.iyaoshow.com/api/physical/GetTijianInfoByTijianEmployeeID?ComNo=31003&TiJianEmployeeID=219812&_time="
             +time+"&_sign="+key;
         JSONObject response = restTemplate.getForObject(url, JSONObject.class);
         JSONArray data = response.getJSONArray("data");
@@ -59,6 +59,19 @@ public class TestController {
         afPeTask.setPeOrginzation(obj.getString("ShopName"));
         afPeTask.setPeAddress(obj.getString("ShopAddress"));
         boolean b = afPeTaskService.update(afPeTask);
+        return JsonResult.success(null);
+    }
+
+    @GetMapping("/test1")
+    public JsonResult findBespeakPeId() {
+        String url = "http://10.17.3.1:9999/FileOperationForJSON.svc/GetPhysicalExaminationInformation/110102194202123028";
+        JSONArray response = restTemplate.getForObject(url, JSONArray.class);
+        JSONObject jo = response.getJSONObject(0);
+        AfPeTask afPeTask = new AfPeTask();
+        afPeTask.setIdNum(jo.getString("EmployeeID"));
+        afPeTask.setBespeakPeId(jo.getString("ReservationNumber"));
+        afPeTask.setComNo(jo.getString("CompanyID"));
+        afPeTaskService.update(afPeTask);
         return JsonResult.success(null);
     }
 
