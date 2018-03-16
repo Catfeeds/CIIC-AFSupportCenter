@@ -1064,9 +1064,11 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         int paymentType = 0;
         switch (hfEmpTask.getTaskCategory()) {
             case HfEmpTaskConstant.TASK_CATEGORY_IN_ADD:
+                paymentType = HfMonthChargeConstant.PAYMENT_TYPE_NEW;
+                break;
             case HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN:
             case HfEmpTaskConstant.TASK_CATEGORY_IN_MULTI_TRANS_IN:
-                paymentType = HfMonthChargeConstant.PAYMENT_TYPE_NEW;
+                paymentType = HfMonthChargeConstant.PAYMENT_TYPE_TRANS_IN;
                 break;
             case HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN:
                 paymentType = HfMonthChargeConstant.PAYMENT_TYPE_OPEN;
@@ -1081,9 +1083,11 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 paymentType = HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_OPEN;
                 break;
             case HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE:
+                paymentType = HfMonthChargeConstant.PAYMENT_TYPE_CLOSE;
+                break;
             case HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT:
             case HfEmpTaskConstant.TASK_CATEGORY_OUT_MULTI_TRANS_OUT:
-                paymentType = HfMonthChargeConstant.PAYMENT_TYPE_CLOSE;
+                paymentType = HfMonthChargeConstant.PAYMENT_TYPE_TRANS_OUT;
                 break;
             default:
                 break;
@@ -1107,6 +1111,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 YearMonth endMonthDate;
 
                 if (paymentType != HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_CLOSE
+                    && paymentType != HfMonthChargeConstant.PAYMENT_TYPE_TRANS_OUT
                     && paymentType != HfMonthChargeConstant.PAYMENT_TYPE_CLOSE) {
                     if (StringUtils.isEmpty(startMonth)) {
                         throw new BusinessException("雇员档案费用分段表中缴费起始月为空");
@@ -1537,7 +1542,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         getSSPItemsRequestDTO.setEffectiveMonth(effectiveMonth);
         com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<GetSSPItemsResposeDTO> result = commonApiUtils.getRoundingType(getSSPItemsRequestDTO);
 
-        if (result.getCode() == 200) {
+        if (result.getCode() == 0) {
             GetSSPItemsResposeDTO getSSPItemsResposeDTO = result.getData();
             if (getSSPItemsResposeDTO != null) {
                 List<SSPItemDTO> list = getSSPItemsResposeDTO.getItems();
