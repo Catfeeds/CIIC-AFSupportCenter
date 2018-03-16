@@ -116,8 +116,8 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         hfEmpTask.setTaskFormContent(JSON.toJSONString(dto));
 
         //前道传递的政策明细ID,用它调用系统中心获取进位方式
-        if (dto.getNowAgreement() != null && dto.getNowAgreement().getSocialPolicyId() != null) {
-            hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getSocialPolicyId());
+        if (dto.getNowAgreement() != null && dto.getNowAgreement().getFundPolicyId() != null) {
+            hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getFundPolicyId());
         }
         //TODO 表中加字段
 //        hfEmpTask.setProcessId(taskMsgDTO.getProcessId());
@@ -180,8 +180,8 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         //转出单位(来源地)
         hfEmpTask.setTransferOutUnit(this.getTransUnit(paramMap));
         //前道传递的政策明细ID,用它调用系统中心获取进位方式
-        if (dto.getNowAgreement() != null && dto.getNowAgreement().getSocialPolicyId() != null) {
-            hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getSocialPolicyId());
+        if (dto.getNowAgreement() != null && dto.getNowAgreement().getFundPolicyId() != null) {
+            hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getFundPolicyId());
         }
         //TODO 表中加字段
         //hfEmpTask.setProcessId(taskMsgDTO.getProcessId());
