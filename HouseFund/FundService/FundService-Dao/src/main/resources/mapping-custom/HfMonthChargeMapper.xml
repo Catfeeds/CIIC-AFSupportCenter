@@ -12,6 +12,7 @@
         <result column="employee_id" property="employeeId" />
         <result column="employee_name" property="employeeName" />
         <result column="hf_emp_account" property="hfEmpAccount" />
+        <result column="basic_hf_emp_account" property="basicHfEmpAccount" />
         <result column="id_num" property="idNum" />
         <result column="hf_month" property="hfMonth" />
         <result column="ss_month_belong" property="ssMonthBelong" />
@@ -115,6 +116,7 @@
         hmc.employee_id,
         ee.employee_name,
         CASE WHEN hmc.hf_type = 1 THEN heab.hf_emp_account ELSE heaa.hf_emp_account END hf_emp_account,
+        heab.hf_emp_account AS basic_hf_emp_account,
         ee.id_num,
         hmc.hf_month,
         hmc.ss_month_belong,
@@ -142,7 +144,7 @@
             <if test="employeeName != null">
                 AND ee.employee_name LIKE CONCAT('%', #{employeeName}, '%')
             </if>
-            <if test="companyId">
+            <if test="companyId != null">
                 AND hmc.company_id = #{companyId}
             </if>
             <if test="companyName != null">
@@ -154,20 +156,23 @@
             <if test="basicHfEmpAccount != null">
                 AND heab.hf_emp_account = #{basicHfEmpAccount}
             </if>
-            <if test="hfAccountType">
+            <if test="hfAccountType != null">
                 AND hcab.hf_account_type = #{hfAccountType}
                 OR hcaa.hf_account_type = #{hfAccountType}
             </if>
-            <if test="basicHfComAccount">
+            <if test="basicHfComAccount != null">
                 AND hcacb.hf_com_account = #{basicHfComAccount}
             </if>
             <if test="addedHfEmpAccount != null">
                 AND heaa.hf_emp_account = #{addedHfEmpAccount}
             </if>
-            <if test="addedHfComAccount">
+            <if test="addedHfComAccount != null">
                 AND hcaca.hf_com_account = #{addedHfComAccount}
             </if>
-            <if test="paymentTypes">
+            <if test="hfType != null">
+                AND hmc.hf_type = #{hfType}
+            </if>
+            <if test="paymentTypes != null">
                 AND hmc.payment_type IN (${paymentTypes})
             </if>
         </where>
