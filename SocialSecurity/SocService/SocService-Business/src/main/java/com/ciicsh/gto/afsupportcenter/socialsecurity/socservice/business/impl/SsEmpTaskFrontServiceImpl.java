@@ -246,6 +246,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
             if (ssEmpTask.getEndMonth() == null || ssEmpTask.getEndMonth().equals("")){
                 return;
             }
+            //如果当前系统月份 > 社保缴纳截止月份 就会在本月处理，否则就是截止月份的下一个月份处理
             if(Integer.parseInt(thisMonth) > Integer.parseInt(ssEmpTask.getEndMonth())){
                 submitMonth = ssEmpTask.getEndMonth() + today;
             }else {
