@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFMonthChargeRepo
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfMonthChargeService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.PdfUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -77,18 +78,27 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
         workbook.close();
     }
 
-    @RequestMapping("/basicDetailListExport")
-    public void basicDetailListExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
+    @RequestMapping("/chgDetailListExport")
+    public void chgDetailListExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         HFMonthChargeQueryBO hfMonthChargeQueryBO = pageInfo.toJavaObject(HFMonthChargeQueryBO.class);
-        String fileName = URLEncoder.encode(String.format("基本公积金汇缴变更清册_%1$s.pdf", hfMonthChargeQueryBO.getHfMonth()), "UTF-8");
+        String hfTypeName;
+        String templateFilePath;
+        if (hfMonthChargeQueryBO.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
+            hfTypeName = "基本";
+            templateFilePath = "/template/SH_BAS_HF_CHG_DTL_TMP.pdf";
+        } else {
+            hfTypeName = "补充";
+            templateFilePath = "/template/SH_ADD_HF_CHG_DTL_TMP.pdf";
+        }
+        String fileName = URLEncoder.encode(String.format("上海市%1$s公积金汇缴变更清册_%2$s.pdf", hfTypeName, hfMonthChargeQueryBO.getHfMonth()), "UTF-8");
         response.reset();
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/pdf");
         response.setHeader("Content-Disposition",
             "attachment;filename=" + fileName);
         try {
-            List<Map<String, Object>> basChgDetailsPageList = business.getBasChgDetailsPageList(hfMonthChargeQueryBO);
-            PdfUtil.createPdfByTemplate("/template/SH_BAS_HF_CHG_DTL_TMP.pdf",
+            List<Map<String, Object>> basChgDetailsPageList = business.getChgDetailsPageList(hfMonthChargeQueryBO, HfEmpTaskConstant.HF_TYPE_BASIC);
+            PdfUtil.createPdfByTemplate(templateFilePath,
                 null,
                 true,
                 true,

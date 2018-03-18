@@ -45,10 +45,11 @@ public interface HfMonthChargeService extends IService<HfMonthCharge> {
     PageRows<HFMonthChargeReportBO> queryHfMonthChargeReport(PageInfo pageInfo);
 
     /**
-     * 获取基本公积金汇缴变更清册导出数据
+     * 获取基本/补充公积金汇缴变更清册导出数据
      *
      * @param hfMonthChargeQueryBO
+     * @param hfType
      * @return
      */
-    List<Map<String, Object>> getBasChgDetailsPageList(HFMonthChargeQueryBO hfMonthChargeQueryBO);
+    List<Map<String, Object>> getChgDetailsPageList(HFMonthChargeQueryBO hfMonthChargeQueryBO, Integer hfType);
 }
