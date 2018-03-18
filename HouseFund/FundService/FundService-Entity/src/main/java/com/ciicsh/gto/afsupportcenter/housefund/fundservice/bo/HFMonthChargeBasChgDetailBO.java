@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 
 @Data
 public class HFMonthChargeBasChgDetailBO {
+    private Integer rowNo;
     private String inChangeType;
     private String inEmployeeName;
     private String idNum;

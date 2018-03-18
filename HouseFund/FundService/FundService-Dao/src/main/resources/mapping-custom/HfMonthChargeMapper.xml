@@ -167,6 +167,9 @@
             <if test="addedHfComAccount">
                 AND hcaca.hf_com_account = #{addedHfComAccount}
             </if>
+            <if test="paymentTypes">
+                AND hmc.payment_type IN (${paymentTypes})
+            </if>
         </where>
     </select>
 </mapper>

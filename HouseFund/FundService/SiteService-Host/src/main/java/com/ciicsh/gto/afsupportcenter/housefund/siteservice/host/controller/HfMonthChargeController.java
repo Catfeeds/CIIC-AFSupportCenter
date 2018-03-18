@@ -3,10 +3,12 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFMonthChargeQueryBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFMonthChargeReportBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfMonthChargeService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
+import com.ciicsh.gto.afsupportcenter.util.PdfUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
+import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -71,5 +75,27 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
             "attachment;filename=" + fileName);
         workbook.write(response.getOutputStream());
         workbook.close();
+    }
+
+    @RequestMapping("/basicDetailListExport")
+    public void basicDetailListExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
+        HFMonthChargeQueryBO hfMonthChargeQueryBO = pageInfo.toJavaObject(HFMonthChargeQueryBO.class);
+        String fileName = URLEncoder.encode(String.format("基本公积金汇缴变更清册_%1$s.pdf", hfMonthChargeQueryBO.getHfMonth()), "UTF-8");
+        response.reset();
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader("content-Type", "application/pdf");
+        response.setHeader("Content-Disposition",
+            "attachment;filename=" + fileName);
+        try {
+            List<Map<String, Object>> basChgDetailsPageList = business.getBasChgDetailsPageList(hfMonthChargeQueryBO);
+            PdfUtil.createPdfByTemplate("/template/SH_BAS_HF_CHG_DTL_TMP.pdf",
+                null,
+                true,
+                true,
+                basChgDetailsPageList,
+                response.getOutputStream());
+        } catch (Exception e) {
+            e.printStackTrace(); // TODO log
+        }
     }
 }

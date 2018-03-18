@@ -14,7 +14,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 public class PdfUtil {
-    private final static String DEFAULT_FONT_NAME = "simsun.ttc,1";
+    private final static String DEFAULT_FONT_NAME = "simsun.ttc";
 
     /**
      * 根据模板生成Pdf（根据单页模板，生成多页文档）
@@ -22,26 +22,24 @@ public class PdfUtil {
      * @param templateFilePath 模板文档路径（支持相对路径）
      * @param fontName 字体名
      * @param isInSystemFontFolder 是否系统目录下字体
+     * @param hasPageInfo 是否包含翻页信息
      * @param fillDataMapList 充填数据Map列表（表体之外部分：属性名请与Pdf模板一致；
-     *                        表体部分：key:"fillDataList"; value:List<T>; 属性名请与Pdf模板一致，名称后的数字不需定义）
+     *                        表体部分(可省略)：key:"fillDataList"; value:List<T>； 属性名请与Pdf模板一致，名称后的数字不需定义）
      * @param outputStream 输出流
      * @throws BusinessException 封装后异常
      */
     public static void createPdfByTemplate(String templateFilePath,
                                            String fontName,
                                            boolean isInSystemFontFolder,
+                                           boolean hasPageInfo,
                                            List<Map<String, Object>> fillDataMapList,
                                            OutputStream outputStream) throws BusinessException {
-        InputStream is = null;
-        ByteArrayOutputStream bos = null;
-        Document doc = null;
-        try {
-            is = StreamUtil.getResourceStream(templateFilePath);
-            bos = new ByteArrayOutputStream();
+        try (InputStream is = StreamUtil.getResourceStream(templateFilePath);
+             ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
             if (isInSystemFontFolder) {
-                fontName = getChineseFont(fontName);
+                fontName = getChineseFont(fontName) + ",1";
             }
-            doc = new Document();
+            Document doc = new Document();
             PdfCopy copy = new PdfCopy(doc, outputStream);
             doc.open();
             BaseFont baseFont = BaseFont.createFont(fontName, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
@@ -57,26 +55,41 @@ public class PdfUtil {
                 form.setSubstitutionFonts(fontList);
                 Set<String> formKeySet = form.getFields().keySet();
                 Map<String, Object> fillDataMap = fillDataMapList.get(page);
-                List<T> fillDataList = (List<T>) fillDataMap.get("fillDataList");
 
-                form.setField("pageTotal",String.valueOf(pageSize));
-                form.setField("page", String.valueOf(page + 1));
+                if (hasPageInfo) {
+                    form.setField("totalPage", String.valueOf(pageSize));
+                    form.setField("page", String.valueOf(page + 1));
+                }
 
                 for (String key : fillDataMap.keySet()) {
                     if (formKeySet.contains(key)) {
-                        form.setField(key, String.valueOf(fillDataMap.get(key)));
+                        Object value = fillDataMap.get(key);
+                        if (value != null) {
+                            form.setField(key, String.valueOf(value));
+                        } else {
+                            form.setField(key, "");
+                        }
                     }
                 }
 
-                for (int i = 0; i < fillDataList.size(); i++) {
-                    T t = fillDataList.get(i);
-                    Field[] fields = t.getClass().getDeclaredFields();
+                if (fillDataMap.containsKey("fillDataList")) {
+                    List fillDataList = (List) fillDataMap.get("fillDataList");
+                    for (int i = 0; i < fillDataList.size(); i++) {
+                        Object obj = fillDataList.get(i);
+                        Field[] fields = obj.getClass().getDeclaredFields();
 
-                    for (Field field : fields) {
-                        String fieldName = field.getName() + (i + 1);
+                        for (Field field : fields) {
+                            field.setAccessible(true);
+                            String fieldName = field.getName() + (i + 1);
 
-                        if (formKeySet.contains(fieldName)) {
-                            form.setField(fieldName, String.valueOf(field.get(t)));
+                            if (formKeySet.contains(fieldName)) {
+                                Object fieldValue = field.get(obj);
+                                if (fieldValue != null) {
+                                    form.setField(fieldName, String.valueOf(fieldValue));
+                                } else {
+                                    form.setField(fieldName, "");
+                                }
+                            }
                         }
                     }
                 }
@@ -88,24 +101,6 @@ public class PdfUtil {
             doc.close();
         } catch (IOException | DocumentException | IllegalAccessException e) {
             throw new BusinessException(e);
-        } finally {
-            if (doc != null && doc.isOpen()) {
-                doc.close();
-            }
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    // TODO log
-                }
-            }
-            if (bos != null) {
-                try {
-                    bos.close();
-                } catch (IOException e) {
-                    // TODO log
-                }
-            }
         }
     }
 
