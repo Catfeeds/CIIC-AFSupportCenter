@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -237,12 +238,21 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
     private void resetTaskSubmitTime(SsEmpTask ssEmpTask) {
         String submitMonth = "";
         LocalDateTime submitTime;
-        String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd"));
+        LocalDateTime now = LocalDateTime.now();
+        String today = now.format(DateTimeFormatter.ofPattern("dd"));
+        String thisMonth=now.format(DateTimeFormatter.ofPattern("yyyyMM"));
+
         if (ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_5) || ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_6) || ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_14) || ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_15)) {//转出任务单
             if (ssEmpTask.getEndMonth() == null || ssEmpTask.getEndMonth().equals("")){
                 return;
             }
-            submitMonth = ssEmpTask.getEndMonth() + today;
+            if(Integer.parseInt(thisMonth) > Integer.parseInt(ssEmpTask.getEndMonth())){
+                submitMonth = ssEmpTask.getEndMonth() + today;
+            }else {
+                String em= LocalDate.parse(ssEmpTask.getEndMonth()+"01").plusMonths(1).format(DateTimeFormatter.ofPattern("yyyyMM"));
+                submitMonth = em + today;
+            }
+
         } else {
             if (ssEmpTask.getStartMonth() == null || ssEmpTask.getStartMonth().equals("")){
                 return;
