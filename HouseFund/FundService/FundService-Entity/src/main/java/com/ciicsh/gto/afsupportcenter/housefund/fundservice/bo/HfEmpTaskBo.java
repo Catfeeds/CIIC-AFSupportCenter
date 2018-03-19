@@ -17,6 +17,7 @@ public class HfEmpTaskBo implements Serializable {
     private Integer hfAccountType;
     private Integer hfType;
     private Integer paymentBank;
+    private Integer processCategory;
     private Integer taskCategory;
     private Integer urgent;
     private Integer isChange;

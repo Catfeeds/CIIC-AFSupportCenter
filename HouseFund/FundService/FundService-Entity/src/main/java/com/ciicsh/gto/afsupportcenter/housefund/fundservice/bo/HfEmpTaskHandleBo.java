@@ -19,6 +19,7 @@ public class HfEmpTaskHandleBo implements Serializable {
     private Long empArchiveId;
     private Integer hfType;
     private String hfTypeName;
+    private Integer processCategory;
     private Integer taskCategory;
     private Integer taskStatus;
     private String comHandleStatusName;
