@@ -100,8 +100,9 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
                 "attachment;filename=" + fileName);
 
             PdfUtil.createPdfByTemplate(templateFilePath,
-                null,
-                true,
+                PdfUtil.DEFAULT_FONT_NAME,
+                PdfUtil.DEFAULT_FONT_ENCODING,
+                false,
                 true,
                 chgDetailsPageList,
                 response.getOutputStream());
@@ -137,8 +138,9 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
                 "attachment;filename=" + fileName);
 
             PdfUtil.createPdfByTemplate(templateFilePath,
-                null,
-                true,
+                PdfUtil.DEFAULT_FONT_NAME,
+                PdfUtil.DEFAULT_FONT_ENCODING,
+                false,
                 true,
                 repairDetailsPageList,
                 response.getOutputStream());

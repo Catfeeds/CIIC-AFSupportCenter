@@ -36,8 +36,8 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
     private HfComAccountClassService hfComAccountClassService;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
-    private DateTimeFormatter dateTimeformatter = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
-    private DateTimeFormatter dateformatter = DateTimeFormatter.ofPattern("uuuuMMdd");
+    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
+    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("uuuuMMdd");
     private char[] repairReasonIcons = {'\u2460', '\u2461', '\u2462', '\u2463', '\u2464', '\u2465'};
 
     @Override
@@ -193,7 +193,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             int inCount = 0;
             int outCount = 0;
             String createdBy = "test"; // TODO
-            String createdTime = LocalDateTime.now().format(dateTimeformatter);
+            String createdTime = LocalDateTime.now().format(dateTimeFormatter);
 
             for(int page = 0; page < pages; page++) {
                 Map<String, Object> pageMap = new HashMap<>();
@@ -502,7 +502,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             BigDecimal total = BigDecimal.ZERO;
             int count = 0;
             String createdBy = "test"; // TODO
-            String createdTime = LocalDateTime.now().format(dateformatter);
+            String createdTime = LocalDateTime.now().format(dateFormatter);
             String createdTimeYYYY = createdTime.substring(0, 4);
             String createdTimeMM = createdTime.substring(4, 6);
             String createdTimeDD = createdTime.substring(6, 8);
