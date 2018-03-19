@@ -49,11 +49,11 @@ public class CalculateSocialUtils {
 				return new BigDecimal(Math.ceil(amount.doubleValue()));
 			// 进位偶数
 			case 4:
-				BigDecimal rs = new BigDecimal(Math.floor(amount.doubleValue()));
+				BigDecimal rs = new BigDecimal(Math.ceil(amount.doubleValue()));
 				if (rs.intValue() % 2 == 0){
 					return rs;
 				}else {
-					return rs.add(new BigDecimal(1));
+                    return rs.add(new BigDecimal(1));
 				}
 			// 舍去角
 			case 5:
