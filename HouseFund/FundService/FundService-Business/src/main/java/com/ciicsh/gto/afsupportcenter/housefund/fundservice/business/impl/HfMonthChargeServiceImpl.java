@@ -1,6 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 
-import com.baomidou.mybatisplus.mapper.Condition;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
@@ -15,7 +14,6 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfMonthChargeMap
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccountClass;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
-import com.ciicsh.gto.afsupportcenter.util.PdfUtil;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
@@ -24,16 +22,11 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.OutputStream;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, HfMonthCharge> implements HfMonthChargeService {
@@ -44,6 +37,8 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
     private DateTimeFormatter dateTimeformatter = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
+    private DateTimeFormatter dateformatter = DateTimeFormatter.ofPattern("uuuuMMdd");
+    private char[] repairReasonIcons = {'\u2460', '\u2461', '\u2462', '\u2463', '\u2464', '\u2465'};
 
     @Override
     public int updateHfMonthCharge(HfMonthChargeBo hfMonthChargeBo) {
@@ -99,11 +94,10 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
      * 获取基本/补充公积金汇缴变更清册导出数据列表
      *
      * @param hfMonthChargeQueryBO 雇员每月汇缴明细数据查询条件
-     * @param hfType 公积金类型：基本/补充
      * @return 基本/补充公积金汇缴变更清册导出数据列表
      */
     @Override
-    public List<Map<String, Object>> getChgDetailsPageList(HFMonthChargeQueryBO hfMonthChargeQueryBO, Integer hfType) {
+    public List<Map<String, Object>> getChgDetailsPageList(HFMonthChargeQueryBO hfMonthChargeQueryBO) {
         ComAccountParamExtBo comAccountParamExtBo = new ComAccountParamExtBo();
         comAccountParamExtBo.setCompanyId(hfMonthChargeQueryBO.getCompanyId());
         comAccountParamExtBo.setCompanyName(hfMonthChargeQueryBO.getCompanyName());
@@ -120,12 +114,12 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             ComAccountExtBo comAccountExtBo = comAccountExtBoList.get(0);
             Map<String, Object> condition = new HashMap<>();
             condition.put("is_active", 1);
-            condition.put("hf_type", hfType);
+            condition.put("hf_type", hfMonthChargeQueryBO.getHfType());
             condition.put("com_account_id", comAccountExtBo.getComAccountId());
             List<HfComAccountClass> hfComAccountClassesList = hfComAccountClassService.selectByMap(condition);
 
             String hfTypeName;
-            if (hfType == HfEmpTaskConstant.HF_TYPE_BASIC) {
+            if (hfMonthChargeQueryBO.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
                 hfTypeName = "基本";
             } else {
                 hfTypeName = "补充";
@@ -156,14 +150,16 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             }, ','));
             List<HFMonthChargeReportBO> outHfMonthChargeReportBOList = baseMapper.queryHfMonthChargeReport(hfMonthChargeQueryBO);
 
-            int allCount = 0;
+            int allCount;
             List<HFMonthChargeBasChgDetailBO> hfMonthChargeBasChgDetailBOList = null;
             List<HFMonthChargeAddChgDetailBO> hfMonthChargeAddChgDetailBOList = null;
-            if (hfType == HfEmpTaskConstant.HF_TYPE_BASIC) {
-                hfMonthChargeBasChgDetailBOList = getBasChgDetailList(inHfMonthChargeReportBOList, outHfMonthChargeReportBOList);
+            Set<String> companyIdSet = new HashSet<>();
+
+            if (hfMonthChargeQueryBO.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
+                hfMonthChargeBasChgDetailBOList = getBasChgDetailList(companyIdSet, inHfMonthChargeReportBOList, outHfMonthChargeReportBOList);
                 allCount = hfMonthChargeBasChgDetailBOList.size();
             } else {
-                hfMonthChargeAddChgDetailBOList = getAddChgDetailList(inHfMonthChargeReportBOList, outHfMonthChargeReportBOList);
+                hfMonthChargeAddChgDetailBOList = getAddChgDetailList(companyIdSet, inHfMonthChargeReportBOList, outHfMonthChargeReportBOList);
                 allCount = hfMonthChargeAddChgDetailBOList.size();
             }
             if (allCount == 0) {
@@ -174,7 +170,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             if (lastPageCount > 0) {
                 pages++;
 
-                if (hfType == HfEmpTaskConstant.HF_TYPE_BASIC) {
+                if (hfMonthChargeQueryBO.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
                     for (int i = 0; i < 10 - lastPageCount; i++) {
                         hfMonthChargeBasChgDetailBOList.add(new HFMonthChargeBasChgDetailBO());
                     }
@@ -211,7 +207,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                 int inSubCount = 0;
                 int outSubCount = 0;
 
-                if (hfType == HfEmpTaskConstant.HF_TYPE_BASIC) {
+                if (hfMonthChargeQueryBO.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
                     List<HFMonthChargeBasChgDetailBO> subBasList = hfMonthChargeBasChgDetailBOList.subList(page * 10, (page + 1) * 10);
                     for (HFMonthChargeBasChgDetailBO hfMonthChargeBasChgDetailBO : subBasList) {
                         if (StringUtils.isNotEmpty(hfMonthChargeBasChgDetailBO.getInEmployeeName())
@@ -258,6 +254,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                 pageMap.put("outSubTotal", outSubTotal);
                 pageMap.put("createdBy", createdBy);
                 pageMap.put("createdTime", createdTime);
+                pageMap.put("companyIds", StringUtils.join(companyIdSet, ' '));
                 resultList.add(pageMap);
             }
 
@@ -276,11 +273,12 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
     /**
      * 组装基本公积金汇缴变更清册表体数据列表
      *
+     * @param companyIdSet 所关联的客户ID的集合
      * @param inHfMonthChargeReportBOList 增加汇缴部分雇员汇缴明细数据列表
      * @param outHfMonthChargeReportBOList 减少汇缴部分雇员汇缴明细数据列表
      * @return 基本公积金汇缴变更清册表体数据列表
      */
-    private List<HFMonthChargeBasChgDetailBO> getBasChgDetailList(List<HFMonthChargeReportBO> inHfMonthChargeReportBOList, List<HFMonthChargeReportBO> outHfMonthChargeReportBOList) {
+    private List<HFMonthChargeBasChgDetailBO> getBasChgDetailList(Set<String> companyIdSet, List<HFMonthChargeReportBO> inHfMonthChargeReportBOList, List<HFMonthChargeReportBO> outHfMonthChargeReportBOList) {
         List<HFMonthChargeBasChgDetailBO> hfMonthChargeBasChgDetailBOList = new ArrayList<>();
         int length = 0;
         if (CollectionUtils.isNotEmpty(inHfMonthChargeReportBOList)) {
@@ -298,6 +296,8 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                 hfMonthChargeBasChgDetailBO.setOutChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType()));
                 hfMonthChargeBasChgDetailBO.setOutAmount(hfMonthChargeReportBO.getAmount());
                 hfMonthChargeBasChgDetailBOList.add(hfMonthChargeBasChgDetailBO);
+
+                companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
             }
 
             if (length > 0) {
@@ -309,7 +309,9 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                     hfMonthChargeBasChgDetailBOList.get(i).setInAmount(hfMonthChargeReportBO.getAmount());
                     hfMonthChargeBasChgDetailBOList.get(i).setIdNum(hfMonthChargeReportBO.getIdNum());
                     hfMonthChargeBasChgDetailBOList.get(i).setBase(hfMonthChargeReportBO.getBase());
-                    hfMonthChargeBasChgDetailBOList.get(i).setRatio(CalculateSocialUtils.digitInSimpleFormat(hfMonthChargeReportBO.getRatio().multiply(BigDecimal.valueOf(100))));
+                    hfMonthChargeBasChgDetailBOList.get(i).setRatio(CalculateSocialUtils.digitInSimpleFormat(hfMonthChargeReportBO.getRatio().multiply(BigDecimal.valueOf(100))) + "%");
+
+                    companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
                 }
             }
         } else {
@@ -324,8 +326,10 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                     hfMonthChargeBasChgDetailBO.setInAmount(hfMonthChargeReportBO.getAmount());
                     hfMonthChargeBasChgDetailBO.setIdNum(hfMonthChargeReportBO.getIdNum());
                     hfMonthChargeBasChgDetailBO.setBase(hfMonthChargeReportBO.getBase());
-                    hfMonthChargeBasChgDetailBO.setRatio(CalculateSocialUtils.digitInSimpleFormat(hfMonthChargeReportBO.getRatio().multiply(BigDecimal.valueOf(100))));
+                    hfMonthChargeBasChgDetailBO.setRatio(CalculateSocialUtils.digitInSimpleFormat(hfMonthChargeReportBO.getRatio().multiply(BigDecimal.valueOf(100))) + "%");
                     hfMonthChargeBasChgDetailBOList.add(hfMonthChargeBasChgDetailBO);
+
+                    companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
                 }
             }
 
@@ -336,6 +340,8 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                     hfMonthChargeBasChgDetailBOList.get(i).setOutHfEmpAccount(hfMonthChargeReportBO.getHfEmpAccount());
                     hfMonthChargeBasChgDetailBOList.get(i).setOutChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType()));
                     hfMonthChargeBasChgDetailBOList.get(i).setOutAmount(hfMonthChargeReportBO.getAmount());
+
+                    companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
                 }
             }
         }
@@ -346,11 +352,12 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
     /**
      * 组装补充公积金汇缴变更清册表体数据列表
      *
+     * @param companyIdSet 所关联的客户ID的集合
      * @param inHfMonthChargeReportBOList 增加汇缴部分雇员汇缴明细数据列表
      * @param outHfMonthChargeReportBOList 减少汇缴部分雇员汇缴明细数据列表
      * @return 补充公积金汇缴变更清册表体数据列表
      */
-    private List<HFMonthChargeAddChgDetailBO> getAddChgDetailList(List<HFMonthChargeReportBO> inHfMonthChargeReportBOList, List<HFMonthChargeReportBO> outHfMonthChargeReportBOList) {
+    private List<HFMonthChargeAddChgDetailBO> getAddChgDetailList(Set<String> companyIdSet, List<HFMonthChargeReportBO> inHfMonthChargeReportBOList, List<HFMonthChargeReportBO> outHfMonthChargeReportBOList) {
         List<HFMonthChargeAddChgDetailBO> hfMonthChargeAddChgDetailBOList = new ArrayList<>();
         int length = 0;
         if (CollectionUtils.isNotEmpty(inHfMonthChargeReportBOList)) {
@@ -368,6 +375,8 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                 hfMonthChargeAddChgDetailBO.setOutChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType()));
                 hfMonthChargeAddChgDetailBO.setOutAmount(hfMonthChargeReportBO.getAmount());
                 hfMonthChargeAddChgDetailBOList.add(hfMonthChargeAddChgDetailBO);
+
+                companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
             }
 
             if (length > 0) {
@@ -378,7 +387,9 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                     hfMonthChargeAddChgDetailBOList.get(i).setInChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType()));
                     hfMonthChargeAddChgDetailBOList.get(i).setInAmount(hfMonthChargeReportBO.getAmount());
                     hfMonthChargeAddChgDetailBOList.get(i).setBasicHfEmpAccount(hfMonthChargeReportBO.getBasicHfEmpAccount());
-                    hfMonthChargeAddChgDetailBOList.get(i).setRatio(CalculateSocialUtils.digitInSimpleFormat(hfMonthChargeReportBO.getRatio().multiply(BigDecimal.valueOf(100))));
+                    hfMonthChargeAddChgDetailBOList.get(i).setRatio(CalculateSocialUtils.digitInSimpleFormat(hfMonthChargeReportBO.getRatio().multiply(BigDecimal.valueOf(100))) + "%");
+
+                    companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
                 }
             }
         } else {
@@ -392,8 +403,10 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                     hfMonthChargeAddChgDetailBO.setInChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType()));
                     hfMonthChargeAddChgDetailBO.setInAmount(hfMonthChargeReportBO.getAmount());
                     hfMonthChargeAddChgDetailBO.setBasicHfEmpAccount(hfMonthChargeReportBO.getBasicHfEmpAccount());
-                    hfMonthChargeAddChgDetailBO.setRatio(CalculateSocialUtils.digitInSimpleFormat(hfMonthChargeReportBO.getRatio().multiply(BigDecimal.valueOf(100))));
+                    hfMonthChargeAddChgDetailBO.setRatio(CalculateSocialUtils.digitInSimpleFormat(hfMonthChargeReportBO.getRatio().multiply(BigDecimal.valueOf(100))) + "%");
                     hfMonthChargeAddChgDetailBOList.add(hfMonthChargeAddChgDetailBO);
+
+                    companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
                 }
             }
 
@@ -404,6 +417,8 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                     hfMonthChargeAddChgDetailBOList.get(i).setOutAddedHfEmpAccount(hfMonthChargeReportBO.getHfEmpAccount());
                     hfMonthChargeAddChgDetailBOList.get(i).setOutChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType()));
                     hfMonthChargeAddChgDetailBOList.get(i).setOutAmount(hfMonthChargeReportBO.getAmount());
+
+                    companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
                 }
             }
         }
@@ -412,100 +427,285 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
     }
 
     /**
+     * 获取基本/补充公积金补缴清册导出数据列表
+     *
+     * @param hfMonthChargeQueryBO 雇员每月汇缴明细数据查询条件
+     * @return 基本/补充公积金补缴清册导出数据列表
+     */
+    @Override
+    public List<Map<String, Object>> getRepairDetailsPageList(HFMonthChargeQueryBO hfMonthChargeQueryBO) {
+        ComAccountParamExtBo comAccountParamExtBo = new ComAccountParamExtBo();
+        comAccountParamExtBo.setCompanyId(hfMonthChargeQueryBO.getCompanyId());
+        comAccountParamExtBo.setCompanyName(hfMonthChargeQueryBO.getCompanyName());
+        comAccountParamExtBo.setHfAccountType(hfMonthChargeQueryBO.getHfAccountType());
+        comAccountParamExtBo.setBasicHfComAccount(hfMonthChargeQueryBO.getBasicHfComAccount());
+        comAccountParamExtBo.setAddedHfComAccount(hfMonthChargeQueryBO.getAddedHfComAccount());
+        List<ComAccountExtBo> comAccountExtBoList = hfComAccountService.queryHfComAccountList(comAccountParamExtBo);
+
+        if (CollectionUtils.isNotEmpty(comAccountExtBoList)) {
+            if (comAccountExtBoList.size() > 1) {
+                throw new BusinessException("仅支持一次导出某一个企业账户下的清册，请明确查询条件");
+            }
+
+            ComAccountExtBo comAccountExtBo = comAccountExtBoList.get(0);
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("is_active", 1);
+            condition.put("hf_type", hfMonthChargeQueryBO.getHfType());
+            condition.put("com_account_id", comAccountExtBo.getComAccountId());
+            List<HfComAccountClass> hfComAccountClassesList = hfComAccountClassService.selectByMap(condition);
+
+            String hfTypeName;
+            if (hfMonthChargeQueryBO.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
+                hfTypeName = "基本";
+            } else {
+                hfTypeName = "补充";
+            }
+
+            if (CollectionUtils.isNotEmpty(hfComAccountClassesList)) {
+                if (comAccountExtBoList.size() > 1) {
+                    throw new BusinessException("企业" + hfTypeName + "公积金账户数据不正确");
+                }
+            } else {
+                throw new BusinessException("企业" + hfTypeName + "公积金账户数据不正确");
+            }
+
+//            hfMonthChargeQueryBO.setHfType(hfType);
+            hfMonthChargeQueryBO.setPaymentTypes(StringUtils.join(new Integer[] {
+                HfMonthChargeConstant.PAYMENT_TYPE_REPAIR,
+                HfMonthChargeConstant.PAYMENT_TYPE_DIFF_REPAIR
+            }, ','));
+            List<HFMonthChargeReportBO> hfMonthChargeReportBOList = baseMapper.queryHfMonthChargeReport(hfMonthChargeQueryBO);
+
+            int allCount;
+            Set<String> companyIdSet = new HashSet<>();
+            List<HFMonthChargeRepairDetailBO> hfMonthChargeRepairDetailBOList = getRepairDetailList(companyIdSet, hfMonthChargeReportBOList);
+            allCount = hfMonthChargeRepairDetailBOList.size();
+
+            if (allCount == 0) {
+                throw new BusinessException("未查询到符合条件的清册数据");
+            }
+            int lastPageCount = allCount % 10;
+            int pages = allCount / 10;
+            if (lastPageCount > 0) {
+                pages++;
+
+                for (int i = 0; i < 10 - lastPageCount; i++) {
+                    hfMonthChargeRepairDetailBOList.add(new HFMonthChargeRepairDetailBO());
+                }
+            }
+
+            String comAccountName = comAccountExtBo.getComAccountName();
+            String hfComAccount = hfComAccountClassesList.get(0).getHfComAccount();
+//            String hfMonth = hfMonthChargeQueryBO.getHfMonth();
+
+            List<Map<String, Object>> resultList = new ArrayList<>(pages - 1);
+            BigDecimal total = BigDecimal.ZERO;
+            int count = 0;
+            String createdBy = "test"; // TODO
+            String createdTime = LocalDateTime.now().format(dateformatter);
+            String createdTimeYYYY = createdTime.substring(0, 4);
+            String createdTimeMM = createdTime.substring(4, 6);
+            String createdTimeDD = createdTime.substring(6, 8);
+
+            for(int page = 0; page < pages; page++) {
+                Map<String, Object> pageMap = new HashMap<>();
+                pageMap.put("comAccountName", comAccountName);
+                pageMap.put("hfComAccount", hfComAccount);
+                pageMap.put("createdTimeYYYY", createdTimeYYYY);
+                pageMap.put("createdTimeMM", createdTimeMM);
+                pageMap.put("createdTimeDD", createdTimeDD);
+
+                BigDecimal subTotal = BigDecimal.ZERO;
+                int subCount = 0;
+
+                List<HFMonthChargeRepairDetailBO> subBasList = hfMonthChargeRepairDetailBOList.subList(page * 10, (page + 1) * 10);
+                for (HFMonthChargeRepairDetailBO hfMonthChargeRepairDetailBO : subBasList) {
+                    if (StringUtils.isNotEmpty(hfMonthChargeRepairDetailBO.getEmployeeName())
+//                        && StringUtils.isNotEmpty(hfMonthChargeRepairDetailBO.getHfEmpAccount())
+                        && StringUtils.isNotEmpty(hfMonthChargeRepairDetailBO.getIdNum())
+                        && hfMonthChargeRepairDetailBO.getTotalAmount() != null) {
+                        subTotal = subTotal.add(hfMonthChargeRepairDetailBO.getTotalAmount());
+                        subCount++;
+                    }
+                }
+                pageMap.put("fillDataList", subBasList);
+
+                total = total.add(subTotal);
+                count += subCount;
+                pageMap.put("subCount", subCount);
+                pageMap.put("subTotal", subTotal);
+                pageMap.put("createdBy", createdBy);
+                pageMap.put("companyIds", StringUtils.join(companyIdSet, ' '));
+                resultList.add(pageMap);
+            }
+
+            for(Map<String, Object> map : resultList) {
+                map.put("total", total);
+                map.put("count", count);
+            }
+            return resultList;
+        } else {
+            throw new BusinessException("未查询到符合条件的企业账户信息");
+        }
+    }
+
+    /**
      * 整理补缴清册数据
      *
+     * @param companyIdSet 所关联的客户ID的集合
      * @param hfMonthChargeReportBOList 雇员每月汇缴明细数据列表
-     * @param weightRoundType 权重进位方式
      * @return 补缴清册数据列表
      */
-    private List<HFMonthChargeRepairDetailBO> getRepairDetailList(List<HFMonthChargeReportBO> hfMonthChargeReportBOList, int weightRoundType) {
+    private List<HFMonthChargeRepairDetailBO> getRepairDetailList(Set<String> companyIdSet, List<HFMonthChargeReportBO> hfMonthChargeReportBOList) {
         List<HFMonthChargeRepairDetailBO> hfMonthChargeRepairDetailBOList = new ArrayList<>();
         // 添加一个临时非正式HFMonthChargeReportBO对象，方便处理最后的正式数据
         HFMonthChargeReportBO tempHfMonthChargeReportBO = new HFMonthChargeReportBO();
-        tempHfMonthChargeReportBO.setEmployeeId("");
+//        tempHfMonthChargeReportBO.setEmployeeName("");
+//        tempHfMonthChargeReportBO.setHfEmpAccount("");
+//        tempHfMonthChargeReportBO.setIdNum("");
         hfMonthChargeReportBOList.add(tempHfMonthChargeReportBO);
 
         HFMonthChargeReportBO hfMonthChargeReportBO = hfMonthChargeReportBOList.get(0);
         HFMonthChargeRepairDetailBO hfMonthChargeRepairDetailBO = new HFMonthChargeRepairDetailBO();
-        hfMonthChargeRepairDetailBO.setEmployeeId(hfMonthChargeReportBO.getEmployeeId());
         hfMonthChargeRepairDetailBO.setEmployeeName(hfMonthChargeReportBO.getEmployeeName());
         hfMonthChargeRepairDetailBO.setIdNum(hfMonthChargeReportBO.getIdNum());
-        hfMonthChargeRepairDetailBO.setRepairReason(hfMonthChargeReportBO.getRepairReason());
+        hfMonthChargeRepairDetailBO.setRepairReason(String.valueOf(repairReasonIcons[hfMonthChargeReportBO.getRepairReason() - 1]));
         hfMonthChargeRepairDetailBO.setStartMonth(hfMonthChargeReportBO.getSsMonthBelong());
         hfMonthChargeRepairDetailBO.setEndMonth(hfMonthChargeReportBO.getSsMonthBelong());
-        hfMonthChargeRepairDetailBO.setAmount(hfMonthChargeReportBO.getAmount());
-        hfMonthChargeRepairDetailBO.setRatio(hfMonthChargeReportBO.getRatio());
+        hfMonthChargeRepairDetailBO.setAmountFir(hfMonthChargeReportBO.getAmount());
+        hfMonthChargeRepairDetailBO.setRatioFir(CalculateSocialUtils.digitInSimpleFormat(hfMonthChargeReportBO.getRatio().multiply(BigDecimal.valueOf(100))) + "%");
         hfMonthChargeRepairDetailBO.setHfEmpAccount(hfMonthChargeReportBO.getHfEmpAccount());
         hfMonthChargeRepairDetailBO.setMonths(1);
+        hfMonthChargeRepairDetailBO.setRowNo(1);
         hfMonthChargeRepairDetailBOList.add(hfMonthChargeRepairDetailBO);
 
-        BigDecimal totalAmount = BigDecimal.ZERO;
+//        BigDecimal totalAmount = BigDecimal.ZERO;
         for (int i = 1; i < hfMonthChargeReportBOList.size(); i++) {
             hfMonthChargeRepairDetailBO = hfMonthChargeRepairDetailBOList.get(hfMonthChargeRepairDetailBOList.size() - 1);
             YearMonth detailEndMonth = YearMonth.parse(hfMonthChargeRepairDetailBO.getEndMonth(), formatter);
             hfMonthChargeReportBO = hfMonthChargeReportBOList.get(i);
-            YearMonth ssMonthBelong = YearMonth.parse(hfMonthChargeReportBO.getSsMonthBelong(), formatter);
+            String ratio = null;
+            String repairReason = null;
 
-            if (hfMonthChargeRepairDetailBO.getEmployeeId().equals(hfMonthChargeReportBO.getEmployeeId())) {
-                if (hfMonthChargeRepairDetailBO.getRepairReason().equals(hfMonthChargeReportBO.getRepairReason())
-                    && hfMonthChargeRepairDetailBO.getRatio().equals(hfMonthChargeReportBO.getRatio())
-                    && hfMonthChargeRepairDetailBO.getAmount().equals(hfMonthChargeReportBO.getAmount())
+            if (hfMonthChargeReportBO.getRatio() != null) {
+                ratio = CalculateSocialUtils.digitInSimpleFormat(hfMonthChargeReportBO.getRatio().multiply(BigDecimal.valueOf(100))) + "%";
+            }
+
+            if (hfMonthChargeReportBO.getRepairReason() != null) {
+                repairReason = String.valueOf(repairReasonIcons[hfMonthChargeReportBO.getRepairReason() - 1]);
+            }
+
+            if (hfMonthChargeRepairDetailBO.getEmployeeName().equals(hfMonthChargeReportBO.getEmployeeName())
+//                && hfMonthChargeRepairDetailBO.getHfEmpAccount().equals(hfMonthChargeReportBO.getHfEmpAccount())
+                && hfMonthChargeRepairDetailBO.getIdNum().equals(hfMonthChargeReportBO.getIdNum())) {
+                YearMonth ssMonthBelong = YearMonth.parse(hfMonthChargeReportBO.getSsMonthBelong(), formatter);
+
+                if (hfMonthChargeRepairDetailBO.getRepairReason().equals(repairReason)
+                    && hfMonthChargeRepairDetailBO.getRatioFir().equals(ratio)
+                    && hfMonthChargeRepairDetailBO.getAmountFir().equals(hfMonthChargeReportBO.getAmount())
                     && detailEndMonth.plusMonths(1).equals(ssMonthBelong)) {
                     hfMonthChargeRepairDetailBO.setEndMonth(hfMonthChargeReportBO.getSsMonthBelong());
                     hfMonthChargeRepairDetailBO.plusOneMonth();
                 } else {
-                    hfMonthChargeRepairDetailBO.setSubTotalAmount(
-                        CalculateSocialUtils.calculateByRoundType(
-                            hfMonthChargeRepairDetailBO.getAmount()
-                                .multiply(BigDecimal.valueOf(hfMonthChargeRepairDetailBO.getMonths()))
-                            , weightRoundType));
-
-                    HFMonthChargeRepairDetailBO newHFMonthChargeRepairDetailBO = new HFMonthChargeRepairDetailBO();
-                    newHFMonthChargeRepairDetailBO.setEmployeeId(hfMonthChargeReportBO.getEmployeeId());
-                    newHFMonthChargeRepairDetailBO.setEmployeeName(hfMonthChargeReportBO.getEmployeeName());
-                    newHFMonthChargeRepairDetailBO.setIdNum(hfMonthChargeReportBO.getIdNum());
-                    newHFMonthChargeRepairDetailBO.setRepairReason(hfMonthChargeReportBO.getRepairReason());
-                    newHFMonthChargeRepairDetailBO.setStartMonth(hfMonthChargeReportBO.getSsMonthBelong());
-                    newHFMonthChargeRepairDetailBO.setEndMonth(hfMonthChargeReportBO.getSsMonthBelong());
-                    newHFMonthChargeRepairDetailBO.setAmount(hfMonthChargeReportBO.getAmount());
-                    newHFMonthChargeRepairDetailBO.setRatio(hfMonthChargeReportBO.getRatio());
-                    newHFMonthChargeRepairDetailBO.setHfEmpAccount(hfMonthChargeReportBO.getHfEmpAccount());
-                    newHFMonthChargeRepairDetailBO.setMonths(1);
-                    hfMonthChargeRepairDetailBOList.add(newHFMonthChargeRepairDetailBO);
+                    repairPeriodEnd(hfMonthChargeRepairDetailBO, hfMonthChargeReportBO, repairReason, ratio, hfMonthChargeRepairDetailBOList);
+//                    hfMonthChargeRepairDetailBO.setSubAmountFir(
+//                            hfMonthChargeRepairDetailBO.getAmountFir()
+//                                .multiply(BigDecimal.valueOf(hfMonthChargeRepairDetailBO.getMonths())));
+//                    hfMonthChargeRepairDetailBO.setTotalAmount(hfMonthChargeRepairDetailBO.getAmountFir());
+//
+//                    HFMonthChargeRepairDetailBO newHFMonthChargeRepairDetailBO = new HFMonthChargeRepairDetailBO();
+//                    newHFMonthChargeRepairDetailBO.setEmployeeName(hfMonthChargeReportBO.getEmployeeName());
+//                    newHFMonthChargeRepairDetailBO.setIdNum(hfMonthChargeReportBO.getIdNum());
+//                    newHFMonthChargeRepairDetailBO.setRepairReason(repairReason);
+//                    newHFMonthChargeRepairDetailBO.setStartMonth(hfMonthChargeReportBO.getSsMonthBelong());
+//                    newHFMonthChargeRepairDetailBO.setEndMonth(hfMonthChargeReportBO.getSsMonthBelong());
+//                    newHFMonthChargeRepairDetailBO.setAmountFir(hfMonthChargeReportBO.getAmount());
+//                    newHFMonthChargeRepairDetailBO.setRatioFir(ratio);
+//                    newHFMonthChargeRepairDetailBO.setHfEmpAccount(hfMonthChargeReportBO.getHfEmpAccount());
+//                    newHFMonthChargeRepairDetailBO.setMonths(1);
+//                    hfMonthChargeRepairDetailBOList.add(newHFMonthChargeRepairDetailBO);
                 }
-                totalAmount.add(hfMonthChargeRepairDetailBO.getSubTotalAmount());
+//                totalAmount.add(hfMonthChargeRepairDetailBO.getSubAmountFir());
             } else {
-                hfMonthChargeRepairDetailBO.setSubTotalAmount(
-                    CalculateSocialUtils.calculateByRoundType(
-                        hfMonthChargeRepairDetailBO.getAmount()
-                            .multiply(BigDecimal.valueOf(hfMonthChargeRepairDetailBO.getMonths()))
-                        , weightRoundType));
-                String employeeId = hfMonthChargeRepairDetailBO.getEmployeeId();
-                totalAmount.add(hfMonthChargeRepairDetailBO.getSubTotalAmount());
+                if (StringUtils.isNotEmpty(hfMonthChargeReportBO.getCompanyId())) {
+                    companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
+                }
+                repairPeriodEnd(hfMonthChargeRepairDetailBO, hfMonthChargeReportBO, repairReason, ratio, hfMonthChargeRepairDetailBOList);
+//                hfMonthChargeRepairDetailBO.setSubAmountFir(
+//                        hfMonthChargeRepairDetailBO.getAmountFir()
+//                            .multiply(BigDecimal.valueOf(hfMonthChargeRepairDetailBO.getMonths())));
+//                String employeeName = hfMonthChargeRepairDetailBO.getEmployeeName();
+//                String hfEmpAccount = hfMonthChargeRepairDetailBO.getHfEmpAccount();
+//                String idNum = hfMonthChargeRepairDetailBO.getIdNum();
 
-                final BigDecimal tempTotalAmount = totalAmount;
-                hfMonthChargeRepairDetailBOList.stream().filter(e -> e.getEmployeeId().equals(employeeId)).forEach(
-                    e -> e.setTotalAmount(CalculateSocialUtils.calculateByRoundType(tempTotalAmount, weightRoundType))
-                );
-                totalAmount = BigDecimal.ZERO;
+//                totalAmount.add(hfMonthChargeRepairDetailBO.getSubAmountFir());
+//                hfMonthChargeRepairDetailBO.setTotalAmount(hfMonthChargeRepairDetailBO.getAmountFir());
 
-                HFMonthChargeRepairDetailBO newHFMonthChargeRepairDetailBO = new HFMonthChargeRepairDetailBO();
-                newHFMonthChargeRepairDetailBO.setEmployeeId(hfMonthChargeReportBO.getEmployeeId());
-                newHFMonthChargeRepairDetailBO.setEmployeeName(hfMonthChargeReportBO.getEmployeeName());
-                newHFMonthChargeRepairDetailBO.setIdNum(hfMonthChargeReportBO.getIdNum());
-                newHFMonthChargeRepairDetailBO.setRepairReason(hfMonthChargeReportBO.getRepairReason());
-                newHFMonthChargeRepairDetailBO.setStartMonth(hfMonthChargeReportBO.getSsMonthBelong());
-                newHFMonthChargeRepairDetailBO.setEndMonth(hfMonthChargeReportBO.getSsMonthBelong());
-                newHFMonthChargeRepairDetailBO.setAmount(hfMonthChargeReportBO.getAmount());
-                newHFMonthChargeRepairDetailBO.setRatio(hfMonthChargeReportBO.getRatio());
-                newHFMonthChargeRepairDetailBO.setHfEmpAccount(hfMonthChargeReportBO.getHfEmpAccount());
-                newHFMonthChargeRepairDetailBO.setMonths(1);
-                hfMonthChargeRepairDetailBOList.add(newHFMonthChargeRepairDetailBO);
+//                final BigDecimal tempTotalAmount = totalAmount;
+//                hfMonthChargeRepairDetailBOList.stream().filter(e ->
+//                    e.getEmployeeName().equals(employeeName)
+////                    && e.getHfEmpAccount().equals(hfEmpAccount)
+//                    && e.getIdNum().equals(idNum)
+//                ).forEach(
+//                    e -> e.setTotalAmount(tempTotalAmount)
+//                );
+//                totalAmount = BigDecimal.ZERO;
+
+//                HFMonthChargeRepairDetailBO newHFMonthChargeRepairDetailBO = new HFMonthChargeRepairDetailBO();
+//                newHFMonthChargeRepairDetailBO.setEmployeeName(hfMonthChargeReportBO.getEmployeeName());
+//                newHFMonthChargeRepairDetailBO.setIdNum(hfMonthChargeReportBO.getIdNum());
+//                newHFMonthChargeRepairDetailBO.setRepairReason(repairReason);
+//                newHFMonthChargeRepairDetailBO.setStartMonth(hfMonthChargeReportBO.getSsMonthBelong());
+//                newHFMonthChargeRepairDetailBO.setEndMonth(hfMonthChargeReportBO.getSsMonthBelong());
+//                newHFMonthChargeRepairDetailBO.setAmountFir(hfMonthChargeReportBO.getAmount());
+//                newHFMonthChargeRepairDetailBO.setRatioFir(ratio);
+//                newHFMonthChargeRepairDetailBO.setHfEmpAccount(hfMonthChargeReportBO.getHfEmpAccount());
+//                newHFMonthChargeRepairDetailBO.setMonths(1);
+//                hfMonthChargeRepairDetailBOList.add(newHFMonthChargeRepairDetailBO);
             }
         }
 
         // 去除最后一个临时的对象
         hfMonthChargeRepairDetailBOList.remove(hfMonthChargeRepairDetailBOList.size() - 1);
         return  hfMonthChargeRepairDetailBOList;
+    }
+
+    /**
+     * 雇员补缴导出数据结束段数据处理
+     *
+     * @param hfMonthChargeRepairDetailBO 当前处理的雇员补缴导出数据
+     * @param hfMonthChargeReportBO 不属于当前处理的补缴段的雇员每月汇缴明细数据
+     * @param repairReason 补缴原因
+     * @param ratio 缴存比例
+     * @param hfMonthChargeRepairDetailBOList 雇员补缴导出数据列表
+     */
+    private void repairPeriodEnd(HFMonthChargeRepairDetailBO hfMonthChargeRepairDetailBO,
+                                 HFMonthChargeReportBO hfMonthChargeReportBO,
+                                 String repairReason,
+                                 String ratio,
+                                 List<HFMonthChargeRepairDetailBO> hfMonthChargeRepairDetailBOList) {
+        hfMonthChargeRepairDetailBO.setSubAmountFir(
+            hfMonthChargeRepairDetailBO.getAmountFir()
+                .multiply(BigDecimal.valueOf(hfMonthChargeRepairDetailBO.getMonths())));
+        String startMonth = hfMonthChargeRepairDetailBO.getStartMonth();
+        String endMonth = hfMonthChargeRepairDetailBO.getEndMonth();
+        StringBuilder sb = new StringBuilder();
+        sb = sb.append(startMonth.substring(0, 4)).append(".").append(startMonth.substring(4, 6))
+            .append("-").append(endMonth.substring(0, 4)).append(".").append(endMonth.substring(4, 6));
+        hfMonthChargeRepairDetailBO.setRepairPeriodFir(sb.toString());
+        hfMonthChargeRepairDetailBO.setTotalAmount(hfMonthChargeRepairDetailBO.getSubAmountFir());
+
+        HFMonthChargeRepairDetailBO newHFMonthChargeRepairDetailBO = new HFMonthChargeRepairDetailBO();
+        newHFMonthChargeRepairDetailBO.setEmployeeName(hfMonthChargeReportBO.getEmployeeName());
+        newHFMonthChargeRepairDetailBO.setIdNum(hfMonthChargeReportBO.getIdNum());
+        newHFMonthChargeRepairDetailBO.setRepairReason(repairReason);
+        newHFMonthChargeRepairDetailBO.setStartMonth(hfMonthChargeReportBO.getSsMonthBelong());
+        newHFMonthChargeRepairDetailBO.setEndMonth(hfMonthChargeReportBO.getSsMonthBelong());
+        newHFMonthChargeRepairDetailBO.setAmountFir(hfMonthChargeReportBO.getAmount());
+        newHFMonthChargeRepairDetailBO.setRatioFir(ratio);
+        newHFMonthChargeRepairDetailBO.setHfEmpAccount(hfMonthChargeReportBO.getHfEmpAccount());
+        newHFMonthChargeRepairDetailBO.setMonths(1);
+        newHFMonthChargeRepairDetailBO.setRowNo(hfMonthChargeRepairDetailBOList.size() + 1);
+        hfMonthChargeRepairDetailBOList.add(newHFMonthChargeRepairDetailBO);
     }
 }

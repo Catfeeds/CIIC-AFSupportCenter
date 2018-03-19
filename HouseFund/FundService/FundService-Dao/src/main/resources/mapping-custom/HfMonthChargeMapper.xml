@@ -17,6 +17,7 @@
         <result column="hf_month" property="hfMonth" />
         <result column="ss_month_belong" property="ssMonthBelong" />
         <result column="payment_type" property="paymentType" />
+        <result column="repair_reason" property="repairReason" />
         <result column="base" property="base" />
         <result column="ratio" property="ratio" />
         <result column="amount" property="amount" />
@@ -121,6 +122,7 @@
         hmc.hf_month,
         hmc.ss_month_belong,
         hmc.payment_type,
+        hmc.repair_reason,
         hmc.base,
         hmc.ratio,
         hmc.amount,
