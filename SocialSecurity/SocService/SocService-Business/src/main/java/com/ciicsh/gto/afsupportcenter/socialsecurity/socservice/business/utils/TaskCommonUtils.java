@@ -140,8 +140,11 @@ public class TaskCommonUtils {
                         afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(SsEmpBaseDetail.getComAmount());
                         afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(SsEmpBaseDetail.getEmpAmount());
                         //afEmpSocialUpdateDateDTO.setStartConfirmDate(stringTranserDate(ssEmpTaskBO.getEmpTaskPeriods().get(0).getStartMonth()));
-                        afEmpSocialUpdateDateDTO.setStartConfirmDate(stringTranserDate(ssEmpTaskBO.getListEmpBasePeriod().get(0).getStartMonth()));
-                        afEmpSocialUpdateDateDTO.setEndConfirmDate(stringTranserDateEndMonth(ssEmpTaskBO.getListEmpBasePeriod().get(0).getEndMonth()));
+                        //反馈前道第一个福利段的开始年月
+                        List<SsEmpBasePeriod> listBase=ssEmpTaskBO.getListEmpBasePeriod();
+                        afEmpSocialUpdateDateDTO.setStartConfirmDate(stringTranserDate(listBase.get(0).getStartMonth()));
+                        //反馈前道最后一个福利段的截至年月
+                        afEmpSocialUpdateDateDTO.setEndConfirmDate(stringTranserDateEndMonth(listBase.get(listBase.size()-1).getEndMonth()));
                         break;
                 }
                 paramsList.add(afEmpSocialUpdateDateDTO);
