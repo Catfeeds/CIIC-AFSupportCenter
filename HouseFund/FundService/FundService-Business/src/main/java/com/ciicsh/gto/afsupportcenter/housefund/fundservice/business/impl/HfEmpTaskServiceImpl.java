@@ -80,7 +80,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
      */
     @Transactional(rollbackFor = {Exception.class})
     @Override
-    public boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer taskCategory, Integer isChange,
+    public boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer prccessCategory,Integer taskCategory, Integer isChange,
                                 AfEmployeeInfoDTO dto) throws Exception {
         AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
 
@@ -109,8 +109,10 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
         //转出单位(来源地)
         hfEmpTask.setTransferOutUnit(this.getTransUnit(paramMap));
+        hfEmpTask.setProcessCategory(prccessCategory);
         //任务类型
         hfEmpTask.setTaskCategory(taskCategory);
+
         //是否更正 1 是 0 否
         hfEmpTask.setIsChange(isChange);
         hfEmpTask.setTaskFormContent(JSON.toJSONString(dto));
@@ -152,7 +154,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
      */
     @Transactional(rollbackFor = {Exception.class})
     @Override
-    public boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, AfEmployeeInfoDTO dto) {
+    public boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory,Integer prccessCategory, AfEmployeeInfoDTO dto) {
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
 
         AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
@@ -184,6 +186,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
             hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getFundPolicyId());
         }
         //TODO 表中加字段
+        hfEmpTask.setProcessCategory(prccessCategory);
         //hfEmpTask.setProcessId(taskMsgDTO.getProcessId());
         hfEmpTask.setModifiedTime(LocalDateTime.now());
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();

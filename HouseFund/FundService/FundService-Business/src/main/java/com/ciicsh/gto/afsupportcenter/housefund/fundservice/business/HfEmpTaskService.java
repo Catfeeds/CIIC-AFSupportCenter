@@ -46,7 +46,7 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @param dto
      * @return
      */
-    boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, AfEmployeeInfoDTO dto);
+    boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer prccessCategory,AfEmployeeInfoDTO dto);
 
     /**
      * 添加数据到雇员任务单表
@@ -58,7 +58,7 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @return
      * @throws Exception
      */
-    boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory,Integer taskCategory, Integer isChange,
+    boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory,Integer prccessCategory,Integer taskCategory, Integer isChange,
                          AfEmployeeInfoDTO dto) throws Exception;
 
 

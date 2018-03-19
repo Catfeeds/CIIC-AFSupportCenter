@@ -66,6 +66,16 @@ public class HfEmpTask implements Serializable {
      */
 	@TableField("hf_emp_account")
 	private String hfEmpAccount;
+
+
+    /**
+     * 任务单处理类别：1. 雇员新增 2. 雇员终止 3. 雇员补缴 4. 雇员翻牌 5. 雇员服务协议调整 6. 雇员服务协议更正
+     7. 集体操作 8. 特殊操作 9. 其它操作
+     */
+    @TableField("process_category")
+    private Integer processCategory;
+
+
     /**
      * 任务类型：1 新增(新开) 、2 新增（转入） 、3 新增（启封）、4 调整（封存）、5 调整（启封）、
             6 补缴、7 离职（转出）、8 离职（封存）、9 转移、 10 特殊任务  11 集体转入  12  集体转出  13 翻牌
@@ -373,6 +383,14 @@ public class HfEmpTask implements Serializable {
 	public void setHfEmpAccount(String hfEmpAccount) {
 		this.hfEmpAccount = hfEmpAccount;
 	}
+
+    public Integer getProcessCategory() {
+        return processCategory;
+    }
+
+    public void setProcessCategory(Integer processCategory) {
+        this.processCategory = processCategory;
+    }
 
 	public Integer getTaskCategory() {
 		return taskCategory;
@@ -738,6 +756,7 @@ public class HfEmpTask implements Serializable {
 			", isChange=" + isChange +
 			", hfType=" + hfType +
 			", hfEmpAccount=" + hfEmpAccount +
+            ", processCategory=" + processCategory +
 			", taskCategory=" + taskCategory +
 			", urgent=" + urgent +
 			", operationRemind=" + operationRemind +
