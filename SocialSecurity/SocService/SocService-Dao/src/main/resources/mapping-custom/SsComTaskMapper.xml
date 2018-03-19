@@ -124,6 +124,7 @@
         sct.customer_id,
         sct.expire_date,
         sct.submitter_id,
+        sct.submitter_name,
         sct.submit_time,
         sct.submit_remark,
         sct.rejection_remark,
@@ -163,6 +164,7 @@
         sct.customer_id,
         sct.expire_date,
         sct.submitter_id,
+        sct.submitter_name,
         sct.submit_time,
         sct.submit_remark,
         sct.rejection_remark,
@@ -214,6 +216,7 @@
         sct.customer_id,
         sct.expire_date,
         sct.submitter_id,
+        sct.submitter_name,
         sct.submit_time,
         sct.submit_remark,
         sct.rejection_remark,
@@ -257,6 +260,7 @@
         sct.customer_id,
         sct.expire_date,
         sct.submitter_id,
+        sct.submitter_name,
         sct.submit_time,
         sct.submit_remark,
         sct.rejection_remark,
@@ -304,6 +308,7 @@
         sct.customer_id,
         sct.expire_date,
         sct.submitter_id,
+        sct.submitter_name,
         sct.submit_time,
         sct.submit_remark,
         sct.task_status,
@@ -364,7 +369,6 @@
         FROM
         ss_com_task sct
         LEFT JOIN ss_account_com_relation scr ON sct.company_id = scr.company_id AND scr.is_active=1
-
         LEFT JOIN
         (
         SELECT
