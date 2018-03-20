@@ -22,13 +22,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * <p>
@@ -242,36 +243,44 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         LocalDateTime now = LocalDateTime.now();
         String today = now.format(DateTimeFormatter.ofPattern("dd"));
         String thisMonth=now.format(DateTimeFormatter.ofPattern("yyyyMM"));
-
         if (ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_5) || ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_6) || ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_14) || ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_15)) {//转出任务单
-            if (ssEmpTask.getEndMonth() == null || ssEmpTask.getEndMonth().equals("")){
+            if (Optional.ofNullable(ssEmpTask.getEndMonth()).isPresent() == false) {
                 return;
             }
             //如果当前系统月份 > 社保缴纳截止月份 就会在本月处理，否则就是截止月份的下一个月份处理
-            if(Integer.parseInt(thisMonth) > Integer.parseInt(ssEmpTask.getEndMonth())){
+            if (Integer.parseInt(thisMonth) > Integer.parseInt(ssEmpTask.getEndMonth())) {
                 submitMonth = ssEmpTask.getEndMonth() + today;
-            }else {
-                String em= LocalDate.parse(ssEmpTask.getEndMonth()+"01").plusMonths(1).format(DateTimeFormatter.ofPattern("yyyyMM"));
-                submitMonth = em + today;
+            } else {
+                String em = LocalDate.parse(ssEmpTask.getEndMonth() + today, DateTimeFormatter.ofPattern("yyyyMMdd")).plusMonths(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+                submitMonth = em;
             }
-
         } else {
-            if (ssEmpTask.getStartMonth() == null || ssEmpTask.getStartMonth().equals("")){
+            if (Optional.ofNullable(ssEmpTask.getStartMonth()).isPresent() == false) {
                 return;
             }
             submitMonth = ssEmpTask.getStartMonth() + today;
         }
-        SimpleDateFormat sf1 = new SimpleDateFormat("yyyyMMdd");
-        SimpleDateFormat sf2 = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            submitMonth = sf2.format(sf1.parse(submitMonth));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        submitTime = LocalDateTime.parse(submitMonth + " 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        submitTime = LocalDateTime.parse(submitMonth + " 00:00:00", DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss"));
         ssEmpTask.setSubmitTime(submitTime);
     }
-
+    //测试上述方法，请忽略我。看不爽，可删除。么么哒！
+    public static  void  main(String[] arg){
+        SsEmpTask ssEmpTask = new SsEmpTask();
+        ssEmpTask.setTaskCategory(5);//转出
+        ssEmpTask.setEndMonth("201806");
+        new SsEmpTaskFrontServiceImpl().resetTaskSubmitTime(ssEmpTask);
+        System.out.println(ssEmpTask.getSubmitTime());
+        ssEmpTask.setEndMonth("201801");
+        new SsEmpTaskFrontServiceImpl().resetTaskSubmitTime(ssEmpTask);
+        System.out.println(ssEmpTask.getSubmitTime());
+        ssEmpTask.setTaskCategory(-5);//非转出
+        ssEmpTask.setStartMonth("201801");//小于本月
+        new SsEmpTaskFrontServiceImpl().resetTaskSubmitTime(ssEmpTask);
+        System.out.println(ssEmpTask.getSubmitTime());
+        ssEmpTask.setStartMonth("201808");//大于本月
+        new SsEmpTaskFrontServiceImpl().resetTaskSubmitTime(ssEmpTask);
+        System.out.println(ssEmpTask.getSubmitTime());
+    }
     /**
      * 更新旧的雇员任务单
      *

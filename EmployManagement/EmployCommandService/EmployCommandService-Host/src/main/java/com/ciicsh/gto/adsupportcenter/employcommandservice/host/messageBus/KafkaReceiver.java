@@ -1,8 +1,6 @@
 package com.ciicsh.gto.adsupportcenter.employcommandservice.host.messageBus;
 
 import com.alibaba.fastjson.JSON;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
-//import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpTaskService;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.slf4j.Logger;
@@ -23,8 +21,6 @@ public class KafkaReceiver {
 
     @Autowired
     private IAmEmpTaskService iAmEmpTaskService;
-//    @Autowired
-//    private AfEmployeeCompanyProxy afEmployeeCompanyProxy;
 
     /**
      * 订阅用工办理任务单

@@ -81,6 +81,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         List<AmResTaskCountBO>  temp = new ArrayList<>();
         amEmpTaskCountBO.setAmount(list.size());
         int num =0;
+        int otherNum =0;
         for(int i=0;i<list.size();i++)
         {
             AmResignBO amResignBO = list.get(i);
@@ -103,7 +104,8 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             }else if(6==status){
                 amEmpTaskCountBO.setBeforeBatchNeedRefuse(amResignBO.getCount());
             }else{
-                amEmpTaskCountBO.setOther(amResignBO.getCount());
+                otherNum = otherNum+amResignBO.getCount();
+                amEmpTaskCountBO.setOther(otherNum);
                 num = num + amResignBO.getCount();
             }
             amEmpTaskCountBO.setAmount(num);
@@ -238,7 +240,9 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             }
             amResignBO.setOutReason(amEmpTask.getOutReason());
         }
-
+        if(amResignBO.getEmploymentId()!=null){
+            amResignBO.setMatchEmployIndex(amResignBO.getEmploymentId().toString());
+        }
         resultMap.put("resignBO",amResignBO);
 
         return JsonResultKit.of(resultMap);

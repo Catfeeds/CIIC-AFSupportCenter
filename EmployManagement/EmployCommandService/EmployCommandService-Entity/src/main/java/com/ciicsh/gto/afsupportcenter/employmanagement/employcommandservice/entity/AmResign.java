@@ -29,6 +29,11 @@ public class AmResign implements Serializable {
 	@TableField("employment_id")
 	private Long employmentId;
     /**
+     * 任务单id
+     */
+    @TableField("emp_task_id")
+    private Long  empTaskId;
+    /**
      * 客户Id
      */
 	@TableField("company_id")
@@ -194,8 +199,15 @@ public class AmResign implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+    public Long getEmpTaskId() {
+        return empTaskId;
+    }
 
-	public Long getResignId() {
+    public void setEmpTaskId(Long empTaskId) {
+        this.empTaskId = empTaskId;
+    }
+
+    public Long getResignId() {
 		return resignId;
 	}
 

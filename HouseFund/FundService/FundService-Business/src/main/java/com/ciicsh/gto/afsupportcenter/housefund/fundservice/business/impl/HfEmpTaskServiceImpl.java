@@ -80,7 +80,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
      */
     @Transactional(rollbackFor = {Exception.class})
     @Override
-    public boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer prccessCategory,Integer taskCategory, Integer isChange,
+    public boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer processCategory,Integer taskCategory, Integer isChange,
                                 AfEmployeeInfoDTO dto) throws Exception {
         AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
 
@@ -109,7 +109,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
         //转出单位(来源地)
         hfEmpTask.setTransferOutUnit(this.getTransUnit(paramMap));
-        hfEmpTask.setProcessCategory(prccessCategory);
+        hfEmpTask.setProcessCategory(processCategory);
         //任务类型
         hfEmpTask.setTaskCategory(taskCategory);
 
@@ -154,13 +154,18 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
      */
     @Transactional(rollbackFor = {Exception.class})
     @Override
-    public boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory,Integer prccessCategory, AfEmployeeInfoDTO dto) {
-        Map<String, Object> paramMap = taskMsgDTO.getVariables();
+    public boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory,AfEmployeeInfoDTO dto) {
 
+        Map<String, Object> paramMap = taskMsgDTO.getVariables();
         AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
 
         HfEmpTask hfEmpTask = new HfEmpTask();
-        hfEmpTask.setTaskId(paramMap.get("oldEmpAgreementId").toString());
+        hfEmpTask.setTaskId(paramMap.get("oldTaskId").toString());
+        //查询旧的任务类型保存到新的任务单
+        List<HfEmpTask> resList = baseMapper.queryByTaskId(hfEmpTask);
+        if (resList.size() > 0) {
+            hfEmpTask = resList.get(0);
+        }
         if(null != companyDto){
             hfEmpTask.setCompanyId(companyDto.getCompanyId());
             hfEmpTask.setEmployeeId(companyDto.getEmployeeId());
@@ -186,7 +191,6 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
             hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getFundPolicyId());
         }
         //TODO 表中加字段
-        hfEmpTask.setProcessCategory(prccessCategory);
         //hfEmpTask.setProcessId(taskMsgDTO.getProcessId());
         hfEmpTask.setModifiedTime(LocalDateTime.now());
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
