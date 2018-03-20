@@ -103,8 +103,10 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             condition.put("employee_id", hfEmpTask.getEmployeeId());
             condition.put("process_category", hfEmpTask.getProcessCategory());
             condition.put("task_category", hfEmpTask.getTaskCategory());
+            condition.put("hf_type", hfEmpTask.getHfType());
             condition.put("is_change", HfEmpTaskConstant.IS_CHANGE_NO);
             condition.put("task_status", HfEmpTaskConstant.TASK_STATUS_HANDLED);
+            condition.put("is_active", hfEmpTask.getActive());
             List<HfEmpTask> hfEmpTaskList = this.selectByMap(condition);
 
             if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
