@@ -44,4 +44,7 @@ public interface HfEmpTaskConstant {
 
     int WELFARE_UNIT_INDEPENDENT = 1; // 福利办理方：独立户
     int WELFARE_UNIT_CIIC_LARGE_STORAGE = 2; // 福利办理方：中智大库
+
+    int IS_CHANGE_YES = 1; // 是否变更：是
+    int IS_CHANGE_NO = 0; // 是否变更：否
 }

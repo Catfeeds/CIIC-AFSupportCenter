@@ -24,6 +24,7 @@ public class HfEmpTaskHandleBo implements Serializable {
     private Integer taskCategory;
     private Integer dictTaskCategory;
     private Integer taskStatus;
+    private Integer isChange;
     private String comHandleStatusName;
     private String companyId;
     private String companyName;
