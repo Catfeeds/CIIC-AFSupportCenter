@@ -63,8 +63,8 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
     public JsonResult<PageRows> hfEmpTaskQuery(@RequestBody PageInfo pageInfo) {
         return JsonResultKit.of(business.queryHfEmpTaskInPage(pageInfo, StringUtils.join(
             new Integer[] {
-                HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK,
-                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
+                HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK
+//                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
             }, ',')));
     }
 
@@ -81,8 +81,8 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
         pageInfo.setPageNum(0);
         PageRows<HfEmpTaskExportBo> result = business.queryHfEmpTaskInPage(pageInfo, StringUtils.join(
             new Integer[] {
-                HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK,
-                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
+                HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK
+//                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
             }, ','));
         long total = result.getTotal();
         ExportParams exportParams = new ExportParams();
@@ -99,8 +99,8 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
                 pageInfo.setPageNum(i);
                 result = business.queryHfEmpTaskInPage(pageInfo, StringUtils.join(
                     new Integer[] {
-                        HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK,
-                        HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
+                        HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK
+//                        HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
                     }, ','));
                 workbook = ExcelExportUtil.exportBigExcel(exportParams, HfEmpTaskExportBo.class, result.getRows());
             }
@@ -129,8 +129,8 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
     public JsonResult<PageRows> hfEmpTaskRejectQuery(@RequestBody PageInfo pageInfo) {
         return JsonResultKit.of(business.queryHfEmpTaskRejectInPage(pageInfo, StringUtils.join(
             new Integer[] {
-                HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK,
-                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
+                HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK
+//                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
             }, ',')));
     }
 
@@ -147,8 +147,8 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
         pageInfo.setPageNum(0);
         PageRows<HfEmpTaskRejectExportBo> result = business.queryHfEmpTaskRejectInPage(pageInfo, StringUtils.join(
             new Integer[] {
-                HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK,
-                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
+                HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK
+//                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
             }, ','));
         long total = result.getTotal();
         ExportParams exportParams = new ExportParams();
@@ -165,8 +165,8 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
                 pageInfo.setPageNum(i);
                 result = business.queryHfEmpTaskRejectInPage(pageInfo, StringUtils.join(
                     new Integer[] {
-                        HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK,
-                        HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
+                        HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK
+//                        HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
                     }, ','));
                 workbook = ExcelExportUtil.exportBigExcel(exportParams, HfEmpTaskRejectExportBo.class, result.getRows());
             }

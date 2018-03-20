@@ -61,12 +61,12 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         rollbackFor = {Exception.class}
     )
     @Override
-    public boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer isChange,
+    public boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer processCategory, Integer isChange,
                                  AfEmployeeInfoDTO dto) {
         boolean result = false;
         try {
             //插入数据到雇员任务单表
-            saveSsEmpTask(taskMsgDTO, taskCategory, isChange, dto);
+            saveSsEmpTask(taskMsgDTO, taskCategory, processCategory, isChange, dto);
             result = true;
         } catch (Exception e) {
             result = false;
@@ -108,7 +108,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         rollbackFor = {Exception.class}
     )
     @Override
-    public boolean saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType, Integer isChange,
+    public boolean saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType, Integer processCategory, Integer isChange,
                                  AfEmployeeInfoDTO dto) throws Exception {
         //基本信息
         AfEmployeeCompanyDTO afEmployeeCompanyDTO = dto.getEmployeeCompany();
@@ -158,6 +158,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
 //                ssEmpTask.setEmpArchiveId(Long.valueOf(Optional.ofNullable(ssEmpArchiveId).orElse("0")));
 //            }
 //        }
+        ssEmpTask.setProcessCategory(processCategory);
         ssEmpTask.setTaskCategory(socialType);
         ssEmpTask.setIsChange(isChange);
         ssEmpTask.setTaskFormContent(JSON.toJSONString(dto));

@@ -64,7 +64,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
             }
 
             HfEmpTaskHandleBo hfEmpTaskHandleBo = list.get(0);
-            if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK) {
+            if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK) {
                 return JsonResultKit.ofError("当前雇员任务单的任务类型不正确");
             }
             if ((hfEmpTaskHandleBo.getTaskStatus() != null && !hfEmpTaskHandleBo.getTaskStatus().equals(hfEmpTaskHandlePostBo.getTaskStatus()))
@@ -127,7 +127,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                 if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_ADD
                     || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN
                     || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN
-                    || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_MULTI_TRANS_IN
+//                    || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_MULTI_TRANS_IN
                     || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST) {
                     if (StringUtils.isNotEmpty(hfMonth) && StringUtils.isNotEmpty(startMonth)) {
                         YearMonth hfMonthDate = YearMonth.parse(hfMonth, formatter);
@@ -247,7 +247,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
             } else if (
                 hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
                 || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT
-                || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_MULTI_TRANS_OUT
+//                || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_MULTI_TRANS_OUT
                 ) {
                 if (hfEmpTaskPeriods.size() > 1) {
                     return JsonResultKit.ofError("当前雇员任务单费用段数据不正确");
