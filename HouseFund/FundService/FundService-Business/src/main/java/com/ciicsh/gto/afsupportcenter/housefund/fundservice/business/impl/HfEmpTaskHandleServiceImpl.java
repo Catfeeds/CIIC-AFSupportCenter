@@ -96,6 +96,32 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             return JsonResultKit.ofError("当前雇员任务单状态已变更，处理失败");
         }
 
+        if (isHandle && hfEmpTask.getIsChange() == HfEmpTaskConstant.IS_CHANGE_YES
+            && hfEmpTask.getProcessCategory() == HfEmpTaskConstant.PROCESS_CATEGORY_ADD) {
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("company_id", hfEmpTask.getCompanyId());
+            condition.put("employee_id", hfEmpTask.getEmployeeId());
+            condition.put("process_category", hfEmpTask.getProcessCategory());
+            condition.put("task_category", hfEmpTask.getTaskCategory());
+            condition.put("is_change", HfEmpTaskConstant.IS_CHANGE_NO);
+            condition.put("task_status", HfEmpTaskConstant.TASK_STATUS_HANDLED);
+            List<HfEmpTask> hfEmpTaskList = this.selectByMap(condition);
+
+            if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
+                if (hfEmpTaskList.size() > 1) {
+                    return JsonResultKit.ofError("相同雇员的雇员新增任务单已办理多次，数据不正确");
+                }
+
+                List<Long> empTaskIdList = new ArrayList<>();
+                empTaskIdList.add(hfEmpTaskList.get(0).getEmpTaskId());
+
+                hfMonthChargeService.deleteHfMonthCharges(empTaskIdList);
+                hfArchiveBaseAdjustService.deleteHfArchiveBaseAdjusts(empTaskIdList);
+                hfArchiveBasePeriodService.deleteHfArchiveBasePeriods(empTaskIdList);
+                hfEmpArchiveService.deleteHfEmpArchiveByEmpTaskIds(empTaskIdList);
+            }
+        }
+
         HfEmpTask inputHfEmpTask = new HfEmpTask();
         inputHfEmpTask.setEmpTaskId(empTaskId);
         Integer dictTaskCategory = params.getInteger("dictTaskCategory");
@@ -194,6 +220,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             }
 
             inputHfEmpTask.setHfType(hfEmpTask.getHfType());
+            inputHfEmpTask.setIsChange(hfEmpTask.getIsChange());
             JsonResult rlt = setEmpTask(params, inputHfEmpTask);
             if (rlt.getCode() != 200) {
                 return rlt;
@@ -468,7 +495,9 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             for (HfEmpTask hfEmpTask : hfEmpTaskList) {
                 if (!hfEmpTask.getActive()) {
                     String taskCategoryName = DictUtil.getInstance().getTextByItemValueAndTypeValue(
-                        String.valueOf(hfEmpTask.getTaskCategory()),
+                        String.valueOf(EmpTaskCategoryConverter.convertDictItemFromCategories(
+                            new int[] { hfEmpTask.getProcessCategory(), hfEmpTask.getTaskCategory() }
+                            )),
                         DictUtil.TYPE_VALUE_HF_LOCAL_TASK_CATEGORY,
                         false);
                     return JsonResultKit.ofError(
@@ -481,7 +510,9 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     );
                 } else if (hfEmpTask.getTaskStatus() != HfEmpTaskConstant.TASK_STATUS_HANDLED) {
                     String taskCategoryName = DictUtil.getInstance().getTextByItemValueAndTypeValue(
-                        String.valueOf(hfEmpTask.getTaskCategory()),
+                        String.valueOf(EmpTaskCategoryConverter.convertDictItemFromCategories(
+                            new int[] { hfEmpTask.getProcessCategory(), hfEmpTask.getTaskCategory() }
+                        )),
                         DictUtil.TYPE_VALUE_HF_LOCAL_TASK_CATEGORY,
                         false);
                     return JsonResultKit.ofError(
@@ -1277,7 +1308,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             isNothing = true;
         }
 
-        switch (params.getInteger("taskCategory")) {
+        switch (inputHfEmpTask.getTaskCategory()) {
             case HfEmpTaskConstant.TASK_CATEGORY_IN_ADD:
             case HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN:
             case HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN:
@@ -1310,10 +1341,10 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         }
 
         inputHfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_HANDLED);
-//        inputHfEmpTask.setHandleStatus(2); //
+//        inputHfEmpTask.setHandleStatus(2);
         inputHfEmpTask.setHandleDate(YearMonth.now().format(formatter));
-        inputHfEmpTask.setHandleUserId("test"); // TODO
-        inputHfEmpTask.setHandleUserName("test"); // TODO
+        inputHfEmpTask.setHandleUserId(inputHfEmpTask.getModifiedBy());
+        inputHfEmpTask.setHandleUserName(inputHfEmpTask.getModifiedBy());
 
         return JsonResultKit.of(empArchiveId);
     }
