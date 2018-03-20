@@ -89,6 +89,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         List<AmEmpTaskCountBO>  temp = new ArrayList<>();
         amEmpTaskCountBO.setAmount(list.size());
         int num =0;
+        int otherNum =0;
         for(int i=0;i<list.size();i++)
         {
             AmEmploymentBO amEmploymentBO = list.get(i);
@@ -109,7 +110,8 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
                 amEmpTaskCountBO.setEmployCancel(amEmploymentBO.getCount());
                 num = num + amEmploymentBO.getCount();
             }else{
-                amEmpTaskCountBO.setOther(amEmploymentBO.getCount());
+                otherNum = otherNum + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setOther(otherNum);
                 num = num + amEmploymentBO.getCount();
             }
             amEmpTaskCountBO.setAmount(num);
@@ -131,6 +133,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         List<AmResTaskCountBO>  temp = new ArrayList<>();
         amEmpTaskCountBO.setAmount(list.size());
         int num =0;
+        int otherNum =0;
         for(int i=0;i<list.size();i++)
         {
             AmEmploymentBO amEmploymentBO = list.get(i);
@@ -153,7 +156,8 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             }else if(6==status){
                 amEmpTaskCountBO.setBeforeBatchNeedRefuse(amEmploymentBO.getCount());
             }else{
-                amEmpTaskCountBO.setOther(amEmploymentBO.getCount());
+                otherNum = otherNum + amEmploymentBO.getCount();
+                amEmpTaskCountBO.setOther(otherNum);
                 num = num + amEmploymentBO.getCount();
             }
             amEmpTaskCountBO.setAmount(num);
