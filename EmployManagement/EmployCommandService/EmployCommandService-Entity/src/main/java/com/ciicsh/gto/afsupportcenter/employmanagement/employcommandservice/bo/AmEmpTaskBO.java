@@ -141,8 +141,16 @@ public class AmEmpTaskBO extends AmEmpTask {
      */
     private String employWay;
 
+    private  String openAfDate;
+    /**
+     * 客服用工属性
+     */
+    private  String templateType;
+
+    private  String archivePlace;
 
     private Long employmentId;
+
 
     public Long getEmploymentId() {
         return employmentId;
@@ -150,6 +158,30 @@ public class AmEmpTaskBO extends AmEmpTask {
 
     public void setEmploymentId(Long employmentId) {
         this.employmentId = employmentId;
+    }
+
+    public String getArchivePlace() {
+        return archivePlace;
+    }
+
+    public void setArchivePlace(String archivePlace) {
+        this.archivePlace = archivePlace;
+    }
+
+    public String getTemplateType() {
+        return templateType;
+    }
+
+    public void setTemplateType(String templateType) {
+        this.templateType = templateType;
+    }
+
+    public String getOpenAfDate() {
+        return openAfDate;
+    }
+
+    public void setOpenAfDate(String openAfDate) {
+        this.openAfDate = openAfDate;
     }
 
     public String getLaborStartDate() {
