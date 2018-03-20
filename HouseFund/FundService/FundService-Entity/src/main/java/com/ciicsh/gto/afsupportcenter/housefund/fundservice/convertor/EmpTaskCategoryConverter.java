@@ -1,18 +1,31 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.convertor;
 
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskHandleBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 
-public class EmpTaskCategoryConvertor {
+public class EmpTaskCategoryConverter {
 
-    public static void convertCategoriesFromDict(HfEmpTaskBo hfEmpTaskBo, int dictItemValue) {
-        int[] categories = convertCategoriesFromDict(dictItemValue);
+    public static void convertCategoriesFromDict(HfEmpTaskBo hfEmpTaskBo) {
+        int[] categories = convertCategoriesFromDict(hfEmpTaskBo.getDictTaskCategory());
         hfEmpTaskBo.setProcessCategory(categories[0]);
         hfEmpTaskBo.setTaskCategory(categories[1]);
     }
 
-    public static int convertDictItemFromCategories(HfEmpTaskBo hfEmpTaskBo) {
-        int[] categories = { hfEmpTaskBo.getProcessCategory(), hfEmpTaskBo.getTaskCategory() };
+    public static int convertDictItemFromCategories(HfEmpTaskRejectExportBo hfEmpTaskRejectExportBo) {
+        int[] categories = { hfEmpTaskRejectExportBo.getProcessCategory(), hfEmpTaskRejectExportBo.getTaskCategory() };
+        return convertDictItemFromCategories(categories);
+    }
+
+    public static int convertDictItemFromCategories(HfEmpTaskExportBo hfEmpTaskExportBo) {
+        int[] categories = { hfEmpTaskExportBo.getProcessCategory(), hfEmpTaskExportBo.getTaskCategory() };
+        return convertDictItemFromCategories(categories);
+    }
+
+    public static int convertDictItemFromCategories(HfEmpTaskHandleBo hfEmpTaskHandleBo) {
+        int[] categories = { hfEmpTaskHandleBo.getProcessCategory(), hfEmpTaskHandleBo.getTaskCategory() };
         return convertDictItemFromCategories(categories);
     }
 

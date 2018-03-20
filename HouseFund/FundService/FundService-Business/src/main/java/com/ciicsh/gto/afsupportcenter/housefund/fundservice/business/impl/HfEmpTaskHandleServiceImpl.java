@@ -16,6 +16,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpArchiv
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskPeriodConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfMonthChargeConstant;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.convertor.EmpTaskCategoryConverter;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
@@ -97,7 +98,10 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 
         HfEmpTask inputHfEmpTask = new HfEmpTask();
         inputHfEmpTask.setEmpTaskId(empTaskId);
-        inputHfEmpTask.setTaskCategory(params.getInteger("taskCategory"));
+        Integer dictTaskCategory = params.getInteger("dictTaskCategory");
+        int[] categories = EmpTaskCategoryConverter.convertCategoriesFromDict(dictTaskCategory);
+        inputHfEmpTask.setProcessCategory(categories[0]);
+        inputHfEmpTask.setTaskCategory(categories[1]);
 
         String dicItemCode = DictUtil.DICT_ITEM_ID_FUND_BASIC;
         if (hfEmpTask.getHfType() == 2) {
