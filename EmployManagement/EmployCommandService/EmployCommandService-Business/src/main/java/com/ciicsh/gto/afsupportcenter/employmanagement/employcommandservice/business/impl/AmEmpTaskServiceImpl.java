@@ -25,6 +25,7 @@ import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,10 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -293,6 +291,23 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             logger.error(e.getMessage(),e);
         }
 
+        //调用前道接口
+        AfEmployeeCompanyDTO afEmployeeCompanyDTO = null;
+        try {
+            TaskCreateMsgDTO taskMsgDTO = new TaskCreateMsgDTO();
+            taskMsgDTO.setMissionId(amEmpTask.getBusinessInterfaceId());
+            AfEmployeeInfoDTO afEmployeeInfoDTO = employeeInfoProxy.callInfByMissId(taskMsgDTO);
+            afEmployeeCompanyDTO = afEmployeeInfoDTO.getEmployeeCompany();
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+        }
+
+        if(afEmployeeCompanyDTO!=null)
+        {
+            employeeBO.setTemplateType(ReasonUtil.getYgsx(afEmployeeCompanyDTO.getTemplateType()==null?"":afEmployeeCompanyDTO.getTemplateType().toString()));
+            employeeBO.setPosition(afEmployeeCompanyDTO.getPosition());
+        }
+
         EmployeeQueryDTO var1 = new EmployeeQueryDTO();
         var1.setBusinessType(1);
         var1.setIdCardType(param.getIdCardType());
@@ -366,7 +381,97 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Override
     public AmEmpTaskBO getDefualtEmployBO(AmEmpTaskBO amEmpTaskBO) {
-        return null;
+        AmEmpTask amEmpTask = super.selectById(amEmpTaskBO.getEmpTaskId());
+        AmEmpTaskBO amEmpTaskBO1 = new AmEmpTaskBO();
+        BeanUtils.copyProperties(amEmpTask,amEmpTaskBO1);
+
+        amEmpTaskBO1 = defaultRule(amEmpTaskBO1);
+
+        EmployeeHireInfoQueryDTO employeeHireInfoQueryDTO = new EmployeeHireInfoQueryDTO();
+        employeeHireInfoQueryDTO.setCompanyId(amEmpTaskBO.getCompanyId());
+        employeeHireInfoQueryDTO.setEmployeeId(amEmpTaskBO.getEmployeeId());
+        com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeHireInfoDTO> employeeHireInfo = null;//雇佣雇佣信息接口
+
+        try {
+            employeeHireInfo = employeeInfoProxy.getEmployeeHireInfo(employeeHireInfoQueryDTO);
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+        }
+
+        //调用前道接口
+        AfEmployeeCompanyDTO afEmployeeCompanyDTO = null;
+        try {
+            TaskCreateMsgDTO taskMsgDTO = new TaskCreateMsgDTO();
+            taskMsgDTO.setMissionId(amEmpTask.getBusinessInterfaceId());
+            AfEmployeeInfoDTO afEmployeeInfoDTO = employeeInfoProxy.callInfByMissId(taskMsgDTO);
+            afEmployeeCompanyDTO = afEmployeeInfoDTO.getEmployeeCompany();
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+        }
+
+        if(afEmployeeCompanyDTO!=null)
+        {
+          if(afEmployeeCompanyDTO.getTemplateType()==1)
+          {
+              amEmpTaskBO1.setEmployProperty("中智");
+          }
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        amEmpTaskBO1.setFirstInDate(sdf.format(employeeHireInfo.getData().getFirstInDate()));
+        amEmpTaskBO1.setOpenAfDate(sdf.format(new Date()));
+        amEmpTaskBO1.setEmployStyle("1");//默认全日制
+        return amEmpTaskBO1;
+    }
+
+    AmEmpTaskBO  defaultRule(AmEmpTaskBO amEmpTaskBO){
+        if("外来从业人员".equals(amEmpTaskBO.getEmployeeNature())||"居住证".equals(amEmpTaskBO.getEmployeeNature()))
+        {
+            amEmpTaskBO.setHandleType(amEmpTaskBO.getEmployeeNature());
+            amEmpTaskBO.setArchivePlace(amEmpTaskBO.getEmployeeNature());
+        }
+        if("上海".equals(amEmpTaskBO.getEmployeeNature())&&"中智".equals(amEmpTaskBO.getArchiveDirection()))
+        {
+            amEmpTaskBO.setHandleType(amEmpTaskBO.getArchiveDirection());
+            amEmpTaskBO.setArchivePlace(amEmpTaskBO.getArchiveDirection());
+        }
+        if("上海".equals(amEmpTaskBO.getEmployeeNature())&&"区人才".equals(amEmpTaskBO.getArchiveDirection()))
+        {
+            amEmpTaskBO.setHandleType(amEmpTaskBO.getArchiveDirection());
+            amEmpTaskBO.setArchivePlace(amEmpTaskBO.getArchiveDirection());
+        }
+        if("上海".equals(amEmpTaskBO.getEmployeeNature())&&"农村富裕劳动力".equals(amEmpTaskBO.getArchiveDirection()))
+        {
+            amEmpTaskBO.setHandleType("农民工");
+            amEmpTaskBO.setArchivePlace("农村富裕劳动力");
+        }
+        if("上海".equals(amEmpTaskBO.getEmployeeNature())&&"市人才".equals(amEmpTaskBO.getArchiveDirection()))
+        {
+            amEmpTaskBO.setHandleType("市人才");
+            amEmpTaskBO.setArchivePlace("市人才");
+        }
+        if("上海".equals(amEmpTaskBO.getEmployeeNature())&&"高教中心".equals(amEmpTaskBO.getArchiveDirection()))
+        {
+            amEmpTaskBO.setHandleType("高校");
+            amEmpTaskBO.setArchivePlace("就业指导中心");
+        }
+        if("上海".equals(amEmpTaskBO.getEmployeeNature())&&"退休".equals(amEmpTaskBO.getArchiveDirection()))
+        {
+            amEmpTaskBO.setHandleType("退休");
+            amEmpTaskBO.setArchivePlace("退休");
+        }
+        if("上海".equals(amEmpTaskBO.getEmployeeNature())&&"协保".equals(amEmpTaskBO.getArchiveDirection()))
+        {
+            amEmpTaskBO.setHandleType("协保");
+            amEmpTaskBO.setArchivePlace("协保");
+        }
+        if("非全日制".equals(amEmpTaskBO.getEmployeeNature())&&"非全日制".equals(amEmpTaskBO.getArchiveDirection()))
+        {
+            amEmpTaskBO.setHandleType("非全日制");
+            amEmpTaskBO.setArchivePlace("非全日制");
+        }
+
+        return  amEmpTaskBO;
     }
 
 

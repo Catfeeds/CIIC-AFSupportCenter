@@ -33,6 +33,7 @@ public class TaskCommonUtils {
 
         TaskRequestDTO taskRequestDTO = new TaskRequestDTO();
         taskRequestDTO.setTaskId(taskId);
+        taskRequestDTO.setAssignee(variables.get("assignee").toString());
         taskRequestDTO.setVariables(variables);
         try {
             Result result =commonApiUtils.completeTask(taskRequestDTO);

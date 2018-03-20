@@ -79,5 +79,18 @@ public class CommonApiUtils {
         return restResult;
     }
 
+    public AfEmployeeInfoDTO callInfByMissId(TaskCreateMsgDTO taskMsgDTO) {
+        AfEmployeeInfoDTO resDto = null;
+        try {
+            AfEmployeeQueryDTO taskRequestDTO = new AfEmployeeQueryDTO();
+            String missionId = taskMsgDTO.getMissionId();
+            taskRequestDTO.setEmpAgreementId(Long.parseLong(missionId));
+            resDto = afEmployeeCompanyProxy.getEmployeeCompany(taskRequestDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resDto;
+    }
+
 
 }

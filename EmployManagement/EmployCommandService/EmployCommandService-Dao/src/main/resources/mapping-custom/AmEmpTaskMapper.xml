@@ -69,20 +69,13 @@
         am_emp_task a
         LEFT JOIN
         am_employment b
-        ON a.employee_id = b.employee_id
-        and a.company_id = b.company_id
+        ON  a.emp_task_id = b.emp_task_id
         LEFT JOIN
         emp_employee d
         on  a.employee_id = d.employee_id
         LEFT JOIN
         sal_company e
         on e.company_id = a.company_id
-        LEFT JOIN
-        am_resign f
-        on a.employee_id = f.employee_id
-        LEFT JOIN
-        am_archive_use g
-        on a.employee_id = g.employee_id
         LEFT JOIN
         sal_fc_company h on h.company_id = a.company_id
         LEFT JOIN
@@ -109,20 +102,13 @@
         am_emp_task a
         LEFT JOIN
         am_employment b
-        ON a.employee_id = b.employee_id
-        and a.company_id = b.company_id
+        ON  a.emp_task_id = b.emp_task_id
         LEFT JOIN
         emp_employee d
         on  a.employee_id = d.employee_id
         LEFT JOIN
         sal_company e
         on e.company_id = a.company_id
-        LEFT JOIN
-        am_resign f
-        on a.employee_id = f.employee_id
-        LEFT JOIN
-        am_archive_use g
-        on a.employee_id = g.employee_id
         LEFT JOIN
         sal_fc_company h on h.company_id = a.company_id
         LEFT JOIN
@@ -224,6 +210,7 @@
         a.company_id,/*客户Id*/
         a.employee_nature,
         a.archive_direction,
+        b.employment_id,
         b.employ_way,/*用工方式 */
         b.employ_property,/*用工属性 */
         c.yuliu_doc_num,/*预留档案编号 */
@@ -242,20 +229,13 @@
         am_emp_task a
         LEFT JOIN
         am_employment b
-        ON a.employee_id = b.employee_id
-        and a.company_id = b.company_id
+        ON  a.emp_task_id = b.emp_task_id
         LEFT JOIN
         emp_employee d
         on  a.employee_id = d.employee_id
         LEFT JOIN
         sal_company e
         on e.company_id = a.company_id
-        LEFT JOIN
-        am_resign f
-        on a.employee_id = f.employee_id
-        LEFT JOIN
-        am_archive_use g
-        on a.employee_id = g.employee_id
         LEFT JOIN
         sal_fc_company h on h.company_id = a.company_id
         LEFT JOIN
