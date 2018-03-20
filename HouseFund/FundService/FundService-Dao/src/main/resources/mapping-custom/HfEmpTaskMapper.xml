@@ -34,6 +34,7 @@
         <result column="process_category" property="processCategory" />
         <result column="task_category" property="taskCategory" />
         <result column="task_status" property="taskStatus" />
+        <result column="is_change" property="isChange" />
         <result column="company_id" property="companyId" />
         <result column="company_name" property="companyName" />
         <result column="employee_id" property="employeeId" />
@@ -463,6 +464,7 @@
         het.process_category,
         het.task_category,
         het.task_status,
+        het.is_change,
         sc.company_id,
         sc.title AS company_name,
         hca.com_account_id,
