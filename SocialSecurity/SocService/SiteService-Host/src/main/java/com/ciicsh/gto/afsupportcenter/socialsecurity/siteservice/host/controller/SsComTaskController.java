@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controlle
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComAccountBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAccountComRelationService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComTaskService;
@@ -185,10 +186,17 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         //DTO转BO
         SsComTaskBO ssComTask = CommonTransform.convertToDTO(ssComTaskDTO, SsComTaskBO.class);
         SsComTaskBO ssComTaskBO = business.queryComInfoAndPayWay(ssComTask);
+
         if(null==ssComTaskBO.getComAccountId()){
             SsComTask ssComTask1 =business.selectById(ssComTask.getComTaskId());
             SsComTaskBO ssComTaskBO1 =  new SsComTaskBO();
+            BeanUtils.copyProperties(ssComTaskBO,ssComTaskBO1);
             BeanUtils.copyProperties(ssComTask1,ssComTaskBO1);
+            //暂时这么改，有时间的话，企业公积金任务单的前端要重新整理代码。
+            SsComAccountBO ssComAccountBO=new SsComAccountBO();
+            BeanUtils.copyProperties(ssComTask1,ssComAccountBO);
+            ssComAccountBO.setExpireDate(ssComTask1.getExpireDateFront());
+            ssComTaskBO1.setSsComAccountBO(ssComAccountBO);
             return JsonResultKit.of(ssComTaskBO1);
         }
         return JsonResultKit.of(ssComTaskBO);
@@ -224,17 +232,9 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
             return JsonResultKit.ofError(retCheckResult.substring(0,retCheckResult.length()-1));
         }
         String result = business.addOrUpdateCompanyTask(ssComTask, ssComAccount, ssAccountRatio, ssAccountComRelation);
+
         if (result.equals("SUCC")){
-            //表示完成
-            if(3 == ssComTask.getTaskStatus()){
-                //任务单为已完成状态 账户设置为可用
-                ssComAccount.setState(new Integer(1));
-                //调用工作流
-                TaskCommonUtils.completeTask(ssComTask.getTaskId(),commonApiUtils,"xsj");
-            }else{
-                //任务单 为初始，受理， 送审  账户为初始状态
-                ssComAccount.setState(new Integer(0));
-            }
+
             return JsonResultKit.of(true);
         }else{
             return JsonResultKit.ofError(result);

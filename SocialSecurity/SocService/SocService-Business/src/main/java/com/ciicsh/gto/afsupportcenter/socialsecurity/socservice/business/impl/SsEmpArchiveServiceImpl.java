@@ -143,4 +143,18 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
     public SsEmpArchiveBO queryEmployeeIsnewOrChangeInto(String empTaskId){
         return baseMapper.queryByEmpTaskId(empTaskId);
     }
+
+    @Override
+    public boolean checkSerial( Long comAccountId,String employeeId,String empSsSerial){
+        SsEmpArchive ssEmpArchive = new SsEmpArchive();
+        ssEmpArchive.setComAccountId(comAccountId);
+        ssEmpArchive.setEmployeeId(employeeId);
+        ssEmpArchive.setSsSerial(empSsSerial);
+        int count = baseMapper.checkSerial(ssEmpArchive);
+        if(count == 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

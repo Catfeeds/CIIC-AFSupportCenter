@@ -166,7 +166,7 @@
         LEFT JOIN sal_bpo_company bpo on bpo.company_id=caCom.company_id
         INNER JOIN sal_company com on com.company_id=caCom.company_id
         WHERE cac.hf_type = 1
-        AND  and ca.state=1
+        AND ca.state=1
         AND caCom.company_id=#{companyId}
     </select>
 

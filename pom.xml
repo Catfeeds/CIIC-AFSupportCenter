@@ -248,6 +248,19 @@
                 <artifactId>easypoi-annotation</artifactId>
                 <version>3.0.4.1</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>itext-asian</artifactId>
+                <version>5.2.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>itextpdf</artifactId>
+                <version>5.4.3</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.ciicsh.gt1.commonservice</groupId>
                 <artifactId>basicdataservice-api</artifactId>
@@ -386,54 +399,12 @@
         <module>./HouseFund/FundService/ApiService-Host</module>
         <module>./HouseFund/FundService/MessageService-Host</module>
 
-        <!--<module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Api</module>
-        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Entity</module>
-        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Dao</module>
-        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Business</module>
-        <module>./HealthMedical/InsuranceQueryService/InsuranceQueryService-Host</module>
-
-        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Api</module>
-        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Entity</module>
-        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Dao</module>
-        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Business</module>
-        <module>./HealthMedical/InsuranceCommandService/InsuranceCommandService-Host</module>-->
-
-        <!--健康医疗代码结构调整-->
-        <module>./HealthMedical/InsuranceService-Api</module>
-        <module>./HealthMedical/InsuranceService-Business</module>
-        <module>./HealthMedical/InsuranceService-Dao</module>
-        <module>./HealthMedical/InsuranceService-Entity</module>
-        <module>./HealthMedical/InsuranceService-Host</module>
-
-        <!--
-                <module>./EmployManagement/EmployQueryService/EmployQueryService-Host</module>
-                <module>./EmployManagement/EmployQueryService/EmployQueryService-Api</module>
-                <module>./EmployManagement/EmployQueryService/EmployQueryService-Dao</module>
-                <module>./EmployManagement/EmployQueryService/EmployQueryService-Business</module>
-                <module>./EmployManagement/EmployQueryService/EmployQueryService-Entity</module>-->
-
         <module>./EmployManagement/EmployCommandService/EmployCommandService-Host</module>
         <module>./EmployManagement/EmployCommandService/EmployCommandService-Api</module>
         <module>./EmployManagement/EmployCommandService/EmployCommandService-Dao</module>
         <module>./EmployManagement/EmployCommandService/EmployCommandService-Business</module>
         <module>./EmployManagement/EmployCommandService/EmployCommandService-Entity</module>
 
-        <module>./FlexibleBenefit/FlexibleBenefit-Entity</module>
-        <module>./FlexibleBenefit/FBQueryService/FBQueryService-Api</module>
-        <module>./FlexibleBenefit/FBQueryService/FBQueryService-Dao</module>
-        <module>./FlexibleBenefit/FBQueryService/FBQueryService-Business</module>
-        <module>./FlexibleBenefit/FBQueryService/FBQueryService-Host</module>
-
-        <module>./FlexibleBenefit/FBCommandService/FBCommandService-Api</module>
-        <module>./FlexibleBenefit/FBCommandService/FBCommandService-Dao</module>
-        <module>./FlexibleBenefit/FBCommandService/FBCommandService-Business</module>
-        <module>./FlexibleBenefit/FBCommandService/FBCommandService-Host</module>
-
-        <!--<module>./JoyingInterface/JoyingInterfaceService-Api</module>-->
-        <!--<module>./JoyingInterface/JoyingInterfaceService-Business</module>-->
-        <!--<module>./JoyingInterface/JoyingInterfaceService-Dao</module>-->
-        <!--<module>./JoyingInterface/JoyingInterfaceService-Entity</module>-->
-        <!--<module>./JoyingInterface/JoyingInterfaceService-Host</module>-->
 
         <module>./Job/FundJob/FundJob-Host</module>
         <module>./Job/FundJob/FundJob-Dao</module>
@@ -446,21 +417,13 @@
         <module>./Job/SocJob/SocJob-Entity</module>
         <module>./Job/SocJob/SocJob-Util</module>
 
-        <!--<module>./Job/ZYJob/ZYJob-Host</module>
-        <module>./Job/ZYJob/ZYJob-Dao</module>
-        <module>./Job/ZYJob/ZYJob-Business</module>
-        <module>./Job/ZYJob/ZYJob-Entity</module>-->
+
         <module>CredentialsManagement/CredentialsCommandService/CredentialsCommandService-Api</module>
         <module>CredentialsManagement/CredentialsCommandService/CredentialsCommandService-Entity</module>
         <module>CredentialsManagement/CredentialsCommandService/CredentialsCommandService-Dao</module>
         <module>CredentialsManagement/CredentialsCommandService/CredentialsCommandService-Business</module>
         <module>CredentialsManagement/CredentialsCommandService/CredentialsCommandService-Host</module>
 
-        <!--<module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Api</module>-->
-        <!--<module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Entity</module>-->
-        <!--<module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Dao</module>-->
-        <!--<module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Business</module>-->
-        <!--<module>CredentialsManagement/CredentialsQueryService/CredentialsQueryService-Host</module>-->
 
 
     </modules>

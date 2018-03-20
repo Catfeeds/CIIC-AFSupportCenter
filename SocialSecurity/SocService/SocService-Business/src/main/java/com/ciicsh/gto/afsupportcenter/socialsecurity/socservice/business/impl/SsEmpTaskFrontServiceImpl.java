@@ -2,41 +2,32 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpAgreementDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpArchiveService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskFrontService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpArchiveMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpTaskFrontMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpArchive;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpRefund;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTaskFront;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.InetAddress;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
 import java.util.*;
 
 /**
@@ -124,10 +115,8 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         //险种明细
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
 
-        //获得社保截止月份
-        AfEmpAgreementDTO afEmpAgreementDTO = dto.getNowAgreement();
-        logger.info("afEmployeeCompanyDTO:"+afEmployeeCompanyDTO);
-        logger.info("socialList:"+socialList);
+        logger.info("afEmployeeCompanyDTO:" + afEmployeeCompanyDTO);
+        logger.info("socialList:" + socialList);
 
 
         SsEmpTask ssEmpTask = new SsEmpTask();
@@ -149,15 +138,15 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
             ssEmpTask.setOutDate(LocalDateTime.ofInstant(afEmployeeCompanyDTO.getOutDate().toInstant(), ZoneId.systemDefault()).toLocalDate());
         }
         //如果inDate 为空 则判断任务单状态 不是新进和转入的 任务单 则查询档案表中的入职日期
-        if(null==ssEmpTask.getInDate() && (1!=socialType && 2!=socialType)){
+        if (null == ssEmpTask.getInDate() && (Integer.parseInt(SocialSecurityConst.TASK_TYPE_1) != socialType && Integer.parseInt(SocialSecurityConst.TASK_TYPE_2) != socialType)) {
             EntityWrapper<SsEmpArchive> ew = new EntityWrapper<SsEmpArchive>();
-            ew.where("employee_id={0}",ssEmpTask.getEmployeeId())
+            ew.where("employee_id={0}", ssEmpTask.getEmployeeId())
                 .where("archive_status!=3")
                 .where("is_active=1");
             SsEmpArchive ssEmpArchive = ssEmpArchiveService.selectOne(ew);
             //设置入职日期
-            if(null!=ssEmpArchive){
-                if(null!=ssEmpArchive.getInDate())ssEmpTask.setInDate(ssEmpArchive.getInDate());
+            if (null != ssEmpArchive && null != ssEmpArchive.getInDate()) {
+                ssEmpTask.setInDate(ssEmpArchive.getInDate());
             }
         }
         //任务单类型不是 新进 和 转入 就要补充雇员社保档案主表ID
@@ -171,10 +160,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         ssEmpTask.setTaskCategory(socialType);
         ssEmpTask.setIsChange(isChange);
         ssEmpTask.setTaskFormContent(JSON.toJSONString(dto));
-        //前道传递的政策明细ID,用它调用内控中心获取计算方式
-//        if (dto.getNowAgreement() != null && dto.getNowAgreement().getSocialRuleId() != null) {
-//            ssEmpTask.setPolicyDetailId(dto.getNowAgreement().getSocialPolicyId());
-//        }
+
         ssEmpTask.setProcessId(taskMsgDTO.getProcessId());
         ssEmpTask.setTaskStatus(Integer.parseInt(SocialSecurityConst.PROCESS_STATUS_1));
         ssEmpTask.setActive(true);
@@ -191,29 +177,19 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                 ssEmpTask.setEmpBase(socialDto.getPersonalBase());
                 ssEmpTask.setPolicyDetailId(socialDto.getPolicyId());
                 if (socialDto.getStartDate() != null) {
-                    ssEmpTask.setStartMonth(StringUtil.dateToString(socialDto.getStartDate(),"yyyyMM"));
+                    ssEmpTask.setStartMonth(StringUtil.dateToString(socialDto.getStartDate(), "yyyyMM"));
                 }
                 if (socialDto.getEndDate() != null) {
-                    ssEmpTask.setEndMonth(StringUtil.dateToString(socialDto.getEndDate(),"yyyyMM"));
+                    ssEmpTask.setEndMonth(StringUtil.dateToString(socialDto.getEndDate(), "yyyyMM"));
                 }
                 break;
             }
         }
-        //转出需要设置 终止时间
-        if(socialType==5){
-            if(null != afEmpAgreementDTO){
-                Date endMonth = afEmpAgreementDTO.getEndDate();
-                if(null!=endMonth){
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
-                    //社保截止月份 转出会有
-                    ssEmpTask.setEndMonth(simpleDateFormat.format(endMonth));
-                }
-            }
-        }
+
         //boolean insertRes = ssEmpTaskMapper.insertEmpTask(ssEmpTask);
         resetTaskSubmitTime(ssEmpTask);//
         Integer insertRes = ssEmpTaskMapper.insert(ssEmpTask);
-        if (insertRes>0) {
+        if (insertRes > 0) {
             List<SsEmpTaskFront> ssEmpTaskFrontList = new ArrayList<>();
             SsEmpTaskFront ssEmpTaskFront;
             if (socialList != null) {
@@ -232,10 +208,10 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                         ssEmpTaskFront.setPersonalBase(socialDto.getPersonalBase());
                         ssEmpTaskFront.setPersonalAmount(socialDto.getPersonalAmount());
                         if (socialDto.getStartDate() != null) {
-                            ssEmpTaskFront.setStartMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getStartDate(),"yyyyMM")));
+                            ssEmpTaskFront.setStartMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getStartDate(), "yyyyMM")));
                         }
                         if (socialDto.getEndDate() != null) {
-                            ssEmpTaskFront.setEndMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getEndDate(),"yyyyMM")));
+                            ssEmpTaskFront.setEndMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getEndDate(), "yyyyMM")));
                         }
                         ssEmpTaskFront.setActive(true);
                         ssEmpTaskFront.setModifiedBy(afEmployeeCompanyDTO.getCreatedBy());
@@ -252,36 +228,48 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         }
         return true;
     }
+
     /**
      * add by linhui
      * 根据不同任务单类型，把前道传递的社保起缴月份（业务老师们都习惯叫执行日期）
      * submitTime=startMonth+系统日
      * submitTime:任务发起日期
-     *
-     * */
-    private void resetTaskSubmitTime(SsEmpTask ssEmpTask){
-        String submitMonth="";
+     */
+    private void resetTaskSubmitTime(SsEmpTask ssEmpTask) {
+        String submitMonth = "";
         LocalDateTime submitTime;
-        String today=LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd"));
-            if(ssEmpTask.getTaskCategory()==5){//转出任务单
-                if(ssEmpTask.getEndMonth()==null || ssEmpTask.getEndMonth().equals(""))
-                    return;
-                submitMonth=ssEmpTask.getEndMonth()+today;
-            }else {
-                if(ssEmpTask.getStartMonth()==null || ssEmpTask.getStartMonth().equals(""))
-                    return;
-                submitMonth=ssEmpTask.getStartMonth()+today;
+        LocalDateTime now = LocalDateTime.now();
+        String today = now.format(DateTimeFormatter.ofPattern("dd"));
+        String thisMonth=now.format(DateTimeFormatter.ofPattern("yyyyMM"));
+
+        if (ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_5) || ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_6) || ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_14) || ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_15)) {//转出任务单
+            if (ssEmpTask.getEndMonth() == null || ssEmpTask.getEndMonth().equals("")){
+                return;
             }
+            //如果当前系统月份 > 社保缴纳截止月份 就会在本月处理，否则就是截止月份的下一个月份处理
+            if(Integer.parseInt(thisMonth) > Integer.parseInt(ssEmpTask.getEndMonth())){
+                submitMonth = ssEmpTask.getEndMonth() + today;
+            }else {
+                String em= LocalDate.parse(ssEmpTask.getEndMonth()+"01").plusMonths(1).format(DateTimeFormatter.ofPattern("yyyyMM"));
+                submitMonth = em + today;
+            }
+
+        } else {
+            if (ssEmpTask.getStartMonth() == null || ssEmpTask.getStartMonth().equals("")){
+                return;
+            }
+            submitMonth = ssEmpTask.getStartMonth() + today;
+        }
         SimpleDateFormat sf1 = new SimpleDateFormat("yyyyMMdd");
         SimpleDateFormat sf2 = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            submitMonth=sf2.format(sf1.parse(submitMonth));
+            submitMonth = sf2.format(sf1.parse(submitMonth));
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        submitTime=LocalDateTime.parse(submitMonth+" 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        submitTime = LocalDateTime.parse(submitMonth + " 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         ssEmpTask.setSubmitTime(submitTime);
-        }
+    }
 
     /**
      * 更新旧的雇员任务单
@@ -300,7 +288,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         String oldTaskId = paramMap.get("oldTaskId").toString();
         SsEmpTask ssEmpTask = new SsEmpTask();
         ssEmpTask.setTaskId(oldTaskId);
-        ssEmpTask =  ssEmpTaskMapper.selectOne(ssEmpTask);
+        ssEmpTask = ssEmpTaskMapper.selectOne(ssEmpTask);
         //由于是更正任务单，因此不需要设置taskId
 //        ssEmpTask.setTaskId(taskMsgDTO.getTaskId());
         ssEmpTask.setCompanyId(companyDto.getCompanyId());
@@ -349,7 +337,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
 
         //先删除字表的明细数据
         EntityWrapper<SsEmpTaskFront> ew = new EntityWrapper<SsEmpTaskFront>();
-        ew.where("emp_task_id={0}",ssEmpTask.getEmpTaskId());
+        ew.where("emp_task_id={0}", ssEmpTask.getEmpTaskId());
         delete(ew);
 
         List<SsEmpTaskFront> eleList = new ArrayList<>();

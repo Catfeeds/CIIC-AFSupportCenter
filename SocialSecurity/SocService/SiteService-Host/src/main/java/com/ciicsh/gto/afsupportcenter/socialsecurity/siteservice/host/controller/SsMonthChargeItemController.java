@@ -69,7 +69,7 @@ public class SsMonthChargeItemController extends BasicController<SsMonthChargeIt
             return ssMonthChargeItemBOList;
         }
         //用于合并的Map
-        Map<String,List<SsMonthChargeItemBO>> dealMap = new HashMap<>();
+        Map<String,List<SsMonthChargeItemBO>> dealMap = new LinkedHashMap<>();
         //用于返回的
         List<SsMonthChargeItemBO> resultDTOList = new ArrayList<>();
         //循环处理

@@ -2,16 +2,15 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpAgreementDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
@@ -81,7 +80,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
      */
     @Transactional(rollbackFor = {Exception.class})
     @Override
-    public boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer taskCategory, Integer isChange,
+    public boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer prccessCategory,Integer taskCategory, Integer isChange,
                                 AfEmployeeInfoDTO dto) throws Exception {
         AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
 
@@ -110,15 +109,17 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
         //转出单位(来源地)
         hfEmpTask.setTransferOutUnit(this.getTransUnit(paramMap));
+        hfEmpTask.setProcessCategory(prccessCategory);
         //任务类型
         hfEmpTask.setTaskCategory(taskCategory);
+
         //是否更正 1 是 0 否
         hfEmpTask.setIsChange(isChange);
         hfEmpTask.setTaskFormContent(JSON.toJSONString(dto));
 
         //前道传递的政策明细ID,用它调用系统中心获取进位方式
-        if (dto.getNowAgreement() != null && dto.getNowAgreement().getSocialPolicyId() != null) {
-            hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getSocialPolicyId());
+        if (dto.getNowAgreement() != null && dto.getNowAgreement().getFundPolicyId() != null) {
+            hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getFundPolicyId());
         }
         //TODO 表中加字段
 //        hfEmpTask.setProcessId(taskMsgDTO.getProcessId());
@@ -153,7 +154,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
      */
     @Transactional(rollbackFor = {Exception.class})
     @Override
-    public boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, AfEmployeeInfoDTO dto) {
+    public boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory,Integer prccessCategory, AfEmployeeInfoDTO dto) {
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
 
         AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
@@ -181,10 +182,11 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         //转出单位(来源地)
         hfEmpTask.setTransferOutUnit(this.getTransUnit(paramMap));
         //前道传递的政策明细ID,用它调用系统中心获取进位方式
-        if (dto.getNowAgreement() != null && dto.getNowAgreement().getSocialPolicyId() != null) {
-            hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getSocialPolicyId());
+        if (dto.getNowAgreement() != null && dto.getNowAgreement().getFundPolicyId() != null) {
+            hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getFundPolicyId());
         }
         //TODO 表中加字段
+        hfEmpTask.setProcessCategory(prccessCategory);
         //hfEmpTask.setProcessId(taskMsgDTO.getProcessId());
         hfEmpTask.setModifiedTime(LocalDateTime.now());
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();

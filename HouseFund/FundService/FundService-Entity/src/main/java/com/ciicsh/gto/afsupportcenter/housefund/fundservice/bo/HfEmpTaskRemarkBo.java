@@ -15,6 +15,7 @@ public class HfEmpTaskRemarkBo implements Serializable {
     private Long empTaskId;
     private Integer hfType;
     private String hfTypeName;
+    private Integer processCategory;
     private Integer taskCategory;
     private String taskCategoryName;
     private Integer taskStatus;

@@ -40,6 +40,11 @@ public class SsStatementResult implements Serializable {
 	@TableField("employee_id")
 	private String employeeId;
     /**
+     * 社保序号
+     */
+    @TableField("ss_serial")
+    private String ssSerial;
+    /**
      * 变更类型
      */
 	@TableField("change_type")
@@ -293,4 +298,12 @@ public class SsStatementResult implements Serializable {
 			", modifiedBy=" + modifiedBy +
 			"}";
 	}
+
+    public String getSsSerial() {
+        return ssSerial;
+    }
+
+    public void setSsSerial(String ssSerial) {
+        this.ssSerial = ssSerial;
+    }
 }

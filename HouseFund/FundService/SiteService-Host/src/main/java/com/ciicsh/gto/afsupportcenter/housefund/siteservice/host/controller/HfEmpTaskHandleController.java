@@ -188,11 +188,12 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
 //                            if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST) {
 //                                hfEmpTaskPeriod.setHfMonth(hfMonth);
 //                            } else {
-                            // 如果账户分类是独立户则客户汇缴月=企业末次汇缴月 + 1
-                            if (hfEmpTaskHandleBo.getHfAccountType() == HfComAccountConstant.HF_ACCOUNT_TYPE_INDEPENDENT) {
+                            // 如果任务单类型是新开且账户分类是独立户则客户汇缴月=企业末次汇缴月 + 1
+                            if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_ADD
+                                && hfEmpTaskHandleBo.getHfAccountType() == HfComAccountConstant.HF_ACCOUNT_TYPE_INDEPENDENT) {
                                 hfEmpTaskPeriod.setHfMonth(hfMonthDate.plusMonths(1).format(formatter));
                             } else {
-                                // 如果账户分类非独立户则客户汇缴月=企业末次汇缴月
+                                // 否则客户汇缴月=企业末次汇缴月
                                 hfEmpTaskPeriod.setHfMonth(hfMonth);
                             }
 //                            }
