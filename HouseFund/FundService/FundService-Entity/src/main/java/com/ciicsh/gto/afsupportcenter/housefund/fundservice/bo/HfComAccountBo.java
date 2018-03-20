@@ -16,4 +16,6 @@ public class HfComAccountBo extends HfComAccount {
     private String addComAccount;
     private String companyId;
     private String title;
+    private String accountTempStoreBc;
+    private String accountTempStore;
 }

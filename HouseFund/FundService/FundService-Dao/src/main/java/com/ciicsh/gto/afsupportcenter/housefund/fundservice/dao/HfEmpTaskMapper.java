@@ -1,9 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTaskTransferBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import org.apache.poi.ss.formula.functions.T;
 
 import java.util.List;
 
@@ -54,4 +54,21 @@ public interface HfEmpTaskMapper extends BaseMapper<HfEmpTask> {
      * @return
      */
     int createTransEmpTask(HfEmpTaskCreateTransBo hfEmpTaskCreateTransBo);
+
+    /**
+     *  查询雇员转移任务单
+     *  @param empTaskTransferBo
+     * @return
+     */
+    List<EmpTaskTransferBo> queryEmpTaskTransfer(EmpTaskTransferBo empTaskTransferBo);
+
+    /**
+     *  查询雇员转移任务单新增任务单雇员查询
+     *  @param empTaskTransferBo
+     * @return
+     */
+    List<EmpTaskTransferBo> queryEmpTaskTransferNewTask(EmpTaskTransferBo empTaskTransferBo);
+
+
+
 }
