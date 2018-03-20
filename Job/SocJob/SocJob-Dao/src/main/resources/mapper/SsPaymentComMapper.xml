@@ -50,16 +50,17 @@
         AND pc.payment_state=1
     </select>
 
-    <!--按照财务服务契约提供雇员级名单-->
+    <!--按照财务服务契约（每日按雇员询问财务是否可付）提供雇员级名单-->
     <select id="getPaymentEmpList" resultType="com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsMonthChargeBO">
         SELECT mc.employee_id ,
         pc.company_id company_id,
         pc.payment_month pay_month,
-        pc.total_pay_amount pay_amount,
-        mc.emp_payment_status is_company_enjoy_advance,
+        pc.ought_amount pay_amount,
+        IF(ca.payment_way=3,'1','0') AS 'is_company_enjoy_advance' ,
         mc.month_charge_id obj_id
         FROM ss_month_charge mc
         INNER JOIN ss_payment_com pc ON pc.com_account_id=mc.com_account_id
+        LEFT JOIN ss_com_account ca ON ca.com_account_id=mc.com_account_id
         WHERE pc.is_active=1
         AND mc.ss_month=#{ssMonth}
         AND pc.payment_com_id=#{paymentComId}

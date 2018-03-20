@@ -49,6 +49,9 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
         }
     }
 
+    public void enquireFinanceComAccountTest(String ssMonth, Long paymentComId, Long comAccountId) {
+        enquireFinanceComAccount(ssMonth, paymentComId , comAccountId);
+    }
     /**
      * 更新雇员的垫付状态
      * @param ssMonth 支付年月
@@ -95,13 +98,15 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
             map.put("paymentComId", paymentComId);
             if (cnt == 0) {
                 map.put("paymentState", 3);
-                map.put("modifiedBy", "system");
+                map.put("modifiedBy", "sysJob");
                 ssPaymentMapper.updatePaymentCom(map);
             } else {
                 map.put("paymentState", 1);
-                map.put("modifiedBy", "system");
+                map.put("modifiedBy", "sysJob");
                 ssPaymentMapper.updatePaymentCom(map);
             }
+        }else {
+            System.out.println("结算中心反馈:"+res.getMsg());
         }
     }
 

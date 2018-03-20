@@ -772,7 +772,7 @@
         INNER JOIN emp_employee emp ON emp.employee_id=eoop.employee_id
         INNER JOIN sal_company com ON com.company_id=eoop.company_id
         INNER JOIN hf_com_account ca ON ca.com_account_id=ea.com_account_id
-        WHERE et.is_active=1 and et.task_category = 9
+        WHERE et.is_active=1 and et.task_category = 8
 
         <if test="empTaskId != null">
             AND et.emp_task_id = #{empTaskId}
