@@ -2,7 +2,6 @@ package com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.message;
 
 import com.alibaba.fastjson.JSON;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeSocialProxy;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComTaskService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskService;
@@ -246,7 +245,6 @@ public class KafkaReceiver {
     private AfEmployeeInfoDTO getEmpInfo(TaskCreateMsgDTO taskMsgDTO,Integer processCategory,Integer taskCategory) {
         AfEmployeeInfoDTO resDto = null;
         try {
-            Thread.sleep(2000);
             logger.info("fund get employee info start, request:" + JSON.toJSONString(taskMsgDTO));
             Long empAgreementId = null;
             if((processCategory.equals(ProcessCategory.EMPLOYEEFLOP.getCategory()) || processCategory.equals(ProcessCategory.EMPLOYEEAGREEMENTADJUST.getCategory())) && taskCategory.equals(TaskCategory.SEALED.getCategory())){
