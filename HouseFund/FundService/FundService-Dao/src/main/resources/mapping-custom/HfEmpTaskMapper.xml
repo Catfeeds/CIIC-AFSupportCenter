@@ -839,9 +839,30 @@
     SELECT
     com.company_id,com.title,emp.employee_id,emp.employee_name,emp.id_num,eoop.`status`,eoop.in_date
     from emp_af_emp_company eoop
+		INNER JOIN hf_emp_archive ea ON eoop.company_id=ea.company_id and eoop.employee_id=ea.employee_id
     INNER JOIN emp_employee emp ON emp.employee_id=eoop.employee_id
     INNER JOIN sal_company com ON com.company_id=eoop.company_id
-    WHERE eoop.is_active=1
+    WHERE eoop.is_active=1 and ea.hf_type=1
+
+
+        <if test="companyId != null">
+            AND com.company_id = #{companyId}
+        </if>
+        <if test="title != null">
+            AND com.title = #{title}
+        </if>
+        <if test="employeeId != null">
+            AND emp.employee_id = #{employeeId}
+        </if>
+        <if test="employeeName != null">
+            AND emp.employee_name LIKE '%#{employeeName}%'
+        </if>
+        <if test="idNum != null">
+            AND emp.id_num = #{idNum}
+        </if>
+        <if test="inDate != null">
+            AND eoop.in_date = #{inDate}
+        </if>
 
     </select>
 

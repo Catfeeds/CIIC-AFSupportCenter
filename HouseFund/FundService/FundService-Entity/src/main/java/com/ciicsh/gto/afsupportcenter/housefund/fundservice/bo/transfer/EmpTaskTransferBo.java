@@ -2,6 +2,8 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer;
 
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 public class EmpTaskTransferBo {
     private String empTaskId;
@@ -13,7 +15,7 @@ public class EmpTaskTransferBo {
     private String idNum;
     private String status;
     private String taskStatus;
-    private String inDate;
+    private LocalDate inDate;
     private String submitTime;
     private String submitterId;
     private String transferInUnit;
@@ -22,4 +24,5 @@ public class EmpTaskTransferBo {
     private String ssAccountType;
     private String hfEmpAccount;
     private String empArchiveId;
+
 }

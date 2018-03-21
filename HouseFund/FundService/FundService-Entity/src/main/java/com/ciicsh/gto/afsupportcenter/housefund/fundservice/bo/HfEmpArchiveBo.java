@@ -28,5 +28,6 @@ public class HfEmpArchiveBo extends HfEmpArchive{
     private String serviceManager;
     private LocalDate inDate;
     private LocalDate outDate;
+    private String hfComAccount;
 
 }

@@ -1,44 +1,21 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 
-import cn.afterturn.easypoi.excel.ExcelExportUtil;
-import cn.afterturn.easypoi.excel.entity.ExportParams;
-import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.toolkit.CollectionUtils;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBatchRejectBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskHandleBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo;
+
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTaskTransferBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.HfEmpTaskHandleVo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.EmpEmployeeService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskHandleService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskTransferService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.EmpEmployee;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
-import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
-import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -76,14 +53,22 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
         return JsonResultKit.of(business.queryEmpTaskTransferNewTaskPage(pageInfo));
     }
 
-    @RequestMapping("/queryComEmpTransferForm")
     @Log("雇员公积金转移任务单表单查询")
-    public JsonResult<HfEmpTaskHandleBo> queryComEmpTransferForm(@RequestParam("employeeId") String employeeId,
+    @RequestMapping("/queryComEmpTransferForm")
+    public JsonResult<HfEmpTaskHandleVo> queryComEmpTransferForm(@RequestParam("employeeId") String employeeId,
                                                                  @RequestParam("companyId") String companyId,
-                                                                 @RequestParam("hfType") int hfType,@RequestParam("empTaskId") Long empTaskId){
-        HfEmpTaskHandleBo hfEmpTaskHandleBo=new HfEmpTaskHandleBo();
+                                                                 @RequestParam(value ="hfType",required = false) String hfType,
+                                                                 @RequestParam(value ="empTaskId" ,required = false) String empTaskId){
+        HfEmpTaskHandleVo hfEmpTaskHandleBo=new HfEmpTaskHandleVo();
+        hfEmpTaskHandleBo.setProcessCategory(9);
+        hfEmpTaskHandleBo.setTaskCategory(8);//转移任务单
+         hfEmpTaskHandleBo.setHfType(Integer.parseInt(hfType));
+        long employeeTaskId=0;
+        if(Optional.ofNullable(empTaskId).isPresent()){
+            employeeTaskId=Long.valueOf(empTaskId);
+        }
         //获取企业账户和雇员信息
-        hfEmpTaskHandleBo= business.queryComEmpTransferForm(employeeId,companyId,empTaskId);
+        hfEmpTaskHandleBo= business.queryComEmpTransferForm(employeeId,companyId,employeeTaskId);
 
         //获取转移任务单信息
 
@@ -93,9 +78,12 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
      * 提交转移任务单
      */
     @RequestMapping("/submitTransferTask")
-    public JsonResult<Object> submitTransferTask(@RequestBody EmpTaskTransferBo empTaskTransferBo){
+    public JsonResult submitTransferTask(@RequestBody EmpTaskTransferBo empTaskTransferBo){
+
+
         try {
             return business.submitTransferTask(empTaskTransferBo);
+
         } catch (BusinessException e) {
             return JsonResultKit.ofError(e.getMessage());
         }
@@ -104,14 +92,14 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
      * 打印转移任务单
      */
     @RequestMapping("/printTransferTask")
-    public JsonResult<Object> printTransferTask(){
+    public JsonResult  printTransferTask(){
         return JsonResultKit.ofError("");
     }
     /**
      * 不需处理任务单
      */
     @RequestMapping("/notHandleTransfer")
-    public JsonResult<Object>  notHandleTransfer(){
+    public JsonResult  notHandleTransfer(){
         return JsonResultKit.ofError("");
     }
 }

@@ -50,7 +50,7 @@
         AND pc.payment_state=1
     </select>
 
-    <!--按照财务服务契约（每日按雇员询问财务是否可付）提供雇员级名单-->
+    <!--按照财务服务契约（每日按雇员询问财务是否可付）提供雇员级名单。is_company_enjoy_advance=1 就是垫付  -->
     <select id="getPaymentEmpList" resultType="com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsMonthChargeBO">
         SELECT mc.employee_id ,
         pc.company_id company_id,
