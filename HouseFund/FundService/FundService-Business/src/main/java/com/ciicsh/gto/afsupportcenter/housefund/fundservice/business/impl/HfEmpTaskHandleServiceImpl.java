@@ -127,8 +127,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         HfEmpTask inputHfEmpTask = new HfEmpTask();
         inputHfEmpTask.setEmpTaskId(empTaskId);
         Integer dictTaskCategory = params.getInteger("dictTaskCategory");
-        int[] categories = EmpTaskCategoryConverter.convertCategoriesFromDict(dictTaskCategory);
-        inputHfEmpTask.setProcessCategory(categories[0]);
+        Integer[] categories = EmpTaskCategoryConverter.convertCategoriesFromDict(dictTaskCategory);
+        inputHfEmpTask.setProcessCategory(hfEmpTask.getProcessCategory());
         inputHfEmpTask.setTaskCategory(categories[1]);
 
         String dicItemCode = DictUtil.DICT_ITEM_ID_FUND_BASIC;

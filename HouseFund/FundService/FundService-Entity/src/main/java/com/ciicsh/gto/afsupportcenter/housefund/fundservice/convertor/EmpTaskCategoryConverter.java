@@ -9,7 +9,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskCo
 public class EmpTaskCategoryConverter {
 
     public static void convertCategoriesFromDict(HfEmpTaskBo hfEmpTaskBo) {
-        int[] categories = convertCategoriesFromDict(hfEmpTaskBo.getDictTaskCategory());
+        Integer[] categories = convertCategoriesFromDict(hfEmpTaskBo.getDictTaskCategory());
         hfEmpTaskBo.setProcessCategory(categories[0]);
         hfEmpTaskBo.setTaskCategory(categories[1]);
     }
@@ -29,28 +29,28 @@ public class EmpTaskCategoryConverter {
         return convertDictItemFromCategories(categories);
     }
 
-    public static int[] convertCategoriesFromDict(int dictItemValue) {
-        int[] categories = new int[2];
+    public static Integer[] convertCategoriesFromDict(int dictItemValue) {
+        Integer[] categories = new Integer[2];
 
         switch (dictItemValue) {
             case HfEmpTaskConstant.DICT_TASK_CATEGORY_IN_ADD:
-                categories[0] = HfEmpTaskConstant.PROCESS_CATEGORY_ADD;
+                categories[0] = null;
                 categories[1] = HfEmpTaskConstant.TASK_CATEGORY_IN_ADD;
                 break;
             case HfEmpTaskConstant.DICT_TASK_CATEGORY_IN_TRANS_IN:
-                categories[0] = HfEmpTaskConstant.PROCESS_CATEGORY_ADD;
+                categories[0] = null;
                 categories[1] = HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN;
                 break;
             case HfEmpTaskConstant.DICT_TASK_CATEGORY_IN_OPEN:
-                categories[0] = HfEmpTaskConstant.PROCESS_CATEGORY_ADD;
+                categories[0] = null;
                 categories[1] = HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN;
                 break;
             case HfEmpTaskConstant.DICT_TASK_CATEGORY_OUT_TRANS_OUT:
-                categories[0] = HfEmpTaskConstant.PROCESS_CATEGORY_STOP;
+                categories[0] = null;
                 categories[1] = HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT;
                 break;
             case HfEmpTaskConstant.DICT_TASK_CATEGORY_OUT_CLOSE:
-                categories[0] = HfEmpTaskConstant.PROCESS_CATEGORY_STOP;
+                categories[0] = null;
                 categories[1] = HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE;
                 break;
             case HfEmpTaskConstant.DICT_TASK_CATEGORY_REPAIR:
@@ -129,8 +129,23 @@ public class EmpTaskCategoryConverter {
                 break;
             case HfEmpTaskConstant.PROCESS_CATEGORY_ADJUST:
                 switch (categories[1]) {
+                    case HfEmpTaskConstant.TASK_CATEGORY_IN_ADD:
+                        dictItemValue = HfEmpTaskConstant.DICT_TASK_CATEGORY_IN_ADD;
+                        break;
+                    case HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN:
+                        dictItemValue = HfEmpTaskConstant.DICT_TASK_CATEGORY_IN_TRANS_IN;
+                        break;
+                    case HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN:
+                        dictItemValue = HfEmpTaskConstant.DICT_TASK_CATEGORY_IN_OPEN;
+                        break;
                     case HfEmpTaskConstant.TASK_CATEGORY_ADJUST:
                         dictItemValue = HfEmpTaskConstant.DICT_TASK_CATEGORY_ADJUST;
+                        break;
+                    case HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT:
+                        dictItemValue = HfEmpTaskConstant.DICT_TASK_CATEGORY_OUT_TRANS_OUT;
+                        break;
+                    case HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE:
+                        dictItemValue = HfEmpTaskConstant.DICT_TASK_CATEGORY_OUT_CLOSE;
                         break;
                     default:
                         break;
