@@ -14,18 +14,18 @@ public class EmpTaskCategoryConverter {
         hfEmpTaskBo.setTaskCategory(categories[1]);
     }
 
-    public static int convertDictItemFromCategories(HfEmpTaskRejectExportBo hfEmpTaskRejectExportBo) {
-        int[] categories = { hfEmpTaskRejectExportBo.getProcessCategory(), hfEmpTaskRejectExportBo.getTaskCategory() };
+    public static Integer convertDictItemFromCategories(HfEmpTaskRejectExportBo hfEmpTaskRejectExportBo) {
+        Integer[] categories = { hfEmpTaskRejectExportBo.getProcessCategory(), hfEmpTaskRejectExportBo.getTaskCategory() };
         return convertDictItemFromCategories(categories);
     }
 
-    public static int convertDictItemFromCategories(HfEmpTaskExportBo hfEmpTaskExportBo) {
-        int[] categories = { hfEmpTaskExportBo.getProcessCategory(), hfEmpTaskExportBo.getTaskCategory() };
+    public static Integer convertDictItemFromCategories(HfEmpTaskExportBo hfEmpTaskExportBo) {
+        Integer[] categories = { hfEmpTaskExportBo.getProcessCategory(), hfEmpTaskExportBo.getTaskCategory() };
         return convertDictItemFromCategories(categories);
     }
 
-    public static int convertDictItemFromCategories(HfEmpTaskHandleBo hfEmpTaskHandleBo) {
-        int[] categories = { hfEmpTaskHandleBo.getProcessCategory(), hfEmpTaskHandleBo.getTaskCategory() };
+    public static Integer convertDictItemFromCategories(HfEmpTaskHandleBo hfEmpTaskHandleBo) {
+        Integer[] categories = { hfEmpTaskHandleBo.getProcessCategory(), hfEmpTaskHandleBo.getTaskCategory() };
         return convertDictItemFromCategories(categories);
     }
 
@@ -87,8 +87,8 @@ public class EmpTaskCategoryConverter {
         return categories;
     }
 
-    public static int convertDictItemFromCategories(int[] categories) {
-        int dictItemValue = 0;
+    public static Integer convertDictItemFromCategories(Integer[] categories) {
+        Integer dictItemValue = null;
 
         switch (categories[0]) {
             case HfEmpTaskConstant.PROCESS_CATEGORY_ADD:

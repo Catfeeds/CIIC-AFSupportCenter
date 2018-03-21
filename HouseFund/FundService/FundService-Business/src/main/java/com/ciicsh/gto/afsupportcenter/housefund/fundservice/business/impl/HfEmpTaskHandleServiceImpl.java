@@ -498,7 +498,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 if (!hfEmpTask.getActive()) {
                     String taskCategoryName = DictUtil.getInstance().getTextByItemValueAndTypeValue(
                         String.valueOf(EmpTaskCategoryConverter.convertDictItemFromCategories(
-                            new int[] { hfEmpTask.getProcessCategory(), hfEmpTask.getTaskCategory() }
+                            new Integer[] { hfEmpTask.getProcessCategory(), hfEmpTask.getTaskCategory() }
                             )),
                         DictUtil.TYPE_VALUE_HF_LOCAL_TASK_CATEGORY,
                         false);
@@ -513,7 +513,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 } else if (hfEmpTask.getTaskStatus() != HfEmpTaskConstant.TASK_STATUS_HANDLED) {
                     String taskCategoryName = DictUtil.getInstance().getTextByItemValueAndTypeValue(
                         String.valueOf(EmpTaskCategoryConverter.convertDictItemFromCategories(
-                            new int[] { hfEmpTask.getProcessCategory(), hfEmpTask.getTaskCategory() }
+                            new Integer[] { hfEmpTask.getProcessCategory(), hfEmpTask.getTaskCategory() }
                         )),
                         DictUtil.TYPE_VALUE_HF_LOCAL_TASK_CATEGORY,
                         false);
