@@ -151,6 +151,25 @@ public class AmEmpTaskBO extends AmEmpTask {
 
     private Long employmentId;
 
+    private  String comAccountName;
+
+    private  LocalDate accountRepairDate;
+
+    public LocalDate getAccountRepairDate() {
+        return accountRepairDate;
+    }
+
+    public void setAccountRepairDate(LocalDate accountRepairDate) {
+        this.accountRepairDate = accountRepairDate;
+    }
+
+    public String getComAccountName() {
+        return comAccountName;
+    }
+
+    public void setComAccountName(String comAccountName) {
+        this.comAccountName = comAccountName;
+    }
 
     public Long getEmploymentId() {
         return employmentId;

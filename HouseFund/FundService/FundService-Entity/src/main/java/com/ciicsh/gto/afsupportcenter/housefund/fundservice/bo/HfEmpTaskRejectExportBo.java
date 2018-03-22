@@ -46,8 +46,9 @@ public class HfEmpTaskRejectExportBo implements Serializable{
     private LocalDateTime submitTime;
     private Integer taskStatus;
     private String taskId;
-    @Excel(name = "批退人", orderNum = "11",  width = 20)
     private String modifiedBy;
+    @Excel(name = "批退人", orderNum = "11",  width = 20)
+    private String modifiedDisplayName;
     @Excel(name = "批退时间", orderNum = "12",  width = 20)
     private LocalDateTime modifiedTime;
     @Excel(name = "批退备注", orderNum = "13",  width = 30)
@@ -186,6 +187,7 @@ public class HfEmpTaskRejectExportBo implements Serializable{
     }
 
     public String getTaskCategoryName() {
+        getDictTaskCategory();
         return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.dictTaskCategory), DictUtil.TYPE_VALUE_HF_LOCAL_TASK_CATEGORY, true);
 //        return taskCategoryName;
     }
@@ -255,5 +257,13 @@ public class HfEmpTaskRejectExportBo implements Serializable{
 
     public void setIsChangeName(String isChangeName) {
         this.isChangeName = isChangeName;
+    }
+
+    public String getModifiedDisplayName() {
+        return modifiedDisplayName;
+    }
+
+    public void setModifiedDisplayName(String modifiedDisplayName) {
+        this.modifiedDisplayName = modifiedDisplayName;
     }
 }
