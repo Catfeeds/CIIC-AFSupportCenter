@@ -172,6 +172,7 @@
             AND et.is_active = 1
             <include refid="employeeDailyOperatorQuery_where"/>
         </where>
+        ORDER BY et.created_time DESC ,et.employee_id DESC
     </select>
     <!--雇员特殊操作查询-->
     <select id="employeeSpecialOperatorQuery" resultMap="BaseResultMapDto">

@@ -131,7 +131,7 @@ public class SsEmpTaskBO implements Serializable {
     //批量查询的id
     private List<Long> empTaskIdList;
     //存在相同已办任务单
-    private Integer isHaveSameTask;
+    private List theSameTask;
     //顺调 和  倒调(1 顺调 0 倒调)
     private Integer adustType;
 
