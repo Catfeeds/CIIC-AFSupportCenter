@@ -186,6 +186,7 @@ public class HfEmpTaskRejectExportBo implements Serializable{
     }
 
     public String getTaskCategoryName() {
+        getDictTaskCategory();
         return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.dictTaskCategory), DictUtil.TYPE_VALUE_HF_LOCAL_TASK_CATEGORY, true);
 //        return taskCategoryName;
     }
