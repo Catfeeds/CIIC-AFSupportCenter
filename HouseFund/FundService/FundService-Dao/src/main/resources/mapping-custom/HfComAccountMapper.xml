@@ -25,6 +25,8 @@
         <result column="com_start_month" property="comStartMonth" />
         <result column="end_month" property="endMonth" />
         <result column="end_type" property="endType" />
+        <result column="account_temp_store" property="accountTempStore" />
+        <result column="com_hf_month" property="comHfMonth" />
     </resultMap>
 
     <resultMap id="ComFundAccountMap"
@@ -101,6 +103,8 @@
             class.hf_com_account,
             class.com_start_month,
             class.end_month,
+            class.com_hf_month,
+            class.account_temp_store,
             class.end_type
         FROM
           hf_com_account ca

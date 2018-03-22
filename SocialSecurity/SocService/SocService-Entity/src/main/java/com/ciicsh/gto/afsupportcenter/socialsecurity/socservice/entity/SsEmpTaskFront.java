@@ -112,10 +112,30 @@ public class SsEmpTaskFront implements Serializable {
     @TableField("created_by")
     private String createdBy;
     /**
-     * 最后修改人
+     * 创建者姓名
+     */
+    @TableField("created_display_name")
+    private String createdDisplayName;
+    /**
+     * 修改者ID
      */
     @TableField("modified_by")
     private String modifiedBy;
+    /**
+     * 修改者姓名
+     */
+    @TableField("modified_display_name")
+    private String modifiedDisplayName;
+    /**
+     * 领导ID
+     */
+    @TableField("leader_ship_id")
+    private String leaderShipId;
+    /**
+     * 领导姓名
+     */
+    @TableField("leader_ship_name")
+    private String leaderShipName;
 
 
     public Long getEmpTaskFrontId() {
@@ -270,6 +290,38 @@ public class SsEmpTaskFront implements Serializable {
         this.modifiedBy = modifiedBy;
     }
 
+    public String getCreatedDisplayName() {
+        return createdDisplayName;
+    }
+
+    public void setCreatedDisplayName(String createdDisplayName) {
+        this.createdDisplayName = createdDisplayName;
+    }
+
+    public String getModifiedDisplayName() {
+        return modifiedDisplayName;
+    }
+
+    public void setModifiedDisplayName(String modifiedDisplayName) {
+        this.modifiedDisplayName = modifiedDisplayName;
+    }
+
+    public String getLeaderShipId() {
+        return leaderShipId;
+    }
+
+    public void setLeaderShipId(String leaderShipId) {
+        this.leaderShipId = leaderShipId;
+    }
+
+    public String getLeaderShipName() {
+        return leaderShipName;
+    }
+
+    public void setLeaderShipName(String leaderShipName) {
+        this.leaderShipName = leaderShipName;
+    }
+
     @Override
     public String toString() {
         return "SsEmpTaskFront{" +
@@ -291,7 +343,11 @@ public class SsEmpTaskFront implements Serializable {
             ", createdTime=" + createdTime +
             ", modifiedTime=" + modifiedTime +
             ", createdBy=" + createdBy +
+            ", createdDisplayName=" + createdDisplayName +
             ", modifiedBy=" + modifiedBy +
+            ", modifiedDisplayName=" + modifiedDisplayName +
+            ", leaderShipId=" + leaderShipId +
+            ", leaderShipName=" + leaderShipName +
             "}";
     }
 }

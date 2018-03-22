@@ -12,4 +12,5 @@ public interface PaymentService extends IService<SsPaymentCom> {
      * @param ssMonth 年月
      */
     void enquireFinanceComAccount(String ssMonth);
+    void enquireFinanceComAccountTest(String ssMonth, Long paymentComId, Long comAccountId);
 }

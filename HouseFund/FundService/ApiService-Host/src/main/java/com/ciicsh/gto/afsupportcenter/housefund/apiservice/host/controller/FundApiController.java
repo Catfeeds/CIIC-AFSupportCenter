@@ -1,6 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.housefund.apiservice.host.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.ciicsh.common.entity.JsonResult;
+import com.ciicsh.gto.afsupportcenter.housefund.apiservice.host.enumeration.Const;
 import com.ciicsh.gto.afsupportcenter.housefund.apiservice.host.translator.ApiTranslator;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.FundApiProxy;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.ComAccountExtDTO;
@@ -12,6 +14,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccou
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComTaskService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogMessage;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -45,6 +49,9 @@ public class FundApiController implements FundApiProxy{
     @Autowired
     HfComTaskService hfComTaskService;
 
+    @Autowired
+    private LogApiUtil log;
+
     /**
      * 企业公积金账户开户、变更、转移、转出的 创建任务单接口
      * @param comTaskDTO
@@ -56,6 +63,8 @@ public class FundApiController implements FundApiProxy{
     @PostMapping("/saveComTask")
     public JsonResult saveComTask(@RequestBody HfComTaskDTO comTaskDTO) {
         try {
+
+            log.info(LogMessage.create().setTitle(Const.SAVECOMTASK.getKey()).setContent("Request: "+JSON.toJSONString(comTaskDTO)));
             if (StringUtils.isBlank(comTaskDTO.getCompanyId())) {
                 return JsonResult.faultMessage("客户Id不能为空！");
             }
@@ -70,11 +79,14 @@ public class FundApiController implements FundApiProxy{
                 HfComTask ssComTask = new HfComTask();
                 BeanUtils.copyProperties(comTaskDTO, ssComTask);
                 Long newComTaskId = addComTask(comTaskDTO);
+                log.info(LogMessage.create().setTitle(Const.SAVECOMTASK.getKey()).setContent("Response: " + newComTaskId.toString()));
                 return JsonResult.success(newComTaskId);
             }
         } catch (Exception e) {
+            log.error(LogMessage.create().setTitle(Const.SAVECOMTASK.getKey()).setContent(e.getMessage()));
             return JsonResult.faultMessage("exception: "+e.getMessage());
         }
+
     }
 
     private boolean checkIsExistAccount(HfComTaskDTO comTask){
@@ -105,6 +117,7 @@ public class FundApiController implements FundApiProxy{
     @PostMapping("/getAccountList")
     public JsonResult<List<HfComAccountDTO>> getComAccountList(@RequestBody HfComAccountParamDTO paramDto) {
 
+        log.info(LogMessage.create().setTitle(Const.GETACCOUNTLIST.getKey()).setContent("Request: "+JSON.toJSONString(paramDto)));
         ComAccountParamExtBo paramBO = new ComAccountParamExtBo();
         BeanUtils.copyProperties(paramDto,paramBO);
 
@@ -114,6 +127,7 @@ public class FundApiController implements FundApiProxy{
         if(null != ssComAccountList && ssComAccountList.size() > 0){
             accountDTOS = ssComAccountList.stream().map(ApiTranslator::toComAccountDTO).collect(Collectors.toList());
         }
+        log.info(LogMessage.create().setTitle(Const.GETACCOUNTLIST.getKey()).setContent("Response: "+JSON.toJSONString(accountDTOS)));
         return JsonResult.success(accountDTOS);
     }
 
@@ -131,12 +145,17 @@ public class FundApiController implements FundApiProxy{
     })
     @GetMapping("/getAccountByCompany")
     public JsonResult<ComAccountExtDTO> getAccountByCompany(@RequestParam("companyId") String companyId, @RequestParam("hfType") Integer hfType) {
+
+        String request =  "Request: { companyId :" + companyId + ", hfType : " + hfType + "}";
+        log.info(LogMessage.create().setTitle(Const.GETACCOUNTBYCOMPANY.getKey()).setContent(request));
         AccountInfoBO info = hfComAccountService.getAccountByCompany(companyId,hfType);
         ComAccountExtDTO extDTO = null;
         if(null != info){
             extDTO = new ComAccountExtDTO();
             BeanUtils.copyProperties(info,extDTO);
         }
+
+        log.info(LogMessage.create().setTitle(Const.GETACCOUNTBYCOMPANY.getKey()).setContent("Response: "+JSON.toJSONString(extDTO)));
         return JsonResult.success(extDTO);
     }
 }

@@ -4,6 +4,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -25,7 +26,8 @@ public class HfEmpArchiveBo extends HfEmpArchive{
     private String hfEmpAccountBc;
     private String archiveTaskStatusBc;
     private String serviceManager;
-    private Date inDate;
-    private Date outDate;
+    private LocalDate inDate;
+    private LocalDate outDate;
+    private String hfComAccount;
 
 }

@@ -64,6 +64,9 @@
         <result column="expire_date" property="expireDate" />
         <result column="legal_person" property="legalPerson" />
         <result column="contact_address" property="contactAddress" />
+        <result column="query_account" property="queryAccount" />
+        <result column="industry_category" property="industryCategory" />
+        <result column="com_ratio" property="comRatio" />
         <result column="dispatch_material" property="dispatchMaterial" />
         <result column="remark" property="remark" />
     </resultMap>
@@ -96,6 +99,9 @@
         a.expire_date_front AS 'expire_date',
         a.legal_person,
         a.contact_address,
+        '' AS 'query_account',
+        a.industry_category,
+        '' AS 'com_ratio',
         a.dispatch_material,
         a.submit_remark AS 'remark'
     </sql>

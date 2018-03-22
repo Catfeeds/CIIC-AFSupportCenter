@@ -150,5 +150,13 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.ciicsh.gt1.logservice</groupId>
+            <artifactId>logservice-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ciicsh.gt1.commonservice</groupId>
+            <artifactId>identityservice-api</artifactId>
+        </dependency>
     </dependencies>
 </project>

@@ -1,32 +1,31 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountInfoBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTaskTransferBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.HfEmpTaskHandleVo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskTransferService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpArchiveMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
-import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
-import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 /**
  * <p>
@@ -35,233 +34,91 @@ import java.util.stream.Collectors;
  */
 @Service
 public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask> implements HfEmpTaskTransferService {
+    @Autowired
+    HfComAccountMapper hfComAccountMapper;
+    @Autowired
+    HfEmpArchiveMapper hfEmpArchiveMapper;
 
     @Override
-    public PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo) {
-        return queryHfEmpTaskInPage(pageInfo, null);
+    public PageRows<EmpTaskTransferBo> queryEmpTaskTransferPage(PageInfo pageInfo) {
+        EmpTaskTransferBo empTaskTransferBo=pageInfo.toJavaObject(EmpTaskTransferBo.class);
+        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryEmpTaskTransfer(empTaskTransferBo));
     }
 
     @Override
-    public PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo, String exceptTaskCategories) {
-        HfEmpTaskBo hfEmpTaskBo = pageInfo.toJavaObject(HfEmpTaskBo.class);
-        if (StringUtils.isNotBlank(exceptTaskCategories)) {
-            hfEmpTaskBo.setExceptTaskCategories(exceptTaskCategories);
+    public PageRows<EmpTaskTransferBo> queryEmpTaskTransferNewTaskPage(PageInfo pageInfo) {
+        EmpTaskTransferBo empTaskTransferBo=pageInfo.toJavaObject(EmpTaskTransferBo.class);
+        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryEmpTaskTransferNewTask(empTaskTransferBo));
+    }
+    @Override
+    public HfEmpTaskHandleVo queryComEmpTransferForm(String employeeId, String companyId, Long empTaskId){
+        HfEmpTaskHandleVo hfEmpTaskHandleBo=new HfEmpTaskHandleVo();
+        //企业账户信息
+        ComAccountParamExtBo comAccountParamExtBo=new ComAccountParamExtBo();
+        comAccountParamExtBo.setCompanyId(companyId);
+        comAccountParamExtBo.setHfAccountType(1);
+        List<ComAccountExtBo> listAccount1 = hfComAccountMapper.getHfComAccountList(comAccountParamExtBo);
+        comAccountParamExtBo.setHfAccountType(2);
+        List<ComAccountExtBo> listAccount2 = hfComAccountMapper.getHfComAccountList(comAccountParamExtBo);
+        if(listAccount1!=null && listAccount1.size()>0){//基本公积金
+            ComAccountExtBo comAccountExtBo=listAccount1.get(0);
+            hfEmpTaskHandleBo.setBasicHfComAccount(comAccountExtBo.getHfComAccount());
+            hfEmpTaskHandleBo.setBasicComHfMonth(Integer.parseInt(comAccountExtBo.getComHfMonth()));
+            BeanUtils.copyProperties(comAccountExtBo,hfEmpTaskHandleBo);
         }
-        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryHfEmpTask(hfEmpTaskBo));
-    }
-
-    @Override
-    public PageRows<HfEmpTaskRejectExportBo> queryHfEmpTaskRejectInPage(PageInfo pageInfo, String exceptTaskCategories) {
-        HfEmpTaskBo hfEmpTaskBo = pageInfo.toJavaObject(HfEmpTaskBo.class);
-        if (StringUtils.isNotBlank(exceptTaskCategories)) {
-            hfEmpTaskBo.setExceptTaskCategories(exceptTaskCategories);
+        if(listAccount2!=null && listAccount2.size()>0){//补充公积金
+            ComAccountExtBo comAccountExtBo=listAccount2.get(0);
+            hfEmpTaskHandleBo.setAddedHfComAccount(comAccountExtBo.getHfComAccount());
+            hfEmpTaskHandleBo.setAddedComHfMonth(Integer.parseInt(comAccountExtBo.getComHfMonth()));
+            BeanUtils.copyProperties(comAccountExtBo,hfEmpTaskHandleBo);
         }
-        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryHfEmpTaskReject(hfEmpTaskBo));
-    }
 
-    /**
-     * 查询任务单信息
-     * @param hfEmpTask
-     */
-    @Override
-    public List<HfEmpTask> queryByTaskId(HfEmpTask hfEmpTask) {
-        return baseMapper.queryByTaskId(hfEmpTask);
-    }
-
-    /**
-     * 添加数据到雇员任务单表
-     * @param taskMsgDTO
-     * @param fundCategory
-     * @param taskCategory
-     * @param isChange
-     * @param dto
-     * @return
-     * @throws Exception
-     */
-    @Transactional(rollbackFor = {Exception.class})
-    @Override
-    public boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer taskCategory, Integer isChange,
-                                AfEmployeeInfoDTO dto) throws Exception {
-        AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
-
+        //雇员信息
+        EmpTaskTransferBo empTaskTransferBo=new EmpTaskTransferBo();
+        empTaskTransferBo.setEmployeeId(employeeId);
+        empTaskTransferBo.setCompanyId(companyId);
+        List<EmpTaskTransferBo> employeeBo= baseMapper.queryEmpTaskTransferNewTask(empTaskTransferBo);
+        BeanUtils.copyProperties(employeeBo.get(0),hfEmpTaskHandleBo);
+        hfEmpTaskHandleBo.setCompanyName(employeeBo.get(0).getTitle());
+        //任务单信息
         HfEmpTask hfEmpTask = new HfEmpTask();
-        hfEmpTask.setTaskId(taskMsgDTO.getTaskId());
-        hfEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
-        if(null != companyDto){
-            hfEmpTask.setCompanyId(companyDto.getCompanyId());
-            hfEmpTask.setEmployeeId(companyDto.getEmployeeId());
-            hfEmpTask.setSubmitterId(companyDto.getCreatedBy());
-            hfEmpTask.setSubmitterRemark(companyDto.getRemark());
-            //福利办理方
-            hfEmpTask.setWelfareUnit(companyDto.getFundUnit());
-            if (companyDto.getInDate() != null) {
-                hfEmpTask.setInDate(LocalDateTime.ofInstant(companyDto.getInDate().toInstant(), ZoneId.systemDefault()));
-            }
-
-            if(null != companyDto.getOutDate()){
-                hfEmpTask.setOutDate(LocalDateTime.ofInstant(companyDto.getOutDate().toInstant(), ZoneId.systemDefault()));
-            }
-
-            hfEmpTask.setCreatedBy(companyDto.getCreatedBy() != null ? companyDto.getCreatedBy() : "system");
-            hfEmpTask.setModifiedBy(companyDto.getModifiedBy() != null ? companyDto.getModifiedBy() : "system");
-        }
-        hfEmpTask.setSubmitTime(LocalDate.now());
-        Map<String, Object> paramMap = taskMsgDTO.getVariables();
-        //转出单位(来源地)
-        hfEmpTask.setTransferOutUnit(this.getTransUnit(paramMap));
-        //任务类型
-        hfEmpTask.setTaskCategory(taskCategory);
-        //是否更正 1 是 0 否
-        hfEmpTask.setIsChange(isChange);
-        hfEmpTask.setTaskFormContent(JSON.toJSONString(dto));
-
-        //前道传递的政策明细ID,用它调用系统中心获取进位方式
-        if (dto.getNowAgreement() != null && dto.getNowAgreement().getSocialPolicyId() != null) {
-            hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getSocialPolicyId());
-        }
-        //TODO 表中加字段
-//        hfEmpTask.setProcessId(taskMsgDTO.getProcessId());
-        //办理状态：1、未处理 2 、处理中(已办)  3 已完成(已做) 4、批退 5、不需处理
-        hfEmpTask.setTaskStatus(1);
-        //入职日期
-
-        hfEmpTask.setActive(true);
-        hfEmpTask.setModifiedTime(LocalDateTime.now());
-        hfEmpTask.setCreatedTime(LocalDateTime.now());
-        hfEmpTask.setAmount(new BigDecimal(0));
-        List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
-        if(null != socialList && socialList.size() > 0){
-            this.setEmpTask(hfEmpTask,socialList,fundCategory);
+        if(empTaskId>0){
+            hfEmpTask.setEmpTaskId(empTaskId);
+            hfEmpTask = baseMapper.selectOne( hfEmpTask);
+            BeanUtils.copyProperties(hfEmpTask,hfEmpTaskHandleBo);
         }
 
-        //公积金类型:1 基本 2 补充
-        Integer hfType = fundCategory.equals("DIT00057") ? 1 : 2;
-        hfEmpTask.setHfType(hfType);
-        //baseMapper.insertHfEmpTask(hfEmpTask);
-        baseMapper.insert(hfEmpTask);
-
-        return true;
+        return  hfEmpTaskHandleBo;
     }
-
-    /**
-     * 修改数据到雇员任务单表
-     * @param taskMsgDTO 消息队列接受的对象
-     * @param fundCategory 公积金类别（基本或者补充公积金）
-     * @param dto        取得的雇员信息
-     * @return
-     */
-    @Transactional(rollbackFor = {Exception.class})
     @Override
-    public boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, AfEmployeeInfoDTO dto) {
-        Map<String, Object> paramMap = taskMsgDTO.getVariables();
-
-        AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
-
-        HfEmpTask hfEmpTask = new HfEmpTask();
-        hfEmpTask.setTaskId(paramMap.get("oldEmpAgreementId").toString());
-        if(null != companyDto){
-            hfEmpTask.setCompanyId(companyDto.getCompanyId());
-            hfEmpTask.setEmployeeId(companyDto.getEmployeeId());
-            hfEmpTask.setSubmitterId(companyDto.getCreatedBy());
-            hfEmpTask.setSubmitterRemark(companyDto.getRemark());
-            //福利办理方
-            hfEmpTask.setWelfareUnit(companyDto.getFundUnit());
-            if (companyDto.getInDate() != null) {
-                hfEmpTask.setInDate(LocalDateTime.ofInstant(companyDto.getInDate().toInstant(), ZoneId.systemDefault()));
-            }
-            if(null != companyDto.getOutDate()){
-                hfEmpTask.setOutDate(LocalDateTime.ofInstant(companyDto.getOutDate().toInstant(), ZoneId.systemDefault()));
-            }
-            hfEmpTask.setModifiedBy(companyDto.getModifiedBy() != null ? companyDto.getModifiedBy() : "system");
+    public JsonResult submitTransferTask(EmpTaskTransferBo empTaskTransferBo) {
+        HfEmpTask hfEmpTask =new HfEmpTask();
+        String empTaskId=empTaskTransferBo.getEmpTaskId();
+        List<AccountInfoBO> listAccount1 = hfComAccountMapper.getAccountsByCompany(empTaskTransferBo.getCompanyId(),1);
+        if (listAccount1.size()==0){
+            return JsonResultKit.ofError("该雇员所在公司没有开户！");
         }
 
-        hfEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
-        hfEmpTask.setTaskFormContent(JSON.toJSONString(dto));
-        //转出单位(来源地)
-        hfEmpTask.setTransferOutUnit(this.getTransUnit(paramMap));
-        //前道传递的政策明细ID,用它调用系统中心获取进位方式
-        if (dto.getNowAgreement() != null && dto.getNowAgreement().getSocialPolicyId() != null) {
-            hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getSocialPolicyId());
+        Wrapper<HfEmpArchive> wrapper = new EntityWrapper<>();
+        wrapper.eq("company_id", empTaskTransferBo.getCompanyId());
+        wrapper.eq("employee_id", empTaskTransferBo.getEmployeeId());
+        wrapper.eq("hf_type",empTaskTransferBo.getHfType());
+        wrapper.eq("is_active",1);
+        List<HfEmpArchive> empArchiveList= hfEmpArchiveMapper.selectList(wrapper);
+        if(empArchiveList.size()==0){
+            return JsonResultKit.ofError("该雇员没有转入或新开的公积金档案信息！");
         }
-        //TODO 表中加字段
-        //hfEmpTask.setProcessId(taskMsgDTO.getProcessId());
-        hfEmpTask.setModifiedTime(LocalDateTime.now());
-        List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
-        if(null != socialList && socialList.size() > 0){
-            this.setEmpTask(hfEmpTask,socialList,fundCategory);
+        hfEmpTask.setEmpArchiveId(empArchiveList.get(0).getEmpArchiveId());//设置雇员公积金档案ID
+        if(Optional.ofNullable(empTaskId).isPresent()==false){ //公积金专员创建任务单
+            hfEmpTask.setProcessCategory(9);//大类：其他
+            BeanUtils.copyProperties(empTaskTransferBo,hfEmpTask);
+            baseMapper.insert(hfEmpTask);
+        }else{
+            baseMapper.updateById(hfEmpTask);
         }
-        baseMapper.updateById(hfEmpTask);
-
-        return true;
-    }
 
 
-    /**
-     * 设置EmpTask的值
-     * @param empTask
-     * @param socialDTOS
-     * @param fundCategory
-     */
-    private void setEmpTask(HfEmpTask empTask,List<AfEmpSocialDTO> socialDTOS,String fundCategory){
-        AfEmpSocialDTO socialDTO = this.getAfEmpSocialByType(socialDTOS,fundCategory);
-        if(null != socialDTO){
-            empTask.setEmpBase(socialDTO.getPersonalBase());
-            if(null != socialDTO.getStartDate()){
-                empTask.setStartMonth(StringUtil.dateToString(socialDTO.getStartDate(),"yyyyMM"));
-            }
-            if(null != socialDTO.getEndDate()){
-                empTask.setEndMonth(StringUtil.dateToString(socialDTO.getEndDate(),"yyyyMM"));
-            }
-            if(null != socialDTO.getTotal()){
-                empTask.setAmount(socialDTO.getTotal());
-            }
-            if(null != socialDTO.getPersonalRatio()){
-                empTask.setRatioEmp(socialDTO.getPersonalRatio());
-            }
-            if(null != socialDTO.getPersonalRatio()){
-                empTask.setRatioCom(socialDTO.getCompanyRatio());
-            }
-            if(null != socialDTO.getAccount()){
-                empTask.setHfEmpAccount(socialDTO.getAccount());
-            }
-        }
-    }
 
-    /**
-     * 根据公积金类型获取AfEmpSocialDTO
-     * @param socialDTOS
-     * @param fundCategory
-     * @return
-     */
-    private AfEmpSocialDTO getAfEmpSocialByType(List<AfEmpSocialDTO> socialDTOS,String fundCategory){
-        AfEmpSocialDTO socialDTO = null;
-        List<AfEmpSocialDTO> fundInfos = socialDTOS
-            .stream()
-            .filter(x->null != x.getPolicyType() && x.getPolicyType().equals(2) && x.getItemCode().equals(fundCategory))
-            .collect(Collectors.toList());
-        if(null != fundInfos && fundInfos.size() > 0){
-            socialDTO = fundInfos.get(0);
-        }
-        return socialDTO;
-    }
-
-
-    /**
-     * 转出单位(来源地)
-     * @param paramMap
-     * @return
-     */
-    private String getTransUnit(Map<String, Object> paramMap){
-        String transUnit = "";
-        if (null != paramMap.get("source")) {
-            String source = paramMap.get("source").toString();
-            if ("1".equals(source)) {
-                transUnit = "中心";
-            }
-            else if ("2".equals(source)) {
-                transUnit ="原单位";
-            }
-        }
-        return transUnit;
+        return JsonResultKit.of();
     }
 }

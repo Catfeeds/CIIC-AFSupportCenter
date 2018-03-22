@@ -15,20 +15,20 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTaskFront;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * <p>
@@ -39,11 +39,12 @@ import java.util.*;
 public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper, SsEmpTaskFront> implements
     SsEmpTaskFrontService {
 
-    private final static Logger logger = LoggerFactory.getLogger(SsEmpTaskFrontServiceImpl.class);
     @Autowired
     private SsEmpTaskMapper ssEmpTaskMapper;
     @Autowired
     private SsEmpArchiveService ssEmpArchiveService;
+    @Autowired
+    LogService logService;
 
     /**
      * <p>Description: 保存数据到雇员任务单表</p>
@@ -60,12 +61,12 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         rollbackFor = {Exception.class}
     )
     @Override
-    public boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer isChange,
+    public boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer processCategory, Integer isChange,
                                  AfEmployeeInfoDTO dto) {
         boolean result = false;
         try {
             //插入数据到雇员任务单表
-            saveSsEmpTask(taskMsgDTO, taskCategory, isChange, dto);
+            saveSsEmpTask(taskMsgDTO, taskCategory, processCategory, isChange, dto);
             result = true;
         } catch (Exception e) {
             result = false;
@@ -107,17 +108,13 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         rollbackFor = {Exception.class}
     )
     @Override
-    public boolean saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType, Integer isChange,
+    public boolean saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType, Integer processCategory, Integer isChange,
                                  AfEmployeeInfoDTO dto) throws Exception {
         //基本信息
         AfEmployeeCompanyDTO afEmployeeCompanyDTO = dto.getEmployeeCompany();
 
         //险种明细
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
-
-        logger.info("afEmployeeCompanyDTO:" + afEmployeeCompanyDTO);
-        logger.info("socialList:" + socialList);
-
 
         SsEmpTask ssEmpTask = new SsEmpTask();
         ssEmpTask.setTaskId(taskMsgDTO.getTaskId());
@@ -157,6 +154,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
 //                ssEmpTask.setEmpArchiveId(Long.valueOf(Optional.ofNullable(ssEmpArchiveId).orElse("0")));
 //            }
 //        }
+        ssEmpTask.setProcessCategory(processCategory);
         ssEmpTask.setTaskCategory(socialType);
         ssEmpTask.setIsChange(isChange);
         ssEmpTask.setTaskFormContent(JSON.toJSONString(dto));
@@ -167,9 +165,13 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         //福利办理方
         ssEmpTask.setWelfareUnit(afEmployeeCompanyDTO.getSocialUnit());
         ssEmpTask.setModifiedBy(afEmployeeCompanyDTO.getCreatedBy());
+        ssEmpTask.setModifiedDisplayName(afEmployeeCompanyDTO.getCreatedDisplayName());
         ssEmpTask.setModifiedTime(LocalDateTime.now());
         ssEmpTask.setCreatedBy(afEmployeeCompanyDTO.getCreatedBy());
+        ssEmpTask.setCreatedDisplayName(afEmployeeCompanyDTO.getCreatedDisplayName());
         ssEmpTask.setCreatedTime(LocalDateTime.now());
+        ssEmpTask.setLeaderShipId(afEmployeeCompanyDTO.getLeadershipId());
+        ssEmpTask.setLeaderShipName(afEmployeeCompanyDTO.getLeadershipName());
 
         //社保缴纳段开始月份YYYYMM
         for (AfEmpSocialDTO socialDto : socialList) {
@@ -215,9 +217,13 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                         }
                         ssEmpTaskFront.setActive(true);
                         ssEmpTaskFront.setModifiedBy(afEmployeeCompanyDTO.getCreatedBy());
+                        ssEmpTaskFront.setModifiedDisplayName(afEmployeeCompanyDTO.getCreatedDisplayName());
                         ssEmpTaskFront.setModifiedTime(LocalDateTime.now());
                         ssEmpTaskFront.setCreatedBy(afEmployeeCompanyDTO.getCreatedBy());
+                        ssEmpTaskFront.setCreatedDisplayName(afEmployeeCompanyDTO.getCreatedDisplayName());
                         ssEmpTaskFront.setCreatedTime(LocalDateTime.now());
+                        ssEmpTaskFront.setLeaderShipId(afEmployeeCompanyDTO.getLeadershipId());
+                        ssEmpTaskFront.setLeaderShipName(afEmployeeCompanyDTO.getLeadershipName());
                         ssEmpTaskFrontList.add(ssEmpTaskFront);
                     }
                 }
@@ -241,33 +247,24 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         LocalDateTime now = LocalDateTime.now();
         String today = now.format(DateTimeFormatter.ofPattern("dd"));
         String thisMonth=now.format(DateTimeFormatter.ofPattern("yyyyMM"));
-
         if (ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_5) || ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_6) || ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_14) || ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_15)) {//转出任务单
-            if (ssEmpTask.getEndMonth() == null || ssEmpTask.getEndMonth().equals("")){
+            if (Optional.ofNullable(ssEmpTask.getEndMonth()).isPresent() == false) {
                 return;
             }
             //如果当前系统月份 > 社保缴纳截止月份 就会在本月处理，否则就是截止月份的下一个月份处理
-            if(Integer.parseInt(thisMonth) > Integer.parseInt(ssEmpTask.getEndMonth())){
+            if (Integer.parseInt(thisMonth) > Integer.parseInt(ssEmpTask.getEndMonth())) {
                 submitMonth = ssEmpTask.getEndMonth() + today;
-            }else {
-                String em= LocalDate.parse(ssEmpTask.getEndMonth()+"01").plusMonths(1).format(DateTimeFormatter.ofPattern("yyyyMM"));
-                submitMonth = em + today;
+            } else {
+                String em = LocalDate.parse(ssEmpTask.getEndMonth() + today, DateTimeFormatter.ofPattern("yyyyMMdd")).plusMonths(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+                submitMonth = em;
             }
-
         } else {
-            if (ssEmpTask.getStartMonth() == null || ssEmpTask.getStartMonth().equals("")){
+            if (Optional.ofNullable(ssEmpTask.getStartMonth()).isPresent() == false) {
                 return;
             }
             submitMonth = ssEmpTask.getStartMonth() + today;
         }
-        SimpleDateFormat sf1 = new SimpleDateFormat("yyyyMMdd");
-        SimpleDateFormat sf2 = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            submitMonth = sf2.format(sf1.parse(submitMonth));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        submitTime = LocalDateTime.parse(submitMonth + " 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        submitTime = LocalDateTime.parse(submitMonth + " 00:00:00", DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss"));
         ssEmpTask.setSubmitTime(submitTime);
     }
 

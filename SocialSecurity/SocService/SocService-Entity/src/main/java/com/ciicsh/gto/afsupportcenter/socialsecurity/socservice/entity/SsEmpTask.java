@@ -47,6 +47,12 @@ public class SsEmpTask implements Serializable {
 	@TableField("is_change")
 	private Integer isChange;
     /**
+     * 任务单处理类别：1. 雇员新增 2. 雇员终止 3. 雇员补缴 4. 雇员翻牌 5. 雇员服务协议调整 6. 雇员服务协议更正
+     7. 集体操作 8. 特殊操作 9. 其它操作
+     */
+    @TableField("process_category")
+    private Integer processCategory;
+    /**
      * 任务类型: 1新进  2  转入 3  调整 4 补缴 5 转出 6封存 7退账  9 特殊操作  10 集体转入   11 集体转出 12 翻牌
 
      */
@@ -275,15 +281,36 @@ public class SsEmpTask implements Serializable {
 	@TableField("modified_time")
 	private LocalDateTime modifiedTime;
     /**
-     * 创建者登录名
+     * 创建者ID
      */
 	@TableField("created_by")
 	private String createdBy;
     /**
-     * 修改者登录名
+     * 创建者姓名
+     */
+    @TableField("created_display_name")
+    private String createdDisplayName;
+    /**
+     * 修改者ID
      */
 	@TableField("modified_by")
 	private String modifiedBy;
+    /**
+     * 修改者姓名
+     */
+    @TableField("modified_display_name")
+    private String modifiedDisplayName;
+    /**
+     * 领导ID
+     */
+    @TableField("leader_ship_id")
+    private String leaderShipId;
+    /**
+     * 领导姓名
+     */
+    @TableField("leader_ship_name")
+    private String leaderShipName;
+
 
 
 	public Long getEmpTaskId() {
@@ -333,6 +360,14 @@ public class SsEmpTask implements Serializable {
 	public void setIsChange(Integer isChange) {
 		this.isChange = isChange;
 	}
+
+    public Integer getProcessCategory() {
+        return processCategory;
+    }
+
+    public void setProcessCategory(Integer processCategory) {
+        this.processCategory = processCategory;
+    }
 
 	public Integer getTaskCategory() {
 		return taskCategory;
@@ -718,7 +753,39 @@ public class SsEmpTask implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	@Override
+    public String getCreatedDisplayName() {
+        return createdDisplayName;
+    }
+
+    public void setCreatedDisplayName(String createdDisplayName) {
+        this.createdDisplayName = createdDisplayName;
+    }
+
+    public String getModifiedDisplayName() {
+        return modifiedDisplayName;
+    }
+
+    public void setModifiedDisplayName(String modifiedDisplayName) {
+        this.modifiedDisplayName = modifiedDisplayName;
+    }
+
+    public String getLeaderShipId() {
+        return leaderShipId;
+    }
+
+    public void setLeaderShipId(String leaderShipId) {
+        this.leaderShipId = leaderShipId;
+    }
+
+    public String getLeaderShipName() {
+        return leaderShipName;
+    }
+
+    public void setLeaderShipName(String leaderShipName) {
+        this.leaderShipName = leaderShipName;
+    }
+
+    @Override
 	public String toString() {
 		return "SsEmpTask{" +
 			", empTaskId=" + empTaskId +
@@ -727,6 +794,7 @@ public class SsEmpTask implements Serializable {
 			", customerId=" + customerId +
 			", empArchiveId=" + empArchiveId +
 			", isChange=" + isChange +
+            ", processCategory=" + processCategory +
 			", taskCategory=" + taskCategory +
 			", taskCategorySpecial=" + taskCategorySpecial +
 			", urgent=" + urgent +
@@ -774,7 +842,11 @@ public class SsEmpTask implements Serializable {
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +
 			", createdBy=" + createdBy +
+            ", createdDisplayName=" + createdDisplayName +
 			", modifiedBy=" + modifiedBy +
+            ", modifiedDisplayName=" + modifiedDisplayName +
+            ", leaderShipId=" + leaderShipId +
+            ", leaderShipName=" + leaderShipName +
 			"}";
 	}
 }

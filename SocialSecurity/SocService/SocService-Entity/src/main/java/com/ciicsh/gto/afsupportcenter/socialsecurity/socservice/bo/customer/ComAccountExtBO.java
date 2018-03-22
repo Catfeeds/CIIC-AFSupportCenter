@@ -1,6 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer;
 
 
+import java.math.BigDecimal;
+
 /**
  * Created by houwanhua on 2018/3/2.
  */
@@ -68,6 +70,20 @@ public class ComAccountExtBO {
      * 联系地址
      */
     private String contactAddress;
+    /**
+     * 查询账号
+     */
+    private String queryAccount;
+
+    /**
+     * 行业类别
+     */
+    private String industryCategory;
+    /**
+     * 工伤比例
+     */
+    private BigDecimal comRatio;
+
 
     /**
      * 发出材料:正式通知书、预生成通知书、收据、银行对账单、汇总表、实时表
@@ -189,6 +205,30 @@ public class ComAccountExtBO {
 
     public void setContactAddress(String contactAddress) {
         this.contactAddress = contactAddress;
+    }
+
+    public String getQueryAccount() {
+        return queryAccount;
+    }
+
+    public void setQueryAccount(String queryAccount) {
+        this.queryAccount = queryAccount;
+    }
+
+    public String getIndustryCategory() {
+        return industryCategory;
+    }
+
+    public void setIndustryCategory(String industryCategory) {
+        this.industryCategory = industryCategory;
+    }
+
+    public BigDecimal getComRatio() {
+        return comRatio;
+    }
+
+    public void setComRatio(BigDecimal comRatio) {
+        this.comRatio = comRatio;
     }
 
     public String getDispatchMaterial() {

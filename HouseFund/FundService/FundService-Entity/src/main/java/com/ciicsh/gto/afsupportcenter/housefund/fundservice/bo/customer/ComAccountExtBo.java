@@ -97,4 +97,7 @@ public class ComAccountExtBo {
      * 1 销户 2 公司自做 3 转其他代理商（前道传递）
      */
     private Integer endType;
+    private String comHfMonth;
+    private String accountTempStore;
+
 }
