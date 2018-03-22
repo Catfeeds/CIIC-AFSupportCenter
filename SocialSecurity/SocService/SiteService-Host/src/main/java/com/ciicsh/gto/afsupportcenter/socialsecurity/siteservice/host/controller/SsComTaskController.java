@@ -54,7 +54,8 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
     private CommonApiUtils commonApiUtils;
     @Autowired
     private SsAccountComRelationService ssAccountComRelationService;
-
+    @Autowired
+    private SsComTaskService ssComTaskService;
 
     @Log("查询未处理企业任务单")
     @RequestMapping(value = "getNoProgressTask")
@@ -150,7 +151,8 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
                 if (isNotNull(refuseReason))
                     ssComTask.setRejectionRemark(refuseReason);
                 //批退工作流
-                TaskCommonUtils.completeTask(ssComTask.getTaskId(),commonApiUtils,"xsj");
+                SsComTask task = ssComTaskService.selectById(ssComTask.getComTaskId());
+                TaskCommonUtils.completeTask(task.getTaskId(),commonApiUtils,"xsj");
                 dataList.add(ssComTask);
             }
         }
