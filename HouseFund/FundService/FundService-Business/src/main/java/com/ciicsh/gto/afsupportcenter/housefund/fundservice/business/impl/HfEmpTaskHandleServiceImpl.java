@@ -12,6 +12,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccou
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.CommonApiUtils;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogMessage;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpArchiveConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskPeriodConstant;
@@ -25,8 +27,6 @@ import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.kit.DateKit;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
@@ -65,7 +65,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
     @Autowired
     private CommonApiUtils commonApiUtils;
     @Autowired
-    private LogService logService;
+    private LogApiUtil logApiUtil;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
@@ -336,11 +336,10 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                                 if (CollectionUtils.isNotEmpty(repairArchiveBasePeriodList)) {
                                     hfArchiveBasePeriodList.addAll(repairArchiveBasePeriodList);
                                 } else {
-                                    LogContext logContext = LogContext.of().setTitle("雇员调整任务单办理")
-                                        .setTextContent("补缴费用段返回为空")
-                                        .addTagOfId(String.valueOf(inputHfEmpTask.getEmpTaskId()));
-                                    logService.error(logContext);
-//                                    System.out.println("Creation type emp task, repairArchiveBasePeriodList is empty, it caused by uncovered logic");
+                                    LogMessage logMessage = LogMessage.create().setTitle("雇员调整任务单办理")
+                                        .setContent("补缴费用段返回为空")
+                                        .setTags(new HashMap<String, String>() { { put("empTaskId", String.valueOf(inputHfEmpTask.getEmpTaskId())); } });
+                                    logApiUtil.error(logMessage);
                                     throw new BusinessException("补缴公积金费用段数据取得失败");
                                 }
                             }
@@ -418,20 +417,18 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     hfArchiveBasePeriodList,
                     false);
             } catch (Exception e) {
-                LogContext logContext = LogContext.of().setTitle("访问接口")
-                    .setTextContent("访问客服中心的雇员任务单实缴金额回调接口失败")
-                    .setExceptionContent(e);
-                logService.error(logContext);
+                LogMessage logMessage = LogMessage.create().setTitle("访问接口").
+                    setContent("访问客服中心的雇员任务单实缴金额回调接口失败,ExceptionMessage:" + e.getMessage());
+                logApiUtil.error(logMessage);
                 throw new BusinessException("访问客服中心的雇员任务单实缴金额回调接口失败");
             }
             try {
                 Result result = apiCompleteTask(inputHfEmpTask.getTaskId(),
                     inputHfEmpTask.getModifiedBy());
             } catch (Exception e) {
-                LogContext logContext = LogContext.of().setTitle("访问接口")
-                    .setTextContent("访问客服中心的完成任务接口失败")
-                    .setExceptionContent(e);
-                logService.error(logContext);
+                LogMessage logMessage = LogMessage.create().setTitle("访问接口").
+                    setContent("访问客服中心的完成任务接口失败,ExceptionMessage:" + e.getMessage());
+                logApiUtil.error(logMessage);
                 throw new BusinessException("访问客服中心的完成任务接口失败");
             }
         }
@@ -478,20 +475,18 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 new ArrayList<HfArchiveBasePeriod>(1) { { add(new HfArchiveBasePeriod()); } },
                 true);
         } catch (Exception e) {
-            LogContext logContext = LogContext.of().setTitle("访问接口")
-                .setTextContent("访问客服中心的雇员任务单实缴金额回调接口失败")
-                .setExceptionContent(e);
-            logService.error(logContext);
+            LogMessage logMessage = LogMessage.create().setTitle("访问接口").
+                setContent("访问客服中心的雇员任务单实缴金额回调接口失败,ExceptionMessage:" + e.getMessage());
+            logApiUtil.error(logMessage);
             throw new BusinessException("访问客服中心的雇员任务单实缴金额回调接口失败");
         }
         try {
             Result result = apiCompleteTask(hfEmpTask.getTaskId(),
                 UserContext.getUserId());
         } catch (Exception e) {
-            LogContext logContext = LogContext.of().setTitle("访问接口")
-                .setTextContent("访问客服中心的完成任务接口失败")
-                .setExceptionContent(e);
-            logService.error(logContext);
+            LogMessage logMessage = LogMessage.create().setTitle("访问接口").
+                setContent("访问客服中心的完成任务接口失败,ExceptionMessage:" + e.getMessage());
+            logApiUtil.error(logMessage);
             throw new BusinessException("访问客服中心的完成任务接口失败");
         }
 
@@ -920,7 +915,6 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
      */
     private List<HfArchiveBasePeriod> adjustEmpBasePeriod(HfEmpTask hfEmpTask, List<HfEmpTaskPeriod> hfEmpTaskPeriodList, int[] roundTypes, int roundTypeInWeight) {
         List<HfArchiveBasePeriod> hfArchiveBasePeriodList;
-        List<HfArchiveBasePeriod> newHfArchiveBasePeriodList;
         List<HfArchiveBasePeriod> diffHfArchiveBasePeriodList;
         EntityWrapper<HfArchiveBasePeriod> wrapper = new EntityWrapper<>();
         wrapper.where("employee_id={0} AND company_id={1} AND hf_type={2} AND is_active = 1", hfEmpTask.getEmployeeId(), hfEmpTask.getCompanyId(), hfEmpTask.getHfType());
@@ -1617,7 +1611,9 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 }
             }
         } else {
-            System.out.println("getRoundingType,return code=" + result.getCode() + ", msg=" + result.getMessage()); // TODO log
+            LogMessage logMessage = LogMessage.create().setTitle("访问接口").
+                setContent("访问内控中心的获取进位方式接口返回值不正确,Code:" + result.getCode() + "Message:" + result.getMessage());
+            logApiUtil.error(logMessage);
         }
         return null;
     }
