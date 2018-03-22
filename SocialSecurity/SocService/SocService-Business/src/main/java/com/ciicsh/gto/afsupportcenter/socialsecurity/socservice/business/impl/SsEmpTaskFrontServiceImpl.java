@@ -15,9 +15,8 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTaskFront;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,11 +39,12 @@ import java.util.Optional;
 public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper, SsEmpTaskFront> implements
     SsEmpTaskFrontService {
 
-    private final static Logger logger = LoggerFactory.getLogger(SsEmpTaskFrontServiceImpl.class);
     @Autowired
     private SsEmpTaskMapper ssEmpTaskMapper;
     @Autowired
     private SsEmpArchiveService ssEmpArchiveService;
+    @Autowired
+    LogService logService;
 
     /**
      * <p>Description: 保存数据到雇员任务单表</p>
@@ -116,10 +116,6 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         //险种明细
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
 
-        logger.info("afEmployeeCompanyDTO:" + afEmployeeCompanyDTO);
-        logger.info("socialList:" + socialList);
-
-
         SsEmpTask ssEmpTask = new SsEmpTask();
         ssEmpTask.setTaskId(taskMsgDTO.getTaskId());
         ssEmpTask.setCompanyId(afEmployeeCompanyDTO.getCompanyId());
@@ -169,9 +165,13 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         //福利办理方
         ssEmpTask.setWelfareUnit(afEmployeeCompanyDTO.getSocialUnit());
         ssEmpTask.setModifiedBy(afEmployeeCompanyDTO.getCreatedBy());
+        ssEmpTask.setModifiedDisplayName(afEmployeeCompanyDTO.getCreatedDisplayName());
         ssEmpTask.setModifiedTime(LocalDateTime.now());
         ssEmpTask.setCreatedBy(afEmployeeCompanyDTO.getCreatedBy());
+        ssEmpTask.setCreatedDisplayName(afEmployeeCompanyDTO.getCreatedDisplayName());
         ssEmpTask.setCreatedTime(LocalDateTime.now());
+        ssEmpTask.setLeaderShipId(afEmployeeCompanyDTO.getLeadershipId());
+        ssEmpTask.setLeaderShipName(afEmployeeCompanyDTO.getLeadershipName());
 
         //社保缴纳段开始月份YYYYMM
         for (AfEmpSocialDTO socialDto : socialList) {
@@ -217,9 +217,13 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                         }
                         ssEmpTaskFront.setActive(true);
                         ssEmpTaskFront.setModifiedBy(afEmployeeCompanyDTO.getCreatedBy());
+                        ssEmpTaskFront.setModifiedDisplayName(afEmployeeCompanyDTO.getCreatedDisplayName());
                         ssEmpTaskFront.setModifiedTime(LocalDateTime.now());
                         ssEmpTaskFront.setCreatedBy(afEmployeeCompanyDTO.getCreatedBy());
+                        ssEmpTaskFront.setCreatedDisplayName(afEmployeeCompanyDTO.getCreatedDisplayName());
                         ssEmpTaskFront.setCreatedTime(LocalDateTime.now());
+                        ssEmpTaskFront.setLeaderShipId(afEmployeeCompanyDTO.getLeadershipId());
+                        ssEmpTaskFront.setLeaderShipName(afEmployeeCompanyDTO.getLeadershipName());
                         ssEmpTaskFrontList.add(ssEmpTaskFront);
                     }
                 }
@@ -263,24 +267,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         submitTime = LocalDateTime.parse(submitMonth + " 00:00:00", DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss"));
         ssEmpTask.setSubmitTime(submitTime);
     }
-    //测试上述方法，请忽略我。看不爽，可删除。么么哒！
-    public static  void  main(String[] arg){
-        SsEmpTask ssEmpTask = new SsEmpTask();
-        ssEmpTask.setTaskCategory(5);//转出
-        ssEmpTask.setEndMonth("201806");
-        new SsEmpTaskFrontServiceImpl().resetTaskSubmitTime(ssEmpTask);
-        System.out.println(ssEmpTask.getSubmitTime());
-        ssEmpTask.setEndMonth("201801");
-        new SsEmpTaskFrontServiceImpl().resetTaskSubmitTime(ssEmpTask);
-        System.out.println(ssEmpTask.getSubmitTime());
-        ssEmpTask.setTaskCategory(-5);//非转出
-        ssEmpTask.setStartMonth("201801");//小于本月
-        new SsEmpTaskFrontServiceImpl().resetTaskSubmitTime(ssEmpTask);
-        System.out.println(ssEmpTask.getSubmitTime());
-        ssEmpTask.setStartMonth("201808");//大于本月
-        new SsEmpTaskFrontServiceImpl().resetTaskSubmitTime(ssEmpTask);
-        System.out.println(ssEmpTask.getSubmitTime());
-    }
+
     /**
      * 更新旧的雇员任务单
      *
