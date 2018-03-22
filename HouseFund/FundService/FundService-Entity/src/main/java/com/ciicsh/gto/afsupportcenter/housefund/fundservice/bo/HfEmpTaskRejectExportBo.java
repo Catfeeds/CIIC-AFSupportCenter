@@ -46,8 +46,9 @@ public class HfEmpTaskRejectExportBo implements Serializable{
     private LocalDateTime submitTime;
     private Integer taskStatus;
     private String taskId;
-    @Excel(name = "批退人", orderNum = "11",  width = 20)
     private String modifiedBy;
+    @Excel(name = "批退人", orderNum = "11",  width = 20)
+    private String modifiedDisplayName;
     @Excel(name = "批退时间", orderNum = "12",  width = 20)
     private LocalDateTime modifiedTime;
     @Excel(name = "批退备注", orderNum = "13",  width = 30)
@@ -256,5 +257,13 @@ public class HfEmpTaskRejectExportBo implements Serializable{
 
     public void setIsChangeName(String isChangeName) {
         this.isChangeName = isChangeName;
+    }
+
+    public String getModifiedDisplayName() {
+        return modifiedDisplayName;
+    }
+
+    public void setModifiedDisplayName(String modifiedDisplayName) {
+        this.modifiedDisplayName = modifiedDisplayName;
     }
 }

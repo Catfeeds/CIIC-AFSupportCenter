@@ -23,6 +23,7 @@
 
     <resultMap id="RejectResultMapBo" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo" extends="BaseResultMapBo">
         <result column="modified_by" property="modifiedBy" />
+        <result column="modified_display_name" property="modifiedDisplayName" />
         <result column="modified_time" property="modifiedTime" />
         <result column="rejection_remark" property="rejectionRemark" />
     </resultMap>
@@ -76,6 +77,8 @@
         <result column="rejection_remark" property="rejectionRemark" />
         <result column="operation_remind" property="operationRemind" />
         <result column="operation_remind_date" property="operationRemindDate" />
+        <result column="leader_ship_id" property="leaderShipId" />
+        <result column="leader_ship_name" property="leaderShipName" />
     </resultMap>
 
     <select id="queryHfEmpTaskReject" resultMap="RejectResultMapBo">
@@ -96,6 +99,7 @@
         het.submit_time,
         het.task_id,
         het.modified_by,
+        het.mpdified_display_name,
         het.modified_time,
         het.rejection_remark
         FROM hf_emp_task het
@@ -190,6 +194,7 @@
         het.submit_time,
         het.task_id,
         het.modified_by,
+        het.modified_display_name,
         het.modified_time,
         het.rejection_remark
         FROM hf_emp_task het
@@ -507,7 +512,9 @@
         het.handle_remark,
         het.rejection_remark,
         het.operation_remind,
-        het.operation_remind_date
+        het.operation_remind_date,
+        het.leader_ship_id,
+        het.leader_ship_name
         FROM hf_emp_task het
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
@@ -701,7 +708,11 @@
             policy_detail_id,
             is_active,
             created_by,
-            modified_by
+            created_display_name,
+            modified_by,
+            modified_display_name,
+            leader_ship_id,
+            leader_ship_name
         ) SELECT
             company_id,
             employee_id,
@@ -736,8 +747,12 @@
             af_bpo_fc,
             policy_detail_id,
             1,
-            #{createdBy},
-            #{createdBy}
+            created_by,
+            created_display_name,
+            #{modifiedBy},
+            #{modifiedDisplayName},
+            leader_ship_id,
+            leader_ship_name
         FROM hf_emp_task
         WHERE emp_task_id = #{empTaskId}
         AND is_active = 1

@@ -25,6 +25,8 @@ import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.kit.DateKit;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
@@ -62,6 +64,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
     private HfArchiveBaseAdjustService hfArchiveBaseAdjustService;
     @Autowired
     private CommonApiUtils commonApiUtils;
+    @Autowired
+    private LogService logService;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
@@ -207,7 +211,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         }
         inputHfEmpTask.setHandleRemark(params.getString("handleRemark"));
         inputHfEmpTask.setRejectionRemark(params.getString("rejectionRemark"));
-        inputHfEmpTask.setModifiedBy(UserContext.getUser().getDisplayName());
+        inputHfEmpTask.setModifiedBy(UserContext.getUserId());
+        inputHfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
         inputHfEmpTask.setModifiedTime(LocalDateTime.now());
 
         if (isHandle) {
@@ -331,8 +336,11 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                                 if (CollectionUtils.isNotEmpty(repairArchiveBasePeriodList)) {
                                     hfArchiveBasePeriodList.addAll(repairArchiveBasePeriodList);
                                 } else {
-                                    // TODO log.error uncovered logic
-                                    System.out.println("Creation type emp task, repairArchiveBasePeriodList is empty, it caused by uncovered logic");
+                                    LogContext logContext = LogContext.of().setTitle("雇员调整任务单办理")
+                                        .setTextContent("补缴费用段返回为空")
+                                        .addTagOfId(String.valueOf(inputHfEmpTask.getEmpTaskId()));
+                                    logService.error(logContext);
+//                                    System.out.println("Creation type emp task, repairArchiveBasePeriodList is empty, it caused by uncovered logic");
                                     throw new BusinessException("补缴公积金费用段数据取得失败");
                                 }
                             }
@@ -410,14 +418,20 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     hfArchiveBasePeriodList,
                     false);
             } catch (Exception e) {
-                e.printStackTrace(); // TODO log
+                LogContext logContext = LogContext.of().setTitle("访问接口")
+                    .setTextContent("访问客服中心的雇员任务单实缴金额回调接口失败")
+                    .setExceptionContent(e);
+                logService.error(logContext);
                 throw new BusinessException("访问客服中心的雇员任务单实缴金额回调接口失败");
             }
             try {
                 Result result = apiCompleteTask(inputHfEmpTask.getTaskId(),
                     inputHfEmpTask.getModifiedBy());
             } catch (Exception e) {
-                e.printStackTrace(); // TODO log
+                LogContext logContext = LogContext.of().setTitle("访问接口")
+                    .setTextContent("访问客服中心的完成任务接口失败")
+                    .setExceptionContent(e);
+                logService.error(logContext);
                 throw new BusinessException("访问客服中心的完成任务接口失败");
             }
         }
@@ -452,7 +466,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         inputHfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_REJECTED);
         inputHfEmpTask.setRejectionRemark(hfEmpTaskBatchRejectBo.getRejectionRemark());
         inputHfEmpTask.setModifiedTime(LocalDateTime.now());
-        inputHfEmpTask.setModifiedBy("test"); // TODO currentUser
+        inputHfEmpTask.setModifiedBy(UserContext.getUserId());
+        inputHfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
 
         this.updateById(inputHfEmpTask);
 
@@ -463,14 +478,20 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 new ArrayList<HfArchiveBasePeriod>(1) { { add(new HfArchiveBasePeriod()); } },
                 true);
         } catch (Exception e) {
-            e.printStackTrace(); // TODO log
+            LogContext logContext = LogContext.of().setTitle("访问接口")
+                .setTextContent("访问客服中心的雇员任务单实缴金额回调接口失败")
+                .setExceptionContent(e);
+            logService.error(logContext);
             throw new BusinessException("访问客服中心的雇员任务单实缴金额回调接口失败");
         }
         try {
             Result result = apiCompleteTask(hfEmpTask.getTaskId(),
-                UserContext.getUser().getDisplayName());
+                UserContext.getUserId());
         } catch (Exception e) {
-            e.printStackTrace(); // TODO log
+            LogContext logContext = LogContext.of().setTitle("访问接口")
+                .setTextContent("访问客服中心的完成任务接口失败")
+                .setExceptionContent(e);
+            logService.error(logContext);
             throw new BusinessException("访问客服中心的完成任务接口失败");
         }
 
@@ -566,7 +587,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 HfEmpTask updateHfEmpTask = new HfEmpTask();
                 updateHfEmpTask.setEmpTaskId(hfEmpTask.getEmpTaskId());
                 updateHfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_UNHANDLED);
-                updateHfEmpTask.setModifiedBy(UserContext.getUser().getDisplayName());
+                updateHfEmpTask.setModifiedBy(UserContext.getUserId());
+                updateHfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
                 updateHfEmpTask.setModifiedTime(LocalDateTime.now());
                 updateHfEmpTaskList.add(updateHfEmpTask);
             }
@@ -575,11 +597,11 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 HfMonthChargeBo hfMonthChargeBo = new HfMonthChargeBo();
                 hfMonthChargeBo.setEmpTaskIdList(outEmpTaskIdList);
                 hfMonthChargeBo.setChgPaymentType(HfMonthChargeConstant.PAYMENT_TYPE_NORMAL);
-                hfMonthChargeBo.setModifiedBy(UserContext.getUser().getDisplayName());
+                hfMonthChargeBo.setModifiedBy(UserContext.getUserId());
                 hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
                 HfArchiveBasePeriodUpdateBo hfArchiveBasePeriodUpdateBo = new HfArchiveBasePeriodUpdateBo();
                 hfArchiveBasePeriodUpdateBo.setEmpTaskIdList(outEmpTaskIdList);
-                hfArchiveBasePeriodUpdateBo.setModifiedBy(UserContext.getUser().getDisplayName());
+                hfArchiveBasePeriodUpdateBo.setModifiedBy(UserContext.getUserId());
                 hfArchiveBasePeriodService.updateHfArchiveBasePeriods(hfArchiveBasePeriodUpdateBo);
 
                 if (CollectionUtils.isNotEmpty(adjustEmpArchiveIdList)) {
@@ -604,7 +626,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 
             HfEmpTaskPeriodInactiveBo hfEmpTaskPeriodInactiveBo = new HfEmpTaskPeriodInactiveBo();
             hfEmpTaskPeriodInactiveBo.setEmpTaskIdList(empTaskIdList);
-            hfEmpTaskPeriodInactiveBo.setModifiedBy(UserContext.getUser().getDisplayName());
+            hfEmpTaskPeriodInactiveBo.setModifiedBy(UserContext.getUserId());
             hfEmpTaskPeriodService.inactiveHfEmpTaskPeriods(hfEmpTaskPeriodInactiveBo);
             this.updateBatchById(updateHfEmpTaskList);
         } else {
@@ -630,7 +652,6 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                                             int[] roundTypes,
                                             int roundTypeInWeight) {
         HfArchiveBasePeriod hfArchiveBasePeriod = new HfArchiveBasePeriod();
-        System.out.println("e.getArchiveBasePeriodId() = " + hfEmpTaskPeriod.getArchiveBasePeriodId()); // TODO log
         hfArchiveBasePeriod.setArchiveBasePeriodId(hfEmpTaskPeriod.getArchiveBasePeriodId());
         hfArchiveBasePeriod.setEmpTaskId(hfEmpTaskPeriod.getEmpTaskId());
         hfArchiveBasePeriod.setEmployeeId(hfEmpTask.getEmployeeId());
@@ -784,8 +805,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 YearMonth repairEndMonth = YearMonth.parse(e.getEndMonth(), formatter);
 
                 if (HfEmpTaskConstant.WELFARE_UNIT_INDEPENDENT == hfEmpTask.getWelfareUnit()) {
-                    if (repairEndMonth.isAfter(hfMonth.minusMonths(2))) {
-                        throw new BusinessException("补缴任务费用分段中的缴费截止年月必须小于等于汇缴年月的前两月（独立户）");
+                    if (hfEmpTask.getTaskCategory() == HfEmpTaskConstant.PROCESS_CATEGORY_ADD && repairEndMonth.isAfter(hfMonth.minusMonths(2))) {
+                        throw new BusinessException("新开任务单，补缴任务费用分段中的缴费截止年月必须小于等于汇缴年月的前两月（独立户）");
                     }
                 } else {
                     if (repairEndMonth.isAfter(hfMonth.minusMonths(1))) {
@@ -899,6 +920,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
      */
     private List<HfArchiveBasePeriod> adjustEmpBasePeriod(HfEmpTask hfEmpTask, List<HfEmpTaskPeriod> hfEmpTaskPeriodList, int[] roundTypes, int roundTypeInWeight) {
         List<HfArchiveBasePeriod> hfArchiveBasePeriodList;
+        List<HfArchiveBasePeriod> newHfArchiveBasePeriodList;
         List<HfArchiveBasePeriod> diffHfArchiveBasePeriodList;
         EntityWrapper<HfArchiveBasePeriod> wrapper = new EntityWrapper<>();
         wrapper.where("employee_id={0} AND company_id={1} AND hf_type={2} AND is_active = 1", hfEmpTask.getEmployeeId(), hfEmpTask.getCompanyId(), hfEmpTask.getHfType());
@@ -925,8 +947,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     for (HfArchiveBasePeriod existHfArchiveBasePeriod : existHfArchiveBasePeriodList) {
                         if (StringUtils.isEmpty(existHfArchiveBasePeriod.getEndMonth())) {
                             YearMonth startMonth = YearMonth.parse(existHfArchiveBasePeriod.getStartMonth(), formatter);
-                            if (startMonth.isAfter(hfMonth) || startMonth.equals(hfMonth)) {
-                                throw new BusinessException("雇员档案费用段中缴费起始年月必须小于汇缴年月");
+                            if (startMonth.isAfter(hfMonth)) {
+                                throw new BusinessException("雇员档案费用段中缴费起始年月不能大于汇缴年月");
                             }
 
                             HfArchiveBasePeriod hfArchiveBasePeriod = new HfArchiveBasePeriod();
@@ -965,10 +987,10 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     YearMonth adjustEndMonth = YearMonth.parse(e.getEndMonth(), formatter);
 
                     if (HfEmpTaskConstant.WELFARE_UNIT_INDEPENDENT == hfEmpTask.getWelfareUnit()) {
-                        if (adjustEndMonth.isAfter(hfMonth.minusMonths(2))) {
-                            throw new BusinessException("调整任务费用分段中补缴段的缴费截止年月必须小于等于汇缴年月的前两月（独立户）");
-                        }
-                    } else {
+//                        if (hfEmpTask.getTaskCategory() == HfEmpTaskConstant.PROCESS_CATEGORY_ADD && adjustEndMonth.isAfter(hfMonth.minusMonths(2))) {
+//                            throw new BusinessException("调整任务费用分段中补缴段的缴费截止年月必须小于等于汇缴年月的前两月（独立户）");
+//                        }
+//                    } else {
                         if (adjustEndMonth.isAfter(hfMonth.minusMonths(1))) {
                             throw new BusinessException("调整任务费用分段中补缴段的缴费截止年月必须小于等于汇缴年月的前月（大库）");
                         }
@@ -1035,7 +1057,9 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 
             if (CollectionUtils.isNotEmpty(hfArchiveBasePeriodList)) {
                 hfArchiveBasePeriodService.insertOrUpdateBatch(hfArchiveBasePeriodList);
-                hfArchiveBasePeriodList.addAll(diffHfArchiveBasePeriodList);
+                if (CollectionUtils.isNotEmpty(diffHfArchiveBasePeriodList)) {
+                    hfArchiveBasePeriodList.addAll(diffHfArchiveBasePeriodList);
+                }
             } else {
                 hfArchiveBasePeriodList = diffHfArchiveBasePeriodList;
             }

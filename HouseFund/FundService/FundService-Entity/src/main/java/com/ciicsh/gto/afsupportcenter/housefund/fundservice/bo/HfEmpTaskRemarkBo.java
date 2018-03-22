@@ -21,6 +21,7 @@ public class HfEmpTaskRemarkBo implements Serializable {
     private Integer taskStatus;
     private String taskStatusName;
     private String modifiedBy;
+    private String modifiedDisplayName;
     private LocalDateTime modifiedTime;
     private String handleRemark;
     private String rejectionRemark;

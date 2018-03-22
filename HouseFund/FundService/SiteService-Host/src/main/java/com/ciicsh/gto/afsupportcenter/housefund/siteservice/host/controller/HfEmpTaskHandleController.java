@@ -16,6 +16,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskCo
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskPeriodConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
@@ -271,6 +272,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                     bo.setTaskCategory(e.getTaskCategory());
                     bo.setTaskStatus(e.getTaskStatus());
                     bo.setModifiedBy(e.getModifiedBy());
+                    bo.setModifiedDisplayName(e.getModifiedDisplayName());
                     bo.setModifiedTime(e.getModifiedTime());
                     bo.setHandleRemark(e.getHandleRemark());
                     bo.setRejectionRemark(e.getRejectionRemark());
@@ -332,7 +334,8 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         hfEmpTask.setEmpTaskId(empTaskId);
         hfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_NOT_HANDLE);
         hfEmpTask.setModifiedTime(LocalDateTime.now());
-        hfEmpTask.setModifiedBy("test"); // TODO current user
+        hfEmpTask.setModifiedBy(UserContext.getUserId());
+        hfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
         if (!business.updateById(hfEmpTask)) {
             return JsonResultKit.ofError("当前任务单数据更新失败");
         }
@@ -376,7 +379,8 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
             hfEmpTask.setEmpTaskId(empTaskId);
             hfEmpTask.setSubmitTime(LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DATE)));
             hfEmpTask.setModifiedTime(LocalDateTime.now());
-            hfEmpTask.setModifiedBy("test"); // TODO current user
+            hfEmpTask.setModifiedBy(UserContext.getUserId());
+            hfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
             if (!business.updateById(hfEmpTask)) {
                 return JsonResultKit.ofError("当前任务单数据更新失败");
             }
@@ -413,7 +417,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         List<Long> empTaskIdList = array.toJavaList(Long.class);
 
         if (CollectionUtils.isNotEmpty(empTaskIdList)) {
-            return business.handleCancel(empTaskIdList, "test"); // TODO currentUser
+            return business.handleCancel(empTaskIdList, UserContext.getUserId());
         } else {
             return JsonResultKit.ofError("提交的雇员任务单ID集合为空");
         }
@@ -482,7 +486,8 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
             }
             return JsonResultKit.of(hfEmpTaskList.get(0));
         } else {
-            hfEmpTaskCreateTransBo.setCreatedBy("test"); // TODO currentUser
+            hfEmpTaskCreateTransBo.setModifiedBy(UserContext.getUserId());
+            hfEmpTaskCreateTransBo.setModifiedDisplayName(UserContext.getUser().getDisplayName());
             int rtn = business.createTransEmpTask(hfEmpTaskCreateTransBo);
             if (rtn == 1) {
                 hfEmpTaskList = business.selectByMap(condition);
