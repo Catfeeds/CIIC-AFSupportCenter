@@ -60,6 +60,10 @@
             <groupId>com.ciicsh.gt1.afsystemmanagecenter</groupId>
             <artifactId>gt1.afsystemmanagecenter.apiservice-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.ciicsh.gt1.logservice</groupId>
+            <artifactId>logservice-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

@@ -10,6 +10,7 @@ import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocia
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.user.UserContext;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpArchiveConstant;
@@ -96,11 +97,39 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             return JsonResultKit.ofError("当前雇员任务单状态已变更，处理失败");
         }
 
+        if (isHandle && hfEmpTask.getIsChange() == HfEmpTaskConstant.IS_CHANGE_YES
+            && hfEmpTask.getProcessCategory() == HfEmpTaskConstant.PROCESS_CATEGORY_ADD) {
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("company_id", hfEmpTask.getCompanyId());
+            condition.put("employee_id", hfEmpTask.getEmployeeId());
+            condition.put("process_category", hfEmpTask.getProcessCategory());
+            condition.put("task_category", hfEmpTask.getTaskCategory());
+            condition.put("hf_type", hfEmpTask.getHfType());
+            condition.put("is_change", HfEmpTaskConstant.IS_CHANGE_NO);
+            condition.put("task_status", HfEmpTaskConstant.TASK_STATUS_HANDLED);
+            condition.put("is_active", hfEmpTask.getActive());
+            List<HfEmpTask> hfEmpTaskList = this.selectByMap(condition);
+
+            if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
+                if (hfEmpTaskList.size() > 1) {
+                    return JsonResultKit.ofError("相同雇员的雇员新增任务单已办理多次，数据不正确");
+                }
+
+                List<Long> empTaskIdList = new ArrayList<>();
+                empTaskIdList.add(hfEmpTaskList.get(0).getEmpTaskId());
+
+                hfMonthChargeService.deleteHfMonthCharges(empTaskIdList);
+                hfArchiveBaseAdjustService.deleteHfArchiveBaseAdjusts(empTaskIdList);
+                hfArchiveBasePeriodService.deleteHfArchiveBasePeriods(empTaskIdList);
+                hfEmpArchiveService.deleteHfEmpArchiveByEmpTaskIds(empTaskIdList);
+            }
+        }
+
         HfEmpTask inputHfEmpTask = new HfEmpTask();
         inputHfEmpTask.setEmpTaskId(empTaskId);
         Integer dictTaskCategory = params.getInteger("dictTaskCategory");
-        int[] categories = EmpTaskCategoryConverter.convertCategoriesFromDict(dictTaskCategory);
-        inputHfEmpTask.setProcessCategory(categories[0]);
+        Integer[] categories = EmpTaskCategoryConverter.convertCategoriesFromDict(dictTaskCategory);
+        inputHfEmpTask.setProcessCategory(hfEmpTask.getProcessCategory());
         inputHfEmpTask.setTaskCategory(categories[1]);
 
         String dicItemCode = DictUtil.DICT_ITEM_ID_FUND_BASIC;
@@ -178,7 +207,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         }
         inputHfEmpTask.setHandleRemark(params.getString("handleRemark"));
         inputHfEmpTask.setRejectionRemark(params.getString("rejectionRemark"));
-        inputHfEmpTask.setModifiedBy("test"); //TODO
+        inputHfEmpTask.setModifiedBy(UserContext.getUser().getDisplayName());
         inputHfEmpTask.setModifiedTime(LocalDateTime.now());
 
         if (isHandle) {
@@ -194,6 +223,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             }
 
             inputHfEmpTask.setHfType(hfEmpTask.getHfType());
+            inputHfEmpTask.setIsChange(hfEmpTask.getIsChange());
             JsonResult rlt = setEmpTask(params, inputHfEmpTask);
             if (rlt.getCode() != 200) {
                 return rlt;
@@ -438,7 +468,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         }
         try {
             Result result = apiCompleteTask(hfEmpTask.getTaskId(),
-                "test"); // TODO currentUser
+                UserContext.getUser().getDisplayName());
         } catch (Exception e) {
             e.printStackTrace(); // TODO log
             throw new BusinessException("访问客服中心的完成任务接口失败");
@@ -468,7 +498,9 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             for (HfEmpTask hfEmpTask : hfEmpTaskList) {
                 if (!hfEmpTask.getActive()) {
                     String taskCategoryName = DictUtil.getInstance().getTextByItemValueAndTypeValue(
-                        String.valueOf(hfEmpTask.getTaskCategory()),
+                        String.valueOf(EmpTaskCategoryConverter.convertDictItemFromCategories(
+                            new Integer[] { hfEmpTask.getProcessCategory(), hfEmpTask.getTaskCategory() }
+                            )),
                         DictUtil.TYPE_VALUE_HF_LOCAL_TASK_CATEGORY,
                         false);
                     return JsonResultKit.ofError(
@@ -481,7 +513,9 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     );
                 } else if (hfEmpTask.getTaskStatus() != HfEmpTaskConstant.TASK_STATUS_HANDLED) {
                     String taskCategoryName = DictUtil.getInstance().getTextByItemValueAndTypeValue(
-                        String.valueOf(hfEmpTask.getTaskCategory()),
+                        String.valueOf(EmpTaskCategoryConverter.convertDictItemFromCategories(
+                            new Integer[] { hfEmpTask.getProcessCategory(), hfEmpTask.getTaskCategory() }
+                        )),
                         DictUtil.TYPE_VALUE_HF_LOCAL_TASK_CATEGORY,
                         false);
                     return JsonResultKit.ofError(
@@ -532,7 +566,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 HfEmpTask updateHfEmpTask = new HfEmpTask();
                 updateHfEmpTask.setEmpTaskId(hfEmpTask.getEmpTaskId());
                 updateHfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_UNHANDLED);
-                updateHfEmpTask.setModifiedBy("test"); // TODO
+                updateHfEmpTask.setModifiedBy(UserContext.getUser().getDisplayName());
                 updateHfEmpTask.setModifiedTime(LocalDateTime.now());
                 updateHfEmpTaskList.add(updateHfEmpTask);
             }
@@ -541,11 +575,11 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 HfMonthChargeBo hfMonthChargeBo = new HfMonthChargeBo();
                 hfMonthChargeBo.setEmpTaskIdList(outEmpTaskIdList);
                 hfMonthChargeBo.setChgPaymentType(HfMonthChargeConstant.PAYMENT_TYPE_NORMAL);
-                hfMonthChargeBo.setModifiedBy("test"); // TODO
+                hfMonthChargeBo.setModifiedBy(UserContext.getUser().getDisplayName());
                 hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
                 HfArchiveBasePeriodUpdateBo hfArchiveBasePeriodUpdateBo = new HfArchiveBasePeriodUpdateBo();
                 hfArchiveBasePeriodUpdateBo.setEmpTaskIdList(outEmpTaskIdList);
-                hfArchiveBasePeriodUpdateBo.setModifiedBy("test"); // TODO
+                hfArchiveBasePeriodUpdateBo.setModifiedBy(UserContext.getUser().getDisplayName());
                 hfArchiveBasePeriodService.updateHfArchiveBasePeriods(hfArchiveBasePeriodUpdateBo);
 
                 if (CollectionUtils.isNotEmpty(adjustEmpArchiveIdList)) {
@@ -570,7 +604,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 
             HfEmpTaskPeriodInactiveBo hfEmpTaskPeriodInactiveBo = new HfEmpTaskPeriodInactiveBo();
             hfEmpTaskPeriodInactiveBo.setEmpTaskIdList(empTaskIdList);
-            hfEmpTaskPeriodInactiveBo.setModifiedBy("test"); //TODO
+            hfEmpTaskPeriodInactiveBo.setModifiedBy(UserContext.getUser().getDisplayName());
             hfEmpTaskPeriodService.inactiveHfEmpTaskPeriods(hfEmpTaskPeriodInactiveBo);
             this.updateBatchById(updateHfEmpTaskList);
         } else {
@@ -1277,7 +1311,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             isNothing = true;
         }
 
-        switch (params.getInteger("taskCategory")) {
+        switch (inputHfEmpTask.getTaskCategory()) {
             case HfEmpTaskConstant.TASK_CATEGORY_IN_ADD:
             case HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN:
             case HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN:
@@ -1310,10 +1344,10 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         }
 
         inputHfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_HANDLED);
-//        inputHfEmpTask.setHandleStatus(2); //
+//        inputHfEmpTask.setHandleStatus(2);
         inputHfEmpTask.setHandleDate(YearMonth.now().format(formatter));
-        inputHfEmpTask.setHandleUserId("test"); // TODO
-        inputHfEmpTask.setHandleUserName("test"); // TODO
+        inputHfEmpTask.setHandleUserId(inputHfEmpTask.getModifiedBy());
+        inputHfEmpTask.setHandleUserName(inputHfEmpTask.getModifiedBy());
 
         return JsonResultKit.of(empArchiveId);
     }
@@ -1335,7 +1369,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         // 办理状态变更
         setEmpArchiveStatus(hfEmpArchive, inputHfEmpTask.getTaskCategory());
 
-        hfEmpArchive.setModifiedBy("test"); // TODO
+        hfEmpArchive.setModifiedBy(inputHfEmpTask.getModifiedBy());
         boolean isNew = false;
 
         if (empArchiveId == null) {
@@ -1351,7 +1385,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             }
 
             hfEmpArchive.setHfEmpAccount(inputHfEmpTask.getHfEmpAccount());
-            hfEmpArchive.setCreatedBy("test"); // TODO
+            hfEmpArchive.setCreatedBy(inputHfEmpTask.getModifiedBy());
             isNew = true;
         } else {
             hfEmpArchive.setEmpArchiveId(empArchiveId);

@@ -34,6 +34,7 @@
         <result column="process_category" property="processCategory" />
         <result column="task_category" property="taskCategory" />
         <result column="task_status" property="taskStatus" />
+        <result column="is_change" property="isChange" />
         <result column="company_id" property="companyId" />
         <result column="company_name" property="companyName" />
         <result column="employee_id" property="employeeId" />
@@ -463,6 +464,7 @@
         het.process_category,
         het.task_category,
         het.task_status,
+        het.is_change,
         sc.company_id,
         sc.title AS company_name,
         hca.com_account_id,
@@ -772,74 +774,96 @@
         INNER JOIN emp_employee emp ON emp.employee_id=eoop.employee_id
         INNER JOIN sal_company com ON com.company_id=eoop.company_id
         INNER JOIN hf_com_account ca ON ca.com_account_id=ea.com_account_id
-        WHERE et.is_active=1 and et.task_category = 9
+        WHERE et.is_active=1 and et.task_category = 8
 
         <if test="empTaskId != null">
-            ANDet.emp_task_id = #{empTaskId}
+            AND et.emp_task_id = #{empTaskId}
         </if>
         <if test="hfType != null">
-            ANDet.hf_type = #{hfType}
+            AND et.hf_type = #{hfType}
         </if>
         <if test="companyId != null">
-            ANDcom.company_id = #{companyId}
+            AND com.company_id = #{companyId}
         </if>
         <if test="title != null">
-            ANDcom.title = #{title}
+            AND com.title = #{title}
         </if>
         <if test="employeeId != null">
-            ANDemp.employee_id = #{employeeId}
+            AND emp.employee_id = #{employeeId}
         </if>
         <if test="employeeName != null">
-            ANDemp.employee_name = #{employeeName}
+            AND emp.employee_name LIKE '%#{employeeName}%'
         </if>
         <if test="idNum != null">
-            ANDemp.id_num = #{idNum}
+            AND emp.id_num = #{idNum}
         </if>
         <if test="status != null">
-            ANDeoop.status = #{status}
+            AND eoop.status = #{status}
         </if>
         <if test="taskStatus != null">
-            ANDet.task_status = #{taskStatus}
+            AND et.task_status = #{taskStatus}
         </if>
         <if test="inDate != null">
-            ANDeoop.in_date = #{inDate}
+            AND eoop.in_date = #{inDate}
         </if>
         <if test="submitTime != null">
-            ANDet.submit_time = #{submitTime}
+            AND et.submit_time = #{submitTime}
         </if>
         <if test="submitterId != null">
-            ANDet.submitter_id = #{submitterId}
+            AND et.submitter_id = #{submitterId}
         </if>
         <if test="transferInUnit != null">
-            ANDet.transfer_in_unit = #{transferInUnit}
+            AND et.transfer_in_unit = #{transferInUnit}
         </if>
         <if test="transferOutUnit != null">
-            ANDet.transfer_out_unit = #{transferOutUnit}
+            AND et.transfer_out_unit = #{transferOutUnit}
         </if>
         <if test="hfEmpAccount != null">
-            ANDea.hf_emp_account = #{hfEmpAccount}
+            AND ea.hf_emp_account = #{hfEmpAccount}
         </if>
         <if test="comAccountId != null">
-            ANDea.com_account_id = #{comAccountId}
+            AND ea.com_account_id = #{comAccountId}
         </if>
         <if test="ssAccountType != null">
-            ANDca.ss_account_type = #{ssAccountType}
+            AND ca.ss_account_type = #{ssAccountType}
         </if>
         <if test="hfEmpAccount != null">
-            ANDea.hf_emp_account = #{hfEmpAccount}
+            AND ea.hf_emp_account = #{hfEmpAccount}
         </if>
         <if test="empArchiveId != null">
-            ANDea.emp_archive_id = #{empArchiveId}
+            AND ea.emp_archive_id = #{empArchiveId}
         </if>
     </select>
 
-    <select id="queryTransferNewTask" resultMap="EmpTaskTransferRM">
+    <select id="queryEmpTaskTransferNewTask" resultMap="EmpTaskTransferRM">
     SELECT
-    com.company_id,com.title,emp.employee_id,emp.employee_name,emp.id_num,eoop.`status`
+    com.company_id,com.title,emp.employee_id,emp.employee_name,emp.id_num,eoop.`status`,eoop.in_date
     from emp_af_emp_company eoop
+		INNER JOIN hf_emp_archive ea ON eoop.company_id=ea.company_id and eoop.employee_id=ea.employee_id
     INNER JOIN emp_employee emp ON emp.employee_id=eoop.employee_id
     INNER JOIN sal_company com ON com.company_id=eoop.company_id
-    WHERE eoop.is_active=1
+    WHERE eoop.is_active=1 and ea.hf_type=1
+
+
+        <if test="companyId != null">
+            AND com.company_id = #{companyId}
+        </if>
+        <if test="title != null">
+            AND com.title = #{title}
+        </if>
+        <if test="employeeId != null">
+            AND emp.employee_id = #{employeeId}
+        </if>
+        <if test="employeeName != null">
+            AND emp.employee_name LIKE '%#{employeeName}%'
+        </if>
+        <if test="idNum != null">
+            AND emp.id_num = #{idNum}
+        </if>
+        <if test="inDate != null">
+            AND eoop.in_date = #{inDate}
+        </if>
+
     </select>
 
 </mapper>
