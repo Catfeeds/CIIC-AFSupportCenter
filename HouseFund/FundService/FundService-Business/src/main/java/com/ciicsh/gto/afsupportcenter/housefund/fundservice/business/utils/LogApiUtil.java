@@ -2,89 +2,85 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils;
 
 import com.ciicsh.gto.logservice.api.LogServiceProxy;
 import com.ciicsh.gto.logservice.api.dto.LogDTO;
+import com.ciicsh.gto.logservice.api.dto.LogLevel;
 import com.ciicsh.gto.logservice.api.dto.LogType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by houwanhua on 2018/3/21.
  */
 @Component
 public class LogApiUtil {
-    private Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
+    private static ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+    @Value("${app.id}")
+    private String appId;
+
+    @Value("${spring.application.name}")
+    private String source;
 
     @Autowired
     LogServiceProxy logService;
 
+    public void info(LogMessage message){
+        execute(LogLevel.INFO,message);
+    }
 
-    private LogDTO setLogDto(String appId,String title,String content,String source,Map<String, String> tags){
+    public void debug(LogMessage message){
+        execute(LogLevel.DEBUG,message);
+    }
+
+    public void warn(LogMessage message){
+        execute(LogLevel.WARN,message);
+    }
+
+    public void error(LogMessage message){
+        execute(LogLevel.ERROR,message);
+    }
+
+    public void fatal(LogMessage message){
+        execute(LogLevel.FATAL,message);
+    }
+
+    private void execute(LogLevel level,LogMessage message){
+        executorService.execute(()->{
+            switch (level){
+                case INFO:
+                    logService.info(setLogDto(message));
+                    break;
+                case DEBUG:
+                    logService.debug(setLogDto(message));
+                    break;
+                case WARN:
+                    logService.warn(setLogDto(message));
+                    break;
+                case ERROR:
+                    logService.error(setLogDto(message));
+                    break;
+                case FATAL:
+                    logService.fatal(setLogDto(message));
+                    break;
+                default:
+                    break;
+            }
+        });
+    }
+
+    private LogDTO setLogDto(LogMessage message){
         LogDTO dto = new LogDTO();
         dto.setAppId(appId);
-        dto.setTitle(title);
-        dto.setContent(content);
+        dto.setTitle(message.getTitle());
+        dto.setContent(message.getContent());
         dto.setSource(source);
         dto.setLogType(LogType.APP);
-        if(null != tags){
-            dto.setTags(tags);
+        if(null != message.getTags()){
+            dto.setTags(message.getTags());
         }
         return dto;
-    }
-
-
-
-    public void debug(String appId,String title,String content,String source){
-        LogDTO dto = setLogDto(appId,title,content,source,null);
-        logService.debug(dto);
-    }
-
-    public void debug(String appId,String title,String content,String source,Map<String, String> tags){
-        LogDTO dto = setLogDto(appId,title,content,source,tags);
-        logService.debug(dto);
-    }
-
-    public void info(String appId,String title,String content,String source){
-        LogDTO dto = setLogDto(appId,title,content,source,null);
-        logService.info(dto);
-    }
-
-    public void info(String appId,String title,String content,String source,Map<String, String> tags){
-        LogDTO dto = setLogDto(appId,title,content,source,tags);
-        logService.info(dto);
-    }
-
-    public void warn(String appId,String title,String content,String source){
-        LogDTO dto = setLogDto(appId,title,content,source,null);
-        logService.warn(dto);
-    }
-
-    public void warn(String appId,String title,String content,String source,Map<String, String> tags){
-        LogDTO dto = setLogDto(appId,title,content,source,tags);
-        logService.warn(dto);
-    }
-
-
-    public void error(String appId,String title,String content,String source){
-        LogDTO dto = setLogDto(appId,title,content,source,null);
-        logService.error(dto);
-    }
-
-    public void error(String appId,String title,String content,String source,Map<String, String> tags){
-        LogDTO dto = setLogDto(appId,title,content,source,tags);
-        logService.error(dto);
-    }
-
-
-    public void fatal(String appId,String title,String content,String source){
-        LogDTO dto = setLogDto(appId,title,content,source,null);
-        logService.fatal(dto);
-    }
-
-    public void fatal(String appId,String title,String content,String source,Map<String, String> tags){
-        LogDTO dto = setLogDto(appId,title,content,source,tags);
-        logService.fatal(dto);
     }
 }

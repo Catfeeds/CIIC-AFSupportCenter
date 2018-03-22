@@ -15,6 +15,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccou
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComTaskService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogMessage;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -62,7 +63,8 @@ public class FundApiController implements FundApiProxy{
     @PostMapping("/saveComTask")
     public JsonResult saveComTask(@RequestBody HfComTaskDTO comTaskDTO) {
         try {
-            log.info(Const.APPID.getKey(),Const.SAVECOMTASK.getKey(), "Request: "+JSON.toJSONString(comTaskDTO),Const.SOURCE.getKey());
+
+            log.info(LogMessage.create().setTitle(Const.SAVECOMTASK.getKey()).setContent("Request: "+JSON.toJSONString(comTaskDTO)));
             if (StringUtils.isBlank(comTaskDTO.getCompanyId())) {
                 return JsonResult.faultMessage("客户Id不能为空！");
             }
@@ -77,11 +79,11 @@ public class FundApiController implements FundApiProxy{
                 HfComTask ssComTask = new HfComTask();
                 BeanUtils.copyProperties(comTaskDTO, ssComTask);
                 Long newComTaskId = addComTask(comTaskDTO);
-                log.info(Const.APPID.getKey(),Const.SAVECOMTASK.getKey(), "Response: " + newComTaskId.toString(),Const.SOURCE.getKey());
+                log.info(LogMessage.create().setTitle(Const.SAVECOMTASK.getKey()).setContent("Response: " + newComTaskId.toString()));
                 return JsonResult.success(newComTaskId);
             }
         } catch (Exception e) {
-            log.error(Const.APPID.getKey(),Const.SAVECOMTASK.getKey(), e.getMessage(),Const.SOURCE.getKey());
+            log.error(LogMessage.create().setTitle(Const.SAVECOMTASK.getKey()).setContent(e.getMessage()));
             return JsonResult.faultMessage("exception: "+e.getMessage());
         }
 
@@ -115,8 +117,7 @@ public class FundApiController implements FundApiProxy{
     @PostMapping("/getAccountList")
     public JsonResult<List<HfComAccountDTO>> getComAccountList(@RequestBody HfComAccountParamDTO paramDto) {
 
-        log.info(Const.APPID.getKey(),Const.GETACCOUNTLIST.getKey(), "Request: "+JSON.toJSONString(paramDto),Const.SOURCE.getKey());
-
+        log.info(LogMessage.create().setTitle(Const.GETACCOUNTLIST.getKey()).setContent("Request: "+JSON.toJSONString(paramDto)));
         ComAccountParamExtBo paramBO = new ComAccountParamExtBo();
         BeanUtils.copyProperties(paramDto,paramBO);
 
@@ -126,7 +127,7 @@ public class FundApiController implements FundApiProxy{
         if(null != ssComAccountList && ssComAccountList.size() > 0){
             accountDTOS = ssComAccountList.stream().map(ApiTranslator::toComAccountDTO).collect(Collectors.toList());
         }
-        log.info(Const.APPID.getKey(),Const.GETACCOUNTLIST.getKey(), "Response: "+JSON.toJSONString(accountDTOS),Const.SOURCE.getKey());
+        log.info(LogMessage.create().setTitle(Const.GETACCOUNTLIST.getKey()).setContent("Response: "+JSON.toJSONString(accountDTOS)));
         return JsonResult.success(accountDTOS);
     }
 
@@ -146,14 +147,15 @@ public class FundApiController implements FundApiProxy{
     public JsonResult<ComAccountExtDTO> getAccountByCompany(@RequestParam("companyId") String companyId, @RequestParam("hfType") Integer hfType) {
 
         String request =  "Request: { companyId :" + companyId + ", hfType : " + hfType + "}";
-        log.info(Const.APPID.getKey(),Const.GETACCOUNTBYCOMPANY.getKey(), request ,Const.SOURCE.getKey());
+        log.info(LogMessage.create().setTitle(Const.GETACCOUNTBYCOMPANY.getKey()).setContent(request));
         AccountInfoBO info = hfComAccountService.getAccountByCompany(companyId,hfType);
         ComAccountExtDTO extDTO = null;
         if(null != info){
             extDTO = new ComAccountExtDTO();
             BeanUtils.copyProperties(info,extDTO);
         }
-        log.info(Const.APPID.getKey(),Const.GETACCOUNTBYCOMPANY.getKey(), "Response: "+JSON.toJSONString(extDTO),Const.SOURCE.getKey());
+
+        log.info(LogMessage.create().setTitle(Const.GETACCOUNTBYCOMPANY.getKey()).setContent("Response: "+JSON.toJSONString(extDTO)));
         return JsonResult.success(extDTO);
     }
 }
