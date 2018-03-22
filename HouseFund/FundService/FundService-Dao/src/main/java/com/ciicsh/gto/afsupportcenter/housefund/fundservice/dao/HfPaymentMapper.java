@@ -32,5 +32,5 @@ public interface HfPaymentMapper extends BaseMapper<HfPayment> {
     List<PayapplyEmployeeProxyDTO> getPaymentEmpList(@Param("paymentId") Long paymentId, @Param("paymentMonth")
         String paymentMonth);
 
-    List<HfPaymentBo> getFundPays(@Param("hfPaymentBo") HfPaymentBo hfPaymentBo);
+    List<HfPaymentBo> getFundPays(HfPaymentBo hfPaymentBo);
 }

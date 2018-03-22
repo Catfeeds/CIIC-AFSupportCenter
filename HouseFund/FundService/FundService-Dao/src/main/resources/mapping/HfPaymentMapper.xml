@@ -71,22 +71,22 @@
         LEFT JOIN hf_payment_state hfps ON hfp.payment_state = hfps.payment_state_code
         LEFT JOIN hf_payment_account_type hfpat ON hfp.hf_account_type = hfpat.account_type_code
         <where>
-            AND hfp.is_active = 1
-            <!--<if test="companyName!= null">-->
-                <!--AND cc.title LIKE CONCAT('%', #{companyName}, '%')-->
-            <!--</if>-->
-            <!--<if test="taskCategory!= null">-->
-                <!--AND hft.task_category = #{taskCategory}-->
-            <!--</if>-->
-            <!--<if test="companyId!= null">-->
-                <!--AND hft.company_id = #{companyId}-->
-            <!--</if>-->
-            <!--<if test="hfTypeName!= null">-->
-                <!--AND ht.hf_type_name = TRIM(#{hfTypeName})-->
-            <!--</if>-->
-            <!--<if test="taskStatusString!= null">-->
-                <!--AND hft.task_status IN (${taskStatusString})-->
-            <!--</if>-->
+            hfp.is_active = 1
+            <if test="paymentBatchNum != null and paymentBatchNum != ''">
+                AND hfp.payment_batch_num = #{paymentBatchNum}
+            </if>
+            <if test="paymentState!= null and paymentState != ''">
+                AND hfp.payment_state = #{paymentState}
+            </if>
+            <if test="hfAccountType!= null and hfAccountType != ''">
+                AND hfp.hf_account_type = #{hfAccountType}
+            </if>
+            <if test="createPaymentUser!= null and createPaymentUser != ''">
+                AND hfp.create_payment_user = TRIM(#{createPaymentUser})
+            </if>
+            <if test="paymentMonth!= null and paymentMonth != ''">
+                AND hfp.payment_month = TRIM(#{paymentMonth})
+            </if>
         </where>
         ORDER BY hfp.payment_id
     </select>

@@ -1,12 +1,15 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfArchiveBaseAdjustMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentAccountBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentAccountMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentAccount;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentAccountService;
+import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
+import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
+import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +30,14 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
 
     @Autowired
     HfPaymentMapper hfPaymentMapper;
+    @Autowired
+    HfPaymentAccountMapper hfPaymentAccountMapper;
+
+    @Override
+    public PageRows<HfPaymentAccountBo> getMakePayLists(PageInfo pageInfo){
+        HfPaymentAccountBo hfPaymentAccountBo = pageInfo.toJavaObject(HfPaymentAccountBo.class);
+        return PageKit.doSelectPage(pageInfo, () -> hfPaymentAccountMapper.getMakePayLists(hfPaymentAccountBo));
+    }
 
     @Override
     @Transactional(rollbackFor = {Exception.class})
