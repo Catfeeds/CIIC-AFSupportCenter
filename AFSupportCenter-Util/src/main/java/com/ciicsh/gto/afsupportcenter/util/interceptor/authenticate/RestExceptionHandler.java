@@ -28,7 +28,7 @@ public class RestExceptionHandler {
     public Object handleAuthException(Exception ex) {
         JsonResult jsonResult = new JsonResult();
         //2
-//        jsonResult.setCode(Global.STRING_TWO);
+        jsonResult.setCode(JsonResult.MsgCode.NO_PERMISSION);
         jsonResult.setMsg(ex.getMessage());
         return jsonResult;
     }

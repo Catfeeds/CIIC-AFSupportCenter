@@ -9,6 +9,7 @@ public class JsonResult<T> {
 
     public enum MsgCode {
         SUCCESS("0", "SUCCESS"),
+        NO_PERMISSION("2", "NO_PERMISSION"),
         REMOTE_INVOCATION_ERROR("300", "远程服务接口调用异常"),
         SERVICE_BUSY("201", "服务器繁忙，请稍后再试！"),
         ILLEGAL_ARGUMENT("400", "非法的请求参数");

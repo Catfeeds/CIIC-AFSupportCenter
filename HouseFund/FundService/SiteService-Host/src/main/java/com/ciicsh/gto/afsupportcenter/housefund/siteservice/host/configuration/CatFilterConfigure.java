@@ -1,8 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.configuration;
 
 
-import com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.interceptor.AuthenticateInterceptor;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.interceptor.CatInterceptor;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.AuthenticateInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
