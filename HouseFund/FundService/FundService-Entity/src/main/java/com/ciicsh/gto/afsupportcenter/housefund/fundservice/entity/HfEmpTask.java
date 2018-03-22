@@ -301,35 +301,37 @@ public class HfEmpTask implements Serializable {
 	@TableField("modified_time")
 	private LocalDateTime modifiedTime;
     /**
-     * 创建者ID
+     * 创建者登录名
      */
 	@TableField("created_by")
 	private String createdBy;
     /**
-     * 创建者登录名
+     * 创建者姓名
      */
-	@TableField("created_display_name")
-	private String createdDisplayName;
+    @TableField("created_display_name")
+    private String createdDisplayName;
     /**
      * 修改者ID
      */
-	@TableField("modified_by")
-	private String modifiedBy;
+    @TableField("modified_by")
+    private String modifiedBy;
     /**
-     * 修改者登录名
+     * 修改者姓名
      */
-	@TableField("modified_display_name")
+    @TableField("modified_display_name")
     private String modifiedDisplayName;
     /**
-     *
+     * 领导ID
      */
-	@TableField("leader_ship_id")
-	private String leaderShipId;
+    @TableField("leader_ship_id")
+    private String leaderShipId;
     /**
-     *
+     * 领导姓名
      */
     @TableField("leader_ship_name")
-	private String leaderShipName;
+    private String leaderShipName;
+
+
 
 	public Long getEmpTaskId() {
 		return empTaskId;
@@ -795,7 +797,7 @@ public class HfEmpTask implements Serializable {
         this.leaderShipName = leaderShipName;
     }
 
-    @Override
+	@Override
 	public String toString() {
 		return "HfEmpTask{" +
 			", empTaskId=" + empTaskId +
@@ -850,9 +852,9 @@ public class HfEmpTask implements Serializable {
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +
-			", createdBy=" + createdBy +
-			", modifiedBy=" + modifiedBy +
+            ", createdBy=" + createdBy +
             ", createdDisplayName=" + createdDisplayName +
+            ", modifiedBy=" + modifiedBy +
             ", modifiedDisplayName=" + modifiedDisplayName +
             ", leaderShipId=" + leaderShipId +
             ", leaderShipName=" + leaderShipName +
