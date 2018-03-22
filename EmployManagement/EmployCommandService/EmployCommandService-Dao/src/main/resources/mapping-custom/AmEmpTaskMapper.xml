@@ -250,4 +250,17 @@
         </foreach>
     </select>
 
+    <select id="querySocial" resultMap="BaseResultMapDTO">
+        select ca.ss_account,ca.com_account_name,ca.modified_time as accountRepairDate,ca.ss_pwd
+        FROM ss_com_account ca
+        LEFT JOIN ss_account_com_relation acr on acr.com_account_id=ca.com_account_id
+        where 1=1
+        <if test="companyId!=null">
+            and  acr.company_id=#{companyId}
+        </if>
+        <if test="templateType!=null">
+            and  ca.ss_account_type=#{templateType}
+        </if>
+    </select>
+
 </mapper>

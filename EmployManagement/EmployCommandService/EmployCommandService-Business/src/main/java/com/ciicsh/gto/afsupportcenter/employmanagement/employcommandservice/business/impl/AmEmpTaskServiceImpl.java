@@ -3,8 +3,10 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bus
 import com.alibaba.fastjson.JSON;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.*;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmCompanySetBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmTaskParamBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmCompanySetService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpMaterialService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.ReasonUtil;
@@ -53,6 +55,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Autowired
     AfEmployeeCompanyProxy afEmployeeCompanyProxy;
+
+    @Autowired
+    private  IAmCompanySetService  iAmCompanySetService;
 
 
 
@@ -306,6 +311,22 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         {
             employeeBO.setTemplateType(ReasonUtil.getYgsx(afEmployeeCompanyDTO.getTemplateType()==null?"":afEmployeeCompanyDTO.getTemplateType().toString()));
             employeeBO.setPosition(afEmployeeCompanyDTO.getPosition());
+
+            Map<String,Object> param0 = new HashMap<>();
+            if(afEmployeeCompanyDTO.getTemplateType()==2){
+                param0.put("companyId",param.getCompanyId());
+            }else {
+                param0.put("templateType",afEmployeeCompanyDTO.getTemplateType());
+            }
+            List<AmEmpTaskBO> list = baseMapper.querySocial(param0);
+
+            if(list!=null&&list.size()>0)
+            {
+                employeeBO.setSsAccount(list.get(0).getSsAccount());
+                employeeBO.setComAccountName(list.get(0).getComAccountName());
+                employeeBO.setAccountRepairDate(list.get(0).getAccountRepairDate());
+                employeeBO.setSsPwd(list.get(0).getSsPwd());
+            }
         }
 
         EmployeeQueryDTO var1 = new EmployeeQueryDTO();
@@ -469,6 +490,21 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         {
             amEmpTaskBO.setHandleType("非全日制");
             amEmpTaskBO.setArchivePlace("非全日制");
+        }
+
+        if("上海".equals(amEmpTaskBO.getEmployeeNature())&&"户口所在地".equals(amEmpTaskBO.getArchiveDirection()))
+        {
+            AmCompanySetBO amCompanySetBO = new AmCompanySetBO();
+            amCompanySetBO.setCompanyId(amEmpTaskBO.getCompanyId());
+            AmCompanySetBO amCompanySetBO1 = iAmCompanySetService.queryAmCompanySet(amCompanySetBO);
+
+            if(amCompanySetBO1.getCompanySpecial8()!=null&&amCompanySetBO1.getCompanySpecial8()==1){
+                amEmpTaskBO.setHandleType("调档");
+            }else {
+                amEmpTaskBO.setHandleType("属地管理");
+                amEmpTaskBO.setArchivePlace("属地管理");
+            }
+
         }
 
         return  amEmpTaskBO;
