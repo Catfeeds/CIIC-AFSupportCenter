@@ -613,7 +613,7 @@
     </select>
 
     <!--通过businessInterfaceId等条件查询任务单-->
-    <select id="queryByBusinessInterfaceId" resultMap="BaseResultMap">
+    <select id="queryByBusinessInterfaceId" resultType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO">
         SELECT
         et.emp_task_id,
         et.customer_id,
