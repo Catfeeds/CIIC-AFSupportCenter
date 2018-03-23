@@ -1,7 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentAccountBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentAccount;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -10,6 +12,7 @@ import java.util.List;
  * 公积金汇缴支付公司账户名单 Mapper 接口
  * </p>
  */
+@Repository
 public interface HfPaymentAccountMapper extends BaseMapper<HfPaymentAccount> {
 
     /**
@@ -21,5 +24,15 @@ public interface HfPaymentAccountMapper extends BaseMapper<HfPaymentAccount> {
      * @return   List<SsPaymentCom>
      */
     List<HfPaymentAccount> getByPaymentId(Integer paymentId);
+
+    /**
+     * <p>Description: 获得公积金汇缴支付列表</p>
+     *
+     * @author sj
+     * @date 2018-03-20
+     * @param hfPaymentAccountBo UI制作汇缴名单
+     * @return   List<HfPaymentAccountBo>
+     */
+    List<HfPaymentAccountBo> getMakePayLists(HfPaymentAccountBo hfPaymentAccountBo);
 
 }
