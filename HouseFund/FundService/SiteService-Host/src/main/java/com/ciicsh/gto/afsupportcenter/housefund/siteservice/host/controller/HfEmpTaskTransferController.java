@@ -1,13 +1,14 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFMonthChargeQueryBO;
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
+import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTaskTransferBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.HfEmpTaskHandleVo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.EmpEmployeeService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskHandleService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskTransferService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.util.PdfUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
@@ -21,10 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -134,5 +131,47 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
     public JsonResult notHandleTransfer(@RequestBody EmpTaskTransferBo empTaskTransferBo){
         return business.notHandleTransfer(empTaskTransferBo);
 
+    }
+
+    /**
+     * 雇员公积金转移清册导出
+     *
+     * @param pageInfo
+     * @return
+     */
+    @RequestMapping("/exportEmpTaskTransfer")
+    @Log("雇员公积金转移清册导出")
+    public void exportEmpTaskTransfer(HttpServletResponse response, PageInfo pageInfo) throws Exception {
+        pageInfo.setPageSize(10000);
+        pageInfo.setPageNum(0);
+        PageRows<EmpTaskTransferBo> result = business.queryEmpTaskTransferPage(pageInfo);
+        long total = result.getTotal();
+        ExportParams exportParams = new ExportParams();
+        exportParams.setType(ExcelType.XSSF);
+        exportParams.setSheetName("雇员公积金任务信息");
+        Workbook workbook;
+
+        if (total <= pageInfo.getPageSize()) {
+            workbook = ExcelExportUtil.exportExcel(exportParams, EmpTaskTransferBo.class, result.getRows());
+        } else {
+            workbook = ExcelExportUtil.exportBigExcel(exportParams, EmpTaskTransferBo.class, result.getRows());
+            int pageNum = (int) Math.ceil(total / pageInfo.getPageSize());
+            for(int i = 1; i < pageNum; i++) {
+                pageInfo.setPageNum(i);
+                result = business.queryEmpTaskTransferPage(pageInfo);
+                workbook = ExcelExportUtil.exportBigExcel(exportParams, EmpTaskTransferBo.class, result.getRows());
+            }
+            ExcelExportUtil.closeExportBigExcel();
+        }
+        String fileName = URLEncoder.encode("雇员公积金转移清册.xlsx", "UTF-8");
+
+        response.reset();
+        response.setCharacterEncoding("UTF-8");
+//            response.setHeader("content-Type", "application/vnd.ms-excel");
+        response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition",
+            "attachment;filename=" + fileName);
+        workbook.write(response.getOutputStream());
+        workbook.close();
     }
 }
