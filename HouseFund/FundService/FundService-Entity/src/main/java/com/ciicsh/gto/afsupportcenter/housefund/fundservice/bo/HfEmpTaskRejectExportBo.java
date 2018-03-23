@@ -8,10 +8,13 @@ import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @ExcelTarget("hfEmpTaskReject")
 public class HfEmpTaskRejectExportBo implements Serializable{
     private static final long serialVersionUID = 1L;
+
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 
     private Long empTaskId;
 
@@ -42,15 +45,17 @@ public class HfEmpTaskRejectExportBo implements Serializable{
     private String isChangeName;
     @Excel(name = "发起人", orderNum = "9",  width = 20)
     private String submitterId;
-    @Excel(name = "发起时间", orderNum = "10",  width = 20)
     private LocalDateTime submitTime;
+    @Excel(name = "发起时间", orderNum = "10",  width = 20)
+    private String submitTimeFormat;
     private Integer taskStatus;
     private String taskId;
     private String modifiedBy;
     @Excel(name = "批退人", orderNum = "11",  width = 20)
     private String modifiedDisplayName;
-    @Excel(name = "批退时间", orderNum = "12",  width = 20)
     private LocalDateTime modifiedTime;
+    @Excel(name = "批退时间", orderNum = "12",  width = 20)
+    private String modifiedTimeFormat;
     @Excel(name = "批退备注", orderNum = "13",  width = 30)
     private String rejectionRemark;
 
@@ -265,5 +270,27 @@ public class HfEmpTaskRejectExportBo implements Serializable{
 
     public void setModifiedDisplayName(String modifiedDisplayName) {
         this.modifiedDisplayName = modifiedDisplayName;
+    }
+
+    public String getSubmitTimeFormat() {
+        if (this.submitTime != null) {
+            return this.submitTime.format(formatter);
+        }
+        return submitTimeFormat;
+    }
+
+    public void setSubmitTimeFormat(String submitTimeFormat) {
+        this.submitTimeFormat = submitTimeFormat;
+    }
+
+    public String getModifiedTimeFormat() {
+        if (this.modifiedTime != null) {
+            return this.modifiedTime.format(formatter);
+        }
+        return modifiedTimeFormat;
+    }
+
+    public void setModifiedTimeFormat(String modifiedTimeFormat) {
+        this.modifiedTimeFormat = modifiedTimeFormat;
     }
 }

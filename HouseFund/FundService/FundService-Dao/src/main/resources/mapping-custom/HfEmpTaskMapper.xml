@@ -99,7 +99,7 @@
         het.submit_time,
         het.task_id,
         het.modified_by,
-        het.mpdified_display_name,
+        het.modified_display_name,
         het.modified_time,
         het.rejection_remark
         FROM hf_emp_task het
