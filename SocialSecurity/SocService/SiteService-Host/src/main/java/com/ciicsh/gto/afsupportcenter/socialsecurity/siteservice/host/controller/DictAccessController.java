@@ -3,10 +3,13 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controlle
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,8 +22,15 @@ import java.util.Map;
 @RequestMapping("/api/soccommandservice/DictAccess")
 public class DictAccessController extends BasicController<CommonApiUtils> {
 
+    @Autowired
+    LogService logService;
+
     @PostConstruct
     private void dictInit() {
+        initDictUtil();
+    }
+
+    private void initDictUtil() {
         List<DicItemDTO> dictItemList;
         try {
             dictItemList = business.listByDicId(DictUtil.DICT_ID_SOCIAL_SECURITY_ACCOUNT_TYPE);
@@ -38,13 +48,20 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
             dictItemList.stream().forEach((d) -> employeeClassifyMap.put(d.getDicItemValue(), d.getDicItemText()));
             DictUtil.getInstance().putDictByTypeValue(DictUtil.TYPE_VALUE_SOCIAL_SECURITY_EMPLOYEE_CLASSIFY, employeeClassifyMap, false);
         } catch (Exception e) {
-            e.printStackTrace();
+            LogContext logContext = LogContext.of().setTitle("上海社保字典项及常量项")
+                .setTextContent("加载字典项（访问字典公共接口）或常量项失败")
+                .setExceptionContent(e);
+            logService.error(logContext);
         }
     }
 
     @RequestMapping("/getDictData")
     @Log("获取本页面需要使用的字典数据")
     public JsonResult<Map<String, List<?>>> getDictData() {
-        return JsonResultKit.of(DictUtil.getInstance().getDictItemList());
+        Map<String, List<?>> map = DictUtil.getInstance().getDictItemList();
+        if (map.size() == 0) {
+            initDictUtil();
+        }
+        return JsonResultKit.of(map);
     }
 }
