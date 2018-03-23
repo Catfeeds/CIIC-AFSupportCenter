@@ -80,7 +80,7 @@
         where mc.is_active=1
         and mc.emp_payment_status = 0
         and mc.ss_month=#{ssMonth}
-        AND EXISTS (select 1 from ss_emp_archive ea INNER JOIN ss_payment_com pc ON pc.company_id=ea.company_id WHERE pc.payment_com_id=#{paymentComId})
+        AND EXISTS (select 1 from ss_payment_com pc where pc.com_account_id=mc.com_account_id and pc.payment_com_id=#{paymentComId})
         and com_account_id=#{comAccountId}
     </select>
 
