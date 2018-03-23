@@ -8,6 +8,7 @@
         <result column="month_emp_change_id" property="monthEmpChangeId" />
         <result column="employee_id" property="employeeId" />
         <result column="employee_name" property="employeeName" />
+        <result column="ss_serial" property="ssSerial" />
         <result column="change_type" property="changeType" />
         <result column="change_type_name" property="changeTypeName" />
         <result column="base_amount" property="baseAmount" />
@@ -85,20 +86,22 @@
             T1.employee_id,T1.change_type,T1.ss_type
     </select>
 
-    <select id="serachMonthEmpChangeDetailPOByStatementId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <select id="serachMonthEmpChangeDetailPOByStatementId" parameterType="java.lang.Long" resultMap="DtoResultMap">
         SELECT
-          T1.*
+            mecd.*,ea.ss_serial
         FROM
-          ss_month_emp_change_detail T1
-          INNER JOIN
-            ss_month_emp_change T2
-          ON
-            T2.month_emp_change_id = T1.month_emp_change_id
-          AND T2.is_active = '1'
-          AND T1.month_emp_change_id = #{monthEmpChangeId,jdbcType=BIGINT}
+            ss_month_emp_change_detail mecd
+            INNER JOIN
+            ss_month_emp_change mec
+                ON mec.month_emp_change_id = mecd.month_emp_change_id
+            INNER JOIN
+            ss_emp_archive ea
+                ON
+                    ea.employee_id = mecd.employee_id
+                    AND ea.com_account_id = mec.com_account_id
         WHERE
-          1=1
-          AND T1.is_active = '1'
+            mecd.is_active = 1
+            AND mec.statement_id = #{statementId,jdbcType=BIGINT}
     </select>
 
     <select id="yysExportQuery" resultMap="YYSExportMap">

@@ -50,4 +50,12 @@ public interface SsEmpArchiveService extends IService<SsEmpArchive> {
 
     public SsEmpArchiveBO queryEmployeeIsnewOrChangeInto(String empTaskId);
 
+    /**
+     * 检查社保序号重复
+     * @param comAccountId
+     * @param employeeId
+     * @param empSsSerial
+     * @return true:验证成功
+     */
+    boolean checkSerial( Long comAccountId,String employeeId,String empSsSerial);
 }

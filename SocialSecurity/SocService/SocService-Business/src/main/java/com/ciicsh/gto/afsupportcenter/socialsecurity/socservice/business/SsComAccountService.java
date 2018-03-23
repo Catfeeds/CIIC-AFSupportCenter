@@ -76,4 +76,21 @@ public interface SsComAccountService extends IService<SsComAccount> {
     boolean addBankAccount(@RequestBody Map<String, Object> map) throws Exception;
 
     Integer isExistAccountInfo(String companyId);
+
+
+    /**
+     * 社保序号增1
+     *
+     * @param comAccountId
+     * @return
+     */
+    void addSerial(Integer comAccountId);
+
+    /**
+     * 根据社保账号获得社保序号
+     *
+     * @param comAccountId
+     * @return
+     */
+    Integer getSerialByComAccountId(Integer comAccountId);
 }

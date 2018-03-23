@@ -117,25 +117,32 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             List<SsEmpTaskPeriod> periods = ssEmpTaskPeriodService.queryByEmpTaskId(empTaskId);
             dto.setEmpTaskPeriods(periods);
         }
-        //表示新进和转入 需要社保序号 并且任务单为 初始状态
-        if(isNeedSerial==1 && dto.getTaskStatus()==1){
-            String ssSerial = business.selectMaxSsSerialByTaskId(empTaskId);
-            dto.setEmpSsSerial(ssSerial);
-         }
+//        //表示新进和转入 需要社保序号 并且任务单为 初始状态
+//        if(isNeedSerial==1 && dto.getTaskStatus()==1){
+//            String ssSerial = business.selectMaxSsSerialByTaskId(empTaskId);
+//            dto.setEmpSsSerial(ssSerial);
+//         }
              //任务单参考信息 用退工
              AmEmpTaskDTO amEmpTaskDTO = amEmpTaskOfSsService.queryReworkInfo(empTaskId);
-             dto.setAmEmpTaskDTO(null==amEmpTaskDTO?new AmEmpTaskDTO():amEmpTaskDTO);
+        if(amEmpTaskDTO==null){
+            amEmpTaskDTO=new AmEmpTaskDTO();
+            amEmpTaskDTO.setTaskStatus(1);//设置默认状态
+        }
+             dto.setAmEmpTaskDTO(amEmpTaskDTO);
 
         //查询该雇员是否还有其他已办理或者未办理的任务
        EntityWrapper<SsEmpTask> ew =  new EntityWrapper<SsEmpTask>();
         ew.where("employee_id={0}",dto.getEmployeeId())
-            .and("task_category={0}",dto.getTaskCategory())
-            .and("is_active=1").and("emp_task_id!={0}",dto.getEmpTaskId()).and("task_status=1");
+           // .and("task_category={0}",dto.getTaskCategory())
+            .and("is_active=1")
+            .and("emp_task_id!={0}",dto.getEmpTaskId())
+            .and("task_status=1")
+            .orderBy("created_time",true);
         List<SsEmpTask> ssEmpTaskList = business.selectList(ew);
         if(ssEmpTaskList.size()>0){
-            dto.setIsHaveSameTask(1);
+            dto.setTheSameTask(ssEmpTaskList);
         }else{
-            dto.setIsHaveSameTask(0);
+            dto.setTheSameTask(new ArrayList());
         }
         return JsonResultKit.of(dto);
     }
@@ -153,6 +160,15 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         return JsonResultKit.of(result);
     }
 
+    /**
+     * 获得社保序号
+     */
+    @Log("获得社保序号")
+    @PostMapping("/getSerial")
+    public JsonResult<Integer> getSerial(Integer comAccountId) {
+        Integer ssSerial =  business.getSerial(comAccountId);
+        return JsonResultKit.of(ssSerial);
+    }
 
     /**
      * 特殊任务查询
@@ -212,7 +228,13 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         List<SsEmpTaskBO> result =business.queryBatchEmpArchiveByEmpTaskIds(ssEmpTaskBO);
         return JsonResultKit.of(result);
     }
-    @Log("查询批量任务信息")
+    @Log("通过条件查询批量任务信息")
+    @RequestMapping("/queryBatchTaskByCondition")
+    public JsonResult<Object> queryBatchTaskByCondition(@RequestBody SsEmpTaskBO ssEmpTaskBO){
+        List<SsEmpTaskBO> result =business.queryBatchTaskByCondition(ssEmpTaskBO);
+        return JsonResultKit.of(result);
+    }
+    @Log("批量任务办理")
     @RequestMapping("/handleBatchTask")
     public JsonResult<Object> handleBatchTask(@RequestBody EmpTaskBatchParameter empTaskBatchParameter){
         Assert.notNull(empTaskBatchParameter,"参数异常");

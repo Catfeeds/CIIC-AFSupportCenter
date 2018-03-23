@@ -2,10 +2,12 @@ package com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
+import com.ciicsh.gto.adsupportcenter.employcommandservice.host.messageBus.KafkaSender;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.CommonApiUtils;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.ReasonUtil;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.employSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
@@ -16,6 +18,8 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -51,6 +55,10 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     @Autowired
     private CommonApiUtils employeeInfoProxy;
 
+    @Autowired
+    private KafkaSender sender;
+
+
 
     /**
      *用工资料任务单查询
@@ -82,6 +90,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         List<AmEmpTaskCountBO>  temp = new ArrayList<>();
         amEmpTaskCountBO.setAmount(list.size());
         int num =0;
+        int otherNum=0;
         for(int i=0;i<list.size();i++)
         {
             AmEmpTaskBO amEmpTaskBO = list.get(i);
@@ -102,7 +111,8 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                 amEmpTaskCountBO.setEmployCancel(amEmpTaskBO.getCount());
                 num = num + amEmpTaskBO.getCount();
             }else{
-                amEmpTaskCountBO.setOther(amEmpTaskBO.getCount());
+                otherNum = otherNum+amEmpTaskBO.getCount();
+                amEmpTaskCountBO.setOther(otherNum);
                 num = num + amEmpTaskBO.getCount();
             }
             amEmpTaskCountBO.setAmount(num);
@@ -141,6 +151,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         params.put("employeeId",amTaskParamBO.getEmployeeId());
         params.put("remarkType",amTaskParamBO.getRemarkType());
         params.put("companyId",amTaskParamBO.getCompanyId());
+        params.put("operateType",new Integer(1));
         pageInfo.setParams(params);
 
         //用工材料
@@ -154,17 +165,25 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         //用工信息
         List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(param);
         //用工档案
-        List<AmArchiveBO> amArchiveBOList = null;
-
+        AmArchiveBO amArchiveBO = null;
         if(null!=resultEmployList&&resultEmployList.size()>0)
         {
             params.put("employmentId",resultEmployList.get(0).getEmploymentId());
-            amArchiveBOList = amArchiveService.queryAmArchiveList(params);
+            List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchiveList(params);
+            if(null!=amArchiveBOList&&amArchiveBOList.size()>0)
+            {
+                amArchiveBO = amArchiveBOList.get(0);
+                if(!StringUtil.isEmpty(amArchiveBO.getEmployFeedback()))
+                {
+                   if(!"7".equals(amArchiveBO.getEmployFeedback())){
+                       amArchiveBO.setIsEnd(0);
+                   }
+                }
+            }
         }
 
         //用工备注
         PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);
-
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
@@ -175,19 +194,19 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         resultMap.put("materialList",empMaterialList);
 
+        if(null!=amArchiveBO){
+            resultMap.put("amArchaiveBo",amArchiveBO);
+        }
+
         if(null!= resultEmployList&&resultEmployList.size()>0)
         {
             resultMap.put("amEmploymentBO",resultEmployList.get(0));
         }
-        if(null!=amArchiveBOList&&amArchiveBOList.size()>0)
-        {
-            resultMap.put("amArchaiveBo",amArchiveBOList.get(0));
-        }
+
         if(null!=amRemarkBOPageRows)
         {
             resultMap.put("amRemarkBo",amRemarkBOPageRows);
         }
-
 
         return JsonResultKit.of(resultMap);
 
@@ -221,7 +240,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @Log("保存用工档案")
     @RequestMapping("/saveAmArchive")
-    public  JsonResult<Boolean>  saveAmArchive(AmArchive entity){
+    public  JsonResult<Boolean>  saveAmArchive(AmArchiveBO amArchiveBO){
+        AmArchive entity = new AmArchive();
+        BeanUtils.copyProperties(amArchiveBO,entity);
         LocalDateTime now = LocalDateTime.now();
         if(entity.getArchiveId()==null){
             entity.setCreatedTime(now);
@@ -233,14 +254,40 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             entity.setModifiedTime(now);
             entity.setModifiedBy("sys");
         }
+        AmEmpTask amEmpTask = null;
         if(!StringUtil.isEmpty(entity.getEmployFeedback())){
             AmEmployment amEmployment = amEmploymentService.selectById(entity.getEmploymentId());
-            AmEmpTask amEmpTask = business.selectById(amEmployment.getEmpTaskId());
+            amEmpTask = business.selectById(amEmployment.getEmpTaskId());
             amEmpTask.setTaskStatus(Integer.parseInt(entity.getEmployFeedback()));
             business.insertOrUpdate(amEmpTask);
         }
 
         boolean result = amArchiveService.insertOrUpdate(entity);
+        if("0".equals(amArchiveBO.getIsFrist()))
+        {//如果满足在用工办理页面提交
+            if(result&&!StringUtil.isEmpty(entity.getEmployFeedback()))
+            {
+                /**
+                 * u盘外借 不会调用complateTask,只发kafaka消息
+                 */
+                if("7".equals(entity.getEmployFeedback()))
+                {
+                    TaskRequestDTO message = new TaskRequestDTO();
+                    message.setAssignee("system");
+                    message.setTaskId(amEmpTask.getTaskId());
+                    Map<String,Object> variables = new HashMap<>();
+                    variables.put("remark","Ukey外借");
+                    sender.sendSocReportMsg(message);
+                }else{
+                    Map<String,Object> variables = new HashMap<>();
+                    variables.put("status", ReasonUtil.getYgResult(entity.getEmployFeedback()));
+                    variables.put("remark",ReasonUtil.getYgfk(entity.getEmployFeedback()));
+                    variables.put("assignee","system");
+                    TaskCommonUtils.completeTask(amEmpTask.getTaskId(),employeeInfoProxy,variables);
+                }
+            }
+        }
+
         return JsonResultKit.of(result);
     }
 
@@ -343,6 +390,12 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         List<employSearchExportOpt> opts = business.queryAmEmpTaskList(amEmpTaskBO);
 
         ExcelUtil.exportExcel(opts,employSearchExportOpt.class,fileNme,response);
+    }
+
+    @RequestMapping("/getDefualtEmployBO")
+    public  JsonResult<AmEmpTaskBO>  getDefualtEmployBO(AmEmpTaskBO amEmpTaskBO){
+        AmEmpTaskBO amEmpTaskBO1 = business.getDefualtEmployBO(amEmpTaskBO);
+        return JsonResultKit.of(amEmpTaskBO1);
     }
 
 

@@ -32,7 +32,7 @@ public class MessageReceiver {
     public void receive(SocReportMessage message){
         logger.info("开始，当前时间：" + dateFormat.format(new Date()));
         logger.info("received from comAccountId : " + message.getComAccountId()+", received from ssMonth: " + message.getSsMonth());
-        String key = "-com-account-"+message.getComAccountId()+"-"+message.getSsMonth()+"-"+message.getGeneralMethod();
+        String key = "-com-account-"+message.getComAccountId()+"-"+message.getSsMonth()+"-"+message.getGeneralMethod()+"-";
         try {
             switch (message.getGeneralMethod()){
                case "generateSocPaymentInfo":

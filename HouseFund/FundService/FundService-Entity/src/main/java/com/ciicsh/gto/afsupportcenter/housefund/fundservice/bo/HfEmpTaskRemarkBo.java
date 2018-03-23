@@ -15,11 +15,13 @@ public class HfEmpTaskRemarkBo implements Serializable {
     private Long empTaskId;
     private Integer hfType;
     private String hfTypeName;
+    private Integer processCategory;
     private Integer taskCategory;
     private String taskCategoryName;
     private Integer taskStatus;
     private String taskStatusName;
     private String modifiedBy;
+    private String modifiedDisplayName;
     private LocalDateTime modifiedTime;
     private String handleRemark;
     private String rejectionRemark;

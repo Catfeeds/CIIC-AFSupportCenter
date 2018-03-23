@@ -55,6 +55,8 @@ public interface SsEmpTaskMapper extends BaseMapper<SsEmpTask> {
 
     List<SsEmpTaskBO> queryBatchEmpArchiveByEmpTaskIds(SsEmpTaskBO ssEmpTaskBO);
 
+    List<SsEmpTaskBO> queryBatchTaskByCondition(SsEmpTaskBO ssEmpTaskBO);
+
     List<SsEmpTaskBO> queryByTaskId(SsEmpTaskBO ssEmpTaskBO);
 
     List<SsEmpTaskBO> queryByBusinessInterfaceId(SsEmpTaskBO ssEmpTaskBO);
@@ -66,4 +68,5 @@ public interface SsEmpTaskMapper extends BaseMapper<SsEmpTask> {
     SsEmpTaskBO selectIdNumByEmployeeId(@Param("employeeId") String employeeId);
 
     List<Map<String,BigDecimal>> fetchInjuryRatio(@Param("empArchiveId")Long empArchiveId, @Param("startMonth")String startMonth);
+
 }

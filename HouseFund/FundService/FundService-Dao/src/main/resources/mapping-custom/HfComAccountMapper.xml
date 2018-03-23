@@ -25,6 +25,8 @@
         <result column="com_start_month" property="comStartMonth" />
         <result column="end_month" property="endMonth" />
         <result column="end_type" property="endType" />
+        <result column="account_temp_store" property="accountTempStore" />
+        <result column="com_hf_month" property="comHfMonth" />
     </resultMap>
 
     <resultMap id="ComFundAccountMap"
@@ -43,6 +45,7 @@
         <result column="com_account" jdbcType="VARCHAR" property="comAccount"/>
         <result column="pay_start_month" jdbcType="VARCHAR" property="payStartMonth"/>
         <result column="pay_end_month" jdbcType="VARCHAR" property="payEndMonth"/>
+        <result column="com_hf_month" jdbcType="VARCHAR" property="comHfMonth"/>
         <result column="account_temp_store" jdbcType="TINYINT" property="accountTempStore"/>
     </resultMap>
 
@@ -80,12 +83,15 @@
         <result column="com_account_name" property="comAccountName" />
         <result column="hf_com_account" property="hfComAccount" />
         <result column="hf_type" property="hfType" />
+        <result column="state" property="state" />
+
     </resultMap>
 
     <resultMap id="AccountNameMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountNamePO">
         <result column="com_account_id" property="comAccountId" />
         <result column="com_account_name" property="comAccountName" />
         <result column="hf_account_type" property="hfAccountType" />
+        <result column="hf_com_account" property="hfComAccount"/>
     </resultMap>
 
     <select id="getHfComAccountList" resultMap="ComAccountExtMap">
@@ -97,6 +103,8 @@
             class.hf_com_account,
             class.com_start_month,
             class.end_month,
+            class.com_hf_month,
+            class.account_temp_store,
             class.end_type
         FROM
           hf_com_account ca
@@ -113,6 +121,9 @@
             </if>
             <if test="hfAccountType != null">
                 AND ca.hf_account_type= #{hfAccountType}
+            </if>
+            <if test="hfType != null">
+                AND class.hf_type= #{hfType}
             </if>
         </where>
     </select>
@@ -133,7 +144,8 @@
         a.hf_com_account com_account,
         a.com_start_month pay_start_month,
         a.end_month pay_end_month,
-        a.account_temp_store
+        a.account_temp_store,
+        a.com_hf_month
         FROM
         hf_com_account_class a
         INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
@@ -154,7 +166,7 @@
         <if test="hfType != null and hfType != 0">
             AND a.hf_type = #{hfType}
         </if>
-        <if test="accountNumber != null and accountNumber != '' and accountType==2">
+        <if test="accountNumber != null and accountNumber != ''">
             AND a.hf_com_account = #{accountNumber}
         </if>
     </select>
@@ -163,11 +175,13 @@
         SELECT
         b.com_account_name,
         a.hf_com_account,
-        a.hf_type
+        a.hf_type,
+        b.state
         FROM
         hf_com_account_class a
         INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
         <where>
+            AND b.is_active=1
             <if test="comAccountName != null and comAccountName != ''">
                 AND b.com_account_name LIKE CONCAT('%', #{comAccountName}, '%')
             </if>
@@ -182,10 +196,12 @@
         SELECT
         a.com_account_id,
         a.com_account_name,
-        a.hf_account_type
+        a.hf_account_type,
+        b.hf_com_account
         FROM
-        hf_com_account a
+        hf_com_account a LEFT JOIN hf_com_account_class b ON a.com_account_id=b.com_account_id
         <where>
+            AND a.state=1 AND a.is_active=1 AND b.hf_type=#{hfType}
             <if test="comAccountName != null and comAccountName != ''">
                 AND a.com_account_name LIKE CONCAT('%', #{comAccountName}, '%')
             </if>
@@ -263,32 +279,47 @@
 
     <select id="queryHfComAccountList" resultMap="ComAccountExtMap">
         SELECT
-            ca.com_account_id,
-            ca.com_account_name,
-            ca.payment_way,
-            ca.hf_account_type,
-            ca.close_day,
-            ca.ukey_store,
-            ca.payment_bank,
-            ca.remark,
-            ca.state,
-            ca.created_time,
-            ca.modified_time,
-            ca.created_by,
-            ca.modified_by
+            hca.com_account_id,
+            hca.com_account_name,
+            hca.payment_way,
+            hca.hf_account_type,
+            hca.close_day,
+            hca.ukey_store,
+            hca.payment_bank,
+            hca.remark,
+            hca.state,
+            hca.created_time,
+            hca.modified_time,
+            hca.created_by,
+            hca.modified_by
         FROM
-        hf_com_account ca
-        <if test="companyId != null">
-            INNER JOIN hf_account_com_relation ssac ON ca.com_account_id = ssac.com_account_id AND ssac.is_active = 1
-            INNER JOIN sal_company com ON ssac.company_id = com.company_id AND com.is_active = 1
+        hf_com_account hca
+        <if test="companyId != null or companyName != null">
+            INNER JOIN hf_account_com_relation hacr ON hca.com_account_id = hacr.com_account_id AND hacr.is_active = 1
+            INNER JOIN sal_company sc ON hacr.company_id = sc.company_id AND sc.is_active = 1
+        </if>
+        <if test="basicHfComAccount != null">
+            INNER JOIN hf_com_account_class hcacb ON hca.com_account_id = hcacb.com_account_id AND hcacb.hf_type = 1 AND hcacb.is_active = 1
+        </if>
+        <if test="addedHfComAccount != null">
+            INNER JOIN hf_com_account_class hcaca ON hca.com_account_id = hcaca.com_account_id AND hcaca.hf_type = 2 AND hcaca.is_active = 1
         </if>
         <where>
-            ca.is_active = 1
+            hca.is_active = 1
             <if test="companyId != null">
-                AND ssac.company_id= #{companyId}
+                AND hacr.company_id = #{companyId}
+            </if>
+            <if test="companyName != null">
+                AND sc.title LIKE CONCAT('%', #{companyName}, '%')
             </if>
             <if test="hfAccountType != null">
-                AND ca.hf_account_type= #{hfAccountType}
+                AND hca.hf_account_type = #{hfAccountType}
+            </if>
+            <if test="basicHfComAccount != null">
+                AND hcacb.hf_com_account = #{basicHfComAccount}
+            </if>
+            <if test="addedHfComAccount != null">
+                AND hcaca.hf_com_account = #{addedHfComAccount}
             </if>
         </where>
     </select>

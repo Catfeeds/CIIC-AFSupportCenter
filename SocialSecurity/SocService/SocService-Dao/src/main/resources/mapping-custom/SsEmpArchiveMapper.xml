@@ -154,4 +154,18 @@
         SELECT count(1) FROM ss_emp_archive ea WHERE ea.emp_archive_id!=${empArchiveId}
         AND ea.com_account_id=#{comAccountId} AND ea.ss_serial=#{ssSerial}
     </select>
+
+
+    <!--检查雇员社保序号是否重复-->
+    <select id="checkSerial" resultType="Integer">
+        SELECT
+            count(EA.emp_archive_id)
+        FROM
+            ss_emp_archive EA
+        WHERE
+            EA.is_active = '1'
+            AND EA.com_account_id = #{comAccountId}
+            AND EA.ss_serial = #{ssSerial}
+            AND EA.employee_id != #{employeeId}
+    </select>
 </mapper>

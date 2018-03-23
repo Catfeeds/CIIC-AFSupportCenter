@@ -55,7 +55,7 @@ public class TestController {
     /*
     * 每日按雇员询问财务是否可付
     * */
-    @RequestMapping("dailyEmpPaymentStatus")
+    @RequestMapping("/dailyEmpPaymentStatus")
     public  String dailyEmpPaymentStatus(@RequestParam String ssMonth) throws ParseException{
         if(Optional.ofNullable(ssMonth).isPresent()) {
             paymentService.enquireFinanceComAccount(ssMonth);
@@ -64,23 +64,17 @@ public class TestController {
             return "请传参数";
         }
     }
-
-
-    @Autowired
-    private EmployeeMonthlyDataProxy employeeMonthlyDataProxy;
-
-    @Autowired
-    PayapplyServiceProxy PayapplyServiceProxy;
-
-    @RequestMapping(value="mytesthaihai")
-    public  void mytesthaihai() {
-//        PayApplyProxyDTO aaa = new PayApplyProxyDTO();
-//        Object aaaaaa = PayapplyServiceProxy.addShSocialInsurancePayApply(aaa);
-//
-
-
-        EmployeeMonthlyDataProxyDTO a = new EmployeeMonthlyDataProxyDTO();
-        Object o = employeeMonthlyDataProxy.employeeCanPay(a);
-       System.out.println("-------------");
+    /*
+       * 每日按雇员询问财务是否可付
+       * */
+    @RequestMapping("/testDailyEmpPaymentStatus")
+    public  String testDailyEmpPaymentStatus(@RequestParam String ssMonth,@RequestParam Long p1,@RequestParam Long p2) throws ParseException{
+        if(Optional.ofNullable(ssMonth).isPresent()) {
+            paymentService.enquireFinanceComAccountTest(ssMonth,p1,p2);
+            return "完成";
+        }else{
+            return "请传参数";
+        }
     }
+
 }

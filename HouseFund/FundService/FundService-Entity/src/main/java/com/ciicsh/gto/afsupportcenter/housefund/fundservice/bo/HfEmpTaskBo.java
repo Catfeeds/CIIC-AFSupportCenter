@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo;
 
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.convertor.EmpTaskCategoryConverter;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -17,6 +18,8 @@ public class HfEmpTaskBo implements Serializable {
     private Integer hfAccountType;
     private Integer hfType;
     private Integer paymentBank;
+    private Integer dictTaskCategory;
+    private Integer processCategory;
     private Integer taskCategory;
     private Integer urgent;
     private Integer isChange;
@@ -34,5 +37,10 @@ public class HfEmpTaskBo implements Serializable {
             setSubmitTimeStart(submitTime[0]);
             setSubmitTimeEnd(submitTime[1]);
         }
+    }
+
+    public void setDictTaskCategory(Integer dictTaskCategory) {
+        this.dictTaskCategory = dictTaskCategory;
+        EmpTaskCategoryConverter.convertCategoriesFromDict(this);
     }
 }

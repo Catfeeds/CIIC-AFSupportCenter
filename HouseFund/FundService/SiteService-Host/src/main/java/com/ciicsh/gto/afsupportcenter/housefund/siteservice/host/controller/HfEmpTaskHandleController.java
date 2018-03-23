@@ -16,6 +16,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskCo
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskPeriodConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
@@ -64,7 +65,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
             }
 
             HfEmpTaskHandleBo hfEmpTaskHandleBo = list.get(0);
-            if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK) {
+            if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK) {
                 return JsonResultKit.ofError("当前雇员任务单的任务类型不正确");
             }
             if ((hfEmpTaskHandleBo.getTaskStatus() != null && !hfEmpTaskHandleBo.getTaskStatus().equals(hfEmpTaskHandlePostBo.getTaskStatus()))
@@ -127,7 +128,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                 if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_ADD
                     || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN
                     || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN
-                    || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_MULTI_TRANS_IN
+//                    || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_MULTI_TRANS_IN
                     || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST) {
                     if (StringUtils.isNotEmpty(hfMonth) && StringUtils.isNotEmpty(startMonth)) {
                         YearMonth hfMonthDate = YearMonth.parse(hfMonth, formatter);
@@ -137,37 +138,66 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                         // 如果任务单起缴月份小于客户汇缴月，则小于的月份自动分成一个补缴的费用段
                         if (startMonthDate.isBefore(hfMonthDate)) {
                             YearMonth endMonthDate = hfMonthDate.minusMonths(1);
-                            // 正常汇缴费用段
-                            hfEmpTaskPeriod.setEmpTaskId(hfEmpTaskHandleBo.getEmpTaskId());
+                            boolean isBreak = false;
+                            boolean isStart = false;
+
                             if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST) {
-                                hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_ADJUST);
-                            } else {
-                                hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_NORMAL);
+                                EntityWrapper<HfArchiveBasePeriod> wrapper = new EntityWrapper<>();
+                                wrapper.where("employee_id={0} AND company_id={1} AND hf_type={2} AND is_active = 1 AND start_month >= {1}",
+                                    hfEmpTaskHandleBo.getEmployeeId(),
+                                    hfEmpTaskHandleBo.getCompanyId(),
+                                    hfEmpTaskHandleBo.getHfType(),
+                                    startMonth);
+                                wrapper.orderBy("start_month", true);
+                                List<HfArchiveBasePeriod> existHfArchiveBasePeriodList = hfArchiveBasePeriodService.selectList(wrapper);
+                                if (CollectionUtils.isNotEmpty(existHfArchiveBasePeriodList)) {
+                                    List<ComposedEmpBasePeriodBO> composedEmpBasePeriodBOList = business.composeEmpBasePeriod(existHfArchiveBasePeriodList);
+                                    for (ComposedEmpBasePeriodBO composedEmpBasePeriodBO : composedEmpBasePeriodBOList) {
+                                        if (!isStart && startMonthDate.isBefore(composedEmpBasePeriodBO.getStartMonth())) {
+                                            startMonthDate = composedEmpBasePeriodBO.getStartMonth();
+                                            isStart = true;
+                                        }
+                                        if (composedEmpBasePeriodBO.getEndMonth() != null && endMonthDate.isAfter(composedEmpBasePeriodBO.getEndMonth())) {
+                                            endMonthDate = composedEmpBasePeriodBO.getEndMonth();
+                                            isBreak = true;
+                                        }
+                                    }
+                                }
                             }
-                            hfEmpTaskPeriod.setStartMonth(hfMonth);
-                            hfEmpTaskPeriod.setHfMonth(hfMonth);
-                            hfEmpTaskPeriod.setBaseAmount(hfEmpTaskHandleBo.getEmpBase());
-                            hfEmpTaskPeriod.setRatioCom(hfEmpTaskHandleBo.getRatioCom());
-                            hfEmpTaskPeriod.setRatioEmp(hfEmpTaskHandleBo.getRatioEmp());
-                            hfEmpTaskPeriod.setAmount(hfEmpTaskHandleBo.getAmount());
-                            hfEmpTaskPeriods.add(hfEmpTaskPeriod);
+                            if (!isBreak) {
+                                // 正常汇缴费用段
+                                hfEmpTaskPeriod.setEmpTaskId(hfEmpTaskHandleBo.getEmpTaskId());
+                                if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST) {
+                                    hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_ADJUST);
+                                } else {
+                                    hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_NORMAL);
+                                }
+                                hfEmpTaskPeriod.setStartMonth(hfMonth);
+                                hfEmpTaskPeriod.setHfMonth(hfMonth);
+                                hfEmpTaskPeriod.setBaseAmount(hfEmpTaskHandleBo.getEmpBase());
+                                hfEmpTaskPeriod.setRatioCom(hfEmpTaskHandleBo.getRatioCom());
+                                hfEmpTaskPeriod.setRatioEmp(hfEmpTaskHandleBo.getRatioEmp());
+                                hfEmpTaskPeriod.setAmount(hfEmpTaskHandleBo.getAmount());
+                                hfEmpTaskPeriods.add(hfEmpTaskPeriod);
+                            }
                             // 补缴费用段
                             hfEmpTaskPeriod = new HfEmpTaskPeriod();
                             hfEmpTaskPeriod.setEmpTaskId(hfEmpTaskHandleBo.getEmpTaskId());
                             hfEmpTaskPeriod.setRemitWay(HfEmpTaskPeriodConstant.REMIT_WAY_REPAIR);
-                            hfEmpTaskPeriod.setStartMonth(startMonth);
+                            hfEmpTaskPeriod.setStartMonth(startMonthDate.format(formatter));
                             hfEmpTaskPeriod.setEndMonth(endMonthDate.format(formatter));
-                            if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST) {
-                                hfEmpTaskPeriod.setHfMonth(hfMonth);
+//                            if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST) {
+//                                hfEmpTaskPeriod.setHfMonth(hfMonth);
+//                            } else {
+                            // 如果任务单类型是新开且账户分类是独立户则客户汇缴月=企业末次汇缴月 + 1
+                            if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_ADD
+                                && hfEmpTaskHandleBo.getHfAccountType() == HfComAccountConstant.HF_ACCOUNT_TYPE_INDEPENDENT) {
+                                hfEmpTaskPeriod.setHfMonth(hfMonthDate.plusMonths(1).format(formatter));
                             } else {
-                                // 如果账户分类是独立户则客户汇缴月=企业末次汇缴月 + 1
-                                if (hfEmpTaskHandleBo.getHfAccountType() == HfComAccountConstant.HF_ACCOUNT_TYPE_INDEPENDENT) {
-                                    hfEmpTaskPeriod.setHfMonth(hfMonthDate.plusMonths(1).format(formatter));
-                                } else {
-                                    // 如果账户分类非独立户则客户汇缴月=企业末次汇缴月
-                                    hfEmpTaskPeriod.setHfMonth(hfMonth);
-                                }
+                                // 否则客户汇缴月=企业末次汇缴月
+                                hfEmpTaskPeriod.setHfMonth(hfMonth);
                             }
+//                            }
                             hfEmpTaskPeriod.setBaseAmount(hfEmpTaskHandleBo.getEmpBase());
                             hfEmpTaskPeriod.setRatioCom(hfEmpTaskHandleBo.getRatioCom());
                             hfEmpTaskPeriod.setRatioEmp(hfEmpTaskHandleBo.getRatioEmp());
@@ -218,7 +248,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
             } else if (
                 hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
                 || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT
-                || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_MULTI_TRANS_OUT
+//                || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_MULTI_TRANS_OUT
                 ) {
                 if (hfEmpTaskPeriods.size() > 1) {
                     return JsonResultKit.ofError("当前雇员任务单费用段数据不正确");
@@ -242,6 +272,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                     bo.setTaskCategory(e.getTaskCategory());
                     bo.setTaskStatus(e.getTaskStatus());
                     bo.setModifiedBy(e.getModifiedBy());
+                    bo.setModifiedDisplayName(e.getModifiedDisplayName());
                     bo.setModifiedTime(e.getModifiedTime());
                     bo.setHandleRemark(e.getHandleRemark());
                     bo.setRejectionRemark(e.getRejectionRemark());
@@ -303,7 +334,8 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         hfEmpTask.setEmpTaskId(empTaskId);
         hfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_NOT_HANDLE);
         hfEmpTask.setModifiedTime(LocalDateTime.now());
-        hfEmpTask.setModifiedBy("test"); // TODO current user
+        hfEmpTask.setModifiedBy(UserContext.getUserId());
+        hfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
         if (!business.updateById(hfEmpTask)) {
             return JsonResultKit.ofError("当前任务单数据更新失败");
         }
@@ -347,7 +379,8 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
             hfEmpTask.setEmpTaskId(empTaskId);
             hfEmpTask.setSubmitTime(LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DATE)));
             hfEmpTask.setModifiedTime(LocalDateTime.now());
-            hfEmpTask.setModifiedBy("test"); // TODO current user
+            hfEmpTask.setModifiedBy(UserContext.getUserId());
+            hfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
             if (!business.updateById(hfEmpTask)) {
                 return JsonResultKit.ofError("当前任务单数据更新失败");
             }
@@ -384,7 +417,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         List<Long> empTaskIdList = array.toJavaList(Long.class);
 
         if (CollectionUtils.isNotEmpty(empTaskIdList)) {
-            return business.handleCancel(empTaskIdList, "test"); // TODO currentUser
+            return business.handleCancel(empTaskIdList, UserContext.getUserId());
         } else {
             return JsonResultKit.ofError("提交的雇员任务单ID集合为空");
         }
@@ -453,7 +486,8 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
             }
             return JsonResultKit.of(hfEmpTaskList.get(0));
         } else {
-            hfEmpTaskCreateTransBo.setCreatedBy("test"); // TODO currentUser
+            hfEmpTaskCreateTransBo.setModifiedBy(UserContext.getUserId());
+            hfEmpTaskCreateTransBo.setModifiedDisplayName(UserContext.getUser().getDisplayName());
             int rtn = business.createTransEmpTask(hfEmpTaskCreateTransBo);
             if (rtn == 1) {
                 hfEmpTaskList = business.selectByMap(condition);

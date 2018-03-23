@@ -39,8 +39,13 @@ public class SsStatementImp implements Serializable {
     /**
      * 雇员姓名
      */
-	@TableField("emp_name")
-	private String empName;
+    @TableField("employee_name")
+    private String employeeName;
+    /**
+     * 社保序号
+     */
+    @TableField("ss_serial")
+    private String ssSerial;
     /**
      * 变更类型名称
      */
@@ -142,12 +147,12 @@ public class SsStatementImp implements Serializable {
 		this.employeeId = employeeId;
 	}
 
-	public String getEmpName() {
-		return empName;
+	public String getEmployeeName() {
+		return employeeName;
 	}
 
-	public void setEmpName(String empName) {
-		this.empName = empName;
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
 	}
 
 	public Integer getChangeType() {
@@ -276,7 +281,7 @@ public class SsStatementImp implements Serializable {
 			", statementImpId=" + statementImpId +
 			", statementId=" + statementId +
 			", employeeId=" + employeeId +
-			", empName=" + empName +
+			", employeeName=" + employeeName +
 			", changeType=" + changeType +
 			", changeTypeName=" + changeTypeName +
 			", baseAmount=" + baseAmount +
@@ -294,4 +299,12 @@ public class SsStatementImp implements Serializable {
 			", modifiedBy=" + modifiedBy +
 			"}";
 	}
+
+    public String getSsSerial() {
+        return ssSerial;
+    }
+
+    public void setSsSerial(String ssSerial) {
+        this.ssSerial = ssSerial;
+    }
 }

@@ -6,7 +6,7 @@ spring:
   application:
     name: support-center-employee-site-service
   profiles:
-    active: uat
+    active: dev
   cloud:
     stream:
       bindings:
@@ -58,8 +58,8 @@ spring:
           #content-type: application/json
           consumer:
             partitioned: true
-        soc_report_output_channel:
-          destination: af_soc_report_generate # topic name
+        emp_employment_output_channel:
+          destination: employee_management_service_af_ukey_feedback # topic name
           content-type: application/json
           producer:
             partitionCount: 1

@@ -25,8 +25,10 @@ public class SsMonthChargeItemBO extends SsMonthChargeItem{
     //企业账户ID
     private Long comAccountId;
     //报表年月
+    @Excel(name = "社保缴纳月", orderNum = "6")
     private String ssMonth;
     //社保序号
+    @Excel(name = "社保序号", orderNum = "3")
     private String ssSerial;
     //雇员姓名
     @Excel(name = "雇员姓名", orderNum = "2")
@@ -35,54 +37,75 @@ public class SsMonthChargeItemBO extends SsMonthChargeItem{
     @Excel(name = "雇员编号", orderNum = "1")
     private String employeeId;
     //公司编号
+    @Excel(name = "客户编号", orderNum = "4")
     private String companyId;
     //社保账户类型
+    @Excel(name = "社保账户类型", orderNum = "5")
     private Integer ssAccountType;
     //雇员属性
     private Integer empClassify;
-    //所属社保月份
+
+    @Excel(name = "所属社保月份", orderNum = "7")
     private String ssMonthBelong;
     //费用种类：1标准 2 新进 3 转入  4 补缴 5 调整 （顺调)）6 转出 7封存 8 退账 9 调整（倒调）
+    @Excel(name = "费用种类", orderNum = "8",replace = {"标准_1","新进_2","转入_3","补缴_4","调整 （顺调)_5","转出_6","封存_7","退账_8","调整（倒调）_9"} )
     private Integer costCategory;
     //社保基数
+    @Excel(name = "社保基数", orderNum = "9")
     private BigDecimal baseAmount;
-    //社保总费用
+    //总计费用
+    @Excel(name = "总计费用", orderNum = "25")
     private BigDecimal totalAmount;
 
     //养老金公司缴费
+    @Excel(name = "养老金公司缴费", orderNum = "10")
     private BigDecimal pensionComFee;
     //养老金个人缴费
+    @Excel(name = "养老金个人缴费", orderNum = "11")
     private BigDecimal pensionEmpFee;
     //养老金总计
+    @Excel(name = "养老金总计", orderNum = "12")
     private BigDecimal pensionTotalFee;
 
     //医疗公司缴费
+    @Excel(name = "医疗公司缴费", orderNum = "13")
     private BigDecimal medicalComFee;
     //医疗个人缴费
+    @Excel(name = "医疗个人缴费", orderNum = "14")
     private BigDecimal medicalEmpFee;
     //医疗总计
+    @Excel(name = "医疗总计", orderNum = "15")
     private BigDecimal medicalTotalFee;
 
     //失业公司缴费
+    @Excel(name = "失业公司缴费", orderNum = "16")
     private BigDecimal unemploymentComFee;
     //失业个人缴费
+    @Excel(name = "失业个人缴费", orderNum = "17")
     private BigDecimal unemploymentEmpFee;
     //失业总计
+    @Excel(name = "失业总计", orderNum = "18")
     private BigDecimal unemploymentTotalFee;
 
 
     //工伤公司缴费
+    @Excel(name = "工伤公司缴费", orderNum = "19")
     private BigDecimal injuryOnJobComFee;
     // 工伤个人缴费
+    @Excel(name = "工伤个人缴费", orderNum = "20")
     private BigDecimal injuryOnJobEmpFee;
     //工伤总计
+    @Excel(name = "工伤总计", orderNum = "21")
     private BigDecimal injuryOnJobTotalFee;
 
     //生育公司缴费
+    @Excel(name = "生育公司缴费", orderNum = "22")
     private BigDecimal birthRiskComFee;
     //生育个人缴费
+    @Excel(name = "生育个人缴费", orderNum = "23")
     private BigDecimal birthRiskEmpFee;
     //生育总计
+    @Excel(name = "生育总计", orderNum = "24")
     private BigDecimal birthRiskTotalFee;
     //
     private String ssAccount;

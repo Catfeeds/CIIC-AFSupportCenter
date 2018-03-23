@@ -66,4 +66,19 @@ public interface SsComAccountMapper extends BaseMapper<SsComAccount> {
 
 
     List<ComAccountExtBO> getComAccountByCompanyId(ComTaskParamBO paramBO);
+    /**
+     * 社保序号增1
+     *
+     * @param comAccountId
+     * @return
+     */
+    void addSerial(@Param("comAccountId") Integer comAccountId);
+    
+    /**
+     * 根据社保账号获得社保序号
+     *
+     * @param comAccountId
+     * @return
+     */
+    Integer getSerialByComAccountId(@Param("comAccountId") Integer comAccountId);
 }

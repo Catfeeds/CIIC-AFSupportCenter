@@ -14,10 +14,6 @@ public class AmEmpTaskBO extends AmEmpTask {
      */
     private String handleType;
     /**
-     * 用工属性
-     */
-    private String employProperty;
-    /**
      * 预留档案编号
      */
     private String yuliuDocNum;
@@ -144,6 +140,68 @@ public class AmEmpTaskBO extends AmEmpTask {
      * 空、Ukey、集体转入,用工自办、翻牌、无材料用工、网办无材料、转人员性质、新进转人员性质、送外区办、修改信息、外来新进、外来转入
      */
     private String employWay;
+
+    private  String openAfDate;
+    /**
+     * 客服用工属性
+     */
+    private  String templateType;
+
+    private  String archivePlace;
+
+    private Long employmentId;
+
+    private  String comAccountName;
+
+    private  LocalDate accountRepairDate;
+
+    public LocalDate getAccountRepairDate() {
+        return accountRepairDate;
+    }
+
+    public void setAccountRepairDate(LocalDate accountRepairDate) {
+        this.accountRepairDate = accountRepairDate;
+    }
+
+    public String getComAccountName() {
+        return comAccountName;
+    }
+
+    public void setComAccountName(String comAccountName) {
+        this.comAccountName = comAccountName;
+    }
+
+    public Long getEmploymentId() {
+        return employmentId;
+    }
+
+    public void setEmploymentId(Long employmentId) {
+        this.employmentId = employmentId;
+    }
+
+    public String getArchivePlace() {
+        return archivePlace;
+    }
+
+    public void setArchivePlace(String archivePlace) {
+        this.archivePlace = archivePlace;
+    }
+
+    public String getTemplateType() {
+        return templateType;
+    }
+
+    public void setTemplateType(String templateType) {
+        this.templateType = templateType;
+    }
+
+    public String getOpenAfDate() {
+        return openAfDate;
+    }
+
+    public void setOpenAfDate(String openAfDate) {
+        this.openAfDate = openAfDate;
+    }
 
     public String getLaborStartDate() {
         return laborStartDate;
@@ -449,14 +507,6 @@ public class AmEmpTaskBO extends AmEmpTask {
 
     public void setHandleType(String handleType) {
         this.handleType = handleType;
-    }
-
-    public String getEmployProperty() {
-        return employProperty;
-    }
-
-    public void setEmployProperty(String employProperty) {
-        this.employProperty = employProperty;
     }
 
     public String getEmployStyle() {

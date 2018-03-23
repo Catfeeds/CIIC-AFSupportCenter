@@ -31,4 +31,6 @@ public interface AmEmpTaskMapper extends BaseMapper<AmEmpTask> {
 
     List<employSearchExportOpt>  queryAmEmpTaskList(AmEmpTaskBO amEmpTaskBO);
 
+    List<AmEmpTaskBO>  querySocial(Map<String,Object> param);
+
 }

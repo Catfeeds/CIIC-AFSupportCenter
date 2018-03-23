@@ -153,7 +153,8 @@ public class SsStatementImpServiceImpl implements SsStatementImpService {
         SsStatementImp ssStatementImp = new SsStatementImp();
         ssStatementImp.setStatementId(statementId);
         ssStatementImp.setEmployeeId(opt.getEmployeeId());
-        ssStatementImp.setEmpName(opt.getEmployeeName());
+        ssStatementImp.setEmployeeName(opt.getEmployeeName());
+        ssStatementImp.setSsSerial(opt.getSsSerial());
         ssStatementImp.setChangeType(opt.getChangeType());
         ssStatementImp.setChangeTypeName(opt.getChangeTypeName());
         ssStatementImp.setBaseAmount(opt.getBaseAmount());
@@ -178,7 +179,8 @@ public class SsStatementImpServiceImpl implements SsStatementImpService {
         SsStatementImp ssStatementImp = new SsStatementImp();
         ssStatementImp.setStatementId(statementId);
         ssStatementImp.setEmployeeId(opt.getEmployeeId());
-        ssStatementImp.setEmpName(opt.getEmployeeName());
+        ssStatementImp.setSsSerial(opt.getSsSerial());
+        ssStatementImp.setEmployeeName(opt.getEmployeeName());
         ssStatementImp.setChangeType(opt.getChangeType());
         ssStatementImp.setChangeTypeName(opt.getChangeTypeName());
         ssStatementImp.setBaseAmount(opt.getBaseAmount());
@@ -202,7 +204,8 @@ public class SsStatementImpServiceImpl implements SsStatementImpService {
         SsStatementImp ssStatementImp = new SsStatementImp();
         ssStatementImp.setStatementId(statementId);
         ssStatementImp.setEmployeeId(opt.getEmployeeId());
-        ssStatementImp.setEmpName(opt.getEmployeeName());
+        ssStatementImp.setEmployeeName(opt.getEmployeeName());
+        ssStatementImp.setSsSerial(opt.getSsSerial());
         ssStatementImp.setChangeType(opt.getChangeType());
         ssStatementImp.setChangeTypeName(opt.getChangeTypeName());
         ssStatementImp.setBaseAmount(opt.getBaseAmount());
@@ -226,7 +229,8 @@ public class SsStatementImpServiceImpl implements SsStatementImpService {
         SsStatementImp ssStatementImp = new SsStatementImp();
         ssStatementImp.setStatementId(statementId);
         ssStatementImp.setEmployeeId(opt.getEmployeeId());
-        ssStatementImp.setEmpName(opt.getEmployeeName());
+        ssStatementImp.setEmployeeName(opt.getEmployeeName());
+        ssStatementImp.setSsSerial(opt.getSsSerial());
         ssStatementImp.setChangeType(opt.getChangeType());
         ssStatementImp.setChangeTypeName(opt.getChangeTypeName());
         ssStatementImp.setBaseAmount(opt.getBaseAmount());

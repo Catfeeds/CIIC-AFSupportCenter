@@ -30,7 +30,7 @@ public class JsonResultAspect extends BasicAspect {
                 long time = System.currentTimeMillis() - start;
                 String name = joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName();
                 String message = getMessage(e);
-                logger.error("API method:{} , time:{}ms , error:{}", name, time, e.getMessage());
+                logger.error("API method:{} , time:{}ms , error:{}", name, time, message);
                 return createErrorJsonResult(returnType, message);
             }
             throw e;

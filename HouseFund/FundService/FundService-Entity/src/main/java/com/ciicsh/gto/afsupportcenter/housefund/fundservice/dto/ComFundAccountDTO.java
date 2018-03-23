@@ -16,6 +16,11 @@ public class ComFundAccountDTO {
     private int comAccountId;
 
     /**
+     * 账户状态:0初始 1有效 2 终止
+     */
+    private Byte state;
+
+    /**
      * 企业账户名称
      */
     private String comAccountName;
@@ -77,8 +82,10 @@ public class ComFundAccountDTO {
      * 公积金缴费截止年月
      */
     private String payEndMonth;
-
-
+    /**
+     * 客户汇缴年月
+     */
+    private String comHfMonth;
     /**
      * 公积金账号是否属于临时保管
      * 1-临时保管状态 0-非临时保管状态
@@ -89,6 +96,7 @@ public class ComFundAccountDTO {
     public ComFundAccountDTO()
     {
         comAccountClassId = 0;
+        state = 0;
         accountTempStore = 0;
         accountType = 0;
         closeDay = 0;
@@ -102,6 +110,15 @@ public class ComFundAccountDTO {
         payStartMonth = "";
         remark = "";
         ukeyStore = 0;
+        comHfMonth="";
+    }
+
+    public String getComHfMonth() {
+        return comHfMonth;
+    }
+
+    public void setComHfMonth(String comHfMonth) {
+        this.comHfMonth = comHfMonth;
     }
 
     public int getComAccountClassId() {
@@ -118,6 +135,14 @@ public class ComFundAccountDTO {
 
     public void setComAccountId(int comAccountId) {
         this.comAccountId = comAccountId;
+    }
+
+    public Byte getState() {
+        return state;
+    }
+
+    public void setState(Byte state) {
+        this.state = state;
     }
 
     public String getComAccountName() {

@@ -81,6 +81,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         List<AmResTaskCountBO>  temp = new ArrayList<>();
         amEmpTaskCountBO.setAmount(list.size());
         int num =0;
+        int otherNum =0;
         for(int i=0;i<list.size();i++)
         {
             AmResignBO amResignBO = list.get(i);
@@ -103,7 +104,8 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             }else if(6==status){
                 amEmpTaskCountBO.setBeforeBatchNeedRefuse(amResignBO.getCount());
             }else{
-                amEmpTaskCountBO.setOther(amResignBO.getCount());
+                otherNum = otherNum+amResignBO.getCount();
+                amEmpTaskCountBO.setOther(otherNum);
                 num = num + amResignBO.getCount();
             }
             amEmpTaskCountBO.setAmount(num);
@@ -126,9 +128,6 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         Map<String,Object> param = new HashMap<>();
         param.put("employeeId",amTaskParamBO.getEmployeeId());
         param.put("companyId",amTaskParamBO.getCompanyId());
-
-        //退工信息
-        AmResignBO amResignBO = new AmResignBO();
 
         List<AmResignBO> listResignBO = business.queryAmResignDetail(param);
 
@@ -171,25 +170,6 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         //雇员信息
         resultMap.put("amEmpTaskBO",employeeBO);
 
-        //退工信息
-        if(null!=listResignBO&&listResignBO.size()>0){
-            amResignBO = listResignBO.get(0);
-            amResignBO.setFirstInDate(employeeBO.getFirstInDate());
-            String code = amArchiveBO.getEmployFeedback();
-            if(!StringUtil.isEmpty(code)){
-                amResignBO.setEmployFeedback(ReasonUtil.getYgfk(code));
-            }
-            AmEmpTask amEmpTask = taskService.selectById(amTaskParamBO.getEmpTaskId());
-            if(null!=amEmpTask){
-                java.text.DateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
-                if(null!=amEmpTask.getOutDate()){
-                    amResignBO.setOutDate(sdf.format(amEmpTask.getOutDate()));
-                }
-                amResignBO.setOutReason(amEmpTask.getOutReason());
-            }
-        }
-        resultMap.put("resignBO",amResignBO);
-
         if(null!=amRemarkBOPageRows)
         {
             resultMap.put("amRemarkBo",amRemarkBOPageRows);
@@ -205,9 +185,10 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             resultMap.put("amRemarkBo2",amRemarkBOPageRows2);
         }
 
+        AmEmploymentBO amEmploymentBO = new AmEmploymentBO();
         if(null!= resultEmployList&&resultEmployList.size()>0)
         {
-            AmEmploymentBO amEmploymentBO = resultEmployList.get(0);
+            amEmploymentBO = resultEmployList.get(0);
             AmRemarkBO queryBo = new AmRemarkBO();
             queryBo.setRemarkType(1);
             queryBo.setEmployeeId(amTaskParamBO.getEmployeeId());
@@ -225,10 +206,44 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
                 amEmploymentBO.setEmployNotes(amRemarkBOList.get(0).getRemarkContent());
             }
 
-            resultMap.put("amEmploymentBO",amEmploymentBO);
         }
 
+        resultMap.put("amEmploymentBO",amEmploymentBO);
+
         resultMap.put("amArchaiveBo",amArchiveBO);
+
+        //退工信息
+        AmResignBO amResignBO = new AmResignBO();
+        if(null!=listResignBO&&listResignBO.size()>0){
+            amResignBO = listResignBO.get(0);
+        }else{
+            amResignBO.setYuliuDocNum(amArchiveBO.getYuliuDocNum());
+            amResignBO.setDocNum(amArchiveBO.getDocNum());
+            amResignBO.setArchiveCardState(amArchiveBO.getArchiveCardState());
+            amResignBO.setArchivePlace(amArchiveBO.getArchivePlace());
+            amResignBO.setArchivePlaceAdditional(amArchiveBO.getArchivePlaceAdditional());
+
+            amResignBO.setHandleType(amEmploymentBO.getHandleType());
+            amResignBO.setEmployFeedback(amEmploymentBO.getEmployFeedback());
+
+        }
+        amResignBO.setFirstInDate(employeeBO.getFirstInDate());
+        String code = amArchiveBO.getEmployFeedback();
+        if(!StringUtil.isEmpty(code)){
+            amResignBO.setEmployFeedback(ReasonUtil.getYgfk(code));
+        }
+        AmEmpTask amEmpTask = taskService.selectById(amTaskParamBO.getEmpTaskId());
+        if(null!=amEmpTask){
+            java.text.DateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+            if(null!=amEmpTask.getOutDate()){
+                amResignBO.setOutDate(sdf.format(amEmpTask.getOutDate()));
+            }
+            amResignBO.setOutReason(amEmpTask.getOutReason());
+        }
+        if(amResignBO.getEmploymentId()!=null){
+            amResignBO.setMatchEmployIndex(amResignBO.getEmploymentId().toString());
+        }
+        resultMap.put("resignBO",amResignBO);
 
         return JsonResultKit.of(resultMap);
     }

@@ -41,7 +41,7 @@
     </resultMap>
 
     <sql id="employeeDailyOperatorQuery_select">
-         et.emp_task_id,
+        et.emp_task_id,
         et.customer_id,
         et.emp_archive_id,
         et.task_category,
@@ -77,6 +77,7 @@
         et.end_month,
         et.chat_history,
         et.business_interface_id,
+        et.created_time,
         e.employee_name,
         e.employee_id,
         e.id_num,
@@ -171,17 +172,19 @@
             AND et.is_active = 1
             <include refid="employeeDailyOperatorQuery_where"/>
         </where>
+        ORDER BY et.created_time DESC ,et.employee_id DESC
     </select>
     <!--雇员特殊操作查询-->
     <select id="employeeSpecialOperatorQuery" resultMap="BaseResultMapDto">
         select
-        et.emp_task_id,et.customer_id,et.emp_archive_id,et.task_category,et.task_category_special,et.urgent,et.submitter_id,et.submitter_name,et.submitter_dept_id,et.submitter_dept_name,et.submit_time,et.expire_date,et.submitter_remark,et.task_form_content,et.salary,et.handle_user_id,et.handle_user_name,et.emp_ss_serial,et.handle_way,et.handle_month,et.handle_remark,et.handle_remark_man,et.handle_remark_date,et.rejection_remark,et.rejection_remark_man,et.rejection_remark_date,et.task_status,et.handle_status,et.start_handle_date,et.send_check_date,et.finish_date,et.end_month,et.chat_history,et.business_interface_id
+        et.emp_task_id,et.customer_id,et.emp_archive_id,et.task_category,et.task_category_special,et.urgent,et.submitter_id,et.submitter_name,et.submitter_dept_id,et.submitter_dept_name,et.submit_time,et.expire_date,et.submitter_remark,et.task_form_content,et.salary,et.handle_user_id,et.handle_user_name,et.emp_ss_serial,et.handle_way,et.handle_month,et.handle_remark,et.handle_remark_man,et.handle_remark_date,et.rejection_remark,et.rejection_remark_man,et.rejection_remark_date,et.task_status,et.handle_status,et.start_handle_date,et.send_check_date,et.finish_date,et.end_month,et.chat_history,et.business_interface_id,
         ,e.employee_name , e.employee_id , e.id_num
         ,ca.com_account_id,ca.ss_pwd,ca.settlement_area,ca.ss_account_type,ca.ss_account,ca.supplier_id
         ,c.company_id,c.title
         ,et.emp_classify,
         et.is_change,
-        et.start_month
+        et.start_month,
+        et.created_time
         from ss_emp_task et
         LEFT JOIN sal_company c on et.company_id = c.company_id
         LEFT JOIN emp_employee e on et.employee_id = e.employee_id
@@ -456,6 +459,108 @@
         AND et.task_status = 1
     </select>
 
+    <select id="queryBatchTaskByCondition" resultMap="QueryBachResultMap">
+        SELECT
+        sebp.emp_task_period_id,
+        sebp.emp_task_id AS emp_task_id_p,
+        sebp.base_amount AS base_amount_p,
+        sebp.start_month AS start_month_p,
+        sebp.end_month AS end_month_p,
+        sebp.remit_way AS remit_way_p,
+        ssac.com_account_id,
+        et.emp_task_id,
+        et.customer_id,
+        et.emp_archive_id,
+        et.task_category,
+        et.task_category_special,
+        et.urgent,
+        et.submitter_id,
+        et.submitter_name,
+        et.submitter_dept_id,
+        et.submitter_dept_name,
+        et.submit_time,
+        et.expire_date,
+        et.submitter_remark,
+        et.task_form_content,
+        et.salary,
+        et.handle_user_id,
+        et.handle_user_name,
+        et.emp_ss_serial,
+        et.handle_way,
+        et.handle_month,
+        et.handle_remark,
+        et.rejection_remark,
+        et.rejection_remark_man,
+        et.rejection_remark_date,
+        et.task_status,
+        et.handle_status,
+        et.start_month,
+        et.end_month,
+        et.in_date,
+        et.emp_base,
+        et.chat_history,
+        et.task_id,
+        et.welfare_unit,
+        et.policy_detail_id,
+        et.business_interface_id,
+        e.employee_name,
+        e.employee_id,
+        e.id_num,
+        c.company_id,
+        c.title
+        FROM ss_emp_task et
+        LEFT JOIN sal_company c on et.company_id = c.company_id AND c.is_active=1
+        LEFT JOIN emp_employee e ON et.employee_id = e.employee_id
+        LEFT JOIN ss_account_com_relation ssac ON ssac.company_id = c.company_id AND ssac.is_active = 1
+        LEFT JOIN ss_emp_task_period sebp ON sebp.emp_task_id = et.emp_task_id AND sebp.is_active = 1
+        LEFT JOIN ss_com_account ca ON ca.com_account_id = ssac.com_account_id AND ca.is_active = 1
+        WHERE 1=1
+        AND et.task_status = 1
+        AND et.task_category = #{taskCategory}
+        <if test="employeeName != null and employeeName.trim()!=''">
+            AND e.employee_name LIKE CONCAT('%',#{employeeName},'%')
+        </if>
+        <if test="settlementArea != null and settlementArea.trim()!=''">
+            AND ca.settlement_area = #{settlementArea}
+        </if>
+        <if test="ssAccountType != null and ssAccountType!=''">
+            AND ca.ss_account_type = #{ssAccountType}
+        </if>
+        <if test="empClassify != null and empClassify!=''">
+            AND et.emp_classify = #{empClassify}
+        </if>
+        <if test="ssAccount != null and ssAccount.trim()!=''">
+            AND ca.ss_account = #{ssAccount}
+        </if>
+        <if test="companyId != null and companyId.trim()!=''">
+            AND c.company_id LIKE CONCAT('%',#{companyId},'%')
+        </if>
+        <if test="idNum != null and idNum.trim()!=''">
+            AND e.id_num LIKE CONCAT('%',#{idNum},'%')
+        </if>
+        <if test="title != null and title.trim()!=''">
+            AND c.title LIKE CONCAT('%',#{title},'%')
+        </if>
+        <if test="employeeId != null and employeeId.trim()!=''">
+            AND e.employee_id LIKE CONCAT('%',#{employeeId},'%')
+        </if>
+        <if test="startMonth != null and startMonth.trim()!=''">
+            AND et.start_month = #{startMonth}
+        </if>
+        <choose>
+            <when test="taskStatus == -1">
+                AND et.submit_time <![CDATA[ <= ]]>
+                str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',if(isnull(ca.expire_date),26,ca.expire_date)),'%Y-%m-%d')
+            </when>
+            <when test="taskStatus == -2">
+                AND et.submit_time <![CDATA[ > ]]>
+                str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',if(isnull(ca.expire_date),26,ca.expire_date)),'%Y-%m-%d')
+            </when>
+            <otherwise>
+                AND et.task_status = 1
+            </otherwise>
+        </choose>
+    </select>
     <!--通过TASKID等条件查询任务单-->
     <select id="queryByTaskId" resultMap="BaseResultMap">
         SELECT
@@ -508,7 +613,7 @@
     </select>
 
     <!--通过businessInterfaceId等条件查询任务单-->
-    <select id="queryByBusinessInterfaceId" resultMap="BaseResultMap">
+    <select id="queryByBusinessInterfaceId" resultType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO">
         SELECT
         et.emp_task_id,
         et.customer_id,

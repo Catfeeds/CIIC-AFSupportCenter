@@ -75,12 +75,10 @@ public class archiveSearchExportOpt {
     private String resignFeedback1;
     @Excel(name = "退工反馈2", orderNum = "21")
     private  String resignFeedback2;
-    @Excel(name = "用工反馈2", orderNum = "22")
-    private String employFeedback2;
-    @Excel(name = "退档日期", orderNum = "23")
+    @Excel(name = "退档日期", orderNum = "22")
     private String returnDocDate;
-    @Excel(name = "退工送办日期", orderNum = "24")
+    @Excel(name = "退工送办日期", orderNum = "23")
     private LocalDate resignHandleDate;
-    @Excel(name = "公司特殊情况",width = 20, orderNum = "25")
+    @Excel(name = "公司特殊情况",width = 20, orderNum = "24")
     private  String companySpecialCase;
 }

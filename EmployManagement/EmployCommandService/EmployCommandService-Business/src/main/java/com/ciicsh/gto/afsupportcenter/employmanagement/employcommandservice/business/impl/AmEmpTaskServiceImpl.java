@@ -3,8 +3,10 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bus
 import com.alibaba.fastjson.JSON;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.*;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmCompanySetBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmTaskParamBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmCompanySetService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpMaterialService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.ReasonUtil;
@@ -25,6 +27,7 @@ import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,10 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -55,6 +55,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Autowired
     AfEmployeeCompanyProxy afEmployeeCompanyProxy;
+
+    @Autowired
+    private  IAmCompanySetService  iAmCompanySetService;
 
 
 
@@ -120,16 +123,12 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         amEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
         //TODO 调用吴敬磊接口传入taskMsgDTO.getMissionId()返回数据
         AfEmployeeInfoDTO dto = null;
-
-        Map<String,Object> param = new HashMap<>();
-
         if(StringUtil.isEmpty(taskMsgDTO.getVariables().get("empCompanyId")))
         {
             logger.info("empCompanyId is null ...");
             return false;
         }
-        param.put("empCompanyId",taskMsgDTO.getVariables().get("empCompanyId"));
-        AmEmpTaskBO bo = baseMapper.selectEmployId(param);
+        AmEmpTaskBO bo = this.queryAmEmpTaskBO(taskMsgDTO.getVariables().get("empCompanyId"));
 
         if(null!=bo){
             amEmpTask.setCompanyId(bo.getCompanyId());
@@ -152,6 +151,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 AmEmpMaterial amEmpMaterial = new AmEmpMaterial();
                 amEmpMaterial.setMaterialName(str);
                 amEmpMaterial.setEmployeeId(bo.getEmployeeId());
+                amEmpMaterial.setOperateType(1);
                 amEmpMaterial.setSubmitMan("sys");
                 amEmpMaterial.setActive(true);
                 amEmpMaterial.setCreatedBy("sys");
@@ -190,23 +190,31 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         try {
             dto = employeeInfoProxy.callInf(taskMsgDTO);
             AfFullEmployeeDTO empDTO  = dto.getEmployee();
-            AfEmpAgreementDTO afEmpAgreementDTO = dto.getNowAgreement();
             AfEmployeeCompanyDTO employeeCompany = dto.getEmployeeCompany();
-            if(null!=empDTO){
+            if(null!=empDTO&&null!=employeeCompany){
                 amEmpTask.setEmployeeId(empDTO.getEmployeeId());
+                amEmpTask.setCompanyId(employeeCompany.getCompanyId());
             }else{
                 logger.info("AfFullEmployeeDTO is null "+" MissionId is "+taskMsgDTO.getMissionId());
-                if(null!=afEmpAgreementDTO){
-                    amEmpTask.setEmployeeId(afEmpAgreementDTO.getEmployeeId());
+                //自己手动的从数据库拉取employeeId,接口过来数据为空
+                AmEmpTaskBO bo = this.queryAmEmpTaskBO(taskMsgDTO.getVariables().get("empCompanyId"));
+                if(null!=bo){
+                    amEmpTask.setCompanyId(bo.getCompanyId());
+                    amEmpTask.setEmployeeId(bo.getEmployeeId());
                 }
+
             }
-            amEmpTask.setCompanyId(employeeCompany.getCompanyId());
             amEmpTask.setTaskFormContent(JSON.toJSONString(taskMsgDTO.getVariables()));
-            amEmpTask.setOutDate(employeeCompany.getOutDate());
-            if(null!=employeeCompany.getOutReason()){
+            amEmpTask.setOutDate(employeeCompany==null?null:employeeCompany.getOutDate());
+            if(null!=employeeCompany&&null!=employeeCompany.getOutReason()){
                 amEmpTask.setOutReason(ReasonUtil.getReasonOut(employeeCompany.getOutReason().toString()));
             }else{
                 logger.info("outReason is null "+"  MissionId is "+taskMsgDTO.getMissionId());
+            }
+            if(employeeCompany!=null&&employeeCompany.getTemplateType()!=null)
+            {
+                amEmpTask.setEmployCode(employeeCompany.getTemplateType());
+                amEmpTask.setEmployProperty(ReasonUtil.getYgsx(employeeCompany.getTemplateType().toString()));
             }
         } catch (Exception e) {
             logger.error("callOut interface error ......");
@@ -281,10 +289,44 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amEmpTask = super.selectById(param.getEmpTaskId());
                 employeeBO.setArchiveDirection(amEmpTask==null?"":amEmpTask.getArchiveDirection());
                 employeeBO.setEmployeeNature(amEmpTask==null?"":amEmpTask.getEmployeeNature());
+                employeeBO.setEmployProperty(amEmpTask==null?"":amEmpTask.getEmployProperty());
             }
 
         } catch (Exception e) {
             logger.error(e.getMessage(),e);
+        }
+
+        //调用前道接口
+        AfEmployeeCompanyDTO afEmployeeCompanyDTO = null;
+        try {
+            TaskCreateMsgDTO taskMsgDTO = new TaskCreateMsgDTO();
+            taskMsgDTO.setMissionId(amEmpTask.getBusinessInterfaceId());
+            AfEmployeeInfoDTO afEmployeeInfoDTO = employeeInfoProxy.callInfByMissId(taskMsgDTO);
+            afEmployeeCompanyDTO = afEmployeeInfoDTO.getEmployeeCompany();
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+        }
+
+        if(afEmployeeCompanyDTO!=null)
+        {
+            employeeBO.setTemplateType(ReasonUtil.getYgsx(afEmployeeCompanyDTO.getTemplateType()==null?"":afEmployeeCompanyDTO.getTemplateType().toString()));
+            employeeBO.setPosition(afEmployeeCompanyDTO.getPosition());
+
+            Map<String,Object> param0 = new HashMap<>();
+            if(afEmployeeCompanyDTO.getTemplateType()==2){
+                param0.put("companyId",param.getCompanyId());
+            }else {
+                param0.put("templateType",afEmployeeCompanyDTO.getTemplateType());
+            }
+            List<AmEmpTaskBO> list = baseMapper.querySocial(param0);
+
+            if(list!=null&&list.size()>0)
+            {
+                employeeBO.setSsAccount(list.get(0).getSsAccount());
+                employeeBO.setComAccountName(list.get(0).getComAccountName());
+                employeeBO.setAccountRepairDate(list.get(0).getAccountRepairDate());
+                employeeBO.setSsPwd(list.get(0).getSsPwd());
+            }
         }
 
         EmployeeQueryDTO var1 = new EmployeeQueryDTO();
@@ -348,6 +390,124 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     @Override
     public List<employSearchExportOpt> queryAmEmpTaskList(AmEmpTaskBO amEmpTaskBO) {
         return  baseMapper.queryAmEmpTaskList(amEmpTaskBO);
+    }
+
+    @Override
+    public AmEmpTaskBO queryAmEmpTaskBO(Object empCompanyId) {
+        Map<String,Object> param = new HashMap<>();
+        param.put("empCompanyId",empCompanyId);
+        AmEmpTaskBO bo = baseMapper.selectEmployId(param);
+        return  bo;
+    }
+
+    @Override
+    public AmEmpTaskBO getDefualtEmployBO(AmEmpTaskBO amEmpTaskBO) {
+        AmEmpTask amEmpTask = super.selectById(amEmpTaskBO.getEmpTaskId());
+        AmEmpTaskBO amEmpTaskBO1 = new AmEmpTaskBO();
+        BeanUtils.copyProperties(amEmpTask,amEmpTaskBO1);
+
+        amEmpTaskBO1 = defaultRule(amEmpTaskBO1);
+
+        EmployeeHireInfoQueryDTO employeeHireInfoQueryDTO = new EmployeeHireInfoQueryDTO();
+        employeeHireInfoQueryDTO.setCompanyId(amEmpTaskBO.getCompanyId());
+        employeeHireInfoQueryDTO.setEmployeeId(amEmpTaskBO.getEmployeeId());
+        com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeHireInfoDTO> employeeHireInfo = null;//雇佣雇佣信息接口
+
+        try {
+            employeeHireInfo = employeeInfoProxy.getEmployeeHireInfo(employeeHireInfoQueryDTO);
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+        }
+
+        //调用前道接口
+        AfEmployeeCompanyDTO afEmployeeCompanyDTO = null;
+        try {
+            TaskCreateMsgDTO taskMsgDTO = new TaskCreateMsgDTO();
+            taskMsgDTO.setMissionId(amEmpTask.getBusinessInterfaceId());
+            AfEmployeeInfoDTO afEmployeeInfoDTO = employeeInfoProxy.callInfByMissId(taskMsgDTO);
+            afEmployeeCompanyDTO = afEmployeeInfoDTO.getEmployeeCompany();
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+        }
+
+        if(afEmployeeCompanyDTO!=null)
+        {
+          if(afEmployeeCompanyDTO.getTemplateType()==1)
+          {
+              amEmpTaskBO1.setEmployProperty("中智");
+          }
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        amEmpTaskBO1.setFirstInDate(sdf.format(employeeHireInfo.getData().getFirstInDate()));
+        amEmpTaskBO1.setOpenAfDate(sdf.format(new Date()));
+        amEmpTaskBO1.setEmployStyle("1");//默认全日制
+        return amEmpTaskBO1;
+    }
+
+    AmEmpTaskBO  defaultRule(AmEmpTaskBO amEmpTaskBO){
+        if("外来从业人员".equals(amEmpTaskBO.getEmployeeNature())||"居住证".equals(amEmpTaskBO.getEmployeeNature()))
+        {
+            amEmpTaskBO.setHandleType(amEmpTaskBO.getEmployeeNature());
+            amEmpTaskBO.setArchivePlace(amEmpTaskBO.getEmployeeNature());
+        }
+        if("上海".equals(amEmpTaskBO.getEmployeeNature())&&"中智".equals(amEmpTaskBO.getArchiveDirection()))
+        {
+            amEmpTaskBO.setHandleType(amEmpTaskBO.getArchiveDirection());
+            amEmpTaskBO.setArchivePlace(amEmpTaskBO.getArchiveDirection());
+        }
+        if("上海".equals(amEmpTaskBO.getEmployeeNature())&&"区人才".equals(amEmpTaskBO.getArchiveDirection()))
+        {
+            amEmpTaskBO.setHandleType(amEmpTaskBO.getArchiveDirection());
+            amEmpTaskBO.setArchivePlace(amEmpTaskBO.getArchiveDirection());
+        }
+        if("上海".equals(amEmpTaskBO.getEmployeeNature())&&"农村富裕劳动力".equals(amEmpTaskBO.getArchiveDirection()))
+        {
+            amEmpTaskBO.setHandleType("农民工");
+            amEmpTaskBO.setArchivePlace("农村富裕劳动力");
+        }
+        if("上海".equals(amEmpTaskBO.getEmployeeNature())&&"市人才".equals(amEmpTaskBO.getArchiveDirection()))
+        {
+            amEmpTaskBO.setHandleType("市人才");
+            amEmpTaskBO.setArchivePlace("市人才");
+        }
+        if("上海".equals(amEmpTaskBO.getEmployeeNature())&&"高教中心".equals(amEmpTaskBO.getArchiveDirection()))
+        {
+            amEmpTaskBO.setHandleType("高校");
+            amEmpTaskBO.setArchivePlace("就业指导中心");
+        }
+        if("上海".equals(amEmpTaskBO.getEmployeeNature())&&"退休".equals(amEmpTaskBO.getArchiveDirection()))
+        {
+            amEmpTaskBO.setHandleType("退休");
+            amEmpTaskBO.setArchivePlace("退休");
+        }
+        if("上海".equals(amEmpTaskBO.getEmployeeNature())&&"协保".equals(amEmpTaskBO.getArchiveDirection()))
+        {
+            amEmpTaskBO.setHandleType("协保");
+            amEmpTaskBO.setArchivePlace("协保");
+        }
+        if("非全日制".equals(amEmpTaskBO.getEmployeeNature())&&"非全日制".equals(amEmpTaskBO.getArchiveDirection()))
+        {
+            amEmpTaskBO.setHandleType("非全日制");
+            amEmpTaskBO.setArchivePlace("非全日制");
+        }
+
+        if("上海".equals(amEmpTaskBO.getEmployeeNature())&&"户口所在地".equals(amEmpTaskBO.getArchiveDirection()))
+        {
+            AmCompanySetBO amCompanySetBO = new AmCompanySetBO();
+            amCompanySetBO.setCompanyId(amEmpTaskBO.getCompanyId());
+            AmCompanySetBO amCompanySetBO1 = iAmCompanySetService.queryAmCompanySet(amCompanySetBO);
+
+            if(amCompanySetBO1.getCompanySpecial8()!=null&&amCompanySetBO1.getCompanySpecial8()==1){
+                amEmpTaskBO.setHandleType("调档");
+            }else {
+                amEmpTaskBO.setHandleType("属地管理");
+                amEmpTaskBO.setArchivePlace("属地管理");
+            }
+
+        }
+
+        return  amEmpTaskBO;
     }
 
 
