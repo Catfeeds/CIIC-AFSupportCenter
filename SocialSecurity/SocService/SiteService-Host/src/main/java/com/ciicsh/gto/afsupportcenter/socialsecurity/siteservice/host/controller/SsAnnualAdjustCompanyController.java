@@ -68,18 +68,19 @@ public class SsAnnualAdjustCompanyController extends BasicController<SsAnnualAdj
         }
         SsAnnualAdjustCompanyDTO ssAnnualAdjustCompanyDTO = new SsAnnualAdjustCompanyDTO();
         ssAnnualAdjustCompanyDTO.setCompanyId(companyId); // TODO current operator, operation rights?
-        SsAnnualAdjustCompany ssAnnualAdjustCompany = new SsAnnualAdjustCompany();
-        ssAnnualAdjustCompany.setCompanyId(companyId);
-        ssAnnualAdjustCompany.setCompanyName(company.getTitle());
-        ssAnnualAdjustCompany.setActive(true);
-        Calendar calendar = Calendar.getInstance();
-        ssAnnualAdjustCompany.setAdjustYear(String.valueOf(calendar.get(Calendar.YEAR)));
-        ssAnnualAdjustCompany.setCreatedBy(UserContext.getUserId());
-        ssAnnualAdjustCompany.setModifiedBy(UserContext.getUserId());
+        SsAnnualAdjustCompany ssAnnualAdjustCompany = null;
 
         List<SsAnnualAdjustCompany> ssAnnualAdjustCompanyList;
         ssAnnualAdjustCompanyList = business.queryAnnualAdjustCompany(ssAnnualAdjustCompanyDTO);
         if (CollectionUtils.isEmpty(ssAnnualAdjustCompanyList)) {
+            ssAnnualAdjustCompany = new SsAnnualAdjustCompany();
+            ssAnnualAdjustCompany.setCompanyId(companyId);
+            ssAnnualAdjustCompany.setCompanyName(company.getTitle());
+            ssAnnualAdjustCompany.setActive(true);
+            Calendar calendar = Calendar.getInstance();
+            ssAnnualAdjustCompany.setAdjustYear(String.valueOf(calendar.get(Calendar.YEAR)));
+            ssAnnualAdjustCompany.setCreatedBy(UserContext.getUserId());
+            ssAnnualAdjustCompany.setModifiedBy(UserContext.getUserId());
             business.insert(ssAnnualAdjustCompany);
         }
         if (ssAnnualAdjustCompanyList != null) {
