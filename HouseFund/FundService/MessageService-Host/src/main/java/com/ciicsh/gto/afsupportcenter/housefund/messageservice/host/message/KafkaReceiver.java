@@ -10,11 +10,9 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogAp
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogMessage;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
-import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.Const;
 import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.FundCategory;
 import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.ProcessCategory;
 import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.TaskCategory;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.apache.commons.lang.StringUtils;
