@@ -155,6 +155,16 @@ public class AmEmpTaskBO extends AmEmpTask {
 
     private  LocalDate accountRepairDate;
 
+    private String employSpecial;
+
+    public String getEmploySpecial() {
+        return employSpecial;
+    }
+
+    public void setEmploySpecial(String employSpecial) {
+        this.employSpecial = employSpecial;
+    }
+
     public LocalDate getAccountRepairDate() {
         return accountRepairDate;
     }
