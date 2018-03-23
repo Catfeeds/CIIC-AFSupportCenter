@@ -170,7 +170,7 @@ public class LogServiceImpl implements LogService {
     private LogDTO convertContextToDTO(LogContext logContext) {
         LogDTO logDTO = new LogDTO();
         logDTO.setAppId(appConfig.getAppId());
-        logDTO.setSource(String.valueOf(Optional.ofNullable(logContext.get("source")).orElse("支持中心")));
+        logDTO.setSource(String.valueOf(Optional.ofNullable(logContext.get("source")).orElse("support-center")));
         logDTO.setTitle(String.valueOf(Optional.ofNullable(logContext.get("title")).orElse("")));
         logDTO.setLogType((LogType) Optional.ofNullable(logContext.get("logType")).orElse(LogType.APP));
         logDTO.setTags((Map<String, String>) logContext.get("tag"));

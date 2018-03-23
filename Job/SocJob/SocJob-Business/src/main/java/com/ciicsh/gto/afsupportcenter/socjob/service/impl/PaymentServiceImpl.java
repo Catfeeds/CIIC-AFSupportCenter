@@ -83,7 +83,7 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
                 //4 财务接口返回的结果更新ss_month_charge
                 for (Map<String, Object> ele : resDto) {
                     map.put("monthChargeId", ele.get("objId"));
-                    map.put("empPaymentStatus", ele.get("isAdvance"));
+                    map.put("empPaymentStatus", ele.get("isAdvance"));//是否可付
                     ssPaymentMapper.updateMonthCharge(map);
                 }
             }
@@ -91,13 +91,14 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
             map.clear();
             map.put("comAccountId", comAccountId);
             map.put("ssMonth", ssMonth);
+            map.put("paymentComId", paymentComId);
             Integer cnt = ssPaymentMapper.countByEmpPaymentStatus(map);
 
             //更新客户的支付状态
             map.clear();
             map.put("paymentComId", paymentComId);
             if (cnt == 0) {
-                map.put("paymentState", 3);
+                map.put("paymentState", 3);//  3 =可付
                 map.put("modifiedBy", "sysJob");
                 ssPaymentMapper.updatePaymentCom(map);
             } else {

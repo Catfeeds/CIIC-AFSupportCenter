@@ -1,11 +1,14 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentComMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
+import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
+import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
+import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyProxyDTO;
@@ -25,10 +28,20 @@ import java.util.List;
 public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment> implements HfPaymentService {
 
     @Autowired
-    private HfPaymentComMapper ssPaymentComMapper;
-
-    @Autowired
     private PayapplyServiceProxy payapplyServiceProxy;
+    @Autowired
+    private HfPaymentMapper hfPaymentMapper;
+
+    /**
+     * 获得公积金汇缴支付列表
+     * @param pageInfo
+     * @return
+     */
+    @Override
+    public PageRows<HfPaymentBo> getFundPays(PageInfo pageInfo) {
+        HfPaymentBo hfPaymentBo = pageInfo.toJavaObject(HfPaymentBo.class);
+        return PageKit.doSelectPage(pageInfo, () -> hfPaymentMapper.getFundPays(hfPaymentBo));
+    }
 
     /**
      * 上海公积金付款申请接口

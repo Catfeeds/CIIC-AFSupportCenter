@@ -122,6 +122,9 @@
             <if test="hfAccountType != null">
                 AND ca.hf_account_type= #{hfAccountType}
             </if>
+            <if test="hfType != null">
+                AND class.hf_type= #{hfType}
+            </if>
         </where>
     </select>
 

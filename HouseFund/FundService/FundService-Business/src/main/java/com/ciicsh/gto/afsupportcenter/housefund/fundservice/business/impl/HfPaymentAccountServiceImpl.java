@@ -1,17 +1,21 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfArchiveBaseAdjustMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentAccountBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentAccountMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentAccount;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentAccountService;
+import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
+import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
+import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +30,14 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
 
     @Autowired
     HfPaymentMapper hfPaymentMapper;
+    @Autowired
+    HfPaymentAccountMapper hfPaymentAccountMapper;
+
+    @Override
+    public PageRows<HfPaymentAccountBo> getMakePayLists(PageInfo pageInfo){
+        HfPaymentAccountBo hfPaymentAccountBo = pageInfo.toJavaObject(HfPaymentAccountBo.class);
+        return PageKit.doSelectPage(pageInfo, () -> hfPaymentAccountMapper.getMakePayLists(hfPaymentAccountBo));
+    }
 
     @Override
     @Transactional(rollbackFor = {Exception.class})
@@ -43,7 +55,7 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
             }
             hfPayment.setPaymentState(paymentState);
             hfPayment.setModifiedBy("system");
-            hfPayment.setModifiedTime(LocalDateTime.now());
+            hfPayment.setModifiedTime(new Date());
             hfPaymentMapper.updateById(hfPayment);
 
             //将批次下的客户费用明细的状态也改为已申请到财务部

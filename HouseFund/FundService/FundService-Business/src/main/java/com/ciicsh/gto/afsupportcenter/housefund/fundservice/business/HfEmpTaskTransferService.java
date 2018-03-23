@@ -9,6 +9,9 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 
+import java.util.List;
+import java.util.Map;
+
 public interface HfEmpTaskTransferService extends IService<HfEmpTask> {
 
     /**
@@ -31,4 +34,9 @@ public interface HfEmpTaskTransferService extends IService<HfEmpTask> {
     HfEmpTaskHandleVo queryComEmpTransferForm(String employeeId, String companyId, Long empTaskId);
 
     JsonResult submitTransferTask(EmpTaskTransferBo empTaskTransferBo);
+
+    JsonResult notHandleTransfer(EmpTaskTransferBo empTaskTransferBo);
+
+    List<Map<String, Object>> printTransferTask (EmpTaskTransferBo empTaskTransferBo);
+
 }

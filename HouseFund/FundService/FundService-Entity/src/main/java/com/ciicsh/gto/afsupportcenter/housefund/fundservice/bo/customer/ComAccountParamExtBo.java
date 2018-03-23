@@ -22,4 +22,6 @@ public class ComAccountParamExtBo {
     private String basicHfComAccount;
     // 企业补充公积金账号
     private String addedHfComAccount;
+    //账户类型
+    private Integer hfType;
 }

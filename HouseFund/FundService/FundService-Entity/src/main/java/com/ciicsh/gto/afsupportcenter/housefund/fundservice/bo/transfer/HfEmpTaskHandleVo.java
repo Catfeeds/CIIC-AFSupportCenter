@@ -15,7 +15,7 @@ import java.util.List;
 
 @Data
 public class HfEmpTaskHandleVo {
-
+   private EmpTaskTransferBo empTaskTransferBo;
     private Long empTaskId;
     private Long empArchiveId;
     private Integer hfType;
