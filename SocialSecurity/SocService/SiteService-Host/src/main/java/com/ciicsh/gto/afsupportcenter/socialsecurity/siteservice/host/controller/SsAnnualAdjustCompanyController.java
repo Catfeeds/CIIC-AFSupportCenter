@@ -77,7 +77,7 @@ public class SsAnnualAdjustCompanyController extends BasicController<SsAnnualAdj
         ssAnnualAdjustCompany.setCreatedBy(UserContext.getUserId());
         ssAnnualAdjustCompany.setModifiedBy(UserContext.getUserId());
 
-        List<SsAnnualAdjustCompany> ssAnnualAdjustCompanyList = null;
+        List<SsAnnualAdjustCompany> ssAnnualAdjustCompanyList;
         ssAnnualAdjustCompanyList = business.queryAnnualAdjustCompany(ssAnnualAdjustCompanyDTO);
         if (CollectionUtils.isEmpty(ssAnnualAdjustCompanyList)) {
             business.insert(ssAnnualAdjustCompany);
