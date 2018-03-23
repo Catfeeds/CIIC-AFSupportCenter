@@ -729,7 +729,7 @@
             NOW(),
             expire_date,
             task_form_content,
-            1,
+            2,
             start_handle_date,
             send_check_date,
             emp_base,

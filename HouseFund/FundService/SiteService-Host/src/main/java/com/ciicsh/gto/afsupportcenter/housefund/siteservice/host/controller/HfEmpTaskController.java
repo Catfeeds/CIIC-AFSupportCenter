@@ -19,6 +19,7 @@ import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -196,7 +197,8 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
                 hfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_REJECTED);
                 hfEmpTask.setRejectionRemark(hfEmpTaskBatchRejectBo.getRejectionRemark());
                 hfEmpTask.setModifiedTime(LocalDateTime.now());
-                hfEmpTask.setModifiedBy("test"); // TODO current user
+                hfEmpTask.setModifiedBy(UserContext.getUserId());
+                hfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
                 list.add(hfEmpTask);
             }
 

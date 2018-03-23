@@ -458,7 +458,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         Map<String, Object> condition = new HashMap<>();
         condition.put("company_id", hfEmpTaskCreateTransBo.getCompanyId());
         condition.put("employee_id", hfEmpTaskCreateTransBo.getEmployeeId());
-        condition.put("task_category", 9);
+        condition.put("task_category", HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK);
         condition.put("hf_type", hfEmpTaskCreateTransBo.getHfType());
         condition.put("is_active", 1);
         List<HfEmpTask> hfEmpTaskList = business.selectByMap(condition);
@@ -476,7 +476,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         Map<String, Object> condition = new HashMap<>();
         condition.put("company_id", hfEmpTaskCreateTransBo.getCompanyId());
         condition.put("employee_id", hfEmpTaskCreateTransBo.getEmployeeId());
-        condition.put("task_category", 9);
+        condition.put("task_category", HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK);
         condition.put("hf_type", hfEmpTaskCreateTransBo.getHfType());
         condition.put("is_active", 1);
         List<HfEmpTask> hfEmpTaskList = business.selectByMap(condition);

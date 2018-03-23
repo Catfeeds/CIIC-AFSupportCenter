@@ -6,7 +6,7 @@
 	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentAccount">
 		<id column="payment_account_id" property="paymentAccountId" />
 		<result column="com_account_id" property="comAccountId" />
-		<result column="payment_bank" property="paymentBank" />
+		<result column="payment_month" property="paymentMonth" />
 		<result column="payment_status" property="paymentStatus" />
 		<result column="total_com_pay_amount" property="totalComPayAmount" />
 		<result column="total_emp_pay_amount" property="totalEmpPayAmount" />
@@ -16,5 +16,49 @@
 		<result column="created_by" property="createdBy" />
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
+
+    <resultMap id="GetMakePayListsResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentAccountBo" extends="BaseResultMap">
+        <result column="com_account_name" property="comAccountName" />
+        <result column="hf_type_name" property="hfTypeName" />
+        <result column="payment_state_value" property="paymentStateValue" />
+        <result column="account_type_value" property="accountTypeValue" />
+        <result column="payment_bank_value" property="paymentBankValue" />
+    </resultMap>
+
+    <!--查询公积金制作汇缴清单-->
+    <select id="getMakePayLists" resultMap="GetMakePayListsResultMap">
+        SELECT
+          ca.com_account_name,
+          ht.hf_type_name,
+          hpt.payment_state_value,
+          hpat.account_type_value,
+          hcapb.payment_bank_value,
+          pa.payment_month
+        FROM hf_payment_account pa
+        LEFT JOIN hf_com_account ca ON ca.com_account_id = pa.com_account_id
+        LEFT JOIN hf_com_account_class cac ON cac.com_account_id = ca.com_account_id
+        LEFT JOIN hf_type ht ON cac.hf_type = ht.hf_type_code
+        LEFT JOIN hf_payment_state hpt ON pa.payment_status = hpt.payment_state_code
+        LEFT JOIN hf_payment_account_type hpat ON ca.hf_account_type = hpat.account_type_code
+        LEFT JOIN hf_com_account_payment_bank hcapb ON ca.payment_bank = hcapb.payment_bank_code
+        <where>
+            pa.is_active = 1
+            AND pa.payment_id is NULL
+            <if test="paymentMonth != null and paymentMonth != ''">
+                AND pa.payment_month = TRIM(#{paymentMonth})
+            </if>
+            <if test="paymentBank!= null and paymentBank != ''">
+                AND ca.payment_bank = #{paymentBank}
+            </if>
+            <if test="paymentStatus!= null and paymentStatus != ''">
+                AND pa.payment_status = #{paymentStatus}
+            </if>
+            <if test="fundAccountType!= null and fundAccountType != ''">
+                AND ca.hf_account_type = #{fundAccountType}
+            </if>
+        </where>
+        ORDER BY
+          pa.payment_account_id
+    </select>
 
 </mapper>

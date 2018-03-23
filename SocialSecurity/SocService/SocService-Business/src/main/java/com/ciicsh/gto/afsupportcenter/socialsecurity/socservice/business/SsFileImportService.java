@@ -16,6 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface SsFileImportService<T> extends IService<SsFileImport> {
 
+    int IMPORT_TYPE_SS_ANNUAL_ADJUST_COMPANY_EMP = 1; // 年调客户雇员工资采集
+    int IMPORT_TYPE_SS_ANNUAL_ADJUST_ACCOUNT_EMP = 2; // 年调社保账户雇员列表
+
     void executeExcelImport(boolean isDelete,
                             String deleteDataKeyField,
                             int importType,

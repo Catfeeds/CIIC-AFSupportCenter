@@ -1,21 +1,26 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import com.baomidou.mybatisplus.annotations.TableId;
-import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableLogic;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * <p>
  * 公积金汇缴支付批次表
  * </p>
+ *
+ * @author 沈健
+ * @since 2018-03-14
  */
 @TableName("hf_payment")
-public class HfPayment implements Serializable {
+public class HfPayment extends Model<HfPayment> {
 
     private static final long serialVersionUID = 1L;
 
@@ -58,22 +63,17 @@ public class HfPayment implements Serializable {
      * 制单日期
      */
 	@TableField("create_payment_date")
-	private LocalDate createPaymentDate;
+	private Date createPaymentDate;
     /**
      * 财务支付日期
      */
 	@TableField("finance_payment_date")
-	private LocalDate financePaymentDate;
+	private Date financePaymentDate;
     /**
-     * 大库、外包、独立户
+     * 1 中智大库  2 中智外包 3 独立户
      */
 	@TableField("hf_account_type")
 	private Integer hfAccountType;
-    /**
-     * 账户总人数
-     */
-	@TableField("total_emp")
-	private Integer totalEmp;
     /**
      * 申请备注
      */
@@ -106,22 +106,23 @@ public class HfPayment implements Serializable {
      * 申请日期
      */
 	@TableField("request_date")
-	private LocalDate requestDate;
+	private Date requestDate;
     /**
      * 是否可用
      */
 	@TableField("is_active")
+    @TableLogic
 	private Boolean isActive;
     /**
      * 创建时间
      */
 	@TableField("created_time")
-	private LocalDateTime createdTime;
+	private Date createdTime;
     /**
      * 最后更新时间
      */
 	@TableField("modified_time")
-	private LocalDateTime modifiedTime;
+	private Date modifiedTime;
     /**
      * 创建者登录名
      */
@@ -190,19 +191,19 @@ public class HfPayment implements Serializable {
 		this.createPaymentUser = createPaymentUser;
 	}
 
-	public LocalDate getCreatePaymentDate() {
+	public Date getCreatePaymentDate() {
 		return createPaymentDate;
 	}
 
-	public void setCreatePaymentDate(LocalDate createPaymentDate) {
+	public void setCreatePaymentDate(Date createPaymentDate) {
 		this.createPaymentDate = createPaymentDate;
 	}
 
-	public LocalDate getFinancePaymentDate() {
+	public Date getFinancePaymentDate() {
 		return financePaymentDate;
 	}
 
-	public void setFinancePaymentDate(LocalDate financePaymentDate) {
+	public void setFinancePaymentDate(Date financePaymentDate) {
 		this.financePaymentDate = financePaymentDate;
 	}
 
@@ -212,14 +213,6 @@ public class HfPayment implements Serializable {
 
 	public void setHfAccountType(Integer hfAccountType) {
 		this.hfAccountType = hfAccountType;
-	}
-
-	public Integer getTotalEmp() {
-		return totalEmp;
-	}
-
-	public void setTotalEmp(Integer totalEmp) {
-		this.totalEmp = totalEmp;
 	}
 
 	public String getApplyRemark() {
@@ -254,11 +247,11 @@ public class HfPayment implements Serializable {
 		this.requestUser = requestUser;
 	}
 
-	public LocalDate getRequestDate() {
+	public Date getRequestDate() {
 		return requestDate;
 	}
 
-	public void setRequestDate(LocalDate requestDate) {
+	public void setRequestDate(Date requestDate) {
 		this.requestDate = requestDate;
 	}
 
@@ -270,19 +263,19 @@ public class HfPayment implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public LocalDateTime getCreatedTime() {
+	public Date getCreatedTime() {
 		return createdTime;
 	}
 
-	public void setCreatedTime(LocalDateTime createdTime) {
+	public void setCreatedTime(Date createdTime) {
 		this.createdTime = createdTime;
 	}
 
-	public LocalDateTime getModifiedTime() {
+	public Date getModifiedTime() {
 		return modifiedTime;
 	}
 
-	public void setModifiedTime(LocalDateTime modifiedTime) {
+	public void setModifiedTime(Date modifiedTime) {
 		this.modifiedTime = modifiedTime;
 	}
 
@@ -303,6 +296,11 @@ public class HfPayment implements Serializable {
 	}
 
 	@Override
+	protected Serializable pkVal() {
+		return this.paymentId;
+	}
+
+	@Override
 	public String toString() {
 		return "HfPayment{" +
 			", paymentId=" + paymentId +
@@ -315,7 +313,6 @@ public class HfPayment implements Serializable {
 			", createPaymentDate=" + createPaymentDate +
 			", financePaymentDate=" + financePaymentDate +
 			", hfAccountType=" + hfAccountType +
-			", totalEmp=" + totalEmp +
 			", applyRemark=" + applyRemark +
 			", rejectionRemark=" + rejectionRemark +
 			", rejectionHis=" + rejectionHis +

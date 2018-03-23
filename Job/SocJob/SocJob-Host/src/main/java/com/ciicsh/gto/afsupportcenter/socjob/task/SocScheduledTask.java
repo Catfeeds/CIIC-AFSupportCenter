@@ -33,6 +33,10 @@ public class SocScheduledTask {
     @Autowired
     private TaskStatusService taskStatusService;
 
+    /**
+     * 每月1日定时生成支付数据
+     * @throws InterruptedException
+     */
     @Scheduled(cron = "0 0 1 1 * ?")  //每月1号凌晨1点
     //@Scheduled(fixedRate = 60000)
     public void generateSocPayment() throws InterruptedException{

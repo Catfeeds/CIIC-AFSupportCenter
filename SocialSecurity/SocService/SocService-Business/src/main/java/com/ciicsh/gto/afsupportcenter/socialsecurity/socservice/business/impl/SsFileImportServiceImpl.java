@@ -10,7 +10,10 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsFileImp
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsFileImportMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsFileImportService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
 import org.apache.poi.ss.formula.functions.T;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,7 +36,8 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 @Service
 public class SsFileImportServiceImpl extends ServiceImpl<SsFileImportMapper, SsFileImport> implements SsFileImportService<T> {
-
+    @Autowired
+    private LogService logService;
     private ReentrantLock reentrantLock = new ReentrantLock();
 
     @Override
@@ -96,8 +100,10 @@ public class SsFileImportServiceImpl extends ServiceImpl<SsFileImportMapper, SsF
                     }
                     reentrantLock.unlock();
                 } catch (IOException e) {
-                    e.printStackTrace();
-                    // TODO log
+                    LogContext logContext = LogContext.of().setTitle("文件上传")
+                        .setTextContent("上传文件到文件服务器并新增上传文件记录表时异常")
+                        .setExceptionContent(e);
+                    logService.error(logContext);
                 } finally {
                     if (reentrantLock.isLocked()) {
                         reentrantLock.unlock();

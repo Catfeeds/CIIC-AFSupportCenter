@@ -1378,7 +1378,11 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
      */
     private Long handleEmpArchive(JSONObject params, Long empArchiveId, HfEmpTask inputHfEmpTask) {
         HfEmpArchive hfEmpArchive = new HfEmpArchive();
-        System.out.println("inputHfEmpTask.getEmpArchiveId() = " + inputHfEmpTask.getEmpArchiveId()); // TODO Log
+        LogMessage logMessage = LogMessage.create().setTitle("办理任务单")
+            .setContent("雇员档案数据新增或更新").setTags(new HashMap<String, String>() {{
+                put("empArchiveId", String.valueOf(inputHfEmpTask.getEmpArchiveId()) );
+            }});
+        logApiUtil.debug(logMessage);
         hfEmpArchive.setStartMonth(inputHfEmpTask.getStartMonth());
 //        hfEmpArchive.setEndMonth(inputHfEmpTask.getEndMonth());
         hfEmpArchive.setOperationRemind(inputHfEmpTask.getOperationRemind());
@@ -1484,7 +1488,14 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         TaskSheetRequestDTO taskSheetRequestDTO = new TaskSheetRequestDTO();
         taskSheetRequestDTO.setTaskId(taskId);
         taskSheetRequestDTO.setAssignee(assignee);
-        return commonApiUtils.completeTask(taskSheetRequestDTO); // TODO return code?
+        Result result = commonApiUtils.completeTask(taskSheetRequestDTO);
+        LogMessage logMessage = LogMessage.create().setTitle("访问接口")
+            .setContent("访问客服中心的完成任务接口")
+            .setTags(new HashMap<String, String>() {{
+            put("code", String.valueOf(result.getCode()));
+        }});
+        logApiUtil.info(logMessage);
+        return result;
     }
 
     /**
@@ -1535,7 +1546,14 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(companyConfirmAmount);
             afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(personalConfirmAmount);
             afEmpSocialUpdateDateDTOList.add(afEmpSocialUpdateDateDTO);
-            return commonApiUtils.updateConfirmDate(afEmpSocialUpdateDateDTOList); // TODO return code?
+            int code = commonApiUtils.updateConfirmDate(afEmpSocialUpdateDateDTOList);
+            LogMessage logMessage = LogMessage.create().setTitle("访问接口")
+                .setContent("访问雇员任务单实缴金额回调接口")
+                .setTags(new HashMap<String, String>() {{
+                    put("code", String.valueOf(code));
+                }});
+            logApiUtil.info(logMessage);
+            return code;
         }
         return 0;
     }
