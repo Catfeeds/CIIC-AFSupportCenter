@@ -182,6 +182,7 @@
         INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
         <where>
             AND b.is_active=1
+            AND a.hf_type=1
             <if test="comAccountName != null and comAccountName != ''">
                 AND b.com_account_name LIKE CONCAT('%', #{comAccountName}, '%')
             </if>
