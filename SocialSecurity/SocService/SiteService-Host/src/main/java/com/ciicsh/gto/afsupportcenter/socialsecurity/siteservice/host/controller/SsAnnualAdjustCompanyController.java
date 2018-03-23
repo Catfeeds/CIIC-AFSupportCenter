@@ -14,6 +14,9 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.util.MyExcelVerifyHandler;
 import com.ciicsh.gto.afsupportcenter.util.core.Result;
 import com.ciicsh.gto.afsupportcenter.util.core.ResultGenerator;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -46,6 +49,8 @@ public class SsAnnualAdjustCompanyController extends BasicController<SsAnnualAdj
     private SsAnnualAdjustCompanyEmpTempService ssAnnualAdjustCompanyEmpTempService;
     @Autowired
     private SsFileImportService ssFileImportService;
+    @Autowired
+    private LogService logService;
 
     /**
      * 根据客户编号上传该客户所属雇员的年调收集信息
@@ -69,14 +74,13 @@ public class SsAnnualAdjustCompanyController extends BasicController<SsAnnualAdj
         ssAnnualAdjustCompany.setActive(true);
         Calendar calendar = Calendar.getInstance();
         ssAnnualAdjustCompany.setAdjustYear(String.valueOf(calendar.get(Calendar.YEAR)));
-        ssAnnualAdjustCompany.setCreatedBy("12"); // TODO current operator,how to get it?
-        ssAnnualAdjustCompany.setModifiedBy("12"); // TODO current operator,how to get it?
+        ssAnnualAdjustCompany.setCreatedBy(UserContext.getUserId());
+        ssAnnualAdjustCompany.setModifiedBy(UserContext.getUserId());
 
         List<SsAnnualAdjustCompany> ssAnnualAdjustCompanyList = null;
         ssAnnualAdjustCompanyList = business.queryAnnualAdjustCompany(ssAnnualAdjustCompanyDTO);
         if (CollectionUtils.isEmpty(ssAnnualAdjustCompanyList)) {
             business.insert(ssAnnualAdjustCompany);
-            System.out.println("AnnualAdjustCompanyId: " + ssAnnualAdjustCompany.getAnnualAdjustCompanyId()); // TODO log
         }
         if (ssAnnualAdjustCompanyList != null) {
             if (ssAnnualAdjustCompanyList.size() > 1) {
@@ -86,7 +90,7 @@ public class SsAnnualAdjustCompanyController extends BasicController<SsAnnualAdj
         }
 
         Map<String, Object> condition = new HashMap<>();
-        int importType = 1; // TODO Constants
+        int importType = ssFileImportService.IMPORT_TYPE_SS_ANNUAL_ADJUST_COMPANY_EMP;
         String conditionKey = "annual_adjust_company_id";
         Long annualAdjustCompanyId = ssAnnualAdjustCompany.getAnnualAdjustCompanyId();
         condition.put(conditionKey, annualAdjustCompanyId);
@@ -118,10 +122,13 @@ public class SsAnnualAdjustCompanyController extends BasicController<SsAnnualAdj
             importParams.setVerifyHanlder(new MyExcelVerifyHandler(fieldLengthMap, setValueMap, skipFields, verifyConfigMap));
 
             ssFileImportService.executeExcelImport(true, conditionKey, importType, annualAdjustCompanyId,
-                importParams, ssAnnualAdjustCompanyEmpTempService, files, "12"); //TODO createdBy
+                importParams, ssAnnualAdjustCompanyEmpTempService, files, UserContext.getUserId());
             afterInsert(annualAdjustCompanyId, companyId);
         } catch (Exception e) {
-            e.printStackTrace(); // TODO log
+            LogContext logContext = LogContext.of().setTitle("文件上传")
+                .setTextContent("根据客户编号上传该客户所属雇员的年调收集信息")
+                .setExceptionContent(e);
+            logService.error(logContext);
             return ResultGenerator.genServerFailResult("文件读取失败，请先检查文件格式是否正确");
         }
 
@@ -161,7 +168,7 @@ public class SsAnnualAdjustCompanyController extends BasicController<SsAnnualAdj
     public JsonResult annualAdjustCompanysUpdate(@RequestBody JSONArray array) {
         List<SsAnnualAdjustCompany> list =  array.toJavaList(SsAnnualAdjustCompany.class);
         list.stream().forEach((e) -> {
-            e.setModifiedBy("11"); // TODO modifiedBy
+            e.setModifiedBy(UserContext.getUserId());
             business.updateAnnualAdjustCompanysByComAccountId(e);
         });
 
