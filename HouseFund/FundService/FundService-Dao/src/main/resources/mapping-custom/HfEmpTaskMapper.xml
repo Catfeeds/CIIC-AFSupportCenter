@@ -772,7 +772,9 @@
         <result column="submit_time" property="submitTime"/>
         <result column="submitter_id" property="submitterId"/>
         <result column="transfer_in_unit" property="transferInUnit"/>
+        <result column="transfer_in_unit_account" property="transferInUnitAccount"/>
         <result column="transfer_out_unit" property="transferOutUnit"/>
+        <result column="transfer_out_unit_account" property="transferOutUnitAccount"/>
         <result column="com_account_id" property="comAccountId"/>
         <result column="ss_account_type" property="ssAccountType"/>
         <result column="hf_emp_account" property="hfEmpAccount"/>
@@ -782,7 +784,7 @@
     <select id="queryEmpTaskTransfer" resultMap="EmpTaskTransferRM">
         SELECT
         et.emp_task_id,et.hf_type,com.company_id,com.title,emp.employee_id,emp.employee_name,emp.id_num,eoop.`status`,et.task_status,eoop.in_date,et.submit_time,et.submitter_id,
-        et.transfer_in_unit,et.transfer_out_unit,ea.com_account_id,ca.hf_account_type,ea.hf_emp_account,ea.emp_archive_id
+        et.transfer_in_unit,et.transfer_in_unit_account,et.transfer_out_unit,et.transfer_out_unit_account,ea.com_account_id,ca.hf_account_type,ea.hf_emp_account,ea.emp_archive_id
         from hf_emp_task et
         LEFT JOIN hf_emp_archive ea  ON ea.emp_archive_id=et.emp_archive_id
         INNER JOIN emp_af_emp_company eoop ON eoop.company_id=ea.company_id and eoop.employee_id=ea.employee_id

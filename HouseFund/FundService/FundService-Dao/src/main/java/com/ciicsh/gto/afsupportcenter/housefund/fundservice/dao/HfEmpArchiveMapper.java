@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import java.util.Map;
 由中智代缴过社保的雇员在此表必有一条记录，如果雇员跳槽到另外一家客户，就会在此表产 Mapper 接口
  * </p>
  */
+@Repository
 public interface HfEmpArchiveMapper extends BaseMapper<HfEmpArchive> {
     List<HfEmpArchiveBo> queryEmpArchive(HfEmpArchiveBo dto);
     HfEmpArchiveBo viewEmpArchive(@Param("empArchiveId")String empArchiveId);

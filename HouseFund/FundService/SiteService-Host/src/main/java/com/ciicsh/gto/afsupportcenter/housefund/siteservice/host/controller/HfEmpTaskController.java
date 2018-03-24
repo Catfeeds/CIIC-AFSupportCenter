@@ -275,7 +275,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
                     String comRatioStr = CalculateSocialUtils.digitInSimpleFormat(comRatio.multiply(BigDecimal.valueOf(100)));
                     String empRatioStr = CalculateSocialUtils.digitInSimpleFormat(empRatio.multiply(BigDecimal.valueOf(100)));
                     String baseAmount = CalculateSocialUtils.digitInSimpleFormat(hfEmpTask.getEmpBase());
-                    outputList.add(String.format(template, i, hfEmpTask.getEmployeeId(), comRatioStr, empRatioStr, amount.toString(), comAmount.toString(), empAmount.toString(), baseAmount));
+                    outputList.add(String.format(template, i + 1, hfEmpTask.getEmployeeId(), comRatioStr, empRatioStr, amount.toString(), comAmount.toString(), empAmount.toString(), baseAmount));
                 }
             }
 
@@ -286,7 +286,6 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
                     empWrapper.in("employee_id", employeeIdSet);
                     List<EmpEmployee> empList = empEmployeeService.selectList(empWrapper);
 
-                    writer.append("\r\n");
                     String employeeIdKey;
                     for (String output : outputList) {
                         for (EmpEmployee emp : empList) {
@@ -296,8 +295,8 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
                                     .replace(employeeIdKey + ".{idNum}", emp.getIdNum())
                                     .replace(employeeIdKey + ".{birthday}", emp.getBirthday().format(formatter))
                                     .replace(employeeIdKey + ".{gender}", (emp.getGender() != null && emp.getGender()) ? "01" : "02");
-                                writer.append(output);
                                 writer.append("\r\n");
+                                writer.append(output);
                                 break;
                             }
                         }
