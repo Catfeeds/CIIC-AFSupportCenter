@@ -2,7 +2,9 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentAccountBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentComBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentAccountService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentComService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentService;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -32,11 +34,27 @@ public class HfFundPayController {
     private HfPaymentService hfPaymentService;
     @Autowired
     private HfPaymentAccountService hfPaymentAccountService;
+    @Autowired
+    private HfPaymentComService hfPaymentComService;
 
     @Log("查询公积金汇缴支付列表")
     @PostMapping("/fundPays")
     public JsonResult<List<HfPaymentBo>> postFundPays(PageInfo pageInfo) {
         PageRows<HfPaymentBo> pageRows = hfPaymentService.getFundPays(pageInfo);
+        return JsonResultKit.ofPage(pageRows);
+    }
+
+    @Log("查询公积金汇缴支付编辑操作数据")
+    @PostMapping("/fundPaysOperateData")
+    public JsonResult<List<HfPaymentAccountBo>> postFundPaysOperateData(PageInfo pageInfo) {
+        PageRows<HfPaymentAccountBo> pageRows = hfPaymentAccountService.getMakePayLists(pageInfo);
+        return JsonResultKit.ofPage(pageRows);
+    }
+
+    @Log("查询公积金汇缴支付详细操作数据")
+    @PostMapping("/fundPaysDetailData")
+    public JsonResult<List<HfPaymentComBo>> postFundPaysDetailData(PageInfo pageInfo) {
+        PageRows<HfPaymentComBo> pageRows = hfPaymentComService.getFundPaysDetailOperationData(pageInfo);
         return JsonResultKit.ofPage(pageRows);
     }
 
