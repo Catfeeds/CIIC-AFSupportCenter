@@ -18,14 +18,24 @@
         <result column="handle_remark" property="handleRemark" />
         <result column="rejection_remark" property="rejectionRemark" />
         <result column="task_id" property="taskId" />
+        <result column="task_form_content" property="taskFormContent" />
+        <result column="employee_nature" property="employeeNature" />
+        <result column="archive_direction" property="archiveDirection" />
+        <result column="business_interface_id" property="businessInterfaceId" />
+        <result column="out_reason" property="outReason" />
+        <result column="out_date" property="outDate" />
+        <result column="employ_property" property="employProperty" />
+        <result column="employ_code" property="employCode" />
+        <result column="leader_ship_id" property="leaderShipId" />
+        <result column="leader_ship_name" property="leaderShipName" />
+        <result column="created_display_name" property="createdDisplayName" />
+        <result column="modified_display_name" property="modifiedDisplayName" />
+        <result column="emp_company_id" property="empCompanyId" />
         <result column="is_active" property="isActive" />
         <result column="created_time" property="createdTime" />
         <result column="modified_time" property="modifiedTime" />
         <result column="created_by" property="createdBy" />
         <result column="modified_by" property="modifiedBy" />
-        <result column="task_form_content" property="taskFormContent" />
-        <result column="archive_direction" property="archiveDirection"/>
-        <result column="employee_nature" property="employeeNature"/>
 	</resultMap>
 
 </mapper>
