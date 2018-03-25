@@ -8,11 +8,13 @@ import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @ExcelTarget("hfEmpTask")
 public class HfEmpTaskExportBo implements Serializable{
     private static final long serialVersionUID = 1L;
 
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
     private Long empTaskId;
 
     @Excel(name = "客户编号", orderNum = "6", width = 20)
@@ -42,8 +44,9 @@ public class HfEmpTaskExportBo implements Serializable{
     private String isChangeName;
     @Excel(name = "发起人", orderNum = "9",  width = 20)
     private String submitterId;
-    @Excel(name = "发起时间", orderNum = "10",  width = 20)
     private LocalDateTime submitTime;
+    @Excel(name = "发起时间", orderNum = "10",  width = 20)
+    private String submitTimeFormat;
     private Integer taskStatus;
     private String taskId;
 
@@ -191,6 +194,17 @@ public class HfEmpTaskExportBo implements Serializable{
 
     public LocalDateTime getSubmitTime() {
         return submitTime;
+    }
+
+    public String getSubmitTimeFormat() {
+        if (this.submitTime != null) {
+            return this.submitTime.format(formatter);
+        }
+        return submitTimeFormat;
+    }
+
+    public void setSubmitTimeFormat(String submitTimeFormat) {
+        this.submitTimeFormat = submitTimeFormat;
     }
 
     public void setSubmitTime(LocalDateTime submitTime) {

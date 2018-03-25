@@ -20,7 +20,6 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +43,10 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
     public PageRows<EmpTaskTransferBo> queryEmpTaskTransferPage(PageInfo pageInfo) {
         EmpTaskTransferBo empTaskTransferBo=pageInfo.toJavaObject(EmpTaskTransferBo.class);
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryEmpTaskTransfer(empTaskTransferBo));
+    }
+
+    public List<EmpTaskTransferBo> queryEmpTaskTransfer(EmpTaskTransferBo empTaskTransferBo) {
+        return baseMapper.queryEmpTaskTransfer(empTaskTransferBo);
     }
 
     @Override
@@ -143,11 +146,18 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         Map<String, Object> mapP=new HashMap<>();
         hfEmpTask.setEmpTaskId(empTaskTransferBo.getEmpTaskId());
         hfEmpTask=baseMapper.selectOne(hfEmpTask);
+
+        //empTaskTransferBo.getEmployeeId();
         mapP.put("createdByYYYY", LocalDate.now().getYear());
         mapP.put("createdByMM", LocalDate.now().getMonthValue());
         mapP.put("createdByDD", LocalDate.now().getDayOfMonth());
-
-
+        mapP.put("employeeName", "");
+        mapP.put("hfEmpAccount", "");
+        mapP.put("inUnitName", "");
+        mapP.put("outUnitName", "");
+        mapP.put("inComAccount", "");
+        mapP.put("outComAccount", "");
+        mapP.put("transCount", "");
         listP.add(mapP);
         return  listP;
     }

@@ -2,11 +2,12 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer;
 
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
 public class EmpTaskTransferBo {
+
     private Long empTaskId;
     private Integer hfType;
     private String companyId;
@@ -14,23 +15,32 @@ public class EmpTaskTransferBo {
     private String employeeId;
     private String employeeName;
     private String idNum;
+    private String hfEmpAccount;
     private Integer status;
     private Integer taskStatus;
     private Date inDate;
     private String submitTime;
     private String submitterId;
-    private String transferInUnit;
-    private String transferOutUnit;
     private String comAccountId;
     private Integer ssAccountType;
-    private String hfEmpAccount;
     private Long empArchiveId;
     private Integer processCategory;
     private Integer taskCategory;
-    private String transferInUnitAccount;
+    private String transferOutUnit;
     private String transferOutUnitAccount;
+    private String transferInUnit;
+    private String transferInUnitAccount;
     private Date transferDate;
+    private String transferDateFormat;
     private Date feedbackDate;
     private Date operateDate;
     private String handleRemark;
+
+    public String getTransferDateFormat() {
+        if (this.transferDate != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            return sdf.format(this.transferDate);
+        }
+        return transferDateFormat;
+    }
 }
