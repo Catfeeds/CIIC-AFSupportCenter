@@ -777,7 +777,7 @@
         <result column="transfer_out_unit" property="transferOutUnit"/>
         <result column="transfer_out_unit_account" property="transferOutUnitAccount"/>
         <result column="com_account_id" property="comAccountId"/>
-        <result column="ss_account_type" property="ssAccountType"/>
+        <result column="hf_account_type" property="hfAccountType"/>
         <result column="hf_emp_account" property="hfEmpAccount"/>
         <result column="emp_archive_id" property="empArchiveId"/>
     </resultMap>
@@ -845,7 +845,7 @@
         <if test="comAccountId != null">
             AND ea.com_account_id = #{comAccountId}
         </if>
-        <if test="ssAccountType != null">
+        <if test="hfAccountType != null">
             AND ca.hf_account_type = #{hfAccountType}
         </if>
         <if test="empArchiveId != null">

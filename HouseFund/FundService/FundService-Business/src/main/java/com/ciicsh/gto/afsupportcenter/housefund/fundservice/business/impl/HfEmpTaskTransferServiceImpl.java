@@ -90,6 +90,8 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         hfEmpTaskHandleBo.setIdNum(empTaskTransferBo.getIdNum());
         //任务单信息
         HfEmpTask hfEmpTask = new HfEmpTask();
+        empTaskTransferBo.setProcessCategory(9);
+        empTaskTransferBo.setTaskCategory(8);
         if(empTaskId>0){
             hfEmpTask.setEmpTaskId(empTaskId);
             hfEmpTask = baseMapper.selectOne( hfEmpTask);
@@ -101,6 +103,7 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         }else{
             hfEmpTaskHandleBo.setEmpTaskTransferBo(empTaskTransferBo);
         }
+
         return  hfEmpTaskHandleBo;
     }
     @Override
@@ -134,7 +137,8 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         }else{
             baseMapper.updateById(hfEmpTask);
         }
-        return JsonResultKit.of("转移办理操作成功！");
+
+        return JsonResultKit.of(200,"转移办理操作成功！" ,hfEmpTask.getEmpTaskId());
     }
 
     @Override
@@ -152,7 +156,8 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         List<Map<String, Object>> listP= new ArrayList();
         Map<String, Object> mapP=new HashMap<>();
         hfEmpTask.setEmpTaskId(empTaskTransferBo.getEmpTaskId());
-        //hfEmpTask=baseMapper.selectOne(hfEmpTask);
+        hfEmpTask.setOperateDate(LocalDate.now());//设置操作日期
+        baseMapper.updateById(hfEmpTask);
         Map<String,String> mapPrint=baseMapper.fetchPrintInfo(empTaskTransferBo.getEmpTaskId());
 
         mapP.put("createdByYYYY", LocalDate.now().getYear());
