@@ -23,6 +23,7 @@ public class EmpTaskTransferBo {
     private String hfEmpAccount;
     private Integer status;
     private Integer taskStatus;
+    private Integer archiveStatus;
     private Date inDate;
     private String submitTime;
     private String submitterId;
@@ -45,6 +46,7 @@ public class EmpTaskTransferBo {
     private Date feedbackDate;
     private Date operateDate;
     private String handleRemark;
+    private Integer paymentBank;
 
     public String getTransferDateFormat() {
         if (this.transferDate != null) {

@@ -125,12 +125,11 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
 
 
     /**
-     * 不需处理任务单
+     * 不需处理转移任务单
      */
     @RequestMapping("/notHandleTransfer")
     public JsonResult notHandleTransfer(@RequestBody EmpTaskTransferBo empTaskTransferBo){
         return business.notHandleTransfer(empTaskTransferBo);
-
     }
 
     /**
