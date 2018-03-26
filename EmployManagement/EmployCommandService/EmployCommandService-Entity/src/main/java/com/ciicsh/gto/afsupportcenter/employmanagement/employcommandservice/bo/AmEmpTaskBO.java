@@ -123,7 +123,6 @@ public class AmEmpTaskBO extends AmEmpTask {
 
     private String organizationCode;
 
-    private Integer empCompanyId;
     /**
      * 客服专员
      */
@@ -150,10 +149,98 @@ public class AmEmpTaskBO extends AmEmpTask {
     private  String archivePlace;
 
     private Long employmentId;
-
+    /**
+     * 社保账户名称
+     */
     private  String comAccountName;
 
     private  LocalDate accountRepairDate;
+    /**
+     * 用工公司特殊情况
+     */
+    private String employSpecial;
+
+    /**
+     * Ukey类别
+     */
+    private String keyType;
+    /**
+     * Ukey编码
+     */
+    private String keyCode;
+    /**
+     * Ukey密码
+     */
+    private String keyPwd;
+    /**
+     * Ukey状态
+     */
+    private String keyStatus;
+    /**
+     * 是否无期限合同
+     */
+    private String isUnlimitedContract;
+    /**
+     * 派遣年限
+     */
+    private String sendCondemnationYears;
+
+
+    public String getSendCondemnationYears() {
+        return sendCondemnationYears;
+    }
+
+    public void setSendCondemnationYears(String sendCondemnationYears) {
+        this.sendCondemnationYears = sendCondemnationYears;
+    }
+
+    public String getIsUnlimitedContract() {
+        return isUnlimitedContract;
+    }
+
+    public void setIsUnlimitedContract(String isUnlimitedContract) {
+        this.isUnlimitedContract = isUnlimitedContract;
+    }
+
+    public String getKeyCode() {
+        return keyCode;
+    }
+
+    public void setKeyCode(String keyCode) {
+        this.keyCode = keyCode;
+    }
+
+    public String getKeyPwd() {
+        return keyPwd;
+    }
+
+    public void setKeyPwd(String keyPwd) {
+        this.keyPwd = keyPwd;
+    }
+
+    public String getKeyStatus() {
+        return keyStatus;
+    }
+
+    public void setKeyStatus(String keyStatus) {
+        this.keyStatus = keyStatus;
+    }
+
+    public String getKeyType() {
+        return keyType;
+    }
+
+    public void setKeyType(String keyType) {
+        this.keyType = keyType;
+    }
+
+    public String getEmploySpecial() {
+        return employSpecial;
+    }
+
+    public void setEmploySpecial(String employSpecial) {
+        this.employSpecial = employSpecial;
+    }
 
     public LocalDate getAccountRepairDate() {
         return accountRepairDate;
@@ -249,14 +336,6 @@ public class AmEmpTaskBO extends AmEmpTask {
 
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
-    }
-
-    public Integer getEmpCompanyId() {
-        return empCompanyId;
-    }
-
-    public void setEmpCompanyId(Integer empCompanyId) {
-        this.empCompanyId = empCompanyId;
     }
 
     public String getFirstInDate() {

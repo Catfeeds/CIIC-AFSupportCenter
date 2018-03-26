@@ -2,8 +2,8 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
-import cn.afterturn.easypoi.excel.entity.ExportParams;
-import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
+import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
+import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTaskTransferBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.HfEmpTaskHandleVo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.EmpEmployeeService;
@@ -22,9 +22,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URLEncoder;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -138,39 +142,107 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
      * @param pageInfo
      * @return
      */
-    @RequestMapping("/exportEmpTaskTransfer")
-    @Log("雇员公积金转移清册导出")
-    public void exportEmpTaskTransfer(HttpServletResponse response, PageInfo pageInfo) throws Exception {
-        pageInfo.setPageSize(10000);
-        pageInfo.setPageNum(0);
-        PageRows<EmpTaskTransferBo> result = business.queryEmpTaskTransferPage(pageInfo);
-        long total = result.getTotal();
-        ExportParams exportParams = new ExportParams();
-        exportParams.setType(ExcelType.XSSF);
-        exportParams.setSheetName("雇员公积金任务信息");
-        Workbook workbook;
+    @RequestMapping("/multiEmpTaskTransferExport")
+    public void multiEmpTaskTransferExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
+        EmpTaskTransferBo empTaskTransferBo = pageInfo.toJavaObject(EmpTaskTransferBo.class);
+        List<EmpTaskTransferBo> empTaskTransferBoList = business.queryEmpTaskTransfer(empTaskTransferBo);
 
-        if (total <= pageInfo.getPageSize()) {
-            workbook = ExcelExportUtil.exportExcel(exportParams, EmpTaskTransferBo.class, result.getRows());
-        } else {
-            workbook = ExcelExportUtil.exportBigExcel(exportParams, EmpTaskTransferBo.class, result.getRows());
-            int pageNum = (int) Math.ceil(total / pageInfo.getPageSize());
-            for(int i = 1; i < pageNum; i++) {
-                pageInfo.setPageNum(i);
-                result = business.queryEmpTaskTransferPage(pageInfo);
-                workbook = ExcelExportUtil.exportBigExcel(exportParams, EmpTaskTransferBo.class, result.getRows());
+        Map<Integer, Map<String, Object>> alMap = new HashMap<>();
+        String[] transferOutUnitAccounts = { "", "" };
+        String[] transferInUnitAccounts = { "", "" };
+
+        for (int i = 0; i < 2; i++) {
+            Map<String, Object> map = new HashMap<>();
+            List<Map<String, Object>>  mapList = new ArrayList<>();
+            final int m = i;
+            List<EmpTaskTransferBo> list = empTaskTransferBoList.stream().filter(e -> e.getHfType() == m + 1).collect(Collectors.toList());
+
+            if (CollectionUtils.isNotEmpty(list)) {
+                String account = list.get(0).getTransferOutUnitAccount();
+                if (account != null) {
+                    transferOutUnitAccounts[i] = account;
+                }
+                account = list.get(0).getTransferInUnitAccount();
+                if (account != null) {
+                    transferInUnitAccounts[i] = account;
+                }
+
+                for (int j = 0; j < list.size(); j++) {
+                    if (!transferOutUnitAccounts[i].equals(list.get(j).getTransferOutUnitAccount())) {
+                        throw new BusinessException("仅支持一次导出相同转出单位公积金账号的信息");
+                    }
+                    if (!transferInUnitAccounts[i].equals(list.get(j).getTransferInUnitAccount())) {
+                        throw new BusinessException("仅支持一次导出相同转入单位公积金账号的信息");
+                    }
+
+                    Map<String, Object> lm = new HashMap<>();
+                    lm.put("hfEmpAccount", list.get(j).getHfEmpAccount());
+                    lm.put("employeeName", list.get(j).getEmployeeName());
+                    lm.put("rowNo", j + 1);
+                    mapList.add(lm);
+                }
             }
-            ExcelExportUtil.closeExportBigExcel();
+            map.put("maplist", mapList);
+            alMap.put(i, map);
         }
-        String fileName = URLEncoder.encode("雇员公积金转移清册.xlsx", "UTF-8");
 
-        response.reset();
-        response.setCharacterEncoding("UTF-8");
+        TemplateExportParams params = new TemplateExportParams("/template/SH_HF_MULTI_TRANSFER_TMP.xlsx", 0, 1);
+        Workbook workbook = ExcelExportUtil.exportExcel(alMap, params);
+        for (int i = 0; i < 2; i++) {
+            String left = workbook.getSheetAt(i).getHeader().getLeft();
+            left = left.replace("{{transferOutUnitAccount}}", transferOutUnitAccounts[i]);
+            left = left.replace("{{transferInUnitAccount}}", transferInUnitAccounts[i]);
+            workbook.getSheetAt(i).getHeader().setLeft(left);
+        }
+        try {
+            String fileName = URLEncoder.encode("上海市公积金雇员转移清册.xlsx", "UTF-8");
+
+            response.reset();
+            response.setCharacterEncoding("UTF-8");
 //            response.setHeader("content-Type", "application/vnd.ms-excel");
-        response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition",
-            "attachment;filename=" + fileName);
-        workbook.write(response.getOutputStream());
-        workbook.close();
+                response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setHeader("Content-Disposition","attachment;filename=" + fileName);
+            workbook.write(response.getOutputStream());
+            workbook.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 雇员公积金转移TXT导出
+     *
+     * @param response
+     * @param pageInfo
+     * @throws Exception
+     */
+    @RequestMapping("/empTaskTransferTxtExport")
+    public void empTaskTransferTxtExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
+        EmpTaskTransferBo empTaskTransferBo = pageInfo.toJavaObject(EmpTaskTransferBo.class);
+        List<EmpTaskTransferBo> empTaskTransferBoList = business.queryEmpTaskTransfer(empTaskTransferBo);
+
+        Writer writer = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
+        String title = "序号|公积金账号||||";
+        String template = "%1$d|%2$s||||";
+        List<String> outputList = new ArrayList<>();
+
+        writer.append(title);
+        if (CollectionUtils.isNotEmpty(empTaskTransferBoList)) {
+            for(int i = 0; i < empTaskTransferBoList.size(); i++) {
+                empTaskTransferBo = empTaskTransferBoList.get(i);
+                outputList.add(String.format(template, i + 1, empTaskTransferBo.getHfEmpAccount()));
+            }
+
+            for (String output : outputList) {
+                writer.append("\r\n");
+                writer.append(output);
+            }
+        }
+        String fileName = URLEncoder.encode("上海市公积金雇员转移TXT.txt", "UTF-8");
+
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader("content-Type", "text/plain");
+        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+        writer.close();
     }
 }

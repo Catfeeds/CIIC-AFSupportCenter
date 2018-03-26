@@ -41,7 +41,7 @@ public class employSearchExportOpt {
     private String serviceCenter;
 
     @Excel(name = "公司特殊情况",width = 20, orderNum = "10")
-    private  String companySpecialCase;
+    private  String employSpecial;
 
     @Excel(name = "档案编号",width = 20, orderNum = "11")
     private  String docNum;

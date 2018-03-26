@@ -22,6 +22,8 @@ public interface HfEmpTaskTransferService extends IService<HfEmpTask> {
      */
     PageRows<EmpTaskTransferBo> queryEmpTaskTransferPage(PageInfo pageInfo);
 
+    List<EmpTaskTransferBo> queryEmpTaskTransfer(EmpTaskTransferBo empTaskTransferBo);
+
     /**
      * 分页查询雇员任务单信息
      *

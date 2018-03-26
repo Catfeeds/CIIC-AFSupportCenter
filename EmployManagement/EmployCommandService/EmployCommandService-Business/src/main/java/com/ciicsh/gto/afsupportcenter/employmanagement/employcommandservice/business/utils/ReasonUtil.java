@@ -3,6 +3,9 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bus
 import ch.qos.logback.core.util.StringCollectionUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -136,6 +139,28 @@ public class ReasonUtil {
 
         return "";
 
+    }
+
+    public static String removeMark(String str){
+        if (StringUtil.isEmpty(str))
+        {
+           return "";
+        }
+        int last = str.lastIndexOf(",");
+        return  str.substring(0,last);
+    }
+
+    public  static  String  getCondemnationYears(Date start,Date end)
+    {
+        long time = end.getTime()-start.getTime();
+
+        double d = (double) time;
+        long year = 365*24*60*60*1000l;
+        double d_year = (double)year;
+        double d1 = d/d_year;
+
+        DecimalFormat df = new DecimalFormat("0.00");
+         return  df.format(d1);
     }
 
 }

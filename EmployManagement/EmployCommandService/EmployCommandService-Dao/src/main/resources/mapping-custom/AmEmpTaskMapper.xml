@@ -62,6 +62,7 @@
         d.id_num,/*证件号 */
         d.id_card_type,
         e.title,/*公司名称 */
+        cs.employ_special,
         e.license_code,/*营业执照编号 */
         h.service_center,/*服务中心 */
         h.custom /*客服*/
@@ -81,6 +82,9 @@
         LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id
+        LEFT JOIN
+        am_company_set cs
+        on cs.company_id = a.company_id
         where   a.task_category = '1'
         <if test="taskStatus!=null">
             and a.task_status = ${taskStatus}
@@ -114,6 +118,9 @@
         LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id
+        LEFT JOIN
+        am_company_set cs
+        on cs.company_id = a.company_id
         where   a.task_category = '1'
         <foreach collection = "param" item = "plid"  open=""  close=""  separator="" >
           AND  ${ plid }
@@ -222,6 +229,7 @@
         d.id_num,/*证件号 */
         d.id_card_type,
         e.title,/*公司名称 */
+        cs.employ_special,
         e.license_code,/*营业执照编号 */
         h.service_center,/*服务中心 */
         h.custom /*客服*/
@@ -241,6 +249,8 @@
         LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id
+        LEFT JOIN
+        am_company_set cs on cs.company_id = a.company_id
         where   a.task_category = '1'
         <if test="taskStatus!=null">
             and a.task_status = ${taskStatus}

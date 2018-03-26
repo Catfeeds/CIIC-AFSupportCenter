@@ -71,6 +71,20 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         PageRows<AmEmpTaskBO> result = business.queryAmEmpTask(pageInfo);
 
+        List<AmEmpTaskBO> list = result.getRows();
+        if(list!=null&&list.size()>0)
+        {
+            for(AmEmpTaskBO amEmpTaskBO:list)
+            {
+                if(!StringUtil.isEmpty(amEmpTaskBO.getEmploySpecial()))
+                {
+                    int last = amEmpTaskBO.getEmploySpecial().lastIndexOf(",");
+                    amEmpTaskBO.setEmploySpecial(amEmpTaskBO.getEmploySpecial().substring(0,last));
+                }
+
+            }
+        }
+
         return JsonResultKit.of(result);
 
     }
