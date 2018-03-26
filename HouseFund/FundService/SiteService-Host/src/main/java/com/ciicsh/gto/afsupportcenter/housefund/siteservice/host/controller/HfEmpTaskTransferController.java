@@ -267,7 +267,6 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
     @RequestMapping(value="/feedbackDateUpload", consumes="multipart/form-data")
     public JsonResult feedbackDateUpload(HttpServletRequest request) {
         EmpTaskTransferBo empTaskTransferBo = new EmpTaskTransferBo();
-        empTaskTransferBo.setOrderByStr("emp.employee_id, emp.employee_name, et.hf_type");
         List<EmpTaskTransferBo> empTaskTransferBoList = business.queryEmpTaskTransfer(empTaskTransferBo);
 
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
