@@ -122,8 +122,10 @@ public class SsAnnualAdjustCompanyController extends BasicController<SsAnnualAdj
             importParams.setNeedVerfiy(true);
             importParams.setVerifyHanlder(new MyExcelVerifyHandler(fieldLengthMap, setValueMap, skipFields, verifyConfigMap));
 
-            ssFileImportService.executeExcelImport(true, conditionKey, importType, annualAdjustCompanyId,
-                importParams, ssAnnualAdjustCompanyEmpTempService, files, UserContext.getUserId());
+            ssFileImportService.deleteExistData(ssAnnualAdjustCompanyEmpTempService, condition);
+            ssFileImportService.executeExcelImport(importType, annualAdjustCompanyId,
+                ssAnnualAdjustCompanyEmpTempService, null, null, null,
+                importParams, files, UserContext.getUserId());
             afterInsert(annualAdjustCompanyId, companyId);
         } catch (Exception e) {
             LogContext logContext = LogContext.of().setTitle("文件上传")

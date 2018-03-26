@@ -1,7 +1,7 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao;
+package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsFileImport;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.SsFileImport;
 import com.ciicsh.gto.afsupportcenter.util.fileImportService.FileImportDTO;
 
 /**

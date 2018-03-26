@@ -3,6 +3,9 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.util;
 import cn.afterturn.easypoi.excel.entity.result.ExcelVerifyHanlderResult;
 import cn.afterturn.easypoi.handler.inter.IExcelModel;
 import cn.afterturn.easypoi.handler.inter.IExcelVerifyHandler;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -11,6 +14,9 @@ import java.util.Map;
 
 public class MyExcelVerifyHandler implements IExcelVerifyHandler<IExcelModel>
 {
+    @Autowired
+    private LogService logService;
+
     private Map<String, Integer> fieldLengthMap;
     private Map<String, Object> setValueMap;
     private List<String> skipFields;
@@ -45,7 +51,7 @@ public class MyExcelVerifyHandler implements IExcelVerifyHandler<IExcelModel>
             for (Field field : model.getClass().getDeclaredFields()) {
                 String fieldName = field.getName();
                 if (skipFields != null && skipFields.contains(fieldName)) continue;
-                String fieldValue = null;
+                String fieldValue;
                 try {
                     field.setAccessible(true);
                     fieldValue = String.valueOf(field.get(model));
@@ -82,15 +88,17 @@ public class MyExcelVerifyHandler implements IExcelVerifyHandler<IExcelModel>
                     fieldValue = fieldValue.substring(0, DEFAULT_LIMIT_LENGTH - 3) + "...";
                     field.set(model, fieldValue);
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                    // TODO log
+                    LogContext logContext = LogContext.of().setTitle("文件上传")
+                        .setTextContent("上传文件校验并向Model中设值时出现异常(ErrorMsg存在时)")
+                        .setExceptionContent(e);
+                    logService.error(logContext);
                 }
             }
         } else {
             for (Field field : model.getClass().getDeclaredFields()) {
                 String fieldName = field.getName();
                 if (skipFields != null && skipFields.contains(fieldName)) continue;
-                String fieldValue = null;
+                String fieldValue;
                 try {
                     field.setAccessible(true);
                     fieldValue = String.valueOf(field.get(model));
@@ -112,8 +120,10 @@ public class MyExcelVerifyHandler implements IExcelVerifyHandler<IExcelModel>
                         continue;
                     }
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                    // TODO log
+                    LogContext logContext = LogContext.of().setTitle("文件上传")
+                        .setTextContent("上传文件校验并向Model中设值时出现异常(ErrorMsg不存在时)")
+                        .setExceptionContent(e);
+                    logService.error(logContext);
                 }
             }
         }

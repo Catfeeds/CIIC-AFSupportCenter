@@ -2,16 +2,22 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTaskTransferBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.HfEmpTaskHandleVo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.EmpEmployeeService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskHandleService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskTransferService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.util.FeedbackDateVerifyHandler;
 import com.ciicsh.gto.afsupportcenter.util.PdfUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
+import com.ciicsh.gto.afsupportcenter.util.core.Result;
+import com.ciicsh.gto.afsupportcenter.util.core.ResultGenerator;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -19,8 +25,12 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -38,6 +48,13 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
     HfEmpTaskHandleService hfEmpTaskHandleService;
     @Autowired
     EmpEmployeeService empEmployeeService;
+    @Autowired
+    HfFileImportService hfFileImportService;
+    @Autowired
+    HFImportFeedbackDateService hfImportFeedbackDateService;
+    @Autowired
+    LogService logService;
+
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 
@@ -245,5 +262,35 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
         response.setHeader("content-Type", "text/plain");
         response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
         writer.close();
+    }
+
+    @RequestMapping(value="/feedbackDateUpload", consumes="multipart/form-data")
+    public JsonResult feedbackDateUpload(HttpServletRequest request) {
+        EmpTaskTransferBo empTaskTransferBo = new EmpTaskTransferBo();
+        empTaskTransferBo.setOrderByStr("emp.employee_id, emp.employee_name, et.hf_type");
+        List<EmpTaskTransferBo> empTaskTransferBoList = business.queryEmpTaskTransfer(empTaskTransferBo);
+
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        MultiValueMap<String, MultipartFile> files = multipartRequest.getMultiFileMap();//得到文件map对象
+        ImportParams importParams = new ImportParams();
+        List<HfEmpTask> successList = new ArrayList<>();
+        List<HfEmpTask> failList = new ArrayList<>();
+
+        try {
+            importParams.setKeyIndex(null);
+            importParams.setNeedVerfiy(true);
+            importParams.setVerifyHanlder(new FeedbackDateVerifyHandler(empTaskTransferBoList));
+            hfFileImportService.executeExcelImport(hfFileImportService.IMPORT_TYPE_EMP_TASK_TRANS_FEEDBACK_DATE, null,
+                null, hfImportFeedbackDateService, successList, failList,
+                importParams, files, UserContext.getUserId());
+        } catch (Exception e) {
+            LogContext logContext = LogContext.of().setTitle("文件上传")
+                .setTextContent("根据客户编号上传该客户所属雇员的年调收集信息")
+                .setExceptionContent(e);
+            logService.error(logContext);
+            return JsonResultKit.ofError("文件读取失败，请先检查文件格式是否正确");
+        }
+
+        return JsonResultKit.of(failList);
     }
 }
