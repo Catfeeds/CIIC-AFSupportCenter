@@ -19,6 +19,7 @@ public interface SocialSecurityConst {
     public static final String FUND_OUT_UNIT_KEY = "FundOutUnit";
     public static final String REMIT_WAY_KEY = "RemitWay";
     public static final String PAYMENT_TYPE_KEY = "PaymentType";
+    public static final String HF_TASK_CATEGORY_KEY = "HFTaskCategory";
 
     //结算区县
     public static final Map<String, String> DISTRICT_MAP = new HashMap<String, String>() {
@@ -62,6 +63,20 @@ public interface SocialSecurityConst {
             put("3", "封存");
         }
     };
+
+    public static final Map<String, String> HF_TASK_CATEGORY_MAP = new HashMap<String, String>() {
+        {
+            put("1", "新开");
+            put("2", "转入");
+            put("3", "启封");
+            put("4", "转出");
+            put("5", "封存");
+            put("6", "补缴");
+            put("7", "调整");
+            put("8", "转移");
+        }
+    };
+
     /**
      * 未处理
      */

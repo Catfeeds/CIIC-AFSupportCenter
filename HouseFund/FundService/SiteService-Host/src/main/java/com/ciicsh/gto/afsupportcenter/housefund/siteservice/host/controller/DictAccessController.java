@@ -63,6 +63,7 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.HANDLE_STATUS_KEY, SocialSecurityConst.HANDLE_STATUS_MAP, false);
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.REMIT_WAY_KEY, SocialSecurityConst.REMIT_WAY_MAP, false);
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.PAYMENT_TYPE_KEY, SocialSecurityConst.PAYMENT_TYPE_MAP, false);
+            DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.HF_TASK_CATEGORY_KEY, SocialSecurityConst.HF_TASK_CATEGORY_MAP, false);
         } catch (Exception e) {
             LogContext logContext = LogContext.of().setTitle("上海公积金字典项及常量项")
                 .setTextContent("加载字典项（访问字典公共接口）或常量项失败")

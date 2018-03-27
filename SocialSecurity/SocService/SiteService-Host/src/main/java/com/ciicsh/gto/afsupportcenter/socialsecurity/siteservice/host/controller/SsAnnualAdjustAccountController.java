@@ -156,11 +156,14 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
         importParams.setVerifyHanlder(new MyExcelVerifyHandler(fieldLengthMap, setValueMap, skipFields, null));
 
         try {
+            ssFileImportService.deleteExistData(ssAnnualAdjustAccountEmpTempService, condition);
+
             for (int i = 0; i < 2; i++) {
                 importParams.setStartSheetIndex(i);
                 setValueMap.put("accountStatus", i + 1);
-                ssFileImportService.executeExcelImport(i == 0, conditionKey, importType, annualAdjustAccountId,
-                    importParams, ssAnnualAdjustAccountEmpTempService, files, UserContext.getUserId());
+                ssFileImportService.executeExcelImport(importType, annualAdjustAccountId,
+                    ssAnnualAdjustAccountEmpTempService, null, null, null,
+                    importParams, files, UserContext.getUserId());
             }
             afterInsert(annualAdjustAccountId);
         } catch (Exception e) {
