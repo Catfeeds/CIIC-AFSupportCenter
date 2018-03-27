@@ -6,69 +6,102 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.io.StreamUtil;
 import com.itextpdf.text.pdf.*;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.poi.ss.formula.functions.T;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
 
 public class PdfUtil {
-    private final static String DEFAULT_FONT_NAME = "simsun.ttc,1";
+    public final static String DEFAULT_FONT_FILE_NAME = "simsun.ttc";
+    public final static String DEFAULT_FONT_NAME = "STSongStd-Light";
+    public final static String DEFAULT_FONT_ENCODING = "UniGB-UCS2-H";
 
     /**
      * 根据模板生成Pdf（根据单页模板，生成多页文档）
      *
      * @param templateFilePath 模板文档路径（支持相对路径）
      * @param fontName 字体名
+     * @param fontEncoding 字体编码
      * @param isInSystemFontFolder 是否系统目录下字体
-     * @param fillDataList 充填数据列表
+     * @param hasPageInfo 是否包含翻页信息
+     * @param fillDataMapList 充填数据Map列表（表体之外部分：属性名请与Pdf模板一致；
+     *                        表体部分(可省略)：key:"fillDataList"; value:List<T>； 属性名请与Pdf模板一致，名称后的数字不需定义）
      * @param outputStream 输出流
-     * @throws BusinessException
+     * @throws BusinessException 封装后异常
      */
     public static void createPdfByTemplate(String templateFilePath,
                                            String fontName,
+                                           String fontEncoding,
                                            boolean isInSystemFontFolder,
-                                           List<T> fillDataList,
+                                           boolean hasPageInfo,
+                                           List<Map<String, Object>> fillDataMapList,
                                            OutputStream outputStream) throws BusinessException {
-        InputStream is = null;
-        ByteArrayOutputStream bos = null;
-        Document doc = null;
-        try {
-            is = StreamUtil.getResourceStream(templateFilePath);
-            bos = new ByteArrayOutputStream();
-            if (isInSystemFontFolder) {
-                fontName = getChineseFont(fontName);
+        try (InputStream is = StreamUtil.getResourceStream(templateFilePath);
+             ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            ArrayList<BaseFont> fontList = null;
+            if (StringUtils.isNotEmpty(fontName)) {
+                fontList = new ArrayList<>();
+                if (isInSystemFontFolder) {
+                    fontName = getChineseFont(fontName) + ",1";
+                }
+                if (StringUtils.isEmpty(fontEncoding)) {
+                    fontEncoding = BaseFont.IDENTITY_H;
+                }
+                BaseFont baseFont = BaseFont.createFont(fontName, fontEncoding, BaseFont.EMBEDDED);
+                fontList.add(baseFont);
             }
-            doc = new Document();
+            Document doc = new Document();
             PdfCopy copy = new PdfCopy(doc, outputStream);
             doc.open();
-            BaseFont baseFont = BaseFont.createFont(fontName, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-            ArrayList<BaseFont> fontList = new ArrayList<>();
-            fontList.add(baseFont);
-            byte[] bytes = IOUtils.toByteArray(is);
 
-            for (T t : fillDataList) {
+            byte[] bytes = IOUtils.toByteArray(is);
+            int pageSize = fillDataMapList.size();
+
+            for (int page = 0; page < pageSize; page++) {
                 PdfReader reader = new PdfReader(bytes);
                 PdfStamper stamper = new PdfStamper(reader, bos);
                 AcroFields form = stamper.getAcroFields();
-                form.setSubstitutionFonts(fontList);
-                Field[] fields = t.getClass().getDeclaredFields();
-                List<Field> fieldList = Arrays.asList(fields);
-                Iterator<String> iterator = form.getFields().keySet().iterator();
+                if (fontList != null) {
+                    form.setSubstitutionFonts(fontList);
+                }
+                Set<String> formKeySet = form.getFields().keySet();
+                Map<String, Object> fillDataMap = fillDataMapList.get(page);
 
-                while (iterator.hasNext()) {
-                    String name = iterator.next();
-//                    form.setFieldProperty(name, "textsize", 9, null);
+                if (hasPageInfo) {
+                    form.setField("totalPage", String.valueOf(pageSize));
+                    form.setField("page", String.valueOf(page + 1));
+                }
 
-                    for (Iterator<Field> iter = fieldList.iterator(); iter.hasNext();) {
-                        Field field = iter.next();
-                        String fieldName = field.getName();
+                for (String key : fillDataMap.keySet()) {
+                    if (formKeySet.contains(key)) {
+                        Object value = fillDataMap.get(key);
+                        if (value != null) {
+                            form.setField(key, String.valueOf(value));
+                        } else {
+                            form.setField(key, "");
+                        }
+                    }
+                }
 
-                        if (name.equals(fieldName)) {
-                            form.setField(name, String.valueOf(field.get(t)));
-                            iter.remove();
-                            break;
+                if (fillDataMap.containsKey("fillDataList")) {
+                    List fillDataList = (List) fillDataMap.get("fillDataList");
+                    for (int i = 0; i < fillDataList.size(); i++) {
+                        Object obj = fillDataList.get(i);
+                        Field[] fields = obj.getClass().getDeclaredFields();
+
+                        for (Field field : fields) {
+                            field.setAccessible(true);
+                            String fieldName = field.getName() + (i + 1);
+
+                            if (formKeySet.contains(fieldName)) {
+                                Object fieldValue = field.get(obj);
+                                if (fieldValue != null) {
+                                    form.setField(fieldName, String.valueOf(fieldValue));
+                                } else {
+                                    form.setField(fieldName, "");
+                                }
+                            }
                         }
                     }
                 }
@@ -78,38 +111,12 @@ public class PdfUtil {
                 copy.addPage(importedPage);
             }
             doc.close();
-        } catch (IOException e) {
+        } catch (IOException | DocumentException | IllegalAccessException e) {
             throw new BusinessException(e);
-        } catch (DocumentException e) {
-            throw new BusinessException(e);
-        } catch (IllegalAccessException e) {
-            throw new BusinessException(e);
-        } finally {
-            if (doc != null && doc.isOpen()) {
-                doc.close();
-            }
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    // TODO log
-                }
-            }
-            if (bos != null) {
-                try {
-                    bos.close();
-                } catch (IOException e) {
-                    // TODO log
-                }
-            }
         }
     }
 
     public static String getChineseFont(String fontName){
-        if (fontName == null) {
-            fontName = DEFAULT_FONT_NAME;
-        }
-
         //宋体（对应css中的 属性 font-family: SimSun; /*宋体*/）
         String fontPath = "C:/Windows/Fonts/" + fontName;
 
@@ -117,7 +124,7 @@ public class PdfUtil {
         Properties prop = System.getProperties();
         String osName = prop.getProperty("os.name").toLowerCase();
 
-        if (osName.indexOf("linux") > -1) {
+        if (osName.contains("linux")) {
             fontPath = "/usr/share/fonts/" + fontName;
         }
         if(!new File(fontPath).exists()){

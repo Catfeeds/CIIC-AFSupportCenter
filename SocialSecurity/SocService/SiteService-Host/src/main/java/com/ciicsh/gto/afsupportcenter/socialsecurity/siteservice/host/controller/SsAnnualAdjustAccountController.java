@@ -17,6 +17,9 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.util.MyExc
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.core.Result;
 import com.ciicsh.gto.afsupportcenter.util.core.ResultGenerator;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -56,6 +59,8 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
     private SsAnnualAdjustAccountEmpService ssAnnualAdjustAccountEmpService;
     @Autowired
     private SsFileImportService ssFileImportService;
+    @Autowired
+    private LogService logService;
 
     /**
      * 分页查询年调社保账户信息
@@ -69,7 +74,7 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
     }
 
     /**
-     * 根据客户编号上传该客户所属雇员的年调收集信息
+     * 根据客户编号上传该企业社保账户所属雇员的年调收集信息
      * @param request
      * @return
      */
@@ -98,19 +103,19 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
         ssAnnualAdjustAccountDTO.setComAccountId(comAccountId); // TODO current operator, operation rights?
 
         List<SsAnnualAdjustAccount> list = business.queryAnnualAdjustAccount(ssAnnualAdjustAccountDTO);
-        SsAnnualAdjustAccount ssAnnualAdjustAccount = new SsAnnualAdjustAccount();
-        ssAnnualAdjustAccount.setComAccountId(comAccountId);
-        ssAnnualAdjustAccount.setComAccountName(ssComAccount.getComAccountName());
-        ssAnnualAdjustAccount.setSsAccount(ssComAccount.getSsAccount());
-        ssAnnualAdjustAccount.setActive(true);
-        Calendar calendar = Calendar.getInstance();
-        ssAnnualAdjustAccount.setAdjustYear(String.valueOf(calendar.get(Calendar.YEAR)));
-        ssAnnualAdjustAccount.setCreatedBy("12"); // TODO current operator,how to get it?
-        ssAnnualAdjustAccount.setModifiedBy("12"); // TODO current operator,how to get it?
+        SsAnnualAdjustAccount ssAnnualAdjustAccount = null;
 
         if (CollectionUtils.isEmpty(list)) {
+            ssAnnualAdjustAccount = new SsAnnualAdjustAccount();
+            ssAnnualAdjustAccount.setComAccountId(comAccountId);
+            ssAnnualAdjustAccount.setComAccountName(ssComAccount.getComAccountName());
+            ssAnnualAdjustAccount.setSsAccount(ssComAccount.getSsAccount());
+            ssAnnualAdjustAccount.setActive(true);
+            Calendar calendar = Calendar.getInstance();
+            ssAnnualAdjustAccount.setAdjustYear(String.valueOf(calendar.get(Calendar.YEAR)));
+            ssAnnualAdjustAccount.setCreatedBy(UserContext.getUserId());
+            ssAnnualAdjustAccount.setModifiedBy(UserContext.getUserId());
             business.insert(ssAnnualAdjustAccount);
-            System.out.println("AnnualAdjustAccountId: " + ssAnnualAdjustAccount.getAnnualAdjustAccountId()); // TODO log
         }
 
         if (CollectionUtils.isNotEmpty(list)) {
@@ -122,7 +127,7 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
 
         // delete data from temporary table by last upload
         Map<String, Object> condition = new HashMap<>();
-        int importType = 2; // TODO Constants
+        int importType = ssFileImportService.IMPORT_TYPE_SS_ANNUAL_ADJUST_ACCOUNT_EMP;
         String conditionKey = "annual_adjust_account_id";
         Long annualAdjustAccountId = ssAnnualAdjustAccount.getAnnualAdjustAccountId();
         condition.put(conditionKey, annualAdjustAccountId);
@@ -155,11 +160,14 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
                 importParams.setStartSheetIndex(i);
                 setValueMap.put("accountStatus", i + 1);
                 ssFileImportService.executeExcelImport(i == 0, conditionKey, importType, annualAdjustAccountId,
-                    importParams, ssAnnualAdjustAccountEmpTempService, files, "12"); // TODO createdBy
+                    importParams, ssAnnualAdjustAccountEmpTempService, files, UserContext.getUserId());
             }
             afterInsert(annualAdjustAccountId);
         } catch (Exception e) {
-            e.printStackTrace(); // TODO log
+            LogContext logContext = LogContext.of().setTitle("文件上传")
+                .setTextContent("根据客户编号上传该企业社保账户所属雇员的平均工资收集信息")
+                .setExceptionContent(e);
+            logService.error(logContext);
             return ResultGenerator.genServerFailResult("文件读取失败，请先检查文件格式是否正确");
         }
 
@@ -244,21 +252,17 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
 
             TemplateExportParams params = new TemplateExportParams("/template/ssAccount_reportYear.xls", 0, 1, 2);
             Workbook workbook = ExcelExportUtil.exportExcel(alMap, params);
-            try {
-                String fileName = URLEncoder.encode("ssAccount_reportYear.xls"
-                    .replace("ssAccount", ssAnnualAdjustAccount.getSsAccount())
-                    .replace("reportYear", String.valueOf(reportYear)), "UTF-8");
+            String fileName = URLEncoder.encode("ssAccount_reportYear.xls"
+                .replace("ssAccount", ssAnnualAdjustAccount.getSsAccount())
+                .replace("reportYear", String.valueOf(reportYear)), "UTF-8");
 
-                response.reset();
-                response.setCharacterEncoding("UTF-8");
-                response.setHeader("content-Type", "application/vnd.ms-excel");
+            response.reset();
+            response.setCharacterEncoding("UTF-8");
+            response.setHeader("content-Type", "application/vnd.ms-excel");
 //                response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-                response.setHeader("Content-Disposition","attachment;filename=" + fileName);
-                workbook.write(response.getOutputStream());
-                workbook.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            response.setHeader("Content-Disposition","attachment;filename=" + fileName);
+            workbook.write(response.getOutputStream());
+            workbook.close();
         }
     }
 

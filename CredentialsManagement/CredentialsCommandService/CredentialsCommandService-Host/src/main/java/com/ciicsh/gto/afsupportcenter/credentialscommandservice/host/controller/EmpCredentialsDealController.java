@@ -34,7 +34,7 @@ import java.util.List;
 
 /**
  * @Author: guwei
- * @Description:
+ * @Description: 雇员证件办理控制器
  * @Date: Created in 9:34 2018/1/17
  */
 @RestController
@@ -47,10 +47,6 @@ public class EmpCredentialsDealController {
     private TaskService taskService;
     @Autowired
     private CompanyExtService companyExtService;
-    @Autowired
-    private TaskMaterialService taskMaterialService;
-    @Autowired
-    private CommandAfDisposableChargeProxy commandAfDisposableChargeProxy;
 
     /**
      * 查询任务单跟进记录
@@ -144,76 +140,26 @@ public class EmpCredentialsDealController {
      */
     @PostMapping("/saveOrUpdate/task")
     public JsonResult saveOrUpdateTask(@RequestBody TaskDetialDTO taskDetialDTO){
-        Task task = new Task();
-        BeanUtils.copyProperties(taskDetialDTO,task);
-        if (StringUtils.isNotBlank(taskDetialDTO.getCredentialsType())) {
-            task.setCredentialsType(Integer.parseInt(taskDetialDTO.getCredentialsType()));
+        int i = taskService.saveOrUpdateTask(taskDetialDTO);
+        String errorMsg = "";
+        if (i == 0) {
+            return JsonResult.success(null);
         }
-        if (StringUtils.isNotBlank(taskDetialDTO.getCredentialsDealType())) {
-            task.setCredentialsDealType(Integer.parseInt(taskDetialDTO.getCredentialsDealType()));
+        if (i == 1) {
+            errorMsg = "任务单保存失败";
         }
-        //TODO
-        if (taskDetialDTO.getTaskId() == null) {
-            task.setCreatedBy("gu");
-            task.setCreatedTime(new Date());
+        if (i == 2) {
+            errorMsg = "材料收缴信息保存失败";
         }
-        task.setModifiedBy("gu");
-        task.setModifiedTime(new Date());
-        boolean b = taskService.insertOrUpdate(task);
-        if (b) {
-            TaskMaterial taskMaterial = new TaskMaterial();
-            taskMaterial.setMaterialIds(taskDetialDTO.getMaterialIds());
-            taskMaterial.setTaskId(String.valueOf(taskDetialDTO.getTaskId()));
-            taskMaterial.setCompanyId(taskDetialDTO.getCompanyId());
-            taskMaterial.setEmployeeId(taskDetialDTO.getEmployeeId());
-            taskMaterial.setComp(taskDetialDTO.getComp());
-            taskMaterial.setMarryStatus(taskDetialDTO.getMarryStatus());
-            taskMaterial.setHasFollower(taskDetialDTO.getHasFollower());
-            taskMaterial.setFamilerMaterials(taskDetialDTO.getFamilerMaterials());
-            taskMaterial.setApplyAddrChange(taskDetialDTO.getApplyAddrChange());
-            taskMaterial.setAddr(taskDetialDTO.getAddr());
-            taskMaterial.setFollowerType(taskDetialDTO.getFollowerType());
-            taskMaterial.setFollower(taskDetialDTO.getFollower());
-            taskMaterial.setHasShPerson(taskDetialDTO.getHasShPerson());
-            taskMaterial.setHasChildFollow(taskDetialDTO.getHasChildFollow());
-            taskMaterial.setHasSpouseFollow(taskDetialDTO.getHasSpouseFollow());
-            taskMaterial.setMarried(taskDetialDTO.getMarried());
-            taskMaterial.setJobMaterials(taskDetialDTO.getJobMaterials());
-            taskMaterial.setEducate(taskDetialDTO.getEducate());
-            taskMaterial.setFollowMaterials(taskDetialDTO.getFollowMaterials());
-            taskMaterial.setNotFollowMaterials(taskDetialDTO.getNotFollowMaterials());
-            //TODO
-            if (taskDetialDTO.getTaskId() == null) {
-                taskMaterial.setCreatedBy("gu");
-                taskMaterial.setCreatedTime(new Date());
-                taskMaterial.setModifiedBy("gu");
-                taskMaterial.setModifiedTime(new Date());
-                taskMaterial.setTaskId(String.valueOf(task.getTaskId()));
-                boolean insert = taskMaterialService.insert(taskMaterial);
-//                if (insert) {
-//                    //调用账单中心
-//                    AfDisposableChargeDTO afDisposableChargeDTO = new AfDisposableChargeDTO();
-//                    Calendar c = Calendar.getInstance();
-//                    afDisposableChargeDTO.setBillMonth(c.get(Calendar.MONTH)+1);
-//                    afDisposableChargeDTO.setActualChargeMonth(c.get(Calendar.MONTH)+1);
-//                    afDisposableChargeDTO.setChargeObject(2);
-//                    //todo 雇员类型（应收类型）:1-派遣;2-代理;3-外包
-//                    afDisposableChargeDTO.setEmployeeType(1);
-//                    afDisposableChargeDTO.setSubjectId();
-//                    commandAfDisposableChargeProxy.save();
-//                    return JsonResult.success();
-//                } else {
-//                    return JsonResult.faultMessage("未录入账单中心");
-//                }
-                return JsonResult.success(insert);
-            } else {
-                taskMaterial.setModifiedBy("gu");
-                taskMaterial.setModifiedTime(new Date());
-                return JsonResult.success(taskMaterialService.updateTaskMaterials(taskMaterial));
-            }
-        } else {
-            return JsonResult.faultMessage("基础信息保存错误");
+        if (i == 3) {
+            errorMsg = "账单生成失败";
         }
+        return JsonResult.faultMessage(errorMsg);
+    }
+
+    @PostMapping("/test")
+    public void testCharge(@RequestBody TaskDetialDTO taskDetialDTO){
+        taskService.saveCommandAfDisposableCharge(taskDetialDTO);
     }
 
 }

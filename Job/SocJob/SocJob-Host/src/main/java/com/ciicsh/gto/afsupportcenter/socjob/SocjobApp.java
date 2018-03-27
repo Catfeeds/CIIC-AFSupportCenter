@@ -10,9 +10,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 /**
  * Created by houwanhua on 2018/1/11.
  */
-@EnableFeignClients("com.ciicsh.gto.settlementcenter.payment.cmdapi")
+@EnableFeignClients({"com.ciicsh.gto.settlementcenter.payment.cmdapi","com.ciicsh.gto.logservice.api"})
 @EnableScheduling
-@SpringBootApplication(scanBasePackages = {"com.ciicsh.gto"})
+@SpringBootApplication(scanBasePackages = {"com.ciicsh.gto","com.ciicsh.gto.afsupportcenter.util"})
 @EnableDiscoveryClient
 @MapperScan("com.ciicsh.gto.afsupportcenter.socjob.dao")
 public class SocjobApp {

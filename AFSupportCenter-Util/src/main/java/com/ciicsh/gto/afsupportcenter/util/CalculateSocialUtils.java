@@ -33,7 +33,10 @@ public class CalculateSocialUtils {
 				return new BigDecimal(0);
 		}
 	}
-
+public static void main(String[] arg){
+   BigDecimal decimal =calculateAmount(new BigDecimal("5000.000"),new BigDecimal("0.000000"),null,2,2);
+    System.out.println(decimal);
+}
 	public static BigDecimal calculateByRoundType(BigDecimal amount,int roundType){
 		BigDecimal ten = new BigDecimal(10);
 		BigDecimal hundred = new BigDecimal(100);
@@ -49,11 +52,11 @@ public class CalculateSocialUtils {
 				return new BigDecimal(Math.ceil(amount.doubleValue()));
 			// 进位偶数
 			case 4:
-				BigDecimal rs = new BigDecimal(Math.floor(amount.doubleValue()));
+				BigDecimal rs = new BigDecimal(Math.ceil(amount.doubleValue()));
 				if (rs.intValue() % 2 == 0){
 					return rs;
 				}else {
-					return rs.add(new BigDecimal(1));
+                    return rs.add(new BigDecimal(1));
 				}
 			// 舍去角
 			case 5:

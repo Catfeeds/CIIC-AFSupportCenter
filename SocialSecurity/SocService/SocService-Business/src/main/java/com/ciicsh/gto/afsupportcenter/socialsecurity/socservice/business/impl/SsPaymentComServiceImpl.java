@@ -56,7 +56,7 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
 
         //新数据
         //抵扣费用是否纳入支付申请
-        int ifDeductedIntoPay = ssPaymentComBO.getIfDeductedIntoPay();
+        int ifDeductedIntoPay = Optional.ofNullable(ssPaymentComBO.getIfDeductedIntoPay()).orElse(0);
         //额外金
         BigDecimal extraAmount = ssPaymentComBO.getExtraAmount();
         //原数据

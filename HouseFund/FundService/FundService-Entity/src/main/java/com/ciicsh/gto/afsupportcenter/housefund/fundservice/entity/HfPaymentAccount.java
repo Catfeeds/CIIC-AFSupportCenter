@@ -29,10 +29,10 @@ public class HfPaymentAccount implements Serializable {
 	@TableField("com_account_id")
 	private String comAccountId;
     /**
-     * 缴费银行，来自字典库
+     * 支付年月YYYYMM
      */
-	@TableField("payment_bank")
-	private String paymentBank;
+	@TableField("payment_month")
+	private String paymentMonth;
     /**
      * 当前支付状态
             1,未到帐  2,无需支付  3 ,可付 4,申请中  5,内部审批批退 6,已申请到财务部  7,财务部批退  8,财务部支付成功
@@ -93,12 +93,12 @@ public class HfPaymentAccount implements Serializable {
 		this.comAccountId = comAccountId;
 	}
 
-	public String getPaymentBank() {
-		return paymentBank;
+	public String getPaymentMonth() {
+		return paymentMonth;
 	}
 
-	public void setPaymentBank(String paymentBank) {
-		this.paymentBank = paymentBank;
+	public void setPaymentMonth(String paymentMonth) {
+		this.paymentMonth = paymentMonth;
 	}
 
 	public Integer getPaymentStatus() {
@@ -170,7 +170,7 @@ public class HfPaymentAccount implements Serializable {
 		return "HfPaymentAccount{" +
 			", paymentAccountId=" + paymentAccountId +
 			", comAccountId=" + comAccountId +
-			", paymentBank=" + paymentBank +
+			", paymentMonth=" + paymentMonth +
 			", paymentStatus=" + paymentStatus +
 			", totalComPayAmount=" + totalComPayAmount +
 			", totalEmpPayAmount=" + totalEmpPayAmount +

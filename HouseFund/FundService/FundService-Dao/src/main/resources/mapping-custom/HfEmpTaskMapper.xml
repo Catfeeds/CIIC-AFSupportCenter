@@ -12,6 +12,7 @@
         <result column="id_num" property="idNum" />
 		<result column="hf_type" property="hfType" />
         <result column="hf_emp_account" property="hfEmpAccount" />
+        <result column="process_category" property="processCategory" />
 		<result column="task_category" property="taskCategory" />
 		<result column="urgent" property="urgent" />
         <result column="is_change" property="isChange" />
@@ -22,6 +23,7 @@
 
     <resultMap id="RejectResultMapBo" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo" extends="BaseResultMapBo">
         <result column="modified_by" property="modifiedBy" />
+        <result column="modified_display_name" property="modifiedDisplayName" />
         <result column="modified_time" property="modifiedTime" />
         <result column="rejection_remark" property="rejectionRemark" />
     </resultMap>
@@ -30,8 +32,10 @@
         <result column="emp_task_id" property="empTaskId" />
         <result column="emp_archive_id" property="empArchiveId" />
         <result column="hf_type" property="hfType" />
+        <result column="process_category" property="processCategory" />
         <result column="task_category" property="taskCategory" />
         <result column="task_status" property="taskStatus" />
+        <result column="is_change" property="isChange" />
         <result column="company_id" property="companyId" />
         <result column="company_name" property="companyName" />
         <result column="employee_id" property="employeeId" />
@@ -73,11 +77,14 @@
         <result column="rejection_remark" property="rejectionRemark" />
         <result column="operation_remind" property="operationRemind" />
         <result column="operation_remind_date" property="operationRemindDate" />
+        <result column="leader_ship_id" property="leaderShipId" />
+        <result column="leader_ship_name" property="leaderShipName" />
     </resultMap>
 
     <select id="queryHfEmpTaskReject" resultMap="RejectResultMapBo">
         SELECT
         het.emp_task_id,
+        het.process_category,
         het.task_category,
         het.urgent,
         het.is_change,
@@ -92,6 +99,7 @@
         het.submit_time,
         het.task_id,
         het.modified_by,
+        het.modified_display_name,
         het.modified_time,
         het.rejection_remark
         FROM hf_emp_task het
@@ -115,6 +123,9 @@
             het.is_active = 1  AND IFNULL(het.task_status, 1) = 4 AND het.welfare_unit = 1
             <if test="exceptTaskCategories != null">
                 AND het.task_category NOT IN (${exceptTaskCategories})
+            </if>
+            <if test="processCategory != null">
+                AND het.process_category = #{processCategory}
             </if>
             <if test="taskCategory != null">
                 AND het.task_category = #{taskCategory}
@@ -168,6 +179,7 @@
         UNION ALL
         SELECT
         het.emp_task_id,
+        het.process_category,
         het.task_category,
         het.urgent,
         het.is_change,
@@ -182,6 +194,7 @@
         het.submit_time,
         het.task_id,
         het.modified_by,
+        het.modified_display_name,
         het.modified_time,
         het.rejection_remark
         FROM hf_emp_task het
@@ -204,6 +217,9 @@
             het.is_active = 1  AND IFNULL(het.task_status, 1) = 4 AND het.welfare_unit = 2
             <if test="exceptTaskCategories != null">
                 AND het.task_category NOT IN (${exceptTaskCategories})
+            </if>
+            <if test="processCategory != null">
+                AND het.process_category = #{processCategory}
             </if>
             <if test="taskCategory != null">
                 AND het.task_category = #{taskCategory}
@@ -259,6 +275,7 @@
     <select id="queryHfEmpTask" resultMap="BaseResultMapBo">
         SELECT
         het.emp_task_id,
+        het.process_category,
         het.task_category,
         het.urgent,
         het.is_change,
@@ -293,6 +310,9 @@
             het.is_active = 1  AND IFNULL(het.task_status, 1) != 5 AND het.welfare_unit = 1
             <if test="exceptTaskCategories != null">
                 AND het.task_category NOT IN (${exceptTaskCategories})
+            </if>
+            <if test="processCategory != null">
+                AND het.process_category = #{processCategory}
             </if>
             <if test="taskCategory != null">
                 AND het.task_category = #{taskCategory}
@@ -349,6 +369,7 @@
         UNION ALL
         SELECT
         het.emp_task_id,
+        het.process_category,
         het.task_category,
         het.urgent,
         het.is_change,
@@ -382,6 +403,9 @@
             het.is_active = 1  AND IFNULL(het.task_status, 1) != 5 AND het.welfare_unit = 2
             <if test="exceptTaskCategories != null">
                 AND het.task_category NOT IN (${exceptTaskCategories})
+            </if>
+            <if test="processCategory != null">
+                AND het.process_category = #{processCategory}
             </if>
             <if test="taskCategory != null">
                 AND het.task_category = #{taskCategory}
@@ -442,8 +466,10 @@
         het.emp_task_id,
         het.emp_archive_id,
         het.hf_type,
+        het.process_category,
         het.task_category,
         het.task_status,
+        het.is_change,
         sc.company_id,
         sc.title AS company_name,
         hca.com_account_id,
@@ -486,7 +512,9 @@
         het.handle_remark,
         het.rejection_remark,
         het.operation_remind,
-        het.operation_remind_date
+        het.operation_remind_date,
+        het.leader_ship_id,
+        het.leader_ship_name
         FROM hf_emp_task het
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
@@ -653,6 +681,7 @@
             is_change,
             hf_type,
             hf_emp_account,
+            process_category,
             task_category,
             urgent,
             submitter_id,
@@ -679,7 +708,11 @@
             policy_detail_id,
             is_active,
             created_by,
-            modified_by
+            created_display_name,
+            modified_by,
+            modified_display_name,
+            leader_ship_id,
+            leader_ship_name
         ) SELECT
             company_id,
             employee_id,
@@ -689,13 +722,14 @@
             hf_type,
             hf_emp_account,
             9,
+            8,
             urgent,
             #{createdBy},
             submitter_dept_name,
             NOW(),
             expire_date,
             task_form_content,
-            1,
+            2,
             start_handle_date,
             send_check_date,
             emp_base,
@@ -713,8 +747,12 @@
             af_bpo_fc,
             policy_detail_id,
             1,
-            #{createdBy},
-            #{createdBy}
+            created_by,
+            created_display_name,
+            #{modifiedBy},
+            #{modifiedDisplayName},
+            leader_ship_id,
+            leader_ship_name
         FROM hf_emp_task
         WHERE emp_task_id = #{empTaskId}
         AND is_active = 1
@@ -730,95 +768,127 @@
         <result column="id_num" property="idNum"/>
         <result column="status" property="status"/>
         <result column="task_status" property="taskStatus"/>
+        <result column="archive_status" property="archiveStatus"/>
         <result column="in_date" property="inDate"/>
         <result column="submit_time" property="submitTime"/>
         <result column="submitter_id" property="submitterId"/>
         <result column="transfer_in_unit" property="transferInUnit"/>
+        <result column="transfer_in_unit_account" property="transferInUnitAccount"/>
         <result column="transfer_out_unit" property="transferOutUnit"/>
+        <result column="transfer_out_unit_account" property="transferOutUnitAccount"/>
         <result column="com_account_id" property="comAccountId"/>
-        <result column="ss_account_type" property="ssAccountType"/>
+        <result column="hf_account_type" property="hfAccountType"/>
         <result column="hf_emp_account" property="hfEmpAccount"/>
         <result column="emp_archive_id" property="empArchiveId"/>
     </resultMap>
 
     <select id="queryEmpTaskTransfer" resultMap="EmpTaskTransferRM">
         SELECT
-        et.emp_task_id,et.hf_type,com.company_id,com.title,emp.employee_id,emp.employee_name,emp.id_num,eoop.`status`,et.task_status,eoop.in_date,et.submit_time,et.submitter_id,
-        et.transfer_in_unit,et.transfer_out_unit,ea.com_account_id,ca.hf_account_type,ea.hf_emp_account,ea.emp_archive_id
+        et.emp_task_id,et.hf_type,com.company_id,com.title,emp.employee_id,emp.employee_name,emp.id_num,eoop.`status`,ea.archive_status,eoop.in_date,et.submit_time,et.submitter_id,
+        et.transfer_in_unit,et.transfer_in_unit_account,et.transfer_out_unit,et.transfer_out_unit_account,ea.com_account_id,ca.hf_account_type,ea.hf_emp_account,ea.emp_archive_id
         from hf_emp_task et
         LEFT JOIN hf_emp_archive ea  ON ea.emp_archive_id=et.emp_archive_id
         INNER JOIN emp_af_emp_company eoop ON eoop.company_id=ea.company_id and eoop.employee_id=ea.employee_id
         INNER JOIN emp_employee emp ON emp.employee_id=eoop.employee_id
         INNER JOIN sal_company com ON com.company_id=eoop.company_id
         INNER JOIN hf_com_account ca ON ca.com_account_id=ea.com_account_id
-        WHERE et.is_active=1 and et.task_category = 9
+        WHERE et.is_active=1 and et.task_category = 8
 
         <if test="empTaskId != null">
-            ANDet.emp_task_id = #{empTaskId}
+            AND et.emp_task_id = #{empTaskId}
         </if>
         <if test="hfType != null">
-            ANDet.hf_type = #{hfType}
+            AND et.hf_type = #{hfType}
         </if>
         <if test="companyId != null">
-            ANDcom.company_id = #{companyId}
+            AND com.company_id LIKE CONCAT('%',#{companyId},'%')
         </if>
         <if test="title != null">
-            ANDcom.title = #{title}
+            AND com.title LIKE CONCAT('%',#{title},'%')
         </if>
         <if test="employeeId != null">
-            ANDemp.employee_id = #{employeeId}
+            AND emp.employee_id LIKE CONCAT('%',#{employeeId},'%')
         </if>
         <if test="employeeName != null">
-            ANDemp.employee_name = #{employeeName}
+            AND emp.employee_name LIKE CONCAT('%',#{employeeName},'%')
         </if>
         <if test="idNum != null">
-            ANDemp.id_num = #{idNum}
+            AND emp.id_num = LIKE CONCAT('%',#{idNum},'%')
         </if>
         <if test="status != null">
-            ANDeoop.status = #{status}
+            AND eoop.status = #{status}
         </if>
         <if test="taskStatus != null">
-            ANDet.task_status = #{taskStatus}
+            AND et.task_status = #{taskStatus}
         </if>
         <if test="inDate != null">
-            ANDeoop.in_date = #{inDate}
+            AND eoop.in_date = #{inDate}
         </if>
         <if test="submitTime != null">
-            ANDet.submit_time = #{submitTime}
+            AND et.submit_time = #{submitTime}
         </if>
         <if test="submitterId != null">
-            ANDet.submitter_id = #{submitterId}
+            AND et.submitter_id = #{submitterId}
         </if>
         <if test="transferInUnit != null">
-            ANDet.transfer_in_unit = #{transferInUnit}
+            AND et.transfer_in_unit LIKE concat('%',#{transferInUnit},'%')
         </if>
         <if test="transferOutUnit != null">
-            ANDet.transfer_out_unit = #{transferOutUnit}
+            AND et.transfer_out_unit LIKE concat('%',#{transferOutUnit},'%')
         </if>
         <if test="hfEmpAccount != null">
-            ANDea.hf_emp_account = #{hfEmpAccount}
+            AND ea.hf_emp_account LIKE concat('%',#{hfEmpAccount},'%')
+        </if>
+        <if test="paymentBank != null">
+            AND ca.payment_bank = #{paymentBank}
         </if>
         <if test="comAccountId != null">
-            ANDea.com_account_id = #{comAccountId}
+            AND ea.com_account_id = #{comAccountId}
         </if>
-        <if test="ssAccountType != null">
-            ANDca.ss_account_type = #{ssAccountType}
-        </if>
-        <if test="hfEmpAccount != null">
-            ANDea.hf_emp_account = #{hfEmpAccount}
+        <if test="hfAccountType != null">
+            AND ca.hf_account_type = #{hfAccountType}
         </if>
         <if test="empArchiveId != null">
-            ANDea.emp_archive_id = #{empArchiveId}
+            AND ea.emp_archive_id = #{empArchiveId}
         </if>
     </select>
 
-    <select id="queryTransferNewTask" resultMap="EmpTaskTransferRM">
+    <select id="queryEmpTaskTransferNewTask" resultMap="EmpTaskTransferRM">
     SELECT
-    com.company_id,com.title,emp.employee_id,emp.employee_name,emp.id_num,eoop.`status`
+    com.company_id,com.title,emp.employee_id,emp.employee_name,emp.id_num,eoop.`status`,eoop.in_date,ea.hf_type
     from emp_af_emp_company eoop
+		INNER JOIN hf_emp_archive ea ON eoop.company_id=ea.company_id and eoop.employee_id=ea.employee_id
     INNER JOIN emp_employee emp ON emp.employee_id=eoop.employee_id
     INNER JOIN sal_company com ON com.company_id=eoop.company_id
     WHERE eoop.is_active=1
+        <if test="companyId != null">
+            AND com.company_id  LIKE CONCAT('%',#{companyId},'%')
+        </if>
+        <if test="title != null">
+            AND com.title LIKE CONCAT('%',#{title},'%')
+        </if>
+        <if test="employeeId != null">
+            AND emp.employee_id LIKE CONCAT('%',#{employeeId},'%')
+        </if>
+        <if test="employeeName != null">
+            AND emp.employee_name LIKE CONCAT('%',#{employeeName},'%')
+        </if>
+        <if test="idNum != null">
+            AND emp.id_num LIKE CONCAT('%',#{idNum},'%')
+        </if>
+        <if test="inDate != null">
+            AND eoop.in_date = #{inDate}
+        </if>
+        <if test="hfType != null">
+            AND ea.hf_type = #{hfType}
+        </if>
+    </select>
+    <select id="fetchPrintInfo" resultType="Map">
+        SELECT et.*,emp.employee_name,ea.hf_emp_account FROM hf_emp_task et INNER JOIN hf_emp_archive ea ON  ea.emp_archive_id= et.emp_archive_id
+        INNER JOIN hf_com_account ca ON  ea.com_account_id=ca.com_account_id
+        INNER  JOIN emp_employee emp ON  emp.employee_id=et.employee_id
+        where et.is_active=1 AND et.emp_task_id=#{empTaskId}
+
     </select>
 
 </mapper>

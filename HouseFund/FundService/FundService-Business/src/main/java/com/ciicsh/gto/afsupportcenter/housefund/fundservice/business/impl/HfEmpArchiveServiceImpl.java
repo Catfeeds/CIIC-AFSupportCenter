@@ -39,8 +39,8 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
         Map<String,Object> resultMap=new HashMap<String,Object>();
 
         HfEmpArchiveBo viewEmpArchiveBo= baseMapper.viewEmpArchive(empArchiveId);
-        HfArchiveBasePeriodBo viewEmpPeriodBo= baseMapper.viewEmpPeriod(empArchiveId,"1");
-        HfArchiveBasePeriodBo viewEmpPeriodAddBo= baseMapper.viewEmpPeriod(empArchiveId,"2");
+        List<HfArchiveBasePeriodBo> viewEmpPeriodBo= baseMapper.viewEmpPeriod(empArchiveId,"1");
+        List<HfArchiveBasePeriodBo> viewEmpPeriodAddBo= baseMapper.viewEmpPeriod(empArchiveId,"2");
         HfComAccountBo viewComAccountBo= baseMapper.viewComAccount(companyId);
         List listEmpTaskPeriodBo=baseMapper.listEmpTaskPeriod(empArchiveId,"1");//基本
         List listEmpTaskPeriodAddBo=baseMapper.listEmpTaskPeriod(empArchiveId,"2");//补充

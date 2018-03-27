@@ -44,59 +44,6 @@
       employee_id = #{empId}
     </select>
 
-    <insert id="insertItem" parameterType="com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Task">
-      <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="taskId">
-          SELECT LAST_INSERT_ID() AS taskId
-      </selectKey>
-        INSERT INTO cm_task(
-            material_back_time,
-            calls_time,
-            apply_time,
-            live_age_limit,
-            shift_letter_send_time,
-            talent_back_time,
-            talent_back_reason,
-            deal_time,
-            charge_time,
-            receive_file_time,
-            original_back_time,
-            original_back_reason,
-            integral_bill_print_time,
-            charge_amount,
-            pay_type,
-            permit_company_name,
-            telephone,
-            remark,
-            created_time,
-            modified_time,
-            created_by,
-            modified_by
-        ) VALUES(
-            #{materialBackTime},
-            #{callsTime},
-            #{applyTime},
-            #{liveAgeLimit},
-            #{shiftLetterSendTime},
-            #{talentBackTime},
-            #{talentBackReason},
-            #{dealTime},
-            #{chargeTime},
-            #{receiveFileTime},
-            #{originalBackTime},
-            #{originalBackReason},
-            #{integralBillPrintTime},
-            #{chargeAmount},
-            #{payType},
-            #{permitCompanyName},
-            #{telephone},
-            #{remark},
-            #{createdTime},
-            #{modifiedTime},
-            #{createdBy},
-            #{modifiedBy}
-        )
-    </insert>
-
     <sql id="SEL_ALL_COLUMS">
         task_id,
         employee_id,

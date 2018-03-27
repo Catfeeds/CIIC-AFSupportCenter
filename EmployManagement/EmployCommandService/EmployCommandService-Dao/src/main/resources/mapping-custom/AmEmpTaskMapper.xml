@@ -62,6 +62,7 @@
         d.id_num,/*证件号 */
         d.id_card_type,
         e.title,/*公司名称 */
+        cs.employ_special,
         e.license_code,/*营业执照编号 */
         h.service_center,/*服务中心 */
         h.custom /*客服*/
@@ -69,8 +70,7 @@
         am_emp_task a
         LEFT JOIN
         am_employment b
-        ON a.employee_id = b.employee_id
-        and a.company_id = b.company_id
+        ON  a.emp_task_id = b.emp_task_id
         LEFT JOIN
         emp_employee d
         on  a.employee_id = d.employee_id
@@ -78,16 +78,13 @@
         sal_company e
         on e.company_id = a.company_id
         LEFT JOIN
-        am_resign f
-        on a.employee_id = f.employee_id
-        LEFT JOIN
-        am_archive_use g
-        on a.employee_id = g.employee_id
-        LEFT JOIN
         sal_fc_company h on h.company_id = a.company_id
         LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id
+        LEFT JOIN
+        am_company_set cs
+        on cs.company_id = a.company_id
         where   a.task_category = '1'
         <if test="taskStatus!=null">
             and a.task_status = ${taskStatus}
@@ -109,8 +106,7 @@
         am_emp_task a
         LEFT JOIN
         am_employment b
-        ON a.employee_id = b.employee_id
-        and a.company_id = b.company_id
+        ON  a.emp_task_id = b.emp_task_id
         LEFT JOIN
         emp_employee d
         on  a.employee_id = d.employee_id
@@ -118,16 +114,13 @@
         sal_company e
         on e.company_id = a.company_id
         LEFT JOIN
-        am_resign f
-        on a.employee_id = f.employee_id
-        LEFT JOIN
-        am_archive_use g
-        on a.employee_id = g.employee_id
-        LEFT JOIN
         sal_fc_company h on h.company_id = a.company_id
         LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id
+        LEFT JOIN
+        am_company_set cs
+        on cs.company_id = a.company_id
         where   a.task_category = '1'
         <foreach collection = "param" item = "plid"  open=""  close=""  separator="" >
           AND  ${ plid }
@@ -224,6 +217,7 @@
         a.company_id,/*客户Id*/
         a.employee_nature,
         a.archive_direction,
+        b.employment_id,
         b.employ_way,/*用工方式 */
         b.employ_property,/*用工属性 */
         c.yuliu_doc_num,/*预留档案编号 */
@@ -235,6 +229,7 @@
         d.id_num,/*证件号 */
         d.id_card_type,
         e.title,/*公司名称 */
+        cs.employ_special,
         e.license_code,/*营业执照编号 */
         h.service_center,/*服务中心 */
         h.custom /*客服*/
@@ -242,8 +237,7 @@
         am_emp_task a
         LEFT JOIN
         am_employment b
-        ON a.employee_id = b.employee_id
-        and a.company_id = b.company_id
+        ON  a.emp_task_id = b.emp_task_id
         LEFT JOIN
         emp_employee d
         on  a.employee_id = d.employee_id
@@ -251,16 +245,12 @@
         sal_company e
         on e.company_id = a.company_id
         LEFT JOIN
-        am_resign f
-        on a.employee_id = f.employee_id
-        LEFT JOIN
-        am_archive_use g
-        on a.employee_id = g.employee_id
-        LEFT JOIN
         sal_fc_company h on h.company_id = a.company_id
         LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id
+        LEFT JOIN
+        am_company_set cs on cs.company_id = a.company_id
         where   a.task_category = '1'
         <if test="taskStatus!=null">
             and a.task_status = ${taskStatus}
@@ -268,6 +258,19 @@
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
         </foreach>
+    </select>
+
+    <select id="querySocial" resultMap="BaseResultMapDTO">
+        select ca.ss_account,ca.com_account_name,ca.modified_time as accountRepairDate,ca.ss_pwd
+        FROM ss_com_account ca
+        LEFT JOIN ss_account_com_relation acr on acr.com_account_id=ca.com_account_id
+        where 1=1
+        <if test="companyId!=null">
+            and  acr.company_id=#{companyId}
+        </if>
+        <if test="templateType!=null">
+            and  ca.ss_account_type=#{templateType}
+        </if>
     </select>
 
 </mapper>

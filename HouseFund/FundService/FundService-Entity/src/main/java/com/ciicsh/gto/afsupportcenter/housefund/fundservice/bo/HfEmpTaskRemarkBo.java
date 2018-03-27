@@ -7,20 +7,26 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Data
 public class HfEmpTaskRemarkBo implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
+
     private Long empTaskId;
     private Integer hfType;
     private String hfTypeName;
+    private Integer processCategory;
     private Integer taskCategory;
     private String taskCategoryName;
     private Integer taskStatus;
     private String taskStatusName;
     private String modifiedBy;
+    private String modifiedDisplayName;
     private LocalDateTime modifiedTime;
+    private String modifiedTimeFormat;
     private String handleRemark;
     private String rejectionRemark;
     private String remark;
@@ -43,5 +49,12 @@ public class HfEmpTaskRemarkBo implements Serializable {
         } else {
             return this.handleRemark;
         }
+    }
+
+    public String getModifiedTimeFormat() {
+        if (this.modifiedTime != null) {
+            return this.modifiedTime.format(formatter);
+        }
+        return modifiedTimeFormat;
     }
 }

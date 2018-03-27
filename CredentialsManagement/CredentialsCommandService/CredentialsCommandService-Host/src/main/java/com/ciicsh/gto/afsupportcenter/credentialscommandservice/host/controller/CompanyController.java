@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * @Author: guwei
- * @Description:
+ * @Description: 客户控制器
  * @Date: Created in 13:58 2018/2/12
  */
 @RestController

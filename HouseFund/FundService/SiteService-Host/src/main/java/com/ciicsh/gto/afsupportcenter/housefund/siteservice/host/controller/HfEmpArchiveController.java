@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +42,13 @@ public class HfEmpArchiveController extends  BasicController<HfEmpArchiveService
     public JsonResult<PageRows> queryEmpArchive(PageInfo pageInfo) {
         PageRows<HfEmpArchiveBo> result = business.queryEmpArchive(pageInfo);
         return JsonResultKit.of(result);
+    }
+
+    @RequestMapping("/impTemplateFile")
+    public void impTemplateFile(HttpServletResponse response) {
+        String fileNme = "雇员公积金账号导入模板.xls";
+        List<EmpAccountImpXsl> opts = new ArrayList();
+        ExcelUtil.exportExcel(opts,EmpAccountImpXsl.class,fileNme,response);
     }
 
     @RequestMapping("/viewEmpArchiveInfo")

@@ -18,5 +18,6 @@ public class HfEmpTaskCreateTransBo implements Serializable {
     private String transferInUnit;
     private String transferInUnitAccount;
     private LocalDate transferDate;
-    private String createdBy;
+    private String modifiedBy;
+    private String modifiedDisplayName;
 }

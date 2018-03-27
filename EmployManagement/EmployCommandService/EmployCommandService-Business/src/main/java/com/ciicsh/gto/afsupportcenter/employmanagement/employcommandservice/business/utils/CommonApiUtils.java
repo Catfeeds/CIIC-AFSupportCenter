@@ -56,9 +56,6 @@ public class CommonApiUtils {
             AfEmployeeQueryDTO taskRequestDTO = new AfEmployeeQueryDTO();
             Map<String, Object> variables = taskMsgDTO.getVariables();
             taskRequestDTO.setEmployeeCompanyId(Long.parseLong(variables.get("empCompanyId").toString()));
-            logger.info("sleep 2000 millis start");
-            Thread.sleep(2000);
-            logger.info("sleep 2000 millis end");
             resDto = afEmployeeCompanyProxy.getEmployeeCompany(taskRequestDTO);
         } catch (Exception e) {
             logger.error("call kehuzhongxin jiekou error!");
@@ -77,6 +74,19 @@ public class CommonApiUtils {
         com.ciicsh.gto.commonservice.util.dto.Result restResult = sheetServiceProxy.completeTask(requestDTO);
         logger.info("customer系统收到完成任务接口返回：" + String.valueOf("code:" + restResult.getCode() + "message:") + restResult.getMessage());
         return restResult;
+    }
+
+    public AfEmployeeInfoDTO callInfByMissId(TaskCreateMsgDTO taskMsgDTO) {
+        AfEmployeeInfoDTO resDto = null;
+        try {
+            AfEmployeeQueryDTO taskRequestDTO = new AfEmployeeQueryDTO();
+            String missionId = taskMsgDTO.getMissionId();
+            taskRequestDTO.setEmpAgreementId(Long.parseLong(missionId));
+            resDto = afEmployeeCompanyProxy.getEmployeeCompany(taskRequestDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resDto;
     }
 
 

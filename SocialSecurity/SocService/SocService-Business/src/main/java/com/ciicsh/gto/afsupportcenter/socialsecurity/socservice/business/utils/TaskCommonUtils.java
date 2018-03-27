@@ -5,6 +5,7 @@ import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocia
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBasePeriod;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.enumeration.ItemCode;
+import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsResposeDTO;
@@ -14,6 +15,7 @@ import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -22,6 +24,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.chrono.ChronoZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -124,7 +130,7 @@ public class TaskCommonUtils {
         if(ssEmpTaskBO.getListEmpBasePeriod()==null){//说明是逆向调整，没有福利段
             return paramsList;
         }
-        //回调前道合同协议，迭代每一个险种,目前的需求福利段只有一条福利段
+        //回调前道合同协议，迭代每一个险种,目前的需求福利段只有一条福利段，因此get(0)
         ssEmpTaskBO.getListEmpBasePeriod().get(0).getListEmpBaseDetail().forEach(SsEmpBaseDetail->{
                 AfEmpSocialUpdateDateDTO afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
                 afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(ssEmpTaskBO.getBusinessInterfaceId())); //messionId
@@ -140,8 +146,9 @@ public class TaskCommonUtils {
                         afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(SsEmpBaseDetail.getComAmount());
                         afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(SsEmpBaseDetail.getEmpAmount());
                         //afEmpSocialUpdateDateDTO.setStartConfirmDate(stringTranserDate(ssEmpTaskBO.getEmpTaskPeriods().get(0).getStartMonth()));
-                        afEmpSocialUpdateDateDTO.setStartConfirmDate(stringTranserDate(ssEmpTaskBO.getListEmpBasePeriod().get(0).getStartMonth()));
-                        afEmpSocialUpdateDateDTO.setEndConfirmDate(stringTranserDateEndMonth(ssEmpTaskBO.getListEmpBasePeriod().get(0).getEndMonth()));
+                        //反馈前道任务单的开始年月和结束年月
+                        afEmpSocialUpdateDateDTO.setStartConfirmDate(stringTranserDate(ssEmpTaskBO.getStartMonth()));
+                        afEmpSocialUpdateDateDTO.setEndConfirmDate(stringTranserDateEndMonth(ssEmpTaskBO.getEndMonth()));
                         break;
                 }
                 paramsList.add(afEmpSocialUpdateDateDTO);
@@ -191,15 +198,13 @@ public class TaskCommonUtils {
             throw new BusinessException();
         }
     }
+
     private static Date stringTranserDateEndMonth(String endMonth) {
-        if(StringUtils.isBlank(endMonth)) return null;
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
-        try {
-            Date date =simpleDateFormat.parse(endMonth+"28");//临时做法，应取最后一天
-            return date;
-        } catch (ParseException e) {
-            throw new BusinessException();
+        if(StringUtils.isBlank(endMonth)) {
+            return null;
         }
+       LocalDate d= LocalDate.parse(endMonth+"28", DateTimeFormatter.ofPattern("yyyyMMdd")).with(TemporalAdjusters.lastDayOfMonth());
+       return DateUtil.localDateToDate(d);
     }
     /**
      *  任务单 完成 实缴金额  回调

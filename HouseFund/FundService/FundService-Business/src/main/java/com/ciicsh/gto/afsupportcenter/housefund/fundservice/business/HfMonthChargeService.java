@@ -10,6 +10,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 
 import java.util.List;
+import java.util.Map;
 
 public interface HfMonthChargeService extends IService<HfMonthCharge> {
     /**
@@ -42,4 +43,20 @@ public interface HfMonthChargeService extends IService<HfMonthCharge> {
      * @return
      */
     PageRows<HFMonthChargeReportBO> queryHfMonthChargeReport(PageInfo pageInfo);
+
+    /**
+     * 获取基本/补充公积金汇缴变更清册导出数据
+     *
+     * @param hfMonthChargeQueryBO
+     * @return
+     */
+    List<Map<String, Object>> getChgDetailsPageList(HFMonthChargeQueryBO hfMonthChargeQueryBO);
+
+    /**
+     * 获取基本/补充公积金补缴清册导出数据
+     *
+     * @param hfMonthChargeQueryBO
+     * @return
+     */
+    List<Map<String, Object>> getRepairDetailsPageList(HFMonthChargeQueryBO hfMonthChargeQueryBO);
 }

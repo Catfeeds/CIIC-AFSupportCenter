@@ -49,6 +49,9 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
         }
     }
 
+    public void enquireFinanceComAccountTest(String ssMonth, Long paymentComId, Long comAccountId) {
+        enquireFinanceComAccount(ssMonth, paymentComId , comAccountId);
+    }
     /**
      * 更新雇员的垫付状态
      * @param ssMonth 支付年月
@@ -80,7 +83,7 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
                 //4 财务接口返回的结果更新ss_month_charge
                 for (Map<String, Object> ele : resDto) {
                     map.put("monthChargeId", ele.get("objId"));
-                    map.put("empPaymentStatus", ele.get("isAdvance"));
+                    map.put("empPaymentStatus", ele.get("isAdvance"));//是否可付
                     ssPaymentMapper.updateMonthCharge(map);
                 }
             }
@@ -88,20 +91,23 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
             map.clear();
             map.put("comAccountId", comAccountId);
             map.put("ssMonth", ssMonth);
+            map.put("paymentComId", paymentComId);
             Integer cnt = ssPaymentMapper.countByEmpPaymentStatus(map);
 
             //更新客户的支付状态
             map.clear();
             map.put("paymentComId", paymentComId);
             if (cnt == 0) {
-                map.put("paymentState", 3);
-                map.put("modifiedBy", "system");
+                map.put("paymentState", 3);//  3 =可付
+                map.put("modifiedBy", "sysJob");
                 ssPaymentMapper.updatePaymentCom(map);
             } else {
                 map.put("paymentState", 1);
-                map.put("modifiedBy", "system");
+                map.put("modifiedBy", "sysJob");
                 ssPaymentMapper.updatePaymentCom(map);
             }
+        }else {
+            System.out.println("结算中心反馈:"+res.getMsg());
         }
     }
 

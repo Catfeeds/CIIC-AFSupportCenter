@@ -15,6 +15,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsAnnualAdju
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsAnnualAdjustAccountEmpTempDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAnnualAdjustAccountEmpTemp;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -73,7 +74,7 @@ public class SsAnnualAdjustAccountEmpController extends BasicController<SsAnnual
     @RequestMapping("/annualAdjustAccountEmpInsert")
     public JsonResult annualAdjustAccountEmpInsert(PageInfo pageInfo) {
         SsAnnualAdjustAccountEmpTempDTO ssAnnualAdjustAccountEmpTempDTO = pageInfo.toJavaObject(SsAnnualAdjustAccountEmpTempDTO.class);
-        ssAnnualAdjustAccountEmpTempDTO.setCreatedBy("test"); // TODO
+        ssAnnualAdjustAccountEmpTempDTO.setCreatedBy(UserContext.getUserId());
         business.insertDataWithoutErrorMsg(ssAnnualAdjustAccountEmpTempDTO);
         return JsonResultKit.of();
     }

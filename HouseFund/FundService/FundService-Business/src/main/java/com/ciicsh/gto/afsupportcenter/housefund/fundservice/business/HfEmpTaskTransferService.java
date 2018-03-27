@@ -1,15 +1,16 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo;
+
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTaskTransferBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.HfEmpTaskHandleVo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
-import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 
 import java.util.List;
+import java.util.Map;
 
 public interface HfEmpTaskTransferService extends IService<HfEmpTask> {
 
@@ -19,53 +20,25 @@ public interface HfEmpTaskTransferService extends IService<HfEmpTask> {
      * @param pageInfo
      * @return
      */
-    PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo);
+    PageRows<EmpTaskTransferBo> queryEmpTaskTransferPage(PageInfo pageInfo);
+
+    List<EmpTaskTransferBo> queryEmpTaskTransfer(EmpTaskTransferBo empTaskTransferBo);
 
     /**
      * 分页查询雇员任务单信息
      *
      * @param pageInfo
-     * @param exceptTaskCategories
-     * @return
-     */
-    PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo, String exceptTaskCategories);
-
-    /**
-     * 分页查询批退雇员任务单信息
-     *
      * @param pageInfo
      * @return
      */
-    PageRows<HfEmpTaskRejectExportBo> queryHfEmpTaskRejectInPage(PageInfo pageInfo, String exceptTaskCategories);
+    PageRows<EmpTaskTransferBo> queryEmpTaskTransferNewTaskPage(PageInfo pageInfo);
 
+    HfEmpTaskHandleVo queryComEmpTransferForm(String employeeId, String companyId, Long empTaskId);
 
-    /**
-     * 更新数据到雇员任务单表
-     * @param taskMsgDTO
-     * @param fundCategory
-     * @param dto
-     * @return
-     */
-    boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, AfEmployeeInfoDTO dto);
+    JsonResult submitTransferTask(EmpTaskTransferBo empTaskTransferBo);
 
-    /**
-     * 添加数据到雇员任务单表
-     * @param taskMsgDTO
-     * @param fundCategory
-     * @param taskCategory
-     * @param isChange
-     * @param dto
-     * @return
-     * @throws Exception
-     */
-    boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer taskCategory, Integer isChange,
-                       AfEmployeeInfoDTO dto) throws Exception;
+    JsonResult notHandleTransfer(EmpTaskTransferBo empTaskTransferBo);
 
+    List<Map<String, Object>> printTransferTask (EmpTaskTransferBo empTaskTransferBo);
 
-    /**
-     * 查询任务单信息
-     *
-     * @param ssEmpTask
-     */
-    List<HfEmpTask> queryByTaskId(HfEmpTask ssEmpTask);
 }

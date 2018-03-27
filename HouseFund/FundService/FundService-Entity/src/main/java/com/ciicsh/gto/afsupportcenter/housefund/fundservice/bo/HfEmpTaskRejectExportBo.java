@@ -2,15 +2,19 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.convertor.EmpTaskCategoryConverter;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @ExcelTarget("hfEmpTaskReject")
 public class HfEmpTaskRejectExportBo implements Serializable{
     private static final long serialVersionUID = 1L;
+
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 
     private Long empTaskId;
 
@@ -29,6 +33,8 @@ public class HfEmpTaskRejectExportBo implements Serializable{
     private String hfTypeName;
     @Excel(name = "公积金账号", orderNum = "8", width = 20)
     private String hfEmpAccount;
+    private Integer processCategory;
+    private Integer dictTaskCategory;
     private Integer taskCategory;
     @Excel(name = "任务单类型", width = 15)
     private String taskCategoryName;
@@ -39,14 +45,17 @@ public class HfEmpTaskRejectExportBo implements Serializable{
     private String isChangeName;
     @Excel(name = "发起人", orderNum = "9",  width = 20)
     private String submitterId;
-    @Excel(name = "发起时间", orderNum = "10",  width = 20)
     private LocalDateTime submitTime;
+    @Excel(name = "发起时间", orderNum = "10",  width = 20)
+    private String submitTimeFormat;
     private Integer taskStatus;
     private String taskId;
-    @Excel(name = "批退人", orderNum = "11",  width = 20)
     private String modifiedBy;
-    @Excel(name = "批退时间", orderNum = "12",  width = 20)
+    @Excel(name = "批退人", orderNum = "11",  width = 20)
+    private String modifiedDisplayName;
     private LocalDateTime modifiedTime;
+    @Excel(name = "批退时间", orderNum = "12",  width = 20)
+    private String modifiedTimeFormat;
     @Excel(name = "批退备注", orderNum = "13",  width = 30)
     private String rejectionRemark;
 
@@ -123,6 +132,25 @@ public class HfEmpTaskRejectExportBo implements Serializable{
         this.hfEmpAccount = hfEmpAccount;
     }
 
+    public Integer getProcessCategory() {
+        return processCategory;
+    }
+
+    public void setProcessCategory(Integer processCategory) {
+        this.processCategory = processCategory;
+    }
+
+    public Integer getDictTaskCategory() {
+        if (this.dictTaskCategory == null) {
+            this.dictTaskCategory = EmpTaskCategoryConverter.convertDictItemFromCategories(this);
+        }
+        return this.dictTaskCategory;
+    }
+
+    public void setDictTaskCategory(Integer dictTaskCategory) {
+        this.dictTaskCategory = dictTaskCategory;
+    }
+
     public Integer getTaskCategory() {
         return taskCategory;
     }
@@ -164,7 +192,8 @@ public class HfEmpTaskRejectExportBo implements Serializable{
     }
 
     public String getTaskCategoryName() {
-        return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.taskCategory), DictUtil.TYPE_VALUE_HF_LOCAL_TASK_CATEGORY, true);
+        getDictTaskCategory();
+        return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.dictTaskCategory), DictUtil.TYPE_VALUE_HF_LOCAL_TASK_CATEGORY, true);
 //        return taskCategoryName;
     }
 
@@ -233,5 +262,35 @@ public class HfEmpTaskRejectExportBo implements Serializable{
 
     public void setIsChangeName(String isChangeName) {
         this.isChangeName = isChangeName;
+    }
+
+    public String getModifiedDisplayName() {
+        return modifiedDisplayName;
+    }
+
+    public void setModifiedDisplayName(String modifiedDisplayName) {
+        this.modifiedDisplayName = modifiedDisplayName;
+    }
+
+    public String getSubmitTimeFormat() {
+        if (this.submitTime != null) {
+            return this.submitTime.format(formatter);
+        }
+        return submitTimeFormat;
+    }
+
+    public void setSubmitTimeFormat(String submitTimeFormat) {
+        this.submitTimeFormat = submitTimeFormat;
+    }
+
+    public String getModifiedTimeFormat() {
+        if (this.modifiedTime != null) {
+            return this.modifiedTime.format(formatter);
+        }
+        return modifiedTimeFormat;
+    }
+
+    public void setModifiedTimeFormat(String modifiedTimeFormat) {
+        this.modifiedTimeFormat = modifiedTimeFormat;
     }
 }

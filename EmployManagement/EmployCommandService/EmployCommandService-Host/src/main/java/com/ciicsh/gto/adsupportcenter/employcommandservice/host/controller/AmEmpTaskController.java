@@ -2,6 +2,7 @@ package com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.ciicsh.gto.adsupportcenter.employcommandservice.host.messageBus.KafkaSender;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.CommonApiUtils;
@@ -17,6 +18,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,6 +55,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     @Autowired
     private CommonApiUtils employeeInfoProxy;
 
+    @Autowired
+    private KafkaSender sender;
+
 
 
     /**
@@ -65,6 +70,20 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     public JsonResult<PageRows> queryAmEmpTask(PageInfo pageInfo) {
 
         PageRows<AmEmpTaskBO> result = business.queryAmEmpTask(pageInfo);
+
+        List<AmEmpTaskBO> list = result.getRows();
+        if(list!=null&&list.size()>0)
+        {
+            for(AmEmpTaskBO amEmpTaskBO:list)
+            {
+                if(!StringUtil.isEmpty(amEmpTaskBO.getEmploySpecial()))
+                {
+                    int last = amEmpTaskBO.getEmploySpecial().lastIndexOf(",");
+                    amEmpTaskBO.setEmploySpecial(amEmpTaskBO.getEmploySpecial().substring(0,last));
+                }
+
+            }
+        }
 
         return JsonResultKit.of(result);
 
@@ -85,6 +104,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         List<AmEmpTaskCountBO>  temp = new ArrayList<>();
         amEmpTaskCountBO.setAmount(list.size());
         int num =0;
+        int otherNum=0;
         for(int i=0;i<list.size();i++)
         {
             AmEmpTaskBO amEmpTaskBO = list.get(i);
@@ -105,7 +125,8 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                 amEmpTaskCountBO.setEmployCancel(amEmpTaskBO.getCount());
                 num = num + amEmpTaskBO.getCount();
             }else{
-                amEmpTaskCountBO.setOther(amEmpTaskBO.getCount());
+                otherNum = otherNum+amEmpTaskBO.getCount();
+                amEmpTaskCountBO.setOther(otherNum);
                 num = num + amEmpTaskBO.getCount();
             }
             amEmpTaskCountBO.setAmount(num);
@@ -178,7 +199,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         //用工备注
         PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);
 
-
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
         //客户信息
@@ -192,7 +212,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             resultMap.put("amArchaiveBo",amArchiveBO);
         }
 
-
         if(null!= resultEmployList&&resultEmployList.size()>0)
         {
             resultMap.put("amEmploymentBO",resultEmployList.get(0));
@@ -202,7 +221,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         {
             resultMap.put("amRemarkBo",amRemarkBOPageRows);
         }
-
 
         return JsonResultKit.of(resultMap);
 
@@ -268,11 +286,17 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                  */
                 if("7".equals(entity.getEmployFeedback()))
                 {
-
+                    TaskRequestDTO message = new TaskRequestDTO();
+                    message.setAssignee("system");
+                    message.setTaskId(amEmpTask.getTaskId());
+                    Map<String,Object> variables = new HashMap<>();
+                    variables.put("remark","Ukey外借");
+                    sender.sendSocReportMsg(message);
                 }else{
                     Map<String,Object> variables = new HashMap<>();
                     variables.put("status", ReasonUtil.getYgResult(entity.getEmployFeedback()));
                     variables.put("remark",ReasonUtil.getYgfk(entity.getEmployFeedback()));
+                    variables.put("assignee","system");
                     TaskCommonUtils.completeTask(amEmpTask.getTaskId(),employeeInfoProxy,variables);
                 }
             }
@@ -380,6 +404,12 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         List<employSearchExportOpt> opts = business.queryAmEmpTaskList(amEmpTaskBO);
 
         ExcelUtil.exportExcel(opts,employSearchExportOpt.class,fileNme,response);
+    }
+
+    @RequestMapping("/getDefualtEmployBO")
+    public  JsonResult<AmEmpTaskBO>  getDefualtEmployBO(AmEmpTaskBO amEmpTaskBO){
+        AmEmpTaskBO amEmpTaskBO1 = business.getDefualtEmployBO(amEmpTaskBO);
+        return JsonResultKit.of(amEmpTaskBO1);
     }
 
 

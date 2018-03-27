@@ -43,6 +43,7 @@ public class HFMonthChargeReportBO implements Serializable {
     @Excel(name = "公司公积金账号", orderNum = "13",  width = 18)
     private String hfComAccount;
     private Integer repairReason;
+    private String basicHfEmpAccount;
 
     public String getHfTypeName() {
         return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.hfType), SocialSecurityConst.FUND_TYPE_KEY, true);

@@ -34,7 +34,7 @@ import java.util.List;
 
 /**
  * @Author: guwei
- * @Description:
+ * @Description: 雇员控制器
  * @Date: Created in 16:36 2018/2/12
  */
 @RestController
@@ -49,18 +49,9 @@ public class EmployeeCompanyController {
     private EmployeeOtherService employeeOtherService;
     @Autowired
     private EmployeeInfoProxy employeeInfoProxy;
-    @Autowired
-    private CompanyProxy companyProxy;
 
     /**
      * 获取雇员列表
-     * @param pageNum
-     * @param pageSize
-     * @param companyId
-     * @param employeeId
-     * @param employeeName
-     * @param idNum
-     * @param status
      * @return
      */
     @GetMapping("/find")
@@ -128,31 +119,30 @@ public class EmployeeCompanyController {
         return employeeInfoDTO.getEmployeeId();
     }
 
-    /**
-     * 查询雇员详情
-     * @param companyId
-     * @param employeeId
-     * @param type
-     * @return
-     */
-    @GetMapping("/getEmpInfo")
-    public JsonResult getEmpInfo(Integer idCardType,String idNum,String companyId,String employeeId,Integer type){
-        EmployeeHireInfoQueryDTO employeeHireInfoQueryDTO = new EmployeeHireInfoQueryDTO();
-        employeeHireInfoQueryDTO.setEmployeeId(employeeId);
-        employeeHireInfoQueryDTO.setCompanyId(companyId);
-        EmployeeInfoForCredentialsDTO data = employeeInfoProxy.getEmployeeInfoForCredentials(employeeHireInfoQueryDTO).getData();
-        return JsonResult.success(data);
-    }
+//    /**
+//     * 查询雇员详情
+//     * @param companyId
+//     * @param employeeId
+//     * @return
+//     */
+//    @GetMapping("/getEmpInfo")
+//    public JsonResult getEmpInfo(String companyId,String employeeId){
+//        EmployeeHireInfoQueryDTO employeeHireInfoQueryDTO = new EmployeeHireInfoQueryDTO();
+//        employeeHireInfoQueryDTO.setEmployeeId(employeeId);
+//        employeeHireInfoQueryDTO.setCompanyId(companyId);
+//        EmployeeInfoForCredentialsDTO data = employeeInfoProxy.getEmployeeInfoForCredentials(employeeHireInfoQueryDTO).getData();
+//        return JsonResult.success(data);
+//    }
 
-    /**
-     * 查询客户详情
-     * @param companyId
-     * @return
-     */
-    @GetMapping("/getCompanyInfo")
-    public JsonResult getCompanyInfo(String companyId){
-        AfCompanyDetailResponseDTO afCompanyInfo = companyProxy.afDetail(companyId).getObject();
-        return JsonResult.success(afCompanyInfo);
-    }
+//    /**
+//     * 查询客户详情
+//     * @param companyId
+//     * @return
+//     */
+//    @GetMapping("/getCompanyInfo")
+//    public JsonResult getCompanyInfo(String companyId){
+//        AfCompanyDetailResponseDTO afCompanyInfo = companyProxy.afDetail(companyId).getObject();
+//        return JsonResult.success(afCompanyInfo);
+//    }
 
 }

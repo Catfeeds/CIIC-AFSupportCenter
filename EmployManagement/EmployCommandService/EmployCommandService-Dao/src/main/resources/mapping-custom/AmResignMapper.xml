@@ -63,31 +63,21 @@
         a.emp_task_id,
         a.employee_id,
         a.company_id,
-        b.employment_id,
+        f.employment_id,
         b.employ_property,
-        /**用工属性*/
         b.employ_date,
-        /**实际录用日期*/
         b.handle_type,
-        /**办理类型*/
         f.resign_date,
-        /**退工日期*/
         f.resign_feedback1,
         f.resign_feedback2,
-        /**退工反馈*/
         a.out_reason,
         a.out_date,
-        /**退工原因*/
         f.job_centre_feedback_date,
         d.employee_id,
-        /**雇员编号*/
         d.employee_name,
-        /**雇员姓名*/
         d.id_num,
-        /*证件号 */
         d.id_card_type,
         e.title,
-        /*公司名称 */
         c.doc_num,
         c.yuliu_doc_num,
         c.archive_place,
@@ -96,13 +86,11 @@
         c.luyong_handle_end
         FROM
         am_emp_task a
-        LEFT JOIN am_employment b  ON a.employee_id = b.employee_id
-        AND a.company_id = b.company_id
+        LEFT JOIN am_resign f  ON f.emp_task_id = a.emp_task_id
+        LEFT JOIN am_employment b  ON  b.employment_id = f.employment_id
         LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
         LEFT JOIN sal_company e ON e.company_id = a.company_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
-        LEFT JOIN am_resign f  ON f.employee_id = a.employee_id
-        AND f.company_id = a.company_id
         WHERE
         a.task_category = '2'
         and
@@ -128,13 +116,11 @@
         a.task_status
         FROM
         am_emp_task a
-        LEFT JOIN am_employment b  ON a.employee_id = b.employee_id
-        AND a.company_id = b.company_id
-        LEFT JOIN emp_employee d ON b.employee_id = d.employee_id
-        LEFT JOIN sal_company e ON e.company_id = b.company_id
+        LEFT JOIN am_resign f  ON f.emp_task_id = a.emp_task_id
+        LEFT JOIN am_employment b  ON  b.employment_id = f.employment_id
+        LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
+        LEFT JOIN sal_company e ON e.company_id = a.company_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
-        LEFT JOIN am_resign f  ON f.employee_id = a.employee_id
-        AND f.company_id = a.company_id
         WHERE
         a.task_category = '2'
         and
@@ -185,29 +171,19 @@
         a.company_id,
         b.employment_id,
         b.employ_property,
-        /**用工属性*/
         b.employ_date,
-        /**实际录用日期*/
         b.handle_type,
-        /**办理类型*/
         f.resign_date,
-        /**退工日期*/
         f.resign_feedback1,
         f.resign_feedback2,
-        /**退工反馈*/
         a.out_reason,
         a.out_date,
-        /**退工原因*/
         f.job_centre_feedback_date,
         d.employee_id,
-        /**雇员编号*/
         d.employee_name,
-        /**雇员姓名*/
         d.id_num,
-        /*证件号 */
         d.id_card_type,
         e.title,
-        /*公司名称 */
         c.doc_num,
         c.yuliu_doc_num,
         c.archive_place,
@@ -216,13 +192,11 @@
         c.luyong_handle_end
         FROM
         am_emp_task a
-        LEFT JOIN am_employment b  ON a.employee_id = b.employee_id
-        AND a.company_id = b.company_id
+        LEFT JOIN am_resign f  ON f.emp_task_id = a.emp_task_id
+        LEFT JOIN am_employment b  ON  b.employment_id = f.employment_id
         LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
         LEFT JOIN sal_company e ON e.company_id = a.company_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
-        LEFT JOIN am_resign f  ON f.employee_id = a.employee_id
-        AND f.company_id = a.company_id
         WHERE
         a.task_category = '2'
         and

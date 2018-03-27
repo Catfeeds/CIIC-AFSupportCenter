@@ -71,11 +71,6 @@ public class HfPayment implements Serializable {
 	@TableField("hf_account_type")
 	private Integer hfAccountType;
     /**
-     * 账户总人数
-     */
-	@TableField("total_emp")
-	private Integer totalEmp;
-    /**
      * 申请备注
      */
 	@TableField("apply_remark")
@@ -215,14 +210,6 @@ public class HfPayment implements Serializable {
 		this.hfAccountType = hfAccountType;
 	}
 
-	public Integer getTotalEmp() {
-		return totalEmp;
-	}
-
-	public void setTotalEmp(Integer totalEmp) {
-		this.totalEmp = totalEmp;
-	}
-
 	public String getApplyRemark() {
 		return applyRemark;
 	}
@@ -316,7 +303,6 @@ public class HfPayment implements Serializable {
 			", createPaymentDate=" + createPaymentDate +
 			", financePaymentDate=" + financePaymentDate +
 			", hfAccountType=" + hfAccountType +
-			", totalEmp=" + totalEmp +
 			", applyRemark=" + applyRemark +
 			", rejectionRemark=" + rejectionRemark +
 			", rejectionHis=" + rejectionHis +

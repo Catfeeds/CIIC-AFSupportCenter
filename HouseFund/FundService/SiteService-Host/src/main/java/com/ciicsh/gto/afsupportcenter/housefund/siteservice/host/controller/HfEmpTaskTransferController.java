@@ -1,50 +1,38 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 
+
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
-import cn.afterturn.easypoi.excel.entity.ExportParams;
-import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
+import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBatchRejectBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTaskTransferBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.HfEmpTaskHandleVo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.EmpEmployeeService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskHandleService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskTransferService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.EmpEmployee;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
-import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
+import com.ciicsh.gto.afsupportcenter.util.PdfUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
-import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.math.BigDecimal;
 import java.net.URLEncoder;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @RestController
-@RequestMapping("/api/fundcommandservice/hfEmpTaskTransfer")
+@RequestMapping("/api/fundcommandservice/hfEmpTask")
 public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransferService> {
     @Autowired
     HfEmpTaskHandleService hfEmpTaskHandleService;
@@ -54,260 +42,203 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 
     /**
-     * 雇员公积金任务查询
+     * 雇员公积金转移任务查询
      *
      * @param pageInfo
      * @return
      */
-    @RequestMapping("/hfEmpTaskQuery")
-    @Log("雇员公积金任务查询")
-    public JsonResult<PageRows> hfEmpTaskQuery(@RequestBody PageInfo pageInfo) {
-        return JsonResultKit.of(business.queryHfEmpTaskInPage(pageInfo, StringUtils.join(
-            new Integer[] {
-                HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK,
-                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
-            }, ',')));
+    @RequestMapping("/queryEmpTaskTransfer")
+    @Log("雇员公积金转移任务查询")
+    public JsonResult<PageRows> queryEmpTaskTransfer( PageInfo pageInfo) {
+        return JsonResultKit.of(business.queryEmpTaskTransferPage(pageInfo));
     }
-
     /**
-     * 雇员公积金任务导出
-     *
-     * @param
-     * @return
-     */
-    @RequestMapping("/hfEmpTaskExport")
-    @Log("雇员公积金任务导出")
-    public void hfEmpTaskExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
-        pageInfo.setPageSize(10000);
-        pageInfo.setPageNum(0);
-        PageRows<HfEmpTaskExportBo> result = business.queryHfEmpTaskInPage(pageInfo, StringUtils.join(
-            new Integer[] {
-                HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK,
-                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
-            }, ','));
-        long total = result.getTotal();
-        ExportParams exportParams = new ExportParams();
-        exportParams.setType(ExcelType.XSSF);
-        exportParams.setSheetName("雇员公积金任务信息");
-        Workbook workbook;
-
-        if (total <= pageInfo.getPageSize()) {
-            workbook = ExcelExportUtil.exportExcel(exportParams, HfEmpTaskExportBo.class, result.getRows());
-        } else {
-            workbook = ExcelExportUtil.exportBigExcel(exportParams, HfEmpTaskExportBo.class, result.getRows());
-            int pageNum = (int) Math.ceil(total / pageInfo.getPageSize());
-            for(int i = 1; i < pageNum; i++) {
-                pageInfo.setPageNum(i);
-                result = business.queryHfEmpTaskInPage(pageInfo, StringUtils.join(
-                    new Integer[] {
-                        HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK,
-                        HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
-                    }, ','));
-                workbook = ExcelExportUtil.exportBigExcel(exportParams, HfEmpTaskExportBo.class, result.getRows());
-            }
-            ExcelExportUtil.closeExportBigExcel();
-        }
-        String fileName = URLEncoder.encode("雇员公积金任务信息.xlsx", "UTF-8");
-
-        response.reset();
-        response.setCharacterEncoding("UTF-8");
-//            response.setHeader("content-Type", "application/vnd.ms-excel");
-        response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition",
-            "attachment;filename=" + fileName);
-        workbook.write(response.getOutputStream());
-        workbook.close();
-    }
-
-    /**
-     * 批退雇员公积金任务查询
+     * 雇员公积金转移任务新建雇员查询
      *
      * @param pageInfo
      * @return
      */
-    @RequestMapping("/hfEmpTaskRejectQuery")
-    @Log("雇员公积金任务查询")
-    public JsonResult<PageRows> hfEmpTaskRejectQuery(@RequestBody PageInfo pageInfo) {
-        return JsonResultKit.of(business.queryHfEmpTaskRejectInPage(pageInfo, StringUtils.join(
-            new Integer[] {
-                HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK,
-                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
-            }, ',')));
+    @RequestMapping("/queryEmpTaskTransferNewTask")
+    @Log("雇员公积金转移任务新建雇员查询")
+    public JsonResult<PageRows> queryEmpTaskTransferNewTask( PageInfo pageInfo) {
+        return JsonResultKit.of(business.queryEmpTaskTransferNewTaskPage(pageInfo));
+    }
+
+    @Log("雇员公积金转移任务单表单查询")
+    @RequestMapping("/queryComEmpTransferForm")
+    public JsonResult<HfEmpTaskHandleVo> queryComEmpTransferForm(@RequestParam("employeeId") String employeeId,
+                                                                 @RequestParam("companyId") String companyId,
+                                                                 @RequestParam(value ="hfType",required = false) String hfType,
+                                                                 @RequestParam(value ="empTaskId" ,required = false) String empTaskId){
+        HfEmpTaskHandleVo hfEmpTaskHandleBo=new HfEmpTaskHandleVo();
+
+         hfEmpTaskHandleBo.setHfType(Integer.parseInt(hfType));
+        long employeeTaskId=0;
+        if(Optional.ofNullable(empTaskId).isPresent()){
+            employeeTaskId=Long.valueOf(empTaskId);
+        }
+        //获取企业账户和雇员信息
+        hfEmpTaskHandleBo= business.queryComEmpTransferForm(employeeId,companyId,employeeTaskId);
+
+        //获取转移任务单信息
+        hfEmpTaskHandleBo.setProcessCategory(9);
+        hfEmpTaskHandleBo.setTaskCategory(8);//转移任务单
+        return JsonResultKit.of(hfEmpTaskHandleBo);
+    }
+    /**
+     * 提交转移任务单
+     */
+    @RequestMapping("/submitTransferTask")
+    public JsonResult submitTransferTask(@RequestBody EmpTaskTransferBo empTaskTransferBo){
+        try {
+            return business.submitTransferTask(empTaskTransferBo);
+        } catch (BusinessException e) {
+            return JsonResultKit.ofError(e.getMessage());
+        }
+    }
+    /**
+     * 打印转移任务单
+     */
+    @RequestMapping("/printTransferTask")
+    public void printTransferTask(HttpServletResponse response, EmpTaskTransferBo empTaskTransferBo)throws Exception {
+        try {
+            String templateFilePath;
+            List<Map<String, Object>> printList = business.printTransferTask(empTaskTransferBo);
+            templateFilePath = "/template/SH_HF_TRANSFER_TMP.pdf";
+            String fileName = URLEncoder.encode( "上海市公积金转移通知书.pdf", "UTF-8");
+            response.reset();
+            response.setCharacterEncoding("UTF-8");
+            response.setHeader("content-Type", "application/pdf");
+            response.setHeader("Content-Disposition",
+                "attachment;filename=" + fileName);
+            PdfUtil.createPdfByTemplate(templateFilePath,
+                PdfUtil.DEFAULT_FONT_NAME,
+                PdfUtil.DEFAULT_FONT_ENCODING,
+                false,
+                true,
+                printList,
+                response.getOutputStream());
+        } catch (Exception e) {
+            response.reset();
+            response.setCharacterEncoding("UTF-8");
+            response.setHeader("content-Type", "text/plain");
+            response.getWriter().write(e.getMessage());
+        }
+
+    }
+
+
+    /**
+     * 不需处理转移任务单
+     */
+    @RequestMapping("/notHandleTransfer")
+    public JsonResult notHandleTransfer(@RequestBody EmpTaskTransferBo empTaskTransferBo){
+        return business.notHandleTransfer(empTaskTransferBo);
     }
 
     /**
-     * 批退雇员公积金任务导出
+     * 雇员公积金转移清册导出
      *
-     * @param
+     * @param pageInfo
      * @return
      */
-    @RequestMapping("/hfEmpTaskRejectExport")
-    @Log("雇员公积金任务导出")
-    public void hfEmpTaskRejectExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
-        pageInfo.setPageSize(10000);
-        pageInfo.setPageNum(0);
-        PageRows<HfEmpTaskRejectExportBo> result = business.queryHfEmpTaskRejectInPage(pageInfo, StringUtils.join(
-            new Integer[] {
-                HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK,
-                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
-            }, ','));
-        long total = result.getTotal();
-        ExportParams exportParams = new ExportParams();
-        exportParams.setType(ExcelType.XSSF);
-        exportParams.setSheetName("雇员公积金任务信息");
-        Workbook workbook;
+    @RequestMapping("/multiEmpTaskTransferExport")
+    public void multiEmpTaskTransferExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
+        EmpTaskTransferBo empTaskTransferBo = pageInfo.toJavaObject(EmpTaskTransferBo.class);
+        List<EmpTaskTransferBo> empTaskTransferBoList = business.queryEmpTaskTransfer(empTaskTransferBo);
 
-        if (total <= pageInfo.getPageSize()) {
-            workbook = ExcelExportUtil.exportExcel(exportParams, HfEmpTaskRejectExportBo.class, result.getRows());
-        } else {
-            workbook = ExcelExportUtil.exportBigExcel(exportParams, HfEmpTaskRejectExportBo.class, result.getRows());
-            int pageNum = (int) Math.ceil(total / pageInfo.getPageSize());
-            for(int i = 1; i < pageNum; i++) {
-                pageInfo.setPageNum(i);
-                result = business.queryHfEmpTaskRejectInPage(pageInfo, StringUtils.join(
-                    new Integer[] {
-                        HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK,
-                        HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
-                    }, ','));
-                workbook = ExcelExportUtil.exportBigExcel(exportParams, HfEmpTaskRejectExportBo.class, result.getRows());
-            }
-            ExcelExportUtil.closeExportBigExcel();
-        }
-        String fileName = URLEncoder.encode("批退雇员公积金任务信息.xlsx", "UTF-8");
+        Map<Integer, Map<String, Object>> alMap = new HashMap<>();
+        String[] transferOutUnitAccounts = { "", "" };
+        String[] transferInUnitAccounts = { "", "" };
 
-        response.reset();
-        response.setCharacterEncoding("UTF-8");
-//            response.setHeader("content-Type", "application/vnd.ms-excel");
-        response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition",
-            "attachment;filename=" + fileName);
-        workbook.write(response.getOutputStream());
-        workbook.close();
-    }
-
-    @RequestMapping("/hfEmpTaskBatchReject")
-    @Log("雇员公积金任务批退")
-    public JsonResult hfEmpTaskBatchReject(@RequestBody HfEmpTaskBatchRejectBo hfEmpTaskBatchRejectBo) {
-        Long[] selectedData = hfEmpTaskBatchRejectBo.getSelectedData();
-        if (!ArrayUtils.isEmpty(selectedData)) {
-            List<HfEmpTask> list = new ArrayList<>();
-            for (Long empTaskId : selectedData) {
-                HfEmpTask hfEmpTask = new HfEmpTask();
-                hfEmpTask.setEmpTaskId(empTaskId);
-                hfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_REJECTED);
-                hfEmpTask.setRejectionRemark(hfEmpTaskBatchRejectBo.getRejectionRemark());
-                hfEmpTask.setModifiedTime(LocalDateTime.now());
-                hfEmpTask.setModifiedBy("test"); // TODO current user
-                list.add(hfEmpTask);
-            }
-
-            if (!business.updateBatchById(list)) {
-                return JsonResultKit.ofError("数据库批量更新失败");
-            }
-        }
-
-        return JsonResultKit.of();
-    }
-
-    @RequestMapping("/newEmpTaskTxtExport")
-    public void newEmpTaskTxtExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
-        Collection<Object> objects = pageInfo.getParams().values();
-
-        Writer writer = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
-        String title = "序号|1|||姓名|单边比例|单边比例 |||缴费金额|1010|身份证号码|出生日期|性别|单边金额|单边金额 ||缴费基数|||||||||-1|";
-        String template = "%1$d|1|||{%2$s}.{employeeName}|%3$s|%4$s|||%5$s|1010|{%2$s}.{idNum}|{%2$s}.{birthday}|{%2$s}.{gender}|%6$s|%7$s||%8$s|||||||||-1|";
-
-
-        if (objects != null) {
-            List<String> outputList = new ArrayList<>(objects.size());
-            Set<String> employeeIdSet = new HashSet<>();
-            Wrapper<HfEmpTask> wrapper = new EntityWrapper<>();
-            wrapper.in("emp_task_id", StringUtils.join(objects, ','));
-            wrapper.eq("task_category", 1);
-            wrapper.eq("is_active", 1);
-
-            List<HfEmpTask> list = business.selectList(wrapper);
-            Map<Long, int[]> roundTypesMap = new HashMap<>();
+        for (int i = 0; i < 2; i++) {
+            Map<String, Object> map = new HashMap<>();
+            List<Map<String, Object>>  mapList = new ArrayList<>();
+            final int m = i;
+            List<EmpTaskTransferBo> list = empTaskTransferBoList.stream().filter(e -> e.getHfType() == m + 1).collect(Collectors.toList());
 
             if (CollectionUtils.isNotEmpty(list)) {
-                for(int i = 0; i < list.size(); i++) {
-                    HfEmpTask hfEmpTask = list.get(i);
-                    employeeIdSet.add(hfEmpTask.getEmployeeId());
-                    String policyId = hfEmpTask.getPolicyDetailId();
-                    Integer welfareUnit = hfEmpTask.getWelfareUnit();
-                    String effectiveMonth = hfEmpTask.getStartMonth();
-                    if (StringUtils.isEmpty(effectiveMonth)) {
-                        effectiveMonth = hfEmpTask.getEndMonth();
+                String account = list.get(0).getTransferOutUnitAccount();
+                if (account != null) {
+                    transferOutUnitAccounts[i] = account;
+                }
+                account = list.get(0).getTransferInUnitAccount();
+                if (account != null) {
+                    transferInUnitAccounts[i] = account;
+                }
+
+                for (int j = 0; j < list.size(); j++) {
+                    if (!transferOutUnitAccounts[i].equals(list.get(j).getTransferOutUnitAccount())) {
+                        throw new BusinessException("仅支持一次导出相同转出单位公积金账号的信息");
                     }
-                    String hfTypeDicItemCode = DictUtil.DICT_ITEM_ID_FUND_BASIC;
-                    if (hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_ADDED) {
-                        hfTypeDicItemCode = DictUtil.DICT_ITEM_ID_FUND_ADDED;
+                    if (!transferInUnitAccounts[i].equals(list.get(j).getTransferInUnitAccount())) {
+                        throw new BusinessException("仅支持一次导出相同转入单位公积金账号的信息");
                     }
-                    int[] roundTypes = null;
-                    if (StringUtils.isNotEmpty(policyId)) {
-                        roundTypes = hfEmpTaskHandleService.getRoundTypeProxy(policyId, welfareUnit, effectiveMonth, hfTypeDicItemCode);
-                        if (roundTypes != null) {
-                            if (roundTypes.length != 2) {
-                                throw new BusinessException("内控中心取得进位方式不正确");
-                            } else {
-                                if (roundTypes[0] < 1 || roundTypes[0] > 10) {
-                                    roundTypes[0] = 1;
-                                }
-                                if (roundTypes[1] < 1 || roundTypes[1] > 10) {
-                                    roundTypes[1] = 1;
-                                }
-                            }
-                        }
-                    }
-                    if (roundTypes == null) {
-                        roundTypes = new int[]{1, 1};
-                    }
-                    roundTypesMap.put(hfEmpTask.getEmpTaskId(), roundTypes);
-                    BigDecimal comRatio = hfEmpTask.getRatioCom();
-                    BigDecimal empRatio = hfEmpTask.getRatioEmp();
-                    BigDecimal amount = CalculateSocialUtils.calculateByRoundType(hfEmpTask.getAmount(),
-                        CalculateSocialUtils.getRoundTypeInWeight(roundTypesMap.get(hfEmpTask.getEmpTaskId())[0], roundTypesMap.get(hfEmpTask.getEmpTaskId())[1]));
-                    BigDecimal comAmount = amount.multiply(comRatio).divide(comRatio.add(empRatio), 3, BigDecimal.ROUND_HALF_UP);
-                    BigDecimal empAmount = amount.multiply(comRatio).divide(comRatio.add(empRatio), 3, BigDecimal.ROUND_HALF_UP);
-                    comAmount = CalculateSocialUtils.calculateByRoundType(comAmount, roundTypesMap.get(hfEmpTask.getEmpTaskId())[0]);
-                    empAmount = CalculateSocialUtils.calculateByRoundType(empAmount, roundTypesMap.get(hfEmpTask.getEmpTaskId())[1]);
-                    String comRatioStr = CalculateSocialUtils.digitInSimpleFormat(comRatio.multiply(BigDecimal.valueOf(100)));
-                    String empRatioStr = CalculateSocialUtils.digitInSimpleFormat(empRatio.multiply(BigDecimal.valueOf(100)));
-                    String baseAmount = CalculateSocialUtils.digitInSimpleFormat(hfEmpTask.getEmpBase());
-                    outputList.add(String.format(template, i, hfEmpTask.getEmployeeId(), comRatioStr, empRatioStr, amount.toString(), comAmount.toString(), empAmount.toString(), baseAmount));
+
+                    Map<String, Object> lm = new HashMap<>();
+                    lm.put("hfEmpAccount", list.get(j).getHfEmpAccount());
+                    lm.put("employeeName", list.get(j).getEmployeeName());
+                    lm.put("rowNo", j + 1);
+                    mapList.add(lm);
                 }
             }
-
-            writer.append(title);
-            if (CollectionUtils.isNotEmpty(outputList)) {
-                if (!employeeIdSet.isEmpty()) {
-                    Wrapper<EmpEmployee> empWrapper = new EntityWrapper<>();
-                    empWrapper.in("employee_id", employeeIdSet);
-                    List<EmpEmployee> empList = empEmployeeService.selectList(empWrapper);
-
-                    writer.append("\r\n");
-                    String employeeIdKey;
-                    for (String output : outputList) {
-                        for (EmpEmployee emp : empList) {
-                            employeeIdKey = "{" + emp.getEmployeeId() + "}";
-                            if (output.contains(employeeIdKey)) {
-                                output = output.replace(employeeIdKey + ".{employeeName}", emp.getEmployeeName())
-                                    .replace(employeeIdKey + ".{idNum}", emp.getIdNum())
-                                    .replace(employeeIdKey + ".{birthday}", emp.getBirthday().format(formatter))
-                                    .replace(employeeIdKey + ".{gender}", (emp.getGender() != null && emp.getGender()) ? "01" : "02");
-                                writer.append(output);
-                                writer.append("\r\n");
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
-            writer.append(title);
+            map.put("maplist", mapList);
+            alMap.put(i, map);
         }
 
-        String fileName = URLEncoder.encode("开户文件.txt", "UTF-8");
+        TemplateExportParams params = new TemplateExportParams("/template/SH_HF_MULTI_TRANSFER_TMP.xlsx", 0, 1);
+        Workbook workbook = ExcelExportUtil.exportExcel(alMap, params);
+        for (int i = 0; i < 2; i++) {
+            String left = workbook.getSheetAt(i).getHeader().getLeft();
+            left = left.replace("{{transferOutUnitAccount}}", transferOutUnitAccounts[i]);
+            left = left.replace("{{transferInUnitAccount}}", transferInUnitAccounts[i]);
+            workbook.getSheetAt(i).getHeader().setLeft(left);
+        }
+        try {
+            String fileName = URLEncoder.encode("上海市公积金雇员转移清册.xlsx", "UTF-8");
+
+            response.reset();
+            response.setCharacterEncoding("UTF-8");
+//            response.setHeader("content-Type", "application/vnd.ms-excel");
+                response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setHeader("Content-Disposition","attachment;filename=" + fileName);
+            workbook.write(response.getOutputStream());
+            workbook.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 雇员公积金转移TXT导出
+     *
+     * @param response
+     * @param pageInfo
+     * @throws Exception
+     */
+    @RequestMapping("/empTaskTransferTxtExport")
+    public void empTaskTransferTxtExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
+        EmpTaskTransferBo empTaskTransferBo = pageInfo.toJavaObject(EmpTaskTransferBo.class);
+        List<EmpTaskTransferBo> empTaskTransferBoList = business.queryEmpTaskTransfer(empTaskTransferBo);
+
+        Writer writer = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
+        String title = "序号|公积金账号||||";
+        String template = "%1$d|%2$s||||";
+        List<String> outputList = new ArrayList<>();
+
+        writer.append(title);
+        if (CollectionUtils.isNotEmpty(empTaskTransferBoList)) {
+            for(int i = 0; i < empTaskTransferBoList.size(); i++) {
+                empTaskTransferBo = empTaskTransferBoList.get(i);
+                outputList.add(String.format(template, i + 1, empTaskTransferBo.getHfEmpAccount()));
+            }
+
+            for (String output : outputList) {
+                writer.append("\r\n");
+                writer.append(output);
+            }
+        }
+        String fileName = URLEncoder.encode("上海市公积金雇员转移TXT.txt", "UTF-8");
 
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "text/plain");

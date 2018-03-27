@@ -7,17 +7,19 @@ import java.math.BigDecimal;
 @Data
 public class HFMonthChargeRepairDetailBO {
 
-    private String employeeId;
+    private Integer rowNo;
     private String hfEmpAccount;
     private String employeeName;
     private String idNum;
-    private Integer repairReason;
+    private String repairReason;
+    private String repairPeriodFir;
     private String startMonth;
     private String endMonth;
-    private BigDecimal ratio;
-    private BigDecimal amount;
+
+    private String ratioFir;
+    private BigDecimal amountFir;
+    private BigDecimal subAmountFir;
     private int months;
-    private BigDecimal subTotalAmount;
     private BigDecimal totalAmount;
 
     public void plusOneMonth() {
