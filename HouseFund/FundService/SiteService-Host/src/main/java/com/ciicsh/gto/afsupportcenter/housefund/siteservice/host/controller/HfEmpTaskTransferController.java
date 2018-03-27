@@ -5,7 +5,9 @@ import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBatchRejectBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTaskTransferBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.FeedbackDateBatchUpdateBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.HfEmpTaskHandleVo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.ImportFeedbackDateBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
@@ -25,6 +27,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.MultiValueMap;
@@ -38,6 +41,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -293,5 +297,29 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
         }
 
         return JsonResultKit.of(failList);
+    }
+
+    @RequestMapping("/batchUpdateFeedbackDate")
+    @Log("雇员公积金转移任务批量更新回单日期")
+    public JsonResult batchUpdateFeedbackDate(@RequestBody FeedbackDateBatchUpdateBO feedbackDateBatchUpdateBO) {
+        Long[] selectedData = feedbackDateBatchUpdateBO.getSelectedData();
+        if (!ArrayUtils.isEmpty(selectedData)) {
+            List<HfEmpTask> list = new ArrayList<>();
+            for (Long empTaskId : selectedData) {
+                HfEmpTask hfEmpTask = new HfEmpTask();
+                hfEmpTask.setEmpTaskId(empTaskId);
+                hfEmpTask.setFeedbackDate(feedbackDateBatchUpdateBO.getFeedbackDate());
+                hfEmpTask.setModifiedTime(LocalDateTime.now());
+                hfEmpTask.setModifiedBy(UserContext.getUserId());
+                hfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+                list.add(hfEmpTask);
+            }
+
+            if (!business.updateBatchById(list)) {
+                return JsonResultKit.ofError("数据库批量更新失败");
+            }
+        }
+
+        return JsonResultKit.of();
     }
 }

@@ -37,6 +37,7 @@ public class HFImportFeedbackDateServiceImpl implements HFImportFeedbackDateServ
                         hfEmpTask.setFeedbackDate(LocalDate.parse(importFeedbackDateBO.getFeedbackDate(), formatter));
                         hfEmpTask.setModifiedTime(LocalDateTime.now());
                         hfEmpTask.setModifiedBy(UserContext.getUserId());
+                        hfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
                         hfEmpTaskList.add(hfEmpTask);
                     }
                 }
