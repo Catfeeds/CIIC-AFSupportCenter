@@ -124,6 +124,9 @@
             <if test="exceptTaskCategories != null">
                 AND het.task_category NOT IN (${exceptTaskCategories})
             </if>
+            <if test="includeTaskCategories != null">
+                AND het.task_category IN (${includeTaskCategories})
+            </if>
             <if test="processCategory != null">
                 AND het.process_category = #{processCategory}
             </if>
@@ -218,6 +221,9 @@
             <if test="exceptTaskCategories != null">
                 AND het.task_category NOT IN (${exceptTaskCategories})
             </if>
+            <if test="includeTaskCategories != null">
+                AND het.task_category IN (${includeTaskCategories})
+            </if>
             <if test="processCategory != null">
                 AND het.process_category = #{processCategory}
             </if>
@@ -311,6 +317,9 @@
             <if test="exceptTaskCategories != null">
                 AND het.task_category NOT IN (${exceptTaskCategories})
             </if>
+            <if test="includeTaskCategories != null">
+                AND het.task_category IN (${includeTaskCategories})
+            </if>
             <if test="processCategory != null">
                 AND het.process_category = #{processCategory}
             </if>
@@ -403,6 +412,9 @@
             het.is_active = 1  AND IFNULL(het.task_status, 1) != 5 AND het.welfare_unit = 2
             <if test="exceptTaskCategories != null">
                 AND het.task_category NOT IN (${exceptTaskCategories})
+            </if>
+            <if test="includeTaskCategories != null">
+                AND het.task_category IN (${includeTaskCategories})
             </if>
             <if test="processCategory != null">
                 AND het.process_category = #{processCategory}
