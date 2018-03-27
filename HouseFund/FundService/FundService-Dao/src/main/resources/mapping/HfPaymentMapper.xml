@@ -57,6 +57,7 @@
     <!--查询公积金汇缴支付-->
     <select id="getFundPays" resultMap="GetFundPaysResultMap">
         SELECT
+        hfp.payment_id,
         hfp.payment_batch_num,
         hfp.total_application_amonut,
         hfp.total_emp_count,
