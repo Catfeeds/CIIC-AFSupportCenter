@@ -53,7 +53,7 @@ public abstract class FileImportServiceImpl<M extends BaseMapper<E>, E> extends 
         if (iService != null) {
             entityClass = (Class<T>) ((ParameterizedType) iService.getClass().getSuperclass().getInterfaces()[0].getGenericInterfaces()[0]).getActualTypeArguments()[0];
         } else {
-            entityClass = (Class<T>) ((ParameterizedType) importService.getClass().getSuperclass().getInterfaces()[0].getGenericInterfaces()[0]).getActualTypeArguments()[0];
+            entityClass = (Class<T>) ((ParameterizedType) importService.getClass().getInterfaces()[0].getGenericInterfaces()[0]).getActualTypeArguments()[0];
         }
 
         ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -104,11 +104,12 @@ public abstract class FileImportServiceImpl<M extends BaseMapper<E>, E> extends 
                         insertFileImport(importType, relatedUnitId, importBatchId, storageFileId, url, fileNames.get(i), createdBy);
                     }
                     reentrantLock.unlock();
-                } catch (IOException e) {
-                    LogContext logContext = LogContext.of().setTitle("文件上传")
-                        .setTextContent("上传文件到文件服务器并新增上传文件记录表时异常")
-                        .setExceptionContent(e);
-                    logService.error(logContext);
+                } catch (Exception e) {
+                    e.printStackTrace();
+//                    LogContext logContext = LogContext.of().setTitle("文件上传")
+//                        .setTextContent("上传文件到文件服务器并新增上传文件记录表时异常")
+//                        .setExceptionContent(e);
+//                    logService.error(logContext);
                 } finally {
                     if (reentrantLock.isLocked()) {
                         reentrantLock.unlock();
@@ -124,7 +125,9 @@ public abstract class FileImportServiceImpl<M extends BaseMapper<E>, E> extends 
     }
 
     protected void handleSingleSuccessList(IService<T> iService, ImportService<T> importService, List<T> successList) {
-        iService.insertBatch(successList, 3000);
+        if (iService != null) {
+            iService.insertBatch(successList, 3000);
+        }
     }
 
     protected void handleSingleFailList(IService<T> iService, ImportService<T> importService, List<T> failList) {
@@ -133,5 +136,5 @@ public abstract class FileImportServiceImpl<M extends BaseMapper<E>, E> extends 
 
     protected abstract long getLastImportBatchId(int importType, Long relatedUnitId);
 
-    protected abstract void insertFileImport(int importType, Long annualAdjustCompanyId, Long importBatchId, String storageFileId, String url, String fileName, String createdBy);
+    protected abstract void insertFileImport(int importType, Long relatedUnitId, Long importBatchId, String storageFileId, String url, String fileName, String createdBy);
 }

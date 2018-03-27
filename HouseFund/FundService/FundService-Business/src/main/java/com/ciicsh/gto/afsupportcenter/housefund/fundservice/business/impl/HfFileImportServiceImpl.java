@@ -14,9 +14,11 @@ import java.util.List;
 
 @Service
 public class HfFileImportServiceImpl extends FileImportServiceImpl<SsFileImportMapper, SsFileImport> implements HfFileImportService<T> {
+
+
     @Override
-    protected void handleSingleFailList(IService<T> iService, ImportService<T> importService, List<T> failList) {
-        importService.handleDataList(failList);
+    protected void handleSingleSuccessList(IService<T> iService, ImportService<T> importService, List<T> successList) {
+        importService.handleDataList(successList);
     }
 
     @Override
@@ -28,10 +30,10 @@ public class HfFileImportServiceImpl extends FileImportServiceImpl<SsFileImportM
     }
 
     @Override
-    protected void insertFileImport(int importType, Long annualAdjustCompanyId, Long importBatchId, String storageFileId, String url, String fileName, String createdBy) {
+    protected void insertFileImport(int importType, Long relatedUnitId, Long importBatchId, String storageFileId, String url, String fileName, String createdBy) {
         SsFileImport ssFileImport = new SsFileImport();
         ssFileImport.setImportType(importType);
-        ssFileImport.setRelatedUnitId(annualAdjustCompanyId);
+        ssFileImport.setRelatedUnitId(relatedUnitId);
         ssFileImport.setImportBatchId(importBatchId);
         ssFileImport.setStorageFileId(storageFileId);
         ssFileImport.setStorageFileUrl(url);

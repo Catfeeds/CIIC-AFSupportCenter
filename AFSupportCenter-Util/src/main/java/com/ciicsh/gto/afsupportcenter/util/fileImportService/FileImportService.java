@@ -16,6 +16,8 @@ import java.util.Map;
  * </p>
  */
 public interface FileImportService<T, E> extends IService<E> {
+    Long DEFAULT_RELATED_UNIT_ID = 0L;
+
     void deleteExistData(IService<T> iService, Map<String, Object> condition);
 
     void executeExcelImport(int importType,

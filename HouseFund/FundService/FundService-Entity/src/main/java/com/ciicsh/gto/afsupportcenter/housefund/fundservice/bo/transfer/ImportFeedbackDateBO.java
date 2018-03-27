@@ -7,6 +7,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.io.Serializable;
+import java.util.List;
 
 @ExcelTarget("importFeedbackDate")
 @Data
@@ -22,7 +23,8 @@ public class ImportFeedbackDateBO implements Serializable, IExcelModel {
     @Excel(name = "回单日期", orderNum = "2")
     @NotBlank(message = "回单日期不能为空")
     private String feedbackDate;
-
+    private String modifiedBy;
+    private List<Long> empTaskIds;
     private String errorMsg;
 
     @Override

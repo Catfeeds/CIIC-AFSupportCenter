@@ -7,7 +7,9 @@ import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTaskTransferBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.HfEmpTaskHandleVo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.ImportFeedbackDateBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.util.FeedbackDateVerifyHandler;
 import com.ciicsh.gto.afsupportcenter.util.PdfUtil;
@@ -266,19 +268,20 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
     @RequestMapping(value="/feedbackDateUpload", consumes="multipart/form-data")
     public JsonResult feedbackDateUpload(HttpServletRequest request) {
         EmpTaskTransferBo empTaskTransferBo = new EmpTaskTransferBo();
+        empTaskTransferBo.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_COMPLETED); // TODO 2 or 3?
         List<EmpTaskTransferBo> empTaskTransferBoList = business.queryEmpTaskTransfer(empTaskTransferBo);
 
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         MultiValueMap<String, MultipartFile> files = multipartRequest.getMultiFileMap();//得到文件map对象
         ImportParams importParams = new ImportParams();
-        List<HfEmpTask> successList = new ArrayList<>();
-        List<HfEmpTask> failList = new ArrayList<>();
+        List<ImportFeedbackDateBO> successList = new ArrayList<>();
+        List<ImportFeedbackDateBO> failList = new ArrayList<>();
 
         try {
             importParams.setKeyIndex(null);
             importParams.setNeedVerfiy(true);
             importParams.setVerifyHanlder(new FeedbackDateVerifyHandler(empTaskTransferBoList));
-            hfFileImportService.executeExcelImport(hfFileImportService.IMPORT_TYPE_EMP_TASK_TRANS_FEEDBACK_DATE, null,
+            hfFileImportService.executeExcelImport(hfFileImportService.IMPORT_TYPE_EMP_TASK_TRANS_FEEDBACK_DATE, hfFileImportService.DEFAULT_RELATED_UNIT_ID,
                 null, hfImportFeedbackDateService, successList, failList,
                 importParams, files, UserContext.getUserId());
         } catch (Exception e) {
