@@ -45,14 +45,14 @@ public class HfFundPayController {
     }
 
     @Log("查询公积金汇缴支付编辑操作数据")
-    @PostMapping("/fundPaysOperateData")
+    @PostMapping("/fundPaysOperateEditData")
     public JsonResult<List<HfPaymentAccountBo>> postFundPaysOperateData(PageInfo pageInfo) {
         PageRows<HfPaymentAccountBo> pageRows = hfPaymentAccountService.getMakePayLists(pageInfo);
         return JsonResultKit.ofPage(pageRows);
     }
 
     @Log("查询公积金汇缴支付详细操作数据")
-    @PostMapping("/fundPaysDetailData")
+    @PostMapping("/fundPaysOperateDetailData")
     public JsonResult<List<HfPaymentComBo>> postFundPaysDetailData(PageInfo pageInfo) {
         PageRows<HfPaymentComBo> pageRows = hfPaymentComService.getFundPaysDetailOperationData(pageInfo);
         return JsonResultKit.ofPage(pageRows);

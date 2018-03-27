@@ -24,12 +24,14 @@
 
     <resultMap id="GetFundPaysDetailOperationDataResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentComBo" extends="BaseResultMap">
         <result column="payment_month" property="paymentMonth" />
+        <result column="title" property="companyName" />
+        <result column="hf_type_name" property="hfTypeName" />
     </resultMap>
 
     <!--查询公积金汇缴支付详细操作数据-->
     <select id="getFundPaysDetailOperationData" resultMap="GetFundPaysDetailOperationDataResultMap">
         SELECT
-        pc.hf_type,
+        ht.hf_type_name,
         p.payment_month,
         pc.company_id,
         com.title,
@@ -42,6 +44,7 @@
         FROM hf_payment_com pc
         INNER JOIN hf_payment p ON p.payment_id = pc.payment_id
         INNER JOIN sal_company com ON com.company_id = pc.company_id
+        INNER JOIN hf_type ht ON ht.hf_type_id = pc.hf_type
         <where>
             pc.is_active = 1
             <if test="paymentMonth != null and paymentMonth != ''">

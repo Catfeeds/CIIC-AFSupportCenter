@@ -16,4 +16,15 @@ public class HfPaymentComBo extends HfPaymentCom {
      * 支付年月YYYYMM
      */
     private String paymentMonth;
+
+    /**
+     * 公司名称
+     */
+    private String companyName;
+
+    /**
+     * 公积金类型名称
+     */
+    private String hfTypeName;
+
 }
