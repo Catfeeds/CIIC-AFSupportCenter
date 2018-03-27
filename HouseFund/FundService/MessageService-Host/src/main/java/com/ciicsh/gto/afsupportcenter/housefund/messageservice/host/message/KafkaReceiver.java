@@ -190,6 +190,7 @@ public class KafkaReceiver {
             logger.info("start fundEmpAgreementCorrect: " + JSON.toJSONString(taskMsgDTO));
             try {
                 Map<String, Object> paramMap = taskMsgDTO.getVariables();
+                Integer processCategory = 0;
                 Integer taskCategory = 0;
                 String fundCategory = (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType())|| TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
                 //未办理任务单
@@ -198,7 +199,7 @@ public class KafkaReceiver {
                     if (null != paramMap && paramMap.get("fundType") != null) {
                         taskCategory = Integer.parseInt(paramMap.get("fundType").toString());
                     }
-                    boolean res = updateEmpTask(taskMsgDTO,fundCategory,ProcessCategory.EMPLOYEEAGREEMENTCORRECT.getCategory(),taskCategory);
+                    boolean res = updateEmpTask(taskMsgDTO,fundCategory,ProcessCategory.EMPLOYEEAGREEMENTCORRECT.getCategory(),taskCategory,1);
                     logger.info("end fundEmpAgreementCorrect(not handled):" + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
                 } //已办理任务单
                 else {
@@ -211,8 +212,9 @@ public class KafkaReceiver {
                     if (resList.size() > 0) {
                         HfEmpTask hfEmpTask = resList.get(0);
                         taskCategory = hfEmpTask.getTaskCategory();
+                        processCategory = hfEmpTask.getProcessCategory();
                     }
-                    boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEAGREEMENTCORRECT.getCategory(),taskCategory, 1);
+                    boolean res = saveEmpTask(taskMsgDTO, fundCategory, processCategory,taskCategory, 1);
                     logger.info("end fundEmpAgreementCorrect(already handled): " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
                 }
             } catch (Exception e) {
@@ -273,12 +275,12 @@ public class KafkaReceiver {
      * @param taskMsgDTO
      * @return
      */
-    private AfEmployeeInfoDTO getEmpInfo(TaskCreateMsgDTO taskMsgDTO,Integer processCategory,Integer taskCategory) {
+    private AfEmployeeInfoDTO getEmpInfo(TaskCreateMsgDTO taskMsgDTO,Integer processCategory,Integer taskCategory,Integer isChange) {
         AfEmployeeInfoDTO resDto = null;
         try {
             logger.info("fund get employee info start, request:" + JSON.toJSONString(taskMsgDTO));
             Long empAgreementId = null;
-            if((processCategory.equals(ProcessCategory.EMPLOYEEFLOP.getCategory()) || processCategory.equals(ProcessCategory.EMPLOYEEAGREEMENTADJUST.getCategory())) && taskCategory.equals(TaskCategory.SEALED.getCategory())){
+            if((processCategory.equals(ProcessCategory.EMPLOYEEFLOP.getCategory()) || processCategory.equals(ProcessCategory.EMPLOYEEAGREEMENTADJUST.getCategory())) && taskCategory.equals(TaskCategory.SEALED.getCategory()) && isChange.equals(0)){
                 Map<String, Object> paramMap = taskMsgDTO.getVariables();
                 if(null != paramMap){
                     empAgreementId = Long.parseLong(paramMap.get("oldEmpAgreementId").toString());
@@ -306,7 +308,7 @@ public class KafkaReceiver {
     private boolean saveEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer processCategory,Integer taskCategory,Integer isChange) {
         try {
             //调用当前雇员信息获取接口
-            AfEmployeeInfoDTO dto = getEmpInfo(taskMsgDTO,processCategory,taskCategory);
+            AfEmployeeInfoDTO dto = getEmpInfo(taskMsgDTO,processCategory,taskCategory,isChange);
             if (dto != null) {
                 //插入数据到雇员任务单表
                 return hfEmpTaskService.addEmpTask(taskMsgDTO, fundCategory, processCategory,taskCategory, isChange, dto);
@@ -328,10 +330,10 @@ public class KafkaReceiver {
      * @param fundCategory
      * @return
      */
-    private boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer processCategory,Integer taskCategory){
+    private boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer processCategory,Integer taskCategory,Integer isChange){
         try {
             //调用当前雇员信息获取接口
-            AfEmployeeInfoDTO dto = getEmpInfo(taskMsgDTO,processCategory,taskCategory);
+            AfEmployeeInfoDTO dto = getEmpInfo(taskMsgDTO,processCategory,taskCategory,isChange);
             if (dto != null) {
                 //更新任务单表信息
                 return hfEmpTaskService.updateEmpTask(taskMsgDTO, fundCategory,dto);
