@@ -205,7 +205,8 @@ public class KafkaReceiver {
                 else {
                     logger.info("start fundEmpAgreementCorrect(already handled): " + JSON.toJSONString(taskMsgDTO));
                     HfEmpTask qd = new HfEmpTask();
-                    qd.setTaskId(paramMap.get("oldTaskId").toString());
+//                    qd.setTaskId(paramMap.get("oldTaskId").toString());
+                    qd.setBusinessInterfaceId(paramMap.get("oldEmpAgreementId").toString());
 
                     //查询旧的任务类型保存到新的任务单
                     List<HfEmpTask> resList = hfEmpTaskService.queryByTaskId(qd);

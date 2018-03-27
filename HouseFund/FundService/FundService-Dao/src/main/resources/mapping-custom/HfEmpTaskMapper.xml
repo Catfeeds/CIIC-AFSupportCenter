@@ -620,6 +620,9 @@
             <if test="taskId != null">
                 and et.task_id=#{taskId}
             </if>
+            <if test="businessInterfaceId != null">
+                and et.business_interface_id = #{businessInterfaceId}
+            </if>
         </where>
     </select>
 
