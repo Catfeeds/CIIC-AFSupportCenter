@@ -81,10 +81,17 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         empTaskTransferBo.setEmployeeId(employeeId);
         empTaskTransferBo.setCompanyId(companyId);
         List<EmpTaskTransferBo> employeeBo= baseMapper.queryEmpTaskTransferNewTask(empTaskTransferBo);
-        BeanUtils.copyProperties(employeeBo.get(0),hfEmpTaskHandleBo);
-        hfEmpTaskHandleBo.setCompanyName(employeeBo.get(0).getTitle());
+        empTaskTransferBo=employeeBo.get(0);
+        hfEmpTaskHandleBo.setEmployeeName(empTaskTransferBo.getEmployeeName());
+        hfEmpTaskHandleBo.setInDate(DateUtil.dateToLocaleDate(empTaskTransferBo.getInDate()));
+        hfEmpTaskHandleBo.setCompanyName(empTaskTransferBo.getTitle());
+        hfEmpTaskHandleBo.setEmployeeId(employeeId);
+        hfEmpTaskHandleBo.setCompanyId(companyId);
+        hfEmpTaskHandleBo.setIdNum(empTaskTransferBo.getIdNum());
         //任务单信息
         HfEmpTask hfEmpTask = new HfEmpTask();
+        empTaskTransferBo.setProcessCategory(9);
+        empTaskTransferBo.setTaskCategory(8);
         if(empTaskId>0){
             hfEmpTask.setEmpTaskId(empTaskId);
             hfEmpTask = baseMapper.selectOne( hfEmpTask);
@@ -93,7 +100,10 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
             empTaskTransferBo.setOperateDate(DateUtil.localDateToDate(hfEmpTask.getOperateDate()));
             empTaskTransferBo.setTransferDate(DateUtil.localDateToDate(hfEmpTask.getTransferDate()));
             hfEmpTaskHandleBo.setEmpTaskTransferBo(empTaskTransferBo);
+        }else{
+            hfEmpTaskHandleBo.setEmpTaskTransferBo(empTaskTransferBo);
         }
+
         return  hfEmpTaskHandleBo;
     }
     @Override
@@ -127,7 +137,8 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         }else{
             baseMapper.updateById(hfEmpTask);
         }
-        return JsonResultKit.of("转移办理操作成功！");
+
+        return JsonResultKit.of(200,"转移办理操作成功！" ,hfEmpTask.getEmpTaskId());
     }
 
     @Override
@@ -145,19 +156,20 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         List<Map<String, Object>> listP= new ArrayList();
         Map<String, Object> mapP=new HashMap<>();
         hfEmpTask.setEmpTaskId(empTaskTransferBo.getEmpTaskId());
-        hfEmpTask=baseMapper.selectOne(hfEmpTask);
+        hfEmpTask.setOperateDate(LocalDate.now());//设置操作日期
+        baseMapper.updateById(hfEmpTask);
+        Map<String,String> mapPrint=baseMapper.fetchPrintInfo(empTaskTransferBo.getEmpTaskId());
 
-        //empTaskTransferBo.getEmployeeId();
         mapP.put("createdByYYYY", LocalDate.now().getYear());
         mapP.put("createdByMM", LocalDate.now().getMonthValue());
         mapP.put("createdByDD", LocalDate.now().getDayOfMonth());
-        mapP.put("employeeName", "");
-        mapP.put("hfEmpAccount", "");
-        mapP.put("inUnitName", "");
-        mapP.put("outUnitName", "");
-        mapP.put("inComAccount", "");
-        mapP.put("outComAccount", "");
-        mapP.put("transCount", "");
+        mapP.put("employeeName", mapPrint.get("employee_name"));
+        mapP.put("hfEmpAccount", mapPrint.get("hf_emp_account"));
+        mapP.put("inUnitName", mapPrint.get("transfer_in_unit"));
+        mapP.put("outUnitName", mapPrint.get("transfer_out_unit"));
+        mapP.put("inComAccount", mapPrint.get("transfer_in_unit_account"));
+        mapP.put("outComAccount", mapPrint.get("transfer_out_unit_account"));
+        mapP.put("transCount", mapPrint.get(""));
         listP.add(mapP);
         return  listP;
     }
