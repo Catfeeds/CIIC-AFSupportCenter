@@ -1,8 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer;
 
+import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import lombok.Data;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -31,10 +33,10 @@ public class EmpTaskTransferBo {
     private String transferOutUnitAccount;
     private String transferInUnit;
     private String transferInUnitAccount;
-    private Date transferDate;
+    private LocalDate transferDate;
     private String transferDateFormat;
-    private Date feedbackDate;
-    private Date operateDate;
+    private LocalDate feedbackDate;
+    private LocalDate operateDate;
     private String handleRemark;
     private Integer paymentBank;
     private Integer hfAccountType;
@@ -42,7 +44,7 @@ public class EmpTaskTransferBo {
     public String getTransferDateFormat() {
         if (this.transferDate != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            return sdf.format(this.transferDate);
+            return sdf.format(DateUtil.localDateToDate(this.transferDate));
         }
         return transferDateFormat;
     }

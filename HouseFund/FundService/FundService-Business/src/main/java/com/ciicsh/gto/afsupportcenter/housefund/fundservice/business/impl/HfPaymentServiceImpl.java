@@ -104,7 +104,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         dto.setBusinessType(2);//业务类型
         dto.setPayWay(3);//转账
         dto.setPayAmount(hfPayment.getTotalApplicationAmonut());//申请支付金额
-        dto.setReceiver("公积金中心");//收款方名称
+        dto.setReceiver("住房资金归集待结算户");//收款方名称
         dto.setApplyer(hfPayment.getRequestUser());  //申请人
         dto.setApplyDate(StringUtil.getNow());//申请日期
         dto.setBusinessPkId(hfPayment.getPaymentId().longValue());//业务方主键ID(整型)
