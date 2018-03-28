@@ -30,12 +30,14 @@
 
     <!--查询未支付客户-->
     <select id="getPaymentComList" resultMap="BaseResultMapExt">
-        SELECT pc.company_id,pc.payment_com_id,ca.com_account_id,ca.payment_way
+        SELECT pc.company_id,pc.hf_type,pc.payment_com_id,ca.com_account_id,ca.payment_way
         FROM hf_payment_com pc
         LEFT JOIN hf_com_account ca ON ca.com_account_id=pc.com_account_id
         WHERE pc.is_active=1
         AND EXISTS (SELECT 1 FROM hf_payment hp WHERE hp.payment_id=pc.payment_id AND hp.payment_month=#{payemntMonth})
         AND EXISTS (SELECT 1 FROM hf_payment_account hpa WHERE hpa.com_account_id=pc.com_account_id AND hpa.payment_status=1)
+
+
     </select>
 
 </mapper>

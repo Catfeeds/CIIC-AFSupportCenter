@@ -84,7 +84,7 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         List<EmpTaskTransferBo> employeeBo= baseMapper.queryEmpTaskTransferNewTask(empTaskTransferBo);
         empTaskTransferBo=employeeBo.get(0);
         hfEmpTaskHandleBo.setEmployeeName(empTaskTransferBo.getEmployeeName());
-        hfEmpTaskHandleBo.setInDate(DateUtil.dateToLocaleDate(empTaskTransferBo.getInDate()));
+        hfEmpTaskHandleBo.setInDate(empTaskTransferBo.getInDate());
         hfEmpTaskHandleBo.setCompanyName(empTaskTransferBo.getTitle());
         hfEmpTaskHandleBo.setEmployeeId(employeeId);
         hfEmpTaskHandleBo.setCompanyId(companyId);

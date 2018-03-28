@@ -21,8 +21,8 @@ public class EmpTaskTransferBo {
     private Integer status;
     private Integer taskStatus;
     private Integer archiveStatus;
-    private Date inDate;
-    private String submitTime;
+    private LocalDate inDate;
+    private LocalDate submitTime;
     private String submitterId;
     private String comAccountId;
     private Integer ssAccountType;
