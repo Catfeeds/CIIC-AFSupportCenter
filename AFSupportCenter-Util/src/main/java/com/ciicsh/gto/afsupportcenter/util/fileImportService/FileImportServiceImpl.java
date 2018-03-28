@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -105,11 +104,11 @@ public abstract class FileImportServiceImpl<M extends BaseMapper<E>, E> extends 
                     }
                     reentrantLock.unlock();
                 } catch (Exception e) {
-                    e.printStackTrace();
-//                    LogContext logContext = LogContext.of().setTitle("文件上传")
-//                        .setTextContent("上传文件到文件服务器并新增上传文件记录表时异常")
-//                        .setExceptionContent(e);
-//                    logService.error(logContext);
+//                    e.printStackTrace();
+                    LogContext logContext = LogContext.of().setTitle("文件上传")
+                        .setTextContent("上传文件到文件服务器并新增上传文件记录表时异常")
+                        .setExceptionContent(e);
+                    logService.error(logContext);
                 } finally {
                     if (reentrantLock.isLocked()) {
                         reentrantLock.unlock();
