@@ -122,7 +122,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
         Map<String,Object>  map = taskService.getInformation(amTaskParamBO);
 
-        AmEmpTaskBO customBO = (AmEmpTaskBO)map.get("customBO");//客户信息
+        AmCustomBO customBO = (AmCustomBO)map.get("customBO");//客户信息
         AmEmpTaskBO employeeBO = (AmEmpTaskBO)map.get("employeeBO");//雇佣信息
 
         Map<String,Object> param = new HashMap<>();

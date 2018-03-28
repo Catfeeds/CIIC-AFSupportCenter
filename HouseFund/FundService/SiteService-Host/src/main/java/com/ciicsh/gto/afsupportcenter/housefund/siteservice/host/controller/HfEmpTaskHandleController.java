@@ -65,7 +65,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
             }
 
             HfEmpTaskHandleBo hfEmpTaskHandleBo = list.get(0);
-            if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK) {
+            if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK) {
                 return JsonResultKit.ofError("当前雇员任务单的任务类型不正确");
             }
             if ((hfEmpTaskHandleBo.getTaskStatus() != null && !hfEmpTaskHandleBo.getTaskStatus().equals(hfEmpTaskHandlePostBo.getTaskStatus()))
@@ -128,7 +128,9 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                 if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_ADD
                     || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN
                     || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN
-//                    || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_MULTI_TRANS_IN
+                    || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_ADD
+                    || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_IN
+                    || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_OPEN
                     || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST) {
                     if (StringUtils.isNotEmpty(hfMonth) && StringUtils.isNotEmpty(startMonth)) {
                         YearMonth hfMonthDate = YearMonth.parse(hfMonth, formatter);
@@ -190,7 +192,8 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
 //                                hfEmpTaskPeriod.setHfMonth(hfMonth);
 //                            } else {
                             // 如果任务单类型是新开且账户分类是独立户则客户汇缴月=企业末次汇缴月 + 1
-                            if (hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_ADD
+                            if ((hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_ADD
+                                 || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_ADD)
                                 && hfEmpTaskHandleBo.getHfAccountType() == HfComAccountConstant.HF_ACCOUNT_TYPE_INDEPENDENT) {
                                 hfEmpTaskPeriod.setHfMonth(hfMonthDate.plusMonths(1).format(formatter));
                             } else {
@@ -246,9 +249,10 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                     hfEmpTaskPeriods.add(hfEmpTaskPeriod);
                 }
             } else if (
-                hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
-                || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT
-//                || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_MULTI_TRANS_OUT
+                    hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
+                    || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT
+                    || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_OUT
+                    || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_CLOSE
                 ) {
                 if (hfEmpTaskPeriods.size() > 1) {
                     return JsonResultKit.ofError("当前雇员任务单费用段数据不正确");
@@ -458,7 +462,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         Map<String, Object> condition = new HashMap<>();
         condition.put("company_id", hfEmpTaskCreateTransBo.getCompanyId());
         condition.put("employee_id", hfEmpTaskCreateTransBo.getEmployeeId());
-        condition.put("task_category", HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK);
+        condition.put("task_category", HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK);
         condition.put("hf_type", hfEmpTaskCreateTransBo.getHfType());
         condition.put("is_active", 1);
         List<HfEmpTask> hfEmpTaskList = business.selectByMap(condition);
@@ -476,7 +480,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         Map<String, Object> condition = new HashMap<>();
         condition.put("company_id", hfEmpTaskCreateTransBo.getCompanyId());
         condition.put("employee_id", hfEmpTaskCreateTransBo.getEmployeeId());
-        condition.put("task_category", HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK);
+        condition.put("task_category", HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK);
         condition.put("hf_type", hfEmpTaskCreateTransBo.getHfType());
         condition.put("is_active", 1);
         List<HfEmpTask> hfEmpTaskList = business.selectByMap(condition);

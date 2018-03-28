@@ -108,6 +108,17 @@ public class KafkaReceiver {
         }
     }
 
+    private final static TaskCategory[] FLOP_IN_TASK_CATEGORIES = {
+        TaskCategory.FLOPNEW,
+        TaskCategory.FLOPINTO,
+        TaskCategory.FLOPREOPEN
+    };
+
+    private final static TaskCategory[] FLOP_OUT_TASK_CATEGORIES = {
+        TaskCategory.FLOPOUT,
+        TaskCategory.FLOPSEALED
+    };
+
     /**
      * 雇员公积金翻牌任务单
      * @param message
@@ -122,18 +133,25 @@ public class KafkaReceiver {
             logger.info("start fundEmpFlop: " + JSON.toJSONString(taskMsgDTO));
             log.info(LogMessage.create().setTitle("fundEmpFlop").setContent("start fundEmpFlop: " + JSON.toJSONString(taskMsgDTO)));
             String fundCategory = TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) || TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
+
+            Map<String, Object> paramMap = taskMsgDTO.getVariables();
+            Integer fundType;
             if (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) || TaskSink.ADD_FUND_NEW.equals(taskMsgDTO.getTaskType())) {
-                Map<String, Object> paramMap = taskMsgDTO.getVariables();
-                if(null != paramMap && paramMap.get("fundType") != null){
+                if(null != paramMap && paramMap.get("fundType") != null) {
+                    fundType = Integer.parseInt(paramMap.get("fundType").toString());
                     logger.info("start in fundEmpFlop: " + JSON.toJSONString(taskMsgDTO));
-                    Integer taskCategory = Integer.parseInt(paramMap.get("fundType").toString());
-                    boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(),taskCategory,0);
+                    boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(), FLOP_IN_TASK_CATEGORIES[fundType].getCategory(), 0);
                     logger.info("end in fundEmpFlop:  " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
                 }
             }
             else{
+                fundType = 1;
+
+                if(null != paramMap && paramMap.get("fundType") != null) {
+                    fundType = Integer.parseInt(paramMap.get("fundType").toString());
+                }
                 logger.info("start out fundEmpFlop: " + JSON.toJSONString(taskMsgDTO));
-                boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(),TaskCategory.SEALED.getCategory(),0);
+                boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(), FLOP_OUT_TASK_CATEGORIES[fundType].getCategory(),0);
                 logger.info("end out fundEmpFlop:  " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
             }
             logger.info("end fundEmpFlop!");
@@ -190,6 +208,7 @@ public class KafkaReceiver {
             logger.info("start fundEmpAgreementCorrect: " + JSON.toJSONString(taskMsgDTO));
             try {
                 Map<String, Object> paramMap = taskMsgDTO.getVariables();
+                Integer processCategory = 0;
                 Integer taskCategory = 0;
                 String fundCategory = (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType())|| TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
                 //未办理任务单
@@ -198,21 +217,23 @@ public class KafkaReceiver {
                     if (null != paramMap && paramMap.get("fundType") != null) {
                         taskCategory = Integer.parseInt(paramMap.get("fundType").toString());
                     }
-                    boolean res = updateEmpTask(taskMsgDTO,fundCategory,ProcessCategory.EMPLOYEEAGREEMENTCORRECT.getCategory(),taskCategory);
+                    boolean res = updateEmpTask(taskMsgDTO,fundCategory,ProcessCategory.EMPLOYEEAGREEMENTCORRECT.getCategory(),taskCategory,1);
                     logger.info("end fundEmpAgreementCorrect(not handled):" + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
                 } //已办理任务单
                 else {
                     logger.info("start fundEmpAgreementCorrect(already handled): " + JSON.toJSONString(taskMsgDTO));
                     HfEmpTask qd = new HfEmpTask();
-                    qd.setTaskId(paramMap.get("oldTaskId").toString());
+//                    qd.setTaskId(paramMap.get("oldTaskId").toString());
+                    qd.setBusinessInterfaceId(paramMap.get("oldEmpAgreementId").toString());
 
                     //查询旧的任务类型保存到新的任务单
                     List<HfEmpTask> resList = hfEmpTaskService.queryByTaskId(qd);
                     if (resList.size() > 0) {
                         HfEmpTask hfEmpTask = resList.get(0);
                         taskCategory = hfEmpTask.getTaskCategory();
+                        processCategory = hfEmpTask.getProcessCategory();
                     }
-                    boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEAGREEMENTCORRECT.getCategory(),taskCategory, 1);
+                    boolean res = saveEmpTask(taskMsgDTO, fundCategory, processCategory,taskCategory, 1);
                     logger.info("end fundEmpAgreementCorrect(already handled): " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
                 }
             } catch (Exception e) {
@@ -273,19 +294,37 @@ public class KafkaReceiver {
      * @param taskMsgDTO
      * @return
      */
-    private AfEmployeeInfoDTO getEmpInfo(TaskCreateMsgDTO taskMsgDTO,Integer processCategory,Integer taskCategory) {
+    private AfEmployeeInfoDTO getEmpInfo(TaskCreateMsgDTO taskMsgDTO,Integer processCategory,Integer taskCategory,Integer isChange) {
         AfEmployeeInfoDTO resDto = null;
         try {
             logger.info("fund get employee info start, request:" + JSON.toJSONString(taskMsgDTO));
             Long empAgreementId = null;
-            if((processCategory.equals(ProcessCategory.EMPLOYEEFLOP.getCategory()) || processCategory.equals(ProcessCategory.EMPLOYEEAGREEMENTADJUST.getCategory())) && taskCategory.equals(TaskCategory.SEALED.getCategory())){
+            if((processCategory.equals(ProcessCategory.EMPLOYEEFLOP.getCategory()) || processCategory.equals(ProcessCategory.EMPLOYEEAGREEMENTADJUST.getCategory())) && taskCategory.equals(TaskCategory.SEALED.getCategory()) && isChange.equals(0)){
                 Map<String, Object> paramMap = taskMsgDTO.getVariables();
                 if(null != paramMap){
                     empAgreementId = Long.parseLong(paramMap.get("oldEmpAgreementId").toString());
                 }
             }
             else{
-                empAgreementId = Long.parseLong(taskMsgDTO.getMissionId());
+                Map<String, Object> paramMap = taskMsgDTO.getVariables();
+                if(null != paramMap && paramMap.get("missionId") != null){
+                    String varMissionId = paramMap.get("missionId").toString();
+
+                    if (StringUtils.isNotEmpty(varMissionId)) {
+                        // 雇员中心收到更正任务单时，原任务单还未发出时，agreementId有可能已更新，但是activiti产生的missionId不会更新，
+                        // 此时从variables里面取得新的agreementId（key为：missionId）
+                        empAgreementId = Long.parseLong(varMissionId);
+                        Long missionId = Long.parseLong(taskMsgDTO.getMissionId());
+
+                        if (empAgreementId.longValue() < missionId.longValue()) {
+                            empAgreementId = missionId;
+                        }
+                    } else {
+                        empAgreementId = Long.parseLong(taskMsgDTO.getMissionId());
+                    }
+                } else {
+                    empAgreementId = Long.parseLong(taskMsgDTO.getMissionId());
+                }
             }
             resDto = employeeSocialProxy.getByEmpAgreement(empAgreementId);
             logger.info("fund get employee info end, response:" + JSON.toJSONString(resDto));
@@ -306,7 +345,7 @@ public class KafkaReceiver {
     private boolean saveEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer processCategory,Integer taskCategory,Integer isChange) {
         try {
             //调用当前雇员信息获取接口
-            AfEmployeeInfoDTO dto = getEmpInfo(taskMsgDTO,processCategory,taskCategory);
+            AfEmployeeInfoDTO dto = getEmpInfo(taskMsgDTO,processCategory,taskCategory,isChange);
             if (dto != null) {
                 //插入数据到雇员任务单表
                 return hfEmpTaskService.addEmpTask(taskMsgDTO, fundCategory, processCategory,taskCategory, isChange, dto);
@@ -328,10 +367,10 @@ public class KafkaReceiver {
      * @param fundCategory
      * @return
      */
-    private boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer processCategory,Integer taskCategory){
+    private boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer processCategory,Integer taskCategory,Integer isChange){
         try {
             //调用当前雇员信息获取接口
-            AfEmployeeInfoDTO dto = getEmpInfo(taskMsgDTO,processCategory,taskCategory);
+            AfEmployeeInfoDTO dto = getEmpInfo(taskMsgDTO,processCategory,taskCategory,isChange);
             if (dto != null) {
                 //更新任务单表信息
                 return hfEmpTaskService.updateEmpTask(taskMsgDTO, fundCategory,dto);

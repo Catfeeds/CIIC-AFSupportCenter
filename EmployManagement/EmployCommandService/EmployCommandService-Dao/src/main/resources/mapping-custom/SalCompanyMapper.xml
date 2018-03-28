@@ -9,7 +9,7 @@
     </resultMap>
 
     <select id="querySalCompanyList" resultMap="BaseResultMapDTO">
-        SELECT  b.company_id,b.title  from  sal_company b
+        SELECT  b.company_id,b.title,a.special from  sal_company b  LEFT JOIN  am_company_set a on b.company_id = a.company_id
         where 1=1
         <if test="companyId!=null">
             and b.company_id = #{companyId}

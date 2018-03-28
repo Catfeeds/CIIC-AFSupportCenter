@@ -20,7 +20,7 @@ public class employSearchExportOpt {
     private String employProperty;
 
     @Excel(name = "公司编码", orderNum = "3")
-    private String licenseCode;
+    private String companyId;
 
     @Excel(name = "公司名称", orderNum = "4")
     private String title;
@@ -35,7 +35,7 @@ public class employSearchExportOpt {
     private String idNum;
 
     @Excel(name = "客服经理", width = 20 ,orderNum = "8")
-    private  String serviceManager;
+    private  String leaderShipName;
 
     @Excel(name = "客服中心",width = 20, orderNum = "9")
     private String serviceCenter;

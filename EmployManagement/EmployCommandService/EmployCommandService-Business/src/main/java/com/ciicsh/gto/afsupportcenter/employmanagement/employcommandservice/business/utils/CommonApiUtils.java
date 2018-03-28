@@ -5,10 +5,15 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bus
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeQueryDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.SMUserInfoProxy;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMUserInfoDTO;
 import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.*;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import com.ciicsh.gto.employeecenter.util.JsonResult;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.company.CompanyTypeDTO;
+import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
 import com.ciicsh.gto.sheetservice.api.SheetServiceProxy;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
@@ -18,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -34,6 +40,12 @@ public class CommonApiUtils {
 
     @Autowired
     AfEmployeeCompanyProxy afEmployeeCompanyProxy;
+
+    @Autowired
+    private CompanyProxy companyProxy;
+
+    @Autowired
+    private SMUserInfoProxy smUserInfoProxy;
 
 
     public  JsonResult<EmployeeInfoDTO> getEmployeeInfo(@RequestBody EmployeeQueryDTO var1){
@@ -84,9 +96,48 @@ public class CommonApiUtils {
             taskRequestDTO.setEmpAgreementId(Long.parseLong(missionId));
             resDto = afEmployeeCompanyProxy.getEmployeeCompany(taskRequestDTO);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return resDto;
+    }
+
+    public CompanyTypeDTO  getCompanyType(String companyId){
+        CompanyTypeDTO companyTypeDTO = null;
+        try {
+            com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<CompanyTypeDTO> companyTypeDTOJsonResult = companyProxy.getCompanyType(companyId);
+            companyTypeDTO = companyTypeDTOJsonResult.getObject();
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+        }
+        return  companyTypeDTO;
+    }
+
+    public AfCompanyDetailResponseDTO  getCompanyDetail(String companyId){
+        AfCompanyDetailResponseDTO afCompanyDetailResponseDTO = null;
+        try {
+            com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO>  afCompanyDetailResponseDTOJsonResult = companyProxy.afDetail(companyId);
+            afCompanyDetailResponseDTO = afCompanyDetailResponseDTOJsonResult.getObject();
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+        }
+        return  afCompanyDetailResponseDTO;
+    }
+
+    public SMUserInfoDTO  getUserInfo(String userId){
+
+        List<SMUserInfoDTO> smUserInfoDTOList = null;
+        try {
+            com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<List<SMUserInfoDTO>> listJsonResult = smUserInfoProxy.getUsersByUserId(userId);
+            smUserInfoDTOList = listJsonResult.getData();
+            if(null!=smUserInfoDTOList&&smUserInfoDTOList.size()>0)
+            {
+                SMUserInfoDTO smUserInfoDTO = smUserInfoDTOList.get(0);
+                return smUserInfoDTO;
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+        }
+      return  null;
     }
 
 

@@ -6,18 +6,23 @@
 	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpMaterial">
 		<id column="emp_material_id" property="empMaterialId" />
 		<result column="material_name" property="materialName" />
-		<result column="submit_date" property="submitDate" />
-        <result column="submit_man" property="submitMan" />
+		<result column="submitter_id" property="submitterId" />
+		<result column="submitter_name" property="submitterName" />
+		<result column="submitter_date" property="submitterDate" />
+		<result column="receive_id" property="receiveId" />
+		<result column="receive_name" property="receiveName" />
 		<result column="receive_date" property="receiveDate" />
-		<result column="receive_man" property="receiveMan" />
+		<result column="reject_id" property="rejectId" />
+		<result column="reject_name" property="rejectName" />
 		<result column="reject_date" property="rejectDate" />
-		<result column="reject_man" property="rejectMan" />
-        <result column="operate_type" property="operateType" />
+		<result column="reject_reason" property="rejectReason" />
+		<result column="operate_type" property="operateType" />
 		<result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />
 		<result column="modified_time" property="modifiedTime" />
 		<result column="created_by" property="createdBy" />
 		<result column="modified_by" property="modifiedBy" />
+		<result column="employee_id" property="employeeId" />
 	</resultMap>
 
 </mapper>
