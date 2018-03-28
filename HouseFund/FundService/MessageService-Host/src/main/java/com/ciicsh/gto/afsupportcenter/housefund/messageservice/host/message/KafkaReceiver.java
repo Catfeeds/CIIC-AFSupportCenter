@@ -306,9 +306,11 @@ public class KafkaReceiver {
                 }
             }
             else{
+                logger.info("fund get employee info taskMsgDTO.getMissionId():" + taskMsgDTO.getMissionId());
                 Map<String, Object> paramMap = taskMsgDTO.getVariables();
                 if(null != paramMap && paramMap.get("missionId") != null){
                     String varMissionId = paramMap.get("missionId").toString();
+                    logger.info("fund get employee info paramMap.get(missionId):" + varMissionId);
 
                     if (StringUtils.isNotEmpty(varMissionId)) {
                         // 雇员中心收到更正任务单时，原任务单还未发出时，agreementId有可能已更新，但是activiti产生的missionId不会更新，
@@ -316,8 +318,10 @@ public class KafkaReceiver {
                         empAgreementId = Long.parseLong(varMissionId);
                         Long missionId = Long.parseLong(taskMsgDTO.getMissionId());
 
-                        if (empAgreementId.longValue() < missionId.longValue()) {
+                        if (empAgreementId.longValue() <= missionId.longValue()) {
                             empAgreementId = missionId;
+                        } else {
+                            taskMsgDTO.setMissionId(varMissionId);
                         }
                     } else {
                         empAgreementId = Long.parseLong(taskMsgDTO.getMissionId());
