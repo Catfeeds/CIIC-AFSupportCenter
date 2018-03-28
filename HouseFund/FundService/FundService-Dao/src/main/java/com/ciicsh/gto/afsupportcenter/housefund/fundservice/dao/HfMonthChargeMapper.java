@@ -6,6 +6,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfMonthChargeBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfMonthChargeDiffBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -15,6 +17,8 @@ import java.util.List;
 当任务单状态为已办，?该表就应该有对应的明细数据，包含调整数据 Mapper 接口
  * </p>
  */
+@Mapper
+@Component
 public interface HfMonthChargeMapper extends BaseMapper<HfMonthCharge> {
 
     /**

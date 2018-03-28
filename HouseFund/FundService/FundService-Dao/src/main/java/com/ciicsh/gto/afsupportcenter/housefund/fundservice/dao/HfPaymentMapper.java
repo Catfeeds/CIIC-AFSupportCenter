@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentComBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyCompanyProxyDTO;
@@ -20,14 +21,7 @@ import java.util.List;
 @Component
 public interface HfPaymentMapper extends BaseMapper<HfPayment> {
 
-    /**
-     * <p></p>
-     *
-     * @author linhui
-     * @date 2018-01-11
-     */
-    List<PayapplyCompanyProxyDTO> getPaymentComList(@Param("paymentId") Long paymentId, @Param("paymentMonth") String
-        paymentMonth);
+    List<PaymentComBO> getPaymentComList(@Param("paymentId") Long paymentId);
 
     List<PayapplyEmployeeProxyDTO> getPaymentEmpList(@Param("paymentId") Long paymentId, @Param("paymentMonth")
         String paymentMonth);
