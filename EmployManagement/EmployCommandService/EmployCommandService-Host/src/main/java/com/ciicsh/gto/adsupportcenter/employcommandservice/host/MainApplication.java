@@ -22,7 +22,9 @@ import org.springframework.context.annotation.Import;
 @EnableFeignClients({
     "com.ciicsh.gto.sheetservice.api",
     "com.ciicsh.gto.employeecenter.apiservice.api",
-    "com.ciicsh.gto.afcompanycenter.queryservice.api"
+    "com.ciicsh.gto.afcompanycenter.queryservice.api",
+    "com.ciicsh.gto.salecenter.apiservice.api.proxy",
+    "com.ciicsh.gto.afsystemmanagecenter.apiservice.api"
 })
 @EnableDiscoveryClient
 public class MainApplication{

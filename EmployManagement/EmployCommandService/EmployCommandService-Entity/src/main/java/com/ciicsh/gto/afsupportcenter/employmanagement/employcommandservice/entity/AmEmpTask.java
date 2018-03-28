@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity;
 
 import com.baomidou.mybatisplus.enums.IdType;
+import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotations.TableId;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotations.TableField;
@@ -14,7 +15,7 @@ import java.util.Date;
  * </p>
  *
  * @author xsj
- * @since 2018-03-23
+ * @since 2018-03-28
  */
 @TableName("am_emp_task")
 public class AmEmpTask implements Serializable {
@@ -132,29 +133,6 @@ public class AmEmpTask implements Serializable {
     @TableField("employ_code")
     private Integer employCode;
     /**
-     * 领导ID
-     */
-    @TableField("leader_ship_id")
-    private String leaderShipId;
-    /**
-     * 领导姓名
-     */
-    @TableField("leader_ship_name")
-    private String leaderShipName;
-    /**
-     * 创建者姓名
-     */
-    @TableField("created_display_name")
-    private String createdDisplayName;
-    /**
-     * 修改者姓名
-     */
-    @TableField("modified_display_name")
-    private String modifiedDisplayName;
-
-    @TableField("emp_company_id")
-    private  String  empCompanyId;
-    /**
      * 是否可用
      */
     @TableField("is_active")
@@ -179,14 +157,9 @@ public class AmEmpTask implements Serializable {
      */
     @TableField("modified_by")
     private String modifiedBy;
+    @TableField("emp_company_id")
+    private String empCompanyId;
 
-    public String getEmpCompanyId() {
-        return empCompanyId;
-    }
-
-    public void setEmpCompanyId(String empCompanyId) {
-        this.empCompanyId = empCompanyId;
-    }
 
     public Long getEmpTaskId() {
         return empTaskId;
@@ -364,38 +337,6 @@ public class AmEmpTask implements Serializable {
         this.employCode = employCode;
     }
 
-    public String getLeaderShipId() {
-        return leaderShipId;
-    }
-
-    public void setLeaderShipId(String leaderShipId) {
-        this.leaderShipId = leaderShipId;
-    }
-
-    public String getLeaderShipName() {
-        return leaderShipName;
-    }
-
-    public void setLeaderShipName(String leaderShipName) {
-        this.leaderShipName = leaderShipName;
-    }
-
-    public String getCreatedDisplayName() {
-        return createdDisplayName;
-    }
-
-    public void setCreatedDisplayName(String createdDisplayName) {
-        this.createdDisplayName = createdDisplayName;
-    }
-
-    public String getModifiedDisplayName() {
-        return modifiedDisplayName;
-    }
-
-    public void setModifiedDisplayName(String modifiedDisplayName) {
-        this.modifiedDisplayName = modifiedDisplayName;
-    }
-
     public Boolean getActive() {
         return isActive;
     }
@@ -436,6 +377,14 @@ public class AmEmpTask implements Serializable {
         this.modifiedBy = modifiedBy;
     }
 
+    public String getEmpCompanyId() {
+        return empCompanyId;
+    }
+
+    public void setEmpCompanyId(String empCompanyId) {
+        this.empCompanyId = empCompanyId;
+    }
+
     @Override
     public String toString() {
         return "AmEmpTask{" +
@@ -461,15 +410,12 @@ public class AmEmpTask implements Serializable {
             ", outDate=" + outDate +
             ", employProperty=" + employProperty +
             ", employCode=" + employCode +
-            ", leaderShipId=" + leaderShipId +
-            ", leaderShipName=" + leaderShipName +
-            ", createdDisplayName=" + createdDisplayName +
-            ", modifiedDisplayName=" + modifiedDisplayName +
             ", isActive=" + isActive +
             ", createdTime=" + createdTime +
             ", modifiedTime=" + modifiedTime +
             ", createdBy=" + createdBy +
             ", modifiedBy=" + modifiedBy +
+            ", empCompanyId=" + empCompanyId +
             "}";
     }
 }

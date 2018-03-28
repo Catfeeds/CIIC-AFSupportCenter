@@ -121,7 +121,7 @@ public class ReasonUtil {
 
     public static  boolean  getYgResult(String code){
 
-        if("3".equals(code)||"8".equals(code)||"9".equals(code)||"10".equals(code))
+        if("1".equals(code)||"2".equals(code)||"6".equals(code)||"7".equals(code))
         {
             return  true;
         }else {

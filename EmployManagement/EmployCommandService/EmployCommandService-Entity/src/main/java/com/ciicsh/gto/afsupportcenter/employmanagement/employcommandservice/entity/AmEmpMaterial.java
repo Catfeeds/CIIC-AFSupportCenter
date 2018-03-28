@@ -12,6 +12,9 @@ import java.io.Serializable;
  * <p>
  * 材料签收表
  * </p>
+ *
+ * @author xsj
+ * @since 2018-03-26
  */
 @TableName("am_emp_material")
 public class AmEmpMaterial implements Serializable {
@@ -21,85 +24,178 @@ public class AmEmpMaterial implements Serializable {
     /**
      * 主键
      */
-	@TableId(value="emp_material_id", type= IdType.AUTO)
-	private Long empMaterialId;
+    @TableId(value="emp_material_id", type= IdType.AUTO)
+    private Long empMaterialId;
     /**
      * 材料名称
      */
-	@TableField("material_name")
-	private String materialName;
+    @TableField("material_name")
+    private String materialName;
+    @TableField("submitter_id")
+    private String submitterId;
+    /**
+     * 材料提交人
+     */
+    @TableField("submitter_name")
+    private String submitterName;
     /**
      * 前道提交时间
      */
-	@TableField("submit_date")
-	private LocalDate submitDate;
-    /**
-     * 后道收到时间
-     */
-	@TableField("receive_date")
-	private LocalDate receiveDate;
+    @TableField("submitter_date")
+    private LocalDate submitterDate;
+    @TableField("receive_id")
+    private String receiveId;
     /**
      * 收到人
      */
-	@TableField("receive_man")
-	private String receiveMan;
+    @TableField("receive_name")
+    private String receiveName;
     /**
-     * 批退日期
+     * 后道收到时间
      */
-	@TableField("reject_date")
-	private LocalDate rejectDate;
-
-    @TableField("reject_reason")
-    private String rejectReason;
+    @TableField("receive_date")
+    private LocalDate receiveDate;
+    @TableField("reject_id")
+    private String rejectId;
     /**
      * 批退人
      */
-	@TableField("reject_man")
-	private String rejectMan;
+    @TableField("reject_name")
+    private String rejectName;
+    /**
+     * 批退日期
+     */
+    @TableField("reject_date")
+    private LocalDate rejectDate;
+    /**
+     * 材料批退原因
+     */
+    @TableField("reject_reason")
+    private String rejectReason;
+    /**
+     * 1 用工材料签收
+     2 退工归还材料签收
+     */
+    @TableField("operate_type")
+    private Integer operateType;
     /**
      * 是否可用
      */
-	@TableField("is_active")
-	private Boolean isActive;
+    @TableField("is_active")
+    private Boolean isActive;
     /**
      * 创建时间
      */
-	@TableField("created_time")
-	private LocalDateTime createdTime;
+    @TableField("created_time")
+    private LocalDateTime createdTime;
     /**
      * 最后更新时间
      */
-	@TableField("modified_time")
-	private LocalDateTime modifiedTime;
+    @TableField("modified_time")
+    private LocalDateTime modifiedTime;
     /**
      * 创建者登录名
      */
-	@TableField("created_by")
-	private String createdBy;
+    @TableField("created_by")
+    private String createdBy;
     /**
      * 修改者登录名
      */
-	@TableField("modified_by")
-	private String modifiedBy;
-
+    @TableField("modified_by")
+    private String modifiedBy;
     /**
      * 雇员id
      */
     @TableField("employee_id")
     private String employeeId;
 
-    @TableField("submit_man")
-    private  String submitMan;
 
-    @TableField("operate_type")
-    private Integer operateType;
-
-    public Integer getOperateType() {
-        return operateType;
+    public Long getEmpMaterialId() {
+        return empMaterialId;
     }
 
-    public void setOperateType(Integer operateType) {
-        this.operateType = operateType;
+    public void setEmpMaterialId(Long empMaterialId) {
+        this.empMaterialId = empMaterialId;
+    }
+
+    public String getMaterialName() {
+        return materialName;
+    }
+
+    public void setMaterialName(String materialName) {
+        this.materialName = materialName;
+    }
+
+    public String getSubmitterId() {
+        return submitterId;
+    }
+
+    public void setSubmitterId(String submitterId) {
+        this.submitterId = submitterId;
+    }
+
+    public String getSubmitterName() {
+        return submitterName;
+    }
+
+    public void setSubmitterName(String submitterName) {
+        this.submitterName = submitterName;
+    }
+
+    public LocalDate getSubmitterDate() {
+        return submitterDate;
+    }
+
+    public void setSubmitterDate(LocalDate submitterDate) {
+        this.submitterDate = submitterDate;
+    }
+
+    public String getReceiveId() {
+        return receiveId;
+    }
+
+    public void setReceiveId(String receiveId) {
+        this.receiveId = receiveId;
+    }
+
+    public String getReceiveName() {
+        return receiveName;
+    }
+
+    public void setReceiveName(String receiveName) {
+        this.receiveName = receiveName;
+    }
+
+    public LocalDate getReceiveDate() {
+        return receiveDate;
+    }
+
+    public void setReceiveDate(LocalDate receiveDate) {
+        this.receiveDate = receiveDate;
+    }
+
+    public String getRejectId() {
+        return rejectId;
+    }
+
+    public void setRejectId(String rejectId) {
+        this.rejectId = rejectId;
+    }
+
+    public String getRejectName() {
+        return rejectName;
+    }
+
+    public void setRejectName(String rejectName) {
+        this.rejectName = rejectName;
+    }
+
+    public LocalDate getRejectDate() {
+        return rejectDate;
+    }
+
+    public void setRejectDate(LocalDate rejectDate) {
+        this.rejectDate = rejectDate;
     }
 
     public String getRejectReason() {
@@ -110,12 +206,52 @@ public class AmEmpMaterial implements Serializable {
         this.rejectReason = rejectReason;
     }
 
-    public String getSubmitMan() {
-        return submitMan;
+    public Integer getOperateType() {
+        return operateType;
     }
 
-    public void setSubmitMan(String submitMan) {
-        this.submitMan = submitMan;
+    public void setOperateType(Integer operateType) {
+        this.operateType = operateType;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public LocalDateTime getModifiedTime() {
+        return modifiedTime;
+    }
+
+    public void setModifiedTime(LocalDateTime modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 
     public String getEmployeeId() {
@@ -126,117 +262,28 @@ public class AmEmpMaterial implements Serializable {
         this.employeeId = employeeId;
     }
 
-    public Long getEmpMaterialId() {
-		return empMaterialId;
-	}
-
-	public void setEmpMaterialId(Long empMaterialId) {
-		this.empMaterialId = empMaterialId;
-	}
-
-	public String getMaterialName() {
-		return materialName;
-	}
-
-	public void setMaterialName(String materialName) {
-		this.materialName = materialName;
-	}
-
-	public LocalDate getSubmitDate() {
-		return submitDate;
-	}
-
-	public void setSubmitDate(LocalDate submitDate) {
-		this.submitDate = submitDate;
-	}
-
-	public LocalDate getReceiveDate() {
-		return receiveDate;
-	}
-
-	public void setReceiveDate(LocalDate receiveDate) {
-		this.receiveDate = receiveDate;
-	}
-
-	public String getReceiveMan() {
-		return receiveMan;
-	}
-
-	public void setReceiveMan(String receiveMan) {
-		this.receiveMan = receiveMan;
-	}
-
-	public LocalDate getRejectDate() {
-		return rejectDate;
-	}
-
-	public void setRejectDate(LocalDate rejectDate) {
-		this.rejectDate = rejectDate;
-	}
-
-	public String getRejectMan() {
-		return rejectMan;
-	}
-
-	public void setRejectMan(String rejectMan) {
-		this.rejectMan = rejectMan;
-	}
-
-	public Boolean getActive() {
-		return isActive;
-	}
-
-	public void setActive(Boolean isActive) {
-		this.isActive = isActive;
-	}
-
-	public LocalDateTime getCreatedTime() {
-		return createdTime;
-	}
-
-	public void setCreatedTime(LocalDateTime createdTime) {
-		this.createdTime = createdTime;
-	}
-
-	public LocalDateTime getModifiedTime() {
-		return modifiedTime;
-	}
-
-	public void setModifiedTime(LocalDateTime modifiedTime) {
-		this.modifiedTime = modifiedTime;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-
-	@Override
-	public String toString() {
-		return "AmEmpMaterial{" +
-			", empMaterialId=" + empMaterialId +
-			", materialName=" + materialName +
-			", submitDate=" + submitDate +
-			", receiveDate=" + receiveDate +
-			", receiveMan=" + receiveMan +
-			", rejectDate=" + rejectDate +
-			", rejectMan=" + rejectMan +
-			", isActive=" + isActive +
-			", createdTime=" + createdTime +
-			", modifiedTime=" + modifiedTime +
-			", createdBy=" + createdBy +
-			", modifiedBy=" + modifiedBy +
-			"}";
-	}
+    @Override
+    public String toString() {
+        return "AmEmpMaterial{" +
+            "empMaterialId=" + empMaterialId +
+            ", materialName=" + materialName +
+            ", submitterId=" + submitterId +
+            ", submitterName=" + submitterName +
+            ", submitterDate=" + submitterDate +
+            ", receiveId=" + receiveId +
+            ", receiveName=" + receiveName +
+            ", receiveDate=" + receiveDate +
+            ", rejectId=" + rejectId +
+            ", rejectName=" + rejectName +
+            ", rejectDate=" + rejectDate +
+            ", rejectReason=" + rejectReason +
+            ", operateType=" + operateType +
+            ", isActive=" + isActive +
+            ", createdTime=" + createdTime +
+            ", modifiedTime=" + modifiedTime +
+            ", createdBy=" + createdBy +
+            ", modifiedBy=" + modifiedBy +
+            ", employeeId=" + employeeId +
+            "}";
+    }
 }
