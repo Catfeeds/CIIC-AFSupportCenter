@@ -1,6 +1,7 @@
 package com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.adsupportcenter.employcommandservice.host.messageBus.KafkaSender;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
@@ -18,7 +19,10 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMUserInfoDTO;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +43,8 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/employcommandservice/amEmpTask")
 public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
+
+    private final static Logger logger = LoggerFactory.getLogger(AmEmpTaskController.class);
 
     @Autowired
     private IAmEmpMaterialService iAmEmpMaterialService;
@@ -149,7 +155,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         Map<String,Object>  map = business.getInformation(amTaskParamBO);
 
-        AmEmpTaskBO customBO = (AmEmpTaskBO)map.get("customBO");//客户信息
+        AmCustomBO customBO = (AmCustomBO)map.get("customBO");//客户信息
         AmEmpTaskBO employeeBO = (AmEmpTaskBO)map.get("employeeBO");//雇佣信息
 
         AmEmpTaskBO bo = new AmEmpTaskBO();
@@ -169,11 +175,17 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         pageInfo.setParams(params);
 
         //用工材料
+        AmMaterialBO amMaterialBO = new AmMaterialBO();
         List<AmEmpMaterialBO> empMaterialList = new ArrayList<>();
         PageRows<AmEmpMaterialBO> result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
         if(result!=null&&result.getRows().size()>0)
         {
             empMaterialList.addAll(result.getRows());
+            String userId = result.getRows().get(0).getSubmitterId();
+            SMUserInfoDTO smUserInfoDTO = employeeInfoProxy.getUserInfo(userId);
+            amMaterialBO.setMaterialsData(empMaterialList);
+            amMaterialBO.setSubmitName(smUserInfoDTO==null?"":smUserInfoDTO.getDisplayName());
+            amMaterialBO.setPhone(smUserInfoDTO==null?"":smUserInfoDTO.getPhone());
         }
 
         //用工信息
@@ -189,7 +201,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                 amArchiveBO = amArchiveBOList.get(0);
                 if(!StringUtil.isEmpty(amArchiveBO.getEmployFeedback()))
                 {
-                   if(!"7".equals(amArchiveBO.getEmployFeedback())){
+                   if(!"4".equals(amArchiveBO.getEmployFeedback())){
                        amArchiveBO.setIsEnd(0);
                    }
                 }
@@ -206,7 +218,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         //雇员信息
         resultMap.put("amEmpTaskBO",employeeBO);
 
-        resultMap.put("materialList",empMaterialList);
+        resultMap.put("amMaterialBO",amMaterialBO);
 
         if(null!=amArchiveBO){
             resultMap.put("amArchaiveBo",amArchiveBO);
@@ -284,13 +296,15 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                 /**
                  * u盘外借 不会调用complateTask,只发kafaka消息
                  */
-                if("7".equals(entity.getEmployFeedback()))
+                if("4".equals(entity.getEmployFeedback()))
                 {
                     TaskRequestDTO message = new TaskRequestDTO();
                     message.setAssignee("system");
                     message.setTaskId(amEmpTask.getTaskId());
                     Map<String,Object> variables = new HashMap<>();
                     variables.put("remark","Ukey外借");
+                    message.setVariables(variables);
+                    logger.info(JSON.toJSONString(message));
                     sender.sendSocReportMsg(message);
                 }else{
                     Map<String,Object> variables = new HashMap<>();
@@ -350,7 +364,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         for(AmEmpMaterial material:list)
         {
             material.setReceiveDate(LocalDate.now());
-            material.setReceiveMan("sys");
+            material.setReceiveName("sys");
         }
 
         boolean result =  iAmEmpMaterialService.updateBatchById(list);
@@ -362,7 +376,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         for(AmEmpMaterial material:list)
         {
             material.setRejectDate(LocalDate.now());
-            material.setRejectMan("sys");
+            material.setReceiveName("sys");
         }
 
         boolean result =  iAmEmpMaterialService.updateBatchById(list);

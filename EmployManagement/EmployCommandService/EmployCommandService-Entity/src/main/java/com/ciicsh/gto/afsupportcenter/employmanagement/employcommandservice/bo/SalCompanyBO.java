@@ -6,4 +6,14 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.enti
  * Created by zhangzhiwen on 2018/3/20.
  */
 public class SalCompanyBO extends SalCompany {
+
+    private  String  special;
+
+    public String getSpecial() {
+        return special;
+    }
+
+    public void setSpecial(String special) {
+        this.special = special;
+    }
 }

@@ -44,6 +44,7 @@
 		<result column="key_code" property="keyCode" />
 		<result column="key_pwd" property="keyPwd" />
 		<result column="key_status" property="keyStatus" />
+        <result column="special" property="special"/>
 	</resultMap>
 
 </mapper>
