@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.messageservice.host.enumeration;
+package com.ciicsh.gto.afsupportcenter.util.enumeration;
 
 /**
  *

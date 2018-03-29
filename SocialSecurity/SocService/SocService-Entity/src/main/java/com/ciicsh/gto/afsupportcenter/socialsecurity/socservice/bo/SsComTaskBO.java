@@ -109,6 +109,8 @@ public class SsComTaskBO {
 
     private String modifiedBy;
 
+    private String leaderShipName;
+
 
     //客户名称
     @Excel(name = "企业客户", orderNum = "4")

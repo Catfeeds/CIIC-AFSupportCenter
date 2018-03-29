@@ -113,8 +113,8 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
     }
 
     @Override
-    public Integer isExistAccountInfo(String companyId) {
-        return baseMapper.isExistAccountInfo(companyId);
+    public boolean isExistAccountInfo(String companyId) {
+        return baseMapper.isExistAccountInfo(companyId) > 0 ? true : false;
     }
 
     @Override

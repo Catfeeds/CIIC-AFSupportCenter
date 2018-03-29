@@ -292,12 +292,11 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
 
     /**
      * 判断企业任务单是否存在
-     *
-     * @param ssComTask
+     * @param companyId
      * @return
      */
-    public Integer isExistComTask(SsComTaskBO ssComTask) {
-        return baseMapper.isExistComTask(ssComTask);
+    public boolean isExistComTask(String companyId) {
+        return baseMapper.isExistComTask(companyId) > 0 ? true : false;
     }
 
     public boolean insertComTask(SsComTask ssComTask) {
