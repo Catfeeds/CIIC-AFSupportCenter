@@ -904,6 +904,7 @@
         INNER JOIN hf_emp_archive ea
                 ON  ea.employee_id=et.employee_id
                 AND ea.company_id=et.company_id
+                AND ea.archive_status!=3
                 AND ea.is_active=1
         INNER JOIN hf_com_account ca
                 ON  ea.com_account_id=ca.com_account_id
