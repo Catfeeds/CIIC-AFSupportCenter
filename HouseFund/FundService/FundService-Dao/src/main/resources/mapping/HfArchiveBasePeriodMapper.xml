@@ -29,4 +29,32 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
+
+    <select id="getArchiveBasePeriods" resultMap="BaseResultMap">
+        SELECT
+            a.emp_task_id,
+            a.emp_archive_id,
+            a.company_id,
+            a.employee_id,
+            a.hf_type,
+            a.base_amount,
+            a.ratio,
+            a.ratio_emp,
+            a.ratio_com,
+            a.amount,
+            a.amount_emp,
+            a.com_amount
+        FROM
+        hf_archive_base_period a
+        INNER JOIN hf_emp_archive b ON a.emp_archive_id = b.emp_archive_id
+        WHERE
+        a.is_active = 1
+        AND b.is_active = 1
+        AND b.com_account_id = #{comAccountId}
+        AND #{paymentMonth} > a.hf_month
+        AND (
+        #{belongMonth} BETWEEN a.start_month AND b.end_month OR (#{belongMonth} >= a.start_month AND a.end_month IS NULL)
+        )
+    </select>
+
 </mapper>

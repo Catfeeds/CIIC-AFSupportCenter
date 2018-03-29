@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentAccountBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentProcessParmBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentService;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
@@ -11,9 +12,9 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
 /**
@@ -47,4 +48,28 @@ public class HfFundPayController {
         return JsonResultKit.ofPage(pageRows);
     }
 
+
+    @Log("公积金汇缴支付流程操作-送审")
+    @PostMapping("/approval")
+    public JsonResult processApproval(@RequestBody PaymentProcessParmBO processParmBO){
+       return hfPaymentService.processApproval(processParmBO);
+    }
+
+    @Log("公积金汇缴支付流程操作-汇缴")
+    @PostMapping("/payment")
+    public JsonResult processPayment(@RequestBody PaymentProcessParmBO processParmBO){
+        return hfPaymentService.processPayment(processParmBO);
+    }
+
+    @Log("公积金汇缴支付流程操作-出票")
+    @PostMapping("/ticket")
+    public JsonResult processTicket(@RequestBody PaymentProcessParmBO processParmBO){
+        return hfPaymentService.processTicket(processParmBO);
+    }
+
+    @Log("公积金汇缴支付流程操作-回单")
+    @PostMapping("/receipt")
+    public JsonResult processReceipt(@RequestBody PaymentProcessParmBO processParmBO){
+        return hfPaymentService.processReceipt(processParmBO);
+    }
 }

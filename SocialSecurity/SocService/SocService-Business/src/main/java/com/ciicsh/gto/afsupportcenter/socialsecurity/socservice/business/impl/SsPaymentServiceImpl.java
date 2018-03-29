@@ -264,7 +264,7 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         dto.setBusinessType(1);//业务类型
         dto.setPayWay(3);//转账
         dto.setPayAmount(ssPayment.getTotalApplicationAmount());//申请支付金额
-        dto.setReceiver("社保中心");//收款方名称
+        dto.setReceiver("见附件");//收款方名称  如果是独立户=见附件，如果是大库外包就是XX， 待确定，第一期上线的是独立户，大库外包有待向业务部收集
         dto.setApplyer(ssPayment.getRequestUser());  //申请人
         dto.setApplyDate(StringUtil.getNow());//申请日期
         dto.setBusinessPkId(ssPayment.getPaymentId());//业务方主键ID(整型)
