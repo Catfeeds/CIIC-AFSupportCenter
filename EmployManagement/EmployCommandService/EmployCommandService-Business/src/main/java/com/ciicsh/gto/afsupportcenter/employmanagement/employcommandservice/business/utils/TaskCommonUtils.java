@@ -1,14 +1,19 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import java.util.Map;
 
 
 public class TaskCommonUtils {
+
+    private final static Logger logger = LoggerFactory.getLogger(TaskCommonUtils.class);
     /**
      * 处理工作流结果
      * @param result
@@ -36,6 +41,7 @@ public class TaskCommonUtils {
         taskRequestDTO.setAssignee(variables.get("assignee").toString());
         taskRequestDTO.setVariables(variables);
         try {
+            logger.info(JSON.toJSONString(taskRequestDTO));
             Result result =commonApiUtils.completeTask(taskRequestDTO);
             handleWorkflowResult(result);
         } catch (Exception e) {

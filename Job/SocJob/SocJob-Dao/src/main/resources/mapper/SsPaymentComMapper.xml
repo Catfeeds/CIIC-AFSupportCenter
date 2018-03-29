@@ -55,7 +55,7 @@
         SELECT mc.employee_id ,
         pc.company_id company_id,
         pc.payment_month pay_month,
-        pc.ought_amount pay_amount,
+        mc.total_amount pay_amount,
         IF(ca.payment_way=3,'1','0') AS 'is_company_enjoy_advance' ,
         mc.month_charge_id obj_id
         FROM ss_month_charge mc

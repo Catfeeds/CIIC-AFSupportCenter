@@ -151,6 +151,10 @@
             <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.ciicsh.gt1</groupId>
+            <artifactId>seaweedFS-client</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.ciicsh.gt1.logservice</groupId>
             <artifactId>logservice-api</artifactId>
         </dependency>

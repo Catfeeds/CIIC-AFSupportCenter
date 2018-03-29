@@ -41,7 +41,6 @@
         <result column="title" property="title" />
         <result column="employee_name" property="employeeName"/>
         <result column="id_num" property="idNum"/>
-        <result column="license_code" property="licenseCode" />
         <result column="service_center" property="serviceCenter"/>
         <result column="diaodang_feedback_opt_date" property="diaodangFeedbackOptDate" />
     </resultMap>
@@ -111,6 +110,7 @@
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
         </foreach>
+        order by b.created_time desc
     </select>
 
     <select id="taskCountEmployee"  resultMap="BaseResultMapDTO">

@@ -38,7 +38,7 @@ import java.util.*;
  * @since 2017-12-01
  */
 @Service
-public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask> implements SsEmpTaskService {
+public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask>  implements SsEmpTaskService {
     @Autowired
     SsEmpTaskPeriodService ssEmpTaskPeriodService;
 
@@ -795,30 +795,33 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                     //BigDecimal base, BigDecimal ratio, BigDecimal fixedAmount, Integer calculateMethod, String roundType
                     //通过进位方式进行 计算(原数据)
                     //如果调用为空 则 默认为 见分进角
-                    BigDecimal comAmount = CalculateSocialUtils.calculateAmount(ssEmpBaseDetail.getComBase(), ssEmpBaseDetail.getComRatio(), null, 2, null == roundTypeMap ? 1 : roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(COMPANYROUNDTYPE));
-                    //System.out.println(ssEmpBaseDetail.getSsType()+"企业部分原数据额"+comAmount);
-                    //企业部分总额
+                    BigDecimal comAmount = CalculateSocialUtils.calculateAmount(ssEmpBaseDetail.getComBase(),ssEmpBaseDetail.getComRatio(),null,2,null==roundTypeMap?1:roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(COMPANYROUNDTYPE));
+                    System.out.println(ssEmpBaseDetail.getSsType()+"企业部分原数据额"+comAmount);
+                    //企业部分金额
                     //通过进位方式进行 计算(前道传递)
-                    BigDecimal frontComAmount = CalculateSocialUtils.calculateAmount(ssEmpTaskFront.getCompanyBase(), ssEmpTaskFront.getCompanyRatio(), null, 2, null == roundTypeMap ? 1 : roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(COMPANYROUNDTYPE));
-                    //System.out.println(ssEmpBaseDetail.getSsType()+"企业部分前道数据额"+frontComAmount);
+                    BigDecimal frontComAmount = CalculateSocialUtils.calculateAmount(ssEmpTaskFront.getCompanyBase(),ssEmpTaskFront.getCompanyRatio(),null,2,null==roundTypeMap?1:roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(COMPANYROUNDTYPE));
+                    System.out.println(ssEmpBaseDetail.getSsType()+"企业部分前道数据额"+frontComAmount);
                     ssEmpBaseAdjustDetail.setComAmount(frontComAmount);
                     //雇员总额(原数据)
-                    BigDecimal empAmount = CalculateSocialUtils.calculateAmount(ssEmpBaseDetail.getEmpBase(), ssEmpBaseDetail.getEmpRatio(), null, 2, null == roundTypeMap ? 1 : roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(PERSONROUNDTYPE));
-                    //System.out.println(ssEmpBaseDetail.getSsType()+"雇员部分原数据额"+empAmount);
+                    BigDecimal empAmount  = CalculateSocialUtils.calculateAmount(ssEmpBaseDetail.getEmpBase(),ssEmpBaseDetail.getEmpRatio(),null,2,null==roundTypeMap?1:roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(PERSONROUNDTYPE));
+                    System.out.println(ssEmpBaseDetail.getSsType()+"雇员部分原数据额"+empAmount);
                     //雇员总额(前道传递)
-                    BigDecimal frontEmpAmount = CalculateSocialUtils.calculateAmount(ssEmpBaseAdjustDetail.getEmpBase(), ssEmpBaseAdjustDetail.getEmpRatio(), null, 2, null == roundTypeMap ? 1 : roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(PERSONROUNDTYPE));
-                    //System.out.println(ssEmpBaseDetail.getSsType()+"雇员部分前道数据额"+frontEmpAmount);
+                    BigDecimal frontEmpAmount  = CalculateSocialUtils.calculateAmount(ssEmpBaseAdjustDetail.getEmpBase(),ssEmpBaseAdjustDetail.getEmpRatio(),null,2,null==roundTypeMap?1:roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(PERSONROUNDTYPE));
+                    System.out.println(ssEmpBaseDetail.getSsType()+"雇员部分前道数据额"+frontEmpAmount);
                     ssEmpBaseAdjustDetail.setEmpAmount(frontEmpAmount);
                     //企业+雇员
                     ssEmpBaseAdjustDetail.setComempAmount(frontComAmount.add(frontEmpAmount));
-                    //System.out.println(ssEmpBaseDetail.getSsType()+"q前道总额"+ssEmpBaseAdjustDetail.getComempAmount());
+                    System.out.println(ssEmpBaseDetail.getSsType()+"q前道总额"+ssEmpBaseAdjustDetail.getComempAmount());
                     //调整后减去原来 企业部分差额
                     ssEmpBaseAdjustDetail.setComDiffAmount(frontComAmount.subtract(comAmount));
-
+                    System.out.println("企业差额="+ssEmpBaseAdjustDetail.getComDiffAmount());
                     //调整减原来    雇员部分差额
                     ssEmpBaseAdjustDetail.setEmpDiffAmount(frontEmpAmount.subtract(empAmount));
+                    System.out.println("雇员差额="+ssEmpBaseAdjustDetail.getEmpDiffAmount());
                     //总差额
-                    ssEmpBaseAdjustDetail.setComempDiffAmount(ssEmpBaseAdjustDetail.getComempAmount().subtract(ssEmpBaseDetail.getComempAmount()));
+                   // ssEmpBaseAdjustDetail.setComempDiffAmount(ssEmpBaseAdjustDetail.getComempAmount().subtract(ssEmpBaseDetail.getComempAmount())); //这是不对的
+                    ssEmpBaseAdjustDetail.setComempDiffAmount(ssEmpBaseAdjustDetail.getComDiffAmount().add(ssEmpBaseAdjustDetail.getEmpDiffAmount()));
+                    System.out.println("总差额="+ssEmpBaseAdjustDetail.getComempDiffAmount());
 //                    //企业附加金额
 //                    ssEmpBaseAdjustDetail.setComAdditionAmount(ssEmpBaseDetail.getComAdditionAmount());
 //                    //雇员附加金额

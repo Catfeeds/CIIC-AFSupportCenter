@@ -1,6 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo;
 
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.convertor.EmpTaskCategoryConverter;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfArchiveBasePeriod;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTaskPeriod;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
@@ -22,7 +21,7 @@ public class HfEmpTaskHandleBo implements Serializable {
     private String hfTypeName;
     private Integer processCategory;
     private Integer taskCategory;
-    private Integer dictTaskCategory;
+//    private Integer dictTaskCategory;
     private Integer taskStatus;
     private Integer isChange;
     private String comHandleStatusName;
@@ -120,12 +119,12 @@ public class HfEmpTaskHandleBo implements Serializable {
         }
     }
 
-    public Integer getDictTaskCategory () {
-        if (this.dictTaskCategory == null) {
-            this.dictTaskCategory = EmpTaskCategoryConverter.convertDictItemFromCategories(this);
-        }
-        return this.dictTaskCategory;
-    }
+//    public Integer getDictTaskCategory () {
+//        if (this.dictTaskCategory == null) {
+//            this.dictTaskCategory = EmpTaskCategoryConverter.convertDictItemFromCategories(this);
+//        }
+//        return this.dictTaskCategory;
+//    }
 
 //    public String getBasicComTaskStatusName() {
 //        return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.basicComTaskStatus), DictUtil.TYPE_VALUE_TASK_PROCESS_STATUS, false);

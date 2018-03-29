@@ -24,3 +24,6 @@ eureka:
   client:
     serviceUrl:
       defaultZone: "http://172.16.9.24:9602/eureka,http://172.16.9.25:9602/eureka"  #fat注册中心eureka地址
+
+seaweed:
+  masterHost: "172.16.9.19:9333"

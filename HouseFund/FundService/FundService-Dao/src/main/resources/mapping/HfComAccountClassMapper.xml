@@ -21,4 +21,33 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
+    <select id="getAccountClassByPaymentId" resultMap="BaseResultMap">
+        SELECT
+            a.com_account_class_id,
+            a.com_account_id,
+            a.hf_type,
+            a.hf_com_account,
+            a.com_start_month,
+            a.end_month,
+            a.operate_start_month,
+            a.account_temp_store,
+            a.com_hf_month,
+            a.end_type,
+            a.is_active,
+            a.created_time,
+            a.created_by,
+            a.modified_time,
+            a.modified_by
+        FROM
+            hf_com_account_class a
+        INNER JOIN hf_payment_com b ON a.com_account_id = b.com_account_id
+        AND a.hf_type = b.hf_type
+        INNER JOIN hf_payment c ON b.payment_id = c.payment_id
+        WHERE
+            a.is_active = 1
+        AND b.is_active = 1
+        AND c.is_active = 1
+        AND c.payment_id = #{paymentId}
+    </select>
+
 </mapper>

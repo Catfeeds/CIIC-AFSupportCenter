@@ -6,6 +6,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -69,6 +70,6 @@ public interface HfEmpTaskMapper extends BaseMapper<HfEmpTask> {
      */
     List<EmpTaskTransferBo> queryEmpTaskTransferNewTask(EmpTaskTransferBo empTaskTransferBo);
 
-
+    Map<String,String> fetchPrintInfo(Long empTaskId);
 
 }

@@ -64,7 +64,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
     public JsonResult<PageRows> hfEmpTaskQuery(@RequestBody PageInfo pageInfo) {
         return JsonResultKit.of(business.queryHfEmpTaskInPage(pageInfo, StringUtils.join(
             new Integer[] {
-                HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK
+                HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK
 //                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
             }, ',')));
     }
@@ -82,7 +82,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
         pageInfo.setPageNum(0);
         PageRows<HfEmpTaskExportBo> result = business.queryHfEmpTaskInPage(pageInfo, StringUtils.join(
             new Integer[] {
-                HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK
+                HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK
 //                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
             }, ','));
         long total = result.getTotal();
@@ -100,7 +100,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
                 pageInfo.setPageNum(i);
                 result = business.queryHfEmpTaskInPage(pageInfo, StringUtils.join(
                     new Integer[] {
-                        HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK
+                        HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK
 //                        HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
                     }, ','));
                 workbook = ExcelExportUtil.exportBigExcel(exportParams, HfEmpTaskExportBo.class, result.getRows());
@@ -130,7 +130,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
     public JsonResult<PageRows> hfEmpTaskRejectQuery(@RequestBody PageInfo pageInfo) {
         return JsonResultKit.of(business.queryHfEmpTaskRejectInPage(pageInfo, StringUtils.join(
             new Integer[] {
-                HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK
+                HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK
 //                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
             }, ',')));
     }
@@ -148,7 +148,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
         pageInfo.setPageNum(0);
         PageRows<HfEmpTaskRejectExportBo> result = business.queryHfEmpTaskRejectInPage(pageInfo, StringUtils.join(
             new Integer[] {
-                HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK
+                HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK
 //                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
             }, ','));
         long total = result.getTotal();
@@ -166,7 +166,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
                 pageInfo.setPageNum(i);
                 result = business.queryHfEmpTaskRejectInPage(pageInfo, StringUtils.join(
                     new Integer[] {
-                        HfEmpTaskConstant.TASK_CATEGORY_TRANS_TASK
+                        HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK
 //                        HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
                     }, ','));
                 workbook = ExcelExportUtil.exportBigExcel(exportParams, HfEmpTaskRejectExportBo.class, result.getRows());
@@ -275,7 +275,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
                     String comRatioStr = CalculateSocialUtils.digitInSimpleFormat(comRatio.multiply(BigDecimal.valueOf(100)));
                     String empRatioStr = CalculateSocialUtils.digitInSimpleFormat(empRatio.multiply(BigDecimal.valueOf(100)));
                     String baseAmount = CalculateSocialUtils.digitInSimpleFormat(hfEmpTask.getEmpBase());
-                    outputList.add(String.format(template, i, hfEmpTask.getEmployeeId(), comRatioStr, empRatioStr, amount.toString(), comAmount.toString(), empAmount.toString(), baseAmount));
+                    outputList.add(String.format(template, i + 1, hfEmpTask.getEmployeeId(), comRatioStr, empRatioStr, amount.toString(), comAmount.toString(), empAmount.toString(), baseAmount));
                 }
             }
 
@@ -286,7 +286,6 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
                     empWrapper.in("employee_id", employeeIdSet);
                     List<EmpEmployee> empList = empEmployeeService.selectList(empWrapper);
 
-                    writer.append("\r\n");
                     String employeeIdKey;
                     for (String output : outputList) {
                         for (EmpEmployee emp : empList) {
@@ -296,8 +295,8 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
                                     .replace(employeeIdKey + ".{idNum}", emp.getIdNum())
                                     .replace(employeeIdKey + ".{birthday}", emp.getBirthday().format(formatter))
                                     .replace(employeeIdKey + ".{gender}", (emp.getGender() != null && emp.getGender()) ? "01" : "02");
-                                writer.append(output);
                                 writer.append("\r\n");
+                                writer.append(output);
                                 break;
                             }
                         }

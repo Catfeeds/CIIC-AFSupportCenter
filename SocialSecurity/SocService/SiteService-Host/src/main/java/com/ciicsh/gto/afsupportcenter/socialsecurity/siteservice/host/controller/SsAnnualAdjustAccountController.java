@@ -156,11 +156,14 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
         importParams.setVerifyHanlder(new MyExcelVerifyHandler(fieldLengthMap, setValueMap, skipFields, null));
 
         try {
+            ssFileImportService.deleteExistData(ssAnnualAdjustAccountEmpTempService, condition);
+
             for (int i = 0; i < 2; i++) {
                 importParams.setStartSheetIndex(i);
                 setValueMap.put("accountStatus", i + 1);
-                ssFileImportService.executeExcelImport(i == 0, conditionKey, importType, annualAdjustAccountId,
-                    importParams, ssAnnualAdjustAccountEmpTempService, files, UserContext.getUserId());
+                ssFileImportService.executeExcelImport(importType, annualAdjustAccountId,
+                    ssAnnualAdjustAccountEmpTempService, null, null, null,
+                    importParams, files, UserContext.getUserId());
             }
             afterInsert(annualAdjustAccountId);
         } catch (Exception e) {
@@ -252,21 +255,17 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
 
             TemplateExportParams params = new TemplateExportParams("/template/ssAccount_reportYear.xls", 0, 1, 2);
             Workbook workbook = ExcelExportUtil.exportExcel(alMap, params);
-            try {
-                String fileName = URLEncoder.encode("ssAccount_reportYear.xls"
-                    .replace("ssAccount", ssAnnualAdjustAccount.getSsAccount())
-                    .replace("reportYear", String.valueOf(reportYear)), "UTF-8");
+            String fileName = URLEncoder.encode("ssAccount_reportYear.xls"
+                .replace("ssAccount", ssAnnualAdjustAccount.getSsAccount())
+                .replace("reportYear", String.valueOf(reportYear)), "UTF-8");
 
-                response.reset();
-                response.setCharacterEncoding("UTF-8");
-                response.setHeader("content-Type", "application/vnd.ms-excel");
+            response.reset();
+            response.setCharacterEncoding("UTF-8");
+            response.setHeader("content-Type", "application/vnd.ms-excel");
 //                response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-                response.setHeader("Content-Disposition","attachment;filename=" + fileName);
-                workbook.write(response.getOutputStream());
-                workbook.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            response.setHeader("Content-Disposition","attachment;filename=" + fileName);
+            workbook.write(response.getOutputStream());
+            workbook.close();
         }
     }
 

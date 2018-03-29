@@ -14,7 +14,6 @@
         <result column="title" property="title" />
         <result column="employee_name" property="employeeName"/>
         <result column="id_num" property="idNum"/>
-        <result column="license_code" property="licenseCode" />
         <result column="service_center" property="serviceCenter"/>
         <result column="custom" property="custom"/>
         <result column="employ_date" property="employDate" />
@@ -38,7 +37,6 @@
         <result column="title" property="title" />
         <result column="employee_name" property="employeeName"/>
         <result column="id_num" property="idNum"/>
-        <result column="license_code" property="licenseCode" />
         <result column="service_center" property="serviceCenter"/>
         <result column="diaodang_feedback_opt_date" property="diaodangFeedbackOptDate" />
     </resultMap>
@@ -62,9 +60,9 @@
         d.id_num,/*证件号 */
         d.id_card_type,
         e.title,/*公司名称 */
-        e.license_code,/*营业执照编号 */
+        cs.employ_special,
         h.service_center,/*服务中心 */
-        h.custom /*客服*/
+        h.leader_ship_name  /*客服经理*/
         FROM
         am_emp_task a
         LEFT JOIN
@@ -77,10 +75,13 @@
         sal_company e
         on e.company_id = a.company_id
         LEFT JOIN
-        sal_fc_company h on h.company_id = a.company_id
+        am_emp_custom h on h.task_id = a.task_id
         LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id
+        LEFT JOIN
+        am_company_set cs
+        on cs.company_id = a.company_id
         where   a.task_category = '1'
         <if test="taskStatus!=null">
             and a.task_status = ${taskStatus}
@@ -88,6 +89,7 @@
         <foreach collection="param" item="plid" open="" close="" separator="">
           and  ${plid}
         </foreach>
+        order by a.created_time desc
     </select>
 
     <select id="taskCount"  resultMap="BaseResultMapDTO">
@@ -110,10 +112,13 @@
         sal_company e
         on e.company_id = a.company_id
         LEFT JOIN
-        sal_fc_company h on h.company_id = a.company_id
+        am_emp_custom h on h.task_id = a.task_id
         LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id
+        LEFT JOIN
+        am_company_set cs
+        on cs.company_id = a.company_id
         where   a.task_category = '1'
         <foreach collection = "param" item = "plid"  open=""  close=""  separator="" >
           AND  ${ plid }
@@ -222,9 +227,9 @@
         d.id_num,/*证件号 */
         d.id_card_type,
         e.title,/*公司名称 */
-        e.license_code,/*营业执照编号 */
+        cs.employ_special,
         h.service_center,/*服务中心 */
-        h.custom /*客服*/
+        h.leader_ship_name /*客服经理*/
         FROM
         am_emp_task a
         LEFT JOIN
@@ -237,10 +242,13 @@
         sal_company e
         on e.company_id = a.company_id
         LEFT JOIN
-        sal_fc_company h on h.company_id = a.company_id
+        am_emp_custom h on h.task_id = a.task_id
         LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id
+        LEFT JOIN
+        am_company_set cs
+        on cs.company_id = a.company_id
         where   a.task_category = '1'
         <if test="taskStatus!=null">
             and a.task_status = ${taskStatus}
@@ -248,6 +256,7 @@
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
         </foreach>
+        order by a.created_time desc
     </select>
 
     <select id="querySocial" resultMap="BaseResultMapDTO">
