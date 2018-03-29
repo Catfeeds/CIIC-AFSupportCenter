@@ -562,6 +562,7 @@
         emp_archive_id,
         is_change,
         hf_type,
+        process_category,
         task_category,
         urgent,
         operation_remind,
