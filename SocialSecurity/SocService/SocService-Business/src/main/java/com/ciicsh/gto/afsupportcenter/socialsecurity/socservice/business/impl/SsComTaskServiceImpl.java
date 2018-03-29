@@ -311,7 +311,9 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
     @Override
     public ComAccountExtBO getComAccountInfo(ComTaskParamBO paramBO) {
         ComAccountExtBO accountExtBO = null;
+        //查询社保账户与客户关系表，是否有数据
         Integer result = ssAccountComRelationMapper.isExistCompany(paramBO.getCompanyId());
+        //如有关系数据，则表示该客户已经开户过，返回开户信息即可；如没有关系数据则从任务单表中获取开户信息；
         List<ComAccountExtBO> extBOS = result > 0 ? sComAccountMapper.getComAccountByCompanyId(paramBO) : baseMapper.getComTaskByCompanyId(paramBO);
 
         if(null != extBOS && extBOS.size() > 0){

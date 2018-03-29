@@ -24,49 +24,48 @@ public class SocApiValidator {
     private SsComTaskService ssComTaskService;
 
     public String saveComTaskValidator(SsComTaskDTO ssComTaskDTO) {
-        String result = null;
         if (ssComTaskDTO == null) {
-            result = "系统错误：ssComTaskDTO is null";
+            return "系统错误：ssComTaskDTO is null";
         } else if (StringUtils.isBlank(ssComTaskDTO.getCompanyId())) {
-            result = "客户Id不能为空！";
+            return "客户Id不能为空！";
         } else if (StringUtils.isBlank(ssComTaskDTO.getTaskCategory())) {
-            result = "任务类型不能为空！";
+            return "任务类型不能为空！";
         } else if (SocialSecurityConst.COM_TASK_CATEGORY_1 == Integer.parseInt(ssComTaskDTO.getTaskCategory())) {
             //新开类型参数校验
             if (ssComTaskDTO.getExpireDateFront() == null) {
-                result = "客户社保截至日不能为空！";
+                return "客户社保截至日不能为空！";
             } else if (ssComTaskDTO.getPaymentWay() == null) {
-                result = "付款方式不能为空！";
+                return "付款方式不能为空！";
             } else if (ssComTaskDTO.getBillReceiver() == null) {
-                result = "账单接收方不能为空！";
+                return "账单接收方不能为空！";
             }
         } else if (SocialSecurityConst.COM_TASK_CATEGORY_2 == Integer.parseInt(ssComTaskDTO.getTaskCategory())) {
             //转入类型参数校验
             if (ssComTaskDTO.getExpireDateFront() == null) {
-                result = "客户社保截至日不能为空！";
+                return "客户社保截至日不能为空！";
             } else if (ssComTaskDTO.getPaymentWay() == null) {
-                result = "付款方式不能为空！";
+                return "付款方式不能为空！";
             } else if (ssComTaskDTO.getBillReceiver() == null) {
-                result = "账单接收方不能为空！";
+                return "账单接收方不能为空！";
             } else if (StringUtils.isBlank(ssComTaskDTO.getSsAccount())) {
-                result = "参保户登记码不能为空！";
+                return "参保户登记码不能为空！";
             } else if (StringUtils.isBlank(ssComTaskDTO.getBankAccount())) {
-                result = "牡丹卡号不能为空！";
+                return "牡丹卡号不能为空！";
             } else if (StringUtils.isBlank(ssComTaskDTO.getComAccountName())) {
-                result = "养老金用公司名称不能为空！";
+                return "养老金用公司名称不能为空！";
             }
         } else if (SocialSecurityConst.COM_TASK_CATEGORY_3 == Integer.parseInt(ssComTaskDTO.getTaskCategory())) {
-            result = "当前版本不支持企业变更任务单！";
+            return "当前版本不支持企业变更任务单！";
         } else if (SocialSecurityConst.COM_TASK_CATEGORY_4 == Integer.parseInt(ssComTaskDTO.getTaskCategory())) {
-            result = "当前版本不支持企业终止任务单！";
+            return "当前版本不支持企业终止任务单！";
         }
         if (checkIsExistAccount(ssComTaskDTO.getCompanyId())) {
-            result = "该客户已存在企业社保账户！";
+            return "该客户已存在企业社保账户！";
         }
         if (checkIsExistComTask(ssComTaskDTO.getCompanyId())) {
-            result = "该客户已存在企业社保账户开户或转入任务单！";
+            return "该客户已存在企业社保账户开户或转入任务单！";
         }
-        return result;
+        return null;
     }
 
     /**
@@ -79,7 +78,7 @@ public class SocApiValidator {
         return accountService.isExistAccountInfo(companyId);
     }
 
-    private boolean checkIsExistComTask(String companyId){
+    private boolean checkIsExistComTask(String companyId) {
         return ssComTaskService.isExistComTask(companyId);
     }
 
