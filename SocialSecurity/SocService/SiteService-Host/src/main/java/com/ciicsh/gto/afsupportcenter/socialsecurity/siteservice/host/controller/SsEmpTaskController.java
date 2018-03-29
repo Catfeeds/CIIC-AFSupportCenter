@@ -16,6 +16,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -95,7 +96,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             task.setTaskStatus(TaskStatusConst.REJECTION);
             list.add(task);
             //调用工作流
-            TaskCommonUtils.completeTask(String.valueOf(task.getEmpTaskId()), commonApiUtils, "xsj");
+            TaskCommonUtils.completeTask(String.valueOf(task.getEmpTaskId()), commonApiUtils, UserContext.getUserId());
         }
         boolean isSuccess = business.updateBatchById(list);
         return JsonResultKit.of(isSuccess);
@@ -210,7 +211,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             return JsonResultKit.ofError("状态错误");
         }
         ssEmpTask.setModifiedTime(LocalDateTime.now());
-        ssEmpTask.setModifiedBy("xsj");
+        ssEmpTask.setModifiedBy(UserContext.getUserId());
         boolean result = business.updateById(ssEmpTask);
         return JsonResultKit.of(result);
     }
@@ -261,7 +262,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             //讨论说 批量办理的 办理月份为当前月份
             p.setHandleMonth(handleMonth.toString());
             p.setModifiedTime(LocalDateTime.now());
-            p.setModifiedBy("xsj");
+            p.setModifiedBy(UserContext.getUserId());
             //true 表示批量办理
             business.saveHandleData(p, true);
         });

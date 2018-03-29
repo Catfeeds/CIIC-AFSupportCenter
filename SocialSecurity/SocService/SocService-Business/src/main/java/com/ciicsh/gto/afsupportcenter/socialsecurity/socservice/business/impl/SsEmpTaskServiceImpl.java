@@ -9,8 +9,8 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.T
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
-import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -18,7 +18,6 @@ import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRe
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.SSPItemDTO;
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -1094,7 +1093,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             if (result == 0) throw new BusinessException("数据库修改不成功.");
             ssEmpBasePeriod.setSsMonthStop(bo.getHandleMonth());
             ssEmpBasePeriod.setEndMonth(bo.getEndMonth());
-            ssEmpBasePeriod.setModifiedBy("xsj");
+            ssEmpBasePeriod.setModifiedBy(UserContext.getUserId());
             ssEmpBasePeriod.setModifiedTime(LocalDateTime.now());
             //修改 没有截止时间时间段的截止时间和停缴月份
             ssEmpBasePeriodService.updateEndMonAndHandleMon(ssEmpBasePeriod);
@@ -1104,7 +1103,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             ssEmpArchive.setEmpArchiveId(bo.getEmpArchiveId());
             ssEmpArchive.setEndMonth(bo.getEndMonth());
             ssEmpArchive.setOutDate(bo.getOutDate());
-            ssEmpArchive.setModifiedBy("xsj");
+            ssEmpArchive.setModifiedBy(UserContext.getUserId());
             ssEmpArchive.setModifiedTime(LocalDateTime.now());
             ssEmpArchiveService.updateById(ssEmpArchive);
             //创建非标数据
@@ -1427,8 +1426,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
     void by(Object entity) {
         BeanMap bm = new BeanMap(entity);
-        bm.put("createdBy", "xsj");
-        bm.put("modifiedBy", "xsj");
+        bm.put("createdBy", UserContext.getUserId());
+        bm.put("modifiedBy", UserContext.getUserId());
     }
 
     /**
@@ -1556,9 +1555,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         ssEmpArchive.setSsMonth(bo.getHandleMonth());
         ssEmpArchive.setActive(true);
         ssEmpArchive.setCreatedTime(LocalDateTime.now());
-        ssEmpArchive.setCreatedBy("xsj");
+        ssEmpArchive.setCreatedBy(UserContext.getUserId());
         ssEmpArchive.setModifiedTime(LocalDateTime.now());
-        ssEmpArchive.setModifiedBy("xsj");
+        ssEmpArchive.setModifiedBy(UserContext.getUserId());
         return ssEmpArchive;
     }
 
@@ -1956,7 +1955,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 break;
         }
         //任务单完成接口调用
-        TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, "xsj");
+        TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, UserContext.getUserId());
     }
 
     /**

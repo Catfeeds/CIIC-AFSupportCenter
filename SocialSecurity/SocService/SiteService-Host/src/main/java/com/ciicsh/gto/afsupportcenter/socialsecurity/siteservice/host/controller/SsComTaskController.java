@@ -22,6 +22,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.logservice.api.LogServiceProxy;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -152,7 +153,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
                     ssComTask.setRejectionRemark(refuseReason);
                 //批退工作流
                 SsComTask task = ssComTaskService.selectById(ssComTask.getComTaskId());
-                TaskCommonUtils.completeTask(task.getTaskId(),commonApiUtils,"xsj");
+                TaskCommonUtils.completeTask(task.getTaskId(),commonApiUtils,UserContext.getUserId());
                 dataList.add(ssComTask);
             }
         }
@@ -224,8 +225,8 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
             ssAccountComRelation.setCompanyId(map.get("companyId"));
             ssAccountComRelation.setMajorCom(new Integer(1));
             ssAccountComRelation.setCreatedTime(LocalDateTime.now());
-            ssAccountComRelation.setCreatedBy("xsj");
-            ssAccountComRelation.setModifiedBy("xsj");
+            ssAccountComRelation.setCreatedBy(UserContext.getUserId());
+            ssAccountComRelation.setModifiedBy(UserContext.getUserId());
             ssAccountComRelation.setModifiedTime(LocalDateTime.now());
         }
 
@@ -253,7 +254,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         SsComTaskBO ssComTaskBO = CommonTransform.convertToDTO(ssComTaskDTO, SsComTaskBO.class);
         if (ssComTaskBO.getTaskStatus() == 3) {
             //调用工作流
-            TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,"xsj");
+            TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,UserContext.getUserId());
             if (null != ssComTaskBO.getEndDate() && null != ssComTaskBO.getComAccountId()) {
                 SsComAccount ssComAccount = new SsComAccount();
                 //2 表示终止
@@ -261,7 +262,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
                 ssComAccount.setComAccountId(ssComTaskBO.getComAccountId());
                 ssComAccount.setEndDate(ssComTaskBO.getEndDate());
                 ssComAccount.setModifiedTime(LocalDateTime.now());
-                ssComAccount.setModifiedBy("xsj");
+                ssComAccount.setModifiedBy(UserContext.getUserId());
                 result = business.updateOrHandlerTask(ssComTaskBO, ssComAccount);
             }
         } else {
@@ -291,12 +292,12 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         //0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
         if (ssComTaskBO.getTaskStatus() == 3) {
             //调用工作流
-            TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,"xsj");
+            TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,UserContext.getUserId());
             if (isNotNull(ssComTaskBO.getSettlementArea()) && null != ssComTaskBO.getComAccountId()) {
                 SsComAccount ssComAccount = new SsComAccount();
                 ssComAccount.setComAccountId(ssComTaskBO.getComAccountId());
                 ssComAccount.setSettlementArea(ssComTaskBO.getSettlementArea());
-                ssComAccount.setModifiedBy("xsj");
+                ssComAccount.setModifiedBy(UserContext.getUserId());
                 ssComAccount.setModifiedTime(LocalDateTime.now());
                 result = business.updateOrHandlerTask(ssComTaskBO, ssComAccount);
             }
@@ -340,7 +341,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         //0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
         if (ssComTaskBO.getTaskStatus() == 3) {
             //调用工作流
-            TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,"xsj");
+            TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,UserContext.getUserId());
             Object object = getObject(ssComTaskBO);
             //变更类型操作
             result = business.updateOrHandlerTask(ssComTaskBO, object);
@@ -359,7 +360,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
     @RequestMapping("/taskRevocation")
     public JsonResult<Boolean> taskRevocation(SsComTask ssComTask) {
         //修改任单状态和时间
-        ssComTask.setModifiedBy("xsj");
+        ssComTask.setModifiedBy(UserContext.getUserId());
         ssComTask.setModifiedTime(LocalDateTime.now());
         return JsonResultKit.of(business.updateTaskStatusForRevoke(ssComTask) > 0 ? true : false);
     }
@@ -426,7 +427,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         ssComAccount.setExpireDate(isNotNull(map.get("expireDate")) ? Integer.valueOf(map.get("expireDate")) : null);
         //默认独立户
         ssComAccount.setSsAccountType(new Integer(3));
-        ssComAccount.setModifiedBy("xsj");
+        ssComAccount.setModifiedBy(UserContext.getUserId());
         ssComAccount.setModifiedTime(LocalDateTime.now());
 
         return ssComAccount;
@@ -477,7 +478,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         ssComTask.setSettlementArea(isNotNull(map.get("settlementArea"))?map.get("settlementArea"):null);
 
         ssComTask.setDispatchMaterial(isNotNull(map.get("dispatchMaterial"))?map.get("dispatchMaterial"):null);
-        ssComTask.setModifiedBy("xsj");
+        ssComTask.setModifiedBy(UserContext.getUserId());
         ssComTask.setModifiedTime(LocalDateTime.now());
         return ssComTask;
     }
@@ -497,7 +498,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         ssAccountRatio.setStartMonth(isNotNull(map.get("startMonth")) ? map.get("startMonth").replaceAll("-", "") :
             null);
 
-        ssAccountRatio.setModifiedBy("xsj");
+        ssAccountRatio.setModifiedBy(UserContext.getUserId());
         ssAccountRatio.setModifiedTime(LocalDateTime.now());
         return ssAccountRatio;
     }
@@ -511,7 +512,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
     public Object getObject(SsComTaskBO ssComTaskBO) {
         //用于返回包装后的账户信息
         SsComAccount ssComAccount = new SsComAccount();
-        ssComAccount.setModifiedBy("xsj");
+        ssComAccount.setModifiedBy(UserContext.getUserId());
         ssComAccount.setModifiedTime(LocalDateTime.now());
         if ("1".equals(ssComTaskBO.getChangeContentValue())) {//行业比例变更
             List<SsAccountRatio> SsAccountRatioList = new ArrayList<SsAccountRatio>();
@@ -525,16 +526,16 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
             String monthInsert = ssComTaskBO.getStartMonth();
             ssAccountRatioInsert.setStartMonth(monthInsert);
             ssAccountRatioInsert.setActive(true);
-            ssAccountRatioInsert.setCreatedBy("xsj");
+            ssAccountRatioInsert.setCreatedBy(UserContext.getUserId());
             ssAccountRatioInsert.setCreatedTime(LocalDateTime.now());
-            ssAccountRatioInsert.setModifiedBy("xsj");
+            ssAccountRatioInsert.setModifiedBy(UserContext.getUserId());
             ssAccountRatioInsert.setModifiedTime(LocalDateTime.now());
             SsAccountRatioList.add(0, ssAccountRatioInsert);
             //原来数据只需要修改endMonth 在原来的月份上减一月
             String monthUpdate = TaskCommonUtils.getLastMonth(Integer.valueOf(ssComTaskBO.getStartMonth()));
             ssAccountRatioUpdate.setComAccountId(ssComTaskBO.getComAccountId());
             ssAccountRatioUpdate.setEndMonth(monthUpdate);
-            ssAccountRatioUpdate.setModifiedBy("xsj");
+            ssAccountRatioUpdate.setModifiedBy(UserContext.getUserId());
             ssAccountRatioUpdate.setModifiedTime(LocalDateTime.now());
             SsAccountRatioList.add(1, ssAccountRatioUpdate);
             //返回两个工伤变更的对象List
