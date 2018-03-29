@@ -130,7 +130,8 @@ public class TaskCommonUtils {
         if(ssEmpTaskBO.getListEmpBasePeriod()==null){//说明是逆向调整，没有福利段
             return paramsList;
         }
-        //回调前道合同协议，迭代每一个险种,目前的需求福利段只有一条福利段，因此get(0)
+        //回调前道合同协议，迭代每一个险种,目前的需求
+        // 福利段只有一条福利段，因此get(0)
         ssEmpTaskBO.getListEmpBasePeriod().get(0).getListEmpBaseDetail().forEach(SsEmpBaseDetail->{
                 AfEmpSocialUpdateDateDTO afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
                 afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(ssEmpTaskBO.getBusinessInterfaceId())); //messionId
