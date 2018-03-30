@@ -70,7 +70,6 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public JsonResult processApproval(PaymentProcessParmBO processParmBO) {
-
         HfPayment payment = new HfPayment();
         payment.setPaymentId(Long.parseLong(processParmBO.getPaymentId()));
         payment = hfPaymentMapper.selectOne(payment);
@@ -128,7 +127,6 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public JsonResult processTicket(PaymentProcessParmBO processParmBO) {
-
         HfPayment payment = new HfPayment();
         payment.setPaymentId(Long.parseLong(processParmBO.getPaymentId()));
         payment = hfPaymentMapper.selectOne(payment);
