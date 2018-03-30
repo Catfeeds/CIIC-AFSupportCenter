@@ -13,6 +13,7 @@
         <result column="is_change" property="isChange" />
         <result column="hf_type" property="hfType" />
         <result column="hf_emp_account" property="hfEmpAccount" />
+        <result column="process_category" property="processCategory" />
         <result column="task_category" property="taskCategory" />
         <result column="urgent" property="urgent" />
         <result column="operation_remind" property="operationRemind" />

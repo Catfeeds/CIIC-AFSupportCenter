@@ -28,7 +28,7 @@ public interface SsComTaskMapper extends BaseMapper<SsComTask> {
     int updateTaskStatusForRevoke(SsComTask ssComTask);
 
     //判断企业任务单是否存在
-    Integer isExistComTask(SsComTaskBO ssComTask);
+    Integer isExistComTask(String companyId);
 
     boolean insertComTask(SsComTask ssComTask);
 

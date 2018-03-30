@@ -165,11 +165,23 @@ public class SsComTaskDTO{
      */
     private Date modifiedTime;
     /**
-     * 创建者登录名
+     * 创建者ID
      */
     private String createdBy;
     /**
-     * 修改者登录名
+     * 创建者姓名
+     */
+    private String createdDisplayName;
+    /**
+     * 领导ID
+     */
+    private String leaderShipId;
+    /**
+     * 领导姓名
+     */
+    private String leaderShipName;
+    /**
+     * 修改者ID
      */
     private String modifiedBy;
     //客户名称
@@ -689,5 +701,29 @@ public class SsComTaskDTO{
 
     public void setIsComplete(String isComplete) {
         this.isComplete = isComplete;
+    }
+
+    public String getCreatedDisplayName() {
+        return createdDisplayName;
+    }
+
+    public void setCreatedDisplayName(String createdDisplayName) {
+        this.createdDisplayName = createdDisplayName;
+    }
+
+    public String getLeaderShipId() {
+        return leaderShipId;
+    }
+
+    public void setLeaderShipId(String leaderShipId) {
+        this.leaderShipId = leaderShipId;
+    }
+
+    public String getLeaderShipName() {
+        return leaderShipName;
+    }
+
+    public void setLeaderShipName(String leaderShipName) {
+        this.leaderShipName = leaderShipName;
     }
 }

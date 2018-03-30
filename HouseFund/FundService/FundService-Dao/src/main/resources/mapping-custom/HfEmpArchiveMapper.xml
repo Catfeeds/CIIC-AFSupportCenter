@@ -318,7 +318,10 @@
 
     <delete id="deleteHfEmpArchiveByEmpTaskIds" parameterType="java.util.List">
         DELETE hea
-        FROM hf_emp_archive hea INNER JOIN hf_emp_task het ON het.emp_archive_id = hea.emp_archive_id
+        FROM hf_emp_archive hea INNER JOIN hf_emp_task het ON
+        het.employee_id = hea.employee_id
+        AND het.company_id = hea.company_id
+        AND hea.archive_status!=3
         AND hea.is_active = 1
         <where>
             <foreach collection="list" item="item" open="AND het.emp_task_id IN (" separator="," close=")">

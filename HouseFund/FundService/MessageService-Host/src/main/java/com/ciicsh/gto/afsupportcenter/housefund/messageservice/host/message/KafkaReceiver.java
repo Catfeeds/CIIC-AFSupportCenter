@@ -108,6 +108,17 @@ public class KafkaReceiver {
         }
     }
 
+    private final static TaskCategory[] FLOP_IN_TASK_CATEGORIES = {
+        TaskCategory.FLOPNEW,
+        TaskCategory.FLOPINTO,
+        TaskCategory.FLOPREOPEN
+    };
+
+    private final static TaskCategory[] FLOP_OUT_TASK_CATEGORIES = {
+        TaskCategory.FLOPOUT,
+        TaskCategory.FLOPSEALED
+    };
+
     /**
      * 雇员公积金翻牌任务单
      * @param message
@@ -122,18 +133,25 @@ public class KafkaReceiver {
             logger.info("start fundEmpFlop: " + JSON.toJSONString(taskMsgDTO));
             log.info(LogMessage.create().setTitle("fundEmpFlop").setContent("start fundEmpFlop: " + JSON.toJSONString(taskMsgDTO)));
             String fundCategory = TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) || TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
+
+            Map<String, Object> paramMap = taskMsgDTO.getVariables();
+            Integer fundType;
             if (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) || TaskSink.ADD_FUND_NEW.equals(taskMsgDTO.getTaskType())) {
-                Map<String, Object> paramMap = taskMsgDTO.getVariables();
-                if(null != paramMap && paramMap.get("fundType") != null){
+                if(null != paramMap && paramMap.get("fundType") != null) {
+                    fundType = Integer.parseInt(paramMap.get("fundType").toString());
                     logger.info("start in fundEmpFlop: " + JSON.toJSONString(taskMsgDTO));
-                    Integer taskCategory = Integer.parseInt(paramMap.get("fundType").toString());
-                    boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(),taskCategory,0);
+                    boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(), FLOP_IN_TASK_CATEGORIES[fundType - 1].getCategory(), 0);
                     logger.info("end in fundEmpFlop:  " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
                 }
             }
             else{
+                fundType = 2;
+
+                if(null != paramMap && paramMap.get("fundType") != null) {
+                    fundType = Integer.parseInt(paramMap.get("fundType").toString());
+                }
                 logger.info("start out fundEmpFlop: " + JSON.toJSONString(taskMsgDTO));
-                boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(),TaskCategory.SEALED.getCategory(),0);
+                boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(), FLOP_OUT_TASK_CATEGORIES[fundType - 1].getCategory(),0);
                 logger.info("end out fundEmpFlop:  " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
             }
             logger.info("end fundEmpFlop!");
@@ -288,7 +306,29 @@ public class KafkaReceiver {
                 }
             }
             else{
-                empAgreementId = Long.parseLong(taskMsgDTO.getMissionId());
+                logger.info("fund get employee info taskMsgDTO.getMissionId():" + taskMsgDTO.getMissionId());
+                Map<String, Object> paramMap = taskMsgDTO.getVariables();
+                if(null != paramMap && paramMap.get("missionId") != null){
+                    String varMissionId = paramMap.get("missionId").toString();
+                    logger.info("fund get employee info paramMap.get(missionId):" + varMissionId);
+
+                    if (StringUtils.isNotEmpty(varMissionId)) {
+                        // 雇员中心收到更正任务单时，原任务单还未发出时，agreementId有可能已更新，但是activiti产生的missionId不会更新，
+                        // 此时从variables里面取得新的agreementId（key为：missionId）
+                        empAgreementId = Long.parseLong(varMissionId);
+                        Long missionId = Long.parseLong(taskMsgDTO.getMissionId());
+
+                        if (empAgreementId.longValue() <= missionId.longValue()) {
+                            empAgreementId = missionId;
+                        } else {
+                            taskMsgDTO.setMissionId(varMissionId);
+                        }
+                    } else {
+                        empAgreementId = Long.parseLong(taskMsgDTO.getMissionId());
+                    }
+                } else {
+                    empAgreementId = Long.parseLong(taskMsgDTO.getMissionId());
+                }
             }
             resDto = employeeSocialProxy.getByEmpAgreement(empAgreementId);
             logger.info("fund get employee info end, response:" + JSON.toJSONString(resDto));

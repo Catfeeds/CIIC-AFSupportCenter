@@ -8,12 +8,17 @@ import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBatchRejectBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTaskTransferBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.FeedbackDateBatchUpdateBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTransferTemplateImpXsl;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.HfEmpTaskHandleVo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.ImportFeedbackDateBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.util.FeedbackDateVerifyHandler;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.EmpEmployeeService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskHandleService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskTransferService;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.PdfUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.core.Result;
@@ -322,4 +327,26 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
 
         return JsonResultKit.of();
     }
+
+    /**
+     * 导出Excel
+     */
+    @RequestMapping("/queryEmpTaskTransferExp")
+    @Log("雇员公积金转移导出")
+    public JsonResult<PageRows> queryEmpTaskTransferExp( PageInfo pageInfo) {
+        return null;
+        //return JsonResultKit.of(business.queryEmpTaskTransferPage(pageInfo));
+    }
+    /**
+     * 下载导入模板
+     */
+
+    @RequestMapping("/downloadTransferTemplateFile")
+    @Log("雇员公积金转移导出")
+    public void downloadTransferTemplateFile( HttpServletResponse response) {
+        String fileNme = "雇员公积金转移导入模板.xls";
+        List<EmpTransferTemplateImpXsl> opts = new ArrayList();
+        ExcelUtil.exportExcel(opts,EmpTransferTemplateImpXsl.class,fileNme,response);
+    }
+
 }

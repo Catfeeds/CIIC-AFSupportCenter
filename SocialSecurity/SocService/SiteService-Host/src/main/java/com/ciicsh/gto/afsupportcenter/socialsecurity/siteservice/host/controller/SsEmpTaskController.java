@@ -16,6 +16,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -58,6 +59,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     private CommonApiUtils commonApiUtils;
     @Autowired
     private AmEmpTaskOfSsService amEmpTaskOfSsService;
+
     /**
      * 雇员日常操作查询
      */
@@ -69,11 +71,11 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     }
 
     @RequestMapping("/employeeOperatorQueryExport")
-    public void employeeOperatorQueryExport(HttpServletResponse response,PageInfo pageInfo) {
+    public void employeeOperatorQueryExport(HttpServletResponse response, PageInfo pageInfo) {
         Date date = new Date();
-        String fileNme = "雇员日常社保_"+ StringUtil.getDateString(date)+".xls";
-        PageRows<SsEmpTaskBO> pageRows= business.employeeOperatorQuery(pageInfo);
-        ExcelUtil.exportExcel(pageRows.getRows(),SsEmpTaskBO.class,fileNme,response);
+        String fileNme = "雇员日常社保_" + StringUtil.getDateString(date) + ".xls";
+        PageRows<SsEmpTaskBO> pageRows = business.employeeOperatorQuery(pageInfo);
+        ExcelUtil.exportExcel(pageRows.getRows(), SsEmpTaskBO.class, fileNme, response);
     }
 
     /**
@@ -94,7 +96,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             task.setTaskStatus(TaskStatusConst.REJECTION);
             list.add(task);
             //调用工作流
-            TaskCommonUtils.completeTask(String.valueOf(task.getEmpTaskId()),commonApiUtils,"xsj");
+            TaskCommonUtils.completeTask(String.valueOf(task.getEmpTaskId()), commonApiUtils, UserContext.getUserId());
         }
         boolean isSuccess = business.updateBatchById(list);
         return JsonResultKit.of(isSuccess);
@@ -107,7 +109,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     @PostMapping("/empTaskById")
     public JsonResult<SsEmpTaskBO> empTaskById(
         @RequestParam("empTaskId") Long empTaskId
-        , @RequestParam(value = "operatorType", defaultValue = "-1") Integer operatorType ,// 1 任务单费用段
+        , @RequestParam(value = "operatorType", defaultValue = "-1") Integer operatorType,// 1 任务单费用段
         @RequestParam(value = "isNeedSerial", defaultValue = "-1") Integer isNeedSerial
     ) {
         SsEmpTask empTask = business.selectById(empTaskId);
@@ -122,31 +124,30 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
 //            String ssSerial = business.selectMaxSsSerialByTaskId(empTaskId);
 //            dto.setEmpSsSerial(ssSerial);
 //         }
-             //任务单参考信息 用退工
-             AmEmpTaskDTO amEmpTaskDTO = amEmpTaskOfSsService.queryReworkInfo(empTaskId);
-        if(amEmpTaskDTO==null){
-            amEmpTaskDTO=new AmEmpTaskDTO();
+        //任务单参考信息 用退工
+        AmEmpTaskDTO amEmpTaskDTO = amEmpTaskOfSsService.queryReworkInfo(empTaskId);
+        if (amEmpTaskDTO == null) {
+            amEmpTaskDTO = new AmEmpTaskDTO();
             amEmpTaskDTO.setTaskStatus(1);//设置默认状态
         }
-             dto.setAmEmpTaskDTO(amEmpTaskDTO);
+        dto.setAmEmpTaskDTO(amEmpTaskDTO);
 
         //查询该雇员是否还有其他已办理或者未办理的任务
-       EntityWrapper<SsEmpTask> ew =  new EntityWrapper<SsEmpTask>();
-        ew.where("employee_id={0}",dto.getEmployeeId())
-           // .and("task_category={0}",dto.getTaskCategory())
+        EntityWrapper<SsEmpTask> ew = new EntityWrapper<SsEmpTask>();
+        ew.where("employee_id={0}", dto.getEmployeeId())
+            // .and("task_category={0}",dto.getTaskCategory())
             .and("is_active=1")
-            .and("emp_task_id!={0}",dto.getEmpTaskId())
+            .and("emp_task_id!={0}", dto.getEmpTaskId())
             .and("task_status=1")
-            .orderBy("created_time",true);
+            .orderBy("created_time", true);
         List<SsEmpTask> ssEmpTaskList = business.selectList(ew);
-        if(ssEmpTaskList.size()>0){
+        if (ssEmpTaskList.size() > 0) {
             dto.setTheSameTask(ssEmpTaskList);
-        }else{
+        } else {
             dto.setTheSameTask(new ArrayList());
         }
         return JsonResultKit.of(dto);
     }
-
 
 
     /**
@@ -156,7 +157,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     @PostMapping("/handle")
     public JsonResult<Boolean> handle(@RequestBody SsEmpTaskBO bo) {
         //false 表示单个办理
-       boolean result =  business.saveHandleData(bo,false);
+        boolean result = business.saveHandleData(bo, false);
         return JsonResultKit.of(result);
     }
 
@@ -166,7 +167,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     @Log("获得社保序号")
     @PostMapping("/getSerial")
     public JsonResult<Integer> getSerial(Integer comAccountId) {
-        Integer ssSerial =  business.getSerial(comAccountId);
+        Integer ssSerial = business.getSerial(comAccountId);
         return JsonResultKit.of(ssSerial);
     }
 
@@ -189,7 +190,8 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
      *
      * @param
      * @return
-     */    @Log("特殊任务办理")
+     */
+    @Log("特殊任务办理")
     @PostMapping("/empSpecialTaskHandle")
     public JsonResult empSpecialTaskHandle(SsEmpTask ssEmpTask) {
 
@@ -209,57 +211,60 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             return JsonResultKit.ofError("状态错误");
         }
         ssEmpTask.setModifiedTime(LocalDateTime.now());
-        ssEmpTask.setModifiedBy("xsj");
+        ssEmpTask.setModifiedBy(UserContext.getUserId());
         boolean result = business.updateById(ssEmpTask);
         return JsonResultKit.of(result);
     }
 
     @Log("通过任务单id查询退账金额")
     @RequestMapping("/queryRefundAmountByTaskId")
-    public JsonResult<Object> queryRefundAmountByTaskId(SsEmpTaskBO ssEmpTaskBO){
+    public JsonResult<Object> queryRefundAmountByTaskId(SsEmpTaskBO ssEmpTaskBO) {
         EntityWrapper<SsEmpRefund> ew = new EntityWrapper();
-        ew.where("emp_task_id={0}",ssEmpTaskBO.getEmpTaskId()).and("is_active=1");
-        Object obj =  ssEmpRefundService.selectOne(ew);
+        ew.where("emp_task_id={0}", ssEmpTaskBO.getEmpTaskId()).and("is_active=1");
+        Object obj = ssEmpRefundService.selectOne(ew);
         return JsonResultKit.of(obj);
     }
+
     @Log("查询批量任务信息")
     @RequestMapping("/queryBatchEmpArchiveByEmpTaskIds")
-    public JsonResult<Object> queryBatchEmpArchiveByEmpTaskIds(@RequestBody SsEmpTaskBO ssEmpTaskBO){
-        List<SsEmpTaskBO> result =business.queryBatchEmpArchiveByEmpTaskIds(ssEmpTaskBO);
+    public JsonResult<Object> queryBatchEmpArchiveByEmpTaskIds(@RequestBody SsEmpTaskBO ssEmpTaskBO) {
+        List<SsEmpTaskBO> result = business.queryBatchEmpArchiveByEmpTaskIds(ssEmpTaskBO);
         return JsonResultKit.of(result);
     }
+
     @Log("通过条件查询批量任务信息")
     @RequestMapping("/queryBatchTaskByCondition")
-    public JsonResult<Object> queryBatchTaskByCondition(@RequestBody SsEmpTaskBO ssEmpTaskBO){
-        List<SsEmpTaskBO> result =business.queryBatchTaskByCondition(ssEmpTaskBO);
+    public JsonResult<Object> queryBatchTaskByCondition(@RequestBody SsEmpTaskBO ssEmpTaskBO) {
+        List<SsEmpTaskBO> result = business.queryBatchTaskByCondition(ssEmpTaskBO);
         return JsonResultKit.of(result);
     }
+
     @Log("批量任务办理")
     @RequestMapping("/handleBatchTask")
-    public JsonResult<Object> handleBatchTask(@RequestBody EmpTaskBatchParameter empTaskBatchParameter){
-        Assert.notNull(empTaskBatchParameter,"参数异常");
-        Assert.notNull(empTaskBatchParameter.getSsEmpTaskBOList(),"参数异常");
+    public JsonResult<Object> handleBatchTask(@RequestBody EmpTaskBatchParameter empTaskBatchParameter) {
+        Assert.notNull(empTaskBatchParameter, "参数异常");
+        Assert.notNull(empTaskBatchParameter.getSsEmpTaskBOList(), "参数异常");
         LocalDate now = LocalDate.now();
         StringBuffer handleMonth = TaskCommonUtils.getMonthStr(now);
-        empTaskBatchParameter.getSsEmpTaskBOList().forEach(p->{
+        empTaskBatchParameter.getSsEmpTaskBOList().forEach(p -> {
             //1新进  2  转入 3  调整 4 补缴 5 转出 6封存 7退账
-            if(1==p.getTaskCategory() || 2==p.getTaskCategory()){
-                String ssSerial =business.selectMaxSsSerialByTaskId(p.getEmpTaskId());
+            if (1 == p.getTaskCategory() || 2 == p.getTaskCategory()) {
+                String ssSerial = business.selectMaxSsSerialByTaskId(p.getEmpTaskId());
                 //社保序号
                 p.setEmpSsSerial(ssSerial);
             }
             //退账 表示已完成
-            if(7==p.getTaskCategory()){
+            if (7 == p.getTaskCategory()) {
                 p.setTaskStatus(TaskStatusConst.FINISH);
-            }else{
+            } else {
                 p.setTaskStatus(TaskStatusConst.PROCESSING);
             }
             //讨论说 批量办理的 办理月份为当前月份
             p.setHandleMonth(handleMonth.toString());
             p.setModifiedTime(LocalDateTime.now());
-            p.setModifiedBy("xsj");
+            p.setModifiedBy(UserContext.getUserId());
             //true 表示批量办理
-            business.saveHandleData(p,true);
+            business.saveHandleData(p, true);
         });
         return JsonResultKit.of(true);
     }
@@ -300,7 +305,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             } else {
                 workbook = ExcelExportUtil.exportBigExcel(exportParams, clazz, result.getRows());
                 int pageNum = (int) Math.ceil(total / pageInfo.getPageSize());
-                for(int i = 1; i < pageNum; i++) {
+                for (int i = 1; i < pageNum; i++) {
                     pageInfo.setPageNum(i);
                     result = business.employeeDailyOperatorQueryForDisk(pageInfo, isRollIn);
                     workbook = ExcelExportUtil.exportBigExcel(exportParams, clazz, result.getRows());
@@ -335,6 +340,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         int REJECTION = 4;// 批退
         int NOPROGRESS = 1;// 不需处理
     }
+
     /**
      * 批退 请求参数
      */
