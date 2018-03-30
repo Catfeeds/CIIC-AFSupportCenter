@@ -12,7 +12,6 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
@@ -51,25 +50,25 @@ public class HfFundPayController {
 
     @Log("公积金汇缴支付流程操作-送审")
     @PostMapping("/approval")
-    public JsonResult processApproval(@RequestBody PaymentProcessParmBO processParmBO){
+    public JsonResult processApproval(PaymentProcessParmBO processParmBO){
        return hfPaymentService.processApproval(processParmBO);
     }
 
     @Log("公积金汇缴支付流程操作-汇缴")
     @PostMapping("/payment")
-    public JsonResult processPayment(@RequestBody PaymentProcessParmBO processParmBO){
+    public JsonResult processPayment(PaymentProcessParmBO processParmBO){
         return hfPaymentService.processPayment(processParmBO);
     }
 
     @Log("公积金汇缴支付流程操作-出票")
     @PostMapping("/ticket")
-    public JsonResult processTicket(@RequestBody PaymentProcessParmBO processParmBO){
+    public JsonResult processTicket(PaymentProcessParmBO processParmBO){
         return hfPaymentService.processTicket(processParmBO);
     }
 
     @Log("公积金汇缴支付流程操作-回单")
     @PostMapping("/receipt")
-    public JsonResult processReceipt(@RequestBody PaymentProcessParmBO processParmBO){
+    public JsonResult processReceipt(PaymentProcessParmBO processParmBO){
         return hfPaymentService.processReceipt(processParmBO);
     }
 }
