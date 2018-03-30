@@ -278,7 +278,7 @@ public class KafkaReceiver {
     private void agreementAdjustOrUpdateEmpStop(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer isChange) {
         // 非0转0，ProcessCategory为调整，taskCategory为封存，新增一个封存任务单，但需要将oldAgreementId同时存入任务单记录；
         // 因为前端发出新开任务时，已经创建了雇员的费用段，oldAgreementId对应的是前一个费用段，任务单结束时需要依据oldAgreementId进行回调，以便前道对其进行处理
-        logger.info("start specialEmpStop(): " + JSON.toJSONString(taskMsgDTO));
+        logger.info("start agreementAdjustOrUpdateEmpStop(): " + JSON.toJSONString(taskMsgDTO));
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
         int fundType = 2;
         String oldAgreementId = null;
@@ -298,9 +298,9 @@ public class KafkaReceiver {
             }
 
             boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEAGREEMENTADJUST.getCategory(), OUT_TASK_CATEGORIES[fundType - 1].getCategory(), oldAgreementId, isChange);
-            logger.info("end specialEmpStop:" + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
+            logger.info("end agreementAdjustOrUpdateEmpStop:" + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
         } else {
-            logger.info("end specialEmpStop:" + JSON.toJSONString(taskMsgDTO) + "，paramMap is null， result：Fail!");
+            logger.info("end agreementAdjustOrUpdateEmpStop:" + JSON.toJSONString(taskMsgDTO) + "，paramMap is null， result：Fail!");
         }
     }
 
