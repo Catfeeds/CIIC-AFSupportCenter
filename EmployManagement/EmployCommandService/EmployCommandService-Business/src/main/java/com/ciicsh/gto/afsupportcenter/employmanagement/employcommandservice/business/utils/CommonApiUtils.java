@@ -67,7 +67,12 @@ public class CommonApiUtils {
         try {
             AfEmployeeQueryDTO taskRequestDTO = new AfEmployeeQueryDTO();
             Map<String, Object> variables = taskMsgDTO.getVariables();
-            taskRequestDTO.setEmployeeCompanyId(Long.parseLong(variables.get("empCompanyId").toString()));
+            if("fire".equals(taskMsgDTO.getTaskType()))
+            {
+                taskRequestDTO.setEmpAgreementId(Long.parseLong(variables.get("oldEmpAgreementId").toString()));
+            }else{
+                taskRequestDTO.setEmpAgreementId(Long.parseLong(taskMsgDTO.getMissionId()));
+            }
             resDto = afEmployeeCompanyProxy.getEmployeeCompany(taskRequestDTO);
         } catch (Exception e) {
             logger.error("call kehuzhongxin jiekou error!");

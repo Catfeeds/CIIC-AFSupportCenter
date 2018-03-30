@@ -113,6 +113,9 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
             amEmpTask.setTaskStatus(Integer.parseInt(bo.getResignFeedback()));
             taskService.insertOrUpdate(amEmpTask);
 
+            Integer isFinish = this.isResginFinish(bo,amEmpTask);
+            entity.setIsFinish(isFinish);
+
             AmResignLink amResignLink = new AmResignLink();
             amResignLink.setTaskId(amEmpTask.getTaskId());
             amResignLink.setResignFeedback(ReasonUtil.getTgfk(bo.getResignFeedback()));
@@ -130,5 +133,42 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
         boolean result = super.insertOrUpdate(entity);
 
         return result;
+    }
+
+    /**
+     *判断是否完成退工详情见v6版退工反馈
+     * @param bo
+     * @param amEmpTask
+     * @return
+     */
+    Integer  isResginFinish(AmResignBO bo,AmEmpTask amEmpTask){
+        String outReson = amEmpTask.getOutReason();
+        String resignFeedback = bo.getResignFeedback();
+        if(StringUtil.isEmpty(outReson))
+        {
+            return  0;
+        }
+        if("13".equals(outReson)||"15".equals(outReson))
+        {
+            if("1".equals(resignFeedback))
+            {
+                return 1;
+            }
+        }else{
+            if("6".equals(resignFeedback)||"12".equals(resignFeedback))
+            {
+                return 1;
+            }
+            if("13".equals(resignFeedback)||"14".equals(resignFeedback))
+            {
+                return 1;
+            }
+            if("15".equals(resignFeedback)||"16".equals(resignFeedback))
+            {
+                return 1;
+            }
+        }
+
+        return 0;
     }
 }
