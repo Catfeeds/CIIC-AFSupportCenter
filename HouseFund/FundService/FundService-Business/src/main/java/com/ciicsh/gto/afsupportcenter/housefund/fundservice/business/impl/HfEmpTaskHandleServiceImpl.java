@@ -26,6 +26,7 @@ import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.kit.DateKit;
+import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
@@ -67,6 +68,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
     private LogApiUtil logApiUtil;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
+    private DateTimeFormatter yyyyMMddFormatter = DateTimeFormatter.ofPattern("uuuuMMdd");
 
     @Override
     public List<HfEmpTaskHandleBo> getEmpTaskHandleData(HfEmpTaskHandlePostBo hfEmpTaskHandleDTO) {
@@ -288,6 +290,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             inputHfEmpTask.setEmployeeId(hfEmpTask.getEmployeeId());
             inputHfEmpTask.setTaskId(hfEmpTask.getTaskId());
             inputHfEmpTask.setBusinessInterfaceId(hfEmpTask.getBusinessInterfaceId());
+            inputHfEmpTask.setOldAgreementId(hfEmpTask.getOldAgreementId());
             inputHfEmpTask.setWelfareUnit(hfEmpTask.getWelfareUnit());
         } else {
             this.updateById(inputHfEmpTask);
@@ -1496,43 +1499,100 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                                        List<HfArchiveBasePeriod> hfArchiveBasePeriodList,
                                        boolean isReject) throws Exception {
         if (CollectionUtils.isNotEmpty(hfArchiveBasePeriodList)) {
-            List<AfEmpSocialUpdateDateDTO> afEmpSocialUpdateDateDTOList = new ArrayList<>(hfArchiveBasePeriodList.size());
+            List<AfEmpSocialUpdateDateDTO> afEmpSocialUpdateDateDTOList = new ArrayList<>(1);
             DateKit.setDatePattern("yyyyMMdd");
             BigDecimal companyConfirmAmount = BigDecimal.ZERO;
             BigDecimal personalConfirmAmount = BigDecimal.ZERO;
             String startMonth = hfEmpTask.getStartMonth();
             String endMonth = hfEmpTask.getEndMonth();
+            String hfMonth = null;
 
             for (HfArchiveBasePeriod hfArchiveBasePeriod : hfArchiveBasePeriodList) {
                 if (!isReject && companyConfirmAmount == BigDecimal.ZERO) {
                     companyConfirmAmount = hfArchiveBasePeriod.getComAmount();
                     personalConfirmAmount = hfArchiveBasePeriod.getAmountEmp();
                 }
+
+                // 正常或调整的费用段的汇缴月份
+                if (HfEmpTaskPeriodConstant.REMIT_WAY_NORMAL == hfArchiveBasePeriod.getRemitWay()
+                    || HfEmpTaskPeriodConstant.REMIT_WAY_ADJUST == hfArchiveBasePeriod.getRemitWay()) {
+                    hfMonth = hfArchiveBasePeriod.getHfMonth();
+                }
+            }
+            Map<String, String> tags = new HashMap<>();
+
+            // 以下为调整前的费用段处理：
+            // 如果oldAgreementId存在时，则要回调接口，通知前道关闭费用段
+            if (StringUtils.isNotEmpty(hfEmpTask.getOldAgreementId())) {
+                AfEmpSocialUpdateDateDTO afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
+                afEmpSocialUpdateDateDTO.setCompanyId(companyId);
+                if (hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
+                    afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ITEM_ID_FUND_BASIC);
+                } else {
+                    afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ITEM_ID_FUND_ADDED);
+                }
+                afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(companyConfirmAmount);
+                afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(personalConfirmAmount);
+                if (StringUtils.isNotEmpty(hfMonth)) {
+                    LocalDate hfMonthDate = LocalDate.parse(hfMonth + "01", yyyyMMddFormatter);
+                    // 关闭日期为汇缴月的前一个月的最后一天
+                    afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(hfMonthDate.minusDays(1).format(yyyyMMddFormatter)));
+                }
+
+                afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(hfEmpTask.getOldAgreementId()));
+                afEmpSocialUpdateDateDTOList.add(afEmpSocialUpdateDateDTO);
+                tags.put("oldAfEmpSocialUpdateDateDTO", JsonKit.toStr(afEmpSocialUpdateDateDTO));
             }
 
-            AfEmpSocialUpdateDateDTO afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
-            if (StringUtils.isNotEmpty(startMonth)) {
-                afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(startMonth + "01"));
-            }
-            if (StringUtils.isNotEmpty(endMonth)) {
-                afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(endMonth + "01"));
-            }
-            afEmpSocialUpdateDateDTO.setCompanyId(companyId);
-            afEmpSocialUpdateDateDTO.setEmpAgreementId(empAgreementId);
-            if (hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
-                afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ITEM_ID_FUND_BASIC);
+            // 以下为调整后的费用段回调处理：
+            // 如果oldAgreementId存在，且是转出或封存时，说明是调整非0转0
+            if (StringUtils.isNotEmpty(hfEmpTask.getOldAgreementId()) && (
+                hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT
+                    || hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
+            )) {
+                // 此时需要回调一个只有开始确认时间的，金额为0的费用段
+                AfEmpSocialUpdateDateDTO afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
+                afEmpSocialUpdateDateDTO.setCompanyId(companyId);
+                if (hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
+                    afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ITEM_ID_FUND_BASIC);
+                } else {
+                    afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ITEM_ID_FUND_ADDED);
+                }
+                afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(BigDecimal.ZERO);
+                afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(BigDecimal.ZERO);
+                if (StringUtils.isNotEmpty(startMonth)) {
+                    afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(startMonth + "01"));
+                }
+                afEmpSocialUpdateDateDTO.setEmpAgreementId(empAgreementId);
+                afEmpSocialUpdateDateDTOList.add(afEmpSocialUpdateDateDTO);
+                tags.put("newAfEmpSocialUpdateDateDTO", JsonKit.toStr(afEmpSocialUpdateDateDTO));
             } else {
-                afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ITEM_ID_FUND_ADDED);
+                // 通常的处理方式
+                AfEmpSocialUpdateDateDTO afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
+                afEmpSocialUpdateDateDTO.setCompanyId(companyId);
+                if (hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
+                    afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ITEM_ID_FUND_BASIC);
+                } else {
+                    afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ITEM_ID_FUND_ADDED);
+                }
+                afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(companyConfirmAmount);
+                afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(personalConfirmAmount);
+                if (StringUtils.isNotEmpty(startMonth)) {
+                    afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(startMonth + "01"));
+                }
+                if (StringUtils.isNotEmpty(endMonth)) {
+                    afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(endMonth + "01"));
+                }
+                afEmpSocialUpdateDateDTO.setEmpAgreementId(empAgreementId);
+                afEmpSocialUpdateDateDTOList.add(afEmpSocialUpdateDateDTO);
+                tags.put("newAfEmpSocialUpdateDateDTO", JsonKit.toStr(afEmpSocialUpdateDateDTO));
             }
-            afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(companyConfirmAmount);
-            afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(personalConfirmAmount);
-            afEmpSocialUpdateDateDTOList.add(afEmpSocialUpdateDateDTO);
+
             int code = commonApiUtils.updateConfirmDate(afEmpSocialUpdateDateDTOList);
+            tags.put("code", String.valueOf(code));
             LogMessage logMessage = LogMessage.create().setTitle("访问接口")
                 .setContent("访问雇员任务单实缴金额回调接口")
-                .setTags(new HashMap<String, String>() {{
-                    put("code", String.valueOf(code));
-                }});
+                .setTags(tags);
             logApiUtil.info(logMessage);
             return code;
         }
