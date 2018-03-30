@@ -27,4 +27,6 @@ public interface IAmResignService extends IService<AmResign> {
     List<AmResignBO>  queryAmResignDetail(Map<String,Object> param);
 
     List<resignSearchExportOpt> queryAmResignList(AmResignBO amResignBO);
+
+    boolean  saveAmResign(AmResignBO bo);
 }

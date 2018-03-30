@@ -121,23 +121,14 @@ public class AmResign implements Serializable {
     /**
      * 退工成功、档案未到先退工、退工盖章未返回、退工失败、前道要求批退、自开退工单,未交、用工已办未反馈、等翻牌联系单、Ukey外借、单项服务,原退工成功、转外地社保,原退工成功、转人员性质无需退工、退工成功,改社保、重复任务单、等修改备案表
      */
-	@TableField("resign_feedback1")
-	private String resignFeedback1;
+	@TableField("resign_feedback")
+	private String resignFeedback;
     /**
      * 退工反馈日期
      */
-	@TableField("resign_feedback_date1")
-	private LocalDate resignFeedbackDate1;
-    /**
-     * “前道要求批退”、“重打退工单”、“退工成功”、“撤销退工”、“撤销退工等修改表”
-     */
-	@TableField("resign_feedback2")
-	private String resignFeedback2;
-    /**
-     * 退工反馈2日期
-     */
-	@TableField("resign_feedback_date2")
-	private LocalDate resignFeedbackDate2;
+	@TableField("resign_feedback_date")
+	private LocalDate resignFeedbackDate;
+
     /**
      * 退工操作员
      */
@@ -359,39 +350,23 @@ public class AmResign implements Serializable {
 		this.resignHandleDate = resignHandleDate;
 	}
 
-	public String getResignFeedback1() {
-		return resignFeedback1;
-	}
+    public String getResignFeedback() {
+        return resignFeedback;
+    }
 
-	public void setResignFeedback1(String resignFeedback1) {
-		this.resignFeedback1 = resignFeedback1;
-	}
+    public void setResignFeedback(String resignFeedback) {
+        this.resignFeedback = resignFeedback;
+    }
 
-	public LocalDate getResignFeedbackDate1() {
-		return resignFeedbackDate1;
-	}
+    public LocalDate getResignFeedbackDate() {
+        return resignFeedbackDate;
+    }
 
-	public void setResignFeedbackDate1(LocalDate resignFeedbackDate1) {
-		this.resignFeedbackDate1 = resignFeedbackDate1;
-	}
+    public void setResignFeedbackDate(LocalDate resignFeedbackDate) {
+        this.resignFeedbackDate = resignFeedbackDate;
+    }
 
-	public String getResignFeedback2() {
-		return resignFeedback2;
-	}
-
-	public void setResignFeedback2(String resignFeedback2) {
-		this.resignFeedback2 = resignFeedback2;
-	}
-
-	public LocalDate getResignFeedbackDate2() {
-		return resignFeedbackDate2;
-	}
-
-	public void setResignFeedbackDate2(LocalDate resignFeedbackDate2) {
-		this.resignFeedbackDate2 = resignFeedbackDate2;
-	}
-
-	public String getResignOperateMan() {
+    public String getResignOperateMan() {
 		return resignOperateMan;
 	}
 
@@ -509,10 +484,8 @@ public class AmResign implements Serializable {
 			", comGroupOutDirect=" + comGroupOutDirect +
 			", cacheDate=" + cacheDate +
 			", resignHandleDate=" + resignHandleDate +
-			", resignFeedback1=" + resignFeedback1 +
-			", resignFeedbackDate1=" + resignFeedbackDate1 +
-			", resignFeedback2=" + resignFeedback2 +
-			", resignFeedbackDate2=" + resignFeedbackDate2 +
+			", resignFeedback1=" + resignFeedback +
+			", resignFeedbackDate1=" + resignFeedbackDate +
 			", resignOperateMan=" + resignOperateMan +
 			", ukeyBorrowDate=" + ukeyBorrowDate +
 			", ukeyReturnDate=" + ukeyReturnDate +
