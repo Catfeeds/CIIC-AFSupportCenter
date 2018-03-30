@@ -111,7 +111,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
             //新增支付信息
             boolean result = addPaymentCom(accountComExt,paymentMonth);
         }
-           // if(result){
+           // if(result){  //注释该判断，是为了后续重新生成变更汇总表和社保通知书
                 /*****生成雇员社保明细****/
                 //如果数据已经存在，先删除已经存在的数据(标准数据)
                 this.delMonthChangeInfos(accountComExt.getComAccountId(),paymentMonth,1);

@@ -4,6 +4,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentAccountB
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentProcessParmBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentAccountService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentComService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentService;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
@@ -16,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -34,6 +38,8 @@ public class HfFundPayController {
     private HfPaymentService hfPaymentService;
     @Autowired
     private HfPaymentAccountService hfPaymentAccountService;
+    @Autowired
+    private HfPaymentComService hfPaymentComService;
 
     @Log("查询公积金汇缴支付列表")
     @PostMapping("/fundPays")
@@ -85,4 +91,14 @@ public class HfFundPayController {
         }
         return hfPaymentService.processReceipt(processParmBO);
     }
+
+    @Log("公积金汇缴支付-生成汇缴支付客户名单")
+    @PostMapping("/createPaymentCom")
+    public JsonResult createPaymentCom(@RequestBody String[] comAccountIds){
+        //验证前端传递的数据是否合法,代码暂不写
+        //开始生成支付客户名单
+        return hfPaymentComService.createPaymentCom( new ArrayList<String>(Arrays.asList(comAccountIds)));
+    }
+
+
 }
