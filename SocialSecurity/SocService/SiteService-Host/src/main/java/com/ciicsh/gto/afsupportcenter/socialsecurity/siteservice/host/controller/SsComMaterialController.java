@@ -4,6 +4,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controlle
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComMaterialService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComMaterial;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
@@ -35,7 +36,7 @@ public class SsComMaterialController  extends BasicController<SsComMaterialServi
                 List<SsComMaterial> ssComMaterialList = new ArrayList<SsComMaterial>();
                 for (String paramStr:params.paramsList) {
                     SsComMaterial ssComMaterial = JsonKit.parseObject(paramStr, SsComMaterial.class);
-                    ssComMaterial.setModifiedBy("xsj");
+                    ssComMaterial.setModifiedBy(UserContext.getUserId());
                     ssComMaterial.setModifiedTime(LocalDateTime.now());
                     ssComMaterialList.add(ssComMaterial);
                 }

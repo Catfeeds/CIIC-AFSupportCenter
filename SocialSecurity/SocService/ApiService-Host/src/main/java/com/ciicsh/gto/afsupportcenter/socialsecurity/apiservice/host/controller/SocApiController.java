@@ -1,6 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.apiservice.host.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.common.entity.JsonResult;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.apiservice.host.translator.ApiTranslator;
@@ -11,7 +10,6 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.ComTaskP
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountParamDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComTaskDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountExtBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComTaskParamBO;
@@ -72,8 +70,6 @@ public class SocApiController implements SocApiProxy {
                 logService.info(LogContext.of().setSource(LogInfo.SOURCE_API.getKey()).setTitle("SocApiController.saveComTask").setTextContent("result: " + result));
                 return JsonResult.faultMessage(result);
             }
-//            SsComTaskBO ssComTask = new SsComTaskBO();
-//            BeanUtils.copyProperties(ssComTaskDTO, ssComTask);
             //结算中心转变成字符串
             if (StringUtils.isNotBlank(ssComTaskDTO.getSettlementArea())) {
                 String settlementArea = SocialSecurityConst.DISTRICT_MAP.get(ssComTaskDTO.getSettlementArea());

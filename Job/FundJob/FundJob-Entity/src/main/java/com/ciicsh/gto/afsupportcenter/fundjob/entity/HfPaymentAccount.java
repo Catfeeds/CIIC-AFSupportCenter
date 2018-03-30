@@ -34,6 +34,9 @@ public class HfPaymentAccount implements Serializable {
      */
 	@TableField("com_account_id")
 	private String comAccountId;
+
+    @TableField("com_account_class_id")
+    private String comAccountClassId;
     /**
      * 缴费银行，来自字典库
      */
@@ -82,8 +85,15 @@ public class HfPaymentAccount implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+    public String getComAccountClassId() {
+        return comAccountClassId;
+    }
 
-	public Long getPaymentAccountId() {
+    public void setComAccountClassId(String comAccountClassId) {
+        this.comAccountClassId = comAccountClassId;
+    }
+
+    public Long getPaymentAccountId() {
 		return paymentAccountId;
 	}
 
@@ -185,6 +195,7 @@ public class HfPaymentAccount implements Serializable {
 			", paymentAccountId=" + paymentAccountId +
 			", paymentId=" + paymentId +
 			", comAccountId=" + comAccountId +
+            ", comAccountClassId=" + comAccountClassId +
 			", paymentBank=" + paymentBank +
 			", paymentStatus=" + paymentStatus +
 			", totalComPayAmount=" + totalComPayAmount +

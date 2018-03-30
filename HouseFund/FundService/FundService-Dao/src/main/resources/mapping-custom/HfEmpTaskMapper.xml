@@ -899,6 +899,9 @@
         <if test="hfType != null">
             AND ea.hf_type = #{hfType}
         </if>
+        <if test="status != null">
+            AND eoop.status = #{status}
+        </if>
     </select>
     <select id="fetchPrintInfo" resultType="Map">
         SELECT et.*,emp.employee_name,ea.hf_emp_account FROM hf_emp_task et

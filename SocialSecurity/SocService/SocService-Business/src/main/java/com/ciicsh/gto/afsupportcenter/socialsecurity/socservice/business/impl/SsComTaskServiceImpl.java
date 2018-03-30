@@ -16,6 +16,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAccount
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComTask;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -152,7 +153,7 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
         if (null == ssComAccount.getComAccountId()) {
             ssComAccount.setActive(true);
             ssComAccount.setCreatedTime(LocalDateTime.now());
-            ssComAccount.setCreatedBy("xsj");
+            ssComAccount.setCreatedBy(UserContext.getUserId());
             sComAccountMapper.insert(ssComAccount);
             //将账户ID 赋给 任务单
             ssComTask.setComAccountId(ssComAccount.getComAccountId());
@@ -167,7 +168,7 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
             ssAccountRatio.setActive(true);
             ssAccountRatio.setCreatedTime(LocalDateTime.now());
             ssAccountRatio.setComAccountId(ssComAccount.getComAccountId());
-            ssAccountRatio.setCreatedBy("xsj");
+            ssAccountRatio.setCreatedBy(UserContext.getUserId());
             ssAccountRatioMapper.insert(ssAccountRatio);
         } else {
             ssAccountRatioMapper.updateById(ssAccountRatio);
@@ -198,7 +199,7 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
                 try {
                     //调用工作流
                     String taskId = baseMapper.selectById(ssComTask.getComTaskId()).getTaskId();
-                    TaskCommonUtils.completeTask(taskId, commonApiUtils, "xsj");
+                    TaskCommonUtils.completeTask(taskId, commonApiUtils, UserContext.getUserId());
                 }catch (BusinessException e){
                     //如果工作流异常，则跳过
                 }
@@ -311,7 +312,9 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
     @Override
     public ComAccountExtBO getComAccountInfo(ComTaskParamBO paramBO) {
         ComAccountExtBO accountExtBO = null;
+        //查询社保账户与客户关系表，是否有数据
         Integer result = ssAccountComRelationMapper.isExistCompany(paramBO.getCompanyId());
+        //如有关系数据，则表示该客户已经开户过，返回开户信息即可；如没有关系数据则从任务单表中获取开户信息；
         List<ComAccountExtBO> extBOS = result > 0 ? sComAccountMapper.getComAccountByCompanyId(paramBO) : baseMapper.getComTaskByCompanyId(paramBO);
 
         if(null != extBOS && extBOS.size() > 0){

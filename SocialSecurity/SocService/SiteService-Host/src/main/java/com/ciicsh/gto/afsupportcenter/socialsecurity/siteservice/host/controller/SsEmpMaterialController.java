@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpMaterialService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpMaterial;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
@@ -45,7 +46,7 @@ public class SsEmpMaterialController extends BasicController<SsEmpMaterialServic
         for (String paramStr : rejectionRequestParam.paramsList) {
             SsEmpMaterial ssEmpMaterial =  JSON.parseObject(paramStr, SsEmpMaterial.class);
             ssEmpMaterial.setModifiedTime(LocalDateTime.now());
-            ssEmpMaterial.setModifiedBy("xsj");
+            ssEmpMaterial.setModifiedBy(UserContext.getUserId());
             ssEmpMaterialList.add(ssEmpMaterial);
 
         }
