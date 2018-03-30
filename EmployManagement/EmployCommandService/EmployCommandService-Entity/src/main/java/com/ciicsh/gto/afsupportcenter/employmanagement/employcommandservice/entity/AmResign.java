@@ -165,6 +165,11 @@ public class AmResign implements Serializable {
 	@TableField("if_labor_manual_return")
 	private Integer ifLaborManualReturn;
     /**
+     * 是否完成退工
+     */
+    @TableField("is_finish")
+    private Integer isFinish;
+    /**
      * 是否可用
      */
 	@TableField("is_active")
@@ -189,6 +194,14 @@ public class AmResign implements Serializable {
      */
 	@TableField("modified_by")
 	private String modifiedBy;
+
+    public Integer getIsFinish() {
+        return isFinish;
+    }
+
+    public void setIsFinish(Integer isFinish) {
+        this.isFinish = isFinish;
+    }
 
     public Long getEmpTaskId() {
         return empTaskId;

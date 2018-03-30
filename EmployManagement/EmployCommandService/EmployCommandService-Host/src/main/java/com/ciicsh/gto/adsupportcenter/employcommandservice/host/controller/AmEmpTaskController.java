@@ -287,6 +287,13 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             amEmpTask.setTaskStatus(Integer.parseInt(entity.getEmployFeedback()));
             business.insertOrUpdate(amEmpTask);
         }
+        if("4".equals(entity.getEmployFeedback()))
+        {
+            if(entity.getUkeyBorrowDate()==null)
+            {
+                entity.setUkeyBorrowDate(LocalDate.now());
+            }
+        }
 
         boolean result = amArchiveService.insertOrUpdate(entity);
         if("0".equals(amArchiveBO.getIsFrist()))
@@ -298,14 +305,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                  */
                 if("4".equals(entity.getEmployFeedback()))
                 {
-                    TaskRequestDTO message = new TaskRequestDTO();
-                    message.setAssignee("system");
-                    message.setTaskId(amEmpTask.getTaskId());
-                    Map<String,Object> variables = new HashMap<>();
-                    variables.put("remark","Ukey外借");
-                    message.setVariables(variables);
-                    logger.info(JSON.toJSONString(message));
-                    sender.sendSocReportMsg(message);
+
                 }else{
                     Map<String,Object> variables = new HashMap<>();
                     variables.put("status", ReasonUtil.getYgResult(entity.getEmployFeedback()));
