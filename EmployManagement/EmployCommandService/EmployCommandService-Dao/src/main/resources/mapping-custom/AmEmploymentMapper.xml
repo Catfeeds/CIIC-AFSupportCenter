@@ -84,8 +84,7 @@
         f.resign_date,
         /**用工反馈*/
         c.employ_feedback,
-        f.resign_feedback1,
-        f.resign_feedback2,
+        f.resign_feedback,
         /**退档日期*/
         f.return_doc_date,
         /**退工送办日期*/
@@ -185,8 +184,7 @@
         f.resign_date,
         /**用工反馈*/
         c.employ_feedback,
-        f.resign_feedback1,
-        f.resign_feedback2,
+        f.resign_feedback,
         /**退档日期*/
         f.return_doc_date,
         /**退工送办日期*/

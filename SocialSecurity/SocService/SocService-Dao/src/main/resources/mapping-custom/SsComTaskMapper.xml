@@ -465,6 +465,7 @@
         sct.finish_date,
         sct.handle_remark,
         sct.rejection_remark,
+        sct.leader_ship_name,
         sc.title,
         sca.com_account_id AS com_account_id_acc,
         sca.supplier_id,
@@ -549,7 +550,7 @@
         FROM ss_com_task sct
         where sct.is_active = 1
         AND sct.company_id = #{companyId}
-        AND sct.task_category=#{taskCategory}
+        AND sct.task_category in(1,2)
         AND sct.task_status in (0,1,2,3)
     </select>
     <!--查询 企业是否有已完成的开户任务单-->
@@ -607,7 +608,11 @@
        created_time,
        modified_time,
        created_by,
-       modified_by
+       created_display_name,
+       modified_by,
+       modified_display_name,
+       leader_ship_id,
+       leader_ship_name
        ) VALUES
         (
         #{customerId},
@@ -650,6 +655,11 @@
         #{createdTime},
         #{modifiedTime},
         #{createdBy},
-        #{modifiedBy})
+        #{createdDisplayName},
+        #{modifiedBy},
+        #{modifiedDisplayName},
+        #{leaderShipId},
+        #{leaderShipName}
+        )
     </insert>
 </mapper>

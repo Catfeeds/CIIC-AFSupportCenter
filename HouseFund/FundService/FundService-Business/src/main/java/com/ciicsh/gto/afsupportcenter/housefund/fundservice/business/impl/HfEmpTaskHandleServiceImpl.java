@@ -246,9 +246,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             Long newEmpArchive = handleEmpArchive(params, existEmpArchive, inputHfEmpTask);
             this.updateById(inputHfEmpTask);
 
-            if (newEmpArchive != null) {
-                inputHfEmpTask.setEmpArchiveId(newEmpArchive);
-            } else {
+            if (newEmpArchive == null) {
                 inputHfEmpTask.setEmpArchiveId(existEmpArchive);
             }
             String startMonth = "999912";
@@ -1398,6 +1396,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         hfEmpArchiveService.insertOrUpdate(hfEmpArchive);
 
         if (isNew) {
+            inputHfEmpTask.setEmpArchiveId(hfEmpArchive.getEmpArchiveId());
             return hfEmpArchive.getEmpArchiveId();
         }
         return null;

@@ -23,10 +23,8 @@
 		<result column="com_group_out_direct" property="comGroupOutDirect" />
 		<result column="cache_date" property="cacheDate" />
 		<result column="resign_handle_date" property="resignHandleDate" />
-		<result column="resign_feedback1" property="resignFeedback1" />
-		<result column="resign_feedback_date1" property="resignFeedbackDate1" />
-		<result column="resign_feedback2" property="resignFeedback2" />
-		<result column="resign_feedback_date2" property="resignFeedbackDate2" />
+		<result column="resign_feedback" property="resignFeedback" />
+		<result column="resign_feedback_date" property="resignFeedbackDate" />
 		<result column="resign_operate_man" property="resignOperateMan" />
 		<result column="ukey_borrow_date" property="ukeyBorrowDate" />
 		<result column="ukey_return_date" property="ukeyReturnDate" />

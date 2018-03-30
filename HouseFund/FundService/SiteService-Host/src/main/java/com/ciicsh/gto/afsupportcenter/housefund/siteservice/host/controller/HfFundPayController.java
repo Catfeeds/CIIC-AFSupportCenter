@@ -7,13 +7,14 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentAc
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentComService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentService;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -57,25 +58,37 @@ public class HfFundPayController {
 
     @Log("公积金汇缴支付流程操作-送审")
     @PostMapping("/approval")
-    public JsonResult processApproval(@RequestBody PaymentProcessParmBO processParmBO){
-       return hfPaymentService.processApproval(processParmBO);
+    public JsonResult processApproval(PaymentProcessParmBO processParmBO){
+        if(StringUtils.isBlank(processParmBO.getOperator())){
+            processParmBO.setOperator(UserContext.getUserName());
+        }
+        return hfPaymentService.processApproval(processParmBO);
     }
 
     @Log("公积金汇缴支付流程操作-汇缴")
     @PostMapping("/payment")
-    public JsonResult processPayment(@RequestBody PaymentProcessParmBO processParmBO){
+    public JsonResult processPayment(PaymentProcessParmBO processParmBO){
+        if(StringUtils.isBlank(processParmBO.getOperator())){
+            processParmBO.setOperator(UserContext.getUserName());
+        }
         return hfPaymentService.processPayment(processParmBO);
     }
 
     @Log("公积金汇缴支付流程操作-出票")
     @PostMapping("/ticket")
-    public JsonResult processTicket(@RequestBody PaymentProcessParmBO processParmBO){
+    public JsonResult processTicket(PaymentProcessParmBO processParmBO){
+        if(StringUtils.isBlank(processParmBO.getOperator())){
+            processParmBO.setOperator(UserContext.getUserName());
+        }
         return hfPaymentService.processTicket(processParmBO);
     }
 
     @Log("公积金汇缴支付流程操作-回单")
     @PostMapping("/receipt")
-    public JsonResult processReceipt(@RequestBody PaymentProcessParmBO processParmBO){
+    public JsonResult processReceipt(PaymentProcessParmBO processParmBO){
+        if(StringUtils.isBlank(processParmBO.getOperator())){
+            processParmBO.setOperator(UserContext.getUserName());
+        }
         return hfPaymentService.processReceipt(processParmBO);
     }
 

@@ -113,11 +113,10 @@ public interface SsComTaskService extends IService<SsComTask> {
 
     /**
      * 判断企业任务单是否存在
-     *
-     * @param ssComTask
+     * @param companyId
      * @return
      */
-    Integer isExistComTask(SsComTaskBO ssComTask);
+    boolean isExistComTask(String companyId);
 
     boolean insertComTask(SsComTask ssComTask);
 

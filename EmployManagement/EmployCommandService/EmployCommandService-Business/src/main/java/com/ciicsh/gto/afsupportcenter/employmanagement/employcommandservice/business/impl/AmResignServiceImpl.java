@@ -1,17 +1,26 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.impl;
 
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmResignBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.AmResignLinkService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.ReasonUtil;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmResign;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao.AmResignMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmResignService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmResignLink;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.resignSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +32,13 @@ import java.util.Map;
  */
 @Service
 public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> implements IAmResignService {
+
+    @Autowired
+    private IAmEmpTaskService taskService;
+
+    @Autowired
+    private AmResignLinkService amResignLinkService;
+
     public PageRows<AmResignBO> queryAmResign(PageInfo pageInfo){
 
         AmResignBO  amResignBO = pageInfo.toJavaObject(AmResignBO.class);
@@ -72,5 +88,47 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
     @Override
     public List<resignSearchExportOpt> queryAmResignList(AmResignBO amResignBO) {
         return baseMapper.queryAmResignList(amResignBO);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean saveAmResign(AmResignBO bo) {
+        AmResign entity = new AmResign();
+        BeanUtils.copyProperties(bo,entity);
+
+        LocalDateTime now = LocalDateTime.now();
+        if(entity.getResignId()==null){
+            entity.setCreatedTime(now);
+            entity.setModifiedTime(now);
+            entity.setCreatedBy("sys");
+            entity.setModifiedBy("sys");
+        }else{
+            entity.setModifiedTime(now);
+            entity.setModifiedBy("sys");
+        }
+
+        if(!StringUtil.isEmpty(bo.getResignFeedback()))
+        {
+            AmEmpTask amEmpTask = taskService.selectById(bo.getEmpTaskId());
+            amEmpTask.setTaskStatus(Integer.parseInt(bo.getResignFeedback()));
+            taskService.insertOrUpdate(amEmpTask);
+
+            AmResignLink amResignLink = new AmResignLink();
+            amResignLink.setTaskId(amEmpTask.getTaskId());
+            amResignLink.setResignFeedback(ReasonUtil.getTgfk(bo.getResignFeedback()));
+            amResignLink.setJobCentreFeedbackDate(bo.getJobCentreFeedbackDate());
+            amResignLink.setResignFeedbackDate(bo.getResignFeedbackDate());
+            amResignLink.setCreatedTime(now);
+            amResignLink.setModifiedTime(now);
+            amResignLink.setCreatedBy("sys");
+            amResignLink.setModifiedBy("sys");
+
+            amResignLinkService.insert(amResignLink);
+        }
+
+
+        boolean result = super.insertOrUpdate(entity);
+
+        return result;
     }
 }

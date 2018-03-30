@@ -173,7 +173,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     public JsonResult archiveDetailInfoQuery(AmTaskParamBO amTaskParamBO){
 
         Map<String,Object>  map = taskService.getInformation(amTaskParamBO);
-        AmEmpTaskBO customBO = (AmEmpTaskBO)map.get("customBO");//客户信息
+        AmCustomBO customBO = (AmCustomBO)map.get("customBO");//客户信息
         AmEmpTaskBO employeeBO = (AmEmpTaskBO)map.get("employeeBO");//雇佣信息
 
         AmResignBO amResignBO = new AmResignBO();
@@ -213,8 +213,8 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         //退工信息
         if(null!=listResignBO&&listResignBO.size()>0){
             amResignBO = listResignBO.get(0);
-            if(!StringUtil.isEmpty(amResignBO.getResignFeedback1())){
-                amResignBO.setResignFeedback1(ReasonUtil.getYgfk(amResignBO.getResignFeedback1()));
+            if(!StringUtil.isEmpty(amResignBO.getResignFeedback())){
+                amResignBO.setResignFeedback(ReasonUtil.getYgfk(amResignBO.getResignFeedback()));
             }
             if(!StringUtil.isEmpty(amResignBO.getIfLaborManualReturn())){
                 amResignBO.setIfLaborManualReturnStr(ReasonUtil.getIsTj(amResignBO.getIfLaborManualReturn().toString()));

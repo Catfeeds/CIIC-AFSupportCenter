@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentComBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentEmpBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentProcessParmBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfArchiveBasePeriodMapper;
@@ -69,7 +70,6 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public JsonResult processApproval(PaymentProcessParmBO processParmBO) {
-
         HfPayment payment = new HfPayment();
         payment.setPaymentId(Long.parseLong(processParmBO.getPaymentId()));
         payment = hfPaymentMapper.selectOne(payment);
@@ -127,7 +127,6 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public JsonResult processTicket(PaymentProcessParmBO processParmBO) {
-
         HfPayment payment = new HfPayment();
         payment.setPaymentId(Long.parseLong(processParmBO.getPaymentId()));
         payment = hfPaymentMapper.selectOne(payment);
@@ -228,8 +227,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         dto.setReviewer("");//待定(审核人)
 
         List<PayapplyCompanyProxyDTO> paymentComList = baseMapper.getPaymentComList(hfPayment.getPaymentId()).stream().map(x->toCompanyDto(x)).collect(Collectors.toList());
-        //TODO SQL修改
-        List<PayapplyEmployeeProxyDTO> paymentEmpList = baseMapper.getPaymentEmpList(hfPayment.getPaymentId(),hfPayment.getPaymentMonth());
+        List<PayapplyEmployeeProxyDTO> paymentEmpList = baseMapper.getPaymentEmpList(hfPayment.getPaymentId(),hfPayment.getPaymentMonth()).stream().map(x->toEmployeeDto(x)).collect(Collectors.toList());
 
         dto.setCompanyList(paymentComList);
         dto.setEmployeeList(paymentEmpList);
@@ -242,6 +240,12 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         PayapplyCompanyProxyDTO companyProxyDTO = new PayapplyCompanyProxyDTO();
         BeanUtils.copyProperties(comBO,companyProxyDTO);
         return companyProxyDTO;
+    }
+
+    private PayapplyEmployeeProxyDTO toEmployeeDto(PaymentEmpBO empBO){
+        PayapplyEmployeeProxyDTO employeeProxyDTO = new PayapplyEmployeeProxyDTO();
+        BeanUtils.copyProperties(empBO,employeeProxyDTO);
+        return employeeProxyDTO;
     }
 
     private void createStandardMonthCharge(HfComAccountClass accountClass, String paymentMonth, String belongMonth,PaymentProcessParmBO processParmBO){

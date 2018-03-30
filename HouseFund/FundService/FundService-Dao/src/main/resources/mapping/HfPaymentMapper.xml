@@ -41,6 +41,7 @@
         hfp.total_application_amonut,
         hfp.total_emp_count,
         hfp.payment_month,
+        hfp.payment_state,
         hfps.payment_state_value,
         hfp.create_payment_user,
         DATE_FORMAT(hfp.create_payment_date, '%Y-%m-%d %H:%i') AS create_payment_date_string,

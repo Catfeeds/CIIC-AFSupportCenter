@@ -140,18 +140,18 @@ public class KafkaReceiver {
                 if(null != paramMap && paramMap.get("fundType") != null) {
                     fundType = Integer.parseInt(paramMap.get("fundType").toString());
                     logger.info("start in fundEmpFlop: " + JSON.toJSONString(taskMsgDTO));
-                    boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(), FLOP_IN_TASK_CATEGORIES[fundType].getCategory(), 0);
+                    boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(), FLOP_IN_TASK_CATEGORIES[fundType - 1].getCategory(), 0);
                     logger.info("end in fundEmpFlop:  " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
                 }
             }
             else{
-                fundType = 1;
+                fundType = 2;
 
                 if(null != paramMap && paramMap.get("fundType") != null) {
                     fundType = Integer.parseInt(paramMap.get("fundType").toString());
                 }
                 logger.info("start out fundEmpFlop: " + JSON.toJSONString(taskMsgDTO));
-                boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(), FLOP_OUT_TASK_CATEGORIES[fundType].getCategory(),0);
+                boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(), FLOP_OUT_TASK_CATEGORIES[fundType - 1].getCategory(),0);
                 logger.info("end out fundEmpFlop:  " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
             }
             logger.info("end fundEmpFlop!");
