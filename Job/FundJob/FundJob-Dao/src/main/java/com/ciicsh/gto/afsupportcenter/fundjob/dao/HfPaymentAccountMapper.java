@@ -20,12 +20,12 @@ public interface HfPaymentAccountMapper extends BaseMapper<HfPaymentAccount> {
     /**
      * <p>Description: 根据批次检索</p>
      *
-     * @author wengxk
-     * @date 2017-12-27
      * @param paymentId 批次ID
      * @return   List<SsPaymentCom>
      */
     List<HfPaymentAccount> getByPaymentId(Integer paymentId);
 
     int updatePaymentAcc(Map map);
+
+    List<HfPaymentAccount> insertPaymentAccountJob();
 }

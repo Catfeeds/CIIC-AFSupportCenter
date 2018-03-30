@@ -24,6 +24,16 @@ public class HfPaymentCom implements Serializable {
 	@TableId(value="payment_com_id", type= IdType.AUTO)
 	private Long paymentComId;
     /**
+     * 外键
+     */
+    @TableId(value="payment_id", type= IdType.AUTO)
+    private Long paymentId;
+    @TableId(value="com_account_id", type= IdType.AUTO)
+    private Long comAccountId;
+    @TableId(value="com_account_class_id", type= IdType.AUTO)
+    private Long comAccountClassId;
+
+    /**
      * 公积金类型
      */
 	@TableField("hf_type")
@@ -89,8 +99,31 @@ public class HfPaymentCom implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+    public Long getPaymentId() {
+        return paymentId;
+    }
 
-	public Long getPaymentComId() {
+    public void setPaymentId(Long paymentId) {
+        this.paymentId = paymentId;
+    }
+
+    public Long getComAccountId() {
+        return comAccountId;
+    }
+
+    public void setComAccountId(Long comAccountId) {
+        this.comAccountId = comAccountId;
+    }
+
+    public Long getComAccountClassId() {
+        return comAccountClassId;
+    }
+
+    public void setComAccountClassId(Long comAccountClassId) {
+        this.comAccountClassId = comAccountClassId;
+    }
+
+    public Long getPaymentComId() {
 		return paymentComId;
 	}
 
@@ -206,6 +239,9 @@ public class HfPaymentCom implements Serializable {
 	public String toString() {
 		return "HfPaymentCom{" +
 			", paymentComId=" + paymentComId +
+            ", paymentId=" + paymentId +
+            ", comAccountId=" + comAccountId +
+            ", comAccountClassId=" + comAccountClassId +
 			", hfType=" + hfType +
 			", companyId=" + companyId +
 			", paymentBank=" + paymentBank +

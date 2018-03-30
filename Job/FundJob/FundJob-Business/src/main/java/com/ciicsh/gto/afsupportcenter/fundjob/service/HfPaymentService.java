@@ -10,5 +10,5 @@ public interface HfPaymentService extends IService<HfPayment> {
      * @param ssMonth 年月
      */
     void enquireFinanceComAccount(String ssMonth);
-
+    void createPaymentAccount();
 }
