@@ -371,6 +371,10 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         //设置账户ID
         ssComAccount.setComAccountId(isNotNull(map.get("comAccountId")) ? Long.parseLong(map.get("comAccountId")) :
             null);
+        //法人
+        ssComAccount.setLegalPerson(isNotNull(map.get("legalPerson")) ? map.get("legalPerson") : null);
+        //联系地址
+        ssComAccount.setContactAddress(isNotNull(map.get("contactAddress")) ? map.get("contactAddress") : null);
         //参保户登记码
         ssComAccount.setSsAccount(isNotNull(map.get("ssAccount")) ? map.get("ssAccount") : null);
         //卡号
@@ -429,7 +433,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         ssComAccount.setSsAccountType(new Integer(3));
         ssComAccount.setModifiedBy(UserContext.getUserId());
         ssComAccount.setModifiedTime(LocalDateTime.now());
-
+        //ssComAccount.setRemark("submitRemark");
         return ssComAccount;
     }
 
@@ -442,6 +446,10 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         ssComTask.setCompanyId(isNotNull(map.get("companyId")) ? map.get("companyId") : null);
         //任务单类型
         ssComTask.setTaskCategory(isNotNull(map.get("taskCategory")) ? map.get("taskCategory") : null);
+        //法人
+        ssComTask.setLegalPerson(isNotNull(map.get("legalPerson")) ? map.get("legalPerson") : null);
+        //联系地址
+        ssComTask.setContactAddress(isNotNull(map.get("contactAddress")) ? map.get("contactAddress") : null);
         //前道传过来的截止日期和支付方式
         ssComTask.setTaskFormContent(isNotNull(map.get("taskFormContent")) ? map.get("taskFormContent") : null);
         //任务单状态

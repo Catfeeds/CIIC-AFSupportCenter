@@ -42,7 +42,7 @@ public class SsComTask implements Serializable {
 	@TableField("company_id")
 	private String companyId;
     /**
-     * 引用：DicItem.DicItemValue 1:开户：2：转移 3：变更 4：终止
+     * 引用：DicItem.DicItemValue 1:开户：2：转入 3：变更 4：终止
      */
 	@TableField("task_category")
 	private String taskCategory;
