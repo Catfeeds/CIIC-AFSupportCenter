@@ -15,6 +15,7 @@ import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
+import org.apache.commons.collections.KeyValue;
 import org.apache.commons.collections.keyvalue.DefaultKeyValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,8 +73,6 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.REMIT_WAY_KEY, SocialSecurityConst.REMIT_WAY_MAP, false);
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.PAYMENT_TYPE_KEY, SocialSecurityConst.PAYMENT_TYPE_MAP, false);
 //            DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.HF_TASK_CATEGORY_KEY, SocialSecurityConst.HF_TASK_CATEGORY_MAP, false);
-            Map<String, List<?>> map = DictUtil.getInstance().getDictItemList();
-            map.put(SocialSecurityConst.FUND_OUT_UNIT_KEY, SocialSecurityConst.FUND_OUT_UNIT_LIST);
         } catch (Exception e) {
             LogContext logContext = LogContext.of().setTitle("上海公积金字典项及常量项")
                 .setTextContent("加载字典项（访问字典公共接口）或常量项失败")
@@ -89,31 +88,39 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
         if (map.size() == 0) {
             initDictUtil();
         }
+        map.put(SocialSecurityConst.FUND_OUT_UNIT_KEY, SocialSecurityConst.FUND_OUT_UNIT_LIST);
         getPaymentBankMap(map);
         return JsonResultKit.of(map);
     }
 
-    private void getPaymentBankMap(Map<String, List<?>> map) {
-        int size = 0;
-        List<?> exists = map.get(SocialSecurityConst.PAY_BANK_KEY);
-        if (exists != null) {
-            size = exists.size();
-        }
+    private void getPaymentBankMap(Map<String, List<?>> existsMap) {
         Wrapper<HfComAccountPaymentBank> wrapper = new EntityWrapper<>();
         wrapper.eq("is_active", 1);
         wrapper.orderBy("payment_bank_code");
         List<HfComAccountPaymentBank> hfComAccountPaymentBankList = hfComAccountPaymentBankMapper.selectList(wrapper);
 
         if (CollectionUtils.isNotEmpty(hfComAccountPaymentBankList)) {
-            if (hfComAccountPaymentBankList.size() == size) {
-                return;
+            List<KeyValue> exists = (List<KeyValue>) existsMap.get(SocialSecurityConst.PAY_BANK_KEY);
+            if (exists != null) {
+                int size = exists.size();
+                if (hfComAccountPaymentBankList.size() == size) {
+                    return;
+                }
+                exists.clear();
+            } else {
+                exists = new ArrayList<>();
+                existsMap.put(SocialSecurityConst.PAY_BANK_KEY, exists);
             }
-            List<DefaultKeyValue> defaultKeyValues = new ArrayList<>(hfComAccountPaymentBankList.size());
 
-            hfComAccountPaymentBankList.stream().forEach(e -> defaultKeyValues.add(new DefaultKeyValue(String.valueOf(e.getPaymentBankCode()), e.getPaymentBankValue())));
-            map.put(SocialSecurityConst.PAY_BANK_KEY, defaultKeyValues);
+            Map<String, String> map = new HashMap<>();
+            for (HfComAccountPaymentBank hfComAccountPaymentBank : hfComAccountPaymentBankList) {
+                String key = String.valueOf(hfComAccountPaymentBank.getPaymentBankCode());
+                map.put(key, hfComAccountPaymentBank.getPaymentBankValue());
+                exists.add(new DefaultKeyValue(key, hfComAccountPaymentBank.getPaymentBankValue()));
+            }
+            DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.PAY_BANK_KEY, map, true);
         } else {
-            map.put(SocialSecurityConst.PAY_BANK_KEY, null);
+            DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.PAY_BANK_KEY, null, true);
         }
     }
 }
