@@ -19,26 +19,27 @@ public interface SocialSecurityConst {
     public static final String FUND_OUT_UNIT_KEY = "FundOutUnit";
     public static final String REMIT_WAY_KEY = "RemitWay";
     public static final String PAYMENT_TYPE_KEY = "PaymentType";
+//    public static final String HF_TASK_CATEGORY_KEY = "HFTaskCategory";
 
     //结算区县
     public static final Map<String, String> DISTRICT_MAP = new HashMap<String, String>() {
         {
-            put("0", "徐汇");
-            put("1", "长宁");
-            put("2", "浦东");
-            put("3", "静安");
-            put("4", "黄浦");
-            put("5", "杨浦");
-            put("6", "普陀");
-            put("7", "宝山");
-            put("8", "虹口");
-            put("9", "闵行");
-            put("10", "松江");
-            put("11", "嘉定");
-            put("12", "青浦");
-            put("13", "奉贤");
-            put("14", "崇明");
-            put("15", "金山");
+            put("徐汇", "徐汇");
+            put("长宁", "长宁");
+            put("浦东", "浦东");
+            put("静安", "静安");
+            put("静安", "黄浦");
+            put("杨浦", "杨浦");
+            put("普陀", "普陀");
+            put("宝山", "宝山");
+            put("虹口", "虹口");
+            put("闵行", "闵行");
+            put("松江", "松江");
+            put("嘉定", "嘉定");
+            put("青浦", "青浦");
+            put("奉贤", "奉贤");
+            put("崇明", "崇明");
+            put("金山", "金山");
         }
     };
 
@@ -62,6 +63,20 @@ public interface SocialSecurityConst {
             put("3", "封存");
         }
     };
+
+//    public static final Map<String, String> HF_TASK_CATEGORY_MAP = new HashMap<String, String>() {
+//        {
+//            put("1", "新开");
+//            put("2", "转入");
+//            put("3", "启封");
+//            put("4", "转出");
+//            put("5", "封存");
+//            put("6", "补缴");
+//            put("7", "调整");
+//            put("8", "转移");
+//        }
+//    };
+
     /**
      * 未处理
      */
@@ -347,4 +362,42 @@ public interface SocialSecurityConst {
      * 任务单传递过来的社保办理类型 1-新进 2-转入
      */
     int SOCIAL_TYPE_2 = 2;
+
+    /**
+     * 企业开户任务单类型1：开户2：转移3：变更4：终止
+     */
+    int COM_TASK_CATEGORY_1 = 1;
+    /**
+     * 企业开户任务单类型1：开户2：转移3：变更4：终止
+     */
+    int COM_TASK_CATEGORY_2 = 2;
+    /**
+     * 企业开户任务单类型1：开户2：转移3：变更4：终止
+     */
+    int COM_TASK_CATEGORY_3= 3;
+    /**
+     * 企业开户任务单类型1：开户2：转移3：变更4：终止
+     */
+    int COM_TASK_CATEGORY_4 = 4;
+
+    /**
+     * 企业任务单处理状态 0：初始1：受理中2：送审中3：已完成4：批退
+     */
+    int COM_TASK_STATUS_0 = 0;
+    /**
+     * 企业任务单处理状态 0：初始1：受理中2：送审中3：已完成4：批退
+     */
+    int COM_TASK_STATUS_1 = 1;
+    /**
+     * 企业任务单处理状态 0：初始1：受理中2：送审中3：已完成4：批退
+     */
+    int COM_TASK_STATUS_2 = 2;
+    /**
+     * 企业任务单处理状态 0：初始1：受理中2：送审中3：已完成4：批退
+     */
+    int COM_TASK_STATUS_3 = 3;
+    /**
+     * 企业任务单处理状态 0：初始1：受理中2：送审中3：已完成4：批退
+     */
+    int COM_TASK_STATUS_4 = 4;
 }

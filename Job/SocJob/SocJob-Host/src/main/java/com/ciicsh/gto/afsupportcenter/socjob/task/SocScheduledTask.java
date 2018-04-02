@@ -57,7 +57,8 @@ public class SocScheduledTask {
         logger.info("社保每日询问财务是否可付定时任务结束，当前时间：" + dateFormat.format(new Date()));
     }
 
-    @Scheduled(cron = "0 15 10 ? * *")//暂定每天上午10:15触发
+    //@Scheduled(cron = "0 15 10 ? * *")//暂定每天上午10:15触发
+    @Scheduled(cron = "0 0 1 1 * ?")  //每月1号凌晨1点
     public void execUpdateTaskStatus(){
         String log="社保每月1日更新办理状态，当前时间：";
         logger.info(log+dateFormat.format(new Date()));

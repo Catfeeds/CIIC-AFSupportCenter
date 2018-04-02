@@ -10,9 +10,8 @@ import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.DbType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
-import org.springframework.cglib.core.Local;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -88,7 +87,7 @@ public class MybatisPlusGeneratorRun {
         gc.setBaseResultMap(true);// XML ResultMap
         gc.setBaseColumnList(false);// XML columList
         // .setKotlin(true) 是否生成 kotlin 代码
-        gc.setAuthor("xsj");
+        gc.setAuthor(UserContext.getUserId());
 
         // 自定义文件命名，注意 %s 会自动填充表实体属性！
         // gc.setMapperName("%sDao");

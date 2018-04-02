@@ -60,10 +60,7 @@ public class AmResignBO extends AmResign {
      * 退工状态数量
      */
     private  Integer count;
-    /**
-     * 公司编码
-     */
-    private  String licenseCode;
+
     /**
      * 服务中心
      */
@@ -116,6 +113,19 @@ public class AmResignBO extends AmResign {
     private String luyongHandleEnd;
 
     private  String ifLaborManualReturnStr;
+
+    /**
+     * 客服经理
+     */
+    private String leaderShipName;
+
+    public String getLeaderShipName() {
+        return leaderShipName;
+    }
+
+    public void setLeaderShipName(String leaderShipName) {
+        this.leaderShipName = leaderShipName;
+    }
 
     public String getIfLaborManualReturnStr() {
         return ifLaborManualReturnStr;
@@ -357,14 +367,6 @@ public class AmResignBO extends AmResign {
 
     public void setCount(Integer count) {
         this.count = count;
-    }
-
-    public String getLicenseCode() {
-        return licenseCode;
-    }
-
-    public void setLicenseCode(String licenseCode) {
-        this.licenseCode = licenseCode;
     }
 
     public String getServiceCenter() {

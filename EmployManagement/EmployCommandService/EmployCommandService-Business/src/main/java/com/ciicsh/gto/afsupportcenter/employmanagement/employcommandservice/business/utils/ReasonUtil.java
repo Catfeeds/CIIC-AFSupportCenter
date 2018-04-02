@@ -3,6 +3,9 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bus
 import ch.qos.logback.core.util.StringCollectionUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,28 +46,29 @@ public class ReasonUtil {
         param.put("15","转其他公司管理, 无需退工");
         param.put("16","转其他公司管理, 需办退工");
 
-        tg_param.put("1","退工成功");
-        tg_param.put("2","档案未退先退工");
+        tg_param.put("1","退工任务单签收");
+        tg_param.put("2","档未到先退工");
         tg_param.put("3","退工盖章未返回");
         tg_param.put("4","退工失败");
         tg_param.put("5","前道要求批退");
-        tg_param.put("6","自开退工单,未交");
-        tg_param.put("7","用工已办未反馈");
-        tg_param.put("8","等翻牌联系单");
-        tg_param.put("9","退工Ukey外借");
-        tg_param.put("10","单项服务,原退工成功");
-        tg_param.put("11","转外地社保,原退工成功");
-        tg_param.put("12","转人员性质无需退工");
-        tg_param.put("13","退工成功,改社保");
-        tg_param.put("14","重复任务单");
-        tg_param.put("15","等修改备案表");
+        tg_param.put("6","撤销退工");
+        tg_param.put("7","等修改备案表");
+        tg_param.put("8","自开退工单,未交");
+        tg_param.put("9","用工已办未反馈");
+        tg_param.put("10","等翻牌联系单");
+        tg_param.put("11","退工Ukey外借");
+        tg_param.put("12","单项服务,原退工成功");
+        tg_param.put("13","转外地社保,原退工成功");
+        tg_param.put("14","转人员性质无需退工");
+        tg_param.put("15","退工成功,改社保");
+        tg_param.put("16","重复任务单");
 
 
         yg_param.put("0","空");
         yg_param.put("1","用工成功");
         yg_param.put("2","用工已办查无档");
         yg_param.put("3","用工失败");
-        yg_param.put("4","用工Ukey外借");
+        yg_param.put("4","Ukey外借");
         yg_param.put("5","前道要求撤销用工");
         yg_param.put("6","用工成功,重复任务单");
         yg_param.put("7","用工已办,前道已中止");
@@ -118,7 +122,7 @@ public class ReasonUtil {
 
     public static  boolean  getYgResult(String code){
 
-        if("3".equals(code)||"8".equals(code)||"9".equals(code)||"10".equals(code))
+        if("1".equals(code)||"2".equals(code)||"6".equals(code)||"7".equals(code))
         {
             return  true;
         }else {
@@ -136,6 +140,28 @@ public class ReasonUtil {
 
         return "";
 
+    }
+
+    public static String removeMark(String str){
+        if (StringUtil.isEmpty(str))
+        {
+           return "";
+        }
+        int last = str.lastIndexOf(",");
+        return  str.substring(0,last);
+    }
+
+    public  static  String  getCondemnationYears(Date start,Date end)
+    {
+        long time = end.getTime()-start.getTime();
+
+        double d = (double) time;
+        long year = 365*24*60*60*1000l;
+        double d_year = (double)year;
+        double d1 = d/d_year;
+
+        DecimalFormat df = new DecimalFormat("0.00");
+         return  df.format(d1);
     }
 
 }

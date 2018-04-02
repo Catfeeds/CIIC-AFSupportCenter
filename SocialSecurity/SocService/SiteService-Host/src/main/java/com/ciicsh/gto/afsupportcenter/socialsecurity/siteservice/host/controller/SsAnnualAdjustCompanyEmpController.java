@@ -14,6 +14,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsAnnualAdju
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAnnualAdjustCompanyEmp;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAnnualAdjustCompanyEmpTemp;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAnnualAdjustEmployee;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -62,10 +63,10 @@ public class SsAnnualAdjustCompanyEmpController extends BasicController<SsAnnual
     @RequestMapping("/checkExistsEmployee")
     public JsonResult checkExistsEmployee(PageInfo pageInfo) {
         SsAnnualAdjustCompanyEmpDTO ssAnnualAdjustCompanyEmpDTO = pageInfo.toJavaObject(SsAnnualAdjustCompanyEmpDTO.class);
-        List<SsAnnualAdjustCompanyEmp> exsitsList = business.queryAnnualAdjustCompanyEmp(ssAnnualAdjustCompanyEmpDTO);
-        if (CollectionUtils.isNotEmpty(exsitsList)) {
-            if (exsitsList.size() == 1) {
-                SsAnnualAdjustCompanyEmp ssAnnualAdjustCompanyEmp = exsitsList.get(0);
+        List<SsAnnualAdjustCompanyEmp> existsList = business.queryAnnualAdjustCompanyEmp(ssAnnualAdjustCompanyEmpDTO);
+        if (CollectionUtils.isNotEmpty(existsList)) {
+            if (existsList.size() == 1) {
+                SsAnnualAdjustCompanyEmp ssAnnualAdjustCompanyEmp = existsList.get(0);
                 return JsonResultKit.of(ssAnnualAdjustCompanyEmp);
             } else {
                 return JsonResultKit.ofError("数据异常：当年仅允许一条年调客户记录[Table名称: ss_annual_adjust_company_emp]");
@@ -96,15 +97,15 @@ public class SsAnnualAdjustCompanyEmpController extends BasicController<SsAnnual
         SsAnnualAdjustCompanyEmpDTO ssAnnualAdjustCompanyEmpDTO = new SsAnnualAdjustCompanyEmpDTO();
         ssAnnualAdjustCompanyEmpDTO.setCompanyId(ssAnnualAdjustCompanyEmpBO.getCompanyId());
         ssAnnualAdjustCompanyEmpDTO.setEmployeeId(ssAnnualAdjustCompanyEmpBO.getEmployeeId());
-        List<SsAnnualAdjustCompanyEmp> exsitsList = business.queryAnnualAdjustCompanyEmp(ssAnnualAdjustCompanyEmpDTO);
+        List<SsAnnualAdjustCompanyEmp> existsList = business.queryAnnualAdjustCompanyEmp(ssAnnualAdjustCompanyEmpDTO);
         SsAnnualAdjustCompanyEmp ssAnnualAdjustCompanyEmp = new SsAnnualAdjustCompanyEmp();
-        if (CollectionUtils.isNotEmpty(exsitsList)) {
-            if (exsitsList.size() == 1) {
-                SsAnnualAdjustCompanyEmp existsSsAnnualAdjustCompanyEmp = exsitsList.get(0);
+        if (CollectionUtils.isNotEmpty(existsList)) {
+            if (existsList.size() == 1) {
+                SsAnnualAdjustCompanyEmp existsSsAnnualAdjustCompanyEmp = existsList.get(0);
                 ssAnnualAdjustCompanyEmp.setAnnualAdjustCompanyEmpId(existsSsAnnualAdjustCompanyEmp.getAnnualAdjustCompanyEmpId());
                 ssAnnualAdjustCompanyEmp.setChgSalary(ssAnnualAdjustCompanyEmpBO.getChgSalary());
                 ssAnnualAdjustCompanyEmp.setModifiedTime(LocalDateTime.now());
-                ssAnnualAdjustCompanyEmp.setModifiedBy("test"); //TODO
+                ssAnnualAdjustCompanyEmp.setModifiedBy(UserContext.getUserId());
             } else {
                 return JsonResultKit.ofError("数据异常：当年仅允许一条年调客户记录[Table名称: ss_annual_adjust_company_emp]");
             }
@@ -126,8 +127,8 @@ public class SsAnnualAdjustCompanyEmpController extends BasicController<SsAnnual
             ssAnnualAdjustCompanyEmp.setSsPwd(ssAnnualAdjustCompanyEmpBO.getSsPwd());
             ssAnnualAdjustCompanyEmp.setLowDepartmentName(ssAnnualAdjustCompanyEmpBO.getLowDepartmentName());
             ssAnnualAdjustCompanyEmp.setHighDepartmentName(ssAnnualAdjustCompanyEmpBO.getHighDepartmentName());
-            ssAnnualAdjustCompanyEmp.setCreatedBy("test"); //TODO
-            ssAnnualAdjustCompanyEmp.setModifiedBy("test"); //TODO
+            ssAnnualAdjustCompanyEmp.setCreatedBy(UserContext.getUserId());
+            ssAnnualAdjustCompanyEmp.setModifiedBy(UserContext.getUserId());
         }
 
         business.insertOrUpdate(ssAnnualAdjustCompanyEmp);
@@ -166,7 +167,7 @@ public class SsAnnualAdjustCompanyEmpController extends BasicController<SsAnnual
     @RequestMapping("/annualAdjustCompanyEmpInsert")
     public JsonResult annualAdjustCompanyEmpInsert(PageInfo pageInfo) {
         SsAnnualAdjustCompanyEmpTempDTO ssAnnualAdjustCompanyEmpTempDTO = pageInfo.toJavaObject(SsAnnualAdjustCompanyEmpTempDTO.class);
-        ssAnnualAdjustCompanyEmpTempDTO.setCreatedBy("test"); // TODO
+        ssAnnualAdjustCompanyEmpTempDTO.setCreatedBy(UserContext.getUserId());
         business.insertDataWithoutErrorMsg(ssAnnualAdjustCompanyEmpTempDTO);
         return JsonResultKit.of();
     }

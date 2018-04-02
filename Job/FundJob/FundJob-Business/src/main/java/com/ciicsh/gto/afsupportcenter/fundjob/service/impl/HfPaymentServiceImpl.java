@@ -116,4 +116,9 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             }
         }
     }
+
+    @Override
+    public void createPaymentAccount() {
+        hfPaymentAccountMapper.insertPaymentAccountJob();
+    }
 }

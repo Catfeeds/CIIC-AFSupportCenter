@@ -247,6 +247,11 @@ public class SsEmpTask implements Serializable {
      */
 	@TableField("business_interface_id")
 	private String businessInterfaceId;
+    /**
+     * 原业务接口ID  oldAgreementId
+     */
+    @TableField("old_agreement_id")
+    private String oldAgreementId;
 	@TableField("process_id")
 	private String processId;
     /**
@@ -665,7 +670,15 @@ public class SsEmpTask implements Serializable {
 		this.businessInterfaceId = businessInterfaceId;
 	}
 
-	public String getProcessId() {
+    public String getOldAgreementId() {
+        return oldAgreementId;
+    }
+
+    public void setOldAgreementId(String oldAgreementId) {
+        this.oldAgreementId = oldAgreementId;
+    }
+
+    public String getProcessId() {
 		return processId;
 	}
 
@@ -832,6 +845,7 @@ public class SsEmpTask implements Serializable {
 			", outDate=" + outDate +
 			", welfareUnit=" + welfareUnit +
 			", businessInterfaceId=" + businessInterfaceId +
+            ", oldAgreementId=" + oldAgreementId +
 			", processId=" + processId +
 			", taskId=" + taskId +
 			", taskDefKey=" + taskDefKey +

@@ -26,27 +26,6 @@
         <result column="modified_by" property="modifiedBy" />
     </resultMap>
 
-    <resultMap id="PaymentComDtoResultMap" type="com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyCompanyProxyDTO">
-        <result column="company_id" property="companyId" />
-        <result column="title" property="companyName" />
-        <result column="bank_account_id" property="companyBankAccountId" />
-        <result column="bank_account"  property="companyBankAccount" />
-        <result column="refund_deducted"   property="noticebillAmount" />
-        <result column="adjust_deducted"   property="deductionAmount" />
-        <result column="payment_month"   property="payMonth" />
-        <result column="total_pay_amount"   property="payAmount" />
-        <result column="payment_way"   property="isAdvance" />
-    </resultMap>
-
-    <resultMap id="PaymentEmpDtoResultMap" type="com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyEmployeeProxyDTO">
-        <result column="employee_id" property="employeeId" />
-        <result column="employee_name" property="employeeName" />
-        <result column="company_id" property="companyId" />
-        <result column="payment_month"  property="payMonth" />
-        <result column="total_pay_amount"  property="payAmount" />
-        <result column="emp_payment_status"   property="isAdvance" />
-    </resultMap>
-
     <resultMap id="GetFundPaysResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentBo" extends="BaseResultMap">
         <result column="payment_state_value" property="paymentStateValue" />
         <result column="account_type_value" property="accountTypeValue" />
@@ -57,10 +36,12 @@
     <!--查询公积金汇缴支付-->
     <select id="getFundPays" resultMap="GetFundPaysResultMap">
         SELECT
+        hfp.payment_id,
         hfp.payment_batch_num,
         hfp.total_application_amonut,
         hfp.total_emp_count,
         hfp.payment_month,
+        hfp.payment_state,
         hfps.payment_state_value,
         hfp.create_payment_user,
         DATE_FORMAT(hfp.create_payment_date, '%Y-%m-%d %H:%i') AS create_payment_date_string,
@@ -90,5 +71,4 @@
         </where>
         ORDER BY hfp.payment_id
     </select>
-
 </mapper>

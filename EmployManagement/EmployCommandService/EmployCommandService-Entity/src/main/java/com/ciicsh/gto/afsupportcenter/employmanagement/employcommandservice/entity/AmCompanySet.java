@@ -164,6 +164,9 @@ public class AmCompanySet implements Serializable {
      */
 	@TableField("archive_special")
 	private String archiveSpecial;
+
+    @TableField("special")
+    private  String  special;
     /**
      * 是否可用
      */
@@ -216,8 +219,15 @@ public class AmCompanySet implements Serializable {
 	@TableField("key_status")
 	private String keyStatus;
 
+    public String getSpecial() {
+        return special;
+    }
 
-	public Long getCompanySetId() {
+    public void setSpecial(String special) {
+        this.special = special;
+    }
+
+    public Long getCompanySetId() {
 		return companySetId;
 	}
 

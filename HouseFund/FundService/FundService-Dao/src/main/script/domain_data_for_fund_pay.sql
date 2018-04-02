@@ -22,14 +22,13 @@ CREATE TABLE `hf_payment_state` (
 -- ----------------------------
 -- Records of hf_payment_state
 -- ----------------------------
-INSERT INTO `hf_payment_state` VALUES ('1', '3', '可付(默认)', '', '2018-02-09 19:23:33', '2018-02-09 19:23:33', 'shenjian', 'shenjian');
-INSERT INTO `hf_payment_state` VALUES ('2', '4', '申请中', '', '2018-02-09 19:23:48', '2018-02-09 19:23:48', 'shenjian', 'shenjian');
-INSERT INTO `hf_payment_state` VALUES ('3', '5', '内部审批批退', '', '2018-02-09 19:24:04', '2018-02-09 19:24:04', 'shenjian', 'shenjian');
-INSERT INTO `hf_payment_state` VALUES ('6', '6', '已申请到财务部', '', '2018-03-15 14:42:24', '2018-03-15 14:42:24', 'shenjian', 'shenjian');
-INSERT INTO `hf_payment_state` VALUES ('7', '7', '财务部批退', '', '2018-03-15 14:42:28', '2018-03-15 14:42:28', 'shenjian', 'shenjian');
-INSERT INTO `hf_payment_state` VALUES ('8', '8', '财务部支付成功', '', '2018-03-15 14:42:38', '2018-03-15 14:42:38', 'shenjian', 'shenjian');
-INSERT INTO `hf_payment_state` VALUES ('9', '1', '未到帐', '', '2018-03-19 16:34:03', '2018-03-19 16:34:03', 'shenjian', 'shenjian');
-INSERT INTO `hf_payment_state` VALUES ('10', '2', '无需支付', '', '2018-03-19 16:35:09', '2018-03-19 16:35:09', 'shenjian', 'shenjian');
+INSERT INTO `hf_payment_state` VALUES ('1', '1', '可付(默认)', '', '2018-02-09 19:23:33', '2018-02-09 19:23:33', 'shenjian', 'shenjian');
+INSERT INTO `hf_payment_state` VALUES ('2', '2', '送审', '', '2018-02-09 19:23:48', '2018-02-09 19:23:48', 'shenjian', 'shenjian');
+INSERT INTO `hf_payment_state` VALUES ('3', '3', '汇缴', '', '2018-02-09 19:24:04', '2018-02-09 19:24:04', 'shenjian', 'shenjian');
+INSERT INTO `hf_payment_state` VALUES ('6', '4', '财务部批退', '', '2018-03-15 14:42:24', '2018-03-15 14:42:24', 'shenjian', 'shenjian');
+INSERT INTO `hf_payment_state` VALUES ('7', '5', '财务部审批通过', '', '2018-03-15 14:42:28', '2018-03-15 14:42:28', 'shenjian', 'shenjian');
+INSERT INTO `hf_payment_state` VALUES ('8', '6', '出票', '', '2018-03-15 14:42:38', '2018-03-15 14:42:38', 'shenjian', 'shenjian');
+INSERT INTO `hf_payment_state` VALUES ('9', '7', '回单', '', '2018-03-19 16:34:03', '2018-03-19 16:34:03', 'shenjian', 'shenjian');
 
 -- ----------------------------
 -- Table structure for hf_payment_account_type

@@ -41,7 +41,6 @@
         <result column="title" property="title" />
         <result column="employee_name" property="employeeName"/>
         <result column="id_num" property="idNum"/>
-        <result column="license_code" property="licenseCode" />
         <result column="service_center" property="serviceCenter"/>
         <result column="diaodang_feedback_opt_date" property="diaodangFeedbackOptDate" />
     </resultMap>
@@ -85,8 +84,7 @@
         f.resign_date,
         /**用工反馈*/
         c.employ_feedback,
-        f.resign_feedback1,
-        f.resign_feedback2,
+        f.resign_feedback,
         /**退档日期*/
         f.return_doc_date,
         /**退工送办日期*/
@@ -111,6 +109,7 @@
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
         </foreach>
+        order by b.created_time desc
     </select>
 
     <select id="taskCountEmployee"  resultMap="BaseResultMapDTO">
@@ -185,8 +184,7 @@
         f.resign_date,
         /**用工反馈*/
         c.employ_feedback,
-        f.resign_feedback1,
-        f.resign_feedback2,
+        f.resign_feedback,
         /**退档日期*/
         f.return_doc_date,
         /**退工送办日期*/

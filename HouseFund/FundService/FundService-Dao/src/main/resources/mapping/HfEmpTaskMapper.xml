@@ -13,6 +13,7 @@
         <result column="is_change" property="isChange" />
         <result column="hf_type" property="hfType" />
         <result column="hf_emp_account" property="hfEmpAccount" />
+        <result column="process_category" property="processCategory" />
         <result column="task_category" property="taskCategory" />
         <result column="urgent" property="urgent" />
         <result column="operation_remind" property="operationRemind" />
@@ -50,6 +51,7 @@
         <result column="operate_date" property="operateDate" />
         <result column="welfare_unit" property="welfareUnit" />
         <result column="business_interface_id" property="businessInterfaceId" />
+        <result column="old_agreement_id" property="oldAgreementId" />
         <result column="policy_detail_id" property="policyDetailId" />
         <result column="task_id" property="taskId" />
         <result column="is_active" property="isActive" />

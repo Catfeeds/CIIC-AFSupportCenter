@@ -33,7 +33,10 @@ public class CalculateSocialUtils {
 				return new BigDecimal(0);
 		}
 	}
-
+public static void main(String[] arg){
+   BigDecimal decimal =calculateAmount(new BigDecimal("5000.000"),new BigDecimal("0.000000"),null,2,2);
+    System.out.println(decimal);
+}
 	public static BigDecimal calculateByRoundType(BigDecimal amount,int roundType){
 		BigDecimal ten = new BigDecimal(10);
 		BigDecimal hundred = new BigDecimal(100);

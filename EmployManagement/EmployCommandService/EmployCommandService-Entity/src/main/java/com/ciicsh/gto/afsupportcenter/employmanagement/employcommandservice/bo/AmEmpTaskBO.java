@@ -51,17 +51,13 @@ public class AmEmpTaskBO extends AmEmpTask {
      */
     private  Integer count;
     /**
-     * 公司编码
-     */
-    private  String licenseCode;
-    /**
      * 服务中心
      */
     private  String serviceCenter;
     /**
-     * 客服
+     * 客服经理
      */
-    private String custom;
+    private String leaderShipName;
     /**
      * 退工日期
      */
@@ -120,10 +116,11 @@ public class AmEmpTaskBO extends AmEmpTask {
      * 岗位
      */
     private String position;
-
+    /**
+     * 组织机构代码
+     */
     private String organizationCode;
 
-    private Integer empCompanyId;
     /**
      * 客服专员
      */
@@ -150,10 +147,138 @@ public class AmEmpTaskBO extends AmEmpTask {
     private  String archivePlace;
 
     private Long employmentId;
-
+    /**
+     * 社保账户名称
+     */
     private  String comAccountName;
 
     private  LocalDate accountRepairDate;
+    /**
+     * 用工公司特殊情况
+     */
+    private String employSpecial;
+
+    /**
+     * Ukey类别
+     */
+    private String keyType;
+    /**
+     * Ukey编码
+     */
+    private String keyCode;
+    /**
+     * Ukey密码
+     */
+    private String keyPwd;
+    /**
+     * Ukey状态
+     */
+    private String keyStatus;
+    /**
+     * 是否无期限合同
+     */
+    private String isUnlimitedContract;
+    /**
+     * 派遣年限
+     */
+    private String sendCondemnationYears;
+
+    /**
+     * 单位性质
+     */
+    private  String  companyType;
+
+    private String phone;
+
+    private String fileFree;
+
+    public String getLeaderShipName() {
+        return leaderShipName;
+    }
+
+    public void setLeaderShipName(String leaderShipName) {
+        this.leaderShipName = leaderShipName;
+    }
+
+    public String getFileFree() {
+        return fileFree;
+    }
+
+    public void setFileFree(String fileFree) {
+        this.fileFree = fileFree;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getCompanyType() {
+        return companyType;
+    }
+
+    public void setCompanyType(String companyType) {
+        this.companyType = companyType;
+    }
+
+    public String getSendCondemnationYears() {
+        return sendCondemnationYears;
+    }
+
+    public void setSendCondemnationYears(String sendCondemnationYears) {
+        this.sendCondemnationYears = sendCondemnationYears;
+    }
+
+    public String getIsUnlimitedContract() {
+        return isUnlimitedContract;
+    }
+
+    public void setIsUnlimitedContract(String isUnlimitedContract) {
+        this.isUnlimitedContract = isUnlimitedContract;
+    }
+
+    public String getKeyCode() {
+        return keyCode;
+    }
+
+    public void setKeyCode(String keyCode) {
+        this.keyCode = keyCode;
+    }
+
+    public String getKeyPwd() {
+        return keyPwd;
+    }
+
+    public void setKeyPwd(String keyPwd) {
+        this.keyPwd = keyPwd;
+    }
+
+    public String getKeyStatus() {
+        return keyStatus;
+    }
+
+    public void setKeyStatus(String keyStatus) {
+        this.keyStatus = keyStatus;
+    }
+
+    public String getKeyType() {
+        return keyType;
+    }
+
+    public void setKeyType(String keyType) {
+        this.keyType = keyType;
+    }
+
+    public String getEmploySpecial() {
+        return employSpecial;
+    }
+
+    public void setEmploySpecial(String employSpecial) {
+        this.employSpecial = employSpecial;
+    }
 
     public LocalDate getAccountRepairDate() {
         return accountRepairDate;
@@ -249,14 +374,6 @@ public class AmEmpTaskBO extends AmEmpTask {
 
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
-    }
-
-    public Integer getEmpCompanyId() {
-        return empCompanyId;
-    }
-
-    public void setEmpCompanyId(Integer empCompanyId) {
-        this.empCompanyId = empCompanyId;
     }
 
     public String getFirstInDate() {
@@ -389,21 +506,6 @@ public class AmEmpTaskBO extends AmEmpTask {
         this.serviceCenter = serviceCenter;
     }
 
-    public String getCustom() {
-        return custom;
-    }
-
-    public void setCustom(String custom) {
-        this.custom = custom;
-    }
-
-    public String getLicenseCode() {
-        return licenseCode;
-    }
-
-    public void setLicenseCode(String licenseCode) {
-        this.licenseCode = licenseCode;
-    }
 
     public Integer getCount() {
         return count;

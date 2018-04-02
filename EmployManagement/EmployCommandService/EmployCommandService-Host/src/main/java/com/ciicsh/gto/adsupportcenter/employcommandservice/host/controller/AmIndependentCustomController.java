@@ -5,7 +5,6 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.S
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmCompanySetService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.ISalCompanyService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmCompanySet;
-import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -53,7 +52,20 @@ public class AmIndependentCustomController extends BasicController<IAmCompanySet
             amCompanySet.setModifiedTime(now);
             amCompanySet.setModifiedBy("sys");
         }
-
+        boolean is_special = false;
+        if(amCompanySet.getRefuseSpecial()!=null||amCompanySet.getArchiveSpecial()!=null||amCompanySet.getEmploySpecial()!=null)
+        {
+            is_special = true;
+        }
+        if(amCompanySet.getCompanySpecial21()==1||amCompanySet.getCompanySpecial22()==1)
+        {
+            is_special = true;
+        }
+        if(is_special){
+            amCompanySet.setSpecial("有");
+        }else {
+            amCompanySet.setSpecial("");
+        }
         boolean result =  business.insertOrUpdate(amCompanySet);
         return JsonResultKit.of(result);
     }
