@@ -20,7 +20,7 @@ import java.util.Map;
 public interface HfEmpMonthChargeMapper extends BaseMapper<HfEmpMonthCharge> {
 
     //按照财务服务契约提供雇员级信息
-    List<HfMonthChargeBO> getPaymentEmpList(Map map);
+    List<HfMonthChargeBO> getPaymentEmpListEnquireFinance(Map map);
 
     //根据接口返回的数据批量更新月度明细的支付状态
     void updateMonthCharge(Map map);

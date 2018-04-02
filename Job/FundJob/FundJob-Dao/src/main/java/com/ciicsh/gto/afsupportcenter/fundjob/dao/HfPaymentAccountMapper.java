@@ -25,7 +25,7 @@ public interface HfPaymentAccountMapper extends BaseMapper<HfPaymentAccount> {
      */
     List<HfPaymentAccount> getByPaymentId(Integer paymentId);
 
-    int updatePaymentAcc(Map map);
+    int updatePaymentAccount(Map map);
 
     List<HfPaymentAccount> insertPaymentAccountJob();
 }
