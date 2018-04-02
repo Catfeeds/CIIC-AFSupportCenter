@@ -40,9 +40,8 @@ public interface FundApiProxy {
     /**
      * 根据公司ID和公积金类别获取公积金账户信息
      * @param companyId 公司ID
-     * @param hfType 公积金类型（基本公积金或者补充公积金）
      * @return
      */
     @GetMapping("/getAccountByCompany")
-    JsonResult<ComAccountExtDTO> getAccountByCompany(@RequestParam("companyId") String companyId, @RequestParam("hfType") Integer hfType);
+    JsonResult<List<ComAccountExtDTO>> getAccountByCompany(@RequestParam("companyId") String companyId);
 }
