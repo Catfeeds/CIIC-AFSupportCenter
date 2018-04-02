@@ -77,6 +77,29 @@ public class AmEmploymentBO extends AmEmployment {
 
     private  String employNotes;
 
+    private String cici;
+
+    public String getCici() {
+        return cici;
+    }
+
+    public void setCici(String cici) {
+        this.cici = cici;
+    }
+
+    /**
+     * 用工属性编码
+     */
+    private Integer employCode;
+
+    public Integer getEmployCode() {
+        return employCode;
+    }
+
+    public void setEmployCode(Integer employCode) {
+        this.employCode = employCode;
+    }
+
     public String getEmployNotes() {
         return employNotes;
     }

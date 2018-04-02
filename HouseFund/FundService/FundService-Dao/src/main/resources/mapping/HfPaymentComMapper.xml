@@ -5,11 +5,13 @@
 	<!-- 通用查询映射结果 -->
 	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentCom">
 		<id column="payment_com_id" property="paymentComId" />
+		<result column="payment_id" property="paymentId" />
+		<result column="com_account_id" property="comAccountId" />
 		<result column="hf_type" property="hfType" />
 		<result column="company_id" property="companyId" />
 		<result column="payment_bank" property="paymentBank" />
 		<result column="remitted_amount" property="remittedAmount" />
-		<result column="bujiao_amount" property="bujiaoAmount" />
+		<result column="repair_amount" property="repairAmount" />
 		<result column="remitted_count_emp" property="remittedCountEmp" />
 		<result column="daozhang_amount" property="daozhangAmount" />
 		<result column="daozhang_count_emp" property="daozhangCountEmp" />
@@ -19,5 +21,38 @@
 		<result column="created_by" property="createdBy" />
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
+
+    <resultMap id="GetFundPaysDetailOperationDataResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentComBo" extends="BaseResultMap">
+        <result column="payment_month" property="paymentMonth" />
+        <result column="title" property="companyName" />
+        <result column="hf_type_name" property="hfTypeName" />
+    </resultMap>
+
+    <!--查询公积金汇缴支付详细操作数据-->
+    <select id="getFundPaysDetailOperationData" resultMap="GetFundPaysDetailOperationDataResultMap">
+        SELECT
+        ht.hf_type_name,
+        p.payment_month,
+        pc.company_id,
+        com.title,
+        pc.payment_bank,
+        pc.remitted_amount,
+        pc.repair_amount,
+        pc.remitted_count_emp,
+        pc.daozhang_amount,
+        pc.daozhang_count_emp
+        FROM hf_payment_com pc
+        INNER JOIN hf_payment p ON p.payment_id = pc.payment_id
+        INNER JOIN sal_company com ON com.company_id = pc.company_id
+        INNER JOIN hf_type ht ON ht.hf_type_id = pc.hf_type
+        <where>
+            pc.is_active = 1
+            <if test="paymentMonth != null and paymentMonth != ''">
+                AND p.payment_month = TRIM(#{paymentMonth})
+            </if>
+        </where>
+        ORDER BY
+        pc.payment_com_id
+    </select>
 
 </mapper>

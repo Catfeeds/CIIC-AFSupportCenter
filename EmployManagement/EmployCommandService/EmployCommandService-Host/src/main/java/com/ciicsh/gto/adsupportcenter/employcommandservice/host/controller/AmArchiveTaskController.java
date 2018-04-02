@@ -76,16 +76,18 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             if(!StringUtil.isEmpty(amEmploymentBO.getEmployFeedback())){
                 amEmploymentBO.setEmployFeedback(ReasonUtil.getYgfk(amEmploymentBO.getEmployFeedback()));
             }
-        }
 
-//        if(amEmpTask.getEmployCode()==2){//代理也就是独立
-//            customBO.setCompanyName(companyName);
-//        }else if(amEmpTask.getEmployCode()==1){
-//            customBO.setCompanyName("中智上海经济技术合作公司");
-//        }else if(amEmpTask.getEmployCode()==3){
-//            customBO.setCompanyName(companyName);
-//            customBO.setCici("上海中智项目外包咨询服务有限公司");
-//        }
+            if(amEmploymentBO!=null&&amEmploymentBO.getEmployCode()!=null)
+            {
+                if(amEmploymentBO.getEmployCode()==2){//代理也就是独立
+
+                }else if(amEmploymentBO.getEmployCode()==1){
+                    amEmploymentBO.setTitle("中智上海经济技术合作公司");
+                }else if(amEmploymentBO.getEmployCode()==3){
+                    amEmploymentBO.setCici("上海中智项目外包咨询服务有限公司");
+                }
+            }
+        }
 
         return JsonResultKit.of(result);
     }

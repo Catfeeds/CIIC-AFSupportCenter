@@ -3,22 +3,23 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfArchiveBaseAdjustMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentComBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentComMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentMapper;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentCom;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentComService;
+import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
+import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
+import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
-import com.ciicsh.gto.afsupportcenter.util.kit.WafKit;
+
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -95,4 +96,14 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
 
     }
 
+    /**
+     * 获得公积金汇缴支付详细操作数据
+     * @param pageInfo
+     * @return
+     */
+    @Override
+    public PageRows<HfPaymentComBo> getFundPaysDetailOperationData(PageInfo pageInfo) {
+        HfPaymentComBo hfPaymentComBo = pageInfo.toJavaObject(HfPaymentComBo.class);
+        return PageKit.doSelectPage(pageInfo, () -> hfPaymentComMapper.getFundPaysDetailOperationData(hfPaymentComBo));
+    }
 }
