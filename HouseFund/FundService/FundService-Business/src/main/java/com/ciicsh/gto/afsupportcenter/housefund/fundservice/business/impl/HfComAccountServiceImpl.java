@@ -118,14 +118,10 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
     }
 
     @Override
-    public AccountInfoBO getAccountByCompany(String companyId, Integer hfType) {
-        AccountInfoBO info = null;
-        Integer result = baseMapper.isExistAccount(companyId, hfType);
-        List<AccountInfoBO> infos = result > 0 ? baseMapper.getAccountsByCompany(companyId, hfType) : comTaskMapper.getAccountsByCompany(companyId, hfType);
-        if (null != infos && infos.size() > 0) {
-            info = infos.get(0);
-        }
-        return info;
+    public List<AccountInfoBO> getAccountByCompany(String companyId) {
+        Integer result = baseMapper.serchExistAccount(companyId);
+        List<AccountInfoBO> infos = result > 0 ? baseMapper.getAccountsByCompany(companyId) : comTaskMapper.getAccountsByCompany(companyId);
+        return infos;
     }
 
     @Override

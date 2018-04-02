@@ -83,10 +83,9 @@ public interface HfComAccountService extends IService<HfComAccount> {
     /**
      * 根据公司信息查询账户信息
      * @param companyId 公司ID
-     * @param hfType 公积金类型
      * @return
      */
-    AccountInfoBO getAccountByCompany(String companyId, Integer hfType);
+    List<AccountInfoBO> getAccountByCompany(String companyId);
 
     /**
      * 查询企业公积金账户信息

@@ -1,6 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.housefund.apiservice.host.translator;
 
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.ComAccountExtDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccountDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountInfoBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import org.springframework.beans.BeanUtils;
 
@@ -12,5 +14,11 @@ public class ApiTranslator {
         HfComAccountDTO accountDTO = new HfComAccountDTO();
         BeanUtils.copyProperties(comAccountExtBo,accountDTO);
         return accountDTO;
+    }
+
+    public static ComAccountExtDTO toAccountExtDTO(AccountInfoBO infoBO){
+        ComAccountExtDTO accountExtDTO = new ComAccountExtDTO();
+        BeanUtils.copyProperties(infoBO,accountExtDTO);
+        return accountExtDTO;
     }
 }
