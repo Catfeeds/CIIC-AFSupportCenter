@@ -62,11 +62,11 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
     )
     @Override
     public boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer processCategory, Integer isChange,
-                                 AfEmployeeInfoDTO dto) {
+                                 String oldAgreementId, AfEmployeeInfoDTO dto) {
         boolean result = false;
         try {
             //插入数据到雇员任务单表
-            saveSsEmpTask(taskMsgDTO, taskCategory, processCategory, isChange, dto);
+            saveSsEmpTask(taskMsgDTO, taskCategory, processCategory, isChange, oldAgreementId, dto);
             result = true;
         } catch (Exception e) {
             result = false;
@@ -109,7 +109,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
     )
     @Override
     public boolean saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType, Integer processCategory, Integer isChange,
-                                 AfEmployeeInfoDTO dto) throws Exception {
+                                 String oldAgreementId, AfEmployeeInfoDTO dto) throws Exception {
         //基本信息
         AfEmployeeCompanyDTO afEmployeeCompanyDTO = dto.getEmployeeCompany();
 
@@ -121,6 +121,10 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         ssEmpTask.setCompanyId(afEmployeeCompanyDTO.getCompanyId());
         ssEmpTask.setEmployeeId(afEmployeeCompanyDTO.getEmployeeId());
         ssEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
+        // 调整通道或更正通道过来的任务单，都需要加上oldAgreementId，回调前道接口时需使用
+        if (oldAgreementId != null) {
+            ssEmpTask.setOldAgreementId(oldAgreementId);
+        }
         ssEmpTask.setSubmitterId(afEmployeeCompanyDTO.getCreatedBy());
         ssEmpTask.setSalary(afEmployeeCompanyDTO.getSalary());
         ssEmpTask.setSubmitterRemark(afEmployeeCompanyDTO.getRemark());

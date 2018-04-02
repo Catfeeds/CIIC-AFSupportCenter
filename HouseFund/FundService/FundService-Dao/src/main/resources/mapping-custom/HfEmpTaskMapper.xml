@@ -599,6 +599,7 @@
         feedback_date,
         operate_date,
         business_interface_id,
+        old_agreement_id,
         task_id,
         is_active,
         created_time,

@@ -47,6 +47,7 @@
 		<result column="out_date" property="outDate" />
 		<result column="welfare_unit" property="welfareUnit" />
 		<result column="business_interface_id" property="businessInterfaceId" />
+        <result column="old_agreement_id" property="oldAgreementId" />
 		<result column="process_id" property="processId" />
 		<result column="task_id" property="taskId" />
 		<result column="task_def_key" property="taskDefKey" />

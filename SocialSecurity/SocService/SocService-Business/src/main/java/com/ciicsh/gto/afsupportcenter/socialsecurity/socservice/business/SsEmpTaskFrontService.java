@@ -21,7 +21,7 @@ public interface SsEmpTaskFrontService extends IService<SsEmpTaskFront> {
      * @param dto
      * @return
      */
-    boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer processCategory, Integer isChange, AfEmployeeInfoDTO dto);
+    boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer processCategory, Integer isChange, String oldAgreementId,  AfEmployeeInfoDTO dto);
 
     /**
      * 更新旧的雇员任务单
@@ -41,10 +41,11 @@ public interface SsEmpTaskFrontService extends IService<SsEmpTaskFront> {
      * @param taskMsgDTO
      * @param socialType
      * @param isChange
+     * @param oldAgreementId
      * @param dto
      * @return
      * @throws Exception
      */
     boolean saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType, Integer processCategory,  Integer isChange,
-                          AfEmployeeInfoDTO dto) throws Exception;
+                          String oldAgreementId, AfEmployeeInfoDTO dto) throws Exception;
 }

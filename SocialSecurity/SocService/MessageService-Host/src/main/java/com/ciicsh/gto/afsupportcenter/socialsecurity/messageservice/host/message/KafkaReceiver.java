@@ -64,8 +64,8 @@ public class KafkaReceiver {
             if(Optional.ofNullable(paramMap).isPresent() && Optional.ofNullable(paramMap.get("socialType")).isPresent()){
                 String socialType = paramMap.get("socialType").toString();
                 //雇员服务协议ID
-                String empAgreementId = taskMsgDTO.getMissionId();
-                saveSsEmpTask(taskMsgDTO, Integer.parseInt(socialType), ProcessCategory.AF_EMP_IN.getCategory(), empAgreementId);
+//                String empAgreementId = taskMsgDTO.getMissionId();
+                saveSsEmpTask(taskMsgDTO, Integer.parseInt(socialType), ProcessCategory.AF_EMP_IN.getCategory(), null, 0);
             }
         }
     }
@@ -81,8 +81,8 @@ public class KafkaReceiver {
         //判断taskType是否是社保新进(social_stop)，如果不是则无需处理
         if (TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_OUT).setTextContent(TaskSink.SOCIAL_STOP + " JSON: " + JSON.toJSONString(taskMsgDTO)));
-            String empAgreementId = taskMsgDTO.getMissionId();
-            saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_5), ProcessCategory.AF_EMP_OUT.getCategory(), empAgreementId);
+//            String empAgreementId = taskMsgDTO.getMissionId();
+            saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_5), ProcessCategory.AF_EMP_OUT.getCategory(), null, 0);
         }
     }
 
@@ -97,8 +97,8 @@ public class KafkaReceiver {
         //判断taskType是否是社保新进(social_make_up)，如果不是则无需处理
         if (TaskSink.SOCIAL_MAKE_UP.equals(taskMsgDTO.getTaskType())) {
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_MAKE_UP).setTextContent(TaskSink.SOCIAL_MAKE_UP + " JSON: " + JSON.toJSONString(taskMsgDTO)));
-            String empAgreementId = taskMsgDTO.getMissionId();
-            saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_4), ProcessCategory.AF_EMP_MAKE_UP.getCategory(), empAgreementId);
+//            String empAgreementId = taskMsgDTO.getMissionId();
+            saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_4), ProcessCategory.AF_EMP_MAKE_UP.getCategory(), null, 0);
         }
     }
 
@@ -118,19 +118,19 @@ public class KafkaReceiver {
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_COMPANY_CHANGE).setTextContent(TaskSink.SOCIAL_NEW + " JSON: " + JSON.toJSONString(taskMsgDTO)));
             if (paramMap != null && paramMap.get("socialType") != null) {
                 int socialType = Integer.parseInt(paramMap.get("socialType").toString());
-                empAgreementId = taskMsgDTO.getMissionId();
+//                empAgreementId = taskMsgDTO.getMissionId();
                 //新进转入判断，任务单保存时转换成支持中心的翻牌新进&翻牌转入类型
                 if (SocialSecurityConst.SOCIAL_TYPE_1 == socialType) {
-                    saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_12), ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), empAgreementId);
+                    saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_12), ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), null, 0);
                 } else if (SocialSecurityConst.SOCIAL_TYPE_2 == socialType) {
-                    saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_13), ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), empAgreementId);
+                    saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_13), ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), null, 0);
                 }
             }
             //翻牌转出
         } else if (TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_COMPANY_CHANGE).setTextContent(TaskSink.SOCIAL_STOP + " JSON: " + JSON.toJSONString(taskMsgDTO)));
-            empAgreementId = paramMap.get("oldEmpAgreementId").toString();
-            saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_14), ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), empAgreementId);
+//            empAgreementId = paramMap.get("oldEmpAgreementId").toString();
+            saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_14), ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), null, 0);
         }
     }
 
@@ -148,18 +148,22 @@ public class KafkaReceiver {
         //注：客服中心调整基数从0变非0时，收到的任务单是调整还是新开或转入，根据雇员中心传入的参数确定
         // 客服中心调整基数从非0变0时，收到的任务单就是社保停办任务单
         String socialType;
-        String empAgreementId;
+        String oldAgreementId = null;
+        if (paramMap.get("oldEmpAgreementId") != null) {
+            oldAgreementId = paramMap.get("oldEmpAgreementId").toString();
+        }
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())) {
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_ADJUST).setTextContent(TaskSink.SOCIAL_NEW + " JSON: " + JSON.toJSONString(taskMsgDTO)));
             //获取社保办理类型
             socialType = paramMap.get("socialType").toString();
-            empAgreementId = taskMsgDTO.getMissionId();
-            saveSsEmpTask(taskMsgDTO, Integer.parseInt(socialType), ProcessCategory.AF_EMP_AGREEMENT_ADJUST.getCategory(), empAgreementId);
+//            empAgreementId = taskMsgDTO.getMissionId();
+
+            saveSsEmpTask(taskMsgDTO, Integer.parseInt(socialType), ProcessCategory.AF_EMP_AGREEMENT_ADJUST.getCategory(), oldAgreementId, 0);
         } else if (TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_ADJUST).setTextContent(TaskSink.SOCIAL_STOP + " JSON: " + JSON.toJSONString(taskMsgDTO)));
             socialType = SocialSecurityConst.TASK_TYPE_5;
-            empAgreementId = paramMap.get("oldEmpAgreementId").toString();
-            saveSsEmpTask(taskMsgDTO, Integer.parseInt(socialType), ProcessCategory.AF_EMP_AGREEMENT_ADJUST.getCategory(), empAgreementId);
+            agreementAdjustOrUpdateEmpStop(taskMsgDTO, 0, TaskSink.AF_EMP_AGREEMENT_ADJUST);
+//            saveSsEmpTask(taskMsgDTO, Integer.parseInt(socialType), ProcessCategory.AF_EMP_AGREEMENT_ADJUST.getCategory(), empAgreementId);
         }
     }
 
@@ -173,14 +177,17 @@ public class KafkaReceiver {
     public void receiveUpdate(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         //判断taskType是否是社保新进或停办(social_new或social_stop)，如果不是则无需处理
-        if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType()) || TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
+        if (TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
+            agreementAdjustOrUpdateEmpStop(taskMsgDTO, 1, TaskSink.AF_EMP_AGREEMENT_UPDATE);
+        } else if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())) {
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_UPDATE).setTextContent(" JSON: " + JSON.toJSONString(taskMsgDTO)));
             try {
+                Map<String, Object> paramMap = taskMsgDTO.getVariables();
+
                 //调用接口-调用客服中心接口，获取任务单表单信息
-                AfEmployeeInfoDTO dto = callEmpAgreement(Long.parseLong(taskMsgDTO.getMissionId()));
+                AfEmployeeInfoDTO dto = callEmpAgreement(taskMsgDTO, ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory(), paramMap.get("oldEmpAgreementId").toString());
                 //taskId为空，该消息则是由af客服中心发出，表示支持中心历史任务单未完成
                 if (StringUtils.isBlank(taskMsgDTO.getTaskId())) {
-                    Map<String, Object> paramMap = taskMsgDTO.getVariables();
                     SsEmpTaskBO ssEmpTaskBO = new SsEmpTaskBO();
                     ssEmpTaskBO.setTaskId(paramMap.get("oldTaskId").toString());
                     ssEmpTaskBO.setEmployeeId(dto.getEmployeeCompany().getEmployeeId());
@@ -193,7 +200,6 @@ public class KafkaReceiver {
                     //已办理任务单
                 } else {//taskId不为空，该kafka则是由任务单中心发出，表示支持中心历史任务单已完成
                     Integer taskCategory = 0;
-                    Map<String, Object> paramMap = taskMsgDTO.getVariables();
                     SsEmpTaskBO ssEmpTaskBO = new SsEmpTaskBO();
                     ssEmpTaskBO.setBusinessInterfaceId(paramMap.get("oldEmpAgreementId").toString());
                     //查询旧的任务类型保存到新的任务单
@@ -202,11 +208,40 @@ public class KafkaReceiver {
                         ssEmpTaskBO = resList.get(0);
                         taskCategory = ssEmpTaskBO.getTaskCategory();
                     }
-                    ssEmpTaskFrontService.saveEmpTaskTc(taskMsgDTO, taskCategory, ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory(),1, dto);
+                    // TODO 调整状态更正时，oldEmpAgreementId是对应调整前协议，更正前任务单应该如何获取？已办的oldTaskId可能会取不到（社保的任务单和公积金的任务单搞混了）
+//                    ssEmpTaskFrontService.saveEmpTaskTc(taskMsgDTO, taskCategory, ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory(),1, paramMap.get("oldEmpAgreementId").toString(), dto);
+                    ssEmpTaskFrontService.saveEmpTaskTc(taskMsgDTO, taskCategory, ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory(),1, null, dto);
                 }
             } catch (Exception e) {
                 logService.error(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_UPDATE).setTextContent(e.getMessage()));
             }
+        }
+    }
+
+    /**
+     * 调整或更正停办处理
+     *
+     * @param taskMsgDTO
+     * @param isChange
+     */
+    private void agreementAdjustOrUpdateEmpStop(TaskCreateMsgDTO taskMsgDTO, Integer isChange, String taskSink) {
+        // 非0转0，ProcessCategory为调整，taskCategory为封存，新增一个封存任务单，但需要将oldAgreementId同时存入任务单记录；
+        // 因为前端发出新开任务时，已经创建了雇员的费用段，oldAgreementId对应的是前一个费用段，任务单结束时需要依据oldAgreementId进行回调，以便前道对其进行处理
+        logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(taskSink).setTextContent(" JSON: " + JSON.toJSONString(taskMsgDTO)));
+        Map<String, Object> paramMap = taskMsgDTO.getVariables();
+        String oldAgreementId = null;
+
+        if (null != paramMap) {
+            if (paramMap.get("oldEmpAgreementId") != null) {
+                Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
+
+                if (cityCodeMap == null || cityCodeMap.get("newFundCityCode") == null
+                    || cityCodeMap.get("newFundCityCode").equals(cityCodeMap.get("oldFundCityCode"))) {
+                    oldAgreementId = paramMap.get("oldEmpAgreementId").toString();
+                }
+            }
+
+            saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_5), ProcessCategory.AF_EMP_AGREEMENT_ADJUST.getCategory(), oldAgreementId, isChange);
         }
     }
 
@@ -251,10 +286,51 @@ public class KafkaReceiver {
     /**
      * 从接口获取数据并保存到社保雇员任务单表
      *
-     * @param empAgreementId
+     * @param taskMsgDTO
+     * @param oldAgreementId
      * @return
      */
-    private AfEmployeeInfoDTO callEmpAgreement(Long empAgreementId) {
+    private AfEmployeeInfoDTO callEmpAgreement(TaskCreateMsgDTO taskMsgDTO, Integer processCategory, String oldAgreementId) {
+        Long empAgreementId = null;
+        // 翻牌或调整通道时，如果是转出或封存的，根据oldAgreementId去获取转出或封存前的雇员信息
+        if(
+            StringUtils.isEmpty(oldAgreementId)
+                && TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())
+                && (
+                    processCategory.equals(ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory())
+                    || processCategory.equals(ProcessCategory.AF_EMP_AGREEMENT_ADJUST.getCategory())
+                    )
+                ) {
+            Map<String, Object> paramMap = taskMsgDTO.getVariables();
+            if(null != paramMap){
+                empAgreementId = Long.parseLong(paramMap.get("oldEmpAgreementId").toString());
+            }
+        }
+        else{
+            logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle("callEmpAgreement").setTextContent("fund get employee info taskMsgDTO.getMissionId():" + taskMsgDTO.getMissionId()));
+            Map<String, Object> paramMap = taskMsgDTO.getVariables();
+            if(null != paramMap && paramMap.get("missionId") != null){
+                String varMissionId = paramMap.get("missionId").toString();
+                logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle("callEmpAgreement").setTextContent("fund get employee info paramMap.get(missionId):" + varMissionId));
+
+                if (org.apache.commons.lang.StringUtils.isNotEmpty(varMissionId)) {
+                    // 雇员中心收到更正任务单时，原任务单还未发出时，agreementId有可能已更新，但是activiti产生的missionId不会更新，
+                    // 此时从variables里面取得新的agreementId（key为：missionId）
+                    empAgreementId = Long.parseLong(varMissionId);
+                    Long missionId = Long.parseLong(taskMsgDTO.getMissionId());
+
+                    if (empAgreementId.longValue() <= missionId.longValue()) {
+                        empAgreementId = missionId;
+                    } else {
+                        taskMsgDTO.setMissionId(varMissionId);
+                    }
+                } else {
+                    empAgreementId = Long.parseLong(taskMsgDTO.getMissionId());
+                }
+            } else {
+                empAgreementId = Long.parseLong(taskMsgDTO.getMissionId());
+            }
+        }
         logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle("callEmpAgreement").setTextContent("empAgreementId：" + empAgreementId));
         AfEmployeeInfoDTO afEmployeeInfoDTO = null;
         try {
@@ -273,11 +349,11 @@ public class KafkaReceiver {
      * @param socialType
      * @return
      */
-    private void saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType, Integer processCategory, String empAgreementId) {
+    private void saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType, Integer processCategory, String oldAgreementId, Integer isChange) {
         try {
-            AfEmployeeInfoDTO dto = callEmpAgreement(Long.parseLong(empAgreementId));
+            AfEmployeeInfoDTO dto = callEmpAgreement(taskMsgDTO, processCategory, oldAgreementId);
             //保存雇员任务单表数据
-            ssEmpTaskFrontService.saveSsEmpTask(taskMsgDTO, socialType, processCategory, 0, dto);
+            ssEmpTaskFrontService.saveSsEmpTask(taskMsgDTO, socialType, processCategory, isChange, oldAgreementId, dto);
         } catch (Exception e) {
             logService.error(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle("saveSsEmpTask").setTextContent(e.getMessage()));
         }
