@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 public class EmpTransferTemplateImpXsl {
         @Excel(name = "雇员编号", orderNum = "1")
         private String empName;
-        @Excel(name = "雇员姓名",orderNum = "2")
+        @Excel(name = "姓名",orderNum = "2")
         private String idNum;
         @Excel(name = "回单日期",orderNum = "3")
         private String empAccount;
