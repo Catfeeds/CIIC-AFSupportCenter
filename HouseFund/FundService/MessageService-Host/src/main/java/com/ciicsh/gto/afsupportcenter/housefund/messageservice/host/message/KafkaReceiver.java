@@ -245,14 +245,13 @@ public class KafkaReceiver {
                             HfEmpTask hfEmpTask = resList.get(0);
                             taskCategory = hfEmpTask.getTaskCategory();
                             processCategory = hfEmpTask.getProcessCategory();
-
-                            // TODO 调整状态更正时，oldEmpAgreementId是对应调整前协议，更正前任务单应该如何获取？已办的oldTaskId可能会取不到（社保的任务单和公积金的任务单搞混了）
                         } else {
                             // 如果没有查到旧的任务单，那么就是特殊情况：外地新开（本地收不到相关任务单），更正时改为翻牌（外地转上海）；
                             // 此时也不知道是翻牌（未走翻牌通道），只能默认为新开任务单；（该情况暂不考虑，前端已限制）
                             //                        processCategory = ProcessCategory.EMPLOYEENEW.getCategory();
                             //                        taskCategory = TaskCategory.NEW.getCategory();
                         }
+                        // 调整状态更正时，oldEmpAgreementId是对应调整前协议，也同时对应更正前任务单的missionId
 //                        boolean res = saveEmpTask(taskMsgDTO, fundCategory, processCategory, taskCategory, paramMap.get("oldEmpAgreementId").toString(), 1);
                         boolean res = saveEmpTask(taskMsgDTO, fundCategory, processCategory, taskCategory, null, 1);
                         logger.info("end fundEmpAgreementCorrect(already handled): " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
