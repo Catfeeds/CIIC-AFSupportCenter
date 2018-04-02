@@ -61,6 +61,7 @@
         a.emp_task_id,
         a.employee_id,
         a.company_id,
+        a.employ_code,
         f.employment_id,
         b.employ_property,
         b.employ_date,

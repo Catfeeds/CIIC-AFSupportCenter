@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Created by zhangzhiwen on 2018/3/29.
  */
 
-@FeignClient("support-center-employ-api-service")
+@FeignClient("support-center-employee-site-service")
 @RequestMapping("/api/employ")
 public interface EmployApiProxy {
 

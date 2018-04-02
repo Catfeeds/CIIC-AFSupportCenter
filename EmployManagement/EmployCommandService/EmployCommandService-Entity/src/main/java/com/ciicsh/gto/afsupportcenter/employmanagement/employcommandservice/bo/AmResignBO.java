@@ -119,6 +119,29 @@ public class AmResignBO extends AmResign {
      */
     private String leaderShipName;
 
+    /**
+     * 用工属性编码
+     */
+    private Integer employCode;
+
+    private String cici;
+
+    public String getCici() {
+        return cici;
+    }
+
+    public void setCici(String cici) {
+        this.cici = cici;
+    }
+
+    public Integer getEmployCode() {
+        return employCode;
+    }
+
+    public void setEmployCode(Integer employCode) {
+        this.employCode = employCode;
+    }
+
     public String getLeaderShipName() {
         return leaderShipName;
     }
