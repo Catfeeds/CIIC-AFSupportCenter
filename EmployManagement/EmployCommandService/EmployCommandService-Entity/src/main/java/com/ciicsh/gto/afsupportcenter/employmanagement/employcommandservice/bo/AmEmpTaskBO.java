@@ -192,6 +192,16 @@ public class AmEmpTaskBO extends AmEmpTask {
 
     private String fileFree;
 
+    private  String cici;
+
+    public String getCici() {
+        return cici;
+    }
+
+    public void setCici(String cici) {
+        this.cici = cici;
+    }
+
     public String getLeaderShipName() {
         return leaderShipName;
     }

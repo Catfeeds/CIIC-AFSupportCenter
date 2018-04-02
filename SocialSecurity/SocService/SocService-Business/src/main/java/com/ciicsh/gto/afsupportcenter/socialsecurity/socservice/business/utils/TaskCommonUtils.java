@@ -122,7 +122,7 @@ public class TaskCommonUtils {
         List<AfEmpSocialUpdateDateDTO> paramsList = new ArrayList<>();
 
         if(StringUtils.isBlank(ssEmpTaskBO.getBusinessInterfaceId())){
-            throw new BusinessException("messionId 为空.");
+            throw new BusinessException("missionId 为空.");
         }
 
         if(ssEmpTaskBO.getListEmpBasePeriod()==null){//说明是逆向调整，没有福利段
@@ -160,9 +160,13 @@ public class TaskCommonUtils {
 
             if (!"190001".equals(startMonth)) {
                 dataStartMonth = startMonth;
+            } else {
+                dataStartMonth = null;
             }
             if (!"999912".equals(endMonth)) {
                 dataEndMonth = endMonth;
+            } else {
+                dataEndMonth = null;
             }
         }
 
@@ -174,7 +178,7 @@ public class TaskCommonUtils {
             switch (ssEmpTaskBO.getTaskStatus()) {
                 case 4: //批退
                     afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
-                    afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(ssEmpTaskBO.getBusinessInterfaceId())); //messionId
+                    afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(ssEmpTaskBO.getBusinessInterfaceId())); //missionId
                     afEmpSocialUpdateDateDTO.setCompanyId(ssEmpTaskBO.getCompanyId());//企业Id
                     afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(dataStartMonth + "01"));
 
@@ -195,7 +199,7 @@ public class TaskCommonUtils {
                     // 如果oldAgreementId存在时，则要回调接口，通知前道关闭费用段
                     if (StringUtils.isNotEmpty(ssEmpTaskBO.getOldAgreementId())) {
                         afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
-                        afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(ssEmpTaskBO.getBusinessInterfaceId())); //messionId
+                        afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(ssEmpTaskBO.getBusinessInterfaceId())); //missionId
                         afEmpSocialUpdateDateDTO.setCompanyId(ssEmpTaskBO.getCompanyId());//企业Id
                         afEmpSocialUpdateDateDTO.setItemCode(ssEmpBaseDetail.getSsType());//社保险种
                         afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(ssEmpBaseDetail.getComAmount());
@@ -212,13 +216,13 @@ public class TaskCommonUtils {
 
                     // 以下为调整后的费用段回调处理：
                     // 如果oldAgreementId存在，且是转出或封存时，说明是调整非0转0
-                    if (org.apache.commons.lang.StringUtils.isNotEmpty(ssEmpTaskBO.getOldAgreementId()) && (
+                    if (StringUtils.isNotEmpty(ssEmpTaskBO.getOldAgreementId()) && (
                         ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_5))
                             || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_6))
                     )) {
                         // 此时需要回调一个只有开始确认时间的，金额为0的费用段
                         afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
-                        afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(ssEmpTaskBO.getBusinessInterfaceId())); //messionId
+                        afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(ssEmpTaskBO.getBusinessInterfaceId())); //missionId
                         afEmpSocialUpdateDateDTO.setCompanyId(ssEmpTaskBO.getCompanyId());//企业Id
                         afEmpSocialUpdateDateDTO.setItemCode(ssEmpBaseDetail.getSsType());//社保险种
                         afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(BigDecimal.ZERO);
@@ -231,7 +235,7 @@ public class TaskCommonUtils {
                     } else {
                         // 通常的处理方式
                         afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
-                        afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(ssEmpTaskBO.getBusinessInterfaceId())); //messionId
+                        afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(ssEmpTaskBO.getBusinessInterfaceId())); //missionId
                         afEmpSocialUpdateDateDTO.setCompanyId(ssEmpTaskBO.getCompanyId());//企业Id
                         afEmpSocialUpdateDateDTO.setItemCode(ssEmpBaseDetail.getSsType());//社保险种
                         afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(ssEmpBaseDetail.getComAmount());

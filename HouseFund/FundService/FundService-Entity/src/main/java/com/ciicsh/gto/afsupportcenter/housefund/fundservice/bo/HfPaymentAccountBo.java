@@ -4,6 +4,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentAcco
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
+
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class HfPaymentAccountBo extends HfPaymentAccount {
@@ -43,5 +45,15 @@ public class HfPaymentAccountBo extends HfPaymentAccount {
      * 缴费银行编号：1 徐汇—X、2 西郊—C、3 东方路—P、4 卢湾—L、5 黄浦—H
      */
     private Integer paymentBank;
+
+    /**
+     * 汇总金额
+     */
+    private BigDecimal sumAmount;
+
+    /**
+     * 补缴金额
+     */
+    private BigDecimal payInBackAmount;
 
 }

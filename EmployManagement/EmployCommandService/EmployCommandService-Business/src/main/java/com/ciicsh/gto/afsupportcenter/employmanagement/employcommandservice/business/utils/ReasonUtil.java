@@ -65,13 +65,13 @@ public class ReasonUtil {
 
 
         yg_param.put("0","空");
-        yg_param.put("1","用工成功");
-        yg_param.put("2","用工已办查无档");
-        yg_param.put("3","用工失败");
-        yg_param.put("4","Ukey外借");
+        yg_param.put("3","用工成功");
+        yg_param.put("10","用工已办查无档");
+        yg_param.put("4","用工失败");
+        yg_param.put("11","Ukey外借");
         yg_param.put("5","前道要求撤销用工");
-        yg_param.put("6","用工成功,重复任务单");
-        yg_param.put("7","用工已办,前道已中止");
+        yg_param.put("12","用工成功,重复任务单");
+        yg_param.put("13","用工已办,前道已中止");
 
 
         yw_param.put("1","全日制");

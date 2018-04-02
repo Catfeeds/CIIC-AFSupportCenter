@@ -1,6 +1,11 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.CommonApiUtils;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountPaymentBankMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccountPaymentBank;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
@@ -10,6 +15,8 @@ import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
+import org.apache.commons.collections.KeyValue;
+import org.apache.commons.collections.keyvalue.DefaultKeyValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +30,8 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
 
     @Autowired
     LogService logService;
+    @Autowired
+    HfComAccountPaymentBankMapper hfComAccountPaymentBankMapper;
 
     @PostConstruct
     private void dictInit() {
@@ -54,7 +63,7 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
 
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.PROCESS_PERIOD_KEY, SocialSecurityConst.PROCESS_PERIOD_MAP, false);
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.FUND_TYPE_KEY, SocialSecurityConst.FUND_TYPE_MAP, false);
-            DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.PAY_BANK_KEY, SocialSecurityConst.PAY_BANK_MAP, false);
+//            DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.PAY_BANK_KEY, SocialSecurityConst.PAY_BANK_MAP, false);
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.COM_PAYMENT_WAY_KEY, SocialSecurityConst.COM_PAYMENT_WAY_MAP, false);
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.COM_UKEY_STORE_KEY, SocialSecurityConst.COM_UKEY_STORE_MAP, false);
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.OPERATION_REMIND_KEY, SocialSecurityConst.OPERATION_REMIND_MAP, false);
@@ -80,6 +89,38 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
             initDictUtil();
         }
         map.put(SocialSecurityConst.FUND_OUT_UNIT_KEY, SocialSecurityConst.FUND_OUT_UNIT_LIST);
+        getPaymentBankMap(map);
         return JsonResultKit.of(map);
+    }
+
+    private void getPaymentBankMap(Map<String, List<?>> existsMap) {
+        Wrapper<HfComAccountPaymentBank> wrapper = new EntityWrapper<>();
+        wrapper.eq("is_active", 1);
+        wrapper.orderBy("payment_bank_code");
+        List<HfComAccountPaymentBank> hfComAccountPaymentBankList = hfComAccountPaymentBankMapper.selectList(wrapper);
+
+        if (CollectionUtils.isNotEmpty(hfComAccountPaymentBankList)) {
+            List<KeyValue> exists = (List<KeyValue>) existsMap.get(SocialSecurityConst.PAY_BANK_KEY);
+            if (exists != null) {
+                int size = exists.size();
+                if (hfComAccountPaymentBankList.size() == size) {
+                    return;
+                }
+                exists.clear();
+            } else {
+                exists = new ArrayList<>();
+                existsMap.put(SocialSecurityConst.PAY_BANK_KEY, exists);
+            }
+
+            Map<String, String> map = new HashMap<>();
+            for (HfComAccountPaymentBank hfComAccountPaymentBank : hfComAccountPaymentBankList) {
+                String key = String.valueOf(hfComAccountPaymentBank.getPaymentBankCode());
+                map.put(key, hfComAccountPaymentBank.getPaymentBankValue());
+                exists.add(new DefaultKeyValue(key, hfComAccountPaymentBank.getPaymentBankValue()));
+            }
+            DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.PAY_BANK_KEY, map, true);
+        } else {
+            DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.PAY_BANK_KEY, null, true);
+        }
     }
 }

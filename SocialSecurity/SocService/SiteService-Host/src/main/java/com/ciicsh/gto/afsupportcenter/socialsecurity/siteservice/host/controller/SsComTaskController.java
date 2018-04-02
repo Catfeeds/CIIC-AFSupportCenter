@@ -228,8 +228,9 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
             ssAccountComRelation.setCreatedBy(UserContext.getUserId());
             ssAccountComRelation.setModifiedBy(UserContext.getUserId());
             ssAccountComRelation.setModifiedTime(LocalDateTime.now());
+        }else{
+            ssAccountComRelation = resList.get(0);
         }
-
         String retCheckResult=business.checkComAccountDuplicate(ssComAccount);
         if ( !retCheckResult.equals("")){//检查输入的内容是否重复
             return JsonResultKit.ofError(retCheckResult.substring(0,retCheckResult.length()-1));
@@ -395,15 +396,17 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         //密码
         ssComAccount.setSsPwd(isNotNull(map.get("ssPwd")) ? map.get("ssPwd") : null);
         //初始余额
-        ssComAccount.setInitialBalance(isNotNull(map.get("initialBalance")) ? new BigDecimal(map.get
-            ("initialBalance")) : null);
+        //ssComAccount.setInitialBalance(isNotNull(map.get("initialBalance")) ? new BigDecimal(map.get
+        //   ("initialBalance")) : null);
         //初期欠费
-        ssComAccount.setInitialDebt(isNotNull(map.get("initialDebt")) ? new BigDecimal(map.get("initialDebt")) : null);
+        //ssComAccount.setInitialDebt(isNotNull(map.get("initialDebt")) ? new BigDecimal(map.get("initialDebt")) : null);
         //来源地
         ssComAccount.setOriginPlace(isNotNull(map.get("originPlace")) ? Integer.valueOf(map.get("originPlace")) : null);
         //来源地备注
         ssComAccount.setOriginPlaceRemark(isNotNull(map.get("originPlaceRemark")) ? map.get("originPlaceRemark") :
             null);
+        //办理备注
+        ssComAccount.setRemark(isNotNull(map.get("handleRemark")) ? map.get("handleRemark") : null);
         //查询账户
         ssComAccount.setQueryAccount(isNotNull(map.get("queryAccount")) ? map.get("queryAccount") : null);
         //交予方式
@@ -414,8 +417,8 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         //给凭证时间
-        ssComAccount.setProvideCertificateTime(isNotNull(map.get("provideCertificateTime")) ? LocalDate.parse(map.get
-            ("provideCertificateTime"), dateFormatter) : null);
+        //ssComAccount.setProvideCertificateTime(isNotNull(map.get("provideCertificateTime")) ? LocalDate.parse(map.get
+        //    ("provideCertificateTime"), dateFormatter) : null);
         //变更时间
         ssComAccount.setChangeTime(isNotNull(map.get("changeTime")) ? LocalDateTime.parse(map.get("changeTime"),
             timeFormatter) : null);
@@ -433,7 +436,6 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         ssComAccount.setSsAccountType(new Integer(3));
         ssComAccount.setModifiedBy(UserContext.getUserId());
         ssComAccount.setModifiedTime(LocalDateTime.now());
-        //ssComAccount.setRemark("submitRemark");
         return ssComAccount;
     }
 

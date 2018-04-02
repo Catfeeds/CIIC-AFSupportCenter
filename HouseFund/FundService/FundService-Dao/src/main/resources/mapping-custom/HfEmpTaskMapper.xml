@@ -909,6 +909,7 @@
         INNER JOIN hf_emp_archive ea
                 ON  ea.employee_id=et.employee_id
                 AND ea.company_id=et.company_id
+                AND ea.hf_type=et.hf_type
                 AND ea.archive_status!=3
                 AND ea.is_active=1
                 AND ea.hf_type=et.hf_type

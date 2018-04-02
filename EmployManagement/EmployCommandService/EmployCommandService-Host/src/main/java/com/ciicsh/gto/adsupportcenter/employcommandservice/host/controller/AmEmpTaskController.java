@@ -89,6 +89,20 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                 }
 
             }
+            for(AmEmpTaskBO amEmpTaskBO:list)
+            {
+                if(amEmpTaskBO!=null&&amEmpTaskBO.getEmployCode()!=null)
+                {
+                    if(amEmpTaskBO.getEmployCode()==2){//代理也就是独立
+
+                    }else if(amEmpTaskBO.getEmployCode()==1){
+                        amEmpTaskBO.setTitle("中智上海经济技术合作公司");
+                    }else if(amEmpTaskBO.getEmployCode()==3){
+                        amEmpTaskBO.setCici("上海中智项目外包咨询服务有限公司");
+                    }
+                }
+            }
+
         }
 
         return JsonResultKit.of(result);
@@ -135,6 +149,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                 amEmpTaskCountBO.setOther(otherNum);
                 num = num + amEmpTaskBO.getCount();
             }
+
             amEmpTaskCountBO.setAmount(num);
 
         }
@@ -201,7 +216,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                 amArchiveBO = amArchiveBOList.get(0);
                 if(!StringUtil.isEmpty(amArchiveBO.getEmployFeedback()))
                 {
-                   if(!"4".equals(amArchiveBO.getEmployFeedback())){
+                   if(!"11".equals(amArchiveBO.getEmployFeedback())){
                        amArchiveBO.setIsEnd(0);
                    }
                 }
@@ -287,7 +302,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             amEmpTask.setTaskStatus(Integer.parseInt(entity.getEmployFeedback()));
             business.insertOrUpdate(amEmpTask);
         }
-        if("4".equals(entity.getEmployFeedback()))
+        if("11".equals(entity.getEmployFeedback()))
         {
             if(entity.getUkeyBorrowDate()==null)
             {
@@ -303,7 +318,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                 /**
                  * u盘外借 不会调用complateTask,只发kafaka消息
                  */
-                if("4".equals(entity.getEmployFeedback()))
+                if("11".equals(entity.getEmployFeedback()))
                 {
 
                 }else{

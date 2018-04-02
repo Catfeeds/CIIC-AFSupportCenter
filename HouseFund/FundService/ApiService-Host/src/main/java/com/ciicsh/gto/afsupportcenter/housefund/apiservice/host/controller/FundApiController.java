@@ -132,30 +132,27 @@ public class FundApiController implements FundApiProxy{
     }
 
     /**
-     * 根据公司ID和公积金类别获取公积金账户信息
+     * 根据公司ID获取公积金账户信息
      * @param companyId 公司ID
-     * @param hfType 公积金类型（基本公积金或者补充公积金）
      * @return
      */
     @Override
-    @ApiOperation(value = "获取公积金账户信息",notes = "根据公司ID和公积金类别获取公积金账户信息")
+    @ApiOperation(value = "获取公积金账户信息",notes = "根据公司ID获取公积金账户信息")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "companyId", value = "公司ID", required = true, dataType = "String"),
-        @ApiImplicitParam(name = "hfType", value = "公积金类型(基本公积金或者补充公积金)", required = true, dataType = "int")
+        @ApiImplicitParam(name = "companyId", value = "公司ID", required = true, dataType = "String")
     })
     @GetMapping("/getAccountByCompany")
-    public JsonResult<ComAccountExtDTO> getAccountByCompany(@RequestParam("companyId") String companyId, @RequestParam("hfType") Integer hfType) {
+    public JsonResult<List<ComAccountExtDTO>> getAccountByCompany(@RequestParam("companyId") String companyId) {
 
-        String request =  "Request: { companyId :" + companyId + ", hfType : " + hfType + "}";
+        String request =  "Request: { companyId :" + companyId +"}";
         log.info(LogMessage.create().setTitle(Const.GETACCOUNTBYCOMPANY.getKey()).setContent(request));
-        AccountInfoBO info = hfComAccountService.getAccountByCompany(companyId,hfType);
-        ComAccountExtDTO extDTO = null;
-        if(null != info){
-            extDTO = new ComAccountExtDTO();
-            BeanUtils.copyProperties(info,extDTO);
+        List<AccountInfoBO> infos = hfComAccountService.getAccountByCompany(companyId);
+        List<ComAccountExtDTO> extDTOs = null;
+        if(null != infos && infos.size() > 0){
+            extDTOs = infos.stream().map(ApiTranslator::toAccountExtDTO).collect(Collectors.toList());
         }
 
-        log.info(LogMessage.create().setTitle(Const.GETACCOUNTBYCOMPANY.getKey()).setContent("Response: "+JSON.toJSONString(extDTO)));
-        return JsonResult.success(extDTO);
+        log.info(LogMessage.create().setTitle(Const.GETACCOUNTBYCOMPANY.getKey()).setContent("Response: "+JSON.toJSONString(extDTOs)));
+        return JsonResult.success(extDTOs);
     }
 }

@@ -45,4 +45,6 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
 
     AmEmpTaskBO getDefualtEmployBO(AmEmpTaskBO amEmpTaskBO);
 
+    boolean insertTaskFireChange(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) throws Exception;
+
 }

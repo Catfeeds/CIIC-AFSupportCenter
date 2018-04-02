@@ -59,9 +59,10 @@
 
     <select id="queryAmArchive" resultMap="BaseResultMapDTO">
         SELECT
+        a.employ_code,
         w.out_reason,
         w.out_date,
-        w.emp_task_id,
+        a.emp_task_id,
         b.employment_id,
         b.employee_id,
         b.company_id,

@@ -229,25 +229,14 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         amEmpTask.setTaskCategory(taskCategory);
         amEmpTask.setTaskStatus(1);
 
-        Object empCompanyId = taskMsgDTO.getVariables().get("empCompanyId");
-        if(StringUtil.isEmpty(empCompanyId))
-        {
-            logger.info("empCompanyId is null ...");
-            return false;
-        }
-        amEmpTask.setEmpCompanyId(empCompanyId.toString());
-        AmEmpTaskBO bo = this.queryAmEmpTaskBO(empCompanyId);
-        if(null!=bo){
-            amEmpTask.setCompanyId(bo.getCompanyId());
-            amEmpTask.setEmployeeId(bo.getEmployeeId());
-            amEmpTask.setTaskFormContent(JSON.toJSONString(taskMsgDTO.getVariables()));
-        }
-
         //TODO 调用吴敬磊接口传入taskMsgDTO.getMissionId()返回数据
         AfEmployeeInfoDTO dto = null;
         try {
             dto = employeeInfoProxy.callInf(taskMsgDTO);
             AfEmployeeCompanyDTO employeeCompany = dto.getEmployeeCompany();
+            amEmpTask.setEmployeeId(employeeCompany.getEmployeeId());
+            amEmpTask.setCompanyId(employeeCompany.getCompanyId());
+            amEmpTask.setTaskFormContent(JSON.toJSONString(taskMsgDTO.getVariables()));
 
             amEmpTask.setOutDate(employeeCompany==null?null:employeeCompany.getOutDate());
 
@@ -271,7 +260,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amEmpTask.setSubmitterId(employeeCompany.getCreatedBy());
             }
 
-            this.saveEmpCustom(employeeCompany,taskMsgDTO.getTaskId(),bo.getCompanyId());
+            this.saveEmpCustom(employeeCompany,taskMsgDTO.getTaskId(),employeeCompany.getCompanyId());
 
         } catch (Exception e) {
             logger.error("callOut interface error ......");
@@ -464,20 +453,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         AfCompanyDetailResponseDTO afCompanyDetailResponseDTO = employeeInfoProxy.getCompanyDetail(param.getCompanyId());
         customBO.setServiceCenter(afCompanyDetailResponseDTO==null?"":afCompanyDetailResponseDTO.getServiceCenter());//服务中心
         String companyName = afCompanyDetailResponseDTO==null?"":afCompanyDetailResponseDTO.getCompanyName();
-        if(amEmpTask!=null&&amEmpTask.getEmployCode()!=null)
-        {
-            if(amEmpTask.getEmployCode()==2){//代理也就是独立
-                customBO.setCompanyName(companyName);
-            }else if(amEmpTask.getEmployCode()==1){
-                customBO.setCompanyName("中智上海经济技术合作公司");
-            }else if(amEmpTask.getEmployCode()==3){
-                customBO.setCompanyName(companyName);
-                customBO.setCici("上海中智项目外包咨询服务有限公司");
-            }
-            customBO.setTaskId(amEmpTask.getTaskId());
-        }else{
-            customBO.setCompanyName(companyName);
-        }
+        this.setCustomBO(amEmpTask,customBO,companyName);
 
         try {
             AmCustomBO amCustomBO  = amEmpCustomService.getCustom(customBO);
@@ -555,6 +531,11 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         amEmpTaskBO1.setOpenAfDate(sdf.format(new Date()));
         amEmpTaskBO1.setEmployStyle("1");//默认全日制
         return amEmpTaskBO1;
+    }
+
+    @Override
+    public boolean insertTaskFireChange(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) throws Exception {
+        return false;
     }
 
     AmEmpTaskBO  defaultRule(AmEmpTaskBO amEmpTaskBO){
@@ -648,5 +629,40 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     }
 
+    AmEmpTask setEmployeeId(AmEmpTask amEmpTask,TaskCreateMsgDTO taskMsgDTO){
+        Object empCompanyId = taskMsgDTO.getVariables().get("empCompanyId");
+        amEmpTask.setEmpCompanyId(empCompanyId.toString());
+        AmEmpTaskBO bo = this.queryAmEmpTaskBO(empCompanyId);
+        if(null!=bo){
+            amEmpTask.setCompanyId(bo.getCompanyId());
+            amEmpTask.setEmployeeId(bo.getEmployeeId());
+            amEmpTask.setTaskFormContent(JSON.toJSONString(taskMsgDTO.getVariables()));
+        }
+        return  amEmpTask;
+    }
+
+    AmCustomBO  setCustomBO( AmEmpTask amEmpTask,AmCustomBO customBO,String companyName){
+        if(amEmpTask!=null&&amEmpTask.getEmployCode()!=null)
+        {
+            if(amEmpTask.getEmployCode()==2){//代理也就是独立
+                customBO.setCompanyName(companyName);
+            }else if(amEmpTask.getEmployCode()==1){
+                customBO.setCompanyName("中智上海经济技术合作公司");
+            }else if(amEmpTask.getEmployCode()==3){
+                customBO.setCompanyName(companyName);
+                customBO.setCici("上海中智项目外包咨询服务有限公司");
+            }
+            customBO.setTaskId(amEmpTask.getTaskId());
+        }else{
+            customBO.setCompanyName(companyName);
+        }
+
+        return customBO;
+    }
+
+
 
 }
+
+
+
