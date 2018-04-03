@@ -61,8 +61,12 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
         Map<String, Object> qMap = new HashMap<>();
         qMap.put("paymentComId", paymentComId);
         qMap.put("ssMonth", ssMonth);
-        List<SsMonthChargeBO> paymentEmpList = ssPaymentMapper.getPaymentEmpList(qMap);
-
+        List<SsMonthChargeBO> paymentEmpList = ssPaymentMapper.getSsPaymentEmpList(qMap);
+        SsMonthChargeBO ssMonthChargeBO=ssPaymentMapper.getSsPaymentComIsCompanyEnjoyAdvance(qMap);
+        String isComEnjoyAdvance= ssMonthChargeBO.getIsCompanyEnjoyAdvance();
+        paymentEmpList.stream().forEach(SsMonthChargeBO->{
+            SsMonthChargeBO.setIsCompanyEnjoyAdvance(isComEnjoyAdvance);
+        });
         List<EmployeeProxyDTO> proxyDTOList = CommonTransform.convertToDTOs(paymentEmpList, EmployeeProxyDTO.class);
 
         //2 按照财务服务契约提供雇员级信息 并调用财务接口
@@ -77,14 +81,17 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
 
         if ("0".equals(res.getCode())) {
             Map<String, Object> map = new HashMap<>();
-
             if (res.getData() != null) {
                 List<Map<String, Object>> resDto = (List) res.getData();
                 //4 财务接口返回的结果更新ss_month_charge
                 for (Map<String, Object> ele : resDto) {
-                    map.put("monthChargeId", ele.get("objId"));
+                    //map.put("monthChargeId", ele.get("objId"));
                     map.put("empPaymentStatus", ele.get("isAdvance"));//是否可付
-                    ssPaymentMapper.updateMonthCharge(map);
+                    map.put("companyId", ele.get("companyId"));
+                    map.put("employeeId", ele.get("employeeId"));
+                    map.put("ssMonthBelong", ele.get("ssMonthBelong"));
+                    map.put("hfMonth", ssMonth);
+                    ssPaymentMapper.updateSsMonthCharge(map);
                 }
             }
             //5 查询 客户下有多少 不可付的记录
@@ -92,7 +99,7 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
             map.put("comAccountId", comAccountId);
             map.put("ssMonth", ssMonth);
             map.put("paymentComId", paymentComId);
-            Integer cnt = ssPaymentMapper.countByEmpPaymentStatus(map);
+            Integer cnt = ssPaymentMapper.countBySsEmpPaymentStatus(map);
 
             //更新客户的支付状态
             map.clear();
@@ -100,11 +107,11 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
             if (cnt == 0) {
                 map.put("paymentState", 3);//  3 =可付
                 map.put("modifiedBy", "sysJob");
-                ssPaymentMapper.updatePaymentCom(map);
+                ssPaymentMapper.updateSsPaymentCom(map);
             } else {
                 map.put("paymentState", 1);
                 map.put("modifiedBy", "sysJob");
-                ssPaymentMapper.updatePaymentCom(map);
+                ssPaymentMapper.updateSsPaymentCom(map);
             }
         }else {
             System.out.println("结算中心反馈:"+res.getMsg());

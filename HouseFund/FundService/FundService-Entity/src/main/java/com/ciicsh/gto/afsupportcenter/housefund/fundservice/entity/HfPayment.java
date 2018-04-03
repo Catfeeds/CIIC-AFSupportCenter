@@ -106,7 +106,12 @@ public class HfPayment extends Model<HfPayment> {
      * 申请日期
      */
 	@TableField("request_date")
-	private Date requestDate;
+    private Date requestDate;
+
+
+    @TableField("receiver")
+    private String receiver;
+
     /**
      * 是否可用
      */
@@ -134,8 +139,15 @@ public class HfPayment extends Model<HfPayment> {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+    public String getReceiver() {
+        return receiver;
+    }
 
-	public Long getPaymentId() {
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
+    }
+
+    public Long getPaymentId() {
 		return paymentId;
 	}
 
@@ -318,6 +330,7 @@ public class HfPayment extends Model<HfPayment> {
 			", rejectionHis=" + rejectionHis +
 			", requestUser=" + requestUser +
 			", requestDate=" + requestDate +
+            ", receiver=" + receiver +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

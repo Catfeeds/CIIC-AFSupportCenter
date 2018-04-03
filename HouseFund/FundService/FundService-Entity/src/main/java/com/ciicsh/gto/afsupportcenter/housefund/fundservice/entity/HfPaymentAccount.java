@@ -28,6 +28,9 @@ public class HfPaymentAccount implements Serializable {
      */
 	@TableField("com_account_id")
 	private String comAccountId;
+
+    @TableField("payment_id")
+    private Long paymentId;
     /**
      * 支付年月YYYYMM
      */
@@ -76,8 +79,15 @@ public class HfPaymentAccount implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+    public Long getPaymentId() {
+        return paymentId;
+    }
 
-	public Long getPaymentAccountId() {
+    public void setPaymentId(Long paymentId) {
+        this.paymentId = paymentId;
+    }
+
+    public Long getPaymentAccountId() {
 		return paymentAccountId;
 	}
 
@@ -169,6 +179,7 @@ public class HfPaymentAccount implements Serializable {
 	public String toString() {
 		return "HfPaymentAccount{" +
 			", paymentAccountId=" + paymentAccountId +
+            ", paymentId=" + paymentId +
 			", comAccountId=" + comAccountId +
 			", paymentMonth=" + paymentMonth +
 			", paymentStatus=" + paymentStatus +
