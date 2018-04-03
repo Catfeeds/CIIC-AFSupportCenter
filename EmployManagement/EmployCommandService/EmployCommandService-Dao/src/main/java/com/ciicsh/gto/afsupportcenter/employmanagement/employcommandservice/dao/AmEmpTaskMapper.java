@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao;
 
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpTask;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
@@ -32,5 +33,13 @@ public interface AmEmpTaskMapper extends BaseMapper<AmEmpTask> {
     List<employSearchExportOpt>  queryAmEmpTaskList(AmEmpTaskBO amEmpTaskBO);
 
     List<AmEmpTaskBO>  querySocial(Map<String,Object> param);
+
+    List<EmploymentDTO>  getEmploymentByTaskId(TaskParamDTO taskParamDTO);
+
+    List<ArchiveDTO>  getArchiveByEmployeeId(TaskParamDTO taskParamDTO);
+
+    List<ResignFeedbackDTO>  queryResignLinkByTaskId(TaskParamDTO taskParamDTO);
+
+    List<ResignDTO>  queryResignByTaskId(TaskParamDTO taskParamDTO);
 
 }

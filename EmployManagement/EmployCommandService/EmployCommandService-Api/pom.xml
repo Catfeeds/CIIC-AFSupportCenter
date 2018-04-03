@@ -16,7 +16,6 @@
     <packaging>jar</packaging>
     <version>1.0.0</version>
 
-
     <dependencies>
         <!-- spring cloud eureka -->
         <dependency>
@@ -34,11 +33,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ciicsh.gt1</groupId>
-            <artifactId>common-entity</artifactId>
         </dependency>
 
     </dependencies>
