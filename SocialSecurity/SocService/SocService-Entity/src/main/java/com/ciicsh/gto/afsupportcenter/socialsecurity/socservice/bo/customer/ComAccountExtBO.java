@@ -93,6 +93,10 @@ public class ComAccountExtBO {
      * 备注
      */
     private String remark;
+    /**
+     * 办理状态 0：未受理1：受理中2：送审中3：已完成4：批退
+     */
+    private String taskStatus;
 
 
     public Long getComAccountId() {
@@ -245,5 +249,13 @@ public class ComAccountExtBO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getTaskStatus() {
+        return taskStatus;
+    }
+
+    public void setTaskStatus(String taskStatus) {
+        this.taskStatus = taskStatus;
     }
 }

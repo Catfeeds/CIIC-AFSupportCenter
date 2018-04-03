@@ -187,6 +187,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         params.put("remarkType",amTaskParamBO.getRemarkType());
         params.put("companyId",amTaskParamBO.getCompanyId());
         params.put("operateType",new Integer(1));
+        params.put("empTaskId",amTaskParamBO.getEmpTaskId());
         pageInfo.setParams(params);
 
         //用工材料
@@ -381,6 +382,10 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             material.setReceiveDate(LocalDate.now());
             material.setReceiveName("sys");
         }
+
+        AmEmpTask amEmpTask = business.selectById(list.get(0).getEmpTaskId());
+        amEmpTask.setTaskStatus(2);
+        business.insertOrUpdate(amEmpTask);
 
         boolean result =  iAmEmpMaterialService.updateBatchById(list);
         return JsonResultKit.of(result);

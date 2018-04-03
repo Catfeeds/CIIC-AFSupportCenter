@@ -24,12 +24,12 @@ public class FundScheduledTask {
     @Autowired
     private HfPaymentService hfPaymentService;
 
-    @Scheduled(cron = "0 1/3 * * * ?") // 每天凌晨启动一次，"0 0 0 * * ?"
+    @Scheduled(cron = "0 0 0 * * ?") // 每天凌晨启动一次，"0 0 0 * * ?"
     public void execEnquireFinanceComAccount() {
         logger.info("公积金每日询问财务是否可付定时任务启动，当前时间：" + dateFormat.format(new Date()));
         
         SimpleDateFormat df = new SimpleDateFormat("yyyyMM");
-        hfPaymentService.enquireFinanceComAccount(df.format(new Date()));
+        hfPaymentService.enquireFinanceComAccount();
 
         logger.info("公积金每日询问财务是否可付定时任务结束，当前时间：" + dateFormat.format(new Date()));
     }

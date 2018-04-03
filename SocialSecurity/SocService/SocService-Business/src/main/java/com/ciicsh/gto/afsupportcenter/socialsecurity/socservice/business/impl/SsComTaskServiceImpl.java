@@ -15,6 +15,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAccount
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAccountRatio;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComTask;
+import com.ciicsh.gto.afsupportcenter.util.enumeration.ComTaskStatus;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -319,6 +320,8 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
 
         if(null != extBOS && extBOS.size() > 0){
             accountExtBO = extBOS.get(0);
+            //处理状态的转换，客服中心只显示用
+            accountExtBO.setTaskStatus(ComTaskStatus.getValue(Integer.parseInt(accountExtBO.getTaskStatus())));
         }
         return accountExtBO;
     }

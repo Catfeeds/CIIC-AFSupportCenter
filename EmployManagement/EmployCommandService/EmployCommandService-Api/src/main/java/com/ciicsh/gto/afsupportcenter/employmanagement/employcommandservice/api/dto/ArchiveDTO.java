@@ -51,6 +51,33 @@ public class ArchiveDTO {
      */
     private String luyongHandleEnd;
 
+    /**
+     * 一次性补贴日期
+     * @return
+     */
+    private LocalDate oneTimeSubsidyDate;
+    /**
+     * 一次性补贴张数
+     * @return
+     */
+    private  Integer oneTimeSubsidyNum;
+
+    public LocalDate getOneTimeSubsidyDate() {
+        return oneTimeSubsidyDate;
+    }
+
+    public void setOneTimeSubsidyDate(LocalDate oneTimeSubsidyDate) {
+        this.oneTimeSubsidyDate = oneTimeSubsidyDate;
+    }
+
+    public Integer getOneTimeSubsidyNum() {
+        return oneTimeSubsidyNum;
+    }
+
+    public void setOneTimeSubsidyNum(Integer oneTimeSubsidyNum) {
+        this.oneTimeSubsidyNum = oneTimeSubsidyNum;
+    }
+
     public String getDocNum() {
         return docNum;
     }

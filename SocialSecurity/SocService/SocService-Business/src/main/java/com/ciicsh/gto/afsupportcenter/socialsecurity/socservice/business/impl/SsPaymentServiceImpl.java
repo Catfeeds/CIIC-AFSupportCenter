@@ -11,6 +11,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.PayapplyEmpl
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPayment;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPaymentCom;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -191,8 +192,8 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         newSsPayment.setTotalAccount(0);
         newSsPayment.setTotalApplicationAmount(new BigDecimal(0));
         newSsPayment.setActive(true);
-        newSsPayment.setCreatedBy("张三");
-        newSsPayment.setModifiedBy("张三");
+        newSsPayment.setCreatedBy(UserContext.getUserName());
+        newSsPayment.setModifiedBy(UserContext.getUserName());
         newSsPayment.setCreatedTime(LocalDateTime.now());
 
         baseMapper.insert(newSsPayment);

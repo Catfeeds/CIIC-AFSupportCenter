@@ -110,6 +110,18 @@ public class AmEmpMaterial implements Serializable {
     private String employeeId;
 
 
+    @TableId(value="emp_task_id")
+    private Long empTaskId;
+
+
+    public Long getEmpTaskId() {
+        return empTaskId;
+    }
+
+    public void setEmpTaskId(Long empTaskId) {
+        this.empTaskId = empTaskId;
+    }
+
     public Long getEmpMaterialId() {
         return empMaterialId;
     }

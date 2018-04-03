@@ -1,6 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.ArchiveDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.EmploymentDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.ResignDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.TaskParamDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmTaskParamBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpTask;
@@ -46,5 +50,11 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
     AmEmpTaskBO getDefualtEmployBO(AmEmpTaskBO amEmpTaskBO);
 
     boolean insertTaskFireChange(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) throws Exception;
+
+    EmploymentDTO getEmploymentByTaskId(TaskParamDTO taskParamDTO);
+
+    ArchiveDTO getArchiveByEmployeeId(TaskParamDTO taskParamDTO);
+
+    ResignDTO getResignByTaskId(TaskParamDTO taskParamDTO);
 
 }

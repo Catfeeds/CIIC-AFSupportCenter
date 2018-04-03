@@ -18,6 +18,7 @@
 	</resultMap>
 
     <resultMap id="GetMakePayListsResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentAccountBo" extends="BaseResultMap">
+        <result column="payment_account_id" property="paymentAccountId" />
         <result column="com_account_name" property="comAccountName" />
         <result column="hf_type_name" property="hfTypeName" />
         <result column="payment_state_value" property="paymentStateValue" />
@@ -30,6 +31,7 @@
     <!--查询公积金制作汇缴清单-->
     <select id="getMakePayLists" resultMap="GetMakePayListsResultMap">
         SELECT
+          pa.payment_account_id,
           ca.com_account_name,
           ht.hf_type_name,
           hpt.payment_state_value,

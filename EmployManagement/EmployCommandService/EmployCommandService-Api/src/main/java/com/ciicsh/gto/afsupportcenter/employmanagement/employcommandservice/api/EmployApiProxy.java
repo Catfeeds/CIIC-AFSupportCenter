@@ -4,7 +4,6 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.EmploymentDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.ResignDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.TaskParamDTO;
-import com.ciicsh.common.entity.JsonResult;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,13 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface EmployApiProxy {
 
     @PostMapping({"/getEmploymentByTaskId"})
-    JsonResult<EmploymentDTO> getEmploymentByTaskId(@RequestBody TaskParamDTO taskParamDTO);
+    EmploymentDTO getEmploymentByTaskId(@RequestBody TaskParamDTO taskParamDTO);
 
     @PostMapping({"/getResignByTaskId"})
-    JsonResult<ResignDTO> getResignByTaskId(@RequestBody TaskParamDTO taskParamDTO);
+    ResignDTO  getResignByTaskId(@RequestBody TaskParamDTO taskParamDTO);
 
 
     @PostMapping({"/getArchiveByEmployeeId"})
-    JsonResult<ArchiveDTO> getArchiveByEmployeeId(@RequestBody TaskParamDTO taskParamDTO);
+    ArchiveDTO  getArchiveByEmployeeId(@RequestBody TaskParamDTO taskParamDTO);
 
 }

@@ -49,6 +49,20 @@ public class ResignDTO {
      */
     private String resignOperateMan;
 
+    /**
+     * 取一次性补贴日期
+     * @return
+     */
+    private LocalDate getOneTimeSubsidyDate;
+
+    public LocalDate getGetOneTimeSubsidyDate() {
+        return getOneTimeSubsidyDate;
+    }
+
+    public void setGetOneTimeSubsidyDate(LocalDate getOneTimeSubsidyDate) {
+        this.getOneTimeSubsidyDate = getOneTimeSubsidyDate;
+    }
+
     private List<ResignFeedbackDTO> feedbackDTOList;
 
 
