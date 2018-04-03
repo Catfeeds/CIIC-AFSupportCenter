@@ -109,8 +109,8 @@ public class HfFundPayController {
     }
 
     @Log("公积金汇缴支付-生成汇缴支付客户名单")
-    @PostMapping("/createPaymentCom")
-    public JsonResult createPaymentCom(@RequestBody String[] comAccountIds){
+    @PostMapping("/createPaymentComList")
+    public JsonResult createPaymentComList(@RequestBody String[] comAccountIds){
         //验证前端传递的数据是否合法,代码暂不写
         //开始生成支付客户名单
         return hfPaymentComService.createPaymentCom( new ArrayList<String>(Arrays.asList(comAccountIds)));

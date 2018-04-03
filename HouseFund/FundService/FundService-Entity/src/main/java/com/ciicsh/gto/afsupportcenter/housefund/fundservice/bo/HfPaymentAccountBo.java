@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(callSuper = false)
 public class HfPaymentAccountBo extends HfPaymentAccount {
 
+    private Long paymentAccountId;
     /**
      * 企业账户名称
      */

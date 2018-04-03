@@ -15,6 +15,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccountC
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -192,7 +193,6 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             BigDecimal outTotal = BigDecimal.ZERO;
             int inCount = 0;
             int outCount = 0;
-            String createdBy = "test"; // TODO
             String createdTime = LocalDateTime.now().format(dateTimeFormatter);
 
             for(int page = 0; page < pages; page++) {
@@ -252,7 +252,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                 pageMap.put("inSubTotal", inSubTotal);
                 pageMap.put("outSubCount", outSubCount);
                 pageMap.put("outSubTotal", outSubTotal);
-                pageMap.put("createdBy", createdBy);
+                pageMap.put("createdBy", UserContext.getUser().getDisplayName());
                 pageMap.put("createdTime", createdTime);
                 pageMap.put("companyIds", StringUtils.join(companyIdSet, ' '));
                 resultList.add(pageMap);

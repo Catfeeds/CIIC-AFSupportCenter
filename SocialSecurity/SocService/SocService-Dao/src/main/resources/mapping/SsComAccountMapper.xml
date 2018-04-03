@@ -97,7 +97,8 @@
         d.industry_category,
         d.com_ratio,
         a.dispatch_material,
-        a.remark
+        a.remark,
+        3 as task_status
     </sql>
 
 </mapper>
