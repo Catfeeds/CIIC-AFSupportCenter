@@ -56,12 +56,12 @@ public class HfApiControllerTest {
     @Test
     public void testDoReviewdePass() {
         HfPayment ssOperatePaymentDTO = new HfPayment();
-        ssOperatePaymentDTO.setPaymentId(1);
+        ssOperatePaymentDTO.setPaymentId(1L);
         ssOperatePaymentDTO.setApplyRemark("再申请");
         ssOperatePaymentDTO.setRejectionRemark("再批退");
 
-        JsonResult<String> jr = hfPaymentService.doReviewdePass(ssOperatePaymentDTO);
-        System.out.println(JSON.toJSONString(jr));
+//        JsonResult<String> jr = hfPaymentService.doReviewdePass(ssOperatePaymentDTO);
+//        System.out.println(JSON.toJSONString(jr));
     }
 
     @Test

@@ -51,17 +51,13 @@ public class AmEmpTaskBO extends AmEmpTask {
      */
     private  Integer count;
     /**
-     * 公司编码
-     */
-    private  String licenseCode;
-    /**
      * 服务中心
      */
     private  String serviceCenter;
     /**
-     * 客服
+     * 客服经理
      */
-    private String custom;
+    private String leaderShipName;
     /**
      * 退工日期
      */
@@ -120,7 +116,9 @@ public class AmEmpTaskBO extends AmEmpTask {
      * 岗位
      */
     private String position;
-
+    /**
+     * 组织机构代码
+     */
     private String organizationCode;
 
     /**
@@ -185,6 +183,56 @@ public class AmEmpTaskBO extends AmEmpTask {
      */
     private String sendCondemnationYears;
 
+    /**
+     * 单位性质
+     */
+    private  String  companyType;
+
+    private String phone;
+
+    private String fileFree;
+
+    private  String cici;
+
+    public String getCici() {
+        return cici;
+    }
+
+    public void setCici(String cici) {
+        this.cici = cici;
+    }
+
+    public String getLeaderShipName() {
+        return leaderShipName;
+    }
+
+    public void setLeaderShipName(String leaderShipName) {
+        this.leaderShipName = leaderShipName;
+    }
+
+    public String getFileFree() {
+        return fileFree;
+    }
+
+    public void setFileFree(String fileFree) {
+        this.fileFree = fileFree;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getCompanyType() {
+        return companyType;
+    }
+
+    public void setCompanyType(String companyType) {
+        this.companyType = companyType;
+    }
 
     public String getSendCondemnationYears() {
         return sendCondemnationYears;
@@ -468,21 +516,6 @@ public class AmEmpTaskBO extends AmEmpTask {
         this.serviceCenter = serviceCenter;
     }
 
-    public String getCustom() {
-        return custom;
-    }
-
-    public void setCustom(String custom) {
-        this.custom = custom;
-    }
-
-    public String getLicenseCode() {
-        return licenseCode;
-    }
-
-    public void setLicenseCode(String licenseCode) {
-        this.licenseCode = licenseCode;
-    }
 
     public Integer getCount() {
         return count;

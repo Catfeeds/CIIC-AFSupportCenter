@@ -7,6 +7,7 @@
         <id column="payment_account_id" property="paymentAccountId" />
         <result column="payment_id" property="paymentId" />
         <result column="com_account_id" property="comAccountId" />
+        <result column="com_account_class_id" property="comAccountClassId" />
         <result column="payment_bank" property="paymentBank" />
         <result column="payment_status" property="paymentStatus" />
         <result column="total_com_pay_amount" property="totalComPayAmount" />
@@ -22,7 +23,20 @@
     <update id="updatePaymentAcc" parameterType="java.util.HashMap">
         UPDATE hf_payment_account SET
         payment_status=#{paymentStatus},modified_by=#{modifiedBy},modified_time=sysdate()
-        where com_account_id=#{comAccountId}
+        where com_account_id=#{comAccountId} AND payment_month=#{paymentMonth}
     </update>
 
+    <select id="getComAccountClass" resultMap="BaseResultMap">
+
+    </select>
+
+    <insert id="insertPaymentAccountJob">
+        INSERT INTO hf_payment_account(com_account_id,com_account_class_id,hf_type,payment_month,payment_status)
+        select ca.com_account_id,cac.com_account_class_id,cac.hf_type,cac.com_hf_month,if(ca.payment_way=1,2,1)
+        from hf_com_account_class cac INNER JOIN hf_com_account ca ON ca.com_account_id=cac.com_account_id
+        where cac.is_active=1 and ca.is_active=1 and IFNULL(cac.end_type ,0)=0 and cac.com_hf_month is not null
+        and not EXISTS(select 1 from hf_payment_account pa where pa.com_account_class_id=cac.com_account_class_id
+        and pa.payment_month=cac.com_hf_month)
+
+    </insert>
 </mapper>

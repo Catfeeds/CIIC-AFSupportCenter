@@ -12,6 +12,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskSe
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
+import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -80,13 +81,19 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
      */
     @Transactional(rollbackFor = {Exception.class})
     @Override
-    public boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer processCategory,Integer taskCategory, Integer isChange,
+    public boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer processCategory,Integer taskCategory, String oldAgreementId, Integer isChange,
                                 AfEmployeeInfoDTO dto) throws Exception {
         AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
 
         HfEmpTask hfEmpTask = new HfEmpTask();
         hfEmpTask.setTaskId(taskMsgDTO.getTaskId());
         hfEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
+
+        // 调整通道或更正通道过来的任务单，都需要加上oldAgreementId，回调前道接口时需使用
+        if (oldAgreementId != null) {
+            hfEmpTask.setOldAgreementId(oldAgreementId);
+        }
+
         if(null != companyDto){
             hfEmpTask.setCompanyId(companyDto.getCompanyId());
             hfEmpTask.setEmployeeId(companyDto.getEmployeeId());
@@ -140,7 +147,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         }
 
         //公积金类型:1 基本 2 补充
-        Integer hfType = fundCategory.equals("DIT00057") ? 1 : 2;
+        Integer hfType = fundCategory.equals(DictUtil.DICT_ITEM_ID_FUND_BASIC) ? 1 : 2;
         hfEmpTask.setHfType(hfType);
         baseMapper.insert(hfEmpTask);
 
@@ -163,6 +170,12 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
 
         HfEmpTask hfEmpTask = new HfEmpTask();
         hfEmpTask.setTaskId(paramMap.get("oldTaskId").toString());
+
+        // 调整通道或更正通道过来的任务单（目前只有更正通道调用该方法），都需要加上oldAgreementId，回调前道接口时需使用
+        if (paramMap.get("oldAgreementId") != null) {
+            hfEmpTask.setOldAgreementId(paramMap.get("oldAgreementId").toString());
+        }
+
         //查询旧的任务类型保存到新的任务单
         hfEmpTask = baseMapper.selectOne(hfEmpTask);
 

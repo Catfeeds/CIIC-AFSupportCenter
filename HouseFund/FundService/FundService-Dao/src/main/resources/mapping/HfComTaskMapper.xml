@@ -137,24 +137,55 @@
     </select>
 
     <select id="getAccountsByCompany" resultMap="ComTaskInfoMap">
-        SELECT
-            com_account_name,
-            payment_way,
-            close_day,
-            company_id,
-            hf_type,
-            hf_com_account,
-            com_start_month,
-            end_month,
-            end_type,
-            remark
-        FROM
-            hf_com_task
-        WHERE
-            is_active = 1
-        AND task_category = 1
-        AND company_id = #{companyId}
-        AND hf_type = #{hfType}
+        SELECT * FROM
+            (
+                SELECT
+                    com_account_name,
+                    payment_way,
+                    close_day,
+                    company_id,
+                    hf_type,
+                    hf_com_account,
+                    com_start_month,
+                    end_month,
+                    end_type,
+                    remark
+                FROM
+                    hf_com_task
+                WHERE
+                    is_active = 1
+                AND task_category IN (1, 2)
+                AND hf_type = 1
+                AND company_id = #{companyId}
+                ORDER BY
+                    created_time
+                LIMIT 0,1
+            ) a
+        UNION ALL
+        SELECT * FROM
+            (
+                SELECT
+                    com_account_name,
+                    payment_way,
+                    close_day,
+                    company_id,
+                    hf_type,
+                    hf_com_account,
+                    com_start_month,
+                    end_month,
+                    end_type,
+                    remark
+                FROM
+                    hf_com_task
+                WHERE
+                    is_active = 1
+                AND task_category IN (1, 2)
+                AND hf_type = 2
+                AND company_id = #{companyId}
+                ORDER BY
+                    created_time
+                LIMIT 0,1
+            ) b
     </select>
 
 </mapper>

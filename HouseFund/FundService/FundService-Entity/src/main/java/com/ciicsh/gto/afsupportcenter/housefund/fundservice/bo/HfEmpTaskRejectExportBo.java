@@ -2,7 +2,6 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.convertor.EmpTaskCategoryConverter;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 
@@ -34,7 +33,7 @@ public class HfEmpTaskRejectExportBo implements Serializable{
     @Excel(name = "公积金账号", orderNum = "8", width = 20)
     private String hfEmpAccount;
     private Integer processCategory;
-    private Integer dictTaskCategory;
+//    private Integer dictTaskCategory;
     private Integer taskCategory;
     @Excel(name = "任务单类型", width = 15)
     private String taskCategoryName;
@@ -140,16 +139,16 @@ public class HfEmpTaskRejectExportBo implements Serializable{
         this.processCategory = processCategory;
     }
 
-    public Integer getDictTaskCategory() {
-        if (this.dictTaskCategory == null) {
-            this.dictTaskCategory = EmpTaskCategoryConverter.convertDictItemFromCategories(this);
-        }
-        return this.dictTaskCategory;
-    }
+//    public Integer getDictTaskCategory() {
+//        if (this.dictTaskCategory == null) {
+//            this.dictTaskCategory = EmpTaskCategoryConverter.convertDictItemFromCategories(this);
+//        }
+//        return this.dictTaskCategory;
+//    }
 
-    public void setDictTaskCategory(Integer dictTaskCategory) {
-        this.dictTaskCategory = dictTaskCategory;
-    }
+//    public void setDictTaskCategory(Integer dictTaskCategory) {
+//        this.dictTaskCategory = dictTaskCategory;
+//    }
 
     public Integer getTaskCategory() {
         return taskCategory;
@@ -192,8 +191,9 @@ public class HfEmpTaskRejectExportBo implements Serializable{
     }
 
     public String getTaskCategoryName() {
-        getDictTaskCategory();
-        return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.dictTaskCategory), DictUtil.TYPE_VALUE_HF_LOCAL_TASK_CATEGORY, true);
+
+//        getDictTaskCategory();
+        return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.taskCategory), DictUtil.TYPE_VALUE_HF_LOCAL_TASK_CATEGORY, true);
 //        return taskCategoryName;
     }
 

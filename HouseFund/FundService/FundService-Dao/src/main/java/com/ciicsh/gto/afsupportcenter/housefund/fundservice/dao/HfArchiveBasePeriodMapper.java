@@ -3,6 +3,9 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfArchiveBasePeriodUpdateBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfArchiveBasePeriod;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -11,6 +14,8 @@ import java.util.List;
  * 雇员公积金汇缴月份段 Mapper 接口
  * </p>
  */
+@Mapper
+@Component
 public interface HfArchiveBasePeriodMapper extends BaseMapper<HfArchiveBasePeriod> {
 
     /**
@@ -27,4 +32,7 @@ public interface HfArchiveBasePeriodMapper extends BaseMapper<HfArchiveBasePerio
      * @return
      */
     int updateHfArchiveBasePeriods(HfArchiveBasePeriodUpdateBo hfArchiveBasePeriodUpdateBo);
+
+
+    List<HfArchiveBasePeriod> getArchiveBasePeriods(@Param("comAccountId") Long comAccountId,@Param("paymentMonth")String paymentMonth,@Param("belongMonth")String belongMonth);
 }

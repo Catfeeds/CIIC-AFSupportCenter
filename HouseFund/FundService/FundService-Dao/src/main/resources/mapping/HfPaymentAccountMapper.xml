@@ -18,22 +18,75 @@
 	</resultMap>
 
     <resultMap id="GetMakePayListsResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentAccountBo" extends="BaseResultMap">
+        <result column="payment_account_id" property="paymentAccountId" />
         <result column="com_account_name" property="comAccountName" />
         <result column="hf_type_name" property="hfTypeName" />
         <result column="payment_state_value" property="paymentStateValue" />
         <result column="account_type_value" property="accountTypeValue" />
         <result column="payment_bank_value" property="paymentBankValue" />
+        <result column="sum_amount" property="sumAmount" />
+        <result column="pay_in_back_amount" property="payInBackAmount" />
     </resultMap>
 
     <!--查询公积金制作汇缴清单-->
     <select id="getMakePayLists" resultMap="GetMakePayListsResultMap">
         SELECT
+          pa.payment_account_id,
           ca.com_account_name,
           ht.hf_type_name,
           hpt.payment_state_value,
           hpat.account_type_value,
           hcapb.payment_bank_value,
-          pa.payment_month
+          pa.payment_month,
+          (
+            SELECT
+            ifnull(sum(amount), 0)
+            FROM
+            hf_month_charge mc
+            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+            WHERE
+            mc.is_active = 1
+            AND ea.is_active = 1
+            <if test="paymentMonth != null and paymentMonth != ''">
+                AND mc.hf_month = TRIM(#{paymentMonth})
+            </if>
+            AND mc.hf_type = pa.hf_type
+            AND ea.com_account_class_id = pa.com_account_class_id
+            AND mc.payment_type IN (1, 2, 3, 4, 5, 6, 11)
+          ) AS sum_add,
+          (
+            SELECT
+            ifnull(sum(amount), 0)
+            FROM
+            hf_month_charge mc
+            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+            WHERE
+            mc.is_active = 1
+            AND ea.is_active = 1
+            <if test="paymentMonth != null and paymentMonth != ''">
+                AND mc.hf_month = TRIM(#{paymentMonth})
+            </if>
+            AND mc.hf_type = pa.hf_type
+            AND ea.com_account_class_id = pa.com_account_class_id
+            AND mc.payment_type IN (7, 8, 9, 10)
+          ) AS sum_sub,
+          (SELECT sum_add - sum_sub) AS sum_amount,
+          (
+            SELECT
+            ifnull(sum(amount), 0)
+            FROM
+            hf_month_charge mc
+            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+            WHERE
+            mc.is_active = 1
+            AND ea.is_active = 1
+            <if test="paymentMonth != null and paymentMonth != ''">
+                AND mc.hf_month = TRIM(#{paymentMonth})
+            </if>
+            AND mc.hf_type = pa.hf_type
+            AND ea.com_account_class_id = pa.com_account_class_id
+            AND mc.payment_type IN (6, 11)
+          ) AS pay_in_back_amount
         FROM hf_payment_account pa
         LEFT JOIN hf_com_account ca ON ca.com_account_id = pa.com_account_id
         LEFT JOIN hf_com_account_class cac ON cac.com_account_id = ca.com_account_id

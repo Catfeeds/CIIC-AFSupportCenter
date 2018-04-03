@@ -7,10 +7,8 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.service.IService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gt1.FileHandler;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
+import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import org.apache.poi.ss.formula.functions.T;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,8 +30,6 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 @Service
 public abstract class FileImportServiceImpl<M extends BaseMapper<E>, E> extends ServiceImpl<M, E> implements FileImportService<T, E> {
-    @Autowired
-    private LogService logService;
     private ReentrantLock reentrantLock = new ReentrantLock();
 
     @Override
@@ -104,12 +100,8 @@ public abstract class FileImportServiceImpl<M extends BaseMapper<E>, E> extends 
                         insertFileImport(importType, relatedUnitId, importBatchId, storageFileId, url, fileNames.get(i), createdBy);
                     }
                     reentrantLock.unlock();
-                } catch (Exception e) {
-                    e.printStackTrace();
-//                    LogContext logContext = LogContext.of().setTitle("文件上传")
-//                        .setTextContent("上传文件到文件服务器并新增上传文件记录表时异常")
-//                        .setExceptionContent(e);
-//                    logService.error(logContext);
+                } catch (IOException e) {
+                    throw new BusinessException(e);
                 } finally {
                     if (reentrantLock.isLocked()) {
                         reentrantLock.unlock();

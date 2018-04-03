@@ -11,6 +11,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.PayapplyEmpl
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPayment;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPaymentCom;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -191,8 +192,8 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         newSsPayment.setTotalAccount(0);
         newSsPayment.setTotalApplicationAmount(new BigDecimal(0));
         newSsPayment.setActive(true);
-        newSsPayment.setCreatedBy("张三");
-        newSsPayment.setModifiedBy("张三");
+        newSsPayment.setCreatedBy(UserContext.getUserName());
+        newSsPayment.setModifiedBy(UserContext.getUserName());
         newSsPayment.setCreatedTime(LocalDateTime.now());
 
         baseMapper.insert(newSsPayment);
@@ -264,9 +265,9 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         dto.setBusinessType(1);//业务类型
         dto.setPayWay(3);//转账
         dto.setPayAmount(ssPayment.getTotalApplicationAmount());//申请支付金额
-        dto.setReceiver("社保中心");//收款方名称
+        dto.setReceiver("见附件");//收款方名称  如果是独立户=见附件，如果是大库外包就是XX， 待确定，第一期上线的是独立户，大库外包有待向业务部收集
         dto.setApplyer(ssPayment.getRequestUser());  //申请人
-        dto.setApplyDate(StringUtil.getNow());//申请日期
+        dto.setApplyDate(StringUtil.now("yyyy-MM-dd"));//申请日期
         dto.setBusinessPkId(ssPayment.getPaymentId());//业务方主键ID(整型)
 
         //支付独立社保费用+支付月份  1 大库、2 外包、3独立户

@@ -23,7 +23,7 @@ public interface HfPaymentAccountMapper extends BaseMapper<HfPaymentAccount> {
      * @param paymentId 批次ID
      * @return   List<SsPaymentCom>
      */
-    List<HfPaymentAccount> getByPaymentId(Integer paymentId);
+    List<HfPaymentAccount> getByPaymentId(Long paymentId);
 
     /**
      * <p>Description: 获得公积金汇缴支付列表</p>

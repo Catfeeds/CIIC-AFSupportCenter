@@ -21,21 +21,18 @@
 	</resultMap>
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMapExt" type="com.ciicsh.gto.afsupportcenter.fundjob.bo.HfPaymentComBO">
-        <result column="company_id" property="companyId"/>
-        <result column="payment_com_id" property="paymentComId"/>
+    <resultMap id="BaseResultMapExt" type="com.ciicsh.gto.afsupportcenter.fundjob.bo.HfPaymentAccountBO">
+        <result column="payment_month" property="paymentMonth"/>
         <result column="com_account_id" property="comAccountId"/>
         <result column="payment_way" property="paymentWay"/>
     </resultMap>
 
     <!--查询未支付客户-->
-    <select id="getPaymentComList" resultMap="BaseResultMapExt">
-        SELECT pc.company_id,pc.payment_com_id,ca.com_account_id,ca.payment_way
-        FROM hf_payment_com pc
-        LEFT JOIN hf_com_account ca ON ca.com_account_id=pc.com_account_id
-        WHERE pc.is_active=1
-        AND EXISTS (SELECT 1 FROM hf_payment hp WHERE hp.payment_id=pc.payment_id AND hp.payment_month=#{payemntMonth})
-        AND EXISTS (SELECT 1 FROM hf_payment_account hpa WHERE hpa.com_account_id=pc.com_account_id AND hpa.payment_status=1)
+    <select id="getPaymentAccountList" resultMap="BaseResultMapExt">
+        SELECT ca.com_account_id,ca.payment_way,pa.payment_month
+        FROM hf_payment_account pa INNER JOIN hf_com_account ca on ca.com_account_id=pa.com_account_id
+        WHERE ca.is_active=1 AND pa.is_active=1
+        AND pa.payment_status=1
     </select>
 
 </mapper>

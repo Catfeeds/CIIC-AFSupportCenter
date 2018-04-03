@@ -43,7 +43,7 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
     @Transactional(rollbackFor = {Exception.class})
     public boolean updatePaymentInfo(Long pkId, String remark, Integer payStatus) {
         HfPayment hfPayment = new HfPayment();
-        hfPayment.setPaymentId(pkId.intValue());
+        hfPayment.setPaymentId(pkId);
         //根据ID获取到记录
         hfPayment = hfPaymentMapper.selectOne(hfPayment);
 

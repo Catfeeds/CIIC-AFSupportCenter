@@ -41,5 +41,5 @@ public interface HfComTaskMapper extends BaseMapper<HfComTask> {
     List<HfComTaskBo> queryCompanyTask(HfComTaskBo hfComTaskBo);
 
 
-    List<AccountInfoBO> getAccountsByCompany(@Param("companyId") String companyId, @Param("hfType") Integer hfType);
+    List<AccountInfoBO> getAccountsByCompany(@Param("companyId") String companyId);
 }

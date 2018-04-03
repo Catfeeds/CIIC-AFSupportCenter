@@ -266,6 +266,7 @@
         AND ea.hf_type=#{hfType}
     </if>
         <!--查看雇员最近一次公积金汇缴段-->
+        ORDER BY abp.archive_base_period_id DESC LIMIT 1
         <!--AND (DATE_FORMAT(CURDATE(),'%Y%m') BETWEEN  abp.start_month AND abp.end_month OR IFNULL(abp.end_month,'') ='' )-->
     </select>
     <resultMap id="listEmpTaskPeriodResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskPeriodBo">
@@ -318,7 +319,10 @@
 
     <delete id="deleteHfEmpArchiveByEmpTaskIds" parameterType="java.util.List">
         DELETE hea
-        FROM hf_emp_archive hea INNER JOIN hf_emp_task het ON het.emp_archive_id = hea.emp_archive_id
+        FROM hf_emp_archive hea INNER JOIN hf_emp_task het ON
+        het.employee_id = hea.employee_id
+        AND het.company_id = hea.company_id
+        AND hea.archive_status!=3
         AND hea.is_active = 1
         <where>
             <foreach collection="list" item="item" open="AND het.emp_task_id IN (" separator="," close=")">

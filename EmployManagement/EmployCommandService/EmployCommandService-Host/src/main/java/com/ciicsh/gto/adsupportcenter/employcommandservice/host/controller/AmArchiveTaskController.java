@@ -76,7 +76,19 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             if(!StringUtil.isEmpty(amEmploymentBO.getEmployFeedback())){
                 amEmploymentBO.setEmployFeedback(ReasonUtil.getYgfk(amEmploymentBO.getEmployFeedback()));
             }
+
+            if(amEmploymentBO!=null&&amEmploymentBO.getEmployCode()!=null)
+            {
+                if(amEmploymentBO.getEmployCode()==2){//代理也就是独立
+
+                }else if(amEmploymentBO.getEmployCode()==1){
+                    amEmploymentBO.setTitle("中智上海经济技术合作公司");
+                }else if(amEmploymentBO.getEmployCode()==3){
+                    amEmploymentBO.setCici("上海中智项目外包咨询服务有限公司");
+                }
+            }
         }
+
         return JsonResultKit.of(result);
     }
 
@@ -173,7 +185,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     public JsonResult archiveDetailInfoQuery(AmTaskParamBO amTaskParamBO){
 
         Map<String,Object>  map = taskService.getInformation(amTaskParamBO);
-        AmEmpTaskBO customBO = (AmEmpTaskBO)map.get("customBO");//客户信息
+        AmCustomBO customBO = (AmCustomBO)map.get("customBO");//客户信息
         AmEmpTaskBO employeeBO = (AmEmpTaskBO)map.get("employeeBO");//雇佣信息
 
         AmResignBO amResignBO = new AmResignBO();
@@ -212,20 +224,24 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         //退工信息
         if(null!=listResignBO&&listResignBO.size()>0){
-            amResignBO = listResignBO.get(0);
-            if(!StringUtil.isEmpty(amResignBO.getResignFeedback1())){
-                amResignBO.setResignFeedback1(ReasonUtil.getYgfk(amResignBO.getResignFeedback1()));
-            }
-            if(!StringUtil.isEmpty(amResignBO.getIfLaborManualReturn())){
-                amResignBO.setIfLaborManualReturnStr(ReasonUtil.getIsTj(amResignBO.getIfLaborManualReturn().toString()));
-            }
-
-            if(null!=amEmpTask){
-                java.text.DateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
-                if(null!=amEmpTask.getOutDate()){
-                    amResignBO.setOutDate(sdf.format(amEmpTask.getOutDate()));
+            AmResignBO resignBO = listResignBO.get(0);
+            if(1==resignBO.getIsFinish())
+            {
+                amResignBO = listResignBO.get(0);
+                if(!StringUtil.isEmpty(amResignBO.getResignFeedback())){
+                    amResignBO.setResignFeedback(ReasonUtil.getYgfk(amResignBO.getResignFeedback()));
                 }
-                amResignBO.setOutReason(amEmpTask.getOutReason());
+                if(!StringUtil.isEmpty(amResignBO.getIfLaborManualReturn())){
+                    amResignBO.setIfLaborManualReturnStr(ReasonUtil.getIsTj(amResignBO.getIfLaborManualReturn().toString()));
+                }
+
+                if(null!=amEmpTask){
+                    java.text.DateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+                    if(null!=amEmpTask.getOutDate()){
+                        amResignBO.setOutDate(sdf.format(amEmpTask.getOutDate()));
+                    }
+                    amResignBO.setOutReason(amEmpTask.getOutReason());
+                }
             }
         }
 

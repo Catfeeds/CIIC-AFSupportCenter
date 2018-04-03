@@ -11,7 +11,12 @@ public enum TaskCategory {
     SEALED(5,"封存"),
     REPAY(6,"补缴"),
     ADJUST(7,"调整"),
-    TRANSFER(8,"转移");
+    TRANSFER(8,"转移"),
+    FLOPNEW(9, "翻牌新开"),
+    FLOPINTO(10, "翻牌转入"),
+    FLOPREOPEN(11, "翻牌启封"),
+    FLOPOUT(12, "翻牌转出"),
+    FLOPSEALED(13, "翻牌封存");
 
     TaskCategory(Integer category, String categoryName){
         this.category = category;

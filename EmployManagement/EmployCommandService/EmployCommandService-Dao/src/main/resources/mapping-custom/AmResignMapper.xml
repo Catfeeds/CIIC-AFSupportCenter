@@ -18,7 +18,6 @@
         <result column="title" property="title" />
         <result column="employee_name" property="employeeName"/>
         <result column="id_num" property="idNum"/>
-        <result column="license_code" property="licenseCode" />
         <result column="service_center" property="serviceCenter"/>
         <result column="custom" property="custom"/>
         <result column="employ_date" property="employDate" />
@@ -45,7 +44,6 @@
         <result column="title" property="title" />
         <result column="employee_name" property="employeeName"/>
         <result column="id_num" property="idNum"/>
-        <result column="license_code" property="licenseCode" />
         <result column="service_center" property="serviceCenter"/>
         <result column="custom" property="custom"/>
         <result column="employ_date" property="employDate" />
@@ -63,13 +61,13 @@
         a.emp_task_id,
         a.employee_id,
         a.company_id,
+        a.employ_code,
         f.employment_id,
         b.employ_property,
         b.employ_date,
         b.handle_type,
         f.resign_date,
-        f.resign_feedback1,
-        f.resign_feedback2,
+        f.resign_feedback,
         a.out_reason,
         a.out_date,
         f.job_centre_feedback_date,
@@ -83,7 +81,9 @@
         c.archive_place,
         c.storage_out_date,
         c.employ_feedback,
-        c.luyong_handle_end
+        c.luyong_handle_end,
+        h.service_center,
+        h.leader_ship_name
         FROM
         am_emp_task a
         LEFT JOIN am_resign f  ON f.emp_task_id = a.emp_task_id
@@ -91,6 +91,7 @@
         LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
         LEFT JOIN sal_company e ON e.company_id = a.company_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
+        LEFT JOIN am_emp_custom h on h.task_id = a.task_id
         WHERE
         a.task_category = '2'
         and
@@ -103,7 +104,7 @@
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
         </foreach>
-
+        order by a.created_time desc
     </select>
 
     <select id="taskCount"  resultMap="BaseResultMapDTO">
@@ -121,6 +122,7 @@
         LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
         LEFT JOIN sal_company e ON e.company_id = a.company_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
+        LEFT JOIN am_emp_custom h on h.task_id = a.task_id
         WHERE
         a.task_category = '2'
         and
@@ -174,8 +176,7 @@
         b.employ_date,
         b.handle_type,
         f.resign_date,
-        f.resign_feedback1,
-        f.resign_feedback2,
+        f.resign_feedback,
         a.out_reason,
         a.out_date,
         f.job_centre_feedback_date,
@@ -189,7 +190,9 @@
         c.archive_place,
         c.storage_out_date,
         c.employ_feedback,
-        c.luyong_handle_end
+        c.luyong_handle_end,
+        h.service_center,
+        h.leader_ship_name
         FROM
         am_emp_task a
         LEFT JOIN am_resign f  ON f.emp_task_id = a.emp_task_id
@@ -197,6 +200,7 @@
         LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
         LEFT JOIN sal_company e ON e.company_id = a.company_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
+        LEFT JOIN am_emp_custom h on h.task_id = a.task_id
         WHERE
         a.task_category = '2'
         and

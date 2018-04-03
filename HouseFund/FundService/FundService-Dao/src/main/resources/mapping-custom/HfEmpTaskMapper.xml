@@ -562,6 +562,7 @@
         emp_archive_id,
         is_change,
         hf_type,
+        process_category,
         task_category,
         urgent,
         operation_remind,
@@ -598,6 +599,7 @@
         feedback_date,
         operate_date,
         business_interface_id,
+        old_agreement_id,
         task_id,
         is_active,
         created_time,
@@ -739,7 +741,7 @@
             9,
             8,
             urgent,
-            #{createdBy},
+            submitter_id,
             submitter_dept_name,
             NOW(),
             expire_date,
@@ -897,10 +899,23 @@
         <if test="hfType != null">
             AND ea.hf_type = #{hfType}
         </if>
+        <if test="status != null">
+            AND eoop.status = #{status}
+        </if>
     </select>
     <select id="fetchPrintInfo" resultType="Map">
-        SELECT et.*,emp.employee_name,ea.hf_emp_account FROM hf_emp_task et INNER JOIN hf_emp_archive ea ON  ea.emp_archive_id= et.emp_archive_id
-        INNER JOIN hf_com_account ca ON  ea.com_account_id=ca.com_account_id
+        SELECT et.*,emp.employee_name,ea.hf_emp_account
+        FROM hf_emp_task et
+        INNER JOIN hf_emp_archive ea
+                ON  ea.employee_id=et.employee_id
+                AND ea.company_id=et.company_id
+                AND ea.hf_type=et.hf_type
+                AND ea.archive_status!=3
+                AND ea.is_active=1
+                AND ea.hf_type=et.hf_type
+        INNER JOIN hf_com_account ca
+                ON  ea.com_account_id=ca.com_account_id
+                AND ca.is_active=1
         INNER  JOIN emp_employee emp ON  emp.employee_id=et.employee_id
         where et.is_active=1 AND et.emp_task_id=#{empTaskId}
 

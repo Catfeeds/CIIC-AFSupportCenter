@@ -22,6 +22,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.logservice.api.LogServiceProxy;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -152,7 +153,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
                     ssComTask.setRejectionRemark(refuseReason);
                 //批退工作流
                 SsComTask task = ssComTaskService.selectById(ssComTask.getComTaskId());
-                TaskCommonUtils.completeTask(task.getTaskId(),commonApiUtils,"xsj");
+                TaskCommonUtils.completeTask(task.getTaskId(),commonApiUtils,UserContext.getUserId());
                 dataList.add(ssComTask);
             }
         }
@@ -224,11 +225,12 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
             ssAccountComRelation.setCompanyId(map.get("companyId"));
             ssAccountComRelation.setMajorCom(new Integer(1));
             ssAccountComRelation.setCreatedTime(LocalDateTime.now());
-            ssAccountComRelation.setCreatedBy("xsj");
-            ssAccountComRelation.setModifiedBy("xsj");
+            ssAccountComRelation.setCreatedBy(UserContext.getUserId());
+            ssAccountComRelation.setModifiedBy(UserContext.getUserId());
             ssAccountComRelation.setModifiedTime(LocalDateTime.now());
+        }else{
+            ssAccountComRelation = resList.get(0);
         }
-
         String retCheckResult=business.checkComAccountDuplicate(ssComAccount);
         if ( !retCheckResult.equals("")){//检查输入的内容是否重复
             return JsonResultKit.ofError(retCheckResult.substring(0,retCheckResult.length()-1));
@@ -253,7 +255,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         SsComTaskBO ssComTaskBO = CommonTransform.convertToDTO(ssComTaskDTO, SsComTaskBO.class);
         if (ssComTaskBO.getTaskStatus() == 3) {
             //调用工作流
-            TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,"xsj");
+            TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,UserContext.getUserId());
             if (null != ssComTaskBO.getEndDate() && null != ssComTaskBO.getComAccountId()) {
                 SsComAccount ssComAccount = new SsComAccount();
                 //2 表示终止
@@ -261,7 +263,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
                 ssComAccount.setComAccountId(ssComTaskBO.getComAccountId());
                 ssComAccount.setEndDate(ssComTaskBO.getEndDate());
                 ssComAccount.setModifiedTime(LocalDateTime.now());
-                ssComAccount.setModifiedBy("xsj");
+                ssComAccount.setModifiedBy(UserContext.getUserId());
                 result = business.updateOrHandlerTask(ssComTaskBO, ssComAccount);
             }
         } else {
@@ -291,12 +293,12 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         //0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
         if (ssComTaskBO.getTaskStatus() == 3) {
             //调用工作流
-            TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,"xsj");
+            TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,UserContext.getUserId());
             if (isNotNull(ssComTaskBO.getSettlementArea()) && null != ssComTaskBO.getComAccountId()) {
                 SsComAccount ssComAccount = new SsComAccount();
                 ssComAccount.setComAccountId(ssComTaskBO.getComAccountId());
                 ssComAccount.setSettlementArea(ssComTaskBO.getSettlementArea());
-                ssComAccount.setModifiedBy("xsj");
+                ssComAccount.setModifiedBy(UserContext.getUserId());
                 ssComAccount.setModifiedTime(LocalDateTime.now());
                 result = business.updateOrHandlerTask(ssComTaskBO, ssComAccount);
             }
@@ -340,7 +342,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         //0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
         if (ssComTaskBO.getTaskStatus() == 3) {
             //调用工作流
-            TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,"xsj");
+            TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,UserContext.getUserId());
             Object object = getObject(ssComTaskBO);
             //变更类型操作
             result = business.updateOrHandlerTask(ssComTaskBO, object);
@@ -359,7 +361,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
     @RequestMapping("/taskRevocation")
     public JsonResult<Boolean> taskRevocation(SsComTask ssComTask) {
         //修改任单状态和时间
-        ssComTask.setModifiedBy("xsj");
+        ssComTask.setModifiedBy(UserContext.getUserId());
         ssComTask.setModifiedTime(LocalDateTime.now());
         return JsonResultKit.of(business.updateTaskStatusForRevoke(ssComTask) > 0 ? true : false);
     }
@@ -370,6 +372,10 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         //设置账户ID
         ssComAccount.setComAccountId(isNotNull(map.get("comAccountId")) ? Long.parseLong(map.get("comAccountId")) :
             null);
+        //法人
+        ssComAccount.setLegalPerson(isNotNull(map.get("legalPerson")) ? map.get("legalPerson") : null);
+        //联系地址
+        ssComAccount.setContactAddress(isNotNull(map.get("contactAddress")) ? map.get("contactAddress") : null);
         //参保户登记码
         ssComAccount.setSsAccount(isNotNull(map.get("ssAccount")) ? map.get("ssAccount") : null);
         //卡号
@@ -390,15 +396,17 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         //密码
         ssComAccount.setSsPwd(isNotNull(map.get("ssPwd")) ? map.get("ssPwd") : null);
         //初始余额
-        ssComAccount.setInitialBalance(isNotNull(map.get("initialBalance")) ? new BigDecimal(map.get
-            ("initialBalance")) : null);
+        //ssComAccount.setInitialBalance(isNotNull(map.get("initialBalance")) ? new BigDecimal(map.get
+        //   ("initialBalance")) : null);
         //初期欠费
-        ssComAccount.setInitialDebt(isNotNull(map.get("initialDebt")) ? new BigDecimal(map.get("initialDebt")) : null);
+        //ssComAccount.setInitialDebt(isNotNull(map.get("initialDebt")) ? new BigDecimal(map.get("initialDebt")) : null);
         //来源地
         ssComAccount.setOriginPlace(isNotNull(map.get("originPlace")) ? Integer.valueOf(map.get("originPlace")) : null);
         //来源地备注
         ssComAccount.setOriginPlaceRemark(isNotNull(map.get("originPlaceRemark")) ? map.get("originPlaceRemark") :
             null);
+        //办理备注
+        ssComAccount.setRemark(isNotNull(map.get("handleRemark")) ? map.get("handleRemark") : null);
         //查询账户
         ssComAccount.setQueryAccount(isNotNull(map.get("queryAccount")) ? map.get("queryAccount") : null);
         //交予方式
@@ -409,8 +417,8 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         //给凭证时间
-        ssComAccount.setProvideCertificateTime(isNotNull(map.get("provideCertificateTime")) ? LocalDate.parse(map.get
-            ("provideCertificateTime"), dateFormatter) : null);
+        //ssComAccount.setProvideCertificateTime(isNotNull(map.get("provideCertificateTime")) ? LocalDate.parse(map.get
+        //    ("provideCertificateTime"), dateFormatter) : null);
         //变更时间
         ssComAccount.setChangeTime(isNotNull(map.get("changeTime")) ? LocalDateTime.parse(map.get("changeTime"),
             timeFormatter) : null);
@@ -426,9 +434,8 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         ssComAccount.setExpireDate(isNotNull(map.get("expireDate")) ? Integer.valueOf(map.get("expireDate")) : null);
         //默认独立户
         ssComAccount.setSsAccountType(new Integer(3));
-        ssComAccount.setModifiedBy("xsj");
+        ssComAccount.setModifiedBy(UserContext.getUserId());
         ssComAccount.setModifiedTime(LocalDateTime.now());
-
         return ssComAccount;
     }
 
@@ -441,6 +448,10 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         ssComTask.setCompanyId(isNotNull(map.get("companyId")) ? map.get("companyId") : null);
         //任务单类型
         ssComTask.setTaskCategory(isNotNull(map.get("taskCategory")) ? map.get("taskCategory") : null);
+        //法人
+        ssComTask.setLegalPerson(isNotNull(map.get("legalPerson")) ? map.get("legalPerson") : null);
+        //联系地址
+        ssComTask.setContactAddress(isNotNull(map.get("contactAddress")) ? map.get("contactAddress") : null);
         //前道传过来的截止日期和支付方式
         ssComTask.setTaskFormContent(isNotNull(map.get("taskFormContent")) ? map.get("taskFormContent") : null);
         //任务单状态
@@ -477,7 +488,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         ssComTask.setSettlementArea(isNotNull(map.get("settlementArea"))?map.get("settlementArea"):null);
 
         ssComTask.setDispatchMaterial(isNotNull(map.get("dispatchMaterial"))?map.get("dispatchMaterial"):null);
-        ssComTask.setModifiedBy("xsj");
+        ssComTask.setModifiedBy(UserContext.getUserId());
         ssComTask.setModifiedTime(LocalDateTime.now());
         return ssComTask;
     }
@@ -497,7 +508,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         ssAccountRatio.setStartMonth(isNotNull(map.get("startMonth")) ? map.get("startMonth").replaceAll("-", "") :
             null);
 
-        ssAccountRatio.setModifiedBy("xsj");
+        ssAccountRatio.setModifiedBy(UserContext.getUserId());
         ssAccountRatio.setModifiedTime(LocalDateTime.now());
         return ssAccountRatio;
     }
@@ -511,7 +522,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
     public Object getObject(SsComTaskBO ssComTaskBO) {
         //用于返回包装后的账户信息
         SsComAccount ssComAccount = new SsComAccount();
-        ssComAccount.setModifiedBy("xsj");
+        ssComAccount.setModifiedBy(UserContext.getUserId());
         ssComAccount.setModifiedTime(LocalDateTime.now());
         if ("1".equals(ssComTaskBO.getChangeContentValue())) {//行业比例变更
             List<SsAccountRatio> SsAccountRatioList = new ArrayList<SsAccountRatio>();
@@ -525,16 +536,16 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
             String monthInsert = ssComTaskBO.getStartMonth();
             ssAccountRatioInsert.setStartMonth(monthInsert);
             ssAccountRatioInsert.setActive(true);
-            ssAccountRatioInsert.setCreatedBy("xsj");
+            ssAccountRatioInsert.setCreatedBy(UserContext.getUserId());
             ssAccountRatioInsert.setCreatedTime(LocalDateTime.now());
-            ssAccountRatioInsert.setModifiedBy("xsj");
+            ssAccountRatioInsert.setModifiedBy(UserContext.getUserId());
             ssAccountRatioInsert.setModifiedTime(LocalDateTime.now());
             SsAccountRatioList.add(0, ssAccountRatioInsert);
             //原来数据只需要修改endMonth 在原来的月份上减一月
             String monthUpdate = TaskCommonUtils.getLastMonth(Integer.valueOf(ssComTaskBO.getStartMonth()));
             ssAccountRatioUpdate.setComAccountId(ssComTaskBO.getComAccountId());
             ssAccountRatioUpdate.setEndMonth(monthUpdate);
-            ssAccountRatioUpdate.setModifiedBy("xsj");
+            ssAccountRatioUpdate.setModifiedBy(UserContext.getUserId());
             ssAccountRatioUpdate.setModifiedTime(LocalDateTime.now());
             SsAccountRatioList.add(1, ssAccountRatioUpdate);
             //返回两个工伤变更的对象List

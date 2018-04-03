@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -83,7 +84,7 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         List<EmpTaskTransferBo> employeeBo= baseMapper.queryEmpTaskTransferNewTask(empTaskTransferBo);
         empTaskTransferBo=employeeBo.get(0);
         hfEmpTaskHandleBo.setEmployeeName(empTaskTransferBo.getEmployeeName());
-        hfEmpTaskHandleBo.setInDate(DateUtil.dateToLocaleDate(empTaskTransferBo.getInDate()));
+        hfEmpTaskHandleBo.setInDate(empTaskTransferBo.getInDate());
         hfEmpTaskHandleBo.setCompanyName(empTaskTransferBo.getTitle());
         hfEmpTaskHandleBo.setEmployeeId(employeeId);
         hfEmpTaskHandleBo.setCompanyId(companyId);
@@ -96,9 +97,9 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
             hfEmpTask.setEmpTaskId(empTaskId);
             hfEmpTask = baseMapper.selectOne( hfEmpTask);
             BeanUtils.copyProperties(hfEmpTask,empTaskTransferBo);
-            empTaskTransferBo.setFeedbackDate(DateUtil.localDateToDate(hfEmpTask.getFeedbackDate()));
-            empTaskTransferBo.setOperateDate(DateUtil.localDateToDate(hfEmpTask.getOperateDate()));
-            empTaskTransferBo.setTransferDate(DateUtil.localDateToDate(hfEmpTask.getTransferDate()));
+            empTaskTransferBo.setFeedbackDate(hfEmpTask.getFeedbackDate());
+            empTaskTransferBo.setOperateDate(hfEmpTask.getOperateDate());
+            empTaskTransferBo.setTransferDate(hfEmpTask.getTransferDate());
             hfEmpTaskHandleBo.setEmpTaskTransferBo(empTaskTransferBo);
         }else{
             hfEmpTaskHandleBo.setEmpTaskTransferBo(empTaskTransferBo);
@@ -110,7 +111,7 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
     public JsonResult submitTransferTask(EmpTaskTransferBo empTaskTransferBo) {
         HfEmpTask hfEmpTask =new HfEmpTask();
         Long empTaskId=empTaskTransferBo.getEmpTaskId();
-        List<AccountInfoBO> listAccount1 = hfComAccountMapper.getAccountsByCompany(empTaskTransferBo.getCompanyId(),1);
+        List<AccountInfoBO> listAccount1 = hfComAccountMapper.getAccountsByCompany(empTaskTransferBo.getCompanyId());
         if (listAccount1.size()==0){
             return JsonResultKit.ofError("该雇员所在公司没有开户！");
         }
@@ -124,29 +125,38 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
             return JsonResultKit.ofError("该雇员没有转入或新开的公积金档案信息！");
         }
         empTaskTransferBo.setEmpArchiveId(empArchiveList.get(0).getEmpArchiveId());//设置雇员公积金档案ID
-
         BeanUtils.copyProperties(empTaskTransferBo,hfEmpTask);
-        hfEmpTask.setTransferDate(DateUtil.dateToLocaleDate(empTaskTransferBo.getTransferDate()));
-        hfEmpTask.setFeedbackDate(DateUtil.dateToLocaleDate(empTaskTransferBo.getFeedbackDate()));
-        hfEmpTask.setOperateDate(DateUtil.dateToLocaleDate(empTaskTransferBo.getOperateDate()));
+        saveEmpTask(hfEmpTask);
+        return JsonResultKit.of(200,"转移数据保存成功！" ,hfEmpTask.getEmpTaskId());
+    }
+
+    /**
+     * 保存雇员公积金任务单表
+     * @param hfEmpTask
+     */
+    private void saveEmpTask(HfEmpTask hfEmpTask){
         hfEmpTask.setProcessCategory(9);//大类：其他
         hfEmpTask.setTaskCategory(8);
-        hfEmpTask.setTaskStatus(1);
-        if(Optional.ofNullable(empTaskId).isPresent()==false){ //公积金专员创建任务单
+        if(Optional.ofNullable(hfEmpTask.getEmpTaskId()).isPresent()==false){ //公积金专员创建任务单
+            hfEmpTask.setSubmitTime(LocalDate.now());
+            hfEmpTask.setSubmitterId("");
+            hfEmpTask.setCreatedBy("");
+            hfEmpTask.setCreatedDisplayName("");
             baseMapper.insert(hfEmpTask);
         }else{
+            hfEmpTask.setModifiedTime(LocalDateTime.now());
+            hfEmpTask.setModifiedBy("");
+            hfEmpTask.setModifiedDisplayName("");
             baseMapper.updateById(hfEmpTask);
         }
 
-        return JsonResultKit.of(200,"转移办理操作成功！" ,hfEmpTask.getEmpTaskId());
     }
-
     @Override
     public JsonResult notHandleTransfer(EmpTaskTransferBo empTaskTransferBo) {
         HfEmpTask hfEmpTask =new HfEmpTask();
         hfEmpTask.setEmpTaskId(empTaskTransferBo.getEmpTaskId());
         hfEmpTask.setTaskStatus(5);//不需办理
-        baseMapper.updateById(hfEmpTask);
+        saveEmpTask(hfEmpTask);
         return JsonResultKit.of("不需办理操作成功！");
     }
 
@@ -157,7 +167,8 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         Map<String, Object> mapP=new HashMap<>();
         hfEmpTask.setEmpTaskId(empTaskTransferBo.getEmpTaskId());
         hfEmpTask.setOperateDate(LocalDate.now());//设置操作日期
-        baseMapper.updateById(hfEmpTask);
+        hfEmpTask.setTaskStatus(3);//已处理
+        saveEmpTask(hfEmpTask);
         Map<String,String> mapPrint=baseMapper.fetchPrintInfo(empTaskTransferBo.getEmpTaskId());
 
         mapP.put("createdByYYYY", LocalDate.now().getYear());

@@ -6,6 +6,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.busi
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmResign;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmResignLink;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.resignSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
@@ -43,6 +44,9 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
     @Autowired
     private IAmEmpTaskService taskService;
 
+    @Autowired
+    private  AmResignLinkService amResignLinkService;
+
 
     @RequestMapping("/queryAmResign")
     public JsonResult<PageRows>  queryAmResign(PageInfo pageInfo){
@@ -60,13 +64,21 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
                }
            }
 
-           if(!StringUtil.isEmpty(amResignBO.getResignFeedback1())){
-               amResignBO.setResignFeedback1(ReasonUtil.getTgfk(amResignBO.getResignFeedback1()));
+           if(!StringUtil.isEmpty(amResignBO.getResignFeedback())){
+               amResignBO.setResignFeedback(ReasonUtil.getTgfk(amResignBO.getResignFeedback()));
            }
 
-           if(!StringUtil.isEmpty(amResignBO.getResignFeedback2())){
+           if(amResignBO!=null&&amResignBO.getEmployCode()!=null)
+           {
+               if(amResignBO.getEmployCode()==2){//代理也就是独立
 
+               }else if(amResignBO.getEmployCode()==1){
+                   amResignBO.setTitle("中智上海经济技术合作公司");
+               }else if(amResignBO.getEmployCode()==3){
+                   amResignBO.setCici("上海中智项目外包咨询服务有限公司");
+               }
            }
+
        }
 
         return JsonResultKit.of(result);
@@ -122,7 +134,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
         Map<String,Object>  map = taskService.getInformation(amTaskParamBO);
 
-        AmEmpTaskBO customBO = (AmEmpTaskBO)map.get("customBO");//客户信息
+        AmCustomBO customBO = (AmCustomBO)map.get("customBO");//客户信息
         AmEmpTaskBO employeeBO = (AmEmpTaskBO)map.get("employeeBO");//雇佣信息
 
         Map<String,Object> param = new HashMap<>();
@@ -250,28 +262,9 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
     @RequestMapping("/saveAmResign")
     public JsonResult<Boolean> saveAmResign(AmResignBO bo) {
-        AmResign entity = new AmResign();
-        BeanUtils.copyProperties(bo,entity);
 
-        LocalDateTime now = LocalDateTime.now();
-        if(entity.getResignId()==null){
-            entity.setCreatedTime(now);
-            entity.setModifiedTime(now);
-            entity.setCreatedBy("sys");
-            entity.setModifiedBy("sys");
-        }else{
-            entity.setModifiedTime(now);
-            entity.setModifiedBy("sys");
-        }
+        boolean result =  business.saveAmResign(bo);
 
-        if(!StringUtil.isEmpty(bo.getResignFeedback1()))
-        {
-            AmEmpTask amEmpTask = taskService.selectById(bo.getEmpTaskId());
-            amEmpTask.setTaskStatus(Integer.parseInt(bo.getResignFeedback1()));
-            taskService.insertOrUpdate(amEmpTask);
-        }
-
-        boolean result =  business.insertOrUpdate(entity);
         return JsonResultKit.of(result);
     }
 
@@ -357,4 +350,5 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
         ExcelUtil.exportExcel(opts,resignSearchExportOpt.class,fileNme,response);
     }
+
 }

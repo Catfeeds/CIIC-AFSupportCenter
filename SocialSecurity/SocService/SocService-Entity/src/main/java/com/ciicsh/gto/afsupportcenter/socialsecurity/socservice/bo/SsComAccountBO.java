@@ -102,6 +102,9 @@ public class SsComAccountBO {
     // 来源表 sal_company
     // 客户编号
     private String companyId;
+
+    private String companyName;
+
     // 客户名称
     private String title;
     //历史企业任务单

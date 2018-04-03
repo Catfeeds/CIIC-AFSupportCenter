@@ -80,7 +80,7 @@
         WHERE
           a.is_active = 1
         AND b.is_active = 1
-        AND a.task_category = '1'
+        AND a.task_category IN (1,2)
         AND a.company_id = #{companyId}
     </select>
 
@@ -103,7 +103,8 @@
         a.industry_category,
         '' AS 'com_ratio',
         a.dispatch_material,
-        a.submit_remark AS 'remark'
+        a.submit_remark AS 'remark',
+        a.task_status
     </sql>
 
 </mapper>

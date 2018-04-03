@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer;
 
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRemarkBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.convertor.EmpTaskCategoryConverter;
+
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfArchiveBasePeriod;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTaskPeriod;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
