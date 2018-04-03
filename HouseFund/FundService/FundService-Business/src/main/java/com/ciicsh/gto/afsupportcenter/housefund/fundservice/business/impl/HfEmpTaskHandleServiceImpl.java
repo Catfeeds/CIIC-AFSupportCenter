@@ -10,6 +10,7 @@ import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocia
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogApiUtil;
@@ -23,6 +24,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.TaskSheetRequest
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
+import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.kit.DateKit;
@@ -440,6 +442,86 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     setContent("访问客服中心的完成任务接口失败,ExceptionMessage:" + e.getMessage());
                 logApiUtil.error(logMessage);
                 throw new BusinessException("访问客服中心的完成任务接口失败");
+            }
+
+            HfEmpTaskCreateTransBo hfEmpTaskCreateTransBo;
+            ComAccountTransBo comAccountTransBo;
+
+            switch (inputHfEmpTask.getTaskCategory()) {
+                case HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE:
+                case HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT:
+                case HfEmpTaskConstant.TASK_CATEGORY_FLOP_CLOSE:
+                case HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_OUT:
+                    hfEmpTaskCreateTransBo = new HfEmpTaskCreateTransBo();
+                    comAccountTransBo = new ComAccountTransBo();
+                    List<ComAccountTransBo> comAccountTransBoList;
+
+                    // 如果转出或封存时，转入单位统一为市公积金中心
+                    if (inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
+                        || inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT) {
+                        String transferInUnit = SocialSecurityConst.FUND_OUT_UNIT_LIST.get(0); //市公积金中心单位名称
+                        hfEmpTaskCreateTransBo.setTransferInUnit(transferInUnit);
+                        String transferInUnitAccount =
+                            (inputHfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC)? SocialSecurityConst.CENTER_BASIC_COM_ACCOUNT
+                                : SocialSecurityConst.CENTER_ADDED_COM_ACCOUNT;
+                        hfEmpTaskCreateTransBo.setTransferInUnitAccount(transferInUnitAccount);
+                    }
+                    comAccountTransBo.setComAccountName(null);
+                    comAccountTransBo.setHfType(inputHfEmpTask.getHfType());
+                    comAccountTransBo.setComAccountId(params.getLong("comAccountId"));
+                    comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
+                    if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
+                        if (comAccountTransBoList.size() > 1) {
+                            String hfTypeName = (comAccountTransBo.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) ? "基本公积金" : "补充公积金";
+                            throw new BusinessException("转出单位的" + hfTypeName + "账户存在重复数据");
+                        }
+                        hfEmpTaskCreateTransBo.setTransferOutUnit(comAccountTransBoList.get(0).getComAccountName());
+                        hfEmpTaskCreateTransBo.setTransferOutUnitAccount(comAccountTransBoList.get(0).getHfComAccount());
+                    }
+                    hfEmpTaskCreateTransBo.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_UNHANDLED);
+                    hfEmpTaskCreateTransBo.setModifiedBy(UserContext.getUserId());
+                    hfEmpTaskCreateTransBo.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+                    createTransEmpTask(hfEmpTaskCreateTransBo);
+                case HfEmpTaskConstant.TASK_CATEGORY_FLOP_OPEN:
+                case HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_IN:
+                    // 翻牌转入或翻牌启封时
+                    Map<String, Object> condition = new HashMap<>();
+                    hfEmpTaskCreateTransBo = new HfEmpTaskCreateTransBo();
+                    condition.put("employee_id", hfEmpTaskCreateTransBo.getEmployeeId());
+                    condition.put("task_category", HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK);
+                    condition.put("hf_type", hfEmpTaskCreateTransBo.getHfType());
+                    condition.put("task_status", HfEmpTaskConstant.TASK_STATUS_UNHANDLED);
+                    condition.put("business_interface_id", inputHfEmpTask.getBusinessInterfaceId());
+                    condition.put("is_active", 1);
+                    List<HfEmpTask> hfEmpTaskList = selectByMap(condition);
+
+                    // 判断相应的翻牌转出或翻牌封存办理时，生成的转移任务单是否存在
+                    if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
+                        int size = hfEmpTaskList.size();
+                        if (size > 0) {
+                            HfEmpTask transferTask = hfEmpTaskList.get(size - 1);
+                            HfEmpTask updateTransferTask = new HfEmpTask();
+                            comAccountTransBo = new ComAccountTransBo();
+                            comAccountTransBo.setHfType(inputHfEmpTask.getHfType());
+                            comAccountTransBo.setComAccountId(params.getLong("comAccountId"));
+                            comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
+                            if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
+                                if (comAccountTransBoList.size() > 1) {
+                                    String hfTypeName = (comAccountTransBo.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) ? "基本公积金" : "补充公积金";
+                                    throw new BusinessException("转入单位的" + hfTypeName + "账户存在重复数据");
+                                }
+                                updateTransferTask.setTransferInUnit(comAccountTransBoList.get(0).getComAccountName());
+                                updateTransferTask.setTransferInUnitAccount(comAccountTransBoList.get(0).getHfComAccount());
+                            }
+                            updateTransferTask.setEmpTaskId(transferTask.getEmpTaskId());
+                            updateTransferTask.setModifiedBy(UserContext.getUserId());
+                            updateTransferTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+                            updateById(updateTransferTask);
+                        }
+                    }
+                    break;
+                default:
+                    break;
             }
         }
         return JsonResultKit.of();

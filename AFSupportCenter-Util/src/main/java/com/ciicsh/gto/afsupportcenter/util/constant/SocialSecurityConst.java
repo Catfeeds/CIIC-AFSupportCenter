@@ -21,6 +21,9 @@ public interface SocialSecurityConst {
     public static final String PAYMENT_TYPE_KEY = "PaymentType";
 //    public static final String HF_TASK_CATEGORY_KEY = "HFTaskCategory";
 
+    String CENTER_BASIC_COM_ACCOUNT = "881383287";
+    String CENTER_ADDED_COM_ACCOUNT = "881383288";
+
     //结算区县
     public static final Map<String, String> DISTRICT_MAP = new HashMap<String, String>() {
         {

@@ -13,6 +13,7 @@ public class HfEmpTaskCreateTransBo implements Serializable {
     private String companyId;
     private String employeeId;
     private Integer hfType;
+    private Integer taskStatus;
     private String transferOutUnit;
     private String transferOutUnitAccount;
     private String transferInUnit;

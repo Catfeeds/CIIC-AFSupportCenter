@@ -748,7 +748,7 @@
             NOW(),
             expire_date,
             task_form_content,
-            2,
+            #{taskStatus},
             start_handle_date,
             send_check_date,
             emp_base,
