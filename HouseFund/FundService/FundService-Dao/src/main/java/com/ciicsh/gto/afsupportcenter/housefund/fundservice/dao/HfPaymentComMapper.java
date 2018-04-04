@@ -1,6 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentComBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HfCreatePaymentAccountBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.HfFundPayCreatePaymentAccountPara;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentCom;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
@@ -24,5 +26,9 @@ public interface HfPaymentComMapper extends BaseMapper<HfPaymentCom> {
      * @param paymentAccountIds
      * @return
      */
-    List<Map<String,Object>> selectPaymentAccount(@Param("paymentAccountIds") List paymentAccountIds);
+    List<HfCreatePaymentAccountBO> selectPaymentAccount(@Param("paymentAccountIds") List paymentAccountIds);
+
+    Integer updatePaymentAccount(HfFundPayCreatePaymentAccountPara hfFundPayCreatePaymentAccountPara);
+
+
 }

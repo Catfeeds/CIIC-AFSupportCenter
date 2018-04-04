@@ -79,6 +79,7 @@
         <result column="operation_remind_date" property="operationRemindDate" />
         <result column="leader_ship_id" property="leaderShipId" />
         <result column="leader_ship_name" property="leaderShipName" />
+        <result column="created_display_name" property="createdDisplayName" />
     </resultMap>
 
     <select id="queryHfEmpTaskReject" resultMap="RejectResultMapBo">
@@ -526,7 +527,8 @@
         het.operation_remind,
         het.operation_remind_date,
         het.leader_ship_id,
-        het.leader_ship_name
+        het.leader_ship_name,
+        het.created_display_name
         FROM hf_emp_task het
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
@@ -746,7 +748,7 @@
             NOW(),
             expire_date,
             task_form_content,
-            2,
+            #{taskStatus},
             start_handle_date,
             send_check_date,
             emp_base,

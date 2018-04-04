@@ -17,5 +17,5 @@ public interface HfPaymentComService extends IService<HfPaymentCom> {
      * @return
      */
     PageRows<HfPaymentComBo> getFundPaysDetailOperationData(PageInfo pageInfo);
-    JsonResult createPaymentCom(List paymentAccountIds);
+    JsonResult createPaymentCom(List paymentAccountIds,String payee);
 }

@@ -132,7 +132,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
                 generatePaymentDetail( accountComExt, paymentMonth);
 
                 /*****更新paymentCom表中的合计金额*****/
-                paymentComMapper.updateMonthChargeTotalAmount(accountComExt.getComAccountId(),paymentMonth);
+                paymentComMapper.updateSsMonthChargeTotalAmount(accountComExt.getComAccountId(),paymentMonth);
           //  }
     }
 
@@ -170,7 +170,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         //生成变更汇总表
         this.createMonthEmpChange(allMonthChargeExts,accountComExt.getComAccountId(),paymentMonth);
         /*****更新paymentCom表中的合计金额*****/
-        paymentComMapper.updateMonthChargeTotalAmount(accountComExt.getComAccountId(),paymentMonth);
+        paymentComMapper.updateSsMonthChargeTotalAmount(accountComExt.getComAccountId(),paymentMonth);
     }
 
 
@@ -182,7 +182,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         //第二步：生成数据
         this.createPaymentDetail(allMonthChargeExts,accountComExt.getComAccountId(),paymentMonth);
         /*****更新paymentCom表中的合计金额*****/
-        paymentComMapper.updateMonthChargeTotalAmount(accountComExt.getComAccountId(),paymentMonth);
+        paymentComMapper.updateSsMonthChargeTotalAmount(accountComExt.getComAccountId(),paymentMonth);
     }
 
     /**

@@ -68,9 +68,9 @@ public class TestController {
        * 每日按雇员询问财务是否可付
        * */
     @RequestMapping("/testDailyEmpPaymentStatus")
-    public  String testDailyEmpPaymentStatus(@RequestParam String ssMonth,@RequestParam Long p1,@RequestParam Long p2) throws ParseException{
+    public  String testDailyEmpPaymentStatus(@RequestParam String ssMonth,@RequestParam Long paymentComId,@RequestParam Long comAccountId) throws ParseException{
         if(Optional.ofNullable(ssMonth).isPresent()) {
-            paymentService.enquireFinanceComAccountTest(ssMonth,p1,p2);
+            paymentService.enquireFinanceComAccountTest(ssMonth,paymentComId,comAccountId);
             return "完成";
         }else{
             return "请传参数";

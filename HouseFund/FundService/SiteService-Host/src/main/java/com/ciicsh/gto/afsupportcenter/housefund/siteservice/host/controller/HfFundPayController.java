@@ -7,6 +7,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentP
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentComService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentService;
+
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.HfFundPayCreatePaymentAccountPara;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -71,6 +73,11 @@ public class HfFundPayController {
         return JsonResultKit.ofPage(pageRows);
     }
 
+    @Log("删除公积金支付批次")
+    @PostMapping("/delHfPayment")
+    public JsonResult<List<HfPaymentAccountBo>> delHfPayment(String paymentId) {
+        return  hfPaymentAccountService.delHfPayment(paymentId);
+    }
 
     @Log("公积金汇缴支付流程操作-送审")
     @PostMapping("/approval")
@@ -110,11 +117,23 @@ public class HfFundPayController {
 
     @Log("公积金汇缴支付-生成汇缴支付客户名单")
     @PostMapping("/createPaymentComList")
-    public JsonResult createPaymentComList(@RequestBody String[] comAccountIds){
+    public JsonResult createPaymentComList(HfFundPayCreatePaymentAccountPara hfFundPayCreatePaymentAccountPara){
         //验证前端传递的数据是否合法,代码暂不写
         //开始生成支付客户名单
-        return hfPaymentComService.createPaymentCom( new ArrayList<String>(Arrays.asList(comAccountIds)));
+        hfFundPayCreatePaymentAccountPara.getListData();
+       return hfPaymentComService.createPaymentCom(hfFundPayCreatePaymentAccountPara.getListData(),
+           hfFundPayCreatePaymentAccountPara.getPayee());
     }
 
+    @Log("公积金汇缴支付-生成网银文件,补缴.txt")
+    @PostMapping("/generateBankBujiao")
+    public void generateBankBujiao(String paymentId){
+
+    }
+    @Log("公积金汇缴支付-生成网银文件,变更.txt")
+    @PostMapping("/generateBankChange")
+    public void generateBankChange(String paymentId){
+
+    }
 
 }

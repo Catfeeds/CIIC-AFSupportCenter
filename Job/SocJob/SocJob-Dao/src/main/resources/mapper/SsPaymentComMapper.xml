@@ -51,41 +51,72 @@
     </select>
 
     <!--按照财务服务契约（每日按雇员询问财务是否可付）提供雇员级名单。is_company_enjoy_advance=1 就是垫付  -->
-    <select id="getPaymentEmpList" resultType="com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsMonthChargeBO">
-        SELECT mc.employee_id ,
-        pc.company_id company_id,
-        pc.payment_month pay_month,
-        mc.total_amount pay_amount,
-        IF(ca.payment_way=3,'1','0') AS 'is_company_enjoy_advance' ,
-        mc.month_charge_id obj_id
-        FROM ss_month_charge mc
-        INNER JOIN ss_payment_com pc ON pc.com_account_id=mc.com_account_id
-        LEFT JOIN ss_com_account ca ON ca.com_account_id=mc.com_account_id
-        WHERE pc.is_active=1
-        AND mc.ss_month=#{ssMonth}
-        AND pc.payment_com_id=#{paymentComId}
+    <!--财务中心要求同一个雇员同一个月份的金额相加（正数+负数金额）大于零的雇员-->
+    <select id="getSsPaymentEmpList" resultType="com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsMonthChargeBO">
+    SELECT mc.employee_id ,
+            pc.company_id,
+            mc.ss_month_belong pay_month,
+            sum(mc.total_amount) pay_amount
+            FROM ss_month_charge mc
+            INNER JOIN ss_payment_com pc ON pc.com_account_id=mc.com_account_id
+            WHERE pc.is_active=1
+            AND mc.ss_month=#{ssMonth}
+            AND pc.payment_com_id=#{paymentComId}
+            group BY mc.employee_id ,
+            pc.company_id ,
+            mc.ss_month_belong
+            HAVING sum(mc.total_amount)>0
+    </select>
+    <select id="getSsPaymentComIsCompanyEnjoyAdvance" resultType="com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsMonthChargeBO">
+      select IF(ca.payment_way=3,'1','0') AS 'is_company_enjoy_advance'  from ss_payment_com pc LEFT JOIN  ss_com_account ca ON  ca.com_account_id=pc.com_account_id
+      WHERE pc.is_active=1 AND pc.payment_com_id=#{paymentComId} limit 1
     </select>
 
+
     <!--根据接口返回的数据批量更新月度明细的支付状态-->
-    <update id="updateMonthCharge" parameterType="java.util.HashMap">
-        UPDATE ss_month_charge SET  emp_payment_status=#{empPaymentStatus}
+    <update id="updateSsMonthCharge" parameterType="java.util.HashMap">
+         UPDATE ss_month_charge SET  emp_payment_status=#{empPaymentStatus}
         WHERE
-        month_charge_id=#{monthChargeId}
+        company_id=#{companyId}
+        AND employee_id=#{employeeId}
+        AND ss_month=#{ssMonth}
+        AND ss_month_belong=#{ssMonthBelong}
     </update>
 
     <!--查询 客户下有多少可付或垫款可付的记录 1 来款可付 2 垫款可付  -->
-    <select id="countByEmpPaymentStatus" resultType="java.lang.Integer">
+    <select id="countBySsEmpPaymentStatus" resultType="java.lang.Integer">
         select count(1)
-        from ss_month_charge mc
-        where mc.is_active=1
-        and mc.emp_payment_status = 0
-        and mc.ss_month=#{ssMonth}
-        AND EXISTS (select 1 from ss_payment_com pc where pc.com_account_id=mc.com_account_id and pc.payment_com_id=#{paymentComId})
+        from ss_month_charge smc
+        where smc.is_active=1
+        and ifnull(smc.emp_payment_status,0) = 0
+        and smc.ss_month=#{ssMonth}
+        AND EXISTS (
+            select 1 from ss_payment_com pc
+            where pc.com_account_id=smc.com_account_id
+            and pc.payment_com_id=#{paymentComId}
+            )
         and com_account_id=#{comAccountId}
+        AND  EXISTS(
+            SELECT mc.employee_id ,
+            pc.company_id,
+            mc.ss_month_belong pay_month,
+            sum(mc.total_amount) pay_amount
+            FROM ss_month_charge mc
+            INNER JOIN ss_payment_com pc ON pc.com_account_id=mc.com_account_id
+            WHERE pc.is_active=1
+            AND mc.ss_month=#{ssMonth}
+            AND pc.payment_com_id=#{paymentComId}
+            AND mc.month_charge_id=smc.month_charge_id
+            group BY mc.employee_id ,
+            pc.company_id ,
+            mc.ss_month_belong
+            HAVING sum(mc.total_amount)>0
+        )
+
     </select>
 
     <!--根据接口返回的数据批量更新客户的支付状态-->
-    <update id="updatePaymentCom" parameterType="java.util.HashMap">
+    <update id="updateSsPaymentCom" parameterType="java.util.HashMap">
         UPDATE ss_payment_com SET
         payment_state=#{paymentState},modified_by=#{modifiedBy},modified_time=sysdate() where payment_com_id=#{paymentComId}
     </update>
@@ -94,7 +125,7 @@
       SELECT COUNT(*) FROM ss_payment_com WHERE com_account_id = #{comAccountId} AND payment_month = #{paymentMonth} AND is_active = 1
     </select>
 
-    <update id="updateMonthChargeTotalAmount">
+    <update id="updateSsMonthChargeTotalAmount">
         <![CDATA[
         UPDATE ss_payment_com pc
         SET pc.total_com_pay_amount = (

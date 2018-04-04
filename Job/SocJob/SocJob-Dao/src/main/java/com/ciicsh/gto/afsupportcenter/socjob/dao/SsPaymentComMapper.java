@@ -33,15 +33,17 @@ public interface SsPaymentComMapper extends BaseMapper<SsPaymentCom> {
     List<SsPaymentComBO> getPaymentComList(Map map);
 
     //按照财务服务契约提供雇员级信息
-    List<SsMonthChargeBO> getPaymentEmpList(Map map);
+    List<SsMonthChargeBO> getSsPaymentEmpList(Map map);
+
+    SsMonthChargeBO getSsPaymentComIsCompanyEnjoyAdvance(Map map);
 
     //根据接口返回的数据批量更新月度明细的支付状态
-    void updateMonthCharge(Map map);
+    void updateSsMonthCharge(Map map);
 
     //根据接口返回的数据批量更新客户的支付状态
-    void updatePaymentCom(Map map);
+    void updateSsPaymentCom(Map map);
 
     //查询 客户下有多少 不可付的记录
-    Integer countByEmpPaymentStatus(Map map);
-    void updateMonthChargeTotalAmount(@Param("comAccountId") long comAccountId, @Param("paymentMonth") String paymentMonth);
+    Integer countBySsEmpPaymentStatus(Map map);
+    void updateSsMonthChargeTotalAmount(@Param("comAccountId") long comAccountId, @Param("paymentMonth") String paymentMonth);
 }

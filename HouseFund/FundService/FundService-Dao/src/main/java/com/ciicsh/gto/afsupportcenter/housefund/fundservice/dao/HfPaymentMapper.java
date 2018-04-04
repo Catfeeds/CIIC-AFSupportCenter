@@ -28,4 +28,5 @@ public interface HfPaymentMapper extends BaseMapper<HfPayment> {
         String paymentMonth);
 
     List<HfPaymentBo> getFundPays(HfPaymentBo hfPaymentBo);
+
 }

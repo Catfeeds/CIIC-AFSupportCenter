@@ -88,7 +88,7 @@
 
     <!--根据接口返回的数据批量更新月度明细的支付状态-->
     <update id="updateMonthCharge" parameterType="java.util.HashMap">
-        UPDATE hf_month_charge SET  emp_payment_status=#{empPaymentStatus}
+           UPDATE hf_month_charge SET  emp_payment_status=#{empPaymentStatus}
         WHERE
         month_charge_id=#{monthChargeId}
     </update>

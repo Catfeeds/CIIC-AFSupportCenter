@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentComBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HfCreatePaymentAccountBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentComMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment;
@@ -40,17 +41,18 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
      * 公积金汇缴支付-生成汇缴支付客户名单
      */
     @Override
-    public JsonResult createPaymentCom(List paymentAccountIds) {
+    public JsonResult createPaymentCom(List paymentAccountIds,String payee) {
         //查询出所有前端选择的基本和补充公积金账户
-        Map<String,Object> paymentAccountMap=new HashMap<>();
-        List<Map<String,Object>> paymentAccountList= hfPaymentComMapper.selectPaymentAccount( paymentAccountIds);
+        HfCreatePaymentAccountBO hfCreatePaymentAccountBO=new HfCreatePaymentAccountBO();
+
+        List<HfCreatePaymentAccountBO> paymentAccountList= hfPaymentComMapper.selectPaymentAccount( paymentAccountIds);
         if (paymentAccountList.size()==0){
             return JsonResultKit.ofError("无数据可生成！");
         }else{
-            paymentAccountMap=paymentAccountList.get(0);
+            hfCreatePaymentAccountBO=paymentAccountList.get(0);
         }
 
-        Long paymentId= insertHfPayment(  paymentAccountMap);
+        Long paymentId= insertHfPayment(hfCreatePaymentAccountBO,payee);
         paymentAccountList.forEach((accountMap)->{
             insertHfPaymentCom(accountMap,paymentId);
         });
@@ -62,7 +64,7 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
      * @param
      * @return
      */
-    private Long insertHfPayment(Map<String,Object> paymentAccountMap){
+    private Long insertHfPayment(HfCreatePaymentAccountBO paymentAccountMap,String payee){
         HfPayment hfPayment=new HfPayment();
         Wrapper<HfPayment> wrapper = new EntityWrapper<>();
         wrapper.where(" is_active = 1 AND create_payment_date=CURDATE() ");
@@ -73,20 +75,22 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
         hfPayment.setPaymentState(1);//可付
         hfPayment.setRequestUser(UserContext.getUserName());
         hfPayment.setRequestDate(new Date());
-        hfPayment.setHfAccountType(Integer.parseInt(paymentAccountMap.get("hf_account_type").toString()));
+        hfPayment.setHfAccountType( paymentAccountMap.getHfAccountType() );
+        hfPayment.setReceiver(payee);
+        hfPayment.setCreatedBy(UserContext.getUserName());
+        hfPayment.setCreatedBy(UserContext.getUserName());
         hfPaymentMapper.insert(hfPayment);
         return hfPayment.getPaymentId();
     }
 
-    private void insertHfPaymentCom(Map<String,Object> accountMap,long paymentId){
+    private void insertHfPaymentCom(HfCreatePaymentAccountBO hfCreatePaymentAccountBO, long paymentId){
         HfPaymentCom hfPaymentCom=new HfPaymentCom();
         hfPaymentCom.setPaymentId(paymentId);
-        hfPaymentCom.setComAccountId(Long.valueOf(accountMap.get("com_account_id").toString()));
-        hfPaymentCom.setComAccountClassId(Long.valueOf(accountMap.get("com_account_class_id").toString()));
-        hfPaymentCom.setHfType(Integer.valueOf(accountMap.get("hf_type").toString()));
-        hfPaymentCom.setCompanyId(accountMap.get("company_id").toString());
-        hfPaymentCom.setPaymentBank(accountMap.get("payment_bank").toString());
-
+        hfPaymentCom.setComAccountId(hfCreatePaymentAccountBO.getComAccountId());
+        hfPaymentCom.setComAccountClassId(hfCreatePaymentAccountBO.getComAccountClassId());
+        hfPaymentCom.setHfType(hfCreatePaymentAccountBO.getHfType());
+        hfPaymentCom.setCompanyId(hfCreatePaymentAccountBO.getCompanyId());
+        hfPaymentCom.setPaymentBank(String.valueOf(hfCreatePaymentAccountBO.getPaymentBank()));
         baseMapper.insert(hfPaymentCom);
     }
     private void updatePayment(){
