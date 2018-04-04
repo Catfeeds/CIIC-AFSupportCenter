@@ -7,6 +7,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentComBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HfCreatePaymentAccountBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentComMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.HfFundPayCreatePaymentAccountPara;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentCom;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentComService;
@@ -41,22 +42,22 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
      * 公积金汇缴支付-生成汇缴支付客户名单
      */
     @Override
-    public JsonResult createPaymentCom(List paymentAccountIds,String payee) {
+    public JsonResult createPaymentCom(HfFundPayCreatePaymentAccountPara params) {
         //查询出所有前端选择的基本和补充公积金账户
         HfCreatePaymentAccountBO hfCreatePaymentAccountBO=new HfCreatePaymentAccountBO();
-
-        List<HfCreatePaymentAccountBO> paymentAccountList= hfPaymentComMapper.selectPaymentAccount( paymentAccountIds);
+//List paymentAccountIds, String payee, String paymentMonth
+        List<HfCreatePaymentAccountBO> paymentAccountList= hfPaymentComMapper.selectPaymentAccount( params.getListData());
         if (paymentAccountList.size()==0){
             return JsonResultKit.ofError("无数据可生成！");
         }else{
             hfCreatePaymentAccountBO=paymentAccountList.get(0);
         }
 
-        Long paymentId= insertHfPayment(hfCreatePaymentAccountBO,payee);
+        Long paymentId= insertHfPayment(hfCreatePaymentAccountBO,params.getPayee(), params.getPaymentMonth());
         paymentAccountList.forEach((accountMap)->{
             insertHfPaymentCom(accountMap,paymentId);
         });
-        return JsonResultKit.of("生成操作成功！");
+        return JsonResultKit.of();
     }
 
     /**
@@ -64,7 +65,7 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
      * @param
      * @return
      */
-    private Long insertHfPayment(HfCreatePaymentAccountBO paymentAccountMap,String payee){
+    private Long insertHfPayment(HfCreatePaymentAccountBO paymentAccountMap,String payee,String paymentMonth){
         HfPayment hfPayment=new HfPayment();
         Wrapper<HfPayment> wrapper = new EntityWrapper<>();
         wrapper.where(" is_active = 1 AND create_payment_date=CURDATE() ");
@@ -73,12 +74,13 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
         String today=LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         hfPayment.setPaymentBatchNum(today+serial);
         hfPayment.setPaymentState(1);//可付
+        hfPayment.setPaymentMonth(paymentMonth);
         hfPayment.setRequestUser(UserContext.getUserName());
         hfPayment.setRequestDate(new Date());
         hfPayment.setHfAccountType( paymentAccountMap.getHfAccountType() );
         hfPayment.setReceiver(payee);
         hfPayment.setCreatedBy(UserContext.getUserName());
-        hfPayment.setCreatedBy(UserContext.getUserName());
+        hfPayment.setModifiedBy(UserContext.getUserName());
         hfPaymentMapper.insert(hfPayment);
         return hfPayment.getPaymentId();
     }
@@ -91,8 +93,11 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
         hfPaymentCom.setHfType(hfCreatePaymentAccountBO.getHfType());
         hfPaymentCom.setCompanyId(hfCreatePaymentAccountBO.getCompanyId());
         hfPaymentCom.setPaymentBank(String.valueOf(hfCreatePaymentAccountBO.getPaymentBank()));
+        hfPaymentCom.setCreatedBy(UserContext.getUserName());
+        hfPaymentCom.setModifiedBy(UserContext.getUserName());
         baseMapper.insert(hfPaymentCom);
     }
+
     private void updatePayment(){
 
     }

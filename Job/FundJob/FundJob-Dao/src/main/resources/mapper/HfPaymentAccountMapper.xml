@@ -30,7 +30,7 @@
 
     </select>
 
-    <insert id="insertPaymentAccountJob">
+    <select id="insertPaymentAccountJob">
         INSERT INTO hf_payment_account(com_account_id,com_account_class_id,hf_type,payment_month,payment_status)
         select ca.com_account_id,cac.com_account_class_id,cac.hf_type,cac.com_hf_month,if(ca.payment_way=1,2,1)
         from hf_com_account_class cac INNER JOIN hf_com_account ca ON ca.com_account_id=cac.com_account_id
@@ -38,5 +38,5 @@
         and not EXISTS(select 1 from hf_payment_account pa where pa.com_account_class_id=cac.com_account_class_id
         and pa.payment_month=cac.com_hf_month)
 
-    </insert>
+    </select>
 </mapper>

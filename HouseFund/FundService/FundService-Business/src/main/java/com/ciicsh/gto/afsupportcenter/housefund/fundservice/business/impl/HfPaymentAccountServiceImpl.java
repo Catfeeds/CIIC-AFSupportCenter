@@ -48,27 +48,34 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
         return PageKit.doSelectPage(pageInfo, () -> hfPaymentAccountMapper.getMakePayLists(hfPaymentAccountBo));
     }
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public JsonResult delHfPayment(String paymentId){
-        //验证是否符合删除条件，代码暂略
-
-        //删除payment_com
-        Map map=new HashMap();
-        map.put("paymentId",paymentId);
-        hfPaymentComMapper.deleteByMap(map);
-        //更新payment_account
-        HfPaymentAccount hfPaymentAccount=new HfPaymentAccount();
-        hfPaymentAccount.setPaymentId(Long.valueOf(0));
-        Wrapper<HfPaymentAccount> wrapperAccount = new EntityWrapper();
-        wrapperAccount.where(" is_active = 1 AND payment_id={0}", paymentId);
-        hfPaymentAccountMapper.update(hfPaymentAccount,wrapperAccount);
-        //更新payment
-        HfPayment hfPayment =new HfPayment();
-        hfPayment.setActive(false);
-        Wrapper<HfPayment> wrapperPayment = new EntityWrapper();
-        wrapperPayment.where(" is_active = 1 AND payment_id={0}", paymentId);
-        hfPaymentMapper.update(hfPayment,wrapperPayment);
-
-        return JsonResultKit.of("生成操作成功！");
+        //判断是否符合删除条件
+        Integer paymentState=hfPaymentMapper.selectById(paymentId).getPaymentState();
+        if(paymentState!=1 &&  paymentState!=4){
+            return JsonResultKit.ofError("删除操作失败！原因是支付状态不符合删除条件。");
+        }
+        try{
+            //删除payment_com
+            Map map=new HashMap();
+            map.put("payment_id",paymentId);
+            hfPaymentComMapper.deleteByMap(map);
+            //更新payment_account  暂用Wrapper后续修改掉
+            HfPaymentAccount hfPaymentAccount=new HfPaymentAccount();
+            hfPaymentAccount.setPaymentId(Long.valueOf(0));
+            Wrapper<HfPaymentAccount> wrapperAccount = new EntityWrapper();
+            wrapperAccount.where(" is_active = 1 AND payment_id={0}", paymentId);
+            hfPaymentAccountMapper.update(hfPaymentAccount,wrapperAccount);
+            //更新payment   暂用Wrapper后续修改掉
+            HfPayment hfPayment =new HfPayment();
+            hfPayment.setActive(false);
+            Wrapper<HfPayment> wrapperPayment = new EntityWrapper();
+            wrapperPayment.where(" is_active = 1 AND payment_id={0}", paymentId);
+            hfPaymentMapper.update(hfPayment,wrapperPayment);
+        }catch (Exception e){
+            return JsonResultKit.ofError("删除操作失败！");
+        }
+        return JsonResultKit.of("删除操作成功！");
     }
     @Override
     @Transactional(rollbackFor = {Exception.class})

@@ -4,6 +4,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentCom;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
+
 /**
  * @auther shenjian
  * @since 2018/3/25
@@ -27,4 +29,12 @@ public class HfPaymentComBo extends HfPaymentCom {
      */
     private String hfTypeName;
 
+    private String companyId;
+    private String title;
+    private String paymentBank;
+    private BigDecimal remittedAmount;
+    private BigDecimal repairAmount;
+    private Integer remittedCountEmp;
+    private BigDecimal daozhangAmount;
+    private Integer daozhangCountEmp;
 }

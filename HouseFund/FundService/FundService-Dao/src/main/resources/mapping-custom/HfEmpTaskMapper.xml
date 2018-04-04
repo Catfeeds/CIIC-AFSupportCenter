@@ -806,12 +806,14 @@
         et.emp_task_id,et.hf_type,com.company_id,com.title,emp.employee_id,emp.employee_name,emp.id_num,eoop.`status`,ea.archive_status,eoop.in_date,et.submit_time,et.submitter_id,
         et.transfer_in_unit,et.transfer_in_unit_account,et.transfer_out_unit,et.transfer_out_unit_account,ea.com_account_id,ca.hf_account_type,ea.hf_emp_account,ea.emp_archive_id
         from hf_emp_task et
-        LEFT JOIN hf_emp_archive ea  ON ea.emp_archive_id=et.emp_archive_id
-        INNER JOIN emp_af_emp_company eoop ON eoop.company_id=ea.company_id and eoop.employee_id=ea.employee_id
+        LEFT JOIN hf_emp_archive ea  ON ea.employee_id=et.employee_id AND ea.hf_type=et.hf_type
+        AND ea.company_id=et.company_id AND ea.is_active=1
+        INNER JOIN emp_af_emp_company eoop ON eoop.company_id=ea.company_id
+        AND eoop.employee_id=ea.employee_id AND eoop.is_active=1
         INNER JOIN emp_employee emp ON emp.employee_id=eoop.employee_id
-        INNER JOIN sal_company com ON com.company_id=eoop.company_id
-        INNER JOIN hf_com_account ca ON ca.com_account_id=ea.com_account_id
-        WHERE et.is_active=1 and et.task_category = 8
+        INNER JOIN sal_company com ON com.company_id=eoop.company_id AND com.is_active=1
+        INNER JOIN hf_com_account ca ON ca.com_account_id=ea.com_account_id AND ca.is_active=1
+        WHERE et.is_active=1 AND et.task_category = 8
 
         <if test="empTaskId != null">
             AND et.emp_task_id = #{empTaskId}

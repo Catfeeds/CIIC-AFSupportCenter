@@ -69,12 +69,16 @@ public class CamelConvert {
         );
     }
     public static void main(String[] args) {
-        String str=" pa.com_account_id,\n" +
-            "        acr.company_id,\n" +
-            "        cac.com_account_class_id,\n" +
-            "        ca.payment_bank,\n" +
-            "        cac.hf_type,\n" +
-            "        ca.hf_account_type" ;
+        String str=" ht.hf_type_name,\n" +
+            "        p.payment_month,\n" +
+            "        pc.company_id,\n" +
+            "        com.title,\n" +
+            "        pc.payment_bank,\n" +
+            "        pc.remitted_amount,\n" +
+            "        pc.repair_amount,\n" +
+            "        pc.remitted_count_emp,\n" +
+            "        pc.daozhang_amount,\n" +
+            "        pc.daozhang_count_emp" ;
         generalMapStr(str);
 
 //        String lineToHump = lineToHump(str);

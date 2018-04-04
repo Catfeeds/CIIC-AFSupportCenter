@@ -249,8 +249,8 @@ CREATE TABLE `hf_com_account_payment_bank` (
 -- ----------------------------
 -- Records of hf_com_account_payment_bank
 -- ----------------------------
-INSERT INTO `hf_com_account_payment_bank` VALUES ('1', '1', '徐汇—X', '', '2018-02-09 19:23:33', '2018-02-09 19:23:33', 'shenjian', 'shenjian');
-INSERT INTO `hf_com_account_payment_bank` VALUES ('2', '2', '西郊—C', '', '2018-02-09 19:23:48', '2018-02-09 19:23:48', 'shenjian', 'shenjian');
-INSERT INTO `hf_com_account_payment_bank` VALUES ('3', '3', '东方路—P', '', '2018-02-09 19:24:04', '2018-02-09 19:24:04', 'shenjian', 'shenjian');
-INSERT INTO `hf_com_account_payment_bank` VALUES ('6', '4', '卢湾—L', '', '2018-03-14 18:48:50', '2018-03-14 18:48:50', 'shenjian', 'shenjian');
-INSERT INTO `hf_com_account_payment_bank` VALUES ('7', '5', '黄浦—H', '', '2018-03-14 18:49:04', '2018-03-14 18:49:04', 'shenjian', 'shenjian');
+INSERT INTO `hf_com_account_payment_bank` VALUES ('1', '15', '徐汇—X', '', '2018-02-09 19:23:33', '2018-02-09 19:23:33', 'shenjian', 'shenjian');
+INSERT INTO `hf_com_account_payment_bank` VALUES ('2', '16', '西郊—C', '', '2018-02-09 19:23:48', '2018-02-09 19:23:48', 'shenjian', 'shenjian');
+INSERT INTO `hf_com_account_payment_bank` VALUES ('3', '17', '东方路—P', '', '2018-02-09 19:24:04', '2018-02-09 19:24:04', 'shenjian', 'shenjian');
+INSERT INTO `hf_com_account_payment_bank` VALUES ('6', '18', '卢湾—L', '', '2018-03-14 18:48:50', '2018-03-14 18:48:50', 'shenjian', 'shenjian');
+INSERT INTO `hf_com_account_payment_bank` VALUES ('7', '0', '黄浦—H', '', '2018-03-14 18:49:04', '2018-03-14 18:49:04', 'shenjian', 'shenjian');

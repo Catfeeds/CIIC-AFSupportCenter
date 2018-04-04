@@ -75,7 +75,7 @@ public class HfFundPayController {
 
     @Log("删除公积金支付批次")
     @PostMapping("/delHfPayment")
-    public JsonResult<List<HfPaymentAccountBo>> delHfPayment(String paymentId) {
+    public JsonResult delHfPayment(String paymentId) {
         return  hfPaymentAccountService.delHfPayment(paymentId);
     }
 
@@ -121,8 +121,7 @@ public class HfFundPayController {
         //验证前端传递的数据是否合法,代码暂不写
         //开始生成支付客户名单
         hfFundPayCreatePaymentAccountPara.getListData();
-       return hfPaymentComService.createPaymentCom(hfFundPayCreatePaymentAccountPara.getListData(),
-           hfFundPayCreatePaymentAccountPara.getPayee());
+       return hfPaymentComService.createPaymentCom(hfFundPayCreatePaymentAccountPara);
     }
 
     @Log("公积金汇缴支付-生成网银文件,补缴.txt")
