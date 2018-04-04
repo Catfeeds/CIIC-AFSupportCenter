@@ -1318,8 +1318,14 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 if (StringUtils.isNotEmpty(endMonth)) {
                     endMonthDate = YearMonth.parse(endMonth, formatter);
                 }
+            } else {
+                if (StringUtils.isEmpty(endMonth)) {
+                    throw new BusinessException("雇员档案费用分段表中缴费截止月为空");
+                }
+                endMonthDate = YearMonth.parse(endMonth, formatter);
+                startMonthDate = endMonthDate;
 
-                // 如果是转出任务单，雇员月度汇缴明细库转入数据可能被删除（当月转入当月转出）
+                // 如果是转出任务单，雇员月度汇缴明细库转入数据可能被删除（当月转入当月转出），且不生成转出数据
                 HfMonthChargeBo hfMonthChargeBo = new HfMonthChargeBo();
                 hfMonthChargeBo.setInactive(true);
                 hfMonthChargeBo.setEmpArchiveId(e.getEmpArchiveId());
@@ -1328,13 +1334,15 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 hfMonthChargeBo.setSsMonthBelongStart(e.getHfMonth());
                 hfMonthChargeBo.setSsMonthBelongEnd(e.getHfMonth());
                 hfMonthChargeBo.setModifiedBy(hfEmpTask.getModifiedBy());
-                hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
-            } else {
-                if (StringUtils.isEmpty(endMonth)) {
-                    throw new BusinessException("雇员档案费用分段表中缴费截止月为空");
+                hfMonthChargeBo.setPaymentTypes(StringUtils.join(new Integer[] {
+                    HfMonthChargeConstant.PAYMENT_TYPE_NEW,
+                    HfMonthChargeConstant.PAYMENT_TYPE_TRANS_IN,
+                    HfMonthChargeConstant.PAYMENT_TYPE_OPEN,
+                }, ','));
+                int rslt = hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
+                if (rslt > 0) {
+                    continue;
                 }
-                endMonthDate = YearMonth.parse(endMonth, formatter);
-                startMonthDate = endMonthDate;
             }
 
             long months = startMonthDate.until(endMonthDate, ChronoUnit.MONTHS);
