@@ -48,62 +48,66 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
         return PageKit.doSelectPage(pageInfo, () -> hfPaymentAccountMapper.getMakePayLists(hfPaymentAccountBo));
     }
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public JsonResult delHfPayment(String paymentId){
-        //验证是否符合删除条件，代码暂略
-
-        //删除payment_com
-        Map map=new HashMap();
-        map.put("paymentId",paymentId);
-        hfPaymentComMapper.deleteByMap(map);
-        //更新payment_account
-        HfPaymentAccount hfPaymentAccount=new HfPaymentAccount();
-        hfPaymentAccount.setPaymentId(Long.valueOf(0));
-        Wrapper<HfPaymentAccount> wrapperAccount = new EntityWrapper();
-        wrapperAccount.where(" is_active = 1 AND payment_id={0}", paymentId);
-        hfPaymentAccountMapper.update(hfPaymentAccount,wrapperAccount);
-        //更新payment
-        HfPayment hfPayment =new HfPayment();
-        hfPayment.setActive(false);
-        Wrapper<HfPayment> wrapperPayment = new EntityWrapper();
-        wrapperPayment.where(" is_active = 1 AND payment_id={0}", paymentId);
-        hfPaymentMapper.update(hfPayment,wrapperPayment);
-
-        return JsonResultKit.of("生成操作成功！");
+        //判断是否符合删除条件
+        Integer paymentState=hfPaymentMapper.selectById(paymentId).getPaymentState();
+        if(paymentState!=1 &&  paymentState!=4){
+            return JsonResultKit.ofError("删除操作失败！原因是支付状态不符合删除条件。");
+        }
+        try{
+            //删除payment_com
+            Map map=new HashMap();
+            map.put("payment_id",paymentId);
+            hfPaymentComMapper.deleteByMap(map);
+            //更新payment_account  暂用Wrapper后续修改掉
+            HfPaymentAccount hfPaymentAccount=new HfPaymentAccount();
+            hfPaymentAccount.setPaymentId(Long.valueOf(0));
+            Wrapper<HfPaymentAccount> wrapperAccount = new EntityWrapper();
+            wrapperAccount.where(" is_active = 1 AND payment_id={0}", paymentId);
+            hfPaymentAccountMapper.update(hfPaymentAccount,wrapperAccount);
+            //更新payment   暂用Wrapper后续修改掉
+            HfPayment hfPayment =new HfPayment();
+            hfPayment.setActive(false);
+            Wrapper<HfPayment> wrapperPayment = new EntityWrapper();
+            wrapperPayment.where(" is_active = 1 AND payment_id={0}", paymentId);
+            hfPaymentMapper.update(hfPayment,wrapperPayment);
+        }catch (Exception e){
+            return JsonResultKit.ofError("删除操作失败！");
+        }
+        return JsonResultKit.of("删除操作成功！");
     }
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public boolean updatePaymentInfo(Long pkId, String remark, Integer payStatus) {
         HfPayment hfPayment = new HfPayment();
         hfPayment.setPaymentId(pkId);
-        //根据ID获取到记录
         hfPayment = hfPaymentMapper.selectOne(hfPayment);
-
-        if (hfPayment != null) {
-            //更新批次状态 支付状态:付款状态(-1:审核未过;9.支付成功;-9:支付失败;)
-            int paymentState = payStatus == 9 ? 8 :7;
-            if(null != remark){
-                hfPayment.setRejectionRemark(remark);
+        if(null != hfPayment){
+            switch (payStatus){
+                case -1:
+                    hfPayment.setPaymentState(4);
+                    hfPayment.setRejectionRemark(remark);
+                    break;
+                case 8:
+                    hfPayment.setPaymentState(5);
+                    break;
+                case 9:
+                    hfPayment.setFinancePaymentDate(new Date());
+                    break;
             }
-            hfPayment.setPaymentState(paymentState);
             hfPayment.setModifiedBy("system");
             hfPayment.setModifiedTime(new Date());
-            hfPaymentMapper.updateById(hfPayment);
-
-            //将批次下的客户费用明细的状态也改为已申请到财务部
-            //取出批次下所有的客户费用
-            List<HfPaymentAccount> ssPaymentComList = baseMapper.getByPaymentId(hfPayment.getPaymentId());
-            if (null != ssPaymentComList && ssPaymentComList.size() > 0) {
-                ssPaymentComList
-                    .stream()
-                    .map(x->{
-                        x.setPaymentStatus(paymentState);
-                        x.setModifiedBy("system");
-                        x.setModifiedTime(LocalDateTime.now());
-                        return x;})
-                    .collect(Collectors.toList());
-                this.updateBatchById(ssPaymentComList);
+            Integer val = hfPaymentMapper.updateById(hfPayment);
+            if(val > 0){
+                return true;
+            }
+            else {
+                return false;
             }
         }
-        return true;
+        else{
+            return false;
+        }
     }
 }

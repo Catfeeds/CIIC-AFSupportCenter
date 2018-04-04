@@ -35,15 +35,15 @@ public class SsMonthChargeServiceImpl extends ServiceImpl<SsMonthChargeMapper, S
      * @param handleMonth
      */
     @Override
-    public void deleteOldDate(String employeeId, String paymentMonth, String handleMonth,Integer costCategory) {
+    public int deleteOldDate(String employeeId, String paymentMonth, String handleMonth,Integer costCategory) {
         List<SsMonthCharge> ssMonthChargeList = baseMapper.selectOldDate(employeeId,paymentMonth,handleMonth,costCategory);
-        if(ssMonthChargeList.size()==0) return;
+        if(ssMonthChargeList.size()==0) return 0;
         ssMonthChargeList.forEach(p->{
             EntityWrapper<SsMonthChargeItem> ew =  new EntityWrapper<SsMonthChargeItem>();
             ew.where("month_charge_id={0}",p.getMonthChargeId());
             ssMonthChargeItemService.delete(ew);
         });
-        baseMapper.deleteOldDate(employeeId,paymentMonth,handleMonth,costCategory);
+        return baseMapper.deleteOldDate(employeeId,paymentMonth,handleMonth,costCategory);
     }
 
     /**

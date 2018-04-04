@@ -107,9 +107,10 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
                 payapplyServiceProxy.addShHouseFundPayApply(resDto);
 
             if(jsRes.getCode().equals(0)){
-                payment.setPaymentState(3);
+                payment.setPaymentState(3);//汇缴(已申请到财务部 )
                 payment.setModifiedTime(new Date());
                 payment.setModifiedBy(processParmBO.getOperator());
+                payment.setPayApplyCode(jsRes.getData().getPayapplyCode());
                 Integer val = hfPaymentMapper.updateById(payment);
                 if(val > 0){
                     return JsonResultKit.of(0,"汇缴成功！");
@@ -119,7 +120,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
                 }
             }
             else{
-                return JsonResultKit.of(1,"汇缴失败，请检查!");
+                return JsonResultKit.of(1,jsRes.getMsg());
             }
         }
     }
@@ -204,9 +205,9 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         dto.setIsFinancedept(0);
         dto.setBusinessType(2);//业务类型
         dto.setBusinessPkId(hfPayment.getPaymentId());//业务方主键ID(整型)
-        dto.setPayWay(3);//转账
+        dto.setPayWay(3);// 3:转账   2:支票  如果是支票就不需要银行账户信息，这里需要判断
         dto.setPayAmount(hfPayment.getTotalApplicationAmonut());//申请支付金额 （待定）
-        dto.setReceiver("公积金中心");//收款方名称（待定）
+        dto.setReceiver(hfPayment.getReceiver());//页面传递
         dto.setApplyer(hfPayment.getRequestUser());  //申请人
         dto.setApplyDate(StringUtil.getNow());//申请日期
 
@@ -219,15 +220,17 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             dto.setPayReason("支付独立户公积金费用" + hfPayment.getPaymentMonth());
         }
         dto.setPayPurpose(dto.getPayReason());
+
+/*      这些社保和公积金都没有
         dto.setReceiveAccountId(0); //待定(付款银行ID)
         dto.setReceiveAccount(""); //待定(付款银行)
         dto.setPresident("");//待定(总经理)
         dto.setLeader("");//待定(分管领导)
         dto.setDepartmentManager(""); //待定(部门经理)
-        dto.setReviewer("");//待定(审核人)
+        dto.setReviewer("");//待定(审核人)*/
 
-        List<PayapplyCompanyProxyDTO> paymentComList = baseMapper.getPaymentComList(hfPayment.getPaymentId()).stream().map(x->toCompanyDto(x)).collect(Collectors.toList());
-        List<PayapplyEmployeeProxyDTO> paymentEmpList = baseMapper.getPaymentEmpList(hfPayment.getPaymentId(),hfPayment.getPaymentMonth()).stream().map(x->toEmployeeDto(x)).collect(Collectors.toList());
+        List<PayapplyCompanyProxyDTO> paymentComList = baseMapper.getHfPaymentComList(hfPayment.getPaymentId()).stream().map(x->toCompanyDto(x)).collect(Collectors.toList());
+        List<PayapplyEmployeeProxyDTO> paymentEmpList = baseMapper.getHfPaymentEmpList(hfPayment.getPaymentId(),hfPayment.getPaymentMonth()).stream().map(x->toEmployeeDto(x)).collect(Collectors.toList());
 
         dto.setCompanyList(paymentComList);
         dto.setEmployeeList(paymentEmpList);

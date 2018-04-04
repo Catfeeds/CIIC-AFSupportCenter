@@ -177,6 +177,16 @@
             <if test="paymentTypes != null">
                 AND hmc.payment_type IN (${paymentTypes})
             </if>
+            <if test="basicComAccountArray != null">
+                <foreach collection="basicComAccountArray" item="item" open="AND hcacb.hf_com_account IN (" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="addedComAccountArray != null">
+                <foreach collection="addedComAccountArray" item="item" open="AND hcaca.hf_com_account IN (" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
         </where>
     </select>
 </mapper>

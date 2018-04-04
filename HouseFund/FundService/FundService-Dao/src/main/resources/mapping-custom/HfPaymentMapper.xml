@@ -21,7 +21,7 @@
         <result column="is_advance"   property="isAdvance" />
     </resultMap>
 
-    <select id="getPaymentComList" resultMap="PaymentComResultMap">
+    <select id="getHfPaymentComList" resultMap="PaymentComResultMap">
         SELECT
             pc.company_id,
             com.title AS 'company_name',
@@ -44,7 +44,7 @@
         AND pc.payment_id = #{paymentId}
     </select>
 
-    <select id="getPaymentEmpList" resultMap="PaymentEmpResultMap">
+    <select id="getHfPaymentEmpList" resultMap="PaymentEmpResultMap">
         SELECT
             mc.employee_id,
             emp.employee_name,

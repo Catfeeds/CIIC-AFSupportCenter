@@ -34,7 +34,10 @@
           pa.payment_account_id,
           ca.com_account_name,
           ht.hf_type_name,
-          hpt.payment_state_value,
+            CASE pa.payment_status when 1 then '未到账'
+            when 2 then '无需支付'
+            when 3 then '可付'
+            END  payment_state_value,
           hpat.account_type_value,
           hcapb.payment_bank_value,
           pa.payment_month,
@@ -91,7 +94,6 @@
         LEFT JOIN hf_com_account ca ON ca.com_account_id = pa.com_account_id
         LEFT JOIN hf_com_account_class cac ON cac.com_account_id = ca.com_account_id
         LEFT JOIN hf_type ht ON cac.hf_type = ht.hf_type_code
-        LEFT JOIN hf_payment_state hpt ON pa.payment_status = hpt.payment_state_code
         LEFT JOIN hf_payment_account_type hpat ON ca.hf_account_type = hpat.account_type_code
         LEFT JOIN hf_com_account_payment_bank hcapb ON ca.payment_bank = hcapb.payment_bank_code
         <where>

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileOutputStream;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +77,13 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
         workbook.close();
     }
 
+    /**
+     * 公积金变更清册导出
+     *
+     * @param response
+     * @param pageInfo
+     * @throws Exception
+     */
     @RequestMapping("/chgDetailListExport")
     public void chgDetailListExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         try {
@@ -83,7 +91,7 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
             String hfTypeName;
             String templateFilePath;
 
-            List<Map<String, Object>> chgDetailsPageList = business.getChgDetailsPageList(hfMonthChargeQueryBO);
+            List<Map<String, Object>> chgDetailsPageList = business.getChgDetailsPageList(hfMonthChargeQueryBO, true);
 
             if (hfMonthChargeQueryBO.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
                 hfTypeName = "基本";
@@ -103,9 +111,18 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
                 PdfUtil.DEFAULT_FONT_NAME,
                 PdfUtil.DEFAULT_FONT_ENCODING,
                 false,
-                true,
+                false,
                 chgDetailsPageList,
                 response.getOutputStream());
+//            FileOutputStream os = new FileOutputStream("E:\\test.pdf");
+//            PdfUtil.createPdfByTemplate(templateFilePath,
+//                PdfUtil.DEFAULT_FONT_NAME,
+//                PdfUtil.DEFAULT_FONT_ENCODING,
+//                false,
+//                false,
+//                chgDetailsPageList,
+//                os);
+//            os.close();
         } catch (Exception e) {
             response.reset();
             response.setCharacterEncoding("UTF-8");
@@ -114,6 +131,13 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
         }
     }
 
+    /**
+     * 公积金补缴清册导出
+     *
+     * @param response
+     * @param pageInfo
+     * @throws Exception
+     */
     @RequestMapping("/repairDetailListExport")
     public void repairDetailListExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         HFMonthChargeQueryBO hfMonthChargeQueryBO = pageInfo.toJavaObject(HFMonthChargeQueryBO.class);
@@ -121,7 +145,7 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
         String templateFilePath;
 
         try {
-            List<Map<String, Object>> repairDetailsPageList = business.getRepairDetailsPageList(hfMonthChargeQueryBO);
+            List<Map<String, Object>> repairDetailsPageList = business.getRepairDetailsPageList(hfMonthChargeQueryBO, true);
 
             if (hfMonthChargeQueryBO.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
                 hfTypeName = "基本";
@@ -141,7 +165,7 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
                 PdfUtil.DEFAULT_FONT_NAME,
                 PdfUtil.DEFAULT_FONT_ENCODING,
                 false,
-                true,
+                false,
                 repairDetailsPageList,
                 response.getOutputStream());
         } catch (Exception e) {
