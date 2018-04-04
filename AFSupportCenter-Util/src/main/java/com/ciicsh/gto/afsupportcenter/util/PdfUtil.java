@@ -37,6 +37,9 @@ public class PdfUtil {
                                            boolean hasPageInfo,
                                            List<Map<String, Object>> fillDataMapList,
                                            OutputStream outputStream) throws BusinessException {
+        PdfReader templateReader = null;
+        PdfReader copiedReader = null;
+
         try (InputStream is = StreamUtil.getResourceStream(templateFilePath);
              ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
             ArrayList<BaseFont> fontList = null;
@@ -59,8 +62,8 @@ public class PdfUtil {
             int pageSize = fillDataMapList.size();
 
             for (int page = 0; page < pageSize; page++) {
-                PdfReader reader = new PdfReader(bytes);
-                PdfStamper stamper = new PdfStamper(reader, bos);
+                templateReader = new PdfReader(bytes);
+                PdfStamper stamper = new PdfStamper(templateReader, bos);
                 AcroFields form = stamper.getAcroFields();
                 if (fontList != null) {
                     form.setSubstitutionFonts(fontList);
@@ -107,12 +110,23 @@ public class PdfUtil {
                 }
                 stamper.setFormFlattening(true);
                 stamper.close();
-                PdfImportedPage importedPage = copy.getImportedPage(new PdfReader(bos.toByteArray()), 1);
+                copiedReader = new PdfReader(bos.toByteArray());
+                PdfImportedPage importedPage = copy.getImportedPage(copiedReader, 1);
                 copy.addPage(importedPage);
+                templateReader.close();
+                copiedReader.close();
+                bos.reset();
             }
             doc.close();
         } catch (IOException | DocumentException | IllegalAccessException e) {
             throw new BusinessException(e);
+        } finally {
+            if (templateReader != null) {
+                templateReader.close();
+            }
+            if (copiedReader != null) {
+                copiedReader.close();
+            }
         }
     }
 
