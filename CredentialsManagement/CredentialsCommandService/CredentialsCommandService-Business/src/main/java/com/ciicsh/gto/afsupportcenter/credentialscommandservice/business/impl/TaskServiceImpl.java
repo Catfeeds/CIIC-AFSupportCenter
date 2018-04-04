@@ -3,29 +3,31 @@ package com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.impl;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskMaterialService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskService;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskTypeService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.TaskMapper;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskDetialDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Task;
-import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMaterial;
-import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskType;
 import com.ciicsh.gto.billcenter.afmodule.cmd.api.dto.AfDisposableChargeDTO;
+import com.ciicsh.gto.billcenter.afmodule.cmd.api.dto.AfDisposableChargeProductDTO;
 import com.ciicsh.gto.billcenter.afmodule.cmd.api.proxy.CommandAfDisposableChargeProxy;
 import com.ciicsh.gto.billcenter.afmodule.cmd.api.result.Result;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoForCredentialsDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
+import com.ciicsh.gto.productcenter.apiservice.api.dto.ProductSubjectDTO;
+import com.ciicsh.gto.productcenter.apiservice.api.proxy.ProductProxy;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -54,6 +56,12 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
 
     @Autowired
     private CompanyProxy companyProxy;
+
+    @Autowired
+    private TaskTypeService taskTypeService;
+
+    @Autowired
+    private ProductProxy productProxy;
 
     @Override
     public List<Task> selectByempId(String empId) {
@@ -89,7 +97,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         if (b) {
             boolean isSuccess = taskMaterialService.insertOrUpdateTaskMaterial(taskDetialDTO, task.getTaskId());
             if (isSuccess) {
-                if (taskDetialDTO.getPayType() != null && taskDetialDTO.getPayType() == 1) {
+                if (!(taskDetialDTO.getCredentialsType().equals(5)) && taskDetialDTO.getPayType() != null && taskDetialDTO.getPayType() == 1) {
                     boolean b1 = this.saveCommandAfDisposableCharge(taskDetialDTO);
                     if (!b1) {
                         return 3;
@@ -111,10 +119,13 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
      */
     @Override
     public boolean saveCommandAfDisposableCharge(TaskDetialDTO taskDetialDTO) {
+        List<AfDisposableChargeDTO> list = new ArrayList<>();
         AfDisposableChargeDTO afDisposableChargeDTO = new AfDisposableChargeDTO();
-        Calendar c = Calendar.getInstance();
-        afDisposableChargeDTO.setBillMonth(c.get(Calendar.MONTH)+1);
-        afDisposableChargeDTO.setActualChargeMonth(c.get(Calendar.MONTH)+1);
+        Date now = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+        String date = sdf.format(now);
+        afDisposableChargeDTO.setBillMonth(Integer.parseInt(date));
+        afDisposableChargeDTO.setActualChargeMonth(Integer.parseInt(date));
         afDisposableChargeDTO.setChargeObject(2);
         if (taskDetialDTO.getChargeAmount() != null) {
             int i = taskDetialDTO.getChargeAmount().compareTo(BigDecimal.ZERO);
@@ -123,13 +134,27 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         afDisposableChargeDTO.setCompanyId(taskDetialDTO.getCompanyId());
         afDisposableChargeDTO.setCompanyName(this.getcompInfo(taskDetialDTO.getCompanyId()).getCompanyName());
         afDisposableChargeDTO.setEmployeeId(taskDetialDTO.getEmployeeId());
-        EmployeeInfoForCredentialsDTO empinfo = this.getempInfo(taskDetialDTO.getCompanyId(), taskDetialDTO.getEmployeeId());
-        afDisposableChargeDTO.setEmployeeName(empinfo.getEmployeeName());
-        //todo 雇员类型（应收类型）:1-派遣;2-代理;3-外包
-        afDisposableChargeDTO.setEmployeeType(1);
-//      afDisposableChargeDTO.setSubjectCodeId();
+        EmployeeInfoForCredentialsDTO empInfo = this.getempInfo(taskDetialDTO.getCompanyId(), taskDetialDTO.getEmployeeId());
+        afDisposableChargeDTO.setEmployeeName(empInfo.getEmployeeName());
+        String templateType = taskDetialDTO.getTemplateType();
+        afDisposableChargeDTO.setEmployeeType(StringUtils.isBlank(templateType) ? 2 : Integer.parseInt(templateType));
+        ProductSubjectDTO data = productProxy.getByBasicProductId(taskDetialDTO.getBasicProductId()).getData();
+        afDisposableChargeDTO.setSubjectCodeId(Integer.parseInt(data.getSubjectCodeId()));
+        List<AfDisposableChargeProductDTO> productList = new ArrayList<>();
+        AfDisposableChargeProductDTO product = new AfDisposableChargeProductDTO();
+        product.setProductId(taskDetialDTO.getBasicProductId());
+        TaskType taskType =
+            taskTypeService.selectById(StringUtils.isBlank(taskDetialDTO.getCredentialsDealType()) ?
+                taskDetialDTO.getCredentialsType() : taskDetialDTO.getCredentialsDealType());
+        product.setProductName(taskType.getTaskTypeName());
+        product.setChargeAmount(taskDetialDTO.getChargeAmount());
+        productList.add(product);
+        afDisposableChargeDTO.setProductList(productList);
+
+        afDisposableChargeDTO.setActive(true);
         afDisposableChargeDTO.setCreatedBy("test");
-        Result result = commandAfDisposableChargeProxy.save(afDisposableChargeDTO);
+        list.add(afDisposableChargeDTO);
+        Result result = commandAfDisposableChargeProxy.saveList(list);
         return result.getStatusCode() == 0 ? true : false;
     }
 

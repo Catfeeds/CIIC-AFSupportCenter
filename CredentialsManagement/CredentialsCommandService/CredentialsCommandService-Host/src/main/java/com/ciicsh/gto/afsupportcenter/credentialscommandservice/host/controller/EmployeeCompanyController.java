@@ -4,25 +4,25 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.EmployeeCompanyService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.EmployeeOtherService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.EmployeeService;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskTypeService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.EmployeeCompanyDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.EmployeeDTO;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskTypeDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Employee;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.EmployeeCompany;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.EmployeeOther;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskType;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.SelectionUtils;
 import com.ciicsh.gto.afsupportcenter.util.page.PageUtil;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeCommonInfoDTO;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeIdQueryDTO;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoForCredentialsDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
-import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
-import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -49,6 +50,8 @@ public class EmployeeCompanyController {
     private EmployeeOtherService employeeOtherService;
     @Autowired
     private EmployeeInfoProxy employeeInfoProxy;
+    @Autowired
+    private TaskTypeService taskTypeService;
 
     /**
      * 获取雇员列表
@@ -119,30 +122,23 @@ public class EmployeeCompanyController {
         return employeeInfoDTO.getEmployeeId();
     }
 
-//    /**
-//     * 查询雇员详情
-//     * @param companyId
-//     * @param employeeId
-//     * @return
-//     */
-//    @GetMapping("/getEmpInfo")
-//    public JsonResult getEmpInfo(String companyId,String employeeId){
-//        EmployeeHireInfoQueryDTO employeeHireInfoQueryDTO = new EmployeeHireInfoQueryDTO();
-//        employeeHireInfoQueryDTO.setEmployeeId(employeeId);
-//        employeeHireInfoQueryDTO.setCompanyId(companyId);
-//        EmployeeInfoForCredentialsDTO data = employeeInfoProxy.getEmployeeInfoForCredentials(employeeHireInfoQueryDTO).getData();
-//        return JsonResult.success(data);
-//    }
-
-//    /**
-//     * 查询客户详情
-//     * @param companyId
-//     * @return
-//     */
-//    @GetMapping("/getCompanyInfo")
-//    public JsonResult getCompanyInfo(String companyId){
-//        AfCompanyDetailResponseDTO afCompanyInfo = companyProxy.afDetail(companyId).getObject();
-//        return JsonResult.success(afCompanyInfo);
-//    }
+    /**
+     * 查询证件类型
+     * @param pid
+     * @return
+     */
+    @GetMapping("/findTaskType/{pid}")
+    public JsonResult findTaskType(@PathVariable("pid") String pid) {
+        List<TaskType> list = taskTypeService.findTaskType(pid);
+        List<TaskTypeDTO> result = list.stream().map(item -> {
+            TaskTypeDTO taskTypeDTO = new TaskTypeDTO();
+            BeanUtils.copyProperties(item,taskTypeDTO);
+            taskTypeDTO.setTaskTypeId(String.valueOf(item.getTaskTypeId()));
+            taskTypeDTO.setLevel(String.valueOf(item.getLevel()));
+            taskTypeDTO.setPid(String.valueOf(item.getPid()));
+            return taskTypeDTO;
+        }).collect(Collectors.toList());
+        return JsonResult.success(result);
+    }
 
 }

@@ -55,9 +55,22 @@ public class EmployeeCompany extends Model<EmployeeCompany> {
     @TableField("type")
     private String type;
 
+    /**
+     * 雇佣类型
+     */
+    private Integer templateType;
+
     @Override
     protected Serializable pkVal() {
         return employeeId;
+    }
+
+    public Integer getTemplateType() {
+        return templateType;
+    }
+
+    public void setTemplateType(Integer templateType) {
+        this.templateType = templateType;
     }
 
     public Integer getIdCardType() {

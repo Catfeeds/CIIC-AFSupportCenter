@@ -1,11 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto;
 
-import com.baomidou.mybatisplus.activerecord.Model;
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableName;
-
-import java.io.Serializable;
-
 /**
  * @Author: guwei
  * @Description:
@@ -49,6 +43,16 @@ public class EmployeeCompanyDTO {
      * 雇员类型 1：af 2：bpo 3：fc
      */
     private String type;
+
+    private Integer templateType;
+
+    public Integer getTemplateType() {
+        return templateType;
+    }
+
+    public void setTemplateType(Integer templateType) {
+        this.templateType = templateType;
+    }
 
     public Integer getIdCardType() {
         return idCardType;

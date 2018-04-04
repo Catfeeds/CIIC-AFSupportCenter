@@ -72,10 +72,10 @@ public class OrgPolicyController {
         BeanUtils.copyProperties(orgPolicyPageDTO, orgPolicy);
         //TODO
         if (orgPolicy.getOrgPoilcyId() == null ) {
-            orgPolicy.setCreatedBy("gu");
+            orgPolicy.setCreatedBy("test");
             orgPolicy.setCreatedTime(new Date());
         }
-        orgPolicy.setModifiedBy("gu");
+        orgPolicy.setModifiedBy("test");
         orgPolicy.setModifiedTime(new Date());
         return JsonResult.success(orgPolicyService.insertOrUpdate(orgPolicy));
     }

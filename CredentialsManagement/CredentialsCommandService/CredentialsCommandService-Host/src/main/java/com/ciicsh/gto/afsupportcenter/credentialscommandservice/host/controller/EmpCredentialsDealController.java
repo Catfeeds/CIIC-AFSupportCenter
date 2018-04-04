@@ -2,8 +2,8 @@ package com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.controller
 
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.CompanyExtService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskFollowService;
-import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskMaterialService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskService;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskTypeService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.CompanyExtDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskDetialDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskFollowDTO;
@@ -11,13 +11,10 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskL
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.CompanyExt;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Task;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskFollow;
-import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskMaterial;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskType;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.SelectionUtils;
-import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
-import com.ciicsh.gto.billcenter.afmodule.cmd.api.dto.AfDisposableChargeDTO;
-import com.ciicsh.gto.billcenter.afmodule.cmd.api.proxy.CommandAfDisposableChargeProxy;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -47,6 +43,8 @@ public class EmpCredentialsDealController {
     private TaskService taskService;
     @Autowired
     private CompanyExtService companyExtService;
+    @Autowired
+    private TaskTypeService taskTypeService;
 
     /**
      * 查询任务单跟进记录
@@ -93,7 +91,7 @@ public class EmpCredentialsDealController {
     public JsonResult getTaskList(@PathVariable("empId") String empId){
         List<TaskListDTO> taskListDTOs = new ArrayList<>();
         List<Task> tasks = taskService.selectByempId(empId);
-        tasks.stream().forEach(i -> {
+        tasks.stream().forEach((Task i) -> {
             TaskListDTO taskListDTO = new TaskListDTO();
             BeanUtils.copyProperties(i,taskListDTO);
             if (i.getCredentialsType() != null){
@@ -104,6 +102,12 @@ public class EmpCredentialsDealController {
             }
             if (i.getPayType() != null) {
                 taskListDTO.setPayType(String.valueOf(i.getPayType()));
+            }
+            Integer taskType = i.getCredentialsType();
+            Integer taskDealType = i.getCredentialsDealType();
+            TaskType taskTypeInfo = taskTypeService.selectById(taskDealType == null ? taskType : taskDealType);
+            if (StringUtils.isNotBlank(taskTypeInfo.getBasicProductId())) {
+                taskListDTO.setBasicProductId(taskTypeInfo.getBasicProductId());
             }
             taskListDTOs.add(taskListDTO);
         });
@@ -157,9 +161,10 @@ public class EmpCredentialsDealController {
         return JsonResult.faultMessage(errorMsg);
     }
 
-    @PostMapping("/test")
-    public void testCharge(@RequestBody TaskDetialDTO taskDetialDTO){
-        taskService.saveCommandAfDisposableCharge(taskDetialDTO);
+    @GetMapping("/findTaskTypeDetial")
+    public JsonResult findTaskType(String taskTypeId) {
+        TaskType taskType = taskTypeService.selectById(taskTypeId);
+        return JsonResult.success(taskType);
     }
 
 }

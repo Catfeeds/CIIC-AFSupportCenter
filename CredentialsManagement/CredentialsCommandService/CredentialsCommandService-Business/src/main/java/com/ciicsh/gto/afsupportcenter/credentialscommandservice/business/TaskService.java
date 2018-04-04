@@ -38,6 +38,11 @@ public interface TaskService extends IService<Task> {
     @Override
     boolean insertOrUpdate(Task entity);
 
+    /**
+     * 保存或更新任务单
+     * @param taskDetialDTO
+     * @return
+     */
     int saveOrUpdateTask(TaskDetialDTO taskDetialDTO);
 
     boolean saveCommandAfDisposableCharge(TaskDetialDTO taskDetialDTO);
