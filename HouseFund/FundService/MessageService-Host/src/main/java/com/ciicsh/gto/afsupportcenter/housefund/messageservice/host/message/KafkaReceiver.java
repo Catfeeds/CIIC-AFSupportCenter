@@ -274,7 +274,7 @@ public class KafkaReceiver {
      */
     private void agreementAdjustOrUpdateEmpStop(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer isChange) {
         // 非0转0，ProcessCategory为调整，taskCategory为封存，新增一个封存任务单，但需要将oldAgreementId同时存入任务单记录；
-        // 因为前端发出新开任务时，已经创建了雇员的费用段，oldAgreementId对应的是前一个费用段，任务单结束时需要依据oldAgreementId进行回调，以便前道对其进行处理
+        // 因为前道发出新开任务时，已经创建了雇员的费用段，oldAgreementId对应的是前一个费用段，任务单结束时需要依据oldAgreementId进行回调，以便前道对其进行处理
         logger.info("start agreementAdjustOrUpdateEmpStop(): " + JSON.toJSONString(taskMsgDTO));
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
         int fundType = 2;

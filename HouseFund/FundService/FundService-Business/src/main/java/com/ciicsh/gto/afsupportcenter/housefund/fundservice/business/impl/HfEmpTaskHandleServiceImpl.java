@@ -1734,8 +1734,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     }
                     afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(BigDecimal.ZERO);
                     afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(BigDecimal.ZERO);
-                    if (StringUtils.isNotEmpty(endMonth)) {
-                        afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(endMonth + "01"));
+                    if (StringUtils.isNotEmpty(hfMonth)) {
+                        afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(hfMonth + "01"));
                     }
                     afEmpSocialUpdateDateDTO.setEmpAgreementId(empAgreementId);
                     afEmpSocialUpdateDateDTOList.add(afEmpSocialUpdateDateDTO);

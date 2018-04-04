@@ -15,14 +15,17 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTaskFront;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
+import com.ciicsh.gto.afsupportcenter.util.enumeration.ProcessCategory;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -45,6 +48,8 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
     private SsEmpArchiveService ssEmpArchiveService;
     @Autowired
     LogService logService;
+
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
     /**
      * <p>Description: 保存数据到雇员任务单表</p>
@@ -192,6 +197,22 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
             }
         }
 
+        // 调整或更正的转出或封存时
+        if (oldAgreementId != null && (
+            ProcessCategory.AF_EMP_AGREEMENT_ADJUST.getCategory().equals(ssEmpTask.getProcessCategory())
+                || ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory().equals(ssEmpTask.getProcessCategory())
+        ) && (
+            SocialSecurityConst.TASK_TYPE_5.equals(String.valueOf(ssEmpTask.getTaskCategory()))
+                || SocialSecurityConst.TASK_TYPE_6.equals(String.valueOf(ssEmpTask.getTaskCategory()))
+        )) {
+            // 非0转0不是常规意义的停办，是一种调整任务，所以没有截止年月，此处需特别处理
+            if (StringUtils.isEmpty(ssEmpTask.getEndMonth()) && StringUtils.isNotEmpty(ssEmpTask.getStartMonth())) {
+                YearMonth startMonthDate = YearMonth.parse(ssEmpTask.getStartMonth(), formatter);
+                ssEmpTask.setEndMonth(startMonthDate.minusMonths(1).format(formatter));
+                ssEmpTask.setStartMonth(null);
+            }
+        }
+
         //boolean insertRes = ssEmpTaskMapper.insertEmpTask(ssEmpTask);
         resetTaskSubmitTime(ssEmpTask);//
         Integer insertRes = ssEmpTaskMapper.insert(ssEmpTask);
@@ -332,6 +353,23 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                 break;
             }
         }
+
+        // 调整或更正的转出或封存时
+        if (paramMap.get("oldAgreementId") != null && (
+            ProcessCategory.AF_EMP_AGREEMENT_ADJUST.getCategory().equals(ssEmpTask.getProcessCategory())
+                || ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory().equals(ssEmpTask.getProcessCategory())
+        ) && (
+            SocialSecurityConst.TASK_TYPE_5.equals(String.valueOf(ssEmpTask.getTaskCategory()))
+                || SocialSecurityConst.TASK_TYPE_6.equals(String.valueOf(ssEmpTask.getTaskCategory()))
+        )) {
+            // 非0转0不是常规意义的停办，是一种调整任务，所以没有截止年月，此处需特别处理
+            if (StringUtils.isEmpty(ssEmpTask.getEndMonth()) && StringUtils.isNotEmpty(ssEmpTask.getStartMonth())) {
+                YearMonth startMonthDate = YearMonth.parse(ssEmpTask.getStartMonth(), formatter);
+                ssEmpTask.setEndMonth(startMonthDate.minusMonths(1).format(formatter));
+                ssEmpTask.setStartMonth(null);
+            }
+        }
+
         ssEmpTask.setModifiedBy(companyDto.getCreatedBy());
         ssEmpTask.setModifiedTime(LocalDateTime.now());
         ssEmpTaskMapper.updateById(ssEmpTask);
