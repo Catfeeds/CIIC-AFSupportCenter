@@ -75,35 +75,32 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
     public boolean updatePaymentInfo(Long pkId, String remark, Integer payStatus) {
         HfPayment hfPayment = new HfPayment();
         hfPayment.setPaymentId(pkId);
-        //根据ID获取到记录
         hfPayment = hfPaymentMapper.selectOne(hfPayment);
-
-        if (hfPayment != null) {
-            //更新批次状态 支付状态:付款状态(-1:审核未过;9.支付成功;-9:支付失败;)
-            int paymentState = payStatus == 9 ? 8 :7;
-            if(null != remark){
-                hfPayment.setRejectionRemark(remark);
+        if(null != hfPayment){
+            switch (payStatus){
+                case -1:
+                    hfPayment.setPaymentState(4);
+                    hfPayment.setRejectionRemark(remark);
+                    break;
+                case 8:
+                    hfPayment.setPaymentState(5);
+                    break;
+                case 9:
+                    hfPayment.setFinancePaymentDate(new Date());
+                    break;
             }
-            hfPayment.setPaymentState(paymentState);
             hfPayment.setModifiedBy("system");
             hfPayment.setModifiedTime(new Date());
-            hfPaymentMapper.updateById(hfPayment);
-
-            //将批次下的客户费用明细的状态也改为已申请到财务部
-            //取出批次下所有的客户费用
-            List<HfPaymentAccount> ssPaymentComList = baseMapper.getByPaymentId(hfPayment.getPaymentId());
-            if (null != ssPaymentComList && ssPaymentComList.size() > 0) {
-                ssPaymentComList
-                    .stream()
-                    .map(x->{
-                        x.setPaymentStatus(paymentState);
-                        x.setModifiedBy("system");
-                        x.setModifiedTime(LocalDateTime.now());
-                        return x;})
-                    .collect(Collectors.toList());
-                this.updateBatchById(ssPaymentComList);
+            Integer val = hfPaymentMapper.updateById(hfPayment);
+            if(val > 0){
+                return true;
+            }
+            else {
+                return false;
             }
         }
-        return true;
+        else{
+            return false;
+        }
     }
 }

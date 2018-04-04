@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto;
 
-import java.time.LocalDate;
+
+import java.util.Date;
 
 /**
  * Created by zhangzhiwen on 2018/3/29.
@@ -25,7 +26,7 @@ public class ArchiveDTO {
     /**
      * 入库日期
      */
-    private LocalDate storageDate;
+    private Date storageDate;
     /**
      * 存档地补充
      */
@@ -55,18 +56,18 @@ public class ArchiveDTO {
      * 一次性补贴日期
      * @return
      */
-    private LocalDate oneTimeSubsidyDate;
+    private Date oneTimeSubsidyDate;
     /**
      * 一次性补贴张数
      * @return
      */
     private  Integer oneTimeSubsidyNum;
 
-    public LocalDate getOneTimeSubsidyDate() {
+    public Date getOneTimeSubsidyDate() {
         return oneTimeSubsidyDate;
     }
 
-    public void setOneTimeSubsidyDate(LocalDate oneTimeSubsidyDate) {
+    public void setOneTimeSubsidyDate(Date oneTimeSubsidyDate) {
         this.oneTimeSubsidyDate = oneTimeSubsidyDate;
     }
 
@@ -110,11 +111,11 @@ public class ArchiveDTO {
         this.docFrom = docFrom;
     }
 
-    public LocalDate getStorageDate() {
+    public Date getStorageDate() {
         return storageDate;
     }
 
-    public void setStorageDate(LocalDate storageDate) {
+    public void setStorageDate(Date storageDate) {
         this.storageDate = storageDate;
     }
 

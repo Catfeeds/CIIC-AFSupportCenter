@@ -79,9 +79,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
             if(amEmploymentBO!=null&&amEmploymentBO.getEmployCode()!=null)
             {
-                if(amEmploymentBO.getEmployCode()==2){//代理也就是独立
+                if(amEmploymentBO.getEmployCode()==1){//是独立
 
-                }else if(amEmploymentBO.getEmployCode()==1){
+                }else if(amEmploymentBO.getEmployCode()==2){
                     amEmploymentBO.setTitle("中智上海经济技术合作公司");
                 }else if(amEmploymentBO.getEmployCode()==3){
                     amEmploymentBO.setCici("上海中智项目外包咨询服务有限公司");

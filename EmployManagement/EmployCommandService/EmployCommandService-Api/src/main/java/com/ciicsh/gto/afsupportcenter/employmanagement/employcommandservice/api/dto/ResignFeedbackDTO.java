@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * Created by zhangzhiwen on 2018/3/30.
@@ -18,7 +18,7 @@ public class ResignFeedbackDTO {
     /**
      * 操作日期
      */
-    private LocalDateTime createdTime;
+    private Date createdTime;
 
     public String getResignFeedback() {
         return resignFeedback;
@@ -36,11 +36,11 @@ public class ResignFeedbackDTO {
         this.resignOperateMan = resignOperateMan;
     }
 
-    public LocalDateTime getCreatedTime() {
+    public Date getCreatedTime() {
         return createdTime;
     }
 
-    public void setCreatedTime(LocalDateTime createdTime) {
+    public void setCreatedTime(Date createdTime) {
         this.createdTime = createdTime;
     }
 }

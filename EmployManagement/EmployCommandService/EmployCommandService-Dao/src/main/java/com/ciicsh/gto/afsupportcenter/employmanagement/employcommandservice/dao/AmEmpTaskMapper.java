@@ -34,6 +34,8 @@ public interface AmEmpTaskMapper extends BaseMapper<AmEmpTask> {
 
     List<AmEmpTaskBO>  querySocial(Map<String,Object> param);
 
+    List<AmEmpTaskBO> querySocialCi();
+
     List<EmploymentDTO>  getEmploymentByTaskId(TaskParamDTO taskParamDTO);
 
     List<ArchiveDTO>  getArchiveByEmployeeId(TaskParamDTO taskParamDTO);

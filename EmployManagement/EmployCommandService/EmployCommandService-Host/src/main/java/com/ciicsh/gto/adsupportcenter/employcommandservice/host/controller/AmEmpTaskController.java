@@ -1,7 +1,6 @@
 package com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller;
 
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.adsupportcenter.employcommandservice.host.messageBus.KafkaSender;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
@@ -14,13 +13,14 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.enti
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMUserInfoDTO;
-import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
+import com.ciicsh.gto.identityservice.api.dto.response.UserInfoResponseDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -61,10 +61,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     @Autowired
     private CommonApiUtils employeeInfoProxy;
 
-    @Autowired
-    private KafkaSender sender;
-
-
 
     /**
      *用工资料任务单查询
@@ -93,9 +89,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             {
                 if(amEmpTaskBO!=null&&amEmpTaskBO.getEmployCode()!=null)
                 {
-                    if(amEmpTaskBO.getEmployCode()==2){//代理也就是独立
+                    if(amEmpTaskBO.getEmployCode()==1){//是独立
 
-                    }else if(amEmpTaskBO.getEmployCode()==1){
+                    }else if(amEmpTaskBO.getEmployCode()==2){
                         amEmpTaskBO.setTitle("中智上海经济技术合作公司");
                     }else if(amEmpTaskBO.getEmployCode()==3){
                         amEmpTaskBO.setCici("上海中智项目外包咨询服务有限公司");
@@ -197,11 +193,17 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         if(result!=null&&result.getRows().size()>0)
         {
             empMaterialList.addAll(result.getRows());
-            String userId = result.getRows().get(0).getSubmitterId();
-            SMUserInfoDTO smUserInfoDTO = employeeInfoProxy.getUserInfo(userId);
+            String submitterId = result.getRows().get(0).getSubmitterId();
+            String submitterName = result.getRows().get(0).getSubmitterName();
+            String extension = result.getRows().get(0).getExtension();
             amMaterialBO.setMaterialsData(empMaterialList);
-            amMaterialBO.setSubmitName(smUserInfoDTO==null?"":smUserInfoDTO.getDisplayName());
-            amMaterialBO.setPhone(smUserInfoDTO==null?"":smUserInfoDTO.getPhone());
+            if("system".equals(submitterId)){
+                amMaterialBO.setSubmitName("自动提交");
+            }else {
+                amMaterialBO.setSubmitName(submitterName);
+                amMaterialBO.setExtension(extension);
+            }
+
         }
 
         //用工信息
@@ -260,17 +262,21 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     @Log("保存用工信息")
     @RequestMapping("/saveEmployee")
     public JsonResult<Boolean> saveEmployee(AmEmployment entity) {
+        String userId = UserContext.getUserId();
+        String userName = UserContext.getUserName();
         LocalDateTime now = LocalDateTime.now();
         if(entity.getEmploymentId()==null){
             entity.setCreatedTime(now);
             entity.setModifiedTime(now);
-            entity.setCreatedBy("sys");
-            entity.setModifiedBy("sys");
+            entity.setCreatedBy(userId);
+            entity.setModifiedBy(userId);
             entity.setIsActive(1);
         }else{
             entity.setModifiedTime(now);
-            entity.setModifiedBy("sys");
+            entity.setModifiedBy(userId);
         }
+        entity.setEmployOperateMan(userName);
+
         boolean result =  amEmploymentService.insertOrUpdate(entity);
         return JsonResultKit.of(result);
     }
@@ -436,6 +442,22 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         String fileNme = "用工任务单_"+ StringUtil.getDateString(date)+".xls";
 
         List<employSearchExportOpt> opts = business.queryAmEmpTaskList(amEmpTaskBO);
+
+        for(employSearchExportOpt employSearchExportOpt:opts)
+        {
+            if(employSearchExportOpt.getEmployCode()!=null)
+            {
+                if(employSearchExportOpt.getEmployCode()==2){//代理也就是独立
+
+                }else if(employSearchExportOpt.getEmployCode()==1){
+                    employSearchExportOpt.setTitle("中智上海经济技术合作公司");
+                }else if(employSearchExportOpt.getEmployCode()==3){
+                    String str = "上海中智项目外包咨询服务有限公司";
+                    str = employSearchExportOpt.getTitle()+" "+str;
+                    employSearchExportOpt.setTitle(str);
+                }
+            }
+        }
 
         ExcelUtil.exportExcel(opts,employSearchExportOpt.class,fileNme,response);
     }
