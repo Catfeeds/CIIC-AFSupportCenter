@@ -232,6 +232,7 @@
         a.company_id,/*客户Id*/
         a.employee_nature,
         a.archive_direction,
+        a.employ_code,
         b.employment_id,
         b.employ_way,/*用工方式 */
         b.employ_property,/*用工属性 */
@@ -284,10 +285,12 @@
         <if test="companyId!=null">
             and  acr.company_id=#{companyId}
         </if>
-        <if test="templateType!=null">
-            and  ca.ss_account_type=#{templateType}
-        </if>
     </select>
+    <select id="querySocialCi">
+        select ca.ss_account,ca.com_account_name,ca.modified_time as accountRepairDate,ca.ss_pwd
+        FROM ss_com_account ca where ca.is_active=1 and ca.ss_account_type=1
+    </select>
+
 
     <select id="getEmploymentByTaskId" resultMap="BaseResultMapEmploymentDTO">
         SELECT
@@ -321,10 +324,10 @@
         a.luyong_handle_end
         FROM
         am_archive a
-        LEFT JOIN am_employment b ON b.employment_id = a.employment_id
-        LEFT JOIN am_emp_task c on b.emp_task_id = c.emp_task_id
         where
-        c.task_id = #{taskId}
+        employee_id = #{employeeId}
+        order by
+        a.created_time desc
     </select>
 
     <select id="queryResignLinkByTaskId" resultMap="BaseResultMapResignLinkDTO">

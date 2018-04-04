@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -11,7 +11,7 @@ public class ResignDTO {
     /**
      * 退工日期
      */
-    private LocalDate resignDate;
+    private Date resignDate;
     /**
      * 退档方向
      */
@@ -19,11 +19,11 @@ public class ResignDTO {
     /**
      * 退档日期
      */
-    private LocalDate returnDocDate;
+    private Date returnDocDate;
     /**
      * 暂存日期
      */
-    private LocalDate cacheDate;
+    private Date cacheDate;
     /**
      * 转移方式
      */
@@ -39,11 +39,11 @@ public class ResignDTO {
     /**
      * 退工成功日期
      */
-    private LocalDate jobCentreFeedbackDate;
+    private Date jobCentreFeedbackDate;
     /**
      * 退工材料交付日期
      */
-    private LocalDate resignMaterialDeliveryDate;
+    private Date resignMaterialDeliveryDate;
     /**
      * 退工操作员
      */
@@ -53,24 +53,24 @@ public class ResignDTO {
      * 取一次性补贴日期
      * @return
      */
-    private LocalDate getOneTimeSubsidyDate;
+    private Date getOneTimeSubsidyDate;
 
-    public LocalDate getGetOneTimeSubsidyDate() {
+    public Date getGetOneTimeSubsidyDate() {
         return getOneTimeSubsidyDate;
     }
 
-    public void setGetOneTimeSubsidyDate(LocalDate getOneTimeSubsidyDate) {
+    public void setGetOneTimeSubsidyDate(Date getOneTimeSubsidyDate) {
         this.getOneTimeSubsidyDate = getOneTimeSubsidyDate;
     }
 
     private List<ResignFeedbackDTO> feedbackDTOList;
 
 
-    public LocalDate getResignDate() {
+    public Date getResignDate() {
         return resignDate;
     }
 
-    public void setResignDate(LocalDate resignDate) {
+    public void setResignDate(Date resignDate) {
         this.resignDate = resignDate;
     }
 
@@ -82,19 +82,19 @@ public class ResignDTO {
         this.returnDocDirect = returnDocDirect;
     }
 
-    public LocalDate getReturnDocDate() {
+    public Date getReturnDocDate() {
         return returnDocDate;
     }
 
-    public void setReturnDocDate(LocalDate returnDocDate) {
+    public void setReturnDocDate(Date returnDocDate) {
         this.returnDocDate = returnDocDate;
     }
 
-    public LocalDate getCacheDate() {
+    public Date getCacheDate() {
         return cacheDate;
     }
 
-    public void setCacheDate(LocalDate cacheDate) {
+    public void setCacheDate(Date cacheDate) {
         this.cacheDate = cacheDate;
     }
 
@@ -122,11 +122,11 @@ public class ResignDTO {
         this.resignFeedback = resignFeedback;
     }
 
-    public LocalDate getJobCentreFeedbackDate() {
+    public Date getJobCentreFeedbackDate() {
         return jobCentreFeedbackDate;
     }
 
-    public void setJobCentreFeedbackDate(LocalDate jobCentreFeedbackDate) {
+    public void setJobCentreFeedbackDate(Date jobCentreFeedbackDate) {
         this.jobCentreFeedbackDate = jobCentreFeedbackDate;
     }
 
@@ -138,11 +138,11 @@ public class ResignDTO {
         this.resignOperateMan = resignOperateMan;
     }
 
-    public LocalDate getResignMaterialDeliveryDate() {
+    public Date getResignMaterialDeliveryDate() {
         return resignMaterialDeliveryDate;
     }
 
-    public void setResignMaterialDeliveryDate(LocalDate resignMaterialDeliveryDate) {
+    public void setResignMaterialDeliveryDate(Date resignMaterialDeliveryDate) {
         this.resignMaterialDeliveryDate = resignMaterialDeliveryDate;
     }
 

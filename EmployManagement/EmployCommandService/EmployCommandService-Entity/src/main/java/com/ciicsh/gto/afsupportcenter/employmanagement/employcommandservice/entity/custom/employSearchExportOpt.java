@@ -58,4 +58,6 @@ public class employSearchExportOpt {
     @Excel(name = "调档反馈操作日期",width = 20, orderNum = "15")
     private String diaodangFeedbackOptDate;
 
+    private  Integer employCode;
+
 }

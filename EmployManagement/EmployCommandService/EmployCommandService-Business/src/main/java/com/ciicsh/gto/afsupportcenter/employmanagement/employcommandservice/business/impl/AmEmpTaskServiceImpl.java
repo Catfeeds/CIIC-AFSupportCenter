@@ -152,7 +152,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
         String archiveDirection = null;
         String employeeNature = null;
-        String submitterId = null;//提交人
+        String submitterId = null;//材料提交人
         Map<String, Object> map = null;
         try {
             map = taskMsgDTO.getVariables();
@@ -177,10 +177,10 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amEmpTask.setCreatedBy(employeeCompany.getCreatedBy());
                 amEmpTask.setModifiedBy(employeeCompany.getModifiedBy());
                 amEmpTask.setSubmitterId(submitterId);
-                if(employeeCompany.getTemplateType()!=null)
+                if(employeeCompany.getHireUnit()!=null)
                 {
-                    amEmpTask.setEmployCode(employeeCompany.getTemplateType());
-                    amEmpTask.setEmployProperty(ReasonUtil.getYgsx(employeeCompany.getTemplateType().toString()));
+                    amEmpTask.setEmployCode(employeeCompany.getHireUnit());
+                    amEmpTask.setEmployProperty(ReasonUtil.getYgsx(employeeCompany.getHireUnit().toString()));
                 }
             }
 
@@ -210,13 +210,14 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amEmpMaterial.setMaterialName(str);
                 amEmpMaterial.setEmployeeId(bo.getEmployeeId());
                 amEmpMaterial.setOperateType(1);
-                amEmpMaterial.setSubmitterId(submitterId);
                 amEmpMaterial.setActive(true);
                 amEmpMaterial.setCreatedBy("sys");
                 amEmpMaterial.setCreatedTime(LocalDateTime.now());
                 amEmpMaterial.setModifiedBy("sys");
                 amEmpMaterial.setSubmitterDate(LocalDate.now());
+                amEmpMaterial.setSubmitterId(submitterId);
                 amEmpMaterial.setSubmitterName(smUserInfoDTO==null?"":smUserInfoDTO.getDisplayName());
+                amEmpMaterial.setExtension(smUserInfoDTO==null?"":smUserInfoDTO.getExtension());
                 amEmpMaterial.setEmpTaskId(amEmpTask.getEmpTaskId());
                 amEmpMaterialsList.add(amEmpMaterial);
             }
@@ -363,12 +364,13 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             employeeBO.setPosition(afEmployeeCompanyDTO.getPosition());
 
             Map<String,Object> param0 = new HashMap<>();
-            if(afEmployeeCompanyDTO.getTemplateType()==2){
+            List<AmEmpTaskBO> list = null;
+            if(afEmployeeCompanyDTO.getHireUnit()==1){ //独立户
                 param0.put("companyId",param.getCompanyId());
-            }else {
-                param0.put("templateType",afEmployeeCompanyDTO.getTemplateType());
+                list = baseMapper.querySocial(param0);
+            }else {//大库
+                list = baseMapper.querySocialCi();
             }
-            List<AmEmpTaskBO> list = baseMapper.querySocial(param0);
 
             if(list!=null&&list.size()>0)
             {
