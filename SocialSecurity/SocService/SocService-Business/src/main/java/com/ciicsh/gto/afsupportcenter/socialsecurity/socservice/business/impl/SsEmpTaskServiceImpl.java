@@ -26,6 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
@@ -73,6 +76,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     private final String PERSONROUNDTYPE = "personRoundType";
     //公司进位方式
     private final String COMPANYROUNDTYPE = "companyRoundType";
+
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
     @Override
     public PageRows<SsEmpTaskBO> employeeOperatorQuery(PageInfo pageInfo) {
@@ -1776,14 +1781,34 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param ssMonthCharge
      */
     private void createSsMonthChargeObject(SsEmpTaskBO ssEmpTaskBO, SsEmpBasePeriod ssEmpBasePeriod, SsMonthCharge ssMonthCharge, List<SsEmpBaseDetail> ssEmpBaseDetailList) {
-        int startMonth = Integer.valueOf(ssEmpBasePeriod.getStartMonth());
-        int endMonth = Integer.valueOf(ssEmpBasePeriod.getEndMonth());
+//        int startMonth = Integer.valueOf(ssEmpBasePeriod.getStartMonth());
+//        int endMonth = Integer.valueOf(ssEmpBasePeriod.getEndMonth());
+        YearMonth startMonthDate = YearMonth.parse(ssEmpBasePeriod.getStartMonth(), formatter);
+        YearMonth endMonthDate = YearMonth.parse(ssEmpBasePeriod.getEndMonth(), formatter);
         BigDecimal negative = new BigDecimal(-1);
         //用于回调
         BigDecimal ponsernalAmount = new BigDecimal(0);
         BigDecimal companyAmount = new BigDecimal(0);
-        for (int i = startMonth; i <= endMonth; i = TaskCommonUtils.getNextMonthInt(i)) {
-            ssMonthCharge.setSsMonthBelong(String.valueOf(i));
+        boolean isOut = 6 == ssMonthCharge.getCostCategory() || 7 == ssMonthCharge.getCostCategory();
+        long months = startMonthDate.until(endMonthDate, ChronoUnit.MONTHS);
+
+//        for (int i = startMonth; i <= endMonth; i = TaskCommonUtils.getNextMonthInt(i)) {
+//            ssMonthCharge.setSsMonthBelong(String.valueOf(i));
+        for (long i = 0; i <= months; i++) {
+            if (isOut) {
+                // 如果是转出任务单，雇员月度汇缴明细库转入数据可能被删除（当月转入当月转出），且不生成转出数据
+                int rslt = ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 2);
+                if (rslt > 0) {
+                    continue;
+                }
+                rslt = ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 3);
+                if (rslt > 0) {
+                    continue;
+                }
+                ssMonthCharge.setSsMonthBelong(startMonthDate.minusMonths(1).plusMonths(i).format(formatter));
+            } else {
+                ssMonthCharge.setSsMonthBelong(startMonthDate.plusMonths(i).format(formatter));
+            }
             //转出和封存是负数
             ssMonthCharge.setBaseAmount(ssEmpBasePeriod.getBaseAmount());
             List<SsMonthChargeItem> ssMonthChargeItemList = new ArrayList<>();
@@ -1795,9 +1820,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 SsMonthChargeItem ssMonthChargeItem = new SsMonthChargeItem();
                 ssMonthChargeItem.setMonthChargeId(ssMonthCharge.getMonthChargeId());
                 //转出和封存是负数
-                ssMonthChargeItem.setComAmount(6 == ssMonthCharge.getCostCategory() || 7 == ssMonthCharge.getCostCategory() ? ssEmpBaseDetail.getComAmount().multiply(negative) : ssEmpBaseDetail.getComAmount());
-                ssMonthChargeItem.setEmpAmount(6 == ssMonthCharge.getCostCategory() || 7 == ssMonthCharge.getCostCategory() ? ssEmpBaseDetail.getEmpAmount().multiply(negative) : ssEmpBaseDetail.getEmpAmount());
-                ssMonthChargeItem.setSubTotalAmount(6 == ssMonthCharge.getCostCategory() || 7 == ssMonthCharge.getCostCategory() ? ssEmpBaseDetail.getComempAmount().multiply(negative) : ssEmpBaseDetail.getComempAmount());
+                ssMonthChargeItem.setComAmount(isOut ? ssEmpBaseDetail.getComAmount().multiply(negative) : ssEmpBaseDetail.getComAmount());
+                ssMonthChargeItem.setEmpAmount(isOut ? ssEmpBaseDetail.getEmpAmount().multiply(negative) : ssEmpBaseDetail.getEmpAmount());
+                ssMonthChargeItem.setSubTotalAmount(isOut ? ssEmpBaseDetail.getComempAmount().multiply(negative) : ssEmpBaseDetail.getComempAmount());
                 ssMonthChargeItem.setSsType(ssEmpBaseDetail.getSsType());
                 ssMonthChargeItem.setSsTypeName(ssEmpBaseDetail.getSsTypeName());
                 by(ssMonthChargeItem);
@@ -1807,7 +1832,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 ponsernalAmount = ponsernalAmount.add(ssEmpBaseDetail.getEmpAmount());
                 companyAmount = companyAmount.add(ssEmpBaseDetail.getComAmount());
             }
-            ssMonthCharge.setTotalAmount(6 == ssMonthCharge.getCostCategory() || 7 == ssMonthCharge.getCostCategory() ? totalAmount.multiply(negative) : totalAmount);
+            ssMonthCharge.setTotalAmount(isOut ? totalAmount.multiply(negative) : totalAmount);
             ssMonthChargeService.updateById(ssMonthCharge);
             ssMonthChargeItemService.insertBatch(ssMonthChargeItemList);
         }

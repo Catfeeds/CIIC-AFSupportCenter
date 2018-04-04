@@ -48,15 +48,17 @@ public interface HfMonthChargeService extends IService<HfMonthCharge> {
      * 获取基本/补充公积金汇缴变更清册导出数据
      *
      * @param hfMonthChargeQueryBO
+     * @param isPageByComAccount
      * @return
      */
-    List<Map<String, Object>> getChgDetailsPageList(HFMonthChargeQueryBO hfMonthChargeQueryBO);
+    List<Map<String, Object>> getChgDetailsPageList(HFMonthChargeQueryBO hfMonthChargeQueryBO, boolean isPageByComAccount);
 
     /**
      * 获取基本/补充公积金补缴清册导出数据
      *
      * @param hfMonthChargeQueryBO
+     * @param isPageByComAccount
      * @return
      */
-    List<Map<String, Object>> getRepairDetailsPageList(HFMonthChargeQueryBO hfMonthChargeQueryBO);
+    List<Map<String, Object>> getRepairDetailsPageList(HFMonthChargeQueryBO hfMonthChargeQueryBO, boolean isPageByComAccount);
 }

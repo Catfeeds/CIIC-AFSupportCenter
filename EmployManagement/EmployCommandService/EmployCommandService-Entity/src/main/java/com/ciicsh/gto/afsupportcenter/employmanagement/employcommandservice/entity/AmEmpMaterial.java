@@ -113,6 +113,16 @@ public class AmEmpMaterial implements Serializable {
     @TableId(value="emp_task_id")
     private Long empTaskId;
 
+    @TableId(value="extension")
+    private  String extension;
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public void setExtension(String extension) {
+        this.extension = extension;
+    }
 
     public Long getEmpTaskId() {
         return empTaskId;

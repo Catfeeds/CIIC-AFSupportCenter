@@ -80,10 +80,8 @@ public class ReasonUtil {
         istj_param.put("0","已交");
         istj_param.put("1","未交");
 
-        ygsx_param.put("1","派遣");
-        ygsx_param.put("2","代理");
-        ygsx_param.put("3","业务外包");
-
+        ygsx_param.put("1","独立户");
+        ygsx_param.put("2","大库");
 
     }
 
