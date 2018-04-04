@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentAccountB
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentAccount;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 
 public interface HfPaymentAccountService extends IService<HfPaymentAccount> {
 
@@ -16,4 +17,6 @@ public interface HfPaymentAccountService extends IService<HfPaymentAccount> {
      * @return
      */
     PageRows<HfPaymentAccountBo> getMakePayLists(PageInfo pageInfo);
+
+    JsonResult delHfPayment(String paymentId);
 }

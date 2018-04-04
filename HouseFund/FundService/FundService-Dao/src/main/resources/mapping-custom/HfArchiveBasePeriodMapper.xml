@@ -2,15 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfArchiveBasePeriodMapper">
 
-    <delete id="deleteHfArchiveBasePeriods" parameterType="java.util.List">
-        DELETE
-        FROM hf_archive_base_period
+    <update id="deleteHfArchiveBasePeriods" parameterType="java.util.List">
+        UPDATE hf_archive_base_period
+        SET is_active = 0
         <where>
             <foreach collection="list" item="item" open="emp_task_id IN (" separator="," close=")">
                 #{item}
             </foreach>
         </where>
-    </delete>
+    </update>
 
     <update id="updateHfArchiveBasePeriods">
         UPDATE hf_archive_base_period habp

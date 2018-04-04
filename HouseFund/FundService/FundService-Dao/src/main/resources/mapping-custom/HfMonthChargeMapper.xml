@@ -71,15 +71,15 @@
         </where>
     </update>
 
-    <delete id="deleteHfMonthCharges" parameterType="java.util.List">
-        DELETE
-        FROM hf_month_charge
+    <update id="deleteHfMonthCharges" parameterType="java.util.List">
+        UPDATE hf_month_charge
+        SET is_active = 0
         <where>
             <foreach collection="list" item="item" open="emp_task_id IN (" separator="," close=")">
                 #{item}
             </foreach>
         </where>
-    </delete>
+    </update>
 
     <select id="getHfMonthChargeDiffSum" resultMap="ResultMapDiffBo">
         SELECT

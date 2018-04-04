@@ -97,6 +97,9 @@
         <where>
             pa.is_active = 1
             AND pa.payment_id is NULL
+            <if test="paymentId != null and paymentId != ''">
+                AND pa.payment_id = #{paymentId}
+            </if>
             <if test="paymentMonth != null and paymentMonth != ''">
                 AND pa.payment_month = TRIM(#{paymentMonth})
             </if>

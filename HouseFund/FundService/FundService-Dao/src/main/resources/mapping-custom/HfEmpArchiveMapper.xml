@@ -317,19 +317,20 @@
         WHERE ea.is_active=1 and emp.employee_name = #{empName} and emp.id_num= #{idNum};
     </select>
 
-    <delete id="deleteHfEmpArchiveByEmpTaskIds" parameterType="java.util.List">
-        DELETE hea
-        FROM hf_emp_archive hea INNER JOIN hf_emp_task het ON
+    <update id="deleteHfEmpArchiveByEmpTaskIds" parameterType="java.util.List">
+        UPDATE hf_emp_archive hea INNER JOIN hf_emp_task het ON
         het.employee_id = hea.employee_id
         AND het.company_id = hea.company_id
+        AND het.hf_type = hea.hf_type
         AND hea.archive_status!=3
         AND hea.is_active = 1
+        SET hea.is_active = 0
         <where>
             <foreach collection="list" item="item" open="AND het.emp_task_id IN (" separator="," close=")">
                 #{item}
             </foreach>
         </where>
-    </delete>
+    </update>
 
     <select id="queryHfEmpArchiveByEmpTaskIds" parameterType="java.util.List" resultType="java.util.Map">
         SELECT het.emp_task_id, hea.emp_archive_id

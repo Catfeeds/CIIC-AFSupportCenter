@@ -70,9 +70,9 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
            if(amResignBO!=null&&amResignBO.getEmployCode()!=null)
            {
-               if(amResignBO.getEmployCode()==2){//代理也就是独立
+               if(amResignBO.getEmployCode()==1){//是独立
 
-               }else if(amResignBO.getEmployCode()==1){
+               }else if(amResignBO.getEmployCode()==2){
                    amResignBO.setTitle("中智上海经济技术合作公司");
                }else if(amResignBO.getEmployCode()==3){
                    amResignBO.setCici("上海中智项目外包咨询服务有限公司");

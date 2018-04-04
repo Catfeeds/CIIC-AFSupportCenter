@@ -9,7 +9,7 @@
     </resultMap>
 
     <select id="queryAmEmpMaterial" resultMap="BaseResultMapDTO">
-        SELECT  * from  am_emp_material where employee_id = #{employeeId}  and operate_type = #{operateType}
+        SELECT  * from  am_emp_material where emp_task_id = #{empTaskId}  and operate_type = #{operateType}
     </select>
 
 </mapper>

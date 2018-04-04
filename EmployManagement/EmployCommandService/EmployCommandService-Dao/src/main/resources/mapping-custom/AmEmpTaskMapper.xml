@@ -41,6 +41,22 @@
         <result column="diaodang_feedback_opt_date" property="diaodangFeedbackOptDate" />
     </resultMap>
 
+    <resultMap id="BaseResultMapEmploymentDTO" type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.EmploymentDTO">
+
+    </resultMap>
+
+    <resultMap id="BaseResultMapArchiveDTO" type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.ArchiveDTO">
+
+    </resultMap>
+
+    <resultMap id="BaseResultMapResignLinkDTO" type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.ResignFeedbackDTO">
+
+    </resultMap>
+
+    <resultMap id="BaseResultMapResignDTO" type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.ResignDTO">
+
+    </resultMap>
+
     <select id="queryAmEmpTask" resultMap="BaseResultMapDTO">
         SELECT
         a.emp_task_id,/*任务id */
@@ -216,6 +232,7 @@
         a.company_id,/*客户Id*/
         a.employee_nature,
         a.archive_direction,
+        a.employ_code,
         b.employment_id,
         b.employ_way,/*用工方式 */
         b.employ_property,/*用工属性 */
@@ -268,9 +285,75 @@
         <if test="companyId!=null">
             and  acr.company_id=#{companyId}
         </if>
-        <if test="templateType!=null">
-            and  ca.ss_account_type=#{templateType}
-        </if>
+    </select>
+    <select id="querySocialCi">
+        select ca.ss_account,ca.com_account_name,ca.modified_time as accountRepairDate,ca.ss_pwd
+        FROM ss_com_account ca where ca.is_active=1 and ca.ss_account_type=1
+    </select>
+
+
+    <select id="getEmploymentByTaskId" resultMap="BaseResultMapEmploymentDTO">
+        SELECT
+        a.employ_date,
+        a.open_af_date,
+        a.employ_style,
+        a.handle_type,
+        c.employ_feedback,
+        c.employ_feedback_opt_date,
+        a.employ_operate_man
+        FROM
+        am_employment a
+        LEFT JOIN  am_emp_task b ON a.emp_task_id = b.emp_task_id
+        LEFT JOIN  am_archive c on a.employment_id = c.employment_id
+        where
+        b.task_id = #{taskId}
+    </select>
+
+    <select id="getArchiveByEmployeeId" resultMap="BaseResultMapArchiveDTO">
+        SELECT
+        a.doc_num,
+        a.archive_place,
+        a.archive_card_state,
+        a.doc_from,
+        a.storage_date,
+        a.archive_place_additional,
+        a.employ_doc_payment_to,
+        a.doc_code,
+        a.hukou_code,
+        a.diaodang_feedback,
+        a.luyong_handle_end
+        FROM
+        am_archive a
+        where
+        employee_id = #{employeeId}
+        order by
+        a.created_time desc
+    </select>
+
+    <select id="queryResignLinkByTaskId" resultMap="BaseResultMapResignLinkDTO">
+        SELECT  resign_feedback,created_by as resign_operate_man,created_time from am_resign_link where task_id = #{taskId}
+    </select>
+
+    <select id="queryResignByTaskId" resultMap="BaseResultMapResignDTO">
+        SELECT
+        a.resign_date,
+        a.return_doc_direct,
+        a.return_doc_date,
+        a.cache_date,
+        a.transfer_way,
+        a.transfer_remark,
+        a.job_centre_feedback_date,
+        a.resign_material_delivery_date,
+        a.resign_operate_man,
+        a.resign_feedback,
+        c.resign_return_date,
+        c.post_letter_date
+        FROM
+        am_resign a
+        LEFT JOIN am_emp_task b ON a.emp_task_id = b.emp_task_id
+        LEFT JOIN am_archive c  on  c.employment_id = a.employment_id
+        where
+        b.task_id = #{taskId}
     </select>
 
 </mapper>

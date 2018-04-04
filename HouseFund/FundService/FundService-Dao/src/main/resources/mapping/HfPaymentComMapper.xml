@@ -48,7 +48,7 @@
         <where>
             pc.is_active = 1
             <if test="paymentMonth != null and paymentMonth != ''">
-                AND p.payment_month = TRIM(#{paymentMonth})
+                AND p.payment_id = TRIM(#{paymentId})
             </if>
         </where>
         ORDER BY

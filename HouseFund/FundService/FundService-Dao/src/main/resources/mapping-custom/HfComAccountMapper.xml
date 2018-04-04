@@ -274,6 +274,9 @@
             <if test="comAccountName != null">
                 AND hca.com_account_name like CONCAT('%', #{comAccountName}, '%')
             </if>
+            <if test="comAccountId != null">
+                AND hca.com_account_id = #{comAccountId}
+            </if>
         </where>
         ORDER BY hca.com_account_name, hca.com_account_id
     </select>

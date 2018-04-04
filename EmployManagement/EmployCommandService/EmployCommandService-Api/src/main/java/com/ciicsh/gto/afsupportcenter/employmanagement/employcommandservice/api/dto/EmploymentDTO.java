@@ -1,6 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -10,11 +9,11 @@ public class EmploymentDTO {
     /**
      * 实际录用日期
      */
-    private LocalDate employDate;
+    private Date employDate;
     /**
      * 开AF单日期
      */
-    private LocalDate openAfDate;
+    private Date openAfDate;
     /**
      * 用工形式
      */
@@ -30,25 +29,37 @@ public class EmploymentDTO {
     /**
      * 用工反馈操作日期
      */
-    private LocalDate employFeedbackOptDate;
+    private Date employFeedbackOptDate;
     /**
      * 用工操作员
      */
     private String employOperateMan;
+    /**
+     * 合同起始日期
+     */
+    private Date laborStartDate;
 
-    public LocalDate getEmployDate() {
+    public Date getLaborStartDate() {
+        return laborStartDate;
+    }
+
+    public void setLaborStartDate(Date laborStartDate) {
+        this.laborStartDate = laborStartDate;
+    }
+
+    public Date getEmployDate() {
         return employDate;
     }
 
-    public void setEmployDate(LocalDate employDate) {
+    public void setEmployDate(Date employDate) {
         this.employDate = employDate;
     }
 
-    public LocalDate getOpenAfDate() {
+    public Date getOpenAfDate() {
         return openAfDate;
     }
 
-    public void setOpenAfDate(LocalDate openAfDate) {
+    public void setOpenAfDate(Date openAfDate) {
         this.openAfDate = openAfDate;
     }
 
@@ -76,11 +87,11 @@ public class EmploymentDTO {
         this.employFeedback = employFeedback;
     }
 
-    public LocalDate getEmployFeedbackOptDate() {
+    public Date getEmployFeedbackOptDate() {
         return employFeedbackOptDate;
     }
 
-    public void setEmployFeedbackOptDate(LocalDate employFeedbackOptDate) {
+    public void setEmployFeedbackOptDate(Date employFeedbackOptDate) {
         this.employFeedbackOptDate = employFeedbackOptDate;
     }
 

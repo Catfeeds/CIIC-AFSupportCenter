@@ -3,7 +3,9 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bus
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmResignBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.AmResignLinkService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.ReasonUtil;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmResign;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao.AmResignMapper;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +41,9 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
 
     @Autowired
     private AmResignLinkService amResignLinkService;
+
+    @Autowired
+    private CommonApiUtils employeeInfoProxy;
 
     public PageRows<AmResignBO> queryAmResign(PageInfo pageInfo){
 
@@ -107,13 +113,15 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
             entity.setModifiedBy("sys");
         }
 
+        Integer isFinish = 0;
+        AmEmpTask amEmpTask = null;
         if(!StringUtil.isEmpty(bo.getResignFeedback()))
         {
-            AmEmpTask amEmpTask = taskService.selectById(bo.getEmpTaskId());
+            amEmpTask = taskService.selectById(bo.getEmpTaskId());
             amEmpTask.setTaskStatus(Integer.parseInt(bo.getResignFeedback()));
             taskService.insertOrUpdate(amEmpTask);
 
-            Integer isFinish = this.isResginFinish(bo,amEmpTask);
+            isFinish = this.isResginFinish(bo,amEmpTask);
             entity.setIsFinish(isFinish);
 
             AmResignLink amResignLink = new AmResignLink();
@@ -129,8 +137,16 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
             amResignLinkService.insert(amResignLink);
         }
 
-
         boolean result = super.insertOrUpdate(entity);
+
+        if(isFinish==1)
+        {
+            Map<String,Object> variables = new HashMap<>();
+            variables.put("status", true);
+            variables.put("remark",ReasonUtil.getTgfk(bo.getResignFeedback()));
+            variables.put("assignee","system");
+            TaskCommonUtils.completeTask(amEmpTask.getTaskId(),employeeInfoProxy,variables);
+        }
 
         return result;
     }

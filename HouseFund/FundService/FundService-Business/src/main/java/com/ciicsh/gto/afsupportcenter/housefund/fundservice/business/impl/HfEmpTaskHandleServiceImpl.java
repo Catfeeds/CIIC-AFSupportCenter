@@ -10,6 +10,7 @@ import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocia
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogApiUtil;
@@ -23,6 +24,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.TaskSheetRequest
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
+import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.kit.DateKit;
@@ -441,6 +443,86 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 logApiUtil.error(logMessage);
                 throw new BusinessException("访问客服中心的完成任务接口失败");
             }
+
+            HfEmpTaskCreateTransBo hfEmpTaskCreateTransBo;
+            ComAccountTransBo comAccountTransBo;
+
+            switch (inputHfEmpTask.getTaskCategory()) {
+                case HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE:
+                case HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT:
+                case HfEmpTaskConstant.TASK_CATEGORY_FLOP_CLOSE:
+                case HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_OUT:
+                    hfEmpTaskCreateTransBo = new HfEmpTaskCreateTransBo();
+                    hfEmpTaskCreateTransBo.setEmpTaskId(inputHfEmpTask.getEmpTaskId());
+                    comAccountTransBo = new ComAccountTransBo();
+                    List<ComAccountTransBo> comAccountTransBoList;
+
+                    // 如果转出或封存时，转入单位统一为市公积金中心
+                    if (inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
+                        || inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT) {
+                        String transferInUnit = SocialSecurityConst.FUND_OUT_UNIT_LIST.get(0); //市公积金中心单位名称
+                        hfEmpTaskCreateTransBo.setTransferInUnit(transferInUnit);
+                        String transferInUnitAccount =
+                            (inputHfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC)? SocialSecurityConst.CENTER_BASIC_COM_ACCOUNT
+                                : SocialSecurityConst.CENTER_ADDED_COM_ACCOUNT;
+                        hfEmpTaskCreateTransBo.setTransferInUnitAccount(transferInUnitAccount);
+                    }
+                    comAccountTransBo.setHfType(inputHfEmpTask.getHfType());
+                    comAccountTransBo.setComAccountId(params.getLong("comAccountId"));
+                    comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
+                    if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
+                        if (comAccountTransBoList.size() > 1) {
+                            String hfTypeName = (comAccountTransBo.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) ? "基本公积金" : "补充公积金";
+                            throw new BusinessException("转出单位的" + hfTypeName + "账户存在重复数据");
+                        }
+                        hfEmpTaskCreateTransBo.setTransferOutUnit(comAccountTransBoList.get(0).getComAccountName());
+                        hfEmpTaskCreateTransBo.setTransferOutUnitAccount(comAccountTransBoList.get(0).getHfComAccount());
+                    }
+                    hfEmpTaskCreateTransBo.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_UNHANDLED);
+                    hfEmpTaskCreateTransBo.setModifiedBy(UserContext.getUserId());
+                    hfEmpTaskCreateTransBo.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+                    createTransEmpTask(hfEmpTaskCreateTransBo);
+                case HfEmpTaskConstant.TASK_CATEGORY_FLOP_OPEN:
+                case HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_IN:
+                    // 翻牌转入或翻牌启封时
+                    Map<String, Object> condition = new HashMap<>();
+                    hfEmpTaskCreateTransBo = new HfEmpTaskCreateTransBo();
+                    condition.put("employee_id", hfEmpTaskCreateTransBo.getEmployeeId());
+                    condition.put("task_category", HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK);
+                    condition.put("hf_type", hfEmpTaskCreateTransBo.getHfType());
+                    condition.put("task_status", HfEmpTaskConstant.TASK_STATUS_UNHANDLED);
+                    condition.put("business_interface_id", inputHfEmpTask.getBusinessInterfaceId());
+                    condition.put("is_active", 1);
+                    List<HfEmpTask> hfEmpTaskList = selectByMap(condition);
+
+                    // 判断相应的翻牌转出或翻牌封存办理时，生成的转移任务单是否存在
+                    if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
+                        int size = hfEmpTaskList.size();
+                        if (size > 0) {
+                            HfEmpTask transferTask = hfEmpTaskList.get(size - 1);
+                            HfEmpTask updateTransferTask = new HfEmpTask();
+                            comAccountTransBo = new ComAccountTransBo();
+                            comAccountTransBo.setHfType(inputHfEmpTask.getHfType());
+                            comAccountTransBo.setComAccountId(params.getLong("comAccountId"));
+                            comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
+                            if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
+                                if (comAccountTransBoList.size() > 1) {
+                                    String hfTypeName = (comAccountTransBo.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) ? "基本公积金" : "补充公积金";
+                                    throw new BusinessException("转入单位的" + hfTypeName + "账户存在重复数据");
+                                }
+                                updateTransferTask.setTransferInUnit(comAccountTransBoList.get(0).getComAccountName());
+                                updateTransferTask.setTransferInUnitAccount(comAccountTransBoList.get(0).getHfComAccount());
+                            }
+                            updateTransferTask.setEmpTaskId(transferTask.getEmpTaskId());
+                            updateTransferTask.setModifiedBy(UserContext.getUserId());
+                            updateTransferTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+                            updateById(updateTransferTask);
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
         return JsonResultKit.of();
     }
@@ -788,7 +870,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         List<HfArchiveBasePeriod> hfArchiveBasePeriodList;
         List<HfArchiveBasePeriod> diffHfArchiveBasePeriodList;
         EntityWrapper<HfArchiveBasePeriod> wrapper = new EntityWrapper<>();
-        wrapper.where("employee_id={0} AND hf_type={1} AND is_active = 1", hfEmpTask.getEmployeeId(), hfEmpTask.getHfType());
+        wrapper.where("employee_id={0} AND company_id={1} AND hf_type={2} AND is_active = 1", hfEmpTask.getEmployeeId(), hfEmpTask.getCompanyId(), hfEmpTask.getHfType());
         wrapper.orderBy("start_month", true);
         List<HfArchiveBasePeriod> existHfArchiveBasePeriodList = hfArchiveBasePeriodService.selectList(wrapper);
 
@@ -797,7 +879,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             diffHfArchiveBasePeriodList = new ArrayList<>();
             List<HfArchiveBaseAdjust> hfArchiveBaseAdjustList = new ArrayList<>();
 
-            hfEmpTaskPeriodList.stream().forEach(e -> {
+            for (HfEmpTaskPeriod e : hfEmpTaskPeriodList) {
                 if (StringUtils.isEmpty(e.getStartMonth()) || StringUtils.isEmpty(e.getEndMonth()) || StringUtils.isEmpty(e.getHfMonth())) {
                     throw new BusinessException("补缴任务费用分段中缴费起始年月或缴费截止年月或汇缴年月为空");
                 }
@@ -820,8 +902,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 //                    throw new BusinessException("补缴任务费用分段中缴费截止年月不能在汇缴年月以后");
 //                }
 
-                YearMonth[] permitYearMonth = new YearMonth[1];
-                boolean isMatch = false;
+//                YearMonth permitYearMonth = null;
+//                boolean isMatch = false;
 
                 List<ComposedEmpBasePeriodBO> composedEmpBasePeriodBOList = composeEmpBasePeriod(existHfArchiveBasePeriodList);
                 for (ComposedEmpBasePeriodBO composedEmpBasePeriodBO : composedEmpBasePeriodBOList) {
@@ -832,67 +914,108 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     }
                     List<HfArchiveBasePeriod> containsHfArchiveBasePeriodList = composedEmpBasePeriodBO.getContainsHfArchiveBasePeriods();
 
-                    // 匹配费用段，如果任务单费用段包含在雇员档案费用段中，那么支持差额补缴；
-                    // 差额补缴时，雇员档案费用段不变，增加雇员调整差异数据
-                    if ((repairStartMonth.isAfter(startMonth) || repairStartMonth.equals(startMonth))
-                        && (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth))) {
-                        YearMonth subStartMonth;
-                        for (HfArchiveBasePeriod hfArchiveBasePeriod : containsHfArchiveBasePeriodList) {
-                            subStartMonth = YearMonth.parse(hfArchiveBasePeriod.getStartMonth(), formatter);
-                            if (subStartMonth.isBefore(repairEndMonth) || subStartMonth.equals(repairEndMonth)) {
-                                if (!hfEmpTask.getCompanyId().equals(hfArchiveBasePeriod.getCompanyId())) {
-                                    throw new BusinessException("补缴任务费用分段中缴费期间与所匹配的费用段不属于同一个客户");
-                                }
+                    // 如果补缴起始年月小于费用段起始月
+                    if (repairStartMonth.isBefore(startMonth)) {
+                        // 补缴截止年月小于费用段起始月，说明整个补缴段都不存在，则全额补缴
+                        if (repairEndMonth.isBefore(startMonth)) {
+                            setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e, null, roundTypes, roundTypeInWeight);
+                            break;
+                        } else { // 补缴截止年月大于等于费用段起始月，说明补缴段部分在费用段中，部分全额补缴，部分差额补缴
+                            // 此时肯定有一段全额补缴，一段差额补缴
+                            e.setEndMonth(startMonth.format(formatter));   // 全额补缴段：从补缴起始年月到费用段起始年月
+                            setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e, null, roundTypes, roundTypeInWeight);
+
+                            // 差额补缴段：从费用段起始年月到补缴截止年月
+                            e.setStartMonth(startMonth.format(formatter));
+                            e.setEndMonth(repairEndMonth.format(formatter));
+                            for (HfArchiveBasePeriod hfArchiveBasePeriod : containsHfArchiveBasePeriodList) {
                                 setHfArchiveBaseAdjust(hfArchiveBaseAdjustList, hfEmpTask, e, hfArchiveBasePeriod, roundTypes, roundTypeInWeight);
                                 setHfArchiveBasePeriodList(diffHfArchiveBasePeriodList, hfEmpTask, e, hfArchiveBasePeriod, roundTypes, roundTypeInWeight);
                             }
+
+                            // 补缴截止年月小于等于费用段截止月时，说明只有一段全额补缴，一段差额补缴
+                            if (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth)) {
+                                break;
+                            } else { // 补缴截止年月大于费用段截止年月时，说明需判断下一个连续费用段
+                                // 补缴截止年月大于费用段截止年月时，后面从当前费用段截止年月开始判断
+                                repairStartMonth = endMonth;
+                            }
                         }
-                        isMatch = true;
-                        break;
-                    } else {
-                        // 匹配费用段空档区间，如果任务单费用段包含在雇员档案费用段空档区间中，那么支持全额补缴；
-                        // 全额补缴时，更新雇员档案费用段，不需要增加雇员调整差异数据
-                        if (permitYearMonth[0] == null) {
-                            // 匹配最早的费用段，判断补缴段的截止年月是否早于雇员档案费用段的起始年月
-                            if (repairEndMonth.isBefore(startMonth)) {
-                                if (!hfEmpTask.getCompanyId().equals(containsHfArchiveBasePeriodList.get(0).getCompanyId())) {
-                                    throw new BusinessException("补缴任务费用分段中缴费期间与所匹配的费用段不属于同一个客户");
-                                }
-                                permitYearMonth[0] = endMonth;
-                                setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e, null, roundTypes, roundTypeInWeight);
-                                isMatch = true;
-                                break;
+                    } else { // 如果补缴起始年月大于等于费用段起始年月
+                        // 补缴起始年月小于等于费用段截止年月时
+                        if (repairStartMonth.isBefore(endMonth) || repairStartMonth.equals(endMonth) ) {
+                            // 此时肯定有一段差额补缴
+                            e.setStartMonth(startMonth.format(formatter));
+                            e.setEndMonth(repairEndMonth.format(formatter));
+                            for (HfArchiveBasePeriod hfArchiveBasePeriod : containsHfArchiveBasePeriodList) {
+                                setHfArchiveBaseAdjust(hfArchiveBaseAdjustList, hfEmpTask, e, hfArchiveBasePeriod, roundTypes, roundTypeInWeight);
+                                setHfArchiveBasePeriodList(diffHfArchiveBasePeriodList, hfEmpTask, e, hfArchiveBasePeriod, roundTypes, roundTypeInWeight);
                             }
-                        } else if (endMonth.isBefore(hfMonth)) {
-                            // 如果雇员档案费用段的截止年月早于当前年月
-                            // 那么判断补缴段是否属于两个雇员档案费用段之间的空档期间
-                            if (repairStartMonth.isAfter(permitYearMonth[0]) && repairEndMonth.isBefore(startMonth)) {
-                                if (!hfEmpTask.getCompanyId().equals(containsHfArchiveBasePeriodList.get(0).getCompanyId())) {
-                                    throw new BusinessException("补缴任务费用分段中缴费期间与所匹配的费用段不属于同一个客户");
-                                }
-                                permitYearMonth[0] = endMonth;
-                                setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e, null, roundTypes, roundTypeInWeight);
-                                isMatch = true;
+
+                            // 补缴截止年月小于等于费用段截止年月时，说明整段段差额补缴
+                            if (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth)) {
                                 break;
+                            } else { // 补缴截止年月大于费用段截止年月时，说明需判断下一个连续费用段
+                                // 补缴截止年月大于费用段截止年月时，后面从当前费用段截止年月开始判断
+                                repairStartMonth = endMonth;
                             }
-//                        } else {
-//                            //
-//                            if (repairStartMonth.isAfter(startMonth) && repairEndMonth.isBefore(endMonth)) {
+                        }
+
+                        // 补缴起始年月大于费用段截止年月时，直接判断下一个连续费用段
+                    }
+
+//                    // 匹配费用段，如果任务单费用段包含在雇员档案费用段中，那么支持差额补缴；
+//                    // 差额补缴时，雇员档案费用段不变，增加雇员调整差异数据
+//                    if ((repairStartMonth.isAfter(startMonth) || repairStartMonth.equals(startMonth))
+//                        && (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth))) {
+//                        YearMonth subStartMonth;
+//                        for (HfArchiveBasePeriod hfArchiveBasePeriod : containsHfArchiveBasePeriodList) {
+//                            subStartMonth = YearMonth.parse(hfArchiveBasePeriod.getStartMonth(), formatter);
+//
+//                            if (subStartMonth.isBefore(repairEndMonth) || subStartMonth.equals(repairEndMonth)) {
 //                                if (!hfEmpTask.getCompanyId().equals(hfArchiveBasePeriod.getCompanyId())) {
 //                                    throw new BusinessException("补缴任务费用分段中缴费期间与所匹配的费用段不属于同一个客户");
 //                                }
-//                                setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e, null);
+//                                setHfArchiveBaseAdjust(hfArchiveBaseAdjustList, hfEmpTask, e, hfArchiveBasePeriod, roundTypes, roundTypeInWeight);
+//                                setHfArchiveBasePeriodList(diffHfArchiveBasePeriodList, hfEmpTask, e, hfArchiveBasePeriod, roundTypes, roundTypeInWeight);
+//                            }
+//                        }
+//                        isMatch = true;
+//                        break;
+//                    } else {
+//                        // 匹配费用段空档区间，如果任务单费用段包含在雇员档案费用段空档区间中，那么支持全额补缴；
+//                        // 全额补缴时，更新雇员档案费用段，不需要增加雇员调整差异数据
+//                        if (permitYearMonth == null) {
+//                            // 匹配最早的费用段，判断补缴段的截止年月是否早于雇员档案费用段的起始年月
+//                            if (repairEndMonth.isBefore(startMonth)) {
+//                                if (!hfEmpTask.getCompanyId().equals(containsHfArchiveBasePeriodList.get(0).getCompanyId())) {
+//                                    throw new BusinessException("补缴任务费用分段中缴费期间与所匹配的费用段不属于同一个客户");
+//                                }
+//                                permitYearMonth = endMonth;
+//                                setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e, null, roundTypes, roundTypeInWeight);
 //                                isMatch = true;
 //                                break;
 //                            }
-                        }
-                    }
+//                        } else if (endMonth.isBefore(hfMonth)) {
+//                            // 如果雇员档案费用段的截止年月早于当前汇缴年月
+//                            // 那么判断补缴段是否属于两个雇员档案费用段之间的空档期间
+//                            if (repairStartMonth.isAfter(permitYearMonth) && repairEndMonth.isBefore(startMonth)) {
+//                                if (!hfEmpTask.getCompanyId().equals(containsHfArchiveBasePeriodList.get(0).getCompanyId())) {
+//                                    throw new BusinessException("补缴任务费用分段中缴费期间与所匹配的费用段不属于同一个客户");
+//                                }
+//                                permitYearMonth = endMonth;
+//                                setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e, null, roundTypes, roundTypeInWeight);
+//                                isMatch = true;
+//                                break;
+//                            }
+//                        }
+//                    }
                 }
 
-                if (!isMatch) {
-                    throw new BusinessException("补缴任务费用分段期间不正确");
-                }
-            });
+//                if (!isMatch) {
+//                    throw new BusinessException("补缴任务费用分段期间不正确");
+//                }
+            }
 
             if (CollectionUtils.isNotEmpty(hfArchiveBaseAdjustList)) {
                 hfArchiveBaseAdjustService.insertBatch(hfArchiveBaseAdjustList);
@@ -1085,11 +1208,19 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         List<HfArchiveBasePeriod> existHfArchiveBasePeriodList = hfArchiveBasePeriodService.selectList(wrapper);
 
         if (CollectionUtils.isNotEmpty(existHfArchiveBasePeriodList)) {
+            HfArchiveBasePeriod hfArchiveBasePeriod = new HfArchiveBasePeriod();
             HfArchiveBasePeriod lastHfArchiveBasePeriod = existHfArchiveBasePeriodList.get(0);
             if (StringUtils.isNotEmpty(lastHfArchiveBasePeriod.getEndMonth())) {
                 throw new BusinessException("当前雇员最后汇缴月份段的缴费截止月已经存在");
+            } else {
+                YearMonth startMonth = YearMonth.parse(lastHfArchiveBasePeriod.getStartMonth(), formatter);
+                YearMonth endMonth = YearMonth.parse(hfEmpTaskPeriod.getEndMonth(), formatter);
+
+                // 如果开始年月大于截止年月，说明是当月转入当月转出，无效费用段，逻辑删除
+                if (startMonth.isAfter(endMonth)) {
+                    hfArchiveBasePeriod.setActive(false);
+                }
             }
-            HfArchiveBasePeriod hfArchiveBasePeriod = new HfArchiveBasePeriod();
             hfArchiveBasePeriod.setEmpTaskId(hfEmpTask.getEmpTaskId());
             hfArchiveBasePeriod.setRemitWay(lastHfArchiveBasePeriod.getRemitWay());
             hfArchiveBasePeriod.setArchiveBasePeriodId(lastHfArchiveBasePeriod.getArchiveBasePeriodId());
@@ -1187,6 +1318,17 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 if (StringUtils.isNotEmpty(endMonth)) {
                     endMonthDate = YearMonth.parse(endMonth, formatter);
                 }
+
+                // 如果是转出任务单，雇员月度汇缴明细库转入数据可能被删除（当月转入当月转出）
+                HfMonthChargeBo hfMonthChargeBo = new HfMonthChargeBo();
+                hfMonthChargeBo.setInactive(true);
+                hfMonthChargeBo.setEmpArchiveId(e.getEmpArchiveId());
+                hfMonthChargeBo.setHfType(e.getHfType());
+                hfMonthChargeBo.setHfMonth(e.getHfMonth());
+                hfMonthChargeBo.setSsMonthBelongStart(e.getHfMonth());
+                hfMonthChargeBo.setSsMonthBelongEnd(e.getHfMonth());
+                hfMonthChargeBo.setModifiedBy(hfEmpTask.getModifiedBy());
+                hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
             } else {
                 if (StringUtils.isEmpty(endMonth)) {
                     throw new BusinessException("雇员档案费用分段表中缴费截止月为空");

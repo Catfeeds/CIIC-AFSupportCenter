@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class AmMaterialBO {
     private  String  submitName;
-    private  String  phone;
+    private  String  extension;
     private  List<AmEmpMaterialBO> materialsData;
 
     public String getSubmitName() {
@@ -18,12 +18,12 @@ public class AmMaterialBO {
         this.submitName = submitName;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getExtension() {
+        return extension;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setExtension(String extension) {
+        this.extension = extension;
     }
 
     public List<AmEmpMaterialBO> getMaterialsData() {

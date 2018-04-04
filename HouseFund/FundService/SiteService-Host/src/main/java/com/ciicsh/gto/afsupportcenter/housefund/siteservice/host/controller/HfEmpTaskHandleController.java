@@ -490,6 +490,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
             }
             return JsonResultKit.of(hfEmpTaskList.get(0));
         } else {
+            hfEmpTaskCreateTransBo.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_COMPLETED);
             hfEmpTaskCreateTransBo.setModifiedBy(UserContext.getUserId());
             hfEmpTaskCreateTransBo.setModifiedDisplayName(UserContext.getUser().getDisplayName());
             int rtn = business.createTransEmpTask(hfEmpTaskCreateTransBo);

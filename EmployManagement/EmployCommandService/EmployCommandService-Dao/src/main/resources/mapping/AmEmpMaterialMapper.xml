@@ -22,7 +22,8 @@
 		<result column="modified_time" property="modifiedTime" />
 		<result column="created_by" property="createdBy" />
 		<result column="modified_by" property="modifiedBy" />
-		<result column="employee_id" property="employeeId" />
+		<result column="emp_task_id" property="empTaskId" />
+        <result column="extension" property="extension" />
 	</resultMap>
 
 </mapper>
