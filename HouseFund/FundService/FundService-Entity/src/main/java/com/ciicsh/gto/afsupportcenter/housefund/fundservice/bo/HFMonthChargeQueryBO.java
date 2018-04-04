@@ -20,4 +20,6 @@ public class HFMonthChargeQueryBO implements Serializable {
     private String addedHfComAccount;
     private Integer hfType;
     private String paymentTypes;
+    private String basicComAccountArray;
+    private String addedComAccountArray;
 }
