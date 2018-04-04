@@ -8,6 +8,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccou
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountClassService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfMonthChargeService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogMessage;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfMonthChargeConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfMonthChargeMapper;
@@ -17,7 +19,6 @@ import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -38,7 +39,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
     @Autowired
     private HfComAccountClassService hfComAccountClassService;
     @Autowired
-    private LogService logService;
+    private LogApiUtil logApiUtil;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
@@ -132,13 +133,13 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
 
                 if (CollectionUtils.isNotEmpty(hfComAccountClassesList)) {
                     if (hfComAccountClassesList.size() > 1) {
-                        logService.warn(LogContext.of().setTitle("获取基本/补充公积金汇缴变更清册导出数据列表")
-                            .setTextContent("企业[" + comAccountName + "]" + hfTypeName + "公积金账户数据不正确"));
+                        logApiUtil.warn(LogMessage.create().setTitle("获取基本/补充公积金汇缴变更清册导出数据列表")
+                            .setContent("企业[" + comAccountName + "]" + hfTypeName + "公积金账户数据不正确"));
                         continue;
                     }
                 } else {
-                    logService.warn(LogContext.of().setTitle("获取基本/补充公积金汇缴变更清册导出数据列表")
-                        .setTextContent("企业[" + comAccountName + "]" + hfTypeName + "公积金账户数据不正确"));
+                    logApiUtil.warn(LogMessage.create().setTitle("获取基本/补充公积金汇缴变更清册导出数据列表")
+                        .setContent("企业[" + comAccountName + "]" + hfTypeName + "公积金账户数据不正确"));
                     continue;
                 }
                 String hfComAccount = hfComAccountClassesList.get(0).getHfComAccount();
@@ -147,7 +148,8 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                 try {
                     list = getChgDetailsPageListOfOneComAccount(hfMonthChargeQueryBO, comAccountName, hfComAccount, isPageByComAccount);
                 } catch (BusinessException e) {
-                    logService.warn(LogContext.of().setTitle("获取基本/补充公积金汇缴变更清册导出数据列表").setExceptionContent(e));
+                    logApiUtil.warn(LogMessage.create().setTitle("获取基本/补充公积金汇缴变更清册导出数据列表")
+                        .setContent(e.getMessage()));
                 }
 
                 if (list != null) {
@@ -505,13 +507,13 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
 
                 if (CollectionUtils.isNotEmpty(hfComAccountClassesList)) {
                     if (hfComAccountClassesList.size() > 1) {
-                        logService.warn(LogContext.of().setTitle("获取基本/补充公积金补缴清册导出数据列表")
-                            .setTextContent("企业[" + comAccountName + "]" + hfTypeName + "公积金账户数据不正确"));
+                        logApiUtil.warn(LogMessage.create().setTitle("获取基本/补充公积金补缴清册导出数据列表")
+                            .setContent("企业[" + comAccountName + "]" + hfTypeName + "公积金账户数据不正确"));
                         continue;
                     }
                 } else {
-                    logService.warn(LogContext.of().setTitle("获取基本/补充公积金补缴清册导出数据列表")
-                        .setTextContent("企业[" + comAccountName + "]" + hfTypeName + "公积金账户数据不正确"));
+                    logApiUtil.warn(LogMessage.create().setTitle("获取基本/补充公积金补缴清册导出数据列表")
+                        .setContent("企业[" + comAccountName + "]" + hfTypeName + "公积金账户数据不正确"));
                     continue;
                 }
 
@@ -519,7 +521,8 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                 try {
                     list = getRepairDetailsPageListOfOneComAccount(hfMonthChargeQueryBO, comAccountName, hfComAccount, isPageByComAccount);
                 } catch (BusinessException e) {
-                    logService.warn(LogContext.of().setTitle("获取基本/补充公积金补缴清册导出数据列表").setExceptionContent(e));
+                    logApiUtil.warn(LogMessage.create().setTitle("获取基本/补充公积金补缴清册导出数据列表")
+                        .setContent(e.getMessage()));
                 }
                 if (list != null) {
                     resultList.addAll(list);
