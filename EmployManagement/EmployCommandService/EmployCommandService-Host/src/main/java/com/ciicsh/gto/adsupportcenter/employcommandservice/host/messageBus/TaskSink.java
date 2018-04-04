@@ -31,6 +31,11 @@ public interface TaskSink {
     String AF_EMP_AGREEMENT_ADJUST = "common_taskservice_af_emp_agreement_adjust_channel";
 
     /**
+     * 雇员服务协议更正
+     */
+    String AF_EMP_AGREEMENT_UPDATE = "common_taskservice_af_emp_agreement_update_channel";
+
+    /**
      * 用工办理
      */
     String HIRE = "hire";
@@ -50,6 +55,9 @@ public interface TaskSink {
 
     @Input(AF_EMP_AGREEMENT_ADJUST)
     MessageChannel afEmpAgreementAdjust();
+
+    @Input(AF_EMP_AGREEMENT_UPDATE)
+    MessageChannel afEmpAgreementUpdate();
 
 
 

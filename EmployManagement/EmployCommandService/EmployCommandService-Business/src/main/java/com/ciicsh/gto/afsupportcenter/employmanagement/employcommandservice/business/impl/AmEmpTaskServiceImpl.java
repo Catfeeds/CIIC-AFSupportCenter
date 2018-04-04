@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.*;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.*;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmCompanySetBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmCustomBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmpTaskBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmTaskParamBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmCompanySetService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpCustomService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpMaterialService;
@@ -93,7 +90,13 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             amEmpTaskBO.setTaskStatus(null);
         }
 
-        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
+        if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
+            return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTaskOther(amEmpTaskBO));
+        }else{
+            return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
+        }
+
+
     }
 
     @Override
@@ -156,10 +159,13 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         Map<String, Object> map = null;
         try {
             map = taskMsgDTO.getVariables();
+
             archiveDirection = (String)map.get("archiveDirection");
             employeeNature = (String)map.get("employeeNature");
-            amEmpTask.setArchiveDirection(archiveDirection);
-            amEmpTask.setEmployeeNature(employeeNature);
+            EmployeeBO personNature = baseMapper.queryNature(employeeNature);
+            EmployeeBO employeeBO  = baseMapper.queryArchiveDriection(archiveDirection);
+            amEmpTask.setArchiveDirection(employeeBO.getArchiveDirection());
+            amEmpTask.setEmployeeNature(personNature.getPersonNature());
             submitterId = taskMsgDTO.getVariables().get("submitterId")==null?"":map.get("submitterId").toString();
 
         } catch (Exception e) {
@@ -360,7 +366,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
         if(afEmployeeCompanyDTO!=null)
         {
-            employeeBO.setTemplateType(ReasonUtil.getYgsx(afEmployeeCompanyDTO.getTemplateType()==null?"":afEmployeeCompanyDTO.getTemplateType().toString()));
+            employeeBO.setTemplateType(ReasonUtil.getYgsx(afEmployeeCompanyDTO.getHireUnit()==null?"":afEmployeeCompanyDTO.getHireUnit().toString()));
             employeeBO.setPosition(afEmployeeCompanyDTO.getPosition());
 
             Map<String,Object> param0 = new HashMap<>();
@@ -375,7 +381,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             if(list!=null&&list.size()>0)
             {
                 employeeBO.setSsAccount(list.get(0).getSsAccount());
-                employeeBO.setComAccountName(list.get(0).getComAccountName());
+                employeeBO.setSettlementArea(list.get(0).getSettlementArea());
                 employeeBO.setAccountRepairDate(list.get(0).getAccountRepairDate());
                 employeeBO.setSsPwd(list.get(0).getSsPwd());
             }
@@ -435,7 +441,13 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 }
             }
 
-            customBO.setEmployeeCenterOperator(employeeHireInfoDTO.getEmployeeCenterOperator());
+            SMUserInfoDTO smUserInfoDTO = null;
+            if(!StringUtil.isEmpty(employeeHireInfoDTO.getEmployeeCenterOperator()))
+            {
+                smUserInfoDTO = employeeInfoProxy.getUserInfo(employeeHireInfoDTO.getEmployeeCenterOperator());
+            }
+
+            customBO.setEmployeeCenterOperator(smUserInfoDTO==null?"":smUserInfoDTO.getDisplayName());
 
         }
 
@@ -684,9 +696,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     AmCustomBO  setCustomBO( AmEmpTask amEmpTask,AmCustomBO customBO,String companyName){
         if(amEmpTask!=null&&amEmpTask.getEmployCode()!=null)
         {
-            if(amEmpTask.getEmployCode()==2){//代理也就是独立
+            if(amEmpTask.getEmployCode()==1){//是独立
                 customBO.setCompanyName(companyName);
-            }else if(amEmpTask.getEmployCode()==1){
+            }else if(amEmpTask.getEmployCode()==2){
                 customBO.setCompanyName("中智上海经济技术合作公司");
             }else if(amEmpTask.getEmployCode()==3){
                 customBO.setCompanyName(companyName);
