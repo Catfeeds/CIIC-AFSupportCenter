@@ -453,6 +453,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 case HfEmpTaskConstant.TASK_CATEGORY_FLOP_CLOSE:
                 case HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_OUT:
                     hfEmpTaskCreateTransBo = new HfEmpTaskCreateTransBo();
+                    hfEmpTaskCreateTransBo.setEmpTaskId(inputHfEmpTask.getEmpTaskId());
                     comAccountTransBo = new ComAccountTransBo();
                     List<ComAccountTransBo> comAccountTransBoList;
 
@@ -466,7 +467,6 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                                 : SocialSecurityConst.CENTER_ADDED_COM_ACCOUNT;
                         hfEmpTaskCreateTransBo.setTransferInUnitAccount(transferInUnitAccount);
                     }
-                    comAccountTransBo.setComAccountName(null);
                     comAccountTransBo.setHfType(inputHfEmpTask.getHfType());
                     comAccountTransBo.setComAccountId(params.getLong("comAccountId"));
                     comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
