@@ -23,7 +23,7 @@ public class FilterConfigure extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new CatInterceptor()).addPathPatterns("/**");
         registry.addInterceptor(authenticateInterceptor()).addPathPatterns("/**").excludePathPatterns("/basic/data/getUserInfoByToken/**")
-            .excludePathPatterns("/api/**")
+            .excludePathPatterns("/api/employ/**")
             .excludePathPatterns("/error");
         super.addInterceptors(registry);
     }

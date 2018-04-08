@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
 @ExcelTarget("resignSearchExportOpt")
 public class resignSearchExportOpt {
 
-    @Excel(name = "职介反馈日期", orderNum = "1")
+    @Excel(name = "退工成功日期", orderNum = "1")
     private String jobCentreFeedbackDate;
 
     @Excel(name = "退工原因", orderNum = "2")
@@ -41,7 +41,7 @@ public class resignSearchExportOpt {
     private String title;
 
     @Excel(name = "客服经理", orderNum = "10")
-    private String serviceManager;
+    private String leaderShipName;
 
     @Excel(name = "客服中心", orderNum = "11")
     private String serviceCenter;
@@ -77,6 +77,6 @@ public class resignSearchExportOpt {
     private  String comprehensiveInsuranceRefuseDate;
 
     @Excel(name = "公司特殊情况", orderNum = "22")
-    private  String companySpecialCase;
+    private  String refuseSpecial;
 
 }

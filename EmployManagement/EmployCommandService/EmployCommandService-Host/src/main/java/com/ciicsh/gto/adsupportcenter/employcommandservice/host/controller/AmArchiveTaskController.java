@@ -87,6 +87,12 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
                     amEmploymentBO.setCici("上海中智项目外包咨询服务有限公司");
                 }
             }
+
+            if(!StringUtil.isEmpty(amEmploymentBO.getArchiveSpecial()))
+            {
+                int last = amEmploymentBO.getArchiveSpecial().lastIndexOf(",");
+                amEmploymentBO.setArchiveSpecial(amEmploymentBO.getArchiveSpecial().substring(0,last));
+            }
         }
 
         return JsonResultKit.of(result);
@@ -465,6 +471,12 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         {
             temp.setEmployFeedback(ReasonUtil.getYgfk(temp.getEmployFeedback()));
             temp.setResignFeedback1(ReasonUtil.getTgfk(temp.getResignFeedback1()));
+
+            if(!StringUtil.isEmpty(temp.getArchiveSpecial()))
+            {
+                int last = temp.getArchiveSpecial().lastIndexOf(",");
+                temp.setArchiveSpecial(temp.getArchiveSpecial().substring(0,last));
+            }
         }
 
         ExcelUtil.exportExcel(opts,archiveSearchExportOpt.class,fileNme,response);

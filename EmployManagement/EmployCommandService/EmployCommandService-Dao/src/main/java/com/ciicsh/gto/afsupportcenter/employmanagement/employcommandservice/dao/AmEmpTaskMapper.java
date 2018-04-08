@@ -29,7 +29,7 @@ public interface AmEmpTaskMapper extends BaseMapper<AmEmpTask> {
 
     AmEmpTaskBO  selectEmployId(Map<String,Object> param);
 
-    AmEmpTaskBO  queryEmpTask(AmEmpTaskBO amEmpTaskBO);
+    List<AmEmpTaskBO>  queryEmpTask(AmEmpTaskBO amEmpTaskBO);
 
     Integer updateTaskStatus(Map<String,Object> param);
 

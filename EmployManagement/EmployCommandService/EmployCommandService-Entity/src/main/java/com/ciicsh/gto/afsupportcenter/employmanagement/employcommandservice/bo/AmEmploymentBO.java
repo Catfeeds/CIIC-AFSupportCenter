@@ -79,6 +79,41 @@ public class AmEmploymentBO extends AmEmployment {
 
     private String cici;
 
+    /**
+     * 服务中心
+     */
+    private  String serviceCenter;
+    /**
+     * 客服经理
+     */
+    private String leaderShipName;
+
+    private  String archiveSpecial;
+
+    public String getArchiveSpecial() {
+        return archiveSpecial;
+    }
+
+    public void setArchiveSpecial(String archiveSpecial) {
+        this.archiveSpecial = archiveSpecial;
+    }
+
+    public String getServiceCenter() {
+        return serviceCenter;
+    }
+
+    public void setServiceCenter(String serviceCenter) {
+        this.serviceCenter = serviceCenter;
+    }
+
+    public String getLeaderShipName() {
+        return leaderShipName;
+    }
+
+    public void setLeaderShipName(String leaderShipName) {
+        this.leaderShipName = leaderShipName;
+    }
+
     public String getCici() {
         return cici;
     }

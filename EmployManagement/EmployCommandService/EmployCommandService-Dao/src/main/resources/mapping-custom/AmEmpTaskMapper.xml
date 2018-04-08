@@ -266,8 +266,7 @@
 
     <select id="queryEmpTask" resultMap="BaseResultMapDTO">
         SELECT
-        a.task_form_content,
-        a.created_time
+        a.*
         FROM
         am_emp_task a
         where

@@ -46,9 +46,9 @@ public class archiveSearchExportOpt {
     private String title;
 
     @Excel(name = "客服经理", orderNum = "11")
-    private String serviceManager;
+    private String leaderShipName;
 
-    @Excel(name = "客服中心", orderNum = "12")
+    @Excel(name = "服务中心", orderNum = "12")
     private String serviceCenter;
 
     @Excel(name = "档案编号", orderNum = "13")
@@ -80,5 +80,6 @@ public class archiveSearchExportOpt {
     @Excel(name = "退工送办日期", orderNum = "23")
     private LocalDate resignHandleDate;
     @Excel(name = "公司特殊情况",width = 20, orderNum = "24")
-    private  String companySpecialCase;
+    private  String archiveSpecial;
+
 }

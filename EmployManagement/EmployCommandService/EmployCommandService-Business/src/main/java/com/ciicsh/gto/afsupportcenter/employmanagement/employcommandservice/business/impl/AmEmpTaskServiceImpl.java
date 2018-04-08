@@ -263,10 +263,10 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 }
                 logger.info("outReason is null "+"  MissionId is "+taskMsgDTO.getMissionId());
             }
-            if(employeeCompany!=null&&employeeCompany.getTemplateType()!=null)
+            if(employeeCompany!=null&&employeeCompany.getHireUnit()!=null)
             {
-                amEmpTask.setEmployCode(employeeCompany.getTemplateType());
-                amEmpTask.setEmployProperty(ReasonUtil.getYgsx(employeeCompany.getTemplateType().toString()));
+                amEmpTask.setEmployCode(employeeCompany.getHireUnit());
+                amEmpTask.setEmployProperty(ReasonUtil.getYgsx(employeeCompany.getHireUnit().toString()));
             }
             if(employeeCompany!=null)
             {
@@ -309,7 +309,10 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     public AmEmpTaskBO queryEmpTask(AmEmpTaskBO amEmpTaskBO) {
         AmEmpTaskBO empTaskBO = null;
         try {
-            empTaskBO = baseMapper.queryEmpTask(amEmpTaskBO);
+            List<AmEmpTaskBO>  list = baseMapper.queryEmpTask(amEmpTaskBO);
+            if(null!=list&&list.size()>0){
+                return  list.get(0);
+            }
         } catch (Exception e) {
 
         }
@@ -341,12 +344,22 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         AmEmpTask amEmpTask = null;
         customBO.setCompanyId(param.getCompanyId());
         try {
-            if(null!=param.getEmpTaskId())
+            if(null!=param.getEmpTaskId()&&param.isResign()==false)
             {
                 amEmpTask = super.selectById(param.getEmpTaskId());
                 employeeBO.setArchiveDirection(amEmpTask==null?"":amEmpTask.getArchiveDirection());
                 employeeBO.setEmployeeNature(amEmpTask==null?"":amEmpTask.getEmployeeNature());
                 employeeBO.setEmployProperty(amEmpTask==null?"":amEmpTask.getEmployProperty());
+            }else{
+                AmEmpTaskBO amEmpTaskBO = new AmEmpTaskBO();
+                amEmpTaskBO.setCompanyId(param.getCompanyId());
+                amEmpTaskBO.setEmployeeId(param.getEmployeeId());
+
+                amEmpTask = this.queryEmpTask(amEmpTaskBO);
+                employeeBO.setArchiveDirection(amEmpTask==null?"":amEmpTask.getArchiveDirection());
+                employeeBO.setEmployeeNature(amEmpTask==null?"":amEmpTask.getEmployeeNature());
+                employeeBO.setEmployProperty(amEmpTask==null?"":amEmpTask.getEmployProperty());
+
             }
 
         } catch (Exception e) {
