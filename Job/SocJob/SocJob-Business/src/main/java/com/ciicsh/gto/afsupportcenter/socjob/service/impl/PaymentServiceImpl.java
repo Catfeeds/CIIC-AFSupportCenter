@@ -90,7 +90,7 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
                     map.put("companyId", ele.get("companyId"));
                     map.put("employeeId", ele.get("employeeId"));
                     map.put("ssMonthBelong", ele.get("ssMonthBelong"));
-                    map.put("hfMonth", ssMonth);
+                    map.put("ssMonth", ssMonth);
                     ssPaymentMapper.updateSsMonthCharge(map);
                 }
             }

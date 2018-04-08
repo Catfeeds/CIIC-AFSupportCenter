@@ -69,7 +69,7 @@
                 AND hfp.payment_month = TRIM(#{paymentMonth})
             </if>
         </where>
-        ORDER BY hfp.payment_id
+        ORDER BY hfp.payment_id DESC
     </select>
 
 

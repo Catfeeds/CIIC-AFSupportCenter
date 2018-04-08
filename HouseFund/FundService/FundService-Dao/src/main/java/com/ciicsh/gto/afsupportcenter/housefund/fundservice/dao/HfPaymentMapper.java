@@ -24,9 +24,9 @@ public interface HfPaymentMapper extends BaseMapper<HfPayment> {
 
     List<PaymentComBO> getHfPaymentComList(@Param("paymentId") Long paymentId);
 
-    List<PaymentEmpBO> getHfPaymentEmpList(@Param("paymentId") Long paymentId, @Param("paymentMonth")
-        String paymentMonth);
+    List<PaymentEmpBO> getHfPaymentEmpList(@Param("paymentId") Long paymentId, @Param("paymentMonth") String paymentMonth);
 
     List<HfPaymentBo> getFundPays(HfPaymentBo hfPaymentBo);
 
+    Integer getHfPaymentBankId(@Param("paymentId") Long paymentId);
 }

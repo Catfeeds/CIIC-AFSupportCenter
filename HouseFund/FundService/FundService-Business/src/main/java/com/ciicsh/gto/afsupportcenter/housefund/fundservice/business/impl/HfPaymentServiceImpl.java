@@ -6,15 +6,10 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentC
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentEmpBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentProcessParmBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfArchiveBasePeriodMapper;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountClassMapper;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfMonthChargeMapper;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentMapper;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfArchiveBasePeriod;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccountClass;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.*;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -55,7 +50,8 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
     private HfComAccountClassMapper comAccountClassMapper;
     @Autowired
     private HfMonthChargeMapper monthChargeMapper;
-
+    @Autowired
+    private HfPaymentAccountMapper hfPaymentAccountMapper;
     /**
      * 获得公积金汇缴支付列表
      * @param pageInfo
@@ -91,6 +87,11 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         }
     }
 
+    /**
+     * 汇缴
+     * @param processParmBO
+     * @return
+     */
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public JsonResult processPayment(PaymentProcessParmBO processParmBO) {
@@ -100,8 +101,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         JsonResult result = isCanPayment(payment);
         if(result.getCode() > 0){
             return  result;
-        }
-        else{
+        }else{
             PayApplyProxyDTO resDto = financePayApi(payment);
             com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult<PayApplyProxyDTO> jsRes =
                 payapplyServiceProxy.addShHouseFundPayApply(resDto);
@@ -114,12 +114,11 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
                 Integer val = hfPaymentMapper.updateById(payment);
                 if(val > 0){
                     return JsonResultKit.of(0,"汇缴成功！");
-                }
-                else{
+                }else{
                     return JsonResultKit.of(1,"更新汇缴状态失败,请检查！");
                 }
-            }
-            else{
+            } else{
+
                 return JsonResultKit.of(1,jsRes.getMsg());
             }
         }
@@ -206,9 +205,9 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         dto.setBusinessType(2);//业务类型
         dto.setBusinessPkId(hfPayment.getPaymentId());//业务方主键ID(整型)
         dto.setPayWay(3);// 3:转账   2:支票  如果是支票就不需要银行账户信息，这里需要判断
-        dto.setPayAmount(hfPayment.getTotalApplicationAmonut());//申请支付金额 （待定）
+        dto.setPayAmount(hfPayment.getTotalApplicationAmonut());//申请支付金额
         dto.setReceiver(hfPayment.getReceiver());//页面传递
-        dto.setApplyer(hfPayment.getRequestUser());  //申请人
+        dto.setApplyer(UserContext.getUser().getDisplayName());  //申请人
         dto.setApplyDate(StringUtil.getNow());//申请日期
 
         //支付独立公积金费用+支付月份  1 大库、2 外包、3独立户
@@ -220,10 +219,13 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             dto.setPayReason("支付独立户公积金费用" + hfPayment.getPaymentMonth());
         }
         dto.setPayPurpose(dto.getPayReason());
+        if(hfPayment.getPaymentWay()!=2){//如果付款方式不是支票
+            dto.setReceiveAccountId(hfPaymentMapper.getHfPaymentBankId(hfPayment.getPaymentId())); //付款银行ID
+            //dto.setReceiveAccount("111"); //待定(付款银行)
+        }
+
 
 /*      这些社保和公积金都没有
-        dto.setReceiveAccountId(0); //待定(付款银行ID)
-        dto.setReceiveAccount(""); //待定(付款银行)
         dto.setPresident("");//待定(总经理)
         dto.setLeader("");//待定(分管领导)
         dto.setDepartmentManager(""); //待定(部门经理)

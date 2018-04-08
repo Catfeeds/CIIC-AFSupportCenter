@@ -18,62 +18,55 @@ public class PaymentEmpBO {
         return companyId;
     }
 
-    public PaymentEmpBO setCompanyId(String companyId) {
+    public void setCompanyId(String companyId) {
         this.companyId = companyId;
-        return this;
     }
 
     public String getEmployeeId() {
         return employeeId;
     }
 
-    public PaymentEmpBO setEmployeeId(String employeeId) {
+    public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
-        return this;
     }
 
     public String getEmployeeName() {
         return employeeName;
     }
 
-    public PaymentEmpBO setEmployeeName(String employeeName) {
+    public void setEmployeeName(String employeeName) {
         this.employeeName = employeeName;
-        return this;
     }
 
     public String getPayMonth() {
         return payMonth;
     }
 
-    public PaymentEmpBO setPayMonth(String payMonth) {
+    public void setPayMonth(String payMonth) {
         this.payMonth = payMonth;
-        return this;
     }
 
     public BigDecimal getPayAmount() {
         return payAmount;
     }
 
-    public PaymentEmpBO setPayAmount(BigDecimal payAmount) {
+    public void setPayAmount(BigDecimal payAmount) {
         this.payAmount = payAmount;
-        return this;
     }
 
     public String getBusinessTypeDesc() {
         return businessTypeDesc;
     }
 
-    public PaymentEmpBO setBusinessTypeDesc(String businessTypeDesc) {
+    public void setBusinessTypeDesc(String businessTypeDesc) {
         this.businessTypeDesc = businessTypeDesc;
-        return this;
     }
 
     public Integer getIsAdvance() {
         return isAdvance;
     }
 
-    public PaymentEmpBO setIsAdvance(Integer isAdvance) {
+    public void setIsAdvance(Integer isAdvance) {
         this.isAdvance = isAdvance;
-        return this;
     }
 }

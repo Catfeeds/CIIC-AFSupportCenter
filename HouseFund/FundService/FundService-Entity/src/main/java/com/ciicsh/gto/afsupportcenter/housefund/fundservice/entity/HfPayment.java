@@ -114,6 +114,9 @@ public class HfPayment extends Model<HfPayment> {
     //付款申请编号
     @TableField("pay_apply_code")
     private String payApplyCode;
+
+    @TableField("payment_way")
+    private Integer paymentWay;
     /**
      * 是否可用
      */
@@ -140,6 +143,14 @@ public class HfPayment extends Model<HfPayment> {
      */
 	@TableField("modified_by")
 	private String modifiedBy;
+
+    public Integer getPaymentWay() {
+        return paymentWay;
+    }
+
+    public void setPaymentWay(Integer paymentWay) {
+        this.paymentWay = paymentWay;
+    }
 
     public String getPayApplyCode() {
         return payApplyCode;

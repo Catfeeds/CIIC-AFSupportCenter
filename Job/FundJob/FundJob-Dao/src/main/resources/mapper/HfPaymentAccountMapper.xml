@@ -20,11 +20,13 @@
     </resultMap>
 
     <!--根据接口返回的数据批量更新客户的支付状态-->
-    <update id="updatePaymentAcc" parameterType="java.util.HashMap">
+    <update id="updateHfPaymentAcc" parameterType="java.util.HashMap">
         UPDATE hf_payment_account SET
         payment_status=#{paymentStatus},modified_by=#{modifiedBy},modified_time=sysdate()
         where com_account_id=#{comAccountId} AND payment_month=#{paymentMonth}
     </update>
+
+
 
     <select id="getComAccountClass" resultMap="BaseResultMap">
 
@@ -39,4 +41,11 @@
         and pa.payment_month=cac.com_hf_month)
 
     </select>
+
+    <select id="getHfPaymentIsCompanyEnjoyAdvance" resultType="Integer">
+        SELECT IF(ca.payment_way=3,'1','0') AS 'is_company_enjoy_advance'
+        from hf_payment_account pa LEFT JOIN  hf_com_account ca ON  ca.com_account_id=pa.com_account_id
+        WHERE pa.is_active=1 AND pa.payment_account_id=#{paymentAccountId} limit 1
+    </select>
+
 </mapper>
