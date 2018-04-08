@@ -227,8 +227,8 @@ public class TaskCommonUtils {
                         afEmpSocialUpdateDateDTO.setItemCode(ssEmpBaseDetail.getSsType());//社保险种
                         afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(BigDecimal.ZERO);
                         afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(BigDecimal.ZERO);
-                        if (StringUtils.isNotEmpty(dataEndMonth)) {
-                            afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(dataEndMonth + "01"));
+                        if (StringUtils.isNotEmpty(ssEmpTaskBO.getHandleMonth())) {
+                            afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(ssEmpTaskBO.getHandleMonth()  + "01"));
                         }
                         afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(ssEmpTaskBO.getBusinessInterfaceId()));
                         paramsList.add(afEmpSocialUpdateDateDTO);
