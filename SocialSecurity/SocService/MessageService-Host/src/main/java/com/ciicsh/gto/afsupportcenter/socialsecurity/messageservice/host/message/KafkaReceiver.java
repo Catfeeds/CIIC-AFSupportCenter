@@ -207,6 +207,14 @@ public class KafkaReceiver {
                     if (resList.size() > 0) {
                         ssEmpTaskBO = resList.get(0);
                         taskCategory = ssEmpTaskBO.getTaskCategory();
+                    } else {
+                        // 如果没有查到旧的任务单，那么就是下列情况：外地新开（本地收不到相关任务单），更正时改为翻牌（外地转上海）；
+                        // 此时也不知道是翻牌（未走翻牌通道），只能默认为新开任务单；（该情况暂不考虑，前道已限制）
+                        // 或者0转非0，新开为0时，不发任务单至后道，更正为非0时，后道找不到旧任务单；
+                        if(paramMap.get("socialType") != null) {
+                            String socialType = paramMap.get("socialType").toString();
+                            taskCategory = Integer.parseInt(socialType);
+                        }
                     }
                     // 调整状态更正时，oldEmpAgreementId是对应调整前协议，也同时对应更正前任务单的missionId
 //                    ssEmpTaskFrontService.saveEmpTaskTc(taskMsgDTO, taskCategory, ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory(),1, paramMap.get("oldEmpAgreementId").toString(), dto);
