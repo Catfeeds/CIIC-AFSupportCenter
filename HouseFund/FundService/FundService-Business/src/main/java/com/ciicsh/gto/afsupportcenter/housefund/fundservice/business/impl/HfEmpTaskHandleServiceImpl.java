@@ -196,7 +196,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         if (isHandle) {
             ComAccountParamExtBo comAccountParamExtBo = new ComAccountParamExtBo();
             comAccountParamExtBo.setCompanyId(hfEmpTask.getCompanyId());
-            List<ComAccountExtBo> hfComAccountList = hfComAccountService.queryHfComAccountList(comAccountParamExtBo);
+            comAccountParamExtBo.setHfType(hfEmpTask.getHfType());
+            List<ComAccountExtBo> hfComAccountList = hfComAccountService.getHfComAccountList(comAccountParamExtBo);
             if (CollectionUtils.isNotEmpty(hfComAccountList)) {
                 if (hfComAccountList.size() > 1) {
                     return JsonResultKit.ofError("当前雇员任务单所属的企业账户数据有误");
