@@ -15,6 +15,8 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyProxyDTO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -135,4 +140,20 @@ public class HfFundPayController {
 
     }
 
+    /**
+     * 付款凭证打印
+     */
+    @Autowired
+    private PayapplyServiceProxy payapplyServiceProxy;
+    @RequestMapping("/printFinancePayVoucher")
+    public void printFinancePayVoucher(String payApplyCode,HttpServletResponse response) throws IOException {
+
+        com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult<PayApplyProxyDTO> res =
+            payapplyServiceProxy.downloadPayVoucher(payApplyCode);
+        byte[] cons = res.getContents();
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader("content-Type", "application/vnd.ms-excel");
+
+        response.getOutputStream().write(cons);
+    }
 }

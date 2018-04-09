@@ -63,7 +63,7 @@
             SELECT
                 mc.employee_id,
                 mc.ss_month_belong,
-                mc.payment_type,
+                ea.company_id,
                 mc.amount
             FROM
               hf_month_charge mc
@@ -75,7 +75,7 @@
             AND mc.payment_type IN (7, 8, 9, 10)
             AND mc.hf_month = #{paymentMonth}
             AND pc.payment_id = #{paymentId}
-          ) a ON a.ss_month_belong = mc.ss_month_belong AND a.employee_id = mc.employee_id
+          ) a ON a.ss_month_belong = mc.ss_month_belong AND a.employee_id = mc.employee_id and a.company_id=ea.company_id
         WHERE
           mc.is_active = 1
         AND mc.payment_type IN (1, 2, 3, 4, 5, 6, 11)
