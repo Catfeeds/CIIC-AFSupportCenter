@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskSe
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogMessage;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.FundCategory;
@@ -238,13 +239,28 @@ public class KafkaReceiver {
                         HfEmpTask qd = new HfEmpTask();
                         //                    qd.setTaskId(paramMap.get("oldTaskId").toString());
                         qd.setBusinessInterfaceId(paramMap.get("oldEmpAgreementId").toString());
-
+                        if (fundCategory.equals(FundCategory.BASICFUND.getCategory())) {
+                            qd.setHfType(HfEmpTaskConstant.HF_TYPE_BASIC);
+                        } else {
+                            qd.setHfType(HfEmpTaskConstant.HF_TYPE_ADDED);
+                        }
                         //查询旧的任务类型保存到新的任务单
                         List<HfEmpTask> resList = hfEmpTaskService.queryByTaskId(qd);
                         if (resList.size() > 0) {
-                            HfEmpTask hfEmpTask = resList.get(0);
-                            taskCategory = hfEmpTask.getTaskCategory();
-                            processCategory = hfEmpTask.getProcessCategory();
+//                            HfEmpTask hfEmpTask = resList.get(0);
+                            // 翻牌时，翻入翻出的empAgreementId相同，需排除翻出的
+                            for (HfEmpTask hfEmpTask : resList) {
+                                taskCategory = hfEmpTask.getTaskCategory();
+                                processCategory = hfEmpTask.getProcessCategory();
+
+                                if (!TaskCategory.TURNOUT.getCategory().equals(taskCategory) &&
+                                    !TaskCategory.SEALED.getCategory().equals(taskCategory) &&
+                                    !TaskCategory.FLOPOUT.getCategory().equals(taskCategory) &&
+                                    !TaskCategory.FLOPSEALED.getCategory().equals(taskCategory)
+                                    ) {
+                                    break;
+                                }
+                            }
                         } else {
                             // 如果没有查到旧的任务单，那么就是下列情况：外地新开（本地收不到相关任务单），更正时改为翻牌（外地转上海）；
                             // 此时也不知道是翻牌（未走翻牌通道），只能默认为新开任务单；（该情况暂不考虑，前道已限制）

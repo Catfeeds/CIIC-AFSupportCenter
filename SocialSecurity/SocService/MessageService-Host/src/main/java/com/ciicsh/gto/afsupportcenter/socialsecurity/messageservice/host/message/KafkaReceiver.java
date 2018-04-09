@@ -205,8 +205,19 @@ public class KafkaReceiver {
                     //查询旧的任务类型保存到新的任务单
                     List<SsEmpTaskBO> resList = ssEmpTaskService.queryByBusinessInterfaceId(ssEmpTaskBO);
                     if (resList.size() > 0) {
-                        ssEmpTaskBO = resList.get(0);
-                        taskCategory = ssEmpTaskBO.getTaskCategory();
+                        for (SsEmpTaskBO bo : resList) {
+//                            ssEmpTaskBO = resList.get(0);
+                            taskCategory = bo.getTaskCategory();
+                            // 翻牌时，翻入翻出的empAgreementId相同，需排除翻出的
+                            if (!SocialSecurityConst.TASK_TYPE_5.equals(String.valueOf(taskCategory)) &&
+                                !SocialSecurityConst.TASK_TYPE_6.equals(String.valueOf(taskCategory)) &&
+                                !SocialSecurityConst.TASK_TYPE_7.equals(String.valueOf(taskCategory)) &&
+                                !SocialSecurityConst.TASK_TYPE_14.equals(String.valueOf(taskCategory)) &&
+                                !SocialSecurityConst.TASK_TYPE_15.equals(String.valueOf(taskCategory))
+                                ) {
+                                break;
+                            }
+                        }
                     } else {
                         // 如果没有查到旧的任务单，那么就是下列情况：外地新开（本地收不到相关任务单），更正时改为翻牌（外地转上海）；
                         // 此时也不知道是翻牌（未走翻牌通道），只能默认为新开任务单；（该情况暂不考虑，前道已限制）
