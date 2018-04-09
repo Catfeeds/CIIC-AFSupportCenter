@@ -43,5 +43,5 @@ public interface FundApiProxy {
      * @return
      */
     @GetMapping("/getAccountByCompany")
-    JsonResult<List<ComAccountExtDTO>> getAccountByCompany(@RequestParam("companyId") String companyId);
+    JsonResult<ComAccountExtDTO> getAccountByCompany(@RequestParam("companyId") String companyId);
 }
