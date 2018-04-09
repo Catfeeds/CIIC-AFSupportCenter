@@ -13,8 +13,11 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogMe
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfMonthChargeConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfMonthChargeMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentAccountMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccountClass;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
@@ -38,6 +41,10 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
     private HfComAccountService hfComAccountService;
     @Autowired
     private HfComAccountClassService hfComAccountClassService;
+    @Autowired
+    private HfPaymentAccountMapper hfPaymentAccountMapper;
+    @Autowired
+    private HfPaymentMapper hfPaymentMapper;
     @Autowired
     private LogApiUtil logApiUtil;
 
@@ -110,6 +117,19 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         comAccountParamExtBo.setHfAccountType(hfMonthChargeQueryBO.getHfAccountType());
         comAccountParamExtBo.setBasicHfComAccount(hfMonthChargeQueryBO.getBasicHfComAccount());
         comAccountParamExtBo.setAddedHfComAccount(hfMonthChargeQueryBO.getAddedHfComAccount());
+        //如果是汇缴支付给发起的报表清册
+        if(Optional.ofNullable(hfMonthChargeQueryBO.getPaymentId()).isPresent()){
+            HfPayment hfPayment=new HfPayment();
+            hfPayment.setPaymentId(hfMonthChargeQueryBO.getPaymentId());
+            hfPayment = hfPaymentMapper.selectOne(hfPayment);
+            Map<String,Object> map=new HashMap<>();
+            List<String> listAccounts=new ArrayList<>();
+            map.put("payment_id",hfMonthChargeQueryBO.getPaymentId());
+            hfPaymentAccountMapper.selectByMap(map).stream().forEach(acc->{
+                listAccounts.add(acc.getComAccountId());
+            });
+            hfMonthChargeQueryBO.setAddedComAccountArray( listAccounts.toArray(new String[listAccounts.size()]));
+        }
         List<ComAccountExtBo> comAccountExtBoList = hfComAccountService.queryHfComAccountList(comAccountParamExtBo);
         List<Map<String, Object>> resultList = new ArrayList<>();
 

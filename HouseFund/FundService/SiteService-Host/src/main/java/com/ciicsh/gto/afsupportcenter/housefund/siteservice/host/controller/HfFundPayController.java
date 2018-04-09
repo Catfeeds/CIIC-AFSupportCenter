@@ -24,8 +24,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.io.*;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -150,10 +151,49 @@ public class HfFundPayController {
 
         com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult<PayApplyProxyDTO> res =
             payapplyServiceProxy.downloadPayVoucher(payApplyCode);
-        byte[] cons = res.getContents();
+        byte[] content = res.getContents();
+        BufferedOutputStream bos = null;
+        ServletOutputStream outputStream = null;
+        BufferedInputStream bis = null;
+        try{
         response.setCharacterEncoding("UTF-8");
-        response.setHeader("content-Type", "application/vnd.ms-excel");
+       // response.setHeader("content-Type", "application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment;filename=" +  URLEncoder.encode("付款凭证打印.xlsx", "UTF-8"));
+        response.setContentType("application/octet-stream;charset=utf-8");
+        response.setContentLength(content.length);
+        outputStream = response.getOutputStream();
+        InputStream is = new ByteArrayInputStream(content);
+        bis = new BufferedInputStream(is);
+        bos = new BufferedOutputStream(outputStream);
 
-        response.getOutputStream().write(cons);
+        byte[] buff = new byte[8192];
+        int bytesRead;
+        while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+            bos.write(buff, 0, bytesRead);
+        }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            try {
+                bis.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                bos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                outputStream.flush();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                outputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

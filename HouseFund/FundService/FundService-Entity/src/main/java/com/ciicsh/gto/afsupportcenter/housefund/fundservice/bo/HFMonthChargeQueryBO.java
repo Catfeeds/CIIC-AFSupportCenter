@@ -22,4 +22,5 @@ public class HFMonthChargeQueryBO implements Serializable {
     private String paymentTypes;
     private String[] basicComAccountArray;
     private String[] addedComAccountArray;
+    private Long paymentId;
 }

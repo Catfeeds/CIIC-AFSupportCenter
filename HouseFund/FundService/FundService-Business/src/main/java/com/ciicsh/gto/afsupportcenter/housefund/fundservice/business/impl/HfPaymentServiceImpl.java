@@ -209,7 +209,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         dto.setPayAmount(hfPayment.getTotalApplicationAmonut());//申请支付金额
         dto.setReceiver(hfPayment.getReceiver());//页面传递
         dto.setApplyer(UserContext.getUser().getDisplayName());  //申请人
-        dto.setApplyDate(StringUtil.getNow());//申请日期
+        dto.setApplyDate(StringUtil.now("yyyy-MM-dd"));//申请日期
 
         //支付独立公积金费用+支付月份  1 大库、2 外包、3独立户
         if (hfPayment.getHfAccountType() == 1) {

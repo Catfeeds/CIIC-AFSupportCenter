@@ -64,7 +64,7 @@
         FROM hf_payment_account pa
         INNER JOIN hf_account_com_relation acr ON acr.com_account_id=pa.com_account_id
         INNER JOIN hf_com_account ca ON ca.com_account_id=pa.com_account_id
-        WHERE
+        WHERE pa.is_active=1
         AND pa.payment_account_id in
         <foreach collection="paymentAccountIds" index="index" item="item" open="(" separator="," close=")">
             #{item}

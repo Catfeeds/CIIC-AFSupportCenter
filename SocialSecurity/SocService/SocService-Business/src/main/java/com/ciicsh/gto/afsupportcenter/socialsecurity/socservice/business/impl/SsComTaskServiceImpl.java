@@ -189,6 +189,7 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
 //          bankAccountMap.put("province_code", "002");
 //          bankAccountMap.put("city_code", "01");
             bankAccountMap.put("account_type", "4");
+            bankAccountMap.put("finance_account_id", "1"); //默认是 中智上海经济技术合作有限公司
             //bankAccountMap.put("subject_no", "1");
             //插入银行账号信息并返回结果，如果接口返回0 表示 接口调用失败，正常返回 bankAccountId 主键
             Map<String,String> mp=new HashMap<>();
