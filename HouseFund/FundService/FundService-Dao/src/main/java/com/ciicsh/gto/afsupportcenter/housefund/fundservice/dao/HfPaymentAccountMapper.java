@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentAccountBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankComAccountBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentAccount;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
@@ -35,4 +36,5 @@ public interface HfPaymentAccountMapper extends BaseMapper<HfPaymentAccount> {
      */
     List<HfPaymentAccountBo> getMakePayLists(HfPaymentAccountBo hfPaymentAccountBo);
 
+    List<HFNetBankComAccountBO> getComAccountByPaymentId(Long paymentId);
 }

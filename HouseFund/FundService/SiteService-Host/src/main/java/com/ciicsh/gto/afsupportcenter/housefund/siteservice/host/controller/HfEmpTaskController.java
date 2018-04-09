@@ -215,7 +215,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
         Collection<Object> objects = pageInfo.getParams().values();
 
         Writer writer = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
-        String title = "序号|1|||姓名|单边比例|单边比例 |||缴费金额|1010|身份证号码|出生日期|性别|单边金额|单边金额 ||缴费基数|||||||||-1|";
+        String title = "序号|1|||姓名|单边比例|单边比例|||缴费金额|1010|身份证号码|出生日期|性别|单边金额|单边金额||缴费基数|||||||||-1|";
         String template = "%1$d|1|||{%2$s}.{employeeName}|%3$s|%4$s|||%5$s|1010|{%2$s}.{idNum}|{%2$s}.{birthday}|{%2$s}.{gender}|%6$s|%7$s||%8$s|||||||||-1|";
 
 

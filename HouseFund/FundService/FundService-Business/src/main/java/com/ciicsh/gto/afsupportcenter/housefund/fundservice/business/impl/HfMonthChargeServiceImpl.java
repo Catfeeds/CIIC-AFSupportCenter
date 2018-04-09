@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankExportBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankQueryBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountClassService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfMonthChargeService;
@@ -532,6 +534,11 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         } else {
             throw new BusinessException("未查询到符合条件的企业账户信息");
         }
+    }
+
+    @Override
+    public List<HFNetBankExportBO> queryNetBankData(HFNetBankQueryBO hfNetBankQueryBO) {
+        return baseMapper.queryNetBankData(hfNetBankQueryBO);
     }
 
     private List<Map<String, Object>> getRepairDetailsPageListOfOneComAccount(HFMonthChargeQueryBO hfMonthChargeQueryBO,
