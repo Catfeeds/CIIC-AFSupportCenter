@@ -26,6 +26,23 @@
         <result column="hf_com_account" property="hfComAccount" />
     </resultMap>
 
+    <resultMap id="NetBankExportBO" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankExportBO">
+        <result column="start_month" property="startMonth" />
+        <result column="employee_id" property="employeeId" />
+        <result column="employee_name" property="employeeName" />
+        <result column="hf_emp_account" property="hfEmpAccount" />
+        <result column="birthday" property="birthday" />
+        <result column="id_num" property="idNum" />
+        <result column="gender" property="gender" />
+        <result column="base" property="base" />
+        <result column="ratio" property="ratio" />
+        <result column="amount" property="amount" />
+        <result column="com_amount" property="comAmount" />
+        <result column="emp_amount" property="empAmount" />
+        <result column="ratio_com" property="ratioCom" />
+        <result column="ratio_emp" property="ratioEmp" />
+    </resultMap>
+
 	<update id="updateHfMonthCharge">
         UPDATE hf_month_charge
         SET
@@ -188,5 +205,39 @@
                 </foreach>
             </if>
         </where>
+    </select>
+
+    <select id="queryNetBankData" resultMap="NetBankExportBO">
+        SELECT
+            hmc.ss_month_belong AS start_month,
+            hmc.employee_id,
+            ee.employee_name,
+            ee.birthday,
+            ee.id_num,
+            ee.gender,
+            hea.hf_emp_account,
+            hmc.amount,
+            hmc.base,
+            hmc.com_amount,
+            hmc.emp_amount,
+            hmc.ratio,
+            hmc.ratio_com,
+            hmc.ratio_emp
+        FROM hf_month_charge hmc
+        INNER JOIN hf_emp_archive hea ON hmc.emp_archive_id = hea.emp_archive_id AND hea.is_active = 1
+        INNER JOIN emp_employee ee ON hea.employee_id = ee.employee_id AND ee.is_active = 1
+        WHERE hmc.is_active = 1
+        <if test="comAccountClassId != null">
+          AND hea.com_account_class_id = #{comAccountClassId}
+        </if>
+        <if test="hfMonth != null">
+          AND hmc.hf_month = #{hfMonth}
+        </if>
+        <if test="hfType != null">
+          AND hea.hf_type = #{hfType}
+        </if>
+        <if test="paymentTypes != null">
+          AND hmc.payment_type IN (${paymentTypes})
+        </if>
     </select>
 </mapper>

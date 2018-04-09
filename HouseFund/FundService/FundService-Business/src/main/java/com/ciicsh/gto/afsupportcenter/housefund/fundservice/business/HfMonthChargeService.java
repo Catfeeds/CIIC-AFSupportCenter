@@ -5,6 +5,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFMonthChargeQuer
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFMonthChargeReportBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfMonthChargeBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfMonthChargeDiffBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankExportBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankQueryBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -61,4 +63,6 @@ public interface HfMonthChargeService extends IService<HfMonthCharge> {
      * @return
      */
     List<Map<String, Object>> getRepairDetailsPageList(HFMonthChargeQueryBO hfMonthChargeQueryBO, boolean isPageByComAccount);
+
+    List<HFNetBankExportBO> queryNetBankData(HFNetBankQueryBO hfNetBankQueryBO);
 }

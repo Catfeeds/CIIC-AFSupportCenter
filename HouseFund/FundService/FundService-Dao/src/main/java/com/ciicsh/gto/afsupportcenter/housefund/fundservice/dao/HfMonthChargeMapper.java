@@ -4,6 +4,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFMonthChargeQuer
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFMonthChargeReportBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfMonthChargeBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfMonthChargeDiffBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankExportBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankQueryBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
@@ -51,4 +53,6 @@ public interface HfMonthChargeMapper extends BaseMapper<HfMonthCharge> {
      * @return
      */
     List<HFMonthChargeReportBO> queryHfMonthChargeReport(HFMonthChargeQueryBO hfMonthChargeQueryBO);
+
+    List<HFNetBankExportBO> queryNetBankData(HFNetBankQueryBO hfNetBankQueryBO);
 }
