@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.api;
 
 import com.ciicsh.common.entity.JsonResult;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.ComAccountExtDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccountExtDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccountDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccountParamDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComTaskDTO;
@@ -43,5 +43,5 @@ public interface FundApiProxy {
      * @return
      */
     @GetMapping("/getAccountByCompany")
-    JsonResult<ComAccountExtDTO> getAccountByCompany(@RequestParam("companyId") String companyId);
+    JsonResult<HfComAccountExtDTO> getAccountByCompany(@RequestParam("companyId") String companyId);
 }

@@ -5,7 +5,7 @@ import com.ciicsh.common.entity.JsonResult;
 import com.ciicsh.gto.afsupportcenter.housefund.apiservice.host.enumeration.Const;
 import com.ciicsh.gto.afsupportcenter.housefund.apiservice.host.translator.ApiTranslator;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.FundApiProxy;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.ComAccountExtDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccountExtDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccountDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccountParamDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComTaskDTO;
@@ -138,15 +138,15 @@ public class FundApiController implements FundApiProxy{
         @ApiImplicitParam(name = "companyId", value = "公司ID", required = true, dataType = "String")
     })
     @GetMapping("/getAccountByCompany")
-    public JsonResult<ComAccountExtDTO> getAccountByCompany(@RequestParam("companyId") String companyId) {
+    public JsonResult<HfComAccountExtDTO> getAccountByCompany(@RequestParam("companyId") String companyId) {
 
         String request =  "Request: { companyId :" + companyId +"}";
         log.info(LogMessage.create().setTitle(Const.GETACCOUNTBYCOMPANY.getKey()).setContent(request));
         List<AccountInfoBO> infos = hfComAccountService.getAccountByCompany(companyId);
-        ComAccountExtDTO extDTO = null;
+        HfComAccountExtDTO extDTO = null;
         if(null != infos && infos.size() > 0){
             AccountInfoBO info = infos.get(0);
-            extDTO = new ComAccountExtDTO();
+            extDTO = new HfComAccountExtDTO();
             extDTO.setComAccountName(info.getComAccountName());
             extDTO.setPaymentWay(info.getPaymentWay());
             extDTO.setCloseDay(info.getCloseDay());

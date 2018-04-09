@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by houwanhua on 2018/3/7.
  */
-public class ComAccountExtDTO {
+public class HfComAccountExtDTO {
     /**
      * 企业账户名称（前道传递）
      */
