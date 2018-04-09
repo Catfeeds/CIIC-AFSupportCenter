@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.housefund.apiservice.host.translator;
 
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.ComAccountExtDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.FundInfoDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccountDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountInfoBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
@@ -16,9 +16,9 @@ public class ApiTranslator {
         return accountDTO;
     }
 
-    public static ComAccountExtDTO toAccountExtDTO(AccountInfoBO infoBO){
-        ComAccountExtDTO accountExtDTO = new ComAccountExtDTO();
-        BeanUtils.copyProperties(infoBO,accountExtDTO);
-        return accountExtDTO;
+    public static FundInfoDTO toFundInfoDTO(AccountInfoBO infoBO){
+        FundInfoDTO fundInfoDTO = new FundInfoDTO();
+        BeanUtils.copyProperties(infoBO,fundInfoDTO);
+        return fundInfoDTO;
     }
 }

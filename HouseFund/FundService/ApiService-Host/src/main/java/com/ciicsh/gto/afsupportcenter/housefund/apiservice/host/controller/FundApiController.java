@@ -76,11 +76,8 @@ public class FundApiController implements FundApiProxy{
                 return JsonResult.faultMessage("该企业已存在相同类型的处理中任务单，不能重复添加！");
             }
             else{
-                HfComTask ssComTask = new HfComTask();
-                BeanUtils.copyProperties(comTaskDTO, ssComTask);
-                Long newComTaskId = addComTask(comTaskDTO);
-                log.info(LogMessage.create().setTitle(Const.SAVECOMTASK.getKey()).setContent("Response: " + newComTaskId.toString()));
-                return JsonResult.success(newComTaskId);
+                addComTask(comTaskDTO);
+                return JsonResult.success("保存成功!");
             }
         } catch (Exception e) {
             log.error(LogMessage.create().setTitle(Const.SAVECOMTASK.getKey()).setContent(e.getMessage()));
@@ -98,7 +95,7 @@ public class FundApiController implements FundApiProxy{
     }
 
     //保存企业任务单
-    private Long addComTask(HfComTaskDTO hfComTaskDTO) {
+    private void addComTask(HfComTaskDTO hfComTaskDTO) {
         HfComTask hfComTask = new HfComTask();
         BeanUtils.copyProperties(hfComTaskDTO,hfComTask);
         hfComTask.setTaskStatus(0);
@@ -107,8 +104,7 @@ public class FundApiController implements FundApiProxy{
         hfComTask.setModifiedTime(new Date());
         hfComTask.setCreatedBy("system");
         hfComTask.setModifiedBy("system");
-        hfComTaskService.addComTask(hfComTask);
-        return hfComTask.getComTaskId();
+        hfComTaskService.insert(hfComTask);
     }
 
     @Override
@@ -142,17 +138,22 @@ public class FundApiController implements FundApiProxy{
         @ApiImplicitParam(name = "companyId", value = "公司ID", required = true, dataType = "String")
     })
     @GetMapping("/getAccountByCompany")
-    public JsonResult<List<ComAccountExtDTO>> getAccountByCompany(@RequestParam("companyId") String companyId) {
+    public JsonResult<ComAccountExtDTO> getAccountByCompany(@RequestParam("companyId") String companyId) {
 
         String request =  "Request: { companyId :" + companyId +"}";
         log.info(LogMessage.create().setTitle(Const.GETACCOUNTBYCOMPANY.getKey()).setContent(request));
         List<AccountInfoBO> infos = hfComAccountService.getAccountByCompany(companyId);
-        List<ComAccountExtDTO> extDTOs = null;
+        ComAccountExtDTO extDTO = null;
         if(null != infos && infos.size() > 0){
-            extDTOs = infos.stream().map(ApiTranslator::toAccountExtDTO).collect(Collectors.toList());
+            AccountInfoBO info = infos.get(0);
+            extDTO = new ComAccountExtDTO();
+            extDTO.setComAccountName(info.getComAccountName());
+            extDTO.setPaymentWay(info.getPaymentWay());
+            extDTO.setCloseDay(info.getCloseDay());
+            extDTO.setCompanyId(info.getCompanyId());
+            extDTO.setFundInfos(infos.stream().map(ApiTranslator::toFundInfoDTO).collect(Collectors.toList()));
         }
-
-        log.info(LogMessage.create().setTitle(Const.GETACCOUNTBYCOMPANY.getKey()).setContent("Response: "+JSON.toJSONString(extDTOs)));
-        return JsonResult.success(extDTOs);
+        log.info(LogMessage.create().setTitle(Const.GETACCOUNTBYCOMPANY.getKey()).setContent("Response: "+JSON.toJSONString(extDTO)));
+        return JsonResult.success(extDTO);
     }
 }
