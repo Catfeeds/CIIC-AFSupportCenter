@@ -70,6 +70,7 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
             hfPaymentAccount.setModifiedTime(LocalDateTime.now());
             hfPaymentAccountMapper.updateById(hfPaymentAccount);
         });
+        //更新申请支付总金额
         HfPayment hfPayment=new HfPayment();
         hfPayment.setPaymentId(paymentId);
         hfPayment.setTotalApplicationAmonut(totalApplicationAmount);
@@ -93,8 +94,8 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
         hfPayment.setPaymentBatchNum(today+serial);
         hfPayment.setPaymentState(1);//可付
         hfPayment.setPaymentMonth(params.getPaymentMonth());
-        hfPayment.setRequestUser(UserContext.getUserName());
-        hfPayment.setRequestDate(new Date());
+        hfPayment.setCreatePaymentUser(UserContext.getUserName());
+        hfPayment.setCreatePaymentDate(new Date());
         hfPayment.setHfAccountType( paymentAccountMap.getHfAccountType() );
         hfPayment.setReceiver(params.getPayee());
         hfPayment.setPaymentWay(params.getPaymentWay());
