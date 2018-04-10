@@ -53,6 +53,14 @@ public class AmIndependentCustomController extends BasicController<IAmCompanySet
             amCompanySet.setModifiedBy("sys");
         }
         boolean is_special = false;
+        if(amCompanySet.getCompanySpecial0()!=null||amCompanySet.getCompanySpecial1()!=null||amCompanySet.getCompanySpecial2()!=null||amCompanySet.getCompanySpecial3()!=null)
+        {
+            is_special = true;
+        }
+        if(amCompanySet.getCompanySpecial4()!=null||amCompanySet.getCompanySpecial5()!=null||amCompanySet.getCompanySpecial6()!=null||amCompanySet.getCompanySpecial7()!=null)
+        {
+            is_special = true;
+        }
         if(amCompanySet.getRefuseSpecial()!=null||amCompanySet.getArchiveSpecial()!=null||amCompanySet.getEmploySpecial()!=null)
         {
             is_special = true;
@@ -65,6 +73,25 @@ public class AmIndependentCustomController extends BasicController<IAmCompanySet
             amCompanySet.setSpecial("有");
         }else {
             amCompanySet.setSpecial("");
+        }
+
+        if(amCompanySet.getKeyCode()==null){
+            amCompanySet.setKeyCode(" ");
+        }
+        if(amCompanySet.getKeyPwd()==null){
+            amCompanySet.setKeyPwd(" ");
+        }
+        if(amCompanySet.getKeyStatus()==null){
+            amCompanySet.setKeyStatus(" ");
+        }
+        if(amCompanySet.getEmploySpecial()==null){
+            amCompanySet.setEmploySpecial(" ");
+        }
+        if(amCompanySet.getRefuseSpecial()==null){
+            amCompanySet.setRefuseSpecial(" ");
+        }
+        if(amCompanySet.getArchiveSpecial()==null){
+            amCompanySet.setArchiveSpecial(" ");
         }
         boolean result =  business.insertOrUpdate(amCompanySet);
         return JsonResultKit.of(result);

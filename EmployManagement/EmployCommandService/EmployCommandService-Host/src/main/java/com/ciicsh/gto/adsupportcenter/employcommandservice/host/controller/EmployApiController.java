@@ -2,6 +2,7 @@ package com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller;
 
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.EmployApiProxy;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.*;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpMaterialService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpTaskService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 
 /**
@@ -24,6 +27,9 @@ public class EmployApiController implements EmployApiProxy {
 
    @Autowired
    private IAmEmpTaskService amEmpTaskService;
+
+   @Autowired
+   private IAmEmpMaterialService amEmpMaterialService;
 
     @Override
     @ApiOperation(value = "根据任务Id查询用工信息",notes = "根据TaskParamDTO对象创建")
@@ -47,5 +53,15 @@ public class EmployApiController implements EmployApiProxy {
     @PostMapping("/getArchiveByEmployeeId")
     public ArchiveDTO getArchiveByEmployeeId(@RequestBody TaskParamDTO taskParamDTO) {
         return  amEmpTaskService.getArchiveByEmployeeId(taskParamDTO);
+    }
+
+    @Override
+    public List<MaterialDTO> queryMaterialByTaskId(@RequestBody Long empTaskId) {
+        return amEmpMaterialService.queryMaterialByTaskId(empTaskId);
+    }
+
+    @Override
+    public boolean updateMaterialByTaskId(@RequestBody MaterialUpdateDTO materialUpdateDTO) {
+        return amEmpMaterialService.updateMaterialByTaskId(materialUpdateDTO);
     }
 }
