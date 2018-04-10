@@ -184,14 +184,12 @@ public class KafkaReceiver {
                 String fundCategory = TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
 
                 if (null != paramMap) {
-                    if (paramMap.get("fund_new") != null || paramMap.get("add_fund_new") != null) {
-                        if (FundCategory.BASICFUND.getCategory().equals(fundCategory) && !Boolean.valueOf(paramMap.get("fund_new").toString())) {
-                            // 如果task_type是new，但Variables中的fund_new为false时，该类任务单不接收
-                            return;
-                        } else if (!Boolean.valueOf(paramMap.get("add_fund_new").toString())) {
-                            // 如果task_type是new，但Variables中的add_fund_new为false时，该类任务单不接收
-                            return;
-                        }
+                    if (FundCategory.BASICFUND.getCategory().equals(fundCategory) && paramMap.get("fund_new") != null && !Boolean.valueOf(paramMap.get("fund_new").toString())) {
+                        // 如果task_type是new，但Variables中的fund_new为false时，该类任务单不接收
+                        return;
+                    } else if (paramMap.get("add_fund_new") != null && !Boolean.valueOf(paramMap.get("add_fund_new").toString())) {
+                        // 如果task_type是new，但Variables中的add_fund_new为false时，该类任务单不接收
+                        return;
                     }
                 }
 
@@ -239,14 +237,12 @@ public class KafkaReceiver {
                     agreementAdjustOrUpdateEmpStop(taskMsgDTO, fundCategory, 1);
                 } else {
                     if (null != paramMap) {
-                        if (paramMap.get("fund_new") != null || paramMap.get("add_fund_new") != null) {
-                            if (FundCategory.BASICFUND.getCategory().equals(fundCategory) && !Boolean.valueOf(paramMap.get("fund_new").toString())) {
-                                // 如果task_type是new，但Variables中的fund_new为false时，该类任务单不接收
-                                return;
-                            } else if (!Boolean.valueOf(paramMap.get("add_fund_new").toString())) {
-                                // 如果task_type是new，但Variables中的add_fund_new为false时，该类任务单不接收
-                                return;
-                            }
+                        if (FundCategory.BASICFUND.getCategory().equals(fundCategory) && paramMap.get("fund_new") != null && !Boolean.valueOf(paramMap.get("fund_new").toString())) {
+                            // 如果task_type是new，但Variables中的fund_new为false时，该类任务单不接收
+                            return;
+                        } else if (paramMap.get("add_fund_new") != null && !Boolean.valueOf(paramMap.get("add_fund_new").toString())) {
+                            // 如果task_type是new，但Variables中的add_fund_new为false时，该类任务单不接收
+                            return;
                         }
                     }
 
@@ -327,14 +323,12 @@ public class KafkaReceiver {
         String oldAgreementId = null;
 
         if (null != paramMap) {
-            if (paramMap.get("fund_stop") != null || paramMap.get("add_fund_stop") != null) {
-                if (FundCategory.BASICFUND.getCategory().equals(fundCategory) && !Boolean.valueOf(paramMap.get("fund_stop").toString())) {
-                    // 如果task_type是stop，但Variables中的fund_stop为false时，该类任务单不接收
-                    return;
-                } else if (!Boolean.valueOf(paramMap.get("add_fund_stop").toString())) {
-                    // 如果task_type是stop，但Variables中的add_fund_stop为false时，该类任务单不接收
-                    return;
-                }
+            if (FundCategory.BASICFUND.getCategory().equals(fundCategory) && paramMap.get("fund_stop") != null && !Boolean.valueOf(paramMap.get("fund_stop").toString())) {
+                // 如果task_type是stop，但Variables中的fund_stop为false时，该类任务单不接收
+                return;
+            } else if (paramMap.get("add_fund_stop") != null && !Boolean.valueOf(paramMap.get("add_fund_stop").toString())) {
+                // 如果task_type是stop，但Variables中的add_fund_stop为false时，该类任务单不接收
+                return;
             }
 
             if (paramMap.get("fundType") != null) {
