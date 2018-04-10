@@ -154,6 +154,15 @@ public class KafkaReceiver {
         }
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())) {
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_ADJUST).setTextContent(TaskSink.SOCIAL_NEW + " JSON: " + JSON.toJSONString(taskMsgDTO)));
+
+            if (null != paramMap && paramMap.get("social_new") != null) {
+                if (!Boolean.valueOf(paramMap.get("social_new").toString())) {
+                    // 如果task_type是new，但Variables中的social_new为false时，该类任务单不接收
+                    logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_ADJUST).setTextContent(TaskSink.SOCIAL_NEW + ", Variables's social_new is false"));
+                    return;
+                }
+            }
+
             //获取社保办理类型
             socialType = paramMap.get("socialType").toString();
 //            empAgreementId = taskMsgDTO.getMissionId();
@@ -183,6 +192,14 @@ public class KafkaReceiver {
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_UPDATE).setTextContent(" JSON: " + JSON.toJSONString(taskMsgDTO)));
             try {
                 Map<String, Object> paramMap = taskMsgDTO.getVariables();
+
+                if (null != paramMap && paramMap.get("social_new") != null) {
+                    if (!Boolean.valueOf(paramMap.get("social_new").toString())) {
+                        // 如果task_type是new，但Variables中的social_new为false时，该类任务单不接收
+                        logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_ADJUST).setTextContent(TaskSink.SOCIAL_NEW + ", Variables's social_new is false"));
+                        return;
+                    }
+                }
 
                 //调用接口-调用客服中心接口，获取任务单表单信息
                 AfEmployeeInfoDTO dto = callEmpAgreement(taskMsgDTO, ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory(), paramMap.get("oldEmpAgreementId").toString());
@@ -251,6 +268,14 @@ public class KafkaReceiver {
         String oldAgreementId = null;
 
         if (null != paramMap) {
+            if (paramMap.get("social_stop") != null) {
+                if (!Boolean.valueOf(paramMap.get("social_stop").toString())) {
+                    // 如果task_type是stop，但Variables中的social_stop为false时，该类任务单不接收
+                    logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle("agreementAdjustOrUpdateEmpStop").setTextContent(TaskSink.SOCIAL_STOP + ", Variables's social_stop is false"));
+                    return;
+                }
+            }
+
             if (paramMap.get("oldEmpAgreementId") != null) {
                 Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
 

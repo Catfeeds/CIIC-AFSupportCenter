@@ -181,9 +181,22 @@ public class KafkaReceiver {
             if (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) || TaskSink.ADD_FUND_NEW.equals(taskMsgDTO.getTaskType())) {
                 logger.info("start in fundEmpAgreementAdjust: " + JSON.toJSONString(taskMsgDTO));
                 Map<String, Object> paramMap = taskMsgDTO.getVariables();
+                String fundCategory = TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
+
+                if (null != paramMap) {
+                    if (paramMap.get("fund_new") != null || paramMap.get("add_fund_new") != null) {
+                        if (FundCategory.BASICFUND.getCategory().equals(fundCategory) && !Boolean.valueOf(paramMap.get("fund_new").toString())) {
+                            // 如果task_type是new，但Variables中的fund_new为false时，该类任务单不接收
+                            return;
+                        } else if (!Boolean.valueOf(paramMap.get("add_fund_new").toString())) {
+                            // 如果task_type是new，但Variables中的add_fund_new为false时，该类任务单不接收
+                            return;
+                        }
+                    }
+                }
+
                 if (null != paramMap && paramMap.get("fundType") != null) {
                     Integer taskCategory = paramMap.get("fundType").equals("4") ? TaskCategory.ADJUST.getCategory() : Integer.parseInt(paramMap.get("fundType").toString());
-                    String fundCategory = TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
                     String oldAgreementId = null;
 
                     if (paramMap.get("oldEmpAgreementId") != null) {
@@ -225,9 +238,22 @@ public class KafkaReceiver {
                 if (TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
                     agreementAdjustOrUpdateEmpStop(taskMsgDTO, fundCategory, 1);
                 } else {
+                    if (null != paramMap) {
+                        if (paramMap.get("fund_new") != null || paramMap.get("add_fund_new") != null) {
+                            if (FundCategory.BASICFUND.getCategory().equals(fundCategory) && !Boolean.valueOf(paramMap.get("fund_new").toString())) {
+                                // 如果task_type是new，但Variables中的fund_new为false时，该类任务单不接收
+                                return;
+                            } else if (!Boolean.valueOf(paramMap.get("add_fund_new").toString())) {
+                                // 如果task_type是new，但Variables中的add_fund_new为false时，该类任务单不接收
+                                return;
+                            }
+                        }
+                    }
+
                     //未办理任务单
                     if (StringUtils.isBlank(taskMsgDTO.getTaskId())) {
                         logger.info("start fundEmpAgreementCorrect(not handled): " + JSON.toJSONString(taskMsgDTO));
+
                         if (null != paramMap && paramMap.get("fundType") != null) {
                             fundType = Integer.parseInt(paramMap.get("fundType").toString());
                         }
@@ -301,6 +327,16 @@ public class KafkaReceiver {
         String oldAgreementId = null;
 
         if (null != paramMap) {
+            if (paramMap.get("fund_stop") != null || paramMap.get("add_fund_stop") != null) {
+                if (FundCategory.BASICFUND.getCategory().equals(fundCategory) && !Boolean.valueOf(paramMap.get("fund_stop").toString())) {
+                    // 如果task_type是stop，但Variables中的fund_stop为false时，该类任务单不接收
+                    return;
+                } else if (!Boolean.valueOf(paramMap.get("add_fund_stop").toString())) {
+                    // 如果task_type是stop，但Variables中的add_fund_stop为false时，该类任务单不接收
+                    return;
+                }
+            }
+
             if (paramMap.get("fundType") != null) {
                 fundType = Integer.parseInt(paramMap.get("fundType").toString());
             }

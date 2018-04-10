@@ -482,7 +482,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             }
             try {
                 Result result = apiCompleteTask(inputHfEmpTask.getTaskId(),
-                    inputHfEmpTask.getModifiedBy());
+                    UserContext.getUser().getDisplayName());
             } catch (Exception e) {
                 LogMessage logMessage = LogMessage.create().setTitle("访问接口").
                     setContent("访问客服中心的完成任务接口失败,ExceptionMessage:" + e.getMessage());
@@ -631,7 +631,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         }
         try {
             Result result = apiCompleteTask(hfEmpTask.getTaskId(),
-                UserContext.getUserId());
+                UserContext.getUser().getDisplayName());
         } catch (Exception e) {
             LogMessage logMessage = LogMessage.create().setTitle("访问接口").
                 setContent("访问客服中心的完成任务接口失败,ExceptionMessage:" + e.getMessage());
