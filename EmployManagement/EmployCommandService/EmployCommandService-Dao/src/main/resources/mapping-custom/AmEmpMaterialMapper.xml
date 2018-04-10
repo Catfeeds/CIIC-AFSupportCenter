@@ -8,8 +8,24 @@
        
     </resultMap>
 
+    <resultMap id="BaseResultMaterialMapDTO" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.MaterialDTO">
+    </resultMap>
+
     <select id="queryAmEmpMaterial" resultMap="BaseResultMapDTO">
         SELECT  * from  am_emp_material where emp_task_id = #{empTaskId}  and operate_type = #{operateType}
     </select>
+
+    <select id="queryMaterialDic" resultMap="BaseResultMapDTO">
+    SELECT  material_name  from  cmy_af_material_dic  where material_type = '2'
+   </select>
+
+    <select id="queryMaterialByTaskId" resultMap="BaseResultMaterialMapDTO">
+        SELECT  material_name,receive_name,receive_date  from  am_emp_material where emp_task_id = #{empTaskId}
+    </select>
+
+    <update id="updateMaterialByTaskId">
+        UPDATE am_emp_material  set receive_name = #{receiveName},receive_date = #{receiveDate} where  emp_task_id = #{empTaskId}
+    </update>
 
 </mapper>

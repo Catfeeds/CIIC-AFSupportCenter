@@ -26,7 +26,6 @@ public class AmEmploymentBO extends AmEmployment {
     private LocalDate storageOutDate;
     /**
      * 存档地
-
      */
     private String archivePlace;
 
@@ -35,7 +34,6 @@ public class AmEmploymentBO extends AmEmployment {
     private String resignFeedback2;
 
     private LocalDate returnDocDate;
-
     /**
      * 退工送办日期
      */
@@ -89,6 +87,16 @@ public class AmEmploymentBO extends AmEmployment {
     private String leaderShipName;
 
     private  String archiveSpecial;
+
+    private Long  empTaskResignId;
+
+    public Long getEmpTaskResignId() {
+        return empTaskResignId;
+    }
+
+    public void setEmpTaskResignId(Long empTaskResignId) {
+        this.empTaskResignId = empTaskResignId;
+    }
 
     public String getArchiveSpecial() {
         return archiveSpecial;
