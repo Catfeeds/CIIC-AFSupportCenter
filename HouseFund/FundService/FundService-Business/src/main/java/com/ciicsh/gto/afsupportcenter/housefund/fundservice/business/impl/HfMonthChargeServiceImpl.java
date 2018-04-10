@@ -124,6 +124,8 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             HfPayment hfPayment=new HfPayment();
             hfPayment.setPaymentId(hfMonthChargeQueryBO.getPaymentId());
             hfPayment = hfPaymentMapper.selectOne(hfPayment);
+            hfMonthChargeQueryBO.setHfMonth(hfPayment.getPaymentMonth());
+
             Map<String,Object> map=new HashMap<>();
             List<String> listAccounts=new ArrayList<>();
             map.put("payment_id",hfMonthChargeQueryBO.getPaymentId());
