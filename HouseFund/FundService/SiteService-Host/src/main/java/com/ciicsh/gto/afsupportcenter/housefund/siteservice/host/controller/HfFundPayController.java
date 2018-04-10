@@ -145,19 +145,13 @@ public class HfFundPayController {
 
     @Log("公积金汇缴支付-生成网银文件,补缴.txt")
     @RequestMapping("/generateBankRepair")
-    public void generateBankRepair(HttpServletResponse response, String paymentId) throws BusinessException {
+    public void generateBankRepair(HttpServletResponse response, String paymentId) throws Exception {
         List<HFNetBankComAccountBO> hfNetBankComAccountBOList = hfPaymentAccountService.getComAccountByPaymentId(Long.valueOf(paymentId));
 
         try {
             if (CollectionUtils.isNotEmpty(hfNetBankComAccountBOList)) {
                 Map<String, String> repairMap = new HashMap<>();
                 HFNetBankQueryBO hfNetBankQueryBO;
-
-                String fileName = URLEncoder.encode("网银文件_补缴TXT.zip", "UTF-8");
-                response.reset();
-                response.setCharacterEncoding("UTF-8");
-                response.setHeader("content-Type", "application/zip");
-                response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
 
                 for (HFNetBankComAccountBO hfNetBankComAccountBO : hfNetBankComAccountBOList) {
                     hfNetBankQueryBO = new HFNetBankQueryBO();
@@ -189,29 +183,33 @@ public class HfFundPayController {
                 }
 
                 if (!repairMap.isEmpty()) {
+                    String fileName = URLEncoder.encode("网银文件_补缴TXT.zip", "UTF-8");
+                    response.reset();
+                    response.setCharacterEncoding("UTF-8");
+                    response.setHeader("content-Type", "application/zip");
+                    response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+
                     ZipUtil.createZipFileWithTxtFiles(response.getOutputStream(), repairMap);
                 }
             }
         } catch (Exception e) {
             logApiUtil.error(LogMessage.create().setTitle("生成网银文件补缴").setContent(e.getMessage()));
-            throw new BusinessException(e);
+//            throw new BusinessException(e);
+            response.reset();
+            response.setCharacterEncoding("UTF-8");
+            response.setHeader("content-Type", "text/plain");
+            response.getWriter().write(e.getMessage());
         }
     }
     @Log("公积金汇缴支付-生成网银文件,变更.txt")
     @RequestMapping("/generateBankChange")
-    public void generateBankChange(HttpServletResponse response, String paymentId) throws BusinessException {
+    public void generateBankChange(HttpServletResponse response, String paymentId) throws Exception {
         List<HFNetBankComAccountBO> hfNetBankComAccountBOList = hfPaymentAccountService.getComAccountByPaymentId(Long.valueOf(paymentId));
 
         try {
             if (CollectionUtils.isNotEmpty(hfNetBankComAccountBOList)) {
                 Map<String, String> changeMap = new HashMap<>();
                 HFNetBankQueryBO hfNetBankQueryBO;
-
-                String fileName = URLEncoder.encode("网银文件_变更TXT.zip", "UTF-8");
-                response.reset();
-                response.setCharacterEncoding("UTF-8");
-                response.setHeader("content-Type", "application/zip");
-                response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
 
                 for (HFNetBankComAccountBO hfNetBankComAccountBO : hfNetBankComAccountBOList) {
                     hfNetBankQueryBO = new HFNetBankQueryBO();
@@ -256,12 +254,22 @@ public class HfFundPayController {
                 }
 
                 if (!changeMap.isEmpty()) {
+                    String fileName = URLEncoder.encode("网银文件_变更TXT.zip", "UTF-8");
+                    response.reset();
+                    response.setCharacterEncoding("UTF-8");
+                    response.setHeader("content-Type", "application/zip");
+                    response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+
                     ZipUtil.createZipFileWithTxtFiles(response.getOutputStream(), changeMap);
                 }
             }
         } catch (Exception e) {
             logApiUtil.error(LogMessage.create().setTitle("生成网银文件变更").setContent(e.getMessage()));
-            throw new BusinessException(e);
+//            throw new BusinessException(e);
+            response.reset();
+            response.setCharacterEncoding("UTF-8");
+            response.setHeader("content-Type", "text/plain");
+            response.getWriter().write(e.getMessage());
         }
     }
 
