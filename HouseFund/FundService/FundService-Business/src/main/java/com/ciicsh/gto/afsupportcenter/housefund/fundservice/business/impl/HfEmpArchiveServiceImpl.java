@@ -77,7 +77,7 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
             xlsRecord->{
                 Map map=baseMapper.selectEmpByCardIdAndName(xlsRecord.getEmpName(),xlsRecord.getIdNum());
                 if (map==null){
-                    retStr.append(xlsRecord.getEmpName()).append("|");
+                    retStr.append(xlsRecord.getEmpName()).append(" |");
                     return;
                 }
                 HfEmpArchive hfEmpArchive=new HfEmpArchive();

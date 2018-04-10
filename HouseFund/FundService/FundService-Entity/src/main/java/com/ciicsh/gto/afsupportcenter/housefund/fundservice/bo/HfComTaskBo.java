@@ -7,6 +7,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.Date;
+
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ExcelTarget("HfComTaskBo")
@@ -68,6 +70,7 @@ public class HfComTaskBo extends HfComTask {
     @Excel(name = "发起时间", orderNum = "6")
     private String submitTimeString;
 
+    private Date[] submitTimeArray;
     /**
      * 任务发起人备注
      */
@@ -111,7 +114,7 @@ public class HfComTaskBo extends HfComTask {
      * 缴费银行：1 徐汇—X、2 西郊—C、3 东方路—P、4 卢湾—L、5 黄浦—H
      */
     private String paymentBankValue;
-
+    private String paymentBank;
     /**
      * 截止缴费年月（截单日）
      */

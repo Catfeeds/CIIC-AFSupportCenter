@@ -329,7 +329,13 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                     Map<String,Object> variables = new HashMap<>();
                     variables.put("status", ReasonUtil.getYgResult(entity.getEmployFeedback()));
                     variables.put("remark",ReasonUtil.getYgfk(entity.getEmployFeedback()));
-                    variables.put("assignee","system");
+                    String userName = "system";
+                    try {
+                        userName = UserContext.getUser().getDisplayName();
+                    } catch (Exception e) {
+
+                    }
+                    variables.put("assignee",userName);
                     TaskCommonUtils.completeTask(amEmpTask.getTaskId(),employeeInfoProxy,variables);
                 }
             }
