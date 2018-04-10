@@ -66,7 +66,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
     }
 
     @Override
-    public HfMonthChargeDiffBo getHfMonthChargeDiffSum(HfMonthChargeBo hfMonthChargeBo) {
+    public List<HfMonthChargeDiffBo> getHfMonthChargeDiffSum(HfMonthChargeBo hfMonthChargeBo) {
         return baseMapper.getHfMonthChargeDiffSum(hfMonthChargeBo);
     }
 

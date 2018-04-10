@@ -36,7 +36,7 @@ public interface HfMonthChargeService extends IService<HfMonthCharge> {
      * @param hfMonthChargeBo
      * @return
      */
-    HfMonthChargeDiffBo getHfMonthChargeDiffSum(HfMonthChargeBo hfMonthChargeBo);
+    List<HfMonthChargeDiffBo> getHfMonthChargeDiffSum(HfMonthChargeBo hfMonthChargeBo);
 
     /**
      * 查询公积金报表
