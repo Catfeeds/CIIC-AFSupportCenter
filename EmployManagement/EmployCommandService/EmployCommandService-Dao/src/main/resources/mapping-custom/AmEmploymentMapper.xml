@@ -55,6 +55,7 @@
         <if test="employmentId!=null">
             and  employment_id = #{employmentId}
         </if>
+        order by  created_time desc
     </select>
 
     <select id="queryAmArchive" resultMap="BaseResultMapDTO">
@@ -62,6 +63,7 @@
         a.employ_code,
         w.out_reason,
         w.out_date,
+        w.emp_task_id as empTaskResignId,
         a.emp_task_id,
         b.employment_id,
         b.employee_id,

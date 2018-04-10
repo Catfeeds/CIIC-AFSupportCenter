@@ -128,6 +128,16 @@ public class AmResignBO extends AmResign {
 
     private  String refuseSpecial;
 
+    private String archiveDirection;
+
+    public String getArchiveDirection() {
+        return archiveDirection;
+    }
+
+    public void setArchiveDirection(String archiveDirection) {
+        this.archiveDirection = archiveDirection;
+    }
+
     public String getRefuseSpecial() {
         return refuseSpecial;
     }
