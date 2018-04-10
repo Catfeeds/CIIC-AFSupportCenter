@@ -106,7 +106,9 @@
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
-        INNER JOIN hf_dataauth_company hdc ON het.company_id = hdc.company_id
+        <if test="userId != null">
+            INNER JOIN hf_dataauth_company hdc ON het.company_id = hdc.company_id AND hdc.user_id = #{userId}
+        </if>
         <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
             INNER JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
             INNER JOIN hf_com_account hcas ON hcas.com_account_id = hacr.com_account_id AND hcas.is_active = 1 AND hcas.hf_account_type = 3
@@ -180,9 +182,6 @@
                 CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hcas.close_day) END
                 )
             </if>
-            <if test="userId != null">
-                AND hdc.user_id = #{userId}
-            </if>
         </where>
         UNION ALL
         SELECT
@@ -208,7 +207,9 @@
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
-        INNER JOIN hf_dataauth_company hdc ON het.company_id = hdc.company_id
+        <if test="userId != null">
+            INNER JOIN hf_dataauth_company hdc ON het.company_id = hdc.company_id AND hdc.user_id = #{userId}
+        </if>
         <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
             INNER JOIN hf_com_account hcas ON hcas.is_active = 1 AND hcas.hf_account_type = 1
         </if>
@@ -281,9 +282,6 @@
                 CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hcas.close_day) END
                 )
             </if>
-            <if test="userId != null">
-                AND hdc.user_id = #{userId}
-            </if>
         </where>
     </select>
 
@@ -307,7 +305,9 @@
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
-        INNER JOIN hf_dataauth_company hdc ON het.company_id = hdc.company_id
+        <if test="userId != null">
+            INNER JOIN hf_dataauth_company hdc ON het.company_id = hdc.company_id AND hdc.user_id = #{userId}
+        </if>
         <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
             INNER JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
             INNER JOIN hf_com_account hcas ON hcas.com_account_id = hacr.com_account_id AND hcas.is_active = 1 AND hcas.hf_account_type = 3
@@ -384,9 +384,6 @@
                 CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hcas.close_day) END
                 )
             </if>
-            <if test="userId != null">
-                AND hdc.user_id = #{userId}
-            </if>
         </where>
         UNION ALL
         SELECT
@@ -408,7 +405,9 @@
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
-        INNER JOIN hf_dataauth_company hdc ON het.company_id = hdc.company_id
+        <if test="userId != null">
+            INNER JOIN hf_dataauth_company hdc ON het.company_id = hdc.company_id AND hdc.user_id = #{userId}
+        </if>
         <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
             INNER JOIN hf_com_account hcas ON hcas.is_active = 1 AND hcas.hf_account_type = 1
         </if>
@@ -483,9 +482,6 @@
                 ELSE
                 CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hcas.close_day) END
                 )
-            </if>
-            <if test="userId != null">
-                AND hdc.user_id = #{userId}
             </if>
         </where>
     </select>

@@ -298,9 +298,12 @@
             hca.modified_by
         FROM
         hf_com_account hca
-        <if test="companyId != null or companyName != null">
+        <if test="companyId != null or companyName != null or userId != null">
             INNER JOIN hf_account_com_relation hacr ON hca.com_account_id = hacr.com_account_id AND hacr.is_active = 1
             INNER JOIN sal_company sc ON hacr.company_id = sc.company_id AND sc.is_active = 1
+            <if test="userId != null">
+                INNER JOIN hf_dataauth_company hdc ON sc.company_id = hdc.company_id AND hdc.user_id = #{userId}
+            </if>
         </if>
         <if test="basicHfComAccount != null">
             INNER JOIN hf_com_account_class hcacb ON hca.com_account_id = hcacb.com_account_id AND hcacb.hf_type = 1 AND hcacb.is_active = 1

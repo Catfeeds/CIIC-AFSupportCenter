@@ -154,6 +154,9 @@
         CASE WHEN hmc.hf_type = 1 THEN hcacb.hf_com_account ELSE hcaca.hf_com_account END hf_com_account
         FROM hf_month_charge hmc
         INNER JOIN sal_company sc ON hmc.company_id = sc.company_id AND sc.is_active = 1
+        <if test="userId != null">
+            INNER JOIN hf_dataauth_company hdc ON sc.company_id = hdc.company_id AND hdc.user_id = #{userId}
+        </if>
         INNER JOIN emp_employee ee ON hmc.employee_id = ee.employee_id
         LEFT JOIN hf_emp_archive heab ON hmc.emp_archive_id = heab.emp_archive_id AND heab.hf_type = 1 AND heab.is_active = 1
         LEFT JOIN hf_com_account hcab ON heab.com_account_id = hcab.com_account_id AND hcab.is_active = 1
