@@ -29,6 +29,7 @@ public class HfEmpTaskBo implements Serializable {
     private String exceptTaskCategories;
     private String includeTaskCategories;
     private String hfComAccount;
+    private String userId;
 
     public void setSubmitTime(LocalDate[] submitTime) {
         this.submitTime = submitTime;

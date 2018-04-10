@@ -44,13 +44,14 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
     @Override
-    public PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo) {
-        return queryHfEmpTaskInPage(pageInfo, null);
+    public PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo, String userId) {
+        return queryHfEmpTaskInPage(pageInfo, userId, null);
     }
 
     @Override
-    public PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo, String exceptTaskCategories) {
+    public PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo, String userId, String exceptTaskCategories) {
         HfEmpTaskBo hfEmpTaskBo = pageInfo.toJavaObject(HfEmpTaskBo.class);
+        hfEmpTaskBo.setUserId(userId);
         if (StringUtils.isNotBlank(exceptTaskCategories)) {
             hfEmpTaskBo.setExceptTaskCategories(exceptTaskCategories);
         }
@@ -58,8 +59,9 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
     }
 
     @Override
-    public PageRows<HfEmpTaskRejectExportBo> queryHfEmpTaskRejectInPage(PageInfo pageInfo, String exceptTaskCategories) {
+    public PageRows<HfEmpTaskRejectExportBo> queryHfEmpTaskRejectInPage(PageInfo pageInfo, String userId, String exceptTaskCategories) {
         HfEmpTaskBo hfEmpTaskBo = pageInfo.toJavaObject(HfEmpTaskBo.class);
+        hfEmpTaskBo.setUserId(userId);
         if (StringUtils.isNotBlank(exceptTaskCategories)) {
             hfEmpTaskBo.setExceptTaskCategories(exceptTaskCategories);
         }
