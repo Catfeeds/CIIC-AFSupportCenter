@@ -54,7 +54,7 @@
         AND ca.state = 1
         AND ca.hf_account_type!=4
         AND ifnull(cac.end_type,'')=''
-        AND ifnull(cac.com_hf_month,'')=''
+        AND ifnull(cac.com_hf_month,'')!=''
         AND NOT EXISTS (
             SELECT
                 1
