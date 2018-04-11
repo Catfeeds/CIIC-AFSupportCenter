@@ -1980,7 +1980,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 break;
         }
         //任务单完成接口调用
-        TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, UserContext.getUser().getDisplayName());
+        TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, UserContext.getUserName());
     }
 
     /**

@@ -22,6 +22,10 @@
             <artifactId>afsupportcenter-socialsecurity-socservice-dao</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.ciicsh.gt1.salecenter</groupId>
+            <artifactId>gt1.salecenter.apiservice-api</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
@@ -55,7 +59,6 @@
             <groupId>com.ciicsh.gt1.companycenter</groupId>
             <artifactId>gt1.companycenter.queryservice-api</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.ciicsh.gt1.commonservice</groupId>
             <artifactId>sheetservice-api</artifactId>
@@ -70,6 +73,10 @@
             <artifactId>gt1.afsystemmanagecenter.apiservice-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.ciicsh.gt1.salecenter</groupId>
+            <artifactId>gt1.salecenter.apiservice-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.ciicsh.gt1.employeecenter</groupId>
             <artifactId>gt1.employeecenter.apiservice-api</artifactId>
         </dependency>
@@ -81,10 +88,6 @@
         <dependency>
             <groupId>com.ciicsh.gt1</groupId>
             <artifactId>seaweedFS-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.ciicsh.gt1.salecenter</groupId>
-            <artifactId>gt1.salecenter.apiservice-api</artifactId>
         </dependency>
     </dependencies>
 
