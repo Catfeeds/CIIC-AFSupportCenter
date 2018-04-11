@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * @Author: guwei
- * @Description:
+ * @Description: 材料收缴控制器
  * @Date: Created in 9:44 2018/2/6
  */
 @RestController

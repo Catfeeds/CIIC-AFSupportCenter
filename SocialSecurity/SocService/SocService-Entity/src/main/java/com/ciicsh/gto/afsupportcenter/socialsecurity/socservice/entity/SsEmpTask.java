@@ -315,7 +315,16 @@ public class SsEmpTask implements Serializable {
      */
     @TableField("leader_ship_name")
     private String leaderShipName;
-
+    /**
+     * 服务中心ID
+     */
+    @TableField("service_center_id")
+    private Integer serviceCenterId;
+    /**
+     * 服务中心
+     */
+    @TableField("service_center")
+    private String serviceCenter;
 
 
 	public Long getEmpTaskId() {
@@ -798,6 +807,22 @@ public class SsEmpTask implements Serializable {
         this.leaderShipName = leaderShipName;
     }
 
+    public Integer getServiceCenterId() {
+        return serviceCenterId;
+    }
+
+    public void setServiceCenterId(Integer serviceCenterId) {
+        this.serviceCenterId = serviceCenterId;
+    }
+
+    public String getServiceCenter() {
+        return serviceCenter;
+    }
+
+    public void setServiceCenter(String serviceCenter) {
+        this.serviceCenter = serviceCenter;
+    }
+
     @Override
 	public String toString() {
 		return "SsEmpTask{" +
@@ -861,6 +886,8 @@ public class SsEmpTask implements Serializable {
             ", modifiedDisplayName=" + modifiedDisplayName +
             ", leaderShipId=" + leaderShipId +
             ", leaderShipName=" + leaderShipName +
+            ", serviceCenterId=" + serviceCenterId +
+            ", serviceCenter=" + serviceCenter +
 			"}";
 	}
 }

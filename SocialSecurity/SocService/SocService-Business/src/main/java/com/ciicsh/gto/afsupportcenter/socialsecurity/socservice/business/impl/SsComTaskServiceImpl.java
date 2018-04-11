@@ -15,6 +15,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAccount
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAccountRatio;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComTask;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.enumeration.ComTaskStatus;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
@@ -26,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -149,7 +149,7 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
     @Transactional(
         rollbackFor = {Exception.class}
     )
-    public String addOrUpdateCompanyTask(SsComTask ssComTask, SsComAccount ssComAccount, SsAccountRatio ssAccountRatio,SsAccountComRelation ssAccountComRelation) {
+    public String addOrUpdateCompanyTask(SsComTask ssComTask, SsComAccount ssComAccount, SsAccountRatio ssAccountRatio, SsAccountComRelation ssAccountComRelation) {
         //如果 账户ID为空 则添加  否则修改
         if (null == ssComAccount.getComAccountId()) {
             ssComAccount.setActive(true);
@@ -175,39 +175,40 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
             ssAccountRatioMapper.updateById(ssAccountRatio);
         }
         //表示完成
-        if(3 == ssComTask.getTaskStatus()){
+        if (3 == ssComTask.getTaskStatus()) {
             //添加账户下对应的公司
             ssAccountComRelation.setComAccountId(ssComAccount.getComAccountId());
             ssAccountComRelationMapper.insert(ssAccountComRelation);
-            Map<String,Object> bankAccountMap =new HashMap<String,Object>();
+            Map<String, Object> bankAccountMap = new HashMap<String, Object>();
             bankAccountMap.put("com_account_id", ssComAccount.getComAccountId());
             bankAccountMap.put("account", ssComAccount.getBankAccount());
             bankAccountMap.put("account_name", ssComAccount.getComAccountName());
             bankAccountMap.put("bank_name", ssComAccount.getPaymentBank());
             bankAccountMap.put("bank_id", "2");//默认工商银行
-            bankAccountMap.put("company_id",ssComTask.getCompanyId() );//客户ID
+            bankAccountMap.put("company_id", ssComTask.getCompanyId());//客户ID
 //          bankAccountMap.put("province_code", "002");
 //          bankAccountMap.put("city_code", "01");
             bankAccountMap.put("account_type", "4");
+            bankAccountMap.put("finance_account_id", "1"); //默认是 中智上海经济技术合作有限公司
             //bankAccountMap.put("subject_no", "1");
             //插入银行账号信息并返回结果，如果接口返回0 表示 接口调用失败，正常返回 bankAccountId 主键
-            Map<String,String> mp=new HashMap<>();
-            mp= commonApiUtils.addBankAccount(bankAccountMap);
-            if(Integer.parseInt(mp.get("code")) == 0){//成功
+            Map<String, String> mp = new HashMap<>();
+            mp = commonApiUtils.addBankAccount(bankAccountMap);
+            if (Integer.parseInt(mp.get("code")) == 0) {//成功
                 ssComAccount.setBankAccountId(Long.valueOf(mp.get("ret")));
                 //任务单为已完成状态 账户设置为可用
                 ssComAccount.setState(new Integer(1));
                 try {
                     //调用工作流
                     String taskId = baseMapper.selectById(ssComTask.getComTaskId()).getTaskId();
-                    TaskCommonUtils.completeTask(taskId, commonApiUtils, UserContext.getUserId());
+                    TaskCommonUtils.completeTask(taskId, commonApiUtils, UserContext.getUserName());
                 }catch (BusinessException e){
                     //如果工作流异常，则跳过
                 }
                 sComAccountMapper.updateById(ssComAccount);
-            }else{
-                throw new BusinessException("调用财务银行信息接口反馈的信息："+mp.get("ret"));
-               // return "办理失败！调用银行信息接口出现异常。";
+            } else {
+                throw new BusinessException("调用财务银行信息接口反馈的信息：" + mp.get("ret"));
+                // return "办理失败！调用银行信息接口出现异常。";
             }
 
         }
@@ -219,20 +220,20 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
      * 判断企业社保账户和名称是否重复
      */
     public String checkComAccountDuplicate(SsComAccount ssComAccount) {
-        int accountC = 0,accountNameC = 0;
-        String retStr="";
-        if (Optional.ofNullable(ssComAccount.getSsAccount()).isPresent() ){
-            accountC=sComAccountMapper.checkComAccountDuplicateaSSAccount(ssComAccount);
+        int accountC = 0, accountNameC = 0;
+        String retStr = "";
+        if (Optional.ofNullable(ssComAccount.getSsAccount()).isPresent()) {
+            accountC = sComAccountMapper.checkComAccountDuplicateaSSAccount(ssComAccount);
         }
-        if (Optional.ofNullable(ssComAccount.getComAccountName()).isPresent() ){
-            accountNameC=sComAccountMapper.checkComAccountDuplicateaSSAccountName(ssComAccount);
+        if (Optional.ofNullable(ssComAccount.getComAccountName()).isPresent()) {
+            accountNameC = sComAccountMapper.checkComAccountDuplicateaSSAccountName(ssComAccount);
         }
-        if (accountC > 0){
-            retStr="参保户登记码在系统中已重复，";
+        if (accountC > 0) {
+            retStr = "参保户登记码在系统中已重复，";
         }
 
-        if (accountNameC > 0){
-            retStr="养老金用公司名称在系统中已重复，";
+        if (accountNameC > 0) {
+            retStr = "养老金用公司名称在系统中已重复，";
         }
 
         return retStr;
@@ -273,7 +274,7 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
             }
             ssComTaskBO.setComAccountId(null);
             SsComTask comTask = new SsComTask();
-            BeanUtils.copyProperties(ssComTaskBO,comTask);
+            BeanUtils.copyProperties(ssComTaskBO, comTask);
             baseMapper.updateById(comTask);
             result = true;
         } catch (Exception e) {
@@ -285,15 +286,17 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
 
     /**
      * 任务单撤销
+     *
      * @param ssComTask
      * @return
      */
-    public int updateTaskStatusForRevoke(SsComTask ssComTask){
+    public int updateTaskStatusForRevoke(SsComTask ssComTask) {
         return baseMapper.updateTaskStatusForRevoke(ssComTask);
     }
 
     /**
      * 判断企业任务单是否存在
+     *
      * @param companyId
      * @return
      */
@@ -318,10 +321,17 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
         //如有关系数据，则表示该客户已经开户过，返回开户信息即可；如没有关系数据则从任务单表中获取开户信息；
         List<ComAccountExtBO> extBOS = result > 0 ? sComAccountMapper.getComAccountByCompanyId(paramBO) : baseMapper.getComTaskByCompanyId(paramBO);
 
-        if(null != extBOS && extBOS.size() > 0){
+        if (null != extBOS && extBOS.size() > 0) {
             accountExtBO = extBOS.get(0);
             //处理状态的转换，客服中心只显示用
             accountExtBO.setTaskStatus(ComTaskStatus.getValue(Integer.parseInt(accountExtBO.getTaskStatus())));
+            if (!StringUtil.isEmpty(accountExtBO.getComAccountId())) {
+                List<SsAccountRatio> ssAccountRatioList = ssAccountRatioMapper.queryRatioByAccountId(accountExtBO.getComAccountId().toString());
+                if (ssAccountRatioList != null && ssAccountRatioList.size() > 0) {
+                    SsAccountRatio ssAccountRatio = ssAccountRatioList.get(0);
+                    accountExtBO.setComRatio(ssAccountRatio.getComRatio());
+                }
+            }
         }
         return accountExtBO;
     }

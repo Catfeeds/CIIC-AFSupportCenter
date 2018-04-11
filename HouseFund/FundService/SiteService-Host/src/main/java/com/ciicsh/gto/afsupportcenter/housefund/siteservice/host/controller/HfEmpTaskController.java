@@ -62,7 +62,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
     @RequestMapping("/hfEmpTaskQuery")
     @Log("雇员公积金任务查询")
     public JsonResult<PageRows> hfEmpTaskQuery(@RequestBody PageInfo pageInfo) {
-        return JsonResultKit.of(business.queryHfEmpTaskInPage(pageInfo, StringUtils.join(
+        return JsonResultKit.of(business.queryHfEmpTaskInPage(pageInfo, UserContext.getUserId(), StringUtils.join(
             new Integer[] {
                 HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK
 //                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
@@ -80,7 +80,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
     public void hfEmpTaskExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         pageInfo.setPageSize(10000);
         pageInfo.setPageNum(0);
-        PageRows<HfEmpTaskExportBo> result = business.queryHfEmpTaskInPage(pageInfo, StringUtils.join(
+        PageRows<HfEmpTaskExportBo> result = business.queryHfEmpTaskInPage(pageInfo, UserContext.getUserId(), StringUtils.join(
             new Integer[] {
                 HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK
 //                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
@@ -128,7 +128,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
     @RequestMapping("/hfEmpTaskRejectQuery")
     @Log("雇员公积金任务查询")
     public JsonResult<PageRows> hfEmpTaskRejectQuery(@RequestBody PageInfo pageInfo) {
-        return JsonResultKit.of(business.queryHfEmpTaskRejectInPage(pageInfo, StringUtils.join(
+        return JsonResultKit.of(business.queryHfEmpTaskRejectInPage(pageInfo, UserContext.getUserId(), StringUtils.join(
             new Integer[] {
                 HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK
 //                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
@@ -146,7 +146,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
     public void hfEmpTaskRejectExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         pageInfo.setPageSize(10000);
         pageInfo.setPageNum(0);
-        PageRows<HfEmpTaskRejectExportBo> result = business.queryHfEmpTaskRejectInPage(pageInfo, StringUtils.join(
+        PageRows<HfEmpTaskRejectExportBo> result = business.queryHfEmpTaskRejectInPage(pageInfo, UserContext.getUserId(), StringUtils.join(
             new Integer[] {
                 HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK
 //                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
@@ -164,7 +164,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
             int pageNum = (int) Math.ceil(total / pageInfo.getPageSize());
             for(int i = 1; i < pageNum; i++) {
                 pageInfo.setPageNum(i);
-                result = business.queryHfEmpTaskRejectInPage(pageInfo, StringUtils.join(
+                result = business.queryHfEmpTaskRejectInPage(pageInfo, UserContext.getUserId(), StringUtils.join(
                     new Integer[] {
                         HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK
 //                        HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
@@ -215,7 +215,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
         Collection<Object> objects = pageInfo.getParams().values();
 
         Writer writer = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
-        String title = "序号|1|||姓名|单边比例|单边比例 |||缴费金额|1010|身份证号码|出生日期|性别|单边金额|单边金额 ||缴费基数|||||||||-1|";
+        String title = "序号|1|||姓名|单边比例|单边比例|||缴费金额|1010|身份证号码|出生日期|性别|单边金额|单边金额||缴费基数|||||||||-1|";
         String template = "%1$d|1|||{%2$s}.{employeeName}|%3$s|%4$s|||%5$s|1010|{%2$s}.{idNum}|{%2$s}.{birthday}|{%2$s}.{gender}|%6$s|%7$s||%8$s|||||||||-1|";
 
 

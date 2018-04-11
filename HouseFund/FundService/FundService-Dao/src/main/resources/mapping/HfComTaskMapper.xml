@@ -129,8 +129,20 @@
             <if test="hfTypeName!= null">
                 AND ht.hf_type_name = TRIM(#{hfTypeName})
             </if>
+            <if test="hfType!= null">
+                AND hft.hf_type = #{hfType}
+            </if>
             <if test="taskStatusString!= null">
                 AND hft.task_status IN (${taskStatusString})
+            </if>
+            <if test="taskStatus!= null">
+                AND hft.task_status =${taskStatus}
+            </if>
+            <if test="hfAccountType!= null">
+                AND hca.hf_account_type = ${hfAccountType}
+            </if>
+            <if test="paymentBank!= null">
+                AND hca.payment_bank = ${paymentBank}
             </if>
         </where>
         ORDER BY hft.com_task_id

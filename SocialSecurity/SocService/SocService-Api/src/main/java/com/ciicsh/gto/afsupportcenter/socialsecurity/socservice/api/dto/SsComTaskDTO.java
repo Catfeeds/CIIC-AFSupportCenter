@@ -181,6 +181,10 @@ public class SsComTaskDTO{
      */
     private String leaderShipName;
     /**
+     * 修改者姓名
+     */
+    private String modifiedDisplayName;
+    /**
      * 修改者ID
      */
     private String modifiedBy;
@@ -725,5 +729,13 @@ public class SsComTaskDTO{
 
     public void setLeaderShipName(String leaderShipName) {
         this.leaderShipName = leaderShipName;
+    }
+
+    public String getModifiedDisplayName() {
+        return modifiedDisplayName;
+    }
+
+    public void setModifiedDisplayName(String modifiedDisplayName) {
+        this.modifiedDisplayName = modifiedDisplayName;
     }
 }

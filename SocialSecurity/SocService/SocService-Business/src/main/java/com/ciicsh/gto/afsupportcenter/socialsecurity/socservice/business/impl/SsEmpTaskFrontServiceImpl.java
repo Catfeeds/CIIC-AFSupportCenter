@@ -17,6 +17,7 @@ import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.enumeration.ProcessCategory;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,11 +68,12 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
     )
     @Override
     public boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer processCategory, Integer isChange,
-                                 String oldAgreementId, AfEmployeeInfoDTO dto) {
+                                 String oldAgreementId, AfEmployeeInfoDTO dto,
+                                 AfCompanyDetailResponseDTO afCompanyDetailResponseDTO) {
         boolean result = false;
         try {
             //插入数据到雇员任务单表
-            saveSsEmpTask(taskMsgDTO, taskCategory, processCategory, isChange, oldAgreementId, dto);
+            saveSsEmpTask(taskMsgDTO, taskCategory, processCategory, isChange, oldAgreementId, dto, afCompanyDetailResponseDTO);
             result = true;
         } catch (Exception e) {
             result = false;
@@ -114,7 +116,8 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
     )
     @Override
     public boolean saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType, Integer processCategory, Integer isChange,
-                                 String oldAgreementId, AfEmployeeInfoDTO dto) throws Exception {
+                                 String oldAgreementId, AfEmployeeInfoDTO dto,
+                                 AfCompanyDetailResponseDTO afCompanyDetailResponseDTO) throws Exception {
         //基本信息
         AfEmployeeCompanyDTO afEmployeeCompanyDTO = dto.getEmployeeCompany();
 
@@ -181,6 +184,11 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         ssEmpTask.setCreatedTime(LocalDateTime.now());
         ssEmpTask.setLeaderShipId(afEmployeeCompanyDTO.getLeadershipId());
         ssEmpTask.setLeaderShipName(afEmployeeCompanyDTO.getLeadershipName());
+
+        if (afCompanyDetailResponseDTO != null) {
+            ssEmpTask.setServiceCenterId(afCompanyDetailResponseDTO.getServiceCenterId());
+            ssEmpTask.setServiceCenter(afCompanyDetailResponseDTO.getServiceCenter());
+        }
 
         //社保缴纳段开始月份YYYYMM
         for (AfEmpSocialDTO socialDto : socialList) {

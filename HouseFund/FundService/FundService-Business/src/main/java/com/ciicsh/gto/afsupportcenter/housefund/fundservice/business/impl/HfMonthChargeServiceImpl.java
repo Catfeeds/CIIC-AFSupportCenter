@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankExportBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankQueryBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountClassService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfMonthChargeService;
@@ -13,8 +15,11 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogMe
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfMonthChargeConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfMonthChargeMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentAccountMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccountClass;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
@@ -39,6 +44,10 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
     @Autowired
     private HfComAccountClassService hfComAccountClassService;
     @Autowired
+    private HfPaymentAccountMapper hfPaymentAccountMapper;
+    @Autowired
+    private HfPaymentMapper hfPaymentMapper;
+    @Autowired
     private LogApiUtil logApiUtil;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
@@ -57,13 +66,14 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
     }
 
     @Override
-    public HfMonthChargeDiffBo getHfMonthChargeDiffSum(HfMonthChargeBo hfMonthChargeBo) {
+    public List<HfMonthChargeDiffBo> getHfMonthChargeDiffSum(HfMonthChargeBo hfMonthChargeBo) {
         return baseMapper.getHfMonthChargeDiffSum(hfMonthChargeBo);
     }
 
     @Override
-    public PageRows<HFMonthChargeReportBO> queryHfMonthChargeReport(PageInfo pageInfo) {
+    public PageRows<HFMonthChargeReportBO> queryHfMonthChargeReport(PageInfo pageInfo, String userId) {
         HFMonthChargeQueryBO hfMonthChargeQueryBO = pageInfo.toJavaObject(HFMonthChargeQueryBO.class);
+        hfMonthChargeQueryBO.setUserId(userId);
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryHfMonthChargeReport(hfMonthChargeQueryBO));
     }
 
@@ -110,6 +120,22 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         comAccountParamExtBo.setHfAccountType(hfMonthChargeQueryBO.getHfAccountType());
         comAccountParamExtBo.setBasicHfComAccount(hfMonthChargeQueryBO.getBasicHfComAccount());
         comAccountParamExtBo.setAddedHfComAccount(hfMonthChargeQueryBO.getAddedHfComAccount());
+        comAccountParamExtBo.setUserId(hfMonthChargeQueryBO.getUserId());
+        //如果是汇缴支付给发起的报表清册
+        if(Optional.ofNullable(hfMonthChargeQueryBO.getPaymentId()).isPresent()){
+            HfPayment hfPayment=new HfPayment();
+            hfPayment.setPaymentId(hfMonthChargeQueryBO.getPaymentId());
+            hfPayment = hfPaymentMapper.selectOne(hfPayment);
+            hfMonthChargeQueryBO.setHfMonth(hfPayment.getPaymentMonth());
+
+            Map<String,Object> map=new HashMap<>();
+            List<String> listAccounts=new ArrayList<>();
+            map.put("payment_id",hfMonthChargeQueryBO.getPaymentId());
+            hfPaymentAccountMapper.selectByMap(map).stream().forEach(acc->{
+                listAccounts.add(acc.getComAccountId());
+            });
+            hfMonthChargeQueryBO.setAddedComAccountArray( listAccounts.toArray(new String[listAccounts.size()]));
+        }
         List<ComAccountExtBo> comAccountExtBoList = hfComAccountService.queryHfComAccountList(comAccountParamExtBo);
         List<Map<String, Object>> resultList = new ArrayList<>();
 
@@ -480,6 +506,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         comAccountParamExtBo.setHfAccountType(hfMonthChargeQueryBO.getHfAccountType());
         comAccountParamExtBo.setBasicHfComAccount(hfMonthChargeQueryBO.getBasicHfComAccount());
         comAccountParamExtBo.setAddedHfComAccount(hfMonthChargeQueryBO.getAddedHfComAccount());
+        comAccountParamExtBo.setUserId(hfMonthChargeQueryBO.getUserId());
         List<ComAccountExtBo> comAccountExtBoList = hfComAccountService.queryHfComAccountList(comAccountParamExtBo);
         List<Map<String, Object>> resultList = new ArrayList<>();
 
@@ -532,6 +559,11 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         } else {
             throw new BusinessException("未查询到符合条件的企业账户信息");
         }
+    }
+
+    @Override
+    public List<HFNetBankExportBO> queryNetBankData(HFNetBankQueryBO hfNetBankQueryBO) {
+        return baseMapper.queryNetBankData(hfNetBankQueryBO);
     }
 
     private List<Map<String, Object>> getRepairDetailsPageListOfOneComAccount(HFMonthChargeQueryBO hfMonthChargeQueryBO,

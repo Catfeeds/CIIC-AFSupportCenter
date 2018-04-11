@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 public class HfMonthChargeDiffBo implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    private String ssMonthBelong;
     private BigDecimal amount;
     private BigDecimal empAmount;
     private BigDecimal comAmount;

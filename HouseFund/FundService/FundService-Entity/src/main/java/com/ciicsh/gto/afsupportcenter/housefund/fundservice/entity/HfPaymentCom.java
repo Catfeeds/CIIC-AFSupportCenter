@@ -56,8 +56,8 @@ public class HfPaymentCom implements Serializable {
     /**
      * 补缴金额
      */
-	@TableField("bujiao_amount")
-	private BigDecimal bujiaoAmount;
+	@TableField("repair_amount")
+	private BigDecimal repairAmount;
     /**
      * 汇缴人数
      */
@@ -163,12 +163,12 @@ public class HfPaymentCom implements Serializable {
 		this.remittedAmount = remittedAmount;
 	}
 
-	public BigDecimal getBujiaoAmount() {
-		return bujiaoAmount;
+	public BigDecimal getRepairAmount() {
+		return repairAmount;
 	}
 
-	public void setBujiaoAmount(BigDecimal bujiaoAmount) {
-		this.bujiaoAmount = bujiaoAmount;
+	public void setRepairAmount(BigDecimal repairAmount) {
+		this.repairAmount = repairAmount;
 	}
 
 	public Integer getRemittedCountEmp() {
@@ -246,7 +246,7 @@ public class HfPaymentCom implements Serializable {
 			", companyId=" + companyId +
 			", paymentBank=" + paymentBank +
 			", remittedAmount=" + remittedAmount +
-			", bujiaoAmount=" + bujiaoAmount +
+			", repairAmount=" + repairAmount +
 			", remittedCountEmp=" + remittedCountEmp +
 			", daozhangAmount=" + daozhangAmount +
 			", daozhangCountEmp=" + daozhangCountEmp +

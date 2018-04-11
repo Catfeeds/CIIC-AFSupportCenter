@@ -24,4 +24,6 @@ public class ComAccountParamExtBo {
     private String addedHfComAccount;
     //账户类型
     private Integer hfType;
+
+    private String userId;
 }

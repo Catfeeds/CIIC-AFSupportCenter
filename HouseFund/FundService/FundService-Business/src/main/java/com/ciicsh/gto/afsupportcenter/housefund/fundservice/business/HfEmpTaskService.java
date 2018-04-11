@@ -7,6 +7,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectEx
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @param pageInfo
      * @return
      */
-    PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo);
+    PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo, String userId);
 
     /**
      * 分页查询雇员任务单信息
@@ -28,7 +29,7 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @param exceptTaskCategories
      * @return
      */
-    PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo, String exceptTaskCategories);
+    PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo, String userId, String exceptTaskCategories);
 
     /**
      * 分页查询批退雇员任务单信息
@@ -36,7 +37,7 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @param pageInfo
      * @return
      */
-    PageRows<HfEmpTaskRejectExportBo> queryHfEmpTaskRejectInPage(PageInfo pageInfo, String exceptTaskCategories);
+    PageRows<HfEmpTaskRejectExportBo> queryHfEmpTaskRejectInPage(PageInfo pageInfo, String userId, String exceptTaskCategories);
 
 
     /**
@@ -59,7 +60,7 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @throws Exception
      */
     boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory,Integer processCategory,Integer taskCategory, String oldAgreementId, Integer isChange,
-                         AfEmployeeInfoDTO dto) throws Exception;
+                         AfEmployeeInfoDTO dto, AfCompanyDetailResponseDTO afCompanyDetailResponseDTO) throws Exception;
 
 
     /**

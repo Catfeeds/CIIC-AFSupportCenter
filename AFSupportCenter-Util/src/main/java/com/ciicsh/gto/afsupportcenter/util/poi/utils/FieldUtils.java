@@ -18,7 +18,7 @@ import java.util.Map;
 public class FieldUtils {
 
     /**
-     * The constant log.
+     * The enums log.
      */
     protected transient final static Logger log = LoggerFactory.getLogger(FieldUtils.class);
 

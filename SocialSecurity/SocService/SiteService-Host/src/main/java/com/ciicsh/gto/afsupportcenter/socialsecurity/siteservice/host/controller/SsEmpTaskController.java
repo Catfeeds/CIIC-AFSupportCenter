@@ -96,7 +96,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             task.setTaskStatus(TaskStatusConst.REJECTION);
             list.add(task);
             //调用工作流
-            TaskCommonUtils.completeTask(String.valueOf(task.getEmpTaskId()), commonApiUtils, UserContext.getUserId());
+            TaskCommonUtils.completeTask(String.valueOf(task.getEmpTaskId()), commonApiUtils, UserContext.getUserName());
         }
         boolean isSuccess = business.updateBatchById(list);
         return JsonResultKit.of(isSuccess);

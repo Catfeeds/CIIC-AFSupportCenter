@@ -22,6 +22,10 @@
             <artifactId>afsupportcenter-socialsecurity-socservice-dao</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.ciicsh.gt1.salecenter</groupId>
+            <artifactId>gt1.salecenter.apiservice-api</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
@@ -56,10 +60,6 @@
             <artifactId>gt1.companycenter.queryservice-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.ciicsh.gt1.salecenter</groupId>
-            <artifactId>gt1.salecenter.apiservice-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.ciicsh.gt1.commonservice</groupId>
             <artifactId>sheetservice-api</artifactId>
         </dependency>
@@ -77,8 +77,9 @@
             <artifactId>gt1.employeecenter.apiservice-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.ciicsh.gt1.productcenter</groupId>
-            <artifactId>gt1.productcenter.apiservice-api</artifactId>
+            <groupId>com.ciicsh.gt1.employeecenter</groupId>
+            <artifactId>employeecenter-util</artifactId>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.ciicsh.gt1</groupId>

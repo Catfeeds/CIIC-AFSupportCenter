@@ -14,6 +14,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmResignLink;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.resignSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -144,7 +145,15 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
             Map<String,Object> variables = new HashMap<>();
             variables.put("status", true);
             variables.put("remark",ReasonUtil.getTgfk(bo.getResignFeedback()));
-            variables.put("assignee","system");
+            String userName = "system";
+            try {
+                userName = UserContext.getUser().getDisplayName();
+            } catch (Exception e) {
+
+            }
+            variables.put("assignee",userName);
+            variables.put("fire_material",true);
+            variables.put("empTaskId",bo.getEmpTaskId());
             TaskCommonUtils.completeTask(amEmpTask.getTaskId(),employeeInfoProxy,variables);
         }
 
