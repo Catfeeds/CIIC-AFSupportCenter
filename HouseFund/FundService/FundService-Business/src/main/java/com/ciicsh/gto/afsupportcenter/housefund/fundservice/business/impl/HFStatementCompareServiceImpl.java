@@ -17,6 +17,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfStatementCo
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfStatementComparePO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfStatementCompareResultPO;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,8 +83,8 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
         po.setHfAccountType(newStatement.getHfAccountType());
         po.setImpRecordCount(lst.size());
         po.setActive(true);
-        po.setCreatedBy(newStatement.getCreatedBy());
-        po.setModifiedBy(newStatement.getCreatedBy());
+        po.setCreatedBy(UserContext.getUser().getDisplayName());
+        po.setModifiedBy(UserContext.getUser().getDisplayName());
 
 
         baseMapper.insert(po);

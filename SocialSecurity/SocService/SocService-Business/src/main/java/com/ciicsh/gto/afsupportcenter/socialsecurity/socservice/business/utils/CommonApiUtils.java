@@ -14,6 +14,8 @@ import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeSearchDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.Page;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
+import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
 import com.ciicsh.gto.settlementcenter.invoicecommandservice.api.ComeAccountCommandProxy;
 import com.ciicsh.gto.settlementcenter.invoicecommandservice.api.dto.JsonResult;
 import com.ciicsh.gto.sheetservice.api.SheetServiceProxy;
@@ -52,6 +54,9 @@ public class CommonApiUtils {
 
     @Autowired
     ComeAccountCommandProxy comeAccountCommandProxy;
+
+    @Autowired
+    CompanyProxy companyProxy;
 
     /**
      * 调用客服中心的完成任务接口
@@ -140,4 +145,18 @@ public class CommonApiUtils {
         return mp;
     }
 
+    /**
+     * 根据客户编号获取服务中心
+     *
+     * @param companyId
+     * @return
+     */
+    public AfCompanyDetailResponseDTO getServiceCenterInfo(String companyId) {
+        com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> jsonResult = companyProxy.afDetail(companyId);
+
+        if (jsonResult != null && jsonResult.getCode() == 0) {
+            return jsonResult.getObject();
+        }
+        return null;
+    }
 }

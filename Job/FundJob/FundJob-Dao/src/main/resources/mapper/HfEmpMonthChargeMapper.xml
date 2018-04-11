@@ -46,13 +46,13 @@
         AND mc.payment_type in(7,8,9,10)
         AND mc.hf_month=#{paymentMonth}
         AND pc.payment_month=#{paymentMonth}
-        AND pc.com_account_id=#{paymentAccountId})a
+        AND pc.payment_account_id=#{paymentAccountId})a
         on a.ss_month_belong=mc.ss_month_belong AND a.employee_id=mc.employee_id and mc.hf_type=a.hf_type
         WHERE mc.is_active=1
         AND mc.payment_type in(1,2,3,4,5,6,11)
         AND mc.hf_month=#{paymentMonth}
         AND pc.payment_month=#{paymentMonth}
-        AND pc.com_account_id=#{paymentAccountId}
+        AND pc.payment_account_id=#{paymentAccountId}
         and (IFNULL(mc.amount,0)-IFNULL(a.amount,0))!=0
     </select>
 
@@ -72,14 +72,14 @@
         AND mc.payment_type in(7,8,9,10)
         AND mc.hf_month=#{paymentMonth}
         AND pc.payment_month=#{paymentMonth}
-        AND pc.com_account_id=#{paymentAccountId})a
+        AND pc.payment_account_id=#{paymentAccountId})a
         on a.ss_month_belong=mc.ss_month_belong AND a.employee_id=mc.employee_id and mc.hf_type=a.hf_type
         WHERE mc.is_active=1
         AND mc.payment_type in(1,2,3,4,5,6,11)
         AND mc.hf_month=#{paymentMonth}
         AND pc.payment_month=#{paymentMonth}
-        AND pc.com_account_id=#{paymentAccountId}
-        and (mc.amount-a.amount)!=0
+        AND pc.payment_account_id=#{paymentAccountId}
+        and (IFNULL(mc.amount,0)-IFNULL(a.amount,0))!=0
         and mc.emp_payment_status=0
 
     </select>

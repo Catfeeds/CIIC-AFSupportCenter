@@ -1,11 +1,13 @@
 package com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.message;
 
 import com.alibaba.fastjson.JSON;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeSocialProxy;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComTaskService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentAccountService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogMessage;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
@@ -14,6 +16,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.FundCategory;
 import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.ProcessCategory;
 import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.TaskCategory;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.apache.commons.lang.StringUtils;
@@ -43,6 +46,8 @@ public class KafkaReceiver {
     private AfEmployeeSocialProxy employeeSocialProxy;
     @Autowired
     private LogApiUtil log;
+    @Autowired
+    private CommonApiUtils commonApiUtils;
 
     /**
      * 雇员公积金新进任务单
@@ -476,8 +481,15 @@ public class KafkaReceiver {
             //调用当前雇员信息获取接口
             AfEmployeeInfoDTO dto = getEmpInfo(taskMsgDTO,processCategory,taskCategory, oldAgreementId, isChange);
             if (dto != null) {
+                AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
+                AfCompanyDetailResponseDTO afCompanyDetailResponseDTO = null;
+
+                if (companyDto != null) {
+                    afCompanyDetailResponseDTO = commonApiUtils.getServiceCenterInfo(companyDto.getCompanyId());
+                }
+
                 //插入数据到雇员任务单表
-                return hfEmpTaskService.addEmpTask(taskMsgDTO, fundCategory, processCategory,taskCategory, oldAgreementId, isChange, dto);
+                return hfEmpTaskService.addEmpTask(taskMsgDTO, fundCategory, processCategory,taskCategory, oldAgreementId, isChange, dto, afCompanyDetailResponseDTO);
             }
             else {
                 logger.error("error:公积金雇员信息获取失败！");

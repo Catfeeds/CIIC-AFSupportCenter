@@ -84,6 +84,8 @@ public class HfEmpTaskHandleBo implements Serializable {
     private String leaderShipName;
     private String createdBy;
     private String createdDisplayName;
+    private Integer serviceCenterId;
+    private String serviceCenter;
 
     public String getHfTypeName() {
         return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.hfType), SocialSecurityConst.FUND_TYPE_KEY, false);

@@ -115,7 +115,12 @@ public class CommonApiUtils {
      * @param companyId
      * @return
      */
-    public com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> getServiceCenterInfo(String companyId) {
-        return companyProxy.afDetail(companyId);
+    public AfCompanyDetailResponseDTO getServiceCenterInfo(String companyId) {
+        com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> jsonResult = companyProxy.afDetail(companyId);
+
+        if (jsonResult != null && jsonResult.getCode() == 0) {
+            return jsonResult.getObject();
+        }
+        return null;
     }
 }

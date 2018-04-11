@@ -1512,7 +1512,10 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 hfMonthCharge.setModifiedBy(hfEmpTask.getModifiedBy());
                 hfMonthChargeList.add(hfMonthCharge);
             }
-            hfMonthChargeService.insertBatch(hfMonthChargeList);
+
+            if (CollectionUtils.isNotEmpty(hfMonthChargeList)) {
+                hfMonthChargeService.insertBatch(hfMonthChargeList);
+            }
         }
     }
 

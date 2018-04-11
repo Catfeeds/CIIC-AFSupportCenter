@@ -31,6 +31,7 @@ public class HfComTaskBo extends HfComTask {
      */
     private String hfTypeName;
 
+    private String hfAccountType;
     /**
      * 客户Id
      */
