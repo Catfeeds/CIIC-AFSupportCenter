@@ -12,6 +12,7 @@
 		<result column="id_num" property="idNum" />
         <result column="type" property="type" />
         <result column="status" property="status" />
+        <result column="template_type" property="templateType" />
     </resultMap>
 
     <select id="select" resultMap="BaseResultMap">
@@ -30,7 +31,8 @@
         company_id,
         company_name,
         type,
-        status
+        status,
+        template_type
     </sql>
 
     <sql id="SEL_LIST_WHERR">

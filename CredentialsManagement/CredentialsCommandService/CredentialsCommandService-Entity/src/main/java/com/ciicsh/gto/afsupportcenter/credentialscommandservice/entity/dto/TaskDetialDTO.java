@@ -26,6 +26,14 @@ public class TaskDetialDTO implements Serializable{
      */
     private String companyId;
     /**
+     * 雇员类型
+     */
+    private String templateType;
+    /**
+     * 基础产品id
+     */
+    private String basicProductId;
+    /**
      * 材料ids
      */
     private String materialIds;
@@ -213,6 +221,22 @@ public class TaskDetialDTO implements Serializable{
      * 修改者登录名
      */
     private String modifiedBy;
+
+    public String getBasicProductId() {
+        return basicProductId;
+    }
+
+    public void setBasicProductId(String basicProductId) {
+        this.basicProductId = basicProductId;
+    }
+
+    public String getTemplateType() {
+        return templateType;
+    }
+
+    public void setTemplateType(String templateType) {
+        this.templateType = templateType;
+    }
 
     public String getHasShPerson() {
         return hasShPerson;

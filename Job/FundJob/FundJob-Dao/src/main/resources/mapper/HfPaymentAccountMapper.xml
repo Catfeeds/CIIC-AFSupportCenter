@@ -33,12 +33,37 @@
     </select>
 
     <select id="insertPaymentAccountJob">
-        INSERT INTO hf_payment_account(com_account_id,com_account_class_id,hf_type,payment_month,payment_status)
-        select ca.com_account_id,cac.com_account_class_id,cac.hf_type,cac.com_hf_month,if(ca.payment_way=1,2,1)
-        from hf_com_account_class cac INNER JOIN hf_com_account ca ON ca.com_account_id=cac.com_account_id
-        where cac.is_active=1 and ca.is_active=1 and IFNULL(cac.end_type ,0)=0 and cac.com_hf_month is not null
-        and not EXISTS(select 1 from hf_payment_account pa where pa.com_account_class_id=cac.com_account_class_id
-        and pa.payment_month=cac.com_hf_month)
+        INSERT INTO hf_payment_account (
+            com_account_id,
+            com_account_class_id,
+            hf_type,
+            payment_month,
+            payment_status
+        ) SELECT
+            ca.com_account_id,
+            cac.com_account_class_id,
+            cac.hf_type,
+            cac.com_hf_month,
+        IF (ca.payment_way = 1, 2, 1)
+        FROM
+            hf_com_account_class cac
+        INNER JOIN hf_com_account ca ON ca.com_account_id = cac.com_account_id
+        WHERE
+            cac.is_active = 1
+        AND ca.is_active = 1
+        AND ca.state = 1
+        AND ca.hf_account_type!=4
+        AND ifnull(cac.end_type,'')=''
+        AND ifnull(cac.com_hf_month,'')!=''
+        AND NOT EXISTS (
+            SELECT
+                1
+            FROM
+                hf_payment_account pa
+            WHERE
+                pa.com_account_class_id = cac.com_account_class_id
+            AND pa.payment_month = cac.com_hf_month
+        )
 
     </select>
 

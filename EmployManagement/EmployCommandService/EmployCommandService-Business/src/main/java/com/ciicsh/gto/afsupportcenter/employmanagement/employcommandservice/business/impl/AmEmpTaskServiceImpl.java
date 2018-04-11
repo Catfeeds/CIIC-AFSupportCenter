@@ -5,16 +5,14 @@ import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.*;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmCompanySetService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpCustomService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpMaterialService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpCustom;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpEmployee;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpMaterial;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao.AmEmpTaskMapper;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpTaskService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.employSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
@@ -68,6 +66,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Autowired
     private IAmEmpCustomService  amEmpCustomService;
+
+    @Autowired
+    private AmEmpEmployeeService  amEmpEmployeeService;
 
 
     @Override
@@ -191,6 +192,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             }
 
             this.saveEmpCustom(employeeCompany,taskMsgDTO.getTaskId(),bo.getCompanyId());
+
+            this.saveEmpEmployee(taskMsgDTO,bo);
 
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -691,6 +694,38 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         } catch (Exception e) {
             logger.error(e.getMessage(),e);
         }
+
+    }
+
+    void saveEmpEmployee(TaskCreateMsgDTO taskMsgDTO,AmEmpTaskBO bo){
+
+
+        EmployeeHireInfoQueryDTO employeeHireInfoQueryDTO = new EmployeeHireInfoQueryDTO();
+        employeeHireInfoQueryDTO.setCompanyId(bo.getCompanyId());
+        employeeHireInfoQueryDTO.setEmployeeId(bo.getEmployeeId());
+        com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeHireInfoDTO> employeeHireInfo = null;//雇佣雇佣信息接口
+
+        try {
+            employeeHireInfo = employeeInfoProxy.getEmployeeHireInfo(employeeHireInfoQueryDTO);
+
+            EmployeeHireInfoDTO employeeHireInfoDTO = employeeHireInfo.getData();
+
+            AmEmpEmployee  amEmpEmployee = new AmEmpEmployee();
+            amEmpEmployee.setEmployeeId(bo.getEmployeeId());
+            amEmpEmployee.setCompanyId(bo.getCompanyId());
+            amEmpEmployee.setTaskId(taskMsgDTO.getTaskId());
+            amEmpEmployee.setLaborStartDate(employeeHireInfoDTO.getLaborStartDate());
+            amEmpEmployee.setLaborEndDate(employeeHireInfoDTO.getLaborEndDate());
+            amEmpEmployee.setGender(employeeHireInfoDTO.getGender());
+            amEmpEmployee.setIdNum(employeeHireInfoDTO.getIdNum());
+            amEmpEmployee.setEmployeeName(employeeHireInfoDTO.getEmployeeName());
+
+            amEmpEmployeeService.insert(amEmpEmployee);
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+        }
+
+
 
     }
 

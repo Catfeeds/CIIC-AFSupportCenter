@@ -247,7 +247,10 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
             amResignBO.setHandleType(amEmploymentBO.getHandleType());
             amResignBO.setEmployFeedback(amEmploymentBO.getEmployFeedback());
+            amResignBO.setEmploymentId(amEmploymentBO.getEmploymentId());
             amResignBO.setEmployDocPaymentTo(amArchiveBO.getEmployDocPaymentTo());
+
+            amResignBO.setArchiveDirection(employeeBO.getArchiveDirection());
         }else{
             amResignBO.setYuliuDocNum(amArchiveBO.getYuliuDocNum());
             amResignBO.setDocNum(amArchiveBO.getDocNum());
@@ -257,7 +260,10 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
             amResignBO.setHandleType(amEmploymentBO.getHandleType());
             amResignBO.setEmployFeedback(amEmploymentBO.getEmployFeedback());
+            amResignBO.setEmploymentId(amEmploymentBO.getEmploymentId());
             amResignBO.setEmployDocPaymentTo(amArchiveBO.getEmployDocPaymentTo());
+
+            amResignBO.setArchiveDirection(employeeBO.getArchiveDirection());
 
         }
         amResignBO.setFirstInDate(employeeBO.getFirstInDate());

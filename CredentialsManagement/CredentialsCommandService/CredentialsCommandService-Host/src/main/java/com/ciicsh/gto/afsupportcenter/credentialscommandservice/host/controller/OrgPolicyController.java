@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * @Author: guwei
- * @Description:
+ * @Description: 政策维护控制器
  * @Date: Created in 17:06 2018/1/16
  */
 @RestController
@@ -72,10 +72,10 @@ public class OrgPolicyController {
         BeanUtils.copyProperties(orgPolicyPageDTO, orgPolicy);
         //TODO
         if (orgPolicy.getOrgPoilcyId() == null ) {
-            orgPolicy.setCreatedBy("gu");
+            orgPolicy.setCreatedBy("test");
             orgPolicy.setCreatedTime(new Date());
         }
-        orgPolicy.setModifiedBy("gu");
+        orgPolicy.setModifiedBy("test");
         orgPolicy.setModifiedTime(new Date());
         return JsonResult.success(orgPolicyService.insertOrUpdate(orgPolicy));
     }

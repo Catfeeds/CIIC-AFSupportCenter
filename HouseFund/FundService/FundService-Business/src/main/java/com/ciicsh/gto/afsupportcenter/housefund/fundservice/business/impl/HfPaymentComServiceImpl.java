@@ -23,7 +23,9 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.beans.Transient;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -48,10 +50,11 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
      * 公积金汇缴支付-生成汇缴支付客户名单
      */
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public JsonResult createPaymentCom(HfFundPayCreatePaymentAccountPara params) {
         //查询出所有前端选择的基本和补充公积金账户
         HfCreatePaymentAccountBO hfCreatePaymentAccountBO=new HfCreatePaymentAccountBO();
-//List paymentAccountIds, String payee, String paymentMonth
+
         List<HfCreatePaymentAccountBO> paymentAccountList= hfPaymentComMapper.selectPaymentAccount( params.getListData());
         if (paymentAccountList.size()==0){
             return JsonResultKit.ofError("无数据可生成！");
@@ -113,7 +116,7 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
         hfPaymentCom.setHfType(hfCreatePaymentAccountBO.getHfType());
         hfPaymentCom.setCompanyId(hfCreatePaymentAccountBO.getCompanyId());
         hfPaymentCom.setPaymentBank(String.valueOf(hfCreatePaymentAccountBO.getPaymentBank()));
-        hfPaymentCom.setBujiaoAmount(hfCreatePaymentAccountBO.getPayInBackAmount());//补缴金额
+        hfPaymentCom.setRepairAmount(hfCreatePaymentAccountBO.getPayInBackAmount());//补缴金额
         hfPaymentCom.setRemittedAmount(hfCreatePaymentAccountBO.getSumAmount());//汇缴金额
         hfPaymentCom.setCreatedBy(UserContext.getUserName());
         hfPaymentCom.setModifiedBy(UserContext.getUserName());

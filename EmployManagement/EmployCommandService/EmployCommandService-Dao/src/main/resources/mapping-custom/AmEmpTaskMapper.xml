@@ -342,7 +342,7 @@
             and  acr.company_id=#{companyId}
         </if>
     </select>
-    <select id="querySocialCi">
+    <select id="querySocialCi" resultMap="BaseResultMapDTO">
         select ca.ss_account,ca.settlement_area,ca.modified_time as accountRepairDate,ca.ss_pwd
         FROM ss_com_account ca where ca.is_active=1 and ca.ss_account_type=1
     </select>
@@ -356,11 +356,13 @@
         a.handle_type,
         c.employ_feedback,
         c.employ_feedback_opt_date,
-        a.employ_operate_man
+        a.employ_operate_man,
+        d.labor_start_date
         FROM
         am_employment a
         LEFT JOIN  am_emp_task b ON a.emp_task_id = b.emp_task_id
         LEFT JOIN  am_archive c on a.employment_id = c.employment_id
+        LEFT JOIN  am_emp_employee d on d.task_id = b.task_id
         where
         b.task_id = #{taskId}
     </select>
@@ -392,7 +394,7 @@
 
     <select id="queryResignByTaskId" resultMap="BaseResultMapResignDTO">
         SELECT
-        a.resign_date,
+        b.out_date as resign_date,
         a.return_doc_direct,
         a.return_doc_date,
         a.cache_date,

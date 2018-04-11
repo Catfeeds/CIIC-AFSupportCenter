@@ -79,7 +79,7 @@ public class HfEmpArchiveController extends  BasicController<HfEmpArchiveService
             json.setMessage("导入成功!");
         } else {
             json.setCode(1);
-            json.setMessage("导入失败! " + result);
+            json.setMessage("导入失败!原因是雇员姓名和身份证号在系统中找不到,名单如下： \n" + result.substring(0,result.length()-1));
         }
         return json;
     }

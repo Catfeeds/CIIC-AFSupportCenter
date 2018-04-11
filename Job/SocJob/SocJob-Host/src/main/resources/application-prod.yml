@@ -5,6 +5,12 @@ spring:
     url: jdbc:mysql://172.16.9.53:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
     username: root
     password: ciicit!#%
+  redis:
+    database: 0
+    host: 172.16.9.54
+    port: 7001
+    password:
+    timeout: 0
   cloud:
     stream:
       kafka:
