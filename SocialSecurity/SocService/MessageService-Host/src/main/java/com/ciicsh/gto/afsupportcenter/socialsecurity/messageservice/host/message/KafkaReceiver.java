@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.messageservice.host.message;
 
 import com.alibaba.fastjson.JSON;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeSocialProxy;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
@@ -8,12 +9,14 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComTa
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskFrontService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsPaymentComService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComTask;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.enumeration.LogInfo;
 import com.ciicsh.gto.afsupportcenter.util.enumeration.ProcessCategory;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.apache.commons.lang3.StringUtils;
@@ -47,6 +50,8 @@ public class KafkaReceiver {
 
     @Autowired
     LogService logService;
+    @Autowired
+    CommonApiUtils commonApiUtils;
 
     /**
      * 订阅社保新进任务单
@@ -246,7 +251,17 @@ public class KafkaReceiver {
                     }
                     // 调整状态更正时，oldEmpAgreementId是对应调整前协议，也同时对应更正前任务单的missionId
 //                    ssEmpTaskFrontService.saveEmpTaskTc(taskMsgDTO, taskCategory, ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory(),1, paramMap.get("oldEmpAgreementId").toString(), dto);
-                    ssEmpTaskFrontService.saveEmpTaskTc(taskMsgDTO, taskCategory, ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory(),1, null, dto);
+
+                    AfCompanyDetailResponseDTO afCompanyDetailResponseDTO = null;
+
+                    if (dto != null) {
+                        AfEmployeeCompanyDTO afEmployeeCompanyDTO = dto.getEmployeeCompany();
+
+                        if (afEmployeeCompanyDTO != null) {
+                            afCompanyDetailResponseDTO = commonApiUtils.getServiceCenterInfo(afEmployeeCompanyDTO.getCompanyId());
+                        }
+                    }
+                    ssEmpTaskFrontService.saveEmpTaskTc(taskMsgDTO, taskCategory, ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory(),1, null, dto, afCompanyDetailResponseDTO);
                 }
             } catch (Exception e) {
                 logService.error(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_UPDATE).setTextContent(e.getMessage()));
@@ -396,8 +411,18 @@ public class KafkaReceiver {
     private void saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType, Integer processCategory, String oldAgreementId, Integer isChange) {
         try {
             AfEmployeeInfoDTO dto = callEmpAgreement(taskMsgDTO, processCategory, oldAgreementId);
+            AfCompanyDetailResponseDTO afCompanyDetailResponseDTO = null;
+
+            if (dto != null) {
+                AfEmployeeCompanyDTO afEmployeeCompanyDTO = dto.getEmployeeCompany();
+
+                if (afEmployeeCompanyDTO != null) {
+                    afCompanyDetailResponseDTO = commonApiUtils.getServiceCenterInfo(afEmployeeCompanyDTO.getCompanyId());
+                }
+            }
+
             //保存雇员任务单表数据
-            ssEmpTaskFrontService.saveSsEmpTask(taskMsgDTO, socialType, processCategory, isChange, oldAgreementId, dto);
+            ssEmpTaskFrontService.saveSsEmpTask(taskMsgDTO, socialType, processCategory, isChange, oldAgreementId, dto, afCompanyDetailResponseDTO);
         } catch (Exception e) {
             logService.error(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle("saveSsEmpTask").setTextContent(e.getMessage()));
         }
