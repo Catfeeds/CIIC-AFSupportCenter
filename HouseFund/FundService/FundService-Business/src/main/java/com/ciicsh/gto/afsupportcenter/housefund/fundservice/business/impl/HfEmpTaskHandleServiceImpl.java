@@ -802,18 +802,12 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         BigDecimal ratioCom = hfEmpTaskPeriod.getRatioCom();
         BigDecimal ratioEmp = hfEmpTaskPeriod.getRatioEmp();
         BigDecimal amount = hfEmpTaskPeriod.getAmount();
-//        if (hfEmpTaskPeriod.getRatioCom() != null) {
-//            ratioCom = hfEmpTaskPeriod.getRatioCom();
-//        }
-//        if (hfEmpTaskPeriod.getRatioEmp() != null) {
-//            ratioEmp = hfEmpTaskPeriod.getRatioEmp();
-//        }
-//        if (hfEmpTaskPeriod.getAmount() != null) {
-//            amount = hfEmpTaskPeriod.getAmount();
-//        }
-        hfArchiveBasePeriod.setRatio(ratioCom.add(ratioEmp).setScale(3, BigDecimal.ROUND_HALF_UP));
-//        if (hfArchiveBasePeriod.getRatio().compareTo(BigDecimal.ZERO) > 0) {
+
+        String startMonth = hfEmpTaskPeriod.getStartMonth();
+        String endMonth = hfEmpTaskPeriod.getEndMonth();
+
         if (repairHfArchiveBasePeriod == null) {
+            hfArchiveBasePeriod.setRatio(ratioCom.add(ratioEmp).setScale(3, BigDecimal.ROUND_HALF_UP));
             hfArchiveBasePeriod.setAmount(CalculateSocialUtils.calculateByRoundType(hfEmpTaskPeriod.getAmount(), roundTypeInWeight));
             hfArchiveBasePeriod.setAmountEmp(
                 CalculateSocialUtils.calculateByRoundType(
@@ -824,7 +818,29 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     amount.multiply(ratioCom.divide(hfArchiveBasePeriod.getRatio(), 3, BigDecimal.ROUND_HALF_UP)),
                     roundTypes[0]));
         } else {
+            String basePeriodStartMonth = hfArchiveBasePeriod.getStartMonth();
+            String basePeriodEndMonth = hfArchiveBasePeriod.getEndMonth();
+
+            YearMonth startMonthDate = YearMonth.parse(startMonth, formatter);
+            YearMonth endMonthDate = YearMonth.parse(endMonth, formatter);
+
+            if (StringUtils.isNotEmpty(basePeriodEndMonth)) {
+                YearMonth basePeriodEndMonthDate = YearMonth.parse(basePeriodEndMonth, formatter);
+
+                if (basePeriodEndMonthDate.isBefore(startMonthDate)) {
+                    return;
+                } else if (basePeriodEndMonthDate.isBefore(endMonthDate)) {
+                    endMonth = basePeriodEndMonth;
+                }
+            }
+            YearMonth basePeriodStartMonthDate = YearMonth.parse(basePeriodStartMonth, formatter);
+
+            if (basePeriodStartMonthDate.isAfter(startMonthDate)) {
+                startMonth = basePeriodStartMonth;
+            }
+
             // 代码特殊处理，仅为了差额补缴时，不重新计算单月差额
+            hfArchiveBasePeriod.setRatio(ratioCom.add(ratioEmp).setScale(3, BigDecimal.ROUND_HALF_UP));
             hfArchiveBasePeriod.setAmountEmp(repairHfArchiveBasePeriod.getAmountEmp());
             hfArchiveBasePeriod.setComAmount(repairHfArchiveBasePeriod.getComAmount());
             hfArchiveBasePeriod.setAmount(
@@ -835,8 +851,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             hfArchiveBasePeriod.setDiffRepair(true);
         }
 
-        hfArchiveBasePeriod.setStartMonth(hfEmpTaskPeriod.getStartMonth());
-        hfArchiveBasePeriod.setEndMonth(hfEmpTaskPeriod.getEndMonth());
+        hfArchiveBasePeriod.setStartMonth(startMonth);
+        hfArchiveBasePeriod.setEndMonth(endMonth);
         hfArchiveBasePeriod.setHfMonth(hfEmpTaskPeriod.getHfMonth());
         hfArchiveBasePeriod.setRepairReason(hfEmpTaskPeriod.getRepairReason());
         hfArchiveBasePeriod.setModifiedBy(hfEmpTask.getModifiedBy());
@@ -887,27 +903,31 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 startMonthDate = YearMonth.parse(startMonth, formatter);
             }
 
+            ComposedEmpBasePeriodBO composedEmpBasePeriodBO;
+
             if (StringUtils.isNotEmpty(endMonth)) {
                 endMonthDate = YearMonth.parse(endMonth, formatter);
-                ComposedEmpBasePeriodBO composedEmpBasePeriodBO = composedEmpBasePeriodBOList.get(composedEmpBasePeriodBOList.size() - 1);
 
                 if (endMonthDate.plusMonths(1).equals(startMonthDate)) {
-                    endMonth = hfArchiveBasePeriod.getEndMonth();
+                    composedEmpBasePeriodBO = composedEmpBasePeriodBOList.get(composedEmpBasePeriodBOList.size() - 1);
                 } else {
-                    composedEmpBasePeriodBO.setEndMonth(endMonthDate);
-                    endMonth = null;
+                    composedEmpBasePeriodBO = new ComposedEmpBasePeriodBO();
+                    composedEmpBasePeriodBO.setStartMonth(startMonthDate);
+                    composedEmpBasePeriodBOList.add(composedEmpBasePeriodBO);
                 }
-                composedEmpBasePeriodBO.getContainsHfArchiveBasePeriods().add(hfArchiveBasePeriod);
+
+                if (StringUtils.isNotEmpty(hfArchiveBasePeriod.getEndMonth())) {
+                    composedEmpBasePeriodBO.setEndMonth(YearMonth.parse(hfArchiveBasePeriod.getEndMonth(), formatter));
+                } else {
+                    composedEmpBasePeriodBO.setEndMonth(null);
+                }
             } else {
-                ComposedEmpBasePeriodBO composedEmpBasePeriodBO = new ComposedEmpBasePeriodBO();
+                composedEmpBasePeriodBO = new ComposedEmpBasePeriodBO();
                 composedEmpBasePeriodBO.setStartMonth(startMonthDate);
                 composedEmpBasePeriodBOList.add(composedEmpBasePeriodBO);
-                endMonth = hfArchiveBasePeriod.getEndMonth();
-
-                if (StringUtils.isEmpty(endMonth)) {
-                    composedEmpBasePeriodBO.getContainsHfArchiveBasePeriods().add(hfArchiveBasePeriod);
-                }
             }
+            composedEmpBasePeriodBO.getContainsHfArchiveBasePeriods().add(hfArchiveBasePeriod);
+            endMonth = hfArchiveBasePeriod.getEndMonth();
         }
 
         return composedEmpBasePeriodBOList;
@@ -970,7 +990,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     if (endMonth == null) {
                         endMonth = hfMonth;
                     }
-                    List<HfArchiveBasePeriod> containsHfArchiveBasePeriodList = composedEmpBasePeriodBO.getContainsHfArchiveBasePeriods(); // 某连续费用段所包含的费用段记录
+                    List<HfArchiveBasePeriod> containsHfArchiveBasePeriodList;
 
                     // 如果补缴起始年月小于费用段起始月
                     if (repairStartMonth.isBefore(startMonth)) {
@@ -986,6 +1006,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                             // 差额补缴段：从费用段起始年月到补缴截止年月
                             e.setStartMonth(startMonth.format(formatter));
                             e.setEndMonth(repairEndMonth.format(formatter));
+                            containsHfArchiveBasePeriodList = composedEmpBasePeriodBO.getContainsHfArchiveBasePeriods(); // 某连续费用段所包含的费用段记录
+
                             for (HfArchiveBasePeriod hfArchiveBasePeriod : containsHfArchiveBasePeriodList) {
                                 setHfArchiveBaseAdjust(hfArchiveBaseAdjustList, hfEmpTask, e, hfArchiveBasePeriod, roundTypes, roundTypeInWeight);
                                 setHfArchiveBasePeriodList(diffHfArchiveBasePeriodList, hfEmpTask, e, hfArchiveBasePeriod, roundTypes, roundTypeInWeight);
@@ -1003,8 +1025,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                         // 补缴起始年月小于等于费用段截止年月时
                         if (repairStartMonth.isBefore(endMonth) || repairStartMonth.equals(endMonth) ) {
                             // 此时肯定有一段差额补缴
-                            e.setStartMonth(startMonth.format(formatter));
-                            e.setEndMonth(repairEndMonth.format(formatter));
+                            containsHfArchiveBasePeriodList = composedEmpBasePeriodBO.getContainsHfArchiveBasePeriods(); // 某连续费用段所包含的费用段记录
+
                             for (HfArchiveBasePeriod hfArchiveBasePeriod : containsHfArchiveBasePeriodList) {
                                 setHfArchiveBaseAdjust(hfArchiveBaseAdjustList, hfEmpTask, e, hfArchiveBasePeriod, roundTypes, roundTypeInWeight);
                                 setHfArchiveBasePeriodList(diffHfArchiveBasePeriodList, hfEmpTask, e, hfArchiveBasePeriod, roundTypes, roundTypeInWeight);
@@ -1654,8 +1676,29 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                                         HfArchiveBasePeriod hfArchiveBasePeriod,
                                         int[] roundTypes,
                                         int roundTypeInWeight) {
+        String basePeriodStartMonth = hfArchiveBasePeriod.getStartMonth();
+        String basePeriodEndMonth = hfArchiveBasePeriod.getEndMonth();
         String startMonth = hfEmpTaskPeriod.getStartMonth();
         String endMonth = hfEmpTaskPeriod.getEndMonth();
+
+        YearMonth startMonthDate = YearMonth.parse(startMonth, formatter);
+        YearMonth endMonthDate = YearMonth.parse(endMonth, formatter);
+
+        if (StringUtils.isNotEmpty(basePeriodEndMonth)) {
+            YearMonth basePeriodEndMonthDate = YearMonth.parse(basePeriodEndMonth, formatter);
+
+            if (basePeriodEndMonthDate.isBefore(startMonthDate)) {
+                return;
+            } else if (basePeriodEndMonthDate.isBefore(endMonthDate)) {
+                endMonth = basePeriodEndMonth;
+            }
+        }
+        YearMonth basePeriodStartMonthDate = YearMonth.parse(basePeriodStartMonth, formatter);
+
+        if (basePeriodStartMonthDate.isAfter(startMonthDate)) {
+            startMonth = basePeriodStartMonth;
+        }
+
         HfArchiveBaseAdjust hfArchiveBaseAdjust = new HfArchiveBaseAdjust();
         hfArchiveBaseAdjust.setEmpTaskId(hfEmpTask.getEmpTaskId());
         hfArchiveBaseAdjust.setHfMonth(hfEmpTaskPeriod.getHfMonth());
