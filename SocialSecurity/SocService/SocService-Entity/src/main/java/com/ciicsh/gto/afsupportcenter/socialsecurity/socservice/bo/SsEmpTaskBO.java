@@ -75,6 +75,13 @@ public class SsEmpTaskBO implements Serializable {
     private LocalDateTime modifiedTime;
     private String createdBy;
     private String modifiedBy;
+    private String createdDisplayName;
+    private String modifiedDisplayName;
+    private String leaderShipId;
+    private String leaderShipName;
+    private Integer serviceCenterId;
+    private String serviceCenter;
+
     //费用段
     private List<SsEmpBasePeriod> listEmpBasePeriod;
     // ohter
