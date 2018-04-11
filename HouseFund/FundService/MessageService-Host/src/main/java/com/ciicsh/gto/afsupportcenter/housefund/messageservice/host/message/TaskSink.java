@@ -45,7 +45,7 @@ public interface TaskSink {
     /**
      * 接受客服中心调用更新企业任务单
      */
-    String AF_COMPANY_SOCIAL_ACCOUNT_ONCE11 = "common_taskservice_af_company_social_account_once_channel11";
+    String AF_COMPANY_FUND_ACCOUNT_ONCE = "common_taskservice_af_company_fund_account_once_channel";
 
     /**
      * 公积金办理
@@ -63,7 +63,6 @@ public interface TaskSink {
      * 补充公积金停办
      */
     String ADD_FUND_STOP = "add_fund_stop";
-
     /**
      * 公积金补缴
      */
@@ -94,6 +93,6 @@ public interface TaskSink {
     @Input(PAY_APPLY_PAY_STATUS_STREAM)
     MessageChannel rejectPayApplyIdStream();
 
-    @Input(AF_COMPANY_SOCIAL_ACCOUNT_ONCE11)
-    MessageChannel afCompanySocialAccountOnce11();
+    @Input(AF_COMPANY_FUND_ACCOUNT_ONCE)
+    MessageChannel afCompanyFundAccountOnce();
 }
