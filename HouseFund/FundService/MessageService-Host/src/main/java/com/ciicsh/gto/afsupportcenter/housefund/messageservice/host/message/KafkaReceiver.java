@@ -381,7 +381,7 @@ public class KafkaReceiver {
      * @param message
      * @return
      */
-    @StreamListener(TaskSink.AF_COMPANY_SOCIAL_ACCOUNT_ONCE11)
+    @StreamListener(TaskSink.AF_COMPANY_FUND_ACCOUNT_ONCE)
     public void updateComTask(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         logger.info("start updateComTask: " + JSON.toJSONString(taskMsgDTO));

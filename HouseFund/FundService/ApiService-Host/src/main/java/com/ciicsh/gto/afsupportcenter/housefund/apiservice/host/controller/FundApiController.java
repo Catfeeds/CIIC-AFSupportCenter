@@ -76,8 +76,8 @@ public class FundApiController implements FundApiProxy{
                 return JsonResult.faultMessage("该企业已存在相同类型的处理中任务单，不能重复添加！");
             }
             else{
-                addComTask(comTaskDTO);
-                return JsonResult.success("保存成功!");
+                Long comTaskId = addComTask(comTaskDTO);
+                return JsonResult.success(comTaskId);
             }
         } catch (Exception e) {
             log.error(LogMessage.create().setTitle(Const.SAVECOMTASK.getKey()).setContent(e.getMessage()));
@@ -95,7 +95,7 @@ public class FundApiController implements FundApiProxy{
     }
 
     //保存企业任务单
-    private void addComTask(HfComTaskDTO hfComTaskDTO) {
+    private Long addComTask(HfComTaskDTO hfComTaskDTO) {
         HfComTask hfComTask = new HfComTask();
         BeanUtils.copyProperties(hfComTaskDTO,hfComTask);
         hfComTask.setTaskStatus(0);
@@ -105,6 +105,7 @@ public class FundApiController implements FundApiProxy{
         hfComTask.setCreatedBy("system");
         hfComTask.setModifiedBy("system");
         hfComTaskService.insert(hfComTask);
+        return hfComTask.getComTaskId();
     }
 
     @Override
