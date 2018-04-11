@@ -44,7 +44,7 @@ public interface HfMonthChargeMapper extends BaseMapper<HfMonthCharge> {
      * @param hfMonthChargeBo
      * @return
      */
-    HfMonthChargeDiffBo getHfMonthChargeDiffSum(HfMonthChargeBo hfMonthChargeBo);
+    List<HfMonthChargeDiffBo> getHfMonthChargeDiffSum(HfMonthChargeBo hfMonthChargeBo);
 
     /**
      * 查询雇员月度汇缴明细库

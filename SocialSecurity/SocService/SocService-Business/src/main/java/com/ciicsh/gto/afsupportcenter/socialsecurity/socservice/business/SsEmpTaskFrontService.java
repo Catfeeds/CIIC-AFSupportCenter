@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business;
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTaskFront;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 
 /**
@@ -21,7 +22,8 @@ public interface SsEmpTaskFrontService extends IService<SsEmpTaskFront> {
      * @param dto
      * @return
      */
-    boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer processCategory, Integer isChange, String oldAgreementId,  AfEmployeeInfoDTO dto);
+    boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer processCategory, Integer isChange, String oldAgreementId,  AfEmployeeInfoDTO dto,
+                          AfCompanyDetailResponseDTO afCompanyDetailResponseDTO);
 
     /**
      * 更新旧的雇员任务单
@@ -47,5 +49,6 @@ public interface SsEmpTaskFrontService extends IService<SsEmpTaskFront> {
      * @throws Exception
      */
     boolean saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType, Integer processCategory,  Integer isChange,
-                          String oldAgreementId, AfEmployeeInfoDTO dto) throws Exception;
+                          String oldAgreementId, AfEmployeeInfoDTO dto,
+                          AfCompanyDetailResponseDTO afCompanyDetailResponseDTO) throws Exception;
 }

@@ -36,7 +36,7 @@ public interface HfMonthChargeService extends IService<HfMonthCharge> {
      * @param hfMonthChargeBo
      * @return
      */
-    HfMonthChargeDiffBo getHfMonthChargeDiffSum(HfMonthChargeBo hfMonthChargeBo);
+    List<HfMonthChargeDiffBo> getHfMonthChargeDiffSum(HfMonthChargeBo hfMonthChargeBo);
 
     /**
      * 查询公积金报表
@@ -44,7 +44,7 @@ public interface HfMonthChargeService extends IService<HfMonthCharge> {
      * @param pageInfo
      * @return
      */
-    PageRows<HFMonthChargeReportBO> queryHfMonthChargeReport(PageInfo pageInfo);
+    PageRows<HFMonthChargeReportBO> queryHfMonthChargeReport(PageInfo pageInfo, String userId);
 
     /**
      * 获取基本/补充公积金汇缴变更清册导出数据

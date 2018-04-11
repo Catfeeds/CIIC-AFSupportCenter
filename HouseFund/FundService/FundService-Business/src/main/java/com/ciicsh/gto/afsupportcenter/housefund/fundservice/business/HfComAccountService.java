@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountI
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountDetailDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.GetComFundAccountListRequestDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountCompanyPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountDetailPO;
@@ -12,6 +13,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccoun
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountNamePO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccount;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 
 import java.util.List;
 
@@ -94,4 +96,6 @@ public interface HfComAccountService extends IService<HfComAccount> {
      * @return
      */
     List<ComAccountExtBo> queryHfComAccountList(ComAccountParamExtBo extBo);
+
+    JsonResult submitCompanyFundAccount(ComFundAccountDetailDTO comFundAccountDetailDTO);
 }

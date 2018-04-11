@@ -21,7 +21,8 @@ import org.springframework.context.annotation.Import;
 @EnableFeignClients({"com.ciicsh.gto.basicdataservice.api",
     "com.ciicsh.gto.employeecenter.apiservice.api",
     "com.ciicsh.gto.salecenter.apiservice.api",
-    "com.ciicsh.gto.billcenter.afmodule.cmd.api.proxy"})
+    "com.ciicsh.gto.billcenter.afmodule.cmd.api.proxy",
+    "com.ciicsh.gto.productcenter.apiservice.api.proxy"})
 @Import({CorsConfiguration.class, MybatisPlusConfig.class})
 public class CredentialsApp extends SpringBootServletInitializer {
 

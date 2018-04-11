@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.credentialscommandservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskDetialDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Task;
 
 import java.util.List;
@@ -38,9 +39,11 @@ public interface TaskService extends IService<Task> {
     boolean insertOrUpdate(Task entity);
 
     /**
-     * 新建任务单 返回主键
-     * @param task
+     * 保存或更新任务单
+     * @param taskDetialDTO
      * @return
      */
-    Long insertItem(Task task);
+    int saveOrUpdateTask(TaskDetialDTO taskDetialDTO);
+
+    boolean saveCommandAfDisposableCharge(TaskDetialDTO taskDetialDTO);
 }

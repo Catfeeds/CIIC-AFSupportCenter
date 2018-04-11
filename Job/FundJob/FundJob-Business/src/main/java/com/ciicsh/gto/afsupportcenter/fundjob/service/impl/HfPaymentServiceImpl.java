@@ -52,23 +52,23 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         List<HfPaymentAccountBO> paymentAccountList = hfPaymenthfPaymentComMapper.getPaymentAccountList(map);
         for (HfPaymentAccountBO ele : paymentAccountList) {
             if (ele.getComAccountId() != null) {
-                enquireFinanceComAccount(ele.getPaymentMonth(), ele.getComAccountClassId(), ele.getComAccountId());
+                enquireFinanceComAccount(ele.getPaymentMonth(), ele.getComAccountId(), ele.getPaymentAccountId());
             }
         }
     }
-    public void enquireFinanceComAccountTest(String ssMonth, Long comAccountId){
-        enquireFinanceComAccount(ssMonth , Long.valueOf(0),comAccountId);
+    public void enquireFinanceComAccountTest(String ssMonth, Long paymentAccountId,Long comAccountId){
+        enquireFinanceComAccount(ssMonth , comAccountId,paymentAccountId);
     }
     /**
      * 更新雇员的垫付状态
      *
      * @param paymentMonth 支付年月
      */
-    private void enquireFinanceComAccount(String paymentMonth, Long comAccountClassId, Long comAccountId) {
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void enquireFinanceComAccount(String paymentMonth, Long comAccountId, Long paymentAccountId) {
         //查询雇员级信息
         Map<String, Object> qMap = new HashMap<>();
-        //qMap.put("comAccountClassId", comAccountClassId);
-        qMap.put("paymentAccountId", comAccountId);
+        qMap.put("paymentAccountId", paymentAccountId);
         qMap.put("paymentMonth", paymentMonth);
         List<HfMonthChargeBO> paymentEmpList = hfEmpMonthChargeMapper.getPaymentEmpListEnquireFinance(qMap);
         String isComEnjoyAdvance= String.valueOf(hfPaymentAccountMapper.getHfPaymentIsCompanyEnjoyAdvance(qMap));

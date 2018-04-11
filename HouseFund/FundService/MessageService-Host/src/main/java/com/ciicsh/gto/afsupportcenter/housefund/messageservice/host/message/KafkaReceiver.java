@@ -1,11 +1,13 @@
 package com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.message;
 
 import com.alibaba.fastjson.JSON;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeSocialProxy;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComTaskService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentAccountService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogMessage;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
@@ -14,6 +16,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.FundCategory;
 import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.ProcessCategory;
 import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.TaskCategory;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.apache.commons.lang.StringUtils;
@@ -43,6 +46,8 @@ public class KafkaReceiver {
     private AfEmployeeSocialProxy employeeSocialProxy;
     @Autowired
     private LogApiUtil log;
+    @Autowired
+    private CommonApiUtils commonApiUtils;
 
     /**
      * 雇员公积金新进任务单
@@ -181,9 +186,20 @@ public class KafkaReceiver {
             if (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) || TaskSink.ADD_FUND_NEW.equals(taskMsgDTO.getTaskType())) {
                 logger.info("start in fundEmpAgreementAdjust: " + JSON.toJSONString(taskMsgDTO));
                 Map<String, Object> paramMap = taskMsgDTO.getVariables();
+                String fundCategory = TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
+
+                if (null != paramMap) {
+                    if (FundCategory.BASICFUND.getCategory().equals(fundCategory) && paramMap.get("fund_new") != null && !Boolean.valueOf(paramMap.get("fund_new").toString())) {
+                        // 如果task_type是new，但Variables中的fund_new为false时，该类任务单不接收
+                        return;
+                    } else if (paramMap.get("add_fund_new") != null && !Boolean.valueOf(paramMap.get("add_fund_new").toString())) {
+                        // 如果task_type是new，但Variables中的add_fund_new为false时，该类任务单不接收
+                        return;
+                    }
+                }
+
                 if (null != paramMap && paramMap.get("fundType") != null) {
                     Integer taskCategory = paramMap.get("fundType").equals("4") ? TaskCategory.ADJUST.getCategory() : Integer.parseInt(paramMap.get("fundType").toString());
-                    String fundCategory = TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
                     String oldAgreementId = null;
 
                     if (paramMap.get("oldEmpAgreementId") != null) {
@@ -225,9 +241,20 @@ public class KafkaReceiver {
                 if (TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
                     agreementAdjustOrUpdateEmpStop(taskMsgDTO, fundCategory, 1);
                 } else {
+                    if (null != paramMap) {
+                        if (FundCategory.BASICFUND.getCategory().equals(fundCategory) && paramMap.get("fund_new") != null && !Boolean.valueOf(paramMap.get("fund_new").toString())) {
+                            // 如果task_type是new，但Variables中的fund_new为false时，该类任务单不接收
+                            return;
+                        } else if (paramMap.get("add_fund_new") != null && !Boolean.valueOf(paramMap.get("add_fund_new").toString())) {
+                            // 如果task_type是new，但Variables中的add_fund_new为false时，该类任务单不接收
+                            return;
+                        }
+                    }
+
                     //未办理任务单
                     if (StringUtils.isBlank(taskMsgDTO.getTaskId())) {
                         logger.info("start fundEmpAgreementCorrect(not handled): " + JSON.toJSONString(taskMsgDTO));
+
                         if (null != paramMap && paramMap.get("fundType") != null) {
                             fundType = Integer.parseInt(paramMap.get("fundType").toString());
                         }
@@ -301,6 +328,14 @@ public class KafkaReceiver {
         String oldAgreementId = null;
 
         if (null != paramMap) {
+            if (FundCategory.BASICFUND.getCategory().equals(fundCategory) && paramMap.get("fund_stop") != null && !Boolean.valueOf(paramMap.get("fund_stop").toString())) {
+                // 如果task_type是stop，但Variables中的fund_stop为false时，该类任务单不接收
+                return;
+            } else if (paramMap.get("add_fund_stop") != null && !Boolean.valueOf(paramMap.get("add_fund_stop").toString())) {
+                // 如果task_type是stop，但Variables中的add_fund_stop为false时，该类任务单不接收
+                return;
+            }
+
             if (paramMap.get("fundType") != null) {
                 fundType = Integer.parseInt(paramMap.get("fundType").toString());
             }
@@ -351,7 +386,7 @@ public class KafkaReceiver {
      * @param message
      * @return
      */
-    @StreamListener(TaskSink.AF_COMPANY_SOCIAL_ACCOUNT_ONCE11)
+    @StreamListener(TaskSink.AF_COMPANY_FUND_ACCOUNT_ONCE)
     public void updateComTask(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         logger.info("start updateComTask: " + JSON.toJSONString(taskMsgDTO));
@@ -446,8 +481,15 @@ public class KafkaReceiver {
             //调用当前雇员信息获取接口
             AfEmployeeInfoDTO dto = getEmpInfo(taskMsgDTO,processCategory,taskCategory, oldAgreementId, isChange);
             if (dto != null) {
+                AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
+                AfCompanyDetailResponseDTO afCompanyDetailResponseDTO = null;
+
+                if (companyDto != null) {
+                    afCompanyDetailResponseDTO = commonApiUtils.getServiceCenterInfo(companyDto.getCompanyId());
+                }
+
                 //插入数据到雇员任务单表
-                return hfEmpTaskService.addEmpTask(taskMsgDTO, fundCategory, processCategory,taskCategory, oldAgreementId, isChange, dto);
+                return hfEmpTaskService.addEmpTask(taskMsgDTO, fundCategory, processCategory,taskCategory, oldAgreementId, isChange, dto, afCompanyDetailResponseDTO);
             }
             else {
                 logger.error("error:公积金雇员信息获取失败！");

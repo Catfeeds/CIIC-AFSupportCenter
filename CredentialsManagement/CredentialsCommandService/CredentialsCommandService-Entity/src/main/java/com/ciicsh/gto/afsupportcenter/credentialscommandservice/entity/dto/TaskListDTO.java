@@ -41,6 +41,7 @@ public class TaskListDTO implements Serializable {
      * 证件办理类型UI
      */
     private String credentialsDealTypeN;
+    private String basicProductId;
     /**
      * 学历认定
      */
@@ -140,6 +141,14 @@ public class TaskListDTO implements Serializable {
      * 创建者登录名
      */
     private String createdBy;
+
+    public String getBasicProductId() {
+        return basicProductId;
+    }
+
+    public void setBasicProductId(String basicProductId) {
+        this.basicProductId = basicProductId;
+    }
 
     public Long getTaskId() {
         return taskId;

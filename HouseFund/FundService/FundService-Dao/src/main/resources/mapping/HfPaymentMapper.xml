@@ -46,8 +46,8 @@
         hfp.pay_apply_code,
         hfps.payment_state_value,
         hfp.create_payment_user,
-        DATE_FORMAT(hfp.create_payment_date, '%Y-%m-%d %H:%i') AS create_payment_date_string,
-        DATE_FORMAT(hfp.finance_payment_date, '%Y-%m-%d %H:%i') AS finance_payment_date_string,
+        DATE_FORMAT(hfp.create_payment_date, '%Y-%m-%d') AS create_payment_date_string,
+        DATE_FORMAT(hfp.finance_payment_date, '%Y-%m-%d') AS finance_payment_date_string,
         hfpat.account_type_value,
         hfp.apply_remark
         FROM hf_payment hfp

@@ -80,6 +80,8 @@
         <result column="leader_ship_id" property="leaderShipId" />
         <result column="leader_ship_name" property="leaderShipName" />
         <result column="created_display_name" property="createdDisplayName" />
+        <result column="service_center_id" property="serviceCenterId" />
+        <result column="service_center" property="serviceCenter" />
     </resultMap>
 
     <select id="queryHfEmpTaskReject" resultMap="RejectResultMapBo">
@@ -106,6 +108,9 @@
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
+        <if test="userId != null">
+            INNER JOIN hf_dataauth_company hdc ON het.company_id = hdc.company_id AND hdc.user_id = #{userId}
+        </if>
         <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
             INNER JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
             INNER JOIN hf_com_account hcas ON hcas.com_account_id = hacr.com_account_id AND hcas.is_active = 1 AND hcas.hf_account_type = 3
@@ -204,8 +209,11 @@
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
+        <if test="userId != null">
+            INNER JOIN hf_dataauth_company hdc ON het.company_id = hdc.company_id AND hdc.user_id = #{userId}
+        </if>
         <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
-          INNER JOIN hf_com_account hcas ON hcas.is_active = 1 AND hcas.hf_account_type = 1
+            INNER JOIN hf_com_account hcas ON hcas.is_active = 1 AND hcas.hf_account_type = 1
         </if>
         <if test="hfAccountType != null">
             AND hcas.hf_account_type = #{hfAccountType}
@@ -299,6 +307,9 @@
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
+        <if test="userId != null">
+            INNER JOIN hf_dataauth_company hdc ON het.company_id = hdc.company_id AND hdc.user_id = #{userId}
+        </if>
         <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
             INNER JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
             INNER JOIN hf_com_account hcas ON hcas.com_account_id = hacr.com_account_id AND hcas.is_active = 1 AND hcas.hf_account_type = 3
@@ -396,6 +407,9 @@
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
+        <if test="userId != null">
+            INNER JOIN hf_dataauth_company hdc ON het.company_id = hdc.company_id AND hdc.user_id = #{userId}
+        </if>
         <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
             INNER JOIN hf_com_account hcas ON hcas.is_active = 1 AND hcas.hf_account_type = 1
         </if>
@@ -528,7 +542,9 @@
         het.operation_remind_date,
         het.leader_ship_id,
         het.leader_ship_name,
-        het.created_display_name
+        het.created_display_name,
+        het.service_center_id,
+        het.service_center
         FROM hf_emp_task het
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
@@ -734,7 +750,9 @@
             modified_by,
             modified_display_name,
             leader_ship_id,
-            leader_ship_name
+            leader_ship_name,
+            service_center_id,
+            service_center
         ) SELECT
             company_id,
             employee_id,
@@ -774,7 +792,9 @@
             #{modifiedBy},
             #{modifiedDisplayName},
             leader_ship_id,
-            leader_ship_name
+            leader_ship_name,
+            service_center_id,
+            service_center
         FROM hf_emp_task
         WHERE emp_task_id = #{empTaskId}
         AND is_active = 1

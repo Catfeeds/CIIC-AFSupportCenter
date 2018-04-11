@@ -59,6 +59,12 @@
 		<result column="modified_time" property="modifiedTime" />
 		<result column="created_by" property="createdBy" />
 		<result column="modified_by" property="modifiedBy" />
+        <result column="created_display_name" property="createdDisplayName" />
+        <result column="modified_display_name" property="modifiedDisplayName" />
+        <result column="leader_ship_id" property="leaderShipId" />
+        <result column="leader_ship_name" property="leaderShipName" />
+        <result column="service_center_id" property="serviceCenterId" />
+        <result column="service_center" property="serviceCenter" />
 	</resultMap>
 
 </mapper>

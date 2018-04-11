@@ -18,6 +18,7 @@ import com.ciicsh.gto.afsupportcenter.util.enumeration.ProcessCategory;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -44,13 +45,14 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
     @Override
-    public PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo) {
-        return queryHfEmpTaskInPage(pageInfo, null);
+    public PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo, String userId) {
+        return queryHfEmpTaskInPage(pageInfo, userId, null);
     }
 
     @Override
-    public PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo, String exceptTaskCategories) {
+    public PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo, String userId, String exceptTaskCategories) {
         HfEmpTaskBo hfEmpTaskBo = pageInfo.toJavaObject(HfEmpTaskBo.class);
+        hfEmpTaskBo.setUserId(userId);
         if (StringUtils.isNotBlank(exceptTaskCategories)) {
             hfEmpTaskBo.setExceptTaskCategories(exceptTaskCategories);
         }
@@ -58,8 +60,9 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
     }
 
     @Override
-    public PageRows<HfEmpTaskRejectExportBo> queryHfEmpTaskRejectInPage(PageInfo pageInfo, String exceptTaskCategories) {
+    public PageRows<HfEmpTaskRejectExportBo> queryHfEmpTaskRejectInPage(PageInfo pageInfo, String userId, String exceptTaskCategories) {
         HfEmpTaskBo hfEmpTaskBo = pageInfo.toJavaObject(HfEmpTaskBo.class);
+        hfEmpTaskBo.setUserId(userId);
         if (StringUtils.isNotBlank(exceptTaskCategories)) {
             hfEmpTaskBo.setExceptTaskCategories(exceptTaskCategories);
         }
@@ -88,7 +91,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer processCategory,Integer taskCategory, String oldAgreementId, Integer isChange,
-                                AfEmployeeInfoDTO dto) throws Exception {
+                                AfEmployeeInfoDTO dto, AfCompanyDetailResponseDTO afCompanyDetailResponseDTO) throws Exception {
         AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
 
         HfEmpTask hfEmpTask = new HfEmpTask();
@@ -119,6 +122,11 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
             hfEmpTask.setModifiedDisplayName(companyDto.getCreatedDisplayName());
             hfEmpTask.setLeaderShipId(companyDto.getLeadershipId() != null ? companyDto.getLeadershipId() : "system");
             hfEmpTask.setLeaderShipName(companyDto.getLeadershipName() != null ? companyDto.getLeadershipName() : "system");
+
+            if (afCompanyDetailResponseDTO != null) {
+                hfEmpTask.setServiceCenterId(afCompanyDetailResponseDTO.getServiceCenterId());
+                hfEmpTask.setServiceCenter(afCompanyDetailResponseDTO.getServiceCenter());
+            }
         }
         hfEmpTask.setSubmitTime(LocalDate.now());
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
