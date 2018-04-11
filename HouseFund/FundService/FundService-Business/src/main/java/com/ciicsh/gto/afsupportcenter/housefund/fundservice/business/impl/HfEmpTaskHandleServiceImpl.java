@@ -818,8 +818,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     amount.multiply(ratioCom.divide(hfArchiveBasePeriod.getRatio(), 3, BigDecimal.ROUND_HALF_UP)),
                     roundTypes[0]));
         } else {
-            String basePeriodStartMonth = hfArchiveBasePeriod.getStartMonth();
-            String basePeriodEndMonth = hfArchiveBasePeriod.getEndMonth();
+            String basePeriodStartMonth = repairHfArchiveBasePeriod.getStartMonth();
+            String basePeriodEndMonth = repairHfArchiveBasePeriod.getEndMonth();
 
             YearMonth startMonthDate = YearMonth.parse(startMonth, formatter);
             YearMonth endMonthDate = YearMonth.parse(endMonth, formatter);
