@@ -7,6 +7,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectEx
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 
 import java.util.List;
@@ -59,7 +60,7 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @throws Exception
      */
     boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory,Integer processCategory,Integer taskCategory, String oldAgreementId, Integer isChange,
-                         AfEmployeeInfoDTO dto) throws Exception;
+                         AfEmployeeInfoDTO dto, AfCompanyDetailResponseDTO afCompanyDetailResponseDTO) throws Exception;
 
 
     /**
