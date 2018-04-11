@@ -10,6 +10,8 @@ import com.ciicsh.gto.basicdataservice.api.DicItemServiceProxy;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.basicdataservice.api.dto.EmptyDicItemDTO;
 import com.ciicsh.gto.commonservice.util.dto.Result;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
+import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
 import com.ciicsh.gto.sheetservice.api.SheetServiceProxy;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.slf4j.Logger;
@@ -36,6 +38,9 @@ public class CommonApiUtils {
 
     @Autowired
     SSPolicyProxy ssPolicyProxy;
+
+    @Autowired
+    CompanyProxy companyProxy;
 
     /**
      * 调用客服中心的完成任务接口
@@ -102,5 +107,15 @@ public class CommonApiUtils {
      */
     public com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<GetSSPItemsResposeDTO> getRoundingType(GetSSPItemsRequestDTO var1){
         return ssPolicyProxy.getSSPItems(var1);
+    }
+
+    /**
+     * 根据客户编号获取服务中心
+     *
+     * @param companyId
+     * @return
+     */
+    public com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> getServiceCenterInfo(String companyId) {
+        return companyProxy.afDetail(companyId);
     }
 }
