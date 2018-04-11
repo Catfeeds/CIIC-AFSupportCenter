@@ -137,6 +137,15 @@ public class CompanyFundAccountController extends BasicController<HfComAccountSe
         return JsonResultKit.ofList(result);
     }
 
+    /**
+     * 提交编辑表单信息
+     * @param comFundAccountDetailDTO
+     * @return
+     */
+    @PostMapping("/submitCompanyFundAccount")
+    public JsonResult submitCompanyFundAccount(@RequestBody ComFundAccountDetailDTO comFundAccountDetailDTO) {
 
+        return  JsonResultKit.of();
+    }
 
 }
