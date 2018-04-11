@@ -74,10 +74,10 @@ public class EmpCredentialsDealController {
         BeanUtils.copyProperties(taskFollowDTO,taskFollow);
         //TODO
         if (taskFollowDTO.getTaskFollowId() == null) {
-            taskFollow.setCreatedBy("gu");
+            taskFollow.setCreatedBy("test");
             taskFollow.setCreatedTime(new Date());
         }
-        taskFollow.setModifiedBy("gu");
+        taskFollow.setModifiedBy("test");
         taskFollow.setModifiedTime(new Date());
         return JsonResult.success(taskFollowService.insertOrUpdate(taskFollow));
     }

@@ -140,13 +140,19 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         afDisposableChargeDTO.setEmployeeType(StringUtils.isBlank(templateType) ? 2 : Integer.parseInt(templateType));
         ProductSubjectDTO data = productProxy.getByBasicProductId(taskDetialDTO.getBasicProductId()).getData();
         afDisposableChargeDTO.setSubjectCodeId(Integer.parseInt(data.getSubjectCodeId()));
+        afDisposableChargeDTO.setInvoiceType(1);
         List<AfDisposableChargeProductDTO> productList = new ArrayList<>();
         AfDisposableChargeProductDTO product = new AfDisposableChargeProductDTO();
         product.setProductId(taskDetialDTO.getBasicProductId());
         TaskType taskType =
             taskTypeService.selectById(StringUtils.isBlank(taskDetialDTO.getCredentialsDealType()) ?
                 taskDetialDTO.getCredentialsType() : taskDetialDTO.getCredentialsDealType());
-        product.setProductName(taskType.getTaskTypeName());
+        if (!"0".equals(taskType.getPid())) {
+            TaskType pTaskType = taskTypeService.selectById(taskType.getPid());
+            product.setProductName(pTaskType.getTaskTypeName()+"-"+taskType.getTaskTypeName());
+        } else {
+            product.setProductName(taskType.getTaskTypeName());
+        }
         product.setChargeAmount(taskDetialDTO.getChargeAmount());
         productList.add(product);
         afDisposableChargeDTO.setProductList(productList);
