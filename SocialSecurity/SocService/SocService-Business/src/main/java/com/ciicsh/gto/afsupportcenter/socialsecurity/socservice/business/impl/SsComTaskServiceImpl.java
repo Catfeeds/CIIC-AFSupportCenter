@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -200,7 +199,7 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
                 try {
                     //调用工作流
                     String taskId = baseMapper.selectById(ssComTask.getComTaskId()).getTaskId();
-                    TaskCommonUtils.completeTask(taskId, commonApiUtils, UserContext.getUserId());
+                    TaskCommonUtils.completeTask(taskId, commonApiUtils, UserContext.getUserName());
                 }catch (BusinessException e){
                     //如果工作流异常，则跳过
                 }

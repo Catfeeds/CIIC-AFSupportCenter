@@ -153,7 +153,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
                     ssComTask.setRejectionRemark(refuseReason);
                 //批退工作流
                 SsComTask task = ssComTaskService.selectById(ssComTask.getComTaskId());
-                TaskCommonUtils.completeTask(task.getTaskId(),commonApiUtils,UserContext.getUserId());
+                TaskCommonUtils.completeTask(task.getTaskId(),commonApiUtils,UserContext.getUserName());
                 dataList.add(ssComTask);
             }
         }
@@ -255,7 +255,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         SsComTaskBO ssComTaskBO = CommonTransform.convertToDTO(ssComTaskDTO, SsComTaskBO.class);
         if (ssComTaskBO.getTaskStatus() == 3) {
             //调用工作流
-            TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,UserContext.getUserId());
+            TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,UserContext.getUserName());
             if (null != ssComTaskBO.getEndDate() && null != ssComTaskBO.getComAccountId()) {
                 SsComAccount ssComAccount = new SsComAccount();
                 //2 表示终止
@@ -293,7 +293,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         //0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
         if (ssComTaskBO.getTaskStatus() == 3) {
             //调用工作流
-            TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,UserContext.getUserId());
+            TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,UserContext.getUserName());
             if (isNotNull(ssComTaskBO.getSettlementArea()) && null != ssComTaskBO.getComAccountId()) {
                 SsComAccount ssComAccount = new SsComAccount();
                 ssComAccount.setComAccountId(ssComTaskBO.getComAccountId());
@@ -342,7 +342,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         //0、初始（材料收缴） 1、受理中  2、送审中  3 、已完成  4、批退
         if (ssComTaskBO.getTaskStatus() == 3) {
             //调用工作流
-            TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,UserContext.getUserId());
+            TaskCommonUtils.completeTask(ssComTaskBO.getTaskId(),commonApiUtils,UserContext.getUserName());
             Object object = getObject(ssComTaskBO);
             //变更类型操作
             result = business.updateOrHandlerTask(ssComTaskBO, object);
