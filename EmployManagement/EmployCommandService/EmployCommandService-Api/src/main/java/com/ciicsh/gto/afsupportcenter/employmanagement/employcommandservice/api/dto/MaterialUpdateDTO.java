@@ -1,5 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 /**
@@ -15,10 +17,23 @@ public class MaterialUpdateDTO {
      * 签收人
      */
     private String receiveName;
+
+    /**
+     * 签收人Id
+     */
+    private String receiveId;
     /**
      * 签收日期
      */
     private Date receiveDate;
+
+    public String getReceiveId() {
+        return receiveId;
+    }
+
+    public void setReceiveId(String receiveId) {
+        this.receiveId = receiveId;
+    }
 
     public Long getEmpTaskId() {
         return empTaskId;

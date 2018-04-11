@@ -95,6 +95,13 @@ public class AmEmpEmployee implements Serializable {
      */
 	@TableField("organization_code")
 	private String organizationCode;
+
+    /**
+     * 档案费
+     */
+    @TableField("file_fee")
+    private  String fileFee;
+
     /**
      * 是否可用
      */
@@ -122,7 +129,15 @@ public class AmEmpEmployee implements Serializable {
 	private String modifiedBy;
 
 
-	public Long getEmpEmployeeId() {
+    public String getFileFee() {
+        return fileFee;
+    }
+
+    public void setFileFee(String fileFee) {
+        this.fileFee = fileFee;
+    }
+
+    public Long getEmpEmployeeId() {
 		return empEmployeeId;
 	}
 

@@ -12,6 +12,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.enti
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.archiveSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -222,8 +224,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         queryBo.setEmployeeId(amTaskParamBO.getEmployeeId());
 
         List<AmRemarkBO> amRemarkBOList = amRemarkService.getAmRemakList(queryBo);
+
         //退工归还材料签收
-        PageRows<AmEmpMaterialBO> result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
+        PageRows<AmEmpMaterialBO> result = null;
 
         PageRows<AmEmpMaterialBO> resultMaterial = iAmEmpMaterialService.queryMaterialDic(pageInfo);
 
@@ -253,9 +256,17 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
                     amResignBO.setOutReason(amEmpTask.getOutReason());
                 }
             }
+            params.put("empTaskId",resignBO.getEmpTaskId());
+            pageInfo.setParams(params);
+            result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
+
         }
 
-        AmEmploymentBO amEmploymentBO = resultEmployList.get(0);
+
+        AmEmploymentBO amEmploymentBO = new AmEmploymentBO();
+        if(null!=resultEmployList&&resultEmployList.size()>0){
+            amEmploymentBO = resultEmployList.get(0);
+        }
 
         if(!StringUtil.isEmpty(amEmploymentBO.getEmployStyle()))
         {
@@ -299,7 +310,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         }
 
-        resultMap.put("amEmploymentBO",resultEmployList.get(0));
+        resultMap.put("amEmploymentBO",amEmploymentBO);
 
         if(null!=amRemarkBOPageRows)
         {
@@ -325,8 +336,8 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             LocalDateTime now = LocalDateTime.now();
             bo.setCreatedTime(now);
             bo.setModifiedTime(now);
-            bo.setCreatedBy("sys");
-            bo.setModifiedBy("sys");
+            bo.setCreatedBy(ReasonUtil.getUserId());
+            bo.setModifiedBy(ReasonUtil.getUserId());
             if(bo.getInjuryId()==null){
                 data.add(bo);
             }
@@ -344,6 +355,14 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
     @PostMapping("/saveAmEmpMaterial")
     public JsonResult<Boolean>  saveAmEmpMaterial(@RequestBody List<AmEmpMaterial> list) {
+        String userId = "System";
+        String userName = "System";
+        try {
+            userId = UserContext.getUserId();
+            userName = UserContext.getUser().getDisplayName();
+        } catch (Exception e) {
+
+        }
         List<AmEmpMaterial>  data = new ArrayList<AmEmpMaterial>();
         for(AmEmpMaterial bo:list)
         {
@@ -351,17 +370,20 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             LocalDateTime now = LocalDateTime.now();
             bo.setCreatedTime(now);
             bo.setModifiedTime(now);
-            bo.setCreatedBy("sys");
-            bo.setModifiedBy("sys");
+            bo.setCreatedBy(userId);
+            bo.setModifiedBy(userId);
+            bo.setRejectDate(LocalDate.now());
+            bo.setRejectId(userId);
+            bo.setRejectName(userName);
+            bo.setSubmitterDate(LocalDate.now());
             if(bo.getEmpMaterialId()==null){
                 data.add(bo);
             }
 
         }
-
         boolean result = false;
         try {
-            result = amEmpMaterialService.insertBatch(data);
+            result = amEmpMaterialService.insertOrUpdateBatch(data);
         } catch (Exception e) {
 
         }
@@ -392,11 +414,11 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             if(bo.getArchiveUseId()==null){
                 bo.setCreatedTime(now);
                 bo.setModifiedTime(now);
-                bo.setCreatedBy("sys");
-                bo.setModifiedBy("sys");
+                bo.setCreatedBy(ReasonUtil.getUserId());
+                bo.setModifiedBy(ReasonUtil.getUserId());
             }else {
                 bo.setModifiedTime(now);
-                bo.setModifiedBy("sys");
+                bo.setModifiedBy(ReasonUtil.getUserId());
             }
         }
 
@@ -438,6 +460,13 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             resultMap.put("amArchiveUsePageRows1",amArchiveUsePageRows1);
         }
 
+        String userName = "System";
+        try {
+            userName = UserContext.getUser().getDisplayName();
+        } catch (Exception e) {
+
+        }
+        resultMap.put("userName",userName);
         return  JsonResultKit.of(resultMap);
     }
 

@@ -292,12 +292,12 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         if(entity.getArchiveId()==null){
             entity.setCreatedTime(now);
             entity.setModifiedTime(now);
-            entity.setCreatedBy("sys");
-            entity.setModifiedBy("sys");
+            entity.setCreatedBy(ReasonUtil.getUserId());
+            entity.setModifiedBy(ReasonUtil.getUserId());
             entity.setIsActive(1);
         }else{
             entity.setModifiedTime(now);
-            entity.setModifiedBy("sys");
+            entity.setModifiedBy(ReasonUtil.getUserId());
         }
         AmEmpTask amEmpTask = null;
         if(!StringUtil.isEmpty(entity.getEmployFeedback())){
@@ -354,8 +354,8 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
              LocalDateTime now = LocalDateTime.now();
              bo.setCreatedTime(now);
              bo.setModifiedTime(now);
-             bo.setCreatedBy("sys");
-             bo.setModifiedBy("sys");
+             bo.setCreatedBy(ReasonUtil.getUserId());
+             bo.setModifiedBy(ReasonUtil.getUserId());
              if(bo.getRemarkId()==null){
                  data.add(bo);
              }
@@ -386,10 +386,20 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
     @PostMapping("/receiveMaterial")
     public JsonResult<Boolean> receiveMaterial(@RequestBody List<AmEmpMaterial> list){
+        String userName = "system";
+        String userId = "system";
+        try {
+            userName = UserContext.getUser().getDisplayName();
+            userId = UserContext.getUser().getUserId();
+        } catch (Exception e) {
+
+        }
         for(AmEmpMaterial material:list)
         {
             material.setReceiveDate(LocalDate.now());
-            material.setReceiveName("sys");
+            material.setReceiveName(userName);
+            material.setReceiveId(userId);
+            material.setModifiedTime(LocalDateTime.now());
         }
 
         AmEmpTask amEmpTask = business.selectById(list.get(0).getEmpTaskId());
@@ -402,10 +412,21 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
     @PostMapping("/rejectMaterial")
     public JsonResult<Boolean> rejectMaterial(@RequestBody List<AmEmpMaterial> list){
+
+        String userName = "system";
+        String userId = "system";
+        try {
+            userName = UserContext.getUser().getDisplayName();
+            userId = UserContext.getUser().getUserId();
+        } catch (Exception e) {
+
+        }
         for(AmEmpMaterial material:list)
         {
             material.setRejectDate(LocalDate.now());
-            material.setReceiveName("sys");
+            material.setRejectName(userName);
+            material.setRejectId(userId);
+            material.setModifiedTime(LocalDateTime.now());
         }
 
         boolean result =  iAmEmpMaterialService.updateBatchById(list);

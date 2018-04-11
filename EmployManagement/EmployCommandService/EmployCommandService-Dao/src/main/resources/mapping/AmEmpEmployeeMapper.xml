@@ -19,6 +19,7 @@
 		<result column="first_in_date" property="firstInDate" />
 		<result column="first_in_company_date" property="firstInCompanyDate" />
 		<result column="organization_code" property="organizationCode" />
+        <result column="file_free" property="fileFree" />
 		<result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />
 		<result column="modified_time" property="modifiedTime" />

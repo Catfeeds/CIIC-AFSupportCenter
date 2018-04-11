@@ -48,14 +48,7 @@
     <select id="queryAmEmployment" resultMap="BaseResultMapDTO">
         SELECT  *  FROM  am_employment
         where
-          is_active = 1
-        <if test="employeeId!=null">
-            and  employee_id = #{employeeId}
-        </if>
-        <if test="employmentId!=null">
-            and  employment_id = #{employmentId}
-        </if>
-        order by  created_time desc
+        emp_task_id = #{empTaskId}
     </select>
 
     <select id="queryAmArchive" resultMap="BaseResultMapDTO">
@@ -130,7 +123,7 @@
         a.task_status
         FROM
         am_employment b
-        LEFT JOIN am_emp_task a on  a.company_id = b.company_id and a.employee_id = b.employee_id
+        LEFT JOIN am_emp_task a on   a.emp_task_id = b.emp_task_id
         LEFT JOIN am_archive c ON b.employment_id = c.employment_id
         LEFT JOIN am_resign f ON f.employment_id = b.employment_id
         WHERE

@@ -1,12 +1,15 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
  * Created by zhangzhiwen on 2018/4/10.
  */
 public class MaterialDTO {
-     /**
+    /**
      * 材料名称
      */
     private String materialName;
@@ -15,9 +18,31 @@ public class MaterialDTO {
      */
     private String receiveName;
     /**
+     * 签收人Id
+     */
+    private String receiveId;
+    /**
      * 签收日期
      */
-    private Date receiveDate;
+    private LocalDate receiveDate;
+
+    private  String  receiveDateStr;
+
+    public String getReceiveDateStr() {
+        return receiveDateStr;
+    }
+
+    public void setReceiveDateStr(String receiveDateStr) {
+        this.receiveDateStr = receiveDateStr;
+    }
+
+    public String getReceiveId() {
+        return receiveId;
+    }
+
+    public void setReceiveId(String receiveId) {
+        this.receiveId = receiveId;
+    }
 
     public String getMaterialName() {
         return materialName;
@@ -35,11 +60,11 @@ public class MaterialDTO {
         this.receiveName = receiveName;
     }
 
-    public Date getReceiveDate() {
+    public LocalDate getReceiveDate() {
         return receiveDate;
     }
 
-    public void setReceiveDate(Date receiveDate) {
+    public void setReceiveDate(LocalDate receiveDate) {
         this.receiveDate = receiveDate;
     }
 }

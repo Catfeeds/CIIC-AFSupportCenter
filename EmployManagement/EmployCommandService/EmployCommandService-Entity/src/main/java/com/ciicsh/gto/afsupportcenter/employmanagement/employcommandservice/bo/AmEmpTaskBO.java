@@ -189,8 +189,10 @@ public class AmEmpTaskBO extends AmEmpTask {
     private  String  companyType;
 
     private String phone;
-
-    private String fileFree;
+    /**
+     * 档案费
+     */
+    private String fileFee;
 
     private  String cici;
 
@@ -210,12 +212,12 @@ public class AmEmpTaskBO extends AmEmpTask {
         this.leaderShipName = leaderShipName;
     }
 
-    public String getFileFree() {
-        return fileFree;
+    public String getFileFee() {
+        return fileFee;
     }
 
-    public void setFileFree(String fileFree) {
-        this.fileFree = fileFree;
+    public void setFileFee(String fileFee) {
+        this.fileFee = fileFee;
     }
 
     public String getPhone() {

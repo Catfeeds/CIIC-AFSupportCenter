@@ -12,6 +12,8 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +41,15 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
 
     @Override
     public List<MaterialDTO> queryMaterialByTaskId(Long empTaskId) {
-        return baseMapper.queryMaterialByTaskId(empTaskId);
+        List<MaterialDTO> list = baseMapper.queryMaterialByTaskId(empTaskId);
+
+        for(MaterialDTO materialDTO:list){
+            DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            if(materialDTO.getReceiveDate()!=null){
+                materialDTO.setReceiveDateStr(df.format(materialDTO.getReceiveDate()));
+            }
+        }
+        return  list;
     }
 
     @Override

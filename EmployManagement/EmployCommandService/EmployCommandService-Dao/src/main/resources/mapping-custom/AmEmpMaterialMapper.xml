@@ -21,11 +21,11 @@
    </select>
 
     <select id="queryMaterialByTaskId" resultMap="BaseResultMaterialMapDTO">
-        SELECT  material_name,receive_name,receive_date  from  am_emp_material where emp_task_id = #{empTaskId}
+        SELECT  material_name,receive_name,receive_date,receive_id  from  am_emp_material where emp_task_id = #{empTaskId}
     </select>
 
     <update id="updateMaterialByTaskId">
-        UPDATE am_emp_material  set receive_name = #{receiveName},receive_date = #{receiveDate} where  emp_task_id = #{empTaskId}
+        UPDATE am_emp_material  set receive_name = #{receiveName},receive_date = #{receiveDate},receive_id = #{receiveId},modified_time = #{receiveDate},modified_by=#{receiveId} where  emp_task_id = #{empTaskId}
     </update>
 
 </mapper>

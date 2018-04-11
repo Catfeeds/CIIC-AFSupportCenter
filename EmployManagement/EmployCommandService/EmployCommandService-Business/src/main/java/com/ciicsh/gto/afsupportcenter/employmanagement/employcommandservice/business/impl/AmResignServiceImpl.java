@@ -66,7 +66,12 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
             amResignBO.setTaskStatus(null);
         }
 
-        return PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmResign(amResignBO));
+        if(null!=amResignBO.getTaskStatus()&&amResignBO.getTaskStatus()==6)
+        {
+            return PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmResignOther(amResignBO));
+        }else{
+            return PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmResign(amResignBO));
+        }
 
     }
 
@@ -102,16 +107,22 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
     public boolean saveAmResign(AmResignBO bo) {
         AmResign entity = new AmResign();
         BeanUtils.copyProperties(bo,entity);
+        String userId = "sys";
+        try {
+            userId = UserContext.getUserId();
+        } catch (Exception e) {
+
+        }
 
         LocalDateTime now = LocalDateTime.now();
         if(entity.getResignId()==null){
             entity.setCreatedTime(now);
             entity.setModifiedTime(now);
-            entity.setCreatedBy("sys");
-            entity.setModifiedBy("sys");
+            entity.setCreatedBy(userId);
+            entity.setModifiedBy(userId);
         }else{
             entity.setModifiedTime(now);
-            entity.setModifiedBy("sys");
+            entity.setModifiedBy(userId);
         }
 
         Integer isFinish = 0;
@@ -119,7 +130,16 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
         if(!StringUtil.isEmpty(bo.getResignFeedback()))
         {
             amEmpTask = taskService.selectById(bo.getEmpTaskId());
-            amEmpTask.setTaskStatus(Integer.parseInt(bo.getResignFeedback()));
+            if("1".equals(bo.getResignFeedback())&&bo.getJobCentreFeedbackDate()==null)
+            {
+                /**
+                 * 退工任务单签收 但退工成功日期为空
+                 */
+                amEmpTask.setTaskStatus(98);
+            }else{
+                amEmpTask.setTaskStatus(Integer.parseInt(bo.getResignFeedback()));
+            }
+
             taskService.insertOrUpdate(amEmpTask);
 
             isFinish = this.isResginFinish(bo,amEmpTask);
@@ -132,8 +152,9 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
             amResignLink.setResignFeedbackDate(bo.getResignFeedbackDate());
             amResignLink.setCreatedTime(now);
             amResignLink.setModifiedTime(now);
-            amResignLink.setCreatedBy("sys");
-            amResignLink.setModifiedBy("sys");
+
+            amResignLink.setCreatedBy(userId);
+            amResignLink.setModifiedBy(userId);
 
             amResignLinkService.insert(amResignLink);
         }

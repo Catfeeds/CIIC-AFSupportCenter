@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bus
 import com.alibaba.fastjson.JSON;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.*;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeProductProxy;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
@@ -69,6 +70,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Autowired
     private AmEmpEmployeeService  amEmpEmployeeService;
+
+    @Autowired
+    private AfEmployeeProductProxy afEmployeeProductProxy;
 
 
     @Override
@@ -220,9 +224,16 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amEmpMaterial.setEmployeeId(bo.getEmployeeId());
                 amEmpMaterial.setOperateType(1);
                 amEmpMaterial.setActive(true);
-                amEmpMaterial.setCreatedBy("sys");
+                String createdBy = "System";
+                try {
+                    createdBy = smUserInfoDTO.getUserId();
+                } catch (Exception e) {
+
+                }
+                amEmpMaterial.setCreatedBy(createdBy);
                 amEmpMaterial.setCreatedTime(LocalDateTime.now());
-                amEmpMaterial.setModifiedBy("sys");
+                amEmpMaterial.setModifiedTime(LocalDateTime.now());
+                amEmpMaterial.setModifiedBy(createdBy);
                 amEmpMaterial.setSubmitterDate(LocalDate.now());
                 amEmpMaterial.setSubmitterId(submitterId);
                 amEmpMaterial.setSubmitterName(smUserInfoDTO==null?"":smUserInfoDTO.getDisplayName());
@@ -245,7 +256,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         amEmpTask.setTaskId(taskMsgDTO.getTaskId());
         amEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
         amEmpTask.setTaskCategory(taskCategory);
-        amEmpTask.setTaskStatus(1);
+        amEmpTask.setTaskStatus(99);
 
         //TODO 调用吴敬磊接口传入taskMsgDTO.getMissionId()返回数据
         AfEmployeeInfoDTO dto = null;
@@ -345,11 +356,13 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         AmCustomBO customBO = new AmCustomBO();//客户信息
         AmEmpTaskBO employeeBO = new AmEmpTaskBO();//雇佣信息
         AmEmpTask amEmpTask = null;
+        String  missId = "";
         customBO.setCompanyId(param.getCompanyId());
         try {
             if(null!=param.getEmpTaskId()&&param.isResign()==false)
             {
                 amEmpTask = super.selectById(param.getEmpTaskId());
+                missId = amEmpTask.getBusinessInterfaceId();
                 employeeBO.setArchiveDirection(amEmpTask==null?"":amEmpTask.getArchiveDirection());
                 employeeBO.setEmployeeNature(amEmpTask==null?"":amEmpTask.getEmployeeNature());
                 employeeBO.setEmployProperty(amEmpTask==null?"":amEmpTask.getEmployProperty());
@@ -359,6 +372,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amEmpTaskBO.setEmployeeId(param.getEmployeeId());
 
                 amEmpTask = this.queryEmpTask(amEmpTaskBO);
+                missId = amEmpTask.getBusinessInterfaceId();
                 employeeBO.setArchiveDirection(amEmpTask==null?"":amEmpTask.getArchiveDirection());
                 employeeBO.setEmployeeNature(amEmpTask==null?"":amEmpTask.getEmployeeNature());
                 employeeBO.setEmployProperty(amEmpTask==null?"":amEmpTask.getEmployProperty());
@@ -479,11 +493,18 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             employeeBO.setKeyStatus(amCompanySetBO1.getKeyStatus());
         }
 
-        //获取单位性质
-        CompanyTypeDTO companyTypeDTO = employeeInfoProxy.getCompanyType(param.getCompanyId());
-        employeeBO.setCompanyType(companyTypeDTO==null?"":companyTypeDTO.getTypeName());
-        if(companyTypeDTO!=null&&companyTypeDTO.isHasFileService()){
-            employeeBO.setFileFree("有");
+        //档案费
+        try {
+            Long ll = Long.parseLong(missId);
+            List<AfEmpProductDTO> afEmpProductDTOList = afEmployeeProductProxy.getByEmpAgreement(ll,1);
+            for(AfEmpProductDTO afEmpProductDTO:afEmpProductDTOList)
+            {
+                if("CPJSW1800005".equals(afEmpProductDTO.getBasicProductId())){
+                    employeeBO.setFileFee("有");
+                }
+            }
+        } catch (NumberFormatException e) {
+
         }
 
 
@@ -719,6 +740,20 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             amEmpEmployee.setGender(employeeHireInfoDTO.getGender());
             amEmpEmployee.setIdNum(employeeHireInfoDTO.getIdNum());
             amEmpEmployee.setEmployeeName(employeeHireInfoDTO.getEmployeeName());
+
+            //档案费
+            try {
+                Long ll = Long.parseLong(taskMsgDTO.getMissionId());
+                List<AfEmpProductDTO> afEmpProductDTOList = afEmployeeProductProxy.getByEmpAgreement(ll,1);
+                for(AfEmpProductDTO afEmpProductDTO:afEmpProductDTOList)
+                {
+                    if("CPJSW1800005".equals(afEmpProductDTO.getBasicProductId())){
+                        amEmpEmployee.setFileFee("有");
+                    }
+                }
+            } catch (NumberFormatException e) {
+
+            }
 
             amEmpEmployeeService.insert(amEmpEmployee);
         } catch (Exception e) {

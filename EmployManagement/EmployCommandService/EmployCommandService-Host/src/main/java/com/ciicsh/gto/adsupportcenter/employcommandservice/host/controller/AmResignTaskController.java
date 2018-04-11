@@ -1,6 +1,7 @@
 package com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.MaterialDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.ReasonUtil;
@@ -46,6 +47,9 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
     @Autowired
     private  AmResignLinkService amResignLinkService;
+
+    @Autowired
+    private IAmEmpMaterialService amEmpMaterialService;
 
 
     @RequestMapping("/queryAmResign")
@@ -106,23 +110,27 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         {
             AmResignBO amResignBO = list.get(i);
             int status = amResignBO.getTaskStatus();
-            if(1==status){
+            if(99==status){
                 amEmpTaskCountBO.setNoFeedback(amResignBO.getCount());
                 num = num + amResignBO.getCount();
-            }else if(2==status){
+            }else if(98==status){
+                amEmpTaskCountBO.setRefuseWaitFinished(amResignBO.getCount());
+                num = num + amResignBO.getCount();
+            }else if(1==status){
                 amEmpTaskCountBO.setRefuseFinished(amResignBO.getCount());
                 num = num + amResignBO.getCount();
-            }else if(3==status){
+            }else if(2==status){
                 amEmpTaskCountBO.setRefuseBeforeWithFile(amResignBO.getCount());
                 num = num + amResignBO.getCount();
-            }else if(4==status){
+            }else if(3==status){
                 amEmpTaskCountBO.setRefuseTicketStampNoReturn(amResignBO.getCount());
                 num = num + amResignBO.getCount();
-            }else if(5==status){
+            }else if(4==status){
                 amEmpTaskCountBO.setRefuseFailed(amResignBO.getCount());
                 num = num + amResignBO.getCount();
-            }else if(6==status){
+            }else if(5==status){
                 amEmpTaskCountBO.setBeforeBatchNeedRefuse(amResignBO.getCount());
+                num = num + amResignBO.getCount();
             }else{
                 otherNum = otherNum+amResignBO.getCount();
                 amEmpTaskCountBO.setOther(otherNum);
@@ -139,6 +147,8 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
     @RequestMapping("/queryAmResignDetail")
     public JsonResult queryAmResignDetail(AmTaskParamBO amTaskParamBO){
+
+        List<MaterialDTO>  lll = amEmpMaterialService.queryMaterialByTaskId(new Long(1126));
 
         amTaskParamBO.setResign(true);
 
@@ -240,7 +250,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             amResignBO = listResignBO.get(0);
 
             amResignBO.setYuliuDocNum(amArchiveBO.getYuliuDocNum());
-            amResignBO.setDocNum(amArchiveBO.getDocNum());
+            amResignBO.setDocNum(amArchiveBO.getDocCode());
             amResignBO.setArchiveCardState(amArchiveBO.getArchiveCardState());
             amResignBO.setArchivePlace(amArchiveBO.getArchivePlace());
             amResignBO.setArchivePlaceAdditional(amArchiveBO.getArchivePlaceAdditional());
@@ -249,11 +259,13 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             amResignBO.setEmployFeedback(amEmploymentBO.getEmployFeedback());
             amResignBO.setEmploymentId(amEmploymentBO.getEmploymentId());
             amResignBO.setEmployDocPaymentTo(amArchiveBO.getEmployDocPaymentTo());
+            amResignBO.setStorageDate(amArchiveBO.getStorageDate());
+            amResignBO.setDiaodangFeedback(amArchiveBO.getDiaodangFeedback());
 
             amResignBO.setArchiveDirection(employeeBO.getArchiveDirection());
         }else{
             amResignBO.setYuliuDocNum(amArchiveBO.getYuliuDocNum());
-            amResignBO.setDocNum(amArchiveBO.getDocNum());
+            amResignBO.setDocNum(amArchiveBO.getDocCode());
             amResignBO.setArchiveCardState(amArchiveBO.getArchiveCardState());
             amResignBO.setArchivePlace(amArchiveBO.getArchivePlace());
             amResignBO.setArchivePlaceAdditional(amArchiveBO.getArchivePlaceAdditional());
@@ -262,6 +274,8 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             amResignBO.setEmployFeedback(amEmploymentBO.getEmployFeedback());
             amResignBO.setEmploymentId(amEmploymentBO.getEmploymentId());
             amResignBO.setEmployDocPaymentTo(amArchiveBO.getEmployDocPaymentTo());
+            amResignBO.setStorageDate(amArchiveBO.getStorageDate());
+            amResignBO.setDiaodangFeedback(amArchiveBO.getDiaodangFeedback());
 
             amResignBO.setArchiveDirection(employeeBO.getArchiveDirection());
 

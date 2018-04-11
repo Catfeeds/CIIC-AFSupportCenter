@@ -6,6 +6,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo;
 public class AmResTaskCountBO {
 
     private  Integer  noFeedback;
+    private  Integer  refuseWaitFinished;
     private  Integer  refuseFinished;
     private  Integer  refuseBeforeWithFile;
     private  Integer  refuseTicketStampNoReturn;
@@ -13,6 +14,14 @@ public class AmResTaskCountBO {
     private  Integer  beforeBatchNeedRefuse;
     private  Integer  other;
     private  Integer amount;
+
+    public Integer getRefuseWaitFinished() {
+        return refuseWaitFinished;
+    }
+
+    public void setRefuseWaitFinished(Integer refuseWaitFinished) {
+        this.refuseWaitFinished = refuseWaitFinished;
+    }
 
     public Integer getNoFeedback() {
         return noFeedback;

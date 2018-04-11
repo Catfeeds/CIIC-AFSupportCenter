@@ -53,11 +53,23 @@ public class AmIndependentCustomController extends BasicController<IAmCompanySet
             amCompanySet.setModifiedBy("sys");
         }
         boolean is_special = false;
-        if(amCompanySet.getCompanySpecial0()!=null||amCompanySet.getCompanySpecial1()!=null||amCompanySet.getCompanySpecial2()!=null||amCompanySet.getCompanySpecial3()!=null)
+        if(amCompanySet.getCompanySpecial0()==1||amCompanySet.getCompanySpecial1()==1||amCompanySet.getCompanySpecial2()==1||amCompanySet.getCompanySpecial3()==1)
         {
             is_special = true;
         }
-        if(amCompanySet.getCompanySpecial4()!=null||amCompanySet.getCompanySpecial5()!=null||amCompanySet.getCompanySpecial6()!=null||amCompanySet.getCompanySpecial7()!=null)
+        if(amCompanySet.getCompanySpecial4()==1||amCompanySet.getCompanySpecial5()==1||amCompanySet.getCompanySpecial6()==1||amCompanySet.getCompanySpecial7()==1)
+        {
+            is_special = true;
+        }
+        if(amCompanySet.getCompanySpecial8()==1||amCompanySet.getCompanySpecial9()==1||amCompanySet.getCompanySpecial10()==1||amCompanySet.getCompanySpecial11()==1)
+        {
+            is_special = true;
+        }
+        if(amCompanySet.getCompanySpecial12()==1||amCompanySet.getCompanySpecial13()==1||amCompanySet.getCompanySpecial14()==1||amCompanySet.getCompanySpecial15()==1)
+        {
+            is_special = true;
+        }
+        if(amCompanySet.getCompanySpecial16()==1||amCompanySet.getCompanySpecial17()==1||amCompanySet.getCompanySpecial18()==1||amCompanySet.getCompanySpecial19()==1)
         {
             is_special = true;
         }
@@ -65,7 +77,7 @@ public class AmIndependentCustomController extends BasicController<IAmCompanySet
         {
             is_special = true;
         }
-        if(amCompanySet.getCompanySpecial21()==1||amCompanySet.getCompanySpecial22()==1)
+        if(amCompanySet.getCompanySpecial20()==1||amCompanySet.getCompanySpecial21()==1||amCompanySet.getCompanySpecial22()==1)
         {
             is_special = true;
         }

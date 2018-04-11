@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bus
 
 import ch.qos.logback.core.util.StringCollectionUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -160,6 +161,16 @@ public class ReasonUtil {
 
         DecimalFormat df = new DecimalFormat("0.00");
          return  df.format(d1);
+    }
+
+    public static  String getUserId(){
+        String userId = "System";
+        try {
+            userId = UserContext.getUserId();
+        } catch (Exception e) {
+
+        }
+        return  userId;
     }
 
 }
