@@ -71,6 +71,10 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         qMap.put("paymentAccountId", comAccountId);
         qMap.put("paymentMonth", paymentMonth);
         List<HfMonthChargeBO> paymentEmpList = hfEmpMonthChargeMapper.getPaymentEmpListEnquireFinance(qMap);
+        String isComEnjoyAdvance= String.valueOf(hfPaymentAccountMapper.getHfPaymentIsCompanyEnjoyAdvance(qMap));
+        paymentEmpList.forEach(HfMonthChargeBO->{
+            HfMonthChargeBO.setIsCompanyEnjoyAdvance(isComEnjoyAdvance);
+        });
         List<EmployeeProxyDTO> proxyDTOList = CommonTransform.convertToDTOs(paymentEmpList, EmployeeProxyDTO.class);
         //2 按照财务服务契约提供雇员级信息 并调用财务接口
         EmployeeMonthlyDataProxyDTO proxyDTO = new EmployeeMonthlyDataProxyDTO();
@@ -92,6 +96,10 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
                 for (Map<String, Object> ele : resDto) {
                     map.put("monthChargeId", ele.get("objId"));
                     map.put("empPaymentStatus", ele.get("isAdvance"));
+                    map.put("companyId", ele.get("companyId"));
+                    map.put("employeeId", ele.get("employeeId"));
+                    map.put("hfMonthBelong", ele.get("hfMonthBelong"));
+                    map.put("hfMonth", paymentMonth);
                     hfEmpMonthChargeMapper.updateMonthCharge(map);
                 }
             }
@@ -109,11 +117,11 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             if (cnt == 0) {
                 map.put("paymentStatus", 3);
                 map.put("modifiedBy", "system");
-                hfPaymentAccountMapper.updatePaymentAccount(map);
+                hfPaymentAccountMapper.updateHfPaymentAcc(map);
             } else {
                 map.put("paymentStatus", 1);
                 map.put("modifiedBy", "system");
-                hfPaymentAccountMapper.updatePaymentAccount(map);
+                hfPaymentAccountMapper.updateHfPaymentAcc(map);
             }
         }else {
             System.out.println("结算中心返回接口："+res.getMsg());

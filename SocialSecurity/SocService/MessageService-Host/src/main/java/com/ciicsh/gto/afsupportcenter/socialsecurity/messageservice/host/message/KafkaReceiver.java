@@ -154,6 +154,15 @@ public class KafkaReceiver {
         }
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())) {
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_ADJUST).setTextContent(TaskSink.SOCIAL_NEW + " JSON: " + JSON.toJSONString(taskMsgDTO)));
+
+            if (null != paramMap && paramMap.get("social_new") != null) {
+                if (!Boolean.valueOf(paramMap.get("social_new").toString())) {
+                    // 如果task_type是new，但Variables中的social_new为false时，该类任务单不接收
+                    logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_ADJUST).setTextContent(TaskSink.SOCIAL_NEW + ", Variables's social_new is false"));
+                    return;
+                }
+            }
+
             //获取社保办理类型
             socialType = paramMap.get("socialType").toString();
 //            empAgreementId = taskMsgDTO.getMissionId();
@@ -184,6 +193,14 @@ public class KafkaReceiver {
             try {
                 Map<String, Object> paramMap = taskMsgDTO.getVariables();
 
+                if (null != paramMap && paramMap.get("social_new") != null) {
+                    if (!Boolean.valueOf(paramMap.get("social_new").toString())) {
+                        // 如果task_type是new，但Variables中的social_new为false时，该类任务单不接收
+                        logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_ADJUST).setTextContent(TaskSink.SOCIAL_NEW + ", Variables's social_new is false"));
+                        return;
+                    }
+                }
+
                 //调用接口-调用客服中心接口，获取任务单表单信息
                 AfEmployeeInfoDTO dto = callEmpAgreement(taskMsgDTO, ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory(), paramMap.get("oldEmpAgreementId").toString());
                 //taskId为空，该消息则是由af客服中心发出，表示支持中心历史任务单未完成
@@ -205,8 +222,27 @@ public class KafkaReceiver {
                     //查询旧的任务类型保存到新的任务单
                     List<SsEmpTaskBO> resList = ssEmpTaskService.queryByBusinessInterfaceId(ssEmpTaskBO);
                     if (resList.size() > 0) {
-                        ssEmpTaskBO = resList.get(0);
-                        taskCategory = ssEmpTaskBO.getTaskCategory();
+                        for (SsEmpTaskBO bo : resList) {
+//                            ssEmpTaskBO = resList.get(0);
+                            taskCategory = bo.getTaskCategory();
+                            // 翻牌时，翻入翻出的empAgreementId相同，需排除翻出的
+                            if (!SocialSecurityConst.TASK_TYPE_5.equals(String.valueOf(taskCategory)) &&
+                                !SocialSecurityConst.TASK_TYPE_6.equals(String.valueOf(taskCategory)) &&
+                                !SocialSecurityConst.TASK_TYPE_7.equals(String.valueOf(taskCategory)) &&
+                                !SocialSecurityConst.TASK_TYPE_14.equals(String.valueOf(taskCategory)) &&
+                                !SocialSecurityConst.TASK_TYPE_15.equals(String.valueOf(taskCategory))
+                                ) {
+                                break;
+                            }
+                        }
+                    } else {
+                        // 如果没有查到旧的任务单，那么就是下列情况：外地新开（本地收不到相关任务单），更正时改为翻牌（外地转上海）；
+                        // 此时也不知道是翻牌（未走翻牌通道），只能默认为新开任务单；（该情况暂不考虑，前道已限制）
+                        // 或者0转非0，新开为0时，不发任务单至后道，更正为非0时，后道找不到旧任务单；
+                        if(paramMap.get("socialType") != null) {
+                            String socialType = paramMap.get("socialType").toString();
+                            taskCategory = Integer.parseInt(socialType);
+                        }
                     }
                     // 调整状态更正时，oldEmpAgreementId是对应调整前协议，也同时对应更正前任务单的missionId
 //                    ssEmpTaskFrontService.saveEmpTaskTc(taskMsgDTO, taskCategory, ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory(),1, paramMap.get("oldEmpAgreementId").toString(), dto);
@@ -232,6 +268,14 @@ public class KafkaReceiver {
         String oldAgreementId = null;
 
         if (null != paramMap) {
+            if (paramMap.get("social_stop") != null) {
+                if (!Boolean.valueOf(paramMap.get("social_stop").toString())) {
+                    // 如果task_type是stop，但Variables中的social_stop为false时，该类任务单不接收
+                    logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle("agreementAdjustOrUpdateEmpStop").setTextContent(TaskSink.SOCIAL_STOP + ", Variables's social_stop is false"));
+                    return;
+                }
+            }
+
             if (paramMap.get("oldEmpAgreementId") != null) {
                 Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
 

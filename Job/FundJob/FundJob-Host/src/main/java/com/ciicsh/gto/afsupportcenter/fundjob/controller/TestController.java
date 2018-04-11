@@ -18,7 +18,14 @@ public class TestController {
 
     @Autowired
     private HfPaymentService hfPaymentService;
-
+    /*
+      * 每日按雇员询问财务是否可付
+      * */
+    @RequestMapping("/createPaymentAccount")
+    public String createPaymentAccount() throws ParseException{
+        hfPaymentService.createPaymentAccount();
+        return "完成";
+    }
     /*
     * 每日按雇员询问财务是否可付
     * */
@@ -39,4 +46,7 @@ public class TestController {
             return "请传参数";
         }
     }
+
+
+
 }

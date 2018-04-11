@@ -1,6 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.MaterialDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.MaterialUpdateDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmpMaterialBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpMaterialService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao.AmEmpMaterialMapper;
@@ -29,4 +31,26 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
     public List<AmEmpMaterialBO> queryAmEmpMaterialList(AmEmpMaterialBO amEmpMaterialBO) {
         return baseMapper.queryAmEmpMaterial(amEmpMaterialBO);
     }
+
+    @Override
+    public PageRows<AmEmpMaterialBO> queryMaterialDic(PageInfo pageInfo) {
+        return PageKit.doSelectPage(pageInfo,() -> baseMapper.queryMaterialDic());
+    }
+
+    @Override
+    public List<MaterialDTO> queryMaterialByTaskId(Long empTaskId) {
+        return baseMapper.queryMaterialByTaskId(empTaskId);
+    }
+
+    @Override
+    public boolean updateMaterialByTaskId(MaterialUpdateDTO materialUpdateDTO) {
+
+        Integer i = baseMapper.updateMaterialByTaskId(materialUpdateDTO);
+
+        if(i>0){
+            return  true;
+        }
+        return false;
+    }
+
 }

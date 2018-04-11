@@ -19,6 +19,16 @@ public class AmTaskParamBO {
 
     private  String remarkType;
 
+    private  boolean isResign;
+
+    public boolean isResign() {
+        return isResign;
+    }
+
+    public void setResign(boolean resign) {
+        isResign = resign;
+    }
+
     public Long getEmploymentId() {
         return employmentId;
     }

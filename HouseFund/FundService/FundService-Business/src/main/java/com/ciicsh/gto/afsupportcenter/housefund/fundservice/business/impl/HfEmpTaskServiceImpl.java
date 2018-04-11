@@ -9,10 +9,12 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
+import com.ciicsh.gto.afsupportcenter.util.enumeration.ProcessCategory;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -24,7 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,14 +41,17 @@ import java.util.stream.Collectors;
 @Service
 public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask> implements HfEmpTaskService {
 
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
+
     @Override
-    public PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo) {
-        return queryHfEmpTaskInPage(pageInfo, null);
+    public PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo, String userId) {
+        return queryHfEmpTaskInPage(pageInfo, userId, null);
     }
 
     @Override
-    public PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo, String exceptTaskCategories) {
+    public PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo, String userId, String exceptTaskCategories) {
         HfEmpTaskBo hfEmpTaskBo = pageInfo.toJavaObject(HfEmpTaskBo.class);
+        hfEmpTaskBo.setUserId(userId);
         if (StringUtils.isNotBlank(exceptTaskCategories)) {
             hfEmpTaskBo.setExceptTaskCategories(exceptTaskCategories);
         }
@@ -52,8 +59,9 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
     }
 
     @Override
-    public PageRows<HfEmpTaskRejectExportBo> queryHfEmpTaskRejectInPage(PageInfo pageInfo, String exceptTaskCategories) {
+    public PageRows<HfEmpTaskRejectExportBo> queryHfEmpTaskRejectInPage(PageInfo pageInfo, String userId, String exceptTaskCategories) {
         HfEmpTaskBo hfEmpTaskBo = pageInfo.toJavaObject(HfEmpTaskBo.class);
+        hfEmpTaskBo.setUserId(userId);
         if (StringUtils.isNotBlank(exceptTaskCategories)) {
             hfEmpTaskBo.setExceptTaskCategories(exceptTaskCategories);
         }
@@ -144,6 +152,22 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
         if(null != socialList && socialList.size() > 0){
             this.setEmpTask(hfEmpTask,socialList,fundCategory);
+
+            // 调整或更正的转出或封存时
+            if (oldAgreementId != null && (
+                    ProcessCategory.AF_EMP_AGREEMENT_ADJUST.getCategory().equals(processCategory)
+                        || ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory().equals(processCategory)
+                ) && (
+                    HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT == taskCategory
+                        || HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE == taskCategory
+            )) {
+                // 非0转0不是常规意义的停办，是一种调整任务，所以没有截止年月，此处需特别处理
+                if (StringUtils.isEmpty(hfEmpTask.getEndMonth()) && StringUtils.isNotEmpty(hfEmpTask.getStartMonth())) {
+                    YearMonth startMonthDate = YearMonth.parse(hfEmpTask.getStartMonth(), formatter);
+                    hfEmpTask.setEndMonth(startMonthDate.minusMonths(1).format(formatter));
+                    hfEmpTask.setStartMonth(null);
+                }
+            }
         }
 
         //公积金类型:1 基本 2 补充
@@ -211,6 +235,22 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
         if(null != socialList && socialList.size() > 0){
             this.setEmpTask(hfEmpTask,socialList,fundCategory);
+
+            // 调整或更正的转出或封存时
+            if (paramMap.get("oldAgreementId") != null && (
+                ProcessCategory.AF_EMP_AGREEMENT_ADJUST.getCategory().equals(hfEmpTask.getProcessCategory())
+                    || ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory().equals(hfEmpTask.getProcessCategory())
+            ) && (
+                HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT == hfEmpTask.getTaskCategory()
+                    || HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE == hfEmpTask.getTaskCategory()
+            )) {
+                // 非0转0不是常规意义的停办，是一种调整任务，所以没有截止年月，此处需特别处理
+                if (StringUtils.isEmpty(hfEmpTask.getEndMonth()) && StringUtils.isNotEmpty(hfEmpTask.getStartMonth())) {
+                    YearMonth startMonthDate = YearMonth.parse(hfEmpTask.getStartMonth(), formatter);
+                    hfEmpTask.setEndMonth(startMonthDate.minusMonths(1).format(formatter));
+                    hfEmpTask.setStartMonth(null);
+                }
+            }
         }
         baseMapper.updateById(hfEmpTask);
 

@@ -83,7 +83,8 @@
         c.employ_feedback,
         c.luyong_handle_end,
         h.service_center,
-        h.leader_ship_name
+        h.leader_ship_name,
+        cs.refuse_special
         FROM
         am_emp_task a
         LEFT JOIN am_resign f  ON f.emp_task_id = a.emp_task_id
@@ -92,6 +93,7 @@
         LEFT JOIN sal_company e ON e.company_id = a.company_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
         LEFT JOIN am_emp_custom h on h.task_id = a.task_id
+        LEFT JOIN am_company_set cs on cs.company_id = a.company_id
         WHERE
         a.task_category = '2'
         and
@@ -153,6 +155,8 @@
         b.archive_card_state,
         b.doc_code,
         b.diaodang_feedback,
+        b.employ_feedback,
+        b.employ_doc_payment_to,
         t.out_reason,
         t.out_date,
         c.*
@@ -192,7 +196,8 @@
         c.employ_feedback,
         c.luyong_handle_end,
         h.service_center,
-        h.leader_ship_name
+        h.leader_ship_name,
+        cs.refuse_special
         FROM
         am_emp_task a
         LEFT JOIN am_resign f  ON f.emp_task_id = a.emp_task_id
@@ -201,6 +206,7 @@
         LEFT JOIN sal_company e ON e.company_id = a.company_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
         LEFT JOIN am_emp_custom h on h.task_id = a.task_id
+        LEFT JOIN am_company_set cs on cs.company_id = a.company_id
         WHERE
         a.task_category = '2'
         and

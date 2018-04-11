@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskSe
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogMessage;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.FundCategory;
@@ -180,9 +181,20 @@ public class KafkaReceiver {
             if (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) || TaskSink.ADD_FUND_NEW.equals(taskMsgDTO.getTaskType())) {
                 logger.info("start in fundEmpAgreementAdjust: " + JSON.toJSONString(taskMsgDTO));
                 Map<String, Object> paramMap = taskMsgDTO.getVariables();
+                String fundCategory = TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
+
+                if (null != paramMap) {
+                    if (FundCategory.BASICFUND.getCategory().equals(fundCategory) && paramMap.get("fund_new") != null && !Boolean.valueOf(paramMap.get("fund_new").toString())) {
+                        // 如果task_type是new，但Variables中的fund_new为false时，该类任务单不接收
+                        return;
+                    } else if (paramMap.get("add_fund_new") != null && !Boolean.valueOf(paramMap.get("add_fund_new").toString())) {
+                        // 如果task_type是new，但Variables中的add_fund_new为false时，该类任务单不接收
+                        return;
+                    }
+                }
+
                 if (null != paramMap && paramMap.get("fundType") != null) {
                     Integer taskCategory = paramMap.get("fundType").equals("4") ? TaskCategory.ADJUST.getCategory() : Integer.parseInt(paramMap.get("fundType").toString());
-                    String fundCategory = TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
                     String oldAgreementId = null;
 
                     if (paramMap.get("oldEmpAgreementId") != null) {
@@ -224,9 +236,20 @@ public class KafkaReceiver {
                 if (TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
                     agreementAdjustOrUpdateEmpStop(taskMsgDTO, fundCategory, 1);
                 } else {
+                    if (null != paramMap) {
+                        if (FundCategory.BASICFUND.getCategory().equals(fundCategory) && paramMap.get("fund_new") != null && !Boolean.valueOf(paramMap.get("fund_new").toString())) {
+                            // 如果task_type是new，但Variables中的fund_new为false时，该类任务单不接收
+                            return;
+                        } else if (paramMap.get("add_fund_new") != null && !Boolean.valueOf(paramMap.get("add_fund_new").toString())) {
+                            // 如果task_type是new，但Variables中的add_fund_new为false时，该类任务单不接收
+                            return;
+                        }
+                    }
+
                     //未办理任务单
                     if (StringUtils.isBlank(taskMsgDTO.getTaskId())) {
                         logger.info("start fundEmpAgreementCorrect(not handled): " + JSON.toJSONString(taskMsgDTO));
+
                         if (null != paramMap && paramMap.get("fundType") != null) {
                             fundType = Integer.parseInt(paramMap.get("fundType").toString());
                         }
@@ -238,18 +261,37 @@ public class KafkaReceiver {
                         HfEmpTask qd = new HfEmpTask();
                         //                    qd.setTaskId(paramMap.get("oldTaskId").toString());
                         qd.setBusinessInterfaceId(paramMap.get("oldEmpAgreementId").toString());
-
+                        if (fundCategory.equals(FundCategory.BASICFUND.getCategory())) {
+                            qd.setHfType(HfEmpTaskConstant.HF_TYPE_BASIC);
+                        } else {
+                            qd.setHfType(HfEmpTaskConstant.HF_TYPE_ADDED);
+                        }
                         //查询旧的任务类型保存到新的任务单
                         List<HfEmpTask> resList = hfEmpTaskService.queryByTaskId(qd);
                         if (resList.size() > 0) {
-                            HfEmpTask hfEmpTask = resList.get(0);
-                            taskCategory = hfEmpTask.getTaskCategory();
-                            processCategory = hfEmpTask.getProcessCategory();
+//                            HfEmpTask hfEmpTask = resList.get(0);
+                            // 翻牌时，翻入翻出的empAgreementId相同，需排除翻出的
+                            for (HfEmpTask hfEmpTask : resList) {
+                                taskCategory = hfEmpTask.getTaskCategory();
+                                processCategory = hfEmpTask.getProcessCategory();
+
+                                if (!TaskCategory.TURNOUT.getCategory().equals(taskCategory) &&
+                                    !TaskCategory.SEALED.getCategory().equals(taskCategory) &&
+                                    !TaskCategory.FLOPOUT.getCategory().equals(taskCategory) &&
+                                    !TaskCategory.FLOPSEALED.getCategory().equals(taskCategory)
+                                    ) {
+                                    break;
+                                }
+                            }
                         } else {
-                            // 如果没有查到旧的任务单，那么就是特殊情况：外地新开（本地收不到相关任务单），更正时改为翻牌（外地转上海）；
-                            // 此时也不知道是翻牌（未走翻牌通道），只能默认为新开任务单；（该情况暂不考虑，前端已限制）
-                            //                        processCategory = ProcessCategory.EMPLOYEENEW.getCategory();
-                            //                        taskCategory = TaskCategory.NEW.getCategory();
+                            // 如果没有查到旧的任务单，那么就是下列情况：外地新开（本地收不到相关任务单），更正时改为翻牌（外地转上海）；
+                            // 此时也不知道是翻牌（未走翻牌通道），只能默认为新开任务单；（该情况暂不考虑，前道已限制）
+                            // 或者0转非0，新开为0时，不发任务单至后道，更正为非0时，后道找不到旧任务单；
+                            processCategory = ProcessCategory.EMPLOYEENEW.getCategory();
+
+                            if (null != paramMap && paramMap.get("fundType") != null) {
+                                taskCategory = paramMap.get("fundType").equals("4") ? TaskCategory.ADJUST.getCategory() : Integer.parseInt(paramMap.get("fundType").toString());
+                            }
                         }
                         // 调整状态更正时，oldEmpAgreementId是对应调整前协议，也同时对应更正前任务单的missionId
 //                        boolean res = saveEmpTask(taskMsgDTO, fundCategory, processCategory, taskCategory, paramMap.get("oldEmpAgreementId").toString(), 1);
@@ -274,13 +316,21 @@ public class KafkaReceiver {
      */
     private void agreementAdjustOrUpdateEmpStop(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer isChange) {
         // 非0转0，ProcessCategory为调整，taskCategory为封存，新增一个封存任务单，但需要将oldAgreementId同时存入任务单记录；
-        // 因为前端发出新开任务时，已经创建了雇员的费用段，oldAgreementId对应的是前一个费用段，任务单结束时需要依据oldAgreementId进行回调，以便前道对其进行处理
+        // 因为前道发出新开任务时，已经创建了雇员的费用段，oldAgreementId对应的是前一个费用段，任务单结束时需要依据oldAgreementId进行回调，以便前道对其进行处理
         logger.info("start agreementAdjustOrUpdateEmpStop(): " + JSON.toJSONString(taskMsgDTO));
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
         int fundType = 2;
         String oldAgreementId = null;
 
         if (null != paramMap) {
+            if (FundCategory.BASICFUND.getCategory().equals(fundCategory) && paramMap.get("fund_stop") != null && !Boolean.valueOf(paramMap.get("fund_stop").toString())) {
+                // 如果task_type是stop，但Variables中的fund_stop为false时，该类任务单不接收
+                return;
+            } else if (paramMap.get("add_fund_stop") != null && !Boolean.valueOf(paramMap.get("add_fund_stop").toString())) {
+                // 如果task_type是stop，但Variables中的add_fund_stop为false时，该类任务单不接收
+                return;
+            }
+
             if (paramMap.get("fundType") != null) {
                 fundType = Integer.parseInt(paramMap.get("fundType").toString());
             }

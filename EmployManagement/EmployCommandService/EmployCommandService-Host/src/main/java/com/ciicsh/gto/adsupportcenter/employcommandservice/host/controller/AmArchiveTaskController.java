@@ -87,6 +87,12 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
                     amEmploymentBO.setCici("上海中智项目外包咨询服务有限公司");
                 }
             }
+
+            if(!StringUtil.isEmpty(amEmploymentBO.getArchiveSpecial()))
+            {
+                int last = amEmploymentBO.getArchiveSpecial().lastIndexOf(",");
+                amEmploymentBO.setArchiveSpecial(amEmploymentBO.getArchiveSpecial().substring(0,last));
+            }
         }
 
         return JsonResultKit.of(result);
@@ -194,6 +200,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         JSONObject params = new JSONObject();
         params.put("employeeId",amTaskParamBO.getEmployeeId());
         params.put("remarkType",amTaskParamBO.getRemarkType());
+        params.put("empTaskId",amTaskParamBO.getEmpTaskId());
         params.put("operateType",new Integer(2));
         pageInfo.setParams(params);
 
@@ -217,6 +224,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         List<AmRemarkBO> amRemarkBOList = amRemarkService.getAmRemakList(queryBo);
         //退工归还材料签收
         PageRows<AmEmpMaterialBO> result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
+
+        PageRows<AmEmpMaterialBO> resultMaterial = iAmEmpMaterialService.queryMaterialDic(pageInfo);
+
         //用工信息
         List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(param);
 
@@ -225,7 +235,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         //退工信息
         if(null!=listResignBO&&listResignBO.size()>0){
             AmResignBO resignBO = listResignBO.get(0);
-            if(1==resignBO.getIsFinish())
+            if(resignBO.getIsFinish()!=null&&1==resignBO.getIsFinish())
             {
                 amResignBO = listResignBO.get(0);
                 if(!StringUtil.isEmpty(amResignBO.getResignFeedback())){
@@ -299,6 +309,8 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         if(null!=result&&result.getRows().size()>0){
             resultMap.put("materialList",result.getRows());
         }
+
+        resultMap.put("resultMaterial",resultMaterial.getRows());
 
 
 
@@ -465,6 +477,12 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         {
             temp.setEmployFeedback(ReasonUtil.getYgfk(temp.getEmployFeedback()));
             temp.setResignFeedback1(ReasonUtil.getTgfk(temp.getResignFeedback1()));
+
+            if(!StringUtil.isEmpty(temp.getArchiveSpecial()))
+            {
+                int last = temp.getArchiveSpecial().lastIndexOf(",");
+                temp.setArchiveSpecial(temp.getArchiveSpecial().substring(0,last));
+            }
         }
 
         ExcelUtil.exportExcel(opts,archiveSearchExportOpt.class,fileNme,response);

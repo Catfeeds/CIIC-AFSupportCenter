@@ -26,7 +26,6 @@ public class AmEmploymentBO extends AmEmployment {
     private LocalDate storageOutDate;
     /**
      * 存档地
-
      */
     private String archivePlace;
 
@@ -35,7 +34,6 @@ public class AmEmploymentBO extends AmEmployment {
     private String resignFeedback2;
 
     private LocalDate returnDocDate;
-
     /**
      * 退工送办日期
      */
@@ -78,6 +76,51 @@ public class AmEmploymentBO extends AmEmployment {
     private  String employNotes;
 
     private String cici;
+
+    /**
+     * 服务中心
+     */
+    private  String serviceCenter;
+    /**
+     * 客服经理
+     */
+    private String leaderShipName;
+
+    private  String archiveSpecial;
+
+    private Long  empTaskResignId;
+
+    public Long getEmpTaskResignId() {
+        return empTaskResignId;
+    }
+
+    public void setEmpTaskResignId(Long empTaskResignId) {
+        this.empTaskResignId = empTaskResignId;
+    }
+
+    public String getArchiveSpecial() {
+        return archiveSpecial;
+    }
+
+    public void setArchiveSpecial(String archiveSpecial) {
+        this.archiveSpecial = archiveSpecial;
+    }
+
+    public String getServiceCenter() {
+        return serviceCenter;
+    }
+
+    public void setServiceCenter(String serviceCenter) {
+        this.serviceCenter = serviceCenter;
+    }
+
+    public String getLeaderShipName() {
+        return leaderShipName;
+    }
+
+    public void setLeaderShipName(String leaderShipName) {
+        this.leaderShipName = leaderShipName;
+    }
 
     public String getCici() {
         return cici;

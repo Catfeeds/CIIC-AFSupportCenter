@@ -4,20 +4,15 @@ import com.alibaba.fastjson.JSON;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.*;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.*;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmCompanySetBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmCustomBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmpTaskBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmTaskParamBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmCompanySetService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpCustomService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpMaterialService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpCustom;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpEmployee;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpMaterial;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao.AmEmpTaskMapper;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpTaskService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.employSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
@@ -72,6 +67,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     @Autowired
     private IAmEmpCustomService  amEmpCustomService;
 
+    @Autowired
+    private AmEmpEmployeeService  amEmpEmployeeService;
+
 
     @Override
     public PageRows<AmEmpTaskBO> queryAmEmpTask(PageInfo pageInfo) {
@@ -93,7 +91,13 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             amEmpTaskBO.setTaskStatus(null);
         }
 
-        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
+        if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
+            return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTaskOther(amEmpTaskBO));
+        }else{
+            return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
+        }
+
+
     }
 
     @Override
@@ -156,10 +160,13 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         Map<String, Object> map = null;
         try {
             map = taskMsgDTO.getVariables();
+
             archiveDirection = (String)map.get("archiveDirection");
             employeeNature = (String)map.get("employeeNature");
-            amEmpTask.setArchiveDirection(archiveDirection);
-            amEmpTask.setEmployeeNature(employeeNature);
+            EmployeeBO personNature = baseMapper.queryNature(employeeNature);
+            EmployeeBO employeeBO  = baseMapper.queryArchiveDriection(archiveDirection);
+            amEmpTask.setArchiveDirection(employeeBO.getArchiveDirection());
+            amEmpTask.setEmployeeNature(personNature.getPersonNature());
             submitterId = taskMsgDTO.getVariables().get("submitterId")==null?"":map.get("submitterId").toString();
 
         } catch (Exception e) {
@@ -185,6 +192,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             }
 
             this.saveEmpCustom(employeeCompany,taskMsgDTO.getTaskId(),bo.getCompanyId());
+
+            this.saveEmpEmployee(taskMsgDTO,bo);
 
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -257,10 +266,10 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 }
                 logger.info("outReason is null "+"  MissionId is "+taskMsgDTO.getMissionId());
             }
-            if(employeeCompany!=null&&employeeCompany.getTemplateType()!=null)
+            if(employeeCompany!=null&&employeeCompany.getHireUnit()!=null)
             {
-                amEmpTask.setEmployCode(employeeCompany.getTemplateType());
-                amEmpTask.setEmployProperty(ReasonUtil.getYgsx(employeeCompany.getTemplateType().toString()));
+                amEmpTask.setEmployCode(employeeCompany.getHireUnit());
+                amEmpTask.setEmployProperty(ReasonUtil.getYgsx(employeeCompany.getHireUnit().toString()));
             }
             if(employeeCompany!=null)
             {
@@ -303,7 +312,10 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     public AmEmpTaskBO queryEmpTask(AmEmpTaskBO amEmpTaskBO) {
         AmEmpTaskBO empTaskBO = null;
         try {
-            empTaskBO = baseMapper.queryEmpTask(amEmpTaskBO);
+            List<AmEmpTaskBO>  list = baseMapper.queryEmpTask(amEmpTaskBO);
+            if(null!=list&&list.size()>0){
+                return  list.get(0);
+            }
         } catch (Exception e) {
 
         }
@@ -335,12 +347,22 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         AmEmpTask amEmpTask = null;
         customBO.setCompanyId(param.getCompanyId());
         try {
-            if(null!=param.getEmpTaskId())
+            if(null!=param.getEmpTaskId()&&param.isResign()==false)
             {
                 amEmpTask = super.selectById(param.getEmpTaskId());
                 employeeBO.setArchiveDirection(amEmpTask==null?"":amEmpTask.getArchiveDirection());
                 employeeBO.setEmployeeNature(amEmpTask==null?"":amEmpTask.getEmployeeNature());
                 employeeBO.setEmployProperty(amEmpTask==null?"":amEmpTask.getEmployProperty());
+            }else{
+                AmEmpTaskBO amEmpTaskBO = new AmEmpTaskBO();
+                amEmpTaskBO.setCompanyId(param.getCompanyId());
+                amEmpTaskBO.setEmployeeId(param.getEmployeeId());
+
+                amEmpTask = this.queryEmpTask(amEmpTaskBO);
+                employeeBO.setArchiveDirection(amEmpTask==null?"":amEmpTask.getArchiveDirection());
+                employeeBO.setEmployeeNature(amEmpTask==null?"":amEmpTask.getEmployeeNature());
+                employeeBO.setEmployProperty(amEmpTask==null?"":amEmpTask.getEmployProperty());
+
             }
 
         } catch (Exception e) {
@@ -360,7 +382,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
         if(afEmployeeCompanyDTO!=null)
         {
-            employeeBO.setTemplateType(ReasonUtil.getYgsx(afEmployeeCompanyDTO.getTemplateType()==null?"":afEmployeeCompanyDTO.getTemplateType().toString()));
+            employeeBO.setTemplateType(ReasonUtil.getYgsx(afEmployeeCompanyDTO.getHireUnit()==null?"":afEmployeeCompanyDTO.getHireUnit().toString()));
             employeeBO.setPosition(afEmployeeCompanyDTO.getPosition());
 
             Map<String,Object> param0 = new HashMap<>();
@@ -375,7 +397,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             if(list!=null&&list.size()>0)
             {
                 employeeBO.setSsAccount(list.get(0).getSsAccount());
-                employeeBO.setComAccountName(list.get(0).getComAccountName());
+                employeeBO.setSettlementArea(list.get(0).getSettlementArea());
                 employeeBO.setAccountRepairDate(list.get(0).getAccountRepairDate());
                 employeeBO.setSsPwd(list.get(0).getSsPwd());
             }
@@ -435,7 +457,13 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 }
             }
 
-            customBO.setEmployeeCenterOperator(employeeHireInfoDTO.getEmployeeCenterOperator());
+            SMUserInfoDTO smUserInfoDTO = null;
+            if(!StringUtil.isEmpty(employeeHireInfoDTO.getEmployeeCenterOperator()))
+            {
+                smUserInfoDTO = employeeInfoProxy.getUserInfo(employeeHireInfoDTO.getEmployeeCenterOperator());
+            }
+
+            customBO.setEmployeeCenterOperator(smUserInfoDTO==null?"":smUserInfoDTO.getDisplayName());
 
         }
 
@@ -669,6 +697,38 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     }
 
+    void saveEmpEmployee(TaskCreateMsgDTO taskMsgDTO,AmEmpTaskBO bo){
+
+
+        EmployeeHireInfoQueryDTO employeeHireInfoQueryDTO = new EmployeeHireInfoQueryDTO();
+        employeeHireInfoQueryDTO.setCompanyId(bo.getCompanyId());
+        employeeHireInfoQueryDTO.setEmployeeId(bo.getEmployeeId());
+        com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeHireInfoDTO> employeeHireInfo = null;//雇佣雇佣信息接口
+
+        try {
+            employeeHireInfo = employeeInfoProxy.getEmployeeHireInfo(employeeHireInfoQueryDTO);
+
+            EmployeeHireInfoDTO employeeHireInfoDTO = employeeHireInfo.getData();
+
+            AmEmpEmployee  amEmpEmployee = new AmEmpEmployee();
+            amEmpEmployee.setEmployeeId(bo.getEmployeeId());
+            amEmpEmployee.setCompanyId(bo.getCompanyId());
+            amEmpEmployee.setTaskId(taskMsgDTO.getTaskId());
+            amEmpEmployee.setLaborStartDate(employeeHireInfoDTO.getLaborStartDate());
+            amEmpEmployee.setLaborEndDate(employeeHireInfoDTO.getLaborEndDate());
+            amEmpEmployee.setGender(employeeHireInfoDTO.getGender());
+            amEmpEmployee.setIdNum(employeeHireInfoDTO.getIdNum());
+            amEmpEmployee.setEmployeeName(employeeHireInfoDTO.getEmployeeName());
+
+            amEmpEmployeeService.insert(amEmpEmployee);
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+        }
+
+
+
+    }
+
     AmEmpTask setEmployeeId(AmEmpTask amEmpTask,TaskCreateMsgDTO taskMsgDTO){
         Object empCompanyId = taskMsgDTO.getVariables().get("empCompanyId");
         amEmpTask.setEmpCompanyId(empCompanyId.toString());
@@ -684,9 +744,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     AmCustomBO  setCustomBO( AmEmpTask amEmpTask,AmCustomBO customBO,String companyName){
         if(amEmpTask!=null&&amEmpTask.getEmployCode()!=null)
         {
-            if(amEmpTask.getEmployCode()==2){//代理也就是独立
+            if(amEmpTask.getEmployCode()==1){//是独立
                 customBO.setCompanyName(companyName);
-            }else if(amEmpTask.getEmployCode()==1){
+            }else if(amEmpTask.getEmployCode()==2){
                 customBO.setCompanyName("中智上海经济技术合作公司");
             }else if(amEmpTask.getEmployCode()==3){
                 customBO.setCompanyName(companyName);

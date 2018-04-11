@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfMonthChargeMapper">
     <resultMap id="ResultMapDiffBo" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfMonthChargeDiffBo">
+        <result column="ss_month_belong" property="ssMonthBelong" />
         <result column="amount" property="amount" />
         <result column="emp_amount" property="empAmount" />
         <result column="com_amount" property="comAmount" />
@@ -24,6 +25,23 @@
         <result column="company_id" property="companyId" />
         <result column="company_name" property="companyName" />
         <result column="hf_com_account" property="hfComAccount" />
+    </resultMap>
+
+    <resultMap id="NetBankExportBO" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankExportBO">
+        <result column="start_month" property="startMonth" />
+        <result column="employee_id" property="employeeId" />
+        <result column="employee_name" property="employeeName" />
+        <result column="hf_emp_account" property="hfEmpAccount" />
+        <result column="birthday" property="birthday" />
+        <result column="id_num" property="idNum" />
+        <result column="gender" property="gender" />
+        <result column="base" property="base" />
+        <result column="ratio" property="ratio" />
+        <result column="amount" property="amount" />
+        <result column="com_amount" property="comAmount" />
+        <result column="emp_amount" property="empAmount" />
+        <result column="ratio_com" property="ratioCom" />
+        <result column="ratio_emp" property="ratioEmp" />
     </resultMap>
 
 	<update id="updateHfMonthCharge">
@@ -83,6 +101,7 @@
 
     <select id="getHfMonthChargeDiffSum" resultMap="ResultMapDiffBo">
         SELECT
+            ss_month_belong,
             IFNULL(SUM(amount),0) AS amount,
             IFNULL(SUM(emp_amount),0) AS emp_amount,
             IFNULL(SUM(com_amount),0) AS com_amount
@@ -95,6 +114,9 @@
             </if>
             <if test="employeeId != null">
                 AND employee_id = #{employeeId}
+            </if>
+            <if test="empArchiveId != null">
+                AND emp_archive_id = #{empArchiveId}
             </if>
             <if test="hfType != null">
                 AND hf_type = #{hfType}
@@ -109,6 +131,7 @@
                 AND #{ssMonthBelongEnd} >= ss_month_belong
             </if>
         </where>
+        GROUP BY ss_month_belong
     </select>
 
     <select id="queryHfMonthChargeReport" resultMap="ResultMapReportBO">
@@ -131,6 +154,9 @@
         CASE WHEN hmc.hf_type = 1 THEN hcacb.hf_com_account ELSE hcaca.hf_com_account END hf_com_account
         FROM hf_month_charge hmc
         INNER JOIN sal_company sc ON hmc.company_id = sc.company_id AND sc.is_active = 1
+        <if test="userId != null">
+            INNER JOIN hf_dataauth_company hdc ON sc.company_id = hdc.company_id AND hdc.user_id = #{userId}
+        </if>
         INNER JOIN emp_employee ee ON hmc.employee_id = ee.employee_id
         LEFT JOIN hf_emp_archive heab ON hmc.emp_archive_id = heab.emp_archive_id AND heab.hf_type = 1 AND heab.is_active = 1
         LEFT JOIN hf_com_account hcab ON heab.com_account_id = hcab.com_account_id AND hcab.is_active = 1
@@ -177,6 +203,50 @@
             <if test="paymentTypes != null">
                 AND hmc.payment_type IN (${paymentTypes})
             </if>
+            <if test="basicComAccountArray != null">
+                <foreach collection="basicComAccountArray" item="item" open="AND hcacb.hf_com_account IN (" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="addedComAccountArray != null">
+                <foreach collection="addedComAccountArray" item="item" open="AND hcaca.hf_com_account IN (" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
         </where>
+    </select>
+
+    <select id="queryNetBankData" resultMap="NetBankExportBO">
+        SELECT
+            hmc.ss_month_belong AS start_month,
+            hmc.employee_id,
+            ee.employee_name,
+            ee.birthday,
+            ee.id_num,
+            ee.gender,
+            hea.hf_emp_account,
+            hmc.amount,
+            hmc.base,
+            hmc.com_amount,
+            hmc.emp_amount,
+            hmc.ratio,
+            hmc.ratio_com,
+            hmc.ratio_emp
+        FROM hf_month_charge hmc
+        INNER JOIN hf_emp_archive hea ON hmc.emp_archive_id = hea.emp_archive_id AND hea.is_active = 1
+        INNER JOIN emp_employee ee ON hea.employee_id = ee.employee_id AND ee.is_active = 1
+        WHERE hmc.is_active = 1
+        <if test="comAccountClassId != null">
+          AND hea.com_account_class_id = #{comAccountClassId}
+        </if>
+        <if test="hfMonth != null">
+          AND hmc.hf_month = #{hfMonth}
+        </if>
+        <if test="hfType != null">
+          AND hea.hf_type = #{hfType}
+        </if>
+        <if test="paymentTypes != null">
+          AND hmc.payment_type IN (${paymentTypes})
+        </if>
     </select>
 </mapper>

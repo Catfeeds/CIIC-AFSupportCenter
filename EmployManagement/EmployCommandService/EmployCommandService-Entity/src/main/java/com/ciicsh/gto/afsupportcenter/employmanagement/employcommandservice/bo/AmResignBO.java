@@ -126,6 +126,26 @@ public class AmResignBO extends AmResign {
 
     private String cici;
 
+    private  String refuseSpecial;
+
+    private String archiveDirection;
+
+    public String getArchiveDirection() {
+        return archiveDirection;
+    }
+
+    public void setArchiveDirection(String archiveDirection) {
+        this.archiveDirection = archiveDirection;
+    }
+
+    public String getRefuseSpecial() {
+        return refuseSpecial;
+    }
+
+    public void setRefuseSpecial(String refuseSpecial) {
+        this.refuseSpecial = refuseSpecial;
+    }
+
     public String getCici() {
         return cici;
     }

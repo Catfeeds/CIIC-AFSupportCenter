@@ -19,7 +19,7 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @param pageInfo
      * @return
      */
-    PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo);
+    PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo, String userId);
 
     /**
      * 分页查询雇员任务单信息
@@ -28,7 +28,7 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @param exceptTaskCategories
      * @return
      */
-    PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo, String exceptTaskCategories);
+    PageRows<HfEmpTaskExportBo> queryHfEmpTaskInPage(PageInfo pageInfo, String userId, String exceptTaskCategories);
 
     /**
      * 分页查询批退雇员任务单信息
@@ -36,7 +36,7 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @param pageInfo
      * @return
      */
-    PageRows<HfEmpTaskRejectExportBo> queryHfEmpTaskRejectInPage(PageInfo pageInfo, String exceptTaskCategories);
+    PageRows<HfEmpTaskRejectExportBo> queryHfEmpTaskRejectInPage(PageInfo pageInfo, String userId, String exceptTaskCategories);
 
 
     /**

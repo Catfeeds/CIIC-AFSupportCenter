@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentComBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.HfFundPayCreatePaymentAccountPara;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentCom;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -17,5 +18,5 @@ public interface HfPaymentComService extends IService<HfPaymentCom> {
      * @return
      */
     PageRows<HfPaymentComBo> getFundPaysDetailOperationData(PageInfo pageInfo);
-    JsonResult createPaymentCom(List paymentAccountIds,String payee);
+    JsonResult createPaymentCom(HfFundPayCreatePaymentAccountPara hfFundPayCreatePaymentAccountPara);
 }

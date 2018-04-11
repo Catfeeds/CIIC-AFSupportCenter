@@ -189,6 +189,7 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
 //          bankAccountMap.put("province_code", "002");
 //          bankAccountMap.put("city_code", "01");
             bankAccountMap.put("account_type", "4");
+            bankAccountMap.put("finance_account_id", "1"); //默认是 中智上海经济技术合作有限公司
             //bankAccountMap.put("subject_no", "1");
             //插入银行账号信息并返回结果，如果接口返回0 表示 接口调用失败，正常返回 bankAccountId 主键
             Map<String,String> mp=new HashMap<>();
@@ -322,6 +323,11 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
             accountExtBO = extBOS.get(0);
             //处理状态的转换，客服中心只显示用
             accountExtBO.setTaskStatus(ComTaskStatus.getValue(Integer.parseInt(accountExtBO.getTaskStatus())));
+            List<SsAccountRatio> ssAccountRatioList = ssAccountRatioMapper.queryRatioByAccountId(accountExtBO.getComAccountId().toString());
+            if (ssAccountRatioList != null && ssAccountRatioList.size() > 0) {
+                SsAccountRatio ssAccountRatio = ssAccountRatioList.get(0);
+                accountExtBO.setComRatio(ssAccountRatio.getComRatio());
+            }
         }
         return accountExtBO;
     }

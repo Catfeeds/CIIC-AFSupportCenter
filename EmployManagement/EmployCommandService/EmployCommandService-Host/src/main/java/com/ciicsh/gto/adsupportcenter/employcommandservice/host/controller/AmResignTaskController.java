@@ -79,6 +79,14 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
                }
            }
 
+           if(!StringUtil.isEmpty(amResignBO.getRefuseSpecial()))
+           {
+               int last = amResignBO.getRefuseSpecial().lastIndexOf(",");
+               amResignBO.setRefuseSpecial(amResignBO.getRefuseSpecial().substring(0,last));
+
+           }
+
+
        }
 
         return JsonResultKit.of(result);
@@ -131,6 +139,8 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
     @RequestMapping("/queryAmResignDetail")
     public JsonResult queryAmResignDetail(AmTaskParamBO amTaskParamBO){
+
+        amTaskParamBO.setResign(true);
 
         Map<String,Object>  map = taskService.getInformation(amTaskParamBO);
 
@@ -228,6 +238,19 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         AmResignBO amResignBO = new AmResignBO();
         if(null!=listResignBO&&listResignBO.size()>0){
             amResignBO = listResignBO.get(0);
+
+            amResignBO.setYuliuDocNum(amArchiveBO.getYuliuDocNum());
+            amResignBO.setDocNum(amArchiveBO.getDocNum());
+            amResignBO.setArchiveCardState(amArchiveBO.getArchiveCardState());
+            amResignBO.setArchivePlace(amArchiveBO.getArchivePlace());
+            amResignBO.setArchivePlaceAdditional(amArchiveBO.getArchivePlaceAdditional());
+
+            amResignBO.setHandleType(amEmploymentBO.getHandleType());
+            amResignBO.setEmployFeedback(amEmploymentBO.getEmployFeedback());
+            amResignBO.setEmploymentId(amEmploymentBO.getEmploymentId());
+            amResignBO.setEmployDocPaymentTo(amArchiveBO.getEmployDocPaymentTo());
+
+            amResignBO.setArchiveDirection(employeeBO.getArchiveDirection());
         }else{
             amResignBO.setYuliuDocNum(amArchiveBO.getYuliuDocNum());
             amResignBO.setDocNum(amArchiveBO.getDocNum());
@@ -237,6 +260,10 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
             amResignBO.setHandleType(amEmploymentBO.getHandleType());
             amResignBO.setEmployFeedback(amEmploymentBO.getEmployFeedback());
+            amResignBO.setEmploymentId(amEmploymentBO.getEmploymentId());
+            amResignBO.setEmployDocPaymentTo(amArchiveBO.getEmployDocPaymentTo());
+
+            amResignBO.setArchiveDirection(employeeBO.getArchiveDirection());
 
         }
         amResignBO.setFirstInDate(employeeBO.getFirstInDate());
@@ -347,6 +374,15 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         String fileNme = "退工任务单_"+ StringUtil.getDateString(date)+".xls";
 
         List<resignSearchExportOpt> opts = business.queryAmResignList(amResignBO);
+
+        for(resignSearchExportOpt temp:opts){
+            if(!StringUtil.isEmpty(temp.getRefuseSpecial()))
+            {
+                int last = temp.getRefuseSpecial().lastIndexOf(",");
+                temp.setRefuseSpecial(temp.getRefuseSpecial().substring(0,last));
+
+            }
+        }
 
         ExcelUtil.exportExcel(opts,resignSearchExportOpt.class,fileNme,response);
     }

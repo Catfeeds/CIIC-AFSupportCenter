@@ -8,5 +8,7 @@ import java.util.List;
 public class HfFundPayCreatePaymentAccountPara {
     List listData;
     String payee;
+    Integer paymentWay;
+    String paymentMonth;
     Long paymentId;
 }

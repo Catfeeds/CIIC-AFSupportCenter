@@ -10,6 +10,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfMonthChar
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.util.PdfUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -32,7 +33,7 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
 
     @RequestMapping("/hfMonthChargeQuery")
     public JsonResult<PageRows<HFMonthChargeReportBO>> hfMonthChargeQuery(PageInfo pageInfo) {
-        PageRows<HFMonthChargeReportBO> result = business.queryHfMonthChargeReport(pageInfo);
+        PageRows<HFMonthChargeReportBO> result = business.queryHfMonthChargeReport(pageInfo, UserContext.getUserId());
         return JsonResultKit.of(result);
     }
 
@@ -47,7 +48,7 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
     public void hfMonthChargeExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         pageInfo.setPageSize(10000);
         pageInfo.setPageNum(0);
-        PageRows<HFMonthChargeReportBO> result = business.queryHfMonthChargeReport(pageInfo);
+        PageRows<HFMonthChargeReportBO> result = business.queryHfMonthChargeReport(pageInfo, UserContext.getUserId());
         long total = result.getTotal();
         ExportParams exportParams = new ExportParams();
         exportParams.setType(ExcelType.XSSF);
@@ -61,7 +62,7 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
             int pageNum = (int) Math.ceil(total / pageInfo.getPageSize());
             for(int i = 1; i < pageNum; i++) {
                 pageInfo.setPageNum(i);
-                result = business.queryHfMonthChargeReport(pageInfo);
+                result = business.queryHfMonthChargeReport(pageInfo, UserContext.getUserId());
                 workbook = ExcelExportUtil.exportBigExcel(exportParams, HfEmpTaskExportBo.class, result.getRows());
             }
             ExcelExportUtil.closeExportBigExcel();
@@ -91,6 +92,7 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
             String hfTypeName;
             String templateFilePath;
 
+            hfMonthChargeQueryBO.setUserId(UserContext.getUserId());
             List<Map<String, Object>> chgDetailsPageList = business.getChgDetailsPageList(hfMonthChargeQueryBO, true);
 
             if (hfMonthChargeQueryBO.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
@@ -145,6 +147,7 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
         String templateFilePath;
 
         try {
+            hfMonthChargeQueryBO.setUserId(UserContext.getUserId());
             List<Map<String, Object>> repairDetailsPageList = business.getRepairDetailsPageList(hfMonthChargeQueryBO, true);
 
             if (hfMonthChargeQueryBO.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {

@@ -22,7 +22,9 @@ public class FilterConfigure extends WebMvcConfigurerAdapter {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new CatInterceptor()).addPathPatterns("/**");
-        registry.addInterceptor(authenticateInterceptor()).addPathPatterns("/**").excludePathPatterns("/basic/data/getUserInfoByToken/**");
+        registry.addInterceptor(authenticateInterceptor()).addPathPatterns("/**").excludePathPatterns("/basic/data/getUserInfoByToken/**")
+            .excludePathPatterns("/api/employ/**")
+            .excludePathPatterns("/error");
         super.addInterceptors(registry);
     }
 

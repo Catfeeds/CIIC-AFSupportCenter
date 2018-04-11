@@ -23,9 +23,16 @@
 	</resultMap>
 
     <resultMap id="GetFundPaysDetailOperationDataResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentComBo" extends="BaseResultMap">
-        <result column="payment_month" property="paymentMonth" />
-        <result column="title" property="companyName" />
-        <result column="hf_type_name" property="hfTypeName" />
+        <result column="hf_type_name" property="hfTypeName"/>
+        <result column="payment_month" property="paymentMonth"/>
+        <result column="company_id" property="companyId"/>
+        <result column="title" property="title"/>
+        <result column="payment_bank" property="paymentBank"/>
+        <result column="remitted_amount" property="remittedAmount"/>
+        <result column="repair_amount" property="repairAmount"/>
+        <result column="remitted_count_emp" property="remittedCountEmp"/>
+        <result column="daozhang_amount" property="daozhangAmount"/>
+        <result column="daozhang_count_emp" property="daozhangCountEmp"/>
     </resultMap>
 
     <!--查询公积金汇缴支付详细操作数据-->
@@ -47,8 +54,8 @@
         INNER JOIN hf_type ht ON ht.hf_type_id = pc.hf_type
         <where>
             pc.is_active = 1
-            <if test="paymentMonth != null and paymentMonth != ''">
-                AND p.payment_id = TRIM(#{paymentId})
+            <if test="paymentId != null and paymentId != ''">
+                AND p.payment_id = #{paymentId}
             </if>
         </where>
         ORDER BY

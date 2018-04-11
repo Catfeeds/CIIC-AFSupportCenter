@@ -2,7 +2,6 @@ package com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.ciicsh.gto.adsupportcenter.employcommandservice.host.messageBus.KafkaSender;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.CommonApiUtils;
@@ -19,8 +18,6 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
-import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMUserInfoDTO;
-import com.ciicsh.gto.identityservice.api.dto.response.UserInfoResponseDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -263,7 +260,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     @RequestMapping("/saveEmployee")
     public JsonResult<Boolean> saveEmployee(AmEmployment entity) {
         String userId = UserContext.getUserId();
-        String userName = UserContext.getUserName();
+        String userName = UserContext.getUser().getDisplayName();
         LocalDateTime now = LocalDateTime.now();
         if(entity.getEmploymentId()==null){
             entity.setCreatedTime(now);
@@ -332,7 +329,13 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                     Map<String,Object> variables = new HashMap<>();
                     variables.put("status", ReasonUtil.getYgResult(entity.getEmployFeedback()));
                     variables.put("remark",ReasonUtil.getYgfk(entity.getEmployFeedback()));
-                    variables.put("assignee","system");
+                    String userName = "system";
+                    try {
+                        userName = UserContext.getUser().getDisplayName();
+                    } catch (Exception e) {
+
+                    }
+                    variables.put("assignee",userName);
                     TaskCommonUtils.completeTask(amEmpTask.getTaskId(),employeeInfoProxy,variables);
                 }
             }

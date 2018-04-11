@@ -55,6 +55,7 @@
         <if test="employmentId!=null">
             and  employment_id = #{employmentId}
         </if>
+        order by  created_time desc
     </select>
 
     <select id="queryAmArchive" resultMap="BaseResultMapDTO">
@@ -62,6 +63,7 @@
         a.employ_code,
         w.out_reason,
         w.out_date,
+        w.emp_task_id as empTaskResignId,
         a.emp_task_id,
         b.employment_id,
         b.employee_id,
@@ -91,7 +93,10 @@
         /**退工送办日期*/
         f.resign_handle_date,
         f.job_centre_feedback_date,
-        e.title
+        e.title,
+        h.service_center,/*服务中心 */
+        h.leader_ship_name,  /*客服经理*/
+        cs.archive_special
         FROM
         am_employment b
         LEFT JOIN am_emp_task a on a.emp_task_id = b.emp_task_id
@@ -100,6 +105,8 @@
         LEFT JOIN emp_employee d  on  b.employee_id = d.employee_id
         LEFT JOIN sal_company e ON e.company_id = b.company_id
         LEFT JOIN am_emp_task w on a.company_id = w.company_id and a.employee_id = w.employee_id and w.task_category = 2
+        LEFT JOIN am_emp_custom h on h.task_id = a.task_id
+        LEFT JOIN am_company_set cs on cs.company_id = a.company_id
         where  1= 1
         <if test="taskStatus!=null">
             and  a.task_status = ${taskStatus}
@@ -191,7 +198,10 @@
         /**退工送办日期*/
         f.resign_handle_date,
         f.job_centre_feedback_date,
-        e.title
+        e.title,
+        h.service_center,/*服务中心 */
+        h.leader_ship_name,  /*客服经理*/
+        cs.archive_special
         FROM
         am_employment b
         LEFT JOIN am_emp_task a on a.emp_task_id = b.emp_task_id
@@ -200,6 +210,8 @@
         LEFT JOIN emp_employee d  on  b.employee_id = d.employee_id
         LEFT JOIN sal_company e ON e.company_id = b.company_id
         LEFT JOIN am_emp_task w on a.company_id = w.company_id and a.employee_id = w.employee_id and w.task_category = 2
+        LEFT JOIN am_emp_custom h on h.task_id = a.task_id
+        LEFT JOIN am_company_set cs on cs.company_id = a.company_id
         where  1= 1
         <if test="taskStatus!=null">
             and  a.task_status = ${taskStatus}

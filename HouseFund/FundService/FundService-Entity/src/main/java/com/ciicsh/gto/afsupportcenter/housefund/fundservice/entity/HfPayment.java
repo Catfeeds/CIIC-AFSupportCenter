@@ -111,7 +111,12 @@ public class HfPayment extends Model<HfPayment> {
 
     @TableField("receiver")
     private String receiver;
+    //付款申请编号
+    @TableField("pay_apply_code")
+    private String payApplyCode;
 
+    @TableField("payment_way")
+    private Integer paymentWay;
     /**
      * 是否可用
      */
@@ -138,6 +143,22 @@ public class HfPayment extends Model<HfPayment> {
      */
 	@TableField("modified_by")
 	private String modifiedBy;
+
+    public Integer getPaymentWay() {
+        return paymentWay;
+    }
+
+    public void setPaymentWay(Integer paymentWay) {
+        this.paymentWay = paymentWay;
+    }
+
+    public String getPayApplyCode() {
+        return payApplyCode;
+    }
+
+    public void setPayApplyCode(String payApplyCode) {
+        this.payApplyCode = payApplyCode;
+    }
 
     public String getReceiver() {
         return receiver;
@@ -330,6 +351,7 @@ public class HfPayment extends Model<HfPayment> {
 			", rejectionHis=" + rejectionHis +
 			", requestUser=" + requestUser +
 			", requestDate=" + requestDate +
+            ", payApplyCode=" + payApplyCode +
             ", receiver=" + receiver +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
