@@ -28,5 +28,6 @@ public class HfPaymentBo extends HfPayment {
      * 财务支付日期
      */
     private String financePaymentDateString;
+    private String  companyId;
 
 }

@@ -56,4 +56,7 @@ public class HfPaymentAccountBo extends HfPaymentAccount {
      */
     private BigDecimal payInBackAmount;
 
+    private String companyId;
+    private String companyName;
+    private String paymentMonthValue;
 }

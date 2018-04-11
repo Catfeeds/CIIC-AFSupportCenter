@@ -70,6 +70,9 @@
             <if test="paymentMonth!= null and paymentMonth != ''">
                 AND hfp.payment_month = TRIM(#{paymentMonth})
             </if>
+            <if test="companyId!= null and companyId != ''">
+                AND EXISTS (select 1 from hf_payment_com pc where pc.payment_id=hfp.payment_id and pc.company_id =#{companyId})
+            </if>
         </where>
         ORDER BY hfp.payment_id DESC
     </select>
