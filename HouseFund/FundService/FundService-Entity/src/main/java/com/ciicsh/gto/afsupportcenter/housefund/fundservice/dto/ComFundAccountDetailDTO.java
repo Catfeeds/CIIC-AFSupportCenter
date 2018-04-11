@@ -70,7 +70,8 @@ public class ComFundAccountDetailDTO
      * */
     private Byte compensativeAccountTempStore;
 
-
+    private Long  comAccountClassId;
+    private Long comAccountId;
     public ComFundAccountDetailDTO()
     {
         paymentBank = 0;
@@ -84,6 +85,22 @@ public class ComFundAccountDetailDTO
         basicAccountTempStore = 0;
         compensativeAccountTempStore = 0;
 
+    }
+
+    public Long getComAccountClassId() {
+        return comAccountClassId;
+    }
+
+    public void setComAccountClassId(Long comAccountClassId) {
+        this.comAccountClassId = comAccountClassId;
+    }
+
+    public Long getComAccountId() {
+        return comAccountId;
+    }
+
+    public void setComAccountId(Long comAccountId) {
+        this.comAccountId = comAccountId;
     }
 
     public Byte getPaymentBank() {

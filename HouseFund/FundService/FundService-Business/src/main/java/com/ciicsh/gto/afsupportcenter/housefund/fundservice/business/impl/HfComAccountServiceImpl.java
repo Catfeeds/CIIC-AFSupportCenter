@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccou
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComTaskMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountDetailDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.GetComFundAccountListRequestDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountCompanyPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountDetailPO;
@@ -15,6 +16,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccoun
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountNamePO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccount;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -127,5 +130,11 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
     @Override
     public List<ComAccountExtBo> queryHfComAccountList(ComAccountParamExtBo extBo) {
         return baseMapper.queryHfComAccountList(extBo);
+    }
+
+    @Override
+    public JsonResult submitCompanyFundAccount(ComFundAccountDetailDTO comFundAccountDetailDTO) {
+
+        return JsonResultKit.of();
     }
 }
