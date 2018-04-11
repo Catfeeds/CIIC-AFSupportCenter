@@ -8,7 +8,7 @@ spring:
   application:
     name: support-center-soc-api-service
   profiles:
-    active: fat
+    active: dev
 ###################  spring cloud eureka  ###################
 eureka:
   instance:
