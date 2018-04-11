@@ -19,7 +19,8 @@ import org.springframework.context.annotation.Import;
     "com.ciicsh.gto.afcompanycenter.queryservice.api",
     "com.ciicsh.gto.afcompanycenter.commandservice.api",
     "com.ciicsh.gto.afsystemmanagecenter.apiservice.api",
-    "com.ciicsh.gto.logservice.api"})
+    "com.ciicsh.gto.logservice.api",
+    "com.ciicsh.gto.salecenter.apiservice.api"})
 @MapperScan("com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao")
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.housefund.fundservice","com.ciicsh.gto.afsupportcenter.housefund.messageservice.host","com.ciicsh.common"})
 @EnableDiscoveryClient
