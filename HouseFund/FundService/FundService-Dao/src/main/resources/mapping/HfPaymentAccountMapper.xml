@@ -98,12 +98,12 @@
         LEFT JOIN hf_com_account_payment_bank hcapb ON ca.payment_bank = hcapb.payment_bank_code
         <where>
             pa.is_active = 1
-            AND pa.payment_id is NULL
+            AND IFNULL(pa.payment_id,0)=0
             <if test="paymentId != null and paymentId != ''">
                 AND pa.payment_id = #{paymentId}
             </if>
-            <if test="paymentMonth != null and paymentMonth != ''">
-                AND pa.payment_month = TRIM(#{paymentMonth})
+            <if test="paymentMonthValue != null and paymentMonthValue != ''">
+                AND pa.payment_month = TRIM(#{paymentMonthValue})
             </if>
             <if test="paymentBank!= null and paymentBank != ''">
                 AND ca.payment_bank = #{paymentBank}
@@ -113,6 +113,14 @@
             </if>
             <if test="fundAccountType!= null and fundAccountType != ''">
                 AND ca.hf_account_type = #{fundAccountType}
+            </if>
+            <if test="companyId!= null and companyId != ''">
+                AND EXISTS (select 1 from hf_account_com_relation acr INNER  JOIN  sal_company com ON  com.company_id=acr.company_id
+                where acr.com_account_id=ca.com_account_id and com.company_id =#{companyId})
+            </if>
+            <if test="companyName!= null and companyName != ''">
+                AND EXISTS (select 1 from hf_account_com_relation acr INNER  JOIN  sal_company com ON  com.company_id=acr.company_id
+                where acr.com_account_id=ca.com_account_id and com.title LIKE concat('%',#{companyName},'%') )
             </if>
         </where>
         ORDER BY

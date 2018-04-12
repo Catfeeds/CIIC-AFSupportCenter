@@ -23,10 +23,8 @@
     <update id="updateHfPaymentAcc" parameterType="java.util.HashMap">
         UPDATE hf_payment_account SET
         payment_status=#{paymentStatus},modified_by=#{modifiedBy},modified_time=sysdate()
-        where com_account_id=#{comAccountId} AND payment_month=#{paymentMonth}
+        where payment_account_id=#{paymentAccountId} AND payment_month=#{paymentMonth}
     </update>
-
-
 
     <select id="getComAccountClass" resultMap="BaseResultMap">
 

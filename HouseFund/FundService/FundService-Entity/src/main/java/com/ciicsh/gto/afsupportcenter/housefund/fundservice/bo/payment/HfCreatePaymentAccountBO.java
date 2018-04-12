@@ -18,4 +18,5 @@ public class HfCreatePaymentAccountBO {
     BigDecimal sumSub;
     BigDecimal sumAmount;
     BigDecimal payInBackAmount;
+    Integer empCount;
 }

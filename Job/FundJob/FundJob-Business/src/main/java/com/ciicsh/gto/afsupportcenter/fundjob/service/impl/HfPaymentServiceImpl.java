@@ -93,6 +93,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             if (res.getData() != null) {
                 List<Map<String, Object>> resDto = (List) res.getData();
                 //4 财务接口返回的结果更新ss_month_charge
+                //isAdvance: 0:不可付;1:来款可付;2:垫付可付
                 for (Map<String, Object> ele : resDto) {
                     map.put("monthChargeId", ele.get("objId"));
                     map.put("empPaymentStatus", ele.get("isAdvance"));
@@ -105,15 +106,13 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             }
             //5 查询 客户下有多少 不可付的记录
             map.clear();
-            map.put("comAccountId", comAccountId);
+            map.put("paymentAccountId", paymentAccountId);
             map.put("paymentMonth", paymentMonth);
-
             Integer cnt = hfEmpMonthChargeMapper.countByEmpPaymentStatus(map);
 
             //更新客户的支付状态
-            map.clear();
+
             map.put("comAccountId", comAccountId);
-            map.put("paymentMonth", paymentMonth);
             if (cnt == 0) {
                 map.put("paymentStatus", 3);
                 map.put("modifiedBy", "system");
