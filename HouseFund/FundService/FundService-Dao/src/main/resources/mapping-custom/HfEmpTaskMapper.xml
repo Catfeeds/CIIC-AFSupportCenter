@@ -550,13 +550,13 @@
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         LEFT JOIN
         (
-        SELECT hcas.com_account_id,het.welfare_unit,hcas.payment_bank,hcas.state,hcas.payment_way,hcas.ukey_store,hcas.hf_account_type,hcas.com_account_name
+        SELECT DISTINCT hcas.com_account_id,het.welfare_unit,hcas.payment_bank,hcas.state,hcas.payment_way,hcas.ukey_store,hcas.hf_account_type,hcas.com_account_name
         FROM hf_emp_task het
         LEFT JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
         LEFT JOIN hf_com_account hcas ON hcas.com_account_id = hacr.com_account_id AND hcas.is_active = 1 AND hcas.hf_account_type = 3
         WHERE het.is_active = 1 AND het.welfare_unit = 1 AND het.emp_task_id = #{empTaskId}
         UNION ALL
-        SELECT hcas.com_account_id,2 AS welfare_unit,hcas.payment_bank,hcas.state,hcas.payment_way,hcas.ukey_store,hcas.hf_account_type,hcas.com_account_name
+        SELECT DISTINCT hcas.com_account_id,2 AS welfare_unit,hcas.payment_bank,hcas.state,hcas.payment_way,hcas.ukey_store,hcas.hf_account_type,hcas.com_account_name
         FROM hf_com_account hcas
         LEFT JOIN hf_account_com_relation hacr ON hcas.com_account_id = hacr.com_account_id AND hacr.is_active = 1
         WHERE hcas.is_active = 1 AND hcas.hf_account_type = 1
@@ -565,8 +565,22 @@
         LEFT JOIN hf_com_account_class hcaca ON hca.com_account_id = hcaca.com_account_id AND hcaca.is_active = 1 AND hcaca.hf_type = 2
         LEFT JOIN hf_com_task hctb ON hca.com_account_id = hctb.com_account_id AND hctb.is_active = 1 AND hctb.hf_type = 1 AND IFNULL(hctb.task_status,1) = 1
         LEFT JOIN hf_com_task hcta ON hca.com_account_id = hcta.com_account_id AND hcta.is_active = 1 AND hcta.hf_type = 2 AND IFNULL(hcta.task_status,1) = 1
-        LEFT JOIN hf_emp_archive heab ON het.employee_id = heab.employee_id AND het.company_id = heab.company_id AND heab.is_active = 1 AND heab.hf_type = 1
-        LEFT JOIN hf_emp_archive heaa ON het.employee_id = heaa.employee_id AND het.company_id = heaa.company_id AND heaa.is_active = 1 AND heaa.hf_type = 2
+        LEFT JOIN
+        (
+        SELECT hea.company_id, hea.employee_id, hea.hf_emp_account, hea.emp_archive_id, hea.archive_status, MAX(hea.created_time)
+        FROM hf_emp_task het INNER JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
+        WHERE hea.is_active = 1 AND hea.hf_type = 1
+        AND het.emp_task_id = #{empTaskId}
+        GROUP BY hea.company_id, hea.employee_id
+        ) heab ON het.employee_id = heab.employee_id AND het.company_id = heab.company_id
+        LEFT JOIN
+        (
+        SELECT hea.company_id, hea.employee_id, hea.hf_emp_account, hea.emp_archive_id, hea.archive_status, MAX(hea.created_time)
+        FROM hf_emp_task het INNER JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
+        WHERE hea.is_active = 1 AND hea.hf_type = 2
+        AND het.emp_task_id = #{empTaskId}
+        GROUP BY hea.company_id, hea.employee_id
+        ) heaa ON het.employee_id = heaa.employee_id AND het.company_id = heaa.company_id
         <where>
             het.is_active = 1
             AND het.emp_task_id = #{empTaskId}
