@@ -141,14 +141,17 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
             hfComAccountClass.setModifiedTime(new Date());
             String comAccount=comFundAccountDetailDTO.getHfType()==1?comFundAccountDetailDTO.getBasicComAccount():comFundAccountDetailDTO.getCompensativeComAccount();
             hfComAccountClass.setHfComAccount(comAccount);
+            hfComAccountClass.setComStartMonth(comFundAccountDetailDTO.getComStartMonthValue());
+            int tmpStore=comFundAccountDetailDTO.getHfType()==1?comFundAccountDetailDTO.getBasicAccountTempStore():comFundAccountDetailDTO.getCompensativeAccountTempStore();
+            hfComAccountClass.setAccountTempStore(tmpStore);
             hfComAccountClass.setComAccountClassId(comFundAccountDetailDTO.getComAccountClassId());
-            String origiComAccount= hfComAccountClassMapper.selectById(hfComAccountClass).getHfComAccount();
-            if(!origiComAccount.equals(comAccount)){
+            //String origiComAccount= hfComAccountClassMapper.selectById(hfComAccountClass).getHfComAccount();
+            //if(!origiComAccount.equals(comAccount)){
                hfComAccountClassMapper.updateById(hfComAccountClass);
-            }
-
+            //}
             HfComAccount hfComAccount=new HfComAccount();
             BeanUtils.copyProperties(comFundAccountDetailDTO,hfComAccount);
+
             baseMapper.updateById(hfComAccount);
         }catch (Exception e){
             e.printStackTrace();

@@ -16,6 +16,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentAccount;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentAccountService;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -75,6 +76,8 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
             //更新payment   暂用Wrapper后续修改掉
             HfPayment hfPayment =new HfPayment();
             hfPayment.setActive(false);
+            hfPayment.setModifiedBy(UserContext.getUser().getDisplayName());
+            hfPayment.setModifiedTime(new Date());
             Wrapper<HfPayment> wrapperPayment = new EntityWrapper();
             wrapperPayment.where(" is_active = 1 AND payment_id={0}", paymentId);
             hfPaymentMapper.update(hfPayment,wrapperPayment);
