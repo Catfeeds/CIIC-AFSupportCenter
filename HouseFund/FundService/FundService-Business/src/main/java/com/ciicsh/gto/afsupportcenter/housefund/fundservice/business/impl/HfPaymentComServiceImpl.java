@@ -68,7 +68,6 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
         HfCreatePaymentAccountBO accountMap =new HfCreatePaymentAccountBO();
         for(int i=0; i<paymentAccountList.size();i++){
             accountMap=paymentAccountList.get(i);
-            ;
             totalApplicationAmount=totalApplicationAmount.add(
                 Optional.ofNullable(accountMap.getSumAmount()).orElse(BigDecimal.valueOf(0))
                     .add(Optional.ofNullable(accountMap.getPayInBackAmount()).orElse(BigDecimal.valueOf(0))));
