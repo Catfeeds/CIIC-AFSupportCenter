@@ -2,7 +2,7 @@ spring:
   datasource:
     druid:
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://172.16.9.53:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
+      url: jdbc:mysql://172.16.22.106:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
       username: root
       password: a111111
       max-active: 20
