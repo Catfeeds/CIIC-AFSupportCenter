@@ -1,12 +1,12 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller;
+package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.util.kit.TreeNodeConvertKit;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAuthorityService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.SsCompanyManagementListDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.SsDataauthCompanyDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.SsDepartmentDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.SsUserInfoDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfAuthorityService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.dataauth.HfCompanyManagementListDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.dataauth.HfDataauthCompanyDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.dataauth.HfDepartmentDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.dataauth.HfUserInfoDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.util.kit.TreeNodeConvertKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.ui.core.TreeKit;
 import com.ciicsh.gto.afsupportcenter.util.ui.core.TreeNode;
@@ -22,30 +22,30 @@ import java.util.List;
 
 /**
  * <p>
- * 社保限权管理
+ * 公积金权限管理
  * <p>
  * 前端控制器
  * </p>
  *
  * @author LiYueLong
- * @since 2018-4-03
+ * @since 2018-4-11
  */
 @RestController
-@RequestMapping("/api/soccommandservice/authority")
-public class AuthorityController {
+@RequestMapping("/api/fundcommandservice/hfauthority")
+public class HfAuthorityController {
 
     @Autowired
-    private SsAuthorityService ssAuthorityService;
+    private HfAuthorityService ssAuthorityService;
 
     /**
      * 客户权限配置列表
      *
      * @return
      */
-    @RequestMapping("authorityList")
+    @RequestMapping("hfauthorityList")
     public JsonResult<PageRows> authorityList() {
-        List<SsUserInfoDTO> result = ssAuthorityService.queryUsersByDepartmentId();
-        PageRows<SsUserInfoDTO> pageRows = new PageRows<>();
+        List<HfUserInfoDTO> result = ssAuthorityService.queryUsersByDepartmentId();
+        PageRows<HfUserInfoDTO> pageRows = new PageRows<>();
         pageRows.setRows(result);
         return JsonResultKit.of(pageRows);
     }
@@ -58,12 +58,12 @@ public class AuthorityController {
      * @param userId
      * @return
      */
-    @RequestMapping("authority")
-    public JsonResult<SsCompanyManagementListDTO> authority(Long serviceCenterId, String userId) {
+    @RequestMapping("hfauthority")
+    public JsonResult<HfCompanyManagementListDTO> authority(Long serviceCenterId, String userId) {
 
-        SsCompanyManagementListDTO result = ssAuthorityService.queryAfCompanyByUidAndServiceCenterId(userId, serviceCenterId);
+        HfCompanyManagementListDTO result = ssAuthorityService.queryAfCompanyByUidAndServiceCenterId(userId, serviceCenterId);
 
-        JsonResult<SsCompanyManagementListDTO> jsonResult = new JsonResult<>();
+        JsonResult<HfCompanyManagementListDTO> jsonResult = new JsonResult<>();
         jsonResult.setCode(result.getCode());
         jsonResult.setData(result);
         jsonResult.setMessage(result.getMessage());
@@ -77,10 +77,10 @@ public class AuthorityController {
      *
      * @return
      */
-    @RequestMapping("authorityDeptNodes")
+    @RequestMapping("hfauthorityDeptNodes")
     public JsonResult<List<TreeNode>> authorityDeptNodes() {
 
-        List<SsDepartmentDTO> list = ssAuthorityService.querySubDepartmentsOfLevel();
+        List<HfDepartmentDTO> list = ssAuthorityService.querySubDepartmentsOfLevel();
 
         List<TreeNode> deptNodes = new ArrayList<>();
 
@@ -94,8 +94,8 @@ public class AuthorityController {
      *
      * @return
      */
-    @RequestMapping("saveAuthority")
-    public JsonResult saveAuthority(SsDataauthCompanyDTO dto) {
+    @RequestMapping("hfsaveAuthority")
+    public JsonResult saveAuthority(HfDataauthCompanyDTO dto) {
 
 
         ssAuthorityService.saveSsDataauth(dto);
