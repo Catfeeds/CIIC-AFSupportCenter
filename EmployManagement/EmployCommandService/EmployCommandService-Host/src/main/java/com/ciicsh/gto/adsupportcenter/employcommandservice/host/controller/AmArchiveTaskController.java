@@ -223,8 +223,6 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         //档案备注
         PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);
 
-        AmEmpTask amEmpTask = taskService.selectById(amTaskParamBO.getEmpTaskId());
-
         //用工备注
         AmRemarkBO queryBo = new AmRemarkBO();
         queryBo.setRemarkType(1);
@@ -249,11 +247,13 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             {
                 amResignBO = listResignBO.get(0);
                 if(!StringUtil.isEmpty(amResignBO.getResignFeedback())){
-                    amResignBO.setResignFeedback(ReasonUtil.getYgfk(amResignBO.getResignFeedback()));
+                    amResignBO.setResignFeedback(ReasonUtil.getTgfk(amResignBO.getResignFeedback()));
                 }
                 if(!StringUtil.isEmpty(amResignBO.getIfLaborManualReturn())){
                     amResignBO.setIfLaborManualReturnStr(ReasonUtil.getIsTj(amResignBO.getIfLaborManualReturn().toString()));
                 }
+
+                AmEmpTask amEmpTask = taskService.selectById(amTaskParamBO.getEmpTaskResignId());
 
                 if(null!=amEmpTask){
                     java.text.DateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");

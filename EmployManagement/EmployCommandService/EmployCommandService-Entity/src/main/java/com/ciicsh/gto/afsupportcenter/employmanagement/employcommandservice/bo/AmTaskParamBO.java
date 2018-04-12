@@ -7,6 +7,8 @@ public class AmTaskParamBO {
 
     private Long empTaskId;
 
+    private Long empTaskResignId;
+
     private Long employmentId;
 
     private String employeeId;
@@ -20,6 +22,14 @@ public class AmTaskParamBO {
     private  String remarkType;
 
     private  boolean isResign;
+
+    public Long getEmpTaskResignId() {
+        return empTaskResignId;
+    }
+
+    public void setEmpTaskResignId(Long empTaskResignId) {
+        this.empTaskResignId = empTaskResignId;
+    }
 
     public boolean isResign() {
         return isResign;
