@@ -93,4 +93,9 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
         return baseMapper.queryAmArchiveList(amEmploymentBO);
     }
 
+    @Override
+    public List<AmEmploymentBO> queryAmEmploymentResign(Map<String, Object> param) {
+        return baseMapper.queryAmEmploymentResign(param);
+    }
+
 }

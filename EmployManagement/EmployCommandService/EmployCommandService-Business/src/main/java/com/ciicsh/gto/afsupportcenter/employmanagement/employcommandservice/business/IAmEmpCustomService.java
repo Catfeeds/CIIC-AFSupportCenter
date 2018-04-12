@@ -14,6 +14,6 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface IAmEmpCustomService extends IService<AmEmpCustom> {
 
-    AmCustomBO getCustom(AmCustomBO amCustomBO);
+    AmCustomBO getCustom(Long empTaskId);
 
 }

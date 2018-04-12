@@ -97,7 +97,7 @@
         sal_company e
         on e.company_id = a.company_id
         LEFT JOIN
-        am_emp_custom h on h.task_id = a.task_id
+        am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id
@@ -149,7 +149,7 @@
         sal_company e
         on e.company_id = a.company_id
         LEFT JOIN
-        am_emp_custom h on h.task_id = a.task_id
+        am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id
@@ -186,7 +186,7 @@
         sal_company e
         on e.company_id = a.company_id
         LEFT JOIN
-        am_emp_custom h on h.task_id = a.task_id
+        am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id
@@ -316,7 +316,7 @@
         sal_company e
         on e.company_id = a.company_id
         LEFT JOIN
-        am_emp_custom h on h.task_id = a.task_id
+        am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id

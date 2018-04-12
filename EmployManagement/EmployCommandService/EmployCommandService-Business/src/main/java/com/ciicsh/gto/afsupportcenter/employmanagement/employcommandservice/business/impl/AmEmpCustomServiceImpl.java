@@ -22,10 +22,10 @@ import java.util.List;
 public class AmEmpCustomServiceImpl extends ServiceImpl<AmEmpCustomMapper, AmEmpCustom> implements IAmEmpCustomService {
 
     @Override
-    public AmCustomBO getCustom(AmCustomBO amCustomBO) {
-         List<AmCustomBO> list = baseMapper.getCustom(amCustomBO);
+    public AmCustomBO getCustom(Long empTaskId) {
+         List<AmCustomBO> list = baseMapper.getCustom(empTaskId);
          if(null!=list&&list.size()>0){
-             return  baseMapper.getCustom(amCustomBO).get(0);
+             return  list.get(0);
          }
          return  null;
     }
