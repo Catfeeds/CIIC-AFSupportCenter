@@ -26,4 +26,6 @@ public interface AmEmploymentMapper extends BaseMapper<AmEmployment> {
 
      List<archiveSearchExportOpt>  queryAmArchiveList(AmEmploymentBO amEmploymentBO);
 
+    List<AmEmploymentBO> queryAmEmploymentResign(Map<String,Object> param);
+
 }

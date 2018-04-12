@@ -8,6 +8,10 @@ public class FundStatementItemDTO {
      * 公积金企业账号
      */
     private String comAccount = "";
+    /**
+     * 个人公积金账号
+     */
+    private String empAccount = "";
 
     /**
      * 员工姓名
@@ -35,6 +39,14 @@ public class FundStatementItemDTO {
 
     public void setComAccount(String comAccount) {
         this.comAccount = comAccount;
+    }
+
+    public String getEmpAccount() {
+        return empAccount;
+    }
+
+    public void setEmpAccount(String empAccount) {
+        this.empAccount = empAccount;
     }
 
     public String getEmpName() {

@@ -51,6 +51,15 @@
         emp_task_id = #{empTaskId}
     </select>
 
+    <select id="queryAmEmploymentResign" resultMap="BaseResultMapDTO">
+        SELECT  *  FROM  am_employment
+        where
+        company_id = #{companyId}
+        and
+        employee_id = #{employeeId}
+        order by created_time desc
+    </select>
+
     <select id="queryAmArchive" resultMap="BaseResultMapDTO">
         SELECT
         a.employ_code,
@@ -98,7 +107,7 @@
         LEFT JOIN emp_employee d  on  b.employee_id = d.employee_id
         LEFT JOIN sal_company e ON e.company_id = b.company_id
         LEFT JOIN am_emp_task w on a.company_id = w.company_id and a.employee_id = w.employee_id and w.task_category = 2
-        LEFT JOIN am_emp_custom h on h.task_id = a.task_id
+        LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
         where  1= 1
         <if test="taskStatus!=null">
@@ -203,7 +212,7 @@
         LEFT JOIN emp_employee d  on  b.employee_id = d.employee_id
         LEFT JOIN sal_company e ON e.company_id = b.company_id
         LEFT JOIN am_emp_task w on a.company_id = w.company_id and a.employee_id = w.employee_id and w.task_category = 2
-        LEFT JOIN am_emp_custom h on h.task_id = a.task_id
+        LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
         where  1= 1
         <if test="taskStatus!=null">

@@ -92,7 +92,7 @@
         LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
         LEFT JOIN sal_company e ON e.company_id = a.company_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
-        LEFT JOIN am_emp_custom h on h.task_id = a.task_id
+        LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
         WHERE
         a.task_category = '2'
@@ -145,7 +145,7 @@
         LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
         LEFT JOIN sal_company e ON e.company_id = a.company_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
-        LEFT JOIN am_emp_custom h on h.task_id = a.task_id
+        LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
         WHERE
         a.task_category = '2'
@@ -177,7 +177,7 @@
         LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
         LEFT JOIN sal_company e ON e.company_id = a.company_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
-        LEFT JOIN am_emp_custom h on h.task_id = a.task_id
+        LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
         WHERE
         a.task_category = '2'
         and
@@ -258,7 +258,7 @@
         LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
         LEFT JOIN sal_company e ON e.company_id = a.company_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
-        LEFT JOIN am_emp_custom h on h.task_id = a.task_id
+        LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
         WHERE
         a.task_category = '2'

@@ -12,15 +12,14 @@ spring:
       filter:
         stat:
           enabled: true
-#  cloud:
-#    stream:
-#      kafka:
-#        binder:
-#          brokers: 172.16.9.55:9092
-#          zk-nodes: 172.16.9.55:2181,172.16.9.56:2181,172.16.9.57:2181
-
-#spring cloud eureka
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: 172.16.100.101:9092
+          zk-nodes: 172.16.100.101:2181,172.16.100.102:2181
+  #spring cloud eureka
 eureka:
   client:
     serviceUrl:
-      defaultZone: "http://172.16.100.103:9602/eureka/,http://172.16.100.104:9602/eureka/"  #prod注册中心eureka地址ureka
+      defaultZone: "http://172.16.100.103:9602/eureka,http://172.16.100.104:9602/eureka"

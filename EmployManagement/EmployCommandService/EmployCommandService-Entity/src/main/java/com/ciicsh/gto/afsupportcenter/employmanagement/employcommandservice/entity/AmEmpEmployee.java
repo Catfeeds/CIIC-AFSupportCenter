@@ -27,11 +27,9 @@ public class AmEmpEmployee implements Serializable {
      */
 	@TableId(value="emp_employee_id", type= IdType.AUTO)
 	private Long empEmployeeId;
-    /**
-     * 用工任务id
-     */
-	@TableField("task_id")
-	private String taskId;
+
+    @TableField("emp_task_id")
+    private Long  empTaskId;
     /**
      * 客户Id
      */
@@ -75,6 +73,9 @@ public class AmEmpEmployee implements Serializable {
      * 性别
      */
 	private Integer gender;
+
+    @TableField("mobile")
+	private  String mobile;
     /**
      * 户籍地址
      */
@@ -103,6 +104,80 @@ public class AmEmpEmployee implements Serializable {
     private  String fileFee;
 
     /**
+     *
+     */
+    @TableField("employee_center_operator")
+    private  String employeeCenterOperator;
+
+    /**
+     * 公司社保登记码
+     */
+    @TableField("ss_account")
+    private String ssAccount;
+    /**
+     * 缴费区县
+     */
+    @TableField("settlement_area")
+    private  String settlementArea;
+
+    @TableField("account_repair_date")
+    private  LocalDate accountRepairDate;
+
+    @TableField("ss_pwd")
+    private String ssPwd;
+
+    @TableField("company_type")
+    private  String companyType;
+
+    public String getCompanyType() {
+        return companyType;
+    }
+
+    public void setCompanyType(String companyType) {
+        this.companyType = companyType;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getSsAccount() {
+        return ssAccount;
+    }
+
+    public void setSsAccount(String ssAccount) {
+        this.ssAccount = ssAccount;
+    }
+
+    public String getSettlementArea() {
+        return settlementArea;
+    }
+
+    public void setSettlementArea(String settlementArea) {
+        this.settlementArea = settlementArea;
+    }
+
+    public LocalDate getAccountRepairDate() {
+        return accountRepairDate;
+    }
+
+    public void setAccountRepairDate(LocalDate accountRepairDate) {
+        this.accountRepairDate = accountRepairDate;
+    }
+
+    public String getSsPwd() {
+        return ssPwd;
+    }
+
+    public void setSsPwd(String ssPwd) {
+        this.ssPwd = ssPwd;
+    }
+
+    /**
      * 是否可用
      */
 	@TableField("is_active")
@@ -128,6 +203,13 @@ public class AmEmpEmployee implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+    public String getEmployeeCenterOperator() {
+        return employeeCenterOperator;
+    }
+
+    public void setEmployeeCenterOperator(String employeeCenterOperator) {
+        this.employeeCenterOperator = employeeCenterOperator;
+    }
 
     public String getFileFee() {
         return fileFee;
@@ -145,15 +227,15 @@ public class AmEmpEmployee implements Serializable {
 		this.empEmployeeId = empEmployeeId;
 	}
 
-	public String getTaskId() {
-		return taskId;
-	}
+    public Long getEmpTaskId() {
+        return empTaskId;
+    }
 
-	public void setTaskId(String taskId) {
-		this.taskId = taskId;
-	}
+    public void setEmpTaskId(Long empTaskId) {
+        this.empTaskId = empTaskId;
+    }
 
-	public String getCompanyId() {
+    public String getCompanyId() {
 		return companyId;
 	}
 
@@ -301,7 +383,6 @@ public class AmEmpEmployee implements Serializable {
 	public String toString() {
 		return "AmEmpEmployee{" +
 			"empEmployeeId=" + empEmployeeId +
-			", taskId=" + taskId +
 			", companyId=" + companyId +
 			", employeeId=" + employeeId +
 			", hireUnit=" + hireUnit +

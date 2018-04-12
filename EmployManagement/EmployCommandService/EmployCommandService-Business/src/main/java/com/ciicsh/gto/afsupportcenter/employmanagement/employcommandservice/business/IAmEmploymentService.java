@@ -28,4 +28,6 @@ public interface IAmEmploymentService extends IService<AmEmployment> {
 
     List<archiveSearchExportOpt>  queryAmArchiveList(AmEmploymentBO amEmploymentBO);
 
+    List<AmEmploymentBO> queryAmEmploymentResign(Map<String,Object> param);
+
 }

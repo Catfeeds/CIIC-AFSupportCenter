@@ -205,7 +205,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         dto.setIsFinancedept(0);
         dto.setBusinessType(2);//业务类型
         dto.setBusinessPkId(hfPayment.getPaymentId());//业务方主键ID(整型)
-        dto.setPayWay(3);// 3:转账   2:支票  如果是支票就不需要银行账户信息，这里需要判断
+        dto.setPayWay(hfPayment.getPaymentWay());// 3:转账   2:支票  如果是支票就不需要银行账户信息，这里需要判断
         dto.setPayAmount(hfPayment.getTotalApplicationAmonut());//申请支付金额
         dto.setReceiver(hfPayment.getReceiver());//页面传递
         dto.setApplyer(UserContext.getUser().getDisplayName());  //申请人

@@ -203,16 +203,14 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         params.put("employeeId",amTaskParamBO.getEmployeeId());
         params.put("remarkType",amTaskParamBO.getRemarkType());
         params.put("empTaskId",amTaskParamBO.getEmpTaskId());
+        params.put("employmentId",amTaskParamBO.getEmploymentId());
+        params.put("companyId",amTaskParamBO.getCompanyId());
         params.put("operateType",new Integer(2));
         pageInfo.setParams(params);
 
-        Map<String,Object>  param = new HashMap<>();
-        param.put("employmentId",amTaskParamBO.getEmploymentId());
-        param.put("employeeId",amTaskParamBO.getEmployeeId());
-        param.put("companyId",amTaskParamBO.getCompanyId());
 
         //用工档案
-        List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchiveList(param);
+        List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchiveList(params);
         //档案备注
         PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);
 
@@ -231,9 +229,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         PageRows<AmEmpMaterialBO> resultMaterial = iAmEmpMaterialService.queryMaterialDic(pageInfo);
 
         //用工信息
-        List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(param);
+        List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(params);
 
-        List<AmResignBO> listResignBO = amResignService.queryAmResignDetail(param);
+        List<AmResignBO> listResignBO = amResignService.queryAmResignDetail(params);
 
         //退工信息
         if(null!=listResignBO&&listResignBO.size()>0){

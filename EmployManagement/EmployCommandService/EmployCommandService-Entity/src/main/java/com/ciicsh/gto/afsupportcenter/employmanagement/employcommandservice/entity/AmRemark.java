@@ -75,6 +75,17 @@ public class AmRemark implements Serializable {
     @TableField("employee_id")
     private String employeeId;
 
+    @TableField("emp_task_id")
+    private Long  empTaskId;
+
+    public Long getEmpTaskId() {
+        return empTaskId;
+    }
+
+    public void setEmpTaskId(Long empTaskId) {
+        this.empTaskId = empTaskId;
+    }
+
     public String getEmployeeId() {
         return employeeId;
     }
