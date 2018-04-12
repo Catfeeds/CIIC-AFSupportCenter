@@ -148,8 +148,6 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
     @RequestMapping("/queryAmResignDetail")
     public JsonResult queryAmResignDetail(AmTaskParamBO amTaskParamBO){
 
-        List<MaterialDTO>  lll = amEmpMaterialService.queryMaterialByTaskId(new Long(1126));
-
         amTaskParamBO.setResign(true);
 
         Map<String,Object>  map = taskService.getInformation(amTaskParamBO);
@@ -157,17 +155,17 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         AmCustomBO customBO = (AmCustomBO)map.get("customBO");//客户信息
         AmEmpTaskBO employeeBO = (AmEmpTaskBO)map.get("employeeBO");//雇佣信息
 
-        Map<String,Object> param = new HashMap<>();
-        param.put("employeeId",amTaskParamBO.getEmployeeId());
-        param.put("companyId",amTaskParamBO.getCompanyId());
-
-        List<AmResignBO> listResignBO = business.queryAmResignDetail(param);
 
         PageInfo pageInfo = new PageInfo();
         JSONObject params = new JSONObject();
         params.put("employeeId",amTaskParamBO.getEmployeeId());
+        params.put("companyId",amTaskParamBO.getCompanyId());
         params.put("remarkType",amTaskParamBO.getRemarkType());
+        params.put("empTaskId",amTaskParamBO.getEmpTaskId());
         pageInfo.setParams(params);
+
+        List<AmResignBO> listResignBO = business.queryAmResignDetail(params);
+
 
         //退工备注
         PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);
@@ -180,7 +178,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         pageInfo.setParams(params);
         PageRows<AmRemarkBO> amRemarkBOPageRows2 = amRemarkService.queryAmRemark(pageInfo);
         //用工信息
-        List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(param);
+        List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmploymentResign(params);
 
         //用工档案
         List<AmArchiveBO> amArchiveBOList = null;
@@ -188,8 +186,8 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
         if(null!=resultEmployList&&resultEmployList.size()>0)
         {
-            param.put("employmentId",resultEmployList.get(0).getEmploymentId());
-            amArchiveBOList = amArchiveService.queryAmArchiveList(param);
+            params.put("employmentId",resultEmployList.get(0).getEmploymentId());
+            amArchiveBOList = amArchiveService.queryAmArchiveList(params);
             if(amArchiveBOList!=null&&amArchiveBOList.size()>0){
                 amArchiveBO = amArchiveBOList.get(0);
             }

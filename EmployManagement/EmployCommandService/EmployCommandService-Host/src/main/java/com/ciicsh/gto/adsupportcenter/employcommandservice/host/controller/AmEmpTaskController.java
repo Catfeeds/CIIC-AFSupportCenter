@@ -58,6 +58,12 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     @Autowired
     private CommonApiUtils employeeInfoProxy;
 
+    @Autowired
+    private  AmEmpEmployeeService amEmpEmployeeService;
+
+    @Autowired
+    private  IAmEmpCustomService amEmpCustomService;
+
 
     /**
      *用工资料任务单查询
@@ -161,17 +167,16 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     @RequestMapping("/employeeDetailInfoQuery")
     public JsonResult employeeDetailInfoQuery(AmTaskParamBO amTaskParamBO) {
 
-        Map<String,Object>  map = business.getInformation(amTaskParamBO);
+        /**
+         * 获取雇员信息
+         */
+        AmEmpEmployeeBO amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amTaskParamBO.getEmpTaskId());
 
-        AmCustomBO customBO = (AmCustomBO)map.get("customBO");//客户信息
-        AmEmpTaskBO employeeBO = (AmEmpTaskBO)map.get("employeeBO");//雇佣信息
+        AmCustomBO amCustomBO1 = amEmpCustomService.getCustom(amTaskParamBO.getEmpTaskId());
 
         AmEmpTaskBO bo = new AmEmpTaskBO();
         bo.setEmployeeId(amTaskParamBO.getEmployeeId());
         bo.setCompanyId(amTaskParamBO.getCompanyId());
-        Map<String,Object> param = new HashMap<>();
-        param.put("employeeId",amTaskParamBO.getEmployeeId());
-        param.put("companyId",amTaskParamBO.getCompanyId());
 
         //用工材料
         PageInfo pageInfo = new PageInfo();
@@ -204,7 +209,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         }
 
         //用工信息
-        List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(param);
+        List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(params);
         //用工档案
         AmArchiveBO amArchiveBO = null;
         if(null!=resultEmployList&&resultEmployList.size()>0)
@@ -229,9 +234,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
         //客户信息
-        resultMap.put("customerInfo",customBO);
+        resultMap.put("customerInfo",amCustomBO1);
         //雇员信息
-        resultMap.put("amEmpTaskBO",employeeBO);
+        resultMap.put("amEmpTaskBO",amEmpEmployeeBO);
 
         resultMap.put("amMaterialBO",amMaterialBO);
 

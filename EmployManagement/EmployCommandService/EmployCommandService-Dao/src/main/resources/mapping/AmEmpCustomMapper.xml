@@ -5,7 +5,7 @@
 	<!-- 通用查询映射结果 -->
 	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpCustom">
 		<id column="emp_custom_id" property="empCustomId" />
-        <result column="task_id" property="taskId" />
+        <result column="emp_task_id" property="empTaskId" />
 		<result column="leader_ship_id" property="leaderShipId" />
 		<result column="leader_ship_name" property="leaderShipName" />
 		<result column="created_display_name" property="createdDisplayName" />

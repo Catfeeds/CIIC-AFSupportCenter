@@ -7,4 +7,8 @@
                type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmpEmployeeBO">
     </resultMap>
 
+    <select id="queryAmEmployeeByTaskId" resultMap="BaseResultMapDTO">
+        SELECT a.*,b.archive_direction,b.employee_nature,b.employ_property from am_emp_employee a  LEFT JOIN am_emp_task b on a.emp_task_id = b.emp_task_id where a.emp_task_id = #{empTaskId}
+    </select>
+
 </mapper>

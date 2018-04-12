@@ -16,6 +16,6 @@ import java.util.List;
  */
 public interface AmEmpCustomMapper extends BaseMapper<AmEmpCustom> {
 
-    List<AmCustomBO> getCustom(AmCustomBO amCustomBO);
+    List<AmCustomBO> getCustom(Long empTaskId);
 
 }
