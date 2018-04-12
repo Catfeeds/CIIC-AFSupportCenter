@@ -40,13 +40,15 @@ public class HfEmpTaskExportBo implements Serializable{
     private Integer isChange;
     @Excel(name = "更正", orderNum = "1",  width = 8)
     private String isChangeName;
-    @Excel(name = "发起人", orderNum = "9",  width = 20)
     private String submitterId;
     private LocalDateTime submitTime;
     @Excel(name = "发起时间", orderNum = "10",  width = 20)
     private String submitTimeFormat;
     private Integer taskStatus;
     private String taskId;
+    private String createdBy;
+    @Excel(name = "发起人", orderNum = "9",  width = 20)
+    private String createdDisplayName;
 
     public Long getEmpTaskId() {
         return empTaskId;
@@ -227,5 +229,21 @@ public class HfEmpTaskExportBo implements Serializable{
 
     public void setIsChangeName(String isChangeName) {
         this.isChangeName = isChangeName;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getCreatedDisplayName() {
+        return createdDisplayName;
+    }
+
+    public void setCreatedDisplayName(String createdDisplayName) {
+        this.createdDisplayName = createdDisplayName;
     }
 }

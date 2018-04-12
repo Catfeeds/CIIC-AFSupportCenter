@@ -19,6 +19,8 @@
 		<result column="submitter_id" property="submitterId" />
         <result column="submit_time" property="submitTime" />
 		<result column="task_id" property="taskId" />
+        <result column="created_by" property="createdBy" />
+        <result column="created_display_name" property="createdDisplayName" />
 	</resultMap>
 
     <resultMap id="RejectResultMapBo" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo" extends="BaseResultMapBo">
@@ -101,6 +103,8 @@
         het.submitter_id,
         het.submit_time,
         het.task_id,
+        het.created_by,
+        het.created_display_name,
         het.modified_by,
         het.modified_display_name,
         het.modified_time,
@@ -202,6 +206,8 @@
         het.submitter_id,
         het.submit_time,
         het.task_id,
+        het.created_by,
+        het.created_display_name,
         het.modified_by,
         het.modified_display_name,
         het.modified_time,
@@ -303,7 +309,9 @@
         het.hf_emp_account,
         het.submitter_id,
         het.submit_time,
-        het.task_id
+        het.task_id,
+        het.created_by,
+        het.created_display_name
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
@@ -403,7 +411,9 @@
         het.hf_emp_account,
         het.submitter_id,
         het.submit_time,
-        het.task_id
+        het.task_id,
+        het.created_by,
+        het.created_display_name
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1

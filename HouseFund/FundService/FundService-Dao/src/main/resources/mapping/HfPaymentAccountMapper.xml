@@ -57,7 +57,7 @@
             </if>
             AND mc.hf_type = pa.hf_type
             AND ea.com_account_class_id = pa.com_account_class_id
-            AND mc.payment_type IN (1, 2, 3, 4, 5, 6, 11)
+            AND mc.payment_type IN (1, 2, 3, 4, 5)
           ) AS sum_add,
           (
             SELECT
