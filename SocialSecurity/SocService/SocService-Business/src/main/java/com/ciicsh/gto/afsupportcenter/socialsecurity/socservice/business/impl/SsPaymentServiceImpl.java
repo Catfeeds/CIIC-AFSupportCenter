@@ -192,8 +192,8 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         newSsPayment.setTotalAccount(0);
         newSsPayment.setTotalApplicationAmount(new BigDecimal(0));
         newSsPayment.setActive(true);
-        newSsPayment.setCreatedBy(UserContext.getUserName());
-        newSsPayment.setModifiedBy(UserContext.getUserName());
+        newSsPayment.setCreatedBy(UserContext.getUser().getDisplayName());
+        newSsPayment.setModifiedBy(UserContext.getUser().getDisplayName());
         newSsPayment.setCreatedTime(LocalDateTime.now());
 
         baseMapper.insert(newSsPayment);

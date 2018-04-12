@@ -16,10 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -74,7 +71,7 @@ public class HfEmpArchiveController extends  BasicController<HfEmpArchiveService
         List<EmpAccountImpXsl> optList = ExcelUtil.importExcel(file,0,1,EmpAccountImpXsl.class,false);
         JsonResult<String> json = new JsonResult<String>();
         String result = business.xlsImportEmpAccount(optList,file.getOriginalFilename());
-        if(result==null){
+        if(Optional.ofNullable(result).isPresent()){
             json.setCode(0);
             json.setMessage("导入成功!");
         } else {

@@ -84,7 +84,10 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
 
             if (StringUtils.isEmpty(hfEmpTaskHandleBo.getHfEmpAccount())) {
                 Wrapper<HfEmpArchive> wrapper = new EntityWrapper<>();
-                wrapper.where(" is_active = 1 AND employee_id={0} AND hf_type={1}", hfEmpTaskHandleBo.getEmployeeId(), hfEmpTaskHandleBo.getHfType());
+                wrapper.where(" is_active = 1 AND company_id={0} AND employee_id={1} AND hf_type={2}",
+                    hfEmpTaskHandleBo.getCompanyId(),
+                    hfEmpTaskHandleBo.getEmployeeId(),
+                    hfEmpTaskHandleBo.getHfType());
                 wrapper.orderBy("created_time", false);
                 List<HfEmpArchive> hfEmpArchiveList = hfEmpArchiveService.selectList(wrapper);
                 if (CollectionUtils.isNotEmpty(hfEmpArchiveList)) {
@@ -94,18 +97,21 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
 
             // 根据雇员档案ID获取雇员基本公积金汇缴月份段信息
             Map<String, Object> condition = new HashMap<>();
-            if (hfEmpTaskHandleBo.getBasicEmpArchiveId() != null) {
-                condition.put("emp_archive_id", hfEmpTaskHandleBo.getBasicEmpArchiveId());
-                condition.put("hf_type", 1);
-                hfEmpTaskHandleBo.setBasicArchiveBasePeriods(hfArchiveBasePeriodService.selectByMap(condition));
-            }
+//            if (hfEmpTaskHandleBo.getBasicEmpArchiveId() != null) {
+            condition.put("is_active", 1);
+            condition.put("company_id", hfEmpTaskHandleBo.getCompanyId());
+            condition.put("employee_id", hfEmpTaskHandleBo.getEmployeeId());
+//                condition.put("emp_archive_id", hfEmpTaskHandleBo.getBasicEmpArchiveId());
+            condition.put("hf_type", 1);
+            hfEmpTaskHandleBo.setBasicArchiveBasePeriods(hfArchiveBasePeriodService.selectByMap(condition));
+//            }
 
             // 根据雇员档案ID获取雇员补充公积金汇缴月份段信息
-            if (hfEmpTaskHandleBo.getAddedEmpArchiveId() != null) {
-                condition.put("emp_archive_id", hfEmpTaskHandleBo.getAddedEmpArchiveId());
-                condition.put("hf_type", 2);
-                hfEmpTaskHandleBo.setAddedArchiveBasePeriods(hfArchiveBasePeriodService.selectByMap(condition));
-            }
+//            if (hfEmpTaskHandleBo.getAddedEmpArchiveId() != null) {
+//                condition.put("emp_archive_id", hfEmpTaskHandleBo.getAddedEmpArchiveId());
+            condition.put("hf_type", 2);
+            hfEmpTaskHandleBo.setAddedArchiveBasePeriods(hfArchiveBasePeriodService.selectByMap(condition));
+//            }
 
             // 根据任务单ID获取任务单费用段信息
             condition.clear();

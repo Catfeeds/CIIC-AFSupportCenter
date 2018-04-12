@@ -2,21 +2,21 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://172.16.9.53:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
+    url: jdbc:mysql://172.16.22.106:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
     username: root
-    password: ciicit!#%
+    password: a111111
   redis:
     database: 0
-    host: 172.16.9.54
-    port: 7001
+    host: 172.16.22.102
+    port: 6379
     password:
     timeout: 0
   cloud:
     stream:
       kafka:
         binder:
-          brokers: 172.16.9.55:9092
-          zk-nodes: 172.16.9.55:2181,172.16.9.56:2181,172.16.9.57:2181
+          brokers: 172.16.100.101:9092
+          zk-nodes: 172.16.100.101:2181,172.16.100.102:2181
 eureka:
   client:
     serviceUrl:

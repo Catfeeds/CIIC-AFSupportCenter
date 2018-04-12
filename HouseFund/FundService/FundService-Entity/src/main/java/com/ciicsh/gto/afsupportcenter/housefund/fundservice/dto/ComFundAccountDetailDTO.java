@@ -48,7 +48,7 @@ public class ComFundAccountDetailDTO
      * 企业缴费起始年月,yyyyMM
      */
     private String comStartMonth;
-
+    private String comStartMonthValue;
     /**
      * 企业账户备注
      */
@@ -72,6 +72,24 @@ public class ComFundAccountDetailDTO
 
     private Long  comAccountClassId;
     private Long comAccountId;
+    private Byte hfType;
+
+    public String getComStartMonthValue() {
+        return comStartMonthValue;
+    }
+
+    public void setComStartMonthValue(String comStartMonthValue) {
+        this.comStartMonthValue = comStartMonthValue;
+    }
+
+    public Byte getHfType() {
+        return hfType;
+    }
+
+    public void setHfType(Byte hfType) {
+        this.hfType = hfType;
+    }
+
     public ComFundAccountDetailDTO()
     {
         paymentBank = 0;

@@ -188,16 +188,6 @@ public class KafkaReceiver {
                 Map<String, Object> paramMap = taskMsgDTO.getVariables();
                 String fundCategory = TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
 
-                if (null != paramMap) {
-                    if (FundCategory.BASICFUND.getCategory().equals(fundCategory) && paramMap.get("fund_new") != null && !Boolean.valueOf(paramMap.get("fund_new").toString())) {
-                        // 如果task_type是new，但Variables中的fund_new为false时，该类任务单不接收
-                        return;
-                    } else if (paramMap.get("add_fund_new") != null && !Boolean.valueOf(paramMap.get("add_fund_new").toString())) {
-                        // 如果task_type是new，但Variables中的add_fund_new为false时，该类任务单不接收
-                        return;
-                    }
-                }
-
                 if (null != paramMap && paramMap.get("fundType") != null) {
                     Integer taskCategory = paramMap.get("fundType").equals("4") ? TaskCategory.ADJUST.getCategory() : Integer.parseInt(paramMap.get("fundType").toString());
                     String oldAgreementId = null;
@@ -241,15 +231,6 @@ public class KafkaReceiver {
                 if (TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
                     agreementAdjustOrUpdateEmpStop(taskMsgDTO, fundCategory, 1);
                 } else {
-                    if (null != paramMap) {
-                        if (FundCategory.BASICFUND.getCategory().equals(fundCategory) && paramMap.get("fund_new") != null && !Boolean.valueOf(paramMap.get("fund_new").toString())) {
-                            // 如果task_type是new，但Variables中的fund_new为false时，该类任务单不接收
-                            return;
-                        } else if (paramMap.get("add_fund_new") != null && !Boolean.valueOf(paramMap.get("add_fund_new").toString())) {
-                            // 如果task_type是new，但Variables中的add_fund_new为false时，该类任务单不接收
-                            return;
-                        }
-                    }
 
                     //未办理任务单
                     if (StringUtils.isBlank(taskMsgDTO.getTaskId())) {
@@ -328,16 +309,27 @@ public class KafkaReceiver {
         String oldAgreementId = null;
 
         if (null != paramMap) {
-            if (FundCategory.BASICFUND.getCategory().equals(fundCategory) && paramMap.get("fund_stop") != null && !Boolean.valueOf(paramMap.get("fund_stop").toString())) {
-                // 如果task_type是stop，但Variables中的fund_stop为false时，该类任务单不接收
-                return;
-            } else if (paramMap.get("add_fund_stop") != null && !Boolean.valueOf(paramMap.get("add_fund_stop").toString())) {
-                // 如果task_type是stop，但Variables中的add_fund_stop为false时，该类任务单不接收
-                return;
-            }
-
             if (paramMap.get("fundType") != null) {
                 fundType = Integer.parseInt(paramMap.get("fundType").toString());
+            }
+            Integer taskCategory = OUT_TASK_CATEGORIES[fundType - 1].getCategory();
+
+            if (paramMap.get("oldEmpAgreementId") != null) {
+                HfEmpTask qd = new HfEmpTask();
+                qd.setBusinessInterfaceId(paramMap.get("oldEmpAgreementId").toString());
+                if (fundCategory.equals(FundCategory.BASICFUND.getCategory())) {
+                    qd.setHfType(HfEmpTaskConstant.HF_TYPE_BASIC);
+                } else {
+                    qd.setHfType(HfEmpTaskConstant.HF_TYPE_ADDED);
+                }
+                //查询旧的任务类型保存到新的任务单
+                List<HfEmpTask> resList = hfEmpTaskService.queryByTaskId(qd);
+                if (resList.size() > 0) {
+                    if (resList.get(0).getTaskCategory().equals(taskCategory)) {
+                        logger.info("agreementAdjustOrUpdateEmpStop(): 更正前任务单已经是转出或封存状态，如果当前消息还是转出或封存状态，此时不生成任务单");
+                        return;
+                    }
+                }
             }
 
             if (paramMap.get("oldEmpAgreementId") != null) {
@@ -349,7 +341,7 @@ public class KafkaReceiver {
                 }
             }
 
-            boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEAGREEMENTADJUST.getCategory(), OUT_TASK_CATEGORIES[fundType - 1].getCategory(), oldAgreementId, isChange);
+            boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEAGREEMENTADJUST.getCategory(), taskCategory, oldAgreementId, isChange);
             logger.info("end agreementAdjustOrUpdateEmpStop:" + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
         } else {
             logger.info("end agreementAdjustOrUpdateEmpStop:" + JSON.toJSONString(taskMsgDTO) + "，paramMap is null， result：Fail!");

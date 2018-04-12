@@ -98,6 +98,7 @@ public class FundApiController implements FundApiProxy{
     private Long addComTask(HfComTaskDTO hfComTaskDTO) {
         HfComTask hfComTask = new HfComTask();
         BeanUtils.copyProperties(hfComTaskDTO,hfComTask);
+        hfComTask.setSubmitTime(new Date());
         hfComTask.setTaskStatus(0);
         hfComTask.setActive(true);
         hfComTask.setCreatedTime(new Date());

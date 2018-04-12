@@ -14,13 +14,16 @@
         <result column="sum_sub" property="sumSub"/>
         <result column="sum_amount" property="sumAmount"/>
         <result column="pay_in_back_amount" property="payInBackAmount"/>
+        <result column="emp_count" property="empCount"/>
+
     </resultMap>
 
+    <!--费用种类：1标准 2 开户 3 转入  4启封 5 调整启封 6 补缴  7 转出 8 封存 9调整封存 10 销户 11 差额补缴-->
 	<select id="selectPaymentAccount" parameterType="java.util.List" resultMap="CreatePaymentAccountBO" >
         SELECT pa.payment_account_id,pa.com_account_id,acr.company_id,pa.com_account_class_id,ca.payment_bank,pa.hf_type,ca.hf_account_type
         ,(
         SELECT
-        ifnull(sum(amount), 0)
+        SUM(ifnull(amount, 0))
         FROM
         hf_month_charge mc
         INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
@@ -30,11 +33,12 @@
         AND mc.hf_month = pa.payment_month
         AND mc.hf_type = pa.hf_type
         AND ea.com_account_class_id = pa.com_account_class_id
-        AND mc.payment_type IN (1, 2, 3, 4, 5, 6, 11)
+        AND ea.company_id=acr.company_id
+        AND mc.payment_type IN (1, 2, 3, 4, 5)
         ) AS sum_add,
         (
         SELECT
-        ifnull(sum(amount), 0)
+        SUM(ifnull(amount, 0))
         FROM
         hf_month_charge mc
         INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
@@ -44,12 +48,13 @@
         AND mc.hf_month = pa.payment_month
         AND mc.hf_type = pa.hf_type
         AND ea.com_account_class_id = pa.com_account_class_id
+        AND ea.company_id=acr.company_id
         AND mc.payment_type IN (7, 8, 9, 10)
         ) AS sum_sub,
         (SELECT sum_add - sum_sub) AS sum_amount,
         (
         SELECT
-        ifnull(sum(amount), 0)
+        SUM(ifnull(amount, 0))
         FROM
         hf_month_charge mc
         INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
@@ -59,12 +64,28 @@
         AND mc.hf_month = pa.payment_month
         AND mc.hf_type = pa.hf_type
         AND ea.com_account_class_id = pa.com_account_class_id
+        AND ea.company_id=acr.company_id
         AND mc.payment_type IN (6, 11)
         ) AS pay_in_back_amount
+        ,(
+        SELECT
+        count(DISTINCT mc.employee_id)
+        FROM
+        hf_month_charge mc
+        INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+        WHERE
+        mc.is_active = 1
+        AND ea.is_active = 1
+        AND mc.hf_month = pa.payment_month
+        AND mc.hf_type = pa.hf_type
+        AND ea.com_account_class_id = pa.com_account_class_id
+        AND ea.company_id=acr.company_id
+        ) AS emp_count
         FROM hf_payment_account pa
         INNER JOIN hf_account_com_relation acr ON acr.com_account_id=pa.com_account_id
         INNER JOIN hf_com_account ca ON ca.com_account_id=pa.com_account_id
         WHERE pa.is_active=1
+        AND pa.payment_status=3
         AND pa.payment_account_id in
         <foreach collection="paymentAccountIds" index="index" item="item" open="(" separator="," close=")">
             #{item}

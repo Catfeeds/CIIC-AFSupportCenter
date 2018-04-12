@@ -139,7 +139,7 @@ public class HfFundPayController {
     public JsonResult createPaymentComList(HfFundPayCreatePaymentAccountPara hfFundPayCreatePaymentAccountPara){
         //验证前端传递的数据是否合法,代码暂不写
         //开始生成支付客户名单
-        hfFundPayCreatePaymentAccountPara.getListData();
+
        return hfPaymentComService.createPaymentCom(hfFundPayCreatePaymentAccountPara);
     }
 

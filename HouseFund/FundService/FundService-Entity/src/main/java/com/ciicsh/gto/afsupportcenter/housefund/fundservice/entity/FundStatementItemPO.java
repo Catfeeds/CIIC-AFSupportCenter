@@ -40,6 +40,11 @@ public class FundStatementItemPO
     private String comAccount = "";
 
     /**
+     * 个人公积金账号
+     */
+    private String empAccount = "";
+
+    /**
      * 员工姓名
      */
     private String empName = "";
@@ -105,6 +110,15 @@ public class FundStatementItemPO
 
     public void setComAccount(String comAccount) {
         this.comAccount = comAccount;
+    }
+
+
+    public String getEmpAccount() {
+        return empAccount;
+    }
+
+    public void setEmpAccount(String empAccount) {
+        this.empAccount = empAccount;
     }
 
     public String getEmpName() {
