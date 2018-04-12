@@ -2,9 +2,9 @@ spring:
   datasource:
     druid:
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://172.16.9.53:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
+      url: jdbc:mysql://172.16.22.106:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
       username: root
-      password: ciicit!#%
+      password: a111111
       max-active: 20
       min-idle: 8
       initial-size: 10
@@ -16,8 +16,8 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: 172.16.9.55:9092
-          zk-nodes: 172.16.9.55:2181,172.16.9.56:2181,172.16.9.57:2181
+          brokers: 172.16.100.101:9092
+          zk-nodes: 172.16.100.101:2181,172.16.100.102:2181
 
 #spring cloud eureka
 eureka:

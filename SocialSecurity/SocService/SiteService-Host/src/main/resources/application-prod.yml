@@ -2,9 +2,9 @@ spring:
   datasource:
     druid:
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://172.16.9.53:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
+      url: jdbc:mysql://172.16.22.106:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
       username: root
-      password: ciicit!#%
+      password: a111111
       max-active: 20
       min-idle: 8
       initial-size: 10
@@ -14,15 +14,15 @@ spring:
           enabled: true
   redis:
     database: 0
-    host: 172.16.9.54
-    port: 7001
+    host: 172.16.22.102
+    port: 6379
     password:
     timeout: 1000
 #spring cloud eureka
 eureka:
   client:
     serviceUrl:
-      defaultZone: "http://172.16.9.56:9602/eureka"  #prod注册中心eureka地址ureka
+      defaultZone: "http://172.16.100.103:9602/eureka/,http://172.16.100.104:9602/eureka/"  #prod注册中心eureka地址ureka
 
 seaweed:
-  masterHost: "172.16.9.58:9333"
+  masterHost: "http://172.16.22.110:9333/"
