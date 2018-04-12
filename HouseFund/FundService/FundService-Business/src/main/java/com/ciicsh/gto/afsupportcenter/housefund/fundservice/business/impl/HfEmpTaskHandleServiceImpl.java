@@ -216,7 +216,9 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             condition.put("payment_month", hfComAccountList.get(0).getComHfMonth());
             List<HfPaymentAccount> hfPaymentAccountList = hfPaymentAccountService.selectByMap(condition);
 
-            if (CollectionUtils.isNotEmpty(hfPaymentAccountList) && hfPaymentAccountList.get(0).getPaymentId() != null) {
+            if (CollectionUtils.isNotEmpty(hfPaymentAccountList)
+                && hfPaymentAccountList.get(0).getPaymentId() != null
+                && !hfPaymentAccountList.get(0).getPaymentId().equals(0)) {
                 return JsonResultKit.ofError("当前任务单所属的企业账户在当前汇缴月已经开始汇缴支付，不能再办理任务单");
             }
 
