@@ -17,6 +17,7 @@
         <result column="imp_record_count" property="impRecordCount" jdbcType="INTEGER"/>
         <result column="diff_count" property="diffCount" jdbcType="INTEGER"/>
         <result column="com_account" property="comAccount" jdbcType="VARCHAR"/>
+        <result column="emp_account" property="empAccount" jdbcType="VARCHAR"/>
         <result column="emp_name" property="empName" jdbcType="VARCHAR"/>
         <result column="imp_amount" property="impAmount" jdbcType="DECIMAL"/>
         <result column="sys_amount" property="sysAmount" jdbcType="DECIMAL"/>
@@ -76,9 +77,10 @@
             b.statement_compare_id statementId,
             b.hf_month,
             c.com_account_name,
-          b.imp_record_count,
-          b.diff_count,
+            b.imp_record_count,
+            b.diff_count,
             a.com_account,
+            a.emp_account,
             a.emp_name,
             d.imp_amount,
             d.sys_amount,
@@ -87,9 +89,8 @@
             hf_statement_compare_imp a
         INNER JOIN hf_statement_compare b ON a.statement_compare_id = b.statement_compare_id
         LEFT JOIN hf_com_account c ON b.com_account_id = c.com_account_id
-        LEFT JOIN hf_statement_compare_result d ON b.statement_compare_id = d.statement_compare_id
+        LEFT JOIN hf_statement_compare_result d ON b.statement_compare_id = d.statement_compare_id AND a.employee_id = d.employee_id
         WHERE b.statement_compare_id=#{statementId};
-
     </select>
 
     <delete id="delStatementResult">
