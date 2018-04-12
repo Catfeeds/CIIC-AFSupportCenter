@@ -144,8 +144,7 @@ public class CompanyFundAccountController extends BasicController<HfComAccountSe
      */
     @PostMapping("/submitCompanyFundAccount")
     public JsonResult submitCompanyFundAccount(@RequestBody ComFundAccountDetailDTO comFundAccountDetailDTO) {
-
-        return  JsonResultKit.of();
+        return business.submitCompanyFundAccount(comFundAccountDetailDTO);
     }
 
 }

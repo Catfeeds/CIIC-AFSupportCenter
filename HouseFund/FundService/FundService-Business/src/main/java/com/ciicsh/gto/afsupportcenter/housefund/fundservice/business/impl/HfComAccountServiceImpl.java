@@ -6,21 +6,20 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccou
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountClassMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountDetailDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.GetComFundAccountListRequestDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountCompanyPO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountDetailPO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountClassNamePO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountNamePO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccount;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,7 +33,8 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
 
     @Autowired
     private HfComTaskMapper comTaskMapper;
-
+    @Autowired
+    private HfComAccountClassMapper hfComAccountClassMapper;
     /**
      * 查询企业社保账户信息表
      *
@@ -132,9 +132,28 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
         return baseMapper.queryHfComAccountList(extBo);
     }
 
+
     @Override
     public JsonResult submitCompanyFundAccount(ComFundAccountDetailDTO comFundAccountDetailDTO) {
+        try{
+            HfComAccountClass hfComAccountClass=new HfComAccountClass();
+            hfComAccountClass.setModifiedBy(UserContext.getUser().getDisplayName());
+            hfComAccountClass.setModifiedTime(new Date());
+            String comAccount=comFundAccountDetailDTO.getHfType()==1?comFundAccountDetailDTO.getBasicComAccount():comFundAccountDetailDTO.getCompensativeComAccount();
+            hfComAccountClass.setHfComAccount(comAccount);
+            hfComAccountClass.setComAccountClassId(comFundAccountDetailDTO.getComAccountClassId());
+            String origiComAccount= hfComAccountClassMapper.selectById(hfComAccountClass).getHfComAccount();
+            if(!origiComAccount.equals(comAccount)){
+               hfComAccountClassMapper.updateById(hfComAccountClass);
+            }
 
+            HfComAccount hfComAccount=new HfComAccount();
+            BeanUtils.copyProperties(comFundAccountDetailDTO,hfComAccount);
+            baseMapper.updateById(hfComAccount);
+        }catch (Exception e){
+            e.printStackTrace();
+            return JsonResultKit.ofError(e.getMessage());
+        }
         return JsonResultKit.of();
     }
 }

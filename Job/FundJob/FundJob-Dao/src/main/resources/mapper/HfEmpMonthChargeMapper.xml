@@ -80,7 +80,8 @@
         AND pc.payment_month=#{paymentMonth}
         AND pc.payment_account_id=#{paymentAccountId}
         and (IFNULL(mc.amount,0)-IFNULL(a.amount,0))!=0
-        and mc.emp_payment_status=0
+        AND IFNULL(mc.emp_payment_status,0) = 0
+
 
     </select>
 
