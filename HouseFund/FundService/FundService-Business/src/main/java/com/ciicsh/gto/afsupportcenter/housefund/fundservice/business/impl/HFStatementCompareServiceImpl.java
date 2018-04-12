@@ -17,6 +17,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfStatementCo
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfStatementComparePO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfStatementCompareResultPO;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +87,6 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
         po.setCreatedBy(UserContext.getUser().getDisplayName());
         po.setModifiedBy(UserContext.getUser().getDisplayName());
 
-
         baseMapper.insert(po);
         statementId = po.getStatementCompareId();
         for(NewStatementExcelItemDTO item : lst) {
@@ -96,6 +96,7 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
             po2.setEmpAccount(item.getPersonalAccount());
             po2.setEmpName(item.getEmpName());
             po2.setEmpCardNum(item.getIdNum());
+            po2.setEmployeeId(getEmployeeId(item.getEmpName(),item.getIdNum(),item.getPersonalAccount()));
             po2.setMonthlyAmount(item.getMonthlyAmount());
             po2.setActive(true);
             po2.setCreatedBy(newStatement.getCreatedBy());
@@ -107,6 +108,16 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
 
     }
 
+
+    private String getEmployeeId(String employeeName,String idNum,String empAccount){
+        if(!StringUtil.empty(employeeName) && !StringUtil.empty(idNum) && !StringUtil.empty(empAccount)){
+            EmployeeIdPO employeeIdPO = baseMapper.getEmployeeIdFromArchive(employeeName,idNum,empAccount);
+            return null != employeeIdPO ? employeeIdPO.getEmployeeId() : "";
+        }
+        else{
+            return "";
+        }
+    }
     /**
      * 获取对账单明细记录
      *
@@ -165,7 +176,7 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
             int diffCount = 0;
 
             for (HfStatementCompareImpPO impPO : compareImpPOList) {
-                EmployeeIdPO empPO = baseMapper.getEmployeeIdFromArchive(impPO.getEmpName(),impPO.getEmpCardNum(),impPO.getEmpAccount());
+                //EmployeeIdPO empPO = baseMapper.getEmployeeIdFromArchive(impPO.getEmpName(),impPO.getEmpCardNum(),impPO.getEmpAccount());
 
                 HfStatementCompareResultPO resultPO = new HfStatementCompareResultPO();
                 resultPO.setStatementCompareId(statementId);
@@ -173,16 +184,26 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
                 resultPO.setActive(true);
                 resultPO.setCreatedBy(compareMan);
                 resultPO.setModifiedBy(compareMan);
-                if(empPO != null){
-                    resultPO.setEmployeeId(empPO.getEmployeeId());
-                    EmployeeSysAmountPO sysAmountPO = empSysAmountMap.get(empPO.getEmployeeId());
-                    resultPO.setSysAmount(sysAmountPO != null ? sysAmountPO.getSysAmount() : BigDecimal.ZERO);
+                resultPO.setEmployeeId(impPO.getEmployeeId());
 
+                if(null != impPO.getEmployeeId()){
+                    EmployeeSysAmountPO sysAmountPO = empSysAmountMap.get(impPO.getEmployeeId());
+                    resultPO.setSysAmount(sysAmountPO != null ? sysAmountPO.getSysAmount() : BigDecimal.ZERO);
                 }
-                else{
-                    resultPO.setEmployeeId("");
+                else {
                     resultPO.setSysAmount(BigDecimal.ZERO);
                 }
+
+//                if(empPO != null){
+//                    resultPO.setEmployeeId(empPO.getEmployeeId());
+//                    EmployeeSysAmountPO sysAmountPO = empSysAmountMap.get(empPO.getEmployeeId());
+//                    resultPO.setSysAmount(sysAmountPO != null ? sysAmountPO.getSysAmount() : BigDecimal.ZERO);
+//
+//                }
+//                else{
+//                    resultPO.setEmployeeId("");
+//                    resultPO.setSysAmount(BigDecimal.ZERO);
+//                }
                 BigDecimal diffAmount = resultPO.getSysAmount().subtract(resultPO.getImpAmount());
                 resultPO.setDiffAmount(diffAmount);
                 if(diffAmount.compareTo(BigDecimal.ZERO) != 0) {
