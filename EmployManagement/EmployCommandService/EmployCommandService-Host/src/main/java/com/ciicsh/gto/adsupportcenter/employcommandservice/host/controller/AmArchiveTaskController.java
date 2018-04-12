@@ -65,6 +65,12 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     @Autowired
     private IAmEmpTaskService taskService;
 
+    @Autowired
+    private  AmEmpEmployeeService amEmpEmployeeService;
+
+    @Autowired
+    private  IAmEmpCustomService amEmpCustomService;
+
     @RequestMapping("/queryAmArchive")
     public JsonResult<PageRows> queryAmArchive(PageInfo pageInfo){
         PageRows<AmEmploymentBO> result = business.queryAmArchive(pageInfo);
@@ -192,9 +198,12 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     @RequestMapping("/archiveDetailInfoQuery")
     public JsonResult archiveDetailInfoQuery(AmTaskParamBO amTaskParamBO){
 
-        Map<String,Object>  map = taskService.getInformation(amTaskParamBO);
-        AmCustomBO customBO = (AmCustomBO)map.get("customBO");//客户信息
-        AmEmpTaskBO employeeBO = (AmEmpTaskBO)map.get("employeeBO");//雇佣信息
+        /**
+         * 获取雇员信息
+         */
+        AmEmpEmployeeBO amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amTaskParamBO.getEmpTaskId());
+
+        AmCustomBO amCustomBO = amEmpCustomService.getCustom(amTaskParamBO.getEmpTaskId());
 
         AmResignBO amResignBO = new AmResignBO();
 
@@ -279,9 +288,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         Map<String, Object> resultMap = new HashMap<>();
         //客户信息
-        resultMap.put("customerInfo",customBO);
+        resultMap.put("customerInfo",amCustomBO);
         //雇员信息
-        resultMap.put("amEmpTaskBO",employeeBO);
+        resultMap.put("amEmpTaskBO",amEmpEmployeeBO);
 
         resultMap.put("resignBO",amResignBO);
 

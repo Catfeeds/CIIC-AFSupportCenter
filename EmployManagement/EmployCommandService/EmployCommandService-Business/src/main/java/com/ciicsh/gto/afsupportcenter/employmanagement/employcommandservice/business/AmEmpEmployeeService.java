@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business;
 
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmpEmployeeBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmTaskParamBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpEmployee;
 import com.baomidou.mybatisplus.service.IService;
 
@@ -17,5 +18,7 @@ import java.util.List;
 public interface AmEmpEmployeeService extends IService<AmEmpEmployee> {
 
     AmEmpEmployeeBO queryAmEmployeeByTaskId(Long empTaskId);
+
+    AmEmpEmployeeBO queryAmEmployee(AmTaskParamBO amTaskParamBO);
 
 }
