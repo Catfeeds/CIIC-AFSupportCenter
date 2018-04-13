@@ -161,7 +161,7 @@
                     com_start_month,
                     end_month,
                     end_type,
-                    remark
+                    submit_remark  AS 'remark'
                 FROM
                     hf_com_task
                 WHERE
@@ -186,7 +186,7 @@
                     com_start_month,
                     end_month,
                     end_type,
-                    remark
+                    submit_remark  AS 'remark'
                 FROM
                     hf_com_task
                 WHERE
