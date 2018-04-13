@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao;
 
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmpEmployeeBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmTaskParamBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpEmployee;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
@@ -17,5 +18,7 @@ import java.util.List;
 public interface AmEmpEmployeeMapper extends BaseMapper<AmEmpEmployee> {
 
     List<AmEmpEmployeeBO> queryAmEmployeeByTaskId(Long empTaskId);
+
+    List<AmEmpEmployeeBO> queryAmEmployee(AmTaskParamBO amTaskParamBO);
 
 }

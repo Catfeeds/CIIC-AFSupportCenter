@@ -65,6 +65,12 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     @Autowired
     private IAmEmpTaskService taskService;
 
+    @Autowired
+    private  AmEmpEmployeeService amEmpEmployeeService;
+
+    @Autowired
+    private  IAmEmpCustomService amEmpCustomService;
+
     @RequestMapping("/queryAmArchive")
     public JsonResult<PageRows> queryAmArchive(PageInfo pageInfo){
         PageRows<AmEmploymentBO> result = business.queryAmArchive(pageInfo);
@@ -192,9 +198,12 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     @RequestMapping("/archiveDetailInfoQuery")
     public JsonResult archiveDetailInfoQuery(AmTaskParamBO amTaskParamBO){
 
-        Map<String,Object>  map = taskService.getInformation(amTaskParamBO);
-        AmCustomBO customBO = (AmCustomBO)map.get("customBO");//客户信息
-        AmEmpTaskBO employeeBO = (AmEmpTaskBO)map.get("employeeBO");//雇佣信息
+        /**
+         * 获取雇员信息
+         */
+        AmEmpEmployeeBO amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amTaskParamBO.getEmpTaskId());
+
+        AmCustomBO amCustomBO = amEmpCustomService.getCustom(amTaskParamBO.getEmpTaskId());
 
         AmResignBO amResignBO = new AmResignBO();
 
@@ -213,8 +222,6 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchiveList(params);
         //档案备注
         PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);
-
-        AmEmpTask amEmpTask = taskService.selectById(amTaskParamBO.getEmpTaskId());
 
         //用工备注
         AmRemarkBO queryBo = new AmRemarkBO();
@@ -240,11 +247,13 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             {
                 amResignBO = listResignBO.get(0);
                 if(!StringUtil.isEmpty(amResignBO.getResignFeedback())){
-                    amResignBO.setResignFeedback(ReasonUtil.getYgfk(amResignBO.getResignFeedback()));
+                    amResignBO.setResignFeedback(ReasonUtil.getTgfk(amResignBO.getResignFeedback()));
                 }
                 if(!StringUtil.isEmpty(amResignBO.getIfLaborManualReturn())){
                     amResignBO.setIfLaborManualReturnStr(ReasonUtil.getIsTj(amResignBO.getIfLaborManualReturn().toString()));
                 }
+
+                AmEmpTask amEmpTask = taskService.selectById(amTaskParamBO.getEmpTaskResignId());
 
                 if(null!=amEmpTask){
                     java.text.DateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
@@ -279,9 +288,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         Map<String, Object> resultMap = new HashMap<>();
         //客户信息
-        resultMap.put("customerInfo",customBO);
+        resultMap.put("customerInfo",amCustomBO);
         //雇员信息
-        resultMap.put("amEmpTaskBO",employeeBO);
+        resultMap.put("amEmpTaskBO",amEmpEmployeeBO);
 
         resultMap.put("resignBO",amResignBO);
 
