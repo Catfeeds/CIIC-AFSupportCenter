@@ -51,6 +51,13 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
     @Autowired
     private IAmEmpMaterialService amEmpMaterialService;
 
+    @Autowired
+    private  AmEmpEmployeeService amEmpEmployeeService;
+
+    @Autowired
+    private  IAmEmpCustomService amEmpCustomService;
+
+
 
     @RequestMapping("/queryAmResign")
     public JsonResult<PageRows>  queryAmResign(PageInfo pageInfo){
@@ -148,26 +155,30 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
     @RequestMapping("/queryAmResignDetail")
     public JsonResult queryAmResignDetail(AmTaskParamBO amTaskParamBO){
 
-        List<MaterialDTO>  lll = amEmpMaterialService.queryMaterialByTaskId(new Long(1126));
-
         amTaskParamBO.setResign(true);
 
-        Map<String,Object>  map = taskService.getInformation(amTaskParamBO);
+//        Map<String,Object>  map = taskService.getInformation(amTaskParamBO);
+        /**
+         * 获取雇员信息
+         */
+        AmEmpEmployeeBO amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployee(amTaskParamBO);
 
-        AmCustomBO customBO = (AmCustomBO)map.get("customBO");//客户信息
-        AmEmpTaskBO employeeBO = (AmEmpTaskBO)map.get("employeeBO");//雇佣信息
+        AmCustomBO amCustomBO = amEmpCustomService.getCustom(amEmpEmployeeBO.getEmpTaskId());
 
-        Map<String,Object> param = new HashMap<>();
-        param.put("employeeId",amTaskParamBO.getEmployeeId());
-        param.put("companyId",amTaskParamBO.getCompanyId());
+//        AmCustomBO customBO = (AmCustomBO)map.get("customBO");//客户信息
+//        AmEmpTaskBO employeeBO = (AmEmpTaskBO)map.get("employeeBO");//雇佣信息
 
-        List<AmResignBO> listResignBO = business.queryAmResignDetail(param);
 
         PageInfo pageInfo = new PageInfo();
         JSONObject params = new JSONObject();
         params.put("employeeId",amTaskParamBO.getEmployeeId());
+        params.put("companyId",amTaskParamBO.getCompanyId());
         params.put("remarkType",amTaskParamBO.getRemarkType());
+        params.put("empTaskId",amTaskParamBO.getEmpTaskId());
         pageInfo.setParams(params);
+
+        List<AmResignBO> listResignBO = business.queryAmResignDetail(params);
+
 
         //退工备注
         PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);
@@ -180,7 +191,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         pageInfo.setParams(params);
         PageRows<AmRemarkBO> amRemarkBOPageRows2 = amRemarkService.queryAmRemark(pageInfo);
         //用工信息
-        List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(param);
+        List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmploymentResign(params);
 
         //用工档案
         List<AmArchiveBO> amArchiveBOList = null;
@@ -188,8 +199,8 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
         if(null!=resultEmployList&&resultEmployList.size()>0)
         {
-            param.put("employmentId",resultEmployList.get(0).getEmploymentId());
-            amArchiveBOList = amArchiveService.queryAmArchiveList(param);
+            params.put("employmentId",resultEmployList.get(0).getEmploymentId());
+            amArchiveBOList = amArchiveService.queryAmArchiveList(params);
             if(amArchiveBOList!=null&&amArchiveBOList.size()>0){
                 amArchiveBO = amArchiveBOList.get(0);
             }
@@ -198,9 +209,9 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
         //客户信息
-        resultMap.put("customerInfo",customBO);
+        resultMap.put("customerInfo",amCustomBO);
         //雇员信息
-        resultMap.put("amEmpTaskBO",employeeBO);
+        resultMap.put("amEmpTaskBO",amEmpEmployeeBO);
 
         if(null!=amRemarkBOPageRows)
         {
@@ -262,7 +273,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             amResignBO.setStorageDate(amArchiveBO.getStorageDate());
             amResignBO.setDiaodangFeedback(amArchiveBO.getDiaodangFeedback());
 
-            amResignBO.setArchiveDirection(employeeBO.getArchiveDirection());
+            amResignBO.setArchiveDirection(amEmpEmployeeBO.getArchiveDirection());
         }else{
             amResignBO.setYuliuDocNum(amArchiveBO.getYuliuDocNum());
             amResignBO.setDocNum(amArchiveBO.getDocCode());
@@ -277,10 +288,10 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             amResignBO.setStorageDate(amArchiveBO.getStorageDate());
             amResignBO.setDiaodangFeedback(amArchiveBO.getDiaodangFeedback());
 
-            amResignBO.setArchiveDirection(employeeBO.getArchiveDirection());
+            amResignBO.setArchiveDirection(amEmpEmployeeBO.getArchiveDirection());
 
         }
-        amResignBO.setFirstInDate(employeeBO.getFirstInDate());
+        amResignBO.setFirstInDate(amEmpEmployeeBO.getFirstInDateStr());
         String code = amArchiveBO.getEmployFeedback();
         if(!StringUtil.isEmpty(code)){
             amResignBO.setEmployFeedback(ReasonUtil.getYgfk(code));

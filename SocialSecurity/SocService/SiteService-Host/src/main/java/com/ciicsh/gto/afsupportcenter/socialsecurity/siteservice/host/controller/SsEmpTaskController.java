@@ -66,7 +66,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     @Log("雇员日常操作查询")
     @PostMapping("/employeeOperatorQuery")
     public JsonResult<List<SsEmpTaskBO>> employeeOperatorQuery(PageInfo pageInfo) {
-        PageRows<SsEmpTaskBO> pageRows = business.employeeOperatorQuery(pageInfo);
+        PageRows<SsEmpTaskBO> pageRows = business.employeeOperatorQuery(pageInfo, UserContext.getUserId());
         return JsonResultKit.ofPage(pageRows);
     }
 
@@ -74,7 +74,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     public void employeeOperatorQueryExport(HttpServletResponse response, PageInfo pageInfo) {
         Date date = new Date();
         String fileNme = "雇员日常社保_" + StringUtil.getDateString(date) + ".xls";
-        PageRows<SsEmpTaskBO> pageRows = business.employeeOperatorQuery(pageInfo);
+        PageRows<SsEmpTaskBO> pageRows = business.employeeOperatorQuery(pageInfo, UserContext.getUserId());
         ExcelUtil.exportExcel(pageRows.getRows(), SsEmpTaskBO.class, fileNme, response);
     }
 
@@ -293,7 +293,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             }
             pageInfo.setPageSize(10000);
             pageInfo.setPageNum(0);
-            PageRows<T> result = business.employeeDailyOperatorQueryForDisk(pageInfo, isRollIn);
+            PageRows<T> result = business.employeeDailyOperatorQueryForDisk(pageInfo, UserContext.getUserId(), isRollIn);
             long total = result.getTotal();
             ExportParams exportParams = new ExportParams();
             exportParams.setType(ExcelType.XSSF);
@@ -307,7 +307,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
                 int pageNum = (int) Math.ceil(total / pageInfo.getPageSize());
                 for (int i = 1; i < pageNum; i++) {
                     pageInfo.setPageNum(i);
-                    result = business.employeeDailyOperatorQueryForDisk(pageInfo, isRollIn);
+                    result = business.employeeDailyOperatorQueryForDisk(pageInfo, UserContext.getUserId(), isRollIn);
                     workbook = ExcelExportUtil.exportBigExcel(exportParams, clazz, result.getRows());
                 }
                 ExcelExportUtil.closeExportBigExcel();

@@ -24,7 +24,7 @@ public interface SsEmpTaskService extends IService<SsEmpTask> {
      * @param pageInfo
      * @return
      */
-    PageRows<SsEmpTaskBO> employeeOperatorQuery(PageInfo pageInfo);
+    PageRows<SsEmpTaskBO> employeeOperatorQuery(PageInfo pageInfo, String userId);
   //  List<SsEmpTaskBO> empOperatorQueryExport(SsEmpTaskBO ssEmpTaskBO);
     /**
      * 雇员日常操作查询(盘片转入转出)
@@ -32,7 +32,7 @@ public interface SsEmpTaskService extends IService<SsEmpTask> {
      * @param isRollIn
      * @return
      */
-    <T> PageRows<T> employeeDailyOperatorQueryForDisk(PageInfo pageInfo, boolean isRollIn);
+    <T> PageRows<T> employeeDailyOperatorQueryForDisk(PageInfo pageInfo, String userId, boolean isRollIn);
 
     /**
      * 通过社保档案ID 查询历史任务单

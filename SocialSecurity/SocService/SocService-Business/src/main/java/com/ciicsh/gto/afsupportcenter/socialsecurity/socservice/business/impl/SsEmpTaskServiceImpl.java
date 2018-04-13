@@ -80,8 +80,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
     @Override
-    public PageRows<SsEmpTaskBO> employeeOperatorQuery(PageInfo pageInfo) {
+    public PageRows<SsEmpTaskBO> employeeOperatorQuery(PageInfo pageInfo, String userId) {
         SsEmpTaskBO dto = pageInfo.toJavaObject(SsEmpTaskBO.class);
+        dto.setUserId(userId);
         handleTaskCategory(dto);
         if (2 == dto.getOperatorType()) {
             return PageKit.doSelectPage(pageInfo, () -> baseMapper.employeeSpecialOperatorQuery(dto));
@@ -104,8 +105,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * 雇员日常操作盘片导出
      */
     @Override
-    public <T> PageRows<T> employeeDailyOperatorQueryForDisk(PageInfo pageInfo, boolean isRollIn) {
+    public <T> PageRows<T> employeeDailyOperatorQueryForDisk(PageInfo pageInfo, String userId, boolean isRollIn) {
         SsEmpTaskBO ssEmpTaskBO = pageInfo.toJavaObject(SsEmpTaskBO.class);
+        ssEmpTaskBO.setUserId(userId);
         return PageKit.doSelectPage(pageInfo, () -> {
             List<T> rollInBOs = null;
             List<SsEmpTaskBO> list = baseMapper.employeeDailyOperatorQuery(ssEmpTaskBO);

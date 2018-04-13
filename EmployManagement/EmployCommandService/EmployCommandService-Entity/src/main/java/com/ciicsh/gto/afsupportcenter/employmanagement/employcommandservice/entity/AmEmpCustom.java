@@ -28,8 +28,8 @@ public class AmEmpCustom implements Serializable {
     /**
      * 任务id
      */
-    @TableField("task_id")
-    private String taskId;
+    @TableField("emp_task_id")
+    private Long  empTaskId;
     /**
      * 领导ID
      */
@@ -90,12 +90,12 @@ public class AmEmpCustom implements Serializable {
         this.empCustomId = empCustomId;
     }
 
-    public String getTaskId() {
-        return taskId;
+    public Long getEmpTaskId() {
+        return empTaskId;
     }
 
-    public void setTaskId(String taskId) {
-        this.taskId = taskId;
+    public void setEmpTaskId(Long empTaskId) {
+        this.empTaskId = empTaskId;
     }
 
     public String getLeaderShipId() {
@@ -182,7 +182,6 @@ public class AmEmpCustom implements Serializable {
     public String toString() {
         return "AmEmpCustom{" +
             "empCustomId=" + empCustomId +
-            ", taskId=" + taskId +
             ", leaderShipId=" + leaderShipId +
             ", leaderShipName=" + leaderShipName +
             ", createdDisplayName=" + createdDisplayName +

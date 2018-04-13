@@ -65,6 +65,12 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     @Autowired
     private IAmEmpTaskService taskService;
 
+    @Autowired
+    private  AmEmpEmployeeService amEmpEmployeeService;
+
+    @Autowired
+    private  IAmEmpCustomService amEmpCustomService;
+
     @RequestMapping("/queryAmArchive")
     public JsonResult<PageRows> queryAmArchive(PageInfo pageInfo){
         PageRows<AmEmploymentBO> result = business.queryAmArchive(pageInfo);
@@ -192,9 +198,12 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     @RequestMapping("/archiveDetailInfoQuery")
     public JsonResult archiveDetailInfoQuery(AmTaskParamBO amTaskParamBO){
 
-        Map<String,Object>  map = taskService.getInformation(amTaskParamBO);
-        AmCustomBO customBO = (AmCustomBO)map.get("customBO");//客户信息
-        AmEmpTaskBO employeeBO = (AmEmpTaskBO)map.get("employeeBO");//雇佣信息
+        /**
+         * 获取雇员信息
+         */
+        AmEmpEmployeeBO amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amTaskParamBO.getEmpTaskId());
+
+        AmCustomBO amCustomBO = amEmpCustomService.getCustom(amTaskParamBO.getEmpTaskId());
 
         AmResignBO amResignBO = new AmResignBO();
 
@@ -203,20 +212,16 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         params.put("employeeId",amTaskParamBO.getEmployeeId());
         params.put("remarkType",amTaskParamBO.getRemarkType());
         params.put("empTaskId",amTaskParamBO.getEmpTaskId());
+        params.put("employmentId",amTaskParamBO.getEmploymentId());
+        params.put("companyId",amTaskParamBO.getCompanyId());
         params.put("operateType",new Integer(2));
         pageInfo.setParams(params);
 
-        Map<String,Object>  param = new HashMap<>();
-        param.put("employmentId",amTaskParamBO.getEmploymentId());
-        param.put("employeeId",amTaskParamBO.getEmployeeId());
-        param.put("companyId",amTaskParamBO.getCompanyId());
 
         //用工档案
-        List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchiveList(param);
+        List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchiveList(params);
         //档案备注
         PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);
-
-        AmEmpTask amEmpTask = taskService.selectById(amTaskParamBO.getEmpTaskId());
 
         //用工备注
         AmRemarkBO queryBo = new AmRemarkBO();
@@ -231,9 +236,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         PageRows<AmEmpMaterialBO> resultMaterial = iAmEmpMaterialService.queryMaterialDic(pageInfo);
 
         //用工信息
-        List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(param);
+        List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(params);
 
-        List<AmResignBO> listResignBO = amResignService.queryAmResignDetail(param);
+        List<AmResignBO> listResignBO = amResignService.queryAmResignDetail(params);
 
         //退工信息
         if(null!=listResignBO&&listResignBO.size()>0){
@@ -242,11 +247,13 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             {
                 amResignBO = listResignBO.get(0);
                 if(!StringUtil.isEmpty(amResignBO.getResignFeedback())){
-                    amResignBO.setResignFeedback(ReasonUtil.getYgfk(amResignBO.getResignFeedback()));
+                    amResignBO.setResignFeedback(ReasonUtil.getTgfk(amResignBO.getResignFeedback()));
                 }
                 if(!StringUtil.isEmpty(amResignBO.getIfLaborManualReturn())){
                     amResignBO.setIfLaborManualReturnStr(ReasonUtil.getIsTj(amResignBO.getIfLaborManualReturn().toString()));
                 }
+
+                AmEmpTask amEmpTask = taskService.selectById(amTaskParamBO.getEmpTaskResignId());
 
                 if(null!=amEmpTask){
                     java.text.DateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
@@ -281,9 +288,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         Map<String, Object> resultMap = new HashMap<>();
         //客户信息
-        resultMap.put("customerInfo",customBO);
+        resultMap.put("customerInfo",amCustomBO);
         //雇员信息
-        resultMap.put("amEmpTaskBO",employeeBO);
+        resultMap.put("amEmpTaskBO",amEmpEmployeeBO);
 
         resultMap.put("resignBO",amResignBO);
 

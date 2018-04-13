@@ -5,7 +5,7 @@
 	<!-- 通用查询映射结果 -->
 	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpEmployee">
 		<id column="emp_employee_id" property="empEmployeeId" />
-		<result column="task_id" property="taskId" />
+		<result column="emp_task_id" property="empTaskId" />
 		<result column="company_id" property="companyId" />
 		<result column="employee_id" property="employeeId" />
 		<result column="hire_unit" property="hireUnit" />
@@ -20,6 +20,12 @@
 		<result column="first_in_company_date" property="firstInCompanyDate" />
 		<result column="organization_code" property="organizationCode" />
         <result column="file_free" property="fileFree" />
+        <result column="employee_center_operator" property="employeeCenterOperator" />
+        <result column="ss_account" property="ssAccount" />
+        <result column="settlement_area" property="settlementArea" />
+        <result column="account_repair_date" property="accountRepairDate" />
+        <result column="ss_pwd" property="ssPwd" />
+        <result column="company_type" property="companyType" />
 		<result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />
 		<result column="modified_time" property="modifiedTime" />
