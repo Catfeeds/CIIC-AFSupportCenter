@@ -401,10 +401,18 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         }
         for(AmEmpMaterial material:list)
         {
-            material.setReceiveDate(LocalDate.now());
-            material.setReceiveName(userName);
-            material.setReceiveId(userId);
+            // 1签收 2批退
+            if(1 == material.getOperateType()){
+                material.setReceiveId(userId);
+                material.setReceiveName(userName);
+                material.setReceiveDate(LocalDate.now());
+            }else if(2 == material.getOperateType()){
+                material.setRejectId(userId);
+                material.setRejectName(userName);
+                material.setRejectDate(LocalDate.now());
+            }
             material.setModifiedTime(LocalDateTime.now());
+            material.setModifiedBy(userId);
         }
 
         AmEmpTask amEmpTask = business.selectById(list.get(0).getEmpTaskId());

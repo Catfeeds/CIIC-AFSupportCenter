@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -112,10 +113,10 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
     private String getEmployeeId(String employeeName,String idNum,String empAccount){
         if(!StringUtil.empty(employeeName) && !StringUtil.empty(idNum) && !StringUtil.empty(empAccount)){
             EmployeeIdPO employeeIdPO = baseMapper.getEmployeeIdFromArchive(employeeName,idNum,empAccount);
-            return null != employeeIdPO ? employeeIdPO.getEmployeeId() : "";
+            return null != employeeIdPO ? employeeIdPO.getEmployeeId() : UUID.randomUUID().toString();
         }
         else{
-            return "";
+            return UUID.randomUUID().toString();
         }
     }
     /**
@@ -176,8 +177,6 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
             int diffCount = 0;
 
             for (HfStatementCompareImpPO impPO : compareImpPOList) {
-                //EmployeeIdPO empPO = baseMapper.getEmployeeIdFromArchive(impPO.getEmpName(),impPO.getEmpCardNum(),impPO.getEmpAccount());
-
                 HfStatementCompareResultPO resultPO = new HfStatementCompareResultPO();
                 resultPO.setStatementCompareId(statementId);
                 resultPO.setImpAmount(impPO.getMonthlyAmount());
@@ -194,16 +193,6 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
                     resultPO.setSysAmount(BigDecimal.ZERO);
                 }
 
-//                if(empPO != null){
-//                    resultPO.setEmployeeId(empPO.getEmployeeId());
-//                    EmployeeSysAmountPO sysAmountPO = empSysAmountMap.get(empPO.getEmployeeId());
-//                    resultPO.setSysAmount(sysAmountPO != null ? sysAmountPO.getSysAmount() : BigDecimal.ZERO);
-//
-//                }
-//                else{
-//                    resultPO.setEmployeeId("");
-//                    resultPO.setSysAmount(BigDecimal.ZERO);
-//                }
                 BigDecimal diffAmount = resultPO.getSysAmount().subtract(resultPO.getImpAmount());
                 resultPO.setDiffAmount(diffAmount);
                 if(diffAmount.compareTo(BigDecimal.ZERO) != 0) {
