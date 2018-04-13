@@ -81,6 +81,7 @@ public class SsEmpTaskBO implements Serializable {
     private String leaderShipName;
     private Integer serviceCenterId;
     private String serviceCenter;
+    private String userId;
 
     //费用段
     private List<SsEmpBasePeriod> listEmpBasePeriod;

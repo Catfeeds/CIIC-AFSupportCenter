@@ -79,6 +79,7 @@
         et.business_interface_id,
         et.old_agreement_id,
         et.created_time,
+        et.created_display_name,
         e.employee_name,
         e.employee_id,
         e.id_num,
@@ -165,6 +166,7 @@
         select
         <include refid="employeeDailyOperatorQuery_select"/>
         from ss_emp_task et
+        INNER JOIN ss_dataauth_company sdc ON et.company_id = sdc.company_id AND sdc.user_id = #{userId}
         LEFT JOIN sal_company c on et.company_id = c.company_id
         LEFT JOIN emp_employee e ON et.employee_id = e.employee_id
         LEFT JOIN ss_account_com_relation ssac ON ssac.company_id = c.company_id AND ssac.is_active = 1
@@ -186,8 +188,10 @@
         ,et.emp_classify,
         et.is_change,
         et.start_month,
-        et.created_time
+        et.created_time,
+        et.created_display_name
         from ss_emp_task et
+        INNER JOIN ss_dataauth_company sdc ON et.company_id = sdc.company_id AND sdc.user_id = #{userId}
         LEFT JOIN sal_company c on et.company_id = c.company_id
         LEFT JOIN emp_employee e on et.employee_id = e.employee_id
         LEFT JOIN ss_account_com_relation ssac on ssac.company_id = c.company_id and ssac.is_active = 1
