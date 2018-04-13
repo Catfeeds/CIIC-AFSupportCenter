@@ -157,16 +157,12 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
         amTaskParamBO.setResign(true);
 
-//        Map<String,Object>  map = taskService.getInformation(amTaskParamBO);
         /**
          * 获取雇员信息
          */
         AmEmpEmployeeBO amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployee(amTaskParamBO);
 
         AmCustomBO amCustomBO = amEmpCustomService.getCustom(amEmpEmployeeBO.getEmpTaskId());
-
-//        AmCustomBO customBO = (AmCustomBO)map.get("customBO");//客户信息
-//        AmEmpTaskBO employeeBO = (AmEmpTaskBO)map.get("employeeBO");//雇佣信息
 
 
         PageInfo pageInfo = new PageInfo();
