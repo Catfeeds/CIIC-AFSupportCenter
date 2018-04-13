@@ -218,9 +218,8 @@
         LEFT JOIN  am_archive b on a.employment_id = a.employment_id
         LEFT JOIN  am_emp_task  t on t.company_id = c.company_id and c.employee_id =t.employee_id
         where
-        c.company_id = #{companyId}
-        and
-        c.employee_id = #{employeeId}
+        c.emp_task_id = #{empTaskId}
+
     </select>
 
     <select id="queryAmResignList" resultMap="RM_resignSearchExportOpt">

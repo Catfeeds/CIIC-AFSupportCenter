@@ -8,7 +8,15 @@
     </resultMap>
 
      <select id="queryAmRemark" resultMap="BaseResultMapDTO">
-         SELECT  *  from am_remark where employee_id = #{employeeId}  and remark_type = #{remarkType} and  is_active = 1  order by created_time desc
+         SELECT
+         *
+         FROM
+         am_remark
+         WHERE
+         emp_task_id = #{empTaskId}
+         and remark_type = #{remarkType}
+         and  is_active = 1
+         order by created_time desc
      </select>
 
     <update id="deleteAmRemark">

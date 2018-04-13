@@ -228,7 +228,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         //用工备注
         AmRemarkBO queryBo = new AmRemarkBO();
         queryBo.setRemarkType(1);
-        queryBo.setEmployeeId(amTaskParamBO.getEmployeeId());
+        queryBo.setEmpTaskId(amTaskParamBO.getEmpTaskId());
 
         List<AmRemarkBO> amRemarkBOList = amRemarkService.getAmRemakList(queryBo);
 
