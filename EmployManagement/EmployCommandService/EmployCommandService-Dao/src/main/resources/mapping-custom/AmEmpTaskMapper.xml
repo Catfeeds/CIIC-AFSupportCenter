@@ -362,7 +362,7 @@
         am_employment a
         LEFT JOIN  am_emp_task b ON a.emp_task_id = b.emp_task_id
         LEFT JOIN  am_archive c on a.employment_id = c.employment_id
-        LEFT JOIN  am_emp_employee d on d.task_id = b.task_id
+        LEFT JOIN am_emp_employee d ON d.emp_task_id = b.emp_task_id
         where
         b.task_id = #{taskId}
     </select>
