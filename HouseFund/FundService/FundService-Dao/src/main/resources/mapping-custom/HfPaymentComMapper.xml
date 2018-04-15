@@ -17,7 +17,7 @@
         <result column="emp_count" property="empCount"/>
 
     </resultMap>
-
+    <!--生成制作汇缴名单-->
     <!--费用种类：1标准 2 开户 3 转入  4启封 5 调整启封 6 补缴  7 转出 8 封存 9调整封存 10 销户 11 差额补缴-->
 	<select id="selectPaymentAccount" parameterType="java.util.List" resultMap="CreatePaymentAccountBO" >
         SELECT pa.payment_account_id,pa.com_account_id,acr.company_id,pa.com_account_class_id,ca.payment_bank,pa.hf_type,ca.hf_account_type
@@ -51,7 +51,7 @@
         AND ea.company_id=acr.company_id
         AND mc.payment_type IN (7, 8, 9, 10)
         ) AS sum_sub,
-        (SELECT sum_add - sum_sub) AS sum_amount,
+        (SELECT ifnull(sum_add,0) - ifnull(sum_sub,0)) AS sum_amount,
         (
         SELECT
         SUM(ifnull(amount, 0))

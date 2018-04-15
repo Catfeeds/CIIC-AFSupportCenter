@@ -233,14 +233,12 @@
         FROM
             hf_com_account_class a
         INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
-        AND a.hf_type = 1
-        INNER JOIN hf_com_account_class c ON c.com_account_id = b.com_account_id
-        AND c.hf_type = 2
+        AND a.hf_type = 1 AND b.is_active = 1
+        LEFT JOIN hf_com_account_class c ON c.com_account_id = b.com_account_id
+        AND c.hf_type = 2 AND c.is_active = 1
         WHERE
             b.com_account_id = #{comAccountId}
         AND a.is_active = 1
-        AND b.is_active = 1
-        AND c.is_active = 1
 
     </select>
 

@@ -19,6 +19,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -142,8 +143,12 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
             String comAccount=comFundAccountDetailDTO.getHfType()==1?comFundAccountDetailDTO.getBasicComAccount():comFundAccountDetailDTO.getCompensativeComAccount();
             hfComAccountClass.setHfComAccount(comAccount);
             hfComAccountClass.setComStartMonth(comFundAccountDetailDTO.getComStartMonthValue());
-            int tmpStore=comFundAccountDetailDTO.getHfType()==1?comFundAccountDetailDTO.getBasicAccountTempStore():comFundAccountDetailDTO.getCompensativeAccountTempStore();
-            hfComAccountClass.setAccountTempStore(tmpStore);
+            String[] tempstore=comFundAccountDetailDTO.getTmpStore();
+            boolean tmpStore=comFundAccountDetailDTO.getHfType()==1?
+                Arrays.stream(tempstore).filter(i->"基本暂保管".equals(i)).findFirst().isPresent():
+                Arrays.stream(tempstore).filter(i->"补充暂保管".equals(i)).findFirst().isPresent();
+
+            hfComAccountClass.setAccountTempStore(tmpStore?1:0);
             hfComAccountClass.setComAccountClassId(comFundAccountDetailDTO.getComAccountClassId());
             //String origiComAccount= hfComAccountClassMapper.selectById(hfComAccountClass).getHfComAccount();
             //if(!origiComAccount.equals(comAccount)){
@@ -151,11 +156,13 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
             //}
             HfComAccount hfComAccount=new HfComAccount();
             BeanUtils.copyProperties(comFundAccountDetailDTO,hfComAccount);
+            hfComAccount.setPaymentBank(comFundAccountDetailDTO.getPaymentBank());
+            hfComAccount.setRemark(comFundAccountDetailDTO.getRemark());
 
             baseMapper.updateById(hfComAccount);
         }catch (Exception e){
             e.printStackTrace();
-            return JsonResultKit.ofError(e.getMessage());
+            return JsonResultKit.ofError("保存数据异常！");
         }
         return JsonResultKit.of();
     }

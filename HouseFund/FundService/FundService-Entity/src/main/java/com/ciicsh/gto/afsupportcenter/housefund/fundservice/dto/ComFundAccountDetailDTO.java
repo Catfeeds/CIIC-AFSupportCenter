@@ -11,7 +11,7 @@ public class ComFundAccountDetailDTO
      * 1 徐汇—X、2 西郊—C、3 东方路—P、4 卢湾—L、5 黄浦—H
      *
      */
-    private Byte paymentBank;
+    private Integer paymentBank;
 
     /**
      * 付款方式:
@@ -73,6 +73,15 @@ public class ComFundAccountDetailDTO
     private Long  comAccountClassId;
     private Long comAccountId;
     private Byte hfType;
+    private String[] tmpStore;
+
+    public String[] getTmpStore() {
+        return tmpStore;
+    }
+
+    public void setTmpStore(String[] tmpStore) {
+        this.tmpStore = tmpStore;
+    }
 
     public String getComStartMonthValue() {
         return comStartMonthValue;
@@ -121,11 +130,11 @@ public class ComFundAccountDetailDTO
         this.comAccountId = comAccountId;
     }
 
-    public Byte getPaymentBank() {
+    public Integer getPaymentBank() {
         return paymentBank;
     }
 
-    public void setPaymentBank(Byte paymentBank) {
+    public void setPaymentBank(Integer paymentBank) {
         this.paymentBank = paymentBank;
     }
 

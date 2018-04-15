@@ -45,7 +45,7 @@
           pa.payment_month,
           (
             SELECT
-            ifnull(sum(amount), 0)
+            sum(ifnull(amount, 0))
             FROM
             hf_month_charge mc
             INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
@@ -61,7 +61,7 @@
           ) AS sum_add,
           (
             SELECT
-            ifnull(sum(amount), 0)
+            sum(ifnull(amount, 0))
             FROM
             hf_month_charge mc
             INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
@@ -78,7 +78,7 @@
           (SELECT sum_add - sum_sub) AS sum_amount,
           (
             SELECT
-            ifnull(sum(amount), 0)
+            sum(ifnull(amount, 0))
             FROM
             hf_month_charge mc
             INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id

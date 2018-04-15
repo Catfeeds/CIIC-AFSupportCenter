@@ -71,7 +71,7 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
             totalApplicationAmount=totalApplicationAmount.add(
                 Optional.ofNullable(accountMap.getSumAmount()).orElse(BigDecimal.valueOf(0))
                     .add(Optional.ofNullable(accountMap.getPayInBackAmount()).orElse(BigDecimal.valueOf(0))));
-            empCount=empCount+accountMap.getEmpCount();
+        //   empCount=empCount+accountMap.getEmpCount();
             insertHfPaymentCom(accountMap,paymentId);
             hfPaymentAccount.setPaymentId(paymentId);
             hfPaymentAccount.setPaymentAccountId(accountMap.getPaymentAccountId());
@@ -93,7 +93,7 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
         HfPayment hfPayment=new HfPayment();
         hfPayment.setPaymentId(paymentId);
         hfPayment.setTotalApplicationAmonut(totalApplicationAmount);
-        hfPayment.setTotalEmpCount(empCount);
+       // hfPayment.setTotalEmpCount(empCount);
         hfPaymentMapper.updateById(hfPayment);
         return JsonResultKit.of();
 
@@ -133,8 +133,8 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
         hfPaymentCom.setHfType(hfCreatePaymentAccountBO.getHfType());
         hfPaymentCom.setCompanyId(hfCreatePaymentAccountBO.getCompanyId());
         hfPaymentCom.setPaymentBank(String.valueOf(hfCreatePaymentAccountBO.getPaymentBank()));
-        hfPaymentCom.setRepairAmount(hfCreatePaymentAccountBO.getPayInBackAmount());//补缴金额
         hfPaymentCom.setRemittedAmount(hfCreatePaymentAccountBO.getSumAmount());//汇缴金额
+        hfPaymentCom.setRepairAmount(hfCreatePaymentAccountBO.getPayInBackAmount());//补缴金额
         hfPaymentCom.setRemittedCountEmp(hfCreatePaymentAccountBO.getEmpCount());
         hfPaymentCom.setCreatedBy(UserContext.getUser().getDisplayName());
         hfPaymentCom.setModifiedBy(UserContext.getUser().getDisplayName());
