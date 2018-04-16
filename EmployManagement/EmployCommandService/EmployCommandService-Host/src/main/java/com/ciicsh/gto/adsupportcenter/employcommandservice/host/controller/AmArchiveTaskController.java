@@ -215,6 +215,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         params.put("employmentId",amTaskParamBO.getEmploymentId());
         params.put("companyId",amTaskParamBO.getCompanyId());
         params.put("operateType",new Integer(2));
+        params.put("empTaskResignId",amTaskParamBO.getEmpTaskResignId());
         pageInfo.setParams(params);
 
 
