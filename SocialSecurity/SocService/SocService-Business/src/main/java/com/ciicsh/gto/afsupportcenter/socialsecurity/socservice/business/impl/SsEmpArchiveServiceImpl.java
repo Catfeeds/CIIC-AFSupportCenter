@@ -48,7 +48,7 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
     public SsEmpArchiveBO  queryByEmpTaskId(String empTaskId,String operatorType) {
         SsEmpArchiveBO ssEmpArchiveBO =new SsEmpArchiveBO();
         try{
-            if("1".equals(operatorType) || "2".equals(operatorType)){
+            if("1".equals(operatorType) || "2".equals(operatorType) || "12".equals(operatorType) || "13".equals(operatorType)){
                 SsEmpTask ssEmpTask = (SsEmpTask) ssEmpTaskService.selectById(empTaskId);
                 //查询证件号码
                 SsEmpTaskBO ssEmpTaskBO = ssEmpTaskService.selectIdNumByEmployeeId(ssEmpTask.getEmployeeId());
