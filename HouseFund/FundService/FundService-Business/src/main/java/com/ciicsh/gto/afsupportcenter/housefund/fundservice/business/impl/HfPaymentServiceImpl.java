@@ -115,7 +115,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
                 payment.setModifiedTime(new Date());
                 payment.setModifiedBy(processParmBO.getOperator());
                 payment.setPayApplyCode(jsRes.getData().getPayapplyCode());
-                payment.setRequestUser(UserContext.getUserName());
+                payment.setRequestUser(UserContext.getUser().getDisplayName());
                 payment.setRequestDate(new Date());
                 Integer val = hfPaymentMapper.updateById(payment);
                 if (val > 0) {
