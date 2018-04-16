@@ -20,6 +20,7 @@ import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -200,7 +201,7 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
                 }
                 statementResultMapper.insert(resultPO);
             } //for
-
+            compareMan= UserContext.getUser().getDisplayName();
             statementPO.setDiffCount(diffCount);
             statementPO.setCompareMan(compareMan);
             statementPO.setCompareTime(LocalDateTime.now());
