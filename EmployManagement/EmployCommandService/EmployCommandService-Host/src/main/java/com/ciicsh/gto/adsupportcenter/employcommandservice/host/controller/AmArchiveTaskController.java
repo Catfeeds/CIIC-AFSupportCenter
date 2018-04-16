@@ -215,6 +215,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         params.put("employmentId",amTaskParamBO.getEmploymentId());
         params.put("companyId",amTaskParamBO.getCompanyId());
         params.put("operateType",new Integer(2));
+        params.put("empTaskResignId",amTaskParamBO.getEmpTaskResignId());
         pageInfo.setParams(params);
 
 
@@ -361,7 +362,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     }
 
     @PostMapping("/saveAmEmpMaterial")
-    public JsonResult<Boolean>  saveAmEmpMaterial(@RequestBody List<AmEmpMaterial> list) {
+    public JsonResult<Integer>  saveAmEmpMaterial(@RequestBody List<AmEmpMaterial> list) {
         String userId = "System";
         String userName = "System";
         try {
@@ -373,6 +374,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         List<AmEmpMaterial>  data = new ArrayList<AmEmpMaterial>();
         for(AmEmpMaterial bo:list)
         {
+            if(bo.getReceiveName() != null){
+                return JsonResultKit.of(2);
+            }
             bo.setOperateType(2);
             LocalDateTime now = LocalDateTime.now();
             bo.setCreatedTime(now);
@@ -395,7 +399,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         }
 
-        return JsonResultKit.of(result);
+        return JsonResultKit.of(result?1:0);
     }
 
     @RequestMapping("/deleteAmInjury")

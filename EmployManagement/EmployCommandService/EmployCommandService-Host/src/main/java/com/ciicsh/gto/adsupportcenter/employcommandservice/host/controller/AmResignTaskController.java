@@ -171,10 +171,10 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         params.put("companyId",amTaskParamBO.getCompanyId());
         params.put("remarkType",amTaskParamBO.getRemarkType());
         params.put("empTaskId",amTaskParamBO.getEmpTaskId());
+        params.put("empTaskResignId",amTaskParamBO.getEmpTaskId());
         pageInfo.setParams(params);
 
         List<AmResignBO> listResignBO = business.queryAmResignDetail(params);
-
 
         //退工备注
         PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);

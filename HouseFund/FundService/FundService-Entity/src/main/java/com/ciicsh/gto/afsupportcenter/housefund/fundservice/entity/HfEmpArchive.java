@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity;
 
+import com.baomidou.mybatisplus.enums.FieldStrategy;
 import com.baomidou.mybatisplus.enums.IdType;
 import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotations.TableId;
@@ -53,7 +54,8 @@ public class HfEmpArchive implements Serializable {
     /**
      * 雇员基本补充公积金账号
      */
-	@TableField("hf_emp_account")
+
+    @TableField(value="hf_emp_account",strategy= FieldStrategy.IGNORED)
 	private String hfEmpAccount;
     /**
      * 公积金状态 : 0-未办理  1-已办  2-已做 3-封存

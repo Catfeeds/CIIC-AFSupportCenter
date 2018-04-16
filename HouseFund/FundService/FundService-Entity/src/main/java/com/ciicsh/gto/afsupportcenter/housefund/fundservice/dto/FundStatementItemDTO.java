@@ -33,6 +33,16 @@ public class FundStatementItemDTO {
      */
     private BigDecimal diffAmount = BigDecimal.ZERO;
 
+    private String remark;
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     public String getComAccount() {
         return comAccount;
     }

@@ -115,7 +115,8 @@
         LEFT JOIN (SELECT hea.emp_archive_id as 'emp_archive_id_bc',hea.belong_emp_archive_id,hea.hf_emp_account as 'hf_emp_account_bc',hea.archive_task_status as 'archive_task_status_bc'
         FROM hf_emp_archive hea WHERE hea.is_active=1 AND hea.hf_type=2)eab ON eab.belong_emp_archive_id=ea.emp_archive_id
         LEFT JOIN sal_af_company af on ea.company_id=af.company_id
-        LEFT JOIN emp_af_emp_company afemp on afemp.employee_id=ea.employee_id AND afemp.company_id=ea.company_id AND afemp.status=2
+        LEFT JOIN emp_af_emp_company afemp on afemp.employee_id=ea.employee_id AND afemp.company_id=ea.company_id
+
         WHERE
         ea.is_active=1
         AND ea.hf_type=1

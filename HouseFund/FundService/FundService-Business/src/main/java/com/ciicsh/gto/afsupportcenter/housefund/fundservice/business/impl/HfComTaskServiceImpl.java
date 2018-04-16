@@ -222,6 +222,9 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             //更新ComTask表
             hfComTask.setComAccountId(hfComAccount.getComAccountId());
             hfComTask.setComAccountClassId(hfComAccountClass.getComAccountClassId());
+            if (StringUtils.isNotBlank(map.get("taskStatus"))) {
+                hfComTask.setTaskStatus(Integer.parseInt(map.get("taskStatus")));
+            }
             if (StringUtils.isNotBlank(map.get("paymentWay"))) {
                 hfComTask.setPaymentWay(Integer.parseInt(map.get("paymentWay")));
             }
