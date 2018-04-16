@@ -156,6 +156,8 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     @Log("雇员任务办理")
     @PostMapping("/handle")
     public JsonResult<Boolean> handle(@RequestBody SsEmpTaskBO bo) {
+        bo.setModifiedBy(UserContext.getUserId());
+        bo.setModifiedDisplayName(UserContext.getUser().getDisplayName());
         //false 表示单个办理
         boolean result = business.saveHandleData(bo, false);
         return JsonResultKit.of(result);
