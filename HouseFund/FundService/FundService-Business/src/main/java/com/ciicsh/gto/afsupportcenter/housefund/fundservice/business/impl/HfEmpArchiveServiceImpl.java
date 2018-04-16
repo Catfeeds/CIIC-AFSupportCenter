@@ -60,6 +60,7 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
             empArchive.setEmpArchiveId(Long.valueOf(updateDto.get("empArchiveId")));
             empArchive.setHfEmpAccount(updateDto.get("hfEmpAccount"));
             baseMapper.updateById(empArchive);
+
             if (Optional.ofNullable(updateDto.get("empArchiveIdBc")).isPresent()){
                 empArchive=new HfEmpArchive();
                 empArchive.setEmpArchiveId(Long.valueOf(updateDto.get("empArchiveIdBc")));

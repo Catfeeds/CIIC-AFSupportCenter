@@ -22,6 +22,7 @@
         <result column="imp_amount" property="impAmount" jdbcType="DECIMAL"/>
         <result column="sys_amount" property="sysAmount" jdbcType="DECIMAL"/>
         <result column="diff_amount" property="diffAmount" jdbcType="DECIMAL"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
     </resultMap>
 
     <resultMap id="EmployeeIdMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.EmployeeIdPO">
@@ -84,7 +85,12 @@
             a.emp_name,
             d.imp_amount,
             d.sys_amount,
-            d.diff_amount
+            d.diff_amount,
+            CASE LENGTH(d.employee_id) WHEN 36 THEN
+              '系统不存在'
+            ELSE
+              ''
+            END AS remark
         FROM
             hf_statement_compare_imp a
         INNER JOIN hf_statement_compare b ON a.statement_compare_id = b.statement_compare_id

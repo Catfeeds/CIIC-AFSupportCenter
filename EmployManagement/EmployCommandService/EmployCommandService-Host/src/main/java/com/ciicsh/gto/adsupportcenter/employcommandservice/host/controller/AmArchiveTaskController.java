@@ -215,6 +215,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         params.put("employmentId",amTaskParamBO.getEmploymentId());
         params.put("companyId",amTaskParamBO.getCompanyId());
         params.put("operateType",new Integer(2));
+        params.put("empTaskResignId",amTaskParamBO.getEmpTaskResignId());
         pageInfo.setParams(params);
 
 
@@ -226,7 +227,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         //用工备注
         AmRemarkBO queryBo = new AmRemarkBO();
         queryBo.setRemarkType(1);
-        queryBo.setEmployeeId(amTaskParamBO.getEmployeeId());
+        queryBo.setEmpTaskId(amTaskParamBO.getEmpTaskId());
 
         List<AmRemarkBO> amRemarkBOList = amRemarkService.getAmRemakList(queryBo);
 

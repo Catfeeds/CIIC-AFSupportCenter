@@ -635,7 +635,13 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
 
     AmEmpTaskBO  defaultRule(AmEmpTaskBO amEmpTaskBO){
-        if("外来从业人员".equals(amEmpTaskBO.getEmployeeNature())||"居住证".equals(amEmpTaskBO.getEmployeeNature()))
+        if("外来三险".equals(amEmpTaskBO.getEmployeeNature())||"外地人员".equals(amEmpTaskBO.getEmployeeNature()))
+        {
+            amEmpTaskBO.setHandleType("外来从业人员");
+            amEmpTaskBO.setArchivePlace("外来从业人员");
+        }
+
+        if("居住证".equals(amEmpTaskBO.getEmployeeNature()))
         {
             amEmpTaskBO.setHandleType(amEmpTaskBO.getEmployeeNature());
             amEmpTaskBO.setArchivePlace(amEmpTaskBO.getEmployeeNature());
@@ -679,17 +685,17 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             amEmpTaskBO.setHandleType("高校");
             amEmpTaskBO.setArchivePlace("就业指导中心");
         }
-        if("退休".equals(amEmpTaskBO.getEmployeeNature())&&"退休".equals(amEmpTaskBO.getArchiveDirection()))
+        if("退休人员".equals(amEmpTaskBO.getEmployeeNature())&&"退休".equals(amEmpTaskBO.getArchiveDirection()))
         {
             amEmpTaskBO.setHandleType("退休");
             amEmpTaskBO.setArchivePlace("退休");
         }
-        if("协保".equals(amEmpTaskBO.getEmployeeNature())&&"协保".equals(amEmpTaskBO.getArchiveDirection()))
+        if("协保人员".equals(amEmpTaskBO.getEmployeeNature())&&"协保".equals(amEmpTaskBO.getArchiveDirection()))
         {
             amEmpTaskBO.setHandleType("协保");
             amEmpTaskBO.setArchivePlace("协保");
         }
-        if("非全日制".equals(amEmpTaskBO.getEmployeeNature())&&"非全日制".equals(amEmpTaskBO.getArchiveDirection()))
+        if("非全日制用工".equals(amEmpTaskBO.getEmployeeNature())&&"非全日制".equals(amEmpTaskBO.getArchiveDirection()))
         {
             amEmpTaskBO.setHandleType("非全日制");
             amEmpTaskBO.setArchivePlace("非全日制");

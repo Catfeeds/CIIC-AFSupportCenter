@@ -156,4 +156,9 @@ public class HfComTaskBo extends HfComTask {
      */
     private String finishDateString;
 
+    /**
+     * comAccount remark
+     */
+    private String comAccountRemark;
+
 }

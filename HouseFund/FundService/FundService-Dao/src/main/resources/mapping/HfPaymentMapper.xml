@@ -40,7 +40,6 @@
         hfp.payment_id,
         hfp.payment_batch_num,
         hfp.total_application_amonut,
-        hfp.total_emp_count,
         hfp.payment_month,
         hfp.payment_state,
         hfp.pay_apply_code,
@@ -49,7 +48,20 @@
         DATE_FORMAT(hfp.create_payment_date, '%Y-%m-%d') AS create_payment_date_string,
         DATE_FORMAT(hfp.finance_payment_date, '%Y-%m-%d') AS finance_payment_date_string,
         hfpat.account_type_value,
-        hfp.apply_remark
+        hfp.apply_remark,
+        (
+            SELECT
+            count(DISTINCT mc.employee_id)
+            FROM
+            hf_month_charge mc
+            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+            INNER JOIN hf_payment_com pc ON pc.company_id=ea.company_id and pc.com_account_class_id=ea.com_account_class_id
+            WHERE
+            mc.is_active = 1
+            AND ea.is_active = 1
+            AND mc.hf_month = hfp.payment_month
+            AND  pc.payment_id=hfp.payment_id
+        ) AS total_emp_count
         FROM hf_payment hfp
         LEFT JOIN hf_payment_state hfps ON hfp.payment_state = hfps.payment_state_code
         LEFT JOIN hf_payment_account_type hfpat ON hfp.hf_account_type = hfpat.account_type_code

@@ -149,16 +149,14 @@
         FROM
         hf_com_account_class a
         INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
---         LEFT JOIN hf_account_com_relation c ON b.com_account_id = c.com_account_id
---         LEFT JOIN sal_company d ON d.company_id = c.company_id
         WHERE
         a.is_active = 1
         AND b.is_active = 1
         <if test="companyId != null and companyId != ''">
-            AND EXISTS (select 1 FROM sal_company com INNER JOIN  hf_account_com_relation acr ON  acr.com_account_id= com.com_account_id and acr.is_active=1 WHERE com.company_id = #{companyId})
+            AND EXISTS (select 1 FROM sal_company com INNER JOIN  hf_account_com_relation acr ON  acr.company_id=com.company_id and acr.is_active=1 WHERE acr.com_account_id= b.com_account_id and com.company_id = #{companyId} )
         </if>
         <if test="companyName != null and companyName != ''">
-            AND EXISTS (select 1 FROM sal_company com INNER JOIN  hf_account_com_relation acr ON  acr.com_account_id= com.com_account_id and acr.is_active=1 WHERE com.title LIKE CONCAT('%',#{companyName},'%'))
+            AND EXISTS (select 1 FROM sal_company com INNER JOIN  hf_account_com_relation acr ON acr.company_id=com.company_id and acr.is_active=1 WHERE acr.com_account_id= b.com_account_id and com.title LIKE CONCAT('%',#{companyName},'%'))
         </if>
         <if test="comHfMonth != null and comHfMonth != ''">
             AND a.com_hf_month = #{comHfMonth}
@@ -233,14 +231,12 @@
         FROM
             hf_com_account_class a
         INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
-        AND a.hf_type = 1
-        INNER JOIN hf_com_account_class c ON c.com_account_id = b.com_account_id
-        AND c.hf_type = 2
+        AND a.hf_type = 1 AND b.is_active = 1
+        LEFT JOIN hf_com_account_class c ON c.com_account_id = b.com_account_id
+        AND c.hf_type = 2 AND c.is_active = 1
         WHERE
             b.com_account_id = #{comAccountId}
         AND a.is_active = 1
-        AND b.is_active = 1
-        AND c.is_active = 1
 
     </select>
 
