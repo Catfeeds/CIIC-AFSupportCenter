@@ -173,4 +173,14 @@ public class ReasonUtil {
         return  userId;
     }
 
+    public static  String getUserName(){
+        String userName = "System";
+        try {
+            userName = UserContext.getUser().getDisplayName();
+        } catch (Exception e) {
+
+        }
+        return  userName;
+    }
+
 }
