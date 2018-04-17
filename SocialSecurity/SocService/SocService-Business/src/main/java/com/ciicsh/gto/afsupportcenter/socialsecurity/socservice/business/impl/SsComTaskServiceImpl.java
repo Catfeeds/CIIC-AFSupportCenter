@@ -324,7 +324,8 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
         if (null != extBOS && extBOS.size() > 0) {
             accountExtBO = extBOS.get(0);
             //处理状态的转换，客服中心只显示用
-            accountExtBO.setTaskStatus(ComTaskStatus.getValue(Integer.parseInt(accountExtBO.getTaskStatus())));
+            Integer value = accountExtBO.getTaskStatus() == null ? 0 : Integer.parseInt(accountExtBO.getTaskStatus());
+            accountExtBO.setTaskStatus(ComTaskStatus.getValue(value));
             if (!StringUtil.isEmpty(accountExtBO.getComAccountId())) {
                 List<SsAccountRatio> ssAccountRatioList = ssAccountRatioMapper.queryRatioByAccountId(accountExtBO.getComAccountId().toString());
                 if (ssAccountRatioList != null && ssAccountRatioList.size() > 0) {

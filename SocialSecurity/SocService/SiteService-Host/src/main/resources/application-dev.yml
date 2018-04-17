@@ -12,6 +12,7 @@ spring:
       filter:
         stat:
           enabled: true
+
 #spring cloud eureka
 eureka:
   client:

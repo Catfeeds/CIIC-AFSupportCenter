@@ -71,3 +71,7 @@ management:
     enabled: false
   port: 6004
   context-path: /admin
+
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
