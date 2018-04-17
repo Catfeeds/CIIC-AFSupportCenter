@@ -83,6 +83,7 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
         po.setHfType(newStatement.getHfType());
         po.setComAccountId(newStatement.getComAccountId());
         po.setHfAccountType(newStatement.getHfAccountType());
+        po.setImpPath(file.getOriginalFilename());
         po.setImpRecordCount(lst.size());
         po.setActive(true);
         po.setCreatedBy(UserContext.getUser().getDisplayName());
