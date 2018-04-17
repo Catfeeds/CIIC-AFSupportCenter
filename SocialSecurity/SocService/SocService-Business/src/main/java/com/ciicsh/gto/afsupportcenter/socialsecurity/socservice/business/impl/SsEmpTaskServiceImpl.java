@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
@@ -352,6 +353,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             //截上 之前的endMonth
             String endMonth = TaskCommonUtils.getLastMonth(minStartDateTask);
             ssEmpBasePeriod.setEndMonth(endMonth);
+            ssEmpBasePeriod.setActive(false);
             ssEmpBasePeriodService.saveAdjustmentPeriod(ssEmpBasePeriod, newEmpBasePeriodList);
             // 险种的数据段 （前道传递过来的）
             List<SsEmpTaskFront> empSocials = getEmpSocials(bo);
@@ -731,13 +733,13 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     private void handleAdjustmentResult(Map newData, SsEmpTaskBO bo) {
         //获得需要调整的时间段 与之前有交叉的
         List<SsEmpBasePeriod> overlappingPeriodList = (List<SsEmpBasePeriod>) newData.get(TaskPeriodConst.OVERLAPPING);
-        bo.setListEmpBasePeriod(overlappingPeriodList);
+
         //原任务单
         SsEmpTaskPeriod ssEmpTaskPeriod = (SsEmpTaskPeriod) newData.get(TaskPeriodConst.OLDBASE);
         //需要添加的时间段 表示前端 调整无 endMonth
         List<SsEmpBasePeriod> addPeriodList = (List<SsEmpBasePeriod>) newData.get(TaskPeriodConst.ADJUSTADDLIST);
         //如果没有调整本月之后的 就没有数据 否则 进行添加修改
-        if (addPeriodList.size() > 0) {
+        if (CollectionUtils.isNotEmpty(addPeriodList)) {
             addPeriodAndUpdateEndMoth(addPeriodList);
 
             // added by Kenny begin
@@ -750,11 +752,17 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             bo.setAdustType(1);
             createNonstandardData(bo, addPeriodList.get(0), null, null, null);
             // added by Kenny end
-            bo.getListEmpBasePeriod().addAll(addPeriodList);
         }
         //将有交叉的调整转 差异 对象  详细 转差异详细 ss_emp_base_adjust ss_emp_base_adjust_detail
         //并保存
         transforAndSave(overlappingPeriodList, ssEmpTaskPeriod, bo);
+
+        bo.setListEmpBasePeriod(addPeriodList);
+        if (bo.getListEmpBasePeriod() != null) {
+            bo.getListEmpBasePeriod().addAll(overlappingPeriodList);
+        } else {
+            bo.setListEmpBasePeriod(overlappingPeriodList);
+        }
     }
 
     /**
@@ -999,14 +1007,15 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         //添加明细 （养 医 失 工 生育 险种）
         addEmpBaseDetail(newEmpBasePeriodList, empSocials, bo.getEmpArchiveId());
 
+        //创建非标 数据
+        SsEmpBasePeriod ssEmpBasePeriod = newEmpBasePeriodList.get(0);
+        createNonstandardData(bo, ssEmpBasePeriod, null, null, null);
+
         if (bo.getListEmpBasePeriod() != null) {
             bo.getListEmpBasePeriod().addAll(newEmpBasePeriodList);
         } else {
             bo.setListEmpBasePeriod(newEmpBasePeriodList);
         }
-        //创建非标 数据
-        SsEmpBasePeriod ssEmpBasePeriod = newEmpBasePeriodList.get(0);
-        createNonstandardData(bo, ssEmpBasePeriod, null, null, null);
     }
 
     /**
