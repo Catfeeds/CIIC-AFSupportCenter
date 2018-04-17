@@ -731,6 +731,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     private void handleAdjustmentResult(Map newData, SsEmpTaskBO bo) {
         //获得需要调整的时间段 与之前有交叉的
         List<SsEmpBasePeriod> overlappingPeriodList = (List<SsEmpBasePeriod>) newData.get(TaskPeriodConst.OVERLAPPING);
+        bo.setListEmpBasePeriod(overlappingPeriodList);
         //原任务单
         SsEmpTaskPeriod ssEmpTaskPeriod = (SsEmpTaskPeriod) newData.get(TaskPeriodConst.OLDBASE);
         //需要添加的时间段 表示前端 调整无 endMonth
@@ -749,6 +750,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             bo.setAdustType(1);
             createNonstandardData(bo, addPeriodList.get(0), null, null, null);
             // added by Kenny end
+            bo.getListEmpBasePeriod().addAll(addPeriodList);
         }
         //将有交叉的调整转 差异 对象  详细 转差异详细 ss_emp_base_adjust ss_emp_base_adjust_detail
         //并保存
@@ -996,7 +998,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         if (empSocials.size() == 0) throw new BusinessException("前道传递险种详细信息为空");
         //添加明细 （养 医 失 工 生育 险种）
         addEmpBaseDetail(newEmpBasePeriodList, empSocials, bo.getEmpArchiveId());
-        bo.setListEmpBasePeriod(newEmpBasePeriodList);
+
+        if (bo.getListEmpBasePeriod() != null) {
+            bo.getListEmpBasePeriod().addAll(newEmpBasePeriodList);
+        } else {
+            bo.setListEmpBasePeriod(newEmpBasePeriodList);
+        }
         //创建非标 数据
         SsEmpBasePeriod ssEmpBasePeriod = newEmpBasePeriodList.get(0);
         createNonstandardData(bo, ssEmpBasePeriod, null, null, null);
@@ -1674,17 +1681,21 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * 非标
      *
      * @param ssEmpTaskBO
-     * @param ssEmpBasePeriod
+     * @param origSsEmpBasePeriod
      * @param ssEmpBaseAdjust
      * @param ssEmpBaseAdjustDetailList
      */
     public void createNonstandardData(
         SsEmpTaskBO ssEmpTaskBO,
-        SsEmpBasePeriod ssEmpBasePeriod,
+        SsEmpBasePeriod origSsEmpBasePeriod,
         SsEmpBaseAdjust ssEmpBaseAdjust,
         List<SsEmpBaseAdjustDetail> ssEmpBaseAdjustDetailList,
         SsEmpRefund ssEmpRefund
     ) {
+        SsEmpBasePeriod ssEmpBasePeriod = null;
+        if (origSsEmpBasePeriod != null) {
+            ssEmpBasePeriod = TaskCommonUtils.cloneObjet(origSsEmpBasePeriod, SsEmpBasePeriod.class);
+        }
 
         //1新进  2  转入 3  调整 4 补缴 5 转出 6封存 7退账  9 特殊操作  10 集体转入   11 集体转出 12 翻牌
         switch (ssEmpTaskBO.getTaskCategory()) {
