@@ -47,5 +47,5 @@ public interface HFStatementCompareService
      * @param statementId
      * @return
      */
-    void execStatement(long statementId,String compareMan) throws Exception;
+    void execStatement(long statementId) throws Exception;
 }

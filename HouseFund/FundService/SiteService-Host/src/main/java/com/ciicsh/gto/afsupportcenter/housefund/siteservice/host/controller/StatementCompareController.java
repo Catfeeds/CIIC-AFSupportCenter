@@ -111,9 +111,9 @@ public class StatementCompareController extends BasicController<HFStatementCompa
      * @return
      */
     @GetMapping("/execStatement/{statementId}")
-    public JsonResult<Boolean> execStatement(@PathVariable("statementId") long statementId,@RequestParam("compareMan") String compareMan) {
+    public JsonResult<Boolean> execStatement(@PathVariable("statementId") long statementId) {
         try{
-            business.execStatement(statementId,compareMan);
+            business.execStatement(statementId);
         }
         catch (Exception ex){
             return JsonResultKit.of(0, ex.getMessage(), false);
