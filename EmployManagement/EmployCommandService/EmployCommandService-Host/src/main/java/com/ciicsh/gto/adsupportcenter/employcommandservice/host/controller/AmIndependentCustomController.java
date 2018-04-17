@@ -73,7 +73,9 @@ public class AmIndependentCustomController extends BasicController<IAmCompanySet
         {
             is_special = true;
         }
-        if(amCompanySet.getRefuseSpecial()!=null||amCompanySet.getArchiveSpecial()!=null||amCompanySet.getEmploySpecial()!=null)
+        if((amCompanySet.getRefuseSpecial()!=null && !"".equals(amCompanySet.getRefuseSpecial().trim()))||
+            (amCompanySet.getArchiveSpecial()!=null && !"".equals(amCompanySet.getArchiveSpecial().trim()))||
+                ( amCompanySet.getEmploySpecial()!=null && !"".equals(amCompanySet.getEmploySpecial().trim()) ))
         {
             is_special = true;
         }
@@ -84,7 +86,7 @@ public class AmIndependentCustomController extends BasicController<IAmCompanySet
         if(is_special){
             amCompanySet.setSpecial("有");
         }else {
-            amCompanySet.setSpecial("");
+            amCompanySet.setSpecial("无");
         }
 
         if(amCompanySet.getKeyCode()==null){

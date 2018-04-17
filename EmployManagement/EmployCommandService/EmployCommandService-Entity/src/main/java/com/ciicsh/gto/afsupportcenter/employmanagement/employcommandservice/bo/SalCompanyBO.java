@@ -9,11 +9,22 @@ public class SalCompanyBO extends SalCompany {
 
     private  String  special;
 
+    // 服务中心
+    private String serviceCenter;
+
     public String getSpecial() {
         return special;
     }
 
     public void setSpecial(String special) {
         this.special = special;
+    }
+
+    public String getServiceCenter() {
+        return serviceCenter;
+    }
+
+    public void setServiceCenter(String serviceCenter) {
+        this.serviceCenter = serviceCenter;
     }
 }

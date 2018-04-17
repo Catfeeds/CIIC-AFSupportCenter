@@ -8,7 +8,7 @@ spring:
   application:
     name: support-center-housefund-site-service
   profiles:
-    active: fat
+    active: dev
 ###################  spring cloud eureka  ###################
 eureka:
   instance:
@@ -67,5 +67,7 @@ management:
     enabled: false
   port: 6008
   context-path: /admin
+
 ribbon:
   ReadTimeout: 60000
+  ConnectTimeout: 60000

@@ -63,7 +63,8 @@ public class TaskCommonUtils {
             Result result =commonApiUtils.completeTask(taskRequestDTO);
             handleWorkflowResult(result);
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+
             throw new BusinessException("调用工作流异常");
         }
     }
@@ -78,7 +79,7 @@ public class TaskCommonUtils {
             if(null==getSSPItemsResposeDTO)return null;
             return getSSPItemsResposeDTO.getItems();
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             //throw new BusinessException("调用进位方式接口异常");
         }
         return null;
@@ -94,12 +95,12 @@ public class TaskCommonUtils {
         //根据不同类型 组装不同参数
         List<AfEmpSocialUpdateDateDTO> paramsList = confirmDateGetParams(ssEmpTaskBO);
         try {
-            logger.info("任务单ID{"+ssEmpTaskBO.getEmpTaskId()+"}:调用实缴金额接口start");
+            logger.debug("任务单ID{"+ssEmpTaskBO.getEmpTaskId()+"}:调用实缴金额接口start");
             int result =commonApiUtils.updateConfirmDate(paramsList);
-             logger.info("实缴金额结果:{"+result+"}");
-            logger.info("任务单ID{"+ssEmpTaskBO.getEmpTaskId()+"}:调用实缴金额接口end");
+             logger.debug("实缴金额结果:{"+result+"}");
+            logger.debug("任务单ID{"+ssEmpTaskBO.getEmpTaskId()+"}:调用实缴金额接口end");
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new BusinessException("实缴金额回调异常");
         }
     }
@@ -171,6 +172,7 @@ public class TaskCommonUtils {
         }
 
         DateTimeFormatter yyyyMMddFormatter = DateTimeFormatter.ofPattern("uuuuMMdd");
+        DateKit.setDatePattern("yyyyMMdd");
 
         //回调前道合同协议，迭代每一个险种,目前的需求
         // 福利段只有一条福利段，因此get(0)
@@ -273,7 +275,7 @@ public class TaskCommonUtils {
             if (null==employeeInfoDTO)return new EmployeeInfoDTO();
             return employeeInfoDTO;
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             //throw new BusinessException("雇员信息查询异常");
         }
         return new EmployeeInfoDTO();

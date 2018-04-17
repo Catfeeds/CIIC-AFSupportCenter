@@ -635,7 +635,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
 
     AmEmpTaskBO  defaultRule(AmEmpTaskBO amEmpTaskBO){
-        if("外来三险".equals(amEmpTaskBO.getEmployeeNature())||"外来三险".equals(amEmpTaskBO.getEmployeeNature()))
+        if("外来三险".equals(amEmpTaskBO.getEmployeeNature())||"外地人员".equals(amEmpTaskBO.getEmployeeNature()))
         {
             amEmpTaskBO.setHandleType("外来从业人员");
             amEmpTaskBO.setArchivePlace("外来从业人员");
