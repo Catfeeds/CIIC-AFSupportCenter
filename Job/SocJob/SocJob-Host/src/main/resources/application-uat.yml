@@ -1,10 +1,17 @@
 spring:
   datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://172.16.9.53:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
-    username: root
-    password: ciicit!#%
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://172.16.9.53:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
+      username: root
+      password: ciicit!#%
+      max-active: 20
+      min-idle: 8
+      initial-size: 10
+      validation-query: SELECT 'x'
+      filter:
+        stat:
+          enabled: true
   redis:
     database: 0
     host: 172.16.9.54
