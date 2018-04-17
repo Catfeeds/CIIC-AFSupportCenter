@@ -172,6 +172,7 @@ public class TaskCommonUtils {
         }
 
         DateTimeFormatter yyyyMMddFormatter = DateTimeFormatter.ofPattern("uuuuMMdd");
+        DateKit.setDatePattern("yyyyMMdd");
 
         //回调前道合同协议，迭代每一个险种,目前的需求
         // 福利段只有一条福利段，因此get(0)
