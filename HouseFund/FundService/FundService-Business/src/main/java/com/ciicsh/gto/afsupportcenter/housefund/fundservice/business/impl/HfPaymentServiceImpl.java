@@ -137,6 +137,16 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         payment = hfPaymentMapper.selectOne(payment);
         if (payment.getPaymentState().equals(5)) {
             List<HfComAccountClass> comAccountClasses = comAccountClassMapper.getAccountClassByPaymentId(Long.parseLong(processParmBO.getPaymentId()));
+            //校验月份是否匹配
+            if (null != comAccountClasses && comAccountClasses.size() > 0) {
+                for (HfComAccountClass x : comAccountClasses) {
+                    if (!payment.getPaymentMonth().equals(x.getComHfMonth())) { //支付月份和class表的hfmonth不相等
+                        return JsonResultKit.of(1, "企业公积金账户："+x.getHfComAccount()+"，请检查该账户的月份是否与支付年月匹配。");
+                    }
+                }
+            }
+
+
             if (null != comAccountClasses && comAccountClasses.size() > 0) {
                 comAccountClasses.forEach(x -> {
                     try {
@@ -257,7 +267,9 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             basePeriods.forEach(x -> monthChargeMapper.insert(setMonthCharge(x, paymentMonth, processParmBO)));
         }
     }
+    private void updateArchiveStatus(HfComAccountClass accountClass) {
 
+    }
     private HfMonthCharge setMonthCharge(HfArchiveBasePeriod basePeriod, String paymentMonth, PaymentProcessParmBO processParmBO) {
         HfMonthCharge monthCharge = new HfMonthCharge();
         monthCharge.setEmpTaskId(basePeriod.getEmpTaskId());
