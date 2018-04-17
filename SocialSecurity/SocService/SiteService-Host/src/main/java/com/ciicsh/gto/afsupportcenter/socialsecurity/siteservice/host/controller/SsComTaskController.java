@@ -16,13 +16,12 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComTask
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
-import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.logservice.api.LogServiceProxy;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -36,7 +35,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -58,23 +61,12 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
     @Autowired
     private SsComTaskService ssComTaskService;
 
-    @Log("查询未处理企业任务单")
+    /**
+     * 查询未处理企业任务单
+     */
     @RequestMapping(value = "getNoProgressTask")
     public JsonResult<List<SsComTaskBO>> getNoProgressCompanyTask(PageInfo pageInfo) {
-//        LogDTO logDTO = new LogDTO();
-//        logDTO.setAppId("10006002");
-//        logDTO.setContent("测试内容");
-//        logDTO.setLogType(LogType.APP);
-//        logDTO.setSource("外企支持中心");
-//        logDTO.setTitle("测试标题"+System.currentTimeMillis());
-//        Map<String,String> tags = new HashMap<>();
-//        tags.put("sheetId","1");
-//        tags.put("sheetName","任务单名称");
-//        logDTO.setTags(tags);
-//        logServiceProxy.info(logDTO);
-        //mybatis 分页插件
         PageRows<SsComTaskBO> pageRows = business.queryNoProgressCompanyTask(pageInfo);
-
         return JsonResultKit.ofPage(pageRows);
     }
 
@@ -82,7 +74,6 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
     /**
      * 未处理企业任务单导出
      */
-    @Log("未处理企业任务单导出")
     @RequestMapping("/noProgressTaskExport")
     public void noProgressTaskExport(HttpServletResponse response, PageInfo pageInfo) {
         Date date = new Date();
@@ -93,7 +84,11 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
     }
 
 
-    @Log("查询处理中企业任务单")
+    /**
+     * 查询处理中企业任务单
+     * @param pageInfo
+     * @return
+     */
     @RequestMapping(value = "getProgressingTask")
     public JsonResult<List<SsComTaskBO>> getNoProgressingCompanyTask(PageInfo pageInfo) {
         //mybatis 分页插件
@@ -105,7 +100,6 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
     /**
      * 处理中企业任务单导出
      */
-    @Log("处理中企业任务单导出")
     @RequestMapping("/progressingTaskExport")
     public void progressingTaskExport(HttpServletResponse response, PageInfo pageInfo) {
         Date date = new Date();
@@ -116,7 +110,11 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
     }
 
 
-    @Log("查询已完成企业任务单")
+    /**
+     * 查询已完成企业任务单
+     * @param pageInfo
+     * @return
+     */
     @RequestMapping(value = "getFinshedTask")
     public JsonResult<List<SsComTaskBO>> getFinshedCompanyTask(PageInfo pageInfo) {
         //mybatis 分页插件
@@ -124,7 +122,11 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         return JsonResultKit.ofPage(pageRows);
     }
 
-    @Log("查询批退企业任务单")
+    /**
+     * 查询批退企业任务单
+     * @param pageInfo
+     * @return
+     */
     @RequestMapping(value = "getRefusedTask")
     public JsonResult<List<SsComTaskBO>> getRefusedCompanyTask(PageInfo pageInfo) {
         //mybatis 分页插件
@@ -132,7 +134,12 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         return JsonResultKit.ofPage(pageRows);
     }
 
-    @Log("批退任务单")
+    /**
+     * 批退任务单
+     * @param taskIdStr
+     * @param refuseReason
+     * @return
+     */
     @RequestMapping(value = "refusingTask")
     public JsonResult<Boolean> refusingTask(@RequestParam(value = "taskIdStr", required = true) String taskIdStr,
                                             @RequestParam(value = "refuseReason", required = true) String
@@ -162,7 +169,11 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         return returnResult;
     }
 
-    @Log("获得企业信息和材料收缴信息")
+    /**
+     * 获得企业信息和材料收缴信息
+     * @param ssComTaskDTO
+     * @return
+     */
     @RequestMapping(value = "getCompanyInfoAndMaterial")
     public JsonResult<SsComTaskBO> getCompanyInfoAndMaterial(SsComTaskDTO ssComTaskDTO) {
         SsComTaskBO ssComTaskBO = CommonTransform.convertToDTO(ssComTaskDTO, SsComTaskBO.class);
@@ -183,7 +194,11 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         } else return JsonResultKit.ofError("任务ID为空");
     }
 
-    @Log("查询企业信息和前道传过来的JSON（包含社保截止和付款方式）")
+    /**
+     * 查询企业信息和前道传过来的JSON（包含社保截止和付款方式）
+     * @param ssComTaskDTO
+     * @return
+     */
     @RequestMapping(value = "getComInfoAndPayWay")
     public JsonResult<SsComTaskBO> queryComInfoAndPayWay(SsComTaskDTO ssComTaskDTO) {
         //DTO转BO
@@ -205,7 +220,11 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         return JsonResultKit.of(ssComTaskBO);
     }
 
-    @Log("添加或者修改企业任务单（开户）")
+    /**
+     * 添加或者修改企业任务单（开户）
+     * @param map
+     * @return
+     */
     @RequestMapping(value = "addOrUpdateCompanyTask")
     public JsonResult<Boolean> addOrUpdateCompanyTask(@RequestParam Map<String, String> map) {
         //获得社保账户信息
@@ -247,7 +266,11 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
 
     }
 
-    @Log("终止任务单的操作")
+    /**
+     * 终止任务单的操作
+     * @param ssComTaskDTO
+     * @return
+     */
     @RequestMapping("updateOrEndingTask")
     public JsonResult<Boolean> updateOrEndingTask(SsComTaskDTO ssComTaskDTO) {
         boolean result = false;
@@ -276,7 +299,11 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         return JsonResultKit.of(result);
     }
 
-    @Log("转移任务单的操作")
+    /**
+     * 转移任务单的操作
+     * @param SsComTaskDTO
+     * @return
+     */
     @RequestMapping("updateOrTransferTask")
     public JsonResult<Boolean> updateOrTransferTask(SsComTaskDTO SsComTaskDTO) {
         boolean result = false;
@@ -312,7 +339,11 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         return JsonResultKit.of(result);
     }
 
-    @Log("变更任务单的操作")
+    /**
+     * 变更任务单的操作
+     * @param ssComTaskDTO
+     * @return
+     */
     @RequestMapping("updateOrChangeTask")
     public JsonResult<Boolean> updateOrChangeTask(SsComTaskDTO ssComTaskDTO) {
         SsComTaskBO ssComTaskBO = CommonTransform.convertToDTO(ssComTaskDTO, SsComTaskBO.class);
@@ -357,7 +388,11 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         return JsonResultKit.of(result);
     }
 
-    @Log("任务单撤销")
+    /**
+     * 任务单撤销
+     * @param ssComTask
+     * @return
+     */
     @RequestMapping("/taskRevocation")
     public JsonResult<Boolean> taskRevocation(SsComTask ssComTask) {
         //修改任单状态和时间

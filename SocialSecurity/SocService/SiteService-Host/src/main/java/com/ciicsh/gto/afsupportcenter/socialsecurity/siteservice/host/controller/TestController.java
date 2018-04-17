@@ -4,12 +4,9 @@ import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCo
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskFrontService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl.SsEmpTaskServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpTaskMapper;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.EmployeeMonthlyDataProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeMonthlyDataProxyDTO;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyProxyDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +29,6 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/test")
-@Log("demo 测试")
 public class TestController {
     @Autowired
     SsEmpTaskMapper empTaskService;

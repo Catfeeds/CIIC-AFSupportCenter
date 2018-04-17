@@ -9,13 +9,18 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.dto.emptas
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskRollInBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskRollOutBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.*;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.AmEmpTaskOfSsService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpRefundService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskPeriodService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.AmEmpTaskDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.*;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpRefund;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTaskPeriod;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -28,27 +33,28 @@ import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.*;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.TaskCommonUtils;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 /**
- * <p>
  * 本地社保的雇员任务单 前端控制器
- * </p>
- *
- * @author HuangXing
- * @since 2017-12-01
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssEmpTask")
-@Log("本地社保的雇员任务单")
 public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
 
     @Autowired
@@ -63,7 +69,6 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     /**
      * 雇员日常操作查询
      */
-    @Log("雇员日常操作查询")
     @PostMapping("/employeeOperatorQuery")
     public JsonResult<List<SsEmpTaskBO>> employeeOperatorQuery(PageInfo pageInfo) {
         PageRows<SsEmpTaskBO> pageRows = business.employeeOperatorQuery(pageInfo, UserContext.getUserId());
@@ -81,7 +86,6 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     /**
      * 雇员任务批退
      */
-    @Log("雇员任务批退")
     @PostMapping("/rejection")
     public JsonResult<Boolean> rejection(RejectionParam param) {
         List<Long> ids = Optional.ofNullable(param.getIds()).orElse(Collections.emptyList());
@@ -105,7 +109,6 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     /**
      * 雇员任务查询
      */
-    @Log("雇员任务查询")
     @PostMapping("/empTaskById")
     public JsonResult<SsEmpTaskBO> empTaskById(
         @RequestParam("empTaskId") Long empTaskId
@@ -153,7 +156,6 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     /**
      * 雇员任务办理（新进和转入）
      */
-    @Log("雇员任务办理")
     @PostMapping("/handle")
     public JsonResult<Boolean> handle(@RequestBody SsEmpTaskBO bo) {
         bo.setModifiedBy(UserContext.getUserId());
@@ -166,7 +168,6 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     /**
      * 获得社保序号
      */
-    @Log("获得社保序号")
     @PostMapping("/getSerial")
     public JsonResult<Integer> getSerial(Integer comAccountId) {
         Integer ssSerial = business.getSerial(comAccountId);
@@ -175,11 +176,9 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
 
     /**
      * 特殊任务查询
-     *
      * @param empTaskId
      * @return
      */
-    @Log("特殊任务查询")
     @PostMapping("/queryEmpSpecialTaskById")
     public JsonResult<SsEmpTask> queryEmpSpecialTask(String empTaskId) {
         // 查询
@@ -189,11 +188,9 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
 
     /**
      * 特殊任务办理
-     *
      * @param
      * @return
      */
-    @Log("特殊任务办理")
     @PostMapping("/empSpecialTaskHandle")
     public JsonResult empSpecialTaskHandle(SsEmpTask ssEmpTask) {
 
@@ -218,7 +215,11 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         return JsonResultKit.of(result);
     }
 
-    @Log("通过任务单id查询退账金额")
+    /**
+     * 通过任务单id查询退账金额
+     * @param ssEmpTaskBO
+     * @return
+     */
     @RequestMapping("/queryRefundAmountByTaskId")
     public JsonResult<Object> queryRefundAmountByTaskId(SsEmpTaskBO ssEmpTaskBO) {
         EntityWrapper<SsEmpRefund> ew = new EntityWrapper();
@@ -227,21 +228,33 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         return JsonResultKit.of(obj);
     }
 
-    @Log("查询批量任务信息")
+    /**
+     * 查询批量任务信息
+     * @param ssEmpTaskBO
+     * @return
+     */
     @RequestMapping("/queryBatchEmpArchiveByEmpTaskIds")
     public JsonResult<Object> queryBatchEmpArchiveByEmpTaskIds(@RequestBody SsEmpTaskBO ssEmpTaskBO) {
         List<SsEmpTaskBO> result = business.queryBatchEmpArchiveByEmpTaskIds(ssEmpTaskBO);
         return JsonResultKit.of(result);
     }
 
-    @Log("通过条件查询批量任务信息")
+    /**
+     * 通过条件查询批量任务信息
+     * @param ssEmpTaskBO
+     * @return
+     */
     @RequestMapping("/queryBatchTaskByCondition")
     public JsonResult<Object> queryBatchTaskByCondition(@RequestBody SsEmpTaskBO ssEmpTaskBO) {
         List<SsEmpTaskBO> result = business.queryBatchTaskByCondition(ssEmpTaskBO);
         return JsonResultKit.of(result);
     }
 
-    @Log("批量任务办理")
+    /**
+     * 批量任务办理
+     * @param empTaskBatchParameter
+     * @return
+     */
     @RequestMapping("/handleBatchTask")
     public JsonResult<Object> handleBatchTask(@RequestBody EmpTaskBatchParameter empTaskBatchParameter) {
         Assert.notNull(empTaskBatchParameter, "参数异常");
@@ -273,12 +286,10 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
 
     /**
      * 雇员日常操作转入盘片导出
-     *
      * @param
      * @return
      */
     @RequestMapping("/employeeDailyOperatorDiskExport")
-    @Log("雇员日常操作盘片导出")
     public void employeeDailyOperatorDiskExport(HttpServletResponse response, PageInfo pageInfo) {
         try {
             SsEmpTaskBO ssEmpTaskBO = pageInfo.toJavaObject(SsEmpTaskBO.class);

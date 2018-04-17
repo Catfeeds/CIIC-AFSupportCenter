@@ -16,26 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * <p>
  * 对账差异结果表 前端控制器
- * </p>
- *
- * @author HuangXing
- * @since 2017-12-11
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssStatementResult")
 public class SsStatementResultController extends BasicController<SsStatementResultService> {
 
     /**
-     * <p>Description: 对账单结果查询(列表页)</p>
-     *
-     * @author wengxk
-     * @date 2017-12-12
+     * 对账单结果查询(列表页)
      * @param ssStatementResultDTO 对账单结果检索条件
      * @return  JsonResult<>
      */
-    @Log("对账单结果查询")
     @PostMapping("/statementResultQuery")
     public JsonResult<List<SsStatementResultBO>> statementResultQuery(SsStatementResultBO ssStatementResultDTO) {
 
@@ -61,7 +52,11 @@ public class SsStatementResultController extends BasicController<SsStatementResu
         return jsonResult;
     }
 
-    @Log("重算对账结果")
+    /**
+     * 重算对账结果
+     * @param statementId
+     * @return
+     */
     @PostMapping("/calculateSstatementResult")
     public JsonResult<String> calculateSstatementResult(Long statementId) {
         JsonResult<String> json = new JsonResult<>();
