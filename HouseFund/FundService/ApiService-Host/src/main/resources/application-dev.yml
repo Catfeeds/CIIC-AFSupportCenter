@@ -12,12 +12,7 @@ spring:
       filter:
         stat:
           enabled: true
-#  cloud:
-#    stream:
-#      kafka:
-#        binder:
-#          brokers: 172.16.9.11:9092
-#          zk-nodes: 172.16.9.11:2181,172.16.9.16:2181
+
 #spring cloud eureka
 eureka:
   client:
