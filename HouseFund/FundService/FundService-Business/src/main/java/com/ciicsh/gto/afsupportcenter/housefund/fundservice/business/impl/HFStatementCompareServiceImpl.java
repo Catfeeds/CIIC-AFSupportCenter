@@ -20,7 +20,6 @@ import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -161,7 +160,7 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
      * @return
      */
     @Override
-    public void execStatement(long statementId,String compareMan) throws Exception{
+    public void execStatement(long statementId) throws Exception{
 
         // 取出导入的对账单明细条目数据
         try {
@@ -182,8 +181,10 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
                 resultPO.setStatementCompareId(statementId);
                 resultPO.setImpAmount(impPO.getMonthlyAmount());
                 resultPO.setActive(true);
-                resultPO.setCreatedBy(compareMan);
-                resultPO.setModifiedBy(compareMan);
+                resultPO.setCreatedTime(LocalDateTime.now());
+                resultPO.setCreatedBy(UserContext.getUserId());
+                resultPO.setModifiedTime(LocalDateTime.now());
+                resultPO.setModifiedBy(UserContext.getUserId());
                 resultPO.setEmployeeId(impPO.getEmployeeId());
 
                 if(null != impPO.getEmployeeId()){
@@ -201,11 +202,11 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
                 }
                 statementResultMapper.insert(resultPO);
             } //for
-            compareMan= UserContext.getUser().getDisplayName();
             statementPO.setDiffCount(diffCount);
-            statementPO.setCompareMan(compareMan);
+            statementPO.setCompareOperateId(UserContext.getUserId());
+            statementPO.setCompareOperateName(UserContext.getUser().getDisplayName());
             statementPO.setCompareTime(LocalDateTime.now());
-            statementPO.setModifiedBy(compareMan);
+            statementPO.setModifiedBy(UserContext.getUserId());
             statementPO.setModifiedTime(LocalDateTime.now());
             baseMapper.updateById(statementPO);
 

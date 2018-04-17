@@ -44,7 +44,8 @@
         c.hf_com_account,
         a.imp_path,
         a.hf_type,
-        a.compare_man,
+        a.compare_operate_id,
+        a.compare_operate_name,
         a.compare_time
         FROM
         hf_statement_compare a
