@@ -174,7 +174,7 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
                 throw new Exception("对账单记录不存在");
             }
 
-            Map<String,EmployeeSysAmountPO> empSysAmountMap = baseMapper.getEmployeeSysAmount(statementPO.getComAccountId(),statementPO.getHfMonth());
+            Map<String,EmployeeSysAmountPO> empSysAmountMap = baseMapper.getEmployeeSysAmount(statementPO.getHfType(),statementPO.getComAccountId(),statementPO.getHfMonth());
             int diffCount = 0;
 
             for (HfStatementCompareImpPO impPO : compareImpPOList) {
