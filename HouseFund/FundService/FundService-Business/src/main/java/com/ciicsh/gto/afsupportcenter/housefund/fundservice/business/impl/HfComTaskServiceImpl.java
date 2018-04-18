@@ -18,6 +18,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccount;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccountClass;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -29,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * <p>
@@ -170,11 +172,15 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             }
             hfComAccount.setState(HF_COM_ACCOUNT_STATE_INIT);
             hfComAccount.setCreatedTime(new Date());
-            hfComAccount.setCreatedBy("sj");
-            hfComAccount.setModifiedBy("sj");
+            hfComAccount.setCreatedBy(UserContext.getUser().getDisplayName());
+            hfComAccount.setModifiedBy(UserContext.getUser().getDisplayName());
             hfComAccount.setModifiedTime(new Date());
-            hfComAccountMapper.insert(hfComAccount);
-
+            if(Optional.ofNullable(map.get("comAccountId")).isPresent()){
+                hfComAccount.setComAccountId(Long.valueOf(map.get("comAccountId")));
+                hfComAccountMapper.updateById(hfComAccount) ;
+            }else{
+                hfComAccountMapper.insert(hfComAccount);
+            }
             //设置企业公积金账号从表
             HfComAccountClass hfComAccountClass = new HfComAccountClass();
             hfComAccountClass.setComAccountId(hfComAccount.getComAccountId());
@@ -199,26 +205,33 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
                 hfComAccountClass.setEndType(Integer.parseInt(map.get("endType")));
             }
             hfComAccountClass.setCreatedTime(new Date());
-            hfComAccountClass.setCreatedBy("sj");
-            hfComAccountClass.setModifiedBy("sj");
+            hfComAccountClass.setCreatedBy(UserContext.getUser().getDisplayName());
+            hfComAccountClass.setModifiedBy(UserContext.getUser().getDisplayName());
             hfComAccountClass.setModifiedTime(new Date());
-            hfComAccountClassMapper.insert(hfComAccountClass);
+            if(Optional.ofNullable(map.get("comAccountClassId")).isPresent()){
+                hfComAccountClass.setComAccountClassId(Long.valueOf(map.get("comAccountClassId")));
+                hfComAccountClassMapper.updateById(hfComAccountClass) ;
+            }else{
+                hfComAccountClassMapper.insert(hfComAccountClass);
+            }
+
 
             //设置企业公积金账户客户关系表
             HfAccountComRelation hfAccountComRelation = new HfAccountComRelation();
             hfAccountComRelation.setComAccountId(hfComAccount.getComAccountId());
             hfAccountComRelation.setCompanyId(hfComTask.getCompanyId());
+            hfAccountComRelation.setMajorCom(1);
             if(hfAccountComRelationMapper.queryIfComAccountIdExists(hfComAccount.getComAccountId()) == 0) {
-                hfAccountComRelation.setMajorCom(HF_ACCOUNT_COM_RELATION_MAJOR_COM_TRUE);
+                hfAccountComRelation.setCreatedTime(new Date());
+                hfAccountComRelation.setCreatedBy(UserContext.getUser().getDisplayName());
+                hfAccountComRelation.setModifiedBy(UserContext.getUser().getDisplayName());
+                hfAccountComRelation.setModifiedTime(new Date());
+                hfAccountComRelationMapper.insert(hfAccountComRelation);
             } else {
-                hfAccountComRelation.setMajorCom(HF_ACCOUNT_COM_RELATION_MAJOR_COM_FALSE);
+                hfAccountComRelation.setModifiedBy(UserContext.getUser().getDisplayName());
+                hfAccountComRelation.setModifiedTime(new Date());
+                hfAccountComRelationMapper.updateById(hfAccountComRelation);
             }
-            hfAccountComRelation.setCreatedTime(new Date());
-            hfAccountComRelation.setCreatedBy("sj");
-            hfAccountComRelation.setModifiedBy("sj");
-            hfAccountComRelation.setModifiedTime(new Date());
-            hfAccountComRelationMapper.insert(hfAccountComRelation);
-
             //更新ComTask表
             hfComTask.setComAccountId(hfComAccount.getComAccountId());
             hfComTask.setComAccountClassId(hfComAccountClass.getComAccountClassId());

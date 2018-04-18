@@ -14,18 +14,22 @@ import java.util.Date;
 @ExcelTarget("HfComTaskBo")
 public class HfComTaskBo extends HfComTask {
 
+    private Integer ukeyStore;
+    private Long comAccountClassId;
+    private Long comAccountId;
     /**
      * 任务单id
      */
     @Excel(name = "任务单编号", orderNum = "1")
     private Long comTaskId;
 
+
     /**
      * 1 开户 2 转入  3 变更 4 终止 5销户
      */
     @Excel(name = "任务单类型", orderNum = "2")
     private String taskCategoryName;
-
+    private Integer taskCategory;
     /**
      * 1 基本公积金、2 补充公积金
      */
@@ -78,6 +82,7 @@ public class HfComTaskBo extends HfComTask {
     @Excel(name = "备注",orderNum = "7")
     private String submitRemark;
 
+    private String operateStrartMonth="";
     /**
      * 付款方式代码名称:
      1 自付（客户自己汇缴给银行，雇员由中智办理）
