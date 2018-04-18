@@ -75,7 +75,12 @@ public class HfComTaskController {
     @PostMapping("/updateCompanyTaskChangeInfo")
     public JsonResult<Boolean> updateCompanyTaskChangeInfo(@RequestParam Map<String, String> map) {
         boolean result = hfComTaskService.upsertCompanyTask(map);
-        return JsonResultKit.of(result);
+        if (result){
+            return JsonResultKit.of();
+        }else {
+            return JsonResultKit.ofError("提交表单出现异常");
+        }
+
     }
 
     /**

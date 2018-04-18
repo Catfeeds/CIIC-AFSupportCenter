@@ -148,7 +148,6 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             if(hfMonthChargeQueryBO.getHfType()==2){
                 hfMonthChargeQueryBO.setAddedComAccountArray( AddListAccounts.toArray(new String[AddListAccounts.size()]));
             }
-
         }
         List<ComAccountExtBo> comAccountExtBoList = hfComAccountService.queryHfComAccountList(comAccountParamExtBo);
         List<Map<String, Object>> resultList = new ArrayList<>();
@@ -521,6 +520,35 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         comAccountParamExtBo.setBasicHfComAccount(hfMonthChargeQueryBO.getBasicHfComAccount());
         comAccountParamExtBo.setAddedHfComAccount(hfMonthChargeQueryBO.getAddedHfComAccount());
         comAccountParamExtBo.setUserId(hfMonthChargeQueryBO.getUserId());
+        //如果是汇缴支付给发起的报表清册
+        if(Optional.ofNullable(hfMonthChargeQueryBO.getPaymentId()).isPresent()){
+            HfPayment hfPayment=new HfPayment();
+            hfPayment.setPaymentId(hfMonthChargeQueryBO.getPaymentId());
+            hfPayment = hfPaymentMapper.selectOne(hfPayment);
+            hfMonthChargeQueryBO.setHfMonth(hfPayment.getPaymentMonth());
+
+            Map<String,Object> map=new HashMap<>();
+            List<String> BasiceListAccounts=new ArrayList<>();
+            List<String> AddListAccounts=new ArrayList<>();
+            map.put("payment_id",hfMonthChargeQueryBO.getPaymentId());
+            hfPaymentAccountMapper.getComAccountByPaymentId(hfMonthChargeQueryBO.getPaymentId()).forEach(
+                acc->{
+                    if(acc.getHfType()==1){
+                        BasiceListAccounts.add(acc.getHfComAccount());
+                    }
+                    if(acc.getHfType()==2) {
+                        AddListAccounts.add(acc.getHfComAccount());
+                    }
+                }
+            );
+            if(hfMonthChargeQueryBO.getHfType()==1){
+                hfMonthChargeQueryBO.setBasicComAccountArray(BasiceListAccounts.toArray(new String[BasiceListAccounts.size()]));
+            }
+            if(hfMonthChargeQueryBO.getHfType()==2){
+                hfMonthChargeQueryBO.setAddedComAccountArray( AddListAccounts.toArray(new String[AddListAccounts.size()]));
+            }
+        }
+
         List<ComAccountExtBo> comAccountExtBoList = hfComAccountService.queryHfComAccountList(comAccountParamExtBo);
         List<Map<String, Object>> resultList = new ArrayList<>();
 

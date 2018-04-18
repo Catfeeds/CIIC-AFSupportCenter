@@ -97,7 +97,12 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
     public PageRows<HfComTaskBo> queryCompanyTasks(PageInfo pageInfo) {
         //将PageInfo对象转DTO对象
         HfComTaskBo hfComTaskBo = pageInfo.toJavaObject(HfComTaskBo.class);
-        return PageKit.doSelectPage(pageInfo, () -> hfComTaskMapper.queryCompanyTask(hfComTaskBo));
+        if("1,2".equals(hfComTaskBo.getTaskStatusString()) ){ //任务单状态：处理中
+            return PageKit.doSelectPage(pageInfo, () -> hfComTaskMapper.queryCompanyTaskProcessing(hfComTaskBo));
+        }else{
+            return PageKit.doSelectPage(pageInfo, () -> hfComTaskMapper.queryCompanyTask(hfComTaskBo));
+        }
+
     }
 
     /**
@@ -221,7 +226,8 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             hfAccountComRelation.setComAccountId(hfComAccount.getComAccountId());
             hfAccountComRelation.setCompanyId(hfComTask.getCompanyId());
             hfAccountComRelation.setMajorCom(1);
-            if(hfAccountComRelationMapper.queryIfComAccountIdExists(hfComAccount.getComAccountId()) == 0) {
+            int ifComAccountIdExists= hfAccountComRelationMapper.queryIfComAccountIdExists(hfComAccount.getComAccountId());
+            if(ifComAccountIdExists == 0) {
                 hfAccountComRelation.setCreatedTime(new Date());
                 hfAccountComRelation.setCreatedBy(UserContext.getUser().getDisplayName());
                 hfAccountComRelation.setModifiedBy(UserContext.getUser().getDisplayName());

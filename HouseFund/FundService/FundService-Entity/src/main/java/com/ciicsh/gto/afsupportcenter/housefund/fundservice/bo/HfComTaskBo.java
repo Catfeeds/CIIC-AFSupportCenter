@@ -120,7 +120,7 @@ public class HfComTaskBo extends HfComTask {
      * 缴费银行：1 徐汇—X、2 西郊—C、3 东方路—P、4 卢湾—L、5 黄浦—H
      */
     private String paymentBankValue;
-    private String paymentBank;
+    private Integer paymentBank;
     /**
      * 截止缴费年月（截单日）
      */
@@ -145,6 +145,7 @@ public class HfComTaskBo extends HfComTask {
      * 任务单状态条件字符串
      */
     private String taskStatusString;
+    private  Integer taskStatus;
 
     /**
      * 受审时间
@@ -165,5 +166,9 @@ public class HfComTaskBo extends HfComTask {
      * comAccount remark
      */
     private String comAccountRemark;
+
+
+    private String operateStartMonth;
+
 
 }

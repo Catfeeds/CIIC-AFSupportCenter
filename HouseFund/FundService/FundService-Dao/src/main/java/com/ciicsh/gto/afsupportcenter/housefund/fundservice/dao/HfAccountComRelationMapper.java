@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfAccountComRelation;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -18,6 +19,6 @@ Sub：表示公司账户下的 Mapper 接口
 @Repository
 public interface HfAccountComRelationMapper extends BaseMapper<HfAccountComRelation> {
 
-    Integer queryIfComAccountIdExists(Long comAccountId);
+    Integer queryIfComAccountIdExists(@Param("comAccountId") Long comAccountId );
 
 }
