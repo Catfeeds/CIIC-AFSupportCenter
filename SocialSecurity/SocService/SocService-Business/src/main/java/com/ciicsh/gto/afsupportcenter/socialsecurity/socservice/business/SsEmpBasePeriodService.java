@@ -65,4 +65,6 @@ public interface SsEmpBasePeriodService extends IService<SsEmpBasePeriod> {
      * @param ssEmpBasePeriod
      */
     Integer updateReductionById(SsEmpBasePeriod ssEmpBasePeriod);
+
+    List<SsEmpBasePeriod> queryPeriodByEmployeeIdAndCompanyId(@Param("companyId")String companyId, @Param("employeeId")String employeeId);
 }

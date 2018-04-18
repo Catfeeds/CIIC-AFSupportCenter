@@ -28,4 +28,26 @@
     <update id="updateReductionById">
          UPDATE ss_emp_base_period SET ss_month_stop =NULL, end_month=NULL WHERE emp_base_period_id=#{empBasePeriodId}
     </update>
+
+    <select id="queryPeriodByEmployeeIdAndCompanyId" resultMap="BaseResultMap">
+        SELECT
+            sebp.emp_archive_id,
+            sebp.emp_task_id,
+            sebp.base_amount,
+            sebp.start_month,
+            sebp.end_month,
+            sebp.ss_month,
+            sebp.ss_month_stop,
+            sebp.remit_way,
+            sebp.is_active,
+            sebp.created_time,
+            sebp.modified_time,
+            sebp.created_by,
+            sebp.modified_by
+        FROM ss_emp_base_period sebp
+        INNER JOIN ss_emp_achive sea ON sea.emp_archive_id = sebp.emp_archive_id AND sea.is_active = 1
+        WHERE sebp.is_active = 1
+        AND sea.company_id = #{companyId}
+        AND sea.employee_id = #{employeeId}
+    </select>
 </mapper>
