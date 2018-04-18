@@ -44,4 +44,6 @@
         INNER JOIN hf_com_account_class hcac ON hpc.com_account_class_id = hcac.com_account_class_id
         WHERE hpc.is_active = 1 AND hpc.payment_id = #{paymentId}
     </select>
+
+
 </mapper>

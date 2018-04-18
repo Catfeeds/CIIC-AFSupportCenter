@@ -18,9 +18,10 @@
     <select id="queryIfComAccountIdExists" resultType="int">
         SELECT
         COUNT(*)
-        FROM hf_account_com_relation hacr
+        FROM hf_account_com_relation car
         <where>
-          hacr.com_account_id = #{comAccountId}
+          acr.com_account_id = #{comAccountId}
+            AND acr.company_id=#{companyId}
         </where>
     </select>
 

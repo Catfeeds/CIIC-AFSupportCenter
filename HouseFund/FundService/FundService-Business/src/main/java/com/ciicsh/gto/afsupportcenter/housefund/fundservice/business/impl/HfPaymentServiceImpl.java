@@ -267,6 +267,11 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             basePeriods.forEach(x -> monthChargeMapper.insert(setMonthCharge(x, paymentMonth, processParmBO)));
         }
     }
+
+    /**
+     * 更新办理状态
+     * @param accountClass
+     */
     private void updateArchiveStatus(HfComAccountClass accountClass) {
 
     }
