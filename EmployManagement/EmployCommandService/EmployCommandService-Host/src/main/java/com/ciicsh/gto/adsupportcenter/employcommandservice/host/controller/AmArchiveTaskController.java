@@ -164,25 +164,29 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         {
             AmEmploymentBO amEmploymentBO = list.get(i);
             int status = amEmploymentBO.getTaskStatus();
-            if(1==status){
+            if(99==status){
                 amEmpTaskCountBO.setNoFeedback(amEmploymentBO.getCount());
                 num = num + amEmploymentBO.getCount();
-            }else if(2==status){
-                amEmpTaskCountBO.setRefuseFailed(amEmploymentBO.getCount());
+            }else if(98==status){
+                amEmpTaskCountBO.setRefuseWaitFinished(amEmploymentBO.getCount());
                 num = num + amEmploymentBO.getCount();
-            }else if(3==status){
+            }else if(1==status){
+                amEmpTaskCountBO.setRefuseFinished(amEmploymentBO.getCount());
+                num = num + amEmploymentBO.getCount();
+            }else if(2==status){
                 amEmpTaskCountBO.setRefuseBeforeWithFile(amEmploymentBO.getCount());
                 num = num + amEmploymentBO.getCount();
-            }else if(4==status){
+            }else if(3==status){
                 amEmpTaskCountBO.setRefuseTicketStampNoReturn(amEmploymentBO.getCount());
                 num = num + amEmploymentBO.getCount();
-            }else if(5==status){
+            }else if(4==status){
                 amEmpTaskCountBO.setRefuseFailed(amEmploymentBO.getCount());
                 num = num + amEmploymentBO.getCount();
-            }else if(6==status){
+            }else if(5==status){
                 amEmpTaskCountBO.setBeforeBatchNeedRefuse(amEmploymentBO.getCount());
+                num = num + amEmploymentBO.getCount();
             }else{
-                otherNum = otherNum + amEmploymentBO.getCount();
+                otherNum = otherNum+amEmploymentBO.getCount();
                 amEmpTaskCountBO.setOther(otherNum);
                 num = num + amEmploymentBO.getCount();
             }

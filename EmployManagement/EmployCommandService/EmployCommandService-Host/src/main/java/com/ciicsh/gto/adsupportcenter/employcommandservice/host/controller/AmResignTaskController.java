@@ -267,7 +267,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         {
             amEmploymentBO.setEmployNotes(amRemarkBOList1.get(0).getRemarkContent());
         }
-
+        //用工信息
         resultMap.put("amEmploymentBO",amEmploymentBO);
         //档案
         resultMap.put("amArchaiveBo",amArchiveBO);
