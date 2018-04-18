@@ -50,6 +50,7 @@
         WHERE
         a.is_active = 1
         AND b.is_active = 1
+        AND a.hf_type = #{hfType}
         AND b.com_account_id = #{comAccountId}
         AND #{paymentMonth} > a.hf_month
         AND (

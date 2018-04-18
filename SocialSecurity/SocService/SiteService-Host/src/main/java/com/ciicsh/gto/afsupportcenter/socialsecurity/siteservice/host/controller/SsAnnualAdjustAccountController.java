@@ -5,16 +5,19 @@ import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.util.MyExcelVerifyHandler;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsAnnualAdjustAccountBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsAnnualAdjustAccountEmpBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.*;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAnnualAdjustAccountEmpService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAnnualAdjustAccountEmpTempService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAnnualAdjustAccountService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComAccountService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsFileImportService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsAnnualAdjustAccountDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsAnnualAdjustAccountEmpDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsAnnualAdjustAccountEmpTempDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAnnualAdjustAccount;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAccount;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.util.MyExcelVerifyHandler;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.core.Result;
 import com.ciicsh.gto.afsupportcenter.util.core.ResultGenerator;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
@@ -30,18 +33,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -185,8 +191,13 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
         ssAnnualAdjustAccountEmpTempService.updateErrorMsgForRepeatingEmployeeId(ssAnnualAdjustAccountEmpTempDTO);
     }
 
+    /**
+     * 导出社保账户平均月工资
+     * @param response
+     * @param pageInfo
+     * @throws Exception
+     */
     @RequestMapping("/accountEmpAvgMonthSalaryExport")
-    @Log("导出社保账户平均月工资")
     public void accountEmpAvgMonthSalaryExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         SsAnnualAdjustAccountDTO ssAnnualAdjustAccountDTO = pageInfo.toJavaObject(SsAnnualAdjustAccountDTO.class);
         Map<String, Object> queryCondition = new HashMap<>();

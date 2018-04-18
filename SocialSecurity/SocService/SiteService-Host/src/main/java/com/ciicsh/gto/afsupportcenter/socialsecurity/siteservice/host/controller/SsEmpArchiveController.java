@@ -10,7 +10,6 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.empSSSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -57,13 +56,12 @@ public class SsEmpArchiveController extends BasicController<SsEmpArchiveService>
     }
 
     /**
-     * 雇员查询
+     * 查询雇员列表信息
      *
      * @param
      * @return
      */
     @RequestMapping("/employeeQuery")
-    @Log("查询雇员列表信息")
     public JsonResult<PageRows> employeeQuery(PageInfo pageInfo) {
 
         PageRows<SsEmpArchiveBO> result = business.queryEmployee(pageInfo);
@@ -74,7 +72,6 @@ public class SsEmpArchiveController extends BasicController<SsEmpArchiveService>
     /**
      * 雇员社保查询查询导出
      */
-    @Log("雇员社保查询查询导出")
     @RequestMapping("/empSSSearchExport")
     public void empSSSearchExport(HttpServletResponse response,SsEmpArchiveBO ssEmpArchiveBO) {
         Date date = new Date();
@@ -91,7 +88,6 @@ public class SsEmpArchiveController extends BasicController<SsEmpArchiveService>
      * @return
      */
     @RequestMapping("/employeeDetailInfoQuery")
-    @Log("雇员详情信息查询")
     public JsonResult employeeDetailInfoQuery(String empArchiveId) {
 
         if(null==empArchiveId)return JsonResultKit.ofError("ID为空");

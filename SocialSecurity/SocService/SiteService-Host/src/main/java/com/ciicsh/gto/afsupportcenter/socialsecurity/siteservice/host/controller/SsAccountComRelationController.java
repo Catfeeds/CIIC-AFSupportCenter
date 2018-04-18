@@ -5,7 +5,6 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAccou
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsAccountComRelationDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAccountComRelation;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.AccountCompanyRelationOpt;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
@@ -43,7 +42,6 @@ public class SsAccountComRelationController extends BasicController<SsAccountCom
      * @author zhangxj
      * @date 2017-12-23
      */
-    @Log("企业社保账户绑定接口")
     @PostMapping("/saveAccountComRelation")
     public JsonResult<String> saveAccountComRelation(SsAccountComRelationDTO dto) {
 

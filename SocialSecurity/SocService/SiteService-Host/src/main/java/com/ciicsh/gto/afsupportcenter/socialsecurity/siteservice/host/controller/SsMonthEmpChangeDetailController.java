@@ -6,11 +6,9 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpCha
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsMonthEmpChangeDetailService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.GsyExportOpt;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.YysExportOpt;
-
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,26 +21,16 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * <p>
- * 雇员月度变更表明细
-该表结果有可能需要调整 前端控制器
- * </p>
- *
- * @author HuangXing
- * @since 2017-12-01
+ * 雇员月度变更表明细,该表结果有可能需要调整 前端控制器
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssMonthEmpChangeDetail")
 public class SsMonthEmpChangeDetailController  extends BasicController<SsMonthEmpChangeDetailService> {
     /**
-     * <p>Description: 社保汇总明细数据展示</p>
-     *
-     * @author wengxk
-     * @date 2017-12-13
+     * 社保汇总明细数据展示
      * @param ssMonthEmpChangeDTO 社保总汇检索条件
      * @return  JsonResult<SsMonthEmpChangeBO>
      */
-    @Log("社保汇总明细数据展示")
     @PostMapping("/showMonthEmpChangeDetail")
     public JsonResult<List<SsMonthEmpChangeDetailBO>> showMonthEmpChangeDetail(SsMonthEmpChangeBO ssMonthEmpChangeDTO) {
 
@@ -57,7 +45,12 @@ public class SsMonthEmpChangeDetailController  extends BasicController<SsMonthEm
 
         return result;
     }
-    @Log("变更总汇明细(养保、医保、失保)导出")
+
+    /**
+     * 变更总汇明细(养保、医保、失保)导出
+     * @param response
+     * @param monthEmpChangeId
+     */
     @RequestMapping("/yysExport")
     public void yysExport(HttpServletResponse response, @RequestParam Long monthEmpChangeId){
         Date date = new Date();
@@ -66,7 +59,11 @@ public class SsMonthEmpChangeDetailController  extends BasicController<SsMonthEm
         ExcelUtil.exportExcel(opts,YysExportOpt.class,fileNme,response);
     }
 
-    @Log("变更总汇明细(养保、医保、失保)导出")
+    /**
+     * 变更总汇明细(养保、医保、失保)导出
+     * @param response
+     * @param monthEmpChangeId
+     */
     @RequestMapping("/gsyExport")
     public void gsyExport(HttpServletResponse response,@RequestParam Long monthEmpChangeId){
         Date date = new Date();

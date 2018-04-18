@@ -4,7 +4,6 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controlle
 import com.alibaba.fastjson.JSON;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpMaterialService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpMaterial;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
@@ -28,7 +27,11 @@ import java.util.List;
 @RequestMapping("/api/soccommandservice/ssEmpMaterial")
 public class SsEmpMaterialController extends BasicController<SsEmpMaterialService> {
 
-    @Log("查询雇员特殊操作材料信息")
+    /**
+     * 查询雇员特殊操作材料信息
+     * @param empTaskId
+     * @return
+     */
     @RequestMapping("/queryEmpMaterialByTaskId")
     public JsonResult<List<SsEmpMaterial>> queryEmpMaterialByTaskId(String empTaskId) {
 
@@ -37,7 +40,11 @@ public class SsEmpMaterialController extends BasicController<SsEmpMaterialServic
         return JsonResultKit.of(empMaterialList);
     }
 
-    @Log("材料收缴")
+    /**
+     * 材料收缴
+     * @param rejectionRequestParam
+     * @return
+     */
     @RequestMapping("/saveMaterial")
     public JsonResult<Boolean> saveMaterial(RejectionRequestParam rejectionRequestParam) {
 

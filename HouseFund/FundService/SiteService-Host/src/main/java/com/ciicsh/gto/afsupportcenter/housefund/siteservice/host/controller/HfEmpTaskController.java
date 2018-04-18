@@ -16,7 +16,6 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskCo
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.EmpEmployee;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
@@ -40,7 +39,13 @@ import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 @RestController
@@ -55,12 +60,10 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
 
     /**
      * 雇员公积金任务查询
-     *
      * @param pageInfo
      * @return
      */
     @RequestMapping("/hfEmpTaskQuery")
-    @Log("雇员公积金任务查询")
     public JsonResult<PageRows> hfEmpTaskQuery(@RequestBody PageInfo pageInfo) {
         return JsonResultKit.of(business.queryHfEmpTaskInPage(pageInfo, UserContext.getUserId(), StringUtils.join(
             new Integer[] {
@@ -71,12 +74,10 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
 
     /**
      * 雇员公积金任务导出
-     *
      * @param
      * @return
      */
     @RequestMapping("/hfEmpTaskExport")
-    @Log("雇员公积金任务导出")
     public void hfEmpTaskExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         pageInfo.setPageSize(10000);
         pageInfo.setPageNum(0);
@@ -121,12 +122,10 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
 
     /**
      * 批退雇员公积金任务查询
-     *
      * @param pageInfo
      * @return
      */
     @RequestMapping("/hfEmpTaskRejectQuery")
-    @Log("雇员公积金任务查询")
     public JsonResult<PageRows> hfEmpTaskRejectQuery(@RequestBody PageInfo pageInfo) {
         return JsonResultKit.of(business.queryHfEmpTaskRejectInPage(pageInfo, UserContext.getUserId(), StringUtils.join(
             new Integer[] {
@@ -137,12 +136,10 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
 
     /**
      * 批退雇员公积金任务导出
-     *
      * @param
      * @return
      */
     @RequestMapping("/hfEmpTaskRejectExport")
-    @Log("雇员公积金任务导出")
     public void hfEmpTaskRejectExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         pageInfo.setPageSize(10000);
         pageInfo.setPageNum(0);
@@ -185,8 +182,12 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
         workbook.close();
     }
 
+    /**
+     * 雇员公积金任务批退
+     * @param hfEmpTaskBatchRejectBo
+     * @return
+     */
     @RequestMapping("/hfEmpTaskBatchReject")
-    @Log("雇员公积金任务批退")
     public JsonResult hfEmpTaskBatchReject(@RequestBody HfEmpTaskBatchRejectBo hfEmpTaskBatchRejectBo) {
         Long[] selectedData = hfEmpTaskBatchRejectBo.getSelectedData();
         if (!ArrayUtils.isEmpty(selectedData)) {

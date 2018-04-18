@@ -3,7 +3,6 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controlle
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SalCompanyService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SalCompany;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -24,17 +23,14 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/salCompany")
-@Log("客户基础信息")
 public class SalCompanyController extends BasicController<SalCompanyService> {
 
     /**
      * 查询客户基础信息
-     *
      * @param pageInfo
      * @return
      */
     @RequestMapping("/companyQuery")
-    @Log("查询")
     public JsonResult<List<SalCompany>> companyQuery(PageInfo pageInfo) {
         PageRows<SalCompany> pageRows = business.companyQuery(pageInfo);
         return JsonResultKit.ofPage(pageRows);

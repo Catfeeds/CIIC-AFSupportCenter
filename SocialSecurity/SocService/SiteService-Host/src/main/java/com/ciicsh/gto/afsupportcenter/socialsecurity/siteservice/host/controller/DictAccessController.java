@@ -55,8 +55,11 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
         }
     }
 
+    /**
+     * 获取本页面需要使用的字典数据
+     * @return
+     */
     @RequestMapping("/getDictData")
-    @Log("获取本页面需要使用的字典数据")
     public JsonResult<Map<String, List<?>>> getDictData() {
         Map<String, List<?>> map = DictUtil.getInstance().getDictItemList();
         if (map.size() == 0) {

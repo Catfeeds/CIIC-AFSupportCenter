@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountPaymentBankMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccountPaymentBank;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
@@ -22,7 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/fundcommandservice/DictAccess")
@@ -81,8 +84,11 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
         }
     }
 
+    /**
+     * 获取本页面需要使用的字典数据
+     * @return
+     */
     @RequestMapping("/getDictData")
-    @Log("获取本页面需要使用的字典数据")
     public JsonResult<Map<String, List<?>>> getDictData() {
         Map<String, List<?>> map = DictUtil.getInstance().getDictItemList();
         if (map.size() == 0) {

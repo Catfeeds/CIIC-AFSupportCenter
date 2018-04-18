@@ -1,13 +1,12 @@
 package com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.MaterialDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpTask;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmployment;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmResign;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmResignLink;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.custom.resignSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
@@ -157,49 +156,76 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
         amTaskParamBO.setResign(true);
 
-        /**
-         * 获取雇员信息
-         */
-        AmEmpEmployeeBO amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployee(amTaskParamBO);
+        AmEmpEmployeeBO amEmpEmployeeBO = null;
 
-        AmCustomBO amCustomBO = amEmpCustomService.getCustom(amEmpEmployeeBO.getEmpTaskId());
+        AmCustomBO amCustomBO = null;
 
+        AmEmployment amEmployment = null;
 
-        PageInfo pageInfo = new PageInfo();
-        JSONObject params = new JSONObject();
+        if(amTaskParamBO.getEmploymentId()!=null){
+            /**
+             * 如果重在用工主键，则通过用工主键找对应的任务单主键查询雇佣信息
+             */
+            amEmployment = amEmploymentService.selectById(amTaskParamBO.getEmploymentId());
+
+            amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amEmployment.getEmpTaskId());
+
+            amCustomBO = amEmpCustomService.getCustom(amEmpEmployeeBO.getEmpTaskId());
+        }else {
+            /**
+             * 否则通过雇佣id和公司id查询最新的雇员信息绑定退工
+             */
+            amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployee(amTaskParamBO);
+
+            amCustomBO = amEmpCustomService.getCustom(amEmpEmployeeBO.getEmpTaskId());
+        }
+
+        Map<String,Object> params = new HashMap<>();
         params.put("employeeId",amTaskParamBO.getEmployeeId());
         params.put("companyId",amTaskParamBO.getCompanyId());
         params.put("remarkType",amTaskParamBO.getRemarkType());
         params.put("empTaskId",amTaskParamBO.getEmpTaskId());
         params.put("empTaskResignId",amTaskParamBO.getEmpTaskId());
-        pageInfo.setParams(params);
+
+        AmRemarkBO amRemarkBO = new AmRemarkBO();
 
         List<AmResignBO> listResignBO = business.queryAmResignDetail(params);
 
         //退工备注
-        PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);
+        amRemarkBO.setRemarkType(3);
+        amRemarkBO.setEmpTaskId(amTaskParamBO.getEmpTaskId());//退工任务单id
+        List<AmRemarkBO>  amRemarkBOList = amRemarkService.getAmRemakList(amRemarkBO);
 
-        params.put("remarkType","1");
-        pageInfo.setParams(params);
-        PageRows<AmRemarkBO> amRemarkBOPageRows1 = amRemarkService.queryAmRemark(pageInfo);
+        //用工备注
+        amRemarkBO.setRemarkType(1);
+        amRemarkBO.setEmpTaskId(amEmployment.getEmpTaskId());//用工任务单Id
+        List<AmRemarkBO>  amRemarkBOList1 = amRemarkService.getAmRemakList(amRemarkBO);
+
         //档案备注
-        params.put("remarkType","2");
-        pageInfo.setParams(params);
-        PageRows<AmRemarkBO> amRemarkBOPageRows2 = amRemarkService.queryAmRemark(pageInfo);
+        amRemarkBO.setRemarkType(2);
+        List<AmRemarkBO>  amRemarkBOList2 = amRemarkService.getAmRemakList(amRemarkBO);
+
         //用工信息
-        List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmploymentResign(params);
+        AmEmploymentBO amEmploymentBO = new AmEmploymentBO();
+        if(amEmployment!=null){
+            BeanUtils.copyProperties(amEmployment,amEmpEmployeeBO);
+        }else{
+            //否则取第一条
+            List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmploymentResign(params);
+            if(null!= resultEmployList&&resultEmployList.size()>0)
+            {
+                amEmploymentBO = resultEmployList.get(0);
+            }
+        }
 
         //用工档案
         List<AmArchiveBO> amArchiveBOList = null;
         AmArchiveBO amArchiveBO = new AmArchiveBO();
+        params.put("employmentId",amEmploymentBO.getEmploymentId());
 
-        if(null!=resultEmployList&&resultEmployList.size()>0)
-        {
-            params.put("employmentId",resultEmployList.get(0).getEmploymentId());
-            amArchiveBOList = amArchiveService.queryAmArchiveList(params);
-            if(amArchiveBOList!=null&&amArchiveBOList.size()>0){
-                amArchiveBO = amArchiveBOList.get(0);
-            }
+        amArchiveBOList = amArchiveService.queryAmArchiveList(params);
+        if(amArchiveBOList!=null&&amArchiveBOList.size()>0){
+            amArchiveBO = amArchiveBOList.get(0);
         }
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -209,46 +235,36 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         //雇员信息
         resultMap.put("amEmpTaskBO",amEmpEmployeeBO);
 
-        if(null!=amRemarkBOPageRows)
+
+        //退工备注
+        if(null!=amRemarkBOList)
         {
-            resultMap.put("amRemarkBo",amRemarkBOPageRows);
+            resultMap.put("amRemarkBo",amRemarkBOList);
+        }
+        //用工备注
+        if(null!=amRemarkBOList1)
+        {
+            resultMap.put("amRemarkBo1",amRemarkBOList1);
+        }
+        //档案备注
+        if(null!=amRemarkBOList2)
+        {
+            resultMap.put("amRemarkBo2",amRemarkBOList2);
         }
 
-        if(null!=amRemarkBOPageRows1&&amRemarkBOPageRows1.getRows().size()>0)
+        //用工信息
+        if(!StringUtil.isEmpty(amEmploymentBO.getEmployStyle()))
         {
-            resultMap.put("amRemarkBo1",amRemarkBOPageRows1);
+            amEmploymentBO.setEmployStyle(ReasonUtil.getYgfs(amEmploymentBO.getEmployStyle()));
         }
-
-        if(null!=amRemarkBOPageRows2&&amRemarkBOPageRows2.getRows().size()>0)
+        //用工信息里边的用工备注  取最新一条
+        if(null!= amRemarkBOList1&& amRemarkBOList1.size()>0)
         {
-            resultMap.put("amRemarkBo2",amRemarkBOPageRows2);
-        }
-
-        AmEmploymentBO amEmploymentBO = new AmEmploymentBO();
-        if(null!= resultEmployList&&resultEmployList.size()>0)
-        {
-            amEmploymentBO = resultEmployList.get(0);
-            AmRemarkBO queryBo = new AmRemarkBO();
-            queryBo.setRemarkType(1);
-            queryBo.setEmployeeId(amTaskParamBO.getEmployeeId());
-
-            List<AmRemarkBO> amRemarkBOList = amRemarkService.getAmRemakList(queryBo);
-
-            if(!StringUtil.isEmpty(amEmploymentBO.getEmployStyle()))
-            {
-                amEmploymentBO.setEmployStyle(ReasonUtil.getYgfs(amEmploymentBO.getEmployStyle()));
-            }
-
-            //用工信息里边的用工备注  取最新一条
-            if(null!= amRemarkBOList&& amRemarkBOList.size()>0)
-            {
-                amEmploymentBO.setEmployNotes(amRemarkBOList.get(0).getRemarkContent());
-            }
-
+            amEmploymentBO.setEmployNotes(amRemarkBOList1.get(0).getRemarkContent());
         }
 
         resultMap.put("amEmploymentBO",amEmploymentBO);
-
+        //档案
         resultMap.put("amArchaiveBo",amArchiveBO);
 
         //退工信息
@@ -256,30 +272,32 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         if(null!=listResignBO&&listResignBO.size()>0){
             amResignBO = listResignBO.get(0);
 
+            amResignBO.setHandleType(amEmploymentBO.getHandleType());
+            amResignBO.setEmployFeedback(amEmploymentBO.getEmployFeedback());
+
             amResignBO.setYuliuDocNum(amArchiveBO.getYuliuDocNum());
             amResignBO.setDocNum(amArchiveBO.getDocCode());
             amResignBO.setArchiveCardState(amArchiveBO.getArchiveCardState());
             amResignBO.setArchivePlace(amArchiveBO.getArchivePlace());
             amResignBO.setArchivePlaceAdditional(amArchiveBO.getArchivePlaceAdditional());
-
-            amResignBO.setHandleType(amEmploymentBO.getHandleType());
-            amResignBO.setEmployFeedback(amEmploymentBO.getEmployFeedback());
-            amResignBO.setEmploymentId(amEmploymentBO.getEmploymentId());
             amResignBO.setEmployDocPaymentTo(amArchiveBO.getEmployDocPaymentTo());
             amResignBO.setStorageDate(amArchiveBO.getStorageDate());
             amResignBO.setDiaodangFeedback(amArchiveBO.getDiaodangFeedback());
 
             amResignBO.setArchiveDirection(amEmpEmployeeBO.getArchiveDirection());
+
         }else{
+
+            amResignBO.setHandleType(amEmploymentBO.getHandleType());
+            amResignBO.setEmployFeedback(amEmploymentBO.getEmployFeedback());
+            amResignBO.setEmploymentId(amEmploymentBO.getEmploymentId());
+
             amResignBO.setYuliuDocNum(amArchiveBO.getYuliuDocNum());
             amResignBO.setDocNum(amArchiveBO.getDocCode());
             amResignBO.setArchiveCardState(amArchiveBO.getArchiveCardState());
             amResignBO.setArchivePlace(amArchiveBO.getArchivePlace());
             amResignBO.setArchivePlaceAdditional(amArchiveBO.getArchivePlaceAdditional());
 
-            amResignBO.setHandleType(amEmploymentBO.getHandleType());
-            amResignBO.setEmployFeedback(amEmploymentBO.getEmployFeedback());
-            amResignBO.setEmploymentId(amEmploymentBO.getEmploymentId());
             amResignBO.setEmployDocPaymentTo(amArchiveBO.getEmployDocPaymentTo());
             amResignBO.setStorageDate(amArchiveBO.getStorageDate());
             amResignBO.setDiaodangFeedback(amArchiveBO.getDiaodangFeedback());
@@ -323,46 +341,49 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         AmResign entity = new AmResign();
         BeanUtils.copyProperties(bo,entity);
 
-        if(bo.getEmploymentId()==null)
+        AmEmployment amEmployment = amEmploymentService.selectById(Long.parseLong(bo.getMatchEmployIndex()));
+
+        if(amEmployment==null)
         {
-            boolean result = false;
-            Map<String,Object> param = new HashMap<>();
-            param.put("employmentId",bo.getMatchEmployIndex());
-            List<AmEmploymentBO> list =  amEmploymentService.queryAmEmployment(param);
+            resultMap.put("result","用工序号查询不到");
+            return JsonResultKit.of(resultMap);
+        }
 
-            if(null!=list&&list.size()>0)
-            {
-                try {
-                    entity.setEmploymentId(Long.parseLong(bo.getMatchEmployIndex()));
-                } catch (NumberFormatException e) {
-                    resultMap.put("result","用工序号格式不对");
-                    return JsonResultKit.of(resultMap);
-                }
+        AmEmpTask amEmpTask = taskService.selectById(bo.getEmpTaskId());
 
-                LocalDateTime now = LocalDateTime.now();
-                if(entity.getResignId()==null){
-                    entity.setCreatedTime(now);
-                    entity.setModifiedTime(now);
-                    entity.setCreatedBy("sys");
-                    entity.setModifiedBy("sys");
-                }else{
-                    entity.setModifiedTime(now);
-                    entity.setModifiedBy("sys");
-                }
+        if(!(amEmployment.getEmployeeId().equals(amEmpTask.getEmployeeId())))
+        {
+            resultMap.put("result","用工序号错误");
+            return JsonResultKit.of(resultMap);
+        }
 
-                result =  business.insertOrUpdate(entity);
 
-                if(result){
-                    resultMap.put("result",result);
-                }else{
-                    resultMap.put("result","绑定失败");
-                }
-            }else {
-                resultMap.put("result","对应用工序号不重在");
-            }
+        try {
+            entity.setEmploymentId(Long.parseLong(bo.getMatchEmployIndex()));
+        } catch (NumberFormatException e) {
+            resultMap.put("result","用工序号格式不对");
+            return JsonResultKit.of(resultMap);
+        }
 
+        boolean result = false;
+
+        LocalDateTime now = LocalDateTime.now();
+        if(entity.getResignId()==null){
+            entity.setCreatedTime(now);
+            entity.setModifiedTime(now);
+            entity.setCreatedBy(ReasonUtil.getUserId());
+            entity.setModifiedBy(ReasonUtil.getUserId());
         }else{
-            resultMap.put("result","对应用工序号已经重在");
+            entity.setModifiedTime(now);
+            entity.setModifiedBy(ReasonUtil.getUserId());
+        }
+
+        result =  business.insertOrUpdate(entity);
+
+        if(result){
+            resultMap.put("result",result);
+        }else{
+            resultMap.put("result","绑定失败");
         }
 
         return JsonResultKit.of(resultMap);

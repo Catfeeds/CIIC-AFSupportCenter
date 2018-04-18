@@ -431,6 +431,8 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
                 bo.setModifiedTime(now);
                 bo.setModifiedBy(ReasonUtil.getUserId());
             }
+
+                bo.setHandleMan(ReasonUtil.getUserName());
         }
 
         boolean result = false;

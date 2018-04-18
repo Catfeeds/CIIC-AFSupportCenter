@@ -9,7 +9,6 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfMonthChargeService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.util.PdfUtil;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.FileOutputStream;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
@@ -39,12 +37,10 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
 
     /**
      * 雇员公积金任务导出
-     *
      * @param
      * @return
      */
     @RequestMapping("/hfMonthChargeExport")
-    @Log("雇员公积金报表导出")
     public void hfMonthChargeExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         pageInfo.setPageSize(10000);
         pageInfo.setPageNum(0);
@@ -80,7 +76,6 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
 
     /**
      * 公积金变更清册导出
-     *
      * @param response
      * @param pageInfo
      * @throws Exception

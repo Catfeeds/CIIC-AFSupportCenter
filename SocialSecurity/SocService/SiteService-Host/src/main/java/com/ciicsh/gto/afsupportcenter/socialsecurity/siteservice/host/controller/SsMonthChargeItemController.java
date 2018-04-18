@@ -5,7 +5,6 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthCharge
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsMonthChargeItemService;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
@@ -13,25 +12,28 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
- * <p>
  * 雇员月度费用明细项目 前端控制器
- * </p>
- *
- * @author HuangXing
- * @since 2017-12-23
  */
 @Controller
 @RequestMapping("/api/soccommandservice/ssMonthChargeItem")
 public class SsMonthChargeItemController extends BasicController<SsMonthChargeItemService>{
 
-    @Log("雇员月度缴费明细")
+    /**
+     * 雇员月度缴费明细
+     * @param ssMonthChargeItemBO
+     * @return
+     */
     @RequestMapping("/queryEmlpyeeMonthFeeDetail")
     @ResponseBody
     public JsonResult<List<SsMonthChargeItemBO>> queryEmlpyeeMonthFeeDetail(SsMonthChargeItemBO ssMonthChargeItemBO){
@@ -43,7 +45,11 @@ public class SsMonthChargeItemController extends BasicController<SsMonthChargeIt
         return JsonResultKit.of(ssMonthChargeItemBOList);
     }
 
-    @Log("导出雇员月度缴费明细")
+    /**
+     * 导出雇员月度缴费明细
+     * @param response
+     * @param ssMonthChargeItemBO
+     */
     @RequestMapping("monthChargeExport")
     public void monthChargeExport(HttpServletResponse response, SsMonthChargeItemBO ssMonthChargeItemBO){
         Date date = new Date();
@@ -57,9 +63,7 @@ public class SsMonthChargeItemController extends BasicController<SsMonthChargeIt
     ;
 
     /**
-     * <p>Description: 将PO通过业务逻辑转换成页面展示的DTO</p>
-     * @author xsj
-     * @date 2017-12-13
+     * 将PO通过业务逻辑转换成页面展示的DTO
      * @param ssMonthChargeItemBOList
      * @return   List<SsMonthChargeItemBO>
      */

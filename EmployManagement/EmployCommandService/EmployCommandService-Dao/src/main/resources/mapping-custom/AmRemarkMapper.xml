@@ -9,7 +9,7 @@
 
      <select id="queryAmRemark" resultMap="BaseResultMapDTO">
          SELECT
-         *
+         remark_id,remark_content,remark_type,remark_man,remark_date
          FROM
          am_remark
          WHERE
