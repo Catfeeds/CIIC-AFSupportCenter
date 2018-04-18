@@ -28,4 +28,6 @@ public interface AmEmploymentMapper extends BaseMapper<AmEmployment> {
 
     List<AmEmploymentBO> queryAmEmploymentResign(Map<String,Object> param);
 
+    List<AmEmploymentBO>  queryAmArchiveResign(AmEmploymentBO amEmploymentBO);
+
 }

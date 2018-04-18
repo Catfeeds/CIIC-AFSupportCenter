@@ -276,6 +276,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             amEmpTask.setOutDate(employeeCompany==null?null:employeeCompany.getOutDate());
 
             if(null!=employeeCompany&&null!=employeeCompany.getOutReason()){
+                amEmpTask.setOutReasonCode(employeeCompany.getOutReason().toString());
                 amEmpTask.setOutReason(ReasonUtil.getReasonOut(employeeCompany.getOutReason().toString()));
             }else{
                 if(employeeCompany!=null){

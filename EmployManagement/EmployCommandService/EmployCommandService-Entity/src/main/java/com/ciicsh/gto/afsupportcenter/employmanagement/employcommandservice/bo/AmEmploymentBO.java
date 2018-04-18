@@ -53,6 +53,8 @@ public class AmEmploymentBO extends AmEmployment {
 
     private Integer taskStatus;
 
+    private Integer taskResignStatus;
+
     private  Integer count;
 
     private  String archiveDirection;
@@ -89,6 +91,44 @@ public class AmEmploymentBO extends AmEmployment {
     private  String archiveSpecial;
 
     private Long  empTaskResignId;
+
+    private Integer taskStatusOther;
+
+    private Integer taskResignStatusOther;
+
+    private Integer taskCategoryResign;
+
+    public Integer getTaskCategoryResign() {
+        return taskCategoryResign;
+    }
+
+    public void setTaskCategoryResign(Integer taskCategoryResign) {
+        this.taskCategoryResign = taskCategoryResign;
+    }
+
+    public Integer getTaskResignStatusOther() {
+        return taskResignStatusOther;
+    }
+
+    public void setTaskResignStatusOther(Integer taskResignStatusOther) {
+        this.taskResignStatusOther = taskResignStatusOther;
+    }
+
+    public Integer getTaskStatusOther() {
+        return taskStatusOther;
+    }
+
+    public void setTaskStatusOther(Integer taskStatusOther) {
+        this.taskStatusOther = taskStatusOther;
+    }
+
+    public Integer getTaskResignStatus() {
+        return taskResignStatus;
+    }
+
+    public void setTaskResignStatus(Integer taskResignStatus) {
+        this.taskResignStatus = taskResignStatus;
+    }
 
     public Long getEmpTaskResignId() {
         return empTaskResignId;

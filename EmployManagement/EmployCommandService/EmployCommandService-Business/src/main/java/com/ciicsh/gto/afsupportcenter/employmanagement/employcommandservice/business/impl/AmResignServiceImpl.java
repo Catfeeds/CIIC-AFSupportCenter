@@ -136,13 +136,20 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
                  * 退工任务单签收 但退工成功日期为空
                  */
                 amEmpTask.setTaskStatus(98);
-            }else{
+            }else if("1".equals(bo.getResignFeedback())&&bo.getJobCentreFeedbackDate()!=null){
+                /**
+                 * 更加v6文档有退工成功返回日期 并且 退工任务单签收 代表退工成功
+                 */
+                amEmpTask.setTaskStatus(1);
+                isFinish = 1;
+            }else {
                 amEmpTask.setTaskStatus(Integer.parseInt(bo.getResignFeedback()));
             }
 
             taskService.insertOrUpdate(amEmpTask);
-
-            isFinish = this.isResginFinish(bo,amEmpTask);
+            if(isFinish==0){
+                isFinish = this.isResginFinish(bo,amEmpTask);
+            }
             entity.setIsFinish(isFinish);
 
             AmResignLink amResignLink = new AmResignLink();
@@ -188,13 +195,13 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
      * @return
      */
     Integer  isResginFinish(AmResignBO bo,AmEmpTask amEmpTask){
-        String outReson = amEmpTask.getOutReason();
+        String outReasonCode = amEmpTask.getOutReasonCode();
         String resignFeedback = bo.getResignFeedback();
-        if(StringUtil.isEmpty(outReson))
+        if(StringUtil.isEmpty(outReasonCode))
         {
             return  0;
         }
-        if("13".equals(outReson)||"15".equals(outReson))
+        if("13".equals(outReasonCode)||"15".equals(outReasonCode))
         {
             if("1".equals(resignFeedback))
             {
