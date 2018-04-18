@@ -137,14 +137,14 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         payment = hfPaymentMapper.selectOne(payment);
         if (payment.getPaymentState().equals(5)) {
             List<HfComAccountClass> comAccountClasses = comAccountClassMapper.getAccountClassByPaymentId(Long.parseLong(processParmBO.getPaymentId()));
-            //校验月份是否匹配
-            if (null != comAccountClasses && comAccountClasses.size() > 0) {
-                for (HfComAccountClass x : comAccountClasses) {
-                    if (!payment.getPaymentMonth().equals(x.getComHfMonth())) { //支付月份和class表的hfmonth不相等
-                        return JsonResultKit.of(1, "企业公积金账户："+x.getHfComAccount()+"，请检查该账户的月份是否与支付年月匹配。");
-                    }
-                }
-            }
+//            //校验月份是否匹配
+//            if (null != comAccountClasses && comAccountClasses.size() > 0) {
+//                for (HfComAccountClass x : comAccountClasses) {
+//                    if (!payment.getPaymentMonth().equals(x.getComHfMonth())) { //支付月份和class表的hfmonth不相等
+//                        return JsonResultKit.of(1, "企业公积金账户："+x.getHfComAccount()+"，请检查该账户的月份是否与支付年月匹配。");
+//                    }
+//                }
+//            }
 
 
             if (null != comAccountClasses && comAccountClasses.size() > 0) {
@@ -211,7 +211,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
      */
     private PayApplyProxyDTO financePayApi(HfPayment hfPayment) {
         PayApplyProxyDTO dto = new PayApplyProxyDTO();
-        dto.setDepartmentName("福利保障部公积金"); //
+        dto.setDepartmentName("福利保障部公积金");
         dto.setIsFinancedept(0);
         dto.setBusinessType(2);//业务类型
         dto.setBusinessPkId(hfPayment.getPaymentId());//业务方主键ID(整型)
@@ -233,12 +233,6 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         if (hfPayment.getPaymentWay() != 2) {//如果付款方式不是支票
             dto.setReceiveAccountId(hfPaymentMapper.getHfPaymentBankId(hfPayment.getPaymentId())); //付款银行ID
         }
-/*      这些社保和公积金都没有
-        dto.setPresident("");//待定(总经理)
-        dto.setLeader("");//待定(分管领导)
-        dto.setDepartmentManager(""); //待定(部门经理)
-        dto.setReviewer("");//待定(审核人)*/
-
         List<PayapplyCompanyProxyDTO> paymentComList = baseMapper.getHfPaymentComList(hfPayment.getPaymentId()).stream().map(x -> toCompanyDto(x)).collect(Collectors.toList());
         List<PayapplyEmployeeProxyDTO> paymentEmpList = baseMapper.getHfPaymentEmpList(hfPayment.getPaymentId(), hfPayment.getPaymentMonth()).stream().map(x -> toEmployeeDto(x)).collect(Collectors.toList());
 
@@ -262,7 +256,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
     }
 
     private void createStandardMonthCharge(HfComAccountClass accountClass, String paymentMonth, String belongMonth, PaymentProcessParmBO processParmBO) {
-        List<HfArchiveBasePeriod> basePeriods = archiveBasePeriodMapper.getArchiveBasePeriods(accountClass.getComAccountId(), paymentMonth, belongMonth);
+        List<HfArchiveBasePeriod> basePeriods = archiveBasePeriodMapper.getArchiveBasePeriods(accountClass.getHfType(),accountClass.getComAccountId(), paymentMonth, belongMonth);
         if (null != basePeriods && basePeriods.size() > 0) {
             basePeriods.forEach(x -> monthChargeMapper.insert(setMonthCharge(x, paymentMonth, processParmBO)));
         }

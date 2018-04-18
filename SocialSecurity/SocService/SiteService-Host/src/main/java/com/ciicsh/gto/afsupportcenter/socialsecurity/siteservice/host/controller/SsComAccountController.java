@@ -9,7 +9,6 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAccount
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAccount;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -44,13 +43,11 @@ public class SsComAccountController extends BasicController<SsComAccountService>
     private SsAccountComRelationService iSsAccountComRelationService;
 
     /**
-     * 根据雇员任务 ID 查询 企业社保账户信息
-     *
+     * 根据雇员任务ID查询企业社保账户信息
      * @param empTaskId
      * @return
      */
     @RequestMapping("/queryByEmpTaskId")
-    @Log("根据雇员任务 ID 查询")
     public JsonResult<SsComAccountBO> queryByEmpTaskId(@RequestParam("empTaskId") String empTaskId,
                                                        @RequestParam("operatorType") String operatorType) {
 
@@ -60,12 +57,10 @@ public class SsComAccountController extends BasicController<SsComAccountService>
 
     /**
      * 查询企业社保账户信息
-     *
      * @param pageInfo
      * @return
      */
     @RequestMapping("/accountQuery")
-    @Log("查询")
     public JsonResult<List<SsComAccountBO>> accountQuery(PageInfo pageInfo) {
         PageRows<SsComAccountBO> pageRows = business.accountQuery(pageInfo);
         return JsonResultKit.ofPage(pageRows);
@@ -74,7 +69,6 @@ public class SsComAccountController extends BasicController<SsComAccountService>
     /**
      * 企业社保账户信息导出
      */
-    @Log("企业社保账户信息导出")
     @RequestMapping("/accountExport")
     public void accountExport(HttpServletResponse response, SsComAccountBO accountBo) {
         Date date = new Date();
@@ -84,7 +78,11 @@ public class SsComAccountController extends BasicController<SsComAccountService>
     }
 
 
-    @Log("企业社保管理详情查询")
+    /**
+     * 企业社保管理详情查询
+     * @param comAccountId
+     * @return
+     */
     @RequestMapping("/comSocialSecurityManageInfo")
     public JsonResult<SsComAccountBO> comSocialSecurityManageInfo(String comAccountId) {
 

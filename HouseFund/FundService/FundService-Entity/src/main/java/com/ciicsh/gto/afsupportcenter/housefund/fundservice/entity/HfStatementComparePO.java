@@ -33,10 +33,15 @@ public class HfStatementComparePO implements Serializable {
 	@TableField("imp_path")
 	private String impPath;
     /**
-     * 对账人
+     * 对账人ID
      */
-	@TableField("compare_man")
-	private String compareMan;
+    @TableField("compare_operate_id")
+    private String compareOperateId;
+    /**
+     * 对账人名称
+     */
+	@TableField("compare_operate_name")
+	private String compareOperateName;
     /**
      * 对账时间
      */
@@ -119,13 +124,21 @@ public class HfStatementComparePO implements Serializable {
 		this.impPath = impPath;
 	}
 
-	public String getCompareMan() {
-		return compareMan;
+	public String getCompareOperateId() {
+		return compareOperateId;
 	}
 
-	public void setCompareMan(String compareMan) {
-		this.compareMan = compareMan;
+	public void setCompareOperateId(String compareOperateId) {
+		this.compareOperateId = compareOperateId;
 	}
+
+    public String getCompareOperateName() {
+        return compareOperateName;
+    }
+
+    public void setCompareOperateName(String compareOperateName) {
+        this.compareOperateName = compareOperateName;
+    }
 
 	public LocalDateTime getCompareTime() {
 		return compareTime;
@@ -221,7 +234,8 @@ public class HfStatementComparePO implements Serializable {
 			", statementCompareId=" + statementCompareId +
 			", hfMonth=" + hfMonth +
 			", impPath=" + impPath +
-			", compareMan=" + compareMan +
+			", compareOperateId=" + compareOperateId +
+            ", compareOperateName=" + compareOperateName +
 			", compareTime=" + compareTime +
 			", hfType=" + hfType +
 			", comAccountId=" + comAccountId +

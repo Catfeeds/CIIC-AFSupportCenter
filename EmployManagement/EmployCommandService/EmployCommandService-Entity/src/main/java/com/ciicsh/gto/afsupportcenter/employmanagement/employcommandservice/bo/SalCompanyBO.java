@@ -12,6 +12,9 @@ public class SalCompanyBO extends SalCompany {
     // 服务中心
     private String serviceCenter;
 
+    // 客服经理
+    private String salManagerName;
+
     public String getSpecial() {
         return special;
     }
@@ -26,5 +29,13 @@ public class SalCompanyBO extends SalCompany {
 
     public void setServiceCenter(String serviceCenter) {
         this.serviceCenter = serviceCenter;
+    }
+
+    public String getSalManagerName() {
+        return salManagerName;
+    }
+
+    public void setSalManagerName(String salManagerName) {
+        this.salManagerName = salManagerName;
     }
 }

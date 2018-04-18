@@ -14,7 +14,6 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAnnua
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsAnnualAdjustAccountDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsAnnualAdjustAccountEmpTempDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAnnualAdjustAccountEmpTemp;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
@@ -91,13 +90,11 @@ public class SsAnnualAdjustAccountEmpController extends BasicController<SsAnnual
     }
 
     /**
-     * 社保雇员年调表导出
-     *
+     * 导出年调社保账户雇员信息
      * @param
      * @return
      */
     @RequestMapping("/annualAdjustAccountEmpExport")
-    @Log("导出年调社保账户雇员信息")
     public void annualAdjustAccountEmpExport(HttpServletResponse response, PageInfo pageInfo) {
         try {
             pageInfo.setPageSize(10000);

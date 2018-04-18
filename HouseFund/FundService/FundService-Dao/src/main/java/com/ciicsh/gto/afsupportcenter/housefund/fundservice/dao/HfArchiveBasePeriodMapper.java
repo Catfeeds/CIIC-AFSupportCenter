@@ -34,5 +34,5 @@ public interface HfArchiveBasePeriodMapper extends BaseMapper<HfArchiveBasePerio
     int updateHfArchiveBasePeriods(HfArchiveBasePeriodUpdateBo hfArchiveBasePeriodUpdateBo);
 
 
-    List<HfArchiveBasePeriod> getArchiveBasePeriods(@Param("comAccountId") Long comAccountId,@Param("paymentMonth")String paymentMonth,@Param("belongMonth")String belongMonth);
+    List<HfArchiveBasePeriod> getArchiveBasePeriods(@Param("hfType") Integer hfType,@Param("comAccountId") Long comAccountId,@Param("paymentMonth")String paymentMonth,@Param("belongMonth")String belongMonth);
 }

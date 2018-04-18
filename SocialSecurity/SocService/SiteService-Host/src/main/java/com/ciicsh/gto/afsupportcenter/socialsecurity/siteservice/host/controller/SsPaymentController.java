@@ -8,7 +8,6 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsPayme
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsPaymentService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPayment;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -26,12 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * <p>
  * 社保支付批次 前端控制器
- * </p>
- *
- * @author HuangXing
- * @since 2017-12-01
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssPayment")
@@ -41,14 +35,10 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
     private SsPaymentComService ssPaymentComService;
 
     /**
-     * <p>Description: 查询社保支付-支付批次(列表页)</p>
-     *
+     * 查询社保支付-支付批次(列表页)
      * @param pageInfo 翻页检索条件
      * @return JsonResult<>
-     * @author wengxk
-     * @date 2017-12-22
      */
-    @Log("查询社保支付-支付批次(列表页)")
     @PostMapping("/paymentQuery")
     public JsonResult<List<SsPaymentBO>> paymentQuery(PageInfo pageInfo) {
 
@@ -56,22 +46,15 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
         PageRows<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentBO> pageBORows = business.paymentQuery(pageInfo);
         PageRows<SsPaymentBO> pageRows = new PageRows<SsPaymentBO>();
         BeanUtils.copyProperties(pageBORows, pageRows);
-
-
-        //PageRows<SsPaymentBO> pageRows = business.paymentQuery(pageInfo);
         return JsonResultKit.ofPage(pageRows);
     }
 
 
     /**
-     * <p>Description: 按照条件显示可加入的批次</p>
-     *
+     * 按照条件显示可加入的批次
      * @param paymentSrarchDTO 检索条件
      * @return JsonResult<>
-     * @author wengxk
-     * @date 2017-12-26
      */
-    @Log("按照条件显示可加入的批次")
     @PostMapping("/showAddBatch")
     public JsonResult<List<SsPaymentBO>> showAddBatch(SsPaymentSrarchBO paymentSrarchDTO) {
 
@@ -97,14 +80,10 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
     }
 
     /**
-     * <p>Description: 申请支付</p>
-     *
+     * 申请支付
      * @param ssOperatePaymentDTO 批次操作参数
      * @return JsonResult<>
-     * @author wengxk
-     * @date 2017-12-28
      */
-    @Log("申请支付")
     @PostMapping("/doApplyPay")
     public JsonResult<String> doApplyPay(SsOperatePaymentBO ssOperatePaymentDTO) {
         JsonResult<String> json = new JsonResult<String>();
@@ -112,20 +91,15 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
         SsPayment ssPayment = CommonTransform.convertToEntity(ssOperatePaymentDTO, SsPayment.class);
         //执行业务
         json = business.doApplyPay(ssPayment);
-
         return json;
     }
 
 
     /**
-     * <p>Description: 删除批次</p>
-     *
+     * 删除批次
      * @param ssOperatePaymentDTO 批次操作参数
      * @return JsonResult<>
-     * @author wengxk
-     * @date 2017-12-28
      */
-    @Log("删除批次")
     @PostMapping("/doDelPayment")
     public JsonResult<String> doDelPayment(SsOperatePaymentBO ssOperatePaymentDTO) {
         JsonResult<String> json = new JsonResult<String>();
@@ -138,13 +112,10 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
     }
 
     /**
-     * <p>Description: 获取支付年月</p>
-     *
+     * 获取支付年月
      * @return JsonResult<>
      * @author wengxk
-     * @date 2017-12-28
      */
-    @Log("获取支付年月")
     @PostMapping("/getPaymentMonth")
     public JsonResult<String> getPaymentMonth() {
         JsonResult<String> json = new JsonResult<String>();
@@ -167,14 +138,10 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
     }
 
     /**
-     * <p>Description: 添加批次</p>
-     *
+     * 添加批次
      * @param ssPaymentDTO 保存批次参数
      * @return JsonResult<>
-     * @author wengxk
-     * @date 2017-12-28
      */
-    @Log("添加批次")
     @PostMapping("/addPayment")
     public JsonResult<String> addPayment(SsPaymentBO ssPaymentDTO) {
         JsonResult<String> json = new JsonResult<String>();
@@ -187,14 +154,10 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
     }
 
     /**
-     * <p>Description: 查询社保支付审核-审核批次(列表页)</p>
-     *
+     * 查询社保支付审核-审核批次(列表页)
      * @param pageInfo 翻页检索条件
      * @return JsonResult<>
-     * @author wengxk
-     * @date 2017-01-05
      */
-    @Log("查询社保支付-支付批次(列表页)")
     @PostMapping("/paymentReviewedQuery")
     public JsonResult<List<SsPaymentBO>> paymentReviewedQuery(PageInfo pageInfo) {
 
@@ -223,14 +186,10 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
     }
 
     /**
-     * <p>Description: 社保支付申请审批通过</p>
-     *
+     * 社保支付申请审批通过
      * @param ssOperatePaymentDTO 批次操作参数
      * @return JsonResult<>
-     * @author zhangxj
-     * @date 2018-01-05
      */
-    @Log("批次审批通过")
     @PostMapping("/doReviewdePass")
     public JsonResult<String> doReviewdePass(SsOperatePaymentBO ssOperatePaymentDTO) {
         //数据转换
@@ -246,14 +205,10 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
     }
 
     /**
-     * <p>Description: 批次批退</p>
-     *
+     * 批次批退
      * @param ssOperatePaymentDTO 批次操作参数
      * @return JsonResult<>
-     * @author wengxk
-     * @date 2018-01-05
      */
-    @Log("批次批退")
     @PostMapping("/doRejection")
     public JsonResult<String> doRejection(SsOperatePaymentBO ssOperatePaymentDTO) {
         JsonResult<String> json = new JsonResult<String>();

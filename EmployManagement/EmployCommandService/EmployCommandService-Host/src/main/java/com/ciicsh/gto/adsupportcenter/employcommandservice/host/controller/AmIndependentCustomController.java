@@ -73,6 +73,9 @@ public class AmIndependentCustomController extends BasicController<IAmCompanySet
         {
             is_special = true;
         }
+        if(amCompanySet.getKey() == 1){
+            is_special = true;
+        }
         if((amCompanySet.getRefuseSpecial()!=null && !"".equals(amCompanySet.getRefuseSpecial().trim()))||
             (amCompanySet.getArchiveSpecial()!=null && !"".equals(amCompanySet.getArchiveSpecial().trim()))||
                 ( amCompanySet.getEmploySpecial()!=null && !"".equals(amCompanySet.getEmploySpecial().trim()) ))

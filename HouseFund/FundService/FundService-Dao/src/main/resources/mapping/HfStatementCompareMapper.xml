@@ -7,7 +7,8 @@
 		<id column="statement_compare_id" property="statementCompareId" />
 		<result column="hf_month" property="hfMonth" />
 		<result column="imp_path" property="impPath" />
-		<result column="compare_man" property="compareMan" />
+		<result column="compare_operate_id" property="compareOperateId" />
+        <result column="compare_operate_name" property="compareOperateName" />
 		<result column="compare_time" property="compareTime" />
 		<result column="hf_type" property="hfType" />
 		<result column="com_account_id" property="comAccountId" />

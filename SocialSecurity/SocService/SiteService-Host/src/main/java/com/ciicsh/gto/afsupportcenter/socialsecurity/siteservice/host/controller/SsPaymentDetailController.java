@@ -5,7 +5,6 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentDeta
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsPaymentDetailService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPaymentDetail;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,25 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * <p>
  * 本地社保应付金额交易记录明细表 前端控制器
- * </p>
- * @author HuangXing
- * @since 2017-12-01
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssPaymentDetail")
 public class SsPaymentDetailController  extends BasicController<SsPaymentDetailService> {
 
     /**
-     * <p>Description: 付款通知查询(列表页)</p>
-     *
-     * @author wengxk
-     * @date 2018-01-02
+     * 付款通知查询(列表页)
      * @param ssPaymentDetailDTO 付款通知查询条件
      * @return  JsonResult<>
      */
-    @Log("付款通知查询")
     @PostMapping("/paymentDetailQuery")
     public JsonResult<List<SsPaymentDetailBO>> statementResultQuery(SsPaymentDetailBO ssPaymentDetailDTO) {
 

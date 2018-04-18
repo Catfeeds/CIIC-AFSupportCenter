@@ -7,7 +7,6 @@ import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAnnualAdjustEmployeeService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsAnnualAdjustEmployeeDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAnnualAdjustEmployee;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -15,7 +14,6 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
@@ -34,12 +32,10 @@ public class SsAnnualAdjustEmployeeController extends BasicController<SsAnnualAd
 
     /**
      * 社保雇员年调表分页查询
-     *
      * @param
      * @return
      */
     @RequestMapping("/annualAdjustEmployeeQuery")
-    @Log("查询社保雇员年调表信息")
     public JsonResult<PageRows> annualAdjustEmployeeQuery(PageInfo pageInfo) {
         PageRows<SsAnnualAdjustEmployee> result = business.queryAnnualAdjustEmployeeInPage(pageInfo);
         return JsonResultKit.of(result);
@@ -47,12 +43,10 @@ public class SsAnnualAdjustEmployeeController extends BasicController<SsAnnualAd
 
     /**
      * 社保雇员年调表导出
-     *
      * @param
      * @return
      */
     @RequestMapping("/annualAdjustEmployeeExport")
-    @Log("导出社保雇员年调表信息")
     public void annualAdjustEmployeeExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         pageInfo.setPageSize(10000);
         pageInfo.setPageNum(0);

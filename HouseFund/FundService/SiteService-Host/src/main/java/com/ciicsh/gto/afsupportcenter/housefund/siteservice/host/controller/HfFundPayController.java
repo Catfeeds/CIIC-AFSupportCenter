@@ -12,15 +12,12 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfMonthChar
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentComService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentService;
-
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogMessage;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfComAccountConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfMonthChargeConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.HfFundPayCreatePaymentAccountPara;
 import com.ciicsh.gto.afsupportcenter.util.ZipUtil;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
-import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -31,15 +28,20 @@ import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyProxyDTO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -63,42 +65,68 @@ public class HfFundPayController {
     private HfMonthChargeService hfMonthChargeService;
     @Autowired
     private LogApiUtil logApiUtil;
+    @Autowired
+    private PayapplyServiceProxy payapplyServiceProxy;
 
-    @Log("查询公积金汇缴支付列表")
+    /**
+     * 查询公积金汇缴支付列表
+     * @param pageInfo
+     * @return
+     */
     @PostMapping("/fundPays")
     public JsonResult<List<HfPaymentBo>> postFundPays(PageInfo pageInfo) {
         PageRows<HfPaymentBo> pageRows = hfPaymentService.getFundPays(pageInfo);
         return JsonResultKit.ofPage(pageRows);
     }
 
-    @Log("查询公积金汇缴支付编辑操作数据")
+    /**
+     * 查询公积金汇缴支付编辑操作数据
+     * @param pageInfo
+     * @return
+     */
     @PostMapping("/fundPaysOperateEditData")
     public JsonResult<List<HfPaymentAccountBo>> postFundPaysOperateData(PageInfo pageInfo) {
         PageRows<HfPaymentAccountBo> pageRows = hfPaymentAccountService.getMakePayLists(pageInfo);
         return JsonResultKit.ofPage(pageRows);
     }
 
-    @Log("查询公积金汇缴支付详细操作数据")
+    /**
+     * 查询公积金汇缴支付详细操作数据
+     * @param pageInfo
+     * @return
+     */
     @PostMapping("/fundPaysOperateDetailData")
     public JsonResult<List<HfPaymentComBo>> postFundPaysDetailData(PageInfo pageInfo) {
         PageRows<HfPaymentComBo> pageRows = hfPaymentComService.getFundPaysDetailOperationData(pageInfo);
         return JsonResultKit.ofPage(pageRows);
     }
 
-    @Log("查询公积金制作汇缴清单列表")
+    /**
+     * 查询公积金制作汇缴清单列表
+     * @param pageInfo
+     * @return
+     */
     @PostMapping("/makePayLists")
     public JsonResult<List<HfPaymentAccountBo>> postMakePayLists(PageInfo pageInfo) {
         PageRows<HfPaymentAccountBo> pageRows = hfPaymentAccountService.getMakePayLists(pageInfo);
         return JsonResultKit.ofPage(pageRows);
     }
 
-    @Log("删除公积金支付批次")
+    /**
+     * 删除公积金支付批次
+     * @param paymentId
+     * @return
+     */
     @PostMapping("/delHfPayment")
     public JsonResult delHfPayment(String paymentId) {
         return  hfPaymentAccountService.delHfPayment(paymentId);
     }
 
-    @Log("公积金汇缴支付流程操作-送审")
+    /**
+     * 公积金汇缴支付流程操作-送审
+     * @param processParmBO
+     * @return
+     */
     @PostMapping("/approval")
     public JsonResult processApproval(PaymentProcessParmBO processParmBO){
         if(StringUtils.isBlank(processParmBO.getOperator())){
@@ -107,7 +135,11 @@ public class HfFundPayController {
         return hfPaymentService.processApproval(processParmBO);
     }
 
-    @Log("公积金汇缴支付流程操作-汇缴")
+    /**
+     * 公积金汇缴支付流程操作-汇缴
+     * @param processParmBO
+     * @return
+     */
     @PostMapping("/payment")
     public JsonResult processPayment(PaymentProcessParmBO processParmBO){
         if(StringUtils.isBlank(processParmBO.getOperator())){
@@ -116,7 +148,11 @@ public class HfFundPayController {
         return hfPaymentService.processPayment(processParmBO);
     }
 
-    @Log("公积金汇缴支付流程操作-出票")
+    /**
+     * 公积金汇缴支付流程操作-出票
+     * @param processParmBO
+     * @return
+     */
     @PostMapping("/ticket")
     public JsonResult processTicket(PaymentProcessParmBO processParmBO){
         if(StringUtils.isBlank(processParmBO.getOperator())){
@@ -125,7 +161,11 @@ public class HfFundPayController {
         return hfPaymentService.processTicket(processParmBO);
     }
 
-    @Log("公积金汇缴支付流程操作-回单")
+    /**
+     * 公积金汇缴支付流程操作-回单
+     * @param processParmBO
+     * @return
+     */
     @PostMapping("/receipt")
     public JsonResult processReceipt(PaymentProcessParmBO processParmBO){
         if(StringUtils.isBlank(processParmBO.getOperator())){
@@ -134,7 +174,11 @@ public class HfFundPayController {
         return hfPaymentService.processReceipt(processParmBO);
     }
 
-    @Log("公积金汇缴支付-生成汇缴支付客户名单")
+    /**
+     * 公积金汇缴支付-生成汇缴支付客户名单
+     * @param hfFundPayCreatePaymentAccountPara
+     * @return
+     */
     @PostMapping("/createPaymentComList")
     public JsonResult createPaymentComList(HfFundPayCreatePaymentAccountPara hfFundPayCreatePaymentAccountPara){
         //验证前端传递的数据是否合法,代码暂不写
@@ -143,7 +187,12 @@ public class HfFundPayController {
        return hfPaymentComService.createPaymentCom(hfFundPayCreatePaymentAccountPara);
     }
 
-    @Log("公积金汇缴支付-生成网银文件,补缴.txt")
+    /**
+     * 公积金汇缴支付-生成网银文件,补缴.txt
+     * @param response
+     * @param paymentId
+     * @throws Exception
+     */
     @RequestMapping("/generateBankRepair")
     public void generateBankRepair(HttpServletResponse response, String paymentId) throws Exception {
         List<HFNetBankComAccountBO> hfNetBankComAccountBOList = hfPaymentAccountService.getComAccountByPaymentId(Long.valueOf(paymentId));
@@ -201,7 +250,13 @@ public class HfFundPayController {
             response.getWriter().write(e.getMessage());
         }
     }
-    @Log("公积金汇缴支付-生成网银文件,变更.txt")
+
+    /**
+     * 公积金汇缴支付-生成网银文件,变更.txt
+     * @param response
+     * @param paymentId
+     * @throws Exception
+     */
     @RequestMapping("/generateBankChange")
     public void generateBankChange(HttpServletResponse response, String paymentId) throws Exception {
         List<HFNetBankComAccountBO> hfNetBankComAccountBOList = hfPaymentAccountService.getComAccountByPaymentId(Long.valueOf(paymentId));
@@ -276,8 +331,6 @@ public class HfFundPayController {
     /**
      * 付款凭证打印
      */
-    @Autowired
-    private PayapplyServiceProxy payapplyServiceProxy;
     @RequestMapping("/printFinancePayVoucher")
     public void printFinancePayVoucher(String payApplyCode,HttpServletResponse response) throws IOException {
 

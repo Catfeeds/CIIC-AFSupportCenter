@@ -8,52 +8,38 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.St
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.springframework.beans.BeanUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
 
 /**
- * <p>
  * 本地社保中，中智公司与社保局的对账单（各一条记录） 前端控制器
- * </p>
- *
- * @author HuangXing
- * @since 2017-12-01
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssStatement")
 public class SsStatementController  extends BasicController<SsStatementService> {
 
     /**
-     * <p>Description: 对账单查询(列表页)</p>
-     *
-     * @author wengxk
-     * @date 2017-12-08
+     * 对账单查询(列表页)
      * @param pageInfo 翻页检索条件
      * @return  JsonResult<>
      */
-    @Log("对账单查询")
     @PostMapping("/statementQuery")
     public JsonResult<List<SsStatementBO>> statementQuery(PageInfo pageInfo) {
 
         PageRows<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementBO> pageBORows = business.statementQuery(pageInfo);
         PageRows<SsStatementBO> pageRows = new PageRows<SsStatementBO>();
         BeanUtils.copyProperties(pageBORows,pageRows);
-
-
-
-        //PageRows<SsStatementBO> pageRows =business.statementQuery(pageInfo);
-
-
         return JsonResultKit.ofPage(pageRows);
     }
 
@@ -61,7 +47,6 @@ public class SsStatementController  extends BasicController<SsStatementService> 
     /**
      * 社保对账主表查询导出
      */
-    @Log("社保对账主表查询导出")
     @RequestMapping("/statementExport")
     public void statementExport(HttpServletResponse response,StatementExportArgs args) {
         Date date = new Date();
@@ -71,14 +56,10 @@ public class SsStatementController  extends BasicController<SsStatementService> 
     }
 
     /**
-     * <p>Description: 对账单查询</p>
-     *
-     * @author wengxk
-     * @date 2017-12-08
+     * 对账单查询
      * @param ssStatementDTO 检索条件
      * @return  JsonResult<SsStatementBO>
      */
-    @Log("对账单查询")
     @PostMapping("/serachStatementData")
     public JsonResult<SsStatementBO> serachStatementData(SsStatementBO ssStatementDTO) {
         //入口转换格式
