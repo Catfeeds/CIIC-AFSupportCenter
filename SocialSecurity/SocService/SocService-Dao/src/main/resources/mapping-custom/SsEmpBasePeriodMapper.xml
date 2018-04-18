@@ -31,6 +31,7 @@
 
     <select id="queryPeriodByEmployeeIdAndCompanyId" resultMap="BaseResultMap">
         SELECT
+            sebp.emp_base_period_id,
             sebp.emp_archive_id,
             sebp.emp_task_id,
             sebp.base_amount,
@@ -45,9 +46,10 @@
             sebp.created_by,
             sebp.modified_by
         FROM ss_emp_base_period sebp
-        INNER JOIN ss_emp_achive sea ON sea.emp_archive_id = sebp.emp_archive_id AND sea.is_active = 1
+        INNER JOIN ss_emp_archive sea ON sea.emp_archive_id = sebp.emp_archive_id AND sea.is_active = 1
         WHERE sebp.is_active = 1
         AND sea.company_id = #{companyId}
         AND sea.employee_id = #{employeeId}
+        ORDER BY sebp.start_month
     </select>
 </mapper>

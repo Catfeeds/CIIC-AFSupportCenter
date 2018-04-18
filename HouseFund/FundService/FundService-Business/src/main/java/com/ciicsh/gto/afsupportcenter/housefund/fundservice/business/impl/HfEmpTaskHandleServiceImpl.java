@@ -837,7 +837,9 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             }
             YearMonth basePeriodStartMonthDate = YearMonth.parse(basePeriodStartMonth, formatter);
 
-            if (basePeriodStartMonthDate.isAfter(startMonthDate)) {
+            if (basePeriodStartMonthDate.isAfter(endMonthDate)) {
+                return;
+            } else if (basePeriodStartMonthDate.isAfter(startMonthDate)) {
                 startMonth = basePeriodStartMonth;
             }
 
@@ -917,16 +919,16 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     composedEmpBasePeriodBO.setStartMonth(startMonthDate);
                     composedEmpBasePeriodBOList.add(composedEmpBasePeriodBO);
                 }
-
-                if (StringUtils.isNotEmpty(hfArchiveBasePeriod.getEndMonth())) {
-                    composedEmpBasePeriodBO.setEndMonth(YearMonth.parse(hfArchiveBasePeriod.getEndMonth(), formatter));
-                } else {
-                    composedEmpBasePeriodBO.setEndMonth(null);
-                }
             } else {
                 composedEmpBasePeriodBO = new ComposedEmpBasePeriodBO();
                 composedEmpBasePeriodBO.setStartMonth(startMonthDate);
                 composedEmpBasePeriodBOList.add(composedEmpBasePeriodBO);
+            }
+
+            if (StringUtils.isNotEmpty(hfArchiveBasePeriod.getEndMonth())) {
+                composedEmpBasePeriodBO.setEndMonth(YearMonth.parse(hfArchiveBasePeriod.getEndMonth(), formatter));
+            } else {
+                composedEmpBasePeriodBO.setEndMonth(null);
             }
             composedEmpBasePeriodBO.getContainsHfArchiveBasePeriods().add(hfArchiveBasePeriod);
             endMonth = hfArchiveBasePeriod.getEndMonth();
@@ -1002,7 +1004,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                             break;
                         } else { // 补缴截止年月大于等于费用段起始月，说明补缴段部分在费用段中，部分全额补缴，部分差额补缴
                             // 此时肯定有一段全额补缴，一段差额补缴
-                            e.setEndMonth(startMonth.format(formatter));   // 全额补缴段：从补缴起始年月到费用段起始年月
+                            e.setEndMonth(startMonth.minusMonths(1).format(formatter));   // 全额补缴段：从补缴起始年月到费用段起始年月前一月
                             setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e, null, roundTypes, roundTypeInWeight);
 
                             // 差额补缴段：从费用段起始年月到补缴截止年月
@@ -1701,7 +1703,9 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         }
         YearMonth basePeriodStartMonthDate = YearMonth.parse(basePeriodStartMonth, formatter);
 
-        if (basePeriodStartMonthDate.isAfter(startMonthDate)) {
+        if (basePeriodStartMonthDate.isAfter(endMonthDate)) {
+            return;
+        } else if (basePeriodStartMonthDate.isAfter(startMonthDate)) {
             startMonth = basePeriodStartMonth;
         }
 
