@@ -125,12 +125,15 @@
         ea.employee_id,
         abp.amount sys_amount
         FROM
-        hf_archive_base_period abp
+          hf_archive_base_period abp
         INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = abp.emp_archive_id
         INNER JOIN hf_com_account ca ON ca.com_account_id = ea.com_account_id
         INNER JOIN emp_employee emp ON emp.employee_id = ea.employee_id
         <where>
-            ea.is_active = 1 AND abp.is_active = 1 AND ca.com_account_id=#{comAccountId}
+            ea.is_active = 1
+            AND abp.is_active = 1
+            AND abp.hf_type = #{hfType}
+            AND ca.com_account_id=#{comAccountId}
             AND (abp.start_month &lt;= #{hfMonth} AND abp.end_month >= #{hfMonth}
             OR ( abp.start_month &lt;= #{hfMonth} AND abp.end_month IS NULL))
         </where>
