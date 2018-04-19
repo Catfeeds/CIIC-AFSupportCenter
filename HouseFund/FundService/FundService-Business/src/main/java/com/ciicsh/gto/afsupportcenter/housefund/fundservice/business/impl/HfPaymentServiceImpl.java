@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.EmpTaskStatusBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentComBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentEmpBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentProcessParmBO;
@@ -9,6 +10,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentSe
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfArchiveBasePeriod;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccountClass;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
@@ -54,7 +57,9 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
     @Autowired
     private HfMonthChargeMapper monthChargeMapper;
     @Autowired
-    private HfPaymentAccountMapper hfPaymentAccountMapper;
+    private HfEmpTaskMapper empTaskMapper;
+    @Autowired
+    private HfEmpArchiveMapper empArchiveMapper;
 
     /**
      * 获得公积金汇缴支付列表
@@ -166,6 +171,8 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             payment.setModifiedTime(new Date());
             payment.setModifiedBy(processParmBO.getOperator());
             hfPaymentMapper.updateById(payment);
+            //更新任务单相关状态
+            updateEmpTaskStatus(payment.getPaymentId());
             return JsonResultKit.of(0, "出票成功！");
         } else {
             return JsonResultKit.of(1, "该记录不能出票，请检查!");
@@ -262,13 +269,6 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         }
     }
 
-    /**
-     * 更新办理状态
-     * @param accountClass
-     */
-    private void updateArchiveStatus(HfComAccountClass accountClass) {
-
-    }
     private HfMonthCharge setMonthCharge(HfArchiveBasePeriod basePeriod, String paymentMonth, PaymentProcessParmBO processParmBO) {
         HfMonthCharge monthCharge = new HfMonthCharge();
         monthCharge.setEmpTaskId(basePeriod.getEmpTaskId());
@@ -294,12 +294,60 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         return monthCharge;
     }
 
-
-    public String setPaymentMonth(String paymentMonth) throws ParseException {
+    private String setPaymentMonth(String paymentMonth) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMM");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(dateFormat.parse(paymentMonth));
         calendar.add(Calendar.MONTH, 1);
         return dateFormat.format(calendar.getTime());
+    }
+
+
+    /**
+     * 更新任务单相关的办理状态
+     * @param paymentId
+     */
+    private void updateEmpTaskStatus(Long paymentId) {
+        List<EmpTaskStatusBO> taskStatus = hfPaymentMapper.getEmpTaskStatusByPaymentId(paymentId);
+        if(null != taskStatus && taskStatus.size() > 0){
+            taskStatus.forEach(x->updateOperate(x));
+        }
+    }
+
+    private void updateOperate(EmpTaskStatusBO taskStatus){
+        HfEmpTask task = empTaskMapper.selectById(taskStatus.getEmpTaskId());
+        HfEmpArchive empArchive = empArchiveMapper.selectById(taskStatus.getEmpArchiveId());
+        if(null != task){
+            task.setTaskStatus(2);
+            task.setModifiedTime(LocalDateTime.now());
+            task.setModifiedBy(UserContext.getUserId());
+            task.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+            empTaskMapper.updateById(task);
+            if(null != empArchive){
+                switch (task.getTaskCategory()){
+                    case 1://新开
+                    case 2://转入
+                    case 3://启封
+                    case 9://翻牌新开
+                    case 10://翻牌转入
+                    case 11://翻牌启封
+                        empArchive.setArchiveStatus(2); //已做
+                        empArchive.setArchiveTaskStatus(2); //已做
+                    case 4://转出
+                    case 5://封存
+                    case 12://翻牌转出
+                        empArchive.setArchiveStatus(3); //封存
+                        empArchive.setArchiveTaskStatus(2);//已做
+                        break;
+                    default:
+                        empArchive.setArchiveStatus(2); //已做
+                        break;
+                }
+                empArchive.setModifiedBy(UserContext.getUserId());
+                empArchive.setModifiedTime(LocalDateTime.now());
+                empArchiveMapper.updateById(empArchive);
+            }
+        }
+
     }
 }
