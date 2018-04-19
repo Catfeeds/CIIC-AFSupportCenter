@@ -56,16 +56,9 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
     }
     public boolean saveComAccount(Map<String,String> updateDto){
         try{
-            HfEmpArchive empArchive=new HfEmpArchive();
-            empArchive.setEmpArchiveId(Long.valueOf(updateDto.get("empArchiveId")));
-            empArchive.setHfEmpAccount(updateDto.get("hfEmpAccount"));
-            baseMapper.updateById(empArchive);
-
+            baseMapper.updateArchiveEmpAccount(updateDto.get("hfEmpAccount"),Long.valueOf(updateDto.get("empArchiveId")));
             if (Optional.ofNullable(updateDto.get("empArchiveIdBc")).isPresent()){
-                empArchive=new HfEmpArchive();
-                empArchive.setEmpArchiveId(Long.valueOf(updateDto.get("empArchiveIdBc")));
-                empArchive.setHfEmpAccount(updateDto.get("hfEmpAccountBc"));
-                baseMapper.updateById(empArchive);
+                baseMapper.updateArchiveEmpAccount(updateDto.get("hfEmpAccountBc"),Long.valueOf(updateDto.get("empArchiveIdBc")));
             }
         }catch (Exception e){
             return false;

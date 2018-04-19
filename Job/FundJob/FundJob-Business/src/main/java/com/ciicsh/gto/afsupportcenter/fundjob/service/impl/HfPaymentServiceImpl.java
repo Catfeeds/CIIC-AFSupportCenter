@@ -95,11 +95,11 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
                 //4 财务接口返回的结果更新ss_month_charge
                 //isAdvance: 0:不可付;1:来款可付;2:垫付可付
                 for (Map<String, Object> ele : resDto) {
-                    map.put("monthChargeId", ele.get("objId"));
+                    //map.put("monthChargeId", ele.get("objId"));
                     map.put("empPaymentStatus", ele.get("isAdvance"));
                     map.put("companyId", ele.get("companyId"));
                     map.put("employeeId", ele.get("employeeId"));
-                    map.put("hfMonthBelong", ele.get("hfMonthBelong"));
+                    map.put("hfMonthBelong", ele.get("payMonth"));
                     map.put("hfMonth", paymentMonth);
                     hfEmpMonthChargeMapper.updateMonthCharge(map);
                 }

@@ -53,11 +53,18 @@
         <result column="hf_com_account" property="hfComAccount"/>
         <result column="com_account_state_value" property="comAccountStateValue"/>
         <result column="payment_bank_value" property="paymentBankValue"/>
+        <result column="payment_bank" property="paymentBank"/>
         <result column="end_month" property="endMonth"/>
+        <result column="com_start_month" property="comStartMonth"/>
+        <result column="operate_start_month" property="operateStartMonth"/>
+        <result column="task_status" property="taskStatus"/>
         <result column="ukey_store" property="ukeyStore"/>
         <result column="ukstore_value" property="ukStoreValue"/>
         <result column="type_value" property="typeValue"/>
         <result column="end_type_value" property="endTypeValue"/>
+        <result column="payment_way" property="paymentWay" />
+        <result column="close_day" property="closeDay" />
+        <result column="com_start_month" property="comStartMonth" />
         <result column="submit_time_string" property="submitTimeString"/>
         <result column="strart_handle_date_string" property="startHandleDateString"/>
         <result column="send_check_date_string" property="sendCheckDateString"/>
@@ -86,6 +93,8 @@
         hca.com_account_id,
         hcac.com_account_class_id,
         hcac.hf_com_account,
+        hcac.com_start_month,
+        hcac.operate_start_month,
         hft.task_category,
         ctc.task_category_name,
         ht.hf_type_name,
@@ -102,9 +111,92 @@
         hft.close_day,
         hft.payment_way,
         ctpw.com_task_payment_way_name,
-
+        hft.task_status,
         hcas.com_account_state_value,
         hcapb.payment_bank_value,
+        hft.end_month,
+        hca.ukey_store,
+        hcau.ukstore_value,
+        hcat.type_value,
+        hctet.end_type_value,
+        DATE_FORMAT(hft.strart_handle_date, '%Y-%m-%d %H:%i') AS strart_handle_date_string,
+        DATE_FORMAT(hft.send_check_date, '%Y-%m-%d %H:%i') AS send_check_date_string,
+        DATE_FORMAT(hft.finish_date, '%Y-%m-%d %H:%i') AS finish_date_string,
+        hca.remark as comAccountRemark
+        FROM hf_com_task hft
+        LEFT JOIN hf_com_account hca ON hft.com_account_id = hca.com_account_id
+        LEFT JOIN hf_com_account_class hcac ON hft.com_account_class_id = hcac.com_account_class_id
+        LEFT JOIN hf_com_account_state hcas ON hca.state = hcas.com_account_state_code
+        LEFT JOIN hf_com_account_payment_bank hcapb ON hca.payment_bank = hcapb.payment_bank_code
+        LEFT JOIN hf_com_account_ukstore hcau ON hca.ukey_store = hcau.ukstore_code
+        LEFT JOIN hf_com_account_type hcat ON hca.hf_account_type = hcat.type_code
+
+        LEFT JOIN sal_company cc ON hft.company_id = cc.company_id
+        LEFT JOIN hf_com_task_category ctc ON hft.task_category = ctc.task_category_code
+        LEFT JOIN hf_type ht ON hft.hf_type = ht.hf_type_code
+        LEFT JOIN hf_com_task_payment_way ctpw ON hft.payment_way = ctpw.com_task_payment_way_code
+        LEFT JOIN hf_com_task_end_type hctet ON hft.end_type = hctet.end_type_code
+        <where>
+            AND hft.is_active = 1
+            <if test="companyName!= null">
+                AND cc.title LIKE CONCAT('%', #{companyName}, '%')
+            </if>
+            <if test="taskCategory!= null">
+                AND hft.task_category = #{taskCategory}
+            </if>
+            <if test="companyId!= null">
+                AND hft.company_id = #{companyId}
+            </if>
+            <if test="hfTypeName!= null">
+                AND ht.hf_type_name = TRIM(#{hfTypeName})
+            </if>
+            <if test="hfType!= null">
+                AND hft.hf_type = #{hfType}
+            </if>
+            <if test="taskStatusString!= null">
+                AND hft.task_status IN (${taskStatusString})
+            </if>
+            <if test="taskStatus!= null">
+                AND hft.task_status =${taskStatus}
+            </if>
+            <if test="hfAccountType!= null">
+                AND hca.hf_account_type = ${hfAccountType}
+            </if>
+            <if test="paymentBank!= null">
+                AND hca.payment_bank = ${paymentBank}
+            </if>
+        </where>
+        ORDER BY hft.com_task_id
+    </select>
+    <!--查询公积金企业任务单 状态处理中-->
+    <select id="queryCompanyTaskProcessing" resultMap="HfComTaskBOResultMap">
+        SELECT
+        hft.com_task_id,
+        hca.com_account_id,
+        hcac.com_account_class_id,
+        hcac.hf_com_account,
+        hcac.com_start_month,
+        hcac.operate_start_month,
+        hft.task_category,
+        ctc.task_category_name,
+        ht.hf_type_name,
+        hft.hf_type,
+        hft.company_id,
+        hft.task_status,
+        cc.title as company_name,
+        hft.handle_user_id,
+        hft.handle_user_name,
+        hft.submitter_id,
+        hft.submitter_name,
+        DATE_FORMAT(hft.submit_time, '%Y-%m-%d %H:%i') AS submit_time_string,
+        hft.submit_remark,
+        hca.com_account_name,
+        hca.close_day,
+        hca.payment_way,
+        hca.payment_bank,
+        hcapb.payment_bank_value,
+        ctpw.com_task_payment_way_name,
+        hcas.com_account_state_value,
         hft.end_month,
         hca.ukey_store,
         hcau.ukstore_value,
