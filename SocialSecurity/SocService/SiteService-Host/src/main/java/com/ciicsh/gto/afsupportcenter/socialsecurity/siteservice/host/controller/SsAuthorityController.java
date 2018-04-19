@@ -3,10 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controlle
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.util.kit.TreeNodeConvertKit;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAuthorityService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.SsCompanyManagementListDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.SsDataauthCompanyDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.SsDepartmentDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.SsUserInfoDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.*;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.ui.core.TreeKit;
 import com.ciicsh.gto.afsupportcenter.util.ui.core.TreeNode;
@@ -104,4 +101,73 @@ public class SsAuthorityController {
         result.setMessage("保存成功");
         return result;
     }
+
+    /**
+     * 保存客户权限配置 类型为福利办理方
+     *
+     * @return
+     */
+    @RequestMapping("saveAuthorityWelfareUnit")
+    public JsonResult saveAuthorityWelfareUnit(SsDataauthWelfareUnitDTO dto) {
+
+
+        ssAuthorityService.saveSsDataauthWelfareUnit(dto);
+
+        JsonResult result = new JsonResult();
+        result.setMessage("保存成功");
+        return result;
+    }
+
+    /**
+     * 查询配置权限 类型为 福利办理方
+     *
+     * @return
+     */
+    @RequestMapping("queryAuthorityWelfareUnit")
+    public JsonResult<SsDataauthWelfareUnitDTO> queryAuthorityWelfareUnit(String userId) {
+
+
+        SsDataauthWelfareUnitDTO dto = ssAuthorityService.querySsDataauthWelfareUnit(userId);
+
+        JsonResult result = new JsonResult();
+
+        result.setData(dto);
+        return result;
+    }
+
+
+    /**
+     * 查询配置权限 类型为 任务单类型
+     *
+     * @return
+     */
+    @RequestMapping("queryAuthorityTaskCategory")
+    public JsonResult<SsDataauthWelfareUnitDTO> queryAuthorityTaskCategory(String userId) {
+
+
+        SsDataauthWelfareUnitDTO dto = ssAuthorityService.queryAuthorityTaskCategory(userId);
+
+        JsonResult result = new JsonResult();
+
+        result.setData(dto);
+        return result;
+    }
+
+
+    /**
+     * 保存客户权限配置 类型为任务单类型
+     *
+     * @return
+     */
+    @RequestMapping("saveAuthorityTaskCategory")
+    public JsonResult saveAuthorityTaskCategory(SsDataauthWelfareUnitDTO dto) {
+
+
+        ssAuthorityService.saveSsDataauthTaskCategory(dto);
+
+        JsonResult result = new JsonResult();
+        result.setMessage("保存成功");
+        return result;
+    }
+
 }

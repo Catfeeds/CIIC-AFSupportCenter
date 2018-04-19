@@ -164,25 +164,29 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         {
             AmEmploymentBO amEmploymentBO = list.get(i);
             int status = amEmploymentBO.getTaskStatus();
-            if(1==status){
+            if(99==status){
                 amEmpTaskCountBO.setNoFeedback(amEmploymentBO.getCount());
                 num = num + amEmploymentBO.getCount();
-            }else if(2==status){
-                amEmpTaskCountBO.setRefuseFailed(amEmploymentBO.getCount());
+            }else if(98==status){
+                amEmpTaskCountBO.setRefuseWaitFinished(amEmploymentBO.getCount());
                 num = num + amEmploymentBO.getCount();
-            }else if(3==status){
+            }else if(1==status){
+                amEmpTaskCountBO.setRefuseFinished(amEmploymentBO.getCount());
+                num = num + amEmploymentBO.getCount();
+            }else if(2==status){
                 amEmpTaskCountBO.setRefuseBeforeWithFile(amEmploymentBO.getCount());
                 num = num + amEmploymentBO.getCount();
-            }else if(4==status){
+            }else if(3==status){
                 amEmpTaskCountBO.setRefuseTicketStampNoReturn(amEmploymentBO.getCount());
                 num = num + amEmploymentBO.getCount();
-            }else if(5==status){
+            }else if(4==status){
                 amEmpTaskCountBO.setRefuseFailed(amEmploymentBO.getCount());
                 num = num + amEmploymentBO.getCount();
-            }else if(6==status){
+            }else if(5==status){
                 amEmpTaskCountBO.setBeforeBatchNeedRefuse(amEmploymentBO.getCount());
+                num = num + amEmploymentBO.getCount();
             }else{
-                otherNum = otherNum + amEmploymentBO.getCount();
+                otherNum = otherNum+amEmploymentBO.getCount();
                 amEmpTaskCountBO.setOther(otherNum);
                 num = num + amEmploymentBO.getCount();
             }
@@ -207,8 +211,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         AmResignBO amResignBO = new AmResignBO();
 
-        PageInfo pageInfo = new PageInfo();
-        JSONObject params = new JSONObject();
+        Map<String,Object> params = new HashMap<>();
         params.put("employeeId",amTaskParamBO.getEmployeeId());
         params.put("remarkType",amTaskParamBO.getRemarkType());
         params.put("empTaskId",amTaskParamBO.getEmpTaskId());
@@ -216,25 +219,22 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         params.put("companyId",amTaskParamBO.getCompanyId());
         params.put("operateType",new Integer(2));
         params.put("empTaskResignId",amTaskParamBO.getEmpTaskResignId());
-        pageInfo.setParams(params);
-
 
         //用工档案
         List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchiveList(params);
-        //档案备注
-        PageRows<AmRemarkBO> amRemarkBOPageRows = amRemarkService.queryAmRemark(pageInfo);
 
         //用工备注
         AmRemarkBO queryBo = new AmRemarkBO();
         queryBo.setRemarkType(1);
         queryBo.setEmpTaskId(amTaskParamBO.getEmpTaskId());
-
         List<AmRemarkBO> amRemarkBOList = amRemarkService.getAmRemakList(queryBo);
 
-        //退工归还材料签收
-        PageRows<AmEmpMaterialBO> result = null;
+        //档案备注
+        queryBo.setRemarkType(2);
+        List<AmRemarkBO> archiveAmRemarkBOList = amRemarkService.getAmRemakList(queryBo);
 
-        PageRows<AmEmpMaterialBO> resultMaterial = iAmEmpMaterialService.queryMaterialDic(pageInfo);
+        //退工材料字典
+        List<AmEmpMaterialBO> resultMaterial = iAmEmpMaterialService.queryMaterialDicList();
 
         //用工信息
         List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmployment(params);
@@ -264,12 +264,8 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
                     amResignBO.setOutReason(amEmpTask.getOutReason());
                 }
             }
-            params.put("empTaskId",resignBO.getEmpTaskId());
-            pageInfo.setParams(params);
-            result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
 
         }
-
 
         AmEmploymentBO amEmploymentBO = new AmEmploymentBO();
         if(null!=resultEmployList&&resultEmployList.size()>0){
@@ -302,11 +298,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             BeanUtils.copyProperties(amArchiveBO,amArchiveDTO);
             resultMap.put("amArchaiveBo",amArchiveDTO);
 
-            params.put("archiveId",amArchiveBO.getArchiveId());
-            pageInfo.setParams(params);
-
             AmInjuryBO amInjuryBO = new AmInjuryBO();
-
             amInjuryBO.setArchiveId(amArchiveBO.getArchiveId().toString());
 
             List<AmInjuryBO>  amInjuryBOList = amInjuryService.queryAmInjury(amInjuryBO);
@@ -315,23 +307,27 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             {
                 resultMap.put("amInjuryBOList",amInjuryBOList);
             }
-
         }
 
         resultMap.put("amEmploymentBO",amEmploymentBO);
 
-        if(null!=amRemarkBOPageRows)
+        //档案备注
+        if(null!=archiveAmRemarkBOList&&archiveAmRemarkBOList.size()>0)
         {
-            resultMap.put("amRemarkBo",amRemarkBOPageRows);
+            resultMap.put("amRemarkBo",archiveAmRemarkBOList);
         }
 
-        if(null!=result&&result.getRows().size()>0){
-            resultMap.put("materialList",result.getRows());
+        //退工归还材料签收
+        AmEmpMaterialBO amEmpMaterialBO = new AmEmpMaterialBO();
+        amEmpMaterialBO.setEmpTaskId(amTaskParamBO.getEmpTaskResignId());
+        amEmpMaterialBO.setOperateType(2);
+        List<AmEmpMaterialBO> amEmpMaterialBOList = amEmpMaterialService.queryAmEmpMaterialList(amEmpMaterialBO);
+        //退工归还材料签收
+        if(null!=amEmpMaterialBOList&&amEmpMaterialBOList.size()>0){
+            resultMap.put("materialList",amEmpMaterialBOList);
         }
-
-        resultMap.put("resultMaterial",resultMaterial.getRows());
-
-
+        //退工材料字典
+        resultMap.put("resultMaterial",resultMaterial);
 
         return  JsonResultKit.of(resultMap);
     }

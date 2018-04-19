@@ -23,6 +23,7 @@
         <result column="archive_direction" property="archiveDirection" />
         <result column="business_interface_id" property="businessInterfaceId" />
         <result column="out_reason" property="outReason" />
+        <result column="out_reason_code" property="outReasonCode" />
         <result column="out_date" property="outDate" />
         <result column="employ_property" property="employProperty" />
         <result column="employ_code" property="employCode" />

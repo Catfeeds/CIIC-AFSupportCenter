@@ -22,6 +22,8 @@ public interface IAmEmpMaterialService extends IService<AmEmpMaterial> {
 
     PageRows<AmEmpMaterialBO> queryMaterialDic(PageInfo pageInfo);
 
+    List<AmEmpMaterialBO> queryMaterialDicList();
+
     List<MaterialDTO> queryMaterialByTaskId(Long empTaskId);
 
     boolean updateMaterialByTaskId(MaterialUpdateDTO materialUpdateDTO);

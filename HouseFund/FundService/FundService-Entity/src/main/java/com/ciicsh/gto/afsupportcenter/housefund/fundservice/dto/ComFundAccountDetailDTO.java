@@ -19,7 +19,7 @@ public class ComFundAccountDetailDTO
      2 我司付款（客户预付）
      3 垫付
      */
-    private Byte paymentWay;
+    private Integer paymentWay;
 
 
     /**
@@ -36,12 +36,12 @@ public class ComFundAccountDetailDTO
      * 公积金企业U盾代管情况
      * 0-没有 1-有(客户自办)  2-有(中智代办)
      */
-    private Byte ukeyStore;
+    private Integer ukeyStore;
 
     /**
      * 每月关账日, 1-31
      */
-    private Byte closeDay;
+    private Integer closeDay;
 
 
     /**
@@ -60,7 +60,7 @@ public class ComFundAccountDetailDTO
      * 1-临时保管状态 0-非临时保管状态
      *
      * */
-    private Byte basicAccountTempStore;
+    private Integer basicAccountTempStore;
 
 
     /**
@@ -68,11 +68,11 @@ public class ComFundAccountDetailDTO
      * 1-临时保管状态 0-非临时保管状态
      *
      * */
-    private Byte compensativeAccountTempStore;
+    private Integer compensativeAccountTempStore;
 
     private Long  comAccountClassId;
     private Long comAccountId;
-    private Byte hfType;
+    private Integer hfType;
     private String[] tmpStore;
 
     public String[] getTmpStore() {
@@ -91,11 +91,11 @@ public class ComFundAccountDetailDTO
         this.comStartMonthValue = comStartMonthValue;
     }
 
-    public Byte getHfType() {
+    public Integer getHfType() {
         return hfType;
     }
 
-    public void setHfType(Byte hfType) {
+    public void setHfType(Integer hfType) {
         this.hfType = hfType;
     }
 
@@ -138,11 +138,11 @@ public class ComFundAccountDetailDTO
         this.paymentBank = paymentBank;
     }
 
-    public Byte getPaymentWay() {
+    public Integer getPaymentWay() {
         return paymentWay;
     }
 
-    public void setPaymentWay(Byte paymentWay) {
+    public void setPaymentWay(Integer paymentWay) {
         this.paymentWay = paymentWay;
     }
 
@@ -162,19 +162,19 @@ public class ComFundAccountDetailDTO
         this.compensativeComAccount = compensativeComAccount;
     }
 
-    public Byte getUkeyStore() {
+    public Integer getUkeyStore() {
         return ukeyStore;
     }
 
-    public void setUkeyStore(Byte ukeyStore) {
+    public void setUkeyStore(Integer ukeyStore) {
         this.ukeyStore = ukeyStore;
     }
 
-    public Byte getCloseDay() {
+    public Integer getCloseDay() {
         return closeDay;
     }
 
-    public void setCloseDay(Byte closeDay) {
+    public void setCloseDay(Integer closeDay) {
         this.closeDay = closeDay;
     }
 
@@ -194,19 +194,19 @@ public class ComFundAccountDetailDTO
         this.remark = remark;
     }
 
-    public Byte getBasicAccountTempStore() {
+    public Integer getBasicAccountTempStore() {
         return basicAccountTempStore;
     }
 
-    public void setBasicAccountTempStore(Byte basicAccountTempStore) {
+    public void setBasicAccountTempStore(Integer basicAccountTempStore) {
         this.basicAccountTempStore = basicAccountTempStore;
     }
 
-    public Byte getCompensativeAccountTempStore() {
+    public Integer getCompensativeAccountTempStore() {
         return compensativeAccountTempStore;
     }
 
-    public void setCompensativeAccountTempStore(Byte compensativeAccountTempStore) {
+    public void setCompensativeAccountTempStore(Integer compensativeAccountTempStore) {
         this.compensativeAccountTempStore = compensativeAccountTempStore;
     }
 }

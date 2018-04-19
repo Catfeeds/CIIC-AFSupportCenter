@@ -40,6 +40,11 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
     }
 
     @Override
+    public List<AmEmpMaterialBO> queryMaterialDicList() {
+        return baseMapper.queryMaterialDic();
+    }
+
+    @Override
     public List<MaterialDTO> queryMaterialByTaskId(Long empTaskId) {
         List<MaterialDTO> list = baseMapper.queryMaterialByTaskId(empTaskId);
 
