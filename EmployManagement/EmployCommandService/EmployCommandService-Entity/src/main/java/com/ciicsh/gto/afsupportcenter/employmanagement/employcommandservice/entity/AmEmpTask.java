@@ -118,6 +118,11 @@ public class AmEmpTask implements Serializable {
     @TableField("out_reason")
     private String outReason;
     /**
+     * 离职原因code
+     */
+    @TableField("out_reason_code")
+    private String outReasonCode;
+    /**
      * 离职原因
      */
     @TableField("out_date")
@@ -160,6 +165,14 @@ public class AmEmpTask implements Serializable {
     @TableField("emp_company_id")
     private String empCompanyId;
 
+
+    public String getOutReasonCode() {
+        return outReasonCode;
+    }
+
+    public void setOutReasonCode(String outReasonCode) {
+        this.outReasonCode = outReasonCode;
+    }
 
     public Long getEmpTaskId() {
         return empTaskId;

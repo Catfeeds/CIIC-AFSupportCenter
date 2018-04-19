@@ -1,6 +1,5 @@
 package com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.ReasonUtil;
@@ -196,19 +195,25 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         amRemarkBO.setEmpTaskId(amTaskParamBO.getEmpTaskId());//退工任务单id
         List<AmRemarkBO>  amRemarkBOList = amRemarkService.getAmRemakList(amRemarkBO);
 
+        List<AmRemarkBO>  amRemarkBOList1 = null;
+        List<AmRemarkBO>  amRemarkBOList2 = null;
         //用工备注
-        amRemarkBO.setRemarkType(1);
-        amRemarkBO.setEmpTaskId(amEmployment.getEmpTaskId());//用工任务单Id
-        List<AmRemarkBO>  amRemarkBOList1 = amRemarkService.getAmRemakList(amRemarkBO);
+        if(amEmployment!=null){
+            amRemarkBO.setRemarkType(1);
+            amRemarkBO.setEmpTaskId(amEmployment.getEmpTaskId());//用工任务单Id
+            amRemarkBOList1 = amRemarkService.getAmRemakList(amRemarkBO);
 
-        //档案备注
-        amRemarkBO.setRemarkType(2);
-        List<AmRemarkBO>  amRemarkBOList2 = amRemarkService.getAmRemakList(amRemarkBO);
+            //档案备注
+            amRemarkBO.setRemarkType(2);
+            amRemarkBOList2 = amRemarkService.getAmRemakList(amRemarkBO);
+        }
+
 
         //用工信息
         AmEmploymentBO amEmploymentBO = new AmEmploymentBO();
         if(amEmployment!=null){
-            BeanUtils.copyProperties(amEmployment,amEmpEmployeeBO);
+            BeanUtils.copyProperties(amEmployment,amEmploymentBO);
+
         }else{
             //否则取第一条
             List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmploymentResign(params);
@@ -237,23 +242,23 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
 
         //退工备注
-        if(null!=amRemarkBOList)
+        if(null!=amRemarkBOList&&amRemarkBOList.size()>0)
         {
             resultMap.put("amRemarkBo",amRemarkBOList);
         }
         //用工备注
-        if(null!=amRemarkBOList1)
+        if(null!=amRemarkBOList1&&amRemarkBOList1.size()>0)
         {
             resultMap.put("amRemarkBo1",amRemarkBOList1);
         }
         //档案备注
-        if(null!=amRemarkBOList2)
+        if(null!=amRemarkBOList2&&amRemarkBOList2.size()>0)
         {
             resultMap.put("amRemarkBo2",amRemarkBOList2);
         }
 
         //用工信息
-        if(!StringUtil.isEmpty(amEmploymentBO.getEmployStyle()))
+        if(null!=amEmploymentBO&&!StringUtil.isEmpty(amEmploymentBO.getEmployStyle()))
         {
             amEmploymentBO.setEmployStyle(ReasonUtil.getYgfs(amEmploymentBO.getEmployStyle()));
         }
@@ -262,7 +267,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         {
             amEmploymentBO.setEmployNotes(amRemarkBOList1.get(0).getRemarkContent());
         }
-
+        //用工信息
         resultMap.put("amEmploymentBO",amEmploymentBO);
         //档案
         resultMap.put("amArchaiveBo",amArchiveBO);

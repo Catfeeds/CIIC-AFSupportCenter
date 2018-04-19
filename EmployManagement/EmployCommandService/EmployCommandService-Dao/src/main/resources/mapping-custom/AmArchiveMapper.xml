@@ -9,13 +9,8 @@
 
     <select id="queryAmArchiveList" resultMap="BaseResultMapDTO">
         select  *  from am_archive
-        where  1=1
-        <if test="employeeId!=null">
-           and  employee_id = #{employeeId}
-        </if>
-        <if test="employmentId!=null">
-            and  employment_id = #{employmentId}
-        </if>
+        where
+        employment_id = #{employmentId}
         order by  created_time desc
     </select>
 
