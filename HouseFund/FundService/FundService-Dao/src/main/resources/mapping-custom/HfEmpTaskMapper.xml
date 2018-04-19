@@ -937,7 +937,7 @@
             AND emp.employee_name LIKE CONCAT('%',#{employeeName},'%')
         </if>
         <if test="idNum != null">
-            AND emp.id_num = LIKE CONCAT('%',#{idNum},'%')
+            AND emp.id_num LIKE CONCAT('%',#{idNum},'%')
         </if>
         <if test="status != null">
             AND eoop.status = #{status}
