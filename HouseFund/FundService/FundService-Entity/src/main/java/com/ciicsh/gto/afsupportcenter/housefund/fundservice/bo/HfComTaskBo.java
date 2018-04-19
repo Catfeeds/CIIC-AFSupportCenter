@@ -166,9 +166,10 @@ public class HfComTaskBo extends HfComTask {
      * comAccount remark
      */
     private String comAccountRemark;
-
-
+    //专员操作开始月份
     private String operateStartMonth;
 
+    private Integer endType;
 
+    private  String taskRemark;
 }

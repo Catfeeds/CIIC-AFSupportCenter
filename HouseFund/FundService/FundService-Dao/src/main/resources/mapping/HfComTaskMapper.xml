@@ -61,6 +61,7 @@
         <result column="ukey_store" property="ukeyStore"/>
         <result column="ukstore_value" property="ukStoreValue"/>
         <result column="type_value" property="typeValue"/>
+        <result column="end_type" property="endType"/>
         <result column="end_type_value" property="endTypeValue"/>
         <result column="payment_way" property="paymentWay" />
         <result column="close_day" property="closeDay" />
@@ -70,6 +71,7 @@
         <result column="send_check_date_string" property="sendCheckDateString"/>
         <result column="finish_date_string" property="finishDateString"/>
         <result column="comAccountRemark" property="comAccountRemark" />
+        <result column="taskRemark" property="taskRemark" />
 
     </resultMap>
 
@@ -198,6 +200,7 @@
         ctpw.com_task_payment_way_name,
         hcas.com_account_state_value,
         hft.end_month,
+        hft.end_type,
         hca.ukey_store,
         hcau.ukstore_value,
         hcat.type_value,
@@ -205,7 +208,8 @@
         DATE_FORMAT(hft.strart_handle_date, '%Y-%m-%d %H:%i') AS strart_handle_date_string,
         DATE_FORMAT(hft.send_check_date, '%Y-%m-%d %H:%i') AS send_check_date_string,
         DATE_FORMAT(hft.finish_date, '%Y-%m-%d %H:%i') AS finish_date_string,
-        hca.remark as comAccountRemark
+        hca.remark as comAccountRemark,
+        hft.remark as taskRemark
         FROM hf_com_task hft
         LEFT JOIN hf_com_account hca ON hft.com_account_id = hca.com_account_id
         LEFT JOIN hf_com_account_class hcac ON hft.com_account_class_id = hcac.com_account_class_id
@@ -213,7 +217,6 @@
         LEFT JOIN hf_com_account_payment_bank hcapb ON hca.payment_bank = hcapb.payment_bank_code
         LEFT JOIN hf_com_account_ukstore hcau ON hca.ukey_store = hcau.ukstore_code
         LEFT JOIN hf_com_account_type hcat ON hca.hf_account_type = hcat.type_code
-
         LEFT JOIN sal_company cc ON hft.company_id = cc.company_id
         LEFT JOIN hf_com_task_category ctc ON hft.task_category = ctc.task_category_code
         LEFT JOIN hf_type ht ON hft.hf_type = ht.hf_type_code

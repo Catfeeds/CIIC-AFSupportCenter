@@ -6,13 +6,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfComTaskBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfComTaskEndTypeBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfComTaskTaskStatusBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComTaskService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfAccountComRelationMapper;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountClassMapper;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountMapper;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountPaymentWayMapper;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComTaskEndTypeMapper;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComTaskMapper;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComTaskTaskStatusMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfAccountComRelation;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccount;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccountClass;
@@ -52,6 +46,11 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
     //前端日期时间格式
     private static final String DATA_FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
+    //企业任务单状态 批退
+    final Integer HF_COM_TASK_TASK_STATUS_4 = 4;
+    final Integer HF_COM_TASK_TASK_STATUS_3 = 3;
+    final Integer HF_COM_ACCOUNT_STATE_1 = 1;
+    final Integer HF_COM_ACCOUNT_STATE_0 = 0;
     @Autowired
     private HfComTaskMapper hfComTaskMapper;
     @Autowired
@@ -81,15 +80,17 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
 
     /**
      * 判断企业任务单是否存在
+     *
      * @return
      */
     @Override
     public Integer isExistComTask(String companyId, Integer hfType, Integer taskCategory) {
-        return baseMapper.isExistComTask(companyId,hfType,taskCategory);
+        return baseMapper.isExistComTask(companyId, hfType, taskCategory);
     }
 
     /**
      * 获得企业任务单 未处理
+     *
      * @param pageInfo
      * @return
      */
@@ -97,16 +98,17 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
     public PageRows<HfComTaskBo> queryCompanyTasks(PageInfo pageInfo) {
         //将PageInfo对象转DTO对象
         HfComTaskBo hfComTaskBo = pageInfo.toJavaObject(HfComTaskBo.class);
-        if("1,2".equals(hfComTaskBo.getTaskStatusString()) ){ //任务单状态：处理中
-            return PageKit.doSelectPage(pageInfo, () -> hfComTaskMapper.queryCompanyTaskProcessing(hfComTaskBo));
-        }else{
+        if ("0".equals(hfComTaskBo.getTaskStatusString())) { //任务单状态：未处理
             return PageKit.doSelectPage(pageInfo, () -> hfComTaskMapper.queryCompanyTask(hfComTaskBo));
+        } else { //否则就是：处理中 完成 批退
+            return PageKit.doSelectPage(pageInfo, () -> hfComTaskMapper.queryCompanyTaskProcessing(hfComTaskBo));
         }
 
     }
 
     /**
      * 获得企业任务单列表
+     *
      * @param hfComTaskBo
      * @return
      */
@@ -117,129 +119,60 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
 
     /**
      * 获得企业任务单支付方式数据
+     *
      * @return
      */
     @Override
-    public List<HfComAccountPaymentWayBo> queryComTaskPaymentWayData(){
+    public List<HfComAccountPaymentWayBo> queryComTaskPaymentWayData() {
         return hfComAccountPaymentWayMapper.selectAllComTaskPaymentWayData();
     }
 
     /**
      * 获得企业任务单任务状态数据
+     *
      * @return
      */
     @Override
-    public List<HfComTaskTaskStatusBo> queryComTaskTaskStatusData(){
+    public List<HfComTaskTaskStatusBo> queryComTaskTaskStatusData() {
         return hfComTaskTaskStatusMapper.selectAllComTaskTaskStatusData();
     }
 
     /**
      * 获得企业任务单终止类型数据
+     *
      * @return
      */
     @Override
-    public List<HfComTaskEndTypeBo> queryComTaskEndTypeData(){
+    public List<HfComTaskEndTypeBo> queryComTaskEndTypeData() {
         return hfComTaskEndTypeMapper.selectAllComTaskEndTypeData();
     }
 
     /**
      * 添加/更新企业任务单及相关表单
+     *
      * @param map
      * @return
      */
     @Override
-    public boolean upsertCompanyTaskRelated(Map<String, String> map){
-        if (StringUtils.isNotBlank(map.get("comTaskId"))) {
-
+    public boolean upsertCompanyTaskRelated(Map<String, String> map) {
+            if (!StringUtils.isNotBlank(map.get("comTaskId"))) {
+                return false;
+            }
             //取得企业任务单
             HfComTask hfComTask = hfComTaskMapper.selectById(map.get("comTaskId"));
-
             //设置企业公积金账号主表
             HfComAccount hfComAccount = new HfComAccount();
-            if (StringUtils.isNotBlank(map.get("comAccountName"))) {
-                hfComAccount.setComAccountName(map.get("comAccountName"));
-            }
-            if (StringUtils.isNotBlank(map.get("paymentWay"))) {
-                hfComAccount.setPaymentWay(Integer.parseInt(map.get("paymentWay")));
-            }
-            hfComAccount.setHfAccountType(HF_COM_ACCOUNT_TYPE_INDEPEDENT);
-            if (StringUtils.isNotBlank(map.get("closeDay"))) {
-                hfComAccount.setCloseDay(Integer.parseInt(map.get("closeDay")));
-            }
-            if (StringUtils.isNotBlank(map.get("uKeyStore"))) {
-                hfComAccount.setUkeyStore(Integer.parseInt(map.get("uKeyStore")));
-            }
-            if (StringUtils.isNotBlank(map.get("paymentBank"))) {
-                hfComAccount.setPaymentBank(Integer.parseInt(map.get("paymentBank")));
-            }
-            if (StringUtils.isNotBlank(map.get("comAccountRemark"))) {
-                hfComAccount.setRemark(map.get("comAccountRemark").toString());
-            }
-            hfComAccount.setCreatedTime(new Date());
-            hfComAccount.setCreatedBy(UserContext.getUser().getDisplayName());
-            hfComAccount.setModifiedBy(UserContext.getUser().getDisplayName());
-            hfComAccount.setModifiedTime(new Date());
-            if(hfComTask.getTaskStatus()==3){ //已完成
-                hfComAccount.setState(1);  //设置有效
-            }else{
-                hfComAccount.setState(0);  //设置初始无效
-            }
-            if(Optional.ofNullable(map.get("comAccountId")).isPresent()){
-                hfComAccount.setComAccountId(Long.valueOf(map.get("comAccountId")));
-                hfComAccountMapper.updateById(hfComAccount) ;
-            }else{
-                hfComAccountMapper.insert(hfComAccount);
-            }
+            this.updateComAccount(map,hfComAccount,hfComTask);
+
             //设置企业公积金账号从表
             HfComAccountClass hfComAccountClass = new HfComAccountClass();
-            hfComAccountClass.setComAccountId(hfComAccount.getComAccountId());
-            hfComAccountClass.setHfType(hfComTask.getHfType());
-            if (StringUtils.isNotBlank(map.get("comAccountNum"))) {
-                hfComAccountClass.setHfComAccount(map.get("comAccountNum"));
-            }
-            if (StringUtils.isNotBlank(map.get("comStartMonth"))) {
-                String yearMonthString = StringUtil.dateStringToYearMonthString(map.get("comStartMonth"));
-                hfComAccountClass.setComStartMonth(yearMonthString);
-                hfComAccountClass.setComHfMonth(yearMonthString);
-            }
-            hfComAccountClass.setEndMonth(hfComTask.getEndMonth());
-            if (StringUtils.isNotBlank(map.get("operateStartMonth"))) {
-                String yearMonthString = StringUtil.dateStringToYearMonthString(map.get("operateStartMonth"));
-                hfComAccountClass.setOperateStartMonth(yearMonthString);
-            }
-            if (StringUtils.isNotBlank(map.get("accountTempStore"))) {
-                hfComAccountClass.setAccountTempStore(Integer.parseInt(map.get("accountTempStore")));
-            }
-            if (StringUtils.isNotBlank(map.get("endType"))) {
-                hfComAccountClass.setEndType(Integer.parseInt(map.get("endType")));
-            }
-            hfComAccountClass.setCreatedTime(new Date());
-            hfComAccountClass.setCreatedBy(UserContext.getUser().getDisplayName());
-            hfComAccountClass.setModifiedBy(UserContext.getUser().getDisplayName());
-            hfComAccountClass.setModifiedTime(new Date());
-            if(Optional.ofNullable(map.get("comAccountClassId")).isPresent()){
-                hfComAccountClass.setComAccountClassId(Long.valueOf(map.get("comAccountClassId")));
-                hfComAccountClassMapper.updateById(hfComAccountClass) ;
-            }else{
-                hfComAccountClassMapper.insert(hfComAccountClass);
-            }
+            this.updateComAccountClass(map,hfComAccount,hfComAccountClass,hfComTask);
+
             //设置企业公积金账户客户关系表
             HfAccountComRelation hfAccountComRelation = new HfAccountComRelation();
-            hfAccountComRelation.setComAccountId(hfComAccount.getComAccountId());
-            hfAccountComRelation.setCompanyId(hfComTask.getCompanyId());
-            hfAccountComRelation.setMajorCom(1);
-            int ifComAccountIdExists= hfAccountComRelationMapper.queryIfComAccountIdExists(hfComAccount.getComAccountId());
-            if(ifComAccountIdExists == 0) {
-                hfAccountComRelation.setCreatedTime(new Date());
-                hfAccountComRelation.setCreatedBy(UserContext.getUser().getDisplayName());
-                hfAccountComRelation.setModifiedBy(UserContext.getUser().getDisplayName());
-                hfAccountComRelation.setModifiedTime(new Date());
-                hfAccountComRelationMapper.insert(hfAccountComRelation);
-            } else {
-                hfAccountComRelation.setModifiedBy(UserContext.getUser().getDisplayName());
-                hfAccountComRelation.setModifiedTime(new Date());
-                hfAccountComRelationMapper.updateById(hfAccountComRelation);
-            }
+            this.updateComAccountRelation(map ,hfComAccount, hfAccountComRelation,hfComTask);
+
+
             //更新ComTask表
             hfComTask.setComAccountId(hfComAccount.getComAccountId());
             hfComTask.setComAccountClassId(hfComAccountClass.getComAccountClassId());
@@ -272,74 +205,237 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             }
             hfComTaskMapper.updateById(hfComTask);
             return true;
-        } else {
-            return false;
-        }
+
     }
 
     /**
      * 添加/更新企业任务单
+     *
      * @param map
      * @return
      */
     @Override
-    public boolean upsertCompanyTask(Map<String, String> map){
-        if (StringUtils.isNotBlank(map.get("comTaskId"))) {
-            //取得企业任务单
-            HfComTask hfComTask = hfComTaskMapper.selectById(map.get("comTaskId"));
-            if (StringUtils.isNotBlank(map.get("comAccountName"))) {
-                hfComTask.setComAccountName(map.get("comAccountName"));
-            }
-            if (StringUtils.isNotBlank(map.get("paymentType"))) {
-                hfComTask.setPaymentWay(Integer.parseInt(map.get("paymentType")));
-            }
-            if (StringUtils.isNotBlank(map.get("taskStatus"))) {
-                hfComTask.setTaskStatus(Integer.parseInt(map.get("taskStatus")));
-            }
-            if (StringUtils.isNotBlank(map.get("endMonth"))) {
-                hfComTask.setEndMonth(map.get("endMonth"));
-            }
-            if (StringUtils.isNotBlank(map.get("endType"))) {
-                hfComTask.setEndType(Integer.parseInt(map.get("endType")));
-            }
-            if (StringUtils.isNotBlank(map.get("acceptDate"))) {
-                try {
-                    hfComTask.setStrartHandleDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("acceptDate")));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            if (StringUtils.isNotBlank(map.get("approvalDate"))) {
-                try {
-                    hfComTask.setSendCheckDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("approvalDate")));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            if (StringUtils.isNotBlank(map.get("finishDate"))) {
-                try {
-                    hfComTask.setFinishDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("finishDate")));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            if (StringUtils.isNotBlank(map.get("remark"))) {
-                hfComTask.setRemark(map.get("remark"));
-            }
-            hfComTaskMapper.updateById(hfComTask);
-            return true;
-        } else {
+    public boolean upsertCompanyTask(Map<String, String> map) {
+        if (!StringUtils.isNotBlank(map.get("comTaskId"))) {
             return false;
         }
+        //取得企业任务单
+        HfComTask hfComTask = hfComTaskMapper.selectById(map.get("comTaskId"));
+        if (StringUtils.isNotBlank(map.get("comAccountName"))) {
+            hfComTask.setComAccountName(map.get("comAccountName"));
+        }
+        if (StringUtils.isNotBlank(map.get("paymentType"))) {
+            hfComTask.setPaymentWay(Integer.parseInt(map.get("paymentType")));
+        }
+        if (StringUtils.isNotBlank(map.get("taskStatus"))) {
+            hfComTask.setTaskStatus(Integer.parseInt(map.get("taskStatus")));
+        }
+        if (StringUtils.isNotBlank(map.get("endMonth"))) {
+            hfComTask.setEndMonth(map.get("endMonth"));
+        }
+        if (StringUtils.isNotBlank(map.get("endType"))) {
+            hfComTask.setEndType(Integer.parseInt(map.get("endType")));
+        }
+        if (StringUtils.isNotBlank(map.get("acceptDate"))) {
+            try {
+                hfComTask.setStrartHandleDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("acceptDate")));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if (StringUtils.isNotBlank(map.get("approvalDate"))) {
+            try {
+                hfComTask.setSendCheckDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("approvalDate")));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if (StringUtils.isNotBlank(map.get("finishDate"))) {
+            try {
+                hfComTask.setFinishDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("finishDate")));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if (StringUtils.isNotBlank(map.get("remark"))) {
+            hfComTask.setRemark(map.get("remark"));
+        }
+        hfComTaskMapper.updateById(hfComTask);
+        return true;
+
     }
 
+    /**
+     * 终止企业任务单
+     *
+     * @param map
+     * @return
+     */
+    @Override
+    public boolean stopCompAccountTask(Map<String, String> map) {
+        if (!StringUtils.isNotBlank(map.get("comTaskId"))) {
+            return false;
+        }
+
+        //取得企业任务单
+        HfComTask hfComTask = hfComTaskMapper.selectById(map.get("comTaskId"));
+
+        HfComAccount hfComAccount = new HfComAccount();
+        if (hfComTask.getTaskStatus() == HF_COM_TASK_TASK_STATUS_3) { //已完成
+            hfComAccount.setState(HF_COM_ACCOUNT_STATE_0);  //设置初始无效
+            hfComAccount.setComAccountId(Long.valueOf(map.get("comAccountId")));
+            hfComAccountMapper.updateById(hfComAccount);
+            HfComAccountClass hfComAccountClass = new HfComAccountClass();
+            this.updateComAccountClass(map,hfComAccount,hfComAccountClass,hfComTask);
+        }
+
+
+        //设置企业公积金账号从表
+
+
+
+
+
+        if (StringUtils.isNotBlank(map.get("taskStatus"))) {
+            hfComTask.setTaskStatus(Integer.parseInt(map.get("taskStatus")));
+        }
+        if (StringUtils.isNotBlank(map.get("endMonth"))) {
+            hfComTask.setEndMonth(map.get("endMonth"));
+        }
+        if (StringUtils.isNotBlank(map.get("endType"))) {
+            hfComTask.setEndType(Integer.parseInt(map.get("endType")));
+        }
+        if (StringUtils.isNotBlank(map.get("acceptDate"))) {
+            try {
+                hfComTask.setStrartHandleDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("acceptDate")));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if (StringUtils.isNotBlank(map.get("approvalDate"))) {
+            try {
+                hfComTask.setSendCheckDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("approvalDate")));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if (StringUtils.isNotBlank(map.get("finishDate"))) {
+            try {
+                hfComTask.setFinishDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("finishDate")));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if (StringUtils.isNotBlank(map.get("remark"))) {
+            hfComTask.setRemark(map.get("remark"));
+        }
+        hfComTaskMapper.updateById(hfComTask);
+        return true;
+    }
+
+    /**
+     * 批退企业任务
+     *
+     * @param map
+     * @return
+     */
     @Override
     public boolean rejection(Map<String, String> map) {
-        HfComTask hfComTask=new HfComTask();
+        HfComTask hfComTask = new HfComTask();
         hfComTask.setComTaskId(Long.valueOf(map.get("comTaskId")));
-        hfComTask.setTaskStatus(4);
+        hfComTask.setTaskStatus(HF_COM_TASK_TASK_STATUS_4);
         hfComTaskMapper.updateById(hfComTask);
         return false;
+    }
+
+    private void updateComAccountClass(Map<String, String> map, HfComAccount hfComAccount, HfComAccountClass hfComAccountClass, HfComTask hfComTask) {
+        hfComAccountClass.setComAccountId(hfComAccount.getComAccountId());
+        hfComAccountClass.setHfType(hfComTask.getHfType());
+        if (StringUtils.isNotBlank(map.get("comAccountNum"))) {
+            hfComAccountClass.setHfComAccount(map.get("comAccountNum"));
+        }
+        if (StringUtils.isNotBlank(map.get("comStartMonth"))) {
+            String yearMonthString = StringUtil.dateStringToYearMonthString(map.get("comStartMonth"));
+            hfComAccountClass.setComStartMonth(yearMonthString);
+            hfComAccountClass.setComHfMonth(yearMonthString);
+        }
+        hfComAccountClass.setEndMonth(hfComTask.getEndMonth());
+        if (StringUtils.isNotBlank(map.get("operateStartMonth"))) {
+            String yearMonthString = StringUtil.dateStringToYearMonthString(map.get("operateStartMonth"));
+            hfComAccountClass.setOperateStartMonth(yearMonthString);
+        }
+        if (StringUtils.isNotBlank(map.get("accountTempStore"))) {
+            hfComAccountClass.setAccountTempStore(Integer.parseInt(map.get("accountTempStore")));
+        }
+        if (StringUtils.isNotBlank(map.get("endType"))) {
+            hfComAccountClass.setEndType(Integer.parseInt(map.get("endType")));
+        }
+        hfComAccountClass.setCreatedTime(new Date());
+        hfComAccountClass.setCreatedBy(UserContext.getUser().getDisplayName());
+        hfComAccountClass.setModifiedBy(UserContext.getUser().getDisplayName());
+        hfComAccountClass.setModifiedTime(new Date());
+        if (Optional.ofNullable(map.get("comAccountClassId")).isPresent()) {
+            hfComAccountClass.setComAccountClassId(Long.valueOf(map.get("comAccountClassId")));
+            hfComAccountClassMapper.updateById(hfComAccountClass);
+        } else {
+            hfComAccountClassMapper.insert(hfComAccountClass);
+        }
+    }
+    private void updateComAccount(Map<String, String> map, HfComAccount hfComAccount,  HfComTask hfComTask) {
+        if (StringUtils.isNotBlank(map.get("comAccountName"))) {
+            hfComAccount.setComAccountName(map.get("comAccountName"));
+        }
+        if (StringUtils.isNotBlank(map.get("paymentWay"))) {
+            hfComAccount.setPaymentWay(Integer.parseInt(map.get("paymentWay")));
+        }
+        hfComAccount.setHfAccountType(HF_COM_ACCOUNT_TYPE_INDEPEDENT);
+        if (StringUtils.isNotBlank(map.get("closeDay"))) {
+            hfComAccount.setCloseDay(Integer.parseInt(map.get("closeDay")));
+        }
+        if (StringUtils.isNotBlank(map.get("uKeyStore"))) {
+            hfComAccount.setUkeyStore(Integer.parseInt(map.get("uKeyStore")));
+        }
+        if (StringUtils.isNotBlank(map.get("paymentBank"))) {
+            hfComAccount.setPaymentBank(Integer.parseInt(map.get("paymentBank")));
+        }
+        if (StringUtils.isNotBlank(map.get("comAccountRemark"))) {
+            hfComAccount.setRemark(map.get("comAccountRemark").toString());
+        }
+        hfComAccount.setCreatedTime(new Date());
+        hfComAccount.setCreatedDisplayName(UserContext.getUser().getDisplayName());
+        hfComAccount.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+        hfComAccount.setCreatedBy(UserContext.getUserId());
+        hfComAccount.setModifiedBy(UserContext.getUserId());
+        hfComAccount.setModifiedTime(new Date());
+
+        if (hfComTask.getTaskStatus() == HF_COM_TASK_TASK_STATUS_3) { //已完成
+            hfComAccount.setState(HF_COM_ACCOUNT_STATE_1);  //设置有效
+        } else {
+            hfComAccount.setState(HF_COM_ACCOUNT_STATE_0);  //设置初始无效
+        }
+        if (Optional.ofNullable(map.get("comAccountId")).isPresent()) {
+            hfComAccount.setComAccountId(Long.valueOf(map.get("comAccountId")));
+            hfComAccountMapper.updateById(hfComAccount);
+        } else {
+            hfComAccountMapper.insert(hfComAccount);
+        }
+    }
+    private void updateComAccountRelation(Map<String, String> map,HfComAccount hfComAccount, HfAccountComRelation hfAccountComRelation,  HfComTask hfComTask) {
+        hfAccountComRelation.setComAccountId(hfComAccount.getComAccountId());
+        hfAccountComRelation.setCompanyId(hfComTask.getCompanyId());
+        hfAccountComRelation.setMajorCom(1);
+        int ifComAccountIdExists = hfAccountComRelationMapper.queryIfComAccountIdExists(hfComAccount.getComAccountId());
+        if (ifComAccountIdExists == 0) {
+            hfAccountComRelation.setCreatedTime(new Date());
+            hfAccountComRelation.setCreatedBy(UserContext.getUser().getDisplayName());
+            hfAccountComRelation.setModifiedBy(UserContext.getUser().getDisplayName());
+            hfAccountComRelation.setModifiedTime(new Date());
+            hfAccountComRelationMapper.insert(hfAccountComRelation);
+        } else {
+            hfAccountComRelation.setModifiedBy(UserContext.getUser().getDisplayName());
+            hfAccountComRelation.setModifiedTime(new Date());
+            hfAccountComRelationMapper.updateById(hfAccountComRelation);
+        }
     }
 
 }

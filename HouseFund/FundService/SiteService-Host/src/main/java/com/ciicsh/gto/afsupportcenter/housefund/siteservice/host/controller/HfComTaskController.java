@@ -12,11 +12,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
@@ -35,6 +31,7 @@ public class HfComTaskController {
 
     /**
      * 查询企业任务单列表
+     *
      * @param pageInfo
      * @return
      */
@@ -58,6 +55,7 @@ public class HfComTaskController {
 
     /**
      * 更新未处理企业任务单
+     *
      * @param map
      * @return
      */
@@ -67,24 +65,30 @@ public class HfComTaskController {
         return JsonResultKit.of(result);
     }
 
+    @PostMapping("/stopCompAccountTask")
+    public JsonResult<Boolean> stopCompAccountTask(@RequestParam Map<String, String> map) {
+        boolean result = hfComTaskService.stopCompAccountTask(map);
+        return JsonResultKit.of(result);
+    }
     /**
      * 更新未处理企业任务单（变更）
+     *
      * @param map
      * @return
      */
     @PostMapping("/updateCompanyTaskChangeInfo")
     public JsonResult<Boolean> updateCompanyTaskChangeInfo(@RequestParam Map<String, String> map) {
         boolean result = hfComTaskService.upsertCompanyTask(map);
-        if (result){
+        if (result) {
             return JsonResultKit.of();
-        }else {
+        } else {
             return JsonResultKit.ofError("提交表单出现异常");
         }
-
     }
 
     /**
      * 更新未处理企业任务单（终止）
+     *
      * @param map
      * @return
      */
@@ -96,6 +100,7 @@ public class HfComTaskController {
 
     /**
      * 查询企业任务单支付方式数据
+     *
      * @return
      */
     @GetMapping("/getCompanyTaskPaymentWayData")
@@ -106,6 +111,7 @@ public class HfComTaskController {
 
     /**
      * 查询企业任务单任务状态数据
+     *
      * @return
      */
     @GetMapping("/getCompanyTaskTaskStatusData")
@@ -116,6 +122,7 @@ public class HfComTaskController {
 
     /**
      * 查询企业任务单终止类型数据
+     *
      * @return
      */
     @GetMapping("/getCompanyTaskEndTypeData")
@@ -123,8 +130,10 @@ public class HfComTaskController {
         List<HfComTaskEndTypeBo> result = hfComTaskService.queryComTaskEndTypeData();
         return JsonResultKit.of(result);
     }
+
     /**
      * 批退
+     *
      * @param map
      * @return
      */
