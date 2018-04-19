@@ -55,7 +55,7 @@ public class HfEmpArchive implements Serializable {
      * 雇员基本补充公积金账号
      */
 
-    @TableField(value="hf_emp_account",strategy= FieldStrategy.IGNORED)
+    @TableField(value="hf_emp_account")
 	private String hfEmpAccount;
     /**
      * 公积金状态 : 0-未办理  1-已办  2-已做 3-封存

@@ -308,7 +308,7 @@
         INNER JOIN hf_emp_archive ea ON ea.emp_archive_id=et.emp_archive_id
         WHERE
         et.is_active=1
-        and et.task_category=9
+        and et.task_category=8
         and et.emp_archive_id
         in(select emp_archive_id from hf_emp_archive where emp_archive_id=#{empArchiveId} OR belong_emp_archive_id=#{empArchiveId} )
     </select>
@@ -346,4 +346,8 @@
             </foreach>
         </where>
     </select>
+
+    <update id="updateArchiveEmpAccount">
+        update hf_emp_archive SET hf_emp_account=#{hfEmpAccount} WHERE emp_archive_id= #{empArchiveId}
+    </update>
 </mapper>
