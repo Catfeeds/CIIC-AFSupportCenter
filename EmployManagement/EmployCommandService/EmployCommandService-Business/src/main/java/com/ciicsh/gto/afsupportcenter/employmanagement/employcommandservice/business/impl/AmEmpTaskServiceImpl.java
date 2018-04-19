@@ -284,6 +284,38 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 }
                 logger.info("outReason is null "+"  MissionId is "+taskMsgDTO.getMissionId());
             }
+            //如果是调整或者更正
+            if("emp_agreement_adjust".equals(taskMsgDTO.getProcessDefinitionKey())||"emp_agreement_update".equals(taskMsgDTO.getProcessDefinitionKey()))
+            {
+                amEmpTask.setOutReason("转其他城市缴纳");
+                amEmpTask.setOutReasonCode("changeOther");
+                List<AfEmpSocialDTO> empSocialList = dto.getEmpSocialList();
+                if(null!=empSocialList)
+                {
+                    boolean isContinue = false;
+                    for(AfEmpSocialDTO afEmpSocialDTO:empSocialList)
+                    {
+                        if("DIT00042".equals(afEmpSocialDTO.getItemCode())&&null!=afEmpSocialDTO.getEndDate())
+                        {
+                            amEmpTask.setOutDate(afEmpSocialDTO.getEndDate());
+                            isContinue = true;
+                            break;
+                        }
+                    }
+                    if(!isContinue)
+                    {
+                        for(AfEmpSocialDTO afEmpSocialDTO:empSocialList)
+                        {
+                            if(null!=afEmpSocialDTO.getEndDate())
+                            {
+                                amEmpTask.setOutDate(afEmpSocialDTO.getEndDate());
+                                break;
+                            }
+
+                        }
+                    }
+                }
+            }
             if(employeeCompany!=null&&employeeCompany.getHireUnit()!=null)
             {
                 amEmpTask.setEmployCode(employeeCompany.getHireUnit());
@@ -585,9 +617,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             /**
              * 用工属性根据雇佣类型  派遣默认中智
               */
-          if(afEmployeeCompanyDTO.getTemplateType()==1)
+          if(afEmployeeCompanyDTO.getHireUnit()==1)
           {
-              amEmpTaskBO1.setEmployProperty("中智");
+              amEmpTaskBO1.setEmployProperty("独立");
           }
         }
 
@@ -860,7 +892,6 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
         return customBO;
     }
-
 
 
 }

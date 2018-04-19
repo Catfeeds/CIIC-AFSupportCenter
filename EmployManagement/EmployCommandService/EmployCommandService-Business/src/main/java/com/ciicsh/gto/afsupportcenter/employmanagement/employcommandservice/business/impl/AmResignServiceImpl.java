@@ -201,6 +201,15 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
         {
             return  0;
         }
+        if("changeOther".equals(outReasonCode))
+        {
+            if("4".equals(resignFeedback)){
+                return  0;
+            }else{
+                return 1;
+            }
+
+        }
         if("13".equals(outReasonCode)||"15".equals(outReasonCode))
         {
             if("1".equals(resignFeedback))

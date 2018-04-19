@@ -242,23 +242,23 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
 
         //退工备注
-        if(null!=amRemarkBOList)
+        if(null!=amRemarkBOList&&amRemarkBOList.size()>0)
         {
             resultMap.put("amRemarkBo",amRemarkBOList);
         }
         //用工备注
-        if(null!=amRemarkBOList1)
+        if(null!=amRemarkBOList1&&amRemarkBOList1.size()>0)
         {
             resultMap.put("amRemarkBo1",amRemarkBOList1);
         }
         //档案备注
-        if(null!=amRemarkBOList2)
+        if(null!=amRemarkBOList2&&amRemarkBOList2.size()>0)
         {
             resultMap.put("amRemarkBo2",amRemarkBOList2);
         }
 
         //用工信息
-        if(!StringUtil.isEmpty(amEmploymentBO.getEmployStyle()))
+        if(null!=amEmploymentBO&&!StringUtil.isEmpty(amEmploymentBO.getEmployStyle()))
         {
             amEmploymentBO.setEmployStyle(ReasonUtil.getYgfs(amEmploymentBO.getEmployStyle()));
         }
