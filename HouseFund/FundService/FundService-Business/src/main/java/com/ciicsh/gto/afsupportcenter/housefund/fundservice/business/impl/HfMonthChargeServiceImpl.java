@@ -544,15 +544,16 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             hfPayment.setPaymentId(hfMonthChargeQueryBO.getPaymentId());
             hfPayment = hfPaymentMapper.selectOne(hfPayment);
             hfMonthChargeQueryBO.setHfMonth(hfPayment.getPaymentMonth());
+            comAccountParamExtBo.setHfMonth(hfPayment.getPaymentMonth());
 
             Map<String,Object> map=new HashMap<>();
-            List<String> BasiceListAccounts=new ArrayList<>();
+            List<String> BasicListAccounts=new ArrayList<>();
             List<String> AddListAccounts=new ArrayList<>();
             map.put("payment_id",hfMonthChargeQueryBO.getPaymentId());
             hfPaymentAccountMapper.getComAccountByPaymentId(hfMonthChargeQueryBO.getPaymentId()).forEach(
                 acc->{
                     if(acc.getHfType()==1){
-                        BasiceListAccounts.add(acc.getHfComAccount());
+                        BasicListAccounts.add(acc.getHfComAccount());
                     }
                     if(acc.getHfType()==2) {
                         AddListAccounts.add(acc.getHfComAccount());
@@ -560,10 +561,12 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                 }
             );
             if(hfMonthChargeQueryBO.getHfType()==1){
-                hfMonthChargeQueryBO.setBasicComAccountArray(BasiceListAccounts.toArray(new String[BasiceListAccounts.size()]));
+//                hfMonthChargeQueryBO.setBasicComAccountArray(BasiceListAccounts.toArray(new String[BasiceListAccounts.size()]));
+                comAccountParamExtBo.setBasicComAccountArray(hfMonthChargeQueryBO.getBasicComAccountArray());
             }
             if(hfMonthChargeQueryBO.getHfType()==2){
-                hfMonthChargeQueryBO.setAddedComAccountArray( AddListAccounts.toArray(new String[AddListAccounts.size()]));
+//                hfMonthChargeQueryBO.setAddedComAccountArray( AddListAccounts.toArray(new String[AddListAccounts.size()]));
+                comAccountParamExtBo.setAddedComAccountArray(hfMonthChargeQueryBO.getAddedComAccountArray());
             }
         }
 
@@ -584,7 +587,6 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
 
                 String hfTypeName;
                 String comAccountName = comAccountExtBo.getComAccountName();
-                String hfComAccount = hfComAccountClassesList.get(0).getHfComAccount();
 
                 if (hfMonthChargeQueryBO.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
                     hfTypeName = "基本";
@@ -604,6 +606,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                     continue;
                 }
 
+                String hfComAccount = hfComAccountClassesList.get(0).getHfComAccount();
                 if (StringUtils.isEmpty(hfComAccount)) {
                     logApiUtil.warn(LogMessage.create().setTitle("获取基本/补充公积金补缴清册导出数据列表")
                         .setContent("企业[" + comAccountName + "]" + hfComAccountClassesList.get(0).getComAccountId() + "企业公积金账号为空"));
@@ -648,7 +651,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             hfMonthChargeQueryBO.setAddedHfComAccount(hfComAccount);
         }
 
-        hfMonthChargeQueryBO.setPaymentTypes(StringUtils.join(new Integer[] {
+        hfMonthChargeQueryBO.setPaymentTypes(StringUtils.join(new Integer[]{
             HfMonthChargeConstant.PAYMENT_TYPE_REPAIR,
             HfMonthChargeConstant.PAYMENT_TYPE_DIFF_REPAIR
         }, ','));
@@ -685,7 +688,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         String createdTimeMM = createdTime.substring(4, 6);
         String createdTimeDD = createdTime.substring(6, 8);
 
-        for(int page = 0; page < pages; page++) {
+        for (int page = 0; page < pages; page++) {
             Map<String, Object> pageMap = new HashMap<>();
             pageMap.put("comAccountName", comAccountName);
             pageMap.put("hfComAccount", hfComAccount);
@@ -721,7 +724,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             resultList.add(pageMap);
         }
 
-        for(Map<String, Object> map : resultList) {
+        for (Map<String, Object> map : resultList) {
             map.put("total", total);
             map.put("count", count);
         }
