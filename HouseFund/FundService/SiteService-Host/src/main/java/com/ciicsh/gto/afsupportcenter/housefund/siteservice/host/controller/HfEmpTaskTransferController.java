@@ -154,6 +154,7 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
                 printList,
                 response.getOutputStream());
         } catch (Exception e) {
+            e.printStackTrace();
             response.reset();
             response.setCharacterEncoding("UTF-8");
             response.setHeader("content-Type", "text/plain");
