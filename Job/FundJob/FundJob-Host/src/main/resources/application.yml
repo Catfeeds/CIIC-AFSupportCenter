@@ -8,7 +8,7 @@ spring:
   application:
     name: support-center-fund-job
   profiles:
-    active: dev
+    active: fat
   cloud:
     stream:
       instance-count: 2
