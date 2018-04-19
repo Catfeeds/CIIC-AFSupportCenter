@@ -27,6 +27,7 @@ import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -130,15 +131,16 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             hfPayment.setPaymentId(hfMonthChargeQueryBO.getPaymentId());
             hfPayment = hfPaymentMapper.selectOne(hfPayment);
             hfMonthChargeQueryBO.setHfMonth(hfPayment.getPaymentMonth());
+            comAccountParamExtBo.setHfMonth(hfPayment.getPaymentMonth());
 
             Map<String,Object> map=new HashMap<>();
-            List<String> BasiceListAccounts=new ArrayList<>();
+            List<String> BasicListAccounts=new ArrayList<>();
             List<String> AddListAccounts=new ArrayList<>();
             map.put("payment_id",hfMonthChargeQueryBO.getPaymentId());
             hfPaymentAccountMapper.getComAccountByPaymentId(hfMonthChargeQueryBO.getPaymentId()).forEach(
                 acc->{
                     if(acc.getHfType()==1){
-                        BasiceListAccounts.add(acc.getHfComAccount());
+                        BasicListAccounts.add(acc.getHfComAccount());
                     }
                     if(acc.getHfType()==2) {
                         AddListAccounts.add(acc.getHfComAccount());
@@ -146,13 +148,19 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                 }
             );
             if(hfMonthChargeQueryBO.getHfType()==1){
-                hfMonthChargeQueryBO.setBasicComAccountArray(BasiceListAccounts.toArray(new String[BasiceListAccounts.size()]));
+//                hfMonthChargeQueryBO.setBasicComAccountArray(BasiceListAccounts.toArray(new String[BasiceListAccounts.size()]));
+                comAccountParamExtBo.setBasicComAccountArray(hfMonthChargeQueryBO.getBasicComAccountArray());
             }
             if(hfMonthChargeQueryBO.getHfType()==2){
-                hfMonthChargeQueryBO.setAddedComAccountArray( AddListAccounts.toArray(new String[AddListAccounts.size()]));
+//                hfMonthChargeQueryBO.setAddedComAccountArray( AddListAccounts.toArray(new String[AddListAccounts.size()]));
+                comAccountParamExtBo.setAddedComAccountArray(hfMonthChargeQueryBO.getAddedComAccountArray());
             }
         }
-        List<ComAccountExtBo> comAccountExtBoList = hfComAccountService.queryHfComAccountList(comAccountParamExtBo);
+        List<ComAccountExtBo> comAccountExtBoList = null;
+        if ((hfMonthChargeQueryBO.getHfType()==1 && !ArrayUtils.isEmpty(hfMonthChargeQueryBO.getBasicComAccountArray()))
+            || (hfMonthChargeQueryBO.getHfType()==2 && !ArrayUtils.isEmpty(hfMonthChargeQueryBO.getAddedComAccountArray()))) {
+            hfComAccountService.queryHfComAccountList(comAccountParamExtBo);
+        }
         List<Map<String, Object>> resultList = new ArrayList<>();
 
         if (CollectionUtils.isNotEmpty(comAccountExtBoList)) {
@@ -570,7 +578,12 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             }
         }
 
-        List<ComAccountExtBo> comAccountExtBoList = hfComAccountService.queryHfComAccountList(comAccountParamExtBo);
+        List<ComAccountExtBo> comAccountExtBoList = null;
+        if ((hfMonthChargeQueryBO.getHfType()==1 && !ArrayUtils.isEmpty(hfMonthChargeQueryBO.getBasicComAccountArray()))
+            || (hfMonthChargeQueryBO.getHfType()==2 && !ArrayUtils.isEmpty(hfMonthChargeQueryBO.getAddedComAccountArray()))) {
+            hfComAccountService.queryHfComAccountList(comAccountParamExtBo);
+        }
+
         List<Map<String, Object>> resultList = new ArrayList<>();
 
         if (CollectionUtils.isNotEmpty(comAccountExtBoList)) {
