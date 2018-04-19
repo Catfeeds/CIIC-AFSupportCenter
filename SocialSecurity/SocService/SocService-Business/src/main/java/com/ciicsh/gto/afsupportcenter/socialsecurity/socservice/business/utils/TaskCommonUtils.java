@@ -246,8 +246,10 @@ public class TaskCommonUtils {
                         //反馈前道任务单的开始年月和结束年月
 
                         afEmpSocialUpdateDateDTO.setStartConfirmDate(stringTranserDate(dataStartMonth));
-                        LocalDate endMonthDate = LocalDate.parse(dataEndMonth + "01", yyyyMMddFormatter);
-                        afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(endMonthDate.plusMonths(1).minusDays(1).format(yyyyMMddFormatter)));
+                        if (StringUtils.isNotEmpty(dataEndMonth)) {
+                            LocalDate endMonthDate = LocalDate.parse(dataEndMonth + "01", yyyyMMddFormatter);
+                            afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(endMonthDate.plusMonths(1).minusDays(1).format(yyyyMMddFormatter)));
+                        }
 //                        afEmpSocialUpdateDateDTO.setEndConfirmDate(stringTranserDateEndMonth(dataEndMonth));
                         paramsList.add(afEmpSocialUpdateDateDTO);
                     }

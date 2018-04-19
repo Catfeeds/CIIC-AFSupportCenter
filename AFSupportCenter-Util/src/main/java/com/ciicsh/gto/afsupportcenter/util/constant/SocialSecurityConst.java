@@ -262,8 +262,9 @@ public interface SocialSecurityConst {
     // 企业公积金U盾
     public static final Map<String, String> COM_UKEY_STORE_MAP = new HashMap<String, String>() {
         {
-            put("0", "无");
-            put("1", "有(中智代办)");
+            put("0", "没有");
+            put("1", "有(客户自办)");
+            put("2", "有(中智代办)");
         }
     };
 

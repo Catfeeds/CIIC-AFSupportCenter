@@ -8,10 +8,10 @@ import java.time.LocalDate;
 @Data
 public class HFNetBankExportBO {
 
-    private String hfEmpAccount;
+    private String hfEmpAccount = "";
     private String companyId;
     private String employeeId;
-    private String employeeName;
+    private String employeeName = "";
     private String idNum;
     private LocalDate birthday;
     private Integer hfType;

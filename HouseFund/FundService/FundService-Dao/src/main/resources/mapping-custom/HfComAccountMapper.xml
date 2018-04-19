@@ -301,10 +301,10 @@
                 <!--INNER JOIN hf_dataauth_company hdc ON sc.company_id = hdc.company_id AND hdc.user_id = #{userId}-->
             <!--</if>-->
         </if>
-        <if test="basicHfComAccount != null">
+        <if test="basicHfComAccount != null || basicComAccountArray != null">
             INNER JOIN hf_com_account_class hcacb ON hca.com_account_id = hcacb.com_account_id AND hcacb.hf_type = 1 AND hcacb.is_active = 1
         </if>
-        <if test="addedHfComAccount != null">
+        <if test="addedHfComAccount != null || addedComAccountArray != null">
             INNER JOIN hf_com_account_class hcaca ON hca.com_account_id = hcaca.com_account_id AND hcaca.hf_type = 2 AND hcaca.is_active = 1
         </if>
         <if test="hfMonth != null">
@@ -333,6 +333,16 @@
             </if>
             <if test="addedHfComAccount != null">
                 AND hcaca.hf_com_account = #{addedHfComAccount}
+            </if>
+            <if test="basicComAccountArray != null">
+                <foreach collection="basicComAccountArray" item="item" open="AND hcacb.hf_com_account IN (" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="addedComAccountArray != null">
+                <foreach collection="addedComAccountArray" item="item" open="AND hcaca.hf_com_account IN (" separator="," close=")">
+                    #{item}
+                </foreach>
             </if>
         </where>
     </select>

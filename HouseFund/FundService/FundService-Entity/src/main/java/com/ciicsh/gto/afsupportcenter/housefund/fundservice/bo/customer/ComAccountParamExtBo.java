@@ -29,4 +29,6 @@ public class ComAccountParamExtBo {
 
     private String hfMonth;
     private String paymentTypes;
+    private String[] basicComAccountArray;
+    private String[] addedComAccountArray;
 }
