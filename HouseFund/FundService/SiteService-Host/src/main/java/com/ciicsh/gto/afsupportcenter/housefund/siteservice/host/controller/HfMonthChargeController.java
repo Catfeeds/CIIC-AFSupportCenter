@@ -112,15 +112,6 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
                 false,
                 chgDetailsPageList,
                 response.getOutputStream());
-//            FileOutputStream os = new FileOutputStream("E:\\test.pdf");
-//            PdfUtil.createPdfByTemplate(templateFilePath,
-//                PdfUtil.DEFAULT_FONT_NAME,
-//                PdfUtil.DEFAULT_FONT_ENCODING,
-//                false,
-//                false,
-//                chgDetailsPageList,
-//                os);
-//            os.close();
         } catch (Exception e) {
             response.reset();
             response.setCharacterEncoding("UTF-8");

@@ -211,6 +211,7 @@ public class HfFundPayController {
                         String.valueOf(HfMonthChargeConstant.PAYMENT_TYPE_REPAIR),
                         String.valueOf(HfMonthChargeConstant.PAYMENT_TYPE_DIFF_REPAIR)
                     }));
+                    hfNetBankQueryBO.setExceptRepairReason(HfMonthChargeConstant.REPAIR_OFF_BALANCE_PAYMENT);
 
                     List<HFNetBankExportBO> repairList = hfMonthChargeService.queryNetBankData(hfNetBankQueryBO);
 

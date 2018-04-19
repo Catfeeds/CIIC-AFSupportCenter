@@ -252,5 +252,8 @@
         <if test="paymentTypes != null">
           AND hmc.payment_type IN (${paymentTypes})
         </if>
+        <if test="exceptRepairReason != null">
+            AND hmc.repair_reason != #{exceptRepairReason}
+        </if>
     </select>
 </mapper>
