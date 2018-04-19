@@ -278,7 +278,7 @@
     </select>
 
     <select id="queryHfComAccountList" resultMap="ComAccountExtMap">
-        SELECT
+        SELECT DISTINCT
             hca.com_account_id,
             hca.com_account_name,
             hca.payment_way,
@@ -294,18 +294,28 @@
             hca.modified_by
         FROM
         hf_com_account hca
-        <if test="companyId != null or companyName != null or userId != null">
+        <if test="companyId != null or companyName != null">
             INNER JOIN hf_account_com_relation hacr ON hca.com_account_id = hacr.com_account_id AND hacr.is_active = 1
             INNER JOIN sal_company sc ON hacr.company_id = sc.company_id AND sc.is_active = 1
-            <if test="userId != null">
-                INNER JOIN hf_dataauth_company hdc ON sc.company_id = hdc.company_id AND hdc.user_id = #{userId}
-            </if>
+            <!--<if test="userId != null">-->
+                <!--INNER JOIN hf_dataauth_company hdc ON sc.company_id = hdc.company_id AND hdc.user_id = #{userId}-->
+            <!--</if>-->
         </if>
         <if test="basicHfComAccount != null">
             INNER JOIN hf_com_account_class hcacb ON hca.com_account_id = hcacb.com_account_id AND hcacb.hf_type = 1 AND hcacb.is_active = 1
         </if>
         <if test="addedHfComAccount != null">
             INNER JOIN hf_com_account_class hcaca ON hca.com_account_id = hcaca.com_account_id AND hcaca.hf_type = 2 AND hcaca.is_active = 1
+        </if>
+        <if test="hfMonth != null">
+            INNER JOIN hf_emp_archive hea ON hea.com_account_id = hca.com_account_id AND hea.is_active = 1
+            INNER JOIN hf_month_charge hmc ON hea.emp_archive_id = hmc.emp_archive_id AND hmc.is_active = 1 AND hmc.hf_month = #{hfMonth}
+            <if test="hfType != null">
+                AND hmc.hf_type = #{hfType}
+            </if>
+            <if test="paymentTypes != null">
+                AND hmc.payment_type IN (${paymentTypes})
+            </if>
         </if>
         <where>
             hca.is_active = 1

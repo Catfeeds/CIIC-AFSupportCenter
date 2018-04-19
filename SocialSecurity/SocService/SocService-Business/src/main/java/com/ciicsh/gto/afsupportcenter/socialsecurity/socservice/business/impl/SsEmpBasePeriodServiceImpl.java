@@ -98,4 +98,9 @@ public class SsEmpBasePeriodServiceImpl extends ServiceImpl<SsEmpBasePeriodMappe
     public Integer updateReductionById(SsEmpBasePeriod ssEmpBasePeriod) {
         return baseMapper.updateReductionById(ssEmpBasePeriod);
     }
+
+    @Override
+    public List<SsEmpBasePeriod> queryPeriodByEmployeeIdAndCompanyId(String companyId, String employeeId) {
+        return baseMapper.queryPeriodByEmployeeIdAndCompanyId(companyId, employeeId);
+    }
 }

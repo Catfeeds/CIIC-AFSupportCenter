@@ -97,7 +97,12 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
     public PageRows<HfComTaskBo> queryCompanyTasks(PageInfo pageInfo) {
         //将PageInfo对象转DTO对象
         HfComTaskBo hfComTaskBo = pageInfo.toJavaObject(HfComTaskBo.class);
-        return PageKit.doSelectPage(pageInfo, () -> hfComTaskMapper.queryCompanyTask(hfComTaskBo));
+        if("1,2".equals(hfComTaskBo.getTaskStatusString()) ){ //任务单状态：处理中
+            return PageKit.doSelectPage(pageInfo, () -> hfComTaskMapper.queryCompanyTaskProcessing(hfComTaskBo));
+        }else{
+            return PageKit.doSelectPage(pageInfo, () -> hfComTaskMapper.queryCompanyTask(hfComTaskBo));
+        }
+
     }
 
     /**
@@ -170,11 +175,15 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             if (StringUtils.isNotBlank(map.get("comAccountRemark"))) {
                 hfComAccount.setRemark(map.get("comAccountRemark").toString());
             }
-            hfComAccount.setState(HF_COM_ACCOUNT_STATE_INIT);
             hfComAccount.setCreatedTime(new Date());
             hfComAccount.setCreatedBy(UserContext.getUser().getDisplayName());
             hfComAccount.setModifiedBy(UserContext.getUser().getDisplayName());
             hfComAccount.setModifiedTime(new Date());
+            if(hfComTask.getTaskStatus()==3){ //已完成
+                hfComAccount.setState(1);  //设置有效
+            }else{
+                hfComAccount.setState(0);  //设置初始无效
+            }
             if(Optional.ofNullable(map.get("comAccountId")).isPresent()){
                 hfComAccount.setComAccountId(Long.valueOf(map.get("comAccountId")));
                 hfComAccountMapper.updateById(hfComAccount) ;
@@ -214,14 +223,13 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             }else{
                 hfComAccountClassMapper.insert(hfComAccountClass);
             }
-
-
             //设置企业公积金账户客户关系表
             HfAccountComRelation hfAccountComRelation = new HfAccountComRelation();
             hfAccountComRelation.setComAccountId(hfComAccount.getComAccountId());
             hfAccountComRelation.setCompanyId(hfComTask.getCompanyId());
             hfAccountComRelation.setMajorCom(1);
-            if(hfAccountComRelationMapper.queryIfComAccountIdExists(hfComAccount.getComAccountId()) == 0) {
+            int ifComAccountIdExists= hfAccountComRelationMapper.queryIfComAccountIdExists(hfComAccount.getComAccountId());
+            if(ifComAccountIdExists == 0) {
                 hfAccountComRelation.setCreatedTime(new Date());
                 hfAccountComRelation.setCreatedBy(UserContext.getUser().getDisplayName());
                 hfAccountComRelation.setModifiedBy(UserContext.getUser().getDisplayName());
@@ -323,6 +331,15 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
         } else {
             return false;
         }
+    }
+
+    @Override
+    public boolean rejection(Map<String, String> map) {
+        HfComTask hfComTask=new HfComTask();
+        hfComTask.setComTaskId(Long.valueOf(map.get("comTaskId")));
+        hfComTask.setTaskStatus(4);
+        hfComTaskMapper.updateById(hfComTask);
+        return false;
     }
 
 }

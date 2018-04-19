@@ -109,16 +109,16 @@
             AND ca.ss_account = #{ssAccount}
         </if>
         <if test="companyId != null">
-            AND c.company_id LIKE CONCAT('%',#{companyId},'%')
+            AND c.company_id = #{companyId}
         </if>
         <if test="idNum != null">
-            AND e.id_num LIKE CONCAT('%',#{idNum},'%')
+            AND e.id_num = #{idNum}
         </if>
         <if test="title != null">
             AND c.title LIKE CONCAT('%',#{title},'%')
         </if>
         <if test="employeeId != null">
-            AND e.employee_id LIKE CONCAT('%',#{employeeId},'%')
+            AND e.employee_id  = #{employeeId}
         </if>
         <if test="urgent != null">
             AND et.urgent = #{urgent}

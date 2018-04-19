@@ -175,7 +175,7 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         mapP.put("createdByMM", LocalDate.now().getMonthValue());
         mapP.put("createdByDD", LocalDate.now().getDayOfMonth());
         mapP.put("employeeName", mapPrint.get("employee_name"));
-        mapP.put("hfEmpAccount", mapPrint.get("hf_emp_account"));
+        mapP.put("hfEmpAccount", mapPrint.get("emp_account"));
         mapP.put("inUnitName", mapPrint.get("transfer_in_unit"));
         mapP.put("outUnitName", mapPrint.get("transfer_out_unit"));
         mapP.put("inComAccount", mapPrint.get("transfer_in_unit_account"));

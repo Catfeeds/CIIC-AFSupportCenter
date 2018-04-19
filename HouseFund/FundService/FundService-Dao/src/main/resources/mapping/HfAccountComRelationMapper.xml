@@ -15,13 +15,15 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
-    <select id="queryIfComAccountIdExists" resultType="int">
+    <select id="queryIfComAccountIdExists" resultType="Integer">
         SELECT
-        COUNT(*)
-        FROM hf_account_com_relation car
+        COUNT(*) AS C
+        FROM hf_account_com_relation acr
         <where>
-          acr.com_account_id = #{comAccountId}
-            AND acr.company_id=#{companyId}
+            acr.com_account_id = #{comAccountId}
+            <!--<if test="companyId!= null">-->
+               <!--AND acr.company_id=#{companyId}-->
+            <!--</if>-->
         </where>
     </select>
 

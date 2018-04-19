@@ -26,4 +26,7 @@ public class ComAccountParamExtBo {
     private Integer hfType;
 
     private String userId;
+
+    private String hfMonth;
+    private String paymentTypes;
 }

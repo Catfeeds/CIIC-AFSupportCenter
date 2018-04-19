@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -111,15 +112,6 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
                 false,
                 chgDetailsPageList,
                 response.getOutputStream());
-//            FileOutputStream os = new FileOutputStream("E:\\test.pdf");
-//            PdfUtil.createPdfByTemplate(templateFilePath,
-//                PdfUtil.DEFAULT_FONT_NAME,
-//                PdfUtil.DEFAULT_FONT_ENCODING,
-//                false,
-//                false,
-//                chgDetailsPageList,
-//                os);
-//            os.close();
         } catch (Exception e) {
             response.reset();
             response.setCharacterEncoding("UTF-8");
