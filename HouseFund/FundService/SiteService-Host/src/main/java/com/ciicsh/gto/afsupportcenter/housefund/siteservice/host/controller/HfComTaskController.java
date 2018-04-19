@@ -123,5 +123,14 @@ public class HfComTaskController {
         List<HfComTaskEndTypeBo> result = hfComTaskService.queryComTaskEndTypeData();
         return JsonResultKit.of(result);
     }
-
+    /**
+     * 批退
+     * @param map
+     * @return
+     */
+    @PostMapping("/rejection")
+    public JsonResult<Boolean> rejection(@RequestParam Map<String, String> map) {
+        boolean result = hfComTaskService.rejection(map);
+        return JsonResultKit.of(result);
+    }
 }

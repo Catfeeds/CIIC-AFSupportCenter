@@ -74,4 +74,11 @@ public interface HfComTaskService extends IService<HfComTask> {
      */
     boolean upsertCompanyTask(Map<String, String> map);
 
+    /**
+     * 批退
+     * @param map
+     * @return
+     */
+    boolean rejection(Map<String, String> map);
+
 }

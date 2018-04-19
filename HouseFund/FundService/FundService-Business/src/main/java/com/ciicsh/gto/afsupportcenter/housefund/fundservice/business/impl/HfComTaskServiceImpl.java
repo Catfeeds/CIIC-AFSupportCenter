@@ -175,11 +175,15 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             if (StringUtils.isNotBlank(map.get("comAccountRemark"))) {
                 hfComAccount.setRemark(map.get("comAccountRemark").toString());
             }
-            hfComAccount.setState(HF_COM_ACCOUNT_STATE_INIT);
             hfComAccount.setCreatedTime(new Date());
             hfComAccount.setCreatedBy(UserContext.getUser().getDisplayName());
             hfComAccount.setModifiedBy(UserContext.getUser().getDisplayName());
             hfComAccount.setModifiedTime(new Date());
+            if(hfComTask.getTaskStatus()==3){ //已完成
+                hfComAccount.setState(1);  //设置有效
+            }else{
+                hfComAccount.setState(0);  //设置初始无效
+            }
             if(Optional.ofNullable(map.get("comAccountId")).isPresent()){
                 hfComAccount.setComAccountId(Long.valueOf(map.get("comAccountId")));
                 hfComAccountMapper.updateById(hfComAccount) ;
@@ -219,8 +223,6 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             }else{
                 hfComAccountClassMapper.insert(hfComAccountClass);
             }
-
-
             //设置企业公积金账户客户关系表
             HfAccountComRelation hfAccountComRelation = new HfAccountComRelation();
             hfAccountComRelation.setComAccountId(hfComAccount.getComAccountId());
@@ -329,6 +331,15 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
         } else {
             return false;
         }
+    }
+
+    @Override
+    public boolean rejection(Map<String, String> map) {
+        HfComTask hfComTask=new HfComTask();
+        hfComTask.setComTaskId(Long.valueOf(map.get("comTaskId")));
+        hfComTask.setTaskStatus(4);
+        hfComTaskMapper.updateById(hfComTask);
+        return false;
     }
 
 }
