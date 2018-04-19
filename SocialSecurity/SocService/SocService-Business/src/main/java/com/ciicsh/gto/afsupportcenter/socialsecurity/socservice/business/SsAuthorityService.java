@@ -1,9 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.SsDepartmentDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.SsCompanyManagementListDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.SsDataauthCompanyDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.SsUserInfoDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.*;
 
 import java.util.List;
 
@@ -25,4 +22,12 @@ public interface SsAuthorityService {
     SsCompanyManagementListDTO queryAfCompanyByUidAndServiceCenterId(String userId,Long serviceCenterId);
 
     boolean saveSsDataauth(SsDataauthCompanyDTO dto);
+
+    boolean saveSsDataauthWelfareUnit(SsDataauthWelfareUnitDTO dto);
+
+    boolean saveSsDataauthTaskCategory(SsDataauthWelfareUnitDTO dto);
+
+    SsDataauthWelfareUnitDTO querySsDataauthWelfareUnit(String userId);
+
+    SsDataauthWelfareUnitDTO queryAuthorityTaskCategory(String userId);
 }

@@ -33,6 +33,12 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
     private void initDictUtil() {
         List<DicItemDTO> dictItemList;
         try {
+
+            dictItemList = business.listByDicId(DictUtil.DICT_ID_SOC_LOCAL_TASK_CATEGORY);
+            Map<String, String> ssLocalTaskCategoryMap = new LinkedHashMap<>();
+            dictItemList.stream().forEach((d) -> ssLocalTaskCategoryMap.put(d.getDicItemValue(), d.getDicItemText()));
+            DictUtil.getInstance().putDictByTypeValue(DictUtil.TYPE_VALUE_SOC_LOCAL_TASK_CATEGORY, ssLocalTaskCategoryMap, false);
+
             dictItemList = business.listByDicId(DictUtil.DICT_ID_SOCIAL_SECURITY_ACCOUNT_TYPE);
             Map<String, String> accountTypeMap = new LinkedHashMap<>();
             dictItemList.stream().forEach((d) -> accountTypeMap.put(d.getDicItemValue(), d.getDicItemText()));

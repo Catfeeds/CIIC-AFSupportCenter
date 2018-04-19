@@ -2,14 +2,15 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsDataauthCompanyBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsDataauthWelfareUnitBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAuthorityService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsDataauthCompanyMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.SsDepartmentDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.SsCompanyManagementDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.SsCompanyManagementListDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.SsDataauthCompanyDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.SsUserInfoDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsDataauthTaskCategoryMapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsDataauthWelfareUnitMapper;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsDataauthCompany;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsDataauthTaskCategory;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsDataauthWelfareUnit;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.SMDepartmentProxy;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.SMUserInfoProxy;
@@ -46,6 +47,12 @@ public class SsAuthorityServiceImpl extends ServiceImpl<SsDataauthCompanyMapper,
 
     @Autowired
     private CompanyProxy companyProxy;
+
+    @Autowired
+    private SsDataauthWelfareUnitMapper ssDataauthWelfareUnitMapper;
+
+    @Autowired
+    SsDataauthTaskCategoryMapper ssDataauthTaskCategoryMapper;
 
     @Override
     public List<SsUserInfoDTO> queryUsersByDepartmentId() {
@@ -145,5 +152,85 @@ public class SsAuthorityServiceImpl extends ServiceImpl<SsDataauthCompanyMapper,
         }
         return true;
     }
+
+    @Override
+    @Transactional(
+        rollbackFor = {Exception.class}
+    )
+    public boolean saveSsDataauthWelfareUnit(SsDataauthWelfareUnitDTO dto) {
+        ssDataauthWelfareUnitMapper.delByUid(dto.getUserId());
+        List<Integer> units = dto.getWelfareUnits();
+        for (Integer unitId: units) {
+            SsDataauthWelfareUnit unit = new SsDataauthWelfareUnit();
+            // 用户ID
+            unit.setUserId(dto.getUserId());
+            // 福利方ID
+            unit.setWelfareUnit(unitId);
+            unit.setCreatedBy(UserContext.getUserId());
+            unit.setModifiedBy(UserContext.getUserId());
+            unit.setCreatedTime(new Date());
+            unit.setModifiedTime(new Date());
+            ssDataauthWelfareUnitMapper.insertSsDataauthWelfareUnit(unit);
+        }
+        return true;
+    }
+
+
+    @Override
+    @Transactional(
+        rollbackFor = {Exception.class}
+    )
+    public boolean saveSsDataauthTaskCategory(SsDataauthWelfareUnitDTO dto) {
+
+        ssDataauthTaskCategoryMapper.delByUid(dto.getUserId());
+        List<Integer> units = dto.getWelfareUnits();
+        for (Integer unitId: units) {
+
+            SsDataauthTaskCategory task = new SsDataauthTaskCategory();
+            // 用户ID
+            task.setUserId(dto.getUserId());
+            // 福利方ID
+            task.setTaskCategory(unitId);
+            task.setCreatedBy(UserContext.getUserId());
+            task.setModifiedBy(UserContext.getUserId());
+            task.setCreatedTime(new Date());
+            task.setModifiedTime(new Date());
+            ssDataauthTaskCategoryMapper.insertSsDataauthTaskCategory(task);
+        }
+        return true;
+    }
+
+    @Override
+    public SsDataauthWelfareUnitDTO querySsDataauthWelfareUnit(String userId) {
+        SsDataauthWelfareUnitDTO dto = new SsDataauthWelfareUnitDTO();
+        dto.setUserId(userId);
+        List<Integer> welfareUnits = new ArrayList<>();
+        SsDataauthWelfareUnit po = new SsDataauthWelfareUnit();
+        po.setUserId(userId);
+        List<SsDataauthWelfareUnitBO> boList = ssDataauthWelfareUnitMapper.queryListByUid(po);
+        for (SsDataauthWelfareUnitBO bo : boList) {
+            // 福利办理方
+            welfareUnits.add(bo.getWelfareUnit());
+        }
+        dto.setWelfareUnits(welfareUnits);
+        return dto;
+    }
+
+    @Override
+    public SsDataauthWelfareUnitDTO queryAuthorityTaskCategory(String userId) {
+        SsDataauthWelfareUnitDTO dto = new SsDataauthWelfareUnitDTO();
+        dto.setUserId(userId);
+        List<Integer> ids = new ArrayList<>();
+        SsDataauthTaskCategory task = new SsDataauthTaskCategory();
+        task.setUserId(userId);
+        List<SsDataauthTaskCategory> list = ssDataauthTaskCategoryMapper.queryListByUid(task);
+        for (SsDataauthTaskCategory po:list ) {
+            //任务单类型
+            ids.add(po.getTaskCategory());
+        }
+        dto.setWelfareUnits(ids);
+        return dto;
+    }
+
 
 }
