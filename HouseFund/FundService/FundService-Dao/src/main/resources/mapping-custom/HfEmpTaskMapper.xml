@@ -937,7 +937,7 @@
             AND emp.employee_name LIKE CONCAT('%',#{employeeName},'%')
         </if>
         <if test="idNum != null">
-            AND emp.id_num = LIKE CONCAT('%',#{idNum},'%')
+            AND emp.id_num LIKE CONCAT('%',#{idNum},'%')
         </if>
         <if test="status != null">
             AND eoop.status = #{status}
@@ -1011,16 +1011,15 @@
         </if>
     </select>
     <select id="fetchPrintInfo" resultType="Map">
-        SELECT et.*,emp.employee_name,ea.hf_emp_account
+        SELECT et.*,emp.employee_name,ea.hf_emp_account as emp_account
         FROM hf_emp_task et
-        INNER JOIN hf_emp_archive ea
+        LEFT JOIN hf_emp_archive ea
                 ON  ea.employee_id=et.employee_id
                 AND ea.company_id=et.company_id
                 AND ea.hf_type=et.hf_type
-                AND ea.archive_status!=3
                 AND ea.is_active=1
                 AND ea.hf_type=et.hf_type
-        INNER JOIN hf_com_account ca
+        LEFT JOIN hf_com_account ca
                 ON  ea.com_account_id=ca.com_account_id
                 AND ca.is_active=1
         INNER  JOIN emp_employee emp ON  emp.employee_id=et.employee_id

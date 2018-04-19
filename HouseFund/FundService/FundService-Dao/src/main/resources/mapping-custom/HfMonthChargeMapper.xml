@@ -140,7 +140,7 @@
         hmc.employee_id,
         ee.employee_name,
         CASE WHEN hmc.hf_type = 1 THEN heab.hf_emp_account ELSE heaa.hf_emp_account END hf_emp_account,
-        heab.hf_emp_account AS basic_hf_emp_account,
+        heaab.hf_emp_account AS basic_hf_emp_account,
         ee.id_num,
         hmc.hf_month,
         hmc.ss_month_belong,
@@ -154,14 +154,15 @@
         CASE WHEN hmc.hf_type = 1 THEN hcacb.hf_com_account ELSE hcaca.hf_com_account END hf_com_account
         FROM hf_month_charge hmc
         INNER JOIN sal_company sc ON hmc.company_id = sc.company_id AND sc.is_active = 1
-        <if test="userId != null">
-            INNER JOIN hf_dataauth_company hdc ON sc.company_id = hdc.company_id AND hdc.user_id = #{userId}
-        </if>
+        <!--<if test="userId != null">-->
+            <!--INNER JOIN hf_dataauth_company hdc ON sc.company_id = hdc.company_id AND hdc.user_id = #{userId}-->
+        <!--</if>-->
         INNER JOIN emp_employee ee ON hmc.employee_id = ee.employee_id
         LEFT JOIN hf_emp_archive heab ON hmc.emp_archive_id = heab.emp_archive_id AND heab.hf_type = 1 AND heab.is_active = 1
         LEFT JOIN hf_com_account hcab ON heab.com_account_id = hcab.com_account_id AND hcab.is_active = 1
         LEFT JOIN hf_com_account_class hcacb ON heab.com_account_id = hcacb.com_account_id AND hcacb.hf_type = 1 AND hcab.is_active = 1
         LEFT JOIN hf_emp_archive heaa ON hmc.emp_archive_id = heaa.emp_archive_id AND heaa.hf_type = 2 AND heaa.is_active = 1
+        LEFT JOIN hf_emp_archive heaab ON heaab.emp_archive_id = heaa.belong_emp_archive_id AND heaab.hf_type = 1 AND heaab.is_active = 1
         LEFT JOIN hf_com_account hcaa ON heaa.com_account_id = hcaa.com_account_id AND hcaa.is_active = 1
         LEFT JOIN hf_com_account_class hcaca ON heaa.com_account_id = hcaca.com_account_id AND hcaca.hf_type = 2 AND hcaa.is_active = 1
         <where>
@@ -202,6 +203,9 @@
             </if>
             <if test="paymentTypes != null">
                 AND hmc.payment_type IN (${paymentTypes})
+            </if>
+            <if test="exceptRepairReason != null">
+                AND hmc.repair_reason != #{exceptRepairReason}
             </if>
             <if test="basicComAccountArray != null">
                 <foreach collection="basicComAccountArray" item="item" open="AND hcacb.hf_com_account IN (" separator="," close=")">
@@ -247,6 +251,9 @@
         </if>
         <if test="paymentTypes != null">
           AND hmc.payment_type IN (${paymentTypes})
+        </if>
+        <if test="exceptRepairReason != null">
+            AND hmc.repair_reason != #{exceptRepairReason}
         </if>
     </select>
 </mapper>

@@ -28,4 +28,6 @@ public interface SsEmpBasePeriodMapper extends BaseMapper<SsEmpBasePeriod> {
     void updateEndMonAndHandleMon(SsEmpBasePeriod ssEmpBasePeriod);
 
     Integer updateReductionById(SsEmpBasePeriod ssEmpBasePeriod);
+
+    List<SsEmpBasePeriod> queryPeriodByEmployeeIdAndCompanyId(@Param("companyId")String companyId, @Param("employeeId")String employeeId);
 }

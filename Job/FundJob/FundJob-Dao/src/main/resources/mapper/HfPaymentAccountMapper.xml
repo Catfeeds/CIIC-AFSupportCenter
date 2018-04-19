@@ -66,9 +66,13 @@
     </select>
 
     <select id="getHfPaymentIsCompanyEnjoyAdvance" resultType="Integer">
-        SELECT IF(ca.payment_way=3,'1','0') AS 'is_company_enjoy_advance'
-        from hf_payment_account pa LEFT JOIN  hf_com_account ca ON  ca.com_account_id=pa.com_account_id
-        WHERE pa.is_active=1 AND pa.payment_account_id=#{paymentAccountId} limit 1
+        SELECT
+          IF(ca.payment_way=3,'1','0') AS 'is_company_enjoy_advance'
+        FROM hf_payment_account pa
+        INNER JOIN  hf_com_account ca ON  ca.com_account_id=pa.com_account_id
+        WHERE
+          pa.is_active = 1
+        AND pa.payment_account_id=#{paymentAccountId} limit 1
     </select>
 
 </mapper>
