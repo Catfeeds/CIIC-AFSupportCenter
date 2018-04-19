@@ -65,5 +65,5 @@ public interface HfStatementCompareMapper extends BaseMapper<HfStatementCompareP
      * @return
      */
     @MapKey("employeeId")
-    Map<String,EmployeeSysAmountPO> getEmployeeSysAmount(@Param("comAccountId") long comAccountId, @Param("hfMonth") String hfMonth);
+    Map<String,EmployeeSysAmountPO> getEmployeeSysAmount(@Param("hfType")Integer hfType, @Param("comAccountId") long comAccountId, @Param("hfMonth") String hfMonth);
 }
