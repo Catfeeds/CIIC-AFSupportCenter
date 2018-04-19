@@ -91,8 +91,29 @@ public class HfComAccount implements Serializable {
      */
 	@TableField("modified_by")
 	private String modifiedBy;
+    @TableField("modified_display_name")
+    private String modifiedDisplayName;
 
-	public Long getComAccountId() {
+    @TableField("created_display_name")
+    private String createdDisplayName;
+
+    public String getModifiedDisplayName() {
+        return modifiedDisplayName;
+    }
+
+    public void setModifiedDisplayName(String modifiedDisplayName) {
+        this.modifiedDisplayName = modifiedDisplayName;
+    }
+
+    public String getCreatedDisplayName() {
+        return createdDisplayName;
+    }
+
+    public void setCreatedDisplayName(String createdDisplayName) {
+        this.createdDisplayName = createdDisplayName;
+    }
+
+    public Long getComAccountId() {
 		return comAccountId;
 	}
 
