@@ -231,13 +231,13 @@ public class HfFundPayController {
                     }
                 }
 
-                if (!repairMap.isEmpty()) {
-                    String fileName = URLEncoder.encode("网银文件_补缴TXT.zip", "UTF-8");
-                    response.reset();
-                    response.setCharacterEncoding("UTF-8");
-                    response.setHeader("content-Type", "application/zip");
-                    response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+                String fileName = URLEncoder.encode("网银文件_补缴TXT.zip", "UTF-8");
+                response.reset();
+                response.setCharacterEncoding("UTF-8");
+                response.setHeader("content-Type", "application/zip");
+                response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
 
+                if (!repairMap.isEmpty()) {
                     ZipUtil.createZipFileWithTxtFiles(response.getOutputStream(), repairMap);
                 }
             }
@@ -308,13 +308,13 @@ public class HfFundPayController {
                     }
                 }
 
-                if (!changeMap.isEmpty()) {
-                    String fileName = URLEncoder.encode("网银文件_变更TXT.zip", "UTF-8");
-                    response.reset();
-                    response.setCharacterEncoding("UTF-8");
-                    response.setHeader("content-Type", "application/zip");
-                    response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+                String fileName = URLEncoder.encode("网银文件_变更TXT.zip", "UTF-8");
+                response.reset();
+                response.setCharacterEncoding("UTF-8");
+                response.setHeader("content-Type", "application/zip");
+                response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
 
+                if (!changeMap.isEmpty()) {
                     ZipUtil.createZipFileWithTxtFiles(response.getOutputStream(), changeMap);
                 }
             }
