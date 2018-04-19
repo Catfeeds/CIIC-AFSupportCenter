@@ -8,4 +8,5 @@ public class HFNetBankQueryBO {
     private String hfMonth;
     private Integer hfType;
     private String paymentTypes;
+    private Integer exceptRepairReason;
 }
