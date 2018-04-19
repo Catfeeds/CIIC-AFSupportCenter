@@ -291,6 +291,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     endMonth = null;
                 }
             } else {
+                startMonth = params.getString("startMonth");
                 endMonth = params.getString("endMonth");
             }
 
@@ -1563,8 +1564,6 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 throw new BusinessException("该雇员的雇员档案数据不正确");
             }
             empArchiveId = hfEmpArchiveList.get(0).getEmpArchiveId();
-            // TODO 和林辉先确认
-//            inputHfEmpTask.setHfEmpAccount(hfEmpArchiveList.get(0).getHfEmpAccount());
 
             hfEmpArchiveList = hfEmpArchiveList.stream()
                 .filter(e -> e.getArchiveStatus() == null || e.getArchiveStatus() != HfEmpArchiveConstant.ARCHIVE_STATUS_CLOSED)
@@ -1653,8 +1652,6 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 
         hfEmpArchive.setModifiedBy(inputHfEmpTask.getModifiedBy());
         boolean isNew = false;
-        // TODO 和林辉确认
-//        hfEmpArchive.setHfEmpAccount(inputHfEmpTask.getHfEmpAccount());
 
         if (empArchiveId == null) {
             hfEmpArchive.setCompanyId(params.getString("companyId"));
@@ -1906,7 +1903,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                         afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(startMonth + "01"));
                     }
                     if (StringUtils.isNotEmpty(endMonth)) {
-                        afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(endMonth + "01"));
+                        LocalDate endMonthDate = LocalDate.parse(endMonth + "01", yyyyMMddFormatter);
+                        afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(endMonthDate.plusMonths(1).minusDays(1).format(yyyyMMddFormatter)));
                     }
                     afEmpSocialUpdateDateDTO.setEmpAgreementId(empAgreementId);
                     afEmpSocialUpdateDateDTOList.add(afEmpSocialUpdateDateDTO);
