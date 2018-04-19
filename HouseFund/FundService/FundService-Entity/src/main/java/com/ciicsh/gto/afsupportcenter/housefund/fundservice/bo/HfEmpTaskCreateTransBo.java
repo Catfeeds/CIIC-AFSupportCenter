@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import lombok.Data;
 
 import java.io.Serializable;
