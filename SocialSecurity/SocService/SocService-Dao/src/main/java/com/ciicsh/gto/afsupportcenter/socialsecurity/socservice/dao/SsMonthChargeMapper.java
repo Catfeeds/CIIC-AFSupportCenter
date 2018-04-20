@@ -35,5 +35,5 @@ public interface SsMonthChargeMapper extends BaseMapper<SsMonthCharge> {
 
     List<SsMonthCharge> selectOldDate(@Param("employeeId") String employeeId, @Param("paymentMonth") String paymentMonth, @Param("handleMonth") String handleMonth,@Param("costCategory")Integer costCategory);
 
-    List<SsMonthChargeBO> selectTotalFromOld(@Param("employeeId")String employeeId, @Param("paymentMonth")String paymentMonth);
+    List<SsMonthChargeBO> selectTotalFromOld(@Param("employeeId")String employeeId, @Param("paymentMonth")String paymentMonth, @Param("costCategory")Integer costCategory);
 }

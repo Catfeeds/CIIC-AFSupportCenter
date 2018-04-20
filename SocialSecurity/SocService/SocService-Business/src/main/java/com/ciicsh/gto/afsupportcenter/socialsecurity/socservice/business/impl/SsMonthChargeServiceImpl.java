@@ -52,7 +52,7 @@ public class SsMonthChargeServiceImpl extends ServiceImpl<SsMonthChargeMapper, S
      * @param paymentMonth
      */
     @Override
-    public  List<SsMonthChargeBO> selectTotalFromOld(String employeeId, String paymentMonth) {
-        return baseMapper.selectTotalFromOld(employeeId,paymentMonth);
+    public  List<SsMonthChargeBO> selectTotalFromOld(String employeeId, String paymentMonth, Integer costCategory) {
+        return baseMapper.selectTotalFromOld(employeeId,paymentMonth, costCategory);
     }
 }

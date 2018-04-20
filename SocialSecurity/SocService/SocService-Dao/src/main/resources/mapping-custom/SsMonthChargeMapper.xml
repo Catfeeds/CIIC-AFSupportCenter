@@ -81,7 +81,7 @@
     </select>
 
     <!--查询总额 之前做了相减 则当月已办肯定没有-->
-    <select id="selectTotalFromOld" parameterType="string" resultMap="ResultMap">
+    <select id="selectTotalFromOld" resultMap="ResultMap">
         SELECT
         smc.month_charge_id,
         smc.total_amount,
@@ -99,7 +99,7 @@
         WHERE smc.employee_id =#{employeeId}
         AND smc.ss_month_belong=#{paymentMonth}
          AND smc.is_active=1
-         AND smc.cost_category = 9
+         AND smc.cost_category = #{costCategory}
     </select>
 
 </mapper>
