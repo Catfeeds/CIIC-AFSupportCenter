@@ -40,6 +40,7 @@ public class EmpTaskTransferBo {
     private String handleRemark;
     private Integer paymentBank;
     private Integer hfAccountType;
+    private String createdDisplayName;
 
     public String getTransferDateFormat() {
         if (this.transferDate != null) {

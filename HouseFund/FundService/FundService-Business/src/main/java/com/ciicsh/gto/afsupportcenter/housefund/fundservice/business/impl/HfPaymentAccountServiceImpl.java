@@ -485,6 +485,7 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
         List<String> outList = new ArrayList<>();
         repairList.add(new HFNetBankExportBO());
         HFNetBankExportBO prevHfNetBankExportBO = repairList.get(0);
+        prevHfNetBankExportBO.setEndMonth(prevHfNetBankExportBO.getStartMonth());
 
         for (int i = 1; i < repairList.size(); i++) {
             HFNetBankExportBO hfNetBankExportBO = repairList.get(i);
@@ -533,6 +534,8 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
      * @return
      */
     private boolean isContinue(HFNetBankExportBO prevHfNetBankExportBO, HFNetBankExportBO hfNetBankExportBO) {
+        hfNetBankExportBO.setEndMonth(hfNetBankExportBO.getStartMonth());
+
         if (prevHfNetBankExportBO.getCompanyId().equals(hfNetBankExportBO.getCompanyId()) &&
             prevHfNetBankExportBO.getEmployeeId().equals(hfNetBankExportBO.getEmployeeId()) &&
             prevHfNetBankExportBO.getHfType().equals(hfNetBankExportBO.getHfType()) &&
@@ -543,12 +546,11 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
             YearMonth EndMonth = YearMonth.parse(prevHfNetBankExportBO.getEndMonth(), formatter);
             YearMonth StartMonth = YearMonth.parse(hfNetBankExportBO.getStartMonth(), formatter);
 
+            // 如果前一条的截止年月与当前一条的开始年月接上
             if (EndMonth.plusMonths(1).equals(StartMonth)) {
                 prevHfNetBankExportBO.setEndMonth(hfNetBankExportBO.getStartMonth());
                 return true;
             }
-        } else {
-            hfNetBankExportBO.setEndMonth(hfNetBankExportBO.getStartMonth());
         }
         return false;
     }

@@ -14,7 +14,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpArchiveMapp
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
-import com.ciicsh.gto.afsupportcenter.util.DateUtil;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -61,9 +61,9 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         //企业账户信息
         ComAccountParamExtBo comAccountParamExtBo=new ComAccountParamExtBo();
         comAccountParamExtBo.setCompanyId(companyId);
-        comAccountParamExtBo.setHfType(1);
+        comAccountParamExtBo.setHfType(1);//基本
         List<ComAccountExtBo> listAccount1 = hfComAccountMapper.getHfComAccountList(comAccountParamExtBo);
-        comAccountParamExtBo.setHfType(2);
+        comAccountParamExtBo.setHfType(2);//补充
         List<ComAccountExtBo> listAccount2 = hfComAccountMapper.getHfComAccountList(comAccountParamExtBo);
         if(listAccount1!=null && listAccount1.size()>0){//基本公积金
             ComAccountExtBo comAccountExtBo=listAccount1.get(0);
@@ -134,22 +134,28 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
      * 保存雇员公积金任务单表
      * @param hfEmpTask
      */
-    private void saveEmpTask(HfEmpTask hfEmpTask){
-        hfEmpTask.setProcessCategory(9);//大类：其他
-        hfEmpTask.setTaskCategory(8);
-        if(Optional.ofNullable(hfEmpTask.getEmpTaskId()).isPresent()==false){ //公积金专员创建任务单
+    final Integer EMP_TASK_PRCESS_CATEGORY_9 = 9;
+    final Integer EMP_TASK_TASK_CATEGORY_8 = 8;
+    final Integer EMP_TASK_TASK_STATUS_1 = 1;
+
+    private void saveEmpTask(HfEmpTask hfEmpTask) {
+        hfEmpTask.setProcessCategory(EMP_TASK_PRCESS_CATEGORY_9);//大类：其他
+        hfEmpTask.setTaskCategory(EMP_TASK_TASK_CATEGORY_8);
+        hfEmpTask.setTaskStatus(EMP_TASK_TASK_STATUS_1);
+        if (Optional.ofNullable(hfEmpTask.getEmpTaskId()).isPresent() == false) { //公积金专员创建任务单
             hfEmpTask.setSubmitTime(LocalDate.now());
-            hfEmpTask.setSubmitterId("");
-            hfEmpTask.setCreatedBy("");
-            hfEmpTask.setCreatedDisplayName("");
+            hfEmpTask.setSubmitterId(UserContext.getUser().getDisplayName());
+            hfEmpTask.setCreatedBy(UserContext.getUserId());
+            hfEmpTask.setCreatedDisplayName(UserContext.getUser().getDisplayName());
+            hfEmpTask.setModifiedBy(UserContext.getUserId());
+            hfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
             baseMapper.insert(hfEmpTask);
-        }else{
+        } else {
             hfEmpTask.setModifiedTime(LocalDateTime.now());
-            hfEmpTask.setModifiedBy("");
-            hfEmpTask.setModifiedDisplayName("");
+            hfEmpTask.setModifiedBy(UserContext.getUserId());
+            hfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
             baseMapper.updateById(hfEmpTask);
         }
-
     }
     @Override
     public JsonResult notHandleTransfer(EmpTaskTransferBo empTaskTransferBo) {

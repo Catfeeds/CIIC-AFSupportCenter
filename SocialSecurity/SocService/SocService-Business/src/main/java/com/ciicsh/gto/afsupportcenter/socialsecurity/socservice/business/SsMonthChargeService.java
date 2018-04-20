@@ -20,5 +20,5 @@ public interface SsMonthChargeService extends IService<SsMonthCharge> {
 
     int deleteOldDate(String employeeId, String paymentMonth, String handleMonth,Integer costCategory);
 
-    List<SsMonthChargeBO>  selectTotalFromOld(String employeeId, String paymentMonth);
+    List<SsMonthChargeBO>  selectTotalFromOld(String employeeId, String paymentMonth, Integer costCategory);
 }
