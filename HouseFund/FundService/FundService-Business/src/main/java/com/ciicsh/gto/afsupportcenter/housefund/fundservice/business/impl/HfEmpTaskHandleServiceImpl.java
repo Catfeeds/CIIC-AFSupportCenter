@@ -262,24 +262,33 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             String dataEndMonth;
 
             if (operatorListData != null) {
+                // 遍历任务单费用段记录
                 for (int i = 0; i < operatorListData.size(); i++) {
                     JSONObject data = operatorListData.getJSONObject(i);
                     dataStartMonth = data.getString("startMonth");
                     dataEndMonth = data.getString("endMonth");
 
+                    // 如果任务单费用段起始年月不为空
                     if (StringUtils.isNotEmpty(dataStartMonth)) {
+                        // 如果参照起始年月大于任务单费用段起始年月，则将参照起始年月更新为任务单费用段起始年月
+                        // 目的是为了取得所有任务单费用段中的最早起始年月
                         if (Integer.valueOf(startMonth) > Integer.valueOf(dataStartMonth)) {
                             startMonth = dataStartMonth;
                         }
                     } else {
+                        // 如果任务单费用段起始年月为空，则暂定为一个理论最小值
                         startMonth = "190001";
                     }
 
+                    // 如果任务单费用段截止年月不为空
                     if (StringUtils.isNotEmpty(dataEndMonth)) {
+                        // 如果参照截止年月小于任务单费用段截止年月，则将参照截止年月更新为任务单费用段截止年月
+                        // 目的是为了取得所有任务单费用段中的最晚截止年月
                         if (Integer.valueOf(endMonth) < Integer.valueOf(dataEndMonth)) {
                             endMonth = dataEndMonth;
                         }
                     } else {
+                        // 如果任务单费用段截止年月为空，则暂定为一个理论最大值
                         endMonth = "999912";
                     }
                 }
