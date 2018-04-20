@@ -125,6 +125,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         comAccountParamExtBo.setHfMonth(hfMonthChargeQueryBO.getHfMonth());
         comAccountParamExtBo.setHfType(hfMonthChargeQueryBO.getHfType());
         comAccountParamExtBo.setPaymentTypes(hfMonthChargeQueryBO.getPaymentTypes());
+        List<ComAccountExtBo> comAccountExtBoList = null;
         //如果是汇缴支付给发起的报表清册
         if(Optional.ofNullable(hfMonthChargeQueryBO.getPaymentId()).isPresent()){
             HfPayment hfPayment=new HfPayment();
@@ -148,19 +149,20 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                 }
             );
             if(hfMonthChargeQueryBO.getHfType()==1){
-//                hfMonthChargeQueryBO.setBasicComAccountArray(BasiceListAccounts.toArray(new String[BasiceListAccounts.size()]));
-                comAccountParamExtBo.setBasicComAccountArray(hfMonthChargeQueryBO.getBasicComAccountArray());
+                comAccountParamExtBo.setBasicComAccountArray(BasicListAccounts.toArray(new String[BasicListAccounts.size()]));
             }
             if(hfMonthChargeQueryBO.getHfType()==2){
-//                hfMonthChargeQueryBO.setAddedComAccountArray( AddListAccounts.toArray(new String[AddListAccounts.size()]));
-                comAccountParamExtBo.setAddedComAccountArray(hfMonthChargeQueryBO.getAddedComAccountArray());
+                comAccountParamExtBo.setAddedComAccountArray(AddListAccounts.toArray(new String[AddListAccounts.size()]));
             }
+
+            if ((comAccountParamExtBo.getHfType()==1 && !ArrayUtils.isEmpty(comAccountParamExtBo.getBasicComAccountArray()))
+                || (comAccountParamExtBo.getHfType()==2 && !ArrayUtils.isEmpty(comAccountParamExtBo.getAddedComAccountArray()))) {
+                comAccountExtBoList = hfComAccountService.queryHfComAccountList(comAccountParamExtBo);
+            }
+        } else {
+            comAccountExtBoList = hfComAccountService.queryHfComAccountList(comAccountParamExtBo);
         }
-        List<ComAccountExtBo> comAccountExtBoList = null;
-        if ((hfMonthChargeQueryBO.getHfType()==1 && !ArrayUtils.isEmpty(hfMonthChargeQueryBO.getBasicComAccountArray()))
-            || (hfMonthChargeQueryBO.getHfType()==2 && !ArrayUtils.isEmpty(hfMonthChargeQueryBO.getAddedComAccountArray()))) {
-            hfComAccountService.queryHfComAccountList(comAccountParamExtBo);
-        }
+
         List<Map<String, Object>> resultList = new ArrayList<>();
 
         if (CollectionUtils.isNotEmpty(comAccountExtBoList)) {
@@ -546,6 +548,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         comAccountParamExtBo.setHfType(hfMonthChargeQueryBO.getHfType());
         comAccountParamExtBo.setPaymentTypes(hfMonthChargeQueryBO.getPaymentTypes());
         comAccountParamExtBo.setUserId(hfMonthChargeQueryBO.getUserId());
+        List<ComAccountExtBo> comAccountExtBoList = null;
         //如果是汇缴支付给发起的报表清册
         if(Optional.ofNullable(hfMonthChargeQueryBO.getPaymentId()).isPresent()){
             HfPayment hfPayment=new HfPayment();
@@ -569,19 +572,18 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                 }
             );
             if(hfMonthChargeQueryBO.getHfType()==1){
-//                hfMonthChargeQueryBO.setBasicComAccountArray(BasiceListAccounts.toArray(new String[BasiceListAccounts.size()]));
-                comAccountParamExtBo.setBasicComAccountArray(hfMonthChargeQueryBO.getBasicComAccountArray());
+                comAccountParamExtBo.setBasicComAccountArray(BasicListAccounts.toArray(new String[BasicListAccounts.size()]));
             }
             if(hfMonthChargeQueryBO.getHfType()==2){
-//                hfMonthChargeQueryBO.setAddedComAccountArray( AddListAccounts.toArray(new String[AddListAccounts.size()]));
-                comAccountParamExtBo.setAddedComAccountArray(hfMonthChargeQueryBO.getAddedComAccountArray());
+                comAccountParamExtBo.setAddedComAccountArray(AddListAccounts.toArray(new String[AddListAccounts.size()]));
             }
-        }
 
-        List<ComAccountExtBo> comAccountExtBoList = null;
-        if ((hfMonthChargeQueryBO.getHfType()==1 && !ArrayUtils.isEmpty(hfMonthChargeQueryBO.getBasicComAccountArray()))
-            || (hfMonthChargeQueryBO.getHfType()==2 && !ArrayUtils.isEmpty(hfMonthChargeQueryBO.getAddedComAccountArray()))) {
-            hfComAccountService.queryHfComAccountList(comAccountParamExtBo);
+            if ((comAccountParamExtBo.getHfType()==1 && !ArrayUtils.isEmpty(comAccountParamExtBo.getBasicComAccountArray()))
+                || (comAccountParamExtBo.getHfType()==2 && !ArrayUtils.isEmpty(comAccountParamExtBo.getAddedComAccountArray()))) {
+                comAccountExtBoList = hfComAccountService.queryHfComAccountList(comAccountParamExtBo);
+            }
+        } else {
+            comAccountExtBoList = hfComAccountService.queryHfComAccountList(comAccountParamExtBo);
         }
 
         List<Map<String, Object>> resultList = new ArrayList<>();
