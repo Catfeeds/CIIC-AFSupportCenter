@@ -40,7 +40,7 @@ public class SsMonthChargeItemBO extends SsMonthChargeItem{
     @Excel(name = "客户编号", orderNum = "4")
     private String companyId;
     //社保账户类型
-    @Excel(name = "社保账户类型", orderNum = "5")
+    @Excel(name = "社保账户类型", orderNum = "5", replace = {"中智大库_1","中智外包_2","独立户_3"})
     private Integer ssAccountType;
     //雇员属性
     private Integer empClassify;
