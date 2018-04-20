@@ -158,11 +158,17 @@ public class KafkaReceiver {
             else{
                 fundType = 2;
 
-                if(null != paramMap && paramMap.get("fundType") != null) {
-                    fundType = Integer.parseInt(paramMap.get("fundType").toString());
+                String oldAgreementId = null;
+                if (null != paramMap) {
+                    if (paramMap.get("fundType") != null) {
+                        fundType = Integer.parseInt(paramMap.get("fundType").toString());
+                    }
+                    if (paramMap.get("oldEmpAgreementId") != null) {
+                        oldAgreementId = paramMap.get("oldEmpAgreementId").toString();
+                    }
                 }
                 logger.debug("start out fundEmpFlop: " + JSON.toJSONString(taskMsgDTO));
-                boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(), FLOP_OUT_TASK_CATEGORIES[fundType - 1].getCategory(), null,0);
+                boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(), FLOP_OUT_TASK_CATEGORIES[fundType - 1].getCategory(), oldAgreementId,0);
                 logger.debug("end out fundEmpFlop:  " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
             }
             logger.debug("end fundEmpFlop!");
@@ -411,21 +417,20 @@ public class KafkaReceiver {
             Long empAgreementId = null;
             // 翻牌或调整通道时，如果是转出或封存的，根据oldAgreementId去获取转出或封存前的雇员信息
             if(
-                StringUtils.isEmpty(oldAgreementId) && (
                 (
                     processCategory.equals(ProcessCategory.EMPLOYEEFLOP.getCategory()) && (
                         taskCategory.equals(TaskCategory.FLOPOUT.getCategory())
-                            || taskCategory.equals(TaskCategory.FLOPSEALED.getCategory()
-                        )
+                            || taskCategory.equals(TaskCategory.FLOPSEALED.getCategory())
                     )
                 )
                 || (
+                    StringUtils.isEmpty(oldAgreementId) && (
                     processCategory.equals(ProcessCategory.EMPLOYEEAGREEMENTADJUST.getCategory()) && (
                         taskCategory.equals(TaskCategory.TURNOUT.getCategory())
                             || taskCategory.equals(TaskCategory.SEALED.getCategory()
                         )
-                    )
-                ))) {
+                    )))
+                ) {
                 Map<String, Object> paramMap = taskMsgDTO.getVariables();
                 if(null != paramMap){
                     empAgreementId = Long.parseLong(paramMap.get("oldEmpAgreementId").toString());

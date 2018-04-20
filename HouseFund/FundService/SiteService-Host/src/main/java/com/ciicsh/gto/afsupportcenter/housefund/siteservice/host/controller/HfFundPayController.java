@@ -238,13 +238,10 @@ public class HfFundPayController {
                 response.setHeader("content-Type", "application/zip");
                 response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
 
-                if (!repairMap.isEmpty()) {
-                    ZipUtil.createZipFileWithTxtFiles(response.getOutputStream(), repairMap);
-                }
+                ZipUtil.createZipFileWithTxtFiles(response.getOutputStream(), repairMap);
             }
         } catch (Exception e) {
             logApiUtil.error(LogMessage.create().setTitle("生成网银文件补缴").setContent(e.getMessage()));
-//            throw new BusinessException(e);
             response.reset();
             response.setCharacterEncoding("UTF-8");
             response.setHeader("content-Type", "text/plain");
@@ -315,13 +312,10 @@ public class HfFundPayController {
                 response.setHeader("content-Type", "application/zip");
                 response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
 
-                if (!changeMap.isEmpty()) {
-                    ZipUtil.createZipFileWithTxtFiles(response.getOutputStream(), changeMap);
-                }
+                ZipUtil.createZipFileWithTxtFiles(response.getOutputStream(), changeMap);
             }
         } catch (Exception e) {
             logApiUtil.error(LogMessage.create().setTitle("生成网银文件变更").setContent(e.getMessage()));
-//            throw new BusinessException(e);
             response.reset();
             response.setCharacterEncoding("UTF-8");
             response.setHeader("content-Type", "text/plain");
