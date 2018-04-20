@@ -82,7 +82,6 @@ public class HfComTaskBo extends HfComTask {
     @Excel(name = "备注",orderNum = "7")
     private String submitRemark;
 
-    private String operateStrartMonth="";
     /**
      * 付款方式代码名称:
      1 自付（客户自己汇缴给银行，雇员由中智办理）
@@ -172,4 +171,9 @@ public class HfComTaskBo extends HfComTask {
     private Integer endType;
 
     private  String taskRemark;
+
+    private String comAccountNameTask;
+
+    private String paymentWayTask;
+
 }

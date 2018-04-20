@@ -209,7 +209,7 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
     }
 
     /**
-     * 添加/更新企业任务单
+     * 变更企业任务单
      *
      * @param map
      * @return
@@ -221,6 +221,21 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
         }
         //取得企业任务单
         HfComTask hfComTask = hfComTaskMapper.selectById(map.get("comTaskId"));
+        HfComAccount hfComAccount = new HfComAccount();
+        if (hfComTask.getTaskStatus() == HF_COM_TASK_TASK_STATUS_3) { //已完成
+            hfComAccount.setComAccountId(Long.valueOf(map.get("comAccountId")));
+            if (StringUtils.isNotBlank(map.get("comAccountName"))) {
+                hfComAccount.setComAccountName(map.get("comAccountName"));
+            }
+            if (StringUtils.isNotBlank(map.get("paymentType"))) {
+                hfComAccount.setPaymentWay(Integer.parseInt(map.get("paymentType")));
+            }
+            hfComAccountMapper.updateById(hfComAccount);
+            HfComAccountClass hfComAccountClass = new HfComAccountClass();
+            this.updateComAccountClass(map,hfComAccount,hfComAccountClass,hfComTask);
+        }
+
+
         if (StringUtils.isNotBlank(map.get("comAccountName"))) {
             hfComTask.setComAccountName(map.get("comAccountName"));
         }
@@ -276,10 +291,8 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
         if (!StringUtils.isNotBlank(map.get("comTaskId"))) {
             return false;
         }
-
         //取得企业任务单
         HfComTask hfComTask = hfComTaskMapper.selectById(map.get("comTaskId"));
-
         HfComAccount hfComAccount = new HfComAccount();
         if (hfComTask.getTaskStatus() == HF_COM_TASK_TASK_STATUS_3) { //已完成
             hfComAccount.setState(HF_COM_ACCOUNT_STATE_0);  //设置初始无效
@@ -288,14 +301,7 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             HfComAccountClass hfComAccountClass = new HfComAccountClass();
             this.updateComAccountClass(map,hfComAccount,hfComAccountClass,hfComTask);
         }
-
-
-        //设置企业公积金账号从表
-
-
-
-
-
+        //更新企业任务单
         if (StringUtils.isNotBlank(map.get("taskStatus"))) {
             hfComTask.setTaskStatus(Integer.parseInt(map.get("taskStatus")));
         }

@@ -72,7 +72,8 @@
         <result column="finish_date_string" property="finishDateString"/>
         <result column="comAccountRemark" property="comAccountRemark" />
         <result column="taskRemark" property="taskRemark" />
-
+        <result column="com_account_name_task" property="comAccountNameTask" />
+        <result column="payment_way_task" property="paymentWayTask" />
     </resultMap>
 
     <resultMap id="ComTaskInfoMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountInfoBO">
@@ -201,6 +202,8 @@
         hcas.com_account_state_value,
         hft.end_month,
         hft.end_type,
+        hft.com_account_name as com_account_name_task ,
+        hft.payment_way as payment_way_task,
         hca.ukey_store,
         hcau.ukstore_value,
         hcat.type_value,
