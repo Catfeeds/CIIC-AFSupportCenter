@@ -318,7 +318,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         HfEmpTask task = empTaskMapper.selectById(taskStatus.getEmpTaskId());
         HfEmpArchive empArchive = empArchiveMapper.selectById(taskStatus.getEmpArchiveId());
         if(null != task){
-            task.setTaskStatus(2);
+            task.setTaskStatus(3); //3=已完成(已做)
             task.setModifiedTime(LocalDateTime.now());
             task.setModifiedBy(UserContext.getUserId());
             task.setModifiedDisplayName(UserContext.getUser().getDisplayName());
@@ -336,11 +336,12 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
                     case 4://转出
                     case 5://封存
                     case 12://翻牌转出
+                    case 13://翻牌封存
                         empArchive.setArchiveStatus(3); //封存
-                        empArchive.setArchiveTaskStatus(2);//已做
+                        empArchive.setArchiveTaskStatus(3);//封存
                         break;
                     default:
-                        empArchive.setArchiveStatus(2); //已做
+                        empArchive.setArchiveTaskStatus(empArchive.getArchiveStatus());
                         break;
                 }
                 empArchive.setModifiedBy(UserContext.getUserId());
