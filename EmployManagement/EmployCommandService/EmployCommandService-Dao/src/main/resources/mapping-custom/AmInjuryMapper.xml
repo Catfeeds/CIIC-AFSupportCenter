@@ -9,11 +9,7 @@
     </resultMap>
 
     <select id="queryAmInjury" resultMap="BaseResultMapDTO">
-        SELECT  *  from  am_injury  where archive_id = #{archiveId}
+        SELECT  *  from  am_injury  where archive_id = #{archiveId} and  is_active = 1
     </select>
-
-    <delete id="deleteAmInjury">
-        DELETE FROM am_injury WHERE injury_id = #{injuryId}
-    </delete>
 
 </mapper>

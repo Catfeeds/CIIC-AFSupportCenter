@@ -367,6 +367,19 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         } catch (Exception e) {
 
         }
+        if(null!=list&&list.size()>0){
+            // 有签收人就不用保存了
+            AmEmpMaterial amEmpMaterial = list.get(0);
+            AmEmpMaterialBO amEmpMaterialBO = new AmEmpMaterialBO();
+            BeanUtils.copyProperties(amEmpMaterial,amEmpMaterialBO);
+            List<AmEmpMaterialBO> list1 = amEmpMaterialService.queryAmEmpMaterialList(amEmpMaterialBO);
+            for(AmEmpMaterialBO amEmpMaterialBO1:list1){
+                if(!StringUtil.isEmpty(amEmpMaterialBO1.getReceiveName()))
+                {
+                    return JsonResultKit.of(2);
+                }
+            }
+        }
         List<AmEmpMaterial>  data = new ArrayList<AmEmpMaterial>();
         for(AmEmpMaterial bo:list)
         {
@@ -400,13 +413,16 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
     @RequestMapping("/deleteAmInjury")
     public JsonResult<Boolean>  deleteAmInjury(Long injuryId){
-        boolean  result = amInjuryService.deleteAmInjury(injuryId);
+        AmInjury amInjury = amInjuryService.selectById(injuryId);
+        amInjury.setActive(false);
+        boolean  result = amInjuryService.insertOrUpdate(amInjury);
         return JsonResultKit.of(result);
     }
 
     @RequestMapping("/deleteAmEmpMaterial")
     public JsonResult<Boolean>  deleteAmEmpMaterial(AmEmpMaterial amEmpMaterial){
-        boolean  result = amEmpMaterialService.deleteById(amEmpMaterial);
+        amEmpMaterial.setActive(false);
+        boolean  result = amEmpMaterialService.insertOrUpdate(amEmpMaterial);
         return JsonResultKit.of(result);
     }
 

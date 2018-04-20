@@ -3,8 +3,6 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bus
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmInjuryBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmInjury;
-import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
-import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 
 import java.util.List;
 
@@ -15,5 +13,4 @@ public interface IAmInjuryService extends IService<AmInjury> {
 
     List<AmInjuryBO> queryAmInjury(AmInjuryBO amInjuryBO);
 
-    boolean deleteAmInjury(Long injuryId);
 }
