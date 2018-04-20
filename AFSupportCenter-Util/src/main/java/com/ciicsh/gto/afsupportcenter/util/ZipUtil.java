@@ -16,11 +16,13 @@ public class ZipUtil {
 
     public static void createZipFileWithTxtFiles(OutputStream outputStream, Map<String, String> txtFileMap, String charsetName) throws BusinessException {
         try(ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)) {
-            for (String key : txtFileMap.keySet()) {
-                zipOutputStream.putNextEntry(new ZipEntry(key));
-                zipOutputStream.write(txtFileMap.get(key).getBytes(charsetName));
+            if (txtFileMap != null && !txtFileMap.isEmpty()) {
+                for (String key : txtFileMap.keySet()) {
+                    zipOutputStream.putNextEntry(new ZipEntry(key));
+                    zipOutputStream.write(txtFileMap.get(key).getBytes(charsetName));
+                }
+                zipOutputStream.close();
             }
-            zipOutputStream.close();
         } catch (IOException e) {
             throw new BusinessException(e);
         }
