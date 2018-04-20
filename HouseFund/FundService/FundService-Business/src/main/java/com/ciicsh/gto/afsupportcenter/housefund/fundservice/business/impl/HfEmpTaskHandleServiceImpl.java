@@ -1873,30 +1873,28 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(hfEmpTask.getOldAgreementId()));
                     afEmpSocialUpdateDateDTOList.add(afEmpSocialUpdateDateDTO);
                     tags.put("oldAfEmpSocialUpdateDateDTO", JsonKit.toStr(afEmpSocialUpdateDateDTO));
-                }
 
-                // 以下为调整后的费用段回调处理：
-                // 如果oldAgreementId存在，且是转出或封存时，说明是调整非0转0
-                if (StringUtils.isNotEmpty(hfEmpTask.getOldAgreementId()) && (
-                    hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT
+                    // 如果oldAgreementId存在，且是转出或封存时，说明是调整非0转0
+                    if (hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT
                         || hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
-                )) {
-                    // 此时需要回调一个只有开始确认时间的，金额为0的费用段
-                    AfEmpSocialUpdateDateDTO afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
-                    afEmpSocialUpdateDateDTO.setCompanyId(companyId);
-                    if (hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
-                        afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ITEM_ID_FUND_BASIC);
-                    } else {
-                        afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ITEM_ID_FUND_ADDED);
+                        ) {
+                        // 此时需要回调一个只有开始确认时间的，金额为0的费用段
+                        afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
+                        afEmpSocialUpdateDateDTO.setCompanyId(companyId);
+                        if (hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
+                            afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ITEM_ID_FUND_BASIC);
+                        } else {
+                            afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ITEM_ID_FUND_ADDED);
+                        }
+                        afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(BigDecimal.ZERO);
+                        afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(BigDecimal.ZERO);
+                        if (StringUtils.isNotEmpty(hfMonth)) {
+                            afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(hfMonth + "01"));
+                        }
+                        afEmpSocialUpdateDateDTO.setEmpAgreementId(empAgreementId);
+                        afEmpSocialUpdateDateDTOList.add(afEmpSocialUpdateDateDTO);
+                        tags.put("newAfEmpSocialUpdateDateDTO", JsonKit.toStr(afEmpSocialUpdateDateDTO));
                     }
-                    afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(BigDecimal.ZERO);
-                    afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(BigDecimal.ZERO);
-                    if (StringUtils.isNotEmpty(hfMonth)) {
-                        afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(hfMonth + "01"));
-                    }
-                    afEmpSocialUpdateDateDTO.setEmpAgreementId(empAgreementId);
-                    afEmpSocialUpdateDateDTOList.add(afEmpSocialUpdateDateDTO);
-                    tags.put("newAfEmpSocialUpdateDateDTO", JsonKit.toStr(afEmpSocialUpdateDateDTO));
                 } else {
                     // 通常的处理方式
                     AfEmpSocialUpdateDateDTO afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();

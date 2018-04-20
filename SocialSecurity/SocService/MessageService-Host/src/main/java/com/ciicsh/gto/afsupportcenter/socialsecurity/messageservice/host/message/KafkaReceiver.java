@@ -117,7 +117,6 @@ public class KafkaReceiver {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
         //获取任务单参数
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
-        String empAgreementId;
         //社保翻牌新进或转入
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())) {
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_COMPANY_CHANGE).setTextContent(TaskSink.SOCIAL_NEW + " JSON: " + JSON.toJSONString(taskMsgDTO)));
@@ -133,9 +132,13 @@ public class KafkaReceiver {
             }
             //翻牌转出
         } else if (TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
+            String oldAgreementId = null;
+            if (paramMap != null && paramMap.get("oldEmpAgreementId") != null) {
+                oldAgreementId = paramMap.get("oldEmpAgreementId").toString();
+            }
+
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_COMPANY_CHANGE).setTextContent(TaskSink.SOCIAL_STOP + " JSON: " + JSON.toJSONString(taskMsgDTO)));
-//            empAgreementId = paramMap.get("oldEmpAgreementId").toString();
-            saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_14), ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), null, 0);
+            saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_14), ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), oldAgreementId, 0);
         }
     }
 
@@ -343,14 +346,12 @@ public class KafkaReceiver {
     private AfEmployeeInfoDTO callEmpAgreement(TaskCreateMsgDTO taskMsgDTO, Integer processCategory, String oldAgreementId) {
         Long empAgreementId = null;
         // 翻牌或调整通道时，如果是转出或封存的，根据oldAgreementId去获取转出或封存前的雇员信息
-        if(
-            StringUtils.isEmpty(oldAgreementId)
-                && TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())
-                && (
-                    processCategory.equals(ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory())
-                    || processCategory.equals(ProcessCategory.AF_EMP_AGREEMENT_ADJUST.getCategory())
+        if(TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType()) && (
+                processCategory.equals(ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory())
+                    || (StringUtils.isEmpty(oldAgreementId)
+                        && processCategory.equals(ProcessCategory.AF_EMP_AGREEMENT_ADJUST.getCategory())
                     )
-                ) {
+                )) {
             Map<String, Object> paramMap = taskMsgDTO.getVariables();
             if(null != paramMap){
                 empAgreementId = Long.parseLong(paramMap.get("oldEmpAgreementId").toString());
