@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.util.kit;
 
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.dataauth.HfDepartmentDTO;
+import com.ciicsh.gto.afsupportcenter.util.ui.core.CascaderNode;
 import com.ciicsh.gto.afsupportcenter.util.ui.core.TreeNode;
 import com.ciicsh.gto.afsupportcenter.util.ui.core.TreeNodeConvert;
 
@@ -24,5 +25,13 @@ public class DeptNodeConvert implements TreeNodeConvert<HfDepartmentDTO> {
     node.put("departmentName", e.getDepartmentName());
     node.put("description", e.getDescription());
     return node;
+  }
+
+  public CascaderNode toCascaderNode(HfDepartmentDTO e){
+      CascaderNode cascaderNode = new CascaderNode();
+      cascaderNode.setLabel(e.getDepartmentName());
+      cascaderNode.setValue(String.valueOf(e.getDepartmentId()));
+      cascaderNode.setPvalue(String.valueOf(e.getParentDepartmentId()));
+      return cascaderNode;
   }
 }
