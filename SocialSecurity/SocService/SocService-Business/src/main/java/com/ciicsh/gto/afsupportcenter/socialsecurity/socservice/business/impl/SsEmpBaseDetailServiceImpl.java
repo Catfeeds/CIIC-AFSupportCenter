@@ -1,6 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBaseDetail;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpBaseDetailMapper;
@@ -23,9 +23,9 @@ import java.util.List;
 public class SsEmpBaseDetailServiceImpl extends ServiceImpl<SsEmpBaseDetailMapper, SsEmpBaseDetail> implements SsEmpBaseDetailService {
 
     @Override
-    public void saveForSsEmpBaseDetail(List<SsEmpBaseDetail> details, SsEmpBaseDetail detail) {
+    public void saveForSsEmpBaseDetail(List<SsEmpBaseDetail> details, SsEmpBaseDetail detail, Wrapper<SsEmpBaseDetail> wrapper) {
         // 删除 old
-        baseMapper.delete(new EntityWrapper(detail));
+        baseMapper.update(detail, wrapper);
         // 保存 new
         if (CollectionUtils.isNotEmpty(details)) {
             this.insertBatch(details);
