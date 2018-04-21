@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpComBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountInfoBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
@@ -77,6 +78,13 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
             hfEmpTaskHandleBo.setAddedComHfMonth(Integer.parseInt(comAccountExtBo.getComHfMonth()));
             BeanUtils.copyProperties(comAccountExtBo,hfEmpTaskHandleBo);
         }
+        HfEmpComBO hfEmpComBO = hfEmpArchiveMapper.fetchManager(companyId,employeeId);
+        if(hfEmpComBO!=null){
+            hfEmpTaskHandleBo.setServiceCenter(hfEmpComBO.getServiceCenter());
+            hfEmpTaskHandleBo.setServiceSpecialist(hfEmpComBO.getServiceSpecialist());
+            hfEmpTaskHandleBo.setLeadershipName(hfEmpComBO.getLeadershipName());
+        }
+
         //雇员信息
         EmpTaskTransferBo empTaskTransferBo=new EmpTaskTransferBo();
         empTaskTransferBo.setEmployeeId(employeeId);

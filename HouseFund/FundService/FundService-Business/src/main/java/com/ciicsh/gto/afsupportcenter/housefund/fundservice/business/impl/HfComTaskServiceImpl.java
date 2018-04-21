@@ -21,10 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * <p>
@@ -98,7 +95,7 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
     public PageRows<HfComTaskBo> queryCompanyTasks(PageInfo pageInfo) {
         //将PageInfo对象转DTO对象
         HfComTaskBo hfComTaskBo = pageInfo.toJavaObject(HfComTaskBo.class);
-        if ("0".equals(hfComTaskBo.getTaskStatusString())) { //任务单状态：未处理
+        if ("0".equals(hfComTaskBo.getTaskStatusString()) || "4".equals(hfComTaskBo.getTaskStatusString())) { //任务单状态：未处理 、批退
             return PageKit.doSelectPage(pageInfo, () -> hfComTaskMapper.queryCompanyTask(hfComTaskBo));
         } else { //否则就是：处理中 完成 批退
             return PageKit.doSelectPage(pageInfo, () -> hfComTaskMapper.queryCompanyTaskProcessing(hfComTaskBo));
@@ -158,6 +155,20 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             if (!StringUtils.isNotBlank(map.get("comTaskId"))) {
                 return false;
             }
+            if (!StringUtils.isNotBlank(map.get("companyId"))) {
+                return false;
+            }
+
+            //获取公司是否已绑定企业账号
+            Map<String,Object> mapCom=new HashMap();
+            mapCom.put("company_id",map.get("companyId"));
+            mapCom.put("major_com","1");
+            List<HfAccountComRelation> listRelation = hfAccountComRelationMapper.selectByMap(mapCom);
+            if(listRelation.size() > 0){
+                map.put("comAccountId",String.valueOf(listRelation.get(0).getComAccountId()));
+                map.put("ifHasDealAccount","1");//已开户标记
+            }
+
             //取得企业任务单
             HfComTask hfComTask = hfComTaskMapper.selectById(map.get("comTaskId"));
             //设置企业公积金账号主表
@@ -295,9 +306,11 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
         HfComTask hfComTask = hfComTaskMapper.selectById(map.get("comTaskId"));
         HfComAccount hfComAccount = new HfComAccount();
         if (hfComTask.getTaskStatus() == HF_COM_TASK_TASK_STATUS_3) { //已完成
-            hfComAccount.setState(HF_COM_ACCOUNT_STATE_0);  //设置初始无效
-            hfComAccount.setComAccountId(Long.valueOf(map.get("comAccountId")));
-            hfComAccountMapper.updateById(hfComAccount);
+            if(hfComTask.getHfType() == 1){//只有基本公积金 才可以设置成无效
+                hfComAccount.setState(HF_COM_ACCOUNT_STATE_0);  //设置初始无效
+                hfComAccount.setComAccountId(Long.valueOf(map.get("comAccountId")));
+                hfComAccountMapper.updateById(hfComAccount);
+            }
             HfComAccountClass hfComAccountClass = new HfComAccountClass();
             this.updateComAccountClass(map,hfComAccount,hfComAccountClass,hfComTask);
         }
@@ -394,7 +407,7 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
         if (StringUtils.isNotBlank(map.get("paymentWay"))) {
             hfComAccount.setPaymentWay(Integer.parseInt(map.get("paymentWay")));
         }
-        hfComAccount.setHfAccountType(HF_COM_ACCOUNT_TYPE_INDEPEDENT);
+        hfComAccount.setHfAccountType(HF_COM_ACCOUNT_TYPE_INDEPEDENT);//独立户
         if (StringUtils.isNotBlank(map.get("closeDay"))) {
             hfComAccount.setCloseDay(Integer.parseInt(map.get("closeDay")));
         }
@@ -414,11 +427,15 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
         hfComAccount.setModifiedBy(UserContext.getUserId());
         hfComAccount.setModifiedTime(new Date());
 
-        if (hfComTask.getTaskStatus() == HF_COM_TASK_TASK_STATUS_3) { //已完成
-            hfComAccount.setState(HF_COM_ACCOUNT_STATE_1);  //设置有效
-        } else {
-            hfComAccount.setState(HF_COM_ACCOUNT_STATE_0);  //设置初始无效
+        String ifHasDealAccount=Optional.ofNullable(map.get("ifHasDealAccount")).orElse("0");
+        if("0".equals(ifHasDealAccount)){
+            if (hfComTask.getTaskStatus() == HF_COM_TASK_TASK_STATUS_3) { //已完成
+                hfComAccount.setState(HF_COM_ACCOUNT_STATE_1);  //设置有效
+            } else {
+                hfComAccount.setState(HF_COM_ACCOUNT_STATE_0);  //设置初始无效
+            }
         }
+
         if (Optional.ofNullable(map.get("comAccountId")).isPresent()) {
             hfComAccount.setComAccountId(Long.valueOf(map.get("comAccountId")));
             hfComAccountMapper.updateById(hfComAccount);

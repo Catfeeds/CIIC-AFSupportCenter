@@ -292,7 +292,7 @@
         AND ebp.ss_month != #{ssMonth}
         AND (ebp.ss_month_stop = #{ssMonth} OR ebp.ss_month_stop is NULL)
         AND (
-        #{ssMonth} BETWEEN ebp.start_month AND ebp.end_month
+          #{ssMonth} BETWEEN ebp.start_month AND ebp.end_month
           OR (#{ssMonth}>=ebp.start_month AND ebp.end_month is null)
           OR ebp.ss_month_stop=#{ssMonth}
         )
