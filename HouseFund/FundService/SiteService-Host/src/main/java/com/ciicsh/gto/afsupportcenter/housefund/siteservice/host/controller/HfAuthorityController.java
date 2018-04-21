@@ -2,10 +2,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 
 
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfAuthorityService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.dataauth.HfCompanyManagementListDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.dataauth.HfDataauthCompanyDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.dataauth.HfDepartmentDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.dataauth.HfUserInfoDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.dataauth.*;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.util.kit.TreeNodeConvertKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.ui.core.TreeKit;
@@ -35,7 +32,7 @@ import java.util.List;
 public class HfAuthorityController {
 
     @Autowired
-    private HfAuthorityService ssAuthorityService;
+    private HfAuthorityService hfAuthorityService;
 
     /**
      * 客户权限配置列表
@@ -44,7 +41,7 @@ public class HfAuthorityController {
      */
     @RequestMapping("hfauthorityList")
     public JsonResult<PageRows> authorityList() {
-        List<HfUserInfoDTO> result = ssAuthorityService.queryUsersByDepartmentId();
+        List<HfUserInfoDTO> result = hfAuthorityService.queryUsersByDepartmentId();
         PageRows<HfUserInfoDTO> pageRows = new PageRows<>();
         pageRows.setRows(result);
         return JsonResultKit.of(pageRows);
@@ -61,7 +58,7 @@ public class HfAuthorityController {
     @RequestMapping("hfauthority")
     public JsonResult<HfCompanyManagementListDTO> authority(Long serviceCenterId, String userId) {
 
-        HfCompanyManagementListDTO result = ssAuthorityService.queryAfCompanyByUidAndServiceCenterId(userId, serviceCenterId);
+        HfCompanyManagementListDTO result = hfAuthorityService.queryAfCompanyByUidAndServiceCenterId(userId, serviceCenterId);
 
         JsonResult<HfCompanyManagementListDTO> jsonResult = new JsonResult<>();
         jsonResult.setCode(result.getCode());
@@ -80,7 +77,7 @@ public class HfAuthorityController {
     @RequestMapping("hfauthorityDeptNodes")
     public JsonResult<List<TreeNode>> authorityDeptNodes() {
 
-        List<HfDepartmentDTO> list = ssAuthorityService.querySubDepartmentsOfLevel();
+        List<HfDepartmentDTO> list = hfAuthorityService.querySubDepartmentsOfLevel();
 
         List<TreeNode> deptNodes = new ArrayList<>();
 
@@ -98,7 +95,76 @@ public class HfAuthorityController {
     public JsonResult saveAuthority(HfDataauthCompanyDTO dto) {
 
 
-        ssAuthorityService.saveSsDataauth(dto);
+        hfAuthorityService.saveSsDataauth(dto);
+
+        JsonResult result = new JsonResult();
+        result.setMessage("保存成功");
+        return result;
+    }
+
+
+    /**
+     * 保存客户权限配置 类型为福利办理方
+     *
+     * @return
+     */
+    @RequestMapping("saveAuthorityWelfareUnit")
+    public JsonResult saveAuthorityWelfareUnit(HfDataauthWelfareUnitDTO dto) {
+
+
+        hfAuthorityService.saveHfDataauthWelfareUnit(dto);
+
+        JsonResult result = new JsonResult();
+        result.setMessage("保存成功");
+        return result;
+    }
+
+    /**
+     * 查询配置权限 类型为 福利办理方
+     *
+     * @return
+     */
+    @RequestMapping("queryAuthorityWelfareUnit")
+    public JsonResult<HfDataauthWelfareUnitDTO> queryAuthorityWelfareUnit(String userId) {
+
+
+        HfDataauthWelfareUnitDTO dto = hfAuthorityService.queryHfDataauthWelfareUnit(userId);
+
+        JsonResult result = new JsonResult();
+
+        result.setData(dto);
+        return result;
+    }
+
+
+    /**
+     * 查询配置权限 类型为 任务单类型
+     *
+     * @return
+     */
+    @RequestMapping("queryAuthorityTaskCategory")
+    public JsonResult<HfDataauthWelfareUnitDTO> queryAuthorityTaskCategory(String userId) {
+
+
+        HfDataauthWelfareUnitDTO dto = hfAuthorityService.queryAuthorityTaskCategory(userId);
+
+        JsonResult result = new JsonResult();
+
+        result.setData(dto);
+        return result;
+    }
+
+
+    /**
+     * 保存客户权限配置 类型为任务单类型
+     *
+     * @return
+     */
+    @RequestMapping("saveAuthorityTaskCategory")
+    public JsonResult saveAuthorityTaskCategory(HfDataauthWelfareUnitDTO dto) {
+
+
+        hfAuthorityService.saveHfDataauthTaskCategory(dto);
 
         JsonResult result = new JsonResult();
         result.setMessage("保存成功");
