@@ -267,15 +267,17 @@ public class KafkaReceiver {
                                 taskCategory = hfEmpTask.getTaskCategory();
                                 processCategory = hfEmpTask.getProcessCategory();
 
+                                /* 更正业务流程，该业务场景已限制
                                 if (!TaskCategory.TURNOUT.getCategory().equals(taskCategory) &&
                                     !TaskCategory.SEALED.getCategory().equals(taskCategory) &&
                                     !TaskCategory.FLOPOUT.getCategory().equals(taskCategory) &&
                                     !TaskCategory.FLOPSEALED.getCategory().equals(taskCategory)
                                     ) {
                                     break;
-                                }
+                                }*/
                             }
                         } else {
+                            /* 更正业务流程，该业务场景已限制
                             // 如果没有查到旧的任务单，那么就是下列情况：外地新开（本地收不到相关任务单），更正时改为翻牌（外地转上海）；
                             // 此时也不知道是翻牌（未走翻牌通道），只能默认为新开任务单；（该情况暂不考虑，前道已限制）
                             // 或者0转非0，新开为0时，不发任务单至后道，更正为非0时，后道找不到旧任务单；
@@ -283,7 +285,8 @@ public class KafkaReceiver {
 
                             if (null != paramMap && paramMap.get("fundType") != null) {
                                 taskCategory = paramMap.get("fundType").equals("4") ? TaskCategory.ADJUST.getCategory() : Integer.parseInt(paramMap.get("fundType").toString());
-                            }
+                            }*/
+                            log.warn(LogMessage.create().setTitle("fundEmpAgreementCorrect").setContent("根据oldEmpAgreementId未找到旧的任务单"));
                         }
                         // 调整状态更正时，oldEmpAgreementId是对应调整前协议，也同时对应更正前任务单的missionId
 //                        boolean res = saveEmpTask(taskMsgDTO, fundCategory, processCategory, taskCategory, paramMap.get("oldEmpAgreementId").toString(), 1);
@@ -320,6 +323,7 @@ public class KafkaReceiver {
             }
             Integer taskCategory = OUT_TASK_CATEGORIES[fundType - 1].getCategory();
 
+            /* 更正业务流程，该业务场景已限制
             if (paramMap.get("oldEmpAgreementId") != null) {
                 HfEmpTask qd = new HfEmpTask();
                 qd.setBusinessInterfaceId(paramMap.get("oldEmpAgreementId").toString());
@@ -337,7 +341,7 @@ public class KafkaReceiver {
                         return;
                     }
                 }
-            }
+            }*/
 
             if (paramMap.get("oldEmpAgreementId") != null) {
                 Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");

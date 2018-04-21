@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business;
 
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBaseDetail;
 
@@ -22,5 +23,5 @@ public interface SsEmpBaseDetailService extends IService<SsEmpBaseDetail> {
      * @param details
      * @param detail
      */
-    void saveForSsEmpBaseDetail(List<SsEmpBaseDetail> details, SsEmpBaseDetail detail);
+    void saveForSsEmpBaseDetail(List<SsEmpBaseDetail> details, SsEmpBaseDetail detail, Wrapper<SsEmpBaseDetail> wrapper);
 }

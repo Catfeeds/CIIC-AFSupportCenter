@@ -74,7 +74,8 @@
     </select>
     <!-- 删除当月 某月 非标数据-->
     <update id="deleteOldDate">
-        DELETE  FROM ss_month_charge WHERE employee_id=#{employeeId} AND ss_month_belong =#{paymentMonth} AND ss_month =#{handleMonth} AND cost_category =#{costCategory}
+        UPDATE ss_month_charge SET is_active = 0, modified_time = NOW(), modified_by = #{modifiedBy}
+        WHERE employee_id=#{employeeId} AND ss_month_belong =#{paymentMonth} AND ss_month =#{handleMonth} AND cost_category =#{costCategory}
     </update>
     <select id="selectOldDate" resultMap="BaseResultMap">
        SELECT * FROM ss_month_charge WHERE employee_id=#{employeeId} AND ss_month_belong =#{paymentMonth} AND ss_month =#{handleMonth} AND cost_category =#{costCategory}

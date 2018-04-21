@@ -165,14 +165,11 @@ public class KafkaReceiver {
 
             //获取社保办理类型
             socialType = paramMap.get("socialType").toString();
-//            empAgreementId = taskMsgDTO.getMissionId();
 
             saveSsEmpTask(taskMsgDTO, Integer.parseInt(socialType), ProcessCategory.AF_EMP_AGREEMENT_ADJUST.getCategory(), oldAgreementId, 0);
         } else if (TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_ADJUST).setTextContent(TaskSink.SOCIAL_STOP + " JSON: " + JSON.toJSONString(taskMsgDTO)));
-            socialType = SocialSecurityConst.TASK_TYPE_5;
             agreementAdjustOrUpdateEmpStop(taskMsgDTO, 0, TaskSink.AF_EMP_AGREEMENT_ADJUST);
-//            saveSsEmpTask(taskMsgDTO, Integer.parseInt(socialType), ProcessCategory.AF_EMP_AGREEMENT_ADJUST.getCategory(), empAgreementId);
         }
     }
 
@@ -217,6 +214,7 @@ public class KafkaReceiver {
                         for (SsEmpTaskBO bo : resList) {
 //                            ssEmpTaskBO = resList.get(0);
                             taskCategory = bo.getTaskCategory();
+                            /* 更正业务流程，该业务场景已限制
                             // 翻牌时，翻入翻出的empAgreementId相同，需排除翻出的
                             if (!SocialSecurityConst.TASK_TYPE_5.equals(String.valueOf(taskCategory)) &&
                                 !SocialSecurityConst.TASK_TYPE_6.equals(String.valueOf(taskCategory)) &&
@@ -225,19 +223,19 @@ public class KafkaReceiver {
                                 !SocialSecurityConst.TASK_TYPE_15.equals(String.valueOf(taskCategory))
                                 ) {
                                 break;
-                            }
+                            }*/
                         }
                     } else {
+                        /* 更正业务流程，该业务场景已限制
                         // 如果没有查到旧的任务单，那么就是下列情况：外地新开（本地收不到相关任务单），更正时改为翻牌（外地转上海）；
                         // 此时也不知道是翻牌（未走翻牌通道），只能默认为新开任务单；（该情况暂不考虑，前道已限制）
                         // 或者0转非0，新开为0时，不发任务单至后道，更正为非0时，后道找不到旧任务单；
                         if(paramMap.get("socialType") != null) {
                             String socialType = paramMap.get("socialType").toString();
                             taskCategory = Integer.parseInt(socialType);
-                        }
+                        }*/
+                        logService.warn(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_UPDATE).setTextContent("根据oldEmpAgreementId未找到旧的任务单"));
                     }
-                    // 调整状态更正时，oldEmpAgreementId是对应调整前协议，也同时对应更正前任务单的missionId
-//                    ssEmpTaskFrontService.saveEmpTaskTc(taskMsgDTO, taskCategory, ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory(),1, paramMap.get("oldEmpAgreementId").toString(), dto);
 
                     AfCompanyDetailResponseDTO afCompanyDetailResponseDTO = null;
 
@@ -271,6 +269,7 @@ public class KafkaReceiver {
 
         if (null != paramMap) {
             if (paramMap.get("oldEmpAgreementId") != null) {
+                /* 更正业务流程，该业务场景已限制
                 SsEmpTaskBO ssEmpTaskBO = new SsEmpTaskBO();
                 ssEmpTaskBO.setBusinessInterfaceId(paramMap.get("oldEmpAgreementId").toString());
                 //查询旧的任务类型保存到新的任务单
@@ -284,7 +283,7 @@ public class KafkaReceiver {
                             .setTextContent("更正前任务单已经是转出或封存状态，如果当前消息还是转出或封存状态，此时不生成任务单"));
                         return;
                     }
-                }
+                }*/
 
                 Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
 

@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.*;
@@ -342,15 +343,19 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 ssEmpBasePeriod.setActive(false);
 
                 SsEmpBaseDetail ssEmpBaseDetail = new SsEmpBaseDetail();
-                ssEmpBaseDetail.setEmpBasePeriodId(ssEmpBasePeriod.getEmpBasePeriodId());
-                ssEmpBaseDetailService.saveForSsEmpBaseDetail(null, ssEmpBaseDetail);
+                ssEmpBaseDetail.setActive(false);
+                ssEmpBaseDetail.setModifiedTime(LocalDateTime.now());
+                ssEmpBaseDetail.setModifiedBy(bo.getModifiedBy());
+                Wrapper<SsEmpBaseDetail> wrapper = new EntityWrapper<>();
+                wrapper.eq("emp_base_period_id", ssEmpBasePeriod.getEmpBasePeriodId());
+                ssEmpBaseDetailService.saveForSsEmpBaseDetail(null, ssEmpBaseDetail, wrapper);
             }
             ssEmpBasePeriodService.saveAdjustmentPeriod(ssEmpBasePeriod, newEmpBasePeriodList);
             // 险种的数据段 （前道传递过来的）
             List<SsEmpTaskFront> empSocials = getEmpSocials(bo);
             if (empSocials.size() == 0) throw new BusinessException("前道传递险种详细信息为空");
             // 添加明细
-            addEmpBaseDetail(newEmpBasePeriodList, empSocials, bo.getEmpArchiveId());
+            addEmpBaseDetail(newEmpBasePeriodList, empSocials, bo.getEmpArchiveId(), bo.getModifiedBy());
             bo.setListEmpBasePeriod(newEmpBasePeriodList);
             { //顺调的逻辑
                 bo.setAdustType(1);
@@ -411,8 +416,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 ssEmpBasePeriodService.updateById(updatePeriod);
 
                 SsEmpBaseDetail ssEmpBaseDetail = new SsEmpBaseDetail();
-                ssEmpBaseDetail.setEmpBasePeriodId(ssEmpBasePeriod.getEmpBasePeriodId());
-                ssEmpBaseDetailService.saveForSsEmpBaseDetail(null, ssEmpBaseDetail);
+                ssEmpBaseDetail.setActive(false);
+                ssEmpBaseDetail.setModifiedTime(LocalDateTime.now());
+                ssEmpBaseDetail.setModifiedBy(bo.getModifiedBy());
+                Wrapper<SsEmpBaseDetail> wrapper = new EntityWrapper<>();
+                wrapper.eq("emp_base_period_id", ssEmpBasePeriod.getEmpBasePeriodId());
+                ssEmpBaseDetailService.saveForSsEmpBaseDetail(null, ssEmpBaseDetail, wrapper);
             }
 
             //当前月到永远的那段 （即如果调整是到永远的话，则从下月设置到永远）
@@ -616,7 +625,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             EntityWrapper ew = new EntityWrapper<SsEmpTaskFront>();
             ew.where("emp_task_id={0}", bo.getEmpTaskId()).and("is_active=1");
             List<SsEmpTaskFront> ssTaskEmpBaseDetailList = ssEmpTaskFrontService.selectList(ew);
-            addEmpBaseDetail(addPeriodList, ssTaskEmpBaseDetailList, bo.getEmpArchiveId());
+            addEmpBaseDetail(addPeriodList, ssTaskEmpBaseDetailList, bo.getEmpArchiveId(), bo.getModifiedBy());
 
             bo.setAdustType(1);
             createNonstandardData(bo, addPeriodList.get(0), null, null, null);
@@ -633,7 +642,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             EntityWrapper ew = new EntityWrapper<SsEmpTaskFront>();
             ew.where("emp_task_id={0}", bo.getEmpTaskId()).and("is_active=1");
             List<SsEmpTaskFront> ssTaskEmpBaseDetailList = ssEmpTaskFrontService.selectList(ew);
-            addEmpBaseDetail(supplementPayList, ssTaskEmpBaseDetailList, bo.getEmpArchiveId());
+            addEmpBaseDetail(supplementPayList, ssTaskEmpBaseDetailList, bo.getEmpArchiveId(), bo.getModifiedBy());
             bo.setTaskCategory(Integer.valueOf(SocialSecurityConst.TASK_TYPE_4));
             createNonstandardData(bo, supplementPayList.get(0), null, null, null);
         }
@@ -682,8 +691,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 ssEmpBasePeriodService.updateById(ssEmpBasePeriod);
 
                 SsEmpBaseDetail ssEmpBaseDetail = new SsEmpBaseDetail();
-                ssEmpBaseDetail.setEmpBasePeriodId(p.getEmpBasePeriodId());
-                ssEmpBaseDetailService.saveForSsEmpBaseDetail(null, ssEmpBaseDetail);
+                ssEmpBaseDetail.setActive(false);
+                ssEmpBaseDetail.setModifiedTime(LocalDateTime.now());
+                ssEmpBaseDetail.setModifiedBy(bo.getModifiedBy());
+                Wrapper<SsEmpBaseDetail> wrapper = new EntityWrapper<>();
+                wrapper.eq("emp_base_period_id", p.getEmpBasePeriodId());
+                ssEmpBaseDetailService.saveForSsEmpBaseDetail(null, ssEmpBaseDetail, wrapper);
             } else {
                 //获得计算的差额
                 Map<String, Object> resultMap = getSsEmpBaseAdjust(p, ssEmpTaskPeriod, bo);
@@ -860,7 +873,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             EntityWrapper ew = new EntityWrapper<SsEmpTaskFront>();
             ew.where("emp_task_id={0}", bo.getEmpTaskId()).and("is_active=1");
             List<SsEmpTaskFront> ssTaskEmpBaseDetailList = ssEmpTaskFrontService.selectList(ew);
-            addEmpBaseDetail(supplementPayList, ssTaskEmpBaseDetailList, bo.getEmpArchiveId());
+            addEmpBaseDetail(supplementPayList, ssTaskEmpBaseDetailList, bo.getEmpArchiveId(), bo.getModifiedBy());
             createNonstandardData(bo, supplementPayList.get(0), null, null, null);
         }
 
@@ -897,7 +910,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         List<SsEmpTaskFront> empSocials = getEmpSocials(bo);
         if (empSocials.size() == 0) throw new BusinessException("前道传递险种详细信息为空");
         //添加明细 （养 医 失 工 生育 险种）
-        addEmpBaseDetail(newEmpBasePeriodList, empSocials, bo.getEmpArchiveId());
+        addEmpBaseDetail(newEmpBasePeriodList, empSocials, bo.getEmpArchiveId(), bo.getModifiedBy());
 
         //创建非标 数据
         SsEmpBasePeriod ssEmpBasePeriod = newEmpBasePeriodList.get(0);
@@ -1150,6 +1163,36 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             //查询雇员 是否已经新进了
             queryEmployeeIsnewOrChangeInto(bo);
         }
+
+        // 如果新开（转入，含翻牌）时的更正，需先撤销之前办理的任务单
+        if (bo.getIsChange() == 1) {
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("company_id", bo.getCompanyId());
+            condition.put("employee_id", bo.getEmployeeId());
+            condition.put("emp_archive_id", bo.getEmpArchiveId());
+            condition.put("task_category", bo.getTaskCategory());
+            condition.put("is_change", 0);
+            condition.put("task_status", 2);
+            condition.put("is_active", 1);
+            List<SsEmpTask> ssEmpTaskList = this.selectByMap(condition);
+
+            if (CollectionUtils.isNotEmpty(ssEmpTaskList)) {
+                if (ssEmpTaskList.size() > 1) {
+                    throw new BusinessException("相同雇员的雇员新增任务单已办理多次，数据不正确");
+                }
+            }
+
+            SsEmpTask ssEmpTask = ssEmpTaskList.get(0);
+            // 撤销报表及其明细数据
+            inactiveMonthChargeData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
+            // 撤销差额补缴（逆调）费用段数据及其明细数据
+            inactiveBaseAdjustData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
+            // 撤销雇员费用段数据及其明细数据
+            inactiveBasePeriodData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
+            // 撤销雇员档案数据
+            inactiveEmpArchive(ssEmpTask.getCompanyId(), ssEmpTask.getEmployeeId(), ssEmpTask.getEmpArchiveId(), bo.getModifiedBy());
+        }
+
         //检查社保序号是否有重复
         //根据企业社保账户Id 和 employeeId 判断重复
         boolean serialCheckFlag = ssEmpArchiveService.checkSerial(bo.getComAccountId(), bo.getEmployeeId(), bo.getEmpSsSerial());
@@ -1223,7 +1266,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         List<SsEmpTaskFront> empSocials = getEmpSocials(bo);
         if (empSocials.size() == 0) throw new BusinessException("前道传递险种详细信息为空");
         //添加明细 （养 医 失 工 生育 险种）
-        addEmpBaseDetail(basePeriods, empSocials, empArchiveId);
+        addEmpBaseDetail(basePeriods, empSocials, empArchiveId, bo.getModifiedBy());
         bo.setListEmpBasePeriod(basePeriods);
         {//生成非标数据
             SsEmpBasePeriod ssEmpBasePeriod = basePeriods.get(0);
@@ -1235,6 +1278,131 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             List<SsEmpBasePeriod> ssEmpBasePeriodList = getPeriodsByEmployeeIdAndCompanyId(bo);
             backStartForTaskPeriods(backPeriods, ssEmpBasePeriodList, bo);
         }
+    }
+
+    /**
+     * 根据任务单ID逻辑删除报表记录及其明细记录
+     *
+     * @param empTaskId 任务单ID
+     * @param modifiedBy
+     */
+    private void inactiveMonthChargeData(Long empTaskId, String modifiedBy) {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("emp_task_id", empTaskId);
+        condition.put("is_active", 1);
+        List<SsMonthCharge> ssMonthChargeList = ssMonthChargeService.selectByMap(condition);
+
+        if (CollectionUtils.isNotEmpty(ssMonthChargeList)) {
+            for (SsMonthCharge ssMonthCharge : ssMonthChargeList) {
+                SsMonthChargeItem ssMonthChargeItem = new SsMonthChargeItem();
+                ssMonthChargeItem.setActive(false);
+                ssMonthChargeItem.setModifiedTime(LocalDateTime.now());
+                ssMonthChargeItem.setModifiedBy(modifiedBy);
+
+                Wrapper<SsMonthChargeItem> wrapper = new EntityWrapper<>();
+                wrapper.eq("month_charge_id", ssMonthCharge.getMonthChargeId());
+                wrapper.eq("is_active", 1);
+                ssMonthChargeItemService.update(ssMonthChargeItem, wrapper);
+
+                SsMonthCharge delMonthCharge = new SsMonthCharge();
+                delMonthCharge.setMonthChargeId(ssMonthCharge.getMonthChargeId());
+                delMonthCharge.setActive(false);
+                delMonthCharge.setModifiedTime(LocalDateTime.now());
+                delMonthCharge.setModifiedBy(modifiedBy);
+                ssMonthChargeService.updateById(delMonthCharge);
+            }
+        }
+    }
+
+    /**
+     * 根据任务单ID逻辑删除差额补缴（逆调）费用段记录及其明细记录
+     *
+     * @param empTaskId 任务单ID
+     * @param modifiedBy
+     */
+    private void inactiveBaseAdjustData(Long empTaskId, String modifiedBy) {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("emp_task_id", empTaskId);
+        condition.put("is_active", 1);
+        List<SsEmpBaseAdjust> ssEmpBaseAdjustList = ssEmpBaseAdjustService.selectByMap(condition);
+
+        if (CollectionUtils.isNotEmpty(ssEmpBaseAdjustList)) {
+            for (SsEmpBaseAdjust ssEmpBaseAdjust : ssEmpBaseAdjustList) {
+                SsEmpBaseAdjustDetail ssEmpBaseAdjustDetail = new SsEmpBaseAdjustDetail();
+                ssEmpBaseAdjustDetail.setActive(false);
+                ssEmpBaseAdjustDetail.setModifiedTime(LocalDateTime.now());
+                ssEmpBaseAdjustDetail.setModifiedBy(modifiedBy);
+
+                Wrapper<SsEmpBaseAdjustDetail> wrapper = new EntityWrapper<>();
+                wrapper.eq("emp_base_adjust_id", ssEmpBaseAdjust.getEmpBaseAdjustId());
+                wrapper.eq("is_active", 1);
+                ssEmpBaseAdjustDetailService.update(ssEmpBaseAdjustDetail, wrapper);
+
+                SsEmpBaseAdjust delEmpBaseAdjust = new SsEmpBaseAdjust();
+                delEmpBaseAdjust.setEmpBaseAdjustId(ssEmpBaseAdjust.getEmpBaseAdjustId());
+                delEmpBaseAdjust.setActive(false);
+                delEmpBaseAdjust.setModifiedTime(LocalDateTime.now());
+                delEmpBaseAdjust.setModifiedBy(modifiedBy);
+                ssEmpBaseAdjustService.updateById(delEmpBaseAdjust);
+            }
+        }
+    }
+
+    /**
+     * 根据任务单ID逻辑删除雇员费用段记录及其明细记录
+     *
+     * @param empTaskId 任务单ID
+     * @param modifiedBy
+     */
+    private void inactiveBasePeriodData(Long empTaskId, String modifiedBy) {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("emp_task_id", empTaskId);
+        condition.put("is_active", 1);
+        List<SsEmpBasePeriod> ssEmpBasePeriodList = ssEmpBasePeriodService.selectByMap(condition);
+
+        if (CollectionUtils.isNotEmpty(ssEmpBasePeriodList)) {
+            for (SsEmpBasePeriod ssEmpBasePeriod : ssEmpBasePeriodList) {
+                SsEmpBaseDetail ssEmpBaseDetail = new SsEmpBaseDetail();
+                ssEmpBaseDetail.setActive(false);
+                ssEmpBaseDetail.setModifiedTime(LocalDateTime.now());
+                ssEmpBaseDetail.setModifiedBy(modifiedBy);
+
+                Wrapper<SsEmpBaseDetail> wrapper = new EntityWrapper<>();
+                wrapper.eq("emp_base_period_id", ssEmpBasePeriod.getEmpBasePeriodId());
+                wrapper.eq("is_active", 1);
+                ssEmpBaseDetailService.update(ssEmpBaseDetail, wrapper);
+
+                SsEmpBasePeriod delEmpBasePeriod = new SsEmpBasePeriod();
+                delEmpBasePeriod.setEmpBasePeriodId(ssEmpBasePeriod.getEmpBasePeriodId());
+                delEmpBasePeriod.setActive(false);
+                delEmpBasePeriod.setModifiedTime(LocalDateTime.now());
+                delEmpBasePeriod.setModifiedBy(modifiedBy);
+                ssEmpBasePeriodService.updateById(delEmpBasePeriod);
+            }
+        }
+    }
+
+    /**
+     * 逻辑删除雇员档案
+     *
+     * @param companyId
+     * @param employeeId
+     * @param ssEmpArchiveId
+     * @param modifiedBy
+     */
+    private void inactiveEmpArchive(String companyId, String employeeId, Long ssEmpArchiveId, String modifiedBy) {
+        SsEmpArchive ssEmpArchive = new SsEmpArchive();
+        ssEmpArchive.setActive(false);
+        ssEmpArchive.setModifiedTime(LocalDateTime.now());
+        ssEmpArchive.setModifiedBy(modifiedBy);
+
+        Wrapper<SsEmpArchive> wrapper = new EntityWrapper<>();
+        wrapper.eq("company_id", companyId);
+        wrapper.eq("employee_id", employeeId);
+        wrapper.eq("emp_archive_id", ssEmpArchiveId);
+        wrapper.eq("archive_status", 1);
+        wrapper.eq("is_active", 1);
+        ssEmpArchiveService.update(ssEmpArchive, wrapper);
     }
 
     /**
@@ -1286,7 +1454,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param empSocials
      * @param empArchiveId
      */
-    private void addEmpBaseDetail(List<SsEmpBasePeriod> basePeriods, List<SsEmpTaskFront> empSocials, Long empArchiveId) {
+    private void addEmpBaseDetail(List<SsEmpBasePeriod> basePeriods, List<SsEmpTaskFront> empSocials, Long empArchiveId, String modifiedBy) {
         //if (StringUtils.isBlank(roundType))throw new BusinessException("服务器异常");
         basePeriods.forEach(p -> {
             // 组合险种和费用段
@@ -1320,10 +1488,15 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 detailsList.add(detail);
             });
             p.setListEmpBaseDetail(detailsList);
-            SsEmpBaseDetail detail = new SsEmpBaseDetail();
-            detail.setEmpArchiveId(empArchiveId);
-            detail.setEmpBasePeriodId(empBasePeriodId);
-            ssEmpBaseDetailService.saveForSsEmpBaseDetail(detailsList, detail);
+
+            SsEmpBaseDetail ssEmpBaseDetail = new SsEmpBaseDetail();
+            ssEmpBaseDetail.setActive(false);
+            ssEmpBaseDetail.setModifiedTime(LocalDateTime.now());
+            ssEmpBaseDetail.setModifiedBy(modifiedBy);
+            Wrapper<SsEmpBaseDetail> wrapper = new EntityWrapper<>();
+            wrapper.eq("emp_archive_id", empArchiveId);
+            wrapper.eq("emp_base_period_id", empBasePeriodId);
+            ssEmpBaseDetailService.saveForSsEmpBaseDetail(detailsList, ssEmpBaseDetail, wrapper);
         });
     }
 
@@ -1735,24 +1908,24 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         for (long i = 0; i <= months; i++) {
             if (isOut) {
                 // 如果是转出任务单，雇员月度汇缴明细库转入数据可能被删除（当月转入当月转出），且不生成转出数据
-                int rslt = ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 2);
+                int rslt = ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 2, ssEmpTaskBO.getModifiedBy());
                 if (rslt > 0) {
                     continue;
                 }
-                rslt = ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 3);
+                rslt = ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 3, ssEmpTaskBO.getModifiedBy());
                 if (rslt > 0) {
                     continue;
                 }
-                rslt = ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 5);
+                rslt = ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 5, ssEmpTaskBO.getModifiedBy());
                 if (rslt > 0) {
                     continue;
                 }
                 ssMonthCharge.setSsMonthBelong(startMonthDate.minusMonths(1).plusMonths(i).format(formatter));
             } else {
                 if (2 == ssMonthCharge.getCostCategory() || 3 == ssMonthCharge.getCostCategory() || 5 == ssMonthCharge.getCostCategory()) { // 新开或转入或顺调当月数据清除
-                    ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 2);
-                    ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 3);
-                    ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 5);
+                    ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 2, ssEmpTaskBO.getModifiedBy());
+                    ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 3, ssEmpTaskBO.getModifiedBy());
+                    ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 5, ssEmpTaskBO.getModifiedBy());
                 }
                 ssMonthCharge.setSsMonthBelong(startMonthDate.plusMonths(i).format(formatter));
             }
@@ -1813,7 +1986,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         //将每个月拆分出来
         for (int i = startMonth; i <= endMonth; i = TaskCommonUtils.getNextMonthInt(i)) {
             //删除 该员工 该所属月份 该办理月份的 非标数据(即 重新发调整任务单 并且 该任务是已办未做)
-            ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), String.valueOf(i), ssEmpTaskBO.getHandleMonth(), ssMonthCharge.getCostCategory());
+            ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), String.valueOf(i), ssEmpTaskBO.getHandleMonth(), ssMonthCharge.getCostCategory(), ssEmpTaskBO.getModifiedBy());
             //减去 该所属月份的调整的历史差额总和
             List<SsMonthChargeBO> ssMonthChargeBOList = ssMonthChargeService.selectTotalFromOld(ssEmpTaskBO.getEmployeeId(), String.valueOf(i), ssMonthCharge.getCostCategory());
             ssMonthCharge.setSsMonthBelong(String.valueOf(i));
