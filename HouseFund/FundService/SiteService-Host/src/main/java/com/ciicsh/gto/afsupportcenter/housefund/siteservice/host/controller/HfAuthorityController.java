@@ -8,6 +8,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.dataauth.HfDepar
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.dataauth.HfUserInfoDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.util.kit.TreeNodeConvertKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.afsupportcenter.util.ui.core.CascaderNode;
+import com.ciicsh.gto.afsupportcenter.util.ui.core.CascderInstall;
 import com.ciicsh.gto.afsupportcenter.util.ui.core.TreeKit;
 import com.ciicsh.gto.afsupportcenter.util.ui.core.TreeNode;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
@@ -87,6 +89,19 @@ public class HfAuthorityController {
         list.forEach((e) -> deptNodes.add(TreeNodeConvertKit.DEPT.handle(e)));
 
         return JsonResultKit.ofList(TreeKit.tree(deptNodes));
+    }
+
+
+    /**
+     * 获取下拉框客服中心数据
+     * @return
+     */
+    @RequestMapping("getHfCustomerData")
+    public JsonResult<List<CascaderNode>> getCascaderData(){
+        List<HfDepartmentDTO> list = ssAuthorityService.querySubDepartmentsOfLevel();
+        List<CascaderNode> cascaderNodes = new ArrayList<>();
+        list.forEach((e) -> cascaderNodes.add(TreeNodeConvertKit.DEPT.toCascaderNode(e)));
+        return JsonResultKit.ofList(CascderInstall.createCascder(cascaderNodes));
     }
 
     /**
