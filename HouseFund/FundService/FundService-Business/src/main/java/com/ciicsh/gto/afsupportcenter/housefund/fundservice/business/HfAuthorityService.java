@@ -1,10 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business;
 
 
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.dataauth.HfDataauthCompanyDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.dataauth.HfUserInfoDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.dataauth.HfDepartmentDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.dataauth.HfCompanyManagementListDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.dataauth.*;
+
 import java.util.List;
 
 /**
@@ -23,5 +21,14 @@ public interface HfAuthorityService {
     List<HfDepartmentDTO> querySubDepartmentsOfLevel();
 
     HfCompanyManagementListDTO queryAfCompanyByUidAndServiceCenterId(String userId, Long serviceCenterId);
+
     boolean saveSsDataauth(HfDataauthCompanyDTO dto);
+
+    boolean saveHfDataauthWelfareUnit(HfDataauthWelfareUnitDTO dto);
+
+    boolean saveHfDataauthTaskCategory(HfDataauthWelfareUnitDTO dto);
+
+    HfDataauthWelfareUnitDTO queryHfDataauthWelfareUnit(String userId);
+
+    HfDataauthWelfareUnitDTO queryAuthorityTaskCategory(String userId);
 }

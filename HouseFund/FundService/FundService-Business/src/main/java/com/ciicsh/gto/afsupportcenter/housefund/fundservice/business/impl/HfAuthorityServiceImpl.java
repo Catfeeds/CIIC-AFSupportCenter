@@ -4,8 +4,12 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfDataauthCompanyBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfAuthorityService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfDataauthCompanyMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfDataauthTaskCategoryMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfDataauthWelfareUnitMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.dataauth.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfDataauthCompany;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfDataauthTaskCategory;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfDataauthWelfareUnit;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.SMDepartmentProxy;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.SMUserInfoProxy;
@@ -41,6 +45,12 @@ public class HfAuthorityServiceImpl extends ServiceImpl<HfDataauthCompanyMapper,
 
     @Autowired
     private CompanyProxy companyProxy;
+
+    @Autowired
+    private HfDataauthWelfareUnitMapper hfDataauthWelfareUnitMapper;
+
+    @Autowired
+    private HfDataauthTaskCategoryMapper hfDataauthTaskCategoryMapper;
 
     @Override
     public List<HfUserInfoDTO> queryUsersByDepartmentId() {
@@ -141,4 +151,82 @@ public class HfAuthorityServiceImpl extends ServiceImpl<HfDataauthCompanyMapper,
         return true;
     }
 
+    @Override
+    @Transactional(
+        rollbackFor = {Exception.class}
+    )
+    public boolean saveHfDataauthWelfareUnit(HfDataauthWelfareUnitDTO dto) {
+        hfDataauthWelfareUnitMapper.delByUid(dto.getUserId());
+        List<Integer> units = dto.getWelfareUnits();
+        for (Integer unitId: units) {
+            HfDataauthWelfareUnit unit = new HfDataauthWelfareUnit();
+            // 用户ID
+            unit.setUserId(dto.getUserId());
+            // 福利方ID
+            unit.setWelfareUnit(unitId);
+            unit.setCreatedBy(UserContext.getUserId());
+            unit.setModifiedBy(UserContext.getUserId());
+            unit.setCreatedTime(new Date());
+            unit.setModifiedTime(new Date());
+            hfDataauthWelfareUnitMapper.insertHfDataauthWelfareUnit(unit);
+        }
+        return true;
+    }
+
+
+    @Override
+    @Transactional(
+        rollbackFor = {Exception.class}
+    )
+    public boolean saveHfDataauthTaskCategory(HfDataauthWelfareUnitDTO dto) {
+
+        hfDataauthTaskCategoryMapper.delByUid(dto.getUserId());
+        List<Integer> units = dto.getWelfareUnits();
+        for (Integer unitId: units) {
+
+            HfDataauthTaskCategory task = new HfDataauthTaskCategory();
+            // 用户ID
+            task.setUserId(dto.getUserId());
+            // 福利方ID
+            task.setTaskCategory(unitId);
+            task.setCreatedBy(UserContext.getUserId());
+            task.setModifiedBy(UserContext.getUserId());
+            task.setCreatedTime(new Date());
+            task.setModifiedTime(new Date());
+            hfDataauthTaskCategoryMapper.insertHfDataauthTaskCategory(task);
+        }
+        return true;
+    }
+
+    @Override
+    public HfDataauthWelfareUnitDTO queryHfDataauthWelfareUnit(String userId) {
+        HfDataauthWelfareUnitDTO dto = new HfDataauthWelfareUnitDTO();
+        dto.setUserId(userId);
+        List<Integer> welfareUnits = new ArrayList<>();
+        HfDataauthWelfareUnit po = new HfDataauthWelfareUnit();
+        po.setUserId(userId);
+        List<HfDataauthWelfareUnit> boList = hfDataauthWelfareUnitMapper.queryListByUid(po);
+        for (HfDataauthWelfareUnit bo : boList) {
+            // 福利办理方
+            welfareUnits.add(bo.getWelfareUnit());
+        }
+        dto.setWelfareUnits(welfareUnits);
+        return dto;
+    }
+
+    @Override
+    public HfDataauthWelfareUnitDTO queryAuthorityTaskCategory(String userId) {
+        HfDataauthWelfareUnitDTO dto = new HfDataauthWelfareUnitDTO();
+        dto.setUserId(userId);
+        List<Integer> ids = new ArrayList<>();
+        HfDataauthTaskCategory task = new HfDataauthTaskCategory();
+        task.setUserId(userId);
+        List<HfDataauthTaskCategory> list = hfDataauthTaskCategoryMapper.queryListByUid(task);
+        for (HfDataauthTaskCategory po:list ) {
+            //任务单类型
+            ids.add(po.getTaskCategory());
+        }
+        dto.setWelfareUnits(ids);
+        return dto;
+    }
 }
