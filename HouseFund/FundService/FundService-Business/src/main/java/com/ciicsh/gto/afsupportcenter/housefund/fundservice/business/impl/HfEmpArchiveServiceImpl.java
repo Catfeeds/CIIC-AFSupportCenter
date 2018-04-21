@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfArchiveBasePeriodBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfComAccountBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpArchiveBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpComBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpArchiveService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpArchiveMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.EmpAccountImpXsl;
@@ -11,6 +12,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.afsupportcenter.util.poi.utils.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -42,6 +44,9 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
         List listEmpTaskPeriodBo = baseMapper.listEmpTaskPeriod(empArchiveId, "1");//基本
         List listEmpTaskPeriodAddBo = baseMapper.listEmpTaskPeriod(empArchiveId, "2");//补充
         List listEmpTransferBo = baseMapper.listEmpTransfer(empArchiveId);
+
+        HfEmpComBO hfEmpComBO = baseMapper.fetchManager(companyId,viewEmpArchiveBo.getEmployeeId());
+        org.springframework.beans.BeanUtils.copyProperties(hfEmpComBO,viewComAccountBo);
         resultMap.put("viewEmpArchive", viewEmpArchiveBo);
         resultMap.put("viewEmpPeriod", viewEmpPeriodBo);
         resultMap.put("viewEmpPeriodAdd", viewEmpPeriodAddBo);

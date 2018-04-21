@@ -74,6 +74,7 @@
         <result column="taskRemark" property="taskRemark" />
         <result column="com_account_name_task" property="comAccountNameTask" />
         <result column="payment_way_task" property="paymentWayTask" />
+        <result column="leader_ship_name" property="leaderShipName" />
     </resultMap>
 
     <resultMap id="ComTaskInfoMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountInfoBO">
@@ -95,14 +96,16 @@
         hft.com_task_id,
         hca.com_account_id,
         hcac.com_account_class_id,
-        hcac.hf_com_account,
-        hcac.com_start_month,
+        hft.hf_com_account,
+        hft.com_start_month,
         hcac.operate_start_month,
         hft.task_category,
         ctc.task_category_name,
         ht.hf_type_name,
         hft.hf_type,
+        hft.end_month,
         hft.company_id,
+        hft.leader_ship_name,
         cc.title as company_name,
         hft.handle_user_id,
         hft.handle_user_name,
@@ -117,7 +120,6 @@
         hft.task_status,
         hcas.com_account_state_value,
         hcapb.payment_bank_value,
-        hft.end_month,
         hca.ukey_store,
         hcau.ukstore_value,
         hcat.type_value,
@@ -168,6 +170,9 @@
             <if test="paymentBank!= null">
                 AND hca.payment_bank = ${paymentBank}
             </if>
+            <if test="leaderShipName!= null">
+                AND hft.leader_ship_name LIKE CONCAT('%', #{leaderShipName}, '%')
+            </if>
         </where>
         ORDER BY hft.com_task_id
     </select>
@@ -185,6 +190,7 @@
         ht.hf_type_name,
         hft.hf_type,
         hft.company_id,
+        hft.leader_ship_name,
         hft.task_status,
         cc.title as company_name,
         hft.handle_user_id,
@@ -253,6 +259,9 @@
             </if>
             <if test="paymentBank!= null">
                 AND hca.payment_bank = ${paymentBank}
+            </if>
+            <if test="leaderShipName!= null">
+                AND hft.leader_ship_name LIKE CONCAT('%', #{leaderShipName}, '%')
             </if>
         </where>
         ORDER BY hft.com_task_id
