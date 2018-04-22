@@ -62,7 +62,7 @@ public interface SsEmpTaskService extends IService<SsEmpTask> {
      * @param comAccountId
      * @return
      */
-    Integer getSerial(Integer comAccountId);
+    Integer getSerial(Long comAccountId);
 
     /**
      * 批量查询任务单信息

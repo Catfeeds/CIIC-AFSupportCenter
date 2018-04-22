@@ -305,6 +305,9 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             }
 
             // 雇员档案处理
+            inputHfEmpTask.setWelfareUnit(hfEmpTask.getWelfareUnit());
+            inputHfEmpTask.setServiceCenterId(hfEmpTask.getServiceCenterId());
+            inputHfEmpTask.setServiceCenter(hfEmpTask.getServiceCenter());
             Long newEmpArchive = handleEmpArchive(params, existEmpArchive, inputHfEmpTask, startMonth, endMonth);
             this.updateById(inputHfEmpTask);
 
@@ -319,7 +322,6 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             inputHfEmpTask.setTaskId(hfEmpTask.getTaskId());
             inputHfEmpTask.setBusinessInterfaceId(hfEmpTask.getBusinessInterfaceId());
             inputHfEmpTask.setOldAgreementId(hfEmpTask.getOldAgreementId());
-            inputHfEmpTask.setWelfareUnit(hfEmpTask.getWelfareUnit());
         } else {
             this.updateById(inputHfEmpTask);
         }
@@ -1673,6 +1675,9 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 hfEmpArchive.setComAccountClassId(params.getLong("addedComAccountClassId"));
                 hfEmpArchive.setBelongEmpArchiveId(params.getLong("belongEmpArchiveId"));
             }
+            hfEmpArchive.setWelfareUnit(inputHfEmpTask.getWelfareUnit());
+            hfEmpArchive.setServiceCenterId(inputHfEmpTask.getServiceCenterId());
+            hfEmpArchive.setServiceCenter(inputHfEmpTask.getServiceCenter());
             hfEmpArchive.setHfEmpAccount(inputHfEmpTask.getHfEmpAccount());
             hfEmpArchive.setCreatedBy(inputHfEmpTask.getModifiedBy());
             isNew = true;
