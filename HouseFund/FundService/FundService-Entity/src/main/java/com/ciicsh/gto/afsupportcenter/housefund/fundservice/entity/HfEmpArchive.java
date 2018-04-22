@@ -123,6 +123,21 @@ public class HfEmpArchive implements Serializable {
      */
 	@TableField("modified_by")
 	private String modifiedBy;
+    /**
+     * 福利办理方
+     */
+    @TableField("welfare_unit")
+    private Integer welfareUnit;
+    /**
+     * 服务中心ID
+     */
+    @TableField("service_center_id")
+    private Integer serviceCenterId;
+    /**
+     * 服务中心
+     */
+    @TableField("service_center")
+    private String serviceCenter;
 
 
 	public Long getEmpArchiveId() {
@@ -285,7 +300,31 @@ public class HfEmpArchive implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	@Override
+    public Integer getWelfareUnit() {
+        return welfareUnit;
+    }
+
+    public void setWelfareUnit(Integer welfareUnit) {
+        this.welfareUnit = welfareUnit;
+    }
+
+    public Integer getServiceCenterId() {
+        return serviceCenterId;
+    }
+
+    public void setServiceCenterId(Integer serviceCenterId) {
+        this.serviceCenterId = serviceCenterId;
+    }
+
+    public String getServiceCenter() {
+        return serviceCenter;
+    }
+
+    public void setServiceCenter(String serviceCenter) {
+        this.serviceCenter = serviceCenter;
+    }
+
+    @Override
 	public String toString() {
 		return "HfEmpArchive{" +
 			", empArchiveId=" + empArchiveId +
@@ -308,6 +347,9 @@ public class HfEmpArchive implements Serializable {
 			", modifiedTime=" + modifiedTime +
 			", createdBy=" + createdBy +
 			", modifiedBy=" + modifiedBy +
+            ", welfareUnit=" + welfareUnit +
+            ", serviceCenterId=" + serviceCenterId +
+            ", serviceCenter=" + serviceCenter +
 			"}";
 	}
 }

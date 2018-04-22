@@ -160,6 +160,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         SsEmpTask ssEmpTask = selectById(bo.getEmpTaskId());
         bo.setCompanyId(ssEmpTask.getCompanyId());
         bo.setEmployeeId(ssEmpTask.getEmployeeId());
+        bo.setWelfareUnit(ssEmpTask.getWelfareUnit());
+        bo.setServiceCenterId(ssEmpTask.getServiceCenterId());
+        bo.setServiceCenter(ssEmpTask.getServiceCenter());
 
         // 更新雇员任务信息
         // 备注时间
@@ -213,7 +216,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     }
 
     @Override
-    public Integer getSerial(Integer comAccountId) {
+    public Integer getSerial(Long comAccountId) {
         //社保序号增1
         ssComAccountService.addSerial(comAccountId);
         //取出序号
@@ -239,7 +242,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     private void handleAdjustmentTask(SsEmpTaskBO bo, boolean isBatch) {
         if (isBatch) {
             //查询企业 是否开户
-            queryConpanyIsOpenAccount(bo);
+            queryCompanyIsOpenAccount(bo);
             //查询 雇员是否新进
             queryEmployeeIsnewOrChangeInto(bo);
         }
@@ -998,7 +1001,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     private void handleBackTask(SsEmpTaskBO bo, boolean isBatch) {
         if (isBatch) {
             //查询企业 是否开户
-            queryConpanyIsOpenAccount(bo);
+            queryCompanyIsOpenAccount(bo);
             //查询 雇员是否新进
             queryEmployeeIsnewOrChangeInto(bo);
         }
@@ -1027,7 +1030,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     private void handleTurnOutTask(SsEmpTaskBO bo, boolean isBatch) {
         if (isBatch) {
             //查询企业 是否开户
-            queryConpanyIsOpenAccount(bo);
+            queryCompanyIsOpenAccount(bo);
             //查询 雇员是否新进
             queryEmployeeIsnewOrChangeInto(bo);
         }
@@ -1079,7 +1082,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     private void handleRefundAccountTask(SsEmpTaskBO bo, boolean isBatch) {
         if (isBatch) {
             //查询企业 是否开户
-            queryConpanyIsOpenAccount(bo);
+            queryCompanyIsOpenAccount(bo);
             //查询 雇员是否新进
             queryEmployeeIsnewOrChangeInto(bo);
         }
@@ -1159,9 +1162,11 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     private void newOrChangeInto(SsEmpTaskBO bo, boolean isBatch) {
         //如果是批量办理 则查看当前 企业是否开户
         if (isBatch) {
-            queryConpanyIsOpenAccount(bo);
+            queryCompanyIsOpenAccount(bo);
             //查询雇员 是否已经新进了
             queryEmployeeIsnewOrChangeInto(bo);
+            // 起缴月份必须小于或者等于办理月份
+            checkStartMonth(bo);
         }
 
         // 如果新开（转入，含翻牌）时的更正，需先撤销之前办理的任务单
@@ -1279,6 +1284,16 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             backStartForTaskPeriods(backPeriods, ssEmpBasePeriodList, bo);
         }
     }
+
+    private void checkStartMonth(SsEmpTaskBO bo) {
+        YearMonth startMonthDate = YearMonth.parse(bo.getStartMonth(), formatter);
+        YearMonth handleMonthDate = YearMonth.parse(bo.getHandleMonth(), formatter);
+
+        if (startMonthDate.isAfter(handleMonthDate)) {
+            throw new BusinessException("[" + bo.getEmployeeName() + "]该雇员起缴月份必须小于或者等于办理月份");
+        }
+    }
+
 
     /**
      * 根据任务单ID逻辑删除报表记录及其明细记录
@@ -1410,9 +1425,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      *
      * @param bo
      */
-    private void queryConpanyIsOpenAccount(SsEmpTaskBO bo) {
+    private void queryCompanyIsOpenAccount(SsEmpTaskBO bo) {
         SsComAccountBO ssComAccountBO = ssComAccountService.queryByEmpTaskId(String.valueOf(bo.getEmpTaskId()), String.valueOf(bo.getTaskCategory()));
-        if (null == ssComAccountBO.getComAccountId())
+        if (ssComAccountBO == null || null == ssComAccountBO.getComAccountId())
             throw new BusinessException("[" + bo.getEmployeeName() + "]该雇员对应的公司没有开户");
     }
 
@@ -1643,7 +1658,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         String SUPPLEMENTARYPAY = "supplementaryPayList"; //代表调整(全额补缴)的标志
     }
 
-    SsEmpArchive getArchive(SsEmpTaskBO bo) {
+    private SsEmpArchive getArchive(SsEmpTaskBO bo) {
         SsEmpArchive ssEmpArchive = new SsEmpArchive();
         ssEmpArchive.setComAccountId(bo.getComAccountId());
         ssEmpArchive.setCompanyId(bo.getCompanyId());
@@ -1662,6 +1677,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         ssEmpArchive.setCreatedBy(UserContext.getUserId());
         ssEmpArchive.setModifiedTime(LocalDateTime.now());
         ssEmpArchive.setModifiedBy(UserContext.getUserId());
+        ssEmpArchive.setWelfareUnit(bo.getWelfareUnit());
+        ssEmpArchive.setServiceCenterId(bo.getServiceCenterId());
+        ssEmpArchive.setServiceCenter(bo.getServiceCenter());
         return ssEmpArchive;
     }
 

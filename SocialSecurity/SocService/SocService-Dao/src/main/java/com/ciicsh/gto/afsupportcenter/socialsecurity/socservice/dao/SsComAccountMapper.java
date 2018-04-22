@@ -72,7 +72,7 @@ public interface SsComAccountMapper extends BaseMapper<SsComAccount> {
      * @param comAccountId
      * @return
      */
-    void addSerial(@Param("comAccountId") Integer comAccountId);
+    void addSerial(@Param("comAccountId") Long comAccountId);
     
     /**
      * 根据社保账号获得社保序号
@@ -80,5 +80,5 @@ public interface SsComAccountMapper extends BaseMapper<SsComAccount> {
      * @param comAccountId
      * @return
      */
-    Integer getSerialByComAccountId(@Param("comAccountId") Integer comAccountId);
+    Integer getSerialByComAccountId(@Param("comAccountId") Long comAccountId);
 }

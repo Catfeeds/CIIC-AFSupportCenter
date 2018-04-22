@@ -169,7 +169,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
      * 获得社保序号
      */
     @PostMapping("/getSerial")
-    public JsonResult<Integer> getSerial(Integer comAccountId) {
+    public JsonResult<Integer> getSerial(Long comAccountId) {
         Integer ssSerial = business.getSerial(comAccountId);
         return JsonResultKit.of(ssSerial);
     }
@@ -263,10 +263,10 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         StringBuffer handleMonth = TaskCommonUtils.getMonthStr(now);
         empTaskBatchParameter.getSsEmpTaskBOList().forEach(p -> {
             //1新进  2  转入 3  调整 4 补缴 5 转出 6封存 7退账
-            if (1 == p.getTaskCategory() || 2 == p.getTaskCategory()) {
-                String ssSerial = business.selectMaxSsSerialByTaskId(p.getEmpTaskId());
+            if ((1 == p.getTaskCategory() || 2 == p.getTaskCategory()) && p.getComAccountId() != null) {
+                Integer ssSerial = business.getSerial(p.getComAccountId());
                 //社保序号
-                p.setEmpSsSerial(ssSerial);
+                p.setEmpSsSerial(String.valueOf(ssSerial));
             }
             //退账 表示已完成
             if (7 == p.getTaskCategory()) {
