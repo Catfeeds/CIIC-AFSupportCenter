@@ -118,12 +118,12 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
     }
 
     @Override
-    public void addSerial(Integer comAccountId) {
+    public void addSerial(Long comAccountId) {
         baseMapper.addSerial(comAccountId);
     }
 
     @Override
-    public Integer getSerialByComAccountId(Integer comAccountId) {
+    public Integer getSerialByComAccountId(Long comAccountId) {
         return baseMapper.getSerialByComAccountId(comAccountId);
     }
 

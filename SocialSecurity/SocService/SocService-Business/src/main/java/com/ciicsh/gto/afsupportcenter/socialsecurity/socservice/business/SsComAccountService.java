@@ -84,7 +84,7 @@ public interface SsComAccountService extends IService<SsComAccount> {
      * @param comAccountId
      * @return
      */
-    void addSerial(Integer comAccountId);
+    void addSerial(Long comAccountId);
 
     /**
      * 根据社保账号获得社保序号
@@ -92,5 +92,5 @@ public interface SsComAccountService extends IService<SsComAccount> {
      * @param comAccountId
      * @return
      */
-    Integer getSerialByComAccountId(Integer comAccountId);
+    Integer getSerialByComAccountId(Long comAccountId);
 }
