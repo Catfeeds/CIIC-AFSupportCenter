@@ -7,4 +7,5 @@ public class HfEmpComBO {
     private String serviceSpecialist;
     private String leadershipName;
     private String serviceCenter;
+    private Integer serviceCenterId;
 }

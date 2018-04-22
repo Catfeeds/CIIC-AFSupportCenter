@@ -977,6 +977,9 @@
         <if test="empArchiveId != null">
             AND ea.emp_archive_id = #{empArchiveId}
         </if>
+        <if test="serviceCenterValue != null">
+            AND et.service_center_id = #{serviceCenterValue}
+        </if>
     </select>
 
     <select id="queryEmpTaskTransferNewTask" resultMap="EmpTaskTransferRM">

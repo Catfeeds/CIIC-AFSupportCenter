@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer;
 import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import lombok.Data;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
@@ -41,6 +42,7 @@ public class EmpTaskTransferBo {
     private Integer paymentBank;
     private Integer hfAccountType;
     private String createdDisplayName;
+    private Integer serviceCenterValue;
 
     public String getTransferDateFormat() {
         if (this.transferDate != null) {

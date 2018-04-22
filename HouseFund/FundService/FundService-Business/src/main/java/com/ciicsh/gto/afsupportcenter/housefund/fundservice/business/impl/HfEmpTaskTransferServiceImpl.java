@@ -151,6 +151,8 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         hfEmpTask.setTaskCategory(EMP_TASK_TASK_CATEGORY_8);
         hfEmpTask.setTaskStatus(EMP_TASK_TASK_STATUS_1);
         if (Optional.ofNullable(hfEmpTask.getEmpTaskId()).isPresent() == false) { //公积金专员创建任务单
+            HfEmpComBO hfEmpComBO = hfEmpArchiveMapper.fetchManager(hfEmpTask.getCompanyId(),hfEmpTask.getEmployeeId());
+            hfEmpTask.setServiceCenterId(hfEmpComBO.getServiceCenterId());
             hfEmpTask.setSubmitTime(LocalDate.now());
             hfEmpTask.setSubmitterId(UserContext.getUser().getDisplayName());
             hfEmpTask.setCreatedBy(UserContext.getUserId());
