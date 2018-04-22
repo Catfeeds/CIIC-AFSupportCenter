@@ -160,6 +160,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         SsEmpTask ssEmpTask = selectById(bo.getEmpTaskId());
         bo.setCompanyId(ssEmpTask.getCompanyId());
         bo.setEmployeeId(ssEmpTask.getEmployeeId());
+        bo.setWelfareUnit(ssEmpTask.getWelfareUnit());
+        bo.setServiceCenterId(ssEmpTask.getServiceCenterId());
+        bo.setServiceCenter(ssEmpTask.getServiceCenter());
 
         // 更新雇员任务信息
         // 备注时间
@@ -1655,7 +1658,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         String SUPPLEMENTARYPAY = "supplementaryPayList"; //代表调整(全额补缴)的标志
     }
 
-    SsEmpArchive getArchive(SsEmpTaskBO bo) {
+    private SsEmpArchive getArchive(SsEmpTaskBO bo) {
         SsEmpArchive ssEmpArchive = new SsEmpArchive();
         ssEmpArchive.setComAccountId(bo.getComAccountId());
         ssEmpArchive.setCompanyId(bo.getCompanyId());
@@ -1674,6 +1677,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         ssEmpArchive.setCreatedBy(UserContext.getUserId());
         ssEmpArchive.setModifiedTime(LocalDateTime.now());
         ssEmpArchive.setModifiedBy(UserContext.getUserId());
+        ssEmpArchive.setWelfareUnit(bo.getWelfareUnit());
+        ssEmpArchive.setServiceCenterId(bo.getServiceCenterId());
+        ssEmpArchive.setServiceCenter(bo.getServiceCenter());
         return ssEmpArchive;
     }
 

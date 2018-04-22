@@ -24,6 +24,9 @@
 		<result column="modified_time" property="modifiedTime" />
 		<result column="created_by" property="createdBy" />
 		<result column="modified_by" property="modifiedBy" />
+        <result column="welfare_unit" property="welfareUnit" />
+        <result column="service_center_id" property="serviceCenterId" />
+        <result column="service_center" property="serviceCenter" />
 	</resultMap>
 
 </mapper>
