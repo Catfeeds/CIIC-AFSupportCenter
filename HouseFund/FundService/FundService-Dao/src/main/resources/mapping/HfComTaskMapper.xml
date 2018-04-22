@@ -149,6 +149,9 @@
             <if test="taskCategory!= null">
                 AND hft.task_category = #{taskCategory}
             </if>
+            <if test="hfComAccount!= null">
+                AND hft.hf_com_account  LIKE CONCAT('%', #{hfComAccount}, '%')
+            </if>
             <if test="companyId!= null">
                 AND hft.company_id = #{companyId}
             </if>

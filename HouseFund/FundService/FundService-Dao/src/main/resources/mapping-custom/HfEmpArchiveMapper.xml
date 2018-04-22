@@ -354,9 +354,10 @@
         <result column="created_display_name" property="serviceSpecialist"/>
         <result column="leadership_name" property="leadershipName"/>
         <result column="service_center" property="serviceCenter"/>
+        <result column="service_center_id" property="serviceCenterId"/>
     </resultMap>
     <select id="fetchManager" resultMap="empComRM" >
-        SELECT eoop.created_display_name,eoop.leadership_name,com.service_center
+        SELECT eoop.created_display_name,eoop.leadership_name,com.service_center,com.service_center_id
         FROM emp_af_emp_company eoop INNER JOIN sal_af_company com ON com.company_id=eoop.company_id
         where eoop.employee_id=#{employeeId} and eoop.company_id =#{companyId}
         ORDER BY eoop.in_date desc LIMIT 1
