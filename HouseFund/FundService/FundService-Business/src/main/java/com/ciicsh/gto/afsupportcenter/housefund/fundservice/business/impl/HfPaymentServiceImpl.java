@@ -6,6 +6,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.EmpTaskS
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentComBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentEmpBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentProcessParmBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.printRemittedBookBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfArchiveBasePeriod;
@@ -201,9 +202,12 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
     }
 
     @Override
-    public JsonResult printRemittedBook(String paymentId, Integer hfType) {
-        //hfPaymentMapper
-        return JsonResultKit.of();
+    public JsonResult printRemittedBook(Long paymentId, Integer hfType) {
+        List<printRemittedBookBO> listPrint=hfPaymentMapper.printRemittedBook(paymentId,hfType);
+        if(listPrint.size()==0){
+            return JsonResultKit.ofError("汇缴书数据为空！");
+        }
+        return JsonResultKit.of(listPrint);
     }
 
 

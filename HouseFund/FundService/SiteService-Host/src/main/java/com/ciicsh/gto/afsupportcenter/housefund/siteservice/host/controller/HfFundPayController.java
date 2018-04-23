@@ -326,7 +326,7 @@ public class HfFundPayController {
      * 打印汇缴书
      */
     @PostMapping("/printRemittedBook")
-    public JsonResult printRemittedBook(String paymentId,Integer hfType){
+    public JsonResult printRemittedBook(Long paymentId,Integer hfType){
         return hfPaymentService.printRemittedBook(paymentId,hfType);
     }
 
