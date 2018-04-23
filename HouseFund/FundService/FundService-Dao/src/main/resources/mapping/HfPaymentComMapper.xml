@@ -13,8 +13,6 @@
 		<result column="remitted_amount" property="remittedAmount" />
 		<result column="repair_amount" property="repairAmount" />
 		<result column="remitted_count_emp" property="remittedCountEmp" />
-		<result column="daozhang_amount" property="daozhangAmount" />
-		<result column="daozhang_count_emp" property="daozhangCountEmp" />
 		<result column="is_active" property="isActive" />
 		<result column="created_time" property="createdTime" />
 		<result column="modified_time" property="modifiedTime" />
@@ -31,8 +29,6 @@
         <result column="remitted_amount" property="remittedAmount"/>
         <result column="repair_amount" property="repairAmount"/>
         <result column="remitted_count_emp" property="remittedCountEmp"/>
-        <result column="daozhang_amount" property="daozhangAmount"/>
-        <result column="daozhang_count_emp" property="daozhangCountEmp"/>
     </resultMap>
 
     <!--查询公积金汇缴支付详细操作数据-->
@@ -45,9 +41,7 @@
         pc.payment_bank,
         pc.remitted_amount,
         pc.repair_amount,
-        pc.remitted_count_emp,
-        pc.daozhang_amount,
-        pc.daozhang_count_emp
+        pc.remitted_count_emp
         FROM hf_payment_com pc
         INNER JOIN hf_payment p ON p.payment_id = pc.payment_id
         INNER JOIN sal_company com ON com.company_id = pc.company_id

@@ -151,6 +151,7 @@
         INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
         WHERE
         a.is_active = 1
+        AND b.state=1
         AND b.is_active = 1
         <if test="companyId != null and companyId != ''">
             AND EXISTS (select 1 FROM sal_company com INNER JOIN  hf_account_com_relation acr ON  acr.company_id=com.company_id and acr.is_active=1 WHERE acr.com_account_id= b.com_account_id and com.company_id = #{companyId} )
