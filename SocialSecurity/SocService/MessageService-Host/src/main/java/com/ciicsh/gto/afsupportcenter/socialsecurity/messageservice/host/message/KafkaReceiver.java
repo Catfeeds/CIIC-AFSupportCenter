@@ -226,15 +226,12 @@ public class KafkaReceiver {
                             }*/
                         }
                     } else {
-                        /* 更正业务流程，该业务场景已限制
-                        // 如果没有查到旧的任务单，那么就是下列情况：外地新开（本地收不到相关任务单），更正时改为翻牌（外地转上海）；
-                        // 此时也不知道是翻牌（未走翻牌通道），只能默认为新开任务单；（该情况暂不考虑，前道已限制）
-                        // 或者0转非0，新开为0时，不发任务单至后道，更正为非0时，后道找不到旧任务单；
+                        logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_UPDATE).setTextContent("根据oldEmpAgreementId未找到旧的任务单"));
+                        // 如果没有查到旧的雇员协议：
                         if(paramMap.get("socialType") != null) {
                             String socialType = paramMap.get("socialType").toString();
                             taskCategory = Integer.parseInt(socialType);
-                        }*/
-                        logService.warn(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_UPDATE).setTextContent("根据oldEmpAgreementId未找到旧的任务单"));
+                        }
                     }
 
                     AfCompanyDetailResponseDTO afCompanyDetailResponseDTO = null;
