@@ -9,10 +9,8 @@
         <result column="company_id" property="companyId" />
         <result column="payment_bank" property="paymentBank" />
         <result column="remitted_amount" property="remittedAmount" />
-        <result column="bujiao_amount" property="bujiaoAmount" />
+        <result column="repair_amount" property="bujiaoAmount" />
         <result column="remitted_count_emp" property="remittedCountEmp" />
-        <result column="daozhang_amount" property="daozhangAmount" />
-        <result column="daozhang_count_emp" property="daozhangCountEmp" />
         <result column="is_active" property="isActive" />
         <result column="created_time" property="createdTime" />
         <result column="modified_time" property="modifiedTime" />
