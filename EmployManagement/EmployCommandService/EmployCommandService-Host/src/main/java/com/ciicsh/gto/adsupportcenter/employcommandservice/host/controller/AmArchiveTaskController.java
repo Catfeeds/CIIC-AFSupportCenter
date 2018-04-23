@@ -329,6 +329,10 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         //退工材料字典
         resultMap.put("resultMaterial",resultMaterial);
 
+        UserInfoBO userInfoBO = new UserInfoBO();
+        userInfoBO.setUserName(ReasonUtil.getUserName());
+        resultMap.put("userInfo",userInfoBO);
+
         return  JsonResultKit.of(resultMap);
     }
 

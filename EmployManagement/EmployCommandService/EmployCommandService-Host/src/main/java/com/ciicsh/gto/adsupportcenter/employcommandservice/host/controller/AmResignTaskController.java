@@ -163,7 +163,8 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
         if(amTaskParamBO.getEmploymentId()!=null){
             /**
-             * 如果重在用工主键，则通过用工主键找对应的任务单主键查询雇佣信息
+             * 如果重在用工主键，则通过用工主键找对应的任务
+             * 单主键查询雇佣信息
              */
             amEmployment = amEmploymentService.selectById(amTaskParamBO.getEmploymentId());
 
@@ -327,6 +328,11 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             amResignBO.setMatchEmployIndex(amResignBO.getEmploymentId().toString());
         }
         resultMap.put("resignBO",amResignBO);
+
+        UserInfoBO userInfoBO = new UserInfoBO();
+        userInfoBO.setUserName(ReasonUtil.getUserName());
+
+        resultMap.put("userInfo",userInfoBO);
 
         return JsonResultKit.of(resultMap);
     }
