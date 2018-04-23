@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * SsEmpTask DTO
@@ -158,4 +159,7 @@ public class SsEmpTaskBO implements Serializable {
     private Integer welfareUnit;
     //证件类型
     private Integer idCardType;
+
+    //进位方式
+    private Map<String, Map<String, Integer>> roundTypeMap;
 }

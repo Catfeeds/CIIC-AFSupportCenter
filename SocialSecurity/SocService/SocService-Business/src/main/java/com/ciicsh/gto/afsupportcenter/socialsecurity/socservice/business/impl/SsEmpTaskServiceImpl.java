@@ -74,8 +74,6 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     @Autowired
     SsComAccountService ssComAccountService;
 
-    //进位方式
-    private Map<String, Map<String, Integer>> roundTypeMap;
     //个人进位方式
     private final String PERSONROUNDTYPE = "personRoundType";
     //公司进位方式
@@ -249,7 +247,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         //修改任务单详细
         baseMapper.updateMyselfColumnById(bo);
         //获得进位方式
-        getRoundType(bo.getPolicyDetailId(), bo.getWelfareUnit(), bo.getStartMonth());
+        getRoundType(bo.getPolicyDetailId(), bo.getWelfareUnit(), bo.getStartMonth(), bo);
         //获得前端输入的缴纳费用段
         List<SsEmpTaskPeriod> taskPeriods = bo.getEmpTaskPeriods();
         if (taskPeriods == null || taskPeriods.size() == 0) {
@@ -358,7 +356,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             List<SsEmpTaskFront> empSocials = getEmpSocials(bo);
             if (empSocials.size() == 0) throw new BusinessException("前道传递险种详细信息为空");
             // 添加明细
-            addEmpBaseDetail(newEmpBasePeriodList, empSocials, bo.getEmpArchiveId(), bo.getModifiedBy());
+            addEmpBaseDetail(newEmpBasePeriodList, empSocials, bo.getEmpArchiveId(), bo.getModifiedBy(), bo.getRoundTypeMap());
             bo.setListEmpBasePeriod(newEmpBasePeriodList);
             { //顺调的逻辑
                 bo.setAdustType(1);
@@ -628,7 +626,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             EntityWrapper ew = new EntityWrapper<SsEmpTaskFront>();
             ew.where("emp_task_id={0}", bo.getEmpTaskId()).and("is_active=1");
             List<SsEmpTaskFront> ssTaskEmpBaseDetailList = ssEmpTaskFrontService.selectList(ew);
-            addEmpBaseDetail(addPeriodList, ssTaskEmpBaseDetailList, bo.getEmpArchiveId(), bo.getModifiedBy());
+            addEmpBaseDetail(addPeriodList, ssTaskEmpBaseDetailList, bo.getEmpArchiveId(), bo.getModifiedBy(), bo.getRoundTypeMap());
 
             bo.setAdustType(1);
             createNonstandardData(bo, addPeriodList.get(0), null, null, null);
@@ -645,7 +643,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             EntityWrapper ew = new EntityWrapper<SsEmpTaskFront>();
             ew.where("emp_task_id={0}", bo.getEmpTaskId()).and("is_active=1");
             List<SsEmpTaskFront> ssTaskEmpBaseDetailList = ssEmpTaskFrontService.selectList(ew);
-            addEmpBaseDetail(supplementPayList, ssTaskEmpBaseDetailList, bo.getEmpArchiveId(), bo.getModifiedBy());
+            addEmpBaseDetail(supplementPayList, ssTaskEmpBaseDetailList, bo.getEmpArchiveId(), bo.getModifiedBy(), bo.getRoundTypeMap());
             bo.setTaskCategory(Integer.valueOf(SocialSecurityConst.TASK_TYPE_4));
             createNonstandardData(bo, supplementPayList.get(0), null, null, null);
         }
@@ -726,6 +724,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     }
 
     private Map<String, Object> getSsEmpBaseAdjust(SsEmpBasePeriod p, SsEmpTaskPeriod ssEmpTaskPeriod, SsEmpTaskBO bo) {
+        Map<String, Map<String, Integer>> roundTypeMap = bo.getRoundTypeMap();
         Map<String, Object> map = new HashMap();
         SsEmpBaseAdjust ssEmpBaseAdjust = new SsEmpBaseAdjust();
         ssEmpBaseAdjust.setEmpTaskId(ssEmpTaskPeriod.getEmpTaskId());
@@ -876,7 +875,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             EntityWrapper ew = new EntityWrapper<SsEmpTaskFront>();
             ew.where("emp_task_id={0}", bo.getEmpTaskId()).and("is_active=1");
             List<SsEmpTaskFront> ssTaskEmpBaseDetailList = ssEmpTaskFrontService.selectList(ew);
-            addEmpBaseDetail(supplementPayList, ssTaskEmpBaseDetailList, bo.getEmpArchiveId(), bo.getModifiedBy());
+            addEmpBaseDetail(supplementPayList, ssTaskEmpBaseDetailList, bo.getEmpArchiveId(), bo.getModifiedBy(), bo.getRoundTypeMap());
             createNonstandardData(bo, supplementPayList.get(0), null, null, null);
         }
 
@@ -913,7 +912,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         List<SsEmpTaskFront> empSocials = getEmpSocials(bo);
         if (empSocials.size() == 0) throw new BusinessException("前道传递险种详细信息为空");
         //添加明细 （养 医 失 工 生育 险种）
-        addEmpBaseDetail(newEmpBasePeriodList, empSocials, bo.getEmpArchiveId(), bo.getModifiedBy());
+        addEmpBaseDetail(newEmpBasePeriodList, empSocials, bo.getEmpArchiveId(), bo.getModifiedBy(), bo.getRoundTypeMap());
 
         //创建非标 数据
         SsEmpBasePeriod ssEmpBasePeriod = newEmpBasePeriodList.get(0);
@@ -1008,7 +1007,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         //修改任务单详细
         baseMapper.updateMyselfColumnById(bo);
         //获得进位方式
-        getRoundType(bo.getPolicyDetailId(), bo.getWelfareUnit(), bo.getStartMonth());
+        getRoundType(bo.getPolicyDetailId(), bo.getWelfareUnit(), bo.getStartMonth(), bo);
         //获得前端输入的补缴费用段
         List<SsEmpTaskPeriod> taskPeriods = bo.getEmpTaskPeriods();
         if (taskPeriods == null || taskPeriods.size() == 0) {
@@ -1216,7 +1215,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
         //获得进位方式
         int unit = Optional.ofNullable(bo.getWelfareUnit()).orElse(1);
-        getRoundType(bo.getPolicyDetailId(), unit, bo.getStartMonth());
+        getRoundType(bo.getPolicyDetailId(), unit, bo.getStartMonth(), bo);
 
         //获得前端输入的缴纳费用段
         List<SsEmpTaskPeriod> taskPeriods = bo.getEmpTaskPeriods();
@@ -1271,7 +1270,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         List<SsEmpTaskFront> empSocials = getEmpSocials(bo);
         if (empSocials.size() == 0) throw new BusinessException("前道传递险种详细信息为空");
         //添加明细 （养 医 失 工 生育 险种）
-        addEmpBaseDetail(basePeriods, empSocials, empArchiveId, bo.getModifiedBy());
+        addEmpBaseDetail(basePeriods, empSocials, empArchiveId, bo.getModifiedBy(), bo.getRoundTypeMap());
         bo.setListEmpBasePeriod(basePeriods);
         {//生成非标数据
             SsEmpBasePeriod ssEmpBasePeriod = basePeriods.get(0);
@@ -1469,7 +1468,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param empSocials
      * @param empArchiveId
      */
-    private void addEmpBaseDetail(List<SsEmpBasePeriod> basePeriods, List<SsEmpTaskFront> empSocials, Long empArchiveId, String modifiedBy) {
+    private void addEmpBaseDetail(List<SsEmpBasePeriod> basePeriods, List<SsEmpTaskFront> empSocials, Long empArchiveId, String modifiedBy, Map<String, Map<String, Integer>> roundTypeMap) {
         //if (StringUtils.isBlank(roundType))throw new BusinessException("服务器异常");
         basePeriods.forEach(p -> {
             // 组合险种和费用段
@@ -1761,7 +1760,11 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 break;
             case 4:
                 //补缴
-                createNewOrIntoNonstandard(ssEmpTaskBO, ssEmpBasePeriod);
+                if (ssEmpTaskBO.getAdustType() != null && ssEmpTaskBO.getAdustType() == 0) {
+                    createAdjustNonstandard(ssEmpTaskBO, ssEmpBaseAdjust, ssEmpBaseAdjustDetailList);
+                } else {
+                    createNewOrIntoNonstandard(ssEmpTaskBO, ssEmpBasePeriod);
+                }
                 break;
             case 5:
             case 6:
@@ -1869,8 +1872,13 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 }
                 break;
             case 4://补缴
-                ssMonthCharge.setCostCategory(4);
-                createSsMonthChargeObject(ssEmpTaskBO, ssEmpBasePeriod, ssMonthCharge, ssEmpBaseDetailList);
+                if (ssEmpTaskBO.getAdustType() != null && ssEmpTaskBO.getAdustType()  == 0) { // 差额补缴
+                    ssMonthCharge.setCostCategory(9);
+                    createSsMonthChargeObject(ssEmpTaskBO, ssEmpBaseAdjust, ssEmpBaseeAdjustDetailList, ssMonthCharge);
+                } else {
+                    ssMonthCharge.setCostCategory(4);
+                    createSsMonthChargeObject(ssEmpTaskBO, ssEmpBasePeriod, ssMonthCharge, ssEmpBaseDetailList);
+                }
                 break;
             case 5:
             case 14:
@@ -2185,14 +2193,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param payAccountType
      * @param effectiveMonth
      */
-    public void getRoundType(String ssPolicyId, int payAccountType, String effectiveMonth) {
+    public void getRoundType(String ssPolicyId, int payAccountType, String effectiveMonth, SsEmpTaskBO ssEmpTaskBO) {
         GetSSPItemsRequestDTO getSSPItemsRequestDTO = new GetSSPItemsRequestDTO();
         getSSPItemsRequestDTO.setSsPolicyId(ssPolicyId);
         getSSPItemsRequestDTO.setPayAccountType(payAccountType);
         getSSPItemsRequestDTO.setEffectiveMonth(effectiveMonth);
         List<SSPItemDTO> resultList = TaskCommonUtils.getRoundTypeFromApi(commonApiUtils, getSSPItemsRequestDTO);
         //将返回结果封装 成Map 对象 便于使用
-        handleRoundType(resultList);
+        handleRoundType(resultList, ssEmpTaskBO);
     }
 
     /**
@@ -2200,16 +2208,25 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      *
      * @param resultList
      */
-    private void handleRoundType(List<SSPItemDTO> resultList) {
+    private void handleRoundType(List<SSPItemDTO> resultList, SsEmpTaskBO ssEmpTaskBO) {
         if (null == resultList || resultList.size() == 0) return;//throw new BusinessException("进位方式返回值为null")
-        roundTypeMap = new HashMap<>();
+        Map<String, Map<String, Integer>> roundTypeMap = new HashMap<>();
         resultList.forEach(p -> {
             //某个险种下对用的 个人进位和公司进位方式
             Map<String, Integer> map = new HashMap<>();
-            map.put(PERSONROUNDTYPE, p.getPersonRoundType());
-            map.put(COMPANYROUNDTYPE, p.getCompanyRoundType());
-            roundTypeMap.put(p.getItemcode(), map);
+            int personRoundType = 1;
+            int companyRoundType = 1;
+            if (p.getPersonRoundType() != null) {
+                personRoundType = p.getPersonRoundType();
+            }
+            if (p.getCompanyRoundType() != null) {
+                companyRoundType = p.getCompanyRoundType();
+            }
+            map.put(PERSONROUNDTYPE, personRoundType);
+            map.put(COMPANYROUNDTYPE, companyRoundType);
+            roundTypeMap.put(p.getItemCode(), map);
         });
+        ssEmpTaskBO.setRoundTypeMap(roundTypeMap);
     }
 
     //工伤保险
