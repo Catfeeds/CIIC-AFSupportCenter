@@ -167,6 +167,8 @@
         <include refid="employeeDailyOperatorQuery_select"/>
         from ss_emp_task et
         INNER JOIN ss_dataauth_company sdc ON et.company_id = sdc.company_id AND sdc.user_id = #{userId}
+        INNER JOIN ss_dataauth_welfare_unit sdwu ON et.welfare_unit = sdwu.welfare_unit AND sdwu.user_id = #{userId}
+        INNER JOIN ss_dataauth_task_category sdtc ON et.task_category = sdtc.task_category AND sdtc.user_id = #{userId}
         LEFT JOIN sal_company c on et.company_id = c.company_id
         LEFT JOIN emp_employee e ON et.employee_id = e.employee_id
         LEFT JOIN ss_account_com_relation ssac ON ssac.company_id = c.company_id AND ssac.is_active = 1
@@ -192,6 +194,8 @@
         et.created_display_name
         from ss_emp_task et
         INNER JOIN ss_dataauth_company sdc ON et.company_id = sdc.company_id AND sdc.user_id = #{userId}
+        INNER JOIN ss_dataauth_welfare_unit sdwu ON et.welfare_unit = sdwu.welfare_unit AND sdwu.user_id = #{userId}
+        INNER JOIN ss_dataauth_task_category sdtc ON et.task_category = sdtc.task_category AND sdtc.user_id = #{userId}
         LEFT JOIN sal_company c on et.company_id = c.company_id
         LEFT JOIN emp_employee e on et.employee_id = e.employee_id
         LEFT JOIN ss_account_com_relation ssac on ssac.company_id = c.company_id and ssac.is_active = 1
