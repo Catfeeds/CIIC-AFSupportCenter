@@ -18,7 +18,7 @@ import java.util.List;
  */
 public interface SsMonthChargeService extends IService<SsMonthCharge> {
 
-    int deleteOldDate(String employeeId, String paymentMonth, String handleMonth,Integer costCategory);
+    int deleteOldDate(String employeeId, String paymentMonth, String handleMonth,Integer costCategory, String modifiedBy);
 
     List<SsMonthChargeBO>  selectTotalFromOld(String employeeId, String paymentMonth, Integer costCategory);
 }

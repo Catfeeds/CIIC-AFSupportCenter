@@ -18,6 +18,7 @@ public class HFNetBankExportBO {
     private Boolean gender;
     private String startMonth;
     private String endMonth;
+    private BigDecimal totalAmount;
     private BigDecimal amount;
     private BigDecimal empAmount;
     private BigDecimal comAmount;

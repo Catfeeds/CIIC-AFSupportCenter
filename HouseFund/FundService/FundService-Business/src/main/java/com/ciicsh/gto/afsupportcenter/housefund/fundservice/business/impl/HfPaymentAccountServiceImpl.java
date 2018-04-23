@@ -486,6 +486,7 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
         repairList.add(new HFNetBankExportBO());
         HFNetBankExportBO prevHfNetBankExportBO = repairList.get(0);
         prevHfNetBankExportBO.setEndMonth(prevHfNetBankExportBO.getStartMonth());
+        prevHfNetBankExportBO.setTotalAmount(prevHfNetBankExportBO.getAmount());
 
         for (int i = 1; i < repairList.size(); i++) {
             HFNetBankExportBO hfNetBankExportBO = repairList.get(i);
@@ -494,7 +495,7 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
                     String.format(template,
                         prevHfNetBankExportBO.getHfEmpAccount(),
                         prevHfNetBankExportBO.getEmployeeName(),
-                        CalculateSocialUtils.digitInSimpleFormat(prevHfNetBankExportBO.getAmount()),
+                        CalculateSocialUtils.digitInSimpleFormat(prevHfNetBankExportBO.getTotalAmount()),
                         prevHfNetBankExportBO.getStartMonth(),
                         prevHfNetBankExportBO.getEndMonth()
                     )
@@ -535,19 +536,18 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
      */
     private boolean isContinue(HFNetBankExportBO prevHfNetBankExportBO, HFNetBankExportBO hfNetBankExportBO) {
         hfNetBankExportBO.setEndMonth(hfNetBankExportBO.getStartMonth());
+        hfNetBankExportBO.setTotalAmount(hfNetBankExportBO.getAmount());
 
         if (prevHfNetBankExportBO.getCompanyId().equals(hfNetBankExportBO.getCompanyId()) &&
             prevHfNetBankExportBO.getEmployeeId().equals(hfNetBankExportBO.getEmployeeId()) &&
-            prevHfNetBankExportBO.getHfType().equals(hfNetBankExportBO.getHfType()) &&
-            prevHfNetBankExportBO.getBase().equals(hfNetBankExportBO.getBase()) &&
-            prevHfNetBankExportBO.getRatioCom().equals(hfNetBankExportBO.getRatioCom()) &&
-            prevHfNetBankExportBO.getRatioEmp().equals(hfNetBankExportBO.getRatioEmp())
+            prevHfNetBankExportBO.getHfType().equals(hfNetBankExportBO.getHfType())
             ) {
             YearMonth EndMonth = YearMonth.parse(prevHfNetBankExportBO.getEndMonth(), formatter);
             YearMonth StartMonth = YearMonth.parse(hfNetBankExportBO.getStartMonth(), formatter);
 
             // 如果前一条的截止年月与当前一条的开始年月接上
             if (EndMonth.plusMonths(1).equals(StartMonth)) {
+                prevHfNetBankExportBO.setTotalAmount(prevHfNetBankExportBO.getTotalAmount().add(hfNetBankExportBO.getAmount()));
                 prevHfNetBankExportBO.setEndMonth(hfNetBankExportBO.getStartMonth());
                 return true;
             }

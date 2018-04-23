@@ -1,9 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfArchiveBasePeriodBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfComAccountBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpArchiveBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskPeriodBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
@@ -31,4 +28,5 @@ public interface HfEmpArchiveMapper extends BaseMapper<HfEmpArchive> {
     int deleteHfEmpArchiveByEmpTaskIds(List<Long> empTaskIdList);
     Map queryHfEmpArchiveByEmpTaskIds(List<Long> empTaskIdList);
     int updateArchiveEmpAccount(@Param("hfEmpAccount")String hfEmpAccount, @Param("empArchiveId")Long empArchiveId);
+    HfEmpComBO fetchManager(@Param("companyId")String companyId, @Param("employeeId")String employeeId);
 }

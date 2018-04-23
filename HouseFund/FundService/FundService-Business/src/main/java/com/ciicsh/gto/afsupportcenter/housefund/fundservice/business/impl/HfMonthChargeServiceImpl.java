@@ -411,7 +411,11 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                     hfMonthChargeBasChgDetailBOList.get(i).setInAmount(hfMonthChargeReportBO.getAmount());
                     hfMonthChargeBasChgDetailBOList.get(i).setIdNum(hfMonthChargeReportBO.getIdNum());
                     hfMonthChargeBasChgDetailBOList.get(i).setBase(hfMonthChargeReportBO.getBase());
-                    hfMonthChargeBasChgDetailBOList.get(i).setRatio(CalculateSocialUtils.digitInSimpleFormat(hfMonthChargeReportBO.getRatio().multiply(BigDecimal.valueOf(100))) + "%");
+                    hfMonthChargeBasChgDetailBOList.get(i).setRatio(
+                        CalculateSocialUtils.digitInSimpleFormat(
+                            hfMonthChargeReportBO.getRatio()
+                                .divide(BigDecimal.valueOf(2), 5, BigDecimal.ROUND_HALF_UP)
+                                .multiply(BigDecimal.valueOf(100))) + "%");
 
                     companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
                 }
@@ -428,7 +432,11 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                     hfMonthChargeBasChgDetailBO.setInAmount(hfMonthChargeReportBO.getAmount());
                     hfMonthChargeBasChgDetailBO.setIdNum(hfMonthChargeReportBO.getIdNum());
                     hfMonthChargeBasChgDetailBO.setBase(hfMonthChargeReportBO.getBase());
-                    hfMonthChargeBasChgDetailBO.setRatio(CalculateSocialUtils.digitInSimpleFormat(hfMonthChargeReportBO.getRatio().multiply(BigDecimal.valueOf(100))) + "%");
+                    hfMonthChargeBasChgDetailBO.setRatio(
+                        CalculateSocialUtils.digitInSimpleFormat(
+                            hfMonthChargeReportBO.getRatio()
+                                .divide(BigDecimal.valueOf(2), 5, BigDecimal.ROUND_HALF_UP)
+                                .multiply(BigDecimal.valueOf(100))) + "%");
                     hfMonthChargeBasChgDetailBOList.add(hfMonthChargeBasChgDetailBO);
 
                     companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
@@ -491,7 +499,10 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                     hfMonthChargeAddChgDetailBOList.get(i).setInChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType()));
                     hfMonthChargeAddChgDetailBOList.get(i).setInAmount(hfMonthChargeReportBO.getAmount());
                     hfMonthChargeAddChgDetailBOList.get(i).setBasicHfEmpAccount(hfMonthChargeReportBO.getBasicHfEmpAccount());
-                    hfMonthChargeAddChgDetailBOList.get(i).setRatio(CalculateSocialUtils.digitInSimpleFormat(hfMonthChargeReportBO.getRatio().multiply(BigDecimal.valueOf(100))) + "%");
+                    hfMonthChargeAddChgDetailBOList.get(i).setRatio(
+                        CalculateSocialUtils.digitInSimpleFormat(hfMonthChargeReportBO.getRatio()
+                            .divide(BigDecimal.valueOf(2), 5, BigDecimal.ROUND_HALF_UP)
+                            .multiply(BigDecimal.valueOf(100))) + "%");
 
                     companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
                 }
@@ -507,7 +518,11 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                     hfMonthChargeAddChgDetailBO.setInChangeType(getChangeTypeByPaymentType(hfMonthChargeReportBO.getPaymentType()));
                     hfMonthChargeAddChgDetailBO.setInAmount(hfMonthChargeReportBO.getAmount());
                     hfMonthChargeAddChgDetailBO.setBasicHfEmpAccount(hfMonthChargeReportBO.getBasicHfEmpAccount());
-                    hfMonthChargeAddChgDetailBO.setRatio(CalculateSocialUtils.digitInSimpleFormat(hfMonthChargeReportBO.getRatio().multiply(BigDecimal.valueOf(100))) + "%");
+                    hfMonthChargeAddChgDetailBO.setRatio(
+                        CalculateSocialUtils.digitInSimpleFormat(
+                            hfMonthChargeReportBO.getRatio()
+                                .divide(BigDecimal.valueOf(2), 5, BigDecimal.ROUND_HALF_UP)
+                                .multiply(BigDecimal.valueOf(100))) + "%");
                     hfMonthChargeAddChgDetailBOList.add(hfMonthChargeAddChgDetailBO);
 
                     companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
@@ -782,7 +797,9 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                 String repairReason = null;
 
                 if (hfMonthChargeReportBO.getRatio() != null) {
-                    ratio = CalculateSocialUtils.digitInSimpleFormat(hfMonthChargeReportBO.getRatio().multiply(BigDecimal.valueOf(100))) + "%";
+                    ratio = CalculateSocialUtils.digitInSimpleFormat(hfMonthChargeReportBO.getRatio()
+                        .divide(BigDecimal.valueOf(2), 5, BigDecimal.ROUND_HALF_UP)
+                        .multiply(BigDecimal.valueOf(100))) + "%";
                 }
 
                 if (hfMonthChargeReportBO.getRepairReason() != null) {

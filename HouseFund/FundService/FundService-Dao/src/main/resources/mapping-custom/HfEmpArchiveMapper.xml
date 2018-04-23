@@ -23,6 +23,9 @@
         <result column="operation_remind" property="operationRemind"/>
         <result column="operation_remind_date" property="operationRemindDate"/>
         <result column="emp_archive_id_bc" property="empArchiveIdBc"/>
+        <result column="service_specialist" property="serviceSpecialist"/>
+        <result column="service_center" property="serviceCenter"/>
+        <result column="leadership_name" property="leaderShipName"/>
     </resultMap>
 
     <!--雇员公积金查询 下面SQL是考虑到 bpo fc af 一拖三表 ，SQL暂时用不到 -->
@@ -104,10 +107,10 @@
     <select id="queryEmpArchive" resultMap="queryEmpArchiveResultMap">
         SELECT
         ea.emp_archive_id,eab.emp_archive_id_bc,com.company_id,com.title,ea.belong_vendor,
-        af.custom_group,
-        afemp.status AS 'emp_status',
+        af.custom_group,afemp.status AS 'emp_status',
         ca.hf_account_type,emp.employee_id,emp.employee_name,emp.id_num,ea.hf_emp_account,ea.archive_task_status
         ,eab.hf_emp_account_bc,eab.archive_task_status_bc,ea.operation_remind,ea.operation_remind_date
+        ,afemp.created_display_name as 'service_specialist',ea.service_center,afemp.leadership_name
         FROM hf_emp_archive ea
         LEFT JOIN sal_company com ON com.company_id=ea.company_id
         INNER JOIN emp_employee emp ON emp.employee_id=ea.employee_id
@@ -132,8 +135,8 @@
         <if test="paymentBank !=null">
             AND ca.payment_bank=#{paymentBank}
         </if>
-        <if test="serviceManager !=null">
-
+        <if test="leaderShipName !=null">
+            AND afemp.leadership_name LIKE CONCAT('%',#{leaderShipName}, '%')
         </if>
         <if test="idNum !=null">
             AND emp.id_num LIKE CONCAT('%',#{idNum}, '%')
@@ -144,8 +147,8 @@
         <if test="empStatus !=null">
             AND afemp.status=#{empStatus}
         </if>
-        <if test="serviceCenter !=null">
-            --AND af.custom_group=''
+        <if test="serviceCenterValue!= null">
+            AND ea.service_center_id = #{serviceCenterValue}
         </if>
         <if test="hfComAccount !=null">
            AND EXISTS (select 1 from hf_com_account_class cac WHERE cac.com_account_class_id=ea.com_account_class_id AND
@@ -350,4 +353,17 @@
     <update id="updateArchiveEmpAccount">
         update hf_emp_archive SET hf_emp_account=#{hfEmpAccount} WHERE emp_archive_id= #{empArchiveId}
     </update>
+    <resultMap id="empComRM" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpComBO">
+        <result column="created_display_name" property="serviceSpecialist"/>
+        <result column="leadership_name" property="leaderShipName"/>
+        <result column="service_center" property="serviceCenter"/>
+        <result column="service_center_id" property="serviceCenterId"/>
+    </resultMap>
+    <select id="fetchManager" resultMap="empComRM" >
+        SELECT eoop.created_display_name,eoop.leadership_name,com.service_center,com.service_center_id
+        FROM emp_af_emp_company eoop INNER JOIN sal_af_company com ON com.company_id=eoop.company_id
+        where eoop.employee_id=#{employeeId} and eoop.company_id =#{companyId}
+        ORDER BY eoop.in_date desc LIMIT 1
+    </select>
+    
 </mapper>
