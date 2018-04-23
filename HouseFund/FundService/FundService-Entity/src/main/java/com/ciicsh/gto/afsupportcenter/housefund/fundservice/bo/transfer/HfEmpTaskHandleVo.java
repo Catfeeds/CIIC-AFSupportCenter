@@ -82,6 +82,6 @@ public class HfEmpTaskHandleVo {
     private List<HfEmpTaskRemarkBo> empTaskRemarks;
     private boolean canHandle;
     private String serviceCenter;//服务中心
-    private String leadershipName;//客服经理
+    private String leaderShipName;//客服经理
     private String serviceSpecialist;//客服专员
 }

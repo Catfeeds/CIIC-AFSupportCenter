@@ -322,6 +322,13 @@ public class HfFundPayController {
             response.getWriter().write(e.getMessage());
         }
     }
+    /**
+     * 打印汇缴书
+     */
+    @PostMapping("/printRemittedBook")
+    public JsonResult printRemittedBook(String paymentId,Integer hfType){
+        return hfPaymentService.printRemittedBook(paymentId,hfType);
+    }
 
     /**
      * 付款凭证打印
