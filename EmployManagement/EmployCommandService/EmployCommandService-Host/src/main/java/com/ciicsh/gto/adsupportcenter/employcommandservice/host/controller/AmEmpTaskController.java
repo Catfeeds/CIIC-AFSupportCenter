@@ -254,6 +254,11 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             resultMap.put("amRemarkBo",amRemarkBOPageRows);
         }
 
+        UserInfoBO userInfoBO = new UserInfoBO();
+        userInfoBO.setUserName(ReasonUtil.getUserName());
+
+        resultMap.put("userInfo",userInfoBO);
+
         return JsonResultKit.of(resultMap);
 
     }
@@ -263,7 +268,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @Log("保存用工信息")
     @RequestMapping("/saveEmployee")
-    public JsonResult<Boolean> saveEmployee(AmEmployment entity) {
+    public JsonResult<AmEmployment> saveEmployee(AmEmployment entity) {
         String userId = UserContext.getUserId();
         String userName = UserContext.getUser().getDisplayName();
         LocalDateTime now = LocalDateTime.now();
@@ -278,9 +283,8 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             entity.setModifiedBy(userId);
         }
         entity.setEmployOperateMan(userName);
-
-        boolean result =  amEmploymentService.insertOrUpdate(entity);
-        return JsonResultKit.of(result);
+        amEmploymentService.insertOrUpdate(entity);
+        return JsonResultKit.of(entity);
     }
 
     /**
@@ -361,6 +365,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
              bo.setModifiedTime(now);
              bo.setCreatedBy(ReasonUtil.getUserId());
              bo.setModifiedBy(ReasonUtil.getUserId());
+
              if(bo.getRemarkId()==null){
                  data.add(bo);
              }
@@ -380,7 +385,16 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     @RequestMapping("/queryAmRemark")
     public JsonResult queryAmRemark(PageInfo pageInfo) {
         PageRows<AmRemarkBO> result = amRemarkService.queryAmRemark(pageInfo);
-        return JsonResultKit.of(result);
+        String userName = "System";
+        try {
+            userName = UserContext.getUser().getDisplayName();
+        } catch (Exception e) {
+
+        }
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("userName",userName);
+        resultMap.put("result",result);
+        return JsonResultKit.of(resultMap);
     }
 
     @RequestMapping("/deleteAmRemark")
