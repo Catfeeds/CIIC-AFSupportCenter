@@ -294,7 +294,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @Log("保存用工档案")
     @RequestMapping("/saveAmArchive")
-    public  JsonResult<Boolean>  saveAmArchive(AmArchiveBO amArchiveBO){
+    public  JsonResult<AmArchive>  saveAmArchive(AmArchiveBO amArchiveBO){
         AmArchive entity = new AmArchive();
         BeanUtils.copyProperties(amArchiveBO,entity);
         LocalDateTime now = LocalDateTime.now();
@@ -350,7 +350,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             }
         }
 
-        return JsonResultKit.of(result);
+        return JsonResultKit.of(entity);
     }
 
     @PostMapping("/saveAmRemark")
