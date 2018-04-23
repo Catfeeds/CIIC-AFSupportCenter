@@ -1995,8 +1995,16 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 List<SSPItemDTO> list = getSSPItemsResposeDTO.getItems();
                 if (CollectionUtils.isNotEmpty(list)) {
                     for (SSPItemDTO sspItemDTO : list) {
-                        if (hfTypeDicItemCode.equals(sspItemDTO.getItemcode())) {
-                            return new int[] { sspItemDTO.getCompanyRoundType(), sspItemDTO.getPersonRoundType() };
+                        if (hfTypeDicItemCode.equals(sspItemDTO.getItemCode())) {
+                            int companyRoundType = 0;
+                            int personRoundType = 0;
+                            if (sspItemDTO.getCompanyRoundType() != null) {
+                                companyRoundType = sspItemDTO.getCompanyRoundType();
+                            }
+                            if (sspItemDTO.getPersonRoundType() != null) {
+                                personRoundType = sspItemDTO.getPersonRoundType();
+                            }
+                            return new int[] { companyRoundType, personRoundType };
                         }
                     }
                 }

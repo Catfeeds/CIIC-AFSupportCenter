@@ -1760,7 +1760,11 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 break;
             case 4:
                 //补缴
-                createNewOrIntoNonstandard(ssEmpTaskBO, ssEmpBasePeriod);
+                if (ssEmpTaskBO.getAdustType() != null && ssEmpTaskBO.getAdustType() == 0) {
+                    createAdjustNonstandard(ssEmpTaskBO, ssEmpBaseAdjust, ssEmpBaseAdjustDetailList);
+                } else {
+                    createNewOrIntoNonstandard(ssEmpTaskBO, ssEmpBasePeriod);
+                }
                 break;
             case 5:
             case 6:
@@ -1868,8 +1872,13 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 }
                 break;
             case 4://补缴
-                ssMonthCharge.setCostCategory(4);
-                createSsMonthChargeObject(ssEmpTaskBO, ssEmpBasePeriod, ssMonthCharge, ssEmpBaseDetailList);
+                if (ssEmpTaskBO.getAdustType() != null && ssEmpTaskBO.getAdustType()  == 0) { // 差额补缴
+                    ssMonthCharge.setCostCategory(9);
+                    createSsMonthChargeObject(ssEmpTaskBO, ssEmpBaseAdjust, ssEmpBaseeAdjustDetailList, ssMonthCharge);
+                } else {
+                    ssMonthCharge.setCostCategory(4);
+                    createSsMonthChargeObject(ssEmpTaskBO, ssEmpBasePeriod, ssMonthCharge, ssEmpBaseDetailList);
+                }
                 break;
             case 5:
             case 14:
@@ -2205,9 +2214,17 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         resultList.forEach(p -> {
             //某个险种下对用的 个人进位和公司进位方式
             Map<String, Integer> map = new HashMap<>();
-            map.put(PERSONROUNDTYPE, p.getPersonRoundType());
-            map.put(COMPANYROUNDTYPE, p.getCompanyRoundType());
-            roundTypeMap.put(p.getItemcode(), map);
+            int personRoundType = 1;
+            int companyRoundType = 1;
+            if (p.getPersonRoundType() != null) {
+                personRoundType = p.getPersonRoundType();
+            }
+            if (p.getCompanyRoundType() != null) {
+                companyRoundType = p.getCompanyRoundType();
+            }
+            map.put(PERSONROUNDTYPE, personRoundType);
+            map.put(COMPANYROUNDTYPE, companyRoundType);
+            roundTypeMap.put(p.getItemCode(), map);
         });
         ssEmpTaskBO.setRoundTypeMap(roundTypeMap);
     }
