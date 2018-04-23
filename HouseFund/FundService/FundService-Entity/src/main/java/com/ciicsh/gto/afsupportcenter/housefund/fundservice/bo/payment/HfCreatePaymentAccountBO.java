@@ -14,9 +14,13 @@ public class HfCreatePaymentAccountBO {
     Integer paymentBank;
     Integer hfType;
     Integer hfAccountType;
-    BigDecimal sumAdd;
-    BigDecimal sumSub;
-    BigDecimal sumAmount;
-    BigDecimal payInBackAmount;
-    Integer empCount;
+    BigDecimal remittedAmountAdd;
+    BigDecimal remittedAmountReduce;
+    BigDecimal remittedAmount;
+    BigDecimal repairAmount;
+    Integer remittedCountEmp;
+    Integer repairCountEmp;
+    Integer remittedCountEmpAdd;
+    Integer remittedCountEmpReduce;
+
 }

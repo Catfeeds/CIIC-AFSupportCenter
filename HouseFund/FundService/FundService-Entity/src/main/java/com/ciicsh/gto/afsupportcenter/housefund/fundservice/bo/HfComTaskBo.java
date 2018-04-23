@@ -176,4 +176,5 @@ public class HfComTaskBo extends HfComTask {
 
     private String paymentWayTask;
     private String leaderShipName;
+    private Integer serviceCenterValue;
 }

@@ -200,6 +200,12 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         }
     }
 
+    @Override
+    public JsonResult printRemittedBook(String paymentId, Integer hfType) {
+        //hfPaymentMapper
+        return JsonResultKit.of();
+    }
+
 
     private JsonResult isCanPayment(HfPayment payment) {
         if (payment == null) {

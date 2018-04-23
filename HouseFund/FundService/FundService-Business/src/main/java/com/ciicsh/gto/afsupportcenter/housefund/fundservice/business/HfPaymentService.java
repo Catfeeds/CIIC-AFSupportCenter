@@ -39,4 +39,9 @@ public interface HfPaymentService {
      */
     JsonResult processReceipt(PaymentProcessParmBO processParmBO);
 
+    /**
+     * 打印汇缴书
+     */
+    JsonResult printRemittedBook(String paymentId,Integer hfType);
+
 }

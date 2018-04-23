@@ -135,8 +135,8 @@
         LEFT JOIN hf_com_account_payment_bank hcapb ON hca.payment_bank = hcapb.payment_bank_code
         LEFT JOIN hf_com_account_ukstore hcau ON hca.ukey_store = hcau.ukstore_code
         LEFT JOIN hf_com_account_type hcat ON hca.hf_account_type = hcat.type_code
-
         LEFT JOIN sal_company cc ON hft.company_id = cc.company_id
+        LEFT JOIN sal_af_company comAf ON hft.company_id = comAf.company_id
         LEFT JOIN hf_com_task_category ctc ON hft.task_category = ctc.task_category_code
         LEFT JOIN hf_type ht ON hft.hf_type = ht.hf_type_code
         LEFT JOIN hf_com_task_payment_way ctpw ON hft.payment_way = ctpw.com_task_payment_way_code
@@ -175,6 +175,9 @@
             </if>
             <if test="leaderShipName!= null">
                 AND hft.leader_ship_name LIKE CONCAT('%', #{leaderShipName}, '%')
+            </if>
+            <if test="serviceCenterValue!= null">
+                AND comAf.service_center_id = #{serviceCenterValue}
             </if>
         </where>
         ORDER BY hft.com_task_id
@@ -230,6 +233,7 @@
         LEFT JOIN hf_com_account_ukstore hcau ON hca.ukey_store = hcau.ukstore_code
         LEFT JOIN hf_com_account_type hcat ON hca.hf_account_type = hcat.type_code
         LEFT JOIN sal_company cc ON hft.company_id = cc.company_id
+        LEFT JOIN sal_af_company comAf ON hft.company_id = comAf.company_id
         LEFT JOIN hf_com_task_category ctc ON hft.task_category = ctc.task_category_code
         LEFT JOIN hf_type ht ON hft.hf_type = ht.hf_type_code
         LEFT JOIN hf_com_task_payment_way ctpw ON hft.payment_way = ctpw.com_task_payment_way_code
@@ -265,6 +269,9 @@
             </if>
             <if test="leaderShipName!= null">
                 AND hft.leader_ship_name LIKE CONCAT('%', #{leaderShipName}, '%')
+            </if>
+            <if test="serviceCenterValue!= null">
+                AND comAf.service_center_id = #{serviceCenterValue}
             </if>
         </where>
         ORDER BY hft.com_task_id

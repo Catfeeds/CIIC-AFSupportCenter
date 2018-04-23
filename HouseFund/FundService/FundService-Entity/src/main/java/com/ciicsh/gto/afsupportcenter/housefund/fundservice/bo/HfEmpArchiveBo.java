@@ -15,7 +15,6 @@ public class HfEmpArchiveBo extends HfEmpArchive{
     private String title;
     private String belongVendor;
     private String hfAccountTyp;
-    private String serviceCenter;
     private String empStatus;
     private String hfAccountType;
     private String employeeId;
@@ -29,5 +28,9 @@ public class HfEmpArchiveBo extends HfEmpArchive{
     private LocalDate inDate;
     private LocalDate outDate;
     private String hfComAccount;
+    private Integer serviceCenterValue;
+    private String serviceSpecialist;
+    private String serviceCenter;
+    private String leaderShipName;
 
 }

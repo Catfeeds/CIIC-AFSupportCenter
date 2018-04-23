@@ -63,16 +63,62 @@ public class HfPaymentCom implements Serializable {
      */
 	@TableField("remitted_count_emp")
 	private Integer remittedCountEmp;
-    /**
-     * 到账金额
-     */
-	@TableField("daozhang_amount")
-	private BigDecimal daozhangAmount;
-    /**
-     * 到账人数
-     */
-	@TableField("daozhang_count_emp")
-	private Integer daozhangCountEmp;
+
+    @TableField("remitted_amount_add")
+    private BigDecimal remittedAmountAdd;
+
+    @TableField("remitted_amount_reduce")
+    private BigDecimal remittedAmountReduce;
+
+    @TableField("remitted_count_emp_add")
+    private Integer remittedCountEmpAdd;
+
+    @TableField("remitted_count_emp_reduce")
+    private Integer remittedCountEmpReduce;
+
+    @TableField("repair_count_emp")
+    private Integer repairCountEmp;
+
+    public BigDecimal getRemittedAmountAdd() {
+        return remittedAmountAdd;
+    }
+
+    public void setRemittedAmountAdd(BigDecimal remittedAmountAdd) {
+        this.remittedAmountAdd = remittedAmountAdd;
+    }
+
+    public BigDecimal getRemittedAmountReduce() {
+        return remittedAmountReduce;
+    }
+
+    public void setRemittedAmountReduce(BigDecimal remittedAmountReduce) {
+        this.remittedAmountReduce = remittedAmountReduce;
+    }
+
+    public Integer getRemittedCountEmpAdd() {
+        return remittedCountEmpAdd;
+    }
+
+    public void setRemittedCountEmpAdd(Integer remittedCountEmpAdd) {
+        this.remittedCountEmpAdd = remittedCountEmpAdd;
+    }
+
+    public Integer getRemittedCountEmpReduce() {
+        return remittedCountEmpReduce;
+    }
+
+    public void setRemittedCountEmpReduce(Integer remittedCountEmpReduce) {
+        this.remittedCountEmpReduce = remittedCountEmpReduce;
+    }
+
+    public Integer getRepairCountEmp() {
+        return repairCountEmp;
+    }
+
+    public void setRepairCountEmp(Integer repairCountEmp) {
+        this.repairCountEmp = repairCountEmp;
+    }
+
     /**
      * 是否可用
      */
@@ -179,22 +225,6 @@ public class HfPaymentCom implements Serializable {
 		this.remittedCountEmp = remittedCountEmp;
 	}
 
-	public BigDecimal getDaozhangAmount() {
-		return daozhangAmount;
-	}
-
-	public void setDaozhangAmount(BigDecimal daozhangAmount) {
-		this.daozhangAmount = daozhangAmount;
-	}
-
-	public Integer getDaozhangCountEmp() {
-		return daozhangCountEmp;
-	}
-
-	public void setDaozhangCountEmp(Integer daozhangCountEmp) {
-		this.daozhangCountEmp = daozhangCountEmp;
-	}
-
 	public Boolean getActive() {
 		return isActive;
 	}
@@ -248,8 +278,6 @@ public class HfPaymentCom implements Serializable {
 			", remittedAmount=" + remittedAmount +
 			", repairAmount=" + repairAmount +
 			", remittedCountEmp=" + remittedCountEmp +
-			", daozhangAmount=" + daozhangAmount +
-			", daozhangCountEmp=" + daozhangCountEmp +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +
