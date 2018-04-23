@@ -28,5 +28,5 @@ public interface IAmResignService extends IService<AmResign> {
 
     List<resignSearchExportOpt> queryAmResignList(AmResignBO amResignBO);
 
-    boolean  saveAmResign(AmResignBO bo);
+    AmResign  saveAmResign(AmResignBO bo);
 }

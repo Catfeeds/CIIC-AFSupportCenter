@@ -338,9 +338,9 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
     }
 
     @RequestMapping("/saveAmResign")
-    public JsonResult<Boolean> saveAmResign(AmResignBO bo) {
+    public JsonResult<AmResign> saveAmResign(AmResignBO bo) {
 
-        boolean result =  business.saveAmResign(bo);
+        AmResign result =  business.saveAmResign(bo);
 
         return JsonResultKit.of(result);
     }
