@@ -13,7 +13,7 @@
     </resultMap>
 
     <select id="queryAmEmpMaterial" resultMap="BaseResultMapDTO">
-        SELECT  * from  am_emp_material where emp_task_id = #{empTaskId}  and operate_type = #{operateType}
+        SELECT  * from  am_emp_material where is_active = 1 and  emp_task_id = #{empTaskId}  and operate_type = #{operateType}
     </select>
 
     <select id="queryMaterialDic" resultMap="BaseResultMapDTO">
@@ -21,7 +21,7 @@
    </select>
 
     <select id="queryMaterialByTaskId" resultMap="BaseResultMaterialMapDTO">
-        SELECT  material_name,receive_name,receive_date,receive_id  from  am_emp_material where emp_task_id = #{empTaskId}
+        SELECT  material_name,receive_name,receive_date,receive_id  from  am_emp_material where is_active = 1 and  emp_task_id = #{empTaskId}
     </select>
 
     <update id="updateMaterialByTaskId">

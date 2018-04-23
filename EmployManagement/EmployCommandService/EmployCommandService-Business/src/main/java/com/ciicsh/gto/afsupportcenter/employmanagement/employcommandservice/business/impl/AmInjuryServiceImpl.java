@@ -38,15 +38,4 @@ public class AmInjuryServiceImpl extends ServiceImpl<AmInjuryMapper, AmInjury> i
         return amInjuryBOList;
     }
 
-    @Override
-    public boolean deleteAmInjury(Long injuryId) {
-        int i =0;
-        i = baseMapper.deleteAmInjury(injuryId);
-        if(i>0){
-            return  true;
-        }else {
-            return  false;
-        }
-
-    }
 }
