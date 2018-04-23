@@ -166,9 +166,11 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             List<HfAccountComRelation> listRelation = hfAccountComRelationMapper.selectByMap(mapCom);
             if(listRelation.size() > 0){
                 map.put("comAccountId",String.valueOf(listRelation.get(0).getComAccountId()));
+            }
+            Integer ifHasDealAccount= hfAccountComRelationMapper.queryOperAccountByComId(map.get("companyId"));
+            if(ifHasDealAccount>0){
                 map.put("ifHasDealAccount","1");//已开户标记
             }
-
             //取得企业任务单
             HfComTask hfComTask = hfComTaskMapper.selectById(map.get("comTaskId"));
             //设置企业公积金账号主表
@@ -374,13 +376,13 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             hfComAccountClass.setHfComAccount(map.get("comAccountNum"));
         }
         if (StringUtils.isNotBlank(map.get("comStartMonth"))) {
-            String yearMonthString = StringUtil.dateStringToYearMonthString(map.get("comStartMonth"));
+            String yearMonthString = map.get("comStartMonth");
             hfComAccountClass.setComStartMonth(yearMonthString);
             hfComAccountClass.setComHfMonth(yearMonthString);
         }
         hfComAccountClass.setEndMonth(hfComTask.getEndMonth());
         if (StringUtils.isNotBlank(map.get("operateStartMonth"))) {
-            String yearMonthString = StringUtil.dateStringToYearMonthString(map.get("operateStartMonth"));
+            String yearMonthString =  map.get("operateStartMonth");
             hfComAccountClass.setOperateStartMonth(yearMonthString);
         }
         if (StringUtils.isNotBlank(map.get("accountTempStore"))) {

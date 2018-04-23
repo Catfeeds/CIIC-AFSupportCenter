@@ -29,6 +29,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletOutputStream;
@@ -326,7 +327,9 @@ public class HfFundPayController {
      * 打印汇缴书
      */
     @PostMapping("/printRemittedBook")
-    public JsonResult printRemittedBook(Long paymentId,Integer hfType){
+    public JsonResult printRemittedBook(@RequestParam(value = "paymentId", required = true) Long paymentId,
+                                        @RequestParam(value = "hfType", required = true) Integer hfType){
+
         return hfPaymentService.printRemittedBook(paymentId,hfType);
     }
 
