@@ -17,6 +17,4 @@ public interface AmInjuryMapper extends BaseMapper<AmInjury> {
 
     List<AmInjuryBO> queryAmInjury(AmInjuryBO amInjury);
 
-    int  deleteAmInjury(Long injuryId);
-
 }
