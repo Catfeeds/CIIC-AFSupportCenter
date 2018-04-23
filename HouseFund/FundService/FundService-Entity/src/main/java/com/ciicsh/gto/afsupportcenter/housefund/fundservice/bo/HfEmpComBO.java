@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class HfEmpComBO {
     private String serviceSpecialist;
-    private String leadershipName;
+    private String leaderShipName;
     private String serviceCenter;
     private Integer serviceCenterId;
 }

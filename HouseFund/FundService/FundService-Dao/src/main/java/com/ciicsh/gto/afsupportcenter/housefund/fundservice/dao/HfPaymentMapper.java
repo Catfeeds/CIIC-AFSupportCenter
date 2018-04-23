@@ -32,4 +32,7 @@ public interface HfPaymentMapper extends BaseMapper<HfPayment> {
     Integer getHfPaymentBankId(@Param("paymentId") Long paymentId);
 
     List<EmpTaskStatusBO> getEmpTaskStatusByPaymentId(@Param("paymentId") Long paymentId);
+
+    List printRemittedBook(@Param("paymentId") Long paymentId,@Param("hfType") Integer hfType);
+
 }

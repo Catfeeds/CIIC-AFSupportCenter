@@ -69,8 +69,8 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
         for(int i=0; i<paymentAccountList.size();i++){
             accountMap=paymentAccountList.get(i);
             totalApplicationAmount=totalApplicationAmount.add(
-                Optional.ofNullable(accountMap.getSumAmount()).orElse(BigDecimal.valueOf(0))
-                    .add(Optional.ofNullable(accountMap.getPayInBackAmount()).orElse(BigDecimal.valueOf(0))));
+                Optional.ofNullable(accountMap.getRemittedAmount()).orElse(BigDecimal.valueOf(0))
+                    .add(Optional.ofNullable(accountMap.getRepairAmount()).orElse(BigDecimal.valueOf(0))));
         //   empCount=empCount+accountMap.getEmpCount();
             insertHfPaymentCom(accountMap,paymentId);
             hfPaymentAccount.setPaymentId(paymentId);
@@ -79,16 +79,6 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
             hfPaymentAccount.setModifiedTime(LocalDateTime.now());
             hfPaymentAccountMapper.updateById(hfPaymentAccount);
         }
-       /* paymentAccountList.forEach((accountMap)->{
-            totalApplicationAmount.add(accountMap.getSumAmount()).add(accountMap.getPayInBackAmount());
-            empCount=empCount+accountMap.getEmpCount();
-            insertHfPaymentCom(accountMap,paymentId);
-            hfPaymentAccount.setPaymentId(paymentId);
-            hfPaymentAccount.setPaymentAccountId(accountMap.getPaymentAccountId());
-            hfPaymentAccount.setModifiedBy(UserContext.getUser().getDisplayName());
-            hfPaymentAccount.setModifiedTime(LocalDateTime.now());
-            hfPaymentAccountMapper.updateById(hfPaymentAccount);
-        });*/
         //更新申请支付总金额
         HfPayment hfPayment=new HfPayment();
         hfPayment.setPaymentId(paymentId);
@@ -133,9 +123,14 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
         hfPaymentCom.setHfType(hfCreatePaymentAccountBO.getHfType());
         hfPaymentCom.setCompanyId(hfCreatePaymentAccountBO.getCompanyId());
         hfPaymentCom.setPaymentBank(String.valueOf(hfCreatePaymentAccountBO.getPaymentBank()));
-        hfPaymentCom.setRemittedAmount(hfCreatePaymentAccountBO.getSumAmount());//汇缴金额
-        hfPaymentCom.setRepairAmount(hfCreatePaymentAccountBO.getPayInBackAmount());//补缴金额
-        hfPaymentCom.setRemittedCountEmp(hfCreatePaymentAccountBO.getEmpCount());
+        hfPaymentCom.setRemittedAmount(hfCreatePaymentAccountBO.getRemittedAmount());//汇缴金额
+        hfPaymentCom.setRepairAmount(hfCreatePaymentAccountBO.getRepairAmount());//补缴金额
+        hfPaymentCom.setRemittedCountEmp(hfCreatePaymentAccountBO.getRemittedCountEmp());//汇缴人数
+        hfPaymentCom.setRepairCountEmp(hfCreatePaymentAccountBO.getRepairCountEmp());//补缴人数
+        hfPaymentCom.setRemittedAmountAdd(hfCreatePaymentAccountBO.getRemittedAmountAdd());//本月增加金额
+        hfPaymentCom.setRemittedCountEmp(hfCreatePaymentAccountBO.getRemittedCountEmp());//本月增加人数
+        hfPaymentCom.setRemittedCountEmpReduce(hfCreatePaymentAccountBO.getRemittedCountEmpReduce());//本月减少人数
+        hfPaymentCom.setRemittedAmountReduce(hfCreatePaymentAccountBO.getRemittedAmountReduce());//本月减少金额
         hfPaymentCom.setCreatedBy(UserContext.getUser().getDisplayName());
         hfPaymentCom.setModifiedBy(UserContext.getUser().getDisplayName());
         baseMapper.insert(hfPaymentCom);

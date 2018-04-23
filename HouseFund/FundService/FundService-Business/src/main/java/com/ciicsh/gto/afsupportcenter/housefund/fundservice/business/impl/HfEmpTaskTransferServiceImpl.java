@@ -82,7 +82,7 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         if(hfEmpComBO!=null){
             hfEmpTaskHandleBo.setServiceCenter(hfEmpComBO.getServiceCenter());
             hfEmpTaskHandleBo.setServiceSpecialist(hfEmpComBO.getServiceSpecialist());
-            hfEmpTaskHandleBo.setLeadershipName(hfEmpComBO.getLeadershipName());
+            hfEmpTaskHandleBo.setLeaderShipName(hfEmpComBO.getLeaderShipName());
         }
 
         //雇员信息
