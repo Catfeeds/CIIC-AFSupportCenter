@@ -161,6 +161,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         bo.setWelfareUnit(ssEmpTask.getWelfareUnit());
         bo.setServiceCenterId(ssEmpTask.getServiceCenterId());
         bo.setServiceCenter(ssEmpTask.getServiceCenter());
+        bo.setIsChange(ssEmpTask.getIsChange());
 
         // 更新雇员任务信息
         // 备注时间
@@ -1052,6 +1053,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             //修改档案表的离职时间和缴纳截止时间
             SsEmpArchive ssEmpArchive = new SsEmpArchive();
             ssEmpArchive.setEmpArchiveId(bo.getEmpArchiveId());
+            ssEmpArchive.setArchiveStatus(3);
             ssEmpArchive.setEndMonth(bo.getEndMonth());
             ssEmpArchive.setOutDate(bo.getOutDate());
             ssEmpArchive.setModifiedBy(UserContext.getUserId());
@@ -1170,31 +1172,41 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
         // 如果新开（转入，含翻牌）时的更正，需先撤销之前办理的任务单
         if (bo.getIsChange() == 1) {
-            Map<String, Object> condition = new HashMap<>();
-            condition.put("company_id", bo.getCompanyId());
-            condition.put("employee_id", bo.getEmployeeId());
-            condition.put("emp_archive_id", bo.getEmpArchiveId());
-            condition.put("task_category", bo.getTaskCategory());
-            condition.put("is_change", 0);
-            condition.put("task_status", 2);
-            condition.put("is_active", 1);
-            List<SsEmpTask> ssEmpTaskList = this.selectByMap(condition);
-
-            if (CollectionUtils.isNotEmpty(ssEmpTaskList)) {
-                if (ssEmpTaskList.size() > 1) {
-                    throw new BusinessException("相同雇员的雇员新增任务单已办理多次，数据不正确");
+            Wrapper<SsEmpArchive> wrapper = new EntityWrapper<>();
+            wrapper.where("company_id={0} AND employee_id={1} AND archive_status<3 AND is_active=1");
+            List<SsEmpArchive> ssEmpArchiveList = ssEmpArchiveService.selectList(wrapper);
+            if (CollectionUtils.isNotEmpty(ssEmpArchiveList)) {
+                if (ssEmpArchiveList.size() > 1) {
+                    throw new BusinessException("该雇员存在多个未转出的雇员档案，数据不正确");
                 }
-            }
+                SsEmpArchive ssEmpArchive = ssEmpArchiveList.get(0);
 
-            SsEmpTask ssEmpTask = ssEmpTaskList.get(0);
-            // 撤销报表及其明细数据
-            inactiveMonthChargeData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
-            // 撤销差额补缴（逆调）费用段数据及其明细数据
-            inactiveBaseAdjustData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
-            // 撤销雇员费用段数据及其明细数据
-            inactiveBasePeriodData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
-            // 撤销雇员档案数据
-            inactiveEmpArchive(ssEmpTask.getCompanyId(), ssEmpTask.getEmployeeId(), ssEmpTask.getEmpArchiveId(), bo.getModifiedBy());
+                Map<String, Object> condition = new HashMap<>();
+                condition.put("company_id", bo.getCompanyId());
+                condition.put("employee_id", bo.getEmployeeId());
+                condition.put("emp_archive_id", ssEmpArchive.getEmpArchiveId());
+                condition.put("task_category", bo.getTaskCategory());
+                condition.put("is_change", 0);
+                condition.put("task_status", 2);
+                condition.put("is_active", 1);
+                List<SsEmpTask> ssEmpTaskList = this.selectByMap(condition);
+
+                if (CollectionUtils.isNotEmpty(ssEmpTaskList)) {
+                    if (ssEmpTaskList.size() > 1) {
+                        throw new BusinessException("相同雇员的雇员新增任务单已办理多次，数据不正确");
+                    }
+                }
+
+                SsEmpTask ssEmpTask = ssEmpTaskList.get(0);
+                // 撤销报表及其明细数据
+                inactiveMonthChargeData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
+                // 撤销差额补缴（逆调）费用段数据及其明细数据
+                inactiveBaseAdjustData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
+                // 撤销雇员费用段数据及其明细数据
+                inactiveBasePeriodData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
+                // 撤销雇员档案数据
+                inactiveEmpArchive(ssEmpTask.getCompanyId(), ssEmpTask.getEmployeeId(), ssEmpArchive.getEmpArchiveId(), bo.getModifiedBy());
+            }
         }
 
         //检查社保序号是否有重复
