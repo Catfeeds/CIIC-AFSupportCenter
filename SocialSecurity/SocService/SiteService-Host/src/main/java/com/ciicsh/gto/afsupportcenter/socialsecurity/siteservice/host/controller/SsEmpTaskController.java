@@ -28,6 +28,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -115,7 +116,18 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         , @RequestParam(value = "operatorType", defaultValue = "-1") Integer operatorType,// 1 任务单费用段
         @RequestParam(value = "isNeedSerial", defaultValue = "-1") Integer isNeedSerial
     ) {
-        SsEmpTask empTask = business.selectById(empTaskId);
+//        SsEmpTask empTask = business.selectById(empTaskId);
+        SsEmpTask empTask;
+        List<SsEmpTask> empTaskList = business.queryEmpTaskById(empTaskId, UserContext.getUserId());
+        if (CollectionUtils.isNotEmpty(empTaskList)) {
+            if (empTaskList.size() > 1) {
+                return JsonResultKit.ofError("该任务单所关联的权限数据有问题");
+            }
+            empTask = empTaskList.get(0);
+        } else {
+            return JsonResultKit.ofError("获取当前任务单失败");
+        }
+
         SsEmpTaskBO dto = JsonKit.castToObject(empTask, SsEmpTaskBO.class);
         // operatorType == 1 查询任务单费用段
         if (operatorType == 1) {

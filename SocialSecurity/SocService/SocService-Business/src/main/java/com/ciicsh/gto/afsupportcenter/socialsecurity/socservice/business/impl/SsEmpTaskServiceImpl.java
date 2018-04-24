@@ -1720,6 +1720,11 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         return baseMapper.selectIdNumByEmployeeId(employeeId);
     }
 
+    @Override
+    public List<SsEmpTask> queryEmpTaskById(Long empTaskId, String userId) {
+        return baseMapper.queryEmpTaskById(empTaskId, userId);
+    }
+
     /**
      * 非标
      *

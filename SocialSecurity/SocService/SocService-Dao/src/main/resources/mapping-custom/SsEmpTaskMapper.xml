@@ -166,9 +166,11 @@
         select
         <include refid="employeeDailyOperatorQuery_select"/>
         from ss_emp_task et
+        <if test="userId != null">
         INNER JOIN ss_dataauth_company sdc ON et.company_id = sdc.company_id AND sdc.user_id = #{userId}
         INNER JOIN ss_dataauth_welfare_unit sdwu ON et.welfare_unit = sdwu.welfare_unit AND sdwu.user_id = #{userId}
         INNER JOIN ss_dataauth_task_category sdtc ON et.task_category = sdtc.task_category AND sdtc.user_id = #{userId}
+        </if>
         LEFT JOIN sal_company c on et.company_id = c.company_id
         LEFT JOIN emp_employee e ON et.employee_id = e.employee_id
         LEFT JOIN ss_account_com_relation ssac ON ssac.company_id = c.company_id AND ssac.is_active = 1
@@ -193,9 +195,11 @@
         et.created_time,
         et.created_display_name
         from ss_emp_task et
+        <if test="userId != null">
         INNER JOIN ss_dataauth_company sdc ON et.company_id = sdc.company_id AND sdc.user_id = #{userId}
         INNER JOIN ss_dataauth_welfare_unit sdwu ON et.welfare_unit = sdwu.welfare_unit AND sdwu.user_id = #{userId}
         INNER JOIN ss_dataauth_task_category sdtc ON et.task_category = sdtc.task_category AND sdtc.user_id = #{userId}
+        </if>
         LEFT JOIN sal_company c on et.company_id = c.company_id
         LEFT JOIN emp_employee e on et.employee_id = e.employee_id
         LEFT JOIN ss_account_com_relation ssac on ssac.company_id = c.company_id and ssac.is_active = 1
@@ -762,4 +766,79 @@
 
      </select>
 
+    <select id="queryEmpTaskById" resultMap="BaseResultMap">
+        SELECT
+            et.emp_task_id,
+            et.company_id,
+            et.employee_id,
+            et.customer_id,
+            et.emp_archive_id,
+            et.is_change,
+            et.task_category,
+            et.task_category_special,
+            et.urgent,
+            et.submitter_id,
+            et.submitter_name,
+            et.submitter_dept_id,
+            et.submitter_dept_name,
+            et.submit_time,
+            et.expire_date,
+            et.submitter_remark,
+            et.handle_user_id,
+            et.handle_user_name,
+            et.emp_ss_serial,
+            et.handle_way,
+            et.handle_month,
+            et.handle_remark,
+            et.handle_remark_man,
+            et.handle_remark_date,
+            et.rejection_remark,
+            et.rejection_remark_man,
+            et.rejection_remark_date,
+            et.task_status,
+            et.handle_status,
+            et.chat_history,
+            et.start_handle_date,
+            et.send_check_date,
+            et.finish_date,
+            et.task_form_content,
+            et.salary,
+            et.emp_classify,
+            et.emp_base,
+            et.start_month,
+            et.end_month,
+            et.in_date,
+            et.out_date,
+            et.welfare_unit,
+            et.business_interface_id,
+            et.old_agreement_id,
+            et.process_id,
+            et.task_id,
+            et.task_def_key,
+            et.pro_def_key,
+            et.policy_detail_id,
+            et.af_bpo_fc,
+            et.is_active,
+            et.created_time,
+            et.modified_time,
+            et.created_by,
+            et.modified_by,
+            et.created_display_name,
+            et.modified_display_name,
+            et.leader_ship_id,
+            et.leader_ship_name,
+            et.service_center_id,
+            et.service_center
+        FROM ss_emp_task et
+        INNER JOIN ss_dataauth_company sdc ON et.company_id = sdc.company_id
+        INNER JOIN ss_dataauth_task_category sdtc ON et.task_category = sdtc.task_category AND sdc.user_id = sdtc.user_id
+        INNER JOIN ss_dataauth_welfare_unit sdwu ON et.welfare_unit = sdwu.welfare_unit AND sdc.user_id = sdwu.user_id
+        WHERE et.is_active = 1
+        <if test="empTaskId != null">
+          AND et.emp_task_id = #{empTaskId}
+        </if>
+        <if test="userId != null">
+          AND sdc.user_id = #{userId}
+        </if>
+    </select>
 </mapper>

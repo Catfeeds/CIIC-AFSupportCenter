@@ -138,6 +138,8 @@
             INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
             <if test="userId != null">
                 INNER JOIN hf_dataauth_company hdc ON het.company_id = hdc.company_id AND hdc.user_id = #{userId}
+                INNER JOIN hf_dataauth_welfare_unit hdwu ON het.welfare_unit = hdwu.welfare_unit AND hdwu.user_id = #{userId}
+                INNER JOIN hf_dataauth_task_category hdtc ON het.task_category = hdtc.task_category AND hdtc.user_id = #{userId}
             </if>
             <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
                 INNER JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
@@ -244,9 +246,12 @@
             INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
             <if test="userId != null">
                 INNER JOIN hf_dataauth_company hdc ON het.company_id = hdc.company_id AND hdc.user_id = #{userId}
+                INNER JOIN hf_dataauth_welfare_unit hdwu ON het.welfare_unit = hdwu.welfare_unit AND hdwu.user_id = #{userId}
+                INNER JOIN hf_dataauth_task_category hdtc ON het.task_category = hdtc.task_category AND hdtc.user_id = #{userId}
             </if>
             <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
-                INNER JOIN hf_com_account hcas ON hcas.is_active = 1 AND hcas.hf_account_type = 1
+                INNER JOIN hf_com_account hcas ON hcas.is_active = 1 AND
+                ((hcas.hf_account_type = 1 AND het.welfare_unit = 2) OR (hcas.hf_account_type = 2 AND het.welfare_unit = 3))
             </if>
             <if test="hfAccountType != null">
                 AND hcas.hf_account_type = #{hfAccountType}
@@ -260,7 +265,7 @@
                 AND hcac.hf_com_account = #{hfComAccount}
             </if>
             <where>
-                het.is_active = 1 AND IFNULL(het.task_status, 1) = 4 AND het.welfare_unit = 2
+                het.is_active = 1 AND IFNULL(het.task_status, 1) = 4 AND het.welfare_unit > 1
                 <if test="exceptTaskCategories != null">
                     AND het.task_category NOT IN (${exceptTaskCategories})
                 </if>
@@ -367,6 +372,8 @@
             INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
             <if test="userId != null">
                 INNER JOIN hf_dataauth_company hdc ON het.company_id = hdc.company_id AND hdc.user_id = #{userId}
+                INNER JOIN hf_dataauth_welfare_unit hdwu ON het.welfare_unit = hdwu.welfare_unit AND hdwu.user_id = #{userId}
+                INNER JOIN hf_dataauth_task_category hdtc ON het.task_category = hdtc.task_category AND hdtc.user_id = #{userId}
             </if>
             <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
                 INNER JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
@@ -472,9 +479,12 @@
             INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
             <if test="userId != null">
                 INNER JOIN hf_dataauth_company hdc ON het.company_id = hdc.company_id AND hdc.user_id = #{userId}
+                INNER JOIN hf_dataauth_welfare_unit hdwu ON het.welfare_unit = hdwu.welfare_unit AND hdwu.user_id = #{userId}
+                INNER JOIN hf_dataauth_task_category hdtc ON het.task_category = hdtc.task_category AND hdtc.user_id = #{userId}
             </if>
             <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
-                INNER JOIN hf_com_account hcas ON hcas.is_active = 1 AND hcas.hf_account_type = 1
+                INNER JOIN hf_com_account hcas ON hcas.is_active = 1 AND
+                ((hcas.hf_account_type = 1 AND het.welfare_unit = 2) OR (hcas.hf_account_type = 2 AND het.welfare_unit = 3))
             </if>
             <if test="hfAccountType != null">
                 AND hcas.hf_account_type = #{hfAccountType}
@@ -488,7 +498,7 @@
                 AND hcac.hf_com_account = #{hfComAccount}
             </if>
             <where>
-                het.is_active = 1 AND IFNULL(het.task_status, 1) != 5 AND het.welfare_unit = 2
+                het.is_active = 1 AND IFNULL(het.task_status, 1) != 5 AND het.welfare_unit > 1
                 <if test="exceptTaskCategories != null">
                     AND het.task_category NOT IN (${exceptTaskCategories})
                 </if>
@@ -614,6 +624,11 @@
         FROM hf_emp_task het
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
+        <if test="userId != null">
+            INNER JOIN hf_dataauth_company hdc ON het.company_id = hdc.company_id AND hdc.user_id = #{userId}
+            INNER JOIN hf_dataauth_welfare_unit hdwu ON het.welfare_unit = hdwu.welfare_unit AND hdwu.user_id = #{userId}
+            INNER JOIN hf_dataauth_task_category hdtc ON het.task_category = hdtc.task_category AND hdtc.user_id = #{userId}
+        </if>
         LEFT JOIN
         (
         SELECT DISTINCT hcas.com_account_id,het.welfare_unit,hcas.payment_bank,hcas.state,hcas.payment_way,hcas.ukey_store,hcas.hf_account_type,hcas.com_account_name
@@ -626,6 +641,11 @@
         FROM hf_com_account hcas
         LEFT JOIN hf_account_com_relation hacr ON hcas.com_account_id = hacr.com_account_id AND hacr.is_active = 1
         WHERE hcas.is_active = 1 AND hcas.hf_account_type = 1
+        UNION ALL
+        SELECT DISTINCT hcas.com_account_id,3 AS welfare_unit,hcas.payment_bank,hcas.state,hcas.payment_way,hcas.ukey_store,hcas.hf_account_type,hcas.com_account_name
+        FROM hf_com_account hcas
+        LEFT JOIN hf_account_com_relation hacr ON hcas.com_account_id = hacr.com_account_id AND hacr.is_active = 1
+        WHERE hcas.is_active = 1 AND hcas.hf_account_type = 2
         ) hca ON het.welfare_unit = hca.welfare_unit
         LEFT JOIN hf_com_account_class hcacb ON hca.com_account_id = hcacb.com_account_id AND hcacb.is_active = 1 AND hcacb.hf_type = 1
         LEFT JOIN hf_com_account_class hcaca ON hca.com_account_id = hcaca.com_account_id AND hcaca.is_active = 1 AND hcaca.hf_type = 2
