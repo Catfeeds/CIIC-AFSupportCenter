@@ -35,6 +35,4 @@ public class HfPaymentComBo extends HfPaymentCom {
     private BigDecimal remittedAmount;
     private BigDecimal repairAmount;
     private Integer remittedCountEmp;
-    private BigDecimal daozhangAmount;
-    private Integer daozhangCountEmp;
 }

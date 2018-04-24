@@ -124,13 +124,13 @@
     <select id="ifExistPayment" resultType="int">
       SELECT COUNT(*) FROM ss_payment_com WHERE com_account_id = #{comAccountId} AND payment_month = #{paymentMonth} AND is_active = 1
     </select>
-
+<!--费用种类：1标准 2 新进 3 转入  4 补缴 5 调整 （顺调)）6 转出 7封存 8 退账 9 调整（倒调）-->
     <update id="updateSsMonthChargeTotalAmount">
         <![CDATA[
         UPDATE ss_payment_com pc
         SET pc.total_com_pay_amount = (
             SELECT
-            IFNULL(sum(mci.com_amount),0)
+            sum(IFNULL(mci.com_amount,0))
             FROM
             ss_month_charge_item mci
             INNER JOIN ss_month_charge mc ON mc.month_charge_id = mci.month_charge_id
@@ -140,12 +140,16 @@
             AND mci.is_active = 1
             AND ea.company_id = pc.company_id
             and mc.com_account_id=pc.com_account_id
-            AND mci.com_amount>0
+            AND (
+            (mci.com_amount != 0 AND mc.cost_category IN (1,2,3,4,5,6,7))
+            OR
+             (mci.com_amount > 0 AND mc.cost_category = 9)
+            )
             AND mc.ss_month=#{paymentMonth}
         ),
         pc.total_emp_pay_amount = (
             SELECT
-            IFNULL(sum(mci.emp_amount),0)
+            sum(IFNULL(mci.emp_amount,0))
             FROM
             ss_month_charge_item mci
             INNER JOIN ss_month_charge mc ON mc.month_charge_id = mci.month_charge_id
@@ -155,7 +159,11 @@
             AND mci.is_active = 1
             AND ea.company_id = pc.company_id
             AND mc.com_account_id=pc.com_account_id
-            AND mci.emp_amount>0
+            AND (
+            (mci.emp_amount != 0 AND mc.cost_category IN (1,2,3,4,5,6,7))
+            OR
+             (mci.emp_amount > 0 AND mc.cost_category = 9)
+            )
             AND mc.ss_month=#{paymentMonth}
         ),
         pc.ought_amount = pc.total_com_pay_amount + pc.total_emp_pay_amount,
@@ -163,7 +171,7 @@
         pc.refund_deducted=0,
         pc.adjust_deducted=(
             SELECT
-            IFNULL(sum(mci.emp_amount + mci.com_amount),0)
+            sum(IFNULL(mci.emp_amount,0) + IFNULL(mci.com_amount,0))
             FROM
             ss_month_charge_item mci
             INNER JOIN ss_month_charge mc ON mc.month_charge_id = mci.month_charge_id
@@ -171,6 +179,7 @@
             WHERE
             mc.is_active = 1
             AND mci.is_active = 1
+            AND mc.cost_category = 9
             AND ea.company_id = pc.company_id
             AND mc.com_account_id=pc.com_account_id
             AND mci.emp_amount < 0
@@ -178,7 +187,7 @@
         ),
         pc.emp_count=(
             SELECT
-            IFNULL(sum(DISTINCT mc.emp_archive_id),0)
+            count(DISTINCT mc.emp_archive_id)
             FROM
             ss_month_charge mc
             LEFT JOIN ss_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
