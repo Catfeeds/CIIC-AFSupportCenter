@@ -391,6 +391,12 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
         if (StringUtils.isNotBlank(map.get("endType"))) {
             hfComAccountClass.setEndType(Integer.parseInt(map.get("endType")));
         }
+
+        if (hfComTask.getTaskStatus() == HF_COM_TASK_TASK_STATUS_3) { //已完成
+            hfComAccountClass.setActive(true);  //设置有效
+        } else {
+            hfComAccountClass.setActive(false);  //设置初始无效
+        }
         hfComAccountClass.setCreatedTime(new Date());
         hfComAccountClass.setCreatedBy(UserContext.getUser().getDisplayName());
         hfComAccountClass.setModifiedBy(UserContext.getUser().getDisplayName());
