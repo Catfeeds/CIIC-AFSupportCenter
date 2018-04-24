@@ -17,8 +17,8 @@
         <result column="repair_amount" property="repairAmount"/>
         <result column="repair_count_emp" property="repairCountEmp"/>
         <result column="remitted_count_emp" property="remittedCountEmp"/>
-        <result column="remitted_emp_count_add" property="remittedEmpCountAdd"/>
-        <result column="remitted_emp_count_reduce" property="remittedCountEmpReduce"/>
+        <result column="remitted_count_emp_add" property="remittedCountEmpAdd"/>
+        <result column="remitted_count_emp_reduce" property="remittedCountEmpReduce"/>
 
     </resultMap>
     <!--生成制作汇缴名单-->

@@ -27,4 +27,11 @@
         </where>
     </select>
 
+
+    <select id="queryOperAccountByComId" resultType="Integer">
+        select count(1) from hf_account_com_relation acr
+        INNER JOIN hf_com_account ca ON ca.com_account_id=acr.com_account_id
+          where acr.company_id =#{companyId} and ca.state=1
+    </select>
+
 </mapper>
