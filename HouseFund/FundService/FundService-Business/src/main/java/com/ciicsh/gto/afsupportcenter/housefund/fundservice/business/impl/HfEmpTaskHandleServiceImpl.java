@@ -226,29 +226,40 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 || hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_OPEN
             )
                 ) {
-                condition = new HashMap<>();
-                condition.put("company_id", hfEmpTask.getCompanyId());
-                condition.put("employee_id", hfEmpTask.getEmployeeId());
-                condition.put("process_category", hfEmpTask.getProcessCategory());
-                condition.put("task_category", hfEmpTask.getTaskCategory());
-                condition.put("hf_type", hfEmpTask.getHfType());
-                condition.put("is_change", HfEmpTaskConstant.IS_CHANGE_NO);
-                condition.put("task_status", HfEmpTaskConstant.TASK_STATUS_HANDLED);
-                condition.put("is_active", hfEmpTask.getActive());
-                List<HfEmpTask> hfEmpTaskList = this.selectByMap(condition);
-
-                if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
-                    if (hfEmpTaskList.size() > 1) {
-                        return JsonResultKit.ofError("相同雇员的雇员新增任务单已办理多次，数据不正确");
+                Wrapper<HfEmpArchive> wrapper = new EntityWrapper<>();
+                wrapper.where("company_id={0} AND employee_id={1} AND archive_status<3 AND is_active=1");
+                List<HfEmpArchive> hfEmpArchiveList = hfEmpArchiveService.selectList(wrapper);
+                if (CollectionUtils.isNotEmpty(hfEmpArchiveList)) {
+                    if (hfEmpArchiveList.size() > 1) {
+                        return JsonResultKit.ofError("该雇员存在多个未转出的雇员档案，数据不正确");
                     }
+                    HfEmpArchive hfEmpArchive = hfEmpArchiveList.get(0);
 
-                    List<Long> empTaskIdList = new ArrayList<>();
-                    empTaskIdList.add(hfEmpTaskList.get(0).getEmpTaskId());
+                    condition = new HashMap<>();
+                    condition.put("company_id", hfEmpTask.getCompanyId());
+                    condition.put("employee_id", hfEmpTask.getEmployeeId());
+                    condition.put("emp_archive_id", hfEmpArchive.getEmpArchiveId());
+                    condition.put("process_category", hfEmpTask.getProcessCategory());
+                    condition.put("task_category", hfEmpTask.getTaskCategory());
+                    condition.put("hf_type", hfEmpTask.getHfType());
+                    condition.put("is_change", HfEmpTaskConstant.IS_CHANGE_NO);
+                    condition.put("task_status", HfEmpTaskConstant.TASK_STATUS_HANDLED);
+                    condition.put("is_active", hfEmpTask.getActive());
+                    List<HfEmpTask> hfEmpTaskList = this.selectByMap(condition);
 
-                    hfMonthChargeService.deleteHfMonthCharges(empTaskIdList);
-                    hfArchiveBaseAdjustService.deleteHfArchiveBaseAdjusts(empTaskIdList);
-                    hfArchiveBasePeriodService.deleteHfArchiveBasePeriods(empTaskIdList);
-                    hfEmpArchiveService.deleteHfEmpArchiveByEmpTaskIds(empTaskIdList);
+                    if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
+                        if (hfEmpTaskList.size() > 1) {
+                            return JsonResultKit.ofError("相同雇员的雇员新增任务单已办理多次，数据不正确");
+                        }
+
+                        List<Long> empTaskIdList = new ArrayList<>();
+                        empTaskIdList.add(hfEmpTaskList.get(0).getEmpTaskId());
+
+                        hfMonthChargeService.deleteHfMonthCharges(empTaskIdList);
+                        hfArchiveBaseAdjustService.deleteHfArchiveBaseAdjusts(empTaskIdList);
+                        hfArchiveBasePeriodService.deleteHfArchiveBasePeriods(empTaskIdList);
+                        hfEmpArchiveService.deleteHfEmpArchiveByEmpTaskIds(empTaskIdList);
+                    }
                 }
             }
 
