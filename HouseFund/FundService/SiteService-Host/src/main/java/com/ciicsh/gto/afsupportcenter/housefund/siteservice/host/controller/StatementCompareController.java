@@ -5,6 +5,9 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HFStatement
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.FundStatementDetailDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.HFStatementCompareDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.NewStatementDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.FundStatementItemDTO;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
@@ -20,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 
 
@@ -90,6 +95,22 @@ public class StatementCompareController extends BasicController<HFStatementCompa
 
         return JsonResultKit.of(0, "获取对账单详情成功", result);
 
+    }
+
+
+    /**
+     * 对账记录详情导出
+     */
+    @RequestMapping("/exportStatementDetail")
+    public void exportStatementDetail(HttpServletResponse response,long statementId){
+        FundStatementDetailDTO detail = business.getStatementDetail(statementId);
+        if(null != detail){
+            if(detail.getItems().size() > 0){
+                Date date = new Date();
+                String fileNme = "公积金对账详情_"+ StringUtil.getDateString(date)+".xls";
+                ExcelUtil.exportExcel(detail.getItems(),FundStatementItemDTO.class,fileNme,response);
+            }
+        }
     }
 
     /**
