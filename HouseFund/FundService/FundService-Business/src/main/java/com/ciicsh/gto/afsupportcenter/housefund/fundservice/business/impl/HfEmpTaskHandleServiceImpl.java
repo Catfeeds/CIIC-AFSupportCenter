@@ -227,7 +227,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             )
                 ) {
                 Wrapper<HfEmpArchive> wrapper = new EntityWrapper<>();
-                wrapper.where("company_id={0} AND employee_id={1} AND archive_status<3 AND is_active=1");
+                wrapper.where("company_id={0} AND employee_id={1} AND archive_status<3 AND is_active=1", hfEmpTask.getCompanyId(), hfEmpTask.getEmployeeId());
                 List<HfEmpArchive> hfEmpArchiveList = hfEmpArchiveService.selectList(wrapper);
                 if (CollectionUtils.isNotEmpty(hfEmpArchiveList)) {
                     if (hfEmpArchiveList.size() > 1) {
