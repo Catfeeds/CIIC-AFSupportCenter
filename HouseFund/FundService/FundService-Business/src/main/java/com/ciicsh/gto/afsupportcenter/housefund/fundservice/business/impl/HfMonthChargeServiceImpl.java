@@ -783,7 +783,9 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             hfMonthChargeRepairDetailBO.setStartMonth(hfMonthChargeReportBO.getSsMonthBelong());
             hfMonthChargeRepairDetailBO.setEndMonth(hfMonthChargeReportBO.getSsMonthBelong());
             hfMonthChargeRepairDetailBO.setAmountFir(hfMonthChargeReportBO.getAmount());
-            hfMonthChargeRepairDetailBO.setRatioFir(CalculateSocialUtils.digitInSimpleFormat(hfMonthChargeReportBO.getRatio().multiply(BigDecimal.valueOf(100))) + "%");
+            hfMonthChargeRepairDetailBO.setRatioFir(CalculateSocialUtils.digitInSimpleFormat(hfMonthChargeReportBO.getRatio()
+                .divide(BigDecimal.valueOf(2), 5, BigDecimal.ROUND_HALF_UP)
+                .multiply(BigDecimal.valueOf(100))) + "%");
             hfMonthChargeRepairDetailBO.setHfEmpAccount(hfMonthChargeReportBO.getHfEmpAccount());
             hfMonthChargeRepairDetailBO.setMonths(1);
             hfMonthChargeRepairDetailBO.setRowNo(1);
