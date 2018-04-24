@@ -1530,30 +1530,6 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         }
     }
 
-//    private void addCloseMonthRecharge(HfEmpTask hfEmpTask, String hfMonth, int paymentType) {
-//        Map<String, Object> condition = new HashMap<>();
-//        condition.put("is_active", 1);
-//        condition.put("hf_month", hfMonth);
-//        condition.put("emp_archive_id", hfEmpTask.getEmpArchiveId());
-//        condition.put("hf_type", hfEmpTask.getHfType());
-//        condition.put("payment_type", HfMonthChargeConstant.PAYMENT_TYPE_NORMAL);
-//        List<HfMonthCharge> hfMonthChargeList = hfMonthChargeService.selectByMap(condition);
-//        if (CollectionUtils.isNotEmpty(hfMonthChargeList)) {
-//            if (hfMonthChargeList.size() > 1) {
-//                throw new BusinessException("开票时自动生成的标准雇员月度汇缴明细记录重复");
-//            }
-//        } else {
-//            // 新进或转入当月就转出或封存时？NG
-//            throw new BusinessException("开票时自动生成的标准雇员月度汇缴明细记录不存在");
-//        }
-//        HfMonthCharge hfMonthCharge = hfMonthChargeList.get(0);
-//        hfMonthCharge.setMonthChargeId(null);
-//        hfMonthCharge.setPaymentType(paymentType);
-//        hfMonthCharge.setCreatedBy(hfEmpTask.getModifiedBy());
-//        hfMonthCharge.setModifiedBy(hfEmpTask.getModifiedBy());
-//        hfMonthChargeService.insert(hfMonthCharge);
-//    }
-
     /**
      * 雇员任务表数据处理
      *

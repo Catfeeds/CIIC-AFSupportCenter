@@ -71,4 +71,5 @@ public interface SsEmpTaskMapper extends BaseMapper<SsEmpTask> {
 
     List<Map<String,BigDecimal>> fetchInjuryRatio(@Param("empArchiveId")Long empArchiveId, @Param("startMonth")String startMonth);
 
+    List<SsEmpTask> queryEmpTaskById(@Param("empTaskId")Long empTaskId, @Param("userId")String userId);
 }
