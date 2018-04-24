@@ -57,6 +57,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
      */
     @RequestMapping("/empTaskHandleDataQuery")
     public JsonResult<HfEmpTaskHandleBo> empTaskHandleDataQuery(HfEmpTaskHandlePostBo hfEmpTaskHandlePostBo) {
+        hfEmpTaskHandlePostBo.setUserId(UserContext.getUserId());
         // 获取当前任务单主体信息
         List<HfEmpTaskHandleBo> list = business.getEmpTaskHandleData(hfEmpTaskHandlePostBo);
         if (CollectionUtils.isNotEmpty(list)) {

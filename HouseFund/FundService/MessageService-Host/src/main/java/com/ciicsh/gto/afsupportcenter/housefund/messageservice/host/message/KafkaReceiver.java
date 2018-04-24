@@ -220,35 +220,29 @@ public class KafkaReceiver {
     @StreamListener(TaskSink.AF_EMP_AGREEMENT_UPDATE)
     public void fundEmpAgreementCorrect(Message<TaskCreateMsgDTO> message) {
         TaskCreateMsgDTO taskMsgDTO = message.getPayload();
-        if (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType())
-            || TaskSink.ADD_FUND_NEW.equals(taskMsgDTO.getTaskType())
-            || TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())
-            || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
+        Map<String, Object> paramMap = taskMsgDTO.getVariables();
+        Integer processCategory = 0;
+        Integer taskCategory = 0;
+        String fundCategory = (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) || TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
 
-            log.info(LogMessage.create().setTitle("fundEmpAgreementCorrect").setContent("start fundEmpAgreementCorrect: "+ JSON.toJSONString(taskMsgDTO)));
-            logger.debug("start fundEmpAgreementCorrect: " + JSON.toJSONString(taskMsgDTO));
-            try {
-                Map<String, Object> paramMap = taskMsgDTO.getVariables();
-                Integer processCategory = 0;
-                Integer fundType = 0;
-                Integer taskCategory = 0;
-                String fundCategory = (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) || TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
-                // 更正通道，收到停办消息，通常是两种情况：原消息为本地新开，更正为非0转0（调整）；或更正为翻牌封存（或翻牌转出），后者暂不考虑（前道已限制）；
-                if (TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
-                    agreementAdjustOrUpdateEmpStop(taskMsgDTO, fundCategory, 1);
-                } else {
-
-                    //未办理任务单
-                    if (StringUtils.isBlank(taskMsgDTO.getTaskId())) {
-                        logger.debug("start fundEmpAgreementCorrect(not handled): " + JSON.toJSONString(taskMsgDTO));
-
-                        if (null != paramMap && paramMap.get("fundType") != null) {
-                            fundType = Integer.parseInt(paramMap.get("fundType").toString());
-                        }
-                        boolean res = updateEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEAGREEMENTCORRECT.getCategory(), taskCategory, null,1);
-                        logger.debug("end fundEmpAgreementCorrect(not handled):" + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
-                    } //已办理任务单
-                        else{
+        //未办理任务单
+        if (StringUtils.isBlank(taskMsgDTO.getTaskId())) {
+            logger.debug("start fundEmpAgreementCorrect(not handled): " + JSON.toJSONString(taskMsgDTO));
+            boolean res = updateEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEAGREEMENTCORRECT.getCategory(), taskCategory, null,1);
+            logger.debug("end fundEmpAgreementCorrect(not handled):" + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
+        } //已办理任务单
+        else{
+            if (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType())
+                || TaskSink.ADD_FUND_NEW.equals(taskMsgDTO.getTaskType())
+                || TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())
+                || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
+                log.info(LogMessage.create().setTitle("fundEmpAgreementCorrect").setContent("start fundEmpAgreementCorrect: " + JSON.toJSONString(taskMsgDTO)));
+                logger.debug("start fundEmpAgreementCorrect: " + JSON.toJSONString(taskMsgDTO));
+                try {
+                    // 更正通道，收到停办消息，通常是两种情况：原消息为本地新开，更正为非0转0（调整）；或更正为翻牌封存（或翻牌转出），后者暂不考虑（前道已限制）；
+                    if (TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
+                        agreementAdjustOrUpdateEmpStop(taskMsgDTO, fundCategory, 1);
+                    } else {
                         logger.debug("start fundEmpAgreementCorrect(already handled): " + JSON.toJSONString(taskMsgDTO));
                         HfEmpTask qd = new HfEmpTask();
                         //                    qd.setTaskId(paramMap.get("oldTaskId").toString());
@@ -261,20 +255,20 @@ public class KafkaReceiver {
                         //查询旧的任务类型保存到新的任务单
                         List<HfEmpTask> resList = hfEmpTaskService.queryByTaskId(qd);
                         if (resList.size() > 0) {
-//                            HfEmpTask hfEmpTask = resList.get(0);
+    //                            HfEmpTask hfEmpTask = resList.get(0);
                             // 翻牌时，翻入翻出的empAgreementId相同，需排除翻出的
                             for (HfEmpTask hfEmpTask : resList) {
                                 taskCategory = hfEmpTask.getTaskCategory();
                                 processCategory = hfEmpTask.getProcessCategory();
 
-                                /* 更正业务流程，该业务场景已限制
-                                if (!TaskCategory.TURNOUT.getCategory().equals(taskCategory) &&
-                                    !TaskCategory.SEALED.getCategory().equals(taskCategory) &&
-                                    !TaskCategory.FLOPOUT.getCategory().equals(taskCategory) &&
-                                    !TaskCategory.FLOPSEALED.getCategory().equals(taskCategory)
-                                    ) {
-                                    break;
-                                }*/
+                                    /* 更正业务流程，该业务场景已限制
+                                    if (!TaskCategory.TURNOUT.getCategory().equals(taskCategory) &&
+                                        !TaskCategory.SEALED.getCategory().equals(taskCategory) &&
+                                        !TaskCategory.FLOPOUT.getCategory().equals(taskCategory) &&
+                                        !TaskCategory.FLOPSEALED.getCategory().equals(taskCategory)
+                                        ) {
+                                        break;
+                                    }*/
                             }
                         } else {
                             log.info(LogMessage.create().setTitle("fundEmpAgreementCorrect").setContent("根据oldEmpAgreementId未找到旧的任务单"));
@@ -286,14 +280,15 @@ public class KafkaReceiver {
                             }
                         }
                         // 调整状态更正时，oldEmpAgreementId是对应调整前协议，也同时对应更正前任务单的missionId
-//                        boolean res = saveEmpTask(taskMsgDTO, fundCategory, processCategory, taskCategory, paramMap.get("oldEmpAgreementId").toString(), 1);
+    //                        boolean res = saveEmpTask(taskMsgDTO, fundCategory, processCategory, taskCategory, paramMap.get("oldEmpAgreementId").toString(), 1);
                         boolean res = saveEmpTask(taskMsgDTO, fundCategory, processCategory, taskCategory, null, 1);
                         logger.debug("end fundEmpAgreementCorrect(already handled): " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
                     }
+
+                } catch (Exception e) {
+                    logger.debug("fundEmpAgreementCorrect exception: " + e.getMessage(), e);
+                    log.error(LogMessage.create().setTitle("fundEmpAgreementCorrect").setContent("fundEmpAgreementCorrect exception: " + e.getMessage()));
                 }
-            } catch (Exception e) {
-                logger.debug("fundEmpAgreementCorrect exception: " + e.getMessage(),e);
-                log.error(LogMessage.create().setTitle("fundEmpAgreementCorrect").setContent("fundEmpAgreementCorrect exception: " + e.getMessage()));
             }
             logger.debug("end fundEmpAgreementCorrect!");
         }
@@ -320,7 +315,6 @@ public class KafkaReceiver {
             }
             Integer taskCategory = OUT_TASK_CATEGORIES[fundType - 1].getCategory();
 
-            /* 更正业务流程，该业务场景已限制
             if (paramMap.get("oldEmpAgreementId") != null) {
                 HfEmpTask qd = new HfEmpTask();
                 qd.setBusinessInterfaceId(paramMap.get("oldEmpAgreementId").toString());
@@ -333,12 +327,12 @@ public class KafkaReceiver {
                 List<HfEmpTask> resList = hfEmpTaskService.queryByTaskId(qd);
                 if (resList.size() > 0) {
                     if (resList.get(0).getTaskCategory().equals(taskCategory)) {
-                        log.info(LogMessage.create().setTitle("agreementAdjustOrUpdateEmpStop").setContent("end: 更正前任务单已经是转出或封存状态，如果当前消息还是转出或封存状态，此时不生成任务单"));
+                        log.warn(LogMessage.create().setTitle("agreementAdjustOrUpdateEmpStop").setContent("end: 更正前任务单已经是转出或封存状态，如果当前消息还是转出或封存状态，此时不生成任务单"));
                         logger.debug("agreementAdjustOrUpdateEmpStop(): 更正前任务单已经是转出或封存状态，如果当前消息还是转出或封存状态，此时不生成任务单");
                         return;
                     }
                 }
-            }*/
+            }
 
             if (paramMap.get("oldEmpAgreementId") != null) {
                 Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
