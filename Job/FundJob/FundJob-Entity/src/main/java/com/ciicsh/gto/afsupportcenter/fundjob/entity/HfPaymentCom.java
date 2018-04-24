@@ -47,23 +47,14 @@ public class HfPaymentCom implements Serializable {
     /**
      * 补缴金额
      */
-	@TableField("bujiao_amount")
-	private BigDecimal bujiaoAmount;
+	@TableField("repair_amount")
+	private BigDecimal repairAmount;
     /**
      * 汇缴人数
      */
 	@TableField("remitted_count_emp")
 	private Integer remittedCountEmp;
-    /**
-     * 到账金额
-     */
-	@TableField("daozhang_amount")
-	private BigDecimal daozhangAmount;
-    /**
-     * 到账人数
-     */
-	@TableField("daozhang_count_emp")
-	private Integer daozhangCountEmp;
+
     /**
      * 是否可用
      */
@@ -131,15 +122,16 @@ public class HfPaymentCom implements Serializable {
 		this.remittedAmount = remittedAmount;
 	}
 
-	public BigDecimal getBujiaoAmount() {
-		return bujiaoAmount;
-	}
 
-	public void setBujiaoAmount(BigDecimal bujiaoAmount) {
-		this.bujiaoAmount = bujiaoAmount;
-	}
+    public BigDecimal getRepairAmount() {
+        return repairAmount;
+    }
 
-	public Integer getRemittedCountEmp() {
+    public void setRepairAmount(BigDecimal repairAmount) {
+        this.repairAmount = repairAmount;
+    }
+
+    public Integer getRemittedCountEmp() {
 		return remittedCountEmp;
 	}
 
@@ -147,21 +139,7 @@ public class HfPaymentCom implements Serializable {
 		this.remittedCountEmp = remittedCountEmp;
 	}
 
-	public BigDecimal getDaozhangAmount() {
-		return daozhangAmount;
-	}
 
-	public void setDaozhangAmount(BigDecimal daozhangAmount) {
-		this.daozhangAmount = daozhangAmount;
-	}
-
-	public Integer getDaozhangCountEmp() {
-		return daozhangCountEmp;
-	}
-
-	public void setDaozhangCountEmp(Integer daozhangCountEmp) {
-		this.daozhangCountEmp = daozhangCountEmp;
-	}
 
 	public Boolean getActive() {
 		return isActive;
@@ -211,10 +189,8 @@ public class HfPaymentCom implements Serializable {
 			", companyId=" + companyId +
 			", paymentBank=" + paymentBank +
 			", remittedAmount=" + remittedAmount +
-			", bujiaoAmount=" + bujiaoAmount +
+			", repairAmount=" + repairAmount +
 			", remittedCountEmp=" + remittedCountEmp +
-			", daozhangAmount=" + daozhangAmount +
-			", daozhangCountEmp=" + daozhangCountEmp +
 			", isActive=" + isActive +
 			", createdTime=" + createdTime +
 			", modifiedTime=" + modifiedTime +

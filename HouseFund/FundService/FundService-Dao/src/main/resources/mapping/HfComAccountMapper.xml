@@ -36,11 +36,11 @@
 
     <select id="isExistAccount" resultType="int">
         SELECT
-            COUNT(*)
+            COUNT(1)
         FROM
             hf_account_com_relation a
         INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
-        INNER JOIN hf_com_account_class c ON a.com_account_id = b.com_account_id
+        INNER JOIN hf_com_account_class c ON c.com_account_id = b.com_account_id
         WHERE
             a.is_active = 1
         AND b.is_active = 1

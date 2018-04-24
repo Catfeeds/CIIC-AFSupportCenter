@@ -20,5 +20,5 @@ Sub：表示公司账户下的 Mapper 接口
 public interface HfAccountComRelationMapper extends BaseMapper<HfAccountComRelation> {
 
     Integer queryIfComAccountIdExists(@Param("comAccountId") Long comAccountId );
-
+    Integer queryOperAccountByComId(@Param("companyId") String companyId );
 }
