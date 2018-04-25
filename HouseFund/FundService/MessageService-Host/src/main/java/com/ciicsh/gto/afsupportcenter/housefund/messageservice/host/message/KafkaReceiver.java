@@ -224,6 +224,7 @@ public class KafkaReceiver {
         Integer processCategory = 0;
         Integer taskCategory = 0;
         String fundCategory = (TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) || TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
+        log.info(LogMessage.create().setTitle("fundEmpAgreementCorrect").setContent("start fundEmpAgreementCorrect: " + JSON.toJSONString(taskMsgDTO)));
 
         //未办理任务单
         if (StringUtils.isBlank(taskMsgDTO.getTaskId())) {
@@ -236,7 +237,6 @@ public class KafkaReceiver {
                 || TaskSink.ADD_FUND_NEW.equals(taskMsgDTO.getTaskType())
                 || TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType())
                 || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
-                log.info(LogMessage.create().setTitle("fundEmpAgreementCorrect").setContent("start fundEmpAgreementCorrect: " + JSON.toJSONString(taskMsgDTO)));
                 logger.debug("start fundEmpAgreementCorrect: " + JSON.toJSONString(taskMsgDTO));
                 try {
                     // 更正通道，收到停办消息，通常是两种情况：原消息为本地新开，更正为非0转0（调整）；或更正为翻牌封存（或翻牌转出），后者暂不考虑（前道已限制）；
