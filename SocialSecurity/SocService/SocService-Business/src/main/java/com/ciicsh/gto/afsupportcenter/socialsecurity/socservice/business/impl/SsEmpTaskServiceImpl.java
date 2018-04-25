@@ -1210,17 +1210,17 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 if (ssEmpTaskList.size() > 1) {
                     throw new BusinessException("相同雇员的雇员新增任务单已办理多次，数据不正确");
                 }
-            }
 
-            SsEmpTask ssEmpTask = ssEmpTaskList.get(0);
-            // 撤销报表及其明细数据
-            inactiveMonthChargeData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
-            // 撤销差额补缴（逆调）费用段数据及其明细数据
-            inactiveBaseAdjustData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
-            // 撤销雇员费用段数据及其明细数据
-            inactiveBasePeriodData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
-            // 撤销雇员档案数据
-            inactiveEmpArchive(ssEmpTask.getCompanyId(), ssEmpTask.getEmployeeId(), bo.getEmpArchiveId(), bo.getModifiedBy());
+                SsEmpTask ssEmpTask = ssEmpTaskList.get(0);
+                // 撤销报表及其明细数据
+                inactiveMonthChargeData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
+                // 撤销差额补缴（逆调）费用段数据及其明细数据
+                inactiveBaseAdjustData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
+                // 撤销雇员费用段数据及其明细数据
+                inactiveBasePeriodData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
+                // 撤销雇员档案数据
+                inactiveEmpArchive(ssEmpTask.getCompanyId(), ssEmpTask.getEmployeeId(), bo.getEmpArchiveId(), bo.getModifiedBy());
+            }
         }
 
         //检查社保序号是否有重复
