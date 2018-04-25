@@ -8,7 +8,16 @@ import java.util.List;
 public class AmMaterialBO {
     private  String  submitName;
     private  String  extension;
+    private String reasonValue;
     private  List<AmEmpMaterialBO> materialsData;
+
+    public String getReasonValue() {
+        return reasonValue;
+    }
+
+    public void setReasonValue(String reasonValue) {
+        this.reasonValue = reasonValue;
+    }
 
     public String getSubmitName() {
         return submitName;
