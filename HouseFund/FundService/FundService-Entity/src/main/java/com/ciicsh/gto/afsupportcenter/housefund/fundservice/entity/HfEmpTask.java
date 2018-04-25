@@ -43,12 +43,12 @@ public class HfEmpTask implements Serializable {
      * 入职日期
      */
 	@TableField("in_date")
-	private LocalDateTime inDate;
+	private LocalDate inDate;
     /**
      * 离职时间
      */
     @TableField("out_date")
-    private LocalDateTime outDate;
+    private LocalDate outDate;
 
     /**
      * 是否更正 1 是 0 否
@@ -378,19 +378,19 @@ public class HfEmpTask implements Serializable {
 		this.empArchiveId = empArchiveId;
 	}
 
-	public LocalDateTime getInDate() {
+	public LocalDate getInDate() {
 		return inDate;
 	}
 
-	public void setInDate(LocalDateTime inDate) {
+	public void setInDate(LocalDate inDate) {
 		this.inDate = inDate;
 	}
 
-    public LocalDateTime getOutDate() {
+    public LocalDate getOutDate() {
         return outDate;
     }
 
-    public void setOutDate(LocalDateTime outDate) {
+    public void setOutDate(LocalDate outDate) {
         this.outDate = outDate;
     }
 

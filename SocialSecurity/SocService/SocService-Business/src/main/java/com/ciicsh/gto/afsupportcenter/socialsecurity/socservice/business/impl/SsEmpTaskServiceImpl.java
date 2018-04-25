@@ -20,6 +20,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.SSPItemDTO;
 import org.apache.commons.beanutils.BeanMap;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1046,6 +1047,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             queryCompanyIsOpenAccount(bo);
             //查询 雇员是否新进
             queryEmployeeIsnewOrChangeInto(bo);
+
+            checkEndMonth(bo);
         }
         //更新雇员任务信息
         baseMapper.updateMyselfColumnById(bo);
@@ -1151,14 +1154,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 switch (operatorType) {
                     // 日常操作
                     case 1:
-                        taskCategories = new Integer[]{1, 2, 3, 4, 5, 6, 7};
+                        taskCategories = new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13, 14, 15};
                         break;
                     // 特殊操作
                     case 2:
                         taskCategories = null;//现在特殊任务只有状态为9的 后面sql已经写死为9
                         break;
                     default:// 日常操作
-                        taskCategories = new Integer[]{1, 2, 3, 4, 5, 6, 7};
+                        taskCategories = new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13, 14, 15};
                 }
             } else {
                 taskCategories = new Integer[]{taskCategory};
@@ -1185,15 +1188,23 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
         // 如果新开（转入，含翻牌）时的更正，需先撤销之前办理的任务单
         if (bo.getIsChange() == 1) {
-            Map<String, Object> condition = new HashMap<>();
-            condition.put("company_id", bo.getCompanyId());
-            condition.put("employee_id", bo.getEmployeeId());
-            condition.put("emp_archive_id", bo.getEmpArchiveId());
-            condition.put("task_category", bo.getTaskCategory());
-            condition.put("is_change", 0);
-            condition.put("task_status", 2);
-            condition.put("is_active", 1);
-            List<SsEmpTask> ssEmpTaskList = this.selectByMap(condition);
+            Integer[] inArray = new Integer[]{TaskTypeConst.NEW, TaskTypeConst.INTO};
+            Integer[] flopInArray = new Integer[]{TaskTypeConst.FLOPNEW, TaskTypeConst.FLOPINTO};
+
+//            Map<String, Object> condition = new HashMap<>();
+            Wrapper<SsEmpTask> wrapper = new EntityWrapper<>();
+            wrapper.eq("company_id", bo.getCompanyId());
+            wrapper.eq("employee_id", bo.getEmployeeId());
+            wrapper.eq("emp_archive_id", bo.getEmpArchiveId());
+            if (ArrayUtils.contains(inArray, bo.getTaskCategory())) {
+                wrapper.in("task_category", inArray);
+            } else if (ArrayUtils.contains(flopInArray, bo.getTaskCategory())) {
+                wrapper.in("task_category", flopInArray);
+            }
+            wrapper.eq("is_change", 0);
+            wrapper.eq("task_status", 2);
+            wrapper.eq("is_active", 1);
+            List<SsEmpTask> ssEmpTaskList = this.selectList(wrapper);
 
             if (CollectionUtils.isNotEmpty(ssEmpTaskList)) {
                 if (ssEmpTaskList.size() > 1) {
@@ -1308,6 +1319,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         }
     }
 
+    private void checkEndMonth(SsEmpTaskBO bo) {
+        YearMonth endMonthDate = YearMonth.parse(bo.getEndMonth(), formatter);
+        YearMonth handleMonthDate = YearMonth.parse(bo.getHandleMonth(), formatter);
+
+        if (!endMonthDate.plusMonths(1).equals(handleMonthDate)) {
+            throw new BusinessException("[" + bo.getEmployeeName() + "]该雇员截止月份必须等于办理月份前一月");
+        }
+    }
 
     /**
      * 根据任务单ID逻辑删除报表记录及其明细记录
@@ -1452,7 +1471,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      */
     private void queryEmployeeIsnewOrChangeInto(SsEmpTaskBO bo) {
         //新进需要判断雇员已经做过新进或转入
-        if (bo.getTaskCategory() == 1 || bo.getTaskCategory() == 2) {
+        if (bo.getTaskCategory() == 1 || bo.getTaskCategory() == 2 || bo.getTaskCategory() == 12 || bo.getTaskCategory() == 13) {
             //
             SsEmpArchiveBO ssEmpArchiveBO = ssEmpArchiveService.queryEmployeeIsnewOrChangeInto(String.valueOf(bo.getEmpTaskId()));
             if (null != ssEmpArchiveBO.getEmpArchiveId())
@@ -2188,19 +2207,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     void taskCompletCallBack(SsEmpTaskBO bo) {
         // 1新进  2  转入 3  调整 4 补缴 5 转出 6封存 7退账  9 特殊操作  10 集体转入   11 集体转出 12翻牌新进13翻牌转入14翻牌转出15翻牌封存
 
-        switch (bo.getTaskCategory()) {
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 6:
-            case 7:
-            case 10:
-            case 11:
-                //回调 实缴金额 接口  批退为0
-                TaskCommonUtils.updateConfirmDate(commonApiUtils, bo);
-                break;
+        if (bo.getTaskCategory() != 9) {
+            //回调 实缴金额 接口  批退为0
+            TaskCommonUtils.updateConfirmDate(commonApiUtils, bo);
         }
         //任务单完成接口调用
         TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, UserContext.getUser().getDisplayName());

@@ -138,6 +138,16 @@ public class HfEmpArchive implements Serializable {
      */
     @TableField("service_center")
     private String serviceCenter;
+    /**
+     * 入职日期
+     */
+    @TableField("in_date")
+    private LocalDate inDate;
+    /**
+     * 离职时间
+     */
+    @TableField("out_date")
+    private LocalDate outDate;
 
 
 	public Long getEmpArchiveId() {
@@ -324,6 +334,22 @@ public class HfEmpArchive implements Serializable {
         this.serviceCenter = serviceCenter;
     }
 
+    public LocalDate getInDate() {
+        return inDate;
+    }
+
+    public void setInDate(LocalDate inDate) {
+        this.inDate = inDate;
+    }
+
+    public LocalDate getOutDate() {
+        return outDate;
+    }
+
+    public void setOutDate(LocalDate outDate) {
+        this.outDate = outDate;
+    }
+
     @Override
 	public String toString() {
 		return "HfEmpArchive{" +
@@ -338,6 +364,8 @@ public class HfEmpArchive implements Serializable {
 			", archiveTaskStatus=" + archiveTaskStatus +
 			", startMonth=" + startMonth +
 			", endMonth=" + endMonth +
+            ", inDate=" + inDate +
+            ", outDate" + outDate +
 			", operationRemind=" + operationRemind +
 			", operationRemindDate=" + operationRemindDate +
 			", belongVendor=" + belongVendor +
