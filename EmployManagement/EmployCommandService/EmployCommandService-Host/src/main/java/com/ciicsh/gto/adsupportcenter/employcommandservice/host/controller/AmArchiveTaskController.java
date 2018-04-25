@@ -337,7 +337,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     }
 
     @PostMapping("/saveAmInjury")
-    public JsonResult<Boolean>  saveAmInjury(@RequestBody List<AmInjury> list) {
+    public JsonResult  saveAmInjury(@RequestBody List<AmInjury> list) {
         List<AmInjury>  data = new ArrayList<AmInjury>();
         for(AmInjury bo:list)
         {
@@ -358,11 +358,20 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         }
 
-        return JsonResultKit.of(result);
+        AmInjuryBO amInjuryBO = new AmInjuryBO();
+        amInjuryBO.setArchiveId(list.get(0).getArchiveId());
+
+        List<AmInjuryBO>  amInjuryBOList = amInjuryService.queryAmInjury(amInjuryBO);
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("result",result);
+        map.put("data",amInjuryBOList);
+
+        return JsonResultKit.of(map);
     }
 
     @PostMapping("/saveAmEmpMaterial")
-    public JsonResult<Integer>  saveAmEmpMaterial(@RequestBody List<AmEmpMaterial> list) {
+    public JsonResult  saveAmEmpMaterial(@RequestBody List<AmEmpMaterial> list) {
         String userId = "System";
         String userName = "System";
         try {
@@ -371,6 +380,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         } catch (Exception e) {
 
         }
+        Map<String, Object> resultMap = new HashMap<>();
         if(null!=list&&list.size()>0){
             // 有签收人就不用保存了
             AmEmpMaterial amEmpMaterial = list.get(0);
@@ -380,7 +390,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             for(AmEmpMaterialBO amEmpMaterialBO1:list1){
                 if(!StringUtil.isEmpty(amEmpMaterialBO1.getReceiveName()))
                 {
-                    return JsonResultKit.of(2);
+                    resultMap.put("data",2);
+                    resultMap.put("result",list1);
+                    return JsonResultKit.of(resultMap);
                 }
             }
         }
@@ -411,8 +423,14 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         } catch (Exception e) {
 
         }
+        AmEmpMaterial amEmpMaterial = list.get(0);
+        AmEmpMaterialBO amEmpMaterialBO = new AmEmpMaterialBO();
+        BeanUtils.copyProperties(amEmpMaterial,amEmpMaterialBO);
+        List<AmEmpMaterialBO> list1 = amEmpMaterialService.queryAmEmpMaterialList(amEmpMaterialBO);
 
-        return JsonResultKit.of(result?1:0);
+        resultMap.put("data",result?1:0);
+        resultMap.put("result",list1);
+        return  JsonResultKit.of(resultMap);
     }
 
     @RequestMapping("/deleteAmInjury")

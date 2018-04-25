@@ -177,7 +177,9 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
              */
             amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployee(amTaskParamBO);
 
-            amCustomBO = amEmpCustomService.getCustom(amEmpEmployeeBO.getEmpTaskId());
+            if(amEmpEmployeeBO!=null){
+                amCustomBO = amEmpCustomService.getCustom(amEmpEmployeeBO.getEmpTaskId());
+            }
         }
 
         Map<String,Object> params = new HashMap<>();
@@ -290,7 +292,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             amResignBO.setStorageDate(amArchiveBO.getStorageDate());
             amResignBO.setDiaodangFeedback(amArchiveBO.getDiaodangFeedback());
 
-            amResignBO.setArchiveDirection(amEmpEmployeeBO.getArchiveDirection());
+            amResignBO.setArchiveDirection(amEmpEmployeeBO==null?"":amEmpEmployeeBO.getArchiveDirection());
 
         }else{
 
@@ -308,10 +310,10 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             amResignBO.setStorageDate(amArchiveBO.getStorageDate());
             amResignBO.setDiaodangFeedback(amArchiveBO.getDiaodangFeedback());
 
-            amResignBO.setArchiveDirection(amEmpEmployeeBO.getArchiveDirection());
+            amResignBO.setArchiveDirection(amEmpEmployeeBO==null?"":amEmpEmployeeBO.getArchiveDirection());
 
         }
-        amResignBO.setFirstInDate(amEmpEmployeeBO.getFirstInDateStr());
+        amResignBO.setFirstInDate(amEmpEmployeeBO==null?"":amEmpEmployeeBO.getFirstInDateStr());
         String code = amArchiveBO.getEmployFeedback();
         if(!StringUtil.isEmpty(code)){
             amResignBO.setEmployFeedback(ReasonUtil.getYgfk(code));
@@ -338,9 +340,9 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
     }
 
     @RequestMapping("/saveAmResign")
-    public JsonResult<Boolean> saveAmResign(AmResignBO bo) {
+    public JsonResult<AmResign> saveAmResign(AmResignBO bo) {
 
-        boolean result =  business.saveAmResign(bo);
+        AmResign result =  business.saveAmResign(bo);
 
         return JsonResultKit.of(result);
     }
@@ -393,6 +395,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
         if(result){
             resultMap.put("result",result);
+            resultMap.put("entity",entity);
         }else{
             resultMap.put("result","绑定失败");
         }

@@ -36,6 +36,7 @@ import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRe
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.SSPItemDTO;
 import com.ciicsh.gto.commonservice.util.dto.Result;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -227,7 +228,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             )
                 ) {
                 Wrapper<HfEmpArchive> wrapper = new EntityWrapper<>();
-                wrapper.where("company_id={0} AND employee_id={1} AND archive_status<3 AND is_active=1");
+                wrapper.where("company_id={0} AND employee_id={1} AND hf_type={2} AND archive_status<3 AND is_active=1",
+                    hfEmpTask.getCompanyId(), hfEmpTask.getEmployeeId(), hfEmpTask.getHfType());
                 List<HfEmpArchive> hfEmpArchiveList = hfEmpArchiveService.selectList(wrapper);
                 if (CollectionUtils.isNotEmpty(hfEmpArchiveList)) {
                     if (hfEmpArchiveList.size() > 1) {
@@ -235,16 +237,24 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     }
                     HfEmpArchive hfEmpArchive = hfEmpArchiveList.get(0);
 
-                    condition = new HashMap<>();
-                    condition.put("company_id", hfEmpTask.getCompanyId());
-                    condition.put("employee_id", hfEmpTask.getEmployeeId());
-                    condition.put("emp_archive_id", hfEmpArchive.getEmpArchiveId());
-                    condition.put("process_category", hfEmpTask.getProcessCategory());
-                    condition.put("task_category", hfEmpTask.getTaskCategory());
-                    condition.put("hf_type", hfEmpTask.getHfType());
-                    condition.put("is_change", HfEmpTaskConstant.IS_CHANGE_NO);
-                    condition.put("task_status", HfEmpTaskConstant.TASK_STATUS_HANDLED);
-                    condition.put("is_active", hfEmpTask.getActive());
+                    Integer[] inArray = new Integer[]{HfEmpTaskConstant.TASK_CATEGORY_IN_ADD, HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN, HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN};
+                    Integer[] flopInArray = new Integer[]{HfEmpTaskConstant.TASK_CATEGORY_FLOP_ADD, HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_IN, HfEmpTaskConstant.TASK_CATEGORY_FLOP_OPEN};
+                    Wrapper<HfEmpTask> hfEmpTaskWrapper = new EntityWrapper<>();
+//                    condition = new HashMap<>();
+                    hfEmpTaskWrapper.eq("company_id", hfEmpTask.getCompanyId());
+                    hfEmpTaskWrapper.eq("employee_id", hfEmpTask.getEmployeeId());
+                    hfEmpTaskWrapper.eq("emp_archive_id", hfEmpArchive.getEmpArchiveId());
+                    hfEmpTaskWrapper.eq("process_category", hfEmpTask.getProcessCategory());
+                    if (ArrayUtils.contains(inArray, hfEmpTask.getTaskCategory())) {
+                        hfEmpTaskWrapper.in("task_category", inArray);
+                    } else {
+                        hfEmpTaskWrapper.in("task_category", flopInArray);
+                    }
+//                    condition.put("task_category", hfEmpTask.getTaskCategory());
+                    hfEmpTaskWrapper.eq("hf_type", hfEmpTask.getHfType());
+                    hfEmpTaskWrapper.eq("is_change", HfEmpTaskConstant.IS_CHANGE_NO);
+                    hfEmpTaskWrapper.eq("task_status", HfEmpTaskConstant.TASK_STATUS_HANDLED);
+                    hfEmpTaskWrapper.eq("is_active", hfEmpTask.getActive());
                     List<HfEmpTask> hfEmpTaskList = this.selectByMap(condition);
 
                     if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
@@ -319,6 +329,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             inputHfEmpTask.setWelfareUnit(hfEmpTask.getWelfareUnit());
             inputHfEmpTask.setServiceCenterId(hfEmpTask.getServiceCenterId());
             inputHfEmpTask.setServiceCenter(hfEmpTask.getServiceCenter());
+            inputHfEmpTask.setInDate(hfEmpTask.getInDate());
+            inputHfEmpTask.setOutDate(hfEmpTask.getOutDate());
             Long newEmpArchive = handleEmpArchive(params, existEmpArchive, inputHfEmpTask, startMonth, endMonth);
             this.updateById(inputHfEmpTask);
 
@@ -1561,11 +1573,12 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             if (hfEmpArchiveList.size() > 1) {
                 throw new BusinessException("该雇员的雇员档案数据不正确");
             }
-            empArchiveId = hfEmpArchiveList.get(0).getEmpArchiveId();
 
             hfEmpArchiveList = hfEmpArchiveList.stream()
                 .filter(e -> e.getArchiveStatus() == null || e.getArchiveStatus() != HfEmpArchiveConstant.ARCHIVE_STATUS_CLOSED)
                 .collect(Collectors.toList());
+
+            empArchiveId = hfEmpArchiveList.get(0).getEmpArchiveId();
         } else {
             isNothing = true;
         }
@@ -1632,12 +1645,18 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             case HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_IN:
             case HfEmpTaskConstant.TASK_CATEGORY_FLOP_OPEN:
                 hfEmpArchive.setStartMonth(startMonth);
+                if (inputHfEmpTask.getInDate() != null) {
+                    hfEmpArchive.setInDate(inputHfEmpTask.getInDate().toLocalDate());
+                }
                 break;
             case HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE:
             case HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT:
             case HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_OUT:
             case HfEmpTaskConstant.TASK_CATEGORY_FLOP_CLOSE:
                 hfEmpArchive.setEndMonth(endMonth);
+                if (inputHfEmpTask.getOutDate() != null) {
+                    hfEmpArchive.setOutDate(inputHfEmpTask.getOutDate().toLocalDate());
+                }
                 break;
             default:
                 break;
@@ -1869,6 +1888,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     // 如果oldAgreementId存在，且是转出或封存时，说明是调整非0转0
                     if (hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT
                         || hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
+                        || hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST
                         ) {
                         // 此时需要回调一个只有开始确认时间的，金额为0的费用段
                         afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
@@ -1878,8 +1898,14 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                         } else {
                             afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ITEM_ID_FUND_ADDED);
                         }
-                        afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(BigDecimal.ZERO);
-                        afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(BigDecimal.ZERO);
+                        if (hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST) {
+                            afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(companyConfirmAmount);
+                            afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(personalConfirmAmount);
+                        } else {
+                            afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(BigDecimal.ZERO);
+                            afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(BigDecimal.ZERO);
+
+                        }
                         if (StringUtils.isNotEmpty(hfMonth)) {
                             afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(hfMonth + "01"));
                         }
