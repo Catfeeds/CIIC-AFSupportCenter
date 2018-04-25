@@ -199,6 +199,10 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             String submitterName = result.getRows().get(0).getSubmitterName();
             String extension = result.getRows().get(0).getExtension();
             amMaterialBO.setMaterialsData(empMaterialList);
+            if(null!=result.getRows().get(0)){
+                amMaterialBO.setReasonValue(result.getRows().get(0).getRejectReason());
+            }
+
             if("system".equals(submitterId)){
                 amMaterialBO.setSubmitName("自动提交");
             }else {
@@ -355,29 +359,30 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
     @PostMapping("/saveAmRemark")
     @Log("保存用工备注信息")
-    public JsonResult<Boolean>  saveAmRemark(@RequestBody List<AmRemark> list) {
+    public JsonResult  saveAmRemark(@RequestBody List<AmRemark> list) {
 
-        List<AmRemark>  data = new ArrayList<AmRemark>();
          for(AmRemark bo:list)
          {
-             LocalDateTime now = LocalDateTime.now();
-             bo.setCreatedTime(now);
-             bo.setModifiedTime(now);
-             bo.setCreatedBy(ReasonUtil.getUserId());
-             bo.setModifiedBy(ReasonUtil.getUserId());
-
              if(bo.getRemarkId()==null){
-                 data.add(bo);
+                 LocalDateTime now = LocalDateTime.now();
+                 bo.setCreatedTime(now);
+                 bo.setModifiedTime(now);
+                 bo.setCreatedBy(ReasonUtil.getUserId());
+                 bo.setModifiedBy(ReasonUtil.getUserId());
              }
          }
 
         boolean result = false;
         try {
-            result = amRemarkService.insertOrUpdateBatch(data);
+            result = amRemarkService.insertOrUpdateBatch(list);
         } catch (Exception e) {
 
         }
-        return JsonResultKit.of(result);
+        Map<String,Object> resultMap = new HashMap<>();
+        resultMap.put("result",result);
+        resultMap.put("data",list);
+
+        return JsonResultKit.of(resultMap);
 
     }
 
@@ -399,12 +404,13 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
     @RequestMapping("/deleteAmRemark")
     public JsonResult<Boolean>  deleteAmRemark(Long amRemarkId){
-       boolean  result = amRemarkService.deleteAmRemark(amRemarkId);
+        boolean  result = amRemarkService.deleteAmRemark(amRemarkId);
+
         return JsonResultKit.of(result);
     }
 
     @PostMapping("/receiveMaterial")
-    public JsonResult<Boolean> receiveMaterial(@RequestBody List<AmEmpMaterial> list){
+    public JsonResult receiveMaterial(@RequestBody List<AmEmpMaterial> list){
         String userName = "system";
         String userId = "system";
         try {
@@ -434,11 +440,14 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         business.insertOrUpdate(amEmpTask);
 
         boolean result =  iAmEmpMaterialService.updateBatchById(list);
-        return JsonResultKit.of(result);
+        Map<String,Object> map = new HashMap<>();
+        map.put("result",result);
+        map.put("data",list);
+        return JsonResultKit.of(map);
     }
 
     @PostMapping("/rejectMaterial")
-    public JsonResult<Boolean> rejectMaterial(@RequestBody List<AmEmpMaterial> list){
+    public JsonResult rejectMaterial(@RequestBody List<AmEmpMaterial> list){
 
         String userName = "system";
         String userId = "system";
@@ -457,7 +466,10 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         }
 
         boolean result =  iAmEmpMaterialService.updateBatchById(list);
-        return JsonResultKit.of(result);
+        Map<String,Object> map = new HashMap<>();
+        map.put("result",result);
+        map.put("data",list);
+        return JsonResultKit.of(map);
     }
 
     @RequestMapping("/updateTaskStatus")
