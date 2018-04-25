@@ -6,15 +6,10 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.EmpTaskS
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentComBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentEmpBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentProcessParmBO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.printRemittedBookBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HfPrintRemittedBookBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.*;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfArchiveBasePeriod;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccountClass;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -31,12 +26,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -203,11 +197,33 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
 
     @Override
     public JsonResult printRemittedBook(Long paymentId, Integer hfType) {
-        List<printRemittedBookBO> listPrint=hfPaymentMapper.printRemittedBook(paymentId,hfType);
-        if(listPrint.size()==0){
+        List<HfPrintRemittedBookBO> listPrint = hfPaymentMapper.printRemittedBook(paymentId, hfType);
+        if (listPrint.size() == 0) {
             return JsonResultKit.ofError("汇缴书数据为空！");
         }
-        return JsonResultKit.of(listPrint);
+        List<HfPrintRemittedBookBO> retListPrint = new ArrayList();
+
+        for (HfPrintRemittedBookBO in : listPrint) {
+            HfPrintRemittedBookBO out = new HfPrintRemittedBookBO();
+
+            if (Optional.ofNullable(in.getRepairAmount()).orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0){ //存在补缴
+                out.setIsRepair(true);//补缴打钩
+                out.setComAccountName(in.getComAccountName());
+                out.setCurdate(in.getCurdate());
+                out.setHfComAccount(in.getHfComAccount());
+                out.setRepairAmount(in.getRepairAmount());
+                out.setRepairCountEmp(in.getRepairCountEmp());
+                out.setBankName(in.getBankName());
+                retListPrint.add(out);
+                out = new HfPrintRemittedBookBO();
+            }
+            BeanUtils.copyProperties(in, out);
+            out.setIsRemitted(true);//汇缴打钩
+            out.setRepairCountEmp(null);
+            out.setRepairAmount(null);
+            retListPrint.add(out);
+        }
+        return JsonResultKit.of(retListPrint);
     }
 
 
@@ -273,7 +289,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
     }
 
     private void createStandardMonthCharge(HfComAccountClass accountClass, String paymentMonth, String belongMonth, PaymentProcessParmBO processParmBO) {
-        List<HfArchiveBasePeriod> basePeriods = archiveBasePeriodMapper.getArchiveBasePeriods(accountClass.getHfType(),accountClass.getComAccountId(), paymentMonth, belongMonth);
+        List<HfArchiveBasePeriod> basePeriods = archiveBasePeriodMapper.getArchiveBasePeriods(accountClass.getHfType(), accountClass.getComAccountId(), paymentMonth, belongMonth);
         if (null != basePeriods && basePeriods.size() > 0) {
             basePeriods.forEach(x -> monthChargeMapper.insert(setMonthCharge(x, paymentMonth, processParmBO)));
         }
@@ -315,26 +331,27 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
 
     /**
      * 更新任务单相关的办理状态
+     *
      * @param paymentId
      */
     private void updateEmpTaskStatus(Long paymentId) {
         List<EmpTaskStatusBO> taskStatus = hfPaymentMapper.getEmpTaskStatusByPaymentId(paymentId);
-        if(null != taskStatus && taskStatus.size() > 0){
-            taskStatus.forEach(x->updateOperate(x));
+        if (null != taskStatus && taskStatus.size() > 0) {
+            taskStatus.forEach(x -> updateOperate(x));
         }
     }
 
-    private void updateOperate(EmpTaskStatusBO taskStatus){
+    private void updateOperate(EmpTaskStatusBO taskStatus) {
         HfEmpTask task = empTaskMapper.selectById(taskStatus.getEmpTaskId());
         HfEmpArchive empArchive = empArchiveMapper.selectById(taskStatus.getEmpArchiveId());
-        if(null != task){
+        if (null != task) {
             task.setTaskStatus(3); //3=已完成(已做)
             task.setModifiedTime(LocalDateTime.now());
             task.setModifiedBy(UserContext.getUserId());
             task.setModifiedDisplayName(UserContext.getUser().getDisplayName());
             empTaskMapper.updateById(task);
-            if(null != empArchive){
-                switch (task.getTaskCategory()){
+            if (null != empArchive) {
+                switch (task.getTaskCategory()) {
                     case 1://新开
                     case 2://转入
                     case 3://启封

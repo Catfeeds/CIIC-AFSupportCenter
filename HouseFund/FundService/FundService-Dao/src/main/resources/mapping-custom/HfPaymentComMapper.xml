@@ -23,8 +23,8 @@
     </resultMap>
     <!--生成制作汇缴名单-->
     <!--费用种类：1标准 2 开户 3 转入  4启封 5 调整启封 6 补缴  7 转出 8 封存 9调整封存 10 销户 11 差额补缴-->
-    <!---->
-	<select id="selectPaymentAccount" parameterType="java.util.List" resultMap="CreatePaymentAccountBO" >
+    <!--parameterType="java.util.List"-->
+	<select id="selectPaymentAccount"  resultMap="CreatePaymentAccountBO" >
         SELECT pa.payment_account_id,pa.com_account_id,acr.company_id,pa.com_account_class_id,ca.payment_bank,pa.hf_type,ca.hf_account_type
         ,(SELECT SUM(ifnull(amount, 0)) FROM hf_month_charge mc
         INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
@@ -123,10 +123,14 @@
         INNER JOIN hf_com_account ca ON ca.com_account_id=pa.com_account_id
         WHERE pa.is_active=1
         AND pa.payment_status=3
-        AND pa.payment_account_id in
-        <foreach collection="paymentAccountIds" index="index" item="item" open="(" separator="," close=")">
+        AND pa.com_account_id in
+        (SELECT com_account_id FROM hf_payment_account WHERE
+         payment_month= #{paymentMonth} AND ifnull(payment_id,0)=0 AND
+        payment_account_id in(
+        <foreach collection="listData" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
+        ))
     </select>
 
     <update id="updatePaymentAccount">

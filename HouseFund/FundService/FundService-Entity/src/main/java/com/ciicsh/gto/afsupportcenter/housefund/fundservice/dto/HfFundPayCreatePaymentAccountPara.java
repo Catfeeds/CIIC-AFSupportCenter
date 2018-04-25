@@ -7,8 +7,8 @@ import java.util.List;
 @Data
 public class HfFundPayCreatePaymentAccountPara {
     List listData;
-    String payee;
-    Integer paymentWay;
-    String paymentMonth;
+    String payee; //收款方
+    Integer paymentWay;//付款方式
+    String paymentMonth;//支付年月
     Long paymentId;
 }
