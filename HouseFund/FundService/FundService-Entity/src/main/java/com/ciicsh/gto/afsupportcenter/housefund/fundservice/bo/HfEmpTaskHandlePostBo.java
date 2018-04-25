@@ -13,4 +13,5 @@ public class HfEmpTaskHandlePostBo implements Serializable {
     private Integer taskStatus;
 
     private String createdBy;
+    private String userId;
 }

@@ -9,6 +9,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsPaymentCom
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsPaymentMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPayment;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPaymentCom;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -129,7 +130,6 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
                 json.setMessage("已加入批次的数据不可再次加入别的批次");
                 return json;
             }
-
             paymentComList.add(ssPaymentCom);
         }
         //取出批次
@@ -220,7 +220,7 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
         ssPayment.setTotalEmpCount(totalEmpCount);
         ssPayment.setTotalAccount(totalAccount);
         ssPayment.setTotalCom(totalCom);
-        ssPayment.setModifiedBy("张三");
+        ssPayment.setModifiedBy(UserContext.getUserId());
         ssPayment.setModifiedTime(LocalDateTime.now());
         ssPaymentMapper.updateById(ssPayment);
 

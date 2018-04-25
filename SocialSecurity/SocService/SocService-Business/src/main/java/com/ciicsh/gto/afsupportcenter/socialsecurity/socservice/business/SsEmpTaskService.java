@@ -90,4 +90,6 @@ public interface SsEmpTaskService extends IService<SsEmpTask> {
     List<SsEmpTaskBO> queryByBusinessInterfaceId(SsEmpTaskBO ssEmpTaskBO);
 
     SsEmpTaskBO selectIdNumByEmployeeId(String employeeId);
+
+    List<SsEmpTask> queryEmpTaskById(Long empTaskId, String userId);
 }

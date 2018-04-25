@@ -161,6 +161,20 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         bo.setWelfareUnit(ssEmpTask.getWelfareUnit());
         bo.setServiceCenterId(ssEmpTask.getServiceCenterId());
         bo.setServiceCenter(ssEmpTask.getServiceCenter());
+        bo.setIsChange(ssEmpTask.getIsChange());
+
+        if (bo.getEmpArchiveId() == null) {
+            Wrapper<SsEmpArchive> wrapper = new EntityWrapper<>();
+            wrapper.where("company_id={0} AND employee_id={1} AND archive_status<3 AND is_active=1", ssEmpTask.getCompanyId(), ssEmpTask.getEmployeeId());
+            List<SsEmpArchive> ssEmpArchiveList = ssEmpArchiveService.selectList(wrapper);
+            if (CollectionUtils.isNotEmpty(ssEmpArchiveList)) {
+                if (ssEmpArchiveList.size() > 1) {
+                    throw new BusinessException("该雇员存在多个未转出的雇员档案，数据不正确");
+                }
+                SsEmpArchive ssEmpArchive = ssEmpArchiveList.get(0);
+                bo.setEmpArchiveId(ssEmpArchive.getEmpArchiveId());
+            }
+        }
 
         // 更新雇员任务信息
         // 备注时间
@@ -1052,6 +1066,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             //修改档案表的离职时间和缴纳截止时间
             SsEmpArchive ssEmpArchive = new SsEmpArchive();
             ssEmpArchive.setEmpArchiveId(bo.getEmpArchiveId());
+            ssEmpArchive.setArchiveStatus(3);
             ssEmpArchive.setEndMonth(bo.getEndMonth());
             ssEmpArchive.setOutDate(bo.getOutDate());
             ssEmpArchive.setModifiedBy(UserContext.getUserId());
@@ -1194,7 +1209,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             // 撤销雇员费用段数据及其明细数据
             inactiveBasePeriodData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
             // 撤销雇员档案数据
-            inactiveEmpArchive(ssEmpTask.getCompanyId(), ssEmpTask.getEmployeeId(), ssEmpTask.getEmpArchiveId(), bo.getModifiedBy());
+            inactiveEmpArchive(ssEmpTask.getCompanyId(), ssEmpTask.getEmployeeId(), bo.getEmpArchiveId(), bo.getModifiedBy());
         }
 
         //检查社保序号是否有重复
@@ -1720,6 +1735,11 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         return baseMapper.selectIdNumByEmployeeId(employeeId);
     }
 
+    @Override
+    public List<SsEmpTask> queryEmpTaskById(Long empTaskId, String userId) {
+        return baseMapper.queryEmpTaskById(empTaskId, userId);
+    }
+
     /**
      * 非标
      *
@@ -2183,7 +2203,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 break;
         }
         //任务单完成接口调用
-        TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, UserContext.getUserName());
+        TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, UserContext.getUser().getDisplayName());
     }
 
     /**
