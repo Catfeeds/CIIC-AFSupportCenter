@@ -104,7 +104,7 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean saveAmResign(AmResignBO bo) {
+    public AmResign saveAmResign(AmResignBO bo) {
         AmResign entity = new AmResign();
         BeanUtils.copyProperties(bo,entity);
         String userId = "sys";
@@ -168,7 +168,7 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
 
         boolean result = super.insertOrUpdate(entity);
 
-        if(isFinish==1)
+        if(isFinish==1&&result)
         {
             Map<String,Object> variables = new HashMap<>();
             variables.put("status", true);
@@ -185,7 +185,7 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
             TaskCommonUtils.completeTask(amEmpTask.getTaskId(),employeeInfoProxy,variables);
         }
 
-        return result;
+        return  entity;
     }
 
     /**
