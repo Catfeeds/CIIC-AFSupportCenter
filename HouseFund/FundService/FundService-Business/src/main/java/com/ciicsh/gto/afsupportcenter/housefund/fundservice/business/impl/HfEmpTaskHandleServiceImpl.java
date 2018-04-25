@@ -1645,14 +1645,18 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             case HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_IN:
             case HfEmpTaskConstant.TASK_CATEGORY_FLOP_OPEN:
                 hfEmpArchive.setStartMonth(startMonth);
-                hfEmpArchive.setInDate(inputHfEmpTask.getInDate());
+                if (inputHfEmpTask.getInDate() != null) {
+                    hfEmpArchive.setInDate(inputHfEmpTask.getInDate().toLocalDate());
+                }
                 break;
             case HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE:
             case HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT:
             case HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_OUT:
             case HfEmpTaskConstant.TASK_CATEGORY_FLOP_CLOSE:
                 hfEmpArchive.setEndMonth(endMonth);
-                hfEmpArchive.setOutDate(inputHfEmpTask.getOutDate());
+                if (inputHfEmpTask.getOutDate() != null) {
+                    hfEmpArchive.setOutDate(inputHfEmpTask.getOutDate().toLocalDate());
+                }
                 break;
             default:
                 break;
