@@ -55,7 +55,7 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
         //查询出所有前端选择的基本和补充公积金账户
         HfCreatePaymentAccountBO hfCreatePaymentAccountBO=new HfCreatePaymentAccountBO();
 
-        List<HfCreatePaymentAccountBO> paymentAccountList= hfPaymentComMapper.selectPaymentAccount( params.getListData());
+        List<HfCreatePaymentAccountBO> paymentAccountList= hfPaymentComMapper.selectPaymentAccount( params);
         if (paymentAccountList.size()==0){
             return JsonResultKit.ofError("无数据可生成！");
         }else{

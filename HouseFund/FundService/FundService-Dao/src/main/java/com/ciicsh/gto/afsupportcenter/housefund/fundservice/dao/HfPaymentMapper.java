@@ -4,11 +4,9 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.EmpTaskStatusBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentComBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentEmpBO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.printRemittedBookBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HfPrintRemittedBookBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyCompanyProxyDTO;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyEmployeeProxyDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -34,6 +32,6 @@ public interface HfPaymentMapper extends BaseMapper<HfPayment> {
 
     List<EmpTaskStatusBO> getEmpTaskStatusByPaymentId(@Param("paymentId") Long paymentId);
 
-    List<printRemittedBookBO> printRemittedBook(@Param("paymentId") Long paymentId, @Param("hfType") Integer hfType);
+    List<HfPrintRemittedBookBO> printRemittedBook(@Param("paymentId") Long paymentId, @Param("hfType") Integer hfType);
 
 }
