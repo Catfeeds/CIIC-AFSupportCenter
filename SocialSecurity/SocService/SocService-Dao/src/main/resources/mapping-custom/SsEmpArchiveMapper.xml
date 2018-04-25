@@ -13,6 +13,7 @@
         <result column="settlement_area" property="settlementArea"/>
         <result column="title" property="title"/>
         <result column="com_account_name" property="comAccountName"/>
+        <result column="leadership_name" property="leaderShipName"/>
     </resultMap>
     <!-- 查询非新增和转入的雇员信息 -->
     <select id="queryByEmpTaskId" resultMap="BaseResultMapDTO">
@@ -46,7 +47,7 @@
             sea.start_month,
             sea.end_month,
             sea.ss_month,
-            sea.in_date
+            sea.in_date,afemp.leadership_name
     </sql>
     <!--雇员查询 where-->
     <sql id="queryEmployee_where">
@@ -67,6 +68,9 @@
         </if>
         <if test="employeeId != null">
             AND emp.employee_id = #{employeeId}
+        </if>
+        <if test="leaderShipName !=null">
+            AND afemp.leadership_name LIKE CONCAT('%',#{leaderShipName}, '%')
         </if>
         <if test="idNum != null">
             AND emp.id_num = #{idNum}
@@ -89,6 +93,8 @@
         LEFT JOIN sal_company sc ON sc.company_id=sea.company_id AND sc.is_active = 1
         LEFT JOIN emp_employee emp ON emp.employee_id =sea.employee_id
         LEFT JOIN ss_com_account sca ON sca.com_account_id=sea.com_account_id AND sca.is_active =1
+        LEFT JOIN emp_af_emp_company afemp on afemp.employee_id=sea.employee_id AND afemp.company_id=sea.company_id AND afemp.in_date=sea.in_date
+
         <where>
              sea.is_active = 1
             <include refid="queryEmployee_where"/>
@@ -141,11 +147,13 @@
         sca.ss_account,
         sea.emp_classify,
         sea.com_account_id,
+        afemp.leadership_name,
         sea.out_date
         FROM ss_emp_archive sea
         LEFT JOIN sal_company sc ON sc.company_id=sea.company_id AND sc.is_active = 1
         LEFT JOIN emp_employee emp ON emp.employee_id =sea.employee_id
         LEFT JOIN ss_com_account sca ON sca.com_account_id=sea.com_account_id AND sca.is_active =1
+        LEFT JOIN emp_af_emp_company afemp on afemp.employee_id=sea.employee_id AND afemp.company_id=sea.company_id AND afemp.in_date=sea.in_date
         WHERE  sea.is_active = 1
         AND emp_archive_id = #{empArchiveId}
     </select>
