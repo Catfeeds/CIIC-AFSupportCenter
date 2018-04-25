@@ -1,6 +1,6 @@
-package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business;
+package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao;
 
-import com.baomidou.mybatisplus.service.IService;
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmArchiveBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmArchiveDocSeqBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmArchive;
@@ -10,16 +10,18 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by zhangzhiwen on 2018/1/29.
+ * <p>
+ * 雇员档案序号表
+ * </p>
  */
-public interface IAmArchiveService extends IService<AmArchive> {
+public interface AmArchiveDocSeqMapper extends BaseMapper<AmArchiveDocSeq> {
 
-    List<AmArchiveBO>  queryAmArchiveList(Map<String,Object> param);
+    List<AmArchiveDocSeqBO>  queryListByType(AmArchiveDocSeq seq);
 
-    List<AmArchiveDocSeqBO> queryAmArchiveDocTypeByType(Integer type);
 
-    AmArchiveDocSeqBO queryAmArchiveDocTypeByTypeAndDocType(Integer type, String docType);
+    AmArchiveDocSeqBO queryListByTypeAndDocType(AmArchiveDocSeq seq);
 
     void updateByTypeAndDocType(AmArchiveDocSeq seq);
+
 
 }

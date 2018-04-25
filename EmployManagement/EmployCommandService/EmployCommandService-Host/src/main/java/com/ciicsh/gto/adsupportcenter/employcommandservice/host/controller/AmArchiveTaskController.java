@@ -20,15 +20,17 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by zhangzhiwen on 2018/2/6.
@@ -199,6 +201,14 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         return  JsonResultKit.of(amResignCollection);
     }
 
+    @RequestMapping("/queryDocSeqByDocType")
+    public JsonResult queryDocSeqByDocType(AmArchiveDocSeqBO bo){
+        AmArchiveDocSeqBO result = amArchiveService.queryAmArchiveDocTypeByTypeAndDocType(bo.getType(),bo.getDocType());
+        Map<String, Object> map = new HashMap<>();
+        map.put("docBo", result);
+        return JsonResultKit.of(map);
+    }
+
     @RequestMapping("/archiveDetailInfoQuery")
     public JsonResult archiveDetailInfoQuery(AmTaskParamBO amTaskParamBO){
 
@@ -291,13 +301,17 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         resultMap.put("resignBO",amResignBO);
 
+        // 预留档案类别
+        List<AmArchiveDocSeqBO> boList = amArchiveService.queryAmArchiveDocTypeByType(1);
+        List<AmArchiveDocSeqBO> boList2 = amArchiveService.queryAmArchiveDocTypeByType(2);
+        resultMap.put("docSeqList",boList);
+        resultMap.put("docSeqList2",boList2);
         if(null!=amArchiveBOList&&amArchiveBOList.size()>0)
         {
             AmArchiveBO  amArchiveBO = amArchiveBOList.get(0);
             AmArchiveDTO amArchiveDTO = new AmArchiveDTO();
             BeanUtils.copyProperties(amArchiveBO,amArchiveDTO);
             resultMap.put("amArchaiveBo",amArchiveDTO);
-
             AmInjuryBO amInjuryBO = new AmInjuryBO();
             amInjuryBO.setArchiveId(amArchiveBO.getArchiveId().toString());
 
