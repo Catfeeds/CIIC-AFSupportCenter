@@ -1598,11 +1598,11 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 }
                 break;
             case HfEmpTaskConstant.TASK_CATEGORY_REPAIR:
-            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST:
                 if (isNothing) {
                     throw new BusinessException("雇员档案不存在");
                 }
                 break;
+            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST:
             case HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT:
             case HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE:
             case HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_OUT:
