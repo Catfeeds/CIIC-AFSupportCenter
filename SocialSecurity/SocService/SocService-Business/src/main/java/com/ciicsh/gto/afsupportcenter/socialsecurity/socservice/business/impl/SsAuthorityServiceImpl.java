@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsDataauthCompanyBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsDataauthWelfareUnitBO;
@@ -111,9 +112,9 @@ public class SsAuthorityServiceImpl extends ServiceImpl<SsDataauthCompanyMapper,
         dataauthCompany.setUserId(userId);
         dataauthCompany.setServiceCenterId(serviceCenterId);
         // 从本地库查询已配置的客户
-        List<SsDataauthCompanyBO> boList = baseMapper.queryListByUidAndSerCenterId(dataauthCompany);
+        List<SsDataauthCompany> boList = baseMapper.selectList(new EntityWrapper<>(dataauthCompany));
         List<String> companyIds = new ArrayList<>();
-        for (SsDataauthCompanyBO bo : boList) {
+        for (SsDataauthCompany bo : boList) {
             companyIds.add(bo.getCompanyId());
         }
         // 已配置的客户ID
@@ -134,7 +135,7 @@ public class SsAuthorityServiceImpl extends ServiceImpl<SsDataauthCompanyMapper,
         dataauthCompany.setUserId(dto.getUserId());
         dataauthCompany.setServiceCenterId(dto.getServiceCenterId());
         // 删除已配置的客户
-        baseMapper.delByUidAndSerCenterId(dataauthCompany);
+        baseMapper.delete(new EntityWrapper<>(dataauthCompany));
         for (String companyId : dto.getCompanyIds()) {
             SsDataauthCompany dataauth = new SsDataauthCompany();
             // 配置的用户ID
@@ -158,7 +159,9 @@ public class SsAuthorityServiceImpl extends ServiceImpl<SsDataauthCompanyMapper,
         rollbackFor = {Exception.class}
     )
     public boolean saveSsDataauthWelfareUnit(SsDataauthWelfareUnitDTO dto) {
-        ssDataauthWelfareUnitMapper.delByUid(dto.getUserId());
+        SsDataauthWelfareUnit uni = new SsDataauthWelfareUnit();
+        uni.setUserId(dto.getUserId());
+        ssDataauthWelfareUnitMapper.delete(new EntityWrapper<>(uni));
         List<Integer> units = dto.getWelfareUnits();
         for (Integer unitId: units) {
             SsDataauthWelfareUnit unit = new SsDataauthWelfareUnit();
@@ -170,7 +173,7 @@ public class SsAuthorityServiceImpl extends ServiceImpl<SsDataauthCompanyMapper,
             unit.setModifiedBy(UserContext.getUserId());
             unit.setCreatedTime(new Date());
             unit.setModifiedTime(new Date());
-            ssDataauthWelfareUnitMapper.insertSsDataauthWelfareUnit(unit);
+            ssDataauthWelfareUnitMapper.insert(unit);
         }
         return true;
     }
@@ -182,7 +185,9 @@ public class SsAuthorityServiceImpl extends ServiceImpl<SsDataauthCompanyMapper,
     )
     public boolean saveSsDataauthTaskCategory(SsDataauthWelfareUnitDTO dto) {
 
-        ssDataauthTaskCategoryMapper.delByUid(dto.getUserId());
+        SsDataauthTaskCategory task1 = new SsDataauthTaskCategory();
+        task1.setUserId(dto.getUserId());
+        ssDataauthTaskCategoryMapper.delete(new EntityWrapper<>(task1));
         List<Integer> units = dto.getWelfareUnits();
         for (Integer unitId: units) {
 
@@ -195,7 +200,7 @@ public class SsAuthorityServiceImpl extends ServiceImpl<SsDataauthCompanyMapper,
             task.setModifiedBy(UserContext.getUserId());
             task.setCreatedTime(new Date());
             task.setModifiedTime(new Date());
-            ssDataauthTaskCategoryMapper.insertSsDataauthTaskCategory(task);
+            ssDataauthTaskCategoryMapper.insert(task);
         }
         return true;
     }
@@ -207,8 +212,8 @@ public class SsAuthorityServiceImpl extends ServiceImpl<SsDataauthCompanyMapper,
         List<Integer> welfareUnits = new ArrayList<>();
         SsDataauthWelfareUnit po = new SsDataauthWelfareUnit();
         po.setUserId(userId);
-        List<SsDataauthWelfareUnitBO> boList = ssDataauthWelfareUnitMapper.queryListByUid(po);
-        for (SsDataauthWelfareUnitBO bo : boList) {
+        List<SsDataauthWelfareUnit> boList = ssDataauthWelfareUnitMapper.selectList(new EntityWrapper<>(po));
+        for (SsDataauthWelfareUnit bo : boList) {
             // 福利办理方
             welfareUnits.add(bo.getWelfareUnit());
         }
@@ -223,7 +228,7 @@ public class SsAuthorityServiceImpl extends ServiceImpl<SsDataauthCompanyMapper,
         List<Integer> ids = new ArrayList<>();
         SsDataauthTaskCategory task = new SsDataauthTaskCategory();
         task.setUserId(userId);
-        List<SsDataauthTaskCategory> list = ssDataauthTaskCategoryMapper.queryListByUid(task);
+        List<SsDataauthTaskCategory> list = ssDataauthTaskCategoryMapper.selectList(new EntityWrapper<>(task));
         for (SsDataauthTaskCategory po:list ) {
             //任务单类型
             ids.add(po.getTaskCategory());

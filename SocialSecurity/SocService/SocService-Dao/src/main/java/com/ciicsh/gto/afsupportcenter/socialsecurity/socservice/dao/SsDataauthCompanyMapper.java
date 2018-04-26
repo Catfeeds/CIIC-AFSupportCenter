@@ -16,9 +16,4 @@ import java.util.List;
  */
 public interface SsDataauthCompanyMapper extends BaseMapper<SsDataauthCompany> {
 
-    boolean insertSsDataauthCompany(SsDataauthCompany ssDataauthCompany);
-
-    List<SsDataauthCompanyBO> queryListByUidAndSerCenterId(SsDataauthCompany ssDataauthCompany);
-
-    boolean delByUidAndSerCenterId(SsDataauthCompany ssDataauthCompany);
 }

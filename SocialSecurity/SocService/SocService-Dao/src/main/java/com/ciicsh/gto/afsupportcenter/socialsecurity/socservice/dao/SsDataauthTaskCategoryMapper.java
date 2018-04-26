@@ -17,9 +17,4 @@ import java.util.List;
  */
 public interface SsDataauthTaskCategoryMapper extends BaseMapper<SsDataauthTaskCategory> {
 
-    boolean insertSsDataauthTaskCategory(SsDataauthTaskCategory ssDataauthTaskCategory);
-
-    List<SsDataauthTaskCategory> queryListByUid(SsDataauthTaskCategory ssDataauthTaskCategory);
-
-    boolean delByUid(String userId);
 }

@@ -46,6 +46,9 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
 
     @Override
     public void updateByTypeAndDocType(AmArchiveDocSeq seq) {
+        if(seq.getType() == null || seq.getDocType() == null || "".equals(seq.getDocType())){
+            return;
+        }
         amArchiveDocSeqMapper.updateByTypeAndDocType(seq);
     }
 }
