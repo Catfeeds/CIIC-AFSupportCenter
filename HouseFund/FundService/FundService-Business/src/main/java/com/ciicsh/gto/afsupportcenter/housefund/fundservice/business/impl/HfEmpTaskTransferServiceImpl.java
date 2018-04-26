@@ -118,17 +118,10 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
     @Override
     public JsonResult submitTransferTask(EmpTaskTransferBo empTaskTransferBo) {
         HfEmpTask hfEmpTask =new HfEmpTask();
-        AccountInfoBO accountInfoBO = hfComAccountMapper.getAccountsByCompany(empTaskTransferBo.getCompanyId(),empTaskTransferBo.getHfType());
-        if (null != accountInfoBO){
-            return JsonResultKit.ofError("该雇员所在公司没有开户！");
-        }
-
         Integer result = hfComAccountMapper.isExistAccount(empTaskTransferBo.getCompanyId(),empTaskTransferBo.getHfType());
         if(result <= 0){
             return JsonResultKit.ofError("该雇员所在公司没有开户！");
         }
-
-
         Wrapper<HfEmpArchive> wrapper = new EntityWrapper<>();
         wrapper.eq("company_id", empTaskTransferBo.getCompanyId());
         wrapper.eq("employee_id", empTaskTransferBo.getEmployeeId());
