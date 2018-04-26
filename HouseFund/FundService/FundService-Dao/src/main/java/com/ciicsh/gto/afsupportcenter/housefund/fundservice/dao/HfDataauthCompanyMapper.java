@@ -15,9 +15,4 @@ import java.util.List;
  */
 public interface HfDataauthCompanyMapper extends BaseMapper<HfDataauthCompany> {
 
-    boolean insertSsDataauthCompany(HfDataauthCompany ssDataauthCompany);
-
-    List<HfDataauthCompanyBO> queryListByUidAndSerCenterId(HfDataauthCompany ssDataauthCompany);
-
-    boolean delByUidAndSerCenterId(HfDataauthCompany ssDataauthCompany);
 }
