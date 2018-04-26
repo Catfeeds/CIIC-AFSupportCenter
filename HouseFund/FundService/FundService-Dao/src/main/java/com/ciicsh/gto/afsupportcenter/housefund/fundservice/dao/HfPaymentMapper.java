@@ -22,7 +22,7 @@ import java.util.List;
 @Component
 public interface HfPaymentMapper extends BaseMapper<HfPayment> {
 
-    List<PaymentComBO> getHfPaymentComList(@Param("paymentId") Long paymentId);
+    List<PaymentComBO> getHfPaymentComList(@Param("paymentId") Long paymentId,@Param("paymentMonth") String paymentMonth);
 
     List<PaymentEmpBO> getHfPaymentEmpList(@Param("paymentId") Long paymentId, @Param("paymentMonth") String paymentMonth);
 

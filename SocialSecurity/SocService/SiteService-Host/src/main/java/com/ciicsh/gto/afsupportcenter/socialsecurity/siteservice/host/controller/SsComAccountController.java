@@ -35,7 +35,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/soccommandservice/ssComAccount")
-public class SsComAccountController extends BasicController<SsComAccountService>{
+public class SsComAccountController extends BasicController<SsComAccountService> {
 
     @Autowired
     private SsAccountRatioService ssAccountRatioService;
@@ -44,6 +44,7 @@ public class SsComAccountController extends BasicController<SsComAccountService>
 
     /**
      * 根据雇员任务ID查询企业社保账户信息
+     *
      * @param empTaskId
      * @return
      */
@@ -57,6 +58,7 @@ public class SsComAccountController extends BasicController<SsComAccountService>
 
     /**
      * 查询企业社保账户信息
+     *
      * @param pageInfo
      * @return
      */
@@ -80,6 +82,7 @@ public class SsComAccountController extends BasicController<SsComAccountService>
 
     /**
      * 企业社保管理详情查询
+     *
      * @param comAccountId
      * @return
      */
@@ -96,8 +99,7 @@ public class SsComAccountController extends BasicController<SsComAccountService>
         //再查询工伤比例变更
         List<SsAccountRatio> ssAccountRatioList = ssAccountRatioService.queryRatioByAccountId(comAccountId);
         //查询 账户关联的公司
-        List<SsAccountComRelationBO> ssAccountComRelationBOList = iSsAccountComRelationService.queryByAccountId
-            (comAccountId);
+        List<SsAccountComRelationBO> ssAccountComRelationBOList = iSsAccountComRelationService.queryByAccountId(comAccountId);
         ssComAccountBO.setSsAccountRatioList(ssAccountRatioList);
         ssComAccountBO.setSsAccountComRelationBOList(ssAccountComRelationBOList);
 

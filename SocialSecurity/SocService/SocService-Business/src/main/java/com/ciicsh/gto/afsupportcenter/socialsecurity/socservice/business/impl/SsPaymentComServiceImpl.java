@@ -81,7 +81,7 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
         ssPaymentCom.setIfDeductedIntoPay(ifDeductedIntoPay);
         ssPaymentCom.setTotalPayAmount(totalPayAmount);
         ssPaymentCom.setRemark(ssPaymentComBO.getRemark());
-        ssPaymentCom.setModifiedBy("张三");
+        ssPaymentCom.setModifiedBy(UserContext.getUser().getDisplayName());
         ssPaymentCom.setModifiedTime(LocalDateTime.now());
         //保存
         baseMapper.updateById(ssPaymentCom);

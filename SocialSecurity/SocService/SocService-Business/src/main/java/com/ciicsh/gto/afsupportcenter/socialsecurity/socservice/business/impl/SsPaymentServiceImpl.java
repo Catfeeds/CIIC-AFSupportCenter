@@ -109,7 +109,7 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         //将批次状态改为申请中
         ssPayment.setPaymentState(4);
         ssPayment.setApplyRemark(applyRemark);
-        ssPayment.setRequestUser("张三");
+        ssPayment.setRequestUser(UserContext.getUser().getDisplayName());
         ssPayment.setRequestDate(LocalDate.now());
         baseMapper.updateById(ssPayment);
 
@@ -121,7 +121,7 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
                 //修改状态为申请中
                 SsPaymentCom ssPaymentCom = ssPaymentComList.get(i);
                 ssPaymentCom.setPaymentState(4);
-                ssPaymentCom.setModifiedBy("张三");
+                ssPaymentCom.setModifiedBy(UserContext.getUser().getDisplayName());
                 ssPaymentCom.setModifiedTime(LocalDateTime.now());
                 ssPaymentComMapper.updateById(ssPaymentCom);
             }
@@ -154,7 +154,7 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         //验证结束
         //将批次逻辑删除
         ssPayment.setActive(false);
-        ssPayment.setModifiedBy("张三");
+        ssPayment.setModifiedBy(UserContext.getUser().getDisplayName());
         ssPayment.setModifiedTime(LocalDateTime.now());
         baseMapper.updateById(ssPayment);
 
@@ -166,7 +166,7 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
                 //修改状态为申请中
                 SsPaymentCom ssPaymentCom = ssPaymentComList.get(i);
                 ssPaymentCom.setPaymentId(null);
-                ssPaymentCom.setModifiedBy("张三");
+                ssPaymentCom.setModifiedBy(UserContext.getUser().getDisplayName());
                 ssPaymentCom.setModifiedTime(LocalDateTime.now());
                 ssPaymentComMapper.updateAllColumnById(ssPaymentCom);
             }
@@ -316,9 +316,9 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         //将批次状态改为内部审批批退
         ssPayment.setRejectionRemark(rejectionRemark);
         ssPayment.setPaymentState(5);
-        ssPayment.setRequestUser("张三");
+        ssPayment.setRequestUser(UserContext.getUser().getDisplayName());
         ssPayment.setRequestDate(LocalDate.now());
-        ssPayment.setModifiedBy("张三");
+        ssPayment.setModifiedBy(UserContext.getUser().getDisplayName());
         ssPayment.setModifiedTime(LocalDateTime.now());
         //组装批退历史
         String rejectionHis = ssPayment.getRejectionHis();
@@ -359,7 +359,7 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
                 //修改状态为内部审批批退
                 SsPaymentCom ssPaymentCom = ssPaymentComList.get(i);
                 ssPaymentCom.setPaymentState(5);
-                ssPaymentCom.setModifiedBy("张三");
+                ssPaymentCom.setModifiedBy(UserContext.getUser().getDisplayName());
                 ssPaymentCom.setModifiedTime(LocalDateTime.now());
                 ssPaymentComMapper.updateById(ssPaymentCom);
             }

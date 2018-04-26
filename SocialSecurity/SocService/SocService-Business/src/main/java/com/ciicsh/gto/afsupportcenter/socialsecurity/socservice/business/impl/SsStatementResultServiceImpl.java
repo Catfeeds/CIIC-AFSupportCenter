@@ -13,6 +13,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsStateme
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsStatementResultMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsStatementResultService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,7 +65,7 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
         //清除历史结果
         SsStatementResultBO ssStatementResultBO = new SsStatementResultBO();
         ssStatementResultBO.setStatementId(statementId);
-        ssStatementResultBO.setModifiedBy("张三");
+        ssStatementResultBO.setModifiedBy(UserContext.getUser().getDisplayName());
         ssStatementResultBO.setModifiedTime(dealTime);
         baseMapper.cleanResultByStatementId(ssStatementResultBO);
 
@@ -108,7 +109,7 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
                 result.setActive(true);
                 result.setModifiedBy(null);
                 result.setModifiedTime(null);
-                result.setCreatedBy("对账操作人张三");
+                result.setCreatedBy(UserContext.getUser().getDisplayName());
                 result.setCreatedTime(dealTime);
                 baseMapper.insert(result);
             }
@@ -118,7 +119,7 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
         ssStatement.setStatementId(statementId);
         ssStatement = ssStatementMapper.selectOne(ssStatement);
         //更新操作人字段
-        ssStatement.setStatementUserId("张三");
+        ssStatement.setStatementUserId(UserContext.getUser().getDisplayName());
         ssStatement.setStatementTime(dealTime);
         //统计字段
         //差异项目数
