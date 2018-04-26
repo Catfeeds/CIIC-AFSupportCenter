@@ -753,6 +753,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             amEmpCustom.setLeaderShipName(employeeCompany==null?"":employeeCompany.getLeadershipName());//客服经理
             amEmpCustom.setCreatedBy(employeeCompany==null?"":employeeCompany.getCreatedBy());
             amEmpCustom.setServiceCenter(afCompanyDetailResponseDTO.getServiceCenter());
+            amEmpCustom.setTitle(employeeCompany==null?"":employeeCompany.getTitle());
             amEmpCustom.setActive(true);
             amEmpCustom.setCreatedTime(LocalDateTime.now());
             amEmpCustom.setModifiedTime(LocalDateTime.now());

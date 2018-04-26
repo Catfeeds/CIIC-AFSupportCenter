@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfDataauthCompanyBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfAuthorityService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfDataauthCompanyMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfDataauthTaskCategoryMapper;
@@ -109,9 +109,9 @@ public class HfAuthorityServiceImpl extends ServiceImpl<HfDataauthCompanyMapper,
         dataauthCompany.setUserId(userId);
         dataauthCompany.setServiceCenterId(serviceCenterId);
         // 从本地库查询已配置的客户
-        List<HfDataauthCompanyBO> boList = baseMapper.queryListByUidAndSerCenterId(dataauthCompany);
+        List<HfDataauthCompany> boList = baseMapper.selectList(new EntityWrapper<>(dataauthCompany));
         List<String> companyIds = new ArrayList<>();
-        for (HfDataauthCompanyBO bo : boList) {
+        for (HfDataauthCompany bo : boList) {
             companyIds.add(bo.getCompanyId());
         }
         // 已配置的客户ID
@@ -132,7 +132,7 @@ public class HfAuthorityServiceImpl extends ServiceImpl<HfDataauthCompanyMapper,
         dataauthCompany.setUserId(dto.getUserId());
         dataauthCompany.setServiceCenterId(dto.getServiceCenterId());
         // 删除已配置的客户
-        baseMapper.delByUidAndSerCenterId(dataauthCompany);
+        baseMapper.delete(new EntityWrapper<>(dataauthCompany));
         for (String companyId : dto.getCompanyIds()) {
             HfDataauthCompany dataauth = new HfDataauthCompany();
             // 配置的用户ID
@@ -156,7 +156,9 @@ public class HfAuthorityServiceImpl extends ServiceImpl<HfDataauthCompanyMapper,
         rollbackFor = {Exception.class}
     )
     public boolean saveHfDataauthWelfareUnit(HfDataauthWelfareUnitDTO dto) {
-        hfDataauthWelfareUnitMapper.delByUid(dto.getUserId());
+        HfDataauthWelfareUnit u = new HfDataauthWelfareUnit();
+        u.setUserId(dto.getUserId());
+        hfDataauthWelfareUnitMapper.delete(new EntityWrapper<>(u));
         List<Integer> units = dto.getWelfareUnits();
         for (Integer unitId: units) {
             HfDataauthWelfareUnit unit = new HfDataauthWelfareUnit();
@@ -168,7 +170,7 @@ public class HfAuthorityServiceImpl extends ServiceImpl<HfDataauthCompanyMapper,
             unit.setModifiedBy(UserContext.getUserId());
             unit.setCreatedTime(new Date());
             unit.setModifiedTime(new Date());
-            hfDataauthWelfareUnitMapper.insertHfDataauthWelfareUnit(unit);
+            hfDataauthWelfareUnitMapper.insert(unit);
         }
         return true;
     }
@@ -180,7 +182,9 @@ public class HfAuthorityServiceImpl extends ServiceImpl<HfDataauthCompanyMapper,
     )
     public boolean saveHfDataauthTaskCategory(HfDataauthWelfareUnitDTO dto) {
 
-        hfDataauthTaskCategoryMapper.delByUid(dto.getUserId());
+        HfDataauthTaskCategory uni = new HfDataauthTaskCategory();
+        uni.setUserId(dto.getUserId());
+        hfDataauthTaskCategoryMapper.delete(new EntityWrapper<>(uni));
         List<Integer> units = dto.getWelfareUnits();
         for (Integer unitId: units) {
 
@@ -193,7 +197,7 @@ public class HfAuthorityServiceImpl extends ServiceImpl<HfDataauthCompanyMapper,
             task.setModifiedBy(UserContext.getUserId());
             task.setCreatedTime(new Date());
             task.setModifiedTime(new Date());
-            hfDataauthTaskCategoryMapper.insertHfDataauthTaskCategory(task);
+            hfDataauthTaskCategoryMapper.insert(task);
         }
         return true;
     }
@@ -205,7 +209,7 @@ public class HfAuthorityServiceImpl extends ServiceImpl<HfDataauthCompanyMapper,
         List<Integer> welfareUnits = new ArrayList<>();
         HfDataauthWelfareUnit po = new HfDataauthWelfareUnit();
         po.setUserId(userId);
-        List<HfDataauthWelfareUnit> boList = hfDataauthWelfareUnitMapper.queryListByUid(po);
+        List<HfDataauthWelfareUnit> boList = hfDataauthWelfareUnitMapper.selectList(new EntityWrapper<>(po));
         for (HfDataauthWelfareUnit bo : boList) {
             // 福利办理方
             welfareUnits.add(bo.getWelfareUnit());
@@ -221,7 +225,7 @@ public class HfAuthorityServiceImpl extends ServiceImpl<HfDataauthCompanyMapper,
         List<Integer> ids = new ArrayList<>();
         HfDataauthTaskCategory task = new HfDataauthTaskCategory();
         task.setUserId(userId);
-        List<HfDataauthTaskCategory> list = hfDataauthTaskCategoryMapper.queryListByUid(task);
+        List<HfDataauthTaskCategory> list = hfDataauthTaskCategoryMapper.selectList(new EntityWrapper<>(task));
         for (HfDataauthTaskCategory po:list ) {
             //任务单类型
             ids.add(po.getTaskCategory());

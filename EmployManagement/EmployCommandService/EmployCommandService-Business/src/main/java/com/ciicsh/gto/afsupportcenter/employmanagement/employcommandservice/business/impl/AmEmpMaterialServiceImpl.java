@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.MaterialUpdateDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmEmpMaterialBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpMaterialService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao.AmEmpMaterialMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmEmpMaterial;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +43,38 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
 
     @Override
     public List<AmEmpMaterialBO> queryMaterialDicList() {
-        return baseMapper.queryMaterialDic();
+        List<AmEmpMaterialBO> list = null;
+        try {
+            list =  baseMapper.queryMaterialDic();
+        } catch (Exception e) {
+
+        }
+        List<AmEmpMaterialBO> listReturn = new ArrayList<>();
+        List<String> stringList = ReasonUtil.getMaterialDic();
+
+        for(int i=0;i<stringList.size();i++)
+        {
+            AmEmpMaterialBO temp = new AmEmpMaterialBO();
+            temp.setMaterialName(stringList.get(i));
+            listReturn.add(temp);
+        }
+
+        List<AmEmpMaterialBO> tempList = new ArrayList<>();
+        if(null!=list&&list.size()>stringList.size()){
+            for(AmEmpMaterialBO amEmpMaterialBO:list)
+            {
+               if(!stringList.contains(amEmpMaterialBO.getMaterialName()))
+               {
+                   tempList.add(amEmpMaterialBO);
+               }
+            }
+        }
+        if(tempList.size()>0)
+        {
+            listReturn.addAll(tempList);
+        }
+
+        return listReturn;
     }
 
     @Override

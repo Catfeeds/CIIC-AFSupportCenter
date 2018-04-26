@@ -15,9 +15,5 @@ import java.util.List;
  */
 public interface HfDataauthWelfareUnitMapper extends BaseMapper<HfDataauthWelfareUnit> {
 
-    boolean insertHfDataauthWelfareUnit(HfDataauthWelfareUnit hfDataauthWelfareUnit);
 
-    List<HfDataauthWelfareUnit> queryListByUid(HfDataauthWelfareUnit hfDataauthWelfareUnit);
-
-    boolean delByUid(String userId);
 }

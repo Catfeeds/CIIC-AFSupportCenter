@@ -40,6 +40,9 @@ public class AmEmpCustom implements Serializable {
      */
     @TableField("leader_ship_name")
     private String leaderShipName;
+
+    @TableField("title")
+    private String title;
     /**
      * 创建者姓名
      */
@@ -81,6 +84,13 @@ public class AmEmpCustom implements Serializable {
     @TableField("modified_by")
     private String modifiedBy;
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public Long getEmpCustomId() {
         return empCustomId;

@@ -95,7 +95,7 @@
         /**退工送办日期*/
         f.resign_handle_date,
         f.job_centre_feedback_date,
-        e.title,
+        h.title,
         h.service_center,/*服务中心 */
         h.leader_ship_name,  /*客服经理*/
         cs.archive_special
@@ -105,7 +105,6 @@
         LEFT JOIN am_archive c ON b.employment_id = c.employment_id
         LEFT JOIN am_resign f ON f.employment_id = b.employment_id
         LEFT JOIN emp_employee d  on  b.employee_id = d.employee_id
-        LEFT JOIN sal_company e ON e.company_id = b.company_id
         LEFT JOIN am_emp_task w on f.emp_task_id = w.emp_task_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
@@ -159,7 +158,7 @@
         /**退工送办日期*/
         f.resign_handle_date,
         f.job_centre_feedback_date,
-        e.title,
+        h.title,
         h.service_center,/*服务中心 */
         h.leader_ship_name,  /*客服经理*/
         cs.archive_special
@@ -169,7 +168,6 @@
         LEFT JOIN am_archive c ON b.employment_id = c.employment_id
         LEFT JOIN am_resign f ON f.employment_id = b.employment_id
         LEFT JOIN emp_employee d  on  b.employee_id = d.employee_id
-        LEFT JOIN sal_company e ON e.company_id = b.company_id
         LEFT JOIN am_emp_task w on f.emp_task_id = w.emp_task_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
@@ -203,10 +201,8 @@
         LEFT JOIN am_archive c ON b.employment_id = c.employment_id
         LEFT JOIN am_resign f ON f.employment_id = b.employment_id
         LEFT JOIN emp_employee d  on  b.employee_id = d.employee_id
-        LEFT JOIN sal_company e ON e.company_id = b.company_id
         LEFT JOIN am_emp_task w on f.emp_task_id = w.emp_task_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
-        LEFT JOIN am_company_set cs on cs.company_id = a.company_id
         WHERE
         a.task_category = 1
         <foreach collection = "param" item = "plid"  open=""  close=""  separator="" >
@@ -231,10 +227,8 @@
         LEFT JOIN am_archive c ON b.employment_id = c.employment_id
         LEFT JOIN am_resign f ON f.employment_id = b.employment_id
         LEFT JOIN emp_employee d  on  b.employee_id = d.employee_id
-        LEFT JOIN sal_company e ON e.company_id = b.company_id
         LEFT JOIN am_emp_task w on f.emp_task_id = w.emp_task_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
-        LEFT JOIN am_company_set cs on cs.company_id = a.company_id
         WHERE  w.task_category = 2
         <foreach collection = "param" item = "plid"  open=""  close=""  separator="" >
             AND  ${ plid }
@@ -276,7 +270,7 @@
         /**退工送办日期*/
         f.resign_handle_date,
         f.job_centre_feedback_date,
-        e.title,
+        h.title,
         h.service_center,/*服务中心 */
         h.leader_ship_name,  /*客服经理*/
         cs.archive_special
@@ -286,7 +280,6 @@
         LEFT JOIN am_archive c ON b.employment_id = c.employment_id
         LEFT JOIN am_resign f ON f.employment_id = b.employment_id
         LEFT JOIN emp_employee d  on  b.employee_id = d.employee_id
-        LEFT JOIN sal_company e ON e.company_id = b.company_id
         LEFT JOIN am_emp_task w on a.company_id = w.company_id and a.employee_id = w.employee_id and w.task_category = 2
         LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id

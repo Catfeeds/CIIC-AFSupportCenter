@@ -12,8 +12,8 @@ import java.io.Serializable;
  * 公司特殊情况设置表
  * </p>
  *
- * @author xsj
- * @since 2018-03-22
+ * @author ${author}
+ * @since 2018-04-25
  */
 @TableName("am_company_set")
 public class AmCompanySet implements Serializable {
@@ -164,34 +164,6 @@ public class AmCompanySet implements Serializable {
      */
 	@TableField("archive_special")
 	private String archiveSpecial;
-
-    @TableField("special")
-    private  String  special;
-    /**
-     * 是否可用
-     */
-	@TableField("is_active")
-	private Boolean isActive;
-    /**
-     * 创建者
-     */
-	@TableField("created_by")
-	private String createdBy;
-    /**
-     * 创建时间
-     */
-	@TableField("created_time")
-	private LocalDateTime createdTime;
-    /**
-     * 最后修改者
-     */
-	@TableField("modified_by")
-	private String modifiedBy;
-    /**
-     * 最后修改时间
-     */
-	@TableField("modified_time")
-	private LocalDateTime modifiedTime;
     /**
      * 社保公司特殊情况字符串
      */
@@ -218,16 +190,61 @@ public class AmCompanySet implements Serializable {
      */
 	@TableField("key_status")
 	private String keyStatus;
+    /**
+     * 是否有特殊
+     */
+	private String special;
+    /**
+     * 是否邮寄退工单
+     */
+	@TableField("mail_continue")
+	private Boolean mailContinue;
+    /**
+     * 邮寄退工单地址
+     */
+	@TableField("mail_adress")
+	private String mailAdress;
+    /**
+     * 邮寄退工单收件人
+     */
+	private String recipient;
+    /**
+     * 邮寄退工单邮编
+     */
+	@TableField("post_code")
+	private String postCode;
+    /**
+     * 邮寄退工单电话
+     */
+	private String phone;
+    /**
+     * 是否可用
+     */
+	@TableField("is_active")
+	private Boolean isActive;
+    /**
+     * 创建者
+     */
+	@TableField("created_by")
+	private String createdBy;
+    /**
+     * 创建时间
+     */
+	@TableField("created_time")
+	private LocalDateTime createdTime;
+    /**
+     * 最后修改者
+     */
+	@TableField("modified_by")
+	private String modifiedBy;
+    /**
+     * 最后修改时间
+     */
+	@TableField("modified_time")
+	private LocalDateTime modifiedTime;
 
-    public String getSpecial() {
-        return special;
-    }
 
-    public void setSpecial(String special) {
-        this.special = special;
-    }
-
-    public Long getCompanySetId() {
+	public Long getCompanySetId() {
 		return companySetId;
 	}
 
@@ -459,46 +476,6 @@ public class AmCompanySet implements Serializable {
 		this.archiveSpecial = archiveSpecial;
 	}
 
-	public Boolean getActive() {
-		return isActive;
-	}
-
-	public void setActive(Boolean isActive) {
-		this.isActive = isActive;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public LocalDateTime getCreatedTime() {
-		return createdTime;
-	}
-
-	public void setCreatedTime(LocalDateTime createdTime) {
-		this.createdTime = createdTime;
-	}
-
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-
-	public LocalDateTime getModifiedTime() {
-		return modifiedTime;
-	}
-
-	public void setModifiedTime(LocalDateTime modifiedTime) {
-		this.modifiedTime = modifiedTime;
-	}
-
 	public String getSocialSpecial() {
 		return socialSpecial;
 	}
@@ -547,6 +524,94 @@ public class AmCompanySet implements Serializable {
 		this.keyStatus = keyStatus;
 	}
 
+	public String getSpecial() {
+		return special;
+	}
+
+	public void setSpecial(String special) {
+		this.special = special;
+	}
+
+    public Boolean getMailContinue() {
+        return mailContinue;
+    }
+
+    public void setMailContinue(Boolean mailContinue) {
+        this.mailContinue = mailContinue;
+    }
+
+    public String getMailAdress() {
+		return mailAdress;
+	}
+
+	public void setMailAdress(String mailAdress) {
+		this.mailAdress = mailAdress;
+	}
+
+	public String getRecipient() {
+		return recipient;
+	}
+
+	public void setRecipient(String recipient) {
+		this.recipient = recipient;
+	}
+
+	public String getPostCode() {
+		return postCode;
+	}
+
+	public void setPostCode(String postCode) {
+		this.postCode = postCode;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public Boolean getActive() {
+		return isActive;
+	}
+
+	public void setActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public LocalDateTime getCreatedTime() {
+		return createdTime;
+	}
+
+	public void setCreatedTime(LocalDateTime createdTime) {
+		this.createdTime = createdTime;
+	}
+
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public LocalDateTime getModifiedTime() {
+		return modifiedTime;
+	}
+
+	public void setModifiedTime(LocalDateTime modifiedTime) {
+		this.modifiedTime = modifiedTime;
+	}
+
 	@Override
 	public String toString() {
 		return "AmCompanySet{" +
@@ -579,17 +644,22 @@ public class AmCompanySet implements Serializable {
 			", employSpecial=" + employSpecial +
 			", refuseSpecial=" + refuseSpecial +
 			", archiveSpecial=" + archiveSpecial +
-			", isActive=" + isActive +
-			", createdBy=" + createdBy +
-			", createdTime=" + createdTime +
-			", modifiedBy=" + modifiedBy +
-			", modifiedTime=" + modifiedTime +
 			", socialSpecial=" + socialSpecial +
 			", key=" + key +
 			", keyType=" + keyType +
 			", keyCode=" + keyCode +
 			", keyPwd=" + keyPwd +
 			", keyStatus=" + keyStatus +
+			", special=" + special +
+			", mailAdress=" + mailAdress +
+			", recipient=" + recipient +
+			", postCode=" + postCode +
+			", phone=" + phone +
+			", isActive=" + isActive +
+			", createdBy=" + createdBy +
+			", createdTime=" + createdTime +
+			", modifiedBy=" + modifiedBy +
+			", modifiedTime=" + modifiedTime +
 			"}";
 	}
 }

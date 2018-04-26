@@ -6,6 +6,8 @@
     <resultMap id="ExtendResultMap" extends="BaseResultMap"
                type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsAccountComRelationBO">
         <result column="title" property="title"></result>
+        <result column="service_center" property="serviceCenter"></result>
+        <result column="leader_ship_name" property="leaderShipName"></result>
     </resultMap>
 
     <resultMap id="AccountComapanyRelationMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.AccountCompanyRelationOpt">
@@ -19,10 +21,11 @@
 
     <select id="queryByAccountId" resultMap="ExtendResultMap">
         SELECT
-        scr.company_id,
-        sc.title AS title
+        scr.company_id,sc.title,ac.service_center,
+        (select ct.leader_ship_name from ss_com_task ct where ct.company_id= sc.company_id AND ct.com_account_id=scr.com_account_id) as leader_ship_name
         FROM ss_account_com_relation scr
         LEFT JOIN sal_company sc ON scr.company_id = sc.company_id
+        LEFT JOIN sal_af_company ac ON ac.company_id = sc.company_id
         WHERE scr.com_account_id = #{comAccountId}
     </select>
 
