@@ -105,6 +105,8 @@
         am_company_set cs
         on cs.company_id = a.company_id
         where   a.task_category = '1'
+        and  a.employee_id is not null
+        and  a.company_id  is not null
         <if test="taskStatus!=null">
             and a.task_status = ${taskStatus}
         </if>
@@ -157,6 +159,8 @@
         am_company_set cs
         on cs.company_id = a.company_id
         where   a.task_category = '1'
+        and  a.employee_id is not null
+        and  a.company_id  is not null
         <if test="taskStatus!=null">
             and a.task_status not in ('1','2','3','4','5')
         </if>
