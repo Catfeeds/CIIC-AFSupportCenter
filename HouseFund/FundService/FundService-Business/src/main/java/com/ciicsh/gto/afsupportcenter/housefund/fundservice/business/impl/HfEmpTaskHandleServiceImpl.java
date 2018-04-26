@@ -1039,39 +1039,40 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 
                             // 差额补缴段：从费用段起始年月到补缴截止年月
                             e.setStartMonth(startMonth.format(formatter));
-                            e.setEndMonth(repairEndMonth.format(formatter));
+                            // 补缴截止年月小于等于费用段截止月时，说明只有一段全额补缴，一段差额补缴
+                            if (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth)) {
+                                e.setEndMonth(repairEndMonth.format(formatter));
+                            } else { // 补缴截止年月大于费用段截止年月时，说明需判断下一个连续费用段
+                                // 补缴截止年月大于费用段截止年月时，后面从当前费用段截止年月次月开始判断
+                                e.setEndMonth(endMonth.format(formatter));
+                                repairStartMonth = endMonth.plusMonths(1);
+                            }
                             containsHfArchiveBasePeriodList = composedEmpBasePeriodBO.getContainsHfArchiveBasePeriods(); // 某连续费用段所包含的费用段记录
 
                             for (HfArchiveBasePeriod hfArchiveBasePeriod : containsHfArchiveBasePeriodList) {
                                 setHfArchiveBaseAdjust(hfArchiveBaseAdjustList, hfEmpTask, e, hfArchiveBasePeriod, roundTypes, roundTypeInWeight);
                                 setHfArchiveBasePeriodList(diffHfArchiveBasePeriodList, hfEmpTask, e, hfArchiveBasePeriod, roundTypes, roundTypeInWeight);
-                            }
-
-                            // 补缴截止年月小于等于费用段截止月时，说明只有一段全额补缴，一段差额补缴
-                            if (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth)) {
-                                break;
-                            } else { // 补缴截止年月大于费用段截止年月时，说明需判断下一个连续费用段
-                                // 补缴截止年月大于费用段截止年月时，后面从当前费用段截止年月开始判断
-                                repairStartMonth = endMonth;
                             }
                         }
                     } else { // 如果补缴起始年月大于等于费用段起始年月
                         // 补缴起始年月小于等于费用段截止年月时
                         if (repairStartMonth.isBefore(endMonth) || repairStartMonth.equals(endMonth) ) {
                             // 此时肯定有一段差额补缴
+                            // 差额补缴段：从费用段起始年月到补缴截止年月
+                            e.setStartMonth(startMonth.format(formatter));
+                            // 补缴截止年月小于等于费用段截止月时，说明只有一段全额补缴，一段差额补缴
+                            if (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth)) {
+                                e.setEndMonth(repairEndMonth.format(formatter));
+                            } else { // 补缴截止年月大于费用段截止年月时，说明需判断下一个连续费用段
+                                // 补缴截止年月大于费用段截止年月时，后面从当前费用段截止年月次月开始判断
+                                e.setEndMonth(endMonth.format(formatter));
+                                repairStartMonth = endMonth.plusMonths(1);
+                            }
                             containsHfArchiveBasePeriodList = composedEmpBasePeriodBO.getContainsHfArchiveBasePeriods(); // 某连续费用段所包含的费用段记录
 
                             for (HfArchiveBasePeriod hfArchiveBasePeriod : containsHfArchiveBasePeriodList) {
                                 setHfArchiveBaseAdjust(hfArchiveBaseAdjustList, hfEmpTask, e, hfArchiveBasePeriod, roundTypes, roundTypeInWeight);
                                 setHfArchiveBasePeriodList(diffHfArchiveBasePeriodList, hfEmpTask, e, hfArchiveBasePeriod, roundTypes, roundTypeInWeight);
-                            }
-
-                            // 补缴截止年月小于等于费用段截止年月时，说明整段段差额补缴
-                            if (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth)) {
-                                break;
-                            } else { // 补缴截止年月大于费用段截止年月时，说明需判断下一个连续费用段
-                                // 补缴截止年月大于费用段截止年月时，后面从当前费用段截止年月开始判断
-                                repairStartMonth = endMonth;
                             }
                         }
 

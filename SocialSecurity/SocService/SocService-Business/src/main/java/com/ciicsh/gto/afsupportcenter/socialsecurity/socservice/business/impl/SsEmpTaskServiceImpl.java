@@ -76,9 +76,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     SsComAccountService ssComAccountService;
 
     //个人进位方式
-    private final String PERSONROUNDTYPE = "personRoundType";
+    private final static String PERSONROUNDTYPE = "personRoundType";
     //公司进位方式
-    private final String COMPANYROUNDTYPE = "companyRoundType";
+    private final static String COMPANYROUNDTYPE = "companyRoundType";
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
@@ -522,7 +522,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                     SsEmpBasePeriod adjustPayObj = TaskCommonUtils.cloneObjet(ssEmpBasePeriod, SsEmpBasePeriod.class);
                     // 差额补缴段：从费用段起始年月到补缴截止年月
                     adjustPayObj.setStartMonth(startMonth.format(formatter));
-                    adjustPayObj.setEndMonth(repairEndMonth.format(formatter));
+                    // 补缴截止年月小于等于费用段截止月时，说明只有一段全额补缴，一段差额补缴
+                    if (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth)) {
+                        adjustPayObj.setEndMonth(repairEndMonth.format(formatter));
+                    } else { // 补缴截止年月大于费用段截止年月时，说明需判断下一个连续费用段
+                        // 补缴截止年月大于费用段截止年月时，后面从当前费用段截止年月次月开始判断
+                        adjustPayObj.setEndMonth(endMonth.format(formatter));
+                        repairStartMonth = endMonth.plusMonths(1);
+                    }
                     containsSsEmpBasePeriodList = composedEmpBasePeriodBO.getContainSsEmpBasePeriods(); // 某连续费用段所包含的费用段记录
 
                     for (SsEmpBasePeriod subObj : containsSsEmpBasePeriodList) {
@@ -550,14 +557,6 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                         }
                         adjustPayObj.setEmpBasePeriodId(subObj.getEmpBasePeriodId());
                         overlappingPeriodList.add(adjustPayObj);
-                    }
-
-                    // 补缴截止年月小于等于费用段截止月时，说明只有一段全额补缴，一段差额补缴
-                    if (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth)) {
-                        break;
-                    } else { // 补缴截止年月大于费用段截止年月时，说明需判断下一个连续费用段
-                        // 补缴截止年月大于费用段截止年月时，后面从当前费用段截止年月开始判断
-                        repairStartMonth = endMonth;
                     }
                 }
             } else { // 如果补缴起始年月大于等于费用段起始年月
@@ -565,9 +564,16 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 if (repairStartMonth.isBefore(endMonth) || repairStartMonth.equals(endMonth)) {
                     // 此时肯定有一段差额补缴
                     SsEmpBasePeriod adjustPayObj = TaskCommonUtils.cloneObjet(ssEmpBasePeriod, SsEmpBasePeriod.class);
-                    // 差额补缴段：从费用段起始年月到补缴截止年月
-                    adjustPayObj.setStartMonth(startMonth.format(formatter));
-                    adjustPayObj.setEndMonth(endMonth.format(formatter));
+                    // 差额补缴段：从补缴起始年月到补缴截止年月
+                    adjustPayObj.setStartMonth(repairStartMonth.format(formatter));
+                    // 补缴截止年月小于等于费用段截止月时，说明只有一段全额补缴，一段差额补缴
+                    if (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth)) {
+                        adjustPayObj.setEndMonth(repairEndMonth.format(formatter));
+                    } else { // 补缴截止年月大于费用段截止年月时，说明需判断下一个连续费用段
+                        // 补缴截止年月大于费用段截止年月时，后面从当前费用段截止年月次月开始判断
+                        adjustPayObj.setEndMonth(endMonth.format(formatter));
+                        repairStartMonth = endMonth.plusMonths(1);
+                    }
                     containsSsEmpBasePeriodList = composedEmpBasePeriodBO.getContainSsEmpBasePeriods(); // 某连续费用段所包含的费用段记录
 
                     for (SsEmpBasePeriod subObj : containsSsEmpBasePeriodList) {
@@ -595,14 +601,6 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                         }
                         adjustPayObj.setEmpBasePeriodId(subObj.getEmpBasePeriodId());
                         overlappingPeriodList.add(adjustPayObj);
-                    }
-
-                    // 补缴截止年月小于等于费用段截止年月时，说明整段段差额补缴
-                    if (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth)) {
-                        break;
-                    } else { // 补缴截止年月大于费用段截止年月时，说明需判断下一个连续费用段
-                        // 补缴截止年月大于费用段截止年月时，后面从当前费用段截止年月开始判断
-                        repairStartMonth = endMonth;
                     }
                 }
 
@@ -1055,12 +1053,17 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         List<SsEmpBasePeriod> ssEmpBasePeriodList = getNormalPeriod(bo);
         if (ssEmpBasePeriodList.size() > 0) {
             //有可能是再次办理 先将endMonth 和 ss_month_stop
-            SsEmpBasePeriod ssEmpBasePeriod = ssEmpBasePeriodList.get(0);
-            //还原之前修改 （再次办理的时候 ss_month_stop end_month 还原到为修改的状态）
-            Integer result = ssEmpBasePeriodService.updateReductionById(ssEmpBasePeriod);
-            if (result == 0) throw new BusinessException("数据库修改不成功.");
+            SsEmpBasePeriod existsSsEmpBasePeriod = ssEmpBasePeriodList.get(0);
+//            //还原之前修改 （再次办理的时候 ss_month_stop end_month 还原到为修改的状态）
+//            Integer result = ssEmpBasePeriodService.updateReductionById(ssEmpBasePeriod);
+//            if (result == 0) throw new BusinessException("数据库修改不成功.");
+            SsEmpBasePeriod ssEmpBasePeriod = new SsEmpBasePeriod();
             ssEmpBasePeriod.setSsMonthStop(bo.getHandleMonth());
             ssEmpBasePeriod.setEndMonth(bo.getEndMonth());
+            if (YearMonth.parse(existsSsEmpBasePeriod.getStartMonth(), formatter)
+                .isAfter(YearMonth.parse(ssEmpBasePeriod.getEndMonth(), formatter))) {
+                ssEmpBasePeriod.setActive(false);
+            }
             ssEmpBasePeriod.setModifiedBy(UserContext.getUserId());
             ssEmpBasePeriod.setModifiedTime(LocalDateTime.now());
             //修改 没有截止时间时间段的截止时间和停缴月份
