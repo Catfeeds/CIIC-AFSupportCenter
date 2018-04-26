@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import scala.Int;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
@@ -328,6 +329,18 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         }
 
         boolean result = amArchiveService.insertOrUpdate(entity);
+        // 修改预留档案编号 seq
+        AmArchiveDocSeq seq = new AmArchiveDocSeq();
+        seq.setType(1);
+        seq.setDocType(amArchiveBO.getYuliuDocType());
+        seq.setDocSeq(Integer.parseInt( amArchiveBO.getYuliuDocNum()));
+        amArchiveService.updateByTypeAndDocType(seq);
+        // 修改档案编号 seq
+        AmArchiveDocSeq seq2 = new AmArchiveDocSeq();
+        seq2.setType(2);
+        seq2.setDocType(amArchiveBO.getDocType());
+        seq2.setDocSeq(Integer.parseInt( amArchiveBO.getDocNum()));
+        amArchiveService.updateByTypeAndDocType(seq2);
         if("0".equals(amArchiveBO.getIsFrist()))
         {//如果满足在用工办理页面提交
             if(result&&!StringUtil.isEmpty(entity.getEmployFeedback()))

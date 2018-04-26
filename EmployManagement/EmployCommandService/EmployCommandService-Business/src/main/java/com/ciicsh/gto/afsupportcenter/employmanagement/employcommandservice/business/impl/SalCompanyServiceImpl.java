@@ -41,11 +41,12 @@ public class SalCompanyServiceImpl extends ServiceImpl<SalCompanyMapper, SalComp
         List<SalCompanyBO> boList = result.getRows();
         // 获取客服经理名字
         for (SalCompanyBO bo: boList) {
-            AfUserPermissionRequestDTO requestDTO = new AfUserPermissionRequestDTO();
-            requestDTO.setCompanyId(bo.getCompanyId());
-            List<AfUserPermissionDTO> dtoList = afUserCompanyRefProxy.queryUserCompanyByCompanyId(requestDTO);
-            if(dtoList != null && dtoList.size() > 0){
-                JsonResult<List<SMDepartmentDTO>> resultDto = SMDepartmentProxy.getDepartmentsOfUser(dtoList.get(0).getUserId(), 7);
+            List<AfUserPermissionDTO> list = afUserCompanyRefProxy.getLeaderShipByCompanyId(bo.getCompanyId());
+            if(list != null && list.size() > 0){
+                JsonResult<List<SMDepartmentDTO>> resultDto = SMDepartmentProxy.getDepartmentsOfUser(list.get(0).getLeadershipUserId(), 7);
+                if(resultDto.getData() == null || resultDto.getData().size() == 0){
+                    resultDto = SMDepartmentProxy.getDepartmentsOfUser(list.get(0).getLeadershipUserId(), 6);
+                }
                 List<SMDepartmentDTO> dList = resultDto.getData();
                 if(dList != null && dList.size() > 0){
                     bo.setSalManagerName(dList.get(0).getDepartmentName());
