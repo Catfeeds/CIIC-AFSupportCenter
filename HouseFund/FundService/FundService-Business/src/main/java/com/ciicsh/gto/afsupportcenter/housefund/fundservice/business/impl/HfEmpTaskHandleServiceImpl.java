@@ -1579,7 +1579,9 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 .filter(e -> e.getArchiveStatus() == null || e.getArchiveStatus() != HfEmpArchiveConstant.ARCHIVE_STATUS_CLOSED)
                 .collect(Collectors.toList());
 
-            empArchiveId = hfEmpArchiveList.get(0).getEmpArchiveId();
+            if (hfEmpArchiveList.size() > 0) {
+                empArchiveId = hfEmpArchiveList.get(0).getEmpArchiveId();
+            }
         } else {
             isNothing = true;
         }
