@@ -20,6 +20,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.SSPItemDTO;
 import org.apache.commons.beanutils.BeanMap;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,9 +76,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     SsComAccountService ssComAccountService;
 
     //个人进位方式
-    private final String PERSONROUNDTYPE = "personRoundType";
+    private final static String PERSONROUNDTYPE = "personRoundType";
     //公司进位方式
-    private final String COMPANYROUNDTYPE = "companyRoundType";
+    private final static String COMPANYROUNDTYPE = "companyRoundType";
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
@@ -521,7 +522,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                     SsEmpBasePeriod adjustPayObj = TaskCommonUtils.cloneObjet(ssEmpBasePeriod, SsEmpBasePeriod.class);
                     // 差额补缴段：从费用段起始年月到补缴截止年月
                     adjustPayObj.setStartMonth(startMonth.format(formatter));
-                    adjustPayObj.setEndMonth(repairEndMonth.format(formatter));
+                    // 补缴截止年月小于等于费用段截止月时，说明只有一段全额补缴，一段差额补缴
+                    if (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth)) {
+                        adjustPayObj.setEndMonth(repairEndMonth.format(formatter));
+                    } else { // 补缴截止年月大于费用段截止年月时，说明需判断下一个连续费用段
+                        // 补缴截止年月大于费用段截止年月时，后面从当前费用段截止年月次月开始判断
+                        adjustPayObj.setEndMonth(endMonth.format(formatter));
+                        repairStartMonth = endMonth.plusMonths(1);
+                    }
                     containsSsEmpBasePeriodList = composedEmpBasePeriodBO.getContainSsEmpBasePeriods(); // 某连续费用段所包含的费用段记录
 
                     for (SsEmpBasePeriod subObj : containsSsEmpBasePeriodList) {
@@ -549,14 +557,6 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                         }
                         adjustPayObj.setEmpBasePeriodId(subObj.getEmpBasePeriodId());
                         overlappingPeriodList.add(adjustPayObj);
-                    }
-
-                    // 补缴截止年月小于等于费用段截止月时，说明只有一段全额补缴，一段差额补缴
-                    if (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth)) {
-                        break;
-                    } else { // 补缴截止年月大于费用段截止年月时，说明需判断下一个连续费用段
-                        // 补缴截止年月大于费用段截止年月时，后面从当前费用段截止年月开始判断
-                        repairStartMonth = endMonth;
                     }
                 }
             } else { // 如果补缴起始年月大于等于费用段起始年月
@@ -564,9 +564,16 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 if (repairStartMonth.isBefore(endMonth) || repairStartMonth.equals(endMonth)) {
                     // 此时肯定有一段差额补缴
                     SsEmpBasePeriod adjustPayObj = TaskCommonUtils.cloneObjet(ssEmpBasePeriod, SsEmpBasePeriod.class);
-                    // 差额补缴段：从费用段起始年月到补缴截止年月
-                    adjustPayObj.setStartMonth(startMonth.format(formatter));
-                    adjustPayObj.setEndMonth(endMonth.format(formatter));
+                    // 差额补缴段：从补缴起始年月到补缴截止年月
+                    adjustPayObj.setStartMonth(repairStartMonth.format(formatter));
+                    // 补缴截止年月小于等于费用段截止月时，说明只有一段全额补缴，一段差额补缴
+                    if (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth)) {
+                        adjustPayObj.setEndMonth(repairEndMonth.format(formatter));
+                    } else { // 补缴截止年月大于费用段截止年月时，说明需判断下一个连续费用段
+                        // 补缴截止年月大于费用段截止年月时，后面从当前费用段截止年月次月开始判断
+                        adjustPayObj.setEndMonth(endMonth.format(formatter));
+                        repairStartMonth = endMonth.plusMonths(1);
+                    }
                     containsSsEmpBasePeriodList = composedEmpBasePeriodBO.getContainSsEmpBasePeriods(); // 某连续费用段所包含的费用段记录
 
                     for (SsEmpBasePeriod subObj : containsSsEmpBasePeriodList) {
@@ -594,14 +601,6 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                         }
                         adjustPayObj.setEmpBasePeriodId(subObj.getEmpBasePeriodId());
                         overlappingPeriodList.add(adjustPayObj);
-                    }
-
-                    // 补缴截止年月小于等于费用段截止年月时，说明整段段差额补缴
-                    if (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth)) {
-                        break;
-                    } else { // 补缴截止年月大于费用段截止年月时，说明需判断下一个连续费用段
-                        // 补缴截止年月大于费用段截止年月时，后面从当前费用段截止年月开始判断
-                        repairStartMonth = endMonth;
                     }
                 }
 
@@ -1046,6 +1045,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             queryCompanyIsOpenAccount(bo);
             //查询 雇员是否新进
             queryEmployeeIsnewOrChangeInto(bo);
+
+            checkEndMonth(bo);
         }
         //更新雇员任务信息
         baseMapper.updateMyselfColumnById(bo);
@@ -1053,11 +1054,15 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         if (ssEmpBasePeriodList.size() > 0) {
             //有可能是再次办理 先将endMonth 和 ss_month_stop
             SsEmpBasePeriod ssEmpBasePeriod = ssEmpBasePeriodList.get(0);
-            //还原之前修改 （再次办理的时候 ss_month_stop end_month 还原到为修改的状态）
-            Integer result = ssEmpBasePeriodService.updateReductionById(ssEmpBasePeriod);
-            if (result == 0) throw new BusinessException("数据库修改不成功.");
+//            //还原之前修改 （再次办理的时候 ss_month_stop end_month 还原到为修改的状态）
+//            Integer result = ssEmpBasePeriodService.updateReductionById(ssEmpBasePeriod);
+//            if (result == 0) throw new BusinessException("数据库修改不成功.");
             ssEmpBasePeriod.setSsMonthStop(bo.getHandleMonth());
             ssEmpBasePeriod.setEndMonth(bo.getEndMonth());
+            if (YearMonth.parse(ssEmpBasePeriod.getStartMonth(), formatter)
+                .isAfter(YearMonth.parse(ssEmpBasePeriod.getEndMonth(), formatter))) {
+                ssEmpBasePeriod.setActive(false);
+            }
             ssEmpBasePeriod.setModifiedBy(UserContext.getUserId());
             ssEmpBasePeriod.setModifiedTime(LocalDateTime.now());
             //修改 没有截止时间时间段的截止时间和停缴月份
@@ -1151,14 +1156,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 switch (operatorType) {
                     // 日常操作
                     case 1:
-                        taskCategories = new Integer[]{1, 2, 3, 4, 5, 6, 7};
+                        taskCategories = new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13, 14, 15};
                         break;
                     // 特殊操作
                     case 2:
                         taskCategories = null;//现在特殊任务只有状态为9的 后面sql已经写死为9
                         break;
                     default:// 日常操作
-                        taskCategories = new Integer[]{1, 2, 3, 4, 5, 6, 7};
+                        taskCategories = new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13, 14, 15};
                 }
             } else {
                 taskCategories = new Integer[]{taskCategory};
@@ -1185,31 +1190,39 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
         // 如果新开（转入，含翻牌）时的更正，需先撤销之前办理的任务单
         if (bo.getIsChange() == 1) {
-            Map<String, Object> condition = new HashMap<>();
-            condition.put("company_id", bo.getCompanyId());
-            condition.put("employee_id", bo.getEmployeeId());
-            condition.put("emp_archive_id", bo.getEmpArchiveId());
-            condition.put("task_category", bo.getTaskCategory());
-            condition.put("is_change", 0);
-            condition.put("task_status", 2);
-            condition.put("is_active", 1);
-            List<SsEmpTask> ssEmpTaskList = this.selectByMap(condition);
+            Integer[] inArray = new Integer[]{TaskTypeConst.NEW, TaskTypeConst.INTO};
+            Integer[] flopInArray = new Integer[]{TaskTypeConst.FLOPNEW, TaskTypeConst.FLOPINTO};
+
+//            Map<String, Object> condition = new HashMap<>();
+            Wrapper<SsEmpTask> wrapper = new EntityWrapper<>();
+            wrapper.eq("company_id", bo.getCompanyId());
+            wrapper.eq("employee_id", bo.getEmployeeId());
+            wrapper.eq("emp_archive_id", bo.getEmpArchiveId());
+            if (ArrayUtils.contains(inArray, bo.getTaskCategory())) {
+                wrapper.in("task_category", inArray);
+            } else if (ArrayUtils.contains(flopInArray, bo.getTaskCategory())) {
+                wrapper.in("task_category", flopInArray);
+            }
+            wrapper.eq("is_change", 0);
+            wrapper.eq("task_status", 2);
+            wrapper.eq("is_active", 1);
+            List<SsEmpTask> ssEmpTaskList = this.selectList(wrapper);
 
             if (CollectionUtils.isNotEmpty(ssEmpTaskList)) {
                 if (ssEmpTaskList.size() > 1) {
                     throw new BusinessException("相同雇员的雇员新增任务单已办理多次，数据不正确");
                 }
-            }
 
-            SsEmpTask ssEmpTask = ssEmpTaskList.get(0);
-            // 撤销报表及其明细数据
-            inactiveMonthChargeData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
-            // 撤销差额补缴（逆调）费用段数据及其明细数据
-            inactiveBaseAdjustData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
-            // 撤销雇员费用段数据及其明细数据
-            inactiveBasePeriodData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
-            // 撤销雇员档案数据
-            inactiveEmpArchive(ssEmpTask.getCompanyId(), ssEmpTask.getEmployeeId(), bo.getEmpArchiveId(), bo.getModifiedBy());
+                SsEmpTask ssEmpTask = ssEmpTaskList.get(0);
+                // 撤销报表及其明细数据
+                inactiveMonthChargeData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
+                // 撤销差额补缴（逆调）费用段数据及其明细数据
+                inactiveBaseAdjustData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
+                // 撤销雇员费用段数据及其明细数据
+                inactiveBasePeriodData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
+                // 撤销雇员档案数据
+                inactiveEmpArchive(ssEmpTask.getCompanyId(), ssEmpTask.getEmployeeId(), bo.getEmpArchiveId(), bo.getModifiedBy());
+            }
         }
 
         //检查社保序号是否有重复
@@ -1308,6 +1321,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         }
     }
 
+    private void checkEndMonth(SsEmpTaskBO bo) {
+        YearMonth endMonthDate = YearMonth.parse(bo.getEndMonth(), formatter);
+        YearMonth handleMonthDate = YearMonth.parse(bo.getHandleMonth(), formatter);
+
+        if (!endMonthDate.plusMonths(1).equals(handleMonthDate)) {
+            throw new BusinessException("[" + bo.getEmployeeName() + "]该雇员截止月份必须等于办理月份前一月");
+        }
+    }
 
     /**
      * 根据任务单ID逻辑删除报表记录及其明细记录
@@ -1452,7 +1473,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      */
     private void queryEmployeeIsnewOrChangeInto(SsEmpTaskBO bo) {
         //新进需要判断雇员已经做过新进或转入
-        if (bo.getTaskCategory() == 1 || bo.getTaskCategory() == 2) {
+        if (bo.getTaskCategory() == 1 || bo.getTaskCategory() == 2 || bo.getTaskCategory() == 12 || bo.getTaskCategory() == 13) {
             //
             SsEmpArchiveBO ssEmpArchiveBO = ssEmpArchiveService.queryEmployeeIsnewOrChangeInto(String.valueOf(bo.getEmpTaskId()));
             if (null != ssEmpArchiveBO.getEmpArchiveId())
@@ -2188,19 +2209,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     void taskCompletCallBack(SsEmpTaskBO bo) {
         // 1新进  2  转入 3  调整 4 补缴 5 转出 6封存 7退账  9 特殊操作  10 集体转入   11 集体转出 12翻牌新进13翻牌转入14翻牌转出15翻牌封存
 
-        switch (bo.getTaskCategory()) {
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 6:
-            case 7:
-            case 10:
-            case 11:
-                //回调 实缴金额 接口  批退为0
-                TaskCommonUtils.updateConfirmDate(commonApiUtils, bo);
-                break;
+        if (bo.getTaskCategory() != 9) {
+            //回调 实缴金额 接口  批退为0
+            TaskCommonUtils.updateConfirmDate(commonApiUtils, bo);
         }
         //任务单完成接口调用
         TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, UserContext.getUser().getDisplayName());

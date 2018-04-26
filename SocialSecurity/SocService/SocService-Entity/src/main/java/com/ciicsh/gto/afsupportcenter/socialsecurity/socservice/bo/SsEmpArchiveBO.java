@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpArchive;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
@@ -36,6 +37,9 @@ public class SsEmpArchiveBO extends SsEmpArchive {
     private SsEmpTask SsEmpTask;
     //旧基数
     private BigDecimal oldEmpBase;
+    //客服经理
+    private String leaderShipName;
+
     public String getEmployeeName() {
         return employeeName;
     }
@@ -146,5 +150,13 @@ public class SsEmpArchiveBO extends SsEmpArchive {
 
     public void setOldEmpBase(BigDecimal oldEmpBase) {
         this.oldEmpBase = oldEmpBase;
+    }
+
+    public String getLeaderShipName() {
+        return leaderShipName;
+    }
+
+    public void setLeaderShipName(String leaderShipName) {
+        this.leaderShipName = leaderShipName;
     }
 }
