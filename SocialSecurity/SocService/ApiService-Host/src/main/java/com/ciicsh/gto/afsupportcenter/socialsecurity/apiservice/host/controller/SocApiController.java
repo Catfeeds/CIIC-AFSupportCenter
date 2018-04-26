@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.apiservice.host.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ciicsh.common.entity.JsonResult;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.apiservice.host.translator.ApiTranslator;
@@ -63,6 +64,7 @@ public class SocApiController implements SocApiProxy {
     @ApiImplicitParam(name = "ssComTaskDTO", value = "企业任务单对象 ssComTaskDTO", required = true, dataType = "SsComTaskDTO")
     @PostMapping("/saveComTask")
     public JsonResult saveComTask(@RequestBody SsComTaskDTO ssComTaskDTO) {
+        logService.info(LogContext.of().setSource(LogInfo.SOURCE_API.getKey()).setTitle("saveComTask").setTextContent("Request: "+ JSON.toJSONString(ssComTaskDTO)));
         try {
             //参数校验
             String result = socApiValidator.saveComTaskValidator(ssComTaskDTO);
@@ -90,14 +92,14 @@ public class SocApiController implements SocApiProxy {
         ssComTask.setTaskStatus(SocialSecurityConst.COM_TASK_STATUS_0);
         ssComTask.setActive(true);
         ssComTask.setSubmitTime(now);
-        ssComTask.setSubmitterId(ssComTaskDTO.getCreatedBy());
-        ssComTask.setSubmitterName(ssComTaskDTO.getCreatedDisplayName());
+        ssComTask.setSubmitterId(ssComTaskDTO.getSubmitterId());
+        ssComTask.setSubmitterName(ssComTaskDTO.getSubmitterName());
         ssComTask.setCreatedTime(now);
-        ssComTask.setCreatedBy(ssComTaskDTO.getCreatedBy());
-        ssComTask.setCreatedDisplayName(ssComTaskDTO.getCreatedDisplayName());
+        ssComTask.setCreatedBy(ssComTaskDTO.getSubmitterId());
+        ssComTask.setCreatedDisplayName(ssComTaskDTO.getSubmitterName());
         ssComTask.setModifiedTime(now);
-        ssComTask.setModifiedBy(ssComTaskDTO.getCreatedBy());
-        ssComTask.setModifiedDisplayName(ssComTaskDTO.getCreatedDisplayName());
+        ssComTask.setModifiedBy(ssComTaskDTO.getSubmitterId());
+        ssComTask.setModifiedDisplayName(ssComTaskDTO.getSubmitterName());
         ssComTask.setLeaderShipId(ssComTaskDTO.getLeaderShipId());
         ssComTask.setLeaderShipName(ssComTaskDTO.getLeaderShipName());
         //任务单上前道系统传递过来的内容，Json格式
@@ -130,6 +132,7 @@ public class SocApiController implements SocApiProxy {
     @ApiImplicitParam(name = "paramDTO", value = "企业任务单对象 paramDTO", required = true, dataType = "ComTaskParamDTO")
     @PostMapping("/getAccountByCompany")
     public JsonResult<ComAccountExtDTO> getAccountByCompany(@RequestBody ComTaskParamDTO paramDTO) {
+        logService.info(LogContext.of().setSource(LogInfo.SOURCE_API.getKey()).setTitle("getAccountByCompany").setTextContent("Request: "+ JSON.toJSONString(paramDTO)));
         ComTaskParamBO paramBO = new ComTaskParamBO();
         BeanUtils.copyProperties(paramDTO, paramBO);
         ComAccountExtBO extBO = taskService.getComAccountInfo(paramBO);
