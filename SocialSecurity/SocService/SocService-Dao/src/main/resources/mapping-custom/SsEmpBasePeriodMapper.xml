@@ -19,6 +19,7 @@
     </update>
     <update id="updateEndMonAndHandleMon">
          UPDATE ss_emp_base_period SET
+         is_active=#{isActive},
          ss_month_stop =#{ssMonthStop},
          end_month=#{endMonth},
          modified_by=#{modifiedBy},
