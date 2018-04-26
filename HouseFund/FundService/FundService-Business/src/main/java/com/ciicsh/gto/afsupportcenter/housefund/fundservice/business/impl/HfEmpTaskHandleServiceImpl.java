@@ -1059,7 +1059,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                         if (repairStartMonth.isBefore(endMonth) || repairStartMonth.equals(endMonth) ) {
                             // 此时肯定有一段差额补缴
                             // 差额补缴段：从费用段起始年月到补缴截止年月
-                            e.setStartMonth(startMonth.format(formatter));
+                            e.setStartMonth(repairStartMonth.format(formatter));
                             // 补缴截止年月小于等于费用段截止月时，说明只有一段全额补缴，一段差额补缴
                             if (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth)) {
                                 e.setEndMonth(repairEndMonth.format(formatter));
