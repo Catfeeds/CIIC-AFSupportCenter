@@ -62,6 +62,77 @@ public class AmEmpEmployeeBO extends AmEmpEmployee {
 
     private String firstInDateStr;
 
+    /**
+     * 是否邮寄退工单
+     */
+    private Boolean mailContinue;
+    /**
+     * 邮寄退工单地址
+     */
+    private String mailAdress;
+    /**
+     * 邮寄退工单收件人
+     */
+    private String recipient;
+    /**
+     * 邮寄退工单邮编
+     */
+    private String postCode;
+    /**
+     * 邮寄退工单电话
+     */
+    private String phone;
+
+    private  String  mailContinueStr;
+
+    public String getMailContinueStr() {
+        return mailContinueStr;
+    }
+
+    public void setMailContinueStr(String mailContinueStr) {
+        this.mailContinueStr = mailContinueStr;
+    }
+
+    public Boolean getMailContinue() {
+        return mailContinue;
+    }
+
+    public void setMailContinue(Boolean mailContinue) {
+        this.mailContinue = mailContinue;
+    }
+
+    public String getMailAdress() {
+        return mailAdress;
+    }
+
+    public void setMailAdress(String mailAdress) {
+        this.mailAdress = mailAdress;
+    }
+
+    public String getRecipient() {
+        return recipient;
+    }
+
+    public void setRecipient(String recipient) {
+        this.recipient = recipient;
+    }
+
+    public String getPostCode() {
+        return postCode;
+    }
+
+    public void setPostCode(String postCode) {
+        this.postCode = postCode;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public String getFirstInDateStr() {
         return firstInDateStr;
     }

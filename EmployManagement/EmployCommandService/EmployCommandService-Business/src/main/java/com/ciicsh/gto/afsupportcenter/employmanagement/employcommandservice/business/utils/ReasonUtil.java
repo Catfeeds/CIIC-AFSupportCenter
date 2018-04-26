@@ -6,9 +6,7 @@ import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by zhangzhiwen on 2018/3/5.
@@ -159,8 +157,18 @@ public class ReasonUtil {
         double d_year = (double)year;
         double d1 = d/d_year;
 
-        DecimalFormat df = new DecimalFormat("0.00");
-         return  df.format(d1);
+        if(d1<=1.0){
+            return  "1年(含)及以下";
+        }else if(d1>1.0&&d1<=2.0){
+            return  "1年-2年(含)";
+        }else if(d1>2.0&&d1<=5.0){
+            return  "2年-5年(含)";
+        }else{
+            return  "5年以上";
+        }
+
+//        DecimalFormat df = new DecimalFormat("0.00");
+//         return  df.format(d1);
     }
 
     public static  String getUserId(){
@@ -181,6 +189,30 @@ public class ReasonUtil {
 
         }
         return  userName;
+    }
+
+    public static List<String> getMaterialDic(){
+        List<String> list = new ArrayList<>();
+        list.add("劳动手册");
+        list.add("职工登记表");
+        list.add("退工单绿联");
+        list.add("退工单红联");
+        list.add("退工单黄联");
+        list.add("退工单白联");
+        list.add("存档卡");
+        list.add("综保劳动手册");
+        list.add("养老补贴凭证");
+        list.add("报到证");
+        list.add("劳动力登记表");
+        list.add("劳动合同期限情况表");
+        list.add("告知书");
+        list.add("照片");
+        list.add("离职证明");
+        list.add("劳动手册复印件");
+        list.add("退工单复印件");
+        list.add("外来从业人员退工备案登记表");
+
+        return  list;
     }
 
 }
