@@ -99,15 +99,20 @@ public class FundApiController implements FundApiProxy{
     private Long addComTask(HfComTaskDTO hfComTaskDTO) {
         HfComTask hfComTask = new HfComTask();
         BeanUtils.copyProperties(hfComTaskDTO,hfComTask);
+        if(hfComTaskDTO.getTaskCategory().equals(1)){
+            if(!StringUtils.isBlank(hfComTask.getHfComAccount())){
+                hfComTask.setHfComAccount("");
+            }
+        }
         hfComTask.setSubmitTime(new Date());
         hfComTask.setTaskStatus(0);
         hfComTask.setActive(true);
         hfComTask.setCreatedTime(new Date());
         hfComTask.setModifiedTime(new Date());
-        hfComTask.setCreatedBy(UserContext.getUserId());
-        hfComTask.setCreatedDisplayName(UserContext.getUser().getDisplayName());
-        hfComTask.setModifiedBy(UserContext.getUserId());
-        hfComTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+        hfComTask.setCreatedBy(hfComTaskDTO.getSubmitterId());
+        hfComTask.setCreatedDisplayName(hfComTaskDTO.getSubmitterName());
+        hfComTask.setModifiedBy(hfComTaskDTO.getSubmitterId());
+        hfComTask.setModifiedDisplayName(hfComTaskDTO.getSubmitterName());
         hfComTaskService.insert(hfComTask);
         return hfComTask.getComTaskId();
     }
