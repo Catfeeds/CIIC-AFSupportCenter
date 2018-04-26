@@ -27,6 +27,8 @@
         <result column="task_category" property="taskCategory" />
     </resultMap>
 
+    <!--CASE ca.payment_way WHEN 3 THEN 1 ELSE 0 END AS 'is_advance'-->
+    <!--结算中心要求：公司下面只有一个雇员是垫款，那么公司就是垫款-->
     <select id="getHfPaymentComList" resultMap="PaymentComResultMap">
         SELECT
             pc.company_id,
@@ -35,7 +37,14 @@
             cac.hf_com_account AS 'company_bank_account',
             p.payment_month,
             pc.remitted_amount + pc.repair_amount AS 'pay_amount',
-            CASE ca.payment_way WHEN 3 THEN 1 ELSE 0 END AS 'is_advance'
+            (SELECT if(count(1)>0,1,0) from hf_month_charge mc
+                  INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+                  INNER JOIN hf_payment_com pc1 ON pc1.com_account_id = ea.com_account_id AND pc1.company_id=ea.company_id
+                              AND pc1.company_id=ea.company_id AND pc1.com_account_class_id=ea.com_account_class_id
+                WHERE pc1.is_active=1
+                AND mc.hf_month=#{paymentMonth}
+                AND pc1.payment_id=#{paymentId}
+              ) AS 'is_advance'
         FROM hf_payment p
         INNER JOIN	hf_payment_com pc ON p.payment_id = pc.payment_id
         INNER JOIN hf_com_account ca ON ca.com_account_id = pc.com_account_id
@@ -46,10 +55,9 @@
         AND pc.is_active = 1
         AND ca.is_active = 1
         AND cac.is_active = 1
-        AND com.is_active = 1
         AND pc.payment_id = #{paymentId}
     </select>
-
+    <!--向结算中心支付申请的雇员名单-->
     <select id="getHfPaymentEmpList" resultMap="PaymentEmpResultMap">
         SELECT
             mc.employee_id,
@@ -91,6 +99,7 @@
         AND pc.payment_id = #{paymentId}
         AND (IFNULL(mc.amount,0) - IFNULL(a.amount,0)) != 0
     </select>
+
     <select id="getHfPaymentBankId"  resultType="Integer" >
         SELECT ca.payment_bank
         FROM hf_payment_account pa

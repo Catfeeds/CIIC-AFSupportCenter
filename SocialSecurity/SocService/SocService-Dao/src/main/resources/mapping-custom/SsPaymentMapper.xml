@@ -28,16 +28,15 @@
         <result column="modified_by" property="modifiedBy" />
     </resultMap>
     <resultMap id="PaymentComDtoResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.PayapplyCompanyProxyDTO">
-
         <result column="company_id" property="companyId" />
         <result column="title" property="companyName" />
         <result column="bank_account_id" property="companyBankAccountId" />
         <result column="bank_account"  property="companyBankAccount" />
-        <result column="refund_deducted"   property="noticebillAmount" />
-        <result column="adjust_deducted"   property="deductionAmount" />
+        <result column="noticebillAmount"   property="noticebillAmount" />
+        <result column="deductionAmount"   property="deductionAmount" />
         <result column="payment_month"   property="payMonth" />
         <result column="total_pay_amount"   property="payAmount" />
-        <result column="payment_way"   property="isAdvance" />
+        <result column="is_advance"   property="isAdvance" />
     </resultMap>
     <resultMap id="PaymentEmpDtoResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.PayapplyEmployeeProxyDTO">
         <result column="employee_id" property="employeeId" />
@@ -100,28 +99,41 @@
             #{paymentState}
         </foreach>
     </select>
-
+<!--CASE ca.payment_way WHEN 3 THEN  1 ELSE  0 END  AS 'payment_way'-->
+    <!--结算中心要求：公司下面只有一个雇员是垫款，那么公司就是垫款-->
     <select id="getPaymentComList" resultMap="PaymentComDtoResultMap">
-    SELECT pc.company_id,com.title,ca.bank_account_id,ca.bank_account,
-    pc.refund_deducted,pc.adjust_deducted,pc.payment_month,pc.total_pay_amount,
-    CASE ca.payment_way WHEN 3 THEN  1 ELSE  0 END  AS 'payment_way'
+    SELECT pc.company_id,com.title,ca.bank_account_id,ca.bank_account,pc.payment_month,
+    (SELECT base_pension_amount+base_medical_amount+add_medical_amount+ unemployment_amount+ accident_amount+ maternity_amount
+    FROM ss_payment_detail spd where spd.com_account_id=ca.com_account_id AND spd.seq=9 AND spd.payment_month=pc.payment_month )AS 'noticebillAmount',
+    pc.adjust_deducted AS 'deductionAmount',pc.total_pay_amount,
+    (SELECT if(count(1)>0,1,0) from ss_month_charge mc
+        INNER JOIN emp_employee emp1 ON emp1.employee_id=mc.employee_id
+        INNER JOIN ss_payment_com pc1 ON pc1.com_account_id=mc.com_account_id
+        WHERE pc.is_active=1
+        AND mc.ss_month=#{paymentMonth}
+        AND pc1.payment_id=#{paymentId}
+      ) AS 'is_advance'
     FROM ss_payment_com pc
     INNER JOIN ss_com_account ca ON ca.com_account_id = pc.com_account_id
     INNER JOIN sal_company com ON com.company_id = pc.company_id
-    WHERE pc.is_active=1
+    WHERE pc.is_active = 1
     AND pc.payment_month=#{paymentMonth}
     AND pc.payment_id=#{paymentId}
-
     </select>
+
+    <!--向结算中心支付申请的雇员名单-->
     <select id="getPaymentEmpList" resultMap="PaymentEmpDtoResultMap">
     SELECT emp.employee_id,emp.employee_name,pc.company_id,pc.payment_month,
-    pc.total_pay_amount,ifnull(mc.emp_payment_status,1) emp_payment_status
+    ifnull(mc.emp_payment_status,1) emp_payment_status,
+    sum(mc.total_amount) AS total_pay_amount
     FROM ss_month_charge mc
     INNER JOIN emp_employee emp ON emp.employee_id=mc.employee_id
     INNER JOIN ss_payment_com pc ON pc.com_account_id=mc.com_account_id
     WHERE pc.is_active=1
     AND mc.ss_month=#{paymentMonth}
     AND pc.payment_id=#{paymentId}
+    GROUP BY
+    emp.employee_id,emp.employee_name,pc.company_id,pc.payment_month
 
     </select>
 </mapper>
