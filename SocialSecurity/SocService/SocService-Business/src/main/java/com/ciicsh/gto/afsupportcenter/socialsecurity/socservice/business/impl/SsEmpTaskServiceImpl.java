@@ -1053,14 +1053,13 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         List<SsEmpBasePeriod> ssEmpBasePeriodList = getNormalPeriod(bo);
         if (ssEmpBasePeriodList.size() > 0) {
             //有可能是再次办理 先将endMonth 和 ss_month_stop
-            SsEmpBasePeriod existsSsEmpBasePeriod = ssEmpBasePeriodList.get(0);
+            SsEmpBasePeriod ssEmpBasePeriod = ssEmpBasePeriodList.get(0);
 //            //还原之前修改 （再次办理的时候 ss_month_stop end_month 还原到为修改的状态）
 //            Integer result = ssEmpBasePeriodService.updateReductionById(ssEmpBasePeriod);
 //            if (result == 0) throw new BusinessException("数据库修改不成功.");
-            SsEmpBasePeriod ssEmpBasePeriod = new SsEmpBasePeriod();
             ssEmpBasePeriod.setSsMonthStop(bo.getHandleMonth());
             ssEmpBasePeriod.setEndMonth(bo.getEndMonth());
-            if (YearMonth.parse(existsSsEmpBasePeriod.getStartMonth(), formatter)
+            if (YearMonth.parse(ssEmpBasePeriod.getStartMonth(), formatter)
                 .isAfter(YearMonth.parse(ssEmpBasePeriod.getEndMonth(), formatter))) {
                 ssEmpBasePeriod.setActive(false);
             }
