@@ -1,5 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao;
 
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.CompanyDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.CompanyParamDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmCompanySetBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmCompanySet;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
@@ -17,5 +19,7 @@ import java.util.List;
 public interface AmCompanySetMapper extends BaseMapper<AmCompanySet> {
 
     List<AmCompanySetBO> queryAmCompanySet(AmCompanySetBO amCompanySetBO);
+
+    List<CompanyDTO>  queryCompanyDTO(CompanyParamDTO companyParamDTO);
 
 }

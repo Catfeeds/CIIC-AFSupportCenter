@@ -2,6 +2,7 @@ package com.ciicsh.gto.adsupportcenter.employcommandservice.host.controller;
 
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.EmployApiProxy;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.*;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmCompanySetService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpMaterialService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmEmpTaskService;
 import io.swagger.annotations.Api;
@@ -30,6 +31,9 @@ public class EmployApiController implements EmployApiProxy {
 
    @Autowired
    private IAmEmpMaterialService amEmpMaterialService;
+
+   @Autowired
+   private IAmCompanySetService  amCompanySetService;
 
     @Override
     @ApiOperation(value = "根据任务Id查询用工信息",notes = "根据TaskParamDTO对象创建")
@@ -63,5 +67,17 @@ public class EmployApiController implements EmployApiProxy {
     @Override
     public boolean updateMaterialByTaskId(@RequestBody MaterialUpdateDTO materialUpdateDTO) {
         return amEmpMaterialService.updateMaterialByTaskId(materialUpdateDTO);
+    }
+
+    @Override
+    public boolean saveCompanyDTO(@RequestBody CompanyDTO companyDTO) {
+
+        return amCompanySetService.saveCompanyDTO(companyDTO);
+    }
+
+    @Override
+    public CompanyDTO queryCompanyDTO(@RequestBody CompanyParamDTO companyParamDTO) {
+
+        return amCompanySetService.queryCompanyDTO(companyParamDTO);
     }
 }

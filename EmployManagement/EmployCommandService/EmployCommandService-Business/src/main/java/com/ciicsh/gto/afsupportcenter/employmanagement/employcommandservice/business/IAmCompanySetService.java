@@ -1,8 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business;
 
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.CompanyDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.CompanyParamDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmCompanySetBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmCompanySet;
 import com.baomidou.mybatisplus.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -15,4 +19,8 @@ import com.baomidou.mybatisplus.service.IService;
 public interface IAmCompanySetService extends IService<AmCompanySet> {
 
     AmCompanySetBO queryAmCompanySet(AmCompanySetBO amCompanySetBO);
+
+    CompanyDTO  queryCompanyDTO(CompanyParamDTO companyParamDTO);
+
+    boolean saveCompanyDTO(CompanyDTO companyDTO);
 }
