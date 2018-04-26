@@ -15,10 +15,12 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -123,9 +125,23 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
 
     @Override
     public List<AccountInfoBO> getAccountByCompany(String companyId) {
-        Integer result = baseMapper.serchExistAccount(companyId);
-        List<AccountInfoBO> infos = result > 0 ? baseMapper.getAccountsByCompany(companyId) : comTaskMapper.getAccountsByCompany(companyId);
+        List<AccountInfoBO> infos = new ArrayList<>();
+        AccountInfoBO basicAccount = this.getAccountInfo(companyId,1);
+        if(null != basicAccount){
+            infos.add(basicAccount);
+        }
+        AccountInfoBO addAccount = this.getAccountInfo(companyId,2);
+        if(null != addAccount){
+            infos.add(addAccount);
+        }
         return infos;
+    }
+
+
+    private AccountInfoBO getAccountInfo(String companyId, Integer hfType){
+        Integer result = baseMapper.isExistAccount(companyId,hfType);
+        AccountInfoBO accountInfoBO = result > 0 ? baseMapper.getAccountsByCompany(companyId,hfType) : comTaskMapper.getAccountsByCompany(companyId,hfType);
+        return accountInfoBO;
     }
 
     @Override

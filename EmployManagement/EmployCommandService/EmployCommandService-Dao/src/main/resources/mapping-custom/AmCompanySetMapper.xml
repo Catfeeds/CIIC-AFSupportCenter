@@ -8,12 +8,19 @@
                type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmCompanySetBO">
     </resultMap>
 
+    <resultMap id="BaseResultCompanyMapDTO" type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.CompanyDTO">
+    </resultMap>
+
     <select id="queryAmCompanySet" resultMap="BaseResultMapDTO">
         SELECT  a.*,b.organization_code  from  am_company_set a LEFT JOIN sal_company b on a.company_id = b.company_id
         where 1=1
         <if test="companyId!=null">
             and a.company_id = #{companyId}
         </if>
+    </select>
+
+    <select id="queryCompanyDTO" resultMap="BaseResultCompanyMapDTO">
+        SELECT  mail_continue,mail_adress,recipient,post_code,phone,company_id from am_company_set where company_id = #{companyId}
     </select>
 
 </mapper>

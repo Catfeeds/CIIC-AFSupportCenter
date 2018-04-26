@@ -33,18 +33,23 @@
 		<result column="employ_special" property="employSpecial" />
 		<result column="refuse_special" property="refuseSpecial" />
 		<result column="archive_special" property="archiveSpecial" />
-		<result column="is_active" property="isActive" />
-		<result column="created_by" property="createdBy" />
-		<result column="created_time" property="createdTime" />
-		<result column="modified_by" property="modifiedBy" />
-		<result column="modified_time" property="modifiedTime" />
 		<result column="social_special" property="socialSpecial" />
 		<result column="key" property="key" />
 		<result column="key_type" property="keyType" />
 		<result column="key_code" property="keyCode" />
 		<result column="key_pwd" property="keyPwd" />
 		<result column="key_status" property="keyStatus" />
-        <result column="special" property="special"/>
+		<result column="special" property="special" />
+		<result column="mail_continue" property="mailContinue" />
+		<result column="mail_adress" property="mailAdress" />
+		<result column="recipient" property="recipient" />
+		<result column="post_code" property="postCode" />
+		<result column="phone" property="phone" />
+		<result column="is_active" property="isActive" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_by" property="modifiedBy" />
+		<result column="modified_time" property="modifiedTime" />
 	</resultMap>
 
 </mapper>

@@ -16,9 +16,4 @@ import java.util.List;
  */
 public interface HfDataauthTaskCategoryMapper extends BaseMapper<HfDataauthTaskCategory> {
 
-    boolean insertHfDataauthTaskCategory(HfDataauthTaskCategory hfDataauthTaskCategory);
-
-    List<HfDataauthTaskCategory> queryListByUid(HfDataauthTaskCategory hfDataauthTaskCategory);
-
-    boolean delByUid(String userId);
 }

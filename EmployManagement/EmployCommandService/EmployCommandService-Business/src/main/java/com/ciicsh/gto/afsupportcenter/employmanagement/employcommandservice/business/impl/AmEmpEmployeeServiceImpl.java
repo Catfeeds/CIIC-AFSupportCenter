@@ -47,6 +47,7 @@ public class AmEmpEmployeeServiceImpl extends ServiceImpl<AmEmpEmployeeMapper, A
 
                 if(amEmpEmployeeBO.getLaborStartDate()!=null){
                     String d = ReasonUtil.getCondemnationYears(amEmpEmployeeBO.getLaborStartDate(),amEmpEmployeeBO.getLaborEndDate());
+
                     amEmpEmployeeBO.setSendCondemnationYears(d);
                 }
             }
@@ -64,6 +65,17 @@ public class AmEmpEmployeeServiceImpl extends ServiceImpl<AmEmpEmployeeMapper, A
                 amEmpEmployeeBO.setKeyCode(amCompanySetBO1.getKeyCode());
                 amEmpEmployeeBO.setKeyPwd(amCompanySetBO1.getKeyPwd());
                 amEmpEmployeeBO.setKeyStatus(amCompanySetBO1.getKeyStatus());
+
+                amEmpEmployeeBO.setPhone(amCompanySetBO1.getPhone());
+                amEmpEmployeeBO.setPostCode(amCompanySetBO1.getPostCode());
+                amEmpEmployeeBO.setRecipient(amCompanySetBO1.getRecipient());
+                amEmpEmployeeBO.setMailAdress(amCompanySetBO1.getMailAdress());
+                if(amCompanySetBO1.getMailContinue()){
+                    amEmpEmployeeBO.setMailContinueStr("1");
+                }else{
+                    amEmpEmployeeBO.setMailContinueStr("0");
+                }
+                amEmpEmployeeBO.setMailContinue(amCompanySetBO1.getMailContinue());
             }
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

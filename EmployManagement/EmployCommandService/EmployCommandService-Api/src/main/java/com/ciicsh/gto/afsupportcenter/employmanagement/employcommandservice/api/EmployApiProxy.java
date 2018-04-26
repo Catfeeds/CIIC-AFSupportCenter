@@ -32,5 +32,11 @@ public interface EmployApiProxy {
     @PostMapping({"/updateMaterialByTaskId"})
     boolean updateMaterialByTaskId(@RequestBody MaterialUpdateDTO materialUpdateDTO);
 
+    @PostMapping({"/saveCompanyDTO"})
+    boolean saveCompanyDTO(@RequestBody CompanyDTO companyDTO);
+
+    @PostMapping({"/queryCompanyDTO"})
+    CompanyDTO queryCompanyDTO(@RequestBody CompanyParamDTO companyParamDTO);
+
 
 }

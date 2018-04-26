@@ -16,9 +16,4 @@ import java.util.List;
  */
 public interface SsDataauthWelfareUnitMapper extends BaseMapper<SsDataauthWelfareUnit> {
 
-    boolean insertSsDataauthWelfareUnit(SsDataauthWelfareUnit ssDataauthWelfareUnit);
-
-    List<SsDataauthWelfareUnitBO> queryListByUid(SsDataauthWelfareUnit ssDataauthWelfareUnit);
-
-    boolean delByUid(String userId);
 }
