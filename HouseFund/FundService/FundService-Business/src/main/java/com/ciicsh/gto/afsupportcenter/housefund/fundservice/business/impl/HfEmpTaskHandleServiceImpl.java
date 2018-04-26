@@ -1059,7 +1059,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                         if (repairStartMonth.isBefore(endMonth) || repairStartMonth.equals(endMonth) ) {
                             // 此时肯定有一段差额补缴
                             // 差额补缴段：从费用段起始年月到补缴截止年月
-                            e.setStartMonth(startMonth.format(formatter));
+                            e.setStartMonth(repairStartMonth.format(formatter));
                             // 补缴截止年月小于等于费用段截止月时，说明只有一段全额补缴，一段差额补缴
                             if (repairEndMonth.isBefore(endMonth) || repairEndMonth.equals(endMonth)) {
                                 e.setEndMonth(repairEndMonth.format(formatter));
@@ -1579,7 +1579,9 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 .filter(e -> e.getArchiveStatus() == null || e.getArchiveStatus() != HfEmpArchiveConstant.ARCHIVE_STATUS_CLOSED)
                 .collect(Collectors.toList());
 
-            empArchiveId = hfEmpArchiveList.get(0).getEmpArchiveId();
+            if (hfEmpArchiveList.size() > 0) {
+                empArchiveId = hfEmpArchiveList.get(0).getEmpArchiveId();
+            }
         } else {
             isNothing = true;
         }
@@ -1596,11 +1598,11 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 }
                 break;
             case HfEmpTaskConstant.TASK_CATEGORY_REPAIR:
-            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST:
                 if (isNothing) {
                     throw new BusinessException("雇员档案不存在");
                 }
                 break;
+            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST:
             case HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT:
             case HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE:
             case HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_OUT:
@@ -1966,6 +1968,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             case HfEmpTaskConstant.TASK_CATEGORY_FLOP_ADD:
             case HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_IN:
             case HfEmpTaskConstant.TASK_CATEGORY_FLOP_OPEN:
+            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST:
                 hfEmpArchive.setArchiveTaskStatus(HfEmpArchiveConstant.ARCHIVE_TASK_STATUS_HANDLED);
                 hfEmpArchive.setArchiveStatus(HfEmpArchiveConstant.ARCHIVE_STATUS_HANDLED);
                 break;

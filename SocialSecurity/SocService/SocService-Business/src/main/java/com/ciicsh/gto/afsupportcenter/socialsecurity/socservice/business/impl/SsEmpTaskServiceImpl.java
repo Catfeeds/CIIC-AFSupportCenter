@@ -261,6 +261,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         }
         //修改任务单详细
         baseMapper.updateMyselfColumnById(bo);
+
+        SsEmpArchive ssEmpArchive = new SsEmpArchive();
+        ssEmpArchive.setEmpArchiveId(bo.getEmpArchiveId());
+        setEmpArchiveStatus(ssEmpArchive, bo.getTaskCategory());
+        ssEmpArchive.setModifiedBy(UserContext.getUserId());
+        ssEmpArchive.setModifiedTime(LocalDateTime.now());
+        ssEmpArchiveService.updateById(ssEmpArchive);
+
         //获得进位方式
         getRoundType(bo.getPolicyDetailId(), bo.getWelfareUnit(), bo.getStartMonth(), bo);
         //获得前端输入的缴纳费用段
@@ -1019,6 +1027,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         }
         //修改任务单详细
         baseMapper.updateMyselfColumnById(bo);
+
+        SsEmpArchive ssEmpArchive = new SsEmpArchive();
+        ssEmpArchive.setEmpArchiveId(bo.getEmpArchiveId());
+        setEmpArchiveStatus(ssEmpArchive, bo.getTaskCategory());
+        ssEmpArchive.setModifiedBy(UserContext.getUserId());
+        ssEmpArchive.setModifiedTime(LocalDateTime.now());
+        ssEmpArchiveService.updateById(ssEmpArchive);
+
         //获得进位方式
         getRoundType(bo.getPolicyDetailId(), bo.getWelfareUnit(), bo.getStartMonth(), bo);
         //获得前端输入的补缴费用段
@@ -1030,6 +1046,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
         //查询既存缴纳费用段
         List<SsEmpBasePeriod> ssEmpBasePeriodList = getPeriodsByEmployeeIdAndCompanyId(bo);
+
         //补缴的前提条件
         backStartForTaskPeriods(taskPeriods, ssEmpBasePeriodList, bo);
     }
@@ -1050,17 +1067,27 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         }
         //更新雇员任务信息
         baseMapper.updateMyselfColumnById(bo);
+
+        //修改档案表的离职时间和缴纳截止时间
+        SsEmpArchive ssEmpArchive = new SsEmpArchive();
+        ssEmpArchive.setEmpArchiveId(bo.getEmpArchiveId());
+        setEmpArchiveStatus(ssEmpArchive, bo.getTaskCategory());
+        ssEmpArchive.setEndMonth(bo.getEndMonth());
+        ssEmpArchive.setOutDate(bo.getOutDate());
+        ssEmpArchive.setModifiedBy(UserContext.getUserId());
+        ssEmpArchive.setModifiedTime(LocalDateTime.now());
+        ssEmpArchiveService.updateById(ssEmpArchive);
+
         List<SsEmpBasePeriod> ssEmpBasePeriodList = getNormalPeriod(bo);
         if (ssEmpBasePeriodList.size() > 0) {
             //有可能是再次办理 先将endMonth 和 ss_month_stop
-            SsEmpBasePeriod existsSsEmpBasePeriod = ssEmpBasePeriodList.get(0);
+            SsEmpBasePeriod ssEmpBasePeriod = ssEmpBasePeriodList.get(0);
 //            //还原之前修改 （再次办理的时候 ss_month_stop end_month 还原到为修改的状态）
 //            Integer result = ssEmpBasePeriodService.updateReductionById(ssEmpBasePeriod);
 //            if (result == 0) throw new BusinessException("数据库修改不成功.");
-            SsEmpBasePeriod ssEmpBasePeriod = new SsEmpBasePeriod();
             ssEmpBasePeriod.setSsMonthStop(bo.getHandleMonth());
             ssEmpBasePeriod.setEndMonth(bo.getEndMonth());
-            if (YearMonth.parse(existsSsEmpBasePeriod.getStartMonth(), formatter)
+            if (YearMonth.parse(ssEmpBasePeriod.getStartMonth(), formatter)
                 .isAfter(YearMonth.parse(ssEmpBasePeriod.getEndMonth(), formatter))) {
                 ssEmpBasePeriod.setActive(false);
             }
@@ -1069,17 +1096,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             //修改 没有截止时间时间段的截止时间和停缴月份
             ssEmpBasePeriodService.updateEndMonAndHandleMon(ssEmpBasePeriod);
 
-            //修改档案表的离职时间和缴纳截止时间
-            SsEmpArchive ssEmpArchive = new SsEmpArchive();
-            ssEmpArchive.setEmpArchiveId(bo.getEmpArchiveId());
-            ssEmpArchive.setArchiveStatus(3);
-            ssEmpArchive.setEndMonth(bo.getEndMonth());
-            ssEmpArchive.setOutDate(bo.getOutDate());
-            ssEmpArchive.setModifiedBy(UserContext.getUserId());
-            ssEmpArchive.setModifiedTime(LocalDateTime.now());
-            ssEmpArchiveService.updateById(ssEmpArchive);
             //创建非标数据
-
             createNonstandardData(bo, ssEmpBasePeriod, null, null, null);
         } else throw new BusinessException("数据库没有缴纳时间段");
     }
@@ -1108,6 +1125,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         }
         //更新雇员任务信息
         baseMapper.updateMyselfColumnById(bo);
+
+        SsEmpArchive ssEmpArchive = new SsEmpArchive();
+        ssEmpArchive.setEmpArchiveId(bo.getEmpArchiveId());
+        setEmpArchiveStatus(ssEmpArchive, bo.getTaskCategory());
+        ssEmpArchive.setModifiedBy(UserContext.getUserId());
+        ssEmpArchive.setModifiedTime(LocalDateTime.now());
+        ssEmpArchiveService.updateById(ssEmpArchive);
+
         //删除(有可能是再次办理)
         EntityWrapper ew = new EntityWrapper();
         ew.where("emp_task_id={0}", bo.getEmpTaskId());
@@ -1661,6 +1686,22 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         int NOPROGRESS = 5;// 不需处理
     }
 
+    interface ArchiveStatusConst {
+
+        int PROCESSING = 1;// 已办
+        int FINISH = 2;// 已做
+        int OUT = 3;// 转出
+    }
+
+    // 社保档案任务状态 : 0-未办理 1-已办  2-已做 3-转出
+    interface ArchiveTaskStatusConst {
+
+        int NOTPROGRESS = 0;// 未处理
+        int PROCESSING = 1;// 已办
+        int FINISH = 2;// 已做
+        int OUT = 3;// 转出
+    }
+
     /**
      * 1 新进 2 转入 3 调整 4 补缴 5 转出 6封存 7退账 8 提取
      */
@@ -1703,8 +1744,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         ssEmpArchive.setSalary(bo.getSalary());
         ssEmpArchive.setEmpClassify(bo.getEmpClassify());
         ssEmpArchive.setInDate(bo.getInDate());
-        ssEmpArchive.setArchiveStatus(1);
-        ssEmpArchive.setArchiveTaskStatus(1);
+        setEmpArchiveStatus(ssEmpArchive, bo.getTaskCategory());
         ssEmpArchive.setStartMonth(bo.getStartMonth());
         ssEmpArchive.setEndMonth(bo.getEndMonth());
         ssEmpArchive.setSsMonth(bo.getHandleMonth());
@@ -2327,6 +2367,46 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         }
 
         return composedEmpBasePeriodBOList;
+    }
+
+    /**
+     * 根据任务单类型及雇员档案当前原始状态来设置雇员档案中的任务单状态及原始状态
+     *
+     * @param ssEmpArchive 雇员档案当前原始状态
+     * @param taskCategory 任务单类型
+     */
+    private void setEmpArchiveStatus(SsEmpArchive ssEmpArchive, Integer taskCategory) {
+        Integer origStatus = ssEmpArchive.getArchiveStatus();
+
+        switch (taskCategory) {
+            case TaskTypeConst.NEW:
+            case TaskTypeConst.INTO:
+            case TaskTypeConst.FLOPNEW:
+            case TaskTypeConst.FLOPINTO:
+            case TaskTypeConst.ADJUSTMENT:
+                ssEmpArchive.setArchiveTaskStatus(ArchiveTaskStatusConst.PROCESSING);
+                ssEmpArchive.setArchiveStatus(ArchiveStatusConst.PROCESSING);
+                break;
+            case TaskTypeConst.BACK:
+            case TaskTypeConst.REFUNDACCOUNT:
+                if (origStatus != null && origStatus == ArchiveStatusConst.OUT) {
+                    ssEmpArchive.setArchiveTaskStatus(ArchiveTaskStatusConst.OUT);
+                    ssEmpArchive.setArchiveStatus(ArchiveStatusConst.OUT);
+                } else if (origStatus == null || origStatus == ArchiveStatusConst.PROCESSING || origStatus == ArchiveStatusConst.FINISH) {
+                    ssEmpArchive.setArchiveTaskStatus(ArchiveTaskStatusConst.PROCESSING);
+                    ssEmpArchive.setArchiveStatus(ArchiveStatusConst.PROCESSING);
+                }
+                break;
+            case TaskTypeConst.TURNOUT:
+            case TaskTypeConst.SEALED:
+            case TaskTypeConst.FLOPTURNOUT:
+            case TaskTypeConst.FLOPSEALED:
+                ssEmpArchive.setArchiveTaskStatus(ArchiveTaskStatusConst.OUT);
+                ssEmpArchive.setArchiveStatus(ArchiveStatusConst.OUT);
+                break;
+            default:
+                break;
+        }
     }
 }
 

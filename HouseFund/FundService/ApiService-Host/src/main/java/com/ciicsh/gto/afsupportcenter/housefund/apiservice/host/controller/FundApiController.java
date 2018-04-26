@@ -17,6 +17,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComTaskSe
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogMessage;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -98,13 +99,20 @@ public class FundApiController implements FundApiProxy{
     private Long addComTask(HfComTaskDTO hfComTaskDTO) {
         HfComTask hfComTask = new HfComTask();
         BeanUtils.copyProperties(hfComTaskDTO,hfComTask);
+        if(hfComTaskDTO.getTaskCategory().equals(1)){
+            if(!StringUtils.isBlank(hfComTask.getHfComAccount())){
+                hfComTask.setHfComAccount("");
+            }
+        }
         hfComTask.setSubmitTime(new Date());
         hfComTask.setTaskStatus(0);
         hfComTask.setActive(true);
         hfComTask.setCreatedTime(new Date());
         hfComTask.setModifiedTime(new Date());
-        hfComTask.setCreatedBy("system");
-        hfComTask.setModifiedBy("system");
+        hfComTask.setCreatedBy(hfComTaskDTO.getSubmitterId());
+        hfComTask.setCreatedDisplayName(hfComTaskDTO.getSubmitterName());
+        hfComTask.setModifiedBy(hfComTaskDTO.getSubmitterId());
+        hfComTask.setModifiedDisplayName(hfComTaskDTO.getSubmitterName());
         hfComTaskService.insert(hfComTask);
         return hfComTask.getComTaskId();
     }
