@@ -252,7 +252,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     }
 //                    condition.put("task_category", hfEmpTask.getTaskCategory());
                     hfEmpTaskWrapper.eq("hf_type", hfEmpTask.getHfType());
-                    hfEmpTaskWrapper.eq("is_change", HfEmpTaskConstant.IS_CHANGE_NO);
+//                    hfEmpTaskWrapper.eq("is_change", HfEmpTaskConstant.IS_CHANGE_NO);
                     hfEmpTaskWrapper.in("task_status", new Integer[] {HfEmpTaskConstant.TASK_STATUS_HANDLED, HfEmpTaskConstant.TASK_STATUS_COMPLETED});
                     hfEmpTaskWrapper.eq("is_active", hfEmpTask.getActive());
                     List<HfEmpTask> hfEmpTaskList = this.selectList(hfEmpTaskWrapper);

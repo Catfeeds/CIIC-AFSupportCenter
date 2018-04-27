@@ -1238,7 +1238,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             } else if (ArrayUtils.contains(flopInArray, bo.getTaskCategory())) {
                 wrapper.in("task_category", flopInArray);
             }
-            wrapper.eq("is_change", 0);
+//            wrapper.eq("is_change", 0);
             wrapper.in("task_status", new Integer[] {TaskStatusConst.PROCESSING, TaskStatusConst.FINISH});
             wrapper.eq("is_active", 1);
             List<SsEmpTask> ssEmpTaskList = this.selectList(wrapper);
