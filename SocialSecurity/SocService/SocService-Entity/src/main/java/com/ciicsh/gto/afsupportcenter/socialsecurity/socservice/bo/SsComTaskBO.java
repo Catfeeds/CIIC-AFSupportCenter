@@ -109,7 +109,7 @@ public class SsComTaskBO {
 
     private String modifiedBy;
 
-    private String leaderShipName;
+    private String leaderShipName1;
 
 
     //客户名称

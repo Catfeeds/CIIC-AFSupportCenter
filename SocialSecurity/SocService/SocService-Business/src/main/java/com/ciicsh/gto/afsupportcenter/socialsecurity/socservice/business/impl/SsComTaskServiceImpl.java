@@ -139,8 +139,10 @@ public class SsComTaskServiceImpl extends ServiceImpl<SsComTaskMapper, SsComTask
      * @return
      */
     public SsComTaskBO queryComInfoAndPayWay(SsComTaskBO ssComTaskBO) {
-
-        return baseMapper.queryComInfoAndPayWay(ssComTaskBO);
+        SsComTaskBO ssComTaskBO1=  baseMapper.queryComInfoAndPayWay(ssComTaskBO);
+        String leaderShipName = baseMapper.selectById(ssComTaskBO.getComTaskId()).getLeaderShipName();
+        ssComTaskBO1.setLeaderShipName1(leaderShipName);
+        return ssComTaskBO1;
     }
 
     /**

@@ -119,4 +119,5 @@ public class SsComAccountBO {
     //批退备注
     private String rejectionRemark;
     private String leaderShipName;
+    private String leaderShipName1;
 }

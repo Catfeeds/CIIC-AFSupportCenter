@@ -192,6 +192,12 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
      */
     @PostMapping("/doReviewdePass")
     public JsonResult<String> doReviewdePass(SsOperatePaymentBO ssOperatePaymentDTO) {
+
+//        try {
+//            Thread.currentThread().sleep(15000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         //数据转换
         SsPayment ssPayment = CommonTransform.convertToEntity(ssOperatePaymentDTO, SsPayment.class);
         //执行业务
