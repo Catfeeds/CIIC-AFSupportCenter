@@ -352,6 +352,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         LocalDate nowDate = LocalDate.now();
         StringBuffer nowDateStr = TaskCommonUtils.getMonthStr(nowDate);
         Integer currentYearMonth = Integer.valueOf(nowDateStr.toString());
+//        Integer handleMonth = Integer.valueOf(bo.getHandleMonth());
+
         //通过各自的开始时间进行比较 判断是否有交叉
         if (minStartDateTask >= currentYearMonth) {
             // 顺调
@@ -1236,8 +1238,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             } else if (ArrayUtils.contains(flopInArray, bo.getTaskCategory())) {
                 wrapper.in("task_category", flopInArray);
             }
-            wrapper.eq("is_change", 0);
-            wrapper.eq("task_status", 2);
+//            wrapper.eq("is_change", 0);
+            wrapper.in("task_status", new Integer[] {TaskStatusConst.PROCESSING, TaskStatusConst.FINISH});
             wrapper.eq("is_active", 1);
             List<SsEmpTask> ssEmpTaskList = this.selectList(wrapper);
 
@@ -1247,6 +1249,10 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 }
 
                 SsEmpTask ssEmpTask = ssEmpTaskList.get(0);
+                if (ssEmpTask.getTaskStatus() == TaskStatusConst.FINISH) {
+                    throw new BusinessException("该雇员的雇员新增任务单已完成，不能更正");
+                }
+
                 // 撤销报表及其明细数据
                 inactiveMonthChargeData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
                 // 撤销差额补缴（逆调）费用段数据及其明细数据
