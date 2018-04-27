@@ -5,8 +5,8 @@ import com.ciicsh.common.entity.JsonResult;
 import com.ciicsh.gto.afsupportcenter.housefund.apiservice.host.enumeration.Const;
 import com.ciicsh.gto.afsupportcenter.housefund.apiservice.host.translator.ApiTranslator;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.FundApiProxy;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccountExtDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccountDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccountExtDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccountParamDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComTaskDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountInfoBO;
@@ -17,7 +17,6 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComTaskSe
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogMessage;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask;
-import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
