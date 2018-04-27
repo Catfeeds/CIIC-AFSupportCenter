@@ -126,11 +126,11 @@
         AND pa.com_account_id in
         (SELECT com_account_id FROM hf_payment_account WHERE
          payment_month= #{paymentMonth} AND ifnull(payment_id,0)=0 AND
-        payment_account_id in(
+        payment_account_id in
         <foreach collection="listData" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
-        ))
+        )
     </select>
 
     <update id="updatePaymentAccount">

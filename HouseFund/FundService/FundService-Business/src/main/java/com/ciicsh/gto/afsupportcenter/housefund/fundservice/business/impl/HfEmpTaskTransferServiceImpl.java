@@ -171,7 +171,10 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         HfEmpTask hfEmpTask =new HfEmpTask();
         hfEmpTask.setEmpTaskId(empTaskTransferBo.getEmpTaskId());
         hfEmpTask.setTaskStatus(5);//不需办理
-        saveEmpTask(hfEmpTask);
+        hfEmpTask.setModifiedTime(LocalDateTime.now());
+        hfEmpTask.setModifiedBy(UserContext.getUserId());
+        hfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+        baseMapper.updateById(hfEmpTask);
         return JsonResultKit.of("不需办理操作成功！");
     }
 
@@ -183,7 +186,10 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         hfEmpTask.setEmpTaskId(empTaskTransferBo.getEmpTaskId());
         hfEmpTask.setOperateDate(LocalDate.now());//设置操作日期
         hfEmpTask.setTaskStatus(3);//已处理
-        saveEmpTask(hfEmpTask);
+        hfEmpTask.setModifiedTime(LocalDateTime.now());
+        hfEmpTask.setModifiedBy(UserContext.getUserId());
+        hfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+        baseMapper.updateById(hfEmpTask);
         Map<String,String> mapPrint=baseMapper.fetchPrintInfo(empTaskTransferBo.getEmpTaskId());
 
         mapP.put("createdByYYYY", LocalDate.now().getYear());

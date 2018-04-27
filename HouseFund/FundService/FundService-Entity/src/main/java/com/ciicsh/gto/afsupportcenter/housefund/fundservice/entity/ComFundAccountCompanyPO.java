@@ -28,6 +28,15 @@ public class ComFundAccountCompanyPO {
      */
     private String bindedTime;
 
+    private String leaderShipName;
+
+    public String getLeaderShipName() {
+        return leaderShipName;
+    }
+
+    public void setLeaderShipName(String leaderShipName) {
+        this.leaderShipName = leaderShipName;
+    }
 
     public String getCompanyId() {
         return companyId;
