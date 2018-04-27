@@ -300,47 +300,24 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     @Log("保存用工档案")
     @RequestMapping("/saveAmArchive")
     public  JsonResult<AmArchive>  saveAmArchive(AmArchiveBO amArchiveBO){
-        AmArchive entity = new AmArchive();
-        BeanUtils.copyProperties(amArchiveBO,entity);
-        LocalDateTime now = LocalDateTime.now();
-        if(entity.getArchiveId()==null){
-            entity.setCreatedTime(now);
-            entity.setModifiedTime(now);
-            entity.setCreatedBy(ReasonUtil.getUserId());
-            entity.setModifiedBy(ReasonUtil.getUserId());
-            entity.setIsActive(1);
-        }else{
-            entity.setModifiedTime(now);
-            entity.setModifiedBy(ReasonUtil.getUserId());
-        }
-        AmEmpTask amEmpTask = null;
-        if(!StringUtil.isEmpty(entity.getEmployFeedback())){
-            AmEmployment amEmployment = amEmploymentService.selectById(entity.getEmploymentId());
-            amEmpTask = business.selectById(amEmployment.getEmpTaskId());
-            amEmpTask.setTaskStatus(Integer.parseInt(entity.getEmployFeedback()));
-            business.insertOrUpdate(amEmpTask);
-        }
-        if("11".equals(entity.getEmployFeedback()))
-        {
-            if(entity.getUkeyBorrowDate()==null)
-            {
-                entity.setUkeyBorrowDate(LocalDate.now());
-            }
+
+        Map<String,Object> map = null;
+
+        try {
+            map = amArchiveService.saveArchive(amArchiveBO);
+        } catch (Exception e) {
+            return JsonResultKit.of(null);
         }
 
-        boolean result = amArchiveService.insertOrUpdate(entity);
-        // 修改预留档案编号 seq
-        AmArchiveDocSeq seq = new AmArchiveDocSeq();
-        seq.setType(1);
-        seq.setDocType(amArchiveBO.getYuliuDocType());
-        seq.setDocSeq(Integer.parseInt( amArchiveBO.getYuliuDocNum()));
-        amArchiveService.updateByTypeAndDocType(seq);
-        // 修改档案编号 seq
-        AmArchiveDocSeq seq2 = new AmArchiveDocSeq();
-        seq2.setType(2);
-        seq2.setDocType(amArchiveBO.getDocType());
-        seq2.setDocSeq(Integer.parseInt( amArchiveBO.getDocNum()));
-        amArchiveService.updateByTypeAndDocType(seq2);
+        Boolean result = (Boolean)map.get("result");
+        AmArchive entity = (AmArchive)map.get("entity");
+
+        String taskId = null;
+        if(map.get("taskId")!=null)
+        {
+            taskId = map.get("taskId").toString();
+        }
+
         if("0".equals(amArchiveBO.getIsFrist()))
         {//如果满足在用工办理页面提交
             if(result&&!StringUtil.isEmpty(entity.getEmployFeedback()))
@@ -362,7 +339,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
                     }
                     variables.put("assignee",userName);
-                    TaskCommonUtils.completeTask(amEmpTask.getTaskId(),employeeInfoProxy,variables);
+                    TaskCommonUtils.completeTask(taskId,employeeInfoProxy,variables);
                 }
             }
         }
