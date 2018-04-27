@@ -253,12 +253,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param bo
      */
     private void handleAdjustmentTask(SsEmpTaskBO bo, boolean isBatch) {
-        if (isBatch) {
+//        if (isBatch) {
             //查询企业 是否开户
             queryCompanyIsOpenAccount(bo);
             //查询 雇员是否新进
             queryEmployeeIsnewOrChangeInto(bo);
-        }
+//        }
         //修改任务单详细
         baseMapper.updateMyselfColumnById(bo);
 
@@ -348,14 +348,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         Integer minStartDateTask = Integer.valueOf(ssEmpTaskPeriod.getStartMonth());
         //原来数据库历史数据 最大的时间段
         SsEmpBasePeriod ssEmpBasePeriod = ssEmpBasePeriodList.get(ssEmpBasePeriodList.size() - 1);
-        //判断是否大于当前月
-        LocalDate nowDate = LocalDate.now();
-        StringBuffer nowDateStr = TaskCommonUtils.getMonthStr(nowDate);
-        Integer currentYearMonth = Integer.valueOf(nowDateStr.toString());
-//        Integer handleMonth = Integer.valueOf(bo.getHandleMonth());
+        //判断是否大于办理月
+//        LocalDate nowDate = LocalDate.now();
+//        StringBuffer nowDateStr = TaskCommonUtils.getMonthStr(nowDate);
+//        Integer currentYearMonth = Integer.valueOf(nowDateStr.toString());
+        Integer handleMonth = Integer.valueOf(bo.getHandleMonth());
 
         //通过各自的开始时间进行比较 判断是否有交叉
-        if (minStartDateTask >= currentYearMonth) {
+        if (minStartDateTask >= handleMonth) {
             // 顺调
             // 添加 新添加的时间段
             List<SsEmpBasePeriod> newEmpBasePeriodList = taskPeriodTranserEmpBase(taskPeriods, bo, TaskPeriodConst.ADJUSTMENTTYPE);
@@ -413,11 +413,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         addPeriodList.clear();
         supplementPayList.clear();
         //当前月时间
-        LocalDate now = LocalDate.now();
-        //当月时间
-        StringBuffer currentMonthObj = TaskCommonUtils.getMonthStr(now);
+//        LocalDate now = LocalDate.now();
+        String handleMonth = bo.getHandleMonth();
+        YearMonth handleMonthDate = YearMonth.parse(handleMonth, formatter);
+
         //前月时间
-        StringBuffer lastMonthObj = TaskCommonUtils.getMonthStr(now.minusMonths(1));
+        String lastMonth = handleMonthDate.minusMonths(1).format(formatter);
 
         //表示前端 输入的endMonth为空,即调整 输入月份到将来
         if (StringUtils.isBlank(ssEmpTaskPeriod.getEndMonth())) {
@@ -427,18 +428,19 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             //默认当前月份在 最大startMonth 之后
             //将最大startMonth切成两段
             SsEmpBasePeriod addPeriodObj = TaskCommonUtils.cloneObjet(basePeriod, SsEmpBasePeriod.class);
-            addPeriodObj = setValueForEmpBasePeriod(addPeriodObj, ssEmpTaskPeriod, currentMonthObj.toString());
+            addPeriodObj = setValueForEmpBasePeriod(addPeriodObj, ssEmpTaskPeriod, handleMonth);
             addPeriodObj.setEndMonth(null);
-            addPeriodObj.setStartMonth(currentMonthObj.toString()); // 顺调时切段，新费用段，应该是从当前月（办理月）至将来
+            addPeriodObj.setStartMonth(handleMonth); // 顺调时切段，新费用段，应该是从当前月（办理月）至将来
 
             SsEmpBasePeriod ssEmpBasePeriod = ssEmpBasePeriodList.get(ssEmpBasePeriodList.size() - 1);
-            ssEmpBasePeriod.setEndMonth(lastMonthObj.toString());
+            ssEmpBasePeriod.setEndMonth(lastMonth);
+            SsEmpBasePeriod updatePeriod = new SsEmpBasePeriod();
+            updatePeriod.setEmpBasePeriodId(ssEmpBasePeriod.getEmpBasePeriodId());
+            updatePeriod.setModifiedTime(bo.getModifiedTime());
+            updatePeriod.setModifiedBy(bo.getModifiedBy());
+            updatePeriod.setEndMonth(lastMonth);
             if (YearMonth.parse(ssEmpBasePeriod.getStartMonth(), formatter).isAfter(YearMonth.parse(ssEmpBasePeriod.getEndMonth(), formatter))) {
-                SsEmpBasePeriod updatePeriod = new SsEmpBasePeriod();
-                updatePeriod.setEmpBasePeriodId(ssEmpBasePeriod.getEmpBasePeriodId());
                 updatePeriod.setActive(false);
-                updatePeriod.setModifiedTime(bo.getModifiedTime());
-                updatePeriod.setModifiedBy(bo.getModifiedBy());
                 ssEmpBasePeriodService.updateById(updatePeriod);
 
                 SsEmpBaseDetail ssEmpBaseDetail = new SsEmpBaseDetail();
@@ -448,17 +450,19 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 Wrapper<SsEmpBaseDetail> wrapper = new EntityWrapper<>();
                 wrapper.eq("emp_base_period_id", ssEmpBasePeriod.getEmpBasePeriodId());
                 ssEmpBaseDetailService.saveForSsEmpBaseDetail(null, ssEmpBaseDetail, wrapper);
+            } else {
+                ssEmpBasePeriodService.updateById(updatePeriod);
             }
 
             //当前月到永远的那段 （即如果调整是到永远的话，则从下月设置到永远）
             addPeriodList.add(addPeriodObj);
             SsEmpBasePeriod needAdjustObj = TaskCommonUtils.cloneObjet(basePeriod, SsEmpBasePeriod.class);
-            needAdjustObj.setEndMonth(lastMonthObj.toString());
+            needAdjustObj.setEndMonth(lastMonth);
 
             adjustOrSupplement(
                 ssEmpTaskPeriod.getStartMonth(),
-                lastMonthObj.toString(),
-                currentMonthObj.toString(),
+                lastMonth,
+                handleMonth,
                 ssEmpBasePeriodList,
                 needAdjustObj,
                 supplementPayList,
@@ -548,6 +552,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
                         YearMonth startMonthDate = YearMonth.parse(adjustPayObj.getStartMonth(), formatter);
                         YearMonth endMonthDate = YearMonth.parse(adjustPayObj.getEndMonth(), formatter);
+                        SsEmpBasePeriod subAdjustPayObj = TaskCommonUtils.cloneObjet(adjustPayObj, SsEmpBasePeriod.class);
 
                         if (StringUtils.isNotEmpty(basePeriodEndMonth)) {
                             YearMonth basePeriodEndMonthDate = YearMonth.parse(basePeriodEndMonth, formatter);
@@ -555,7 +560,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                             if (basePeriodEndMonthDate.isBefore(startMonthDate)) {
                                 continue;
                             } else if (basePeriodEndMonthDate.isBefore(endMonthDate)) {
-                                adjustPayObj.setEndMonth(basePeriodEndMonth);
+                                subAdjustPayObj.setEndMonth(basePeriodEndMonth);
                             }
                         }
                         YearMonth basePeriodStartMonthDate = YearMonth.parse(basePeriodStartMonth, formatter);
@@ -563,10 +568,10 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                         if (basePeriodStartMonthDate.isAfter(endMonthDate)) {
                             continue;
                         } else if (basePeriodStartMonthDate.isAfter(startMonthDate)) {
-                            adjustPayObj.setStartMonth(basePeriodStartMonth);
+                            subAdjustPayObj.setStartMonth(basePeriodStartMonth);
                         }
-                        adjustPayObj.setEmpBasePeriodId(subObj.getEmpBasePeriodId());
-                        overlappingPeriodList.add(adjustPayObj);
+                        subAdjustPayObj.setEmpBasePeriodId(subObj.getEmpBasePeriodId());
+                        overlappingPeriodList.add(subAdjustPayObj);
                     }
                 }
             } else { // 如果补缴起始年月大于等于费用段起始年月
@@ -592,6 +597,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
                         YearMonth startMonthDate = YearMonth.parse(adjustPayObj.getStartMonth(), formatter);
                         YearMonth endMonthDate = YearMonth.parse(adjustPayObj.getEndMonth(), formatter);
+                        SsEmpBasePeriod subAdjustPayObj = TaskCommonUtils.cloneObjet(adjustPayObj, SsEmpBasePeriod.class);
 
                         if (StringUtils.isNotEmpty(basePeriodEndMonth)) {
                             YearMonth basePeriodEndMonthDate = YearMonth.parse(basePeriodEndMonth, formatter);
@@ -599,7 +605,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                             if (basePeriodEndMonthDate.isBefore(startMonthDate)) {
                                 continue;
                             } else if (basePeriodEndMonthDate.isBefore(endMonthDate)) {
-                                adjustPayObj.setEndMonth(basePeriodEndMonth);
+                                subAdjustPayObj.setEndMonth(basePeriodEndMonth);
                             }
                         }
                         YearMonth basePeriodStartMonthDate = YearMonth.parse(basePeriodStartMonth, formatter);
@@ -607,10 +613,10 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                         if (basePeriodStartMonthDate.isAfter(endMonthDate)) {
                             continue;
                         } else if (basePeriodStartMonthDate.isAfter(startMonthDate)) {
-                            adjustPayObj.setStartMonth(basePeriodStartMonth);
+                            subAdjustPayObj.setStartMonth(basePeriodStartMonth);
                         }
-                        adjustPayObj.setEmpBasePeriodId(subObj.getEmpBasePeriodId());
-                        overlappingPeriodList.add(adjustPayObj);
+                        subAdjustPayObj.setEmpBasePeriodId(subObj.getEmpBasePeriodId());
+                        overlappingPeriodList.add(subAdjustPayObj);
                     }
                 }
 
@@ -668,6 +674,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             List<SsEmpTaskFront> ssTaskEmpBaseDetailList = ssEmpTaskFrontService.selectList(ew);
             addEmpBaseDetail(supplementPayList, ssTaskEmpBaseDetailList, bo.getEmpArchiveId(), bo.getModifiedBy(), bo.getRoundTypeMap());
             bo.setTaskCategory(Integer.valueOf(SocialSecurityConst.TASK_TYPE_4));
+            bo.setAdustType(1);
             createNonstandardData(bo, supplementPayList.get(0), null, null, null);
         }
 
@@ -866,10 +873,10 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         if (StringUtils.isBlank(ssEmpTaskPeriod.getEndMonth())) throw new BusinessException("截止时间不能为空");
         //当前月 (判断补缴只能补半年之内的)
 
-        LocalDate now = LocalDate.now();
-        String currentMonth = TaskCommonUtils.getMonthStr(now).toString();
+//        LocalDate now = LocalDate.now();
+        String handleMonth = bo.getHandleMonth();
         int endMonth = Integer.parseInt(ssEmpTaskPeriod.getEndMonth());
-        if (Integer.parseInt(currentMonth) < endMonth)
+        if (Integer.parseInt(handleMonth) < endMonth)
             throw new BusinessException("补缴的时间段的截止月份需在当前月之前。");
 
         List<SsEmpBasePeriod> newEmpBasePeriodList = taskPeriodTranserEmpBase(taskPeriods, bo, TaskPeriodConst.SUPPLEMENTARYPAYTYPE);
@@ -882,7 +889,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         adjustOrSupplement(
             ssEmpTaskPeriod.getStartMonth(),
             ssEmpTaskPeriod.getEndMonth(),
-            currentMonth,
+            handleMonth,
             ssEmpBasePeriodList,
             ssEmpBasePeriod,
             supplementPayList,
@@ -1026,12 +1033,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param bo
      */
     private void handleBackTask(SsEmpTaskBO bo, boolean isBatch) {
-        if (isBatch) {
+//        if (isBatch) {
             //查询企业 是否开户
             queryCompanyIsOpenAccount(bo);
             //查询 雇员是否新进
             queryEmployeeIsnewOrChangeInto(bo);
-        }
+//        }
         //修改任务单详细
         baseMapper.updateMyselfColumnById(bo);
 
@@ -1064,14 +1071,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param bo
      */
     private void handleTurnOutTask(SsEmpTaskBO bo, boolean isBatch) {
-        if (isBatch) {
+//        if (isBatch) {
             //查询企业 是否开户
             queryCompanyIsOpenAccount(bo);
             //查询 雇员是否新进
             queryEmployeeIsnewOrChangeInto(bo);
 
             checkEndMonth(bo);
-        }
+//        }
         //更新雇员任务信息
         baseMapper.updateMyselfColumnById(bo);
 
@@ -1124,12 +1131,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param bo
      */
     private void handleRefundAccountTask(SsEmpTaskBO bo, boolean isBatch) {
-        if (isBatch) {
+//        if (isBatch) {
             //查询企业 是否开户
             queryCompanyIsOpenAccount(bo);
             //查询 雇员是否新进
             queryEmployeeIsnewOrChangeInto(bo);
-        }
+//        }
         //更新雇员任务信息
         baseMapper.updateMyselfColumnById(bo);
 
@@ -1213,7 +1220,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      */
     private void newOrChangeInto(SsEmpTaskBO bo, boolean isBatch) {
         //如果是批量办理 则查看当前 企业是否开户
-        if (isBatch) {
+//        if (isBatch) {
             queryCompanyIsOpenAccount(bo);
             if (bo.getIsChange() == 0) {
                 //查询雇员 是否已经新进了
@@ -1221,7 +1228,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             }
             // 起缴月份必须小于或者等于办理月份
             checkStartMonth(bo);
-        }
+//        }
 
         // 如果新开（转入，含翻牌）时的更正，需先撤销之前办理的任务单
         if (bo.getIsChange() == 1) {

@@ -222,7 +222,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         }
 
         //boolean insertRes = ssEmpTaskMapper.insertEmpTask(ssEmpTask);
-        resetTaskSubmitTime(ssEmpTask);//
+        //resetTaskSubmitTime(ssEmpTask);
         Integer insertRes = ssEmpTaskMapper.insert(ssEmpTask);
         if (insertRes > 0) {
             List<SsEmpTaskFront> ssEmpTaskFrontList = new ArrayList<>();
@@ -280,7 +280,10 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         LocalDateTime now = LocalDateTime.now();
         String today = now.format(DateTimeFormatter.ofPattern("dd"));
         String thisMonth=now.format(DateTimeFormatter.ofPattern("yyyyMM"));
-        if (ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_5) || ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_6) || ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_14) || ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_15)) {//转出任务单
+        if (ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_5) ||
+            ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_6) ||
+            ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_14) ||
+            ssEmpTask.getTaskCategory() == Integer.parseInt(SocialSecurityConst.TASK_TYPE_15)) {//转出任务单
             if (Optional.ofNullable(ssEmpTask.getEndMonth()).isPresent() == false) {
                 return;
             }
@@ -291,14 +294,16 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                 String em = LocalDate.parse(ssEmpTask.getEndMonth() + today, DateTimeFormatter.ofPattern("yyyyMMdd")).plusMonths(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
                 submitMonth = em;
             }
-        } else {
-            if (Optional.ofNullable(ssEmpTask.getStartMonth()).isPresent() == false) {
-                return;
-            }
-            submitMonth = ssEmpTask.getStartMonth() + today;
+            submitTime = LocalDateTime.parse(submitMonth + " 00:00:00", DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss"));
+            ssEmpTask.setSubmitTime(submitTime);
         }
-        submitTime = LocalDateTime.parse(submitMonth + " 00:00:00", DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss"));
-        ssEmpTask.setSubmitTime(submitTime);
+//        else {
+//            if (Optional.ofNullable(ssEmpTask.getStartMonth()).isPresent() == false) {
+//                return;
+//            }
+//            submitMonth = ssEmpTask.getStartMonth() + today;
+//        }
+
     }
 
     /**

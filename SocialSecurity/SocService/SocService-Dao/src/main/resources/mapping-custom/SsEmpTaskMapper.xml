@@ -25,6 +25,8 @@
         <!-- ss_emp_archive -->
         <result column="emp_classify" property="empClassify"/>
         <result column="start_month" property="startMonth"/>
+        <result column="submitter_name" property="submitterName"/>
+
     </resultMap>
 
     <resultMap id="QueryBachResultMap" extends="BaseResultMapDto"

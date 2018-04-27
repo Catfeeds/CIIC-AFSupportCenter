@@ -8,6 +8,8 @@
         <!-- sal_company -->
         <result column="company_id" property="companyId"/>
         <result column="title" property="title"/>
+        <result column="leader_ship_name" property="leaderShipName"/>
+
     </resultMap>
     <!-- 通用查询映射结果 -->
     <resultMap id="ComAccountExtMap" extends="BaseResultMap"
@@ -36,7 +38,7 @@
         select
         ca.*,
         c.company_id,
-        c.title
+        c.title,et.leader_ship_name
         FROM ss_emp_task et
         LEFT JOIN ss_account_com_relation ssac on et.company_id = ssac.company_id AND ssac.is_active = 1
         LEFT JOIN ss_com_account ca on ca.com_account_id = ssac.com_account_id AND ca.is_active = 1

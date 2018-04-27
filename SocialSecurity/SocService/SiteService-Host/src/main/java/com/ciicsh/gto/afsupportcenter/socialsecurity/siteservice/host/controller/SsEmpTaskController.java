@@ -274,8 +274,8 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         LocalDate now = LocalDate.now();
         StringBuffer handleMonth = TaskCommonUtils.getMonthStr(now);
         empTaskBatchParameter.getSsEmpTaskBOList().forEach(p -> {
-            //1新进  2  转入 3  调整 4 补缴 5 转出 6封存 7退账
-            if ((1 == p.getTaskCategory() || 2 == p.getTaskCategory()) && p.getComAccountId() != null) {
+            // 1新进  2转入 12 翻牌新进 13翻牌转入
+            if ((1 == p.getTaskCategory() || 2 == p.getTaskCategory() || 12 == p.getTaskCategory() || 13 == p.getTaskCategory()) && p.getComAccountId() != null) {
                 Integer ssSerial = business.getSerial(p.getComAccountId());
                 //社保序号
                 p.setEmpSsSerial(String.valueOf(ssSerial));
