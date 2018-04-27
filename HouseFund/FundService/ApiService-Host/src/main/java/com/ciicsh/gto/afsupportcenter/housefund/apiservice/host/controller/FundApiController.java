@@ -64,7 +64,6 @@ public class FundApiController implements FundApiProxy{
     @PostMapping("/saveComTask")
     public JsonResult saveComTask(@RequestBody HfComTaskDTO comTaskDTO) {
         try {
-
             log.info(LogMessage.create().setTitle(Const.SAVECOMTASK.getKey()).setContent("Request: "+JSON.toJSONString(comTaskDTO)));
             if (StringUtils.isBlank(comTaskDTO.getCompanyId())) {
                 return JsonResult.faultMessage("客户Id不能为空！");
@@ -81,7 +80,6 @@ public class FundApiController implements FundApiProxy{
                 return JsonResult.success(comTaskId);
             }
         } catch (Exception e) {
-            log.error(LogMessage.create().setTitle(Const.SAVECOMTASK.getKey()).setContent(e.getMessage()));
             return JsonResult.faultMessage("exception: "+e.getMessage());
         }
 
