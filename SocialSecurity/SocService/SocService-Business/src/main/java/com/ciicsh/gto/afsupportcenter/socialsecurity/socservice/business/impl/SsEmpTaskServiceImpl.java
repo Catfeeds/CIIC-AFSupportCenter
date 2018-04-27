@@ -1213,8 +1213,10 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         //如果是批量办理 则查看当前 企业是否开户
         if (isBatch) {
             queryCompanyIsOpenAccount(bo);
-            //查询雇员 是否已经新进了
-            queryEmployeeIsnewOrChangeInto(bo);
+            if (bo.getIsChange() == 0) {
+                //查询雇员 是否已经新进了
+                queryEmployeeIsnewOrChangeInto(bo);
+            }
             // 起缴月份必须小于或者等于办理月份
             checkStartMonth(bo);
         }
@@ -1254,6 +1256,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 // 撤销雇员档案数据
                 inactiveEmpArchive(ssEmpTask.getCompanyId(), ssEmpTask.getEmployeeId(), bo.getEmpArchiveId(), bo.getModifiedBy());
             }
+
+            queryEmployeeIsnewOrChangeInto(bo);
         }
 
         //检查社保序号是否有重复
