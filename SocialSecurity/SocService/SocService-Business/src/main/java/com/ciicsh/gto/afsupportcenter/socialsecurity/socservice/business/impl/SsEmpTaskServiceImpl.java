@@ -674,7 +674,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             List<SsEmpTaskFront> ssTaskEmpBaseDetailList = ssEmpTaskFrontService.selectList(ew);
             addEmpBaseDetail(supplementPayList, ssTaskEmpBaseDetailList, bo.getEmpArchiveId(), bo.getModifiedBy(), bo.getRoundTypeMap());
             bo.setTaskCategory(Integer.valueOf(SocialSecurityConst.TASK_TYPE_4));
-            bo.setAdustType(0);
+            bo.setAdustType(1);
             createNonstandardData(bo, supplementPayList.get(0), null, null, null);
         }
 
