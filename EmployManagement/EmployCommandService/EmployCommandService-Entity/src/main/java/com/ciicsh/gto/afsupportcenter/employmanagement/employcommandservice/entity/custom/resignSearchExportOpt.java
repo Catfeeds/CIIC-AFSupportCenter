@@ -79,4 +79,7 @@ public class resignSearchExportOpt {
     @Excel(name = "公司特殊情况", orderNum = "22")
     private  String refuseSpecial;
 
+    @Excel(name = "是否翻盘",width = 20, orderNum = "23")
+    private String change;
+
 }

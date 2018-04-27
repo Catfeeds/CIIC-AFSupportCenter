@@ -53,23 +53,23 @@ public class AmIndependentCustomController extends BasicController<IAmCompanySet
             amCompanySet.setModifiedBy("sys");
         }
         boolean is_special = false;
-        if(amCompanySet.getCompanySpecial0()==1||amCompanySet.getCompanySpecial1()==1||amCompanySet.getCompanySpecial2()==1||amCompanySet.getCompanySpecial3()==1)
+        if((null!=amCompanySet.getCompanySpecial0()&&amCompanySet.getCompanySpecial0()==1)||(null!=amCompanySet.getCompanySpecial1()&&amCompanySet.getCompanySpecial1()==1)||(null!=amCompanySet.getCompanySpecial2()&&amCompanySet.getCompanySpecial2()==1)||(null!=amCompanySet.getCompanySpecial3()&&amCompanySet.getCompanySpecial3()==1))
         {
             is_special = true;
         }
-        if(amCompanySet.getCompanySpecial4()==1||amCompanySet.getCompanySpecial5()==1||amCompanySet.getCompanySpecial6()==1||amCompanySet.getCompanySpecial7()==1)
+        if((null!=amCompanySet.getCompanySpecial4()&&amCompanySet.getCompanySpecial4()==1)||(null!=amCompanySet.getCompanySpecial5()&&amCompanySet.getCompanySpecial5()==1)||(null!=amCompanySet.getCompanySpecial6()&&amCompanySet.getCompanySpecial6()==1)||(null!=amCompanySet.getCompanySpecial7()&&amCompanySet.getCompanySpecial7()==1))
         {
             is_special = true;
         }
-        if(amCompanySet.getCompanySpecial8()==1||amCompanySet.getCompanySpecial9()==1||amCompanySet.getCompanySpecial10()==1||amCompanySet.getCompanySpecial11()==1)
+        if((null!=amCompanySet.getCompanySpecial8()&&amCompanySet.getCompanySpecial8()==1)||(null!=amCompanySet.getCompanySpecial9()&&amCompanySet.getCompanySpecial9()==1)||(null!=amCompanySet.getCompanySpecial10()&&amCompanySet.getCompanySpecial10()==1)||(null!=amCompanySet.getCompanySpecial11()&&amCompanySet.getCompanySpecial11()==1))
         {
             is_special = true;
         }
-        if(amCompanySet.getCompanySpecial12()==1||amCompanySet.getCompanySpecial13()==1||amCompanySet.getCompanySpecial14()==1||amCompanySet.getCompanySpecial15()==1)
+        if((null!=amCompanySet.getCompanySpecial12()&&amCompanySet.getCompanySpecial12()==1)||(null!=amCompanySet.getCompanySpecial13()&&amCompanySet.getCompanySpecial13()==1)||(null!=amCompanySet.getCompanySpecial14()&&amCompanySet.getCompanySpecial14()==1)||(null!=amCompanySet.getCompanySpecial15()&&amCompanySet.getCompanySpecial15()==1))
         {
             is_special = true;
         }
-        if(amCompanySet.getCompanySpecial16()==1||amCompanySet.getCompanySpecial17()==1||amCompanySet.getCompanySpecial18()==1||amCompanySet.getCompanySpecial19()==1)
+        if((null!=amCompanySet.getCompanySpecial16()&&amCompanySet.getCompanySpecial16()==1)||(null!=amCompanySet.getCompanySpecial17()&&amCompanySet.getCompanySpecial17()==1)||(null!=amCompanySet.getCompanySpecial18()&&amCompanySet.getCompanySpecial18()==1)||(null!=amCompanySet.getCompanySpecial19()&&amCompanySet.getCompanySpecial19()==1))
         {
             is_special = true;
         }
@@ -82,7 +82,7 @@ public class AmIndependentCustomController extends BasicController<IAmCompanySet
         {
             is_special = true;
         }
-        if(amCompanySet.getCompanySpecial20()==1||amCompanySet.getCompanySpecial21()==1||amCompanySet.getCompanySpecial22()==1)
+        if((null!=amCompanySet.getCompanySpecial20()&&amCompanySet.getCompanySpecial20()==1)||(null!=amCompanySet.getCompanySpecial21()&&amCompanySet.getCompanySpecial21()==1)||(null!=amCompanySet.getCompanySpecial22()&&amCompanySet.getCompanySpecial22()==1))
         {
             is_special = true;
         }

@@ -70,6 +70,7 @@
         a.employee_nature,
         a.archive_direction,
         a.employ_code,
+        a.change,
         b.employment_id,
         b.employ_way,/*用工方式 */
         b.employ_property,/*用工属性 */
@@ -121,6 +122,7 @@
         a.employee_nature,
         a.archive_direction,
         a.employ_code,
+        a.change,
         b.employment_id,
         b.employ_way,/*用工方式 */
         b.employ_property,/*用工属性 */
@@ -281,6 +283,7 @@
         a.employee_nature,
         a.archive_direction,
         a.employ_code,
+        a.change,
         b.employment_id,
         b.employ_way,/*用工方式 */
         b.employ_property,/*用工属性 */
