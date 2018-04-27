@@ -82,4 +82,7 @@ public class archiveSearchExportOpt {
     @Excel(name = "公司特殊情况",width = 20, orderNum = "24")
     private  String archiveSpecial;
 
+    @Excel(name = "是否翻盘",width = 20, orderNum = "25")
+    private String change;
+
 }

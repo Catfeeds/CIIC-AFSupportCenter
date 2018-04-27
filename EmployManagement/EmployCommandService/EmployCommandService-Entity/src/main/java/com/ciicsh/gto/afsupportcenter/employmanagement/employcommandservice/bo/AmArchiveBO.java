@@ -7,7 +7,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.enti
  */
 public class AmArchiveBO extends AmArchive {
 
-    private  Integer  isEnd;
+    private  Boolean  end;
 
     private  String isFrist;
 
@@ -19,11 +19,11 @@ public class AmArchiveBO extends AmArchive {
         this.isFrist = isFrist;
     }
 
-    public Integer getIsEnd() {
-        return isEnd;
+    public Boolean getEnd() {
+        return end;
     }
 
-    public void setIsEnd(Integer isEnd) {
-        this.isEnd = isEnd;
+    public void setEnd(Boolean end) {
+        this.end = end;
     }
 }

@@ -226,9 +226,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                 amArchiveBO = amArchiveBOList.get(0);
                 if(!StringUtil.isEmpty(amArchiveBO.getEmployFeedback()))
                 {
-                   if(!"11".equals(amArchiveBO.getEmployFeedback())){
-                       amArchiveBO.setIsEnd(0);
-                   }
+                    if(!"11".equals(amArchiveBO.getEmployFeedback())){
+                        amArchiveBO.setEnd(true);
+                    }
                 }
             }
         }
@@ -299,7 +299,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @Log("保存用工档案")
     @RequestMapping("/saveAmArchive")
-    public  JsonResult<AmArchive>  saveAmArchive(AmArchiveBO amArchiveBO){
+    public  JsonResult<AmArchiveBO>  saveAmArchive(AmArchiveBO amArchiveBO){
 
         Map<String,Object> map = null;
 
@@ -311,6 +311,12 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         Boolean result = (Boolean)map.get("result");
         AmArchive entity = (AmArchive)map.get("entity");
+        amArchiveBO.setArchiveId(entity.getArchiveId());
+        if(result){
+            if(!"11".equals(amArchiveBO.getEmployFeedback())){
+                amArchiveBO.setEnd(true);
+            }
+        }
 
         String taskId = null;
         if(map.get("taskId")!=null)
@@ -318,8 +324,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             taskId = map.get("taskId").toString();
         }
 
+        //如果满足在用工办理页面提交
         if("0".equals(amArchiveBO.getIsFrist()))
-        {//如果满足在用工办理页面提交
+        {
             if(result&&!StringUtil.isEmpty(entity.getEmployFeedback()))
             {
                 /**
@@ -344,7 +351,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             }
         }
 
-        return JsonResultKit.of(entity);
+        return JsonResultKit.of(amArchiveBO);
     }
 
     @PostMapping("/saveAmRemark")
