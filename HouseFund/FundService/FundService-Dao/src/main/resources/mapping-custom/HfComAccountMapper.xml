@@ -69,6 +69,8 @@
         <result column="company_name" jdbcType="VARCHAR" property="companyName"/>
         <result column="account_manager" jdbcType="VARCHAR" property="accountManager"/>
         <result column="binded_time" jdbcType="VARCHAR" property="bindedTime"/>
+        <result column="leader_ship_name" jdbcType="VARCHAR" property="leaderShipName"/>
+
     </resultMap>
 
     <resultMap id="ComAccountTransBo"
@@ -250,6 +252,7 @@
                 a.created_time,
                 '%Y-%m-%d %h:%i'
             ) AS binded_time
+            ,(select leader_ship_name from hf_com_task where company_id=a.company_id limit 1) leader_ship_name
         FROM
             hf_account_com_relation a
         INNER JOIN sal_company b ON a.company_id = b.company_id
