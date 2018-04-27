@@ -253,12 +253,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param bo
      */
     private void handleAdjustmentTask(SsEmpTaskBO bo, boolean isBatch) {
-        if (isBatch) {
+//        if (isBatch) {
             //查询企业 是否开户
             queryCompanyIsOpenAccount(bo);
             //查询 雇员是否新进
             queryEmployeeIsnewOrChangeInto(bo);
-        }
+//        }
         //修改任务单详细
         baseMapper.updateMyselfColumnById(bo);
 
@@ -1032,12 +1032,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param bo
      */
     private void handleBackTask(SsEmpTaskBO bo, boolean isBatch) {
-        if (isBatch) {
+//        if (isBatch) {
             //查询企业 是否开户
             queryCompanyIsOpenAccount(bo);
             //查询 雇员是否新进
             queryEmployeeIsnewOrChangeInto(bo);
-        }
+//        }
         //修改任务单详细
         baseMapper.updateMyselfColumnById(bo);
 
@@ -1070,14 +1070,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param bo
      */
     private void handleTurnOutTask(SsEmpTaskBO bo, boolean isBatch) {
-        if (isBatch) {
+//        if (isBatch) {
             //查询企业 是否开户
             queryCompanyIsOpenAccount(bo);
             //查询 雇员是否新进
             queryEmployeeIsnewOrChangeInto(bo);
 
             checkEndMonth(bo);
-        }
+//        }
         //更新雇员任务信息
         baseMapper.updateMyselfColumnById(bo);
 
@@ -1130,12 +1130,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @param bo
      */
     private void handleRefundAccountTask(SsEmpTaskBO bo, boolean isBatch) {
-        if (isBatch) {
+//        if (isBatch) {
             //查询企业 是否开户
             queryCompanyIsOpenAccount(bo);
             //查询 雇员是否新进
             queryEmployeeIsnewOrChangeInto(bo);
-        }
+//        }
         //更新雇员任务信息
         baseMapper.updateMyselfColumnById(bo);
 
@@ -1219,7 +1219,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      */
     private void newOrChangeInto(SsEmpTaskBO bo, boolean isBatch) {
         //如果是批量办理 则查看当前 企业是否开户
-        if (isBatch) {
+//        if (isBatch) {
             queryCompanyIsOpenAccount(bo);
             if (bo.getIsChange() == 0) {
                 //查询雇员 是否已经新进了
@@ -1227,7 +1227,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             }
             // 起缴月份必须小于或者等于办理月份
             checkStartMonth(bo);
-        }
+//        }
 
         // 如果新开（转入，含翻牌）时的更正，需先撤销之前办理的任务单
         if (bo.getIsChange() == 1) {
