@@ -252,10 +252,10 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     }
 //                    condition.put("task_category", hfEmpTask.getTaskCategory());
                     hfEmpTaskWrapper.eq("hf_type", hfEmpTask.getHfType());
-                    hfEmpTaskWrapper.eq("is_change", HfEmpTaskConstant.IS_CHANGE_NO);
-                    hfEmpTaskWrapper.eq("task_status", HfEmpTaskConstant.TASK_STATUS_HANDLED);
+//                    hfEmpTaskWrapper.eq("is_change", HfEmpTaskConstant.IS_CHANGE_NO);
+                    hfEmpTaskWrapper.in("task_status", new Integer[] {HfEmpTaskConstant.TASK_STATUS_HANDLED, HfEmpTaskConstant.TASK_STATUS_COMPLETED});
                     hfEmpTaskWrapper.eq("is_active", hfEmpTask.getActive());
-                    List<HfEmpTask> hfEmpTaskList = this.selectByMap(condition);
+                    List<HfEmpTask> hfEmpTaskList = this.selectList(hfEmpTaskWrapper);
 
                     if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
                         if (hfEmpTaskList.size() > 1) {
@@ -263,6 +263,10 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                         }
 
                         List<Long> empTaskIdList = new ArrayList<>();
+                        if (hfEmpTaskList.get(0).getTaskStatus() == HfEmpTaskConstant.TASK_STATUS_COMPLETED) {
+                            return JsonResultKit.ofError("该雇员的雇员新增任务单已完成，不能更正");
+                        }
+
                         empTaskIdList.add(hfEmpTaskList.get(0).getEmpTaskId());
 
                         hfMonthChargeService.deleteHfMonthCharges(empTaskIdList);
@@ -646,6 +650,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         inputHfEmpTask.setModifiedTime(LocalDateTime.now());
         inputHfEmpTask.setModifiedBy(UserContext.getUserId());
         inputHfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+        inputHfEmpTask.setHfType(hfEmpTask.getHfType());
 
         this.updateById(inputHfEmpTask);
 
@@ -1672,6 +1677,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 
         hfEmpArchive.setModifiedBy(inputHfEmpTask.getModifiedBy());
         boolean isNew = false;
+        Long addedEmpArchiveId = null;
 
         if (empArchiveId == null) {
             hfEmpArchive.setCompanyId(params.getString("companyId"));
@@ -1680,6 +1686,22 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             hfEmpArchive.setHfType(inputHfEmpTask.getHfType());
             if (hfEmpArchive.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
                 hfEmpArchive.setComAccountClassId(params.getLong("basicComAccountClassId"));
+
+                // 查询同雇员补充公积金雇员档案的所属公积金档案
+                Wrapper<HfEmpArchive> wrapper = new EntityWrapper<>();
+                wrapper.eq("company_id", hfEmpArchive.getCompanyId());
+                wrapper.eq("employee_id", hfEmpArchive.getEmployeeId());
+                wrapper.eq("com_account_id", hfEmpArchive.getComAccountId());
+                wrapper.eq("hf_type", HfEmpTaskConstant.HF_TYPE_ADDED);
+                wrapper.ne("archive_status", HfEmpArchiveConstant.ARCHIVE_STATUS_CLOSED);
+                wrapper.eq("is_active", 1);
+                List<HfEmpArchive> hfEmpArchiveList = hfEmpArchiveService.selectList(wrapper);
+                if (CollectionUtils.isNotEmpty(hfEmpArchiveList)) {
+                    if (hfEmpArchiveList.size() > 1) {
+                        throw new BusinessException("该雇员的补充公积金雇员档案重复，数据不正确");
+                    }
+                    addedEmpArchiveId = hfEmpArchiveList.get(0).getEmpArchiveId();
+                }
             } else {
                 hfEmpArchive.setComAccountClassId(params.getLong("addedComAccountClassId"));
                 hfEmpArchive.setBelongEmpArchiveId(params.getLong("belongEmpArchiveId"));
@@ -1697,8 +1719,20 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         hfEmpArchiveService.insertOrUpdate(hfEmpArchive);
 
         if (isNew) {
-            inputHfEmpTask.setEmpArchiveId(hfEmpArchive.getEmpArchiveId());
-            return hfEmpArchive.getEmpArchiveId();
+            Long newEmpArchiveId = hfEmpArchive.getEmpArchiveId();
+            inputHfEmpTask.setEmpArchiveId(newEmpArchiveId);
+
+            // 基本公积金雇员档案创建时，更新同雇员补充公积金雇员档案的所属公积金档案ID
+            if (addedEmpArchiveId != null) {
+                hfEmpArchive = new HfEmpArchive();
+                hfEmpArchive.setEmpArchiveId(addedEmpArchiveId);
+                hfEmpArchive.setBelongEmpArchiveId(newEmpArchiveId);
+                hfEmpArchive.setModifiedTime(LocalDateTime.now());
+                hfEmpArchive.setModifiedBy(inputHfEmpTask.getModifiedBy());
+                hfEmpArchiveService.updateById(hfEmpArchive);
+            }
+
+            return newEmpArchiveId;
         }
         return null;
     }

@@ -274,9 +274,9 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
 
             // 查询当前雇员除该任务单之外的所有任务单信息
             EntityWrapper<HfEmpTask> wrapper = new EntityWrapper<>();
-            wrapper.where("company_id={0} AND employee_id={1} AND emp_task_id != {2} AND is_active = 1",
+            wrapper.where("company_id={0} AND employee_id={1} AND emp_task_id != {2} AND task_category != 8 AND is_active = 1",
                 hfEmpTaskHandleBo.getCompanyId(), hfEmpTaskHandleBo.getEmployeeId(), hfEmpTaskHandleBo.getEmpTaskId());
-            wrapper.orderBy("emp_task_id", false);
+            wrapper.orderBy("created_time", false);
             List<HfEmpTask> hfEmpTasks = business.selectList(wrapper);
             if (CollectionUtils.isNotEmpty(hfEmpTasks)) {
                 List<HfEmpTaskRemarkBo> hfEmpTaskRemarkBos = new ArrayList<>();

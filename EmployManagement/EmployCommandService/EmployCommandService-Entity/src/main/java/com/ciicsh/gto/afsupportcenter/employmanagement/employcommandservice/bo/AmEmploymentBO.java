@@ -98,6 +98,16 @@ public class AmEmploymentBO extends AmEmployment {
 
     private Integer taskCategoryResign;
 
+    private String change;
+
+    public String getChange() {
+        return change;
+    }
+
+    public void setChange(String change) {
+        this.change = change;
+    }
+
     public Integer getTaskCategoryResign() {
         return taskCategoryResign;
     }
