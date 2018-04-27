@@ -67,10 +67,11 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
 
     @Override
     public void updateByTypeAndDocType(AmArchiveDocSeq seq) {
-        if(seq.getType() == null || seq.getDocType() == null || "".equals(seq.getDocType())){
-            return;
-        }
         amArchiveDocSeqMapper.updateByTypeAndDocType(seq);
+    }
+
+    public List<AmArchiveDocSeqBO> queryCountHaveAbove(AmArchiveDocSeq seq){
+        return amArchiveDocSeqMapper.queryCountHaveAbove(seq);
     }
 
     @Override
@@ -112,18 +113,29 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
         map.put("entity",entity);
 
         // 修改预留档案编号 seq
-        AmArchiveDocSeq seq = new AmArchiveDocSeq();
-        seq.setType(1);
-        seq.setDocType(amArchiveBO.getYuliuDocType());
-        seq.setDocSeq(Integer.parseInt( amArchiveBO.getYuliuDocNum()));
-        this.updateByTypeAndDocType(seq);
+        if(amArchiveBO.getYuliuDocNum() != null && amArchiveBO.getYuliuDocType() != null){
+            AmArchiveDocSeq seq = new AmArchiveDocSeq();
+            seq.setType(1);
+            seq.setDocType(amArchiveBO.getYuliuDocType());
+            seq.setDocSeq(Integer.parseInt( amArchiveBO.getYuliuDocNum()));
+            List<AmArchiveDocSeqBO> list = this.queryCountHaveAbove(seq);
+            // 比原有的seq要大
+            if(list.size() == 0){
+                this.updateByTypeAndDocType(seq);
+            }
+        }
         // 修改档案编号 seq
-        AmArchiveDocSeq seq2 = new AmArchiveDocSeq();
-        seq2.setType(2);
-        seq2.setDocType(amArchiveBO.getDocType());
-        seq2.setDocSeq(Integer.parseInt( amArchiveBO.getDocNum()));
-        this.updateByTypeAndDocType(seq2);
-
+        if(amArchiveBO.getDocNum() != null && amArchiveBO.getDocType() != null){
+            AmArchiveDocSeq seq2 = new AmArchiveDocSeq();
+            seq2.setType(2);
+            seq2.setDocType(amArchiveBO.getDocType());
+            seq2.setDocSeq(Integer.parseInt( amArchiveBO.getDocNum()));
+            List<AmArchiveDocSeqBO> list = this.queryCountHaveAbove(seq2);
+            // 比原有的seq要大
+            if(list.size() == 0){
+                this.updateByTypeAndDocType(seq2);
+            }
+        }
         return map;
     }
 }

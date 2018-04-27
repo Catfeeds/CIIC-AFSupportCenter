@@ -23,5 +23,5 @@ public interface AmArchiveDocSeqMapper extends BaseMapper<AmArchiveDocSeq> {
 
     void updateByTypeAndDocType(AmArchiveDocSeq seq);
 
-
+    List<AmArchiveDocSeqBO> queryCountHaveAbove(AmArchiveDocSeq seq);
 }
