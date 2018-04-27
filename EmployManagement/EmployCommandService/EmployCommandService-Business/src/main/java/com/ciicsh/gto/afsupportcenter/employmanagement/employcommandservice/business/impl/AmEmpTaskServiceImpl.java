@@ -195,6 +195,14 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 }
             }
 
+            //如果是翻盘
+            if("emp_company_change".equals(taskMsgDTO.getProcessDefinitionKey()))
+            {
+                amEmpTask.setChange("是");
+            }else{
+                amEmpTask.setChange("否");
+            }
+
 
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -315,6 +323,13 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                         }
                     }
                 }
+            }
+            //如果是翻盘
+            if("emp_company_change".equals(taskMsgDTO.getProcessDefinitionKey()))
+            {
+                amEmpTask.setChange("是");
+            }else{
+                amEmpTask.setChange("否");
             }
             if(employeeCompany!=null&&employeeCompany.getHireUnit()!=null)
             {

@@ -201,15 +201,9 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
         {
             return  0;
         }
-        if("changeOther".equals(outReasonCode))
-        {
-            if("4".equals(resignFeedback)){
-                return  0;
-            }else{
-                return 1;
-            }
-
-        }
+        /**
+         * 13 15 代表无需退工(退工原因)，转其他城市缴纳按照辞职的原因来看待
+         */
         if("13".equals(outReasonCode)||"15".equals(outReasonCode))
         {
             if("1".equals(resignFeedback))
