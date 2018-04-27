@@ -199,6 +199,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             if("emp_company_change".equals(taskMsgDTO.getProcessDefinitionKey()))
             {
                 amEmpTask.setChange("是");
+            }else{
+                amEmpTask.setChange("否");
             }
 
 
@@ -326,6 +328,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             if("emp_company_change".equals(taskMsgDTO.getProcessDefinitionKey()))
             {
                 amEmpTask.setChange("是");
+            }else{
+                amEmpTask.setChange("否");
             }
             if(employeeCompany!=null&&employeeCompany.getHireUnit()!=null)
             {
