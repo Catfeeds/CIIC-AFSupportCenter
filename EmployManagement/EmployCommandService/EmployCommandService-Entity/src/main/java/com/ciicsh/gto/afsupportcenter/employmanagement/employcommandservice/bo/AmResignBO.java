@@ -130,6 +130,16 @@ public class AmResignBO extends AmResign {
 
     private String archiveDirection;
 
+    private String change;
+
+    public String getChange() {
+        return change;
+    }
+
+    public void setChange(String change) {
+        this.change = change;
+    }
+
     public String getArchiveDirection() {
         return archiveDirection;
     }
