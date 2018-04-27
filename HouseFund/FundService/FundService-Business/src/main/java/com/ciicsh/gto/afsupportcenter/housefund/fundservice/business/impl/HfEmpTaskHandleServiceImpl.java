@@ -646,6 +646,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         inputHfEmpTask.setModifiedTime(LocalDateTime.now());
         inputHfEmpTask.setModifiedBy(UserContext.getUserId());
         inputHfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+        inputHfEmpTask.setHfType(hfEmpTask.getHfType());
 
         this.updateById(inputHfEmpTask);
 
