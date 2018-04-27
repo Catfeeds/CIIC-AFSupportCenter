@@ -348,14 +348,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         Integer minStartDateTask = Integer.valueOf(ssEmpTaskPeriod.getStartMonth());
         //原来数据库历史数据 最大的时间段
         SsEmpBasePeriod ssEmpBasePeriod = ssEmpBasePeriodList.get(ssEmpBasePeriodList.size() - 1);
-        //判断是否大于当前月
-        LocalDate nowDate = LocalDate.now();
-        StringBuffer nowDateStr = TaskCommonUtils.getMonthStr(nowDate);
-        Integer currentYearMonth = Integer.valueOf(nowDateStr.toString());
-//        Integer handleMonth = Integer.valueOf(bo.getHandleMonth());
+        //判断是否大于办理月
+//        LocalDate nowDate = LocalDate.now();
+//        StringBuffer nowDateStr = TaskCommonUtils.getMonthStr(nowDate);
+//        Integer currentYearMonth = Integer.valueOf(nowDateStr.toString());
+        Integer handleMonth = Integer.valueOf(bo.getHandleMonth());
 
         //通过各自的开始时间进行比较 判断是否有交叉
-        if (minStartDateTask >= currentYearMonth) {
+        if (minStartDateTask >= handleMonth) {
             // 顺调
             // 添加 新添加的时间段
             List<SsEmpBasePeriod> newEmpBasePeriodList = taskPeriodTranserEmpBase(taskPeriods, bo, TaskPeriodConst.ADJUSTMENTTYPE);
@@ -413,11 +413,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         addPeriodList.clear();
         supplementPayList.clear();
         //当前月时间
-        LocalDate now = LocalDate.now();
-        //当月时间
-        StringBuffer currentMonthObj = TaskCommonUtils.getMonthStr(now);
+//        LocalDate now = LocalDate.now();
+        String handleMonth = bo.getHandleMonth();
+        YearMonth handleMonthDate = YearMonth.parse(handleMonth, formatter);
+
         //前月时间
-        StringBuffer lastMonthObj = TaskCommonUtils.getMonthStr(now.minusMonths(1));
+        String lastMonth = handleMonthDate.minusMonths(1).format(formatter);
 
         //表示前端 输入的endMonth为空,即调整 输入月份到将来
         if (StringUtils.isBlank(ssEmpTaskPeriod.getEndMonth())) {
@@ -427,12 +428,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             //默认当前月份在 最大startMonth 之后
             //将最大startMonth切成两段
             SsEmpBasePeriod addPeriodObj = TaskCommonUtils.cloneObjet(basePeriod, SsEmpBasePeriod.class);
-            addPeriodObj = setValueForEmpBasePeriod(addPeriodObj, ssEmpTaskPeriod, currentMonthObj.toString());
+            addPeriodObj = setValueForEmpBasePeriod(addPeriodObj, ssEmpTaskPeriod, handleMonth);
             addPeriodObj.setEndMonth(null);
-            addPeriodObj.setStartMonth(currentMonthObj.toString()); // 顺调时切段，新费用段，应该是从当前月（办理月）至将来
+            addPeriodObj.setStartMonth(handleMonth); // 顺调时切段，新费用段，应该是从当前月（办理月）至将来
 
             SsEmpBasePeriod ssEmpBasePeriod = ssEmpBasePeriodList.get(ssEmpBasePeriodList.size() - 1);
-            ssEmpBasePeriod.setEndMonth(lastMonthObj.toString());
+            ssEmpBasePeriod.setEndMonth(lastMonth);
             if (YearMonth.parse(ssEmpBasePeriod.getStartMonth(), formatter).isAfter(YearMonth.parse(ssEmpBasePeriod.getEndMonth(), formatter))) {
                 SsEmpBasePeriod updatePeriod = new SsEmpBasePeriod();
                 updatePeriod.setEmpBasePeriodId(ssEmpBasePeriod.getEmpBasePeriodId());
@@ -453,12 +454,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             //当前月到永远的那段 （即如果调整是到永远的话，则从下月设置到永远）
             addPeriodList.add(addPeriodObj);
             SsEmpBasePeriod needAdjustObj = TaskCommonUtils.cloneObjet(basePeriod, SsEmpBasePeriod.class);
-            needAdjustObj.setEndMonth(lastMonthObj.toString());
+            needAdjustObj.setEndMonth(lastMonth);
 
             adjustOrSupplement(
                 ssEmpTaskPeriod.getStartMonth(),
-                lastMonthObj.toString(),
-                currentMonthObj.toString(),
+                lastMonth,
+                handleMonth,
                 ssEmpBasePeriodList,
                 needAdjustObj,
                 supplementPayList,
@@ -866,10 +867,10 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         if (StringUtils.isBlank(ssEmpTaskPeriod.getEndMonth())) throw new BusinessException("截止时间不能为空");
         //当前月 (判断补缴只能补半年之内的)
 
-        LocalDate now = LocalDate.now();
-        String currentMonth = TaskCommonUtils.getMonthStr(now).toString();
+//        LocalDate now = LocalDate.now();
+        String handleMonth = bo.getHandleMonth();
         int endMonth = Integer.parseInt(ssEmpTaskPeriod.getEndMonth());
-        if (Integer.parseInt(currentMonth) < endMonth)
+        if (Integer.parseInt(handleMonth) < endMonth)
             throw new BusinessException("补缴的时间段的截止月份需在当前月之前。");
 
         List<SsEmpBasePeriod> newEmpBasePeriodList = taskPeriodTranserEmpBase(taskPeriods, bo, TaskPeriodConst.SUPPLEMENTARYPAYTYPE);
@@ -882,7 +883,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         adjustOrSupplement(
             ssEmpTaskPeriod.getStartMonth(),
             ssEmpTaskPeriod.getEndMonth(),
-            currentMonth,
+            handleMonth,
             ssEmpBasePeriodList,
             ssEmpBasePeriod,
             supplementPayList,
