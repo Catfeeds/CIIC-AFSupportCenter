@@ -22,4 +22,6 @@ public interface IAmArchiveService extends IService<AmArchive> {
 
     void updateByTypeAndDocType(AmArchiveDocSeq seq);
 
+    Map<String,Object>  saveArchive(AmArchiveBO amArchiveBO);
+
 }

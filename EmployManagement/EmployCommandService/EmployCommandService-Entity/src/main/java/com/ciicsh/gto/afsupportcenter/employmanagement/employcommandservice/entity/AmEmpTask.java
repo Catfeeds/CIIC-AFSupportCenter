@@ -138,6 +138,11 @@ public class AmEmpTask implements Serializable {
     @TableField("employ_code")
     private Integer employCode;
     /**
+     * 是否翻盘
+     */
+    @TableField("change")
+    private  String  change;
+    /**
      * 是否可用
      */
     @TableField("is_active")
@@ -165,6 +170,14 @@ public class AmEmpTask implements Serializable {
     @TableField("emp_company_id")
     private String empCompanyId;
 
+
+    public String getChange() {
+        return change;
+    }
+
+    public void setChange(String change) {
+        this.change = change;
+    }
 
     public String getOutReasonCode() {
         return outReasonCode;
