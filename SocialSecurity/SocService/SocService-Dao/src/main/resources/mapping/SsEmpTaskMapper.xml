@@ -897,9 +897,11 @@
             et.service_center_id,
             et.service_center
         FROM ss_emp_task et
+        <if test="userId != null">
         INNER JOIN ss_dataauth_company sdc ON et.company_id = sdc.company_id
         INNER JOIN ss_dataauth_task_category sdtc ON et.task_category = sdtc.task_category AND sdc.user_id = sdtc.user_id
         INNER JOIN ss_dataauth_welfare_unit sdwu ON et.welfare_unit = sdwu.welfare_unit AND sdc.user_id = sdwu.user_id
+        </if>
         WHERE et.is_active = 1
         <if test="empTaskId != null">
           AND et.emp_task_id = #{empTaskId}
