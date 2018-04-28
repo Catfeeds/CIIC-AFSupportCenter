@@ -20,13 +20,11 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import scala.Int;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
@@ -248,6 +246,12 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         if(null!=amArchiveBO){
             resultMap.put("amArchaiveBo",amArchiveBO);
         }
+
+        // 预留档案类别
+        List<AmArchiveDocSeqBO> boList = amArchiveService.queryAmArchiveDocTypeByType(1);
+        List<AmArchiveDocSeqBO> boList2 = amArchiveService.queryAmArchiveDocTypeByType(2);
+        resultMap.put("docSeqList",boList);
+        resultMap.put("docSeqList2",boList2);
 
         if(null!= resultEmployList&&resultEmployList.size()>0)
         {
