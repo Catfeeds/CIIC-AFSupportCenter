@@ -1112,6 +1112,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
             //创建非标数据
             createNonstandardData(bo, ssEmpBasePeriod, null, null, null);
+            Long empBasePeriodId = ssEmpBasePeriod.getEmpBasePeriodId();
+            //通过empBasePeriodId 获得明细
+            Wrapper<SsEmpBaseDetail> ew = new EntityWrapper<>();
+            ew.where("emp_base_period_id={0}", empBasePeriodId).and("is_active=1");
+            List<SsEmpBaseDetail> ssEmpBaseDetailList = ssEmpBaseDetailService.selectList(ew);
+            if (ssEmpBaseDetailList.size() == 0) throw new BusinessException("费用段明细数据不正确");
+            ssEmpBasePeriod.setListEmpBaseDetail(ssEmpBaseDetailList);
+            bo.setListEmpBasePeriod(ssEmpBasePeriodList);
         } else throw new BusinessException("数据库没有缴纳时间段");
     }
 
@@ -1933,7 +1941,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         EntityWrapper<SsEmpBaseDetail> ew = new EntityWrapper();
         ew.where("emp_base_period_id={0}", empBasePeriodId).and("is_active=1");
         List<SsEmpBaseDetail> ssEmpBaseDetailList = ssEmpBaseDetailService.selectList(ew);
-        if (ssEmpBaseDetailList.size() == 0) throw new BusinessException("后台异常");
+        if (ssEmpBaseDetailList.size() == 0) throw new BusinessException("费用段明细数据不正确");
         //获得月度变更 对象 和 详细数据
         addSsMonthChargeAndDetails(ssEmpTaskBO, ssEmpBasePeriod, ssEmpBaseDetailList, null, null);
     }
