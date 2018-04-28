@@ -138,7 +138,7 @@ public class AmArchive implements Serializable {
      * 录用处理结束
      */
 	@TableField("luyong_handle_end")
-	private String luyongHandleEnd;
+	private Boolean luyongHandleEnd;
     /**
      * 档案中途转出
      */
@@ -511,15 +511,15 @@ public class AmArchive implements Serializable {
 		this.storageDate = storageDate;
 	}
 
-	public String getLuyongHandleEnd() {
-		return luyongHandleEnd;
-	}
+    public Boolean getLuyongHandleEnd() {
+        return luyongHandleEnd;
+    }
 
-	public void setLuyongHandleEnd(String luyongHandleEnd) {
-		this.luyongHandleEnd = luyongHandleEnd;
-	}
+    public void setLuyongHandleEnd(Boolean luyongHandleEnd) {
+        this.luyongHandleEnd = luyongHandleEnd;
+    }
 
-	public String getDocHalfwayOut() {
+    public String getDocHalfwayOut() {
 		return docHalfwayOut;
 	}
 

@@ -29,8 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by zhangzhiwen on 2018/2/6.
@@ -310,8 +308,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         {
             AmArchiveBO  amArchiveBO = amArchiveBOList.get(0);
             AmArchiveDTO amArchiveDTO = new AmArchiveDTO();
+            resultMap.put("amArchaiveBo",amArchiveBO);
             BeanUtils.copyProperties(amArchiveBO,amArchiveDTO);
-            resultMap.put("amArchaiveBo",amArchiveDTO);
+
             AmInjuryBO amInjuryBO = new AmInjuryBO();
             amInjuryBO.setArchiveId(amArchiveBO.getArchiveId().toString());
 
