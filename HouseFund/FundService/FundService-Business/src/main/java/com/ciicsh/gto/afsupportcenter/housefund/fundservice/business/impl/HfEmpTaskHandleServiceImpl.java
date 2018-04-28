@@ -215,7 +215,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 
             if (CollectionUtils.isNotEmpty(hfPaymentAccountList)
                 && hfPaymentAccountList.get(0).getPaymentId() != null
-                && !hfPaymentAccountList.get(0).getPaymentId().equals(0)) {
+                && !hfPaymentAccountList.get(0).getPaymentId().equals(0L)) {
                 return JsonResultKit.ofError("当前任务单所属的企业账户在当前汇缴月已经开始汇缴支付，不能再办理任务单");
             }
 
