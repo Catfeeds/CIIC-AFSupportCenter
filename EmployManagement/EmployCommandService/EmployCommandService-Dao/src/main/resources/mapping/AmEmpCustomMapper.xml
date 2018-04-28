@@ -19,4 +19,22 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMapDTO" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmCustomBO">
+    </resultMap>
+
+    <select id="getCustom" resultMap="BaseResultMapDTO">
+        SELECT
+        a.*, b.employee_center_operator,
+        b.company_id,
+        e.title as companyName
+        FROM
+        am_emp_custom a
+        LEFT JOIN am_emp_employee b ON a.emp_task_id = b.emp_task_id
+        LEFT JOIN sal_company e on e.company_id = b.company_id
+        where
+        a.emp_task_id = #{empTaskId}
+    </select>
+
 </mapper>

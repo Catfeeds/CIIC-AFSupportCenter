@@ -284,6 +284,10 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             entity.setModifiedBy(userId);
             entity.setIsActive(1);
         }else{
+            AmEmployment entity1 = amEmploymentService.selectById(entity.getEmploymentId());
+            entity.setCreatedBy(entity1.getCreatedBy());
+            entity.setCreatedTime(entity1.getCreatedTime());
+            entity.setIsActive(1);
             entity.setModifiedTime(now);
             entity.setModifiedBy(userId);
         }

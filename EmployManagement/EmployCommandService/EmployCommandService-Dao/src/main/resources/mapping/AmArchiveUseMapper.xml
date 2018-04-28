@@ -24,4 +24,17 @@
 
 	</resultMap>
 
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMapDTO" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmArchiveUseBO">
+    </resultMap>
+
+    <select id="queryAmArchiveUseList" resultMap="BaseResultMapDTO">
+        select * from  am_archive_use  where is_active = 1 and employee_id = #{employeeId} and archive_id = #{archiveId} and use_borrow = #{useBorrow}
+    </select>
+
+    <update id="deleteAmArchiveUse">
+        update  am_archive_use  set is_active = 0  where archive_use_id = #{archiveUseId}
+    </update>
+
 </mapper>
