@@ -118,7 +118,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     ) {
 //        SsEmpTask empTask = business.selectById(empTaskId);
         SsEmpTask empTask;
-        List<SsEmpTask> empTaskList = business.queryEmpTaskById(empTaskId, UserContext.getUserId());
+        List<SsEmpTask> empTaskList = business.queryEmpTaskById(empTaskId, null);
         if (CollectionUtils.isNotEmpty(empTaskList)) {
             if (empTaskList.size() > 1) {
                 return JsonResultKit.ofError("该任务单所关联的权限数据有问题");

@@ -360,6 +360,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
                     case 11://翻牌启封
                         empArchive.setArchiveStatus(2); //已做
                         empArchive.setArchiveTaskStatus(2); //已做
+                        break;
                     case 4://转出
                     case 5://封存
                     case 12://翻牌转出

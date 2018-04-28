@@ -41,8 +41,6 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
      */
     @PostMapping("/paymentQuery")
     public JsonResult<List<SsPaymentBO>> paymentQuery(PageInfo pageInfo) {
-
-
         PageRows<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentBO> pageBORows = business.paymentQuery(pageInfo);
         PageRows<SsPaymentBO> pageRows = new PageRows<SsPaymentBO>();
         BeanUtils.copyProperties(pageBORows, pageRows);
@@ -57,25 +55,18 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
      */
     @PostMapping("/showAddBatch")
     public JsonResult<List<SsPaymentBO>> showAddBatch(SsPaymentSrarchBO paymentSrarchDTO) {
-
         com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentSrarchBO ssPaymentSrarchBO = CommonTransform.convertToEntity(paymentSrarchDTO, com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentSrarchBO
             .class);
-
         //将要检索的状态写入查询条件
         List<String> paymentStateList = new ArrayList<>();
         paymentStateList.add("3");//3 ,可付
         paymentStateList.add("5");//5,内部审批批退
         paymentStateList.add("7");//财务部批退
         ssPaymentSrarchBO.setPaymentStateList(paymentStateList);
-
         List<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentBO> resultList = business.showAddBatch(ssPaymentSrarchBO);
-
         List<SsPaymentBO> resultDTOList = CommonTransform.convertToDTOs(resultList, SsPaymentBO.class);
-
-
         JsonResult<List<SsPaymentBO>> jsonResult = new JsonResult<>();
         jsonResult.setData(resultDTOList);
-
         return jsonResult;
     }
 
@@ -107,7 +98,6 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
         SsPayment ssPayment = CommonTransform.convertToEntity(ssOperatePaymentDTO, SsPayment.class);
         //执行业务
         json = business.doDelPayment(ssPayment);
-
         return json;
     }
 
@@ -133,7 +123,6 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
         //拼接字符
         String paymentMonth = year + "" + (String.valueOf(month).length()==1?"0"+month : month);
         json.setData(paymentMonth);
-
         return json;
     }
 
@@ -149,7 +138,6 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
         SsPayment ssPayment = CommonTransform.convertToEntity(ssPaymentDTO, SsPayment.class);
         //执行业务
         json = business.addPayment(ssPayment);
-
         return json;
     }
 
@@ -172,7 +160,6 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
             paymentStateList.add(6);
             //财务部支付成功
             paymentStateList.add(8);
-
             ssPaymentBO.setPaymentStateList(paymentStateList);
             pageInfo.put(ssPaymentBO);
         }
@@ -180,8 +167,6 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
         PageRows<com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentBO> pageBORows = business.paymentQuery(pageInfo);
         PageRows<SsPaymentBO> pageRows = new PageRows<SsPaymentBO>();
         BeanUtils.copyProperties(pageBORows, pageRows);
-
-
         return JsonResultKit.ofPage(pageRows);
     }
 
@@ -192,17 +177,10 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
      */
     @PostMapping("/doReviewdePass")
     public JsonResult<String> doReviewdePass(SsOperatePaymentBO ssOperatePaymentDTO) {
-
-//        try {
-//            Thread.currentThread().sleep(15000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
         //数据转换
         SsPayment ssPayment = CommonTransform.convertToEntity(ssOperatePaymentDTO, SsPayment.class);
         //执行业务
         JsonResult<String> json = business.doReviewdePass(ssPayment);
-
         //如果返回失败 不更新
         if (json.getCode() == 0) {
             ssPaymentComService.saveReviewdePassResult(ssPayment);
@@ -222,7 +200,6 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
         SsPayment ssPayment = CommonTransform.convertToEntity(ssOperatePaymentDTO, SsPayment.class);
         //执行业务
         json = business.doRejection(ssPayment);
-
         return json;
     }
 }
