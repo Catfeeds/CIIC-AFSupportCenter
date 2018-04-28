@@ -57,23 +57,11 @@ public class AmCompanySetServiceImpl extends ServiceImpl<AmCompanySetMapper, AmC
         }
 
         amCompanySet.setCompanyId(companyDTO.getCompanyId());
-        if(companyDTO.getMailContinue()){
-            amCompanySet.setPhone(companyDTO.getPhone());
-            amCompanySet.setMailContinue(companyDTO.getMailContinue());
-            amCompanySet.setMailAdress(companyDTO.getMailAdress());
-            if(StringUtil.isEmpty(companyDTO.getPostCode())){
-                amCompanySet.setPostCode("  ");
-            }else{
-                amCompanySet.setPostCode(companyDTO.getPostCode());
-            }
-            amCompanySet.setRecipient(companyDTO.getRecipient());
-        }else{
-            amCompanySet.setMailContinue(companyDTO.getMailContinue());
-            amCompanySet.setPhone(" ");
-            amCompanySet.setMailAdress(" ");
-            amCompanySet.setPostCode(" ");
-            amCompanySet.setRecipient(" ");
-        }
+        amCompanySet.setPhone(companyDTO.getPhone());
+        amCompanySet.setMailContinue(companyDTO.getMailContinue());
+        amCompanySet.setMailAdress(companyDTO.getMailAdress());
+        amCompanySet.setPostCode(companyDTO.getPostCode());
+        amCompanySet.setRecipient(companyDTO.getRecipient());
 
         LocalDateTime now = LocalDateTime.now();
         amCompanySet.setCreatedTime(now);
@@ -82,7 +70,7 @@ public class AmCompanySetServiceImpl extends ServiceImpl<AmCompanySetMapper, AmC
         amCompanySet.setModifiedBy(ReasonUtil.getUserId());
         amCompanySet.setActive(true);
 
-        return this.insertOrUpdate(amCompanySet);
+        return this.insertOrUpdateAllColumn(amCompanySet);
 
     }
 }

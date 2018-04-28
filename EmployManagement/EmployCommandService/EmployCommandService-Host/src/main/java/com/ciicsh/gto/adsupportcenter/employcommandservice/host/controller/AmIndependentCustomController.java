@@ -110,7 +110,7 @@ public class AmIndependentCustomController extends BasicController<IAmCompanySet
         if(amCompanySet.getArchiveSpecial()==null){
             amCompanySet.setArchiveSpecial(" ");
         }
-        boolean result =  business.insertOrUpdate(amCompanySet);
+        boolean result =  business.insertOrUpdateAllColumn(amCompanySet);
         return JsonResultKit.of(result);
     }
 
