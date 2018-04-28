@@ -343,7 +343,24 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amEmpTask.setSubmitterId(employeeCompany.getCreatedBy());
             }
 
-//            this.saveEmpCustom(employeeCompany,taskMsgDTO.getTaskId(),employeeCompany.getCompanyId());
+            try {
+                //更新离职原因
+                AmEmpTaskBO amEmpTaskBO = new AmEmpTaskBO();
+                amEmpTaskBO.setEmployeeId(amEmpTask.getEmployeeId());
+                amEmpTaskBO.setCompanyId(amEmpTask.getCompanyId());
+                List<AmEmpTaskBO> amEmpTaskBOList = baseMapper.queryEmpTask(amEmpTaskBO);
+                if(null!=amEmpTaskBOList&&amEmpTaskBOList.size()>0){
+                    AmEmpTaskBO  amEmpTaskBO1 =  amEmpTaskBOList.get(0);
+                    AmEmpTask amEmpTask1 = this.selectById(amEmpTaskBO1.getEmpTaskId());
+                    amEmpTask1.setOutDate(amEmpTask.getOutDate());
+                    amEmpTask1.setOutReason(amEmpTask.getOutReason());
+                    amEmpTask1.setOutReasonCode(amEmpTask.getOutReasonCode());
+
+                    this.insertOrUpdate(amEmpTask1);
+                }
+            } catch (Exception e) {
+
+            }
 
         } catch (Exception e) {
             logger.error("callOut interface error ......");

@@ -107,7 +107,7 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
             }
         }
 
-        boolean result = this.insertOrUpdate(entity);
+        boolean result = this.insertOrUpdateAllColumn(entity);
 
         map.put("result",new Boolean(result));
         map.put("entity",entity);
