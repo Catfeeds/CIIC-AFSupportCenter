@@ -406,8 +406,7 @@
         a.employ_doc_payment_to,
         a.doc_code,
         a.hukou_code,
-        a.diaodang_feedback,
-        a.luyong_handle_end
+        a.diaodang_feedback
         FROM
         am_archive a
         where
