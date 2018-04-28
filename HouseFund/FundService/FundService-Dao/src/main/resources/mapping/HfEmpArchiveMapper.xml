@@ -54,6 +54,8 @@
         <result column="service_specialist" property="serviceSpecialist"/>
         <result column="service_center" property="serviceCenter"/>
         <result column="leadership_name" property="leaderShipName"/>
+        <result column="company_id" property="companyId"/>
+
     </resultMap>
 
     <!--雇员公积金查询 下面SQL是考虑到 bpo fc af 一拖三表 ，SQL暂时用不到 -->
@@ -152,6 +154,9 @@
         AND ea.hf_type=1
         <if test="employeeId !=null">
             AND ea.employee_id=#{employeeId}
+        </if>
+        <if test="companyId !=null">
+            AND ea.company_id=#{companyId}
         </if>
         <if test="employeeName !=null">
             AND emp.employee_name LIKE CONCAT('%',#{employeeName}, '%')

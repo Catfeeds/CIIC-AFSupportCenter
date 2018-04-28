@@ -502,21 +502,11 @@
                 </if>
                 <if test="processStatus == 1">
                     AND het.submit_time <![CDATA[ <= ]]>
-                    (
-                    SELECT CASE WHEN DAY(CURDATE()) > hcas.close_day THEN
-                    CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hcas.close_day)
-                    ELSE
-                    CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hcas.close_day) END
-                    )
+                    str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',if(isnull(hcas.close_day),25,hcas.close_day)),'%Y-%m-%d')
                 </if>
                 <if test="processStatus == 2">
                     AND het.submit_time >
-                    (
-                    SELECT CASE WHEN DAY(CURDATE()) > hcas.close_day THEN
-                    CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hcas.close_day)
-                    ELSE
-                    CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hcas.close_day) END
-                    )
+                    str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',if(isnull(hcas.close_day),25,hcas.close_day)),'%Y-%m-%d')
                 </if>
             </where>
             UNION ALL
@@ -608,21 +598,12 @@
                 </if>
                 <if test="processStatus == 1">
                     AND het.submit_time <![CDATA[ <= ]]>
-                    (
-                    SELECT CASE WHEN DAY(CURDATE()) > hcas.close_day THEN
-                    CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hcas.close_day)
-                    ELSE
-                    CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hcas.close_day) END
-                    )
+                    str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',if(isnull(hcas.close_day),25,hcas.close_day)),'%Y-%m-%d')
+
                 </if>
                 <if test="processStatus == 2">
                     AND het.submit_time >
-                    (
-                    SELECT CASE WHEN DAY(CURDATE()) > hcas.close_day THEN
-                    CONCAT(date_format(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-',hcas.close_day)
-                    ELSE
-                    CONCAT(date_format(CURDATE(),'%Y-%m'),'-',hcas.close_day) END
-                    )
+                    str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',if(isnull(hcas.close_day),25,hcas.close_day)),'%Y-%m-%d')
                 </if>
             </where>
         ) tmp
