@@ -2,20 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentAccountMapper">
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentAccount">
-		<id column="payment_account_id" property="paymentAccountId" />
-		<result column="com_account_id" property="comAccountId" />
-		<result column="payment_month" property="paymentMonth" />
-		<result column="payment_status" property="paymentStatus" />
-		<result column="total_com_pay_amount" property="totalComPayAmount" />
-		<result column="total_emp_pay_amount" property="totalEmpPayAmount" />
-		<result column="is_active" property="isActive" />
-		<result column="created_time" property="createdTime" />
-		<result column="modified_time" property="modifiedTime" />
-		<result column="created_by" property="createdBy" />
-		<result column="modified_by" property="modifiedBy" />
-	</resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentAccount">
+        <id column="payment_account_id" property="paymentAccountId" />
+        <result column="com_account_id" property="comAccountId" />
+        <result column="payment_month" property="paymentMonth" />
+        <result column="payment_status" property="paymentStatus" />
+        <result column="total_com_pay_amount" property="totalComPayAmount" />
+        <result column="total_emp_pay_amount" property="totalEmpPayAmount" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
+
+    <resultMap id="NetBankComAccountBO" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankComAccountBO">
+        <result column="hf_account_type" property="hfAccountType" />
+        <result column="com_account_id" property="comAccountId" />
+        <result column="com_account_class_id" property="comAccountClassId" />
+        <result column="hf_com_account" property="hfComAccount" />
+        <result column="hf_type" property="hfType" />
+        <result column="payment_month" property="paymentMonth" />
+    </resultMap>
 
     <resultMap id="GetMakePayListsResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentAccountBo" extends="BaseResultMap">
         <result column="payment_account_id" property="paymentAccountId" />
@@ -31,67 +40,67 @@
     <!--查询公积金制作汇缴清单-->
     <select id="getMakePayLists" resultMap="GetMakePayListsResultMap">
         SELECT
-          pa.payment_account_id,
-          ca.com_account_name,
-            CASE pa.hf_type WHEN 1 THEN '基本公积金'
-            WHEN 2 THEN '补充公积金'
-            END hf_type_name,
-            CASE pa.payment_status when 1 then '未到账'
-            when 2 then '无需支付'
-            when 3 then '可付'
-            END  payment_state_value,
-          hpat.account_type_value,
-          hcapb.payment_bank_value,
-          pa.payment_month,
-          (
-            SELECT
-            sum(ifnull(amount, 0))
-            FROM
-            hf_month_charge mc
-            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
-            WHERE
-            mc.is_active = 1
-            AND ea.is_active = 1
-            <if test="paymentMonth != null and paymentMonth != ''">
-                AND mc.hf_month = TRIM(#{paymentMonth})
-            </if>
-            AND mc.hf_type = pa.hf_type
-            AND ea.com_account_class_id = pa.com_account_class_id
-            AND mc.payment_type IN (1, 2, 3, 4, 5)
-          ) AS sum_add,
-          (
-            SELECT
-            sum(ifnull(amount, 0))
-            FROM
-            hf_month_charge mc
-            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
-            WHERE
-            mc.is_active = 1
-            AND ea.is_active = 1
-            <if test="paymentMonth != null and paymentMonth != ''">
-                AND mc.hf_month = TRIM(#{paymentMonth})
-            </if>
-            AND mc.hf_type = pa.hf_type
-            AND ea.com_account_class_id = pa.com_account_class_id
-            AND mc.payment_type IN (7, 8, 9, 10)
-          ) AS sum_sub,
-          (SELECT sum_add - sum_sub) AS sum_amount,
-          (
-            SELECT
-            sum(ifnull(amount, 0))
-            FROM
-            hf_month_charge mc
-            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
-            WHERE
-            mc.is_active = 1
-            AND ea.is_active = 1
-            <if test="paymentMonth != null and paymentMonth != ''">
-                AND mc.hf_month = TRIM(#{paymentMonth})
-            </if>
-            AND mc.hf_type = pa.hf_type
-            AND ea.com_account_class_id = pa.com_account_class_id
-            AND mc.payment_type IN (6, 11)
-          ) AS pay_in_back_amount
+        pa.payment_account_id,
+        ca.com_account_name,
+        CASE pa.hf_type WHEN 1 THEN '基本公积金'
+        WHEN 2 THEN '补充公积金'
+        END hf_type_name,
+        CASE pa.payment_status when 1 then '未到账'
+        when 2 then '无需支付'
+        when 3 then '可付'
+        END  payment_state_value,
+        hpat.account_type_value,
+        hcapb.payment_bank_value,
+        pa.payment_month,
+        (
+        SELECT
+        sum(ifnull(amount, 0))
+        FROM
+        hf_month_charge mc
+        INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+        WHERE
+        mc.is_active = 1
+        AND ea.is_active = 1
+        <if test="paymentMonth != null and paymentMonth != ''">
+            AND mc.hf_month = TRIM(#{paymentMonth})
+        </if>
+        AND mc.hf_type = pa.hf_type
+        AND ea.com_account_class_id = pa.com_account_class_id
+        AND mc.payment_type IN (1, 2, 3, 4, 5)
+        ) AS sum_add,
+        (
+        SELECT
+        sum(ifnull(amount, 0))
+        FROM
+        hf_month_charge mc
+        INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+        WHERE
+        mc.is_active = 1
+        AND ea.is_active = 1
+        <if test="paymentMonth != null and paymentMonth != ''">
+            AND mc.hf_month = TRIM(#{paymentMonth})
+        </if>
+        AND mc.hf_type = pa.hf_type
+        AND ea.com_account_class_id = pa.com_account_class_id
+        AND mc.payment_type IN (7, 8, 9, 10)
+        ) AS sum_sub,
+        (SELECT sum_add - sum_sub) AS sum_amount,
+        (
+        SELECT
+        sum(ifnull(amount, 0))
+        FROM
+        hf_month_charge mc
+        INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+        WHERE
+        mc.is_active = 1
+        AND ea.is_active = 1
+        <if test="paymentMonth != null and paymentMonth != ''">
+            AND mc.hf_month = TRIM(#{paymentMonth})
+        </if>
+        AND mc.hf_type = pa.hf_type
+        AND ea.com_account_class_id = pa.com_account_class_id
+        AND mc.payment_type IN (6, 11)
+        ) AS pay_in_back_amount
         FROM hf_payment_account pa
         LEFT JOIN hf_com_account ca ON ca.com_account_id = pa.com_account_id
         LEFT JOIN hf_payment_account_type hpat ON ca.hf_account_type = hpat.account_type_code
@@ -124,7 +133,43 @@
             </if>
         </where>
         ORDER BY
-          pa.payment_account_id
+        pa.payment_account_id
     </select>
+
+    <select id="getByPaymentId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        payment_account_id,
+        payment_id,
+        com_account_id,
+        payment_bank,
+        payment_status,
+        total_com_pay_amount,
+        total_emp_pay_amount,
+        is_active,
+        created_time,
+        modified_time,
+        created_by,
+        modified_by
+        FROM
+        hf_payment_account SPC
+        WHERE
+        SPC.is_active = '1'
+        AND SPC.payment_id = #{paymentId}
+    </select>
+
+    <select id="getComAccountByPaymentId" parameterType="java.lang.Long" resultMap="NetBankComAccountBO">
+        SELECT
+            hca.hf_account_type,
+            hpc.com_account_id,
+            hpc.com_account_class_id,
+            hcac.hf_com_account,
+            hcac.hf_type,
+            hpc.payment_month
+        FROM hf_payment_account hpc
+        INNER JOIN hf_com_account hca ON hca.com_account_id = hpc.com_account_id AND hca.is_active = 1
+        INNER JOIN hf_com_account_class hcac ON hpc.com_account_class_id = hcac.com_account_class_id
+        WHERE hpc.is_active = 1 AND hpc.payment_id = #{paymentId}
+    </select>
+
 
 </mapper>

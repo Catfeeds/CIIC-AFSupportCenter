@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentMapper">
-
-	<!-- 通用查询映射结果 -->
+    <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment">
         <id column="payment_id" property="paymentId" />
         <result column="payment_batch_num" property="paymentBatchNum" />
@@ -34,6 +33,33 @@
         <result column="pay_apply_code" property="payApplyCode" />
     </resultMap>
 
+    <resultMap id="PaymentComResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentComBO">
+        <result column="company_id" property="companyId" />
+        <result column="company_name" property="companyName" />
+        <result column="business_type_desc" property="businessTypeDesc" />
+        <result column="company_bank_account"  property="companyBankAccount" />
+        <result column="payment_month"   property="payMonth" />
+        <result column="pay_amount"   property="payAmount" />
+        <result column="is_advance"   property="isAdvance" />
+    </resultMap>
+
+    <resultMap id="PaymentEmpResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentEmpBO">
+        <result column="employee_id" property="employeeId" />
+        <result column="employee_name" property="employeeName" />
+        <result column="company_id" property="companyId" />
+        <result column="pay_month"  property="payMonth" />
+        <result column="pay_amount"  property="payAmount" />
+        <result column="business_type_desc" property="businessTypeDesc" />
+        <result column="is_advance"   property="isAdvance" />
+    </resultMap>
+
+    <resultMap id="EmpTaskStatusResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.EmpTaskStatusBO">
+        <result column="emp_task_id" property="empTaskId" />
+        <result column="emp_archive_id" property="empArchiveId" />
+        <result column="task_category" property="taskCategory" />
+    </resultMap>
+
+
     <!--查询公积金汇缴支付-->
     <select id="getFundPays" resultMap="GetFundPaysResultMap">
         SELECT
@@ -50,17 +76,17 @@
         hfpat.account_type_value,
         hfp.apply_remark,
         (
-            SELECT
-            count(DISTINCT mc.employee_id)
-            FROM
-            hf_month_charge mc
-            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
-            INNER JOIN hf_payment_com pc ON pc.company_id=ea.company_id and pc.com_account_class_id=ea.com_account_class_id
-            WHERE
-            mc.is_active = 1
-            AND ea.is_active = 1
-            AND mc.hf_month = hfp.payment_month
-            AND  pc.payment_id=hfp.payment_id
+        SELECT
+        count(DISTINCT mc.employee_id)
+        FROM
+        hf_month_charge mc
+        INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+        INNER JOIN hf_payment_com pc ON pc.company_id=ea.company_id and pc.com_account_class_id=ea.com_account_class_id
+        WHERE
+        mc.is_active = 1
+        AND ea.is_active = 1
+        AND mc.hf_month = hfp.payment_month
+        AND  pc.payment_id=hfp.payment_id
         ) AS total_emp_count
         FROM hf_payment hfp
         LEFT JOIN hf_payment_state hfps ON hfp.payment_state = hfps.payment_state_code
@@ -89,6 +115,161 @@
         ORDER BY hfp.payment_id DESC
     </select>
 
+
+    <!--CASE ca.payment_way WHEN 3 THEN 1 ELSE 0 END AS 'is_advance'-->
+    <!--结算中心要求：公司下面只有一个雇员是垫款，那么公司就是垫款-->
+    <select id="getHfPaymentComList" resultMap="PaymentComResultMap">
+        SELECT
+            pc.company_id,
+            com.title AS 'company_name',
+            CASE cac.hf_type WHEN 1 THEN '基本公积金' ELSE '补充公积金' END AS 'business_type_desc',
+            cac.hf_com_account AS 'company_bank_account',
+            p.payment_month,
+            pc.remitted_amount + pc.repair_amount AS 'pay_amount',
+            (SELECT if(count(1)>0,1,0) from hf_month_charge mc
+                  INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+                  INNER JOIN hf_payment_com pc1 ON pc1.com_account_id = ea.com_account_id AND pc1.company_id=ea.company_id
+                              AND pc1.company_id=ea.company_id AND pc1.com_account_class_id=ea.com_account_class_id
+                WHERE pc1.is_active=1
+                AND mc.hf_month=#{paymentMonth}
+                AND pc1.payment_id=#{paymentId}
+              ) AS 'is_advance'
+        FROM hf_payment p
+        INNER JOIN	hf_payment_com pc ON p.payment_id = pc.payment_id
+        INNER JOIN hf_com_account ca ON ca.com_account_id = pc.com_account_id
+        INNER JOIN hf_com_account_class cac ON cac.com_account_class_id = pc.com_account_class_id
+        INNER JOIN sal_company com ON com.company_id = pc.company_id
+        WHERE
+            p.is_active = 1
+        AND pc.is_active = 1
+        AND ca.is_active = 1
+        AND cac.is_active = 1
+        AND pc.payment_id = #{paymentId}
+    </select>
+    <!--向结算中心支付申请的雇员名单-->
+    <select id="getHfPaymentEmpList" resultMap="PaymentEmpResultMap">
+        SELECT
+            mc.employee_id,
+            emp.employee_name,
+            ea.company_id,
+            CASE mc.hf_type WHEN 1 THEN '基本公积金' ELSE '补充公积金' END AS 'business_type_desc',
+            mc.ss_month_belong AS 'pay_month',
+            CASE mc.emp_payment_status WHEN 2 THEN 1 ELSE 0 END AS 'is_advance',
+            (IFNULL(mc.amount,0) - IFNULL(a.amount,0)) AS 'pay_amount'
+        FROM
+          hf_month_charge mc
+        INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+        INNER JOIN hf_payment_com pc ON pc.com_account_id = ea.com_account_id AND pc.company_id=ea.company_id
+           AND pc.company_id=ea.company_id and pc.com_account_class_id=ea.com_account_class_id
+        INNER JOIN hf_payment hp ON pc.payment_id = hp.payment_id
+        INNER JOIN emp_employee emp ON mc.employee_id = emp.employee_id
+        LEFT JOIN (
+            SELECT
+                mc.employee_id,
+                mc.ss_month_belong,
+                ea.company_id,
+                mc.amount
+            FROM
+              hf_month_charge mc
+            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+            INNER JOIN hf_payment_com pc ON pc.com_account_id = ea.com_account_id
+              AND pc.company_id=ea.company_id and pc.com_account_class_id=ea.com_account_class_id
+            INNER JOIN hf_payment hp ON pc.payment_id = hp.payment_id
+            WHERE
+              pc.is_active = 1
+            AND mc.payment_type IN (7, 8, 9, 10)
+            AND mc.hf_month = #{paymentMonth}
+            AND pc.payment_id = #{paymentId}
+          ) a ON a.ss_month_belong = mc.ss_month_belong AND a.employee_id = mc.employee_id and a.company_id=ea.company_id
+        WHERE
+          mc.is_active = 1
+        AND mc.payment_type IN (1, 2, 3, 4, 5, 6, 11)
+        AND mc.hf_month = #{paymentMonth}
+        AND pc.payment_id = #{paymentId}
+        AND (IFNULL(mc.amount,0) - IFNULL(a.amount,0)) != 0
+    </select>
+
+    <select id="getHfPaymentBankId"  resultType="Integer" >
+        SELECT ca.payment_bank
+        FROM hf_payment_account pa
+        INNER JOIN hf_com_account ca ON ca.com_account_id=pa.com_account_id
+        where pa.payment_id =#{paymentId} limit 1
+    </select>
+
+    <select id="getEmpTaskStatusByPaymentId" resultMap="EmpTaskStatusResultMap">
+        SELECT DISTINCT
+            mc.emp_task_id,
+            ea.emp_archive_id,
+            et.task_category
+        FROM
+            hf_month_charge mc
+        INNER JOIN hf_emp_task et ON et.emp_task_id = mc.emp_task_id
+        INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+        INNER JOIN hf_payment_com pc ON pc.com_account_id = ea.com_account_id
+        AND pc.company_id = ea.company_id
+        AND pc.company_id = ea.company_id
+        AND pc.com_account_class_id = ea.com_account_class_id
+        WHERE
+            mc.is_active = 1
+        AND mc.payment_type != 1
+        AND pc.payment_id = #{paymentId}
+    </select>
+    <resultMap id="printRemittedBookRM" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HfPrintRemittedBookBO">
+        <result column="com_account_name" property="comAccountName"/>
+        <result column="hf_com_account" property="hfComAccount"/>
+        <result column="payment_month" property="paymentMonth"/>
+        <result column="curdate" property="curdate"/>
+        <result column="bank_name" property="bankName"/>
+        <result column="remitted_amount_add" property="remittedAmountAdd"/>
+        <result column="remitted_amount_reduce" property="remittedAmountReduce"/>
+        <result column="remitted_amount" property="remittedAmount"/>
+        <result column="remitted_count_emp_add" property="remittedCountEmpAdd"/>
+        <result column="remitted_count_emp_reduce" property="remittedCountEmpReduce"/>
+        <result column="remitted_count_emp" property="remittedCountEmp"/>
+        <result column="remitted_amount_last" property="remittedAmountLast"/>
+        <result column="remitted_count_emp_last" property="remittedCountEmpLast"/>
+        <result column="repair_amount" property="repairAmount"/>
+        <result column="repair_count_emp" property="repairCountEmp"/>
+
+
+    </resultMap>
+
+    <select id="printRemittedBook"  resultMap="printRemittedBookRM">
+        select
+        ca.com_account_name,cac.hf_com_account,p.payment_month,DATE_FORMAT(CURDATE(),'%Y-%m-%d') as curdate,sba.bank_name
+        ,curMonth.remitted_amount_add,curMonth.remitted_amount_reduce,curMonth.remitted_amount,
+        curMonth.remitted_count_emp_add,curMonth.remitted_count_emp_reduce,curMonth.remitted_count_emp,
+        lastMonth.remitted_amount_last,lastMonth.remitted_count_emp_last
+        from hf_payment_account pa
+        LEFT JOIN hf_com_account ca ON ca.com_account_id=pa.com_account_id
+        LEFT JOIN hf_com_account_class cac ON cac.com_account_class_id=pa.com_account_class_id
+        LEFT JOIN hf_payment p ON p.payment_id=pa.payment_id
+        LEFT JOIN stm_bank_account sba ON sba.bank_account_id=ca.payment_bank
+        LEFT JOIN (
+        select pc.com_account_id,pc.hf_type,
+        sum(pc.remitted_amount_add) as remitted_amount_add, sum(pc.remitted_amount_reduce) as remitted_amount_reduce ,sum(remitted_amount) as remitted_amount,
+        sum(pc.remitted_count_emp_add)as remitted_count_emp_add,sum(pc.remitted_count_emp_reduce) as remitted_count_emp_reduce,sum(remitted_count_emp) as remitted_count_emp
+        ,sum(pc.repair_amount) as repair_amount,sum(repair_count_emp)as repair_count_emp
+        from hf_payment_com pc
+        where pc.is_active = 1
+        and pc.hf_type=#{hfType}
+        and pc.payment_id =#{paymentId}
+        GROUP BY pc.com_account_id,pc.hf_type
+        ) curMonth ON curMonth.com_account_id=ca.com_account_id and curMonth.hf_type=pa.hf_type
+        LEFT JOIN(
+        select pc.com_account_id,pc.hf_type,sum(remitted_amount)remitted_amount_last,sum(remitted_count_emp)remitted_count_emp_last
+        from hf_payment_com pc
+        INNER JOIN hf_payment p ON p.payment_id=pc.payment_id
+        where pc.is_active = 1
+        and pc.hf_type=#{hfType}
+        and p.payment_month = (select period_add(payment_month,-1) from hf_payment where payment_id=#{paymentId})
+        GROUP BY pc.com_account_id,pc.hf_type
+        ) lastMonth ON lastMonth.com_account_id=ca.com_account_id and curMonth.hf_type=pa.hf_type
+        WHERE
+        pa.is_active = 1
+        and pa.hf_type=#{hfType}
+        and pa.payment_id=#{paymentId}
+    </select>
 
 
 </mapper>

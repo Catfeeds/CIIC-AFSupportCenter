@@ -2,43 +2,43 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComTaskMapper">
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask">
-		<id column="com_task_id" property="comTaskId" />
-		<result column="com_account_id" property="comAccountId" />
-		<result column="com_account_class_id" property="comAccountClassId" />
-		<result column="company_id" property="companyId" />
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask">
+        <id column="com_task_id" property="comTaskId" />
+        <result column="com_account_id" property="comAccountId" />
+        <result column="com_account_class_id" property="comAccountClassId" />
+        <result column="company_id" property="companyId" />
         <result column="hf_type" property="hfType" />
-		<result column="task_category" property="taskCategory" />
-		<result column="submitter_id" property="submitterId" />
-		<result column="submitter_name" property="submitterName" />
-		<result column="submitter_dept_id" property="submitterDeptId" />
-		<result column="submitter_dept_name" property="submitterDeptName" />
-		<result column="submit_time" property="submitTime" />
-		<result column="submit_remark" property="submitRemark" />
-		<result column="handle_user_id" property="handleUserId" />
-		<result column="handle_user_name" property="handleUserName" />
-		<result column="strart_handle_date" property="strartHandleDate" />
-		<result column="send_check_date" property="sendCheckDate" />
-		<result column="finish_date" property="finishDate" />
-		<result column="task_status" property="taskStatus" />
-		<result column="material_sign_record" property="materialSignRecord" />
-		<result column="transfer_date" property="transferDate" />
-		<result column="remark" property="remark" />
-		<result column="com_account_name" property="comAccountName" />
-		<result column="payment_way" property="paymentWay" />
-		<result column="close_day" property="closeDay" />
-		<result column="hf_com_account" property="hfComAccount" />
-		<result column="com_start_month" property="comStartMonth" />
-		<result column="end_month" property="endMonth" />
-		<result column="end_type" property="endType" />
-		<result column="task_id" property="taskId" />
-		<result column="is_active" property="isActive" />
-		<result column="created_time" property="createdTime" />
-		<result column="modified_time" property="modifiedTime" />
-		<result column="created_by" property="createdBy" />
-		<result column="modified_by" property="modifiedBy" />
-	</resultMap>
+        <result column="task_category" property="taskCategory" />
+        <result column="submitter_id" property="submitterId" />
+        <result column="submitter_name" property="submitterName" />
+        <result column="submitter_dept_id" property="submitterDeptId" />
+        <result column="submitter_dept_name" property="submitterDeptName" />
+        <result column="submit_time" property="submitTime" />
+        <result column="submit_remark" property="submitRemark" />
+        <result column="handle_user_id" property="handleUserId" />
+        <result column="handle_user_name" property="handleUserName" />
+        <result column="strart_handle_date" property="strartHandleDate" />
+        <result column="send_check_date" property="sendCheckDate" />
+        <result column="finish_date" property="finishDate" />
+        <result column="task_status" property="taskStatus" />
+        <result column="material_sign_record" property="materialSignRecord" />
+        <result column="transfer_date" property="transferDate" />
+        <result column="remark" property="remark" />
+        <result column="com_account_name" property="comAccountName" />
+        <result column="payment_way" property="paymentWay" />
+        <result column="close_day" property="closeDay" />
+        <result column="hf_com_account" property="hfComAccount" />
+        <result column="com_start_month" property="comStartMonth" />
+        <result column="end_month" property="endMonth" />
+        <result column="end_type" property="endType" />
+        <result column="task_id" property="taskId" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
 
     <resultMap id="HfComTaskBOResultMap"
                type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfComTaskBo"
@@ -279,26 +279,82 @@
 
     <select id="getAccountsByCompany" resultMap="ComTaskInfoMap">
         SELECT
-            com_account_name,
-            payment_way,
-            close_day,
-            company_id,
-            hf_type,
-            hf_com_account,
-            com_start_month,
-            end_month,
-            end_type,
-            submit_remark  AS 'remark'
+        com_account_name,
+        payment_way,
+        close_day,
+        company_id,
+        hf_type,
+        hf_com_account,
+        com_start_month,
+        end_month,
+        end_type,
+        submit_remark  AS 'remark'
         FROM
-            hf_com_task
+        hf_com_task
         WHERE
-            is_active = 1
+        is_active = 1
         AND task_category IN (1, 2)
         AND hf_type = #{hfType}
         AND company_id = #{companyId}
         ORDER BY
-            created_time
+        created_time
         LIMIT 0,1
     </select>
 
+
+    <!--判断企业任务单是否存在-->
+    <select id="isExistComTask" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            hf_com_task
+        WHERE
+            is_active = 1
+        AND task_status IN (0, 1, 2)
+        AND company_id = #{companyId}
+        AND hf_type = #{hfType}
+        AND task_category = #{taskCategory}
+    </select>
+
+    <insert id="insertComTask" useGeneratedKeys="true" keyProperty="comTaskId">
+        insert into
+        hf_com_task
+       (com_account_id,
+        com_account_class_id,
+        company_id,
+        hf_type,
+        task_category,
+        submitter_id,
+        submitter_name,
+        submitter_dept_id,
+        submitter_dept_name,
+        submit_time,
+        submit_remark,
+        handle_user_id,
+        handle_user_name,
+        strart_handle_date,
+        send_check_date,
+        finish_date,
+        task_status,
+        material_sign_record,
+        transfer_date,
+        remark,
+        com_account_name,
+        payment_way,
+        close_day,
+        hf_com_account,
+        com_start_month,
+        end_month,
+        end_type,
+        task_id,
+        is_active,
+        created_time,
+        modified_time,
+        created_by,
+        modified_by) VALUES
+        (#{comAccountId},#{comAccountClassId},#{companyId},#{hfType},#{taskCategory},#{submitterId},#{submitterName},#{submitterDeptId},
+        #{submitterDeptName},#{submitTime},#{submitRemark},#{handleUserId},#{handleUserName},#{strartHandleDate},#{sendCheckDate},#{finishDate},#{taskStatus},
+        #{materialSignRecord},#{transferDate},#{remark},#{comAccountName},#{paymentWay},#{closeDay},#{hfComAccount},#{comStartMonth},#{endMonth},
+        #{endType},#{taskId},#{isActive},#{createdTime},#{modifiedTime},#{createdBy},#{modifiedBy})
+    </insert>
 </mapper>
