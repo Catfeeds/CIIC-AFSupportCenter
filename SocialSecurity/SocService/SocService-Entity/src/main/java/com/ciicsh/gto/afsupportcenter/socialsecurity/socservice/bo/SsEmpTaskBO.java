@@ -162,4 +162,6 @@ public class SsEmpTaskBO implements Serializable {
 
     //进位方式
     private Map<String, Map<String, Integer>> roundTypeMap;
+
+    private SsEmpTask oldSsEmpTask;
 }
