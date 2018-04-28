@@ -1,9 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controller;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
-import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
-import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -54,8 +52,6 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
             Map<String, String> employeeClassifyMap = new LinkedHashMap<>();
             dictItemList.stream().forEach((d) -> employeeClassifyMap.put(d.getDicItemValue(), d.getDicItemText()));
             DictUtil.getInstance().putDictByTypeValue(DictUtil.TYPE_VALUE_SOCIAL_SECURITY_EMPLOYEE_CLASSIFY, employeeClassifyMap, false);
-
-            DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.EMP_ARCHIVE_STATUS, SocialSecurityConst.EMP_ARCHIVE_STATUS_MAP, false);
         } catch (Exception e) {
             LogContext logContext = LogContext.of().setTitle("上海社保字典项及常量项")
                 .setTextContent("加载字典项（访问字典公共接口）或常量项失败")
