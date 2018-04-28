@@ -110,7 +110,9 @@ public class AmResignBO extends AmResign {
 
     private String params;
 
-    private String luyongHandleEnd;
+    private Boolean luyongHandleEnd;
+
+    private String  luyongHandleEndStr;
 
     private  String ifLaborManualReturnStr;
 
@@ -131,6 +133,26 @@ public class AmResignBO extends AmResign {
     private String archiveDirection;
 
     private String change;
+
+    private String docType;
+
+    private String yuliuDocType;
+
+    public String getDocType() {
+        return docType;
+    }
+
+    public void setDocType(String docType) {
+        this.docType = docType;
+    }
+
+    public String getYuliuDocType() {
+        return yuliuDocType;
+    }
+
+    public void setYuliuDocType(String yuliuDocType) {
+        this.yuliuDocType = yuliuDocType;
+    }
 
     public String getChange() {
         return change;
@@ -188,13 +210,7 @@ public class AmResignBO extends AmResign {
         this.ifLaborManualReturnStr = ifLaborManualReturnStr;
     }
 
-    public String getLuyongHandleEnd() {
-        return luyongHandleEnd;
-    }
 
-    public void setLuyongHandleEnd(String luyongHandleEnd) {
-        this.luyongHandleEnd = luyongHandleEnd;
-    }
 
     private List<String> param;
 
@@ -454,6 +470,19 @@ public class AmResignBO extends AmResign {
         this.taskStatus = taskStatus;
     }
 
+    public Boolean getLuyongHandleEnd() {
+        return luyongHandleEnd;
+    }
 
+    public void setLuyongHandleEnd(Boolean luyongHandleEnd) {
+        this.luyongHandleEnd = luyongHandleEnd;
+    }
 
+    public String getLuyongHandleEndStr() {
+        return luyongHandleEndStr;
+    }
+
+    public void setLuyongHandleEndStr(String luyongHandleEndStr) {
+        this.luyongHandleEndStr = luyongHandleEndStr;
+    }
 }

@@ -23,19 +23,19 @@ public class ComFundAccountCompanyDTO {
      * 客户经理
      */
     private String accountManager;
-    private String leadShipName;
+    private String leaderShipName;
 
     /**
      * 绑定时间, 格式: yyyy-MM-dd HH:mm
      */
     private String bindedTime;
 
-    public String getLeadShipName() {
-        return leadShipName;
+    public String getLeaderShipName() {
+        return leaderShipName;
     }
 
-    public void setLeadShipName(String leadShipName) {
-        this.leadShipName = leadShipName;
+    public void setLeaderShipName(String leaderShipName) {
+        this.leaderShipName = leaderShipName;
     }
 
     public String getCompanyId() {
