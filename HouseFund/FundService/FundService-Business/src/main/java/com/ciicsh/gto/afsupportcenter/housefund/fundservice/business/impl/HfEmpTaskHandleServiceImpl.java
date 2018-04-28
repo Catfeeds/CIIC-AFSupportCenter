@@ -217,6 +217,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 && !hfPaymentAccountList.get(0).getPaymentId().equals(0)) {
                 return JsonResultKit.ofError("当前任务单所属的企业账户在当前汇缴月已经开始汇缴支付，不能再办理任务单");
             }
+            inputHfEmpTask.setOldAgreementId(hfEmpTask.getOldAgreementId());
 
             if (hfEmpTask.getIsChange() == HfEmpTaskConstant.IS_CHANGE_YES
                 && (hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_ADD
@@ -273,6 +274,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                         hfArchiveBaseAdjustService.deleteHfArchiveBaseAdjusts(empTaskIdList);
                         hfArchiveBasePeriodService.deleteHfArchiveBasePeriods(empTaskIdList);
                         hfEmpArchiveService.deleteHfEmpArchiveByEmpTaskIds(empTaskIdList);
+
+                        inputHfEmpTask.setOldAgreementId(hfEmpTaskList.get(0).getOldAgreementId());
                     }
                 }
             }
@@ -348,7 +351,6 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             inputHfEmpTask.setEmployeeId(hfEmpTask.getEmployeeId());
             inputHfEmpTask.setTaskId(hfEmpTask.getTaskId());
             inputHfEmpTask.setBusinessInterfaceId(hfEmpTask.getBusinessInterfaceId());
-            inputHfEmpTask.setOldAgreementId(hfEmpTask.getOldAgreementId());
         } else {
             this.updateById(inputHfEmpTask);
         }
@@ -1886,9 +1888,21 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         } else {
             if (CollectionUtils.isNotEmpty(hfArchiveBasePeriodList)) {
                 String hfMonth = null;
+                boolean isNewChange = false;
+                // 判断是否新增更正
+                if (hfEmpTask.getIsChange() == HfEmpTaskConstant.IS_CHANGE_YES && (
+                    hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_ADD
+                        || hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN
+                        || hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN
+                        || hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_ADD
+                        || hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_IN
+                        || hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_OPEN
+                    )) {
+                    isNewChange = true;
+                }
 
                 for (HfArchiveBasePeriod hfArchiveBasePeriod : hfArchiveBasePeriodList) {
-                    if (!isReject && companyConfirmAmount == BigDecimal.ZERO) {
+                    if (companyConfirmAmount.equals(BigDecimal.ZERO)) {
                         companyConfirmAmount = hfArchiveBasePeriod.getComAmount();
                         personalConfirmAmount = hfArchiveBasePeriod.getAmountEmp();
                     }
@@ -1905,6 +1919,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 if (StringUtils.isNotEmpty(hfEmpTask.getOldAgreementId())) {
                     AfEmpSocialUpdateDateDTO afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
                     afEmpSocialUpdateDateDTO.setCompanyId(companyId);
+
                     if (hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
                         afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ITEM_ID_FUND_BASIC);
                     } else {
@@ -1912,7 +1927,12 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     }
                     afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(companyConfirmAmount);
                     afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(personalConfirmAmount);
-                    if (StringUtils.isNotEmpty(hfMonth)) {
+                    // 如果是更正新增
+                    if (isNewChange) {
+                        LocalDate startMonthDate = LocalDate.parse(startMonth + "01", yyyyMMddFormatter);
+                        // 关闭日期为起缴月的前一个月的最后一天
+                        afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(startMonthDate.minusDays(1).format(yyyyMMddFormatter)));
+                    } else if (StringUtils.isNotEmpty(hfMonth)) {
                         LocalDate hfMonthDate = LocalDate.parse(hfMonth + "01", yyyyMMddFormatter);
                         // 关闭日期为汇缴月的前一个月的最后一天
                         afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(hfMonthDate.minusDays(1).format(yyyyMMddFormatter)));
@@ -1926,24 +1946,30 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     if (hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT
                         || hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
                         || hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST
+                        || isNewChange
                         ) {
-                        // 此时需要回调一个只有开始确认时间的，金额为0的费用段
                         afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
                         afEmpSocialUpdateDateDTO.setCompanyId(companyId);
+
                         if (hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
                             afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ITEM_ID_FUND_BASIC);
                         } else {
                             afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ITEM_ID_FUND_ADDED);
                         }
-                        if (hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST) {
+
+                        if (hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST || isNewChange) {
                             afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(companyConfirmAmount);
                             afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(personalConfirmAmount);
                         } else {
+                            // 此时需要回调一个只有开始确认时间的，金额为0的费用段
                             afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(BigDecimal.ZERO);
                             afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(BigDecimal.ZERO);
 
                         }
-                        if (StringUtils.isNotEmpty(hfMonth)) {
+                        // 如果是更正新增
+                        if (isNewChange) {
+                            afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(startMonth + "01"));
+                        } else if (StringUtils.isNotEmpty(hfMonth)) {
                             afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(hfMonth + "01"));
                         }
                         afEmpSocialUpdateDateDTO.setEmpAgreementId(empAgreementId);

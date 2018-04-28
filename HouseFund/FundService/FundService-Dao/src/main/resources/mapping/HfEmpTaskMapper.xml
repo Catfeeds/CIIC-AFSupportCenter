@@ -718,19 +718,19 @@
         LEFT JOIN hf_com_task hcta ON hca.com_account_id = hcta.com_account_id AND hcta.is_active = 1 AND hcta.hf_type = 2 AND IFNULL(hcta.task_status,1) = 1
         LEFT JOIN
         (
-        SELECT hea.company_id, hea.employee_id, hea.hf_emp_account, hea.emp_archive_id, hea.archive_status, MAX(hea.created_time)
+        SELECT hea.company_id, hea.employee_id, hea.hf_emp_account, hea.emp_archive_id, hea.archive_status
         FROM hf_emp_task het INNER JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
         WHERE hea.is_active = 1 AND hea.hf_type = 1
         AND het.emp_task_id = #{empTaskId}
-        GROUP BY hea.company_id, hea.employee_id
+        ORDER BY hea.created_time DESC LIMIT 1
         ) heab ON het.employee_id = heab.employee_id AND het.company_id = heab.company_id
         LEFT JOIN
         (
-        SELECT hea.company_id, hea.employee_id, hea.hf_emp_account, hea.emp_archive_id, hea.archive_status, MAX(hea.created_time)
+        SELECT hea.company_id, hea.employee_id, hea.hf_emp_account, hea.emp_archive_id, hea.archive_status
         FROM hf_emp_task het INNER JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
         WHERE hea.is_active = 1 AND hea.hf_type = 2
         AND het.emp_task_id = #{empTaskId}
-        GROUP BY hea.company_id, hea.employee_id
+        ORDER BY hea.created_time DESC LIMIT 1
         ) heaa ON het.employee_id = heaa.employee_id AND het.company_id = heaa.company_id
         <where>
             het.is_active = 1

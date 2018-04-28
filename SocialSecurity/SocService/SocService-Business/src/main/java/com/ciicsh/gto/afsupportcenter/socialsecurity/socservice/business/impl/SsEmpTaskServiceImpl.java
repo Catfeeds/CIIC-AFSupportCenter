@@ -1276,6 +1276,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 inactiveBasePeriodData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
                 // 撤销雇员档案数据
                 inactiveEmpArchive(ssEmpTask.getCompanyId(), ssEmpTask.getEmployeeId(), bo.getEmpArchiveId(), bo.getModifiedBy());
+
+                bo.setOldAgreementId(ssEmpTask.getOldAgreementId());
             }
 
             queryEmployeeIsnewOrChangeInto(bo);
