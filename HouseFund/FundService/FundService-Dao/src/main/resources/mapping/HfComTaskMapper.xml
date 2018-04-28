@@ -273,6 +273,9 @@
             <if test="serviceCenterValue!= null">
                 AND comAf.service_center_id = #{serviceCenterValue}
             </if>
+            <if test="hfComAccount!= null">
+                AND hcac.hf_com_account LIKE CONCAT('%', #{hfComAccount}, '%')
+            </if>
         </where>
         ORDER BY hft.com_task_id
     </select>
