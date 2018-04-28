@@ -83,16 +83,6 @@ public class AmEmpEmployeeBO extends AmEmpEmployee {
      */
     private String phone;
 
-    private  String  mailContinueStr;
-
-    public String getMailContinueStr() {
-        return mailContinueStr;
-    }
-
-    public void setMailContinueStr(String mailContinueStr) {
-        this.mailContinueStr = mailContinueStr;
-    }
-
     public Boolean getMailContinue() {
         return mailContinue;
     }

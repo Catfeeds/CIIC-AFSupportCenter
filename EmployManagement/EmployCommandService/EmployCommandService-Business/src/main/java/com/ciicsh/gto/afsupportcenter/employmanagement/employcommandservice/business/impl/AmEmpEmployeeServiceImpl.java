@@ -70,11 +70,7 @@ public class AmEmpEmployeeServiceImpl extends ServiceImpl<AmEmpEmployeeMapper, A
                 amEmpEmployeeBO.setPostCode(amCompanySetBO1.getPostCode());
                 amEmpEmployeeBO.setRecipient(amCompanySetBO1.getRecipient());
                 amEmpEmployeeBO.setMailAdress(amCompanySetBO1.getMailAdress());
-                if(amCompanySetBO1.getMailContinue()){
-                    amEmpEmployeeBO.setMailContinueStr("1");
-                }else{
-                    amEmpEmployeeBO.setMailContinueStr("0");
-                }
+
                 amEmpEmployeeBO.setMailContinue(amCompanySetBO1.getMailContinue());
             }
 
