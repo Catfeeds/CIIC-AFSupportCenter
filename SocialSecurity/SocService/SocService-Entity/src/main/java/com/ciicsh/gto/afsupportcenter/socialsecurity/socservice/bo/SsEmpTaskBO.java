@@ -164,4 +164,6 @@ public class SsEmpTaskBO implements Serializable {
     private Map<String, Map<String, Integer>> roundTypeMap;
 
     private SsEmpTask oldSsEmpTask;
+    private String oldCityCode;
+    private String newCityCode;
 }

@@ -163,6 +163,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         bo.setServiceCenterId(ssEmpTask.getServiceCenterId());
         bo.setServiceCenter(ssEmpTask.getServiceCenter());
         bo.setIsChange(ssEmpTask.getIsChange());
+        bo.setOldCityCode(ssEmpTask.getOldCityCode());
+        bo.setNewCityCode(ssEmpTask.getNewCityCode());
 
         if (bo.getEmpArchiveId() == null) {
             Wrapper<SsEmpArchive> wrapper = new EntityWrapper<>();

@@ -352,6 +352,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             inputHfEmpTask.setTaskId(hfEmpTask.getTaskId());
             inputHfEmpTask.setBusinessInterfaceId(hfEmpTask.getBusinessInterfaceId());
             inputHfEmpTask.setOldAgreementId(hfEmpTask.getOldAgreementId());
+            inputHfEmpTask.setOldCityCode(hfEmpTask.getOldCityCode());
+            inputHfEmpTask.setNewCityCode(hfEmpTask.getNewCityCode());
         } else {
             this.updateById(inputHfEmpTask);
         }
@@ -1931,11 +1933,16 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     } else {
                         afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ITEM_ID_FUND_ADDED);
                     }
-                    afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(companyConfirmAmount);
-                    afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(personalConfirmAmount);
+//                    afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(companyConfirmAmount);
+//                    afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(personalConfirmAmount);
                     // 如果是更正新增
                     if (isNewChange) {
                         LocalDate startMonthDate = LocalDate.parse(oldHfEmpTask.getStartMonth() + "01", yyyyMMddFormatter);
+                        // 关闭日期为起缴月的前一个月的最后一天
+                        afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(startMonthDate.minusDays(1).format(yyyyMMddFormatter)));
+                    } else if (hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST
+                        || SocialSecurityConst.SHANGHAI_CITY_CODE.equals(hfEmpTask.getNewCityCode())) {
+                        LocalDate startMonthDate = LocalDate.parse(startMonth + "01", yyyyMMddFormatter);
                         // 关闭日期为起缴月的前一个月的最后一天
                         afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(startMonthDate.minusDays(1).format(yyyyMMddFormatter)));
                     } else if (StringUtils.isNotEmpty(hfMonth)) {
@@ -1952,6 +1959,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     if (hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT
                         || hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
                         || hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST
+                        || SocialSecurityConst.SHANGHAI_CITY_CODE.equals(hfEmpTask.getNewCityCode())
                         || isNewChange
                         ) {
                         afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
@@ -1963,7 +1971,9 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                             afEmpSocialUpdateDateDTO.setItemCode(DictUtil.DICT_ITEM_ID_FUND_ADDED);
                         }
 
-                        if (hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST || isNewChange) {
+                        if (hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST
+                            || SocialSecurityConst.SHANGHAI_CITY_CODE.equals(hfEmpTask.getNewCityCode())
+                            || isNewChange) {
                             afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(companyConfirmAmount);
                             afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(personalConfirmAmount);
                         } else {
@@ -1973,7 +1983,9 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 
                         }
                         // 如果是更正新增
-                        if (isNewChange) {
+                        if (hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST
+                            || SocialSecurityConst.SHANGHAI_CITY_CODE.equals(hfEmpTask.getNewCityCode())
+                            || isNewChange) {
                             afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(startMonth + "01"));
                         } else if (StringUtils.isNotEmpty(hfMonth)) {
                             afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(hfMonth + "01"));

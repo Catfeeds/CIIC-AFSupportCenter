@@ -24,6 +24,7 @@ public interface SocialSecurityConst {
 
     String CENTER_BASIC_COM_ACCOUNT = "881383287";
     String CENTER_ADDED_COM_ACCOUNT = "881383288";
+    String SHANGHAI_CITY_CODE = "310000";
 
     //结算区县
     public static final Map<String, String> DISTRICT_MAP = new HashMap<String, String>() {

@@ -222,12 +222,17 @@ public class TaskCommonUtils {
                         afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
                         afEmpSocialUpdateDateDTO.setCompanyId(ssEmpTaskBO.getCompanyId());//企业Id
                         afEmpSocialUpdateDateDTO.setItemCode(ssEmpBaseDetail.getSsType());//社保险种
-                        afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(ssEmpBaseDetail.getComAmount());
-                        afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(ssEmpBaseDetail.getEmpAmount());
+//                        afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(ssEmpBaseDetail.getComAmount());
+//                        afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(ssEmpBaseDetail.getEmpAmount());
 
                         // 如果是更正新增
                         if (isNewChange) {
                             LocalDate startMonthDate = LocalDate.parse(ssEmpTaskBO.getOldSsEmpTask().getStartMonth() + "01", yyyyMMddFormatter);
+                            // 关闭日期为起缴月的前一个月的最后一天
+                            afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(startMonthDate.minusDays(1).format(yyyyMMddFormatter)));
+                        } else if (ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_3))
+                            || SocialSecurityConst.SHANGHAI_CITY_CODE.equals(ssEmpTaskBO.getNewCityCode())) {
+                            LocalDate startMonthDate = LocalDate.parse(ssEmpTaskBO.getStartMonth() + "01", yyyyMMddFormatter);
                             // 关闭日期为起缴月的前一个月的最后一天
                             afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(startMonthDate.minusDays(1).format(yyyyMMddFormatter)));
                         } else if (StringUtils.isNotEmpty(ssEmpTaskBO.getHandleMonth())) {
@@ -243,6 +248,7 @@ public class TaskCommonUtils {
                         if (ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_5))
                                 || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_6))
                                 || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_3))
+                                || SocialSecurityConst.SHANGHAI_CITY_CODE.equals(ssEmpTaskBO.getNewCityCode())
                                 || isNewChange
                             ) {
                             afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
@@ -250,7 +256,9 @@ public class TaskCommonUtils {
                             afEmpSocialUpdateDateDTO.setCompanyId(ssEmpTaskBO.getCompanyId());//企业Id
                             afEmpSocialUpdateDateDTO.setItemCode(ssEmpBaseDetail.getSsType());//社保险种
 
-                            if (ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_3)) || isNewChange) {
+                            if (ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_3))
+                                || SocialSecurityConst.SHANGHAI_CITY_CODE.equals(ssEmpTaskBO.getNewCityCode())
+                                || isNewChange) {
                                 afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(ssEmpBaseDetail.getComAmount());
                                 afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(ssEmpBaseDetail.getEmpAmount());
                             } else {
@@ -260,7 +268,9 @@ public class TaskCommonUtils {
                             }
 
                             // 如果是更正新增
-                            if (isNewChange) {
+                            if (ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_3))
+                                || SocialSecurityConst.SHANGHAI_CITY_CODE.equals(ssEmpTaskBO.getNewCityCode())
+                                || isNewChange) {
                                 afEmpSocialUpdateDateDTO.setStartConfirmDate(stringTranserDate(dataStartMonth));
                             } else {
                                 if (StringUtils.isNotEmpty(ssEmpTaskBO.getHandleMonth())) {
