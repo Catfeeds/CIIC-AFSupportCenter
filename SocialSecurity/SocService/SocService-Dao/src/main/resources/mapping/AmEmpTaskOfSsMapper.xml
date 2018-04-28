@@ -2,27 +2,66 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.AmEmpTaskOfSsMapper">
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.AmEmpTask">
-		<id column="emp_task_id" property="empTaskId" />
-		<result column="employee_id" property="employeeId" />
-		<result column="company_id" property="companyId" />
-		<result column="task_category" property="taskCategory" />
-		<result column="submitter_id" property="submitterId" />
-		<result column="submitter_dept_id" property="submitterDeptId" />
-		<result column="submit_time" property="submitTime" />
-		<result column="submitter_remark" property="submitterRemark" />
-		<result column="task_status" property="taskStatus" />
-		<result column="handle_user_id" property="handleUserId" />
-		<result column="handle_time" property="handleTime" />
-		<result column="handle_remark" property="handleRemark" />
-		<result column="rejection_remark" property="rejectionRemark" />
-		<result column="task_id" property="taskId" />
-		<result column="is_active" property="isActive" />
-		<result column="created_time" property="createdTime" />
-		<result column="modified_time" property="modifiedTime" />
-		<result column="created_by" property="createdBy" />
-		<result column="modified_by" property="modifiedBy" />
-	</resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.AmEmpTask">
+        <id column="emp_task_id" property="empTaskId" />
+        <result column="employee_id" property="employeeId" />
+        <result column="company_id" property="companyId" />
+        <result column="task_category" property="taskCategory" />
+        <result column="submitter_id" property="submitterId" />
+        <result column="submitter_dept_id" property="submitterDeptId" />
+        <result column="submit_time" property="submitTime" />
+        <result column="submitter_remark" property="submitterRemark" />
+        <result column="task_status" property="taskStatus" />
+        <result column="handle_user_id" property="handleUserId" />
+        <result column="handle_time" property="handleTime" />
+        <result column="handle_remark" property="handleRemark" />
+        <result column="rejection_remark" property="rejectionRemark" />
+        <result column="task_id" property="taskId" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
 
+    <resultMap id="selfResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.AmEmpTaskDTO">
+        <result column="emp_task_id" property="empTaskId" />
+        <result column="employee_id" property="employeeId" />
+        <result column="company_id" property="companyId" />
+        <result column="task_category" property="taskCategory" />
+        <result column="submitter_id" property="submitterId" />
+        <result column="submitter_dept_id" property="submitterDeptId" />
+        <result column="submit_time" property="submitTime" />
+        <result column="submitter_remark" property="submitterRemark" />
+        <result column="task_status" property="taskStatus" />
+        <result column="handle_user_id" property="handleUserId" />
+        <result column="handle_time" property="handleTime" />
+        <result column="handle_remark" property="handleRemark" />
+        <result column="rejection_remark" property="rejectionRemark" />
+        <result column="task_id" property="taskId" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+        <result column="open_af_date" property="openAfDate" />
+        <result column="archive_place" property="archivePlace" />
+        <result column="employ_feedback_opt_date" property="employFeedbackOptDate" />
+    </resultMap>
+<select id="queryReworkInfo" resultMap="selfResultMap">
+    select
+    et.task_status,
+    em.open_af_date,
+    ar.archive_place,
+    ar.employ_feedback_opt_date
+    FROM am_emp_task et
+    INNER JOIN am_employment em ON em.emp_task_id=et.emp_task_id AND em.is_active=1
+    INNER JOIN am_archive ar ON ar.employment_id=em.employment_id
+    WHERE et.is_active=1
+    AND et.employee_id =#{employeeId}
+    AND et.company_id =#{companyId}
+    ORDER BY em.created_time DESC
+    LIMIT 1
+</select>
 </mapper>
