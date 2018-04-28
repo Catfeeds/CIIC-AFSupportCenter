@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment">
+        <id column="payment_id" property="paymentId" />
+        <result column="payment_batch_num" property="paymentBatchNum" />
+        <result column="total_application_amonut" property="totalApplicationAmonut" />
+        <result column="total_emp_count" property="totalEmpCount" />
+        <result column="payment_month" property="paymentMonth" />
+        <result column="payment_state" property="paymentState" />
+        <result column="create_payment_user" property="createPaymentUser" />
+        <result column="create_payment_date" property="createPaymentDate" />
+        <result column="finance_payment_date" property="financePaymentDate" />
+        <result column="hf_account_type" property="hfAccountType" />
+        <result column="apply_remark" property="applyRemark" />
+        <result column="rejection_remark" property="rejectionRemark" />
+        <result column="rejection_his" property="rejectionHis" />
+        <result column="request_user" property="requestUser" />
+        <result column="request_date" property="requestDate" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
+
+    <resultMap id="GetFundPaysResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentBo" extends="BaseResultMap">
+        <result column="payment_state_value" property="paymentStateValue" />
+        <result column="account_type_value" property="accountTypeValue" />
+        <result column="create_payment_date_string" property="createPaymentDateString" />
+        <result column="finance_payment_date_string" property="financePaymentDateString" />
+        <result column="pay_apply_code" property="payApplyCode" />
+    </resultMap>
+
     <resultMap id="PaymentComResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentComBO">
         <result column="company_id" property="companyId" />
         <result column="company_name" property="companyName" />
@@ -26,6 +58,63 @@
         <result column="emp_archive_id" property="empArchiveId" />
         <result column="task_category" property="taskCategory" />
     </resultMap>
+
+
+    <!--查询公积金汇缴支付-->
+    <select id="getFundPays" resultMap="GetFundPaysResultMap">
+        SELECT
+        hfp.payment_id,
+        hfp.payment_batch_num,
+        hfp.total_application_amonut,
+        hfp.payment_month,
+        hfp.payment_state,
+        hfp.pay_apply_code,
+        hfps.payment_state_value,
+        hfp.create_payment_user,
+        DATE_FORMAT(hfp.create_payment_date, '%Y-%m-%d') AS create_payment_date_string,
+        DATE_FORMAT(hfp.finance_payment_date, '%Y-%m-%d') AS finance_payment_date_string,
+        hfpat.account_type_value,
+        hfp.apply_remark,
+        (
+        SELECT
+        count(DISTINCT mc.employee_id)
+        FROM
+        hf_month_charge mc
+        INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+        INNER JOIN hf_payment_com pc ON pc.company_id=ea.company_id and pc.com_account_class_id=ea.com_account_class_id
+        WHERE
+        mc.is_active = 1
+        AND ea.is_active = 1
+        AND mc.hf_month = hfp.payment_month
+        AND  pc.payment_id=hfp.payment_id
+        ) AS total_emp_count
+        FROM hf_payment hfp
+        LEFT JOIN hf_payment_state hfps ON hfp.payment_state = hfps.payment_state_code
+        LEFT JOIN hf_payment_account_type hfpat ON hfp.hf_account_type = hfpat.account_type_code
+        <where>
+            hfp.is_active = 1
+            <if test="paymentBatchNum != null and paymentBatchNum != ''">
+                AND hfp.payment_batch_num = #{paymentBatchNum}
+            </if>
+            <if test="paymentState!= null and paymentState != ''">
+                AND hfp.payment_state = #{paymentState}
+            </if>
+            <if test="hfAccountType!= null and hfAccountType != ''">
+                AND hfp.hf_account_type = #{hfAccountType}
+            </if>
+            <if test="createPaymentUser!= null and createPaymentUser != ''">
+                AND hfp.create_payment_user = TRIM(#{createPaymentUser})
+            </if>
+            <if test="paymentMonth!= null and paymentMonth != ''">
+                AND hfp.payment_month = TRIM(#{paymentMonth})
+            </if>
+            <if test="companyId!= null and companyId != ''">
+                AND EXISTS (select 1 from hf_payment_com pc where pc.payment_id=hfp.payment_id and pc.company_id =#{companyId})
+            </if>
+        </where>
+        ORDER BY hfp.payment_id DESC
+    </select>
+
 
     <!--CASE ca.payment_way WHEN 3 THEN 1 ELSE 0 END AS 'is_advance'-->
     <!--结算中心要求：公司下面只有一个雇员是垫款，那么公司就是垫款-->

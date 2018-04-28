@@ -1,6 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfArchiveBasePeriodMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfArchiveBasePeriod">
+        <id column="archive_base_period_id" property="archiveBasePeriodId" />
+        <result column="emp_archive_id" property="empArchiveId" />
+        <result column="emp_task_id" property="empTaskId" />
+        <result column="company_id" property="companyId" />
+        <result column="employee_id" property="employeeId" />
+        <result column="base_amount" property="baseAmount" />
+        <result column="start_month" property="startMonth" />
+        <result column="end_month" property="endMonth" />
+        <result column="hf_month" property="hfMonth" />
+        <result column="hf_type" property="hfType" />
+        <result column="remit_way" property="remitWay" />
+        <result column="ratio" property="ratio" />
+        <result column="ratio_emp" property="ratioEmp" />
+        <result column="ratio_com" property="ratioCom" />
+        <result column="amount" property="amount" />
+        <result column="amount_emp" property="amountEmp" />
+        <result column="com_amount" property="comAmount" />
+        <result column="repair_reason" property="repairReason" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
+
+
+    <select id="getArchiveBasePeriods" resultMap="BaseResultMap">
+        SELECT
+        a.emp_task_id,
+        a.emp_archive_id,
+        a.company_id,
+        a.employee_id,
+        a.hf_type,
+        a.base_amount,
+        a.ratio,
+        a.ratio_emp,
+        a.ratio_com,
+        a.amount,
+        a.amount_emp,
+        a.com_amount
+        FROM
+        hf_archive_base_period a
+        INNER JOIN hf_emp_archive b ON a.emp_archive_id = b.emp_archive_id
+        WHERE
+        a.is_active = 1
+        AND b.is_active = 1
+        AND a.hf_type = #{hfType}
+        AND b.com_account_id = #{comAccountId}
+        AND #{paymentMonth} > a.hf_month
+        AND (
+        #{belongMonth} BETWEEN a.start_month AND b.end_month OR (#{belongMonth} >= a.start_month AND a.end_month IS NULL)
+        )
+    </select>
+
 
     <update id="deleteHfArchiveBasePeriods" parameterType="java.util.List">
         UPDATE hf_archive_base_period
