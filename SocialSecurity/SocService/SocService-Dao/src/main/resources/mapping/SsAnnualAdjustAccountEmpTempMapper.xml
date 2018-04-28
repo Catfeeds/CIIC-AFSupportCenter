@@ -2,18 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsAnnualAdjustAccountEmpTempMapper">
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAnnualAdjustAccountEmpTemp">
-		<id column="annual_adjust_account_emp_temp_id" property="annualAdjustAccountEmpTempId" />
-		<result column="annual_adjust_account_id" property="annualAdjustAccountId" />
-		<result column="account_status" property="accountStatus" />
-		<result column="ss_serial" property="ssSerial" />
-		<result column="employee_name" property="employeeName" />
-		<result column="id_num" property="idNum" />
-		<result column="payment_months" property="paymentMonths" />
-		<result column="avg_month_salary" property="avgMonthSalary" />
-		<result column="error_msg" property="errorMsg" />
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAnnualAdjustAccountEmpTemp">
+        <id column="annual_adjust_account_emp_temp_id" property="annualAdjustAccountEmpTempId" />
+        <result column="annual_adjust_account_id" property="annualAdjustAccountId" />
+        <result column="account_status" property="accountStatus" />
+        <result column="ss_serial" property="ssSerial" />
+        <result column="employee_name" property="employeeName" />
+        <result column="id_num" property="idNum" />
+        <result column="payment_months" property="paymentMonths" />
+        <result column="avg_month_salary" property="avgMonthSalary" />
+        <result column="error_msg" property="errorMsg" />
         <result column="order_num" property="orderNum" />
-	</resultMap>
+    </resultMap>
+
+    <update id="updateErrorMsgForRepeatingEmployeeId">
+        UPDATE ss_annual_adjust_account_emp_temp t1 INNER JOIN
+        (
+        SELECT ${repeatingColumn} FROM ss_annual_adjust_account_emp_temp
+        WHERE annual_adjust_account_id = #{annualAdjustAccountId}
+        AND ${repeatingColumn} IS NOT NULL
+        GROUP BY ${repeatingColumn}
+        HAVING COUNT(annual_adjust_account_emp_temp_id) > 1
+        ) t2 ON t1.${repeatingColumn} = t2.${repeatingColumn}
+        SET t1.error_msg = IF(t1.error_msg IS NULL, CONCAT(#{columnCN},'[',t1.${repeatingColumn},']重复'), CONCAT(t1.error_msg,',',#{columnCN},'[',t1.${repeatingColumn},']重复'))
+        WHERE t1.annual_adjust_account_id = #{annualAdjustAccountId}
+    </update>
 
 </mapper>

@@ -49,6 +49,10 @@ public class AmIndependentCustomController extends BasicController<IAmCompanySet
             amCompanySet.setModifiedBy("sys");
             amCompanySet.setActive(true);
         }else {
+            AmCompanySet amCompanySet1 = business.selectById(amCompanySet.getCompanySetId());
+            amCompanySet.setActive(true);
+            amCompanySet.setCreatedBy(amCompanySet1.getCreatedBy());
+            amCompanySet.setCreatedTime(amCompanySet1.getCreatedTime());
             amCompanySet.setModifiedTime(now);
             amCompanySet.setModifiedBy("sys");
         }
@@ -110,7 +114,7 @@ public class AmIndependentCustomController extends BasicController<IAmCompanySet
         if(amCompanySet.getArchiveSpecial()==null){
             amCompanySet.setArchiveSpecial(" ");
         }
-        boolean result =  business.insertOrUpdate(amCompanySet);
+        boolean result =  business.insertOrUpdateAllColumn(amCompanySet);
         return JsonResultKit.of(result);
     }
 

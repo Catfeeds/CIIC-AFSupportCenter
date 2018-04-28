@@ -2,22 +2,73 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpBasePeriodMapper">
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBasePeriod">
-		<id column="emp_base_period_id" property="empBasePeriodId" />
-		<result column="emp_archive_id" property="empArchiveId" />
-		<result column="emp_task_id" property="empTaskId" />
-		<result column="base_amount" property="baseAmount" />
-		<result column="start_month" property="startMonth" />
-		<result column="end_month" property="endMonth" />
-		<result column="ss_month" property="ssMonth" />
-		<result column="ss_month_stop" property="ssMonthStop" />
-		<result column="remit_way" property="remitWay" />
-		<result column="is_active" property="isActive" />
-		<result column="created_time" property="createdTime" />
-		<result column="modified_time" property="modifiedTime" />
-		<result column="created_by" property="createdBy" />
-		<result column="modified_by" property="modifiedBy" />
-	</resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBasePeriod">
+        <id column="emp_base_period_id" property="empBasePeriodId" />
+        <result column="emp_archive_id" property="empArchiveId" />
+        <result column="emp_task_id" property="empTaskId" />
+        <result column="base_amount" property="baseAmount" />
+        <result column="start_month" property="startMonth" />
+        <result column="end_month" property="endMonth" />
+        <result column="ss_month" property="ssMonth" />
+        <result column="ss_month_stop" property="ssMonthStop" />
+        <result column="remit_way" property="remitWay" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
 
+    <select id="queryPeriodByEmpArchiveId" resultMap="BaseResultMap">
+        SELECT
+        sebp.remit_way,
+        sebp.base_amount,
+        sebp.start_month,
+        sebp.end_month
+        FROM
+        ss_emp_base_period sebp
+        WHERE sebp.emp_archive_id = #{empArchiveId}
+        AND sebp.is_active = 1
+        ORDER BY sebp.start_month DESC
+    </select>
+    <update id="updateEndMonthById">
+        UPDATE ss_emp_base_period SET end_month= NULL WHERE emp_base_period_id=#{empBasePeriodId}
+    </update>
+    <update id="updateEndMonAndHandleMon">
+         UPDATE ss_emp_base_period SET
+         is_active=#{isActive},
+         ss_month_stop =#{ssMonthStop},
+         end_month=#{endMonth},
+         modified_by=#{modifiedBy},
+         modified_time=#{modifiedTime}
+         WHERE emp_base_period_id=#{empBasePeriodId}
+    </update>
+    <update id="updateReductionById">
+         UPDATE ss_emp_base_period SET ss_month_stop =NULL, end_month=NULL WHERE emp_base_period_id=#{empBasePeriodId}
+    </update>
+
+    <select id="queryPeriodByEmployeeIdAndCompanyId" resultMap="BaseResultMap">
+        SELECT
+            sebp.emp_base_period_id,
+            sebp.emp_archive_id,
+            sebp.emp_task_id,
+            sebp.base_amount,
+            sebp.start_month,
+            sebp.end_month,
+            sebp.ss_month,
+            sebp.ss_month_stop,
+            sebp.remit_way,
+            sebp.is_active,
+            sebp.created_time,
+            sebp.modified_time,
+            sebp.created_by,
+            sebp.modified_by
+        FROM ss_emp_base_period sebp
+        INNER JOIN ss_emp_archive sea ON sea.emp_archive_id = sebp.emp_archive_id AND sea.is_active = 1
+        WHERE sebp.is_active = 1
+        AND sea.company_id = #{companyId}
+        AND sea.employee_id = #{employeeId}
+        ORDER BY sebp.start_month
+    </select>
 </mapper>

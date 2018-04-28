@@ -120,7 +120,12 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
             entity.setModifiedTime(now);
             entity.setCreatedBy(userId);
             entity.setModifiedBy(userId);
+            entity.setActive(true);
         }else{
+            AmResign entity1 = this.selectById(entity.getResignId());
+            entity.setCreatedBy(entity1.getCreatedBy());
+            entity.setCreatedTime(entity1.getCreatedTime());
+            entity.setActive(true);
             entity.setModifiedTime(now);
             entity.setModifiedBy(userId);
         }
@@ -166,7 +171,7 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
             amResignLinkService.insert(amResignLink);
         }
 
-        boolean result = super.insertOrUpdate(entity);
+        boolean result = super.insertOrUpdateAllColumn(entity);
 
         if(isFinish==1&&result)
         {

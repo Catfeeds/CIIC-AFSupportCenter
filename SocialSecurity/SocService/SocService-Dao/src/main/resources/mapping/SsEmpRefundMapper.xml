@@ -2,23 +2,61 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpRefundMapper">
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpRefund">
-		<id column="emp_refund_id" property="empRefundId" />
-		<result column="emp_task_id" property="empTaskId" />
-		<result column="emp_archive_id" property="empArchiveId" />
-		<result column="ss_month" property="ssMonth" />
-		<result column="amount" property="amount" />
-		<result column="process_time" property="processTime" />
-		<result column="process_way" property="processWay" />
-		<result column="start_month" property="startMonth" />
-		<result column="end_month" property="endMonth" />
-		<result column="if_deductions" property="ifDeductions" />
-		<result column="is_active" property="isActive" />
-		<result column="created_time" property="createdTime" />
-		<result column="modified_time" property="modifiedTime" />
-		<result column="created_by" property="createdBy" />
-		<result column="modified_by" property="modifiedBy" />
-	</resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpRefund">
+        <id column="emp_refund_id" property="empRefundId" />
+        <result column="emp_task_id" property="empTaskId" />
+        <result column="emp_archive_id" property="empArchiveId" />
+        <result column="ss_month" property="ssMonth" />
+        <result column="amount" property="amount" />
+        <result column="process_time" property="processTime" />
+        <result column="process_way" property="processWay" />
+        <result column="start_month" property="startMonth" />
+        <result column="end_month" property="endMonth" />
+        <result column="if_deductions" property="ifDeductions" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
+
+    <resultMap id="resultMap" extends="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpRefundBO">
+        <result column="title" property="title"></result>
+        <result column="company_id" property="companyId"></result>
+        <result column="ss_account" property="ssAccount"></result>
+        <result column="employee_name" property="employeeName"></result>
+        <result column="employee_id" property="employeeId"></result>
+        <result column="id_num" property="idNum"></result>
+        <result column="ty" property="ty"></result>
+        <result column="com_amount" property="comAmount"></result>
+        <result column="emp_amount" property="empAmount"></result>
+    </resultMap>
+
+    <select id="selectRefundDetail" resultMap="resultMap">
+        SELECT com.title,com.company_id,ca.ss_account,emp.employee_name,emp.employee_id,emp.id_num,'退账' as ty,er.start_month,er.end_month,'' as com_amount,'' as emp_amount,er.amount
+        from ss_emp_refund er
+        INNER JOIN ss_emp_archive ea ON er.emp_archive_id=ea.emp_archive_id
+        INNER JOIN sal_company com ON com.company_id=ea.company_id
+        INNER JOIN emp_employee emp ON emp.employee_id=ea.employee_id
+        INNER JOIN ss_com_account ca ON ca.com_account_id = ea.com_account_id
+        WHERE
+        er.ss_month=#{ssMonth}
+        AND ca.ss_account=#{ssAccount}
+        AND er.is_active=1
+        UNION ALL
+        select com.title,com.company_id,ca.ss_account,emp.employee_name,emp.employee_id,emp.id_num,'调整' as ty,eba.start_month,eba.end_month,
+        eba.com_diff_sum_amount as com_amount,eba.emp_diff_sum_amount as emp_amount,eba.comemp_diff_amount as amount
+        from ss_emp_base_adjust eba
+        INNER JOIN ss_emp_archive ea on ea.emp_archive_id=eba.emp_archive_id
+        INNER JOIN sal_company com ON com.company_id=ea.company_id
+        INNER JOIN emp_employee emp ON emp.employee_id=ea.employee_id
+        INNER JOIN ss_com_account ca ON ca.com_account_id = ea.com_account_id
+        where
+        eba.ss_month=#{ssMonth}
+        AND ca.ss_account=#{ssAccount}
+        AND eba.comemp_diff_amount <![CDATA[<]]> 0
+        AND eba.is_active=1
+    </select>
 
 </mapper>

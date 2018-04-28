@@ -88,6 +88,10 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
             entity.setModifiedBy(ReasonUtil.getUserId());
             entity.setIsActive(1);
         }else{
+            AmArchive entity1 = selectById(entity.getArchiveId());
+            entity.setCreatedBy(entity1.getCreatedBy());
+            entity.setCreatedTime(entity1.getCreatedTime());
+            entity.setIsActive(1);
             entity.setModifiedTime(now);
             entity.setModifiedBy(ReasonUtil.getUserId());
         }
@@ -107,7 +111,7 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
             }
         }
 
-        boolean result = this.insertOrUpdate(entity);
+        boolean result = this.insertOrUpdateAllColumn(entity);
 
         map.put("result",new Boolean(result));
         map.put("entity",entity);

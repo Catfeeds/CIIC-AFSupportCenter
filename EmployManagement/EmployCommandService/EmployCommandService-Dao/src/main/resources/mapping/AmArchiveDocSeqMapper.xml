@@ -10,4 +10,53 @@
 		<result column="doc_seq" property="docSeq" />
 	</resultMap>
 
+    <resultMap id="ModelResultMap"
+               type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmArchiveDocSeqBO"
+               extends="BaseResultMap">
+    </resultMap>
+
+    <select id="queryListByType" resultMap="ModelResultMap"
+            parameterType="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmArchiveDocSeq">
+        select  * from am_archive_doc_seq a
+        <where>
+            <if test="type != null">
+                type = #{type}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryListByTypeAndDocType" resultMap="ModelResultMap"
+            parameterType="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmArchiveDocSeq">
+        select  *  from am_archive_doc_seq
+        <where>
+            <if test="type != null">
+                AND `type` = #{type}
+            </if>
+            <if test="docType != null">
+                AND doc_type = #{docType}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateByTypeAndDocType"
+            parameterType="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmArchiveDocSeq">
+        update am_archive_doc_seq set doc_seq = #{docSeq} where `type` = #{type} and doc_type = #{docType}
+    </update>
+
+    <select id="queryCountHaveAbove" resultMap="ModelResultMap"
+            parameterType="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmArchiveDocSeq">
+        select  *  from am_archive_doc_seq
+        <where>
+            <if test="type != null">
+                AND `type` = #{type}
+            </if>
+            <if test="docType != null">
+                AND doc_type = #{docType}
+            </if>
+            <if test="docType != null">
+                AND doc_seq  &gt;= #{docSeq}
+            </if>
+        </where>
+    </select>
+
 </mapper>

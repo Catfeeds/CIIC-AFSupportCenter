@@ -2,25 +2,42 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsPaymentDetailMapper">
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPaymentDetail">
-		<id column="payment_detail_id" property="paymentDetailId" />
-		<result column="com_account_id" property="comAccountId" />
-		<result column="payment_month" property="paymentMonth" />
-		<result column="seq" property="seq" />
-		<result column="payment_item" property="paymentItem" />
-		<result column="payment_item_name" property="paymentItemName" />
-		<result column="base_pension_amount" property="basePensionAmount" />
-		<result column="base_medical_amount" property="baseMedicalAmount" />
-		<result column="add_medical_amount" property="addMedicalAmount" />
-		<result column="unemployment_amount" property="unemploymentAmount" />
-		<result column="accident_amount" property="accidentAmount" />
-		<result column="maternity_amount" property="maternityAmount" />
-		<result column="is_active" property="isActive" />
-		<result column="created_time" property="createdTime" />
-		<result column="modified_time" property="modifiedTime" />
-		<result column="created_by" property="createdBy" />
-		<result column="modified_by" property="modifiedBy" />
-	</resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPaymentDetail">
+        <id column="payment_detail_id" property="paymentDetailId" />
+        <result column="com_account_id" property="comAccountId" />
+        <result column="payment_month" property="paymentMonth" />
+        <result column="seq" property="seq" />
+        <result column="payment_item" property="paymentItem" />
+        <result column="payment_item_name" property="paymentItemName" />
+        <result column="base_pension_amount" property="basePensionAmount" />
+        <result column="base_medical_amount" property="baseMedicalAmount" />
+        <result column="add_medical_amount" property="addMedicalAmount" />
+        <result column="unemployment_amount" property="unemploymentAmount" />
+        <result column="accident_amount" property="accidentAmount" />
+        <result column="maternity_amount" property="maternityAmount" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
+
+    <select id="paymentDetailQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPaymentDetail" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+            ss_payment_detail SPD
+        WHERE
+            SPD.is_active = '1'
+            <if test = "comAccountId != null and comAccountId != ''">
+              AND SPD.com_account_id = #{comAccountId}
+            </if>
+            <if test = "paymentMonth != null and paymentMonth != ''">
+              AND SPD.payment_month = #{paymentMonth}
+            </if>
+        ORDER BY
+            SPD.seq
+    </select>
 
 </mapper>

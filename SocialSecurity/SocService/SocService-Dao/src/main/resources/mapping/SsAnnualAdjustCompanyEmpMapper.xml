@@ -2,33 +2,134 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsAnnualAdjustCompanyEmpMapper">
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAnnualAdjustCompanyEmp">
-		<id column="annual_adjust_company_emp_id" property="annualAdjustCompanyEmpId" />
-		<result column="annual_adjust_company_id" property="annualAdjustCompanyId" />
-		<result column="employee_id" property="employeeId" />
-		<result column="employee_name" property="employeeName" />
-		<result column="ss_serial" property="ssSerial" />
-		<result column="salary" property="salary" />
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAnnualAdjustCompanyEmp">
+        <id column="annual_adjust_company_emp_id" property="annualAdjustCompanyEmpId" />
+        <result column="annual_adjust_company_id" property="annualAdjustCompanyId" />
+        <result column="employee_id" property="employeeId" />
+        <result column="employee_name" property="employeeName" />
+        <result column="ss_serial" property="ssSerial" />
+        <result column="salary" property="salary" />
         <result column="chg_salary" property="chgSalary" />
-		<result column="id_num" property="idNum" />
-		<result column="archive_status" property="archiveStatus" />
-		<result column="base_amount" property="baseAmount" />
+        <result column="id_num" property="idNum" />
+        <result column="archive_status" property="archiveStatus" />
+        <result column="base_amount" property="baseAmount" />
         <result column="emp_classify" property="empClassify" />
-		<result column="ss_account_type" property="ssAccountType" />
-		<result column="settlement_area" property="settlementArea" />
-		<result column="ss_account" property="ssAccount" />
-		<result column="ss_username" property="ssUsername" />
-		<result column="ss_pwd" property="ssPwd" />
+        <result column="ss_account_type" property="ssAccountType" />
+        <result column="settlement_area" property="settlementArea" />
+        <result column="ss_account" property="ssAccount" />
+        <result column="ss_username" property="ssUsername" />
+        <result column="ss_pwd" property="ssPwd" />
         <result column="low_department_id" property="lowDepartmentId" />
         <result column="low_department_name" property="lowDepartmentName" />
         <result column="high_department_id" property="highDepartmentId" />
         <result column="high_department_name" property="highDepartmentName" />
-		<result column="is_active" property="isActive" />
-		<result column="created_time" property="createdTime" />
-		<result column="modified_time" property="modifiedTime" />
-		<result column="created_by" property="createdBy" />
-		<result column="modified_by" property="modifiedBy" />
-	</resultMap>
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
 
+    <select id="queryAnnualAdjustCompanyEmp" resultMap="BaseResultMap">
+        SELECT
+        saace.annual_adjust_company_emp_id,
+        saace.annual_adjust_company_id,
+        saace.employee_id,
+        saace.employee_name,
+        saace.ss_serial,
+        saace.salary,
+        saace.chg_salary,
+        saace.id_num,
+        saace.archive_status,
+        saace.base_amount,
+        saace.ss_account_type,
+        saace.emp_classify,
+        saace.settlement_area,
+        saace.ss_account,
+        saace.ss_username,
+        saace.ss_pwd
+        FROM ss_annual_adjust_company_emp saace
+        <if test="companyId != null">
+            INNER JOIN ss_annual_adjust_company saac
+            ON saace.annual_adjust_company_id = saac.annual_adjust_company_id
+            AND saac.is_active = 1
+        </if>
+        <where>
+            saace.is_active = 1
+            <if test="annualAdjustCompanyId != null">
+                AND saace.annual_adjust_company_id = #{annualAdjustCompanyId}
+            </if>
+            <if test="companyId != null">
+                AND saac.company_id = #{companyId}
+            </if>
+            <if test="employeeId != null">
+                AND saace.employee_id = #{employeeId}
+            </if>
+            <if test="employeeName != null">
+                AND saace.employee_name LIKE CONCAT('%', #{employeeName},'%')
+            </if>
+            <if test="idNum">
+                AND saace.id_num = #{idNum}
+            </if>
+            <if test="ssSerial != null">
+                AND saace.ss_serial = #{ssSerial}
+            </if>
+            <if test="baseAmountStart">
+                AND base_amount >= #{baseAmountStart}
+            </if>
+            <if test="baseAmountEnd">
+                AND #{baseAmountEnd} >= saace.base_amount
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertDataWithoutErrorMsg">
+        INSERT INTO ss_annual_adjust_company_emp(
+        annual_adjust_company_id,
+        employee_id,
+        employee_name,
+        ss_serial,
+        salary,
+        chg_salary,
+        id_num,
+        archive_status,
+        base_amount,
+        ss_account_type,
+        emp_classify,
+        settlement_area,
+        ss_account,
+        ss_username,
+        ss_pwd,
+        low_department_name,
+        high_department_name,
+        is_active,
+        created_by,
+        modified_by
+        )
+        SELECT
+        annual_adjust_company_id,
+        employee_id,
+        employee_name,
+        ss_serial,
+        salary,
+        chg_salary,
+        id_num,
+        archive_status,
+        base_amount,
+        ss_account_type,
+        emp_classify,
+        settlement_area,
+        ss_account,
+        ss_username,
+        ss_pwd,
+        low_department_name,
+        high_department_name,
+        1,
+        #{createdBy},
+        #{createdBy}
+        FROM ss_annual_adjust_company_emp_temp
+        WHERE annual_adjust_company_id = #{annualAdjustCompanyId}
+        AND error_msg IS NULL
+    </insert>
 </mapper>

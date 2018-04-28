@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsDataauthWelfareUnitMapper">
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsDataauthWelfareUnit">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsDataauthWelfareUnit">
         <id column="id" property="id" />
         <result column="user_id" property="userId" />
         <result column="welfare_unit" property="welfareUnit" />
@@ -10,5 +11,55 @@
         <result column="modified_time" property="modifiedTime" />
         <result column="created_by" property="createdBy" />
         <result column="modified_by" property="modifiedBy" />
-	</resultMap>
+    </resultMap>
+
+    <resultMap id="ModelResultMap"
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsDataauthWelfareUnitBO"
+               extends="BaseResultMap">
+    </resultMap>
+    <!--查询限权客户by用户ID-->
+    <select id="queryListByUid" resultMap="ModelResultMap" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsDataauthWelfareUnit">
+        SELECT
+        s.id,
+        s.user_id,
+        s.welfare_unit,
+        s.created_time,
+        s.modified_time,
+        s.created_by,
+        s.modified_by
+        FROM
+        ss_dataauth_welfare_unit s
+        <where>
+            <if test="userId != null">
+                AND s.user_id = #{userId}
+            </if>
+        </where>
+    </select>
+
+
+    <insert id="insertSsDataauthWelfareUnit" useGeneratedKeys="true" keyProperty="id">
+        INSERT
+        INTO
+        ss_dataauth_welfare_unit
+       (
+       user_id,
+       welfare_unit,
+       created_time,
+       modified_time,
+       created_by,
+       modified_by
+       ) VALUES
+        (
+        #{userId},
+        #{welfareUnit},
+        #{createdTime},
+        #{modifiedTime},
+        #{createdBy},
+        #{modifiedBy}
+        )
+    </insert>
+
+    <delete id="delByUid">
+        DELETE FROM ss_dataauth_welfare_unit WHERE user_id = #{userId}
+    </delete>
 </mapper>
