@@ -166,7 +166,7 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
             amResignLinkService.insert(amResignLink);
         }
 
-        boolean result = super.insertOrUpdate(entity);
+        boolean result = super.insertOrUpdateAllColumn(entity);
 
         if(isFinish==1&&result)
         {
