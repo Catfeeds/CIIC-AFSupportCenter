@@ -1203,6 +1203,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                                 throw new BusinessException("雇员档案费用段中缴费起始年月不能大于汇缴年月");
                             }
 
+                            setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e, null, roundTypes, roundTypeInWeight);
+
                             HfArchiveBasePeriod hfArchiveBasePeriod = new HfArchiveBasePeriod();
                             hfArchiveBasePeriod.setEmpTaskId(hfEmpTask.getEmpTaskId());
                             hfArchiveBasePeriod.setRemitWay(e.getRemitWay());
@@ -1228,8 +1230,6 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                                 hfArchiveBasePeriod.setActive(false);
                             }
                             hfArchiveBasePeriodList.add(hfArchiveBasePeriod);
-
-                            setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e, null, roundTypes, roundTypeInWeight);
                             break;
                         }
                     }
