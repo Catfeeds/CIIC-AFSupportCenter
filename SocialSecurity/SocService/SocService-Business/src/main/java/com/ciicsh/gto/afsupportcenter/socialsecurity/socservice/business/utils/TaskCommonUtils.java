@@ -232,7 +232,7 @@ public class TaskCommonUtils {
                             afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(startMonthDate.minusDays(1).format(yyyyMMddFormatter)));
                         } else if (ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_3))
                             || SocialSecurityConst.SHANGHAI_CITY_CODE.equals(ssEmpTaskBO.getNewCityCode())) {
-                            LocalDate startMonthDate = LocalDate.parse(ssEmpTaskBO.getStartMonth() + "01", yyyyMMddFormatter);
+                            LocalDate startMonthDate = LocalDate.parse(dataStartMonth + "01", yyyyMMddFormatter);
                             // 关闭日期为起缴月的前一个月的最后一天
                             afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(startMonthDate.minusDays(1).format(yyyyMMddFormatter)));
                         } else if (StringUtils.isNotEmpty(ssEmpTaskBO.getHandleMonth())) {
