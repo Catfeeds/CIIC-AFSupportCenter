@@ -213,6 +213,7 @@ public class TaskCommonUtils {
                         || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_13))
                         )) {
                         isNewChange = true;
+                        ssEmpTaskBO.setOldAgreementId(ssEmpTaskBO.getOldSsEmpTask().getBusinessInterfaceId());
                     }
 
                     // 以下为调整前的费用段处理：
@@ -226,7 +227,7 @@ public class TaskCommonUtils {
 
                         // 如果是更正新增
                         if (isNewChange) {
-                            LocalDate startMonthDate = LocalDate.parse(dataStartMonth + "01", yyyyMMddFormatter);
+                            LocalDate startMonthDate = LocalDate.parse(ssEmpTaskBO.getOldSsEmpTask().getStartMonth() + "01", yyyyMMddFormatter);
                             // 关闭日期为起缴月的前一个月的最后一天
                             afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(startMonthDate.minusDays(1).format(yyyyMMddFormatter)));
                         } else if (StringUtils.isNotEmpty(ssEmpTaskBO.getHandleMonth())) {

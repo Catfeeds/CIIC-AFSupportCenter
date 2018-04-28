@@ -183,6 +183,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         bo.setHandleRemarkDate(now);
         bo.setRejectionRemarkDate(now);
         bo.setModifiedTime(LocalDateTime.now());
+
         // 处理中，正式把数据写入到 ss_emp_base_period and ss_emp_base_detail(雇员社)
         if (TaskStatusConst.PROCESSING == taskStatus || TaskStatusConst.FINISH == taskStatus) {
             if (TaskTypeConst.NEW == taskCategory || TaskTypeConst.INTO == taskCategory || TaskTypeConst.FLOPNEW == taskCategory || TaskTypeConst.FLOPINTO == taskCategory) {
@@ -1263,21 +1264,21 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                     throw new BusinessException("相同雇员的雇员新增任务单已办理多次，数据不正确");
                 }
 
-                SsEmpTask ssEmpTask = ssEmpTaskList.get(0);
-                if (ssEmpTask.getTaskStatus() == TaskStatusConst.FINISH) {
+                SsEmpTask oldSsEmpTask = ssEmpTaskList.get(0);
+                if (oldSsEmpTask.getTaskStatus() == TaskStatusConst.FINISH) {
                     throw new BusinessException("该雇员的雇员新增任务单已完成，不能更正");
                 }
 
                 // 撤销报表及其明细数据
-                inactiveMonthChargeData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
+                inactiveMonthChargeData(oldSsEmpTask.getEmpTaskId(), bo.getModifiedBy());
                 // 撤销差额补缴（逆调）费用段数据及其明细数据
-                inactiveBaseAdjustData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
+                inactiveBaseAdjustData(oldSsEmpTask.getEmpTaskId(), bo.getModifiedBy());
                 // 撤销雇员费用段数据及其明细数据
-                inactiveBasePeriodData(ssEmpTask.getEmpTaskId(), bo.getModifiedBy());
+                inactiveBasePeriodData(oldSsEmpTask.getEmpTaskId(), bo.getModifiedBy());
                 // 撤销雇员档案数据
-                inactiveEmpArchive(ssEmpTask.getCompanyId(), ssEmpTask.getEmployeeId(), bo.getEmpArchiveId(), bo.getModifiedBy());
+                inactiveEmpArchive(oldSsEmpTask.getCompanyId(), oldSsEmpTask.getEmployeeId(), bo.getEmpArchiveId(), bo.getModifiedBy());
 
-                bo.setOldAgreementId(ssEmpTask.getOldAgreementId());
+                bo.setOldSsEmpTask(oldSsEmpTask);
             }
 
             queryEmployeeIsnewOrChangeInto(bo);
@@ -1363,10 +1364,13 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             createNonstandardData(bo, ssEmpBasePeriod, null, null, null);
         }
         if (backPeriods.size() != 0) {
+            Integer taskCategory = bo.getTaskCategory();
             bo.setTaskCategory(Integer.valueOf(SocialSecurityConst.TASK_TYPE_4));
             //查询既存缴纳费用段
             List<SsEmpBasePeriod> ssEmpBasePeriodList = getPeriodsByEmployeeIdAndCompanyId(bo);
             backStartForTaskPeriods(backPeriods, ssEmpBasePeriodList, bo);
+
+            bo.setTaskCategory(taskCategory);
         }
     }
 
