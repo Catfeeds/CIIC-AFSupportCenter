@@ -66,4 +66,17 @@
 
 	</resultMap>
 
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMapDTO" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmArchiveBO">
+    </resultMap>
+
+    <select id="queryAmArchiveList" resultMap="BaseResultMapDTO">
+        select  *  from am_archive
+        where
+        employment_id = #{employmentId}
+        order by  created_time desc
+    </select>
+
 </mapper>

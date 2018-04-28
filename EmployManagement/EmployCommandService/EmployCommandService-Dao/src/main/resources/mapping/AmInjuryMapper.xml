@@ -20,4 +20,15 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMapDTO" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmInjuryBO">
+
+    </resultMap>
+
+
+    <select id="queryAmInjury" resultMap="BaseResultMapDTO">
+        SELECT  *  from  am_injury  where archive_id = #{archiveId} and  is_active = 1
+    </select>
+
 </mapper>
