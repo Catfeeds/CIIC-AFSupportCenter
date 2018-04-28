@@ -226,7 +226,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                 amArchiveBO = amArchiveBOList.get(0);
                 if(!StringUtil.isEmpty(amArchiveBO.getEmployFeedback()))
                 {
-                    if(!"11".equals(amArchiveBO.getEmployFeedback())){
+                    if(null!=amArchiveBO.getEmployFeedback()&&!"11".equals(amArchiveBO.getEmployFeedback())){
                         amArchiveBO.setEnd(true);
                     }
                 }
@@ -288,7 +288,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             entity.setModifiedBy(userId);
         }
         entity.setEmployOperateMan(userName);
-        amEmploymentService.insertOrUpdate(entity);
+        amEmploymentService.insertOrUpdateAllColumn(entity);
         return JsonResultKit.of(entity);
     }
 
@@ -313,7 +313,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         AmArchive entity = (AmArchive)map.get("entity");
         amArchiveBO.setArchiveId(entity.getArchiveId());
         if(result){
-            if(!"11".equals(amArchiveBO.getEmployFeedback())){
+            if(null!=amArchiveBO.getEmployFeedback()&&!"11".equals(amArchiveBO.getEmployFeedback())){
                 amArchiveBO.setEnd(true);
             }
         }
