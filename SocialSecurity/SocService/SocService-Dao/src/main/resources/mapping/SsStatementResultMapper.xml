@@ -2,26 +2,87 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsStatementResultMapper">
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsStatementResult">
-		<id column="statement_result_id" property="statementResultId" />
-		<result column="statement_id" property="statementId" />
-		<result column="employee_id" property="employeeId" />
-		<result column="change_type" property="changeType" />
-		<result column="change_type_name" property="changeTypeName" />
-		<result column="project_type" property="projectType" />
-		<result column="project_type_name" property="projectTypeName" />
-		<result column="ss_type" property="ssType" />
-		<result column="ss_type_name" property="ssTypeName" />
-		<result column="imp_amount" property="impAmount" />
-		<result column="ss_amount" property="ssAmount" />
-		<result column="diff_amount" property="diffAmount" />
-		<result column="diff_headcount" property="diffHeadcount" />
-		<result column="is_active" property="isActive" />
-		<result column="created_time" property="createdTime" />
-		<result column="modified_time" property="modifiedTime" />
-		<result column="created_by" property="createdBy" />
-		<result column="modified_by" property="modifiedBy" />
-	</resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsStatementResult">
+        <id column="statement_result_id" property="statementResultId" />
+        <result column="statement_id" property="statementId" />
+        <result column="employee_id" property="employeeId" />
+        <result column="change_type" property="changeType" />
+        <result column="change_type_name" property="changeTypeName" />
+        <result column="project_type" property="projectType" />
+        <result column="project_type_name" property="projectTypeName" />
+        <result column="ss_type" property="ssType" />
+        <result column="ss_type_name" property="ssTypeName" />
+        <result column="imp_amount" property="impAmount" />
+        <result column="ss_amount" property="ssAmount" />
+        <result column="diff_amount" property="diffAmount" />
+        <result column="diff_headcount" property="diffHeadcount" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
+
+    <!-- 表单展示查询映射结果 -->
+    <resultMap id="DtoResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementResultBO">
+        <id column="statement_result_id" jdbcType="BIGINT" property="statementResultId" />
+        <result column="statement_id" jdbcType="BIGINT" property="statementId" />
+        <result column="employee_id" jdbcType="VARCHAR" property="employeeId" />
+        <result column="employee_name" jdbcType="VARCHAR" property="employeeName" />
+        <result column="change_type" jdbcType="INTEGER" property="changeType" />
+        <result column="change_type_name" jdbcType="VARCHAR" property="changeTypeName" />
+        <result column="project_type" jdbcType="INTEGER" property="projectType" />
+        <result column="project_type_name" jdbcType="VARCHAR" property="projectTypeName" />
+        <result column="ss_type" jdbcType="VARCHAR" property="ssType" />
+        <result column="ss_type_name" jdbcType="VARCHAR" property="ssTypeName" />
+        <result column="imp_amount" jdbcType="DECIMAL" property="impAmount" />
+        <result column="ss_amount" jdbcType="DECIMAL" property="ssAmount" />
+        <result column="diff_amount" jdbcType="DECIMAL" property="diffAmount" />
+        <result column="diff_headcount" property="diffHeadcount" />
+        <result column="is_active" jdbcType="BIT" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+        <result column="modified_by" jdbcType="VARCHAR" property="modifiedBy" />
+    </resultMap>
+
+    <select id="statementResultQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementResultBO" resultMap="DtoResultMap">
+         SELECT
+        sr.statement_result_id,sr.employee_id,sr.change_type,sr.change_type_name,sr.project_type,sr.project_type_name,sr.ss_type,sr.ss_type_name,
+        sr.imp_amount,sr.ss_amount,sr.diff_amount,sr.diff_headcount,
+        CASE when sr.employee_name is null then
+        emp.employee_name
+        ELSE
+        sr.employee_name
+        END as employee_name
+        FROM
+            ss_statement_result sr
+        LEFT JOIN
+            emp_employee emp
+        ON
+             emp.employee_id = sr.employee_id
+        WHERE
+            1=1
+            AND sr.is_active = '1'
+            AND sr.statement_id = #{statementId,jdbcType=BIGINT}
+        ORDER BY
+            emp.employee_id,sr.ss_serial,sr.change_type,sr.ss_type,sr.project_type
+
+
+
+    </select>
+    <update id="cleanResultByStatementId" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementResultBO">
+        UPDATE
+          ss_statement_result T1
+        SET
+          T1.is_active = 0,
+          T1.modified_time = #{modifiedTime},
+          T1.modified_by = #{modifiedBy,jdbcType=VARCHAR}
+
+        WHERE
+          T1.statement_id = #{statementId,jdbcType=BIGINT}
+    </update>
+
 
 </mapper>

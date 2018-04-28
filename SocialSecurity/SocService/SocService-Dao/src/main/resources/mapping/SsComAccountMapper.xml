@@ -2,43 +2,43 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsComAccountMapper">
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAccount">
-		<id column="com_account_id" property="comAccountId" />
-		<result column="customer_id" property="customerId" />
-		<result column="supplier_id" property="supplierId" />
-		<result column="ss_account_type" property="ssAccountType" />
-		<result column="ss_account" property="ssAccount" />
-		<result column="bank_account" property="bankAccount" />
-		<result column="com_account_name" property="comAccountName" />
-		<result column="settlement_area" property="settlementArea" />
-		<result column="payment_bank" property="paymentBank" />
-		<result column="payment_way" property="paymentWay" />
-		<result column="bill_receiver" property="billReceiver" />
-		<result column="expire_date" property="expireDate" />
-		<result column="ss_username" property="ssUsername" />
-		<result column="ss_pwd" property="ssPwd" />
-		<result column="initial_balance" property="initialBalance" />
-		<result column="initial_debt" property="initialDebt" />
-		<result column="origin_place" property="originPlace" />
-		<result column="origin_place_remark" property="originPlaceRemark" />
-		<result column="query_account" property="queryAccount" />
-		<result column="deliver_way" property="deliverWay" />
-		<result column="deliver_way_remark" property="deliverWayRemark" />
-		<result column="provide_certificate_time" property="provideCertificateTime" />
-		<result column="change_time" property="changeTime" />
-		<result column="receive_date" property="receiveDate" />
-		<result column="into_date" property="intoDate" />
-		<result column="end_date" property="endDate" />
-		<result column="dispatch_material" property="dispatchMaterial" />
-		<result column="remark" property="remark" />
-		<result column="state" property="state" />
-		<result column="is_active" property="isActive" />
-		<result column="created_time" property="createdTime" />
-		<result column="modified_time" property="modifiedTime" />
-		<result column="created_by" property="createdBy" />
-		<result column="modified_by" property="modifiedBy" />
-	</resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAccount">
+        <id column="com_account_id" property="comAccountId" />
+        <result column="customer_id" property="customerId" />
+        <result column="supplier_id" property="supplierId" />
+        <result column="ss_account_type" property="ssAccountType" />
+        <result column="ss_account" property="ssAccount" />
+        <result column="bank_account" property="bankAccount" />
+        <result column="com_account_name" property="comAccountName" />
+        <result column="settlement_area" property="settlementArea" />
+        <result column="payment_bank" property="paymentBank" />
+        <result column="payment_way" property="paymentWay" />
+        <result column="bill_receiver" property="billReceiver" />
+        <result column="expire_date" property="expireDate" />
+        <result column="ss_username" property="ssUsername" />
+        <result column="ss_pwd" property="ssPwd" />
+        <result column="initial_balance" property="initialBalance" />
+        <result column="initial_debt" property="initialDebt" />
+        <result column="origin_place" property="originPlace" />
+        <result column="origin_place_remark" property="originPlaceRemark" />
+        <result column="query_account" property="queryAccount" />
+        <result column="deliver_way" property="deliverWay" />
+        <result column="deliver_way_remark" property="deliverWayRemark" />
+        <result column="provide_certificate_time" property="provideCertificateTime" />
+        <result column="change_time" property="changeTime" />
+        <result column="receive_date" property="receiveDate" />
+        <result column="into_date" property="intoDate" />
+        <result column="end_date" property="endDate" />
+        <result column="dispatch_material" property="dispatchMaterial" />
+        <result column="remark" property="remark" />
+        <result column="state" property="state" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+    </resultMap>
 
     <resultMap id="AccountExtMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountExtBO">
         <result column="customer_id" property="customerId" />
@@ -64,14 +64,14 @@
 
     <select id="getComAccountByCompanyId" resultMap="AccountExtMap">
         SELECT
-          <include refid="ComAccount_Ext_Columns"/>
+        <include refid="ComAccount_Ext_Columns"/>
         FROM
-          ss_com_account a
+        ss_com_account a
         INNER JOIN ss_account_com_relation b ON a.com_account_id = b.com_account_id
         INNER JOIN sal_company c ON b.company_id = c.company_id
         INNER JOIN ss_account_ratio d ON a.com_account_id = d.com_account_id
         WHERE
-          a.is_active = 1
+        a.is_active = 1
         AND b.is_active = 1
         AND c.is_active = 1
         AND d.is_active = 1
@@ -101,4 +101,217 @@
         3 as task_status
     </sql>
 
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMapDTO" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComAccountBO">
+        <!-- sal_company -->
+        <result column="company_id" property="companyId"/>
+        <result column="title" property="title"/>
+        <result column="leader_ship_name" property="leaderShipName"/>
+
+    </resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="ComAccountExtMap" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.ComAccountExtPO">
+    </resultMap>
+    <!--关联账户表和任务单表-->
+    <resultMap id="AccountAndTaskResultMap" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComAccountBO">
+        <collection property="ssComTaskList"
+                    ofType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComTask">
+            <id column="com_task_id" property="comTaskId"/>
+            <result column="com_account_id_t" property="comAccountId"/>
+            <result column="company_id" property="companyId"/>
+            <result column="task_category" property="taskCategory"/>
+            <result column="task_status" property="taskStatus"/>
+            <result column="submitter_name" property="submitterName"/>
+            <result column="submit_time" property="submitTime"/>
+            <result column="submit_remark" property="submitRemark"/>
+            <result column="modified_time" property="modifiedTime"/>
+            <result column="modified_by" property="modifiedBy"/>
+
+        </collection>
+    </resultMap>
+    <!--通过雇员任务单查询账户信息-->
+    <select id="queryByEmpTaskId" resultMap="BaseResultMapDTO">
+        select
+        ca.*,
+        c.company_id,
+        c.title,et.leader_ship_name
+        FROM ss_emp_task et
+        LEFT JOIN ss_account_com_relation ssac on et.company_id = ssac.company_id AND ssac.is_active = 1
+        LEFT JOIN ss_com_account ca on ca.com_account_id = ssac.com_account_id AND ca.is_active = 1
+        LEFT JOIN sal_company c on c.company_id = et.company_id  AND c.is_active = 1
+        WHERE 1=1
+        AND et.is_active = 1
+        AND et.emp_task_id = #{empTaskId}
+    </select>
+    <!--通过雇员任务单查询 新进和转入 账户信息-->
+    <select id="queryNewOrIntoByEmpTaskId" resultMap="BaseResultMapDTO">
+        select
+        ca.*,
+        c.company_id,
+        c.title
+        from ss_com_account ca
+        LEFT JOIN ss_account_com_relation ssac on ca.com_account_id = ssac.com_account_id AND ssac.is_active = 1
+        LEFT JOIN sal_company c on c.company_id = ssac.company_id AND c.is_active = 1
+        WHERE 1 = 1
+        AND ca.is_active = 1
+        AND EXISTS(
+            select
+            1
+            from
+            ss_emp_task et
+            WHERE et.is_active = 1 AND et.company_id = c.company_id AND et.emp_task_id = #{empTaskId}
+        )
+    </select>
+    <select id="accountQuery" resultMap="BaseResultMapDTO">
+        select * from ss_com_account ca
+        <where>
+            and ca.is_active = 1
+            and ca.state != 0
+            <if test="ssAccount != null">
+                and ca.ss_account LIKE CONCAT('%',#{ssAccount},'%')
+            </if>
+            <if test="comAccountName != null">
+                and ca.com_account_name LIKE CONCAT('%',#{comAccountName},'%')
+            </if>
+            <if test="ssAccountType != null">
+                and ca.ss_account_type LIKE CONCAT('%',#{ssAccountType},'%')
+            </if>
+            <if test="companyId != null">
+                AND  EXISTS (select 1 from ss_account_com_relation  acr
+                                where  acr.com_account_id=ca.com_account_id
+                                AND  acr.company_id like CONCAT('%',#{companyId},'%')
+                              )
+        </if>
+            <if test="state != null">
+                and ca.state =#{state}
+            </if>
+        </where>
+    </select>
+
+    <!--查询企业社保管理详细信息-->
+    <select id="querySocialSecurityManageInfo" resultMap="AccountAndTaskResultMap">
+         SELECT
+            sca.com_account_id,
+            sca.ss_account,
+            sca.bank_account,
+            sca.com_account_name,
+            sca.settlement_area,
+            sca.payment_bank,
+            sca.payment_way,
+            sca.bill_receiver,
+            sca.query_account,
+            sca.expire_date,
+            sca.ss_username,
+            sca.ss_pwd,
+            sca.initial_balance,
+            sca.initial_debt,
+            sca.origin_place,
+            sca.origin_place_remark,
+            sca.deliver_way,
+            sca.provide_certificate_time,
+            sca.change_time,
+            sca.receive_date,
+            sca.into_date,
+            sca.end_date,
+            sca.dispatch_material,
+            sca.deliver_way_remark,
+            sct.com_account_id_t,
+            sct.com_task_id,
+            sct.task_category,
+            sct.task_status,
+            sct.submitter_name,
+            sct.submit_time,
+            sct.submit_remark,
+            sct.modified_time,
+            sct.modified_by
+        FROM
+            ss_com_account sca
+        LEFT JOIN
+                (
+                    SELECT
+                    com_account_id AS  com_account_id_t,
+                    com_task_id,
+                    task_category,
+                    modified_by,
+                    modified_time,
+                    task_status,
+                    submit_time,
+                    submitter_name,
+                    submit_remark
+                    FROM ss_com_task
+                    WHERE is_active=1 AND task_status=3 OR task_status=4
+                )sct ON sca.com_account_id = sct.com_account_id_t
+           WHERE sca.com_account_id = #{comAccountId}
+
+    </select>
+
+    <select id="getSsComAccountList" resultMap="ComAccountExtMap">
+        select ca.*
+        from ss_com_account ca
+        LEFT JOIN ss_account_com_relation ssac on ca.com_account_id = ssac.com_account_id
+        <where>
+            and ca.is_active = 1
+            <if test="companyId != null">
+                and ssac.is_active = 1
+                and ssac.company_id= #{companyId}
+            </if>
+            <if test="ssAccountType != null">
+                and ca.ss_account_type= #{ssAccountType}
+            </if>
+        </where>
+    </select>
+    <select id="checkComAccountDuplicateaSSAccount" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM ss_com_account ca
+        WHERE 1=1
+        AND ca.ss_account=#{ssAccount}
+        <if test="comAccountId != null">
+            AND ca.com_account_id !=#{comAccountId}
+        </if>
+    </select>
+    <select id="checkComAccountDuplicateaSSAccountName" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM ss_com_account ca
+        WHERE 1=1
+        AND ca.com_account_name=#{comAccountName}
+        <if test="comAccountId != null">
+            AND ca.com_account_id !=#{comAccountId}
+        </if>
+    </select>
+    <!-- 获得企业开户任务 查询是否有开户账号和账号状态-->
+    <select id="isExistAccountInfo" resultType="java.lang.Integer">
+        SELECT
+            COUNT(1)
+        FROM
+            ss_com_account a
+        INNER JOIN ss_account_com_relation b ON a.com_account_id = b.com_account_id
+        WHERE
+            a.is_active = 1
+        AND b.is_active = 1
+        AND a.state != 2
+        AND b.company_id = #{companyId}
+    </select>
+    <!-- 社保序号增1 -->
+    <update id="addSerial">
+        UPDATE
+            ss_com_account CA
+        SET
+            CA.ss_serial = CA.ss_serial + 1
+        WHERE
+            CA.com_account_id = #{comAccountId}
+            AND CA.is_active = '1'
+    </update>
+
+    <!-- 根据社保账号获得社保序号 -->
+    <select id="getSerialByComAccountId" resultType="java.lang.Integer">
+        SELECT
+            CA.ss_serial
+        FROM
+            ss_com_account CA
+        WHERE
+            CA.com_account_id = #{comAccountId}
+    </select>
 </mapper>
