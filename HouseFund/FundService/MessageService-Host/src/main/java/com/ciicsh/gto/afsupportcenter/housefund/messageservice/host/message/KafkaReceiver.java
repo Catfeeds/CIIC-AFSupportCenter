@@ -64,7 +64,8 @@ public class KafkaReceiver {
             if (null != paramMap && paramMap.get("fundType") != null) {
                 String taskCategory = paramMap.get("fundType").toString();
                 String fundCategory = TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
-                boolean result = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEENEW.getCategory(),Integer.parseInt(taskCategory), null, 0);
+                Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
+                boolean result = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEENEW.getCategory(),Integer.parseInt(taskCategory), null, cityCodeMap, 0);
                 String content = "end fundEmpIn: " + JSON.toJSONString(taskMsgDTO) + "，result：" + (result ? "Success!" : "Fail!");
                 logger.debug(content);
                 log.info(LogMessage.create().setTitle("fundEmpIn").setContent(content));
@@ -87,7 +88,8 @@ public class KafkaReceiver {
                 String fundType = paramMap.get("fundType").toString();
                 Integer taskCategory = fundType.equals("1") ? TaskCategory.TURNOUT.getCategory() : TaskCategory.SEALED.getCategory();
                 String fundCategory = TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
-                boolean res = saveEmpTask(taskMsgDTO, fundCategory,ProcessCategory.EMPLOYEESTOP.getCategory(),taskCategory, null, 0);
+                Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
+                boolean res = saveEmpTask(taskMsgDTO, fundCategory,ProcessCategory.EMPLOYEESTOP.getCategory(),taskCategory, null, cityCodeMap, 0);
                 String content = "end fundEmpOut:" + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!");
                 logger.debug(content);
                 log.info(LogMessage.create().setTitle("fundEmpOut").setContent(content));
@@ -107,7 +109,12 @@ public class KafkaReceiver {
             logger.debug("start funEmpRepay: " + JSON.toJSONString(taskMsgDTO));
             log.info(LogMessage.create().setTitle("funEmpRepay").setContent("start funEmpRepay: " + JSON.toJSONString(taskMsgDTO)));
             String fundCategory = TaskSink.FUND_MAKE_UP.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
-            boolean res = saveEmpTask(taskMsgDTO, fundCategory,ProcessCategory.EMPLOYEEREPAY.getCategory(),TaskCategory.REPAY.getCategory(), null, 0);
+            Map<String, Object> paramMap = taskMsgDTO.getVariables();
+            Map<String, Object> cityCodeMap = null;
+            if (paramMap != null) {
+                cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
+            }
+            boolean res = saveEmpTask(taskMsgDTO, fundCategory,ProcessCategory.EMPLOYEEREPAY.getCategory(),TaskCategory.REPAY.getCategory(), null, cityCodeMap, 0);
             String content = "end funEmpRepay: " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!");
             logger.debug(content);
             log.info(LogMessage.create().setTitle("funEmpRepay").setContent(content));
@@ -151,7 +158,8 @@ public class KafkaReceiver {
                 if(null != paramMap && paramMap.get("fundType") != null) {
                     fundType = Integer.parseInt(paramMap.get("fundType").toString());
                     logger.debug("start in fundEmpFlop: " + JSON.toJSONString(taskMsgDTO));
-                    boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(), FLOP_IN_TASK_CATEGORIES[fundType - 1].getCategory(), null,0);
+                    Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
+                    boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(), FLOP_IN_TASK_CATEGORIES[fundType - 1].getCategory(), null, cityCodeMap,0);
                     logger.debug("end in fundEmpFlop:  " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
                 }
             }
@@ -159,6 +167,7 @@ public class KafkaReceiver {
                 fundType = 2;
 
                 String oldAgreementId = null;
+                Map<String, Object> cityCodeMap = null;
                 if (null != paramMap) {
                     if (paramMap.get("fundType") != null) {
                         fundType = Integer.parseInt(paramMap.get("fundType").toString());
@@ -166,9 +175,10 @@ public class KafkaReceiver {
                     if (paramMap.get("oldEmpAgreementId") != null) {
                         oldAgreementId = paramMap.get("oldEmpAgreementId").toString();
                     }
+                    cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
                 }
                 logger.debug("start out fundEmpFlop: " + JSON.toJSONString(taskMsgDTO));
-                boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(), FLOP_OUT_TASK_CATEGORIES[fundType - 1].getCategory(), oldAgreementId,0);
+                boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(), FLOP_OUT_TASK_CATEGORIES[fundType - 1].getCategory(), oldAgreementId, cityCodeMap, 0);
                 logger.debug("end out fundEmpFlop:  " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
             }
             logger.debug("end fundEmpFlop!");
@@ -201,7 +211,8 @@ public class KafkaReceiver {
                     if (paramMap.get("oldEmpAgreementId") != null) {
                         oldAgreementId = paramMap.get("oldEmpAgreementId").toString();
                     }
-                    boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEAGREEMENTADJUST.getCategory(), taskCategory, oldAgreementId, 0);
+                    Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
+                    boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEAGREEMENTADJUST.getCategory(), taskCategory, oldAgreementId, cityCodeMap, 0);
                     logger.debug("end in fundEmpAgreementAdjust: " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
                 }
             }//离职封存()
@@ -279,9 +290,10 @@ public class KafkaReceiver {
                                 taskCategory = paramMap.get("fundType").equals("4") ? TaskCategory.ADJUST.getCategory() : Integer.parseInt(paramMap.get("fundType").toString());
                             }
                         }
+                        Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
                         // 调整状态更正时，oldEmpAgreementId是对应调整前协议，也同时对应更正前任务单的missionId
     //                        boolean res = saveEmpTask(taskMsgDTO, fundCategory, processCategory, taskCategory, paramMap.get("oldEmpAgreementId").toString(), 1);
-                        boolean res = saveEmpTask(taskMsgDTO, fundCategory, processCategory, taskCategory, null, 1);
+                        boolean res = saveEmpTask(taskMsgDTO, fundCategory, processCategory, taskCategory, null, cityCodeMap,1);
                         logger.debug("end fundEmpAgreementCorrect(already handled): " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
                     }
 
@@ -334,16 +346,16 @@ public class KafkaReceiver {
                 }
             }
 
-            if (paramMap.get("oldEmpAgreementId") != null) {
-                Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
+            Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
 
-                if (cityCodeMap == null || cityCodeMap.get("newFundCityCode") == null
-                    || cityCodeMap.get("newFundCityCode").equals(cityCodeMap.get("oldFundCityCode"))) {
+            if (paramMap.get("oldEmpAgreementId") != null) {
+//                if (cityCodeMap == null || cityCodeMap.get("newFundCityCode") == null
+//                    || cityCodeMap.get("newFundCityCode").equals(cityCodeMap.get("oldFundCityCode"))) {
                     oldAgreementId = paramMap.get("oldEmpAgreementId").toString();
-                }
+//                }
             }
 
-            boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEAGREEMENTADJUST.getCategory(), taskCategory, oldAgreementId, isChange);
+            boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEAGREEMENTADJUST.getCategory(), taskCategory, oldAgreementId, cityCodeMap, isChange);
             log.info(LogMessage.create().setTitle("agreementAdjustOrUpdateEmpStop").setContent("end: " + JSON.toJSONString(taskMsgDTO) + ", result: " + (res ? "Success!" : "Fail!")));
             logger.debug("end agreementAdjustOrUpdateEmpStop:" + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
         } else {
@@ -473,7 +485,7 @@ public class KafkaReceiver {
      * @param taskCategory
      * @return
      */
-    private boolean saveEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer processCategory,Integer taskCategory, String oldAgreementId, Integer isChange) {
+    private boolean saveEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer processCategory,Integer taskCategory, String oldAgreementId, Map<String, Object> cityCodeMap, Integer isChange) {
         try {
             //调用当前雇员信息获取接口
             AfEmployeeInfoDTO dto = getEmpInfo(taskMsgDTO,processCategory,taskCategory, oldAgreementId, isChange);
@@ -486,7 +498,7 @@ public class KafkaReceiver {
                 }
 
                 //插入数据到雇员任务单表
-                return hfEmpTaskService.addEmpTask(taskMsgDTO, fundCategory, processCategory,taskCategory, oldAgreementId, isChange, dto, afCompanyDetailResponseDTO);
+                return hfEmpTaskService.addEmpTask(taskMsgDTO, fundCategory, processCategory,taskCategory, oldAgreementId, isChange, cityCodeMap, dto, afCompanyDetailResponseDTO);
             }
             else {
                 logger.debug("error:公积金雇员信息获取失败！");

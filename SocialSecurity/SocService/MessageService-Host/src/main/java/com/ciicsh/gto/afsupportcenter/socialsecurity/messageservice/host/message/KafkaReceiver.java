@@ -68,9 +68,10 @@ public class KafkaReceiver {
             Map<String, Object> paramMap = taskMsgDTO.getVariables();
             if(Optional.ofNullable(paramMap).isPresent() && Optional.ofNullable(paramMap.get("socialType")).isPresent()){
                 String socialType = paramMap.get("socialType").toString();
+                Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
                 //雇员服务协议ID
 //                String empAgreementId = taskMsgDTO.getMissionId();
-                saveSsEmpTask(taskMsgDTO, Integer.parseInt(socialType), ProcessCategory.AF_EMP_IN.getCategory(), null, 0);
+                saveSsEmpTask(taskMsgDTO, Integer.parseInt(socialType), ProcessCategory.AF_EMP_IN.getCategory(), null, cityCodeMap,0);
             }
         }
     }
@@ -87,7 +88,12 @@ public class KafkaReceiver {
         if (TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_OUT).setTextContent(TaskSink.SOCIAL_STOP + " JSON: " + JSON.toJSONString(taskMsgDTO)));
 //            String empAgreementId = taskMsgDTO.getMissionId();
-            saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_5), ProcessCategory.AF_EMP_OUT.getCategory(), null, 0);
+            Map<String, Object> paramMap = taskMsgDTO.getVariables();
+            Map<String, Object> cityCodeMap = null;
+            if (paramMap != null) {
+                cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
+            }
+            saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_5), ProcessCategory.AF_EMP_OUT.getCategory(), null, cityCodeMap,0);
         }
     }
 
@@ -103,7 +109,12 @@ public class KafkaReceiver {
         if (TaskSink.SOCIAL_MAKE_UP.equals(taskMsgDTO.getTaskType())) {
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_MAKE_UP).setTextContent(TaskSink.SOCIAL_MAKE_UP + " JSON: " + JSON.toJSONString(taskMsgDTO)));
 //            String empAgreementId = taskMsgDTO.getMissionId();
-            saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_4), ProcessCategory.AF_EMP_MAKE_UP.getCategory(), null, 0);
+            Map<String, Object> paramMap = taskMsgDTO.getVariables();
+            Map<String, Object> cityCodeMap = null;
+            if (paramMap != null) {
+                cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
+            }
+            saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_4), ProcessCategory.AF_EMP_MAKE_UP.getCategory(), null, cityCodeMap, 0);
         }
     }
 
@@ -122,23 +133,29 @@ public class KafkaReceiver {
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_COMPANY_CHANGE).setTextContent(TaskSink.SOCIAL_NEW + " JSON: " + JSON.toJSONString(taskMsgDTO)));
             if (paramMap != null && paramMap.get("socialType") != null) {
                 int socialType = Integer.parseInt(paramMap.get("socialType").toString());
+                Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
 //                empAgreementId = taskMsgDTO.getMissionId();
                 //新进转入判断，任务单保存时转换成支持中心的翻牌新进&翻牌转入类型
                 if (SocialSecurityConst.SOCIAL_TYPE_1 == socialType) {
-                    saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_12), ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), null, 0);
+                    saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_12), ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), null, cityCodeMap, 0);
                 } else if (SocialSecurityConst.SOCIAL_TYPE_2 == socialType) {
-                    saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_13), ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), null, 0);
+                    saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_13), ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), null, cityCodeMap, 0);
                 }
             }
             //翻牌转出
         } else if (TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
             String oldAgreementId = null;
-            if (paramMap != null && paramMap.get("oldEmpAgreementId") != null) {
-                oldAgreementId = paramMap.get("oldEmpAgreementId").toString();
+            Map<String, Object> cityCodeMap = null;
+            if (paramMap != null) {
+                if (paramMap.get("oldEmpAgreementId") != null) {
+                    oldAgreementId = paramMap.get("oldEmpAgreementId").toString();
+                }
+
+                cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
             }
 
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_COMPANY_CHANGE).setTextContent(TaskSink.SOCIAL_STOP + " JSON: " + JSON.toJSONString(taskMsgDTO)));
-            saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_14), ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), oldAgreementId, 0);
+            saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_14), ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), oldAgreementId, cityCodeMap, 0);
         }
     }
 
@@ -165,8 +182,8 @@ public class KafkaReceiver {
 
             //获取社保办理类型
             socialType = paramMap.get("socialType").toString();
-
-            saveSsEmpTask(taskMsgDTO, Integer.parseInt(socialType), ProcessCategory.AF_EMP_AGREEMENT_ADJUST.getCategory(), oldAgreementId, 0);
+            Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
+            saveSsEmpTask(taskMsgDTO, Integer.parseInt(socialType), ProcessCategory.AF_EMP_AGREEMENT_ADJUST.getCategory(), oldAgreementId, cityCodeMap, 0);
         } else if (TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_ADJUST).setTextContent(TaskSink.SOCIAL_STOP + " JSON: " + JSON.toJSONString(taskMsgDTO)));
             agreementAdjustOrUpdateEmpStop(taskMsgDTO, 0, TaskSink.AF_EMP_AGREEMENT_ADJUST);
@@ -246,7 +263,9 @@ public class KafkaReceiver {
                             afCompanyDetailResponseDTO = commonApiUtils.getServiceCenterInfo(afEmployeeCompanyDTO.getCompanyId());
                         }
                     }
-                    ssEmpTaskFrontService.saveEmpTaskTc(taskMsgDTO, taskCategory, ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory(), 1, null, dto, afCompanyDetailResponseDTO);
+
+                    Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
+                    ssEmpTaskFrontService.saveEmpTaskTc(taskMsgDTO, taskCategory, ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory(), 1, null, dto, afCompanyDetailResponseDTO, cityCodeMap);
 
                 } catch (Exception e) {
                     logService.error(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_UPDATE).setTextContent(e.getMessage()));
@@ -267,6 +286,7 @@ public class KafkaReceiver {
         logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(taskSink).setTextContent(" JSON: " + JSON.toJSONString(taskMsgDTO)));
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
         String oldAgreementId = null;
+        Map<String, Object> cityCodeMap = null;
 
         if (null != paramMap) {
             if (paramMap.get("oldEmpAgreementId") != null) {
@@ -285,15 +305,15 @@ public class KafkaReceiver {
                     }
                 }
 
-                Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
+                cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
 
-                if (cityCodeMap == null || cityCodeMap.get("newFundCityCode") == null
-                    || cityCodeMap.get("newFundCityCode").equals(cityCodeMap.get("oldFundCityCode"))) {
+//                if (cityCodeMap == null || cityCodeMap.get("newSocialCityCode") == null
+//                    || cityCodeMap.get("newSocialCityCode").equals(cityCodeMap.get("oldSocialCityCode"))) {
                     oldAgreementId = paramMap.get("oldEmpAgreementId").toString();
-                }
+//                }
             }
 
-            saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_5), ProcessCategory.AF_EMP_AGREEMENT_ADJUST.getCategory(), oldAgreementId, isChange);
+            saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_5), ProcessCategory.AF_EMP_AGREEMENT_ADJUST.getCategory(), oldAgreementId, cityCodeMap, isChange);
         }
     }
 
@@ -399,7 +419,7 @@ public class KafkaReceiver {
      * @param socialType
      * @return
      */
-    private void saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType, Integer processCategory, String oldAgreementId, Integer isChange) {
+    private void saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType, Integer processCategory, String oldAgreementId, Map<String, Object> cityCodeMap, Integer isChange) {
         try {
             AfEmployeeInfoDTO dto = callEmpAgreement(taskMsgDTO, processCategory, oldAgreementId);
             AfCompanyDetailResponseDTO afCompanyDetailResponseDTO = null;
@@ -413,7 +433,7 @@ public class KafkaReceiver {
             }
 
             //保存雇员任务单表数据
-            ssEmpTaskFrontService.saveSsEmpTask(taskMsgDTO, socialType, processCategory, isChange, oldAgreementId, dto, afCompanyDetailResponseDTO);
+            ssEmpTaskFrontService.saveSsEmpTask(taskMsgDTO, socialType, processCategory, isChange, oldAgreementId, dto, afCompanyDetailResponseDTO, cityCodeMap);
         } catch (Exception e) {
             logService.error(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle("saveSsEmpTask").setTextContent(e.getMessage()));
         }

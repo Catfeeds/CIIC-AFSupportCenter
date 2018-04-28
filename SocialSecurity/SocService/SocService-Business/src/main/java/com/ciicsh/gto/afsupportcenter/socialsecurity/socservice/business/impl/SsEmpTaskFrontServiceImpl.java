@@ -69,11 +69,11 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
     @Override
     public boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer processCategory, Integer isChange,
                                  String oldAgreementId, AfEmployeeInfoDTO dto,
-                                 AfCompanyDetailResponseDTO afCompanyDetailResponseDTO) {
+                                 AfCompanyDetailResponseDTO afCompanyDetailResponseDTO, Map<String, Object> cityCodeMap) {
         boolean result = false;
         try {
             //插入数据到雇员任务单表
-            saveSsEmpTask(taskMsgDTO, taskCategory, processCategory, isChange, oldAgreementId, dto, afCompanyDetailResponseDTO);
+            saveSsEmpTask(taskMsgDTO, taskCategory, processCategory, isChange, oldAgreementId, dto, afCompanyDetailResponseDTO, cityCodeMap);
             result = true;
         } catch (Exception e) {
             result = false;
@@ -117,7 +117,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
     @Override
     public boolean saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType, Integer processCategory, Integer isChange,
                                  String oldAgreementId, AfEmployeeInfoDTO dto,
-                                 AfCompanyDetailResponseDTO afCompanyDetailResponseDTO) throws Exception {
+                                 AfCompanyDetailResponseDTO afCompanyDetailResponseDTO, Map<String, Object> cityCodeMap) throws Exception {
         //基本信息
         AfEmployeeCompanyDTO afEmployeeCompanyDTO = dto.getEmployeeCompany();
 
@@ -133,6 +133,16 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         if (oldAgreementId != null) {
             ssEmpTask.setOldAgreementId(oldAgreementId);
         }
+        if (cityCodeMap != null) {
+            if (cityCodeMap.get("oldSocialCityCode") != null) {
+                ssEmpTask.setOldCityCode(cityCodeMap.get("oldSocialCityCode").toString());
+            }
+
+            if (cityCodeMap.get("newSocialCityCode") != null) {
+                ssEmpTask.setNewCityCode(cityCodeMap.get("newSocialCityCode").toString());
+            }
+        }
+
         ssEmpTask.setSubmitterId(afEmployeeCompanyDTO.getCreatedBy());
         ssEmpTask.setSalary(afEmployeeCompanyDTO.getSalary());
         ssEmpTask.setSubmitterRemark(afEmployeeCompanyDTO.getRemark());

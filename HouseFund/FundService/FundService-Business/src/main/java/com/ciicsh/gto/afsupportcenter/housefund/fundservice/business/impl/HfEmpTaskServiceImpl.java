@@ -91,7 +91,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer processCategory,Integer taskCategory, String oldAgreementId, Integer isChange,
-                                AfEmployeeInfoDTO dto, AfCompanyDetailResponseDTO afCompanyDetailResponseDTO) throws Exception {
+                              Map<String, Object> cityCodeMap, AfEmployeeInfoDTO dto, AfCompanyDetailResponseDTO afCompanyDetailResponseDTO) throws Exception {
         AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
 
         HfEmpTask hfEmpTask = new HfEmpTask();
@@ -101,6 +101,16 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         // 调整通道或更正通道过来的任务单，都需要加上oldAgreementId，回调前道接口时需使用
         if (oldAgreementId != null) {
             hfEmpTask.setOldAgreementId(oldAgreementId);
+        }
+
+        if (cityCodeMap != null) {
+            if (cityCodeMap.get("oldFundCityCode") != null) {
+                hfEmpTask.setOldCityCode(cityCodeMap.get("oldFundCityCode").toString());
+            }
+
+            if (cityCodeMap.get("newFundCityCode") != null) {
+                hfEmpTask.setNewCityCode(cityCodeMap.get("newFundCityCode").toString());
+            }
         }
 
         if(null != companyDto){

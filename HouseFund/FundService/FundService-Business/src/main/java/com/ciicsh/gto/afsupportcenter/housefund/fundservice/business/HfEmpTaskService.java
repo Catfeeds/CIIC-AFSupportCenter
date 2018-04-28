@@ -11,6 +11,7 @@ import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailRespo
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface HfEmpTaskService extends IService<HfEmpTask> {
 
@@ -59,8 +60,8 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @return
      * @throws Exception
      */
-    boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory,Integer processCategory,Integer taskCategory, String oldAgreementId, Integer isChange,
-                         AfEmployeeInfoDTO dto, AfCompanyDetailResponseDTO afCompanyDetailResponseDTO) throws Exception;
+    boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer processCategory, Integer taskCategory, String oldAgreementId, Integer isChange,
+                       Map<String, Object> cityCodeMap, AfEmployeeInfoDTO dto, AfCompanyDetailResponseDTO afCompanyDetailResponseDTO) throws Exception;
 
 
     /**

@@ -6,6 +6,8 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 
+import java.util.Map;
+
 /**
  * <p>
  * 雇员任务单前道传递信息,创建任务单的同时，就要把前道的传递信息复制到这表，当前表复制前道cmy_af_emp_socia 服务类
@@ -23,7 +25,7 @@ public interface SsEmpTaskFrontService extends IService<SsEmpTaskFront> {
      * @return
      */
     boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer processCategory, Integer isChange, String oldAgreementId,  AfEmployeeInfoDTO dto,
-                          AfCompanyDetailResponseDTO afCompanyDetailResponseDTO);
+                          AfCompanyDetailResponseDTO afCompanyDetailResponseDTO, Map<String, Object> cityCodeMap);
 
     /**
      * 更新旧的雇员任务单
@@ -48,7 +50,7 @@ public interface SsEmpTaskFrontService extends IService<SsEmpTaskFront> {
      * @return
      * @throws Exception
      */
-    boolean saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType, Integer processCategory,  Integer isChange,
+    boolean saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType, Integer processCategory, Integer isChange,
                           String oldAgreementId, AfEmployeeInfoDTO dto,
-                          AfCompanyDetailResponseDTO afCompanyDetailResponseDTO) throws Exception;
+                          AfCompanyDetailResponseDTO afCompanyDetailResponseDTO, Map<String, Object> cityCodeMap) throws Exception;
 }
