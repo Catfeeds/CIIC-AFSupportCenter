@@ -71,42 +71,6 @@
         <result column="remark" property="remark" />
     </resultMap>
 
-    <select id="getComTaskByCompanyId" resultMap="ComTaskExtMap">
-        SELECT
-        <include refid="ComTask_Ext_Columns"/>
-        FROM
-        ss_com_task a
-        INNER JOIN sal_company b ON a.company_id = b.company_id
-        WHERE
-        a.is_active = 1
-        AND b.is_active = 1
-        AND a.task_category IN (1,2)
-        AND a.company_id = #{companyId}
-    </select>
-
-    <sql id="ComTask_Ext_Columns">
-        a.customer_id,
-        a.com_account_id,
-        a.com_account_name,
-        a.company_id,
-        b.title AS 'company_ame',
-        a.ss_account,
-        a.bank_account,
-        a.settlement_area,
-        a.payment_bank,
-        a.payment_way,
-        a.bill_receiver,
-        a.expire_date_front AS 'expire_date',
-        a.legal_person,
-        a.contact_address,
-        '' AS 'query_account',
-        a.industry_category,
-        '' AS 'com_ratio',
-        a.dispatch_material,
-        a.submit_remark AS 'remark',
-        a.task_status
-    </sql>
-
     <resultMap id="ModelResultMap"
                type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComTaskBO"
                extends="BaseResultMap">
@@ -221,6 +185,43 @@
             </association>
         </association>
     </resultMap>
+
+    <select id="getComTaskByCompanyId" resultMap="ComTaskExtMap">
+        SELECT
+        <include refid="ComTask_Ext_Columns"/>
+        FROM
+        ss_com_task a
+        INNER JOIN sal_company b ON a.company_id = b.company_id
+        WHERE
+        a.is_active = 1
+        AND b.is_active = 1
+        AND a.task_category IN (1,2)
+        AND a.company_id = #{companyId}
+    </select>
+
+    <sql id="ComTask_Ext_Columns">
+        a.customer_id,
+        a.com_account_id,
+        a.com_account_name,
+        a.company_id,
+        b.title AS 'company_ame',
+        a.ss_account,
+        a.bank_account,
+        a.settlement_area,
+        a.payment_bank,
+        a.payment_way,
+        a.bill_receiver,
+        a.expire_date_front AS 'expire_date',
+        a.legal_person,
+        a.contact_address,
+        '' AS 'query_account',
+        a.industry_category,
+        '' AS 'com_ratio',
+        a.dispatch_material,
+        a.submit_remark AS 'remark',
+        a.task_status
+    </sql>
+
     <!--查询企业任务单 未处理状态-->
     <select id="queryNoProgressCompanyTask" resultMap="ModelResultMap">
         SELECT

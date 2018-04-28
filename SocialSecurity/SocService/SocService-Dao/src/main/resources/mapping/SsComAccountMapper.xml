@@ -68,13 +68,11 @@
         FROM
         ss_com_account a
         INNER JOIN ss_account_com_relation b ON a.com_account_id = b.com_account_id
-        INNER JOIN sal_company c ON b.company_id = c.company_id
-        INNER JOIN ss_account_ratio d ON a.com_account_id = d.com_account_id
+        LEFT JOIN sal_company c ON b.company_id = c.company_id
+        LEFT JOIN ss_account_ratio d ON a.com_account_id = d.com_account_id
         WHERE
         a.is_active = 1
         AND b.is_active = 1
-        AND c.is_active = 1
-        AND d.is_active = 1
         AND b.company_id = #{companyId}
     </select>
 
