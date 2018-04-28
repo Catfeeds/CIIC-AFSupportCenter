@@ -310,8 +310,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         {
             AmArchiveBO  amArchiveBO = amArchiveBOList.get(0);
             AmArchiveDTO amArchiveDTO = new AmArchiveDTO();
+            resultMap.put("amArchaiveBo",amArchiveBO);
             BeanUtils.copyProperties(amArchiveBO,amArchiveDTO);
-            resultMap.put("amArchaiveBo",amArchiveDTO);
+
             AmInjuryBO amInjuryBO = new AmInjuryBO();
             amInjuryBO.setArchiveId(amArchiveBO.getArchiveId().toString());
 
