@@ -282,7 +282,9 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             amResignBO.setEmployFeedback(amEmploymentBO.getEmployFeedback());
 
             amResignBO.setYuliuDocNum(amArchiveBO.getYuliuDocNum());
-            amResignBO.setDocNum(amArchiveBO.getDocCode());
+            amResignBO.setDocNum(amArchiveBO.getDocNum());
+            amResignBO.setDocType(amArchiveBO.getDocType());
+            amResignBO.setYuliuDocType(amArchiveBO.getYuliuDocType());
             amResignBO.setArchiveCardState(amArchiveBO.getArchiveCardState());
             amResignBO.setArchivePlace(amArchiveBO.getArchivePlace());
             amResignBO.setArchivePlaceAdditional(amArchiveBO.getArchivePlaceAdditional());
@@ -299,7 +301,9 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             amResignBO.setEmploymentId(amEmploymentBO.getEmploymentId());
 
             amResignBO.setYuliuDocNum(amArchiveBO.getYuliuDocNum());
-            amResignBO.setDocNum(amArchiveBO.getDocCode());
+            amResignBO.setDocNum(amArchiveBO.getDocNum());
+            amResignBO.setDocType(amArchiveBO.getDocType());
+            amResignBO.setYuliuDocType(amArchiveBO.getYuliuDocType());
             amResignBO.setArchiveCardState(amArchiveBO.getArchiveCardState());
             amResignBO.setArchivePlace(amArchiveBO.getArchivePlace());
             amResignBO.setArchivePlaceAdditional(amArchiveBO.getArchivePlaceAdditional());
