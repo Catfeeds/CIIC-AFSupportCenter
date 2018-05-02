@@ -27,8 +27,7 @@ import org.springframework.context.annotation.Import;
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.housefund.fundservice",
                                             "com.ciicsh.gto",
                                             "com.ciicsh.common",
-                                            "com.ciicsh.gt1",
-                                            "com.ciicsh.gto.afsupportcenter.util"})
+                                            "com.ciicsh.gt1"})
 @EnableDiscoveryClient
 @Import({CustomConfiguration.class, MybatisPlusConfig.class})
 public class FundSiteServiceApp {
