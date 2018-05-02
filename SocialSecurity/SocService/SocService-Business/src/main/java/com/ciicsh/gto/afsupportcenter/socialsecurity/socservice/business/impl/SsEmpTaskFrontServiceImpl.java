@@ -278,6 +278,11 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         return true;
     }
 
+    @Override
+    public Integer getEmpTaskDetailCount(String businessInterfaceId) {
+        return baseMapper.getEmpTaskDetailCount(businessInterfaceId);
+    }
+
     /**
      * add by linhui
      * 根据不同任务单类型，把前道传递的社保起缴月份（业务老师们都习惯叫执行日期）

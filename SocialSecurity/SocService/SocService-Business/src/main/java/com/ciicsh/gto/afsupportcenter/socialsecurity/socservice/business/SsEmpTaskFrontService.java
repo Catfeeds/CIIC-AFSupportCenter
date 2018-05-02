@@ -53,4 +53,6 @@ public interface SsEmpTaskFrontService extends IService<SsEmpTaskFront> {
     boolean saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType, Integer processCategory, Integer isChange,
                           String oldAgreementId, AfEmployeeInfoDTO dto,
                           AfCompanyDetailResponseDTO afCompanyDetailResponseDTO, Map<String, Object> cityCodeMap) throws Exception;
+
+    Integer getEmpTaskDetailCount(String businessInterfaceId);
 }

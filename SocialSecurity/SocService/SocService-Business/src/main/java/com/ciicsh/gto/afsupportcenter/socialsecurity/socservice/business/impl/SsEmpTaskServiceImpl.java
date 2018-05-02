@@ -1123,6 +1123,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             if (ssEmpBaseDetailList.size() == 0) throw new BusinessException("费用段明细数据不正确");
             ssEmpBasePeriod.setListEmpBaseDetail(ssEmpBaseDetailList);
             bo.setListEmpBasePeriod(ssEmpBasePeriodList);
+
+            setDetailCountNoChange(bo);
         } else throw new BusinessException("数据库没有缴纳时间段");
     }
 
@@ -1373,6 +1375,19 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             backStartForTaskPeriods(backPeriods, ssEmpBasePeriodList, bo);
 
             bo.setTaskCategory(taskCategory);
+        }
+
+        setDetailCountNoChange(bo);
+    }
+
+    private void setDetailCountNoChange(SsEmpTaskBO bo) {
+        if (StringUtils.isNotEmpty(bo.getOldAgreementId()) && StringUtils.isNotEmpty(bo.getBusinessInterfaceId())) {
+            Integer oldCount = ssEmpTaskFrontService.getEmpTaskDetailCount(bo.getOldAgreementId());
+            Integer newCount = ssEmpTaskFrontService.getEmpTaskDetailCount(bo.getBusinessInterfaceId());
+
+            if (oldCount != null && !oldCount.equals(newCount)) {
+                bo.setSocCountChange(true);
+            }
         }
     }
 

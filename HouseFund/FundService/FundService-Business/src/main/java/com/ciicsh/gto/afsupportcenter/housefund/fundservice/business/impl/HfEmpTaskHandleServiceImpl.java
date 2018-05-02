@@ -1941,7 +1941,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                         // 关闭日期为起缴月的前一个月的最后一天
                         afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(startMonthDate.minusDays(1).format(yyyyMMddFormatter)));
                     } else if (hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST
-                        || SocialSecurityConst.SHANGHAI_CITY_CODE.equals(hfEmpTask.getNewCityCode())) {
+                        && SocialSecurityConst.SHANGHAI_CITY_CODE.equals(hfEmpTask.getNewCityCode())) {
                         LocalDate startMonthDate = LocalDate.parse(startMonth + "01", yyyyMMddFormatter);
                         // 关闭日期为起缴月的前一个月的最后一天
                         afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(startMonthDate.minusDays(1).format(yyyyMMddFormatter)));
@@ -1956,11 +1956,11 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     tags.put("oldAfEmpSocialUpdateDateDTO", JsonKit.toStr(afEmpSocialUpdateDateDTO));
 
                     // 如果oldAgreementId存在，且是转出或封存时，说明是调整非0转0
-                    if (hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT
-                        || hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
-                        || hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST
-                        || SocialSecurityConst.SHANGHAI_CITY_CODE.equals(hfEmpTask.getNewCityCode())
-                        || isNewChange
+                    if (isNewChange || (
+                                hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT
+                                || hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
+                                || hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST
+                            ) && SocialSecurityConst.SHANGHAI_CITY_CODE.equals(hfEmpTask.getNewCityCode())
                         ) {
                         afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
                         afEmpSocialUpdateDateDTO.setCompanyId(companyId);
@@ -1972,22 +1972,14 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                         }
 
                         if (hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST
-                            || SocialSecurityConst.SHANGHAI_CITY_CODE.equals(hfEmpTask.getNewCityCode())
                             || isNewChange) {
                             afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(companyConfirmAmount);
                             afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(personalConfirmAmount);
+                            afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(startMonth + "01"));
                         } else {
                             // 此时需要回调一个只有开始确认时间的，金额为0的费用段
                             afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(BigDecimal.ZERO);
                             afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(BigDecimal.ZERO);
-
-                        }
-                        // 如果是更正新增
-                        if (hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_ADJUST
-                            || SocialSecurityConst.SHANGHAI_CITY_CODE.equals(hfEmpTask.getNewCityCode())
-                            || isNewChange) {
-                            afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(startMonth + "01"));
-                        } else if (StringUtils.isNotEmpty(hfMonth)) {
                             afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(hfMonth + "01"));
                         }
                         afEmpSocialUpdateDateDTO.setEmpAgreementId(empAgreementId);
