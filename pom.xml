@@ -203,14 +203,14 @@
 
             <dependency>
                 <groupId>com.ciicsh.gt1.settlementcenter</groupId>
-                <artifactId>invoicecommandservice-api</artifactId>
-                <version>1.0.0</version>
+                <artifactId>gt1.settlementcenter.invoicecommandservice-api</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ciicsh.gt1.settlementcenter.payment</groupId>
                 <artifactId>settlementcenter-payment-command-api</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.ciicsh.gt1.companycenter</groupId>

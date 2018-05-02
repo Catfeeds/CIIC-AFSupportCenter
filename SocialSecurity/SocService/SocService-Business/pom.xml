@@ -56,7 +56,7 @@
         </dependency>
         <dependency>
             <groupId>com.ciicsh.gt1.settlementcenter</groupId>
-            <artifactId>invoicecommandservice-api</artifactId>
+            <artifactId>gt1.settlementcenter.invoicecommandservice-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.ciicsh.gt1.afsystemmanagecenter</groupId>
