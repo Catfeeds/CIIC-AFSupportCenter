@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.message;
 
 import com.alibaba.fastjson.JSON;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeSocialProxy;
@@ -477,7 +478,13 @@ public class KafkaReceiver {
         return resDto;
     }
 
-
+    private AfEmployeeInfoDTO getEmpInfoByOldAgreementId(String oldAgreementId) {
+        AfEmployeeInfoDTO resDto = null;
+        if (StringUtils.isNotEmpty(oldAgreementId)) {
+            resDto = employeeSocialProxy.getByEmpAgreement(Long.parseLong(oldAgreementId));
+        }
+        return resDto;
+    }
 
     /**
      * 保存公积金雇员任务单
@@ -496,9 +503,23 @@ public class KafkaReceiver {
                 if (companyDto != null) {
                     afCompanyDetailResponseDTO = commonApiUtils.getServiceCenterInfo(companyDto.getCompanyId());
                 }
+                AfEmpSocialDTO socialDTO = hfEmpTaskService.getAfEmpSocialByType(dto.getEmpSocialList(), fundCategory);
+                // 获取公积金账号（如果根据新雇员协议ID未取得，则根据老雇员协议ID去取）
+                if(socialDTO != null && StringUtils.isEmpty(socialDTO.getAccount())){
+                    Map<String, Object> paramMap = taskMsgDTO.getVariables();
+
+                    if(null != paramMap){
+                        AfEmployeeInfoDTO oldDto = getEmpInfoByOldAgreementId(paramMap.get("oldEmpAgreementId").toString());
+
+                        if (oldDto != null) {
+                            AfEmpSocialDTO oldSocialDTO = hfEmpTaskService.getAfEmpSocialByType(dto.getEmpSocialList(),fundCategory);
+                            socialDTO.setAccount(oldSocialDTO.getAccount());
+                        }
+                    }
+                }
 
                 //插入数据到雇员任务单表
-                return hfEmpTaskService.addEmpTask(taskMsgDTO, fundCategory, processCategory,taskCategory, oldAgreementId, isChange, cityCodeMap, dto, afCompanyDetailResponseDTO);
+                return hfEmpTaskService.addEmpTask(taskMsgDTO, fundCategory, processCategory,taskCategory, oldAgreementId, isChange, cityCodeMap, dto, socialDTO, afCompanyDetailResponseDTO);
             }
             else {
                 logger.debug("error:公积金雇员信息获取失败！");
@@ -523,8 +544,23 @@ public class KafkaReceiver {
             //调用当前雇员信息获取接口
             AfEmployeeInfoDTO dto = getEmpInfo(taskMsgDTO,processCategory,taskCategory, oldAgreementId, isChange);
             if (dto != null) {
+                AfEmpSocialDTO socialDTO = hfEmpTaskService.getAfEmpSocialByType(dto.getEmpSocialList(), fundCategory);
+                // 获取公积金账号（如果根据新雇员协议ID未取得，则根据老雇员协议ID去取）
+                if(socialDTO != null && StringUtils.isEmpty(socialDTO.getAccount())){
+                    Map<String, Object> paramMap = taskMsgDTO.getVariables();
+
+                    if(null != paramMap){
+                        AfEmployeeInfoDTO oldDto = getEmpInfoByOldAgreementId(paramMap.get("oldEmpAgreementId").toString());
+
+                        if (oldDto != null) {
+                            AfEmpSocialDTO oldSocialDTO = hfEmpTaskService.getAfEmpSocialByType(dto.getEmpSocialList(),fundCategory);
+                            socialDTO.setAccount(oldSocialDTO.getAccount());
+                        }
+                    }
+                }
+
                 //更新任务单表信息
-                return hfEmpTaskService.updateEmpTask(taskMsgDTO, fundCategory,dto);
+                return hfEmpTaskService.updateEmpTask(taskMsgDTO, fundCategory, dto, socialDTO);
             }
             else {
                 logger.debug("error:公积金雇员信息获取失败！");
