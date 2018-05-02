@@ -8,11 +8,7 @@ import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.util.MyExcelVerifyHandler;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsAnnualAdjustAccountBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsAnnualAdjustAccountEmpBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAnnualAdjustAccountEmpService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAnnualAdjustAccountEmpTempService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAnnualAdjustAccountService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComAccountService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsFileImportService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsAnnualAdjustAccountDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsAnnualAdjustAccountEmpDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsAnnualAdjustAccountEmpTempDTO;
@@ -21,8 +17,8 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComAcco
 import com.ciicsh.gto.afsupportcenter.util.core.Result;
 import com.ciicsh.gto.afsupportcenter.util.core.ResultGenerator;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
+import com.ciicsh.gto.afsupportcenter.util.logservice.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logservice.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -42,16 +38,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
- *  年调社保账户信息管理前端控制器
+ * 年调社保账户信息管理前端控制器
  * </p>
  */
 @RestController
@@ -66,10 +57,11 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
     @Autowired
     private SsFileImportService ssFileImportService;
     @Autowired
-    private LogService logService;
+    private LogApiUtil logApiUtil;
 
     /**
      * 分页查询年调社保账户信息
+     *
      * @param pageInfo
      * @return
      */
@@ -81,10 +73,11 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
 
     /**
      * 根据客户编号上传该企业社保账户所属雇员的年调收集信息
+     *
      * @param request
      * @return
      */
-    @RequestMapping(value="/annualAdjustAccountEmpUpload", consumes="multipart/form-data")
+    @RequestMapping(value = "/annualAdjustAccountEmpUpload", consumes = "multipart/form-data")
     public Result annualAdjustAccountEmpUpload(HttpServletRequest request) {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         String ssAccount = multipartRequest.getParameter("ssAccount");
@@ -173,10 +166,9 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
             }
             afterInsert(annualAdjustAccountId);
         } catch (Exception e) {
-            LogContext logContext = LogContext.of().setTitle("文件上传")
-                .setTextContent("根据客户编号上传该企业社保账户所属雇员的平均工资收集信息")
-                .setExceptionContent(e);
-            logService.error(logContext);
+            LogMessage logMessage = LogMessage.create().setTitle("文件上传")
+                .setContent("根据客户编号上传该企业社保账户所属雇员的平均工资收集信息" + e.getMessage());
+            logApiUtil.error(logMessage);
             return ResultGenerator.genServerFailResult("文件读取失败，请先检查文件格式是否正确");
         }
 
@@ -193,6 +185,7 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
 
     /**
      * 导出社保账户平均月工资
+     *
      * @param response
      * @param pageInfo
      * @throws Exception
@@ -259,9 +252,9 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
             BigDecimal accountAvgMonthSalary = boList.get(0).getAccountAvgMonthSalary();
             BigDecimal allTotalAmount = boList.get(0).getAccountSalaryAmount();
             BigDecimal allEmpTotal = boList.get(0).getAccountEmpCount();
-            map.put("accountAvgMonthSalary", accountAvgMonthSalary == null? "" : accountAvgMonthSalary);
-            map.put("allTotalAmount", allTotalAmount == null? "" : allTotalAmount);
-            map.put("allEmpTotal", allEmpTotal == null? "" : allEmpTotal);
+            map.put("accountAvgMonthSalary", accountAvgMonthSalary == null ? "" : accountAvgMonthSalary);
+            map.put("allTotalAmount", allTotalAmount == null ? "" : allTotalAmount);
+            map.put("allEmpTotal", allEmpTotal == null ? "" : allEmpTotal);
             alMap.put(2, map);
 
             TemplateExportParams params = new TemplateExportParams("/template/ssAccount_reportYear.xls", 0, 1, 2);
@@ -274,7 +267,7 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
             response.setCharacterEncoding("UTF-8");
             response.setHeader("content-Type", "application/vnd.ms-excel");
 //                response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setHeader("Content-Disposition","attachment;filename=" + fileName);
+            response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
             workbook.write(response.getOutputStream());
             workbook.close();
         }

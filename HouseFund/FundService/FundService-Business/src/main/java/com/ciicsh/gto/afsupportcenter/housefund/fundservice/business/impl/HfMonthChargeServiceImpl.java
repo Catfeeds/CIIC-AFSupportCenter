@@ -10,8 +10,6 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBank
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountClassService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfMonthChargeService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogApiUtil;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogMessage;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfMonthChargeConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfMonthChargeMapper;
@@ -23,7 +21,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
+import com.ciicsh.gto.afsupportcenter.util.logservice.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logservice.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -127,36 +126,36 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         comAccountParamExtBo.setPaymentTypes(hfMonthChargeQueryBO.getPaymentTypes());
         List<ComAccountExtBo> comAccountExtBoList = null;
         //如果是汇缴支付给发起的报表清册
-        if(Optional.ofNullable(hfMonthChargeQueryBO.getPaymentId()).isPresent()){
-            HfPayment hfPayment=new HfPayment();
+        if (Optional.ofNullable(hfMonthChargeQueryBO.getPaymentId()).isPresent()) {
+            HfPayment hfPayment = new HfPayment();
             hfPayment.setPaymentId(hfMonthChargeQueryBO.getPaymentId());
             hfPayment = hfPaymentMapper.selectOne(hfPayment);
             hfMonthChargeQueryBO.setHfMonth(hfPayment.getPaymentMonth());
             comAccountParamExtBo.setHfMonth(hfPayment.getPaymentMonth());
 
-            Map<String,Object> map=new HashMap<>();
-            List<String> BasicListAccounts=new ArrayList<>();
-            List<String> AddListAccounts=new ArrayList<>();
-            map.put("payment_id",hfMonthChargeQueryBO.getPaymentId());
+            Map<String, Object> map = new HashMap<>();
+            List<String> BasicListAccounts = new ArrayList<>();
+            List<String> AddListAccounts = new ArrayList<>();
+            map.put("payment_id", hfMonthChargeQueryBO.getPaymentId());
             hfPaymentAccountMapper.getComAccountByPaymentId(hfMonthChargeQueryBO.getPaymentId()).forEach(
-                acc->{
-                    if(acc.getHfType()==1){
+                acc -> {
+                    if (acc.getHfType() == 1) {
                         BasicListAccounts.add(acc.getHfComAccount());
                     }
-                    if(acc.getHfType()==2) {
+                    if (acc.getHfType() == 2) {
                         AddListAccounts.add(acc.getHfComAccount());
                     }
                 }
             );
-            if(hfMonthChargeQueryBO.getHfType()==1){
+            if (hfMonthChargeQueryBO.getHfType() == 1) {
                 comAccountParamExtBo.setBasicComAccountArray(BasicListAccounts.toArray(new String[BasicListAccounts.size()]));
             }
-            if(hfMonthChargeQueryBO.getHfType()==2){
+            if (hfMonthChargeQueryBO.getHfType() == 2) {
                 comAccountParamExtBo.setAddedComAccountArray(AddListAccounts.toArray(new String[AddListAccounts.size()]));
             }
 
-            if ((comAccountParamExtBo.getHfType()==1 && !ArrayUtils.isEmpty(comAccountParamExtBo.getBasicComAccountArray()))
-                || (comAccountParamExtBo.getHfType()==2 && !ArrayUtils.isEmpty(comAccountParamExtBo.getAddedComAccountArray()))) {
+            if ((comAccountParamExtBo.getHfType() == 1 && !ArrayUtils.isEmpty(comAccountParamExtBo.getBasicComAccountArray()))
+                || (comAccountParamExtBo.getHfType() == 2 && !ArrayUtils.isEmpty(comAccountParamExtBo.getAddedComAccountArray()))) {
                 comAccountExtBoList = hfComAccountService.queryHfComAccountList(comAccountParamExtBo);
             }
         } else {
@@ -166,7 +165,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         List<Map<String, Object>> resultList = new ArrayList<>();
 
         if (CollectionUtils.isNotEmpty(comAccountExtBoList)) {
-            for(ComAccountExtBo comAccountExtBo : comAccountExtBoList) {
+            for (ComAccountExtBo comAccountExtBo : comAccountExtBoList) {
 //            ComAccountExtBo comAccountExtBo = comAccountExtBoList.get(0);
                 Map<String, Object> condition = new HashMap<>();
                 condition.put("is_active", 1);
@@ -235,7 +234,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             hfMonthChargeQueryBO.setAddedHfComAccount(hfComAccount);
         }
 
-        hfMonthChargeQueryBO.setPaymentTypes(StringUtils.join(new Integer[] {
+        hfMonthChargeQueryBO.setPaymentTypes(StringUtils.join(new Integer[]{
             HfMonthChargeConstant.PAYMENT_TYPE_NEW,
             HfMonthChargeConstant.PAYMENT_TYPE_TRANS_IN,
             HfMonthChargeConstant.PAYMENT_TYPE_OPEN,
@@ -243,7 +242,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         }, ','));
         List<HFMonthChargeReportBO> inHfMonthChargeReportBOList = baseMapper.queryHfMonthChargeReport(hfMonthChargeQueryBO);
 
-        hfMonthChargeQueryBO.setPaymentTypes(StringUtils.join(new Integer[] {
+        hfMonthChargeQueryBO.setPaymentTypes(StringUtils.join(new Integer[]{
             HfMonthChargeConstant.PAYMENT_TYPE_TRANS_OUT,
             HfMonthChargeConstant.PAYMENT_TYPE_CLOSE,
             HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_CLOSE,
@@ -293,7 +292,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         int outCount = 0;
         String createdTime = LocalDateTime.now().format(dateTimeFormatter);
 
-        for(int page = 0; page < pages; page++) {
+        for (int page = 0; page < pages; page++) {
             Map<String, Object> pageMap = new HashMap<>();
             pageMap.put("comAccountName", comAccountName);
             pageMap.put("hfComAccount", hfComAccount);
@@ -360,7 +359,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             resultList.add(pageMap);
         }
 
-        for(Map<String, Object> map : resultList) {
+        for (Map<String, Object> map : resultList) {
             map.put("inTotal", inTotal);
             map.put("outTotal", outTotal);
             map.put("inCount", inCount);
@@ -373,8 +372,8 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
     /**
      * 组装基本公积金汇缴变更清册表体数据列表
      *
-     * @param companyIdSet 所关联的客户ID的集合
-     * @param inHfMonthChargeReportBOList 增加汇缴部分雇员汇缴明细数据列表
+     * @param companyIdSet                 所关联的客户ID的集合
+     * @param inHfMonthChargeReportBOList  增加汇缴部分雇员汇缴明细数据列表
      * @param outHfMonthChargeReportBOList 减少汇缴部分雇员汇缴明细数据列表
      * @return 基本公积金汇缴变更清册表体数据列表
      */
@@ -462,8 +461,8 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
     /**
      * 组装补充公积金汇缴变更清册表体数据列表
      *
-     * @param companyIdSet 所关联的客户ID的集合
-     * @param inHfMonthChargeReportBOList 增加汇缴部分雇员汇缴明细数据列表
+     * @param companyIdSet                 所关联的客户ID的集合
+     * @param inHfMonthChargeReportBOList  增加汇缴部分雇员汇缴明细数据列表
      * @param outHfMonthChargeReportBOList 减少汇缴部分雇员汇缴明细数据列表
      * @return 补充公积金汇缴变更清册表体数据列表
      */
@@ -565,36 +564,36 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         comAccountParamExtBo.setUserId(hfMonthChargeQueryBO.getUserId());
         List<ComAccountExtBo> comAccountExtBoList = null;
         //如果是汇缴支付给发起的报表清册
-        if(Optional.ofNullable(hfMonthChargeQueryBO.getPaymentId()).isPresent()){
-            HfPayment hfPayment=new HfPayment();
+        if (Optional.ofNullable(hfMonthChargeQueryBO.getPaymentId()).isPresent()) {
+            HfPayment hfPayment = new HfPayment();
             hfPayment.setPaymentId(hfMonthChargeQueryBO.getPaymentId());
             hfPayment = hfPaymentMapper.selectOne(hfPayment);
             hfMonthChargeQueryBO.setHfMonth(hfPayment.getPaymentMonth());
             comAccountParamExtBo.setHfMonth(hfPayment.getPaymentMonth());
 
-            Map<String,Object> map=new HashMap<>();
-            List<String> BasicListAccounts=new ArrayList<>();
-            List<String> AddListAccounts=new ArrayList<>();
-            map.put("payment_id",hfMonthChargeQueryBO.getPaymentId());
+            Map<String, Object> map = new HashMap<>();
+            List<String> BasicListAccounts = new ArrayList<>();
+            List<String> AddListAccounts = new ArrayList<>();
+            map.put("payment_id", hfMonthChargeQueryBO.getPaymentId());
             hfPaymentAccountMapper.getComAccountByPaymentId(hfMonthChargeQueryBO.getPaymentId()).forEach(
-                acc->{
-                    if(acc.getHfType()==1){
+                acc -> {
+                    if (acc.getHfType() == 1) {
                         BasicListAccounts.add(acc.getHfComAccount());
                     }
-                    if(acc.getHfType()==2) {
+                    if (acc.getHfType() == 2) {
                         AddListAccounts.add(acc.getHfComAccount());
                     }
                 }
             );
-            if(hfMonthChargeQueryBO.getHfType()==1){
+            if (hfMonthChargeQueryBO.getHfType() == 1) {
                 comAccountParamExtBo.setBasicComAccountArray(BasicListAccounts.toArray(new String[BasicListAccounts.size()]));
             }
-            if(hfMonthChargeQueryBO.getHfType()==2){
+            if (hfMonthChargeQueryBO.getHfType() == 2) {
                 comAccountParamExtBo.setAddedComAccountArray(AddListAccounts.toArray(new String[AddListAccounts.size()]));
             }
 
-            if ((comAccountParamExtBo.getHfType()==1 && !ArrayUtils.isEmpty(comAccountParamExtBo.getBasicComAccountArray()))
-                || (comAccountParamExtBo.getHfType()==2 && !ArrayUtils.isEmpty(comAccountParamExtBo.getAddedComAccountArray()))) {
+            if ((comAccountParamExtBo.getHfType() == 1 && !ArrayUtils.isEmpty(comAccountParamExtBo.getBasicComAccountArray()))
+                || (comAccountParamExtBo.getHfType() == 2 && !ArrayUtils.isEmpty(comAccountParamExtBo.getAddedComAccountArray()))) {
                 comAccountExtBoList = hfComAccountService.queryHfComAccountList(comAccountParamExtBo);
             }
         } else {
@@ -764,7 +763,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
     /**
      * 整理补缴清册数据
      *
-     * @param companyIdSet 所关联的客户ID的集合
+     * @param companyIdSet              所关联的客户ID的集合
      * @param hfMonthChargeReportBOList 雇员每月汇缴明细数据列表
      * @return 补缴清册数据列表
      */
@@ -843,10 +842,10 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
     /**
      * 雇员补缴导出数据结束段数据处理
      *
-     * @param hfMonthChargeRepairDetailBO 当前处理的雇员补缴导出数据
-     * @param hfMonthChargeReportBO 不属于当前处理的补缴段的雇员每月汇缴明细数据
-     * @param repairReason 补缴原因
-     * @param ratio 缴存比例
+     * @param hfMonthChargeRepairDetailBO     当前处理的雇员补缴导出数据
+     * @param hfMonthChargeReportBO           不属于当前处理的补缴段的雇员每月汇缴明细数据
+     * @param repairReason                    补缴原因
+     * @param ratio                           缴存比例
      * @param hfMonthChargeRepairDetailBOList 雇员补缴导出数据列表
      */
     private void repairPeriodEnd(HFMonthChargeRepairDetailBO hfMonthChargeRepairDetailBO,

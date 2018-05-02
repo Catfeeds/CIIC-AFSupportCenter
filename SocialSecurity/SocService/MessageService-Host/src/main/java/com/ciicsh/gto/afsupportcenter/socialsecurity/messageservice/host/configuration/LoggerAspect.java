@@ -1,8 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.messageservice.host.configuration;
 
 import com.ciicsh.gto.afsupportcenter.util.enumeration.LogInfo;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
+import com.ciicsh.gto.afsupportcenter.util.logservice.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logservice.LogMessage;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class LoggerAspect {
 
     @Autowired
-    LogService logService;
+    LogApiUtil logApiUtil;
 
     @Pointcut("execution (* com.ciicsh.gto.afsupportcenter.socialsecurity.messageservice.host.message..*.*(..))")
     public void messagePointcut() {
@@ -28,7 +28,7 @@ public class LoggerAspect {
         String className = joinPoint.getTarget().getClass().getSimpleName();
         //获取方法名
         String methodName = joinPoint.getSignature().getName();
-        String msg = String.format("%1$s.%2$s:%3$s",className ,methodName , e.toString());
-        logService.error(LogContext.of().setSource(LogInfo.SOURCE_API.getKey()).setTitle(className + "." + methodName).setTextContent(msg));
+        String msg = String.format("%1$s.%2$s:%3$s", className, methodName, e.toString());
+        logApiUtil.info(LogMessage.create().setTitle(LogInfo.SOURCE_API.getKey()).setContent(className + "." + methodName + "#" + msg));
     }
 }

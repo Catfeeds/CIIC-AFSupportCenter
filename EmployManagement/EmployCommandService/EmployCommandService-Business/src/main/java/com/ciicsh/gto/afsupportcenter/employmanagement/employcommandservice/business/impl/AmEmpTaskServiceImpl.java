@@ -21,10 +21,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMUserInfoDTO;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoDTO;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoQueryDTO;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.*;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.CompanyTypeDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
@@ -492,7 +489,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         var1.setBusinessType(1);
         var1.setIdCardType(param.getIdCardType());
         var1.setIdNum(param.getIdNum());
-        com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeInfoDTO> jsonResult = null;//雇佣信息接口
+        JsonResult<EmployeeInfoDTO> jsonResult = null;//雇佣信息接口
 
         try {
             jsonResult = employeeInfoProxy.getEmployeeInfo(var1);
@@ -513,7 +510,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         EmployeeHireInfoQueryDTO employeeHireInfoQueryDTO = new EmployeeHireInfoQueryDTO();
         employeeHireInfoQueryDTO.setCompanyId(param.getCompanyId());
         employeeHireInfoQueryDTO.setEmployeeId(param.getEmployeeId());
-        com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeHireInfoDTO> employeeHireInfo = null;//雇佣雇佣信息接口
+        JsonResult<EmployeeHireInfoDTO> employeeHireInfo = null;//雇佣雇佣信息接口
 
         try {
             employeeHireInfo = employeeInfoProxy.getEmployeeHireInfo(employeeHireInfoQueryDTO);
@@ -625,7 +622,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         EmployeeHireInfoQueryDTO employeeHireInfoQueryDTO = new EmployeeHireInfoQueryDTO();
         employeeHireInfoQueryDTO.setCompanyId(amEmpTaskBO.getCompanyId());
         employeeHireInfoQueryDTO.setEmployeeId(amEmpTaskBO.getEmployeeId());
-        com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeHireInfoDTO> employeeHireInfo = null;//雇佣雇佣信息接口
+        JsonResult<EmployeeHireInfoDTO> employeeHireInfo = null;//雇佣雇佣信息接口
 
         try {
             employeeHireInfo = employeeInfoProxy.getEmployeeHireInfo(employeeHireInfoQueryDTO);
@@ -802,7 +799,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         EmployeeHireInfoQueryDTO employeeHireInfoQueryDTO = new EmployeeHireInfoQueryDTO();
         employeeHireInfoQueryDTO.setCompanyId(bo.getCompanyId());
         employeeHireInfoQueryDTO.setEmployeeId(bo.getEmployeeId());
-        com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeHireInfoDTO> employeeHireInfo = null;//雇佣雇佣信息接口
+        JsonResult<EmployeeHireInfoDTO> employeeHireInfo = null;//雇佣雇佣信息接口
 
         try {
             employeeHireInfo = employeeInfoProxy.getEmployeeHireInfo(employeeHireInfoQueryDTO);

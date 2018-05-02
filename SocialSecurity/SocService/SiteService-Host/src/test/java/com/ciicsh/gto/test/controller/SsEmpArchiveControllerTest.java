@@ -19,9 +19,10 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsResposeDTO;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
-import com.ciicsh.gto.commonservice.util.dto.Result;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
+import com.ciicsh.gto.sheetservice.api.dto.Result;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -99,7 +100,7 @@ public class SsEmpArchiveControllerTest {
         //dd.setEmployeeId("1805876");
         dd.setIdNum("1321");
        dd.setIdCardType(2);
-        com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeInfoDTO> res  = d2.getEmployeeInfo(dd);
+        com.ciicsh.gto.employeecenter.apiservice.api.dto.JsonResult<EmployeeInfoDTO> res  = d2.getEmployeeInfo(dd);
         System.out.println(JSON.toJSONString(res));
         System.out.println(JSON.toJSONString(res.getData()));
     }

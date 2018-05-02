@@ -2,8 +2,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controlle
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
+import com.ciicsh.gto.afsupportcenter.util.logservice.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logservice.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
@@ -22,7 +22,7 @@ import java.util.Map;
 public class DictAccessController extends BasicController<CommonApiUtils> {
 
     @Autowired
-    LogService logService;
+    LogApiUtil logApiUtil;
 
     @PostConstruct
     private void dictInit() {
@@ -53,15 +53,15 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
             dictItemList.stream().forEach((d) -> employeeClassifyMap.put(d.getDicItemValue(), d.getDicItemText()));
             DictUtil.getInstance().putDictByTypeValue(DictUtil.TYPE_VALUE_SOCIAL_SECURITY_EMPLOYEE_CLASSIFY, employeeClassifyMap, false);
         } catch (Exception e) {
-            LogContext logContext = LogContext.of().setTitle("上海社保字典项及常量项")
-                .setTextContent("加载字典项（访问字典公共接口）或常量项失败")
-                .setExceptionContent(e);
-            logService.error(logContext);
+            LogMessage logMessage = LogMessage.create().setTitle("上海社保字典项及常量项")
+                .setContent("加载字典项（访问字典公共接口）或常量项失败" + e.getMessage());
+            logApiUtil.error(logMessage);
         }
     }
 
     /**
      * 获取本页面需要使用的字典数据
+     *
      * @return
      */
     @RequestMapping("/getDictData")
