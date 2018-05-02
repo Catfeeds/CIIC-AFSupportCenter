@@ -29,8 +29,7 @@
 
         <dependency>
             <groupId>com.ciicsh.gt1.billcenter</groupId>
-            <artifactId>afmodule-commandservice-api</artifactId>
-            <version>1.0.0</version>
+            <artifactId>gt1.billcenter.afmodule-commandservice-api</artifactId>
         </dependency>
 
         <dependency>
