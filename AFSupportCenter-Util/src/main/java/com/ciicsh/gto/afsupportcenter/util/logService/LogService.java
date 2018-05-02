@@ -46,20 +46,4 @@ public interface LogService {
      */
     void fatal(LogContext logContext);
 
-    /**
-     * list log by page
-     *
-     * @param logReqDTO
-     * @return
-     */
-    Page<LogResponseDTO> page(LogReqDTO logReqDTO);
-
-    /**
-     * get One log
-     *
-     * @param logReqDTO
-     * @return LogResponseDTO
-     */
-    LogResponseDTO getOne(LogReqDTO logReqDTO);
-
 }
