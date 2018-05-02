@@ -4,16 +4,12 @@ package com.ciicsh.gto.afsupportcenter.util.logService;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.logservice.api.LogServiceProxy;
 import com.ciicsh.gto.logservice.api.dto.*;
-import com.ciicsh.gto.logservice.api.page.Page;
-import com.ciicsh.gto.logservice.api.result.JsonResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -58,38 +54,6 @@ public class LogServiceImpl implements LogService {
     @Override
     public void fatal(LogContext logContext) {
         addLog(LogLevel.FATAL, logContext);
-    }
-
-    @Override
-    public Page<LogResponseDTO> page(LogReqDTO logReqDTO) {
-        JsonResult<Page<LogResDTO>> jsonResult = logServiceProxy.page(logReqDTO);
-
-        if (jsonResult.isSuccess()) {
-            if (jsonResult.getData() != null) {
-                Page<LogResponseDTO> page = new Page<>();
-                List<LogResponseDTO> logResponseDTOS = new ArrayList<>();
-                jsonResult.getData().getRecords().forEach(logResDTO -> {
-                    LogResponseDTO logResponseDTO = getLogResponseDTO(logResDTO);
-                    logResponseDTOS.add(logResponseDTO);
-                });
-                page.setRecords(logResponseDTOS);
-                page.setTotal(jsonResult.getData().getTotal());
-                return page;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public LogResponseDTO getOne(LogReqDTO logReqDTO) {
-        JsonResult<LogResDTO> jsonResult = logServiceProxy.selectTop1(logReqDTO);
-        if (jsonResult.isSuccess()) {
-            if (jsonResult.getData() != null) {
-                LogResponseDTO logResponseDTO = getLogResponseDTO(jsonResult.getData());
-                return logResponseDTO;
-            }
-        }
-        return null;
     }
 
     private void addLog(LogLevel logLevel, LogContext logContext) {
