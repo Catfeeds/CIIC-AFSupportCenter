@@ -3,8 +3,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.util;
 import cn.afterturn.easypoi.excel.entity.result.ExcelVerifyHanlderResult;
 import cn.afterturn.easypoi.handler.inter.IExcelModel;
 import cn.afterturn.easypoi.handler.inter.IExcelVerifyHandler;
-import com.ciicsh.gto.afsupportcenter.util.logservice.LogApiUtil;
-import com.ciicsh.gto.afsupportcenter.util.logservice.LogMessage;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 

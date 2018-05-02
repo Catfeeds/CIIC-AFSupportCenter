@@ -14,8 +14,8 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComTask
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.enumeration.LogInfo;
 import com.ciicsh.gto.afsupportcenter.util.enumeration.ProcessCategory;
-import com.ciicsh.gto.afsupportcenter.util.logservice.LogApiUtil;
-import com.ciicsh.gto.afsupportcenter.util.logservice.LogMessage;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
