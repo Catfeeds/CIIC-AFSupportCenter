@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.util.logservice;
+package com.ciicsh.gto.afsupportcenter.util.logService;
 
 import java.util.Map;
 

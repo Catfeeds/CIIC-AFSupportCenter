@@ -17,8 +17,8 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.Co
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.enumeration.LogInfo;
-import com.ciicsh.gto.afsupportcenter.util.logservice.LogApiUtil;
-import com.ciicsh.gto.afsupportcenter.util.logservice.LogMessage;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
