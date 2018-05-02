@@ -336,6 +336,9 @@ public class SsEmpTask implements Serializable {
     @TableField("new_city_code")
     private String newCityCode;
 
+    @TableField("social_start_and_stop")
+    private Boolean socialStartAndStop;
+
 	public Long getEmpTaskId() {
 		return empTaskId;
 	}
@@ -848,6 +851,14 @@ public class SsEmpTask implements Serializable {
         this.newCityCode = newCityCode;
     }
 
+    public Boolean getSocialStartAndStop() {
+        return socialStartAndStop;
+    }
+
+    public void setSocialStartAndStop(Boolean socialStartAndStop) {
+        this.socialStartAndStop = socialStartAndStop;
+    }
+
     @Override
 	public String toString() {
 		return "SsEmpTask{" +
@@ -915,6 +926,7 @@ public class SsEmpTask implements Serializable {
             ", serviceCenter=" + serviceCenter +
             ", oldCityCode=" + oldCityCode +
             ", newCityCode=" + newCityCode +
+            ", socialStartAndStop=" + socialStartAndStop +
 			"}";
 	}
 }

@@ -165,6 +165,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         bo.setIsChange(ssEmpTask.getIsChange());
         bo.setOldCityCode(ssEmpTask.getOldCityCode());
         bo.setNewCityCode(ssEmpTask.getNewCityCode());
+        bo.setSocialStartAndStop(ssEmpTask.getSocialStartAndStop());
 
         if (bo.getEmpArchiveId() == null) {
             Wrapper<SsEmpArchive> wrapper = new EntityWrapper<>();
@@ -1379,7 +1380,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 //
 //        setDetailCountNoChange(bo);
     }
-//
+
 //    private void setDetailCountNoChange(SsEmpTaskBO bo) {
 //        if (StringUtils.isNotEmpty(bo.getOldAgreementId()) && StringUtils.isNotEmpty(bo.getBusinessInterfaceId())) {
 //            Integer oldCount = ssEmpTaskFrontService.getEmpTaskDetailCount(bo.getOldAgreementId());

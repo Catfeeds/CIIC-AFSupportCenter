@@ -1925,6 +1925,10 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 
                 // 以下为调整前的费用段处理：
                 // 如果oldAgreementId存在时，则要回调接口，通知前道关闭费用段
+                // 如果oldAgreementId存在时，则要回调接口，通知前道关闭费用段
+                // 调整类别任务单，只发一个消息（新旧雇员协议在同一任务单中记录），oldAgreementId需记录，任务单回调时，同时需回调新旧雇员协议；
+                // 非调整类别的SOCIAL_NEW,FUND_NEW,ADDED_FUND_NEW类型的任务单，oldAgreementId一概不记录，任务单回调时，不回调旧雇员协议，仅回调新雇员协议；
+                // 当SOCIAL_STOP,FUND_STOP,ADDED_FUND_STOP类型的任务单，oldAgreementId需记录，任务单回调时，根据情况回调旧雇员协议（通常只有调整类别中的非0转0）；
                 if (StringUtils.isNotEmpty(hfEmpTask.getOldAgreementId())) {
                     AfEmpSocialUpdateDateDTO afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
                     afEmpSocialUpdateDateDTO.setCompanyId(companyId);

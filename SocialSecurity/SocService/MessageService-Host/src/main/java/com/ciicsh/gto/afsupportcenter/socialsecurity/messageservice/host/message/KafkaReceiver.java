@@ -69,6 +69,7 @@ public class KafkaReceiver {
             if(Optional.ofNullable(paramMap).isPresent() && Optional.ofNullable(paramMap.get("socialType")).isPresent()){
                 String socialType = paramMap.get("socialType").toString();
                 Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
+                cityCodeMap.put("socialStartAndStop", paramMap.get("socialStartAndStop"));
                 //雇员服务协议ID
 //                String empAgreementId = taskMsgDTO.getMissionId();
                 saveSsEmpTask(taskMsgDTO, Integer.parseInt(socialType), ProcessCategory.AF_EMP_IN.getCategory(), null, cityCodeMap,0);
@@ -92,6 +93,7 @@ public class KafkaReceiver {
             Map<String, Object> cityCodeMap = null;
             if (paramMap != null) {
                 cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
+                cityCodeMap.put("socialStartAndStop", paramMap.get("socialStartAndStop"));
             }
             saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_5), ProcessCategory.AF_EMP_OUT.getCategory(), null, cityCodeMap,0);
         }
@@ -113,6 +115,7 @@ public class KafkaReceiver {
             Map<String, Object> cityCodeMap = null;
             if (paramMap != null) {
                 cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
+                cityCodeMap.put("socialStartAndStop", paramMap.get("socialStartAndStop"));
             }
             saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_4), ProcessCategory.AF_EMP_MAKE_UP.getCategory(), null, cityCodeMap, 0);
         }
@@ -129,11 +132,16 @@ public class KafkaReceiver {
         //获取任务单参数
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
         //社保翻牌新进或转入
+        // 如果oldAgreementId存在时，则要回调接口，通知前道关闭费用段
+        // 调整类别任务单，只发一个消息（新旧雇员协议在同一任务单中记录），oldAgreementId需记录，任务单回调时，同时需回调新旧雇员协议；
+        // 非调整类别的SOCIAL_NEW,FUND_NEW,ADDED_FUND_NEW类型的任务单，oldAgreementId一概不记录，任务单回调时，不回调旧雇员协议，仅回调新雇员协议；
+        // 当SOCIAL_STOP,FUND_STOP,ADDED_FUND_STOP类型的任务单，oldAgreementId需记录，任务单回调时，根据情况回调旧雇员协议（通常只有调整类别中的非0转0）；
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())) {
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_COMPANY_CHANGE).setTextContent(TaskSink.SOCIAL_NEW + " JSON: " + JSON.toJSONString(taskMsgDTO)));
             if (paramMap != null && paramMap.get("socialType") != null) {
                 int socialType = Integer.parseInt(paramMap.get("socialType").toString());
                 Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
+                cityCodeMap.put("socialStartAndStop", paramMap.get("socialStartAndStop"));
 //                empAgreementId = taskMsgDTO.getMissionId();
                 //新进转入判断，任务单保存时转换成支持中心的翻牌新进&翻牌转入类型
                 if (SocialSecurityConst.SOCIAL_TYPE_1 == socialType) {
@@ -152,6 +160,7 @@ public class KafkaReceiver {
                 }
 
                 cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
+                cityCodeMap.put("socialStartAndStop", paramMap.get("socialStartAndStop"));
             }
 
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_COMPANY_CHANGE).setTextContent(TaskSink.SOCIAL_STOP + " JSON: " + JSON.toJSONString(taskMsgDTO)));
@@ -179,11 +188,16 @@ public class KafkaReceiver {
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_ADJUST).setTextContent(TaskSink.SOCIAL_NEW + " JSON: " + JSON.toJSONString(taskMsgDTO)));
 
             //获取社保办理类型
+            // 如果oldAgreementId存在时，则要回调接口，通知前道关闭费用段
+            // 调整类别任务单，只发一个消息（新旧雇员协议在同一任务单中记录），oldAgreementId需记录，任务单回调时，同时需回调新旧雇员协议；
+            // 非调整类别的SOCIAL_NEW,FUND_NEW,ADDED_FUND_NEW类型的任务单，oldAgreementId一概不记录，任务单回调时，不回调旧雇员协议，仅回调新雇员协议；
+            // 当SOCIAL_STOP,FUND_STOP,ADDED_FUND_STOP类型的任务单，oldAgreementId需记录，任务单回调时，根据情况回调旧雇员协议（通常只有调整类别中的非0转0）；
             socialType = paramMap.get("socialType").toString();
             if ("3".equals(socialType) && paramMap.get("oldEmpAgreementId") != null) {
                 oldAgreementId = paramMap.get("oldEmpAgreementId").toString();
             }
             Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
+            cityCodeMap.put("socialStartAndStop", paramMap.get("socialStartAndStop"));
             saveSsEmpTask(taskMsgDTO, Integer.parseInt(socialType), ProcessCategory.AF_EMP_AGREEMENT_ADJUST.getCategory(), oldAgreementId, cityCodeMap, 0);
         } else if (TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_ADJUST).setTextContent(TaskSink.SOCIAL_STOP + " JSON: " + JSON.toJSONString(taskMsgDTO)));
@@ -219,7 +233,6 @@ public class KafkaReceiver {
             //已办理任务单
         }  else {   //taskId不为空，该kafka则是由任务单中心发出，表示支持中心历史任务单已完成
 
-            //判断taskType是否是社保新进或停办(social_new或social_stop)，如果不是则无需处理
             if (TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
                 agreementAdjustOrUpdateEmpStop(taskMsgDTO, 1, TaskSink.AF_EMP_AGREEMENT_UPDATE);
             } else if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())) {
@@ -254,6 +267,10 @@ public class KafkaReceiver {
                             String socialType = paramMap.get("socialType").toString();
                             taskCategory = Integer.parseInt(socialType);
 
+                            // 如果oldAgreementId存在时，则要回调接口，通知前道关闭费用段
+                            // 调整类别任务单，只发一个消息（新旧雇员协议在同一任务单中记录），oldAgreementId需记录，任务单回调时，同时需回调新旧雇员协议；
+                            // 非调整类别的SOCIAL_NEW,FUND_NEW,ADDED_FUND_NEW类型的任务单，oldAgreementId一概不记录，任务单回调时，不回调旧雇员协议，仅回调新雇员协议；
+                            // 当SOCIAL_STOP,FUND_STOP,ADDED_FUND_STOP类型的任务单，oldAgreementId需记录，任务单回调时，根据情况回调旧雇员协议（通常只有调整类别中的非0转0）；
                             socialType = paramMap.get("socialType").toString();
                             if ("3".equals(socialType) && paramMap.get("oldEmpAgreementId") != null) {
                                 oldAgreementId = paramMap.get("oldEmpAgreementId").toString();
@@ -272,6 +289,7 @@ public class KafkaReceiver {
                     }
 
                     Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
+                    cityCodeMap.put("socialStartAndStop", paramMap.get("socialStartAndStop"));
                     ssEmpTaskFrontService.saveEmpTaskTc(taskMsgDTO, taskCategory, ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory(), 1, oldAgreementId, dto, afCompanyDetailResponseDTO, cityCodeMap);
 
                 } catch (Exception e) {
@@ -295,6 +313,10 @@ public class KafkaReceiver {
         String oldAgreementId = null;
         Map<String, Object> cityCodeMap = null;
 
+        // 如果oldAgreementId存在时，则要回调接口，通知前道关闭费用段
+        // 调整类别任务单，只发一个消息（新旧雇员协议在同一任务单中记录），oldAgreementId需记录，任务单回调时，同时需回调新旧雇员协议；
+        // 非调整类别的SOCIAL_NEW,FUND_NEW,ADDED_FUND_NEW类型的任务单，oldAgreementId一概不记录，任务单回调时，不回调旧雇员协议，仅回调新雇员协议；
+        // 当SOCIAL_STOP,FUND_STOP,ADDED_FUND_STOP类型的任务单，oldAgreementId需记录，任务单回调时，根据情况回调旧雇员协议（通常只有调整类别中的非0转0）；
         if (null != paramMap) {
             if (paramMap.get("oldEmpAgreementId") != null) {
                 SsEmpTaskBO ssEmpTaskBO = new SsEmpTaskBO();
@@ -318,6 +340,8 @@ public class KafkaReceiver {
 //                    || cityCodeMap.get("newSocialCityCode").equals(cityCodeMap.get("oldSocialCityCode"))) {
                     oldAgreementId = paramMap.get("oldEmpAgreementId").toString();
 //                }
+
+                cityCodeMap.put("socialStartAndStop", paramMap.get("socialStartAndStop"));
             }
 
             saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_5), ProcessCategory.AF_EMP_AGREEMENT_ADJUST.getCategory(), oldAgreementId, cityCodeMap, isChange);
