@@ -141,6 +141,10 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
             if (cityCodeMap.get("newSocialCityCode") != null) {
                 ssEmpTask.setNewCityCode(cityCodeMap.get("newSocialCityCode").toString());
             }
+
+            if (cityCodeMap.get("socialStartAndStop") != null) {
+                ssEmpTask.setSocialStartAndStop(Boolean.valueOf(cityCodeMap.get("socialStartAndStop").toString()));
+            }
         }
 
         ssEmpTask.setSubmitterId(afEmployeeCompanyDTO.getCreatedBy());
