@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  * @since 2017-12-01
  */
 @Service
-public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask>  implements SsEmpTaskService {
+public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask> implements SsEmpTaskService {
     @Autowired
     SsEmpTaskPeriodService ssEmpTaskPeriodService;
 
@@ -255,10 +255,10 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      */
     private void handleAdjustmentTask(SsEmpTaskBO bo, boolean isBatch) {
 //        if (isBatch) {
-            //查询企业 是否开户
-            queryCompanyIsOpenAccount(bo);
-            //查询 雇员是否新进
-            queryEmployeeIsnewOrChangeInto(bo);
+        //查询企业 是否开户
+        queryCompanyIsOpenAccount(bo);
+        //查询 雇员是否新进
+        queryEmployeeIsnewOrChangeInto(bo);
 //        }
         //修改任务单详细
         baseMapper.updateMyselfColumnById(bo);
@@ -380,7 +380,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             ssEmpBasePeriodService.saveAdjustmentPeriod(ssEmpBasePeriod, newEmpBasePeriodList);
             // 险种的数据段 （前道传递过来的）
             List<SsEmpTaskFront> empSocials = getEmpSocials(bo);
-            if (empSocials.size() == 0) throw new BusinessException("前道传递险种详细信息为空");
+            if (empSocials.size() == 0) {
+                throw new BusinessException("前道传递险种详细信息为空");
+            }
             // 添加明细
             addEmpBaseDetail(newEmpBasePeriodList, empSocials, bo.getEmpArchiveId(), bo.getModifiedBy(), bo.getRoundTypeMap());
             bo.setListEmpBasePeriod(newEmpBasePeriodList);
@@ -486,12 +488,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     /**
      * 处理调整或补缴逻辑
      *
-     * @param taskPeriodStartMonth 任务单起始年月
-     * @param taskPeriodEndMonth 任务单截止年月
-     * @param taskSsMonth 办理年月
-     * @param ssEmpBasePeriodList 既存费用段列表
-     * @param ssEmpBasePeriod 根据任务单信息转换后的费用段
-     * @param supplementPayList 全额补缴费用段列表
+     * @param taskPeriodStartMonth  任务单起始年月
+     * @param taskPeriodEndMonth    任务单截止年月
+     * @param taskSsMonth           办理年月
+     * @param ssEmpBasePeriodList   既存费用段列表
+     * @param ssEmpBasePeriod       根据任务单信息转换后的费用段
+     * @param supplementPayList     全额补缴费用段列表
      * @param overlappingPeriodList 差额补缴（逆调）费用段列表
      */
     private void adjustOrSupplement(String taskPeriodStartMonth,
@@ -738,8 +740,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 Map<String, Object> resultMap = getSsEmpBaseAdjust(p, ssEmpTaskPeriod, bo);
                 SsEmpBaseAdjust ssEmpBaseAdjust = (SsEmpBaseAdjust) resultMap.get(TaskPeriodConst.SSEMPBASEADJUST);
                 List<SsEmpBaseAdjustDetail> ssEmpBaseAdjustDetailList = (List<SsEmpBaseAdjustDetail>) resultMap.get(TaskPeriodConst.SSEMPBASEADJUSTDETAILLIST);
-                if (null == ssEmpBaseAdjust || null == ssEmpBaseAdjustDetailList || ssEmpBaseAdjustDetailList.size() == 0)
+                if (null == ssEmpBaseAdjust || null == ssEmpBaseAdjustDetailList || ssEmpBaseAdjustDetailList.size() == 0) {
                     throw new BusinessException("转换差异详情异常");
+                }
                 //保存
                 saveAdjustAndDetail(ssEmpBaseAdjust, ssEmpBaseAdjustDetailList);
                 //非标数据
@@ -806,18 +809,18 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                     //BigDecimal base, BigDecimal ratio, BigDecimal fixedAmount, Integer calculateMethod, String roundType
                     //通过进位方式进行 计算(原数据)
                     //如果调用为空 则 默认为 见分进角
-                    BigDecimal comAmount = CalculateSocialUtils.calculateAmount(ssEmpBaseDetail.getComBase(),ssEmpBaseDetail.getComRatio(),null,2,null==roundTypeMap?1:roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(COMPANYROUNDTYPE));
+                    BigDecimal comAmount = CalculateSocialUtils.calculateAmount(ssEmpBaseDetail.getComBase(), ssEmpBaseDetail.getComRatio(), null, 2, null == roundTypeMap ? 1 : roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(COMPANYROUNDTYPE));
 //                    System.out.println(ssEmpBaseDetail.getSsType()+"企业部分原数据额"+comAmount);
                     //企业部分金额
                     //通过进位方式进行 计算(前道传递)
-                    BigDecimal frontComAmount = CalculateSocialUtils.calculateAmount(ssEmpTaskFront.getCompanyBase(),ssEmpTaskFront.getCompanyRatio(),null,2,null==roundTypeMap?1:roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(COMPANYROUNDTYPE));
+                    BigDecimal frontComAmount = CalculateSocialUtils.calculateAmount(ssEmpTaskFront.getCompanyBase(), ssEmpTaskFront.getCompanyRatio(), null, 2, null == roundTypeMap ? 1 : roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(COMPANYROUNDTYPE));
 //                    System.out.println(ssEmpBaseDetail.getSsType()+"企业部分前道数据额"+frontComAmount);
                     ssEmpBaseAdjustDetail.setComAmount(frontComAmount);
                     //雇员总额(原数据)
-                    BigDecimal empAmount  = CalculateSocialUtils.calculateAmount(ssEmpBaseDetail.getEmpBase(),ssEmpBaseDetail.getEmpRatio(),null,2,null==roundTypeMap?1:roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(PERSONROUNDTYPE));
+                    BigDecimal empAmount = CalculateSocialUtils.calculateAmount(ssEmpBaseDetail.getEmpBase(), ssEmpBaseDetail.getEmpRatio(), null, 2, null == roundTypeMap ? 1 : roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(PERSONROUNDTYPE));
 //                    System.out.println(ssEmpBaseDetail.getSsType()+"雇员部分原数据额"+empAmount);
                     //雇员总额(前道传递)
-                    BigDecimal frontEmpAmount  = CalculateSocialUtils.calculateAmount(ssEmpBaseAdjustDetail.getEmpBase(),ssEmpBaseAdjustDetail.getEmpRatio(),null,2,null==roundTypeMap?1:roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(PERSONROUNDTYPE));
+                    BigDecimal frontEmpAmount = CalculateSocialUtils.calculateAmount(ssEmpBaseAdjustDetail.getEmpBase(), ssEmpBaseAdjustDetail.getEmpRatio(), null, 2, null == roundTypeMap ? 1 : roundTypeMap.get(ssEmpBaseDetail.getSsType()).get(PERSONROUNDTYPE));
 //                    System.out.println(ssEmpBaseDetail.getSsType()+"雇员部分前道数据额"+frontEmpAmount);
                     ssEmpBaseAdjustDetail.setEmpAmount(frontEmpAmount);
                     //企业+雇员
@@ -871,14 +874,17 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         //判断前端传递 时间段是一条还是多条 多条是降序还是升序
         Map map = getSsEmpTaskPeriod(taskPeriods);
         SsEmpTaskPeriod ssEmpTaskPeriod = (SsEmpTaskPeriod) map.get(TaskPeriodConst.SSEMPTASKPERIOD);
-        if (StringUtils.isBlank(ssEmpTaskPeriod.getEndMonth())) throw new BusinessException("截止时间不能为空");
+        if (StringUtils.isBlank(ssEmpTaskPeriod.getEndMonth())) {
+            throw new BusinessException("截止时间不能为空");
+        }
         //当前月 (判断补缴只能补半年之内的)
 
 //        LocalDate now = LocalDate.now();
         String handleMonth = bo.getHandleMonth();
         int endMonth = Integer.parseInt(ssEmpTaskPeriod.getEndMonth());
-        if (Integer.parseInt(handleMonth) < endMonth)
+        if (Integer.parseInt(handleMonth) < endMonth) {
             throw new BusinessException("补缴的时间段的截止月份需在当前月之前。");
+        }
 
         List<SsEmpBasePeriod> newEmpBasePeriodList = taskPeriodTranserEmpBase(taskPeriods, bo, TaskPeriodConst.SUPPLEMENTARYPAYTYPE);
         SsEmpBasePeriod ssEmpBasePeriod = newEmpBasePeriodList.get(0);
@@ -895,7 +901,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             ssEmpBasePeriod,
             supplementPayList,
             overlappingPeriodList
-            );
+        );
 
         // 差额补缴费用段
         if (CollectionUtils.isNotEmpty(overlappingPeriodList)) {
@@ -946,7 +952,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         // 更新雇员社保汇缴基数明细
         // 险种的数据段 （前道传递过来的）
         List<SsEmpTaskFront> empSocials = getEmpSocials(bo);
-        if (empSocials.size() == 0) throw new BusinessException("前道传递险种详细信息为空");
+        if (empSocials.size() == 0) {
+            throw new BusinessException("前道传递险种详细信息为空");
+        }
         //添加明细 （养 医 失 工 生育 险种）
         addEmpBaseDetail(newEmpBasePeriodList, empSocials, bo.getEmpArchiveId(), bo.getModifiedBy(), bo.getRoundTypeMap());
 
@@ -1035,10 +1043,10 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      */
     private void handleBackTask(SsEmpTaskBO bo, boolean isBatch) {
 //        if (isBatch) {
-            //查询企业 是否开户
-            queryCompanyIsOpenAccount(bo);
-            //查询 雇员是否新进
-            queryEmployeeIsnewOrChangeInto(bo);
+        //查询企业 是否开户
+        queryCompanyIsOpenAccount(bo);
+        //查询 雇员是否新进
+        queryEmployeeIsnewOrChangeInto(bo);
 //        }
         //修改任务单详细
         baseMapper.updateMyselfColumnById(bo);
@@ -1073,12 +1081,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      */
     private void handleTurnOutTask(SsEmpTaskBO bo, boolean isBatch) {
 //        if (isBatch) {
-            //查询企业 是否开户
-            queryCompanyIsOpenAccount(bo);
-            //查询 雇员是否新进
-            queryEmployeeIsnewOrChangeInto(bo);
+        //查询企业 是否开户
+        queryCompanyIsOpenAccount(bo);
+        //查询 雇员是否新进
+        queryEmployeeIsnewOrChangeInto(bo);
 
-            checkEndMonth(bo);
+        checkEndMonth(bo);
 //        }
         //更新雇员任务信息
         baseMapper.updateMyselfColumnById(bo);
@@ -1118,10 +1126,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             Wrapper<SsEmpBaseDetail> ew = new EntityWrapper<>();
             ew.where("emp_base_period_id={0}", empBasePeriodId).and("is_active=1");
             List<SsEmpBaseDetail> ssEmpBaseDetailList = ssEmpBaseDetailService.selectList(ew);
-            if (ssEmpBaseDetailList.size() == 0) throw new BusinessException("费用段明细数据不正确");
+            if (ssEmpBaseDetailList.size() == 0) {
+                throw new BusinessException("费用段明细数据不正确");
+            }
             ssEmpBasePeriod.setListEmpBaseDetail(ssEmpBaseDetailList);
             bo.setListEmpBasePeriod(ssEmpBasePeriodList);
-        } else throw new BusinessException("数据库没有缴纳时间段");
+        } else {
+            throw new BusinessException("数据库没有缴纳时间段");
+        }
     }
 
     /**
@@ -1141,10 +1153,10 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      */
     private void handleRefundAccountTask(SsEmpTaskBO bo, boolean isBatch) {
 //        if (isBatch) {
-            //查询企业 是否开户
-            queryCompanyIsOpenAccount(bo);
-            //查询 雇员是否新进
-            queryEmployeeIsnewOrChangeInto(bo);
+        //查询企业 是否开户
+        queryCompanyIsOpenAccount(bo);
+        //查询 雇员是否新进
+        queryEmployeeIsnewOrChangeInto(bo);
 //        }
         //更新雇员任务信息
         baseMapper.updateMyselfColumnById(bo);
@@ -1230,13 +1242,13 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     private void newOrChangeInto(SsEmpTaskBO bo, boolean isBatch) {
         //如果是批量办理 则查看当前 企业是否开户
 //        if (isBatch) {
-            queryCompanyIsOpenAccount(bo);
-            if (bo.getIsChange() == 0) {
-                //查询雇员 是否已经新进了
-                queryEmployeeIsnewOrChangeInto(bo);
-            }
-            // 起缴月份必须小于或者等于办理月份
-            checkStartMonth(bo);
+        queryCompanyIsOpenAccount(bo);
+        if (bo.getIsChange() == 0) {
+            //查询雇员 是否已经新进了
+            queryEmployeeIsnewOrChangeInto(bo);
+        }
+        // 起缴月份必须小于或者等于办理月份
+        checkStartMonth(bo);
 //        }
 
         // 如果新开（转入，含翻牌）时的更正，需先撤销之前办理的任务单
@@ -1255,7 +1267,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 wrapper.in("task_category", flopInArray);
             }
 //            wrapper.eq("is_change", 0);
-            wrapper.in("task_status", new Integer[] {TaskStatusConst.PROCESSING, TaskStatusConst.FINISH});
+            wrapper.in("task_status", new Integer[]{TaskStatusConst.PROCESSING, TaskStatusConst.FINISH});
             wrapper.eq("is_active", 1);
             List<SsEmpTask> ssEmpTaskList = this.selectList(wrapper);
 
@@ -1355,7 +1367,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         // 更新雇员社保汇缴基数明细
         // 险种的数据段 （前道传递过来的）
         List<SsEmpTaskFront> empSocials = getEmpSocials(bo);
-        if (empSocials.size() == 0) throw new BusinessException("前道传递险种详细信息为空");
+        if (empSocials.size() == 0) {
+            throw new BusinessException("前道传递险种详细信息为空");
+        }
         //添加明细 （养 医 失 工 生育 险种）
         addEmpBaseDetail(basePeriods, empSocials, empArchiveId, bo.getModifiedBy(), bo.getRoundTypeMap());
         bo.setListEmpBasePeriod(basePeriods);
@@ -1395,7 +1409,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     /**
      * 根据任务单ID逻辑删除报表记录及其明细记录
      *
-     * @param empTaskId 任务单ID
+     * @param empTaskId  任务单ID
      * @param modifiedBy
      */
     private void inactiveMonthChargeData(Long empTaskId, String modifiedBy) {
@@ -1429,7 +1443,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     /**
      * 根据任务单ID逻辑删除差额补缴（逆调）费用段记录及其明细记录
      *
-     * @param empTaskId 任务单ID
+     * @param empTaskId  任务单ID
      * @param modifiedBy
      */
     private void inactiveBaseAdjustData(Long empTaskId, String modifiedBy) {
@@ -1463,7 +1477,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     /**
      * 根据任务单ID逻辑删除雇员费用段记录及其明细记录
      *
-     * @param empTaskId 任务单ID
+     * @param empTaskId  任务单ID
      * @param modifiedBy
      */
     private void inactiveBasePeriodData(Long empTaskId, String modifiedBy) {
@@ -1538,12 +1552,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         if (bo.getTaskCategory() == 1 || bo.getTaskCategory() == 2 || bo.getTaskCategory() == 12 || bo.getTaskCategory() == 13) {
             //
             SsEmpArchiveBO ssEmpArchiveBO = ssEmpArchiveService.queryEmployeeIsnewOrChangeInto(String.valueOf(bo.getEmpTaskId()));
-            if (null != ssEmpArchiveBO.getEmpArchiveId())
+            if (null != ssEmpArchiveBO.getEmpArchiveId()) {
                 throw new BusinessException("[" + bo.getEmployeeName() + "]该雇员已经做过新进转入");
+            }
         } else {
             SsEmpArchiveBO ssEmpArchiveBO = ssEmpArchiveService.queryByEmpTaskId(String.valueOf(bo.getEmpTaskId()), String.valueOf(bo.getTaskCategory()));
-            if (null == ssEmpArchiveBO.getEmpArchiveId())
+            if (null == ssEmpArchiveBO.getEmpArchiveId()) {
                 throw new BusinessException("[" + bo.getEmployeeName() + "]该雇员未做新进或者转入");
+            }
         }
 
     }
@@ -1990,7 +2006,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 }
                 break;
             case 4://补缴
-                if (ssEmpTaskBO.getAdustType() != null && ssEmpTaskBO.getAdustType()  == 0) { // 差额补缴
+                if (ssEmpTaskBO.getAdustType() != null && ssEmpTaskBO.getAdustType() == 0) { // 差额补缴
                     ssMonthCharge.setCostCategory(9);
                     createSsMonthChargeObject(ssEmpTaskBO, ssEmpBaseAdjust, ssEmpBaseeAdjustDetailList, ssMonthCharge);
                 } else {
@@ -2379,7 +2395,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         YearMonth endMonthDate;
         List<ComposedEmpBasePeriodBO> composedEmpBasePeriodBOList = new ArrayList<>();
 
-        for(SsEmpBasePeriod ssEmpBasePeriod : existsSsEmpBasePeriodList) {
+        for (SsEmpBasePeriod ssEmpBasePeriod : existsSsEmpBasePeriodList) {
             startMonth = ssEmpBasePeriod.getStartMonth();
             if (org.apache.commons.lang.StringUtils.isNotEmpty(startMonth)) {
                 startMonthDate = YearMonth.parse(startMonth, formatter);

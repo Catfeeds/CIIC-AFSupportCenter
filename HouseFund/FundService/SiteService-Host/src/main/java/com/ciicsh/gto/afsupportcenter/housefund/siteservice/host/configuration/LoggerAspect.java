@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.configuration;
 
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogApiUtil;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.LogMessage;
+import com.ciicsh.gto.afsupportcenter.util.logservice.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logservice.LogMessage;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;

@@ -9,10 +9,10 @@ import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRe
 import com.ciicsh.gto.basicdataservice.api.DicItemServiceProxy;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.basicdataservice.api.dto.EmptyDicItemDTO;
-import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
 import com.ciicsh.gto.sheetservice.api.SheetServiceProxy;
+import com.ciicsh.gto.sheetservice.api.dto.Result;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -8,8 +8,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComAccountPaym
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccountPaymentBank;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
+import com.ciicsh.gto.afsupportcenter.util.logservice.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logservice.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
@@ -21,18 +21,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/fundcommandservice/DictAccess")
 public class DictAccessController extends BasicController<CommonApiUtils> {
 
     @Autowired
-    LogService logService;
+    LogApiUtil logApiUtil;
     @Autowired
     HfComAccountPaymentBankMapper hfComAccountPaymentBankMapper;
 
@@ -77,10 +73,9 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.PAYMENT_TYPE_KEY, SocialSecurityConst.PAYMENT_TYPE_MAP, false);
 //            DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.HF_TASK_CATEGORY_KEY, SocialSecurityConst.HF_TASK_CATEGORY_MAP, false);
         } catch (Exception e) {
-            LogContext logContext = LogContext.of().setTitle("上海公积金字典项及常量项")
-                .setTextContent("加载字典项（访问字典公共接口）或常量项失败")
-                .setExceptionContent(e);
-            logService.error(logContext);
+            LogMessage logMessage = LogMessage.create().setTitle("上海公积金字典项及常量项")
+                .setContent("加载字典项（访问字典公共接口）或常量项失败" + e.getMessage());
+            logApiUtil.error(logMessage);
         }
     }
 

@@ -1,4 +1,4 @@
-package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils;
+package com.ciicsh.gto.afsupportcenter.util.logservice;
 
 import com.ciicsh.gto.logservice.api.LogServiceProxy;
 import com.ciicsh.gto.logservice.api.dto.LogDTO;

@@ -6,11 +6,7 @@ import com.ciicsh.common.entity.JsonResult;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.apiservice.host.translator.ApiTranslator;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.apiservice.host.validator.SocApiValidator;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.SocApiProxy;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.ComAccountExtDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.ComTaskParamDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountParamDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComTaskDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountExtBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComTaskParamBO;
@@ -21,8 +17,8 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.Co
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.enumeration.LogInfo;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
+import com.ciicsh.gto.afsupportcenter.util.logservice.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logservice.LogMessage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -56,7 +52,7 @@ public class SocApiController implements SocApiProxy {
     private SocApiValidator socApiValidator;
 
     @Autowired
-    LogService logService;
+    LogApiUtil logApiUtil;
 
 
     @Override
@@ -64,18 +60,20 @@ public class SocApiController implements SocApiProxy {
     @ApiImplicitParam(name = "ssComTaskDTO", value = "企业任务单对象 ssComTaskDTO", required = true, dataType = "SsComTaskDTO")
     @PostMapping("/saveComTask")
     public JsonResult saveComTask(@RequestBody SsComTaskDTO ssComTaskDTO) {
-        logService.info(LogContext.of().setSource(LogInfo.SOURCE_API.getKey()).setTitle("saveComTask").setTextContent("Request: "+ JSON.toJSONString(ssComTaskDTO)));
+//        logService.info(LogContext.of().setSource(LogInfo.SOURCE_API.getKey()).setTitle("saveComTask").setTextContent("Request: "+ JSON.toJSONString(ssComTaskDTO)));
         try {
             //参数校验
             String result = socApiValidator.saveComTaskValidator(ssComTaskDTO);
             if (StringUtils.isNotBlank(result)) {
-                logService.info(LogContext.of().setSource(LogInfo.SOURCE_API.getKey()).setTitle("SocApiController.saveComTask").setTextContent("result: " + result));
+                logApiUtil.info(LogMessage.create().setTitle(LogInfo.SOURCE_API.getKey() + "#" + "SocApiController.saveComTask").setContent("result: " + result));
                 return JsonResult.faultMessage(result);
             }
             //结算中心转变成字符串
             if (StringUtils.isNotBlank(ssComTaskDTO.getSettlementArea())) {
                 String settlementArea = SocialSecurityConst.DISTRICT_MAP.get(ssComTaskDTO.getSettlementArea());
-                if (StringUtils.isNotBlank(settlementArea)) ssComTaskDTO.setSettlementArea(settlementArea);
+                if (StringUtils.isNotBlank(settlementArea)) {
+                    ssComTaskDTO.setSettlementArea(settlementArea);
+                }
             }
             Long newComTaskId = addComTask(ssComTaskDTO);
             return JsonResult.success(newComTaskId);
@@ -132,7 +130,7 @@ public class SocApiController implements SocApiProxy {
     @ApiImplicitParam(name = "paramDTO", value = "企业任务单对象 paramDTO", required = true, dataType = "ComTaskParamDTO")
     @PostMapping("/getAccountByCompany")
     public JsonResult<ComAccountExtDTO> getAccountByCompany(@RequestBody ComTaskParamDTO paramDTO) {
-        logService.info(LogContext.of().setSource(LogInfo.SOURCE_API.getKey()).setTitle("getAccountByCompany").setTextContent("Request: "+ JSON.toJSONString(paramDTO)));
+        logApiUtil.info(LogMessage.create().setTitle(LogInfo.SOURCE_API.getKey() + "#" + "SocApiController.getAccountByCompany").setContent("Request: " + JSON.toJSONString(paramDTO)));
         ComTaskParamBO paramBO = new ComTaskParamBO();
         BeanUtils.copyProperties(paramDTO, paramBO);
         ComAccountExtBO extBO = taskService.getComAccountInfo(paramBO);

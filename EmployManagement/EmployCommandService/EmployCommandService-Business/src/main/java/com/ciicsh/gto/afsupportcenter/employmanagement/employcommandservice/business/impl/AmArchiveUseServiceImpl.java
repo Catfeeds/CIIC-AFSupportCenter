@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  * Created by zhangzhiwen on 2018/2/8.
  */
 @Service
-public class AmArchiveUseServiceImpl extends ServiceImpl<AmArchiveUseMapper, AmArchiveUse>  implements IAmArchiveUseService {
+public class AmArchiveUseServiceImpl extends ServiceImpl<AmArchiveUseMapper, AmArchiveUse> implements IAmArchiveUseService {
 
 
     @Override
@@ -22,15 +22,15 @@ public class AmArchiveUseServiceImpl extends ServiceImpl<AmArchiveUseMapper, AmA
 
         AmArchiveUse amArchiveUse = pageInfo.toJavaObject(AmArchiveUse.class);
 
-        return PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmArchiveUseList(amArchiveUse));
+        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmArchiveUseList(amArchiveUse));
     }
 
     @Override
     public boolean deleteAmArchiveUse(AmArchiveUse amArchiveUse) {
 
-        int i =0;
+        int i = 0;
         i = baseMapper.deleteAmArchiveUse(amArchiveUse);
-        if(i>0){
+        if (i > 0) {
             return true;
         }
         return false;

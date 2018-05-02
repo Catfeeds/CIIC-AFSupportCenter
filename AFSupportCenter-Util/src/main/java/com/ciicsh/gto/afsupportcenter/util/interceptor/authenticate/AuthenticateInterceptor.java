@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate;
 
-import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.identityservice.api.IdentityServiceProxy;
+import com.ciicsh.gto.identityservice.api.dto.Result;
 import com.ciicsh.gto.identityservice.api.dto.response.UserInfoResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
