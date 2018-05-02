@@ -220,11 +220,11 @@ public class TaskCommonUtils {
                     // 如果oldAgreementId存在时，则要回调接口，通知前道关闭费用段
                     if (StringUtils.isNotEmpty(ssEmpTaskBO.getOldAgreementId())) {
                         // 如果新进或转入，且险种数量改变，则不对旧协议进行关闭处理
-                        if ((ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_1))
-                            || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_2)))
-                            && ssEmpTaskBO.isSocCountChange()) {
-//                            continue;
-                        } else {
+//                        if ((ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_1))
+//                            || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_2)))
+//                            && ssEmpTaskBO.isSocCountChange()) {
+////                            continue;
+//                        } else {
                             afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
                             afEmpSocialUpdateDateDTO.setCompanyId(ssEmpTaskBO.getCompanyId());//企业Id
                             afEmpSocialUpdateDateDTO.setItemCode(ssEmpBaseDetail.getSsType());//社保险种
@@ -249,22 +249,23 @@ public class TaskCommonUtils {
 
                             afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(ssEmpTaskBO.getOldAgreementId()));
                             paramsList.add(afEmpSocialUpdateDateDTO);
-                        }
+//                        }
 
                         // 如果oldAgreementId存在，且是转出或封存时，说明是调整非0转0
-                        if (isNewChange
-                                || (
-                                    (
-                                        ((ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_5))
-                                            || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_6)))
-                                            && !ssEmpTaskBO.isSocCountChange())  // 转出或封存，且险种数量未变时（非险种数量改变时的转出或封存，此时通常为0转0或上海转外地）
-                                        || ((ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_1))
-                                            || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_2)))
-                                            && ssEmpTaskBO.isSocCountChange())   // 新进或转入，且险种数量改变时（险种数量改变时的新进或转入）
-                                        || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_3))
-                                    )
-                                     && SocialSecurityConst.SHANGHAI_CITY_CODE.equals(ssEmpTaskBO.getNewCityCode()) // 新城市编码为上海时，排除转外地任务单
-                                )
+//                        if (isNewChange
+//                                || (
+//                                    (
+//                                        ((ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_5))
+//                                            || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_6)))
+//                                            && !ssEmpTaskBO.isSocCountChange())  // 转出或封存，且险种数量未变时（非险种数量改变时的转出或封存，此时通常为0转0或上海转外地）
+//                                        || ((ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_1))
+//                                            || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_2)))
+//                                            && ssEmpTaskBO.isSocCountChange())   // 新进或转入，且险种数量改变时（险种数量改变时的新进或转入）
+//                                        || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_3))
+//                                    )
+//                                     && SocialSecurityConst.SHANGHAI_CITY_CODE.equals(ssEmpTaskBO.getNewCityCode()) // 新城市编码为上海时，排除转外地任务单
+//                                )
+                    if (SocialSecurityConst.SHANGHAI_CITY_CODE.equals(ssEmpTaskBO.getNewCityCode()) // 新城市编码为上海时，排除转外地任务单
                             ) {
                             afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
                             afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(ssEmpTaskBO.getBusinessInterfaceId())); //missionId

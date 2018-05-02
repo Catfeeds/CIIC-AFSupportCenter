@@ -206,11 +206,15 @@ public class KafkaReceiver {
                 String fundCategory = TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
 
                 if (null != paramMap && paramMap.get("fundType") != null) {
-                    Integer taskCategory = paramMap.get("fundType").equals("4") ? TaskCategory.ADJUST.getCategory() : Integer.parseInt(paramMap.get("fundType").toString());
+                    Integer taskCategory =  Integer.parseInt(paramMap.get("fundType").toString());
                     String oldAgreementId = null;
 
-                    if (paramMap.get("oldEmpAgreementId") != null) {
-                        oldAgreementId = paramMap.get("oldEmpAgreementId").toString();
+                    if (paramMap.get("fundType").equals("4")) {
+                        taskCategory = TaskCategory.ADJUST.getCategory();
+
+                        if (paramMap.get("oldEmpAgreementId") != null) {
+                            oldAgreementId = paramMap.get("oldEmpAgreementId").toString();
+                        }
                     }
                     Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
                     boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEAGREEMENTADJUST.getCategory(), taskCategory, oldAgreementId, cityCodeMap, 0);
@@ -255,6 +259,7 @@ public class KafkaReceiver {
                     if (TaskSink.FUND_STOP.equals(taskMsgDTO.getTaskType()) || TaskSink.ADD_FUND_STOP.equals(taskMsgDTO.getTaskType())) {
                         agreementAdjustOrUpdateEmpStop(taskMsgDTO, fundCategory, 1);
                     } else {
+                        String oldAgreementId = null;
                         logger.debug("start fundEmpAgreementCorrect(already handled): " + JSON.toJSONString(taskMsgDTO));
                         HfEmpTask qd = new HfEmpTask();
                         //                    qd.setTaskId(paramMap.get("oldTaskId").toString());
@@ -287,14 +292,18 @@ public class KafkaReceiver {
                             // 如果没有查到旧的雇员协议：
                             processCategory = ProcessCategory.EMPLOYEENEW.getCategory();
 
-                            if (null != paramMap && paramMap.get("fundType") != null) {
-                                taskCategory = paramMap.get("fundType").equals("4") ? TaskCategory.ADJUST.getCategory() : Integer.parseInt(paramMap.get("fundType").toString());
+                            if (paramMap.get("fundType").equals("4")) {
+                                taskCategory = TaskCategory.ADJUST.getCategory();
+
+                                if (paramMap.get("oldEmpAgreementId") != null) {
+                                    oldAgreementId = paramMap.get("oldEmpAgreementId").toString();
+                                }
                             }
                         }
                         Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
                         // 调整状态更正时，oldEmpAgreementId是对应调整前协议，也同时对应更正前任务单的missionId
     //                        boolean res = saveEmpTask(taskMsgDTO, fundCategory, processCategory, taskCategory, paramMap.get("oldEmpAgreementId").toString(), 1);
-                        boolean res = saveEmpTask(taskMsgDTO, fundCategory, processCategory, taskCategory, null, cityCodeMap,1);
+                        boolean res = saveEmpTask(taskMsgDTO, fundCategory, processCategory, taskCategory, oldAgreementId, cityCodeMap,1);
                         logger.debug("end fundEmpAgreementCorrect(already handled): " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
                     }
 

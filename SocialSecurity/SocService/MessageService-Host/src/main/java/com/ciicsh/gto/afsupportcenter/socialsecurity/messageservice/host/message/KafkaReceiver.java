@@ -174,14 +174,15 @@ public class KafkaReceiver {
         // 客服中心调整基数从非0变0时，收到的任务单就是社保停办任务单
         String socialType;
         String oldAgreementId = null;
-        if (paramMap.get("oldEmpAgreementId") != null) {
-            oldAgreementId = paramMap.get("oldEmpAgreementId").toString();
-        }
+
         if (TaskSink.SOCIAL_NEW.equals(taskMsgDTO.getTaskType())) {
             logService.info(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_ADJUST).setTextContent(TaskSink.SOCIAL_NEW + " JSON: " + JSON.toJSONString(taskMsgDTO)));
 
             //获取社保办理类型
             socialType = paramMap.get("socialType").toString();
+            if ("3".equals(socialType) && paramMap.get("oldEmpAgreementId") != null) {
+                oldAgreementId = paramMap.get("oldEmpAgreementId").toString();
+            }
             Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
             saveSsEmpTask(taskMsgDTO, Integer.parseInt(socialType), ProcessCategory.AF_EMP_AGREEMENT_ADJUST.getCategory(), oldAgreementId, cityCodeMap, 0);
         } else if (TaskSink.SOCIAL_STOP.equals(taskMsgDTO.getTaskType())) {
@@ -226,6 +227,7 @@ public class KafkaReceiver {
                 try {
 
                     Integer taskCategory = 0;
+                    String oldAgreementId = null;
                     SsEmpTaskBO ssEmpTaskBO = new SsEmpTaskBO();
                     ssEmpTaskBO.setBusinessInterfaceId(paramMap.get("oldEmpAgreementId").toString());
                     //查询旧的任务类型保存到新的任务单
@@ -251,6 +253,11 @@ public class KafkaReceiver {
                         if (paramMap.get("socialType") != null) {
                             String socialType = paramMap.get("socialType").toString();
                             taskCategory = Integer.parseInt(socialType);
+
+                            socialType = paramMap.get("socialType").toString();
+                            if ("3".equals(socialType) && paramMap.get("oldEmpAgreementId") != null) {
+                                oldAgreementId = paramMap.get("oldEmpAgreementId").toString();
+                            }
                         }
                     }
 
@@ -265,7 +272,7 @@ public class KafkaReceiver {
                     }
 
                     Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
-                    ssEmpTaskFrontService.saveEmpTaskTc(taskMsgDTO, taskCategory, ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory(), 1, null, dto, afCompanyDetailResponseDTO, cityCodeMap);
+                    ssEmpTaskFrontService.saveEmpTaskTc(taskMsgDTO, taskCategory, ProcessCategory.AF_EMP_AGREEMENT_UPDATE.getCategory(), 1, oldAgreementId, dto, afCompanyDetailResponseDTO, cityCodeMap);
 
                 } catch (Exception e) {
                     logService.error(LogContext.of().setSource(LogInfo.SOURCE_MESSAGE.getKey()).setTitle(TaskSink.AF_EMP_AGREEMENT_UPDATE).setTextContent(e.getMessage()));

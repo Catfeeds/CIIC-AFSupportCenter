@@ -166,5 +166,5 @@ public class SsEmpTaskBO implements Serializable {
     private SsEmpTask oldSsEmpTask;
     private String oldCityCode;
     private String newCityCode;
-    private boolean isSocCountChange;
+//    private boolean isSocCountChange;
 }

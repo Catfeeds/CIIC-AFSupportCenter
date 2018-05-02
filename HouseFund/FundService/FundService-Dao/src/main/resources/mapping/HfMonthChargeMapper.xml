@@ -101,7 +101,7 @@
                 </foreach>
             </if>
             <if test="exceptEmpTaskId != null">
-                AND empTaskId != #{exceptEmpTaskId}
+                AND emp_task_id != #{exceptEmpTaskId}
             </if>
             <if test="hfType != null">
                 AND hf_type = #{hfType}

@@ -23,6 +23,8 @@ import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -66,6 +68,8 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     private CommonApiUtils commonApiUtils;
     @Autowired
     private AmEmpTaskOfSsService amEmpTaskOfSsService;
+    @Autowired
+    private LogService logService;
 
     /**
      * 雇员日常操作查询
@@ -269,6 +273,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
      */
     @RequestMapping("/handleBatchTask")
     public JsonResult<Object> handleBatchTask(@RequestBody EmpTaskBatchParameter empTaskBatchParameter) {
+        long beginTime = new Date().getTime();
         Assert.notNull(empTaskBatchParameter, "参数异常");
         Assert.notNull(empTaskBatchParameter.getSsEmpTaskBOList(), "参数异常");
         LocalDate now = LocalDate.now();
@@ -293,6 +298,8 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             //true 表示批量办理
             business.saveHandleData(p, true);
         });
+        long endTime = new Date().getTime();
+        logService.info(LogContext.of().setTitle("本地社保雇员任务单批量办理").setTextContent("cost time(ms): " + (endTime - beginTime)));
         return JsonResultKit.of(true);
     }
 
