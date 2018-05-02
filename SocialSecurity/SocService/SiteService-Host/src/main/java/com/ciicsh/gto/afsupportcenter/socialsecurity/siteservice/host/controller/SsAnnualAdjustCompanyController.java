@@ -16,8 +16,8 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAnnualA
 import com.ciicsh.gto.afsupportcenter.util.core.Result;
 import com.ciicsh.gto.afsupportcenter.util.core.ResultGenerator;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
-import com.ciicsh.gto.afsupportcenter.util.logservice.LogApiUtil;
-import com.ciicsh.gto.afsupportcenter.util.logservice.LogMessage;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;

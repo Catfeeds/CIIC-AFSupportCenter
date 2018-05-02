@@ -1,8 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.messageservice.host.configuration;
 
 import com.ciicsh.gto.afsupportcenter.util.enumeration.LogInfo;
-import com.ciicsh.gto.afsupportcenter.util.logservice.LogApiUtil;
-import com.ciicsh.gto.afsupportcenter.util.logservice.LogMessage;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
