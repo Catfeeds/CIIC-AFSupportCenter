@@ -223,7 +223,7 @@ public class TaskCommonUtils {
                         if ((ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_1))
                             || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_2)))
                             && ssEmpTaskBO.isSocCountChange()) {
-                            continue;
+//                            continue;
                         } else {
                             afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
                             afEmpSocialUpdateDateDTO.setCompanyId(ssEmpTaskBO.getCompanyId());//企业Id
@@ -263,7 +263,7 @@ public class TaskCommonUtils {
                                             && ssEmpTaskBO.isSocCountChange())   // 新进或转入，且险种数量改变时（险种数量改变时的新进或转入）
                                         || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_3))
                                     )
-                                     && SocialSecurityConst.SHANGHAI_CITY_CODE.equals(ssEmpTaskBO.getNewCityCode())
+                                     && SocialSecurityConst.SHANGHAI_CITY_CODE.equals(ssEmpTaskBO.getNewCityCode()) // 新城市编码为上海时，排除转外地任务单
                                 )
                             ) {
                             afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
