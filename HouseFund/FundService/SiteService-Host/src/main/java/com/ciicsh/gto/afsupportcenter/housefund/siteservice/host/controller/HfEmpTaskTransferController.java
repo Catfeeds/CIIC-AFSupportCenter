@@ -5,16 +5,8 @@ import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTaskTransferBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTransferTemplateImpXsl;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.FeedbackDateBatchUpdateBO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.HfEmpTaskHandleVo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.ImportFeedbackDateBO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.EmpEmployeeService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HFImportFeedbackDateService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskHandleService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskTransferService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfFileImportService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.*;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.util.FeedbackDateVerifyHandler;
@@ -22,8 +14,8 @@ import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.PdfUtil;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
+import com.ciicsh.gto.afsupportcenter.util.logservice.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logservice.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -48,11 +40,7 @@ import java.io.Writer;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -68,32 +56,36 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
     @Autowired
     HFImportFeedbackDateService hfImportFeedbackDateService;
     @Autowired
-    LogService logService;
+    LogApiUtil logApiUtil;
 
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 
     /**
      * 雇员公积金转移任务查询
+     *
      * @param pageInfo
      * @return
      */
     @RequestMapping("/queryEmpTaskTransfer")
-    public JsonResult<PageRows> queryEmpTaskTransfer( PageInfo pageInfo) {
+    public JsonResult<PageRows> queryEmpTaskTransfer(PageInfo pageInfo) {
         return JsonResultKit.of(business.queryEmpTaskTransferPage(pageInfo));
     }
+
     /**
      * 雇员公积金转移任务新建雇员查询
+     *
      * @param pageInfo
      * @return
      */
     @RequestMapping("/queryEmpTaskTransferNewTask")
-    public JsonResult<PageRows> queryEmpTaskTransferNewTask( PageInfo pageInfo) {
+    public JsonResult<PageRows> queryEmpTaskTransferNewTask(PageInfo pageInfo) {
         return JsonResultKit.of(business.queryEmpTaskTransferNewTaskPage(pageInfo));
     }
 
     /**
      * 雇员公积金转移任务单表单查询
+     *
      * @param employeeId
      * @param companyId
      * @param hfType
@@ -103,43 +95,45 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
     @RequestMapping("/queryComEmpTransferForm")
     public JsonResult<HfEmpTaskHandleVo> queryComEmpTransferForm(@RequestParam("employeeId") String employeeId,
                                                                  @RequestParam("companyId") String companyId,
-                                                                 @RequestParam(value ="hfType",required = false) String hfType,
-                                                                 @RequestParam(value ="empTaskId" ,required = false) String empTaskId){
-        HfEmpTaskHandleVo hfEmpTaskHandleBo=new HfEmpTaskHandleVo();
+                                                                 @RequestParam(value = "hfType", required = false) String hfType,
+                                                                 @RequestParam(value = "empTaskId", required = false) String empTaskId) {
+        HfEmpTaskHandleVo hfEmpTaskHandleBo = new HfEmpTaskHandleVo();
         hfEmpTaskHandleBo.setHfType(Integer.parseInt(hfType));
-        long employeeTaskId=0;
-        if(Optional.ofNullable(empTaskId).isPresent()){
-            employeeTaskId=Long.valueOf(empTaskId);
+        long employeeTaskId = 0;
+        if (Optional.ofNullable(empTaskId).isPresent()) {
+            employeeTaskId = Long.valueOf(empTaskId);
         }
         //获取企业账户和雇员信息
-        hfEmpTaskHandleBo= business.queryComEmpTransferForm(employeeId,companyId,employeeTaskId);
+        hfEmpTaskHandleBo = business.queryComEmpTransferForm(employeeId, companyId, employeeTaskId);
 
         //获取转移任务单信息
         hfEmpTaskHandleBo.setProcessCategory(9);
         hfEmpTaskHandleBo.setTaskCategory(8);//转移任务单
         return JsonResultKit.of(hfEmpTaskHandleBo);
     }
+
     /**
      * 提交转移任务单
      */
     @RequestMapping("/submitTransferTask")
-    public JsonResult submitTransferTask(@RequestBody EmpTaskTransferBo empTaskTransferBo){
+    public JsonResult submitTransferTask(@RequestBody EmpTaskTransferBo empTaskTransferBo) {
         try {
             return business.submitTransferTask(empTaskTransferBo);
         } catch (BusinessException e) {
             return JsonResultKit.ofError(e.getMessage());
         }
     }
+
     /**
      * 打印转移任务单
      */
     @RequestMapping("/printTransferTask")
-    public void printTransferTask(HttpServletResponse response, EmpTaskTransferBo empTaskTransferBo)throws Exception {
+    public void printTransferTask(HttpServletResponse response, EmpTaskTransferBo empTaskTransferBo) throws Exception {
         try {
             String templateFilePath;
             List<Map<String, Object>> printList = business.printTransferTask(empTaskTransferBo);
             templateFilePath = "/template/SH_HF_TRANSFER_TMP.pdf";
-            String fileName = URLEncoder.encode( "上海市公积金转移通知书.pdf", "UTF-8");
+            String fileName = URLEncoder.encode("上海市公积金转移通知书.pdf", "UTF-8");
             response.reset();
             response.setCharacterEncoding("UTF-8");
             response.setHeader("content-Type", "application/pdf");
@@ -167,7 +161,7 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
      * 不需处理转移任务单
      */
     @RequestMapping("/notHandleTransfer")
-    public JsonResult notHandleTransfer(@RequestBody EmpTaskTransferBo empTaskTransferBo){
+    public JsonResult notHandleTransfer(@RequestBody EmpTaskTransferBo empTaskTransferBo) {
         return business.notHandleTransfer(empTaskTransferBo);
     }
 
@@ -183,12 +177,12 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
         List<EmpTaskTransferBo> empTaskTransferBoList = business.queryEmpTaskTransfer(empTaskTransferBo);
 
         Map<Integer, Map<String, Object>> alMap = new HashMap<>();
-        String[] transferOutUnitAccounts = { "", "" };
-        String[] transferInUnitAccounts = { "", "" };
+        String[] transferOutUnitAccounts = {"", ""};
+        String[] transferInUnitAccounts = {"", ""};
 
         for (int i = 0; i < 2; i++) {
             Map<String, Object> map = new HashMap<>();
-            List<Map<String, Object>>  mapList = new ArrayList<>();
+            List<Map<String, Object>> mapList = new ArrayList<>();
             final int m = i;
             List<EmpTaskTransferBo> list = empTaskTransferBoList.stream().filter(e -> e.getHfType() == m + 1).collect(Collectors.toList());
 
@@ -235,8 +229,8 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
             response.reset();
             response.setCharacterEncoding("UTF-8");
 //            response.setHeader("content-Type", "application/vnd.ms-excel");
-                response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setHeader("Content-Disposition","attachment;filename=" + fileName);
+            response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
             workbook.write(response.getOutputStream());
             workbook.close();
         } catch (IOException e) {
@@ -246,6 +240,7 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
 
     /**
      * 雇员公积金转移TXT导出
+     *
      * @param response
      * @param pageInfo
      * @throws Exception
@@ -262,7 +257,7 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
 
         writer.append(title);
         if (CollectionUtils.isNotEmpty(empTaskTransferBoList)) {
-            for(int i = 0; i < empTaskTransferBoList.size(); i++) {
+            for (int i = 0; i < empTaskTransferBoList.size(); i++) {
                 empTaskTransferBo = empTaskTransferBoList.get(i);
                 outputList.add(String.format(template, i + 1, empTaskTransferBo.getHfEmpAccount()));
             }
@@ -280,7 +275,7 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
         writer.close();
     }
 
-    @RequestMapping(value="/feedbackDateUpload", consumes="multipart/form-data")
+    @RequestMapping(value = "/feedbackDateUpload", consumes = "multipart/form-data")
     public JsonResult feedbackDateUpload(HttpServletRequest request) {
         EmpTaskTransferBo empTaskTransferBo = new EmpTaskTransferBo();
         empTaskTransferBo.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_COMPLETED); // TODO 2 or 3?
@@ -300,10 +295,9 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
                 null, hfImportFeedbackDateService, successList, failList,
                 importParams, files, UserContext.getUserId());
         } catch (Exception e) {
-            LogContext logContext = LogContext.of().setTitle("文件上传")
-                .setTextContent("根据客户编号上传该客户所属雇员的年调收集信息")
-                .setExceptionContent(e);
-            logService.error(logContext);
+            LogMessage logMessage = LogMessage.create().setTitle("文件上传")
+                .setContent("根据客户编号上传该客户所属雇员的年调收集信息" + e.getMessage());
+            logApiUtil.error(logMessage);
             return JsonResultKit.ofError("文件读取失败，请先检查文件格式是否正确");
         }
 
@@ -312,6 +306,7 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
 
     /**
      * 雇员公积金转移任务批量更新回单日期
+     *
      * @param feedbackDateBatchUpdateBO
      * @return
      */
@@ -342,7 +337,7 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
      * 雇员公积金转移导出
      */
     @RequestMapping("/queryEmpTaskTransferExp")
-    public JsonResult<PageRows> queryEmpTaskTransferExp( PageInfo pageInfo) {
+    public JsonResult<PageRows> queryEmpTaskTransferExp(PageInfo pageInfo) {
         return null;
         //return JsonResultKit.of(business.queryEmpTaskTransferPage(pageInfo));
     }
@@ -351,10 +346,10 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
      * 雇员公积金转移导出
      */
     @RequestMapping("/downloadTransferTemplateFile")
-    public void downloadTransferTemplateFile( HttpServletResponse response) {
+    public void downloadTransferTemplateFile(HttpServletResponse response) {
         String fileNme = "雇员公积金转移导入模板.xls";
         List<EmpTransferTemplateImpXsl> opts = new ArrayList();
-        ExcelUtil.exportExcel(opts,EmpTransferTemplateImpXsl.class,fileNme,response);
+        ExcelUtil.exportExcel(opts, EmpTransferTemplateImpXsl.class, fileNme, response);
     }
 
 }

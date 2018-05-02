@@ -7,14 +7,13 @@ import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeQu
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.SMUserInfoProxy;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMUserInfoDTO;
-import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.*;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
-import com.ciicsh.gto.employeecenter.util.JsonResult;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.CompanyTypeDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
 import com.ciicsh.gto.sheetservice.api.SheetServiceProxy;
+import com.ciicsh.gto.sheetservice.api.dto.Result;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.slf4j.Logger;
@@ -88,7 +87,7 @@ public class CommonApiUtils {
      */
     public Result completeTask(@RequestBody TaskRequestDTO requestDTO) throws Exception {
         logger.info("customer系统调用完成任务接口：" + requestDTO.toString());
-        com.ciicsh.gto.commonservice.util.dto.Result restResult = sheetServiceProxy.completeTask(requestDTO);
+        Result restResult = sheetServiceProxy.completeTask(requestDTO);
         logger.info("customer系统收到完成任务接口返回：" + String.valueOf("code:" + restResult.getCode() + "message:") + restResult.getMessage());
         return restResult;
     }

@@ -4,19 +4,20 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controlle
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.util.MyExcelVerifyHandler;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SalCompanyService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAnnualAdjustCompanyEmpTempService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAnnualAdjustCompanyService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsFileImportService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsAnnualAdjustCompanyDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.SsAnnualAdjustCompanyEmpTempDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.*;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.util.MyExcelVerifyHandler;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SalCompany;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAnnualAdjustCompany;
 import com.ciicsh.gto.afsupportcenter.util.core.Result;
 import com.ciicsh.gto.afsupportcenter.util.core.ResultGenerator;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
+import com.ciicsh.gto.afsupportcenter.util.logservice.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logservice.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -27,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -50,7 +50,7 @@ public class SsAnnualAdjustCompanyController extends BasicController<SsAnnualAdj
     @Autowired
     private SsFileImportService ssFileImportService;
     @Autowired
-    private LogService logService;
+    private LogApiUtil logApiUtil;
 
     /**
      * 根据客户编号上传该客户所属雇员的年调收集信息
@@ -128,10 +128,9 @@ public class SsAnnualAdjustCompanyController extends BasicController<SsAnnualAdj
                 importParams, files, UserContext.getUserId());
             afterInsert(annualAdjustCompanyId, companyId);
         } catch (Exception e) {
-            LogContext logContext = LogContext.of().setTitle("文件上传")
-                .setTextContent("根据客户编号上传该客户所属雇员的年调收集信息")
-                .setExceptionContent(e);
-            logService.error(logContext);
+            LogMessage logMessage = LogMessage.create().setTitle("文件上传")
+                .setContent("根据客户编号上传该客户所属雇员的年调收集信息"+e.getMessage());
+            logApiUtil.error(logMessage);
             return ResultGenerator.genServerFailResult("文件读取失败，请先检查文件格式是否正确");
         }
 
