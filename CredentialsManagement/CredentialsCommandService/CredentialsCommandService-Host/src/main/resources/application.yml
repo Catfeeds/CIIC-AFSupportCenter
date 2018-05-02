@@ -33,7 +33,7 @@ server:
   port: 6025
 
 app:
-  id=10006014
+  id: 10006014
 endpoints:
   shutdown:
     enabled: true
