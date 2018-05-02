@@ -215,9 +215,13 @@
                 AND heab.hf_emp_account = #{basicHfEmpAccount}
             </if>
             <if test="hfAccountType != null">
-                AND hcab.hf_account_type = #{hfAccountType}
-                OR hcaa.hf_account_type = #{hfAccountType}
+                AND (hcab.hf_account_type = #{hfAccountType}
+                OR hcaa.hf_account_type = #{hfAccountType})
             </if>
+            <!--<if test="hfAccountType == null">-->
+                <!--AND (hcab.hf_account_type IN (1, 2, 3)-->
+                <!--OR hcaa.hf_account_type IN (1, 2, 3))-->
+            <!--</if>-->
             <if test="basicHfComAccount != null">
                 AND hcacb.hf_com_account = #{basicHfComAccount}
             </if>
