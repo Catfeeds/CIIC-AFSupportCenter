@@ -77,7 +77,7 @@
     <update id="updateSsMonthCharge" parameterType="java.util.HashMap">
          UPDATE ss_month_charge SET  emp_payment_status=#{empPaymentStatus}
         WHERE
-        company_id=#{companyId}
+        com_account_id=#{comAccountId}
         AND employee_id=#{employeeId}
         AND ss_month=#{ssMonth}
         AND ss_month_belong=#{ssMonthBelong}

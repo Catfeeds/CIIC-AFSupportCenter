@@ -1450,6 +1450,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 } else {
                     paymentType = HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_OPEN;
                 }
+            } else if (e.getRemitWay() == HfEmpTaskPeriodConstant.REMIT_WAY_REPAIR) {
+                paymentType = HfMonthChargeConstant.PAYMENT_TYPE_REPAIR;
             }
             YearMonth startMonthDate;
             YearMonth endMonthDate;
@@ -1501,10 +1503,6 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             BigDecimal comAmount = e.getComAmount();
             BigDecimal empAmount = e.getAmountEmp();
             BigDecimal amount = e.getAmount();
-
-            if (e.getRemitWay() == HfEmpTaskPeriodConstant.REMIT_WAY_REPAIR) {
-                paymentType = HfMonthChargeConstant.PAYMENT_TYPE_REPAIR;
-            }
 
             Map<String, BigDecimal[]> diffMap = null;
 

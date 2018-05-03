@@ -87,9 +87,11 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
                 for (Map<String, Object> ele : resDto) {
                     //map.put("monthChargeId", ele.get("objId"));
                     map.put("empPaymentStatus", ele.get("isAdvance"));//是否可付
-                    map.put("companyId", ele.get("companyId"));
+                    map.put("comAccountId", comAccountId);
+//                    map.put("companyId", ele.get("companyId"));
                     map.put("employeeId", ele.get("employeeId"));
-                    map.put("ssMonthBelong", ele.get("ssMonthBelong"));
+//                    map.put("ssMonthBelong", ele.get("ssMonthBelong"));
+                    map.put("ssMonthBelong", ele.get("payMonth"));
                     map.put("ssMonth", ssMonth);
                     ssPaymentMapper.updateSsMonthCharge(map);
                 }
