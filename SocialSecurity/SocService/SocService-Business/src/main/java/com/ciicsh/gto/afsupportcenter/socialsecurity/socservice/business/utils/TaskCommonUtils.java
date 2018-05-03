@@ -249,8 +249,7 @@ public class TaskCommonUtils {
                                 LocalDate startMonthDate = LocalDate.parse(ssEmpTaskBO.getOldSsEmpTask().getStartMonth() + "01", yyyyMMddFormatter);
                                 // 关闭日期为起缴月的前一个月的最后一天
                                 afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(startMonthDate.minusDays(1).format(yyyyMMddFormatter)));
-                            } else if (ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_3))
-                                && SocialSecurityConst.SHANGHAI_CITY_CODE.equals(ssEmpTaskBO.getNewCityCode())) {
+                            } else if (ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_3))) {
                                 LocalDate startMonthDate = LocalDate.parse(dataStartMonth + "01", yyyyMMddFormatter);
                                 // 关闭日期为起缴月的前一个月的最后一天
                                 afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(startMonthDate.minusDays(1).format(yyyyMMddFormatter)));
@@ -299,12 +298,12 @@ public class TaskCommonUtils {
                                 afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(ssEmpBaseDetail.getComAmount());
                                 afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(ssEmpBaseDetail.getEmpAmount());
 
-                                if (ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_3))
-                                    || isNewChange) {
-                                    afEmpSocialUpdateDateDTO.setStartConfirmDate(stringTranserDate(dataStartMonth));
-                                } else if (StringUtils.isNotEmpty(ssEmpTaskBO.getHandleMonth())) {
-                                    afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(ssEmpTaskBO.getHandleMonth() + "01"));
-                                }
+//                                if (ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_3))
+//                                    || isNewChange) {
+                                afEmpSocialUpdateDateDTO.setStartConfirmDate(stringTranserDate(dataStartMonth));
+//                                } else if (StringUtils.isNotEmpty(ssEmpTaskBO.getHandleMonth())) {
+//                                    afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(ssEmpTaskBO.getHandleMonth() + "01"));
+//                                }
                             }
                             afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(ssEmpTaskBO.getBusinessInterfaceId()));
                             paramsList.add(afEmpSocialUpdateDateDTO);
