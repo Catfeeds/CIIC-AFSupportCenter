@@ -190,10 +190,13 @@ public class KafkaReceiver {
             //获取社保办理类型
             // 如果oldAgreementId存在时，则要回调接口，通知前道关闭费用段
             // 调整类别任务单，只发一个消息（新旧雇员协议在同一任务单中记录），oldAgreementId需记录，任务单回调时，同时需回调新旧雇员协议；
-            // 非调整类别的SOCIAL_NEW,FUND_NEW,ADDED_FUND_NEW类型的任务单，oldAgreementId一概不记录，任务单回调时，不回调旧雇员协议，仅回调新雇员协议；
+            // 非调整类别的SOCIAL_NEW,FUND_NEW,ADDED_FUND_NEW类型的任务单，social_startAndStop为true，oldAgreementId一概不记录，任务单回调时，不回调旧雇员协议，仅回调新雇员协议；
+            // 不为true，则oldAgreementId需记录，任务单回调时，同时需回调新旧雇员协议；
             // 当SOCIAL_STOP,FUND_STOP,ADDED_FUND_STOP类型的任务单，oldAgreementId需记录，任务单回调时，根据情况回调旧雇员协议（通常只有调整类别中的非0转0）；
             socialType = paramMap.get("socialType").toString();
-            if ("3".equals(socialType) && paramMap.get("oldEmpAgreementId") != null) {
+//            if ("3".equals(socialType) && paramMap.get("oldEmpAgreementId") != null
+            if ((paramMap.get("social_startAndStop") == null
+                || !Boolean.valueOf(paramMap.get("social_startAndStop").toString())) && paramMap.get("oldEmpAgreementId") != null) {
                 oldAgreementId = paramMap.get("oldEmpAgreementId").toString();
             }
             Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
@@ -272,9 +275,12 @@ public class KafkaReceiver {
 
                     // 如果oldAgreementId存在时，则要回调接口，通知前道关闭费用段
                     // 调整类别任务单，只发一个消息（新旧雇员协议在同一任务单中记录），oldAgreementId需记录，任务单回调时，同时需回调新旧雇员协议；
-                    // 非调整类别的SOCIAL_NEW,FUND_NEW,ADDED_FUND_NEW类型的任务单，oldAgreementId一概不记录，任务单回调时，不回调旧雇员协议，仅回调新雇员协议；
+                    // 非调整类别的SOCIAL_NEW,FUND_NEW,ADDED_FUND_NEW类型的任务单，social_startAndStop为true，oldAgreementId一概不记录，任务单回调时，不回调旧雇员协议，仅回调新雇员协议；
+                    // 不为true，则oldAgreementId需记录，任务单回调时，同时需回调新旧雇员协议；
                     // 当SOCIAL_STOP,FUND_STOP,ADDED_FUND_STOP类型的任务单，oldAgreementId需记录，任务单回调时，根据情况回调旧雇员协议（通常只有调整类别中的非0转0）；
-                    if (Integer.parseInt(SocialSecurityConst.TASK_TYPE_3) == taskCategory && paramMap.get("oldEmpAgreementId") != null) {
+//                    if (Integer.parseInt(SocialSecurityConst.TASK_TYPE_3) == taskCategory && paramMap.get("oldEmpAgreementId") != null) {
+                    if ((paramMap.get("social_startAndStop") == null
+                        || !Boolean.valueOf(paramMap.get("social_startAndStop").toString())) && paramMap.get("oldEmpAgreementId") != null) {
                         oldAgreementId = paramMap.get("oldEmpAgreementId").toString();
                     }
 
