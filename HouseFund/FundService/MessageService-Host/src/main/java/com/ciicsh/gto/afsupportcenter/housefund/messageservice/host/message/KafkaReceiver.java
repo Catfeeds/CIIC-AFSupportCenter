@@ -520,6 +520,7 @@ public class KafkaReceiver {
         try {
             //调用当前雇员信息获取接口
             AfEmployeeInfoDTO dto = getEmpInfo(taskMsgDTO,processCategory,taskCategory, oldAgreementId, isChange);
+
             if (dto != null) {
                 AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
                 AfCompanyDetailResponseDTO afCompanyDetailResponseDTO = null;
@@ -527,21 +528,8 @@ public class KafkaReceiver {
                 if (companyDto != null) {
                     afCompanyDetailResponseDTO = commonApiUtils.getServiceCenterInfo(companyDto.getCompanyId());
                 }
-                AfEmpSocialDTO socialDTO = hfEmpTaskService.getAfEmpSocialByType(dto.getEmpSocialList(), fundCategory);
-                // 获取公积金账号（如果根据新雇员协议ID未取得，则根据老雇员协议ID去取）
-                if(socialDTO != null && StringUtils.isEmpty(socialDTO.getAccount())){
-                    Map<String, Object> paramMap = taskMsgDTO.getVariables();
 
-                    if(null != paramMap){
-                        AfEmployeeInfoDTO oldDto = getEmpInfoByOldAgreementId(paramMap.get("oldEmpAgreementId").toString());
-
-                        if (oldDto != null) {
-                            AfEmpSocialDTO oldSocialDTO = hfEmpTaskService.getAfEmpSocialByType(dto.getEmpSocialList(),fundCategory);
-                            socialDTO.setAccount(oldSocialDTO.getAccount());
-                        }
-                    }
-                }
-
+                AfEmpSocialDTO socialDTO = setEmpAccount(taskMsgDTO, dto, fundCategory);
                 //插入数据到雇员任务单表
                 return hfEmpTaskService.addEmpTask(taskMsgDTO, fundCategory, processCategory,taskCategory, oldAgreementId, isChange, cityCodeMap, dto, socialDTO, afCompanyDetailResponseDTO);
             }
@@ -556,6 +544,32 @@ public class KafkaReceiver {
         }
     }
 
+    private AfEmpSocialDTO setEmpAccount(TaskCreateMsgDTO taskMsgDTO, AfEmployeeInfoDTO dto, String fundCategory) {
+        AfEmpSocialDTO socialDTO = null;
+        List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
+        if(null != socialList && socialList.size() > 0) {
+            socialDTO = hfEmpTaskService.getAfEmpSocialByType(socialList, fundCategory);
+            // 获取公积金账号（如果根据新雇员协议ID未取得，则根据老雇员协议ID去取）
+            if (socialDTO != null && StringUtils.isEmpty(socialDTO.getAccount())) {
+                Map<String, Object> paramMap = taskMsgDTO.getVariables();
+
+                if (null != paramMap && paramMap.get("oldEmpAgreementId") != null) {
+                    AfEmployeeInfoDTO oldDto = getEmpInfoByOldAgreementId(paramMap.get("oldEmpAgreementId").toString());
+
+                    if (oldDto != null) {
+                        socialList = oldDto.getEmpSocialList();
+                        if(null != socialList && socialList.size() > 0) {
+                            AfEmpSocialDTO oldSocialDTO = hfEmpTaskService.getAfEmpSocialByType(socialList, fundCategory);
+                            if (oldSocialDTO != null) {
+                                socialDTO.setAccount(oldSocialDTO.getAccount());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return socialDTO;
+    }
 
     /**
      * 修改公积金雇员任务单
@@ -567,21 +581,9 @@ public class KafkaReceiver {
         try {
             //调用当前雇员信息获取接口
             AfEmployeeInfoDTO dto = getEmpInfo(taskMsgDTO,processCategory,taskCategory, oldAgreementId, isChange);
+
             if (dto != null) {
-                AfEmpSocialDTO socialDTO = hfEmpTaskService.getAfEmpSocialByType(dto.getEmpSocialList(), fundCategory);
-                // 获取公积金账号（如果根据新雇员协议ID未取得，则根据老雇员协议ID去取）
-                if(socialDTO != null && StringUtils.isEmpty(socialDTO.getAccount())){
-                    Map<String, Object> paramMap = taskMsgDTO.getVariables();
-
-                    if(null != paramMap){
-                        AfEmployeeInfoDTO oldDto = getEmpInfoByOldAgreementId(paramMap.get("oldEmpAgreementId").toString());
-
-                        if (oldDto != null) {
-                            AfEmpSocialDTO oldSocialDTO = hfEmpTaskService.getAfEmpSocialByType(dto.getEmpSocialList(),fundCategory);
-                            socialDTO.setAccount(oldSocialDTO.getAccount());
-                        }
-                    }
-                }
+                AfEmpSocialDTO socialDTO = setEmpAccount(taskMsgDTO, dto, fundCategory);
 
                 //更新任务单表信息
                 return hfEmpTaskService.updateEmpTask(taskMsgDTO, fundCategory, dto, socialDTO);
