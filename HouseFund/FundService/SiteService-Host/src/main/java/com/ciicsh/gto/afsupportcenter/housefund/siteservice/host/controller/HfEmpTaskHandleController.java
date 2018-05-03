@@ -84,16 +84,17 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
             }
 
             if (StringUtils.isEmpty(hfEmpTaskHandleBo.getHfEmpAccount())) {
-                Wrapper<HfEmpArchive> wrapper = new EntityWrapper<>();
-                wrapper.where(" is_active = 1 AND company_id={0} AND employee_id={1} AND hf_type={2}",
-                    hfEmpTaskHandleBo.getCompanyId(),
-                    hfEmpTaskHandleBo.getEmployeeId(),
-                    hfEmpTaskHandleBo.getHfType());
-                wrapper.orderBy("created_time", false);
-                List<HfEmpArchive> hfEmpArchiveList = hfEmpArchiveService.selectList(wrapper);
-                if (CollectionUtils.isNotEmpty(hfEmpArchiveList)) {
-                    hfEmpTaskHandleBo.setHfEmpAccount(hfEmpArchiveList.get(0).getHfEmpAccount());
-                }
+//                Wrapper<HfEmpArchive> wrapper = new EntityWrapper<>();
+//                wrapper.where(" is_active = 1 AND company_id={0} AND employee_id={1} AND hf_type={2}",
+//                    hfEmpTaskHandleBo.getCompanyId(),
+//                    hfEmpTaskHandleBo.getEmployeeId(),
+//                    hfEmpTaskHandleBo.getHfType());
+//                wrapper.orderBy("created_time", false);
+                String empAccount = hfEmpArchiveService.getEmpAccountByEmployeeId(hfEmpTaskHandleBo.getEmployeeId(), hfEmpTaskHandleBo.getHfType());
+//                List<HfEmpArchive> hfEmpArchiveList = hfEmpArchiveService.selectList(wrapper);
+//                if (CollectionUtils.isNotEmpty(hfEmpArchiveList)) {
+                hfEmpTaskHandleBo.setHfEmpAccount(empAccount);
+//                }
             }
 
             // 根据雇员档案ID获取雇员基本公积金汇缴月份段信息
