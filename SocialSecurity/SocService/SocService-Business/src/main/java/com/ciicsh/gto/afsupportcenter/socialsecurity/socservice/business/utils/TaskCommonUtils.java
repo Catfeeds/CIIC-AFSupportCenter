@@ -228,9 +228,9 @@ public class TaskCommonUtils {
                     // 以下为调整前的费用段处理：
                     // 如果oldAgreementId存在时，则要回调接口，通知前道关闭费用段
                     // 调整类别任务单，只发一个消息（新旧雇员协议在同一任务单中记录），oldAgreementId需记录，任务单回调时，同时需回调新旧雇员协议；
-                    // 非调整类别的SOCIAL_NEW,FUND_NEW,ADDED_FUND_NEW类型的任务单，oldAgreementId一概不记录，任务单回调时，不回调旧雇员协议，仅回调新雇员协议；
-                    // 当SOCIAL_STOP,FUND_STOP,ADDED_FUND_STOP类型的任务单，oldAgreementId需记录，任务单回调时，根据情况回调旧雇员协议（通常只有调整类别中的非0转0）；
-                    // 社保有五险或三险更换的情况，其转出消息与非0转0类似，可根据SocialStartAndStop来区分：只出不进时（通常只有非0转0），排除一出一进的任务单
+                    // 非调整类别的SOCIAL_NEW,FUND_NEW,ADDED_FUND_NEW类型的任务单，social_startAndStop为true，oldAgreementId一概不记录，任务单回调时，不回调旧雇员协议，仅回调新雇员协议；
+                    // 不为true，则oldAgreementId需记录，任务单回调时，同时需回调新旧雇员协议；
+                    // 当SOCIAL_STOP,FUND_STOP,ADDED_FUND_STOP类型的任务单，oldAgreementId需记录，任务单回调时，根据情况回调旧雇员协议（仅非0转0）；
                     if (StringUtils.isNotEmpty(ssEmpTaskBO.getOldAgreementId())) {
                         // 如果新进或转入，且险种数量改变，则不对旧协议进行关闭处理
 //                        if ((ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_1))
@@ -279,7 +279,7 @@ public class TaskCommonUtils {
 //                                     && SocialSecurityConst.SHANGHAI_CITY_CODE.equals(ssEmpTaskBO.getNewCityCode()) // 新城市编码为上海时，排除转外地任务单
 //                                )
                     if (SocialSecurityConst.SHANGHAI_CITY_CODE.equals(ssEmpTaskBO.getNewCityCode()) // 新城市编码为上海时，排除转外地任务单
-                        && (ssEmpTaskBO.getSocialStartAndStop() == null || !ssEmpTaskBO.getSocialStartAndStop()) // 只出不进时（通常只有非0转0），排除一出一进的任务单
+                        && (ssEmpTaskBO.getSocialStartAndStop() == null || !ssEmpTaskBO.getSocialStartAndStop()) // 只出不进（或只进不出）时（通常有调整基数或比例、非0转0、0转非0），排除一出一进的任务单(调整模板)
                             ) {
                             afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
                             afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(ssEmpTaskBO.getBusinessInterfaceId())); //missionId
