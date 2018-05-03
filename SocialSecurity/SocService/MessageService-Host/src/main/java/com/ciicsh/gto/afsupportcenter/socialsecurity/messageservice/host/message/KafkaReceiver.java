@@ -241,6 +241,7 @@ public class KafkaReceiver {
                 try {
 
                     Integer taskCategory = 0;
+                    String oldAgreementId = null;
                     SsEmpTaskBO ssEmpTaskBO = new SsEmpTaskBO();
                     ssEmpTaskBO.setBusinessInterfaceId(paramMap.get("oldEmpAgreementId").toString());
                     //查询旧的任务类型保存到新的任务单
@@ -462,7 +463,7 @@ public class KafkaReceiver {
             }
 
             //保存雇员任务单表数据
-            ssEmpTaskFrontService.saveSsEmpTask(taskMsgDTO, socialType, processCategory, isChange, oldAgreementId, dto, afCompanyDetailResponseDTO);
+            ssEmpTaskFrontService.saveSsEmpTask(taskMsgDTO, socialType, processCategory, isChange, oldAgreementId, dto, afCompanyDetailResponseDTO, cityCodeMap);
         } catch (Exception e) {
             logApiUtil.info(LogMessage.create().setTitle(LogInfo.SOURCE_MESSAGE.getKey()+"#"+"saveSsEmpTask").setContent(e.getMessage()));
         }
