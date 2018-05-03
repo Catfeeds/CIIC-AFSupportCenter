@@ -227,54 +227,83 @@ public class TaskCommonUtils {
 
                     // 以下为调整前的费用段处理：
                     // 如果oldAgreementId存在时，则要回调接口，通知前道关闭费用段
+                    // 调整类别任务单，只发一个消息（新旧雇员协议在同一任务单中记录），oldAgreementId需记录，任务单回调时，同时需回调新旧雇员协议；
+                    // 非调整类别的SOCIAL_NEW,FUND_NEW,ADDED_FUND_NEW类型的任务单，social_startAndStop为true，oldAgreementId一概不记录，任务单回调时，不回调旧雇员协议，仅回调新雇员协议；
+                    // 不为true，则oldAgreementId需记录，任务单回调时，同时需回调新旧雇员协议；
+                    // 当SOCIAL_STOP,FUND_STOP,ADDED_FUND_STOP类型的任务单，oldAgreementId需记录，任务单回调时，根据情况回调旧雇员协议（仅非0转0）；
                     if (StringUtils.isNotEmpty(ssEmpTaskBO.getOldAgreementId())) {
-                        afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
-                        afEmpSocialUpdateDateDTO.setCompanyId(ssEmpTaskBO.getCompanyId());//企业Id
-                        afEmpSocialUpdateDateDTO.setItemCode(ssEmpBaseDetail.getSsType());//社保险种
-                        afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(ssEmpBaseDetail.getComAmount());
-                        afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(ssEmpBaseDetail.getEmpAmount());
+                        // 如果新进或转入，且险种数量改变，则不对旧协议进行关闭处理
+//                        if ((ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_1))
+//                            || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_2)))
+//                            && ssEmpTaskBO.isSocCountChange()) {
+////                            continue;
+//                        } else {
+                            afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
+                            afEmpSocialUpdateDateDTO.setCompanyId(ssEmpTaskBO.getCompanyId());//企业Id
+                            afEmpSocialUpdateDateDTO.setItemCode(ssEmpBaseDetail.getSsType());//社保险种
+//                        afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(ssEmpBaseDetail.getComAmount());
+//                        afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(ssEmpBaseDetail.getEmpAmount());
 
-                        // 如果是更正新增
-                        if (isNewChange) {
-                            LocalDate startMonthDate = LocalDate.parse(ssEmpTaskBO.getOldSsEmpTask().getStartMonth() + "01", yyyyMMddFormatter);
-                            // 关闭日期为起缴月的前一个月的最后一天
-                            afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(startMonthDate.minusDays(1).format(yyyyMMddFormatter)));
-                        } else if (StringUtils.isNotEmpty(ssEmpTaskBO.getHandleMonth())) {
-                            LocalDate handleMonthDate = LocalDate.parse(ssEmpTaskBO.getHandleMonth() + "01", yyyyMMddFormatter);
-                            // 关闭日期为汇缴月的前一个月的最后一天
-                            afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(handleMonthDate.minusDays(1).format(yyyyMMddFormatter)));
-                        }
+                            // 如果是更正新增
+                            if (isNewChange) {
+                                LocalDate startMonthDate = LocalDate.parse(ssEmpTaskBO.getOldSsEmpTask().getStartMonth() + "01", yyyyMMddFormatter);
+                                // 关闭日期为起缴月的前一个月的最后一天
+                                afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(startMonthDate.minusDays(1).format(yyyyMMddFormatter)));
+                            } else if (ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_3))) {
+                                LocalDate startMonthDate = LocalDate.parse(dataStartMonth + "01", yyyyMMddFormatter);
+                                // 关闭日期为起缴月的前一个月的最后一天
+                                afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(startMonthDate.minusDays(1).format(yyyyMMddFormatter)));
+                            } else if (StringUtils.isNotEmpty(ssEmpTaskBO.getHandleMonth())) {
+                                LocalDate handleMonthDate = LocalDate.parse(ssEmpTaskBO.getHandleMonth() + "01", yyyyMMddFormatter);
+                                // 关闭日期为汇缴月的前一个月的最后一天
+                                afEmpSocialUpdateDateDTO.setEndConfirmDate(DateKit.toDate(handleMonthDate.minusDays(1).format(yyyyMMddFormatter)));
+                            }
 
-                        afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(ssEmpTaskBO.getOldAgreementId()));
-                        paramsList.add(afEmpSocialUpdateDateDTO);
+                            afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(ssEmpTaskBO.getOldAgreementId()));
+                            paramsList.add(afEmpSocialUpdateDateDTO);
+//                        }
 
                         // 如果oldAgreementId存在，且是转出或封存时，说明是调整非0转0
-                        if (ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_5))
-                            || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_6))
-                            || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_3))
-                            || isNewChange
+//                        if (isNewChange
+//                                || (
+//                                    (
+//                                        ((ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_5))
+//                                            || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_6)))
+//                                            && !ssEmpTaskBO.isSocCountChange())  // 转出或封存，且险种数量未变时（非险种数量改变时的转出或封存，此时通常为0转0或上海转外地）
+//                                        || ((ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_1))
+//                                            || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_2)))
+//                                            && ssEmpTaskBO.isSocCountChange())   // 新进或转入，且险种数量改变时（险种数量改变时的新进或转入）
+//                                        || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_3))
+//                                    )
+//                                     && SocialSecurityConst.SHANGHAI_CITY_CODE.equals(ssEmpTaskBO.getNewCityCode()) // 新城市编码为上海时，排除转外地任务单
+//                                )
+                    if (SocialSecurityConst.SHANGHAI_CITY_CODE.equals(ssEmpTaskBO.getNewCityCode()) // 新城市编码为上海时，排除转外地任务单
+                        && (ssEmpTaskBO.getSocialStartAndStop() == null || !ssEmpTaskBO.getSocialStartAndStop()) // 只出不进（或只进不出）时（通常有调整基数或比例、非0转0、0转非0），排除一出一进的任务单(调整模板)
                             ) {
                             afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
                             afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(ssEmpTaskBO.getBusinessInterfaceId())); //missionId
                             afEmpSocialUpdateDateDTO.setCompanyId(ssEmpTaskBO.getCompanyId());//企业Id
                             afEmpSocialUpdateDateDTO.setItemCode(ssEmpBaseDetail.getSsType());//社保险种
 
-                            if (ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_3)) || isNewChange) {
-                                afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(ssEmpBaseDetail.getComAmount());
-                                afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(ssEmpBaseDetail.getEmpAmount());
-                            } else {
+                            if ( ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_5))
+                                || ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_6))) {
                                 // 此时需要回调一个只有开始确认时间的，金额为0的费用段
                                 afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(BigDecimal.ZERO);
                                 afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(BigDecimal.ZERO);
-                            }
 
-                            // 如果是更正新增
-                            if (isNewChange) {
-                                afEmpSocialUpdateDateDTO.setStartConfirmDate(stringTranserDate(dataStartMonth));
-                            } else {
                                 if (StringUtils.isNotEmpty(ssEmpTaskBO.getHandleMonth())) {
                                     afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(ssEmpTaskBO.getHandleMonth() + "01"));
                                 }
+                            } else {
+                                afEmpSocialUpdateDateDTO.setCompanyConfirmAmount(ssEmpBaseDetail.getComAmount());
+                                afEmpSocialUpdateDateDTO.setPersonalConfirmAmount(ssEmpBaseDetail.getEmpAmount());
+
+//                                if (ssEmpTaskBO.getTaskCategory().equals(Integer.parseInt(SocialSecurityConst.TASK_TYPE_3))
+//                                    || isNewChange) {
+                                afEmpSocialUpdateDateDTO.setStartConfirmDate(stringTranserDate(dataStartMonth));
+//                                } else if (StringUtils.isNotEmpty(ssEmpTaskBO.getHandleMonth())) {
+//                                    afEmpSocialUpdateDateDTO.setStartConfirmDate(DateKit.toDate(ssEmpTaskBO.getHandleMonth() + "01"));
+//                                }
                             }
                             afEmpSocialUpdateDateDTO.setEmpAgreementId(Long.valueOf(ssEmpTaskBO.getBusinessInterfaceId()));
                             paramsList.add(afEmpSocialUpdateDateDTO);

@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo;
@@ -11,6 +12,7 @@ import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailRespo
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface HfEmpTaskService extends IService<HfEmpTask> {
 
@@ -47,7 +49,7 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @param dto
      * @return
      */
-    boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, AfEmployeeInfoDTO dto);
+    boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, AfEmployeeInfoDTO dto, AfEmpSocialDTO socialDTO);
 
     /**
      * 添加数据到雇员任务单表
@@ -59,8 +61,8 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @return
      * @throws Exception
      */
-    boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory,Integer processCategory,Integer taskCategory, String oldAgreementId, Integer isChange,
-                         AfEmployeeInfoDTO dto, AfCompanyDetailResponseDTO afCompanyDetailResponseDTO) throws Exception;
+    boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer processCategory, Integer taskCategory, String oldAgreementId, Integer isChange,
+                       Map<String, Object> cityCodeMap, AfEmployeeInfoDTO dto, AfEmpSocialDTO socialDTO, AfCompanyDetailResponseDTO afCompanyDetailResponseDTO) throws Exception;
 
 
     /**
@@ -69,4 +71,6 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
      * @param ssEmpTask
      */
     List<HfEmpTask> queryByTaskId(HfEmpTask ssEmpTask);
+
+    AfEmpSocialDTO getAfEmpSocialByType(List<AfEmpSocialDTO> socialDTOS, String fundCategory);
 }

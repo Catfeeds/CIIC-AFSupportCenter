@@ -345,6 +345,16 @@ public class HfEmpTask implements Serializable {
      */
     @TableField("service_center")
     private String serviceCenter;
+    /**
+     * 旧城市编码
+     */
+    @TableField("old_city_code")
+    private String oldCityCode;
+    /**
+     * 新城市编码
+     */
+    @TableField("new_city_code")
+    private String newCityCode;
 
 	public Long getEmpTaskId() {
 		return empTaskId;
@@ -834,6 +844,22 @@ public class HfEmpTask implements Serializable {
         this.serviceCenter = serviceCenter;
     }
 
+    public String getOldCityCode() {
+        return oldCityCode;
+    }
+
+    public void setOldCityCode(String oldCityCode) {
+        this.oldCityCode = oldCityCode;
+    }
+
+    public String getNewCityCode() {
+        return newCityCode;
+    }
+
+    public void setNewCityCode(String newCityCode) {
+        this.newCityCode = newCityCode;
+    }
+
     @Override
 	public String toString() {
 		return "HfEmpTask{" +
@@ -898,6 +924,8 @@ public class HfEmpTask implements Serializable {
             ", leaderShipName=" + leaderShipName +
             ", serviceCenterId=" + serviceCenterId +
             ", serviceCenter=" + serviceCenter +
+            ", oldCityCode=" + oldCityCode +
+            ", newCityCode=" + newCityCode +
 			"}";
 	}
 }

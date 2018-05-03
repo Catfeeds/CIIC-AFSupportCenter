@@ -398,5 +398,15 @@
         where eoop.employee_id=#{employeeId} and eoop.company_id =#{companyId}
         ORDER BY eoop.in_date desc LIMIT 1
     </select>
-    
+
+    <select id="getEmpAccountByEmployeeId" resultType="string">
+        SELECT DISTINCT(hf_emp_account)
+        FROM hf_emp_archive
+        <where>
+            is_active = 1
+            AND employee_id = #{employeeId}
+            AND hf_type = #{hfType}
+            AND hf_emp_account IS NOT NULL
+        </where>
+    </select>
 </mapper>

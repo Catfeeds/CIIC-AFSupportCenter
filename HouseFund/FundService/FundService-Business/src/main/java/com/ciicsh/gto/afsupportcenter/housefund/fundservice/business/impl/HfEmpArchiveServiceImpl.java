@@ -97,4 +97,9 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
     public Map queryHfEmpArchiveByEmpTaskIds(List<Long> empTaskIdList) {
         return baseMapper.queryHfEmpArchiveByEmpTaskIds(empTaskIdList);
     }
+
+    @Override
+    public String getEmpAccountByEmployeeId(String employeeId, Integer hfType) {
+        return baseMapper.getEmpAccountByEmployeeId(employeeId, hfType);
+    }
 }

@@ -163,6 +163,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         bo.setServiceCenterId(ssEmpTask.getServiceCenterId());
         bo.setServiceCenter(ssEmpTask.getServiceCenter());
         bo.setIsChange(ssEmpTask.getIsChange());
+        bo.setOldCityCode(ssEmpTask.getOldCityCode());
+        bo.setNewCityCode(ssEmpTask.getNewCityCode());
+        bo.setSocialStartAndStop(ssEmpTask.getSocialStartAndStop());
 
         if (bo.getEmpArchiveId() == null) {
             Wrapper<SsEmpArchive> wrapper = new EntityWrapper<>();
@@ -1387,6 +1390,17 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             bo.setTaskCategory(taskCategory);
         }
     }
+
+//    private void setDetailCountNoChange(SsEmpTaskBO bo) {
+//        if (StringUtils.isNotEmpty(bo.getOldAgreementId()) && StringUtils.isNotEmpty(bo.getBusinessInterfaceId())) {
+//            Integer oldCount = ssEmpTaskFrontService.getEmpTaskDetailCount(bo.getOldAgreementId());
+//            Integer newCount = ssEmpTaskFrontService.getEmpTaskDetailCount(bo.getBusinessInterfaceId());
+//
+//            if (oldCount != null && !oldCount.equals(newCount)) {
+//                bo.setSocCountChange(true);
+//            }
+//        }
+//    }
 
     private void checkStartMonth(SsEmpTaskBO bo) {
         YearMonth startMonthDate = YearMonth.parse(bo.getStartMonth(), formatter);

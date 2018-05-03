@@ -65,6 +65,9 @@
         <result column="leader_ship_name" property="leaderShipName" />
         <result column="service_center_id" property="serviceCenterId" />
         <result column="service_center" property="serviceCenter" />
+        <result column="old_city_code" property="oldCityCode" />
+        <result column="new_city_code" property="newCityCode" />
+        <result column="social_start_and_stop" property="socialStartAndStop" />
     </resultMap>
 
     <!-- 通用查询映射结果 -->
