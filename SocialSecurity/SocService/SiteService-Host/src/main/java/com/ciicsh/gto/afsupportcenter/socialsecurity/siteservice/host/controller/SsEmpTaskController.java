@@ -23,13 +23,14 @@ import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.logservice.bizclient.dto.LogContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.formula.functions.T;
@@ -69,7 +70,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     @Autowired
     private AmEmpTaskOfSsService amEmpTaskOfSsService;
     @Autowired
-    private LogService logService;
+    private LogApiUtil logApiUtil;
 
     /**
      * 雇员日常操作查询
@@ -299,7 +300,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             business.saveHandleData(p, true);
         });
         long endTime = new Date().getTime();
-        logService.info(LogContext.of().setTitle("本地社保雇员任务单批量办理").setTextContent("cost time(ms): " + (endTime - beginTime)));
+        logApiUtil.info(LogMessage.create().setTitle("本地社保雇员任务单批量办理").setContent("cost time(ms): " + (endTime - beginTime)));
         return JsonResultKit.of(true);
     }
 
