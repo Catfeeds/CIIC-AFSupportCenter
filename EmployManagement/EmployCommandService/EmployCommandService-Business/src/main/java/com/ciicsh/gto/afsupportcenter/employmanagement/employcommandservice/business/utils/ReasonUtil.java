@@ -61,6 +61,7 @@ public class ReasonUtil {
         tg_param.put("14","转人员性质无需退工");
         tg_param.put("15","退工成功,改社保");
         tg_param.put("16","重复任务单");
+        tg_param.put("17","退工自办");
 
 
         yg_param.put("0","空");
