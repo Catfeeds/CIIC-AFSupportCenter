@@ -228,6 +228,10 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
             {
                 return 1;
             }
+            if("17".equals(resignFeedback))
+            {
+                return 1;
+            }
         }
 
         return 0;
