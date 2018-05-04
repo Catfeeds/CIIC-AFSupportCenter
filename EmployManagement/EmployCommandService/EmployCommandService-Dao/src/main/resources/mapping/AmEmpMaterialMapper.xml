@@ -32,10 +32,6 @@
 
     </resultMap>
 
-    <resultMap id="BaseResultMaterialMapDTO" extends="BaseResultMap"
-               type="com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.api.dto.MaterialDTO">
-    </resultMap>
-
     <select id="queryAmEmpMaterial" resultMap="BaseResultMapDTO">
         SELECT  * from  am_emp_material where is_active = 1 and  emp_task_id = #{empTaskId}  and operate_type = #{operateType}
     </select>
@@ -44,7 +40,7 @@
         SELECT  material_name  from  cmy_af_material_dic  where material_type = '2'
     </select>
 
-    <select id="queryMaterialByTaskId" resultMap="BaseResultMaterialMapDTO">
+    <select id="queryMaterialByTaskId" resultMap="BaseResultMapDTO">
         SELECT  material_name,receive_name,receive_date,receive_id  from  am_emp_material where is_active = 1 and  emp_task_id = #{empTaskId}
     </select>
 

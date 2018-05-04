@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bus
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.AmRemarkBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.IAmRemarkService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.dao.AmRemarkMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.entity.AmRemark;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -27,6 +28,12 @@ public class AmRemarkServiceImpl extends ServiceImpl<AmRemarkMapper, AmRemark> i
 
     @Override
     public boolean deleteAmRemark(Long remarkId) {
+        AmRemark amRemark = this.selectById(remarkId);
+        String userId = ReasonUtil.getUserId();
+        if(!userId.equals(amRemark.getCreatedBy()))
+        {
+            return false;
+        }
        int i =  baseMapper.deleteAmRemark(remarkId);
        if(i>0){
            return  true;
