@@ -700,6 +700,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 bo.setListEmpBasePeriod(supplementPayList);
             }
         }
+        bo.setTaskCategory(Integer.valueOf(SocialSecurityConst.TASK_TYPE_3));
     }
 
     /**
