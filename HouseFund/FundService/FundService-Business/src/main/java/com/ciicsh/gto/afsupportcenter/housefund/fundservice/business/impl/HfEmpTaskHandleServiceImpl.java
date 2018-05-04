@@ -1974,7 +1974,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 
                     // 只出不进（或只进不出）时（通常有调整基数或比例、非0转0、0转非0），调整产生的任务单无一进一出的场景
                     if (SocialSecurityConst.SHANGHAI_CITY_CODE.equals(hfEmpTask.getNewCityCode())
-                        && hfEmpTask.getTaskCategory() != HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT // 翻牌转出只需回调旧雇员协议
+                        && hfEmpTask.getTaskCategory() != HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_OUT
+                        && hfEmpTask.getTaskCategory() != HfEmpTaskConstant.TASK_CATEGORY_FLOP_CLOSE      // 翻牌转出(封存)只需回调旧雇员协议
                         ) {
                         afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
                         afEmpSocialUpdateDateDTO.setCompanyId(companyId);
