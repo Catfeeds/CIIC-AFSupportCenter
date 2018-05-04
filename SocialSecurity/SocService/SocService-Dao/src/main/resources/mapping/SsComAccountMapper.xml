@@ -127,7 +127,7 @@
             <result column="submit_remark" property="submitRemark"/>
             <result column="modified_time" property="modifiedTime"/>
             <result column="modified_by" property="modifiedBy"/>
-
+            <result column="modified_display_name" property="modifiedDisplayName"/>
         </collection>
     </resultMap>
     <!--通过雇员任务单查询账户信息-->
@@ -224,7 +224,8 @@
             sct.submit_time,
             sct.submit_remark,
             sct.modified_time,
-            sct.modified_by
+            sct.modified_by,
+            sct.modified_display_name
         FROM
             ss_com_account sca
         LEFT JOIN
@@ -234,6 +235,7 @@
                     com_task_id,
                     task_category,
                     modified_by,
+                    modified_display_name,
                     modified_time,
                     task_status,
                     submit_time,
