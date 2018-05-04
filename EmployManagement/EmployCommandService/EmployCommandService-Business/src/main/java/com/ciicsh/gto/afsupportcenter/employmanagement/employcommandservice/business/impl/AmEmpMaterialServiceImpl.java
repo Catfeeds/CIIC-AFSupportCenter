@@ -79,15 +79,24 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
 
     @Override
     public List<MaterialDTO> queryMaterialByTaskId(Long empTaskId) {
-        List<MaterialDTO> list = baseMapper.queryMaterialByTaskId(empTaskId);
+        List<AmEmpMaterialBO> list = baseMapper.queryMaterialByTaskId(empTaskId);
 
-        for(MaterialDTO materialDTO:list){
-            DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            if(materialDTO.getReceiveDate()!=null){
-                materialDTO.setReceiveDateStr(df.format(materialDTO.getReceiveDate()));
+        List<MaterialDTO> materialDTOList = new ArrayList<>();
+
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        for(AmEmpMaterialBO amEmpMaterialBO:list){
+
+            MaterialDTO materialDTO = new MaterialDTO();
+            if(amEmpMaterialBO.getReceiveDate()!=null){
+                materialDTO.setReceiveDateStr(df.format(amEmpMaterialBO.getReceiveDate()));
             }
+            materialDTO.setReceiveId(amEmpMaterialBO.getReceiveId());
+            materialDTO.setMaterialName(amEmpMaterialBO.getMaterialName());
+            materialDTO.setReceiveName(amEmpMaterialBO.getReceiveName());
+
+            materialDTOList.add(materialDTO);
         }
-        return  list;
+        return  materialDTOList;
     }
 
     @Override
