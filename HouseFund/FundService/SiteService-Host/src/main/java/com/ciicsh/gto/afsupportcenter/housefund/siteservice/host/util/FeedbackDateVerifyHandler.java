@@ -74,7 +74,7 @@ public class FeedbackDateVerifyHandler implements IExcelVerifyHandler<IExcelMode
                             simpleDateFormat.parse(fieldValue);
                         } catch (ParseException e) {
                             rtn.setSuccess(false);
-                            rtn.setMsg("回单日期格式不正确（正确格式：YYYY-MM-DD）");
+                            rtn.setMsg("回单日期格式不正确（请设置为文本类型，且正确格式：YYYY-MM-DD）");
                         }
                     }
                 } catch (IllegalAccessException e) {
