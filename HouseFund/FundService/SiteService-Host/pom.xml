@@ -86,6 +86,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.ciicsh.gt1.commonservice</groupId>
+            <artifactId>gt1.commonservice.logservice-client</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.ciicsh.gt1</groupId>
             <artifactId>redis-manager</artifactId>
         </dependency>

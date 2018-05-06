@@ -26,9 +26,9 @@
             <version>1.0.0</version>
         </dependency>
         <dependency>
-            <groupId>com.ciicsh.gt1.afsupportcenter</groupId>
-            <artifactId>employcommandservice-api</artifactId>
-            <version>1.0.0</version>
+            <groupId>com.ciicsh.gt1.afsupportcenter.employ</groupId>
+            <artifactId>gt1.afsupportcenter.employ.commandservice-api</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.dianping.cat</groupId>

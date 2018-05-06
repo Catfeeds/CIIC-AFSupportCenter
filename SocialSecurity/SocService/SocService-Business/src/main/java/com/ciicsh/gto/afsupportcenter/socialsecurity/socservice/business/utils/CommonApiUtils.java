@@ -8,17 +8,15 @@ import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRe
 import com.ciicsh.gto.basicdataservice.api.DicItemServiceProxy;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.basicdataservice.api.dto.EmptyDicItemDTO;
-import com.ciicsh.gto.commonservice.util.dto.Result;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeSearchDTO;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.Page;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
 import com.ciicsh.gto.settlementcenter.invoicecommandservice.api.ComeAccountCommandProxy;
 import com.ciicsh.gto.settlementcenter.invoicecommandservice.api.dto.JsonResult;
 import com.ciicsh.gto.sheetservice.api.SheetServiceProxy;
+import com.ciicsh.gto.sheetservice.api.dto.Result;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,12 +58,13 @@ public class CommonApiUtils {
 
     /**
      * 调用客服中心的完成任务接口
+     *
      * @param requestDTO
      * @return
      */
     public Result completeTask(@RequestBody TaskRequestDTO requestDTO) throws Exception {
         logger.info("customer系统调用完成任务接口：" + requestDTO.toString());
-        com.ciicsh.gto.commonservice.util.dto.Result restResult = sheetServiceProxy.completeTask(requestDTO);
+        Result restResult = sheetServiceProxy.completeTask(requestDTO);
         logger.info("customer系统收到完成任务接口返回：" + String.valueOf("code:" + restResult.getCode() + "message:") + restResult.getMessage());
         return restResult;
     }
@@ -116,31 +115,32 @@ public class CommonApiUtils {
      * @param var1 传入employeeId和业务类型
      * @return
      */
-    public com.ciicsh.gto.employeecenter.util.JsonResult<EmployeeInfoDTO> getEmployeeInfo(
+    public com.ciicsh.gto.employeecenter.apiservice.api.dto.JsonResult<EmployeeInfoDTO> getEmployeeInfo(
         @RequestBody EmployeeQueryDTO var1) throws Exception {
         return employeeInfoProxy.getEmployeeInfo(var1);
     }
 
     /**
      * 获取进位方式
+     *
      * @param var1
      * @return
      */
-    public com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<GetSSPItemsResposeDTO> getRoundingType(GetSSPItemsRequestDTO var1){
+    public com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<GetSSPItemsResposeDTO> getRoundingType(GetSSPItemsRequestDTO var1) {
         return ssPolicyProxy.getSSPItems(var1);
     }
 
     /**
      * 新增银行账户信息
-     * */
-    public Map<String,String> addBankAccount(Map<String,Object> map){
+     */
+    public Map<String, String> addBankAccount(Map<String, Object> map) {
         JsonResult jr = comeAccountCommandProxy.addAccount(map);
-        Map<String,String> mp= new HashMap<>();
-        mp.put("code",jr.getErrorcode());
-        if(jr.getErrorcode().equals("0")){
-            mp.put("ret",jr.getBankAccountId().toString());
-        }else {
-            mp.put("ret",jr.getErrormsg());
+        Map<String, String> mp = new HashMap<>();
+        mp.put("code", jr.getErrorcode());
+        if (jr.getErrorcode().equals("0")) {
+            mp.put("ret", jr.getBankAccountId().toString());
+        } else {
+            mp.put("ret", jr.getErrormsg());
         }
         return mp;
     }

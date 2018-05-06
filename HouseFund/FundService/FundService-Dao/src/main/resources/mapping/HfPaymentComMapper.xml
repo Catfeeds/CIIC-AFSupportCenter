@@ -186,6 +186,7 @@
             #{item}
         </foreach>
         )
+        AND pa.payment_month= #{paymentMonth}
     </select>
 
     <update id="updatePaymentAccount">

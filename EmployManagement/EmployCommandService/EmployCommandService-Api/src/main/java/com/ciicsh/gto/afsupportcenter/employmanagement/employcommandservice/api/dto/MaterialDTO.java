@@ -21,10 +21,7 @@ public class MaterialDTO {
      * 签收人Id
      */
     private String receiveId;
-    /**
-     * 签收日期
-     */
-    private LocalDate receiveDate;
+
 
     private  String  receiveDateStr;
 
@@ -60,11 +57,5 @@ public class MaterialDTO {
         this.receiveName = receiveName;
     }
 
-    public LocalDate getReceiveDate() {
-        return receiveDate;
-    }
 
-    public void setReceiveDate(LocalDate receiveDate) {
-        this.receiveDate = receiveDate;
-    }
 }

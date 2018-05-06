@@ -84,8 +84,8 @@
 
         <dependency>
             <groupId>com.ciicsh.gt1.afsupportcenter.socialsecurity</groupId>
-            <artifactId>afsupportcenter-socialsecurity-socservice-api</artifactId>
-            <version>1.0.0</version>
+            <artifactId>gt1.afsupportcenter.socialsecurity.socservice-api</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -103,8 +103,8 @@
             <artifactId>common-entity</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.ciicsh.gt1.logservice</groupId>
-            <artifactId>logservice-api</artifactId>
+            <groupId>com.ciicsh.gt1.commonservice</groupId>
+            <artifactId>gt1.commonservice.logservice-client</artifactId>
         </dependency>
     </dependencies>
 

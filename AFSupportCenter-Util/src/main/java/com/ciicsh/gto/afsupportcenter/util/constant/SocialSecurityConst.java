@@ -20,9 +20,11 @@ public interface SocialSecurityConst {
     public static final String REMIT_WAY_KEY = "RemitWay";
     public static final String PAYMENT_TYPE_KEY = "PaymentType";
 //    public static final String HF_TASK_CATEGORY_KEY = "HFTaskCategory";
+    public static final String EMP_ARCHIVE_STATUS = "EmpArchiveStatus";
 
     String CENTER_BASIC_COM_ACCOUNT = "881383287";
     String CENTER_ADDED_COM_ACCOUNT = "881383288";
+    String SHANGHAI_CITY_CODE = "310000";
 
     //结算区县
     public static final Map<String, String> DISTRICT_MAP = new HashMap<String, String>() {
@@ -342,6 +344,16 @@ public interface SocialSecurityConst {
             put("9", "调整封存");
             put("10", "销户");
             put("11", "差额补缴");
+        }
+    };
+
+    // 雇员档案状态状态 : 0-未办理  1-已办  2-已做 3-封存
+    Map<String, String> EMP_ARCHIVE_STATUS_MAP = new HashMap<String, String>() {
+        {
+            put("0", "未办理");
+            put("1", "已办");
+            put("2", "已做");
+            put("3", "封存");
         }
     };
 

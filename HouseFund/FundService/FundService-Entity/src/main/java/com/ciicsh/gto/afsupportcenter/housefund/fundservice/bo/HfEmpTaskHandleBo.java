@@ -143,10 +143,10 @@ public class HfEmpTaskHandleBo implements Serializable {
     }
 
     public String getBasicArchiveStatusName() {
-        return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.basicArchiveStatus), DictUtil.TYPE_VALUE_SOCIAL_SECURITY_STATUS, false);
+        return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.basicArchiveStatus), SocialSecurityConst.EMP_ARCHIVE_STATUS, false);
     }
 
     public String getAddedArchiveStatusName() {
-        return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.addedArchiveStatus), DictUtil.TYPE_VALUE_SOCIAL_SECURITY_STATUS, false);
+        return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.addedArchiveStatus), SocialSecurityConst.EMP_ARCHIVE_STATUS, false);
     }
 }

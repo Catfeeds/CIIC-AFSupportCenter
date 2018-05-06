@@ -77,61 +77,6 @@
                 <scope>import</scope>
             </dependency>
 
-            <!--&lt;!&ndash; spring cloud eureka &ndash;&gt;-->
-            <!--<dependency>-->
-            <!--<groupId>org.springframework.cloud</groupId>-->
-            <!--<artifactId>spring-cloud-starter-eureka</artifactId>-->
-            <!--</dependency>-->
-            <!--&lt;!&ndash; spring cloud feign &ndash;&gt;-->
-            <!--<dependency>-->
-            <!--<groupId>org.springframework.cloud</groupId>-->
-            <!--<artifactId>spring-cloud-starter-feign</artifactId>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-actuator</artifactId>-->
-            <!--</dependency>-->
-            <!--&lt;!&ndash;spring boot依赖&ndash;&gt;-->
-            <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-aop</artifactId>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.springframework.cloud</groupId>-->
-            <!--<artifactId>spring-cloud-starter-bus-kafka</artifactId>-->
-            <!--</dependency>-->
-
-            <!--<dependency>-->
-            <!--<groupId>org.springframework.cloud</groupId>-->
-            <!--<artifactId>spring-cloud-starter-stream-kafka</artifactId>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-web</artifactId>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-cache</artifactId>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-validation</artifactId>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-jdbc</artifactId>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-test</artifactId>-->
-            <!--&lt;!&ndash; <scope>test</scope> &ndash;&gt;-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-devtools</artifactId>-->
-            <!--<optional>true</optional>-->
-            <!--</dependency>-->
-
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
@@ -191,23 +136,6 @@
                 <version>${ehcache.version}</version>
             </dependency>
 
-            <!-- jackson -->
-            <!--<dependency>-->
-            <!--<groupId>com.fasterxml.jackson.core</groupId>-->
-            <!--<artifactId>jackson-core</artifactId>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>com.fasterxml.jackson.module</groupId>-->
-            <!--<artifactId>jackson-module-parameter-names</artifactId>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>com.fasterxml.jackson.datatype</groupId>-->
-            <!--<artifactId>jackson-datatype-jdk8</artifactId>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>com.fasterxml.jackson.datatype</groupId>-->
-            <!--<artifactId>jackson-datatype-jsr310</artifactId>-->
-            <!--</dependency>-->
             <!--文件上传-->
             <dependency>
                 <groupId>com.ciicsh.gt1</groupId>
@@ -216,8 +144,8 @@
             </dependency>
             <dependency>
                 <groupId>com.ciicsh.gt1.commonservice</groupId>
-                <artifactId>sheetservice-api</artifactId>
-                <version>1.0.0</version>
+                <artifactId>gt1.commonservice.sheetservice-api</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <!--cat依赖-->
@@ -263,61 +191,51 @@
 
             <dependency>
                 <groupId>com.ciicsh.gt1.commonservice</groupId>
-                <artifactId>basicdataservice-api</artifactId>
-                <version>1.0.0</version>
+                <artifactId>gt1.commonservice.basicdataservice-api</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ciicsh.gt1.commonservice</groupId>
-                <artifactId>identityservice-api</artifactId>
-                <version>1.0.0</version>
+                <artifactId>gt1.commonservice.identityservice-api</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ciicsh.gt1.settlementcenter</groupId>
-                <artifactId>invoicecommandservice-api</artifactId>
-                <version>1.0.0</version>
+                <artifactId>gt1.settlementcenter.invoicecommandservice-api</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ciicsh.gt1.settlementcenter.payment</groupId>
                 <artifactId>settlementcenter-payment-command-api</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.ciicsh.gt1.companycenter</groupId>
                 <artifactId>gt1.companycenter.commandservice-api</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.ciicsh.gt1.companycenter</groupId>
                 <artifactId>gt1.companycenter.queryservice-api</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.ciicsh.gt1.employeecenter</groupId>
                 <artifactId>gt1.employeecenter.apiservice-api</artifactId>
-                <version>1.0.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.ciicsh.gt1.employeecenter</groupId>
-                <artifactId>employeecenter-util</artifactId>
-                <version>1.0.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.ciicsh.gt1.employeecenter</groupId>
-                <artifactId>apiservice-api</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.ciicsh.gt1.billcenter</groupId>
-                <artifactId>afmodule-commandservice-api</artifactId>
-                <version>1.0.0</version>
+                <artifactId>gt1.billcenter.afmodule-commandservice-api</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.ciicsh.gt1</groupId>
                 <artifactId>redis-manager</artifactId>
-                <version>0.0.3</version>
+                <version>0.0.3-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.projectlombok</groupId>
@@ -327,32 +245,27 @@
             <dependency>
                 <groupId>com.ciicsh.gt1</groupId>
                 <artifactId>common-entity</artifactId>
-                <version>0.0.1</version>
+                <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.ciicsh.gt1.afsystemmanagecenter</groupId>
                 <artifactId>gt1.afsystemmanagecenter.apiservice-api</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.ciicsh.gt1.productcenter</groupId>
                 <artifactId>gt1.productcenter.apiservice-api</artifactId>
-                <version>1.0.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.ciicsh.gt1.logservice</groupId>
-                <artifactId>logservice-api</artifactId>
                 <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.ciicsh.gt1.commonservice</groupId>
-                <artifactId>identityservice-api</artifactId>
-                <version>1.0.0</version>
+                <artifactId>gt1.commonservice.logservice-client</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>com.ciicsh.gt1.productcenter</groupId>
-                <artifactId>gt1.productcenter.apiservice-api</artifactId>
-                <version>1.0.0</version>
+                <groupId>com.ciicsh.gt1.commonservice</groupId>
+                <artifactId>gt1.commonservice.identityservice-api</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>io.springfox</groupId>
@@ -367,7 +280,7 @@
             <dependency>
                 <groupId>com.ciicsh.gt1.salecenter</groupId>
                 <artifactId>gt1.salecenter.apiservice-api</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

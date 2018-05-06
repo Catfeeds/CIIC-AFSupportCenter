@@ -2,7 +2,6 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bus
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.system.AfUserPermissionDTO;
-import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.system.AfUserPermissionRequestDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfUserCompanyRefProxy;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.bo.SalCompanyBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.ISalCompanyService;
@@ -36,19 +35,19 @@ public class SalCompanyServiceImpl extends ServiceImpl<SalCompanyMapper, SalComp
     public PageRows<SalCompanyBO> querySalCompanyList(PageInfo pageInfo) {
         SalCompanyBO salCompanyBO = pageInfo.toJavaObject(SalCompanyBO.class);
 
-        PageRows<SalCompanyBO> result = PageKit.doSelectPage(pageInfo,() -> baseMapper.querySalCompanyList(salCompanyBO));
+        PageRows<SalCompanyBO> result = PageKit.doSelectPage(pageInfo, () -> baseMapper.querySalCompanyList(salCompanyBO));
 
         List<SalCompanyBO> boList = result.getRows();
         // 获取客服经理名字
-        for (SalCompanyBO bo: boList) {
+        for (SalCompanyBO bo : boList) {
             List<AfUserPermissionDTO> list = afUserCompanyRefProxy.getLeaderShipByCompanyId(bo.getCompanyId());
-            if(list != null && list.size() > 0){
+            if (list != null && list.size() > 0) {
                 JsonResult<List<SMDepartmentDTO>> resultDto = SMDepartmentProxy.getDepartmentsOfUser(list.get(0).getLeadershipUserId(), 7);
-                if(resultDto.getData() == null || resultDto.getData().size() == 0){
+                if (resultDto.getData() == null || resultDto.getData().size() == 0) {
                     resultDto = SMDepartmentProxy.getDepartmentsOfUser(list.get(0).getLeadershipUserId(), 6);
                 }
                 List<SMDepartmentDTO> dList = resultDto.getData();
-                if(dList != null && dList.size() > 0){
+                if (dList != null && dList.size() > 0) {
                     bo.setSalManagerName(dList.get(0).getDepartmentName());
                 }
             }

@@ -16,7 +16,6 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.enumeration.ProcessCategory;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.apache.commons.lang.StringUtils;
@@ -47,8 +46,8 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
     private SsEmpTaskMapper ssEmpTaskMapper;
     @Autowired
     private SsEmpArchiveService ssEmpArchiveService;
-    @Autowired
-    LogService logService;
+//    @Autowired
+//    private LogApiUtil logApiUtil;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
@@ -69,11 +68,11 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
     @Override
     public boolean saveEmpTaskTc(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory, Integer processCategory, Integer isChange,
                                  String oldAgreementId, AfEmployeeInfoDTO dto,
-                                 AfCompanyDetailResponseDTO afCompanyDetailResponseDTO) {
+                                 AfCompanyDetailResponseDTO afCompanyDetailResponseDTO, Map<String, Object> cityCodeMap) {
         boolean result = false;
         try {
             //插入数据到雇员任务单表
-            saveSsEmpTask(taskMsgDTO, taskCategory, processCategory, isChange, oldAgreementId, dto, afCompanyDetailResponseDTO);
+            saveSsEmpTask(taskMsgDTO, taskCategory, processCategory, isChange, oldAgreementId, dto, afCompanyDetailResponseDTO, cityCodeMap);
             result = true;
         } catch (Exception e) {
             result = false;
@@ -117,7 +116,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
     @Override
     public boolean saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType, Integer processCategory, Integer isChange,
                                  String oldAgreementId, AfEmployeeInfoDTO dto,
-                                 AfCompanyDetailResponseDTO afCompanyDetailResponseDTO) throws Exception {
+                                 AfCompanyDetailResponseDTO afCompanyDetailResponseDTO, Map<String, Object> cityCodeMap) throws Exception {
         //基本信息
         AfEmployeeCompanyDTO afEmployeeCompanyDTO = dto.getEmployeeCompany();
 
@@ -133,6 +132,20 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         if (oldAgreementId != null) {
             ssEmpTask.setOldAgreementId(oldAgreementId);
         }
+        if (cityCodeMap != null) {
+            if (cityCodeMap.get("oldSocialCityCode") != null) {
+                ssEmpTask.setOldCityCode(cityCodeMap.get("oldSocialCityCode").toString());
+            }
+
+            if (cityCodeMap.get("newSocialCityCode") != null) {
+                ssEmpTask.setNewCityCode(cityCodeMap.get("newSocialCityCode").toString());
+            }
+
+            if (cityCodeMap.get("socialStartAndStop") != null) {
+                ssEmpTask.setSocialStartAndStop(Boolean.valueOf(cityCodeMap.get("socialStartAndStop").toString()));
+            }
+        }
+
         ssEmpTask.setSubmitterId(afEmployeeCompanyDTO.getCreatedBy());
         ssEmpTask.setSalary(afEmployeeCompanyDTO.getSalary());
         ssEmpTask.setSubmitterRemark(afEmployeeCompanyDTO.getRemark());
@@ -266,6 +279,11 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
             }
         }
         return true;
+    }
+
+    @Override
+    public Integer getEmpTaskDetailCount(String businessInterfaceId) {
+        return baseMapper.getEmpTaskDetailCount(businessInterfaceId);
     }
 
     /**

@@ -25,4 +25,13 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
+    <select id="getEmpTaskDetailCount" resultType="integer">
+        SELECT COUNT(DISTINCT setf.item_dic_id)
+        FROM ss_emp_task_front setf
+        INNER JOIN ss_emp_task et ON setf.emp_task_id = et.emp_task_id AND setf.is_active = 1
+        <where>
+            et.is_active = 1
+            AND et.business_interface_id = #{businessInterfaceId}
+        </where>
+    </select>
 </mapper>

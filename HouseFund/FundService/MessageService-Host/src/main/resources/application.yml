@@ -8,7 +8,7 @@ spring:
   application:
     name: support-center-housefund-message-service
   profiles:
-    active: dev
+    active: fat
   cloud:
     stream:
       bindings:

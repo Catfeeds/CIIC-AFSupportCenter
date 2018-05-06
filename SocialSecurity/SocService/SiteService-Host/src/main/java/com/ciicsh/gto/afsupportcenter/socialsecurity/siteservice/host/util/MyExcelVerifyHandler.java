@@ -3,8 +3,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.util;
 import cn.afterturn.easypoi.excel.entity.result.ExcelVerifyHanlderResult;
 import cn.afterturn.easypoi.handler.inter.IExcelModel;
 import cn.afterturn.easypoi.handler.inter.IExcelVerifyHandler;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogContext;
-import com.ciicsh.gto.afsupportcenter.util.logService.LogService;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
@@ -12,10 +12,9 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-public class MyExcelVerifyHandler implements IExcelVerifyHandler<IExcelModel>
-{
+public class MyExcelVerifyHandler implements IExcelVerifyHandler<IExcelModel> {
     @Autowired
-    private LogService logService;
+    private LogApiUtil logApiUtil;
 
     private Map<String, Integer> fieldLengthMap;
     private Map<String, Object> setValueMap;
@@ -26,10 +25,9 @@ public class MyExcelVerifyHandler implements IExcelVerifyHandler<IExcelModel>
     private int orderNum;
 
     /**
-     *
-     * @param fieldLengthMap 特殊限制长度字段Map(特殊限制长度至少大于3)
-     * @param setValueMap 需要设值的字段Map
-     * @param skipFields 跳过字段名称
+     * @param fieldLengthMap  特殊限制长度字段Map(特殊限制长度至少大于3)
+     * @param setValueMap     需要设值的字段Map
+     * @param skipFields      跳过字段名称
      * @param verifyConfigMap 需要校验的字段配置Map
      */
     public MyExcelVerifyHandler(Map<String, Integer> fieldLengthMap, Map<String, Object> setValueMap, List<String> skipFields, Map<String, Object> verifyConfigMap) {
@@ -41,6 +39,7 @@ public class MyExcelVerifyHandler implements IExcelVerifyHandler<IExcelModel>
 
     /**
      * 将大于数据库长度的字段进行裁剪处理
+     *
      * @param model
      */
     @Override
@@ -50,7 +49,9 @@ public class MyExcelVerifyHandler implements IExcelVerifyHandler<IExcelModel>
         if (model.getErrorMsg() != null) {
             for (Field field : model.getClass().getDeclaredFields()) {
                 String fieldName = field.getName();
-                if (skipFields != null && skipFields.contains(fieldName)) continue;
+                if (skipFields != null && skipFields.contains(fieldName)) {
+                    continue;
+                }
                 String fieldValue;
                 try {
                     field.setAccessible(true);
@@ -73,10 +74,12 @@ public class MyExcelVerifyHandler implements IExcelVerifyHandler<IExcelModel>
                         continue;
                     }
 
-                    if (StringUtils.isEmpty(fieldValue)) continue;
+                    if (StringUtils.isEmpty(fieldValue)) {
+                        continue;
+                    }
 
                     if (fieldLengthMap != null) {
-                        Integer fieldLimitLength =  fieldLengthMap.get(fieldName);
+                        Integer fieldLimitLength = fieldLengthMap.get(fieldName);
                         if (fieldLimitLength != null && fieldValue.length() > fieldLimitLength) {
                             fieldValue = fieldValue.substring(0, fieldLimitLength - 3) + "...";
                             field.set(model, fieldValue);
@@ -84,20 +87,23 @@ public class MyExcelVerifyHandler implements IExcelVerifyHandler<IExcelModel>
                         }
                     }
 
-                    if (fieldValue.length() <= DEFAULT_LIMIT_LENGTH) continue;
+                    if (fieldValue.length() <= DEFAULT_LIMIT_LENGTH) {
+                        continue;
+                    }
                     fieldValue = fieldValue.substring(0, DEFAULT_LIMIT_LENGTH - 3) + "...";
                     field.set(model, fieldValue);
                 } catch (IllegalAccessException e) {
-                    LogContext logContext = LogContext.of().setTitle("文件上传")
-                        .setTextContent("上传文件校验并向Model中设值时出现异常(ErrorMsg存在时)")
-                        .setExceptionContent(e);
-                    logService.error(logContext);
+                    LogMessage logMessage = LogMessage.create().setTitle("文件上传")
+                        .setContent("上传文件校验并向Model中设值时出现异常(ErrorMsg存在时)" + e.getMessage());
+                    logApiUtil.error(logMessage);
                 }
             }
         } else {
             for (Field field : model.getClass().getDeclaredFields()) {
                 String fieldName = field.getName();
-                if (skipFields != null && skipFields.contains(fieldName)) continue;
+                if (skipFields != null && skipFields.contains(fieldName)) {
+                    continue;
+                }
                 String fieldValue;
                 try {
                     field.setAccessible(true);
@@ -120,10 +126,9 @@ public class MyExcelVerifyHandler implements IExcelVerifyHandler<IExcelModel>
                         continue;
                     }
                 } catch (IllegalAccessException e) {
-                    LogContext logContext = LogContext.of().setTitle("文件上传")
-                        .setTextContent("上传文件校验并向Model中设值时出现异常(ErrorMsg不存在时)")
-                        .setExceptionContent(e);
-                    logService.error(logContext);
+                    LogMessage logMessage = LogMessage.create().setTitle("文件上传")
+                        .setContent("上传文件校验并向Model中设值时出现异常(ErrorMsg不存在时)" + e.getMessage());
+                    logApiUtil.error(logMessage);
                 }
             }
         }

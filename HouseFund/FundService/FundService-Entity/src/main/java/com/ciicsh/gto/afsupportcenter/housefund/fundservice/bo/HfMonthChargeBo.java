@@ -21,4 +21,5 @@ public class HfMonthChargeBo implements Serializable {
     private String paymentTypes;
     private Integer chgPaymentType;
     private String modifiedBy;
+    private Long exceptEmpTaskId;
 }

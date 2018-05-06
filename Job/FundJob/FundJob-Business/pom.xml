@@ -32,7 +32,7 @@
         </dependency>
         <dependency>
             <groupId>com.ciicsh.gt1.employeecenter</groupId>
-            <artifactId>apiservice-api</artifactId>
+            <artifactId>gt1.employeecenter.apiservice-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.ciicsh.gt1.afsupportcenter</groupId>

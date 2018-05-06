@@ -91,7 +91,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer processCategory,Integer taskCategory, String oldAgreementId, Integer isChange,
-                                AfEmployeeInfoDTO dto, AfCompanyDetailResponseDTO afCompanyDetailResponseDTO) throws Exception {
+                              Map<String, Object> cityCodeMap, AfEmployeeInfoDTO dto, AfEmpSocialDTO socialDTO, AfCompanyDetailResponseDTO afCompanyDetailResponseDTO) throws Exception {
         AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
 
         HfEmpTask hfEmpTask = new HfEmpTask();
@@ -101,6 +101,16 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         // 调整通道或更正通道过来的任务单，都需要加上oldAgreementId，回调前道接口时需使用
         if (oldAgreementId != null) {
             hfEmpTask.setOldAgreementId(oldAgreementId);
+        }
+
+        if (cityCodeMap != null) {
+            if (cityCodeMap.get("oldFundCityCode") != null) {
+                hfEmpTask.setOldCityCode(cityCodeMap.get("oldFundCityCode").toString());
+            }
+
+            if (cityCodeMap.get("newFundCityCode") != null) {
+                hfEmpTask.setNewCityCode(cityCodeMap.get("newFundCityCode").toString());
+            }
         }
 
         if(null != companyDto){
@@ -157,7 +167,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         hfEmpTask.setAmount(new BigDecimal(0));
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
         if(null != socialList && socialList.size() > 0){
-            this.setEmpTask(hfEmpTask,socialList,fundCategory);
+            this.setEmpTask(hfEmpTask,socialDTO,fundCategory);
 
             // 调整或更正的转出或封存时
             if (oldAgreementId != null && (
@@ -193,7 +203,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
      */
     @Transactional(rollbackFor = {Exception.class})
     @Override
-    public boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory,AfEmployeeInfoDTO dto) {
+    public boolean updateEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, AfEmployeeInfoDTO dto, AfEmpSocialDTO socialDTO) {
 
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
         AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
@@ -240,7 +250,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         hfEmpTask.setModifiedTime(LocalDateTime.now());
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
         if(null != socialList && socialList.size() > 0){
-            this.setEmpTask(hfEmpTask,socialList,fundCategory);
+            this.setEmpTask(hfEmpTask,socialDTO,fundCategory);
 
             // 调整或更正的转出或封存时
             if (paramMap.get("oldAgreementId") != null && (
@@ -267,11 +277,11 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
     /**
      * 设置EmpTask的值
      * @param empTask
-     * @param socialDTOS
+     * @param socialDTO
      * @param fundCategory
      */
-    private void setEmpTask(HfEmpTask empTask,List<AfEmpSocialDTO> socialDTOS,String fundCategory){
-        AfEmpSocialDTO socialDTO = this.getAfEmpSocialByType(socialDTOS,fundCategory);
+    private void setEmpTask(HfEmpTask empTask,AfEmpSocialDTO socialDTO,String fundCategory){
+//        AfEmpSocialDTO socialDTO = this.getAfEmpSocialByType(socialDTOS,fundCategory);
         if(null != socialDTO){
             empTask.setEmpBase(socialDTO.getPersonalBase());
             if(null != socialDTO.getStartDate()){
@@ -301,7 +311,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
      * @param fundCategory
      * @return
      */
-    private AfEmpSocialDTO getAfEmpSocialByType(List<AfEmpSocialDTO> socialDTOS,String fundCategory){
+    public AfEmpSocialDTO getAfEmpSocialByType(List<AfEmpSocialDTO> socialDTOS,String fundCategory){
         AfEmpSocialDTO socialDTO = null;
         List<AfEmpSocialDTO> fundInfos = socialDTOS
             .stream()
