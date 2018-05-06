@@ -31,4 +31,6 @@ public interface HfAuthorityService {
     HfDataauthWelfareUnitDTO queryHfDataauthWelfareUnit(String userId);
 
     HfDataauthWelfareUnitDTO queryAuthorityTaskCategory(String userId);
+
+    List<HfDepartmentDTO> querySubDepartmentsOfLevel(Integer[] levels);
 }

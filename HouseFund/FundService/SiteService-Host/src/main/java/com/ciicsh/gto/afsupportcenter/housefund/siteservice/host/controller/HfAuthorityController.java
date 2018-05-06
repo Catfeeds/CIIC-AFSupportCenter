@@ -95,7 +95,7 @@ public class HfAuthorityController {
      */
     @RequestMapping("getHfCustomerData")
     public JsonResult<List<CascaderNode>> getCascaderData(){
-        List<HfDepartmentDTO> list = hfAuthorityService.querySubDepartmentsOfLevel();
+        List<HfDepartmentDTO> list = hfAuthorityService.querySubDepartmentsOfLevel(new Integer[] {4, 5});
         List<CascaderNode> cascaderNodes = new ArrayList<>();
         list.forEach((e) -> cascaderNodes.add(TreeNodeConvertKit.DEPT.toCascaderNode(e)));
         return JsonResultKit.ofList(CascderInstall.createCascder(cascaderNodes));
