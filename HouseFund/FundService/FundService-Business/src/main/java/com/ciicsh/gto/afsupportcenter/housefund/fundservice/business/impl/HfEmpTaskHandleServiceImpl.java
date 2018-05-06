@@ -1494,6 +1494,26 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 hfMonthChargeBo.setExceptEmpTaskId(hfEmpTask.getEmpTaskId());
                 int rslt = hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
                 if (rslt > 0) {
+                    HfMonthCharge hfMonthCharge = new HfMonthCharge();
+                    hfMonthCharge.setEmpArchiveId(e.getEmpArchiveId());
+                    hfMonthCharge.setEmpTaskId(hfEmpTask.getEmpTaskId());
+                    hfMonthCharge.setHfMonth(e.getHfMonth());
+                    hfMonthCharge.setSsMonthBelong(endMonth);
+                    hfMonthCharge.setCompanyId(hfEmpTask.getCompanyId());
+                    hfMonthCharge.setEmployeeId(hfEmpTask.getEmployeeId());
+                    hfMonthCharge.setHfType(e.getHfType());
+                    hfMonthCharge.setAmount(e.getAmount());
+                    hfMonthCharge.setComAmount(e.getComAmount());
+                    hfMonthCharge.setEmpAmount(e.getAmountEmp());
+                    hfMonthCharge.setBase(e.getBaseAmount());
+                    hfMonthCharge.setRatio(e.getRatio());
+                    hfMonthCharge.setRatioCom(e.getRatioCom());
+                    hfMonthCharge.setRatioEmp(e.getRatioEmp());
+                    hfMonthCharge.setPaymentType(paymentType);
+                    hfMonthCharge.setCreatedBy(hfEmpTask.getModifiedBy());
+                    hfMonthCharge.setModifiedBy(hfEmpTask.getModifiedBy());
+                    hfMonthCharge.setActive(false);
+                    hfMonthChargeService.insert(hfMonthCharge);
                     continue;
                 }
             }
