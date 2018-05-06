@@ -209,8 +209,7 @@
         AND pc.company_id = ea.company_id
         AND pc.com_account_class_id = ea.com_account_class_id
         WHERE
-            mc.is_active = 1
-        AND mc.payment_type != 1
+            mc.payment_type != 1
         AND pc.payment_id = #{paymentId}
     </select>
     <resultMap id="printRemittedBookRM" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HfPrintRemittedBookBO">
