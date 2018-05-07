@@ -131,6 +131,7 @@
                   INNER JOIN hf_payment_com pc1 ON pc1.com_account_id = ea.com_account_id AND pc1.company_id=ea.company_id
                               AND pc1.company_id=ea.company_id AND pc1.com_account_class_id=ea.com_account_class_id
                 WHERE pc1.is_active=1
+                AND mc.emp_payment_status = 2
                 AND mc.hf_month=#{paymentMonth}
                 AND pc1.payment_id=#{paymentId}
               ) AS 'is_advance'
