@@ -54,4 +54,6 @@ public interface SsMonthChargeMapper extends BaseMapper<SsMonthCharge> {
      * @return 返回删除影响的行数
      */
     Integer delByCondition(@Param("comAccountId") long comAccountId,@Param("ssMonth") String ssMonth,@Param("costCategory") Integer costCategory);
+
+    List<SsMonthCharge> getSsMonthChargeList(@Param("comAccountId") long comAccountId, @Param("ssMonth") String ssMonth);
 }

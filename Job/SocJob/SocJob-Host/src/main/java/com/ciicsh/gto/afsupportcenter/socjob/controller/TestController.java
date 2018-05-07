@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 /**
@@ -29,14 +31,16 @@ public class TestController {
     private PaymentService paymentService;
     @RequestMapping("/createPaymentCom")
     public String createPaymentCom(@RequestParam String ssMonth,@RequestParam Long comAccountId) throws Exception{
-        String paymentMonth = CommonUtils.getPaymentMonth(); //默认当前系统年月
-        if(Optional.ofNullable(ssMonth).isPresent()){
-            paymentMonth=ssMonth;
-        }
+
+//        if(Optional.ofNullable(ssMonth).isPresent()){
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
+//            YearMonth hfMonthDate = YearMonth.parse(ssMonth , formatter);
+//            paymentMonth= hfMonthDate.plusMonths(1).format(formatter);
+//        }
         if(Optional.ofNullable(comAccountId).isPresent()){
-            paymentComService.generateSocPaymentInfo(comAccountId,paymentMonth);
+            paymentComService.generateSocPaymentInfo(comAccountId,ssMonth);
         }else{
-            paymentComService.generateSocPaymentInfo(paymentMonth);
+            paymentComService.generateSocPaymentInfo(ssMonth);
         }
         return "完成";
     }

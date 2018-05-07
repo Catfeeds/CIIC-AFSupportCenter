@@ -33,4 +33,7 @@ public interface SsEmpBasePeriodMapper extends BaseMapper<SsEmpBasePeriod> {
      * @return 雇员正常汇缴社保的基数分段扩展信息
      */
     List<SsEmpBasePeriodExt> getEmpBasePeriodExts(@Param("comAccountId") long comAccountId, @Param("ssMonth") String ssMonth);
+
+
+
 }

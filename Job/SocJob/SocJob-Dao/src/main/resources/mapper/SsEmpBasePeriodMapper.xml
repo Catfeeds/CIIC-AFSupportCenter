@@ -289,15 +289,53 @@
         ss_emp_base_period ebp INNER JOIN ss_emp_archive ea ON ebp.emp_archive_id = ea.emp_archive_id
         WHERE ebp.is_active = 1 AND ea.is_active = 1
         AND ea.com_account_id = #{comAccountId}
-        AND ebp.ss_month != #{ssMonth}
-        AND ( #{ssMonth}>=ebp.ss_month_stop OR ebp.ss_month_stop is NULL)
+        -- job年月大于等于办理月份，表示非标数据需要生成下月的标准数据
+        AND #{ssMonth} >= ebp.ss_month
+        -- job年月大于等于停办的办理月份 或者 停办的办理月份为空 则表示需要生成下月的标准数据
+        AND ( ebp.remit_way = 1 and #{ssMonth} = ebp.end_month)
         AND (
           period_add(#{ssMonth},-1) BETWEEN ebp.start_month AND ebp.end_month
           OR ( period_add(#{ssMonth},-1)>=ebp.start_month AND ebp.end_month is null)
           OR ebp.ss_month_stop=#{ssMonth}
         )
     </select>
+    <!--查询费用段标准数据-->
+   <!-- <select id="getEmpBaseArchiveExts1" resultMap="ExtResultMap">
+        SELECT
+        ebp.emp_base_period_id,
+        ebp.emp_archive_id,
+        ebp.emp_task_id,
+        ebp.base_amount,
+        ebp.start_month,
+        ebp.end_month,
+        ebp.ss_month,
+        ebp.ss_month_stop,
+        ebp.remit_way,
+        ea.customer_id,
+        ea.company_id,
+        ea.employee_id,
+        ea.com_account_id,
+        ea.ss_serial,
+        ea.salary,
+        ea.emp_classify,
+        ea.in_date,
+        ea.out_date,
+        ea.archive_status,
+        ea.archive_task_status
+        FROM
+        ss_emp_base_period ebp INNER JOIN ss_emp_archive ea ON ebp.emp_archive_id = ea.emp_archive_id
+        WHERE ebp.is_active = 1 AND ea.is_active = 1
+        AND ea.com_account_id = #{comAccountId}
+        &#45;&#45; AND ebp.ss_month != #{ssMonth}
+        AND #{ssMonth} >= ebp.ss_month
+        AND ( #{ssMonth} >= ebp.ss_month_stop OR ebp.ss_month_stop is NULL)
+        AND (
+          period_add(#{ssMonth},-1) BETWEEN ebp.start_month AND ebp.end_month
+          OR ( period_add(#{ssMonth},-1)>=ebp.start_month AND ebp.end_month is null)
+          OR ebp.ss_month_stop=#{ssMonth}
+        )
 
+    </select>-->
     <sql id="SsEmpBaseArchiveExt_All_Columns">
         a.emp_base_period_id,
         a.emp_archive_id,
