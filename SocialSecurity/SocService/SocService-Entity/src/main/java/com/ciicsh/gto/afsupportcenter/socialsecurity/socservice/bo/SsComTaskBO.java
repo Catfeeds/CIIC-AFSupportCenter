@@ -160,4 +160,17 @@ public class SsComTaskBO {
     private String isComplete;
 
     private String dispatchMaterial;
+
+    /**
+     * 创建者姓名
+     */
+    private String createdDisplayName;
+    /**
+     * 修改者姓名
+     */
+    private String modifiedDisplayName;
+    /**
+     * 领导ID
+     */
+    private String leaderShipId;
 }
