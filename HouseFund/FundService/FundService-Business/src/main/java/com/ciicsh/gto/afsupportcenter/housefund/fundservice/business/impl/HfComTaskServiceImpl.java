@@ -201,6 +201,8 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else {
+            hfComTask.setStrartHandleDate(null);
         }
         if (StringUtils.isNotBlank(map.get("approvalDate"))) {
             try {
@@ -208,6 +210,8 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else {
+            hfComTask.setSendCheckDate(null);
         }
         if (StringUtils.isNotBlank(map.get("finishDate"))) {
             try {
@@ -215,8 +219,10 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else{
+            hfComTask.setFinishDate(null);
         }
-        hfComTaskMapper.updateById(hfComTask);
+        hfComTaskMapper.updateAllColumnById(hfComTask);
         return true;
 
     }
@@ -247,11 +253,7 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             HfComAccountClass hfComAccountClass = new HfComAccountClass();
             this.updateComAccountClass(map, hfComAccount, hfComAccountClass, hfComTask);
         }
-
-
-        if (StringUtils.isNotBlank(map.get("comAccountName"))) {
-            hfComTask.setComAccountName(map.get("comAccountName"));
-        }
+        hfComTask.setComAccountName(map.get("comAccountName"));
         if (StringUtils.isNotBlank(map.get("paymentType"))) {
             hfComTask.setPaymentWay(Integer.parseInt(map.get("paymentType")));
         }
@@ -270,6 +272,8 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else {
+            hfComTask.setStrartHandleDate(null);
         }
         if (StringUtils.isNotBlank(map.get("approvalDate"))) {
             try {
@@ -277,6 +281,8 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else{
+            hfComTask.setSendCheckDate(null);
         }
         if (StringUtils.isNotBlank(map.get("finishDate"))) {
             try {
@@ -284,11 +290,13 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else {
+            hfComTask.setFinishDate(null);
         }
-        if (StringUtils.isNotBlank(map.get("remark"))) {
-            hfComTask.setRemark(map.get("remark"));
-        }
-        hfComTaskMapper.updateById(hfComTask);
+
+        hfComTask.setRemark(map.get("remark"));
+        hfComTask.setActive(true);
+        hfComTaskMapper.updateAllColumnById(hfComTask);
         return true;
 
     }
@@ -320,9 +328,7 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
         if (StringUtils.isNotBlank(map.get("taskStatus"))) {
             hfComTask.setTaskStatus(Integer.parseInt(map.get("taskStatus")));
         }
-        if (StringUtils.isNotBlank(map.get("endMonth"))) {
-            hfComTask.setEndMonth(map.get("endMonth"));
-        }
+        hfComTask.setEndMonth(map.get("endMonth"));
         if (StringUtils.isNotBlank(map.get("endType"))) {
             hfComTask.setEndType(Integer.parseInt(map.get("endType")));
         }
@@ -332,6 +338,8 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else {
+            hfComTask.setStrartHandleDate(null);
         }
         if (StringUtils.isNotBlank(map.get("approvalDate"))) {
             try {
@@ -339,6 +347,8 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else {
+            hfComTask.setSendCheckDate(null);
         }
         if (StringUtils.isNotBlank(map.get("finishDate"))) {
             try {
@@ -346,11 +356,11 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else{
+            hfComTask.setFinishDate(null);
         }
-        if (StringUtils.isNotBlank(map.get("remark"))) {
-            hfComTask.setRemark(map.get("remark"));
-        }
-        hfComTaskMapper.updateById(hfComTask);
+        hfComTask.setRemark(map.get("remark"));
+        hfComTaskMapper.updateAllColumnById(hfComTask);
         return true;
     }
 
@@ -370,65 +380,83 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
     }
 
     private void updateComAccountClass(Map<String, String> map, HfComAccount hfComAccount, HfComAccountClass hfComAccountClass, HfComTask hfComTask) {
+
+        if (Optional.ofNullable(map.get("comAccountClassId")).isPresent()) {
+            hfComAccountClass=hfComAccountClassMapper.selectById(map.get("comAccountClassId"));
+        }
         hfComAccountClass.setComAccountId(hfComAccount.getComAccountId());
         hfComAccountClass.setHfType(hfComTask.getHfType());
-        if (StringUtils.isNotBlank(map.get("comAccountNum"))) {
-            hfComAccountClass.setHfComAccount(map.get("comAccountNum"));
-        }
+        hfComAccountClass.setHfComAccount(map.get("comAccountNum"));
         if (StringUtils.isNotBlank(map.get("comStartMonth"))) {
             String yearMonthString = map.get("comStartMonth");
             hfComAccountClass.setComStartMonth(yearMonthString);
             hfComAccountClass.setComHfMonth(yearMonthString);
+        }else {
+            hfComAccountClass.setComHfMonth(null);
         }
         hfComAccountClass.setEndMonth(hfComTask.getEndMonth());
         if (StringUtils.isNotBlank(map.get("operateStartMonth"))) {
             String yearMonthString = map.get("operateStartMonth");
             hfComAccountClass.setOperateStartMonth(yearMonthString);
+        }else{
+            hfComAccountClass.setOperateStartMonth(null);
         }
         if (StringUtils.isNotBlank(map.get("accountTempStore"))) {
             hfComAccountClass.setAccountTempStore(Integer.parseInt(map.get("accountTempStore")));
+        }else{
+            hfComAccountClass.setAccountTempStore(null);
         }
         if (StringUtils.isNotBlank(map.get("endType"))) {
             hfComAccountClass.setEndType(Integer.parseInt(map.get("endType")));
+        }else{
+            hfComAccountClass.setEndType(null);
         }
-
         if (HF_COM_TASK_TASK_STATUS_3.equals(hfComTask.getTaskStatus())) { //已完成
             hfComAccountClass.setActive(true);  //设置有效
         } else {
             hfComAccountClass.setActive(false);  //设置初始无效
         }
+        hfComAccountClass.setActive(true);
         hfComAccountClass.setCreatedTime(new Date());
         hfComAccountClass.setCreatedBy(UserContext.getUser().getDisplayName());
         hfComAccountClass.setModifiedBy(UserContext.getUser().getDisplayName());
         hfComAccountClass.setModifiedTime(new Date());
         if (Optional.ofNullable(map.get("comAccountClassId")).isPresent()) {
             hfComAccountClass.setComAccountClassId(Long.valueOf(map.get("comAccountClassId")));
-            hfComAccountClassMapper.updateById(hfComAccountClass);
+            hfComAccountClassMapper.updateAllColumnById(hfComAccountClass);
         } else {
             hfComAccountClassMapper.insert(hfComAccountClass);
         }
     }
 
     private void updateComAccount(Map<String, String> map, HfComAccount hfComAccount, HfComTask hfComTask) {
-        if (StringUtils.isNotBlank(map.get("comAccountName"))) {
-            hfComAccount.setComAccountName(map.get("comAccountName"));
+        if (Optional.ofNullable(map.get("comAccountId")).isPresent()) {
+            hfComAccount = hfComAccountMapper.selectById(map.get("comAccountId"));
         }
+        hfComAccount.setComAccountName(map.get("comAccountName"));
         if (StringUtils.isNotBlank(map.get("paymentWay"))) {
             hfComAccount.setPaymentWay(Integer.parseInt(map.get("paymentWay")));
+        }else{
+            hfComAccount.setPaymentWay(null);
         }
         hfComAccount.setHfAccountType(HF_COM_ACCOUNT_TYPE_INDEPEDENT);//独立户
         if (StringUtils.isNotBlank(map.get("closeDay"))) {
             hfComAccount.setCloseDay(Integer.parseInt(map.get("closeDay")));
+        }else{
+            hfComAccount.setCloseDay(null);
         }
         if (StringUtils.isNotBlank(map.get("uKeyStore"))) {
             hfComAccount.setUkeyStore(Integer.parseInt(map.get("uKeyStore")));
+        }else{
+            hfComAccount.setUkeyStore(null);
         }
         if (StringUtils.isNotBlank(map.get("paymentBank"))) {
             hfComAccount.setPaymentBank(Integer.parseInt(map.get("paymentBank")));
+        }else{
+            hfComAccount.setPaymentBank(null);
         }
-        if (StringUtils.isNotBlank(map.get("comAccountRemark"))) {
-            hfComAccount.setRemark(map.get("comAccountRemark").toString());
-        }
+        hfComAccount.setRemark(map.get("comAccountRemark").toString());
+        hfComAccount.setActive(true);
         hfComAccount.setCreatedTime(new Date());
         hfComAccount.setCreatedDisplayName(UserContext.getUser().getDisplayName());
         hfComAccount.setModifiedDisplayName(UserContext.getUser().getDisplayName());
@@ -447,7 +475,7 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
 
         if (Optional.ofNullable(map.get("comAccountId")).isPresent()) {
             hfComAccount.setComAccountId(Long.valueOf(map.get("comAccountId")));
-            hfComAccountMapper.updateById(hfComAccount);
+            hfComAccountMapper.updateAllColumnById(hfComAccount);
         } else {
             hfComAccountMapper.insert(hfComAccount);
         }

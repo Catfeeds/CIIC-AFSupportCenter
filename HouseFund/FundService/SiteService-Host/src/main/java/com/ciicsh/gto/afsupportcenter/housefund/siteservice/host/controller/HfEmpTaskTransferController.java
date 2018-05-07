@@ -22,6 +22,7 @@ import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.MultiValueMap;
@@ -58,8 +59,8 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
     @Autowired
     LogApiUtil logApiUtil;
 
-
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
+    private static final int MULTI_EXPORT_CREATED_BY_MAX_LENTH = 22;
 
     /**
      * 雇员公积金转移任务查询
@@ -217,11 +218,32 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
 
         TemplateExportParams params = new TemplateExportParams("/template/SH_HF_MULTI_TRANSFER_TMP.xlsx", 0, 1);
         Workbook workbook = ExcelExportUtil.exportExcel(alMap, params);
+        String currentUser = UserContext.getUser().getDisplayName();
+
+        if (currentUser == null) {
+            currentUser = "";
+        }
+        int currentUserLength = currentUser.length();
+
+        if (currentUserLength > MULTI_EXPORT_CREATED_BY_MAX_LENTH) {
+            currentUser = currentUser.substring(0, MULTI_EXPORT_CREATED_BY_MAX_LENTH);
+        } else if (currentUserLength < MULTI_EXPORT_CREATED_BY_MAX_LENTH) {
+            char[] spaces = new char[MULTI_EXPORT_CREATED_BY_MAX_LENTH - currentUserLength];
+            Arrays.fill(spaces, ' ');
+            currentUser = currentUser + String.valueOf(spaces);
+        }
+
         for (int i = 0; i < 2; i++) {
-            String left = workbook.getSheetAt(i).getHeader().getLeft();
+            Sheet sheet = workbook.getSheetAt(i);
+            String left = sheet.getHeader().getLeft();
             left = left.replace("{{transferOutUnitAccount}}", transferOutUnitAccounts[i]);
             left = left.replace("{{transferInUnitAccount}}", transferInUnitAccounts[i]);
-            workbook.getSheetAt(i).getHeader().setLeft(left);
+            sheet.getHeader().setLeft(left);
+
+
+            String center = sheet.getFooter().getCenter();
+            center = center.replace("{{createdBy}}", currentUser);
+            sheet.getFooter().setCenter(center);
         }
         try {
             String fileName = URLEncoder.encode("上海市公积金雇员转移清册.xlsx", "UTF-8");

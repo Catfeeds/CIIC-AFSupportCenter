@@ -182,7 +182,7 @@
             AND mc.cost_category = 9
             AND ea.company_id = pc.company_id
             AND mc.com_account_id=pc.com_account_id
-            AND mci.emp_amount < 0
+            AND mc.total_amount < 0
             AND mc.ss_month=#{paymentMonth}
         ),
         pc.emp_count=(
