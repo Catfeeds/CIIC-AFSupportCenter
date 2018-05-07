@@ -2082,6 +2082,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 //            ssMonthCharge.setSsMonthBelong(String.valueOf(i));
         for (long i = 0; i <= months; i++) {
             if (isOut) {
+                // 如果是转出任务单，雇员月度汇缴明细库汇缴当月已生成的标准数据需删除
+                ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 1, ssEmpTaskBO.getModifiedBy());
+
                 // 如果是转出任务单，雇员月度汇缴明细库转入数据可能被删除（当月转入当月转出），且不生成转出数据
                 int rslt = ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 2, ssEmpTaskBO.getModifiedBy());
                 if (rslt > 0) {

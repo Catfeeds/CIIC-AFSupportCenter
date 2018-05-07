@@ -1476,7 +1476,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 endMonthDate = YearMonth.parse(endMonth, formatter);
                 startMonthDate = endMonthDate;
 
-                // 如果是转出任务单，雇员月度汇缴明细库转入数据可能被删除（当月转入当月转出），且不生成转出数据
+                // 如果是转出任务单，雇员月度汇缴明细库汇缴当月已生成的标准数据需删除
                 HfMonthChargeBo hfMonthChargeBo = new HfMonthChargeBo();
                 hfMonthChargeBo.setInactive(true);
                 hfMonthChargeBo.setEmpArchiveId(e.getEmpArchiveId());
@@ -1485,6 +1485,10 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 hfMonthChargeBo.setSsMonthBelongStart(e.getHfMonth());
                 hfMonthChargeBo.setSsMonthBelongEnd(e.getHfMonth());
                 hfMonthChargeBo.setModifiedBy(hfEmpTask.getModifiedBy());
+                hfMonthChargeBo.setPaymentTypes(String.valueOf(HfMonthChargeConstant.PAYMENT_TYPE_NORMAL));
+                hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
+
+                // 如果是转出任务单，雇员月度汇缴明细库转入数据可能被删除（当月转入当月转出），且不生成转出数据
                 hfMonthChargeBo.setPaymentTypes(StringUtils.join(new Integer[]{
                     HfMonthChargeConstant.PAYMENT_TYPE_NEW,
                     HfMonthChargeConstant.PAYMENT_TYPE_TRANS_IN,
