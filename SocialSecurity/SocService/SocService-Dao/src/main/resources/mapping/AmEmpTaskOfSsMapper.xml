@@ -51,6 +51,7 @@
     </resultMap>
 <select id="queryReworkInfo" resultMap="selfResultMap">
     select
+    et.task_category,
     et.task_status,
     em.open_af_date,
     ar.archive_place,

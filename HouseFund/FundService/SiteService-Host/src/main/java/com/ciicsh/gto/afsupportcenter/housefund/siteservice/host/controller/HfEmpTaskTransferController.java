@@ -173,7 +173,7 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
      * @return
      */
     @RequestMapping("/multiEmpTaskTransferExport")
-    public void multiEmpTaskTransferExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
+    public JsonResult multiEmpTaskTransferExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         EmpTaskTransferBo empTaskTransferBo = pageInfo.toJavaObject(EmpTaskTransferBo.class);
         List<EmpTaskTransferBo> empTaskTransferBoList = business.queryEmpTaskTransfer(empTaskTransferBo);
 
@@ -199,10 +199,18 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
 
                 for (int j = 0; j < list.size(); j++) {
                     if (!transferOutUnitAccounts[i].equals(list.get(j).getTransferOutUnitAccount())) {
-                        throw new BusinessException("仅支持一次导出相同转出单位公积金账号的信息");
+//                        throw new BusinessException("仅支持一次导出相同转出单位公积金账号的信息");
+                        JsonResult jsonResult = new JsonResult();
+                        jsonResult.setCode(5);
+                        jsonResult.setMessage("仅支持一次导出相同转出单位公积金账号的信息");
+                        return jsonResult;
                     }
                     if (!transferInUnitAccounts[i].equals(list.get(j).getTransferInUnitAccount())) {
-                        throw new BusinessException("仅支持一次导出相同转入单位公积金账号的信息");
+//                        throw new BusinessException("仅支持一次导出相同转入单位公积金账号的信息");
+                        JsonResult jsonResult = new JsonResult();
+                        jsonResult.setCode(5);
+                        jsonResult.setMessage("仅支持一次导出相同转出单位公积金账号的信息");
+                        return jsonResult;
                     }
 
                     Map<String, Object> lm = new HashMap<>();
@@ -256,8 +264,9 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
             workbook.write(response.getOutputStream());
             workbook.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logApiUtil.error(LogMessage.create().setTitle("HfEmpTaskTransferController#multiEmpTaskTransferExport").setContent(e.getMessage()));
         }
+        return null;
     }
 
     /**
