@@ -77,7 +77,7 @@ public class AmIndependentCustomController extends BasicController<IAmCompanySet
         {
             is_special = true;
         }
-        if(amCompanySet.getKey() == 1){
+        if(null!=amCompanySet.getKey()&&amCompanySet.getKey() == 1){
             is_special = true;
         }
         if((amCompanySet.getRefuseSpecial()!=null && !"".equals(amCompanySet.getRefuseSpecial().trim()))||
@@ -96,24 +96,6 @@ public class AmIndependentCustomController extends BasicController<IAmCompanySet
             amCompanySet.setSpecial("无");
         }
 
-        if(amCompanySet.getKeyCode()==null){
-            amCompanySet.setKeyCode(" ");
-        }
-        if(amCompanySet.getKeyPwd()==null){
-            amCompanySet.setKeyPwd(" ");
-        }
-        if(amCompanySet.getKeyStatus()==null){
-            amCompanySet.setKeyStatus(" ");
-        }
-        if(amCompanySet.getEmploySpecial()==null){
-            amCompanySet.setEmploySpecial(" ");
-        }
-        if(amCompanySet.getRefuseSpecial()==null){
-            amCompanySet.setRefuseSpecial(" ");
-        }
-        if(amCompanySet.getArchiveSpecial()==null){
-            amCompanySet.setArchiveSpecial(" ");
-        }
         boolean result =  business.insertOrUpdateAllColumn(amCompanySet);
         return JsonResultKit.of(result);
     }

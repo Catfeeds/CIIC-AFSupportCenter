@@ -1,11 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employcommandservice.business.utils;
 
-import ch.qos.logback.core.util.StringCollectionUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
