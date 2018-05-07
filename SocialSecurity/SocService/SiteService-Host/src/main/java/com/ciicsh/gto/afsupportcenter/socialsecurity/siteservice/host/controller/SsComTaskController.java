@@ -160,7 +160,10 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
                     ssComTask.setRejectionRemark(refuseReason);
                 //批退工作流
                 SsComTask task = ssComTaskService.selectById(ssComTask.getComTaskId());
-                TaskCommonUtils.completeTask(task.getTaskId(),commonApiUtils,UserContext.getUserName());
+                ssComTask.setModifiedTime(LocalDateTime.now());
+                ssComTask.setModifiedBy(UserContext.getUserId());
+                ssComTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+                TaskCommonUtils.completeTask(task.getTaskId(),commonApiUtils,UserContext.getUser().getDisplayName());
                 dataList.add(ssComTask);
             }
         }
@@ -292,6 +295,9 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         } else {
             SsComTask comTask = new SsComTask();
             BeanUtils.copyProperties(ssComTaskBO, comTask);
+            comTask.setModifiedBy(UserContext.getUserId());
+            comTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+            comTask.setModifiedTime(LocalDateTime.now());
 
             //只是做任务单的状态切换，任务单不完成
             result = business.updateById(comTask);
@@ -332,6 +338,9 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         } else {
             SsComTask comTask = new SsComTask();
             BeanUtils.copyProperties(ssComTaskBO, comTask);
+            comTask.setModifiedBy(UserContext.getUserId());
+            comTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+            comTask.setModifiedTime(LocalDateTime.now());
 
             //只是做任务单的状态切换，任务单不完成
             result = business.updateById(comTask);
@@ -383,6 +392,9 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
 
             SsComTask comTask = new SsComTask();
             BeanUtils.copyProperties(ssComTaskBO, comTask);
+            comTask.setModifiedBy(UserContext.getUserId());
+            comTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+            comTask.setModifiedTime(LocalDateTime.now());
             result = business.updateById(comTask);
         }
         return JsonResultKit.of(result);
@@ -398,6 +410,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         //修改任单状态和时间
         ssComTask.setModifiedBy(UserContext.getUserId());
         ssComTask.setModifiedTime(LocalDateTime.now());
+        ssComTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
         return JsonResultKit.of(business.updateTaskStatusForRevoke(ssComTask) > 0 ? true : false);
     }
 
@@ -524,6 +537,7 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
 
         ssComTask.setDispatchMaterial(isNotNull(map.get("dispatchMaterial"))?map.get("dispatchMaterial"):null);
         ssComTask.setModifiedBy(UserContext.getUserId());
+        ssComTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
         ssComTask.setModifiedTime(LocalDateTime.now());
         return ssComTask;
     }

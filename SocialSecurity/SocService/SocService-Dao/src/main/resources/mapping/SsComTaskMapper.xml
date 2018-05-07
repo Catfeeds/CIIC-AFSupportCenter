@@ -47,6 +47,8 @@
         <result column="modified_time" property="modifiedTime" />
         <result column="created_by" property="createdBy" />
         <result column="modified_by" property="modifiedBy" />
+        <result column="created_display_name" property="createdDisplayName" />
+        <result column="modified_display_name" property="modifiedDisplayName" />
     </resultMap>
 
     <resultMap id="ComTaskExtMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountExtBO">
@@ -236,6 +238,8 @@
         sct.submit_remark,
         sct.rejection_remark,
         sct.handle_remark,
+        sct.created_time,
+        sct.created_display_name,
         cc.title
         FROM ss_com_task sct
         LEFT JOIN sal_company cc ON sct.company_id = cc.company_id
@@ -275,6 +279,8 @@
         sct.submit_time,
         sct.submit_remark,
         sct.rejection_remark,
+        sct.created_time,
+        sct.created_display_name,
         cc.title
         FROM ss_com_task sct
         LEFT JOIN ss_com_account sca ON sct.com_account_id = sca.com_account_id
@@ -327,6 +333,8 @@
         sct.submit_time,
         sct.submit_remark,
         sct.rejection_remark,
+        sct.created_time,
+        sct.created_display_name,
         cc.title
         FROM ss_com_task sct
         LEFT JOIN ss_com_account sca ON sct.com_account_id = sca.com_account_id
@@ -371,6 +379,8 @@
         sct.submit_time,
         sct.submit_remark,
         sct.rejection_remark,
+        sct.created_time,
+        sct.created_display_name,
         cc.title
         FROM ss_com_task sct
         LEFT JOIN sal_company cc ON sct.company_id = cc.company_id
