@@ -20,8 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -100,13 +98,15 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         }
         /*****生成雇员社保明细****/
         //如果数据已经存在，先删除已经存在的数据(标准数据)
-        String ssMonth=DateUtil.plusMonth(paymentMonth,1);
+        String ssMonth = DateUtil.plusMonth(paymentMonth, 1);
         this.delMonthChargeInfos(accountComExt.getComAccountId(), ssMonth, 1);
         //生成标准明细
 //        List<SsEmpBaseArchiveExt> empBaseArchiveExts = empBasePeriodMapper.getEmpBaseArchiveExts(accountComExt.getComAccountId(), paymentMonth);
 //        if (null != empBaseArchiveExts && empBaseArchiveExts.size() > 0) {
 //            empBaseArchiveExts.forEach(ext -> this.createStandardMonthChange(ext, paymentMonth));
 //        }
+
+
         List<SsMonthCharge> ssMonthChargesList = monthChargeMapper.getSsMonthChargeList(accountComExt.getComAccountId(), paymentMonth);
         if (null != ssMonthChargesList && ssMonthChargesList.size() > 0) {
 
@@ -343,17 +343,25 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
             }
         }
     }
+
     private void createStandardMonthCharge(SsMonthCharge ssMonthCharge) {
-        Long monthChargeId=ssMonthCharge.getMonthChargeId();
+        Long monthChargeId = ssMonthCharge.getMonthChargeId();
+        ssMonthCharge.setMonthChargeId(null);
         monthChargeMapper.insert(ssMonthCharge);
         List<SsMonthChargeItem> ssMonthChargeItemsList = monthChargeItemMapper.getMonthChargeItemByMonthChargeId(monthChargeId);
         if (null != ssMonthChargeItemsList && ssMonthChargeItemsList.size() > 0) {
-                ssMonthChargeItemsList.forEach(ssMonthChargeItem -> {
-                    ssMonthChargeItem.setMonthChargeId(monthChargeId);
-                    monthChargeItemMapper.insert(ssMonthChargeItem);
-                } );
+            ssMonthChargeItemsList.forEach(ssMonthChargeItem -> {
+                ssMonthChargeItem.setMonthChargeItemId(null);
+                ssMonthChargeItem.setMonthChargeId(ssMonthCharge.getMonthChargeId());
+                ssMonthChargeItem.setCreatedBy("system");
+                ssMonthChargeItem.setModifiedBy("system");
+                ssMonthChargeItem.setCreatedTime(LocalDateTime.now());
+                ssMonthChargeItem.setModifiedTime(LocalDateTime.now());
+                monthChargeItemMapper.insert(ssMonthChargeItem);
+            });
         }
     }
+
     /**
      * 添加标准月度缴费明细
      *
