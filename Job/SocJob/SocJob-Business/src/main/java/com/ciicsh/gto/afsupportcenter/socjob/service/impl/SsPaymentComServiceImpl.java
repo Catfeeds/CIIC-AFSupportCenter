@@ -114,6 +114,9 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
                 ext.setSsMonthBelong(ssMonth);
                 ext.setSsMonth(ssMonth);
                 ext.setCostCategory(1);
+                ext.setCreatedBy("system");
+                ext.setModifiedBy("system");
+                ext.setCreatedTime(LocalDateTime.now());
                 ext.setModifiedTime(LocalDateTime.now());
                 ext.setEmpPaymentStatus(0);
                 ext.setModifiedBy("system");
