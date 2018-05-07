@@ -335,7 +335,8 @@
         et.task_category_special,
         et.submitter_name,
         et.submit_time,
-        et.task_status
+        et.task_status,
+        et.created_display_name
         FROM
         ss_emp_task et
         WHERE et.emp_archive_id = #{empArchiveId}

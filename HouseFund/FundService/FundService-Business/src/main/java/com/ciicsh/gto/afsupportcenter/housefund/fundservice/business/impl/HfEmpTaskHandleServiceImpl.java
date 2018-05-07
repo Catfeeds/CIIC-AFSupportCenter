@@ -1219,8 +1219,6 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                                 throw new BusinessException("雇员档案费用段中缴费起始年月不能大于汇缴年月");
                             }
 
-                            setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e, null, roundTypes, roundTypeInWeight);
-
                             HfArchiveBasePeriod hfArchiveBasePeriod = new HfArchiveBasePeriod();
                             hfArchiveBasePeriod.setEmpTaskId(hfEmpTask.getEmpTaskId());
                             hfArchiveBasePeriod.setRemitWay(e.getRemitWay());
@@ -1246,6 +1244,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                                 hfArchiveBasePeriod.setActive(false);
                             }
                             hfArchiveBasePeriodList.add(hfArchiveBasePeriod);
+
+                            setHfArchiveBasePeriodList(hfArchiveBasePeriodList, hfEmpTask, e, null, roundTypes, roundTypeInWeight);
                             break;
                         }
                     }
@@ -1494,6 +1494,26 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 hfMonthChargeBo.setExceptEmpTaskId(hfEmpTask.getEmpTaskId());
                 int rslt = hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
                 if (rslt > 0) {
+                    HfMonthCharge hfMonthCharge = new HfMonthCharge();
+                    hfMonthCharge.setEmpArchiveId(e.getEmpArchiveId());
+                    hfMonthCharge.setEmpTaskId(hfEmpTask.getEmpTaskId());
+                    hfMonthCharge.setHfMonth(e.getHfMonth());
+                    hfMonthCharge.setSsMonthBelong(endMonth);
+                    hfMonthCharge.setCompanyId(hfEmpTask.getCompanyId());
+                    hfMonthCharge.setEmployeeId(hfEmpTask.getEmployeeId());
+                    hfMonthCharge.setHfType(e.getHfType());
+                    hfMonthCharge.setAmount(e.getAmount());
+                    hfMonthCharge.setComAmount(e.getComAmount());
+                    hfMonthCharge.setEmpAmount(e.getAmountEmp());
+                    hfMonthCharge.setBase(e.getBaseAmount());
+                    hfMonthCharge.setRatio(e.getRatio());
+                    hfMonthCharge.setRatioCom(e.getRatioCom());
+                    hfMonthCharge.setRatioEmp(e.getRatioEmp());
+                    hfMonthCharge.setPaymentType(paymentType);
+                    hfMonthCharge.setCreatedBy(hfEmpTask.getModifiedBy());
+                    hfMonthCharge.setModifiedBy(hfEmpTask.getModifiedBy());
+                    hfMonthCharge.setActive(false);
+                    hfMonthChargeService.insert(hfMonthCharge);
                     continue;
                 }
             }
@@ -1925,7 +1945,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 }
 
                 for (HfArchiveBasePeriod hfArchiveBasePeriod : hfArchiveBasePeriodList) {
-                    if (companyConfirmAmount.equals(BigDecimal.ZERO)) {
+                    if (companyConfirmAmount.equals(BigDecimal.ZERO) || StringUtils.isEmpty(hfArchiveBasePeriod.getEndMonth())) {
                         companyConfirmAmount = hfArchiveBasePeriod.getComAmount();
                         personalConfirmAmount = hfArchiveBasePeriod.getAmountEmp();
                     }
@@ -1974,6 +1994,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
 
                     // 只出不进（或只进不出）时（通常有调整基数或比例、非0转0、0转非0），调整产生的任务单无一进一出的场景
                     if (SocialSecurityConst.SHANGHAI_CITY_CODE.equals(hfEmpTask.getNewCityCode())
+                        && hfEmpTask.getTaskCategory() != HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_OUT
+                        && hfEmpTask.getTaskCategory() != HfEmpTaskConstant.TASK_CATEGORY_FLOP_CLOSE      // 翻牌转出(封存)只需回调旧雇员协议
                         ) {
                         afEmpSocialUpdateDateDTO = new AfEmpSocialUpdateDateDTO();
                         afEmpSocialUpdateDateDTO.setCompanyId(companyId);

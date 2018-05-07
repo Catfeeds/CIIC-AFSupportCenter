@@ -17,6 +17,7 @@ import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMUserInfoDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.CompanyManagementDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,10 +69,13 @@ public class HfAuthorityServiceImpl extends ServiceImpl<HfDataauthCompanyMapper,
         return resultDate;
     }
 
-
-
     @Override
     public List<HfDepartmentDTO> querySubDepartmentsOfLevel() {
+        return querySubDepartmentsOfLevel(null);
+    }
+
+    @Override
+    public List<HfDepartmentDTO> querySubDepartmentsOfLevel(Integer[] levels) {
         // 调用内控接口,查询上海社保的组织架构树
         JsonResult<List<com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMDepartmentDTO>> result
             = smDepartmentProxy.getChildDepartments(415);
@@ -79,6 +83,9 @@ public class HfAuthorityServiceImpl extends ServiceImpl<HfDataauthCompanyMapper,
         //转换成上海社保的DTO
         List<HfDepartmentDTO> resultList = new ArrayList<>();
         for (com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMDepartmentDTO dto : list) {
+            if (ArrayUtils.isNotEmpty(levels) && !ArrayUtils.contains(levels, dto.getDepartmentLevel())) {
+                continue;
+            }
             HfDepartmentDTO smDto = new HfDepartmentDTO();
             BeanUtils.copyProperties(dto, smDto);
             resultList.add(smDto);
