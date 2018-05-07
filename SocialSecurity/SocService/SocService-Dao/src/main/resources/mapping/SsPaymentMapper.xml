@@ -148,14 +148,15 @@
     AND pc.payment_id=#{paymentId}
     </select>
 
-    <!--向结算中心支付申请的雇员名单-->
+    <!--社保支付：向结算中心支付申请的雇员名单-->
     <select id="getPaymentEmpList" resultMap="PaymentEmpDtoResultMap">
     SELECT emp.employee_id,emp.employee_name,pc.company_id,pc.payment_month,
     if(mc.emp_payment_status = 2, 1, 0 ) is_advance,
     sum(mc.total_amount) AS total_pay_amount
     FROM ss_month_charge mc
     INNER JOIN emp_employee emp ON emp.employee_id=mc.employee_id
-    INNER JOIN ss_payment_com pc ON pc.com_account_id=mc.com_account_id
+    INNER JOIN ss_emp_archive ea ON ea.emp_archive_id=mc.emp_archive_id
+    INNER JOIN ss_payment_com pc ON pc.com_account_id=mc.com_account_id AND pc.company_id=ea.company_id
     WHERE pc.is_active=1
     AND mc.ss_month=#{paymentMonth}
     AND pc.payment_id=#{paymentId}

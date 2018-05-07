@@ -374,16 +374,22 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
         hfComAccountClass.setHfType(hfComTask.getHfType());
         if (StringUtils.isNotBlank(map.get("comAccountNum"))) {
             hfComAccountClass.setHfComAccount(map.get("comAccountNum"));
+        }else{
+            hfComAccountClass.setHfComAccount("");
         }
         if (StringUtils.isNotBlank(map.get("comStartMonth"))) {
             String yearMonthString = map.get("comStartMonth");
             hfComAccountClass.setComStartMonth(yearMonthString);
             hfComAccountClass.setComHfMonth(yearMonthString);
+        }else {
+            hfComAccountClass.setComHfMonth("");
         }
         hfComAccountClass.setEndMonth(hfComTask.getEndMonth());
         if (StringUtils.isNotBlank(map.get("operateStartMonth"))) {
             String yearMonthString = map.get("operateStartMonth");
             hfComAccountClass.setOperateStartMonth(yearMonthString);
+        }else{
+            hfComAccountClass.setOperateStartMonth("");
         }
         if (StringUtils.isNotBlank(map.get("accountTempStore"))) {
             hfComAccountClass.setAccountTempStore(Integer.parseInt(map.get("accountTempStore")));
@@ -412,6 +418,8 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
     private void updateComAccount(Map<String, String> map, HfComAccount hfComAccount, HfComTask hfComTask) {
         if (StringUtils.isNotBlank(map.get("comAccountName"))) {
             hfComAccount.setComAccountName(map.get("comAccountName"));
+        }else{
+            hfComAccount.setComAccountName("");
         }
         if (StringUtils.isNotBlank(map.get("paymentWay"))) {
             hfComAccount.setPaymentWay(Integer.parseInt(map.get("paymentWay")));
@@ -428,6 +436,8 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
         }
         if (StringUtils.isNotBlank(map.get("comAccountRemark"))) {
             hfComAccount.setRemark(map.get("comAccountRemark").toString());
+        }else{
+            hfComAccount.setRemark("");
         }
         hfComAccount.setCreatedTime(new Date());
         hfComAccount.setCreatedDisplayName(UserContext.getUser().getDisplayName());
