@@ -108,16 +108,16 @@
         <where>
             pa.is_active = 1
             AND IFNULL(pa.payment_id,0)=0
-            <if test="paymentId != null and paymentId != ''">
+            <if test="paymentId != null">
                 AND pa.payment_id = #{paymentId}
             </if>
             <if test="paymentMonthValue != null and paymentMonthValue != ''">
                 AND pa.payment_month = TRIM(#{paymentMonthValue})
             </if>
-            <if test="paymentBank!= null and paymentBank != ''">
+            <if test="paymentBank!= null">
                 AND ca.payment_bank = #{paymentBank}
             </if>
-            <if test="paymentStatus!= null and paymentStatus != ''">
+            <if test="paymentStatus!= null">
                 AND pa.payment_status = #{paymentStatus}
             </if>
             <if test="fundAccountType!= null and fundAccountType != ''">
