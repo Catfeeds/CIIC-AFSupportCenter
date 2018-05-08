@@ -1,10 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFMonthChargeQueryBO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFMonthChargeReportBO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfMonthChargeBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfMonthChargeDiffBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankExportBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankQueryBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
@@ -65,4 +62,12 @@ public interface HfMonthChargeService extends IService<HfMonthCharge> {
     List<Map<String, Object>> getRepairDetailsPageList(HFMonthChargeQueryBO hfMonthChargeQueryBO, boolean isPageByComAccount);
 
     List<HFNetBankExportBO> queryNetBankData(HFNetBankQueryBO hfNetBankQueryBO);
+
+    /**
+     * 导出公积金汇缴支付详情报表
+     *
+     * @param pageInfo  导出条件
+     * @return 导出结果
+     */
+    PageRows<HfPaymentAccountReportBo> getOperateDetailReport(PageInfo pageInfo, String userId);
 }

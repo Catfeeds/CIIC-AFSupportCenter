@@ -54,4 +54,25 @@ public interface HfPaymentAccountService extends IService<HfPaymentAccount> {
                                         List<HFNetBankExportBO> newList,
                                         List<HFNetBankExportBO> inList,
                                         List<HFNetBankExportBO> outList);
+    /**
+     * 获得公积金汇缴支付列表(编辑页面添加按钮触发)
+     * @param pageInfo 查询条件
+     * @return 查询结果
+     */
+    PageRows<HfPaymentAccountBo> getMakePayListsById(PageInfo pageInfo);
+
+    /**
+     * 公积金汇缴支付编辑/详情操作数据
+     * @param pageInfo 查询条件
+     * @return 查询结果
+     */
+    PageRows<HfPaymentAccountBo> getFundPaysEditOperationData(PageInfo pageInfo);
+
+    /**
+     * 编辑页面删除支付详情
+     * @param hfPaymentAccountBo 删除的列
+     * @return 删除结果
+     */
+    JsonResult delOperateEditData(HfPaymentAccountBo hfPaymentAccountBo);
+
 }
