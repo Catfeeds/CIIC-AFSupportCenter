@@ -326,7 +326,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
                 clazz = SsEmpTaskRollOutBO.class;
             }
             pageInfo.setPageSize(10000);
-            pageInfo.setPageNum(0);
+            pageInfo.setPageNum(1);
             PageRows<T> result = business.employeeDailyOperatorQueryForDisk(pageInfo, UserContext.getUserId(), isRollIn);
             long total = result.getTotal();
             ExportParams exportParams = new ExportParams();
@@ -338,8 +338,8 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
                 workbook = ExcelExportUtil.exportExcel(exportParams, clazz, result.getRows());
             } else {
                 workbook = ExcelExportUtil.exportBigExcel(exportParams, clazz, result.getRows());
-                int pageNum = (int) Math.ceil(total / pageInfo.getPageSize());
-                for (int i = 1; i < pageNum; i++) {
+                int pageNum = (int) Math.ceil(total * 1.0 / pageInfo.getPageSize());
+                for (int i = 2; i <= pageNum; i++) {
                     pageInfo.setPageNum(i);
                     result = business.employeeDailyOperatorQueryForDisk(pageInfo, UserContext.getUserId(), isRollIn);
                     workbook = ExcelExportUtil.exportBigExcel(exportParams, clazz, result.getRows());

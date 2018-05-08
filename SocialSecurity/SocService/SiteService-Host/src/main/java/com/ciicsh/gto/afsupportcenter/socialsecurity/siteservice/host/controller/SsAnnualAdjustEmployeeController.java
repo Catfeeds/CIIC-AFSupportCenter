@@ -49,7 +49,7 @@ public class SsAnnualAdjustEmployeeController extends BasicController<SsAnnualAd
     @RequestMapping("/annualAdjustEmployeeExport")
     public void annualAdjustEmployeeExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         pageInfo.setPageSize(10000);
-        pageInfo.setPageNum(0);
+        pageInfo.setPageNum(1);
         PageRows<SsAnnualAdjustEmployee> result = business.queryAnnualAdjustEmployeeInPage(pageInfo);
         long total = result.getTotal();
         ExportParams exportParams = new ExportParams();
@@ -61,8 +61,8 @@ public class SsAnnualAdjustEmployeeController extends BasicController<SsAnnualAd
             workbook = ExcelExportUtil.exportExcel(exportParams, SsAnnualAdjustEmployee.class, result.getRows());
         } else {
             workbook = ExcelExportUtil.exportBigExcel(exportParams, SsAnnualAdjustEmployee.class, result.getRows());
-            int pageNum = (int) Math.ceil(total / pageInfo.getPageSize());
-            for(int i = 1; i < pageNum; i++) {
+            int pageNum = (int) Math.ceil(total * 1.0 / pageInfo.getPageSize());
+            for(int i = 2; i <= pageNum; i++) {
                 pageInfo.setPageNum(i);
                 result = business.queryAnnualAdjustEmployeeInPage(pageInfo);
                 workbook = ExcelExportUtil.exportBigExcel(exportParams, SsAnnualAdjustEmployee.class, result.getRows());

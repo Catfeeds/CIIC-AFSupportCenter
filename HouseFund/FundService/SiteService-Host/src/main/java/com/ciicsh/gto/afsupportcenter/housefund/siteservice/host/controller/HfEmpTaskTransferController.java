@@ -25,6 +25,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -257,6 +258,13 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
             String fileName = URLEncoder.encode("上海市公积金雇员转移清册.xlsx", "UTF-8");
 
             response.reset();
+
+                response.addHeader("Access-Control-Allow-Origin", "*");
+                response.addHeader("Access-Control-Allow-Credentials", "true");
+                response.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT, HEAD");
+                response.addHeader("Access-Control-Allow-Headers", "Content-Type");
+                response.addHeader("Access-Control-Max-Age", "3600");
+
             response.setCharacterEncoding("UTF-8");
 //            response.setHeader("content-Type", "application/vnd.ms-excel");
             response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
