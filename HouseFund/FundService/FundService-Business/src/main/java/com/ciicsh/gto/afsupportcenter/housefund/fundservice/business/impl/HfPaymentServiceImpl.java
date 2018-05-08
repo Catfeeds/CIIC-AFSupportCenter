@@ -10,6 +10,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HfPrintRe
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
+import com.ciicsh.gto.afsupportcenter.util.MoneyToCN;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -201,12 +203,20 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         if (listPrint.size() == 0) {
             return JsonResultKit.ofError("汇缴书数据为空！");
         }
+        //转换打印汇缴书结果数据
         List<HfPrintRemittedBookBO> retListPrint = new ArrayList();
-
         for (HfPrintRemittedBookBO in : listPrint) {
             HfPrintRemittedBookBO out = new HfPrintRemittedBookBO();
 
-            if (Optional.ofNullable(in.getRepairAmount()).orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0){ //存在补缴
+            if (Optional.ofNullable(in.getRepairAmount()).orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0) { //存在补缴
+                out.setCurYear(LocalDate.now().getYear());
+                out.setCurMonth(LocalDate.now().getMonth().getValue());
+                out.setCurDay(LocalDate.now().getDayOfMonth());
+                String paymentYearMonth =  in.getPaymentMonth();
+                if (paymentYearMonth != null) {
+                    out.setPaymentYear(paymentYearMonth.substring(0,4));
+                    out.setPaymentMonth(paymentYearMonth.substring(4,6));
+                }
                 out.setIsRepair(true);//补缴打钩
                 out.setComAccountName(in.getComAccountName());
                 out.setCurdate(in.getCurdate());
@@ -218,6 +228,16 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
                 out = new HfPrintRemittedBookBO();
             }
             BeanUtils.copyProperties(in, out);
+            out.setMoneyCN(MoneyToCN.number2CNMontrayUnit(in.getRemittedAmount()));
+            out.setRemittedAmountArrange("¥"+in.getRemittedAmount().toString().replace(".",""));
+            out.setCurYear(LocalDate.now().getYear());
+            out.setCurMonth(LocalDate.now().getMonth().getValue());
+            out.setCurDay(LocalDate.now().getDayOfMonth());
+            String paymentYearMonth =  in.getPaymentMonth();
+            if (paymentYearMonth != null) {
+                out.setPaymentYear(paymentYearMonth.substring(0,4));
+                out.setPaymentMonth(paymentYearMonth.substring(4,6));
+            }
             out.setIsRemitted(true);//汇缴打钩
             out.setRepairCountEmp(null);
             out.setRepairAmount(null);
@@ -225,7 +245,6 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         }
         return JsonResultKit.of(retListPrint);
     }
-
 
     private JsonResult isCanPayment(HfPayment payment) {
         if (payment == null) {
@@ -266,7 +285,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         if (hfPayment.getPaymentWay() != 2) {//如果付款方式不是支票
             dto.setReceiveAccountId(hfPaymentMapper.getHfPaymentBankId(hfPayment.getPaymentId())); //付款银行ID
         }
-        List<PayapplyCompanyProxyDTO> paymentComList = baseMapper.getHfPaymentComList(hfPayment.getPaymentId(),hfPayment.getPaymentMonth()).stream().map(x -> toCompanyDto(x)).collect(Collectors.toList());
+        List<PayapplyCompanyProxyDTO> paymentComList = baseMapper.getHfPaymentComList(hfPayment.getPaymentId(), hfPayment.getPaymentMonth()).stream().map(x -> toCompanyDto(x)).collect(Collectors.toList());
         List<PayapplyEmployeeProxyDTO> paymentEmpList = baseMapper.getHfPaymentEmpList(hfPayment.getPaymentId(), hfPayment.getPaymentMonth()).stream().map(x -> toEmployeeDto(x)).collect(Collectors.toList());
 
         dto.setCompanyList(paymentComList);

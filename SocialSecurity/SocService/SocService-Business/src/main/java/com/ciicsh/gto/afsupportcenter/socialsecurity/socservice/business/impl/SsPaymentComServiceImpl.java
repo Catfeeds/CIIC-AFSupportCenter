@@ -340,7 +340,7 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
         ssPayment = ssPaymentMapper.selectOne(ssPayment);
         if (null != ssPayment) {
             //更新批次状态 支付状态:付款状态(-1:审核未过;9.支付成功;-9:支付失败;)
-            Integer paymentState = payStatus == 9 ? 8 : 7;
+            Integer paymentState = (payStatus == 9 ? 8 : 7);
             if(remark != null && remark != ""){
                 ssPayment.setRejectionRemark(remark);
             }
