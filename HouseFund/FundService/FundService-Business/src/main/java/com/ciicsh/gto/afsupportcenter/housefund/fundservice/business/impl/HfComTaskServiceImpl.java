@@ -459,7 +459,9 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
         }else{
             hfComAccount.setPaymentBank(null);
         }
-        hfComAccount.setRemark(map.get("comAccountRemark").toString());
+        if (StringUtils.isNotBlank(map.get("comAccountRemark"))) {
+            hfComAccount.setRemark(map.get("comAccountRemark").toString());
+        }
         hfComAccount.setActive(true);
         hfComAccount.setCreatedTime(new Date());
         hfComAccount.setCreatedDisplayName(UserContext.getUser().getDisplayName());
