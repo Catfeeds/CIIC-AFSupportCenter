@@ -37,4 +37,19 @@ public interface HfPaymentAccountMapper extends BaseMapper<HfPaymentAccount> {
     List<HfPaymentAccountBo> getMakePayLists(HfPaymentAccountBo hfPaymentAccountBo);
 
     List<HFNetBankComAccountBO> getComAccountByPaymentId(Long paymentId);
+
+    List<HfPaymentAccountBo> getFundPaysEditOperationData(HfPaymentAccountBo hfPaymentComBo);
+
+    /**
+     * 编辑页面添加汇缴支付详细数据
+     * @param hfPaymentAccountBo 条件
+     * @return 添加结果
+     */
+    List<HfPaymentAccountBo> getMakePayListsById(HfPaymentAccountBo hfPaymentAccountBo);
+
+    /**
+     * 删除汇缴编辑操作数据时同步更新hf_payment_account表中数据
+     * @param hfPaymentAccountBo 删除条件
+     */
+    void updateDelOperateEditDataFromHpa(HfPaymentAccountBo hfPaymentAccountBo);
 }

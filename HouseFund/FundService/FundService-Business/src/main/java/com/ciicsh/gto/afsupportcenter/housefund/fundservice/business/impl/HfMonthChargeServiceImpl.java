@@ -14,6 +14,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskCo
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfMonthChargeConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfMonthChargeMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentAccountMapper;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentComMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccountClass;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
@@ -49,6 +50,8 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
     private HfPaymentMapper hfPaymentMapper;
     @Autowired
     private LogApiUtil logApiUtil;
+    @Autowired
+    private HfPaymentComMapper hfPaymentComMapper;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
@@ -876,5 +879,30 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         newHFMonthChargeRepairDetailBO.setMonths(1);
         newHFMonthChargeRepairDetailBO.setRowNo(hfMonthChargeRepairDetailBOList.size() + 1);
         hfMonthChargeRepairDetailBOList.add(newHFMonthChargeRepairDetailBO);
+    }
+    /**
+     * 导出公积金汇缴支付编辑/详情操作数据
+     *
+     * @param pageInfo 查询条件
+     * @return 导出结果
+     */
+    @Override
+    public PageRows<HfPaymentAccountReportBo> getOperateDetailReport(PageInfo pageInfo, String userId) {
+        HfPaymentAccountBo hfPaymentAccountBo = pageInfo.toJavaObject(HfPaymentAccountBo.class);
+        PageRows<HfPaymentAccountReportBo> result = PageKit.doSelectPage(pageInfo, () -> baseMapper.getOperateDetailReport(hfPaymentAccountBo));
+        List<HfPaymentAccountReportBo> reportList = result.getRows();
+        for(int i = 0; i < reportList.size(); i++){
+            StringBuffer companyId = new StringBuffer();
+            StringBuffer title = new StringBuffer();
+            List<HfPaymentComBo> companyIdList = hfPaymentComMapper.getCompanyIdList(hfPaymentAccountBo.getPaymentId(),reportList.get(i).getComAccountId());
+            for(HfPaymentComBo comBo : companyIdList){
+                companyId = companyId.append(comBo.getCompanyId()).append(",");
+                title = title.append(comBo.getTitle()).append(",");
+            }
+            reportList.get(i).setCompanyId(companyId.toString().substring(0, companyId.length() - 1));
+            reportList.get(i).setTitle(title.toString().substring(0, title.length() - 1));
+        }
+        result.setRows(reportList);
+        return result;
     }
 }

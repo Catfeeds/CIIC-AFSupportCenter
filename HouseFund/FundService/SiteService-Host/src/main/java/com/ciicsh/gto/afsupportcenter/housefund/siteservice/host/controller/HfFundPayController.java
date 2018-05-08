@@ -85,11 +85,11 @@ public class HfFundPayController {
      * @param pageInfo
      * @return
      */
-    @PostMapping("/fundPaysOperateEditData")
-    public JsonResult<List<HfPaymentAccountBo>> postFundPaysOperateData(PageInfo pageInfo) {
-        PageRows<HfPaymentAccountBo> pageRows = hfPaymentAccountService.getMakePayLists(pageInfo);
-        return JsonResultKit.ofPage(pageRows);
-    }
+//    @PostMapping("/fundPaysOperateEditData")
+//    public JsonResult<List<HfPaymentAccountBo>> postFundPaysOperateData(PageInfo pageInfo) {
+//        PageRows<HfPaymentAccountBo> pageRows = hfPaymentAccountService.getMakePayLists(pageInfo);
+//        return JsonResultKit.ofPage(pageRows);
+//    }
 
     /**
      * 查询公积金汇缴支付详细操作数据
@@ -385,5 +385,37 @@ public class HfFundPayController {
                 e.printStackTrace();
             }
         }
+    }
+    /**
+     * 公积金汇缴支付编辑/详细操作数据
+     * @param pageInfo 查询条件
+     * @return 查询结果
+     */
+    @PostMapping("/fundPaysOperateEditData")
+    public JsonResult<List<HfPaymentAccountBo>> postFundPaysOperateData(PageInfo pageInfo) {
+        PageRows<HfPaymentAccountBo> pageRows = hfPaymentAccountService.getFundPaysEditOperationData(pageInfo);
+        return JsonResultKit.ofPage(pageRows);
+    }
+
+    /**
+     * 公积金汇缴支付-编辑页面添加汇缴支付名单
+     * @param hfFundPayCreatePaymentAccountPara 生成信息
+     * @return 生成结果
+     */
+    @PostMapping("/createPaymentComListById")
+    public JsonResult createPaymentComListById(HfFundPayCreatePaymentAccountPara hfFundPayCreatePaymentAccountPara){
+        //开始生成支付客户名单
+        return hfPaymentComService.createPaymentComById(hfFundPayCreatePaymentAccountPara);
+    }
+
+    /**
+     * 删除公积金汇缴支付编辑操作数据
+     *
+     * @param hfPaymentAccountBo 删除条件
+     * @return 删除结果
+     */
+    @PostMapping("/delOperateEditData")
+    public JsonResult delOperateEditData(HfPaymentAccountBo hfPaymentAccountBo) {
+        return hfPaymentAccountService.delOperateEditData(hfPaymentAccountBo);
     }
 }

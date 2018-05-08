@@ -35,6 +35,13 @@
         <result column="payment_bank_value" property="paymentBankValue" />
         <result column="sum_amount" property="sumAmount" />
         <result column="pay_in_back_amount" property="payInBackAmount" />
+        <result column="fCount" property="fCount" />
+        <result column="payment_state" property="paymentState" />
+        <result column="hf_account_type" property="fundAccountType" />
+        <result column="remitted_amount" property="remittedAmount" />
+        <result column="repair_amount" property="repairAmount" />
+        <result column="remitted_count_emp" property="remittedCountEmp" />
+        <result column="title" property="title" />
     </resultMap>
 
     <!--查询公积金制作汇缴清单-->
@@ -171,5 +178,125 @@
         WHERE hpc.is_active = 1 AND hpc.payment_id = #{paymentId}
     </select>
 
+    <!--公积金汇缴支付详情/编辑操作数据-->
+    <select id="getFundPaysEditOperationData" resultMap="GetMakePayListsResultMap">
+        SELECT
+        COUNT(hpa.hf_type) fCount,
+        SUM(hpc.remitted_amount) AS remitted_amount,
+        hpc.repair_amount,
+        hpc.remitted_count_emp,
+        hpa.payment_id,
+        hpa.payment_month,
+        hpc.company_id,
+        hpa.payment_status,
+        CASE
+        hpa.payment_status
+        WHEN 1
+        THEN '未到账'
+        WHEN 2
+        THEN '无需支付'
+        WHEN 3
+        THEN '可付'
+        END payment_state_value,
+        hca.com_account_name,
+        hpa.hf_type,
+        hca.hf_account_type,
+        ht.hf_type_name,
+        hpc.payment_bank,
+        hcapb.payment_bank_value,
+        hpc.com_account_id,
+        sc.title
+        FROM
+        hf_payment_account hpa
+        INNER JOIN hf_payment_com hpc
+        ON hpa.payment_id = hpc.payment_id
+        INNER JOIN hf_com_account hca
+        ON hca.com_account_id = hpc.com_account_id
+        INNER JOIN hf_type ht
+        ON ht.hf_type_code = hpa.hf_type
+        INNER JOIN hf_com_account_payment_bank hcapb
+        ON hcapb.payment_bank_code = hpc.payment_bank
+        INNER JOIN sal_company sc
+        ON hpc.company_id = sc.company_id
+        WHERE hpa.is_active = 1
+        AND hpc.is_active = 1
+        <if test = "paymentId != null and paymentId != ''" >
+            AND hpa.payment_id = #{paymentId}
+        </if>
+        AND hpa.hf_type = hpc.hf_type
+        AND hpa.com_account_id = hpc.com_account_id
+        GROUP BY hpa.com_account_id,
+        hpa.hf_type
+    </select>
 
+    <update id="updateDelOperateEditDataFromHpa"
+            parameterType="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentAccountBo">
+        UPDATE hf_payment_account
+        <set>
+            payment_id = 0,
+            modified_by = #{modifiedBy},
+            modified_time = sysdate()
+        </set>
+        <where>
+            is_active = 1
+            <if test="paymentId != null and paymentId != ''">
+                AND payment_id = #{paymentId}
+            </if>
+            <if test="paymentMonthValue != null and paymentMonthValue != ''">
+                AND payment_month = TRIM(#{paymentMonthValue})
+            </if>
+            <if test="paymentStatus!= null and paymentStatus != ''">
+                AND payment_status = #{paymentStatus}
+            </if>
+            <if test="comAccountId != null and comAccountId != ''">
+                AND com_account_id = #{comAccountId}
+            </if>
+        </where>
+    </update>
+
+    <!--查询公积金制作汇缴清单(编辑页面添加按钮触发)-->
+    <select id="getMakePayListsById" resultMap="GetMakePayListsResultMap">
+        SELECT
+        hpa.payment_account_id,
+        hca.com_account_name,
+        CASE
+        hpa.hf_type
+        WHEN 1
+        THEN '基本公积金'
+        WHEN 2
+        THEN '补充公积金'
+        END hf_type_name,
+        CASE
+        hpa.payment_status
+        WHEN 1
+        THEN '未到账'
+        WHEN 2
+        THEN '无需支付'
+        WHEN 3
+        THEN '可付'
+        END payment_state_value,
+        hpat.account_type_value,
+        hcapb.payment_bank_value
+        FROM
+        hf_payment_account hpa
+        LEFT JOIN hf_com_account hca
+        ON hca.com_account_id = hpa.com_account_id
+        LEFT JOIN hf_payment_account_type hpat
+        ON hca.hf_account_type = hpat.account_type_code
+        LEFT JOIN hf_com_account_payment_bank hcapb
+        ON hca.payment_bank = hcapb.payment_bank_code
+        WHERE hpa.is_active = 1
+        AND hpa.com_account_id =
+        (SELECT
+        com_account_id
+        FROM
+        hf_payment_com
+        WHERE
+        is_active = 0
+        <if test="paymentId != null and paymentId != ''">
+            AND payment_id = #{paymentId}
+        </if>
+        LIMIT 1)
+        ORDER BY hpa.payment_account_id
+    </select>
 </mapper>

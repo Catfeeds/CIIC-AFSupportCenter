@@ -59,4 +59,20 @@ public class HfPaymentAccountBo extends HfPaymentAccount {
     private String companyId;
     private String companyName;
     private String paymentMonthValue;
+
+    // 公积金账户数量
+    private int fCount;
+    //  支付状态: 1 ,可付(默认) 2,送审 3 汇缴(已申请到财务部 ) 4 财务部批退 5,财务部批准 6 出票 7 回单
+    private int paymentState;
+    // 企业公积金账户类型 1 大库 2 外包 3 独立户
+    private int hfAccountType;
+    // 当月汇缴金额
+    private BigDecimal remittedAmount;
+    // 补缴金额
+    private BigDecimal repairAmount;
+    // 汇缴人数 当月总人数
+    private BigDecimal remittedCountEmp;
+    // 公司名称
+    private String title;
+    private Long paymentId;
 }
