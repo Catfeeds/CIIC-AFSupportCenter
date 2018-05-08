@@ -73,8 +73,8 @@
     <select id="getSsComAccounts" resultMap="ExtResultMap">
       SELECT
         <include refid="SsComAccountExt_All_Columns"/>
-      FROM ss_com_account a INNER JOIN ss_account_com_relation b ON a.com_account_id = b.com_account_id
-      WHERE a.is_active = 1 AND b.is_active = 1 AND (a.end_date > NOW() OR a.end_date is NULL)
+      FROM ss_com_account a
+      WHERE a.is_active = 1 AND (a.end_date > NOW() OR a.end_date is NULL)
     </select>
 
     <select id="getSsComAccount" resultMap="ExtResultMap">

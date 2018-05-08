@@ -51,6 +51,7 @@
     </resultMap>
 <select id="queryReworkInfo" resultMap="selfResultMap">
     select
+    et.task_category,
     et.task_status,
     em.open_af_date,
     ar.archive_place,
@@ -61,6 +62,9 @@
     WHERE et.is_active=1
     AND et.employee_id =#{employeeId}
     AND et.company_id =#{companyId}
+    <if test="taskCategory">
+        AND et.task_category = #{taskCategory}
+    </if>
     ORDER BY em.created_time DESC
     LIMIT 1
 </select>

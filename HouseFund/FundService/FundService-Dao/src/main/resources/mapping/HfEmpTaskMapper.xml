@@ -416,6 +416,7 @@
         tmp.created_display_name
         FROM (
             SELECT
+            DISTINCT
             het.emp_task_id,
             het.process_category,
             het.task_category,
@@ -427,7 +428,7 @@
             het.company_id,
             sc.title company_name,
             het.hf_type,
-            het.hf_emp_account,
+            hea.hf_emp_account,
             het.submitter_id,
             het.submit_time,
             het.task_id,
@@ -458,6 +459,8 @@
                 hcac.hf_type = het.hf_type
                 AND hcac.hf_com_account = #{hfComAccount}
             </if>
+            LEFT JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
+            AND hea.is_active = 1 AND hea.hf_type = het.hf_type
             <where>
                 het.is_active = 1 AND IFNULL(het.task_status, 1) != 5 AND het.welfare_unit = 1
                 <if test="exceptTaskCategories != null">
@@ -513,6 +516,7 @@
             </where>
             UNION ALL
             SELECT
+            DISTINCT
             het.emp_task_id,
             het.process_category,
             het.task_category,
@@ -524,7 +528,7 @@
             het.company_id,
             sc.title company_name,
             het.hf_type,
-            het.hf_emp_account,
+            hea.hf_emp_account,
             het.submitter_id,
             het.submit_time,
             het.task_id,
@@ -554,6 +558,8 @@
                 hcac.hf_type = het.hf_type
                 AND hcac.hf_com_account = #{hfComAccount}
             </if>
+            LEFT JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
+            AND hea.is_active = 1 AND hea.hf_type = het.hf_type
             <where>
                 het.is_active = 1 AND IFNULL(het.task_status, 1) != 5 AND het.welfare_unit > 1
                 <if test="exceptTaskCategories != null">

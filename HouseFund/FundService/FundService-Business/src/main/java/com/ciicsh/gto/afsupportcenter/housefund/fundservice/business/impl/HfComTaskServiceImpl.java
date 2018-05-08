@@ -12,6 +12,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccount;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccountClass;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -61,7 +63,8 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
     private HfComTaskTaskStatusMapper hfComTaskTaskStatusMapper;
     @Autowired
     private HfComTaskEndTypeMapper hfComTaskEndTypeMapper;
-
+    @Autowired
+    private LogApiUtil logApiUtil;
     /**
      * 保存企业任务单
      *
@@ -199,7 +202,8 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             try {
                 hfComTask.setStrartHandleDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("acceptDate")));
             } catch (Exception e) {
-                e.printStackTrace();
+                logApiUtil.error(LogMessage.create().setTitle("HfComTaskServiceImpl#upsertCompanyTaskRelated").setContent(e.getMessage()));
+//                e.printStackTrace();
             }
         }else {
             hfComTask.setStrartHandleDate(null);
@@ -208,7 +212,8 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             try {
                 hfComTask.setSendCheckDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("approvalDate")));
             } catch (Exception e) {
-                e.printStackTrace();
+                logApiUtil.error(LogMessage.create().setTitle("HfComTaskServiceImpl#upsertCompanyTaskRelated").setContent(e.getMessage()));
+//                e.printStackTrace();
             }
         }else {
             hfComTask.setSendCheckDate(null);
@@ -217,7 +222,8 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             try {
                 hfComTask.setFinishDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("finishDate")));
             } catch (Exception e) {
-                e.printStackTrace();
+                logApiUtil.error(LogMessage.create().setTitle("HfComTaskServiceImpl#upsertCompanyTaskRelated").setContent(e.getMessage()));
+//                e.printStackTrace();
             }
         }else{
             hfComTask.setFinishDate(null);
@@ -270,7 +276,8 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             try {
                 hfComTask.setStrartHandleDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("acceptDate")));
             } catch (Exception e) {
-                e.printStackTrace();
+                logApiUtil.error(LogMessage.create().setTitle("HfComTaskServiceImpl#upsertCompanyTask").setContent(e.getMessage()));
+//                e.printStackTrace();
             }
         }else {
             hfComTask.setStrartHandleDate(null);
@@ -279,7 +286,8 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             try {
                 hfComTask.setSendCheckDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("approvalDate")));
             } catch (Exception e) {
-                e.printStackTrace();
+                logApiUtil.error(LogMessage.create().setTitle("HfComTaskServiceImpl#upsertCompanyTask").setContent(e.getMessage()));
+//                e.printStackTrace();
             }
         }else{
             hfComTask.setSendCheckDate(null);
@@ -288,7 +296,8 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             try {
                 hfComTask.setFinishDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("finishDate")));
             } catch (Exception e) {
-                e.printStackTrace();
+                logApiUtil.error(LogMessage.create().setTitle("HfComTaskServiceImpl#upsertCompanyTask").setContent(e.getMessage()));
+//                e.printStackTrace();
             }
         }else {
             hfComTask.setFinishDate(null);
@@ -336,7 +345,8 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             try {
                 hfComTask.setStrartHandleDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("acceptDate")));
             } catch (Exception e) {
-                e.printStackTrace();
+                logApiUtil.error(LogMessage.create().setTitle("HfComTaskServiceImpl#stopCompAccountTask").setContent(e.getMessage()));
+//                e.printStackTrace();
             }
         }else {
             hfComTask.setStrartHandleDate(null);
@@ -345,7 +355,8 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             try {
                 hfComTask.setSendCheckDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("approvalDate")));
             } catch (Exception e) {
-                e.printStackTrace();
+                logApiUtil.error(LogMessage.create().setTitle("HfComTaskServiceImpl#stopCompAccountTask").setContent(e.getMessage()));
+//                e.printStackTrace();
             }
         }else {
             hfComTask.setSendCheckDate(null);
@@ -354,7 +365,8 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             try {
                 hfComTask.setFinishDate(new SimpleDateFormat(DATA_FORMAT_STRING).parse(map.get("finishDate")));
             } catch (Exception e) {
-                e.printStackTrace();
+                logApiUtil.error(LogMessage.create().setTitle("HfComTaskServiceImpl#stopCompAccountTask").setContent(e.getMessage()));
+//                e.printStackTrace();
             }
         }else{
             hfComTask.setFinishDate(null);
@@ -455,7 +467,9 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
         }else{
             hfComAccount.setPaymentBank(null);
         }
-        hfComAccount.setRemark(map.get("comAccountRemark").toString());
+        if (StringUtils.isNotBlank(map.get("comAccountRemark"))) {
+            hfComAccount.setRemark(map.get("comAccountRemark").toString());
+        }
         hfComAccount.setActive(true);
         hfComAccount.setCreatedTime(new Date());
         hfComAccount.setCreatedDisplayName(UserContext.getUser().getDisplayName());

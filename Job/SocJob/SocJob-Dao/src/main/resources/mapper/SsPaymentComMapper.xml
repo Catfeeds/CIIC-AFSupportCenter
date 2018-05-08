@@ -130,7 +130,7 @@
         UPDATE ss_payment_com pc
         SET pc.total_com_pay_amount = (
             SELECT
-            sum(IFNULL(mci.com_amount,0))
+            IFNULL(sum(IFNULL(mci.com_amount,0)),0)
             FROM
             ss_month_charge_item mci
             INNER JOIN ss_month_charge mc ON mc.month_charge_id = mci.month_charge_id
@@ -149,7 +149,7 @@
         ),
         pc.total_emp_pay_amount = (
             SELECT
-            sum(IFNULL(mci.emp_amount,0))
+           IFNULL(sum(IFNULL(mci.emp_amount,0)),0)
             FROM
             ss_month_charge_item mci
             INNER JOIN ss_month_charge mc ON mc.month_charge_id = mci.month_charge_id

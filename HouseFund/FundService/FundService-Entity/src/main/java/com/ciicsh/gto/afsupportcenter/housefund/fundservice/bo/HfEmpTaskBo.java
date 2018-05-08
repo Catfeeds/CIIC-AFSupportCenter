@@ -23,21 +23,21 @@ public class HfEmpTaskBo implements Serializable {
     private Integer isChange;
     private Integer processStatus;
     private Integer taskStatus;
-    private LocalDate[] submitTime;
-    private LocalDate submitTimeStart;
-    private LocalDate submitTimeEnd;
+//    private String[] submitTime;
+    private String submitTimeStart;
+    private String submitTimeEnd;
     private String exceptTaskCategories;
     private String includeTaskCategories;
     private String hfComAccount;
     private String userId;
 
-    public void setSubmitTime(LocalDate[] submitTime) {
-        this.submitTime = submitTime;
-        if (submitTime != null && submitTime.length == 2) {
-            setSubmitTimeStart(submitTime[0]);
-            setSubmitTimeEnd(submitTime[1]);
-        }
-    }
+//    public void setSubmitTime(String[] submitTime) {
+//        this.submitTime = submitTime;
+//        if (submitTime != null && submitTime.length == 2) {
+//            setSubmitTimeStart(submitTime[0]);
+//            setSubmitTimeEnd(submitTime[1]);
+//        }
+//    }
 
 //    public void setDictTaskCategory(Integer dictTaskCategory) {
 //        this.dictTaskCategory = dictTaskCategory;
