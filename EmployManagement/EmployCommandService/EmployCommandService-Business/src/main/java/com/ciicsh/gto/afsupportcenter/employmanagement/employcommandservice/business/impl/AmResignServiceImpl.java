@@ -129,6 +129,7 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
             entity.setModifiedTime(now);
             entity.setModifiedBy(userId);
         }
+        entity.setResignOperateMan(ReasonUtil.getUserName());
 
         Integer isFinish = 0;
         AmEmpTask amEmpTask = null;
