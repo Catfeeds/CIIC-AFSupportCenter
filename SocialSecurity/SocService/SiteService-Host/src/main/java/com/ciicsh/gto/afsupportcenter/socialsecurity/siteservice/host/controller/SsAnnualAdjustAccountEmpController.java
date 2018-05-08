@@ -98,7 +98,7 @@ public class SsAnnualAdjustAccountEmpController extends BasicController<SsAnnual
     public void annualAdjustAccountEmpExport(HttpServletResponse response, PageInfo pageInfo) {
         try {
             pageInfo.setPageSize(10000);
-            pageInfo.setPageNum(0);
+            pageInfo.setPageNum(1);
             PageRows<SsAnnualAdjustAccountEmpBO> result = business.queryAnnualAdjustAccountEmpInPage(pageInfo);
             long total = result.getTotal();
             ExportParams exportParams = new ExportParams();
@@ -110,8 +110,8 @@ public class SsAnnualAdjustAccountEmpController extends BasicController<SsAnnual
                 workbook = ExcelExportUtil.exportExcel(exportParams, SsAnnualAdjustAccountEmpBO.class, result.getRows());
             } else {
                 workbook = ExcelExportUtil.exportBigExcel(exportParams, SsAnnualAdjustAccountEmpBO.class, result.getRows());
-                int pageNum = (int) Math.ceil(total / pageInfo.getPageSize());
-                for(int i = 1; i < pageNum; i++) {
+                int pageNum = (int) Math.ceil(total * 1.0 / pageInfo.getPageSize());
+                for(int i = 2; i <= pageNum; i++) {
                     pageInfo.setPageNum(i);
                     result = business.queryAnnualAdjustAccountEmpInPage(pageInfo);
                     workbook = ExcelExportUtil.exportBigExcel(exportParams, SsAnnualAdjustAccountEmpBO.class, result.getRows());
