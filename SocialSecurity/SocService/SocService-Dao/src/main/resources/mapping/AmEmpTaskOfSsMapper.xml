@@ -68,4 +68,28 @@
     ORDER BY em.created_time DESC
     LIMIT 1
 </select>
+
+    <select id="queryEmployFeedback" resultType="string">
+        SELECT employ_feedback
+        FROM am_archive
+        <where>
+        is_active = 1
+        AND employee_id =#{employeeId}
+        AND company_id =#{companyId}
+        </where>
+        ORDER BY created_time DESC
+        LIMIT 1
+    </select>
+
+    <select id="queryResignFeedback" resultType="string">
+        SELECT resign_feedback
+        FROM am_resign
+        <where>
+            is_active = 1
+            AND employee_id =#{employeeId}
+            AND company_id =#{companyId}
+        </where>
+        ORDER BY created_time DESC
+        LIMIT 1
+    </select>
 </mapper>
