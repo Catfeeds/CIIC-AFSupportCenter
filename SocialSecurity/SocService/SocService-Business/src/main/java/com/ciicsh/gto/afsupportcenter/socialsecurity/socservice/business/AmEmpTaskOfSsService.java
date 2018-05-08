@@ -18,9 +18,15 @@ import org.springframework.stereotype.Service;
 public interface AmEmpTaskOfSsService {
     /**
      * 雇员新增查询用退工信息
-     * @param empTaskId
+     *
+     * @param employeeId
+     * @param companyId
+     * @param amEmpTaskTaskCategory
      * @return
      */
-    public AmEmpTaskDTO queryReworkInfo(Long empTaskId);
+    public AmEmpTaskDTO queryReworkInfo(String employeeId, String companyId, Integer amEmpTaskTaskCategory);
 
+    String queryEmployFeedback(String employeeId, String companyId);
+
+    String queryResignFeedback(String employeeId, String companyId);
 }
