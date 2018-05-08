@@ -2,9 +2,11 @@ package com.ciicsh.gto.afsupportcenter.util;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.chrono.ChronoZonedDateTime;
 import java.time.chrono.ChronoLocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class DateUtil {
@@ -26,5 +28,9 @@ public class DateUtil {
         ZoneId zoneId  = ZoneId.systemDefault();
         return instant.atZone(zoneId).toLocalDate();
     }
-
+    public static String plusMonth(String month,int months){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
+        YearMonth hfMonthDate = YearMonth.parse(month , formatter);
+        return hfMonthDate.plusMonths(months).format(formatter);
+    }
 }

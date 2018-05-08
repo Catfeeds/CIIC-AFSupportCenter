@@ -58,6 +58,34 @@
         AND cost_category = #{costCategory}
     </select>
 
+    <select id="getSsMonthChargeList" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+            ss_month_charge mc
+        WHERE
+            mc.ss_month = #{ssMonth}
+        AND mc.is_active = 1
+        AND mc.com_account_id = #{comAccountId}
+        AND ((
+            mc.cost_category = 1
+            AND NOT EXISTS (
+                SELECT
+                    1
+                FROM
+                    ss_month_charge b
+                WHERE
+                    b.ss_month_belong = #{ssMonth}
+                AND b.cost_category IN (6, 7)
+                AND b.is_active = 1
+                AND b.com_account_id =  #{comAccountId}
+                AND b.emp_archive_id = mc.emp_archive_id
+            )
+        )
+      OR mc.cost_category IN(2, 3))
+
+    </select>
+
     <select id="getSsMonthChargeExts" resultMap="SsMonthChargeExtMap">
       SELECT
         <include refid="SsMonthChargeExt_All_Columns"/>
