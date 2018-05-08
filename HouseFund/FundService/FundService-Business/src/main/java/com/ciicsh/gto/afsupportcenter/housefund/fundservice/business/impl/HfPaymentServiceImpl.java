@@ -228,7 +228,8 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
                 out = new HfPrintRemittedBookBO();
             }
             BeanUtils.copyProperties(in, out);
-            out.setMoneyCN(MoneyToCN.number2CNMontrayUnit(in.getRepairAmount()));
+            out.setMoneyCN(MoneyToCN.number2CNMontrayUnit(in.getRemittedAmount()));
+            out.setRemittedAmountArrange("¥"+in.getRemittedAmount().toString().replace(".",""));
             out.setCurYear(LocalDate.now().getYear());
             out.setCurMonth(LocalDate.now().getMonth().getValue());
             out.setCurDay(LocalDate.now().getDayOfMonth());
@@ -244,7 +245,6 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         }
         return JsonResultKit.of(retListPrint);
     }
-
 
     private JsonResult isCanPayment(HfPayment payment) {
         if (payment == null) {

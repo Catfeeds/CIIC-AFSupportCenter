@@ -18,6 +18,7 @@ public class HfPrintRemittedBookBO {
     private BigDecimal remittedAmountAdd;//本月增加金额
     private BigDecimal remittedAmountReduce;//本月减少金额
     private BigDecimal remittedAmount;//本月汇缴金额
+    private String remittedAmountArrange;//本月汇缴金额矩阵
     private BigDecimal remittedCountEmpAdd;//本月增加人数
     private BigDecimal remittedCountEmpReduce;//本月减少人数
     private Integer remittedCountEmp;//本月汇缴人数
