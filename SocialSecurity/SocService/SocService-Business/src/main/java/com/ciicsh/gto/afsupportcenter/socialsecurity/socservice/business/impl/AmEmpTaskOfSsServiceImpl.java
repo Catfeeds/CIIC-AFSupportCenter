@@ -6,6 +6,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTa
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.AmEmpTaskOfSsMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.AmEmpTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
+import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,13 @@ public class AmEmpTaskOfSsServiceImpl implements AmEmpTaskOfSsService {
         SsEmpTask ssEmpTask = ssEmpTaskService.selectById(empTaskId);
         if(StringUtils.isBlank(ssEmpTask.getEmployeeId()) || StringUtils.isBlank(ssEmpTask.getCompanyId()))
             throw new BusinessException("任务单信息不完整");
-         AmEmpTaskDTO amEmpTaskDTO = amEmpTaskOfSsMapper.queryReworkInfo(ssEmpTask.getEmployeeId(),ssEmpTask.getCompanyId());
-         return amEmpTaskDTO;
+        Integer amEmpTaskTaskCategory = 1;
+        if (ssEmpTask.getTaskCategory().equals(Integer.valueOf(SocialSecurityConst.TASK_TYPE_5)) ||
+            ssEmpTask.getTaskCategory().equals(Integer.valueOf(SocialSecurityConst.TASK_TYPE_6))
+            ) {
+            amEmpTaskTaskCategory = 2;
+        }
+        AmEmpTaskDTO amEmpTaskDTO = amEmpTaskOfSsMapper.queryReworkInfo(ssEmpTask.getEmployeeId(),ssEmpTask.getCompanyId(), amEmpTaskTaskCategory);
+        return amEmpTaskDTO;
     }
 }

@@ -148,8 +148,8 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         AmEmpTaskDTO amEmpTaskDTO = amEmpTaskOfSsService.queryReworkInfo(empTaskId);
         if (amEmpTaskDTO == null) {
             amEmpTaskDTO = new AmEmpTaskDTO();
-            amEmpTaskDTO.setTaskStatus(1);//设置默认状态
-            amEmpTaskDTO.setTaskCategory(1);
+//            amEmpTaskDTO.setTaskStatus(1);//设置默认状态
+//            amEmpTaskDTO.setTaskCategory(1);
         }
         dto.setAmEmpTaskDTO(amEmpTaskDTO);
 
