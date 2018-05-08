@@ -613,47 +613,35 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Override
     public AmEmpTaskBO getDefualtEmployBO(AmEmpTaskBO amEmpTaskBO) {
+        AmTaskParamBO amTaskParamBO = new AmTaskParamBO();
+        amTaskParamBO.setEmployeeId(amEmpTaskBO.getEmployeeId());
+        amTaskParamBO.setCompanyId(amEmpTaskBO.getCompanyId());
+
+        AmEmpEmployeeBO amEmpEmployeeBO = amEmpEmployeeService.queryDefaultAmEmployee(amTaskParamBO);
+
         AmEmpTask amEmpTask = super.selectById(amEmpTaskBO.getEmpTaskId());
         AmEmpTaskBO amEmpTaskBO1 = new AmEmpTaskBO();
         BeanUtils.copyProperties(amEmpTask,amEmpTaskBO1);
 
         amEmpTaskBO1 = defaultRule(amEmpTaskBO1);
 
-        EmployeeHireInfoQueryDTO employeeHireInfoQueryDTO = new EmployeeHireInfoQueryDTO();
-        employeeHireInfoQueryDTO.setCompanyId(amEmpTaskBO.getCompanyId());
-        employeeHireInfoQueryDTO.setEmployeeId(amEmpTaskBO.getEmployeeId());
-        JsonResult<EmployeeHireInfoDTO> employeeHireInfo = null;//雇佣雇佣信息接口
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        try {
-            employeeHireInfo = employeeInfoProxy.getEmployeeHireInfo(employeeHireInfoQueryDTO);
-        } catch (Exception e) {
-            logger.error(e.getMessage(),e);
-        }
-
-        //调用前道接口
-        AfEmployeeCompanyDTO afEmployeeCompanyDTO = null;
-        try {
-            TaskCreateMsgDTO taskMsgDTO = new TaskCreateMsgDTO();
-            taskMsgDTO.setMissionId(amEmpTask.getBusinessInterfaceId());
-            AfEmployeeInfoDTO afEmployeeInfoDTO = employeeInfoProxy.callInfByMissId(taskMsgDTO);
-            afEmployeeCompanyDTO = afEmployeeInfoDTO.getEmployeeCompany();
-        } catch (Exception e) {
-            logger.error(e.getMessage(),e);
-        }
-
-        if(afEmployeeCompanyDTO!=null)
+        if(amEmpEmployeeBO!=null)
         {
             /**
              * 用工属性根据雇佣类型  派遣默认中智
               */
-          if(afEmployeeCompanyDTO.getHireUnit()==1)
+          if(null!=amEmpEmployeeBO.getHireUnit()&&amEmpEmployeeBO.getHireUnit()==1)
           {
               amEmpTaskBO1.setEmployProperty("独立");
           }
+
+          if(null!=amEmpEmployeeBO.getLaborStartDate()){
+              amEmpTaskBO1.setFirstInDate(sdf.format(amEmpEmployeeBO.getLaborStartDate()));//实际录用日期,合同开始日期
+          }
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        amEmpTaskBO1.setFirstInDate(sdf.format(employeeHireInfo.getData().getLaborStartDate()));//实际录用日期,合同开始日期
         amEmpTaskBO1.setOpenAfDate(sdf.format(new Date()));
         amEmpTaskBO1.setEmployStyle("1");//默认全日制
         return amEmpTaskBO1;

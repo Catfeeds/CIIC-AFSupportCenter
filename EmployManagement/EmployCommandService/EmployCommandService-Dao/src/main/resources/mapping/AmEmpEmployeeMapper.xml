@@ -61,9 +61,9 @@
         am_emp_employee a
         LEFT JOIN am_emp_task b ON a.emp_task_id = b.emp_task_id
         WHERE
-        a.company_id = #{companyId}
-        and
         a.employee_id = #{employeeId}
+        and
+        a.company_id = #{companyId}
         order by a.created_time desc
     </select>
 

@@ -6,6 +6,7 @@ import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFMonthChargeQueryBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFMonthChargeReportBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentAccountReportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfMonthChargeService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.util.PdfUtil;
@@ -164,5 +165,42 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
             response.setHeader("content-Type", "text/plain");
             response.getWriter().write(e.getMessage());
         }
+    }
+
+    /**
+     * 导出公积金汇缴支付详情Excel报表
+     * @param pageInfo 导出条件
+     */
+    @RequestMapping("/operateDetailExcelExport")
+    public void operateDetailExcelExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
+        pageInfo.setPageSize(10000);
+        pageInfo.setPageNum(0);
+        PageRows<HfPaymentAccountReportBo> result = business.getOperateDetailReport(pageInfo, UserContext.getUserId());
+        long total = result.getTotal();
+        ExportParams exportParams = new ExportParams();
+        exportParams.setType(ExcelType.XSSF);
+        exportParams.setSheetName("公积金汇缴支付明细");
+        Workbook workbook;
+        if (total <= pageInfo.getPageSize()) {
+            workbook = ExcelExportUtil.exportExcel(exportParams, HfPaymentAccountReportBo.class, result.getRows());
+        } else {
+            workbook = ExcelExportUtil.exportBigExcel(exportParams, HfPaymentAccountReportBo.class, result.getRows());
+            int pageNum = (int) Math.ceil(total / pageInfo.getPageSize());
+            for(int i = 1; i < pageNum; i++) {
+                pageInfo.setPageNum(i);
+                result = business.getOperateDetailReport(pageInfo, UserContext.getUserId());
+                workbook = ExcelExportUtil.exportBigExcel(exportParams, HfPaymentAccountReportBo.class, result.getRows());
+            }
+            ExcelExportUtil.closeExportBigExcel();
+        }
+        String fileName = URLEncoder.encode("公积金汇缴支付明细-" + System.currentTimeMillis() + ".xlsx", "UTF-8");
+
+        response.reset();
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition",
+            "attachment;filename=" + fileName);
+        workbook.write(response.getOutputStream());
+        workbook.close();
     }
 }

@@ -19,4 +19,11 @@ public interface HfPaymentComService extends IService<HfPaymentCom> {
      */
     PageRows<HfPaymentComBo> getFundPaysDetailOperationData(PageInfo pageInfo);
     JsonResult createPaymentCom(HfFundPayCreatePaymentAccountPara hfFundPayCreatePaymentAccountPara);
+
+    /**
+     * 编辑页面添加支付详细数据
+     * @param hfFundPayCreatePaymentAccountPara 添加的支付批次详情
+     * @return 添加结果
+     */
+    JsonResult createPaymentComById(HfFundPayCreatePaymentAccountPara hfFundPayCreatePaymentAccountPara);
 }

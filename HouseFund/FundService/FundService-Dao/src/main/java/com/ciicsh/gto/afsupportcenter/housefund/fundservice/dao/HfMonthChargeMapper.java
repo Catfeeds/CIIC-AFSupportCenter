@@ -1,9 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFMonthChargeQueryBO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFMonthChargeReportBO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfMonthChargeBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfMonthChargeDiffBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankExportBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankQueryBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
@@ -55,4 +52,11 @@ public interface HfMonthChargeMapper extends BaseMapper<HfMonthCharge> {
     List<HFMonthChargeReportBO> queryHfMonthChargeReport(HFMonthChargeQueryBO hfMonthChargeQueryBO);
 
     List<HFNetBankExportBO> queryNetBankData(HFNetBankQueryBO hfNetBankQueryBO);
+    /**
+     * 导出公积金汇缴支付详情报表
+     *
+     * @param hfPaymentAccountBo 查询条件
+     * @return 导出结果
+     */
+    List<HfPaymentAccountReportBo> getOperateDetailReport(HfPaymentAccountBo hfPaymentAccountBo);
 }

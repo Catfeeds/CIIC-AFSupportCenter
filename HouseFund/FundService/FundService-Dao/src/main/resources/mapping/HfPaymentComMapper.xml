@@ -199,5 +199,44 @@
 
     </update>
 
+    <!-- 删除公积金汇缴支付编辑操作数据：更新hf_payment_com表的is_active为不可用-->
+    <update id="updateHpcById" parameterType="java.lang.Long">
+        update hf_payment_com
+        set is_active = 0
+        WHERE  payment_id=#{paymentId}
+    </update>
+
+    <!-- 添加公积金汇缴支付编辑操作数据：更新hf_payment_com表的is_active为可用-->
+    <update id="updatePaymentComById" parameterType="java.lang.Long">
+        update hf_payment_com
+        set is_active = 1
+        WHERE  payment_id=#{paymentId}
+    </update>
+
+    <!-- 添加公积金汇缴支付编辑操作数据：查出当前汇缴支付批次下的当月汇缴支付总金额-->
+    <select id="getAmountByPaymentId" resultMap="GetFundPaysDetailOperationDataResultMap">
+        SELECT
+          SUM(IFNULL(remitted_amount, 0)) AS remitted_amount,
+          SUM(IFNULL(repair_amount,0)) AS repair_amount
+        FROM
+          hf_payment_com
+        WHERE is_active = 1
+          AND payment_id = #{paymentId}
+    </select>
+
+    <!--导出时查询公积金汇缴支付详细操作数据中的所有公司列表-->
+    <select id="getCompanyIdList" resultMap="GetFundPaysDetailOperationDataResultMap">
+        SELECT DISTINCT
+        hpc.company_id,
+        sc.title,
+        hpc.com_account_id
+        FROM
+        hf_payment_com hpc
+        LEFT JOIN sal_company sc
+        ON hpc.company_id = sc.company_id
+        WHERE hpc.is_active = 1
+        AND hpc.payment_id = #{paymentId}
+        AND hpc.com_account_id = #{comAccountId}
+    </select>
 
 </mapper>
