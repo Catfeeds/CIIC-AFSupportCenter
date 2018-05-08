@@ -42,6 +42,7 @@ public class AmEmpEmployeeServiceImpl extends ServiceImpl<AmEmpEmployeeMapper, A
             if(amEmpEmployeeBO.getLaborEndDate()==null)
             {
                 amEmpEmployeeBO.setIsUnlimitedContract("是");
+                amEmpEmployeeBO.setSendCondemnationYears("无固定期限合同");
             }else{
                 amEmpEmployeeBO.setIsUnlimitedContract("否");
 
@@ -96,6 +97,7 @@ public class AmEmpEmployeeServiceImpl extends ServiceImpl<AmEmpEmployeeMapper, A
             if(amEmpEmployeeBO.getLaborEndDate()==null)
             {
                 amEmpEmployeeBO.setIsUnlimitedContract("是");
+                amEmpEmployeeBO.setSendCondemnationYears("无固定期限合同");
             }else{
                 amEmpEmployeeBO.setIsUnlimitedContract("否");
 
@@ -128,6 +130,16 @@ public class AmEmpEmployeeServiceImpl extends ServiceImpl<AmEmpEmployeeMapper, A
             amEmpEmployeeBO.setFirstInDateStr(amEmpEmployeeBO.getFirstInDate()==null?"":sdf.format(amEmpEmployeeBO.getFirstInDate()));
 
             return  amEmpEmployeeBO;
+        }
+        return null;
+    }
+
+    @Override
+    public AmEmpEmployeeBO queryDefaultAmEmployee(AmTaskParamBO amTaskParamBO) {
+        List<AmEmpEmployeeBO> list = baseMapper.queryAmEmployee(amTaskParamBO);
+        if(list!=null&&list.size()>0)
+        {
+            return  list.get(0);
         }
         return null;
     }
