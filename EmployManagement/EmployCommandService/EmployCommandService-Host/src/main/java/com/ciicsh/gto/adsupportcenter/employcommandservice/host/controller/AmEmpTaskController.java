@@ -536,6 +536,22 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         return JsonResultKit.of(amEmpTaskBO1);
     }
 
+    /**
+     * 档案类别 预留档案类别查询
+     * @param
+     * @return
+     */
+    @Log("档案类别查询")
+    @RequestMapping("/queryAmArchiveDocType")
+    public JsonResult queryAmArchiveDocType() {
+        // 预留档案类别
+        List<AmArchiveDocSeqBO> boList = amArchiveService.queryAmArchiveDocTypeByType(1);
+        List<AmArchiveDocSeqBO> boList2 = amArchiveService.queryAmArchiveDocTypeByType(2);
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("docSeqList",boList);
+        resultMap.put("docSeqList2",boList2);
+        return JsonResultKit.of(resultMap);
+    }
 
 }
 

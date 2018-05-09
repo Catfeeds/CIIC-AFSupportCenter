@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentAccountBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentComBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankComAccountBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankExportBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentAccountService;
@@ -15,6 +16,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentComMapp
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentAccount;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentAccountService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentCom;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -27,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -556,6 +560,74 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
             }
         }
         return false;
+    }
+
+    /**
+     * 编辑页面添加支付详细数据
+     * @param pageInfo 查询条件
+     * @return
+     */
+    @Override
+    public PageRows<HfPaymentAccountBo> getMakePayListsById(PageInfo pageInfo){
+        HfPaymentAccountBo hfPaymentAccountBo = pageInfo.toJavaObject(HfPaymentAccountBo.class);
+        return PageKit.doSelectPage(pageInfo, () -> hfPaymentAccountMapper.getMakePayListsById(hfPaymentAccountBo));
+    }
+
+    /**
+     * 公积金汇缴支付编辑/详细操作数据
+     *
+     * @param pageInfo
+     * @return
+     */
+    @Override
+    public PageRows<HfPaymentAccountBo> getFundPaysEditOperationData(PageInfo pageInfo) {
+        HfPaymentAccountBo hfPaymentAccountBo = pageInfo.toJavaObject(HfPaymentAccountBo.class);
+        return PageKit.doSelectPage(pageInfo, () -> hfPaymentAccountMapper.getFundPaysEditOperationData(hfPaymentAccountBo));
+    }
+
+    /**
+     * 删除公积金汇缴支付编辑操作数据(编辑页面)
+     * @param hfPaymentAccountBo 条件
+     * @return 删除结果
+     */
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public JsonResult delOperateEditData(HfPaymentAccountBo hfPaymentAccountBo) {
+        try {
+            // 1,根据paymentId和comAccountId物理删除hf_payment_com
+            Map map = new HashMap();
+            map.put("payment_id", hfPaymentAccountBo.getPaymentId());
+            map.put("com_account_id", hfPaymentAccountBo.getComAccountId());
+            hfPaymentComMapper.deleteByMap(map);
+            // 2,更新hf_payment_account表中数据,根据paymentId和comAccountId把paymentId置为0
+            hfPaymentAccountMapper.updateDelOperateEditDataFromHpa(hfPaymentAccountBo);
+            // 3,如果当前汇缴批次中的所有支付明细已经全部删除，则删除此批次；否则，更新未删除的明细的支付总金额
+            Wrapper<HfPaymentCom> wrapper = new EntityWrapper();
+            wrapper.eq("payment_id", hfPaymentAccountBo.getPaymentId());
+            List<HfPaymentCom> detailList = hfPaymentComMapper.selectList(wrapper);
+            if(detailList.size() == 0){
+                HfPayment hfPaymentData = new HfPayment();
+                hfPaymentData.setPaymentId(hfPaymentAccountBo.getPaymentId());
+                hfPaymentData.setActive(false);
+                hfPaymentData.setModifiedBy(UserContext.getUser().getDisplayName());
+                hfPaymentData.setModifiedTime(new Date());
+                hfPaymentMapper.updateById(hfPaymentData);
+            } else {
+                // 4,更新hf_payment表中的申请支付总金额
+                HfPaymentComBo amountBo = hfPaymentComMapper.getAmountByPaymentId(hfPaymentAccountBo.getPaymentId());
+                HfPayment hfPayment = new HfPayment();
+                hfPayment.setPaymentId(hfPaymentAccountBo.getPaymentId());
+                hfPayment.setTotalApplicationAmonut(Optional.ofNullable(amountBo.getRemittedAmount()).orElse(BigDecimal.valueOf(0))
+                    .add(Optional.ofNullable(amountBo.getRepairAmount()).orElse(BigDecimal.valueOf(0))));
+                hfPayment.setModifiedTime(new Date());
+                hfPayment.setModifiedBy(UserContext.getUser().getDisplayName());
+                // hfPayment.setTotalEmpCount(empCount);
+                hfPaymentMapper.updateById(hfPayment);
+            }
+        } catch (Exception E) {
+            return JsonResultKit.ofError("删除操作失败！");
+        }
+        return JsonResultKit.of("删除操作成功！");
     }
 
 }

@@ -18,5 +18,9 @@ import org.springframework.stereotype.Component;
 @Component
 public interface AmEmpTaskOfSsMapper{
 
-    AmEmpTaskDTO queryReworkInfo(@Param("employeeId")String employeeId,  @Param("companyId")String companyId);
+    AmEmpTaskDTO queryReworkInfo(@Param("employeeId")String employeeId,  @Param("companyId")String companyId, @Param("taskCategory")Integer taskCategory);
+
+    String queryEmployFeedback(@Param("employeeId")String employeeId,  @Param("companyId")String companyId);
+
+    String queryResignFeedback(@Param("employeeId")String employeeId,  @Param("companyId")String companyId);
 }

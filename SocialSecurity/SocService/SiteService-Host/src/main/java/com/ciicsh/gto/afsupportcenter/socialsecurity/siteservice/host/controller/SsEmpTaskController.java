@@ -21,6 +21,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTaskPeriod;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
+import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
@@ -144,12 +145,29 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
 //            String ssSerial = business.selectMaxSsSerialByTaskId(empTaskId);
 //            dto.setEmpSsSerial(ssSerial);
 //         }
-        //任务单参考信息 用退工
-        AmEmpTaskDTO amEmpTaskDTO = amEmpTaskOfSsService.queryReworkInfo(empTaskId);
+
+        Integer amEmpTaskTaskCategory = 1;
+        String feedback;
+        AmEmpTaskDTO amEmpTaskDTO = null;
+
+        if (empTask.getTaskCategory().equals(Integer.valueOf(SocialSecurityConst.TASK_TYPE_5)) ||
+            empTask.getTaskCategory().equals(Integer.valueOf(SocialSecurityConst.TASK_TYPE_6))
+            ) {
+            amEmpTaskTaskCategory = 2;
+            feedback = amEmpTaskOfSsService.queryResignFeedback(empTask.getEmployeeId(), empTask.getCompanyId());
+        } else {
+            feedback = amEmpTaskOfSsService.queryEmployFeedback(empTask.getEmployeeId(), empTask.getCompanyId());
+            //任务单参考信息 用工
+            amEmpTaskDTO = amEmpTaskOfSsService.queryReworkInfo(empTask.getEmployeeId(), empTask.getCompanyId(), amEmpTaskTaskCategory);
+        }
+
         if (amEmpTaskDTO == null) {
             amEmpTaskDTO = new AmEmpTaskDTO();
-            amEmpTaskDTO.setTaskStatus(1);//设置默认状态
-            amEmpTaskDTO.setTaskCategory(1);
+            amEmpTaskDTO.setTaskCategory(amEmpTaskTaskCategory);
+        }
+
+        if (StringUtils.isNotEmpty(feedback)) {
+            amEmpTaskDTO.setTaskStatus(Integer.parseInt(feedback));
         }
         dto.setAmEmpTaskDTO(amEmpTaskDTO);
 

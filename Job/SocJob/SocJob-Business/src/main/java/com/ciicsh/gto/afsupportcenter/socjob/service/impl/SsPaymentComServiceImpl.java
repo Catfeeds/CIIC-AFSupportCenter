@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socjob.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.socjob.dao.*;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.*;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.custom.SsAccountComExt;
@@ -12,6 +13,7 @@ import com.ciicsh.gto.afsupportcenter.socjob.service.enums.ComputeType;
 import com.ciicsh.gto.afsupportcenter.socjob.service.enums.CostCategory;
 import com.ciicsh.gto.afsupportcenter.socjob.util.CommonUtils;
 import com.ciicsh.gto.afsupportcenter.util.DateUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,10 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -113,7 +112,6 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
             ssMonthChargesList.forEach(ext -> {
                 ext.setSsMonthBelong(ssMonth);
                 ext.setSsMonth(ssMonth);
-                ext.setCostCategory(1);
                 ext.setCreatedBy("system");
                 ext.setModifiedBy("system");
                 ext.setCreatedTime(LocalDateTime.now());
@@ -350,18 +348,57 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
     private void createStandardMonthCharge(SsMonthCharge ssMonthCharge) {
         Long monthChargeId = ssMonthCharge.getMonthChargeId();
         ssMonthCharge.setMonthChargeId(null);
+        Long empTaskId = ssMonthCharge.getEmpTaskId();
+        ssMonthCharge.setEmpTaskId(null);
+        Integer costCategory = ssMonthCharge.getCostCategory();
+        ssMonthCharge.setCostCategory(1);
         monthChargeMapper.insert(ssMonthCharge);
-        List<SsMonthChargeItem> ssMonthChargeItemsList = monthChargeItemMapper.getMonthChargeItemByMonthChargeId(monthChargeId);
-        if (null != ssMonthChargeItemsList && ssMonthChargeItemsList.size() > 0) {
-            ssMonthChargeItemsList.forEach(ssMonthChargeItem -> {
-                ssMonthChargeItem.setMonthChargeItemId(null);
-                ssMonthChargeItem.setMonthChargeId(ssMonthCharge.getMonthChargeId());
-                ssMonthChargeItem.setCreatedBy("system");
-                ssMonthChargeItem.setModifiedBy("system");
-                ssMonthChargeItem.setCreatedTime(LocalDateTime.now());
-                ssMonthChargeItem.setModifiedTime(LocalDateTime.now());
-                monthChargeItemMapper.insert(ssMonthChargeItem);
-            });
+
+        if (costCategory != 5) {
+            List<SsMonthChargeItem> ssMonthChargeItemsList = monthChargeItemMapper.getMonthChargeItemByMonthChargeId(monthChargeId);
+            if (null != ssMonthChargeItemsList && ssMonthChargeItemsList.size() > 0) {
+                ssMonthChargeItemsList.forEach(ssMonthChargeItem -> {
+                    ssMonthChargeItem.setMonthChargeItemId(null);
+                    ssMonthChargeItem.setMonthChargeId(ssMonthCharge.getMonthChargeId());
+                    ssMonthChargeItem.setCreatedBy("system");
+                    ssMonthChargeItem.setModifiedBy("system");
+                    ssMonthChargeItem.setCreatedTime(LocalDateTime.now());
+                    ssMonthChargeItem.setModifiedTime(LocalDateTime.now());
+                    monthChargeItemMapper.insert(ssMonthChargeItem);
+                });
+            }
+        } else {
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("is_active", 1);
+            condition.put("emp_task_id", empTaskId);
+            condition.put("emp_archive_id", ssMonthCharge.getEmpArchiveId());
+            List<SsEmpBasePeriod> list = empBasePeriodMapper.selectByMap(condition);
+
+            if (CollectionUtils.isNotEmpty(list)) {
+                for (SsEmpBasePeriod ssEmpBasePeriod : list) {
+                    if (StringUtils.isEmpty(ssEmpBasePeriod.getEndMonth())) {
+                        List<SsEmpBaseDetail> details = empBaseDetailMapper.getEmpBaseDetailsByPeriodId(ssEmpBasePeriod.getEmpBasePeriodId());
+                        if (CollectionUtils.isNotEmpty(details)) {
+                            details.forEach(detail -> {
+                                SsMonthChargeItem ssMonthChargeItem = new SsMonthChargeItem();
+                                ssMonthChargeItem.setMonthChargeItemId(null);
+                                ssMonthChargeItem.setMonthChargeId(ssMonthCharge.getMonthChargeId());
+                                ssMonthChargeItem.setSsType(detail.getSsType());
+                                ssMonthChargeItem.setSsTypeName(detail.getSsTypeName());
+                                ssMonthChargeItem.setComAmount(detail.getComAmount());
+                                ssMonthChargeItem.setEmpAmount(detail.getEmpAmount());
+                                ssMonthChargeItem.setSubTotalAmount(detail.getComempAmount());
+                                ssMonthChargeItem.setCreatedBy("system");
+                                ssMonthChargeItem.setModifiedBy("system");
+                                ssMonthChargeItem.setCreatedTime(LocalDateTime.now());
+                                ssMonthChargeItem.setModifiedTime(LocalDateTime.now());
+                                monthChargeItemMapper.insert(ssMonthChargeItem);
+                            });
+                        }
+                        break;
+                    }
+                }
+            }
         }
     }
 

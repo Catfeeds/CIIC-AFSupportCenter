@@ -73,6 +73,25 @@
         <result column="ratio_emp" property="ratioEmp" />
     </resultMap>
 
+    <resultMap id="GetOperateDetailReportResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentAccountReportBo">
+        <result column="payment_account_id" property="paymentAccountId" />
+        <result column="com_account_name" property="comAccountName" />
+        <result column="hf_type_name" property="hfTypeName" />
+        <result column="payment_state_value" property="paymentStateValue" />
+        <result column="account_type_value" property="accountTypeValue" />
+        <result column="payment_bank_value" property="paymentBankValue" />
+        <result column="sum_amount" property="sumAmount" />
+        <result column="pay_in_back_amount" property="payInBackAmount" />
+        <result column="fCount" property="fCount" />
+        <result column="payment_state" property="paymentState" />
+        <result column="hf_account_type" property="fundAccountType" />
+        <result column="remitted_amount" property="remittedAmount" />
+        <result column="repair_amount" property="repairAmount" />
+        <result column="remitted_count_emp" property="remittedCountEmp" />
+        <result column="title" property="title" />
+        <result column="com_account_id" property="comAccountId" />
+    </resultMap>
+
 	<update id="updateHfMonthCharge">
         UPDATE hf_month_charge
         SET
@@ -293,5 +312,42 @@
         <if test="exceptRepairReason != null">
             AND hmc.repair_reason != #{exceptRepairReason}
         </if>
+    </select>
+
+    <!--导出公积金汇缴支付编辑操作数据-->
+    <select id="getOperateDetailReport" resultMap="GetOperateDetailReportResultMap">
+        SELECT
+        COUNT(hpa.hf_type) fCount,
+        SUM(hpc.remitted_amount) AS remitted_amount,
+        hpc.repair_amount,
+        hpc.remitted_count_emp,
+        hpa.payment_month,
+        hpc.company_id,
+        hpa.hf_type,
+        ht.hf_type_name,
+        hcapb.payment_bank_value,
+        sc.title,
+        hpa.com_account_id
+        FROM
+        hf_payment_account hpa
+        INNER JOIN hf_payment_com hpc
+        ON hpa.payment_id = hpc.payment_id
+        INNER JOIN hf_com_account hca
+        ON hca.com_account_id = hpc.com_account_id
+        INNER JOIN hf_type ht
+        ON ht.hf_type_code = hpa.hf_type
+        INNER JOIN hf_com_account_payment_bank hcapb
+        ON hcapb.payment_bank_code = hpc.payment_bank
+        INNER JOIN sal_company sc
+        ON hpc.company_id = sc.company_id
+        WHERE hpa.is_active = 1
+        AND hpc.is_active = 1
+        <if test = "paymentId != null and paymentId != ''" >
+            AND hpa.payment_id = #{paymentId}
+        </if>
+        AND hpa.hf_type = hpc.hf_type
+        AND hpa.com_account_id = hpc.com_account_id
+        GROUP BY hpa.com_account_id,
+        hpa.hf_type
     </select>
 </mapper>

@@ -153,4 +153,48 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
         HfPaymentComBo hfPaymentComBo = pageInfo.toJavaObject(HfPaymentComBo.class);
         return PageKit.doSelectPage(pageInfo, () -> hfPaymentComMapper.getFundPaysDetailOperationData(hfPaymentComBo));
     }
+
+    /**
+     * 公积金汇缴支付-生成汇缴支付客户名单(编辑页面的添加)
+     * @param params 生成条件
+     * @return 生成结果
+     */
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public JsonResult createPaymentComById(HfFundPayCreatePaymentAccountPara params) {
+        //查询出所有前端选择的基本和补充公积金账户
+        List<HfCreatePaymentAccountBO> paymentAccountList = hfPaymentComMapper.selectPaymentAccount(params);
+        if (paymentAccountList.size() == 0) {
+            return JsonResultKit.ofError("无数据可生成！");
+        }
+        HfPaymentAccount hfPaymentAccount = new HfPaymentAccount();
+        BigDecimal totalApplicationAmount = BigDecimal.ZERO;
+        int empCount = 0;
+        HfCreatePaymentAccountBO accountBO = new HfCreatePaymentAccountBO();
+        for (int i = 0; i < paymentAccountList.size(); i++) {
+            accountBO = paymentAccountList.get(i);
+            totalApplicationAmount = totalApplicationAmount.add(
+                Optional.ofNullable(accountBO.getRemittedAmount()).orElse(BigDecimal.valueOf(0))
+                    .add(Optional.ofNullable(accountBO.getRepairAmount()).orElse(BigDecimal.valueOf(0))));
+            // 1,生成hf_payment_com记录
+            insertHfPaymentCom(accountBO, params.getPaymentId());
+
+            hfPaymentAccount.setPaymentId(params.getPaymentId());
+            hfPaymentAccount.setPaymentAccountId(accountBO.getPaymentAccountId());
+            hfPaymentAccount.setModifiedBy(UserContext.getUser().getDisplayName());
+            hfPaymentAccount.setModifiedTime(LocalDateTime.now());
+            // 2,更新hf_payment_account中的payment_id
+            hfPaymentAccountMapper.updateById(hfPaymentAccount);
+        }
+        // 3,更新申请支付总金额
+        HfPaymentComBo amountBo = hfPaymentComMapper.getAmountByPaymentId(params.getPaymentId());
+        HfPayment hfPayment = new HfPayment();
+        hfPayment.setPaymentId(params.getPaymentId());
+        hfPayment.setTotalApplicationAmonut(Optional.ofNullable(amountBo.getRemittedAmount()).orElse(BigDecimal.valueOf(0))
+            .add(Optional.ofNullable(amountBo.getRepairAmount()).orElse(BigDecimal.valueOf(0))));
+        hfPayment.setModifiedTime(new Date());
+        hfPayment.setModifiedBy(UserContext.getUser().getDisplayName());
+        hfPaymentMapper.updateById(hfPayment);
+        return JsonResultKit.of();
+    }
 }

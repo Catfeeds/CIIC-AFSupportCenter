@@ -82,6 +82,8 @@ public class SsMonthCharge implements Serializable {
 	private String createdBy;
 	@TableField("modified_by")
 	private String modifiedBy;
+    @TableField("emp_task_id")
+    private Long empTaskId;
 
 
 	public Long getMonthChargeId() {
@@ -204,7 +206,15 @@ public class SsMonthCharge implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	@Override
+    public Long getEmpTaskId() {
+        return empTaskId;
+    }
+
+    public void setEmpTaskId(Long empTaskId) {
+        this.empTaskId = empTaskId;
+    }
+
+    @Override
 	public String toString() {
 		return "SsMonthCharge{" +
 			", monthChargeId=" + monthChargeId +
@@ -222,6 +232,7 @@ public class SsMonthCharge implements Serializable {
 			", modifiedTime=" + modifiedTime +
 			", createdBy=" + createdBy +
 			", modifiedBy=" + modifiedBy +
+            ", empTaskId=" + empTaskId +
 			"}";
 	}
 }
