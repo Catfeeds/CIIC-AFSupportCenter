@@ -350,9 +350,10 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         ssMonthCharge.setMonthChargeId(null);
         Long empTaskId = ssMonthCharge.getEmpTaskId();
         ssMonthCharge.setEmpTaskId(null);
-        monthChargeMapper.insert(ssMonthCharge);
         Integer costCategory = ssMonthCharge.getCostCategory();
         ssMonthCharge.setCostCategory(1);
+        monthChargeMapper.insert(ssMonthCharge);
+
         if (costCategory != 5) {
             List<SsMonthChargeItem> ssMonthChargeItemsList = monthChargeItemMapper.getMonthChargeItemByMonthChargeId(monthChargeId);
             if (null != ssMonthChargeItemsList && ssMonthChargeItemsList.size() > 0) {
