@@ -120,4 +120,5 @@ public class SsComAccountBO {
     private String rejectionRemark;
     private String leaderShipName;
 
+    private Long ssSerial;
 }
