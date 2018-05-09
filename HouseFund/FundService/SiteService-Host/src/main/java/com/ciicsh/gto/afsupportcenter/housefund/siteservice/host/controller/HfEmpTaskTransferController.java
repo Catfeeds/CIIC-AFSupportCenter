@@ -124,43 +124,20 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
             return JsonResultKit.ofError(e.getMessage());
         }
     }
+    /**
+     * 获取转移任务单打印数据
+     */
+    @RequestMapping("/getPrintTransfer")
+    public JsonResult getPrintTransfer(EmpTaskTransferBo empTaskTransferBo) throws Exception {
+        List<Map<String, Object>> printList = business.printTransferTask(empTaskTransferBo);
+        return JsonResultKit.of(printList);
+    }
 
     /**
      * 打印转移任务单PDF
      */
     @RequestMapping("/printTransferTask")
     public void printTransferTask(HttpServletResponse response, EmpTaskTransferBo empTaskTransferBo) throws Exception {
-        try {
-            String templateFilePath;
-            List<Map<String, Object>> printList = business.printTransferTask(empTaskTransferBo);
-            templateFilePath = "/template/SH_HF_TRANSFER_TMP.pdf";
-            String fileName = URLEncoder.encode("上海市公积金转移通知书.pdf", "UTF-8");
-            response.reset();
-            response.setCharacterEncoding("UTF-8");
-            response.setHeader("content-Type", "application/pdf");
-            response.setHeader("Content-Disposition",
-                "attachment;filename=" + fileName);
-            PdfUtil.createPdfByTemplate(templateFilePath,
-                PdfUtil.DEFAULT_FONT_NAME,
-                PdfUtil.DEFAULT_FONT_ENCODING,
-                false,
-                true,
-                printList,
-                response.getOutputStream());
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.reset();
-            response.setCharacterEncoding("UTF-8");
-            response.setHeader("content-Type", "text/plain");
-            response.getWriter().write(e.getMessage());
-        }
-
-    }
-    /**
-     * 打印转移任务单PDF
-     */
-    @RequestMapping("/getPrintTransfer")
-    public void getPrintTransfer(HttpServletResponse response, EmpTaskTransferBo empTaskTransferBo) throws Exception {
         try {
             String templateFilePath;
             List<Map<String, Object>> printList = business.printTransferTask(empTaskTransferBo);
