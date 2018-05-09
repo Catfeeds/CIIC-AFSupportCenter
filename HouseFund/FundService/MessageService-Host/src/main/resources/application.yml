@@ -15,49 +15,41 @@ spring:
         common_taskservice_af_empin_channel:
           destination: common_taskservice_af_empin # topic name
           group: ${spring.application.name}
-#          content-type: application/json
           consumer:
             partitioned: true
         common_taskservice_af_empout_channel:
           destination: common_taskservice_af_empout # topic name
           group: ${spring.application.name}
-#          content-type: application/json
           consumer:
             partitioned: true
         common_taskservice_af_emp_make_up_channel:
           destination: common_taskservice_af_emp_make_up # topic name
           group: ${spring.application.name}
-#          content-type: application/json
           consumer:
             partitioned: true
         common_taskservice_af_emp_company_change_channel:
           destination: common_taskservice_af_emp_company_change # topic name
           group: ${spring.application.name}
-#          content-type: application/json
           consumer:
             partitioned: true
         common_taskservice_af_emp_agreement_adjust_channel:
           destination: common_taskservice_af_emp_agreement_adjust # topic name
           group: ${spring.application.name}
-#          content-type: application/json
           consumer:
             partitioned: true
         common_taskservice_af_emp_agreement_update_channel:
           destination: common_taskservice_af_emp_agreement_update # topic name
           group: ${spring.application.name}
-#          content-type: application/json
           consumer:
             partitioned: true
         pay-apply-pay-status-stream_channel:
           destination: pay-apply-pay-status-stream # topic name
           group: ${spring.application.name}
-#          content-type: application/json
           consumer:
             partitioned: true
         common_taskservice_af_company_fund_account_once_channel:
           destination: common_taskservice_af_company_fund_account_once # topic name
           group: ${spring.application.name}
-          #content-type: application/json
           consumer:
             partitioned: true
       instance-count: 2 # The number of deployed instances of an application.
