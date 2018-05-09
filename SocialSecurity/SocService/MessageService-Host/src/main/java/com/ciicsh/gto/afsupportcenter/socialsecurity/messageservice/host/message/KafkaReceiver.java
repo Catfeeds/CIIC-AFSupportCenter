@@ -366,7 +366,7 @@ public class KafkaReceiver {
         logApiUtil.info(LogMessage.create().setTitle(LogInfo.SOURCE_MESSAGE.getKey()+"#"+TaskSink.PAY_APPLY_PAY_STATUS_STREAM).setContent(" JSON: " + JSON.toJSONString(taskMsgDTO)));
         if (taskMsgDTO.getBusinessType() == 1) {
             try {
-                ssPaymentComService.savePaymentInfo(taskMsgDTO.getBusinessPkId(), taskMsgDTO.getRemark(), taskMsgDTO.getPayStatus());
+                ssPaymentComService.savePaymentInfo(taskMsgDTO);
             } catch (Exception e) {
                 logApiUtil.info(LogMessage.create().setTitle(LogInfo.SOURCE_MESSAGE.getKey()+"#"+TaskSink.PAY_APPLY_PAY_STATUS_STREAM).setContent(e.getMessage()));
             }

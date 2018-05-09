@@ -8,13 +8,15 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentAcco
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 
 import java.util.List;
 import java.util.Map;
 
 public interface HfPaymentAccountService extends IService<HfPaymentAccount> {
 
-    boolean updatePaymentInfo(Long pkId, String remark, Integer payStatus);
+    //boolean updatePaymentInfo(Long pkId, String remark, Integer payStatus);
+    boolean updatePaymentInfo(PayApplyPayStatusDTO taskMsgDTO);
 
     /**
      * 获得公积金汇缴支付列表

@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 
 /**
  * <p>
@@ -95,8 +96,7 @@ public interface SsPaymentComService extends IService<SsPaymentCom> {
      *
      * @author zhangxj
      * @date 2018-01-02
-     * @param pkId 业务方主键id
-     * @param pkId 批退备注
      */
-    boolean savePaymentInfo(Long pkId, String remark, Integer payStatus);
+   //boolean savePaymentInfo(Long pkId, String remark, Integer payStatus);
+    boolean savePaymentInfo(PayApplyPayStatusDTO taskMsgDTO );
 }
