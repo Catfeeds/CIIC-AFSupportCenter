@@ -13,6 +13,7 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Task;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskFollow;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskType;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.SelectionUtils;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -72,12 +73,11 @@ public class EmpCredentialsDealController {
     public JsonResult saveOrUpdateFollow(@RequestBody TaskFollowDTO taskFollowDTO){
         TaskFollow taskFollow = new TaskFollow();
         BeanUtils.copyProperties(taskFollowDTO,taskFollow);
-        //TODO
         if (taskFollowDTO.getTaskFollowId() == null) {
-            taskFollow.setCreatedBy("test");
+            taskFollow.setCreatedBy(UserContext.getUser().getDisplayName());
             taskFollow.setCreatedTime(new Date());
         }
-        taskFollow.setModifiedBy("test");
+        taskFollow.setModifiedBy(UserContext.getUser().getDisplayName());
         taskFollow.setModifiedTime(new Date());
         return JsonResult.success(taskFollowService.insertOrUpdate(taskFollow));
     }

@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.TaskMapper;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskDetialDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Task;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskType;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.billcenter.afmodule.cmd.api.dto.AfDisposableChargeDTO;
 import com.ciicsh.gto.billcenter.afmodule.cmd.api.dto.AfDisposableChargeProductDTO;
 import com.ciicsh.gto.billcenter.afmodule.cmd.api.proxy.CommandAfDisposableChargeProxy;
@@ -86,12 +87,11 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         if (StringUtils.isNotBlank(taskDetialDTO.getCredentialsDealType())) {
             task.setCredentialsDealType(Integer.parseInt(taskDetialDTO.getCredentialsDealType()));
         }
-        //TODO
         if (taskDetialDTO.getTaskId() == null) {
-            task.setCreatedBy("test");
+            task.setCreatedBy(UserContext.getUser().getDisplayName());
             task.setCreatedTime(new Date());
         }
-        task.setModifiedBy("test");
+        task.setModifiedBy(UserContext.getUser().getDisplayName());
         task.setModifiedTime(new Date());
         boolean b = this.insertOrUpdate(task);
         if (b) {

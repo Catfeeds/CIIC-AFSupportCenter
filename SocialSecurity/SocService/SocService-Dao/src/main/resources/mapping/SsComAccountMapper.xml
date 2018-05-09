@@ -38,6 +38,7 @@
         <result column="modified_time" property="modifiedTime" />
         <result column="created_by" property="createdBy" />
         <result column="modified_by" property="modifiedBy" />
+        <result column="ss_serial" property="ssSerial" />
     </resultMap>
 
     <resultMap id="AccountExtMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountExtBO">
