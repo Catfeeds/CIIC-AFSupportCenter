@@ -206,7 +206,11 @@ public class SsComAccount implements Serializable {
      */
 	@TableField("modified_by")
 	private String modifiedBy;
-
+    /**
+     * 社保序号
+     */
+    @TableField("ss_serial")
+	private Long ssSerial;
 
 	public Long getComAccountId() {
 		return comAccountId;
@@ -504,7 +508,15 @@ public class SsComAccount implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	@Override
+    public Long getSsSerial() {
+        return ssSerial;
+    }
+
+    public void setSsSerial(Long ssSerial) {
+        this.ssSerial = ssSerial;
+    }
+
+    @Override
 	public String toString() {
 		return "SsComAccount{" +
 			", comAccountId=" + comAccountId +
@@ -544,6 +556,7 @@ public class SsComAccount implements Serializable {
 			", modifiedTime=" + modifiedTime +
 			", createdBy=" + createdBy +
 			", modifiedBy=" + modifiedBy +
+            ", ssSerial=" + ssSerial +
 			"}";
 	}
 }

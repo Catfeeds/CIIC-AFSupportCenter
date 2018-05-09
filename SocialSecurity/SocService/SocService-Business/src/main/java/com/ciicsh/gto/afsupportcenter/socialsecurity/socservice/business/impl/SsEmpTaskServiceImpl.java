@@ -1390,6 +1390,21 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
             bo.setTaskCategory(taskCategory);
         }
+
+        // 手动填写的社保序号若大于当前种子，则更新为最新的种子
+        if (bo.getComAccountId() != null && StringUtils.isNotEmpty(bo.getEmpSsSerial())) {
+            Integer existsSsSerial = ssComAccountService.getSerialByComAccountId(bo.getComAccountId());
+            long ssSerial = Long.parseLong(bo.getEmpSsSerial());
+
+            if (existsSsSerial == null || ssSerial > existsSsSerial) {
+                SsComAccount ssComAccount = new SsComAccount();
+                ssComAccount.setSsSerial(ssSerial);
+                ssComAccount.setComAccountId(bo.getComAccountId());
+                ssComAccount.setModifiedTime(LocalDateTime.now());
+                ssComAccount.setModifiedBy(UserContext.getUserId());
+                ssComAccountService.updateById(ssComAccount);
+            }
+        }
     }
 
 //    private void setDetailCountNoChange(SsEmpTaskBO bo) {
