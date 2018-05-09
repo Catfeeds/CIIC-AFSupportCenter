@@ -8,13 +8,13 @@ import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentAccountBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankComAccountBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankExportBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentAccountMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentComMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentAccount;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentAccountService;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -22,6 +22,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,9 +95,11 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
 
     @Override
     @Transactional(rollbackFor = {Exception.class})
-    public boolean updatePaymentInfo(Long pkId, String remark, Integer payStatus) {
+    public boolean updatePaymentInfo(PayApplyPayStatusDTO taskMsgDTO) {
+        Integer payStatus=taskMsgDTO.getPayStatus();
+        String remark=taskMsgDTO.getRemark();
         HfPayment hfPayment = new HfPayment();
-        hfPayment.setPaymentId(pkId);
+        hfPayment.setPaymentId(taskMsgDTO.getBusinessPkId());
         hfPayment = hfPaymentMapper.selectOne(hfPayment);
         if(null != hfPayment){
             switch (payStatus){
@@ -108,7 +111,7 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
                     hfPayment.setPaymentState(5);
                     break;
                 case 9:
-                    hfPayment.setFinancePaymentDate(new Date());
+                    hfPayment.setFinancePaymentDate(taskMsgDTO.getOptionDateTime());
                     break;
             }
             hfPayment.setModifiedBy("system");

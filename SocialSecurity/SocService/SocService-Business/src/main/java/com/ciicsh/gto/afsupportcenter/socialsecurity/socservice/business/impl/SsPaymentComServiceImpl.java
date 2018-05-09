@@ -9,11 +9,13 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsPaymentCom
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsPaymentMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPayment;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPaymentCom;
+import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,10 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -334,9 +333,11 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
 
     @Override
     @Transactional(rollbackFor = {Exception.class})
-    public boolean savePaymentInfo(Long pkId, String remark, Integer payStatus) {
+    public boolean savePaymentInfo(PayApplyPayStatusDTO taskMsgDTO ) {
         SsPayment ssPayment = new SsPayment();
-        ssPayment.setPaymentId(pkId);
+        ssPayment.setPaymentId(taskMsgDTO.getBusinessPkId());
+        Integer payStatus = taskMsgDTO.getPayStatus();
+        String remark=taskMsgDTO.getRemark();
         ssPayment = ssPaymentMapper.selectOne(ssPayment);
         if (null != ssPayment) {
             //更新批次状态 支付状态:付款状态(-1:审核未过;9.支付成功;-9:支付失败;)
@@ -347,6 +348,10 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
             ssPayment.setPaymentState(paymentState);
             ssPayment.setModifiedBy("system");
             ssPayment.setModifiedTime(LocalDateTime.now());
+            if(8 == paymentState.intValue()){
+                ssPayment.setFinancePaymentDate(DateUtil.dateToLocaleDate(taskMsgDTO.getOptionDateTime()));
+            }
+
             Integer res = ssPaymentMapper.updateById(ssPayment);
             if(res > 0){
                 //将批次下的客户费用明细的状态也改为已申请到财务部

@@ -141,6 +141,15 @@ public class SsPaymentComBO {
      */
     private String modifiedBy;
 
+    private LocalDate financePaymentDate;
+
+    public LocalDate getFinancePaymentDate() {
+        return financePaymentDate;
+    }
+
+    public void setFinancePaymentDate(LocalDate financePaymentDate) {
+        this.financePaymentDate = financePaymentDate;
+    }
 
     public Long getPaymentComId() {
         return paymentComId;

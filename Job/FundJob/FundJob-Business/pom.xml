@@ -41,7 +41,7 @@
         </dependency>
         <dependency>
             <groupId>com.ciicsh.gt1.settlementcenter.payment</groupId>
-            <artifactId>settlementcenter-payment-command-api</artifactId>
+            <artifactId>gt1.settlementcenter-payment-command-api</artifactId>
         </dependency>
     </dependencies>
 </project>

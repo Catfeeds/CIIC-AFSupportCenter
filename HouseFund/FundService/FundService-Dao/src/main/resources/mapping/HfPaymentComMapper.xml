@@ -48,6 +48,7 @@
         <result column="remitted_count_emp" property="remittedCountEmp"/>
         <result column="remitted_count_emp_add" property="remittedCountEmpAdd"/>
         <result column="remitted_count_emp_reduce" property="remittedCountEmpReduce"/>
+
     </resultMap>
 
     <!--查询公积金汇缴支付详细操作数据-->
@@ -158,7 +159,7 @@
         AND ea.com_account_class_id = pa.com_account_class_id
         AND ea.company_id=acr.company_id
         AND mc.payment_type IN ( 2, 3, 4, 5)
-        ) AS remitted_emp_count_add,
+        ) AS remitted_count_emp_add,
         (SELECT
         count(DISTINCT mc.employee_id)
         FROM hf_month_charge mc
@@ -171,7 +172,7 @@
         AND ea.company_id=acr.company_id
         AND mc.payment_type IN (7, 8, 9, 10)
         ) AS remitted_count_emp_reduce,
-        (SELECT remitted_emp_count_standard + remitted_emp_count_add - remitted_count_emp_reduce) AS remitted_count_emp
+        (SELECT remitted_emp_count_standard + remitted_count_emp_add - remitted_count_emp_reduce) AS remitted_count_emp
 
         FROM hf_payment_account pa
         INNER JOIN hf_account_com_relation acr ON acr.com_account_id=pa.com_account_id
