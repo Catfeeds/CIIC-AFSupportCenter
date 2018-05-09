@@ -4,6 +4,7 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.Company
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.CompanyExtDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.CompanyExt;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.SelectionUtils;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -89,11 +90,10 @@ public class CompanyExtController {
         if (StringUtils.isNotBlank(companyExtDTO.getPayType())) {
             companyExt.setPayType(Integer.parseInt(companyExtDTO.getPayType()));
         }
-        //TODO 创建人...
         if (companyExt.getCompanyExtId() == null) {
-            companyExt.setCreatedBy("gu");
+            companyExt.setCreatedBy(UserContext.getUser().getDisplayName());
         }
-        companyExt.setModifiedBy("gu");
+        companyExt.setModifiedBy(UserContext.getUser().getDisplayName());
         companyExt.setModifiedTime(new Date());
         return JsonResult.success(companyExtService.insertOrUpdate(companyExt));
     }
