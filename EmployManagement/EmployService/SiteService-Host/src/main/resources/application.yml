@@ -37,7 +37,7 @@ mybatis-plus:
     cache-enabled: false
 
 app:
-  id: 10006002
+  id: 10006006
 
 endpoints:
   shutdown:
