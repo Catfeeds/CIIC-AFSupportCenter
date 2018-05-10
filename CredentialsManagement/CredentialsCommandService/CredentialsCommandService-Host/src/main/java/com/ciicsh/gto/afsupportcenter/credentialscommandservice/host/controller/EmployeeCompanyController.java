@@ -98,7 +98,7 @@ public class EmployeeCompanyController {
      */
     @PostMapping("/add")
     public JsonResult addEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        if (employeeDTO.getIdCardType() != null && StringUtils.isNotBlank(employeeDTO.getIdNum()) && StringUtils.isNotBlank(employeeDTO.getEmployeeName())) {
+        if (employeeDTO.getIdCardType() != null && StringUtils.isNotBlank(employeeDTO.getIdNum()) && StringUtils.isNotBlank(employeeDTO.getEmployeeName()) && StringUtils.isNotBlank(employeeDTO.getCompanyId())) {
             boolean b = employeeService.findEmpByIdCard(employeeDTO.getIdCardType(), employeeDTO.getIdNum());
             if (b) {
                 Employee employee = new Employee();
