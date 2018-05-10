@@ -21,7 +21,7 @@ public class EmployeeOther extends Model<EmployeeOther> {
      * 单项雇员编号
      */
     @TableId(value = "other_employee_id", type= IdType.AUTO)
-    private String otherEmployeeId;
+    private Long otherEmployeeId;
     /**
      * 雇员编号
      */
@@ -89,11 +89,11 @@ public class EmployeeOther extends Model<EmployeeOther> {
         this.address = address;
     }
 
-    public String getOtherEmployeeId() {
+    public Long getOtherEmployeeId() {
         return otherEmployeeId;
     }
 
-    public void setOtherEmployeeId(String otherEmployeeId) {
+    public void setOtherEmployeeId(Long otherEmployeeId) {
         this.otherEmployeeId = otherEmployeeId;
     }
 
