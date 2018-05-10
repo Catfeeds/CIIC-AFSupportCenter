@@ -109,6 +109,7 @@ public class EmployeeCompanyController {
                 String employeeId = getEmpId();
                 employee.setEmployeeId(employeeId);
                 employeeOther.setEmployeeId(employeeId);
+                employeeOther.setCompanyId(employeeDTO.getCompanyId());
                 employeeService.addEmployee(employee);
                 employeeOtherService.addEmployeeOther(employeeOther);
             } else {
