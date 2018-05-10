@@ -103,10 +103,10 @@
           ss_com_account T2
         ON
           T2.com_account_id = T1.com_account_id
-          AND T2.is_active = '1'
+          AND T2.is_active = 1
         WHERE
           1=1
-          AND T1.is_active = '1'
+          AND T1.is_active = 1
           AND T1.statement_id = #{statementId,jdbcType=VARCHAR}
     </select>
     <!--<select id="fetchEmpInfo" resultType="Integer">-->

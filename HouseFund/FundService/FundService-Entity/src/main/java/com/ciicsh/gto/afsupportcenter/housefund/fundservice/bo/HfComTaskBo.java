@@ -7,12 +7,35 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ExcelTarget("HfComTaskBo")
-public class HfComTaskBo extends HfComTask {
+public class HfComTaskBo  {
+
+    private Integer hfType;
+    private String submitterDeptId;
+    private String submitterDeptName;
+    private Date submitTime;
+    private String materialSignRecord;
+    private Date transferDate;
+    private String remark;
+    private Integer paymentWay;
+    private String taskId;
+    private Boolean isActive;
+    private String leaderShipId;
+    private Date createdTime;
+    private Date modifiedTime;
+    private String createdBy;
+    private String createdDisplayName;
+    private String modifiedBy;
+    private String modifiedDisplayName;
+
+
+
+
 
     private Integer ukeyStore;
     private Long comAccountClassId;
@@ -149,18 +172,16 @@ public class HfComTaskBo extends HfComTask {
     /**
      * 受审时间
      */
-    private String startHandleDateString;
+    private LocalDate strartHandleDate;
 
     /**
      * 送审时间
      */
-    private String sendCheckDateString;
-
+    private LocalDate sendCheckDate;
     /**
      * 完成时间
      */
-    private String finishDateString;
-
+    private LocalDate finishDate;
     /**
      * comAccount remark
      */
@@ -177,4 +198,11 @@ public class HfComTaskBo extends HfComTask {
     private String paymentWayTask;
     private String leaderShipName;
     private Integer serviceCenterValue;
+
+
+
+
+
+
+
 }

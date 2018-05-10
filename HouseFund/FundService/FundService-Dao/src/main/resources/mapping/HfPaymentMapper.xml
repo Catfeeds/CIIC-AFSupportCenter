@@ -31,6 +31,8 @@
         <result column="create_payment_date_string" property="createPaymentDateString" />
         <result column="finance_payment_date_string" property="financePaymentDateString" />
         <result column="pay_apply_code" property="payApplyCode" />
+
+
     </resultMap>
 
     <resultMap id="PaymentComResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentComBO">
@@ -61,6 +63,7 @@
 
 
     <!--查询公积金汇缴支付-->
+    <!--费用种类：1标准 2 开户 3 转入  4启封 5 调整启封 6 补缴  7 转出 8 封存 9调整封存 10 销户 11 差额补缴-->
     <select id="getFundPays" resultMap="GetFundPaysResultMap">
         SELECT
         hfp.payment_id,
@@ -86,8 +89,25 @@
         mc.is_active = 1
         AND ea.is_active = 1
         AND mc.hf_month = hfp.payment_month
-        AND  pc.payment_id=hfp.payment_id
-        ) AS total_emp_count
+        AND pc.payment_id=hfp.payment_id
+        AND mc.payment_type in (1,2,3,4,5,6,11)
+        ) AS emp_count_add,
+        (
+        SELECT
+        count(DISTINCT mc.employee_id)
+        FROM
+        hf_month_charge mc
+        INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+        INNER JOIN hf_payment_com pc ON pc.company_id=ea.company_id and pc.com_account_class_id=ea.com_account_class_id
+        WHERE
+        mc.is_active = 1
+        AND ea.is_active = 1
+        AND mc.hf_month = hfp.payment_month
+        AND pc.payment_id=hfp.payment_id
+        AND mc.payment_type in (7,8,10)
+        ) AS emp_count_reduce,
+        (select emp_count_add - emp_count_reduce) AS total_emp_count
+
         FROM hf_payment hfp
         LEFT JOIN hf_payment_state hfps ON hfp.payment_state = hfps.payment_state_code
         LEFT JOIN hf_payment_account_type hfpat ON hfp.hf_account_type = hfpat.account_type_code

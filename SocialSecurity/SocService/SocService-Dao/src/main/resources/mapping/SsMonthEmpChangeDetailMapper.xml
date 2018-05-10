@@ -94,7 +94,7 @@
             ss_month_emp_change T2
           ON
             T2.month_emp_change_id = T1.month_emp_change_id
-            AND T2.is_active = '1'
+            AND T2.is_active = 1
             AND T1.month_emp_change_id = #{monthEmpChangeId,jdbcType=BIGINT}
           LEFT JOIN
             emp_employee T3
@@ -102,7 +102,7 @@
             T1.employee_id = T3.employee_id
         WHERE
             1=1
-            AND T1.is_active = '1'
+            AND T1.is_active = 1
         ORDER BY
             T1.employee_id,T1.change_type,T1.ss_type
     </select>
