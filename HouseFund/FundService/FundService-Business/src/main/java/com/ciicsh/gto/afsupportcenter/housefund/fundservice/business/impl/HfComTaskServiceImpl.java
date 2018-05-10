@@ -415,6 +415,7 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
             hfComAccountClass.setComStartMonth(yearMonthString);
             hfComAccountClass.setComHfMonth(yearMonthString);
         }else {
+            hfComAccountClass.setComStartMonth(null);
             hfComAccountClass.setComHfMonth(null);
         }
         hfComAccountClass.setEndMonth(hfComTask.getEndMonth());

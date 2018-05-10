@@ -43,10 +43,10 @@
           LEFT JOIN
             ss_com_account ca
           ON mec.com_account_id = ca.com_account_id
-            AND ca.is_active = '1'
+            AND ca.is_active = 1
         WHERE
           1=1
-          AND mec.is_active = '1'
+          AND mec.is_active = 1
 
         AND  mec.month_emp_change_id=#{monthEmpChangeId,jdbcType=VARCHAR}
     </select>

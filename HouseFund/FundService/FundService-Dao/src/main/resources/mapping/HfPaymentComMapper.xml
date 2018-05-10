@@ -112,7 +112,7 @@
             AND ea.company_id=acr.company_id
             AND mc.payment_type IN (7, 8, 9, 10)
         ) AS remitted_amount_reduce,
-        (SELECT ifnull(amount_standard,0) + ifnull(remitted_amount_add,0) - ifnull(remitted_amount_reduce,0)) AS remitted_amount,
+
         (SELECT SUM(ifnull(amount, 0))
             FROM  hf_month_charge mc
             INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
@@ -137,42 +137,43 @@
             AND mc.payment_type IN (6, 11)
         ) AS repair_count_emp,
         (SELECT
-        count(DISTINCT mc.employee_id)
-        FROM hf_month_charge mc
-        INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
-        WHERE mc.is_active = 1
-        AND ea.is_active = 1
-        AND mc.hf_month = pa.payment_month
-        AND mc.hf_type = pa.hf_type
-        AND ea.com_account_class_id = pa.com_account_class_id
-        AND ea.company_id=acr.company_id
-        AND mc.payment_type = 1
+            count(DISTINCT mc.employee_id)
+            FROM hf_month_charge mc
+            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+            WHERE mc.is_active = 1
+            AND ea.is_active = 1
+            AND mc.hf_month = pa.payment_month
+            AND mc.hf_type = pa.hf_type
+            AND ea.com_account_class_id = pa.com_account_class_id
+            AND ea.company_id=acr.company_id
+            AND mc.payment_type = 1
         ) AS remitted_emp_count_standard,
         (SELECT
-        count(DISTINCT mc.employee_id)
-        FROM hf_month_charge mc
-        INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
-        WHERE mc.is_active = 1
-        AND ea.is_active = 1
-        AND mc.hf_month = pa.payment_month
-        AND mc.hf_type = pa.hf_type
-        AND ea.com_account_class_id = pa.com_account_class_id
-        AND ea.company_id=acr.company_id
-        AND mc.payment_type IN ( 2, 3, 4, 5)
+            count(DISTINCT mc.employee_id)
+            FROM hf_month_charge mc
+            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+            WHERE mc.is_active = 1
+            AND ea.is_active = 1
+            AND mc.hf_month = pa.payment_month
+            AND mc.hf_type = pa.hf_type
+            AND ea.com_account_class_id = pa.com_account_class_id
+            AND ea.company_id=acr.company_id
+            AND mc.payment_type IN ( 2, 3, 4, 5)
         ) AS remitted_count_emp_add,
         (SELECT
-        count(DISTINCT mc.employee_id)
-        FROM hf_month_charge mc
-        INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
-        WHERE mc.is_active = 1
-        AND ea.is_active = 1
-        AND mc.hf_month = pa.payment_month
-        AND mc.hf_type = pa.hf_type
-        AND ea.com_account_class_id = pa.com_account_class_id
-        AND ea.company_id=acr.company_id
-        AND mc.payment_type IN (7, 8, 9, 10)
+            count(DISTINCT mc.employee_id)
+            FROM hf_month_charge mc
+            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+            WHERE mc.is_active = 1
+            AND ea.is_active = 1
+            AND mc.hf_month = pa.payment_month
+            AND mc.hf_type = pa.hf_type
+            AND ea.com_account_class_id = pa.com_account_class_id
+            AND ea.company_id=acr.company_id
+            AND mc.payment_type IN (7, 8, 9, 10)
         ) AS remitted_count_emp_reduce,
-        (SELECT remitted_emp_count_standard + remitted_count_emp_add - remitted_count_emp_reduce) AS remitted_count_emp
+        (SELECT remitted_emp_count_standard + remitted_count_emp_add - remitted_count_emp_reduce) AS remitted_count_emp,
+        (SELECT ifnull(amount_standard,0) + ifnull(remitted_amount_add,0) - ifnull(remitted_amount_reduce,0)) AS remitted_amount
 
         FROM hf_payment_account pa
         INNER JOIN hf_account_com_relation acr ON acr.com_account_id=pa.com_account_id

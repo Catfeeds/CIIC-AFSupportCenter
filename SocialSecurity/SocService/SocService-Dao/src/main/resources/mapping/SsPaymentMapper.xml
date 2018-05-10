@@ -78,7 +78,7 @@
         FROM
             ss_payment sp
         WHERE
-            sp.is_active = '1'
+            sp.is_active = 1
             <if test = "accountType != null and accountType != ''">
             AND sp.account_type = #{accountType}
             </if>
@@ -113,7 +113,7 @@
         FROM
         ss_payment p
         WHERE
-        p.is_active = '1'
+        p.is_active = 1
         <if test = "accountType != null and accountType != ''">
             AND p.account_type = #{accountType}
         </if>

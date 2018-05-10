@@ -303,7 +303,7 @@
             CA.ss_serial = CA.ss_serial + 1
         WHERE
             CA.com_account_id = #{comAccountId}
-            AND CA.is_active = '1'
+            AND CA.is_active = 1
     </update>
 
     <!-- 根据社保账号获得社保序号 -->
