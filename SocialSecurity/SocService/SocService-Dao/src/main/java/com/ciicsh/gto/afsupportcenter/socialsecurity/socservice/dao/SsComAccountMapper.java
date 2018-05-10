@@ -80,5 +80,5 @@ public interface SsComAccountMapper extends BaseMapper<SsComAccount> {
      * @param comAccountId
      * @return
      */
-    Integer getSerialByComAccountId(@Param("comAccountId") Long comAccountId);
+    Long getSerialByComAccountId(@Param("comAccountId") Long comAccountId);
 }
