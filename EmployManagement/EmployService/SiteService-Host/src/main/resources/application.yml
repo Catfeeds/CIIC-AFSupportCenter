@@ -4,7 +4,7 @@ server:
 
 spring:
   application:
-    name: support-center-employee-site-service
+    name: support-center-employmanagement-site-service
   profiles:
     active: dev
   http:
