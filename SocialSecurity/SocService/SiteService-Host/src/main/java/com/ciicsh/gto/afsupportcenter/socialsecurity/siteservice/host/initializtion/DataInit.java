@@ -15,6 +15,6 @@ public class DataInit implements CommandLineRunner{
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println(111);
+//        System.out.println(111);
     }
 }
