@@ -94,6 +94,11 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.ciicsh.gt1.commonservice</groupId>
+            <artifactId>gt1.commonservice.entityidservice-api</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

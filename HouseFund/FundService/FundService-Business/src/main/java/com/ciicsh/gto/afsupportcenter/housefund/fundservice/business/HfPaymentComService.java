@@ -12,12 +12,6 @@ import java.util.List;
 
 public interface HfPaymentComService extends IService<HfPaymentCom> {
 
-    /**
-     * 获得公积金汇缴支付详细操作数据
-     * @param pageInfo
-     * @return
-     */
-    PageRows<HfPaymentComBo> getFundPaysDetailOperationData(PageInfo pageInfo);
     JsonResult createPaymentCom(HfFundPayCreatePaymentAccountPara hfFundPayCreatePaymentAccountPara);
 
     /**

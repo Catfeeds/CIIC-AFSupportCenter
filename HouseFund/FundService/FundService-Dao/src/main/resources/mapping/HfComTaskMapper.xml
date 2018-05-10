@@ -67,9 +67,9 @@
         <result column="close_day" property="closeDay" />
         <result column="com_start_month" property="comStartMonth" />
         <result column="submit_time_string" property="submitTimeString"/>
-        <result column="strart_handle_date_string" property="startHandleDateString"/>
-        <result column="send_check_date_string" property="sendCheckDateString"/>
-        <result column="finish_date_string" property="finishDateString"/>
+        <result column="strart_handle_date" property="strartHandleDate"/>
+        <result column="send_check_date" property="sendCheckDate"/>
+        <result column="finish_date" property="finishDate"/>
         <result column="comAccountRemark" property="comAccountRemark" />
         <result column="taskRemark" property="taskRemark" />
         <result column="com_account_name_task" property="comAccountNameTask" />
@@ -124,9 +124,9 @@
         hcau.ukstore_value,
         hcat.type_value,
         hctet.end_type_value,
-        DATE_FORMAT(hft.strart_handle_date, '%Y-%m-%d %H:%i') AS strart_handle_date_string,
-        DATE_FORMAT(hft.send_check_date, '%Y-%m-%d %H:%i') AS send_check_date_string,
-        DATE_FORMAT(hft.finish_date, '%Y-%m-%d %H:%i') AS finish_date_string,
+        hft.strart_handle_date,
+        hft.send_check_date,
+        hft.finish_date ,
         hca.remark as comAccountRemark
         FROM hf_com_task hft
         LEFT JOIN hf_com_account hca ON hft.com_account_id = hca.com_account_id
@@ -220,9 +220,9 @@
         hcau.ukstore_value,
         hcat.type_value,
         hctet.end_type_value,
-        DATE_FORMAT(hft.strart_handle_date, '%Y-%m-%d %H:%i') AS strart_handle_date_string,
-        DATE_FORMAT(hft.send_check_date, '%Y-%m-%d %H:%i') AS send_check_date_string,
-        DATE_FORMAT(hft.finish_date, '%Y-%m-%d %H:%i') AS finish_date_string,
+        hft.strart_handle_date,
+        hft.send_check_date,
+        hft.finish_date,
         hca.remark as comAccountRemark,
         hft.remark as taskRemark
         FROM hf_com_task hft

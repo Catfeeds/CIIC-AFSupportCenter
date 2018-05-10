@@ -144,17 +144,6 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
     }
 
     /**
-     * 获得公积金汇缴支付详细操作数据
-     * @param pageInfo
-     * @return
-     */
-    @Override
-    public PageRows<HfPaymentComBo> getFundPaysDetailOperationData(PageInfo pageInfo) {
-        HfPaymentComBo hfPaymentComBo = pageInfo.toJavaObject(HfPaymentComBo.class);
-        return PageKit.doSelectPage(pageInfo, () -> hfPaymentComMapper.getFundPaysDetailOperationData(hfPaymentComBo));
-    }
-
-    /**
      * 公积金汇缴支付-生成汇缴支付客户名单(编辑页面的添加)
      * @param params 生成条件
      * @return 生成结果

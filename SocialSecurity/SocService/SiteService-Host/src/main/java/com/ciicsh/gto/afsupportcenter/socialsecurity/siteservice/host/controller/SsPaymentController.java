@@ -19,10 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * 社保支付批次 前端控制器
@@ -33,6 +30,8 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
 
     @Autowired
     private SsPaymentComService ssPaymentComService;
+    @Autowired
+    private SsPaymentService ssPaymentService;
 
     /**
      * 查询社保支付-支付批次(列表页)
@@ -122,6 +121,10 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
         }
         //拼接字符
         String paymentMonth = year + "" + (String.valueOf(month).length()==1?"0"+month : month);
+
+  /*      Map retMap = new HashMap();
+        retMap.put("paymentMonth",paymentMonth);
+        retMap.put("batchNum",paymentMonth);*/
         json.setData(paymentMonth);
         return json;
     }

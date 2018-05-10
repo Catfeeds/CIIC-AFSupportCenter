@@ -29,7 +29,7 @@
         FROM
             ss_payment_detail SPD
         WHERE
-            SPD.is_active = '1'
+            SPD.is_active = 1
             <if test = "comAccountId != null and comAccountId != ''">
               AND SPD.com_account_id = #{comAccountId}
             </if>

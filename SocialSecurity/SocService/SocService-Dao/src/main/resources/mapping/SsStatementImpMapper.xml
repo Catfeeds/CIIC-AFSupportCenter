@@ -35,7 +35,7 @@
         FROM
             ss_statement_imp si
         WHERE
-            si.is_active = '1'
+            si.is_active = 1
             AND si.statement_id = #{statementId,jdbcType=BIGINT}
     </select>
 

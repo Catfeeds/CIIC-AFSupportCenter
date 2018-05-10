@@ -44,7 +44,7 @@
         FROM
         hf_payment_account SPC
         WHERE
-        SPC.is_active = '1'
+        SPC.is_active = 1
         AND SPC.payment_id = #{paymentId}
     </select>
 
