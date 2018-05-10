@@ -8,7 +8,7 @@ spring:
   application:
     name: support-center-employmanagement-message-service
   profiles:
-    active: fat
+    active: dev
   cloud:
     stream:
       bindings:
@@ -98,7 +98,7 @@ mybatis-plus:
     cache-enabled: false
 
 app:
-  id: 10006016
+  id: 10006022
 
 endpoints:
   shutdown:
