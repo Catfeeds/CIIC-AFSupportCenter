@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Import;
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.socialsecurity.apiservice.host","com.ciicsh.gto.afsupportcenter.socialsecurity.socservice","com.ciicsh.common","com.ciicsh.gto.afsupportcenter.util"})
 @EnableDiscoveryClient
 @Import({CustomConfiguration.class, MybatisPlusConfig.class})
-public class EmployApiServiceApp {
+public class SocApiServiceApp {
     public static void main(String[] args) {
         SpringApplication.run(SocApiServiceApp.class, args);
     }
