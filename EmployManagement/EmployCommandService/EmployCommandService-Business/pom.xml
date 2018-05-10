@@ -62,15 +62,5 @@
             <artifactId>gt1.salecenter.apiservice-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ciicsh.gt1.commonservice</groupId>
-            <artifactId>gt1.commonservice.identityservice-api</artifactId>
-        </dependency>
-
     </dependencies>
 </project>
