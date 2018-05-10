@@ -6,7 +6,7 @@ server:
 ###################  spring 配置  ###################
 spring:
   application:
-    name: support-center-employment-message-service
+    name: support-center-employmanagement-message-service
   profiles:
     active: fat
   cloud:
