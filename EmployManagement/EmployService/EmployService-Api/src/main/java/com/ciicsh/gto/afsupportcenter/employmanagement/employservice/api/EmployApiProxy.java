@@ -13,7 +13,7 @@ import java.util.List;
  * Created by zhangzhiwen on 2018/3/29.
  */
 
-@FeignClient("support-center-employee-site-service")
+@FeignClient("support-center-employmanagement-api-service")
 @RequestMapping("/api/employ")
 public interface EmployApiProxy {
 
