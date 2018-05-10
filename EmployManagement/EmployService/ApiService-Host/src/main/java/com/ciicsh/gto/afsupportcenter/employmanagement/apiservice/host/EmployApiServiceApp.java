@@ -12,16 +12,13 @@ import org.springframework.context.annotation.Import;
 /**
  * Created by houwanhua on 2018/2/24.
  */
-@EnableFeignClients({"com.ciicsh.gto.sheetservice.api",
-    "com.ciicsh.gto.settlementcenter.payment.cmdapi",
-    "com.ciicsh.gto.settlementcenter.invoicecommandservice.api",
-    "com.ciicsh.gto.basicdataservice.api",
-    "com.ciicsh.gto.afcompanycenter.queryservice.api",
-    "com.ciicsh.gto.afcompanycenter.commandservice.api",
+@EnableFeignClients({
+    "com.ciicsh.gto.sheetservice.api",
     "com.ciicsh.gto.employeecenter.apiservice.api",
-    "com.ciicsh.gto.logservice.api",
+    "com.ciicsh.gto.afcompanycenter.queryservice.api",
+    "com.ciicsh.gto.salecenter.apiservice.api.proxy",
     "com.ciicsh.gto.afsystemmanagecenter.apiservice.api",
-    "com.ciicsh.gto.salecenter.apiservice.api"
+    "com.ciicsh.gto.identityservice.api"
 })
 @MapperScan("com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao")
 @SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.employmanagement.apiservice.host","com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business","com.ciicsh.common","com.ciicsh.gto.afsupportcenter.util"})
