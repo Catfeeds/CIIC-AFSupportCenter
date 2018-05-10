@@ -40,4 +40,6 @@ public interface OrgPolicyService extends IService<OrgPolicy> {
      * @return
      */
     int deleteById(Integer id);
+
+    List<OrgPolicy> getByType(Integer type);
 }
