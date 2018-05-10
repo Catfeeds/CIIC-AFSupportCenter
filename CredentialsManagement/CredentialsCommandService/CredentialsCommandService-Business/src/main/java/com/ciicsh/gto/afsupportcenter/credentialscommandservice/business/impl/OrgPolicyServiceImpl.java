@@ -1,6 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.impl;
 
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.OrgPolicyService;
@@ -42,5 +44,13 @@ public class OrgPolicyServiceImpl extends ServiceImpl<OrgPolicyMapper, OrgPolicy
         }else {
             return orgPolicyMapper.deleteByOrgPolicyId(id) == 1 ? 0 :2;
         }
+    }
+
+    @Override
+    public List<OrgPolicy> getByType(Integer type) {
+        Wrapper<OrgPolicy> wr = new EntityWrapper<OrgPolicy>()
+            .eq("type", type)
+            .eq("is_active",1);
+        return orgPolicyMapper.selectList(wr);
     }
 }

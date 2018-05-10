@@ -63,6 +63,17 @@ public class OrgPolicyController {
     }
 
     /**
+     * 根据证件类型查询政策信息
+     * @param type
+     * @return
+     */
+    @GetMapping("/getByType")
+    public JsonResult getByType(Integer type) {
+        List<OrgPolicy> orgPolicys = orgPolicyService.getByType(type);
+        return JsonResult.success(orgPolicys);
+    }
+
+    /**
      * 保存或更新政策信息
      * @param orgPolicyPageDTO
      * @return
