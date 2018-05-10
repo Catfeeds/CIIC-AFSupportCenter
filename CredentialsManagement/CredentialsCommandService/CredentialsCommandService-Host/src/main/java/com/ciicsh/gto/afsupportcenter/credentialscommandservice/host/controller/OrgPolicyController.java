@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.OrgPoli
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.OrgPolicyPageDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.OrgPolicy;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.SelectionUtils;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageUtil;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
 import org.springframework.beans.BeanUtils;
@@ -70,12 +71,11 @@ public class OrgPolicyController {
     public JsonResult saveOrUpdateItem(@RequestBody OrgPolicyPageDTO orgPolicyPageDTO){
         OrgPolicy orgPolicy = new OrgPolicy();
         BeanUtils.copyProperties(orgPolicyPageDTO, orgPolicy);
-        //TODO
         if (orgPolicy.getOrgPoilcyId() == null ) {
-            orgPolicy.setCreatedBy("test");
+            orgPolicy.setCreatedBy(UserContext.getUser().getDisplayName());
             orgPolicy.setCreatedTime(new Date());
         }
-        orgPolicy.setModifiedBy("test");
+        orgPolicy.setModifiedBy(UserContext.getUser().getDisplayName());
         orgPolicy.setModifiedTime(new Date());
         return JsonResult.success(orgPolicyService.insertOrUpdate(orgPolicy));
     }
@@ -85,8 +85,8 @@ public class OrgPolicyController {
      * @param id
      * @return
      */
-    @DeleteMapping("/delete/{id}")
-    public JsonResult deleteItem(@PathVariable("id") Integer id){
+    @GetMapping("/delete")
+    public JsonResult deleteItem(Integer id){
         int b = orgPolicyService.deleteById(id);
         if (b==0) {
             return JsonResult.success(null);

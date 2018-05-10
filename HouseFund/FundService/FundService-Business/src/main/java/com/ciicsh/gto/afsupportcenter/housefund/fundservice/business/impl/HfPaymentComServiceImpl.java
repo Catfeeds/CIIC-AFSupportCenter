@@ -128,7 +128,7 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
         hfPaymentCom.setRemittedCountEmp(hfCreatePaymentAccountBO.getRemittedCountEmp());//汇缴人数
         hfPaymentCom.setRepairCountEmp(hfCreatePaymentAccountBO.getRepairCountEmp());//补缴人数
         hfPaymentCom.setRemittedAmountAdd(hfCreatePaymentAccountBO.getRemittedAmountAdd());//本月增加金额
-        hfPaymentCom.setRemittedCountEmp(hfCreatePaymentAccountBO.getRemittedCountEmp());//本月增加人数
+        hfPaymentCom.setRemittedCountEmpAdd(hfCreatePaymentAccountBO.getRemittedCountEmpAdd());//本月增加人数
         hfPaymentCom.setRemittedCountEmpReduce(hfCreatePaymentAccountBO.getRemittedCountEmpReduce());//本月减少人数
         hfPaymentCom.setRemittedAmountReduce(hfCreatePaymentAccountBO.getRemittedAmountReduce());//本月减少金额
         hfPaymentCom.setCreatedBy(UserContext.getUser().getDisplayName());

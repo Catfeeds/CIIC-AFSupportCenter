@@ -207,26 +207,6 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         List<HfPrintRemittedBookBO> retListPrint = new ArrayList();
         for (HfPrintRemittedBookBO in : listPrint) {
             HfPrintRemittedBookBO out = new HfPrintRemittedBookBO();
-
-            if (Optional.ofNullable(in.getRepairAmount()).orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0) { //存在补缴
-                out.setCurYear(LocalDate.now().getYear());
-                out.setCurMonth(LocalDate.now().getMonth().getValue());
-                out.setCurDay(LocalDate.now().getDayOfMonth());
-                String paymentYearMonth =  in.getPaymentMonth();
-                if (paymentYearMonth != null) {
-                    out.setPaymentYear(paymentYearMonth.substring(0,4));
-                    out.setPaymentMonth(paymentYearMonth.substring(4,6));
-                }
-                out.setIsRepair(true);//补缴打钩
-                out.setComAccountName(in.getComAccountName());
-                out.setCurdate(in.getCurdate());
-                out.setHfComAccount(in.getHfComAccount());
-                out.setRepairAmount(in.getRepairAmount());
-                out.setRepairCountEmp(in.getRepairCountEmp());
-                out.setBankName(in.getBankName());
-                retListPrint.add(out);
-                out = new HfPrintRemittedBookBO();
-            }
             BeanUtils.copyProperties(in, out);
             out.setMoneyCN(MoneyToCN.number2CNMontrayUnit(in.getRemittedAmount()));
             out.setRemittedAmountArrange("¥"+in.getRemittedAmount().toString().replace(".",""));
@@ -239,9 +219,35 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
                 out.setPaymentMonth(paymentYearMonth.substring(4,6));
             }
             out.setIsRemitted(true);//汇缴打钩
-            out.setRepairCountEmp(null);
-            out.setRepairAmount(null);
+            if (Optional.ofNullable(in.getRepairAmount()).orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0) { //存在补缴
+                out.setRepairCountEmp(null);
+                out.setRepairAmount(null);
+            }
             retListPrint.add(out);
+
+            if (Optional.ofNullable(in.getRepairAmount()).orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0) { //存在补缴
+                out = new HfPrintRemittedBookBO();
+                BeanUtils.copyProperties(in, out);
+                out.setCurYear(LocalDate.now().getYear());
+                out.setCurMonth(LocalDate.now().getMonth().getValue());
+                out.setCurDay(LocalDate.now().getDayOfMonth());
+                out.setIsRemitted(false);
+                out.setPaymentYear(null);
+                out.setPaymentMonth(null);
+                out.setIsRepair(true);//补缴打钩
+                out.setMoneyCN(MoneyToCN.number2CNMontrayUnit(in.getRepairAmount()));
+                out.setRemittedAmountArrange("¥"+in.getRepairAmount().toString().replace(".",""));
+                out.setRemittedAmountAdd(null);
+                out.setRemittedAmountLast(null);
+                out.setRemittedCountEmp(null);
+                out.setRemittedAmountReduce(null);
+                out.setRemittedCountEmpAdd(null);
+                out.setRemittedCountEmpLast(null);
+                out.setRemittedCountEmpReduce(null);
+                out.setRemittedAmount(null);
+                retListPrint.add(out);
+            }
+
         }
         return JsonResultKit.of(retListPrint);
     }
