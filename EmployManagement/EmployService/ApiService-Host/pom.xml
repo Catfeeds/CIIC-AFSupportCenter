@@ -76,7 +76,7 @@
         <dependency>
             <groupId>com.ciicsh.gt1.afsupportcenter.employmanagement</groupId>
             <artifactId>gt1.afsupportcenter.employmanagement.employservice-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
