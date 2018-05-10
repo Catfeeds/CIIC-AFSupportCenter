@@ -1,6 +1,6 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.apiservice.host;
+package com.ciicsh.gto.afsupportcenter.employmanagement.apiservice.host;
 
-import com.ciicsh.gto.afsupportcenter.socialsecurity.apiservice.host.configuration.MybatisPlusConfig;
+import com.ciicsh.gto.afsupportcenter.employmanagement.apiservice.host.configuration.MybatisPlusConfig;
 import com.ciicsh.gto.afsupportcenter.util.config.CustomConfiguration;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -23,12 +23,12 @@ import org.springframework.context.annotation.Import;
     "com.ciicsh.gto.afsystemmanagecenter.apiservice.api",
     "com.ciicsh.gto.salecenter.apiservice.api"
 })
-@MapperScan("com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao")
-@SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.socialsecurity.apiservice.host","com.ciicsh.gto.afsupportcenter.socialsecurity.socservice","com.ciicsh.common","com.ciicsh.gto.afsupportcenter.util"})
+@MapperScan("com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao")
+@SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.employmanagement.apiservice.host","com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business","com.ciicsh.common","com.ciicsh.gto.afsupportcenter.util"})
 @EnableDiscoveryClient
 @Import({CustomConfiguration.class, MybatisPlusConfig.class})
 public class EmployApiServiceApp {
     public static void main(String[] args) {
-        SpringApplication.run(SocApiServiceApp.class, args);
+        SpringApplication.run(EmployApiServiceApp.class, args);
     }
 }
