@@ -31,7 +31,6 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
-import com.ciicsh.gto.logservice.bizclient.dto.LogContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.formula.functions.T;
@@ -205,8 +204,8 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
      * 获得社保序号
      */
     @PostMapping("/getSerial")
-    public JsonResult<Integer> getSerial(Long comAccountId) {
-        Integer ssSerial = business.getSerial(comAccountId);
+    public JsonResult<Object> getSerial(String comAccountId) {
+        Long ssSerial = business.getSerial(Long.valueOf(comAccountId));
         return JsonResultKit.of(ssSerial);
     }
 
@@ -301,7 +300,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         empTaskBatchParameter.getSsEmpTaskBOList().forEach(p -> {
             // 1新进  2转入 12 翻牌新进 13翻牌转入
             if ((1 == p.getTaskCategory() || 2 == p.getTaskCategory() || 12 == p.getTaskCategory() || 13 == p.getTaskCategory()) && p.getComAccountId() != null) {
-                Integer ssSerial = business.getSerial(p.getComAccountId());
+                Long ssSerial = business.getSerial(p.getComAccountId());
                 //社保序号
                 p.setEmpSsSerial(String.valueOf(ssSerial));
             }
@@ -377,7 +376,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             workbook.write(response.getOutputStream());
             workbook.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logApiUtil.error(LogMessage.create().setTitle("SsEmpTaskController#employeeDailyOperatorDiskExport").setContent(e.getMessage()));
         }
     }
 

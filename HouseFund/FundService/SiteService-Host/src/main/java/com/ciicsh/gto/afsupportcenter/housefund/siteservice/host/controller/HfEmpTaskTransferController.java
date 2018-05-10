@@ -124,9 +124,17 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
             return JsonResultKit.ofError(e.getMessage());
         }
     }
+    /**
+     * 获取转移任务单打印数据
+     */
+    @RequestMapping("/getPrintTransfer")
+    public JsonResult getPrintTransfer(EmpTaskTransferBo empTaskTransferBo) throws Exception {
+        List<Map<String, Object>> printList = business.printTransferTask(empTaskTransferBo);
+        return JsonResultKit.of(printList);
+    }
 
     /**
-     * 打印转移任务单
+     * 打印转移任务单PDF
      */
     @RequestMapping("/printTransferTask")
     public void printTransferTask(HttpServletResponse response, EmpTaskTransferBo empTaskTransferBo) throws Exception {
@@ -156,7 +164,6 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
         }
 
     }
-
 
     /**
      * 不需处理转移任务单

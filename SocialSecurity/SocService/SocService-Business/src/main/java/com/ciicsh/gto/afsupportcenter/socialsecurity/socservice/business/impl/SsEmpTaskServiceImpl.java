@@ -233,11 +233,16 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     }
 
     @Override
-    public Integer getSerial(Long comAccountId) {
+    public Long getSerial(Long comAccountId) {
+        Long ssSerial = ssComAccountService.getSerialByComAccountId(comAccountId);
+        if (ssSerial != null && ssSerial == 9999999999L) {
+            throw new BusinessException("当前账号下社保序列已经到达最大值，无法取值");
+        }
+
         //社保序号增1
         ssComAccountService.addSerial(comAccountId);
         //取出序号
-        Integer ssSerial = ssComAccountService.getSerialByComAccountId(comAccountId);
+        ssSerial = ssComAccountService.getSerialByComAccountId(comAccountId);
         return ssSerial;
     }
 
@@ -1393,7 +1398,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
         // 手动填写的社保序号若大于当前种子，则更新为最新的种子
         if (bo.getComAccountId() != null && StringUtils.isNotEmpty(bo.getEmpSsSerial())) {
-            Integer existsSsSerial = ssComAccountService.getSerialByComAccountId(bo.getComAccountId());
+            Long existsSsSerial = ssComAccountService.getSerialByComAccountId(bo.getComAccountId());
             long ssSerial = Long.parseLong(bo.getEmpSsSerial());
 
             if (existsSsSerial == null || ssSerial > existsSsSerial) {

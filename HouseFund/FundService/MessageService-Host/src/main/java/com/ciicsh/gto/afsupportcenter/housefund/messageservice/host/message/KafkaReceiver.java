@@ -400,7 +400,7 @@ public class KafkaReceiver {
         try{
             if(taskMsgDTO.getBusinessType() == 2){
                 if(taskMsgDTO.getPayStatus().equals(-1) || taskMsgDTO.getPayStatus().equals(8) || taskMsgDTO.getPayStatus().equals(9)){
-                    boolean res = hfPaymentAccountService.updatePaymentInfo(taskMsgDTO.getBusinessPkId(), taskMsgDTO.getRemark(),taskMsgDTO.getPayStatus());
+                    boolean res = hfPaymentAccountService.updatePaymentInfo(taskMsgDTO);
                     logger.debug("applyFinancePayment result: " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
                 }
             }

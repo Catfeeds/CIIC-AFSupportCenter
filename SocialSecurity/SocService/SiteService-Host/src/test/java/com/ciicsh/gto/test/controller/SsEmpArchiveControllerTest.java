@@ -66,8 +66,8 @@ public class SsEmpArchiveControllerTest {
 
     @Test
     public void queryByEmpTaskId() {
-        boolean bol = ssPaymentComService.savePaymentInfo(1L, "未通过",1);
-        System.out.println(JSON.toJSONString(bol));
+//        boolean bol = ssPaymentComService.savePaymentInfo(1L, "未通过",1);
+//        System.out.println(JSON.toJSONString(bol));
     }
 
 

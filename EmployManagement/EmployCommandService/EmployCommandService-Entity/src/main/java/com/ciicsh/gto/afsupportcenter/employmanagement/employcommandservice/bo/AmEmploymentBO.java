@@ -7,7 +7,19 @@ import java.util.List;
 
 public class AmEmploymentBO extends AmEmployment {
 
+    /**
+     * 预留档案类型
+     */
+    private String yuliuDocType;
+
+    /**
+     * 预留档案编号
+     */
     private String yuliuDocNum;
+    /**
+     * 档案类型
+     */
+    private String docType;
     /**
      * 档案编号
      */
@@ -422,5 +434,19 @@ public class AmEmploymentBO extends AmEmployment {
         this.resignFeedback2 = resignFeedback2;
     }
 
+    public String getYuliuDocType() {
+        return yuliuDocType;
+    }
 
+    public void setYuliuDocType(String yuliuDocType) {
+        this.yuliuDocType = yuliuDocType;
+    }
+
+    public String getDocType() {
+        return docType;
+    }
+
+    public void setDocType(String docType) {
+        this.docType = docType;
+    }
 }
