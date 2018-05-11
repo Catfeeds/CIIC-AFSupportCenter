@@ -9,6 +9,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpArchiv
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpArchiveMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.EmpAccountImpXsl;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -76,7 +77,9 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
         int type = 0;
         try {
             for (EmpAccountImpXsl xlsRecord : xls) {
-                if (StringUtils.isBlank(xlsRecord.getEmpAccount()) || xlsRecord.getEmpAccount().length() > 20) {
+                if (StringUtils.isBlank(xlsRecord.getEmpAccount())
+                    || xlsRecord.getEmpAccount().length() > 20
+                    || !StringUtil.validateInt(xlsRecord.getEmpAccount())) {
                     type = 1;
                     retStr.append(xlsRecord.getEmpName());
                     break;
