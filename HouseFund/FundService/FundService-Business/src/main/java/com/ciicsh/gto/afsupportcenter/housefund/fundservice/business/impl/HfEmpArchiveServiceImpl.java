@@ -9,10 +9,14 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpArchiv
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpArchiveMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.EmpAccountImpXsl;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
+import com.ciicsh.gto.afsupportcenter.util.core.Result;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
-import com.ciicsh.gto.afsupportcenter.util.poi.utils.BeanUtils;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -45,8 +49,8 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
         List listEmpTaskPeriodAddBo = baseMapper.listEmpTaskPeriod(empArchiveId, "2");//补充
         List listEmpTransferBo = baseMapper.listEmpTransfer(empArchiveId);
 
-        HfEmpComBO hfEmpComBO = baseMapper.fetchManager(companyId,viewEmpArchiveBo.getEmployeeId());
-        org.springframework.beans.BeanUtils.copyProperties(hfEmpComBO,viewComAccountBo);
+        HfEmpComBO hfEmpComBO = baseMapper.fetchManager(companyId, viewEmpArchiveBo.getEmployeeId());
+        org.springframework.beans.BeanUtils.copyProperties(hfEmpComBO, viewComAccountBo);
         resultMap.put("viewEmpArchive", viewEmpArchiveBo);
         resultMap.put("viewEmpPeriod", viewEmpPeriodBo);
         resultMap.put("viewEmpPeriodAdd", viewEmpPeriodAddBo);
@@ -69,23 +73,49 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
         return true;
     }
 
-    public String xlsImportEmpAccount(List<EmpAccountImpXsl> xls, String fileName) {
+    public JsonResult xlsImportEmpAccount(List<EmpAccountImpXsl> xls, String fileName) {
         StringBuffer retStr = new StringBuffer();
-        xls.forEach(
-            xlsRecord -> {
+        int type = 0;
+        try {
+            for(EmpAccountImpXsl xlsRecord : xls){
+                if(StringUtils.isBlank(xlsRecord.getEmpAccount())|| xlsRecord.getEmpAccount().length()>20 ){
+                    type = 1;
+                    retStr.append(xlsRecord.getEmpName());
+                    break;
+                }
                 Map map = baseMapper.selectEmpByCardIdAndName(xlsRecord.getEmpName(), xlsRecord.getIdNum());
                 if (map == null) {
-                    retStr.append(xlsRecord.getEmpName()).append(" |");
-                    return;
+                    type = 2;
+                    retStr.append(xlsRecord.getEmpName());
+                    break;
                 }
                 HfEmpArchive hfEmpArchive = new HfEmpArchive();
                 hfEmpArchive.setHfEmpAccount(xlsRecord.getEmpAccount());
                 hfEmpArchive.setEmpArchiveId((Long) map.get("emp_archive_id"));
                 baseMapper.updateById(hfEmpArchive);
-                System.out.println(xlsRecord.getEmpAccount());
             }
-        );
-        return retStr.toString();
+        } catch (Exception e) {
+            type = 3;
+        }
+        String ret="";
+        switch (type){
+            case 1:
+                ret=retStr.toString()+"，导入的公积金账号为空或者数字超过长度。";
+                break;
+            case 2:
+                ret=retStr.toString()+"，根据身份证号和姓名无法从系统中找到对应的雇员。";
+                break;
+            case 3:
+                ret="保存导出数据是发生异常！";
+                break;
+        }
+        if(type==0){
+            return JsonResultKit.of(0,"导入成功！");
+        }else{
+            return JsonResultKit.of(1,"导入失败!原因： \n"+ ret);
+        }
+
+
     }
 
     @Override
