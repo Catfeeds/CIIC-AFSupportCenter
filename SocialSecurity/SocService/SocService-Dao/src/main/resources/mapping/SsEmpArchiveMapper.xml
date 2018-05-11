@@ -199,7 +199,7 @@
         FROM
             ss_emp_archive EA
         WHERE
-            EA.is_active = '1'
+            EA.is_active = 1
             AND EA.com_account_id = #{comAccountId}
             AND EA.ss_serial = #{ssSerial}
             AND EA.employee_id != #{employeeId}

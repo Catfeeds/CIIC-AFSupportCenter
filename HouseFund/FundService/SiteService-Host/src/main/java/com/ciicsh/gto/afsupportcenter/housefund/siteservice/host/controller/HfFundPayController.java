@@ -81,28 +81,6 @@ public class HfFundPayController {
     }
 
     /**
-     * 查询公积金汇缴支付编辑操作数据
-     * @param pageInfo
-     * @return
-     */
-//    @PostMapping("/fundPaysOperateEditData")
-//    public JsonResult<List<HfPaymentAccountBo>> postFundPaysOperateData(PageInfo pageInfo) {
-//        PageRows<HfPaymentAccountBo> pageRows = hfPaymentAccountService.getMakePayLists(pageInfo);
-//        return JsonResultKit.ofPage(pageRows);
-//    }
-
-    /**
-     * 查询公积金汇缴支付详细操作数据
-     * @param pageInfo
-     * @return
-     */
-    @PostMapping("/fundPaysOperateDetailData")
-    public JsonResult<List<HfPaymentComBo>> postFundPaysDetailData(PageInfo pageInfo) {
-        PageRows<HfPaymentComBo> pageRows = hfPaymentComService.getFundPaysDetailOperationData(pageInfo);
-        return JsonResultKit.ofPage(pageRows);
-    }
-
-    /**
      * 查询公积金制作汇缴清单列表
      * @param pageInfo
      * @return
@@ -387,12 +365,31 @@ public class HfFundPayController {
         }
     }
     /**
-     * 公积金汇缴支付编辑/详细操作数据
+     * 公积金汇缴支付编辑操作数据
      * @param pageInfo 查询条件
      * @return 查询结果
      */
     @PostMapping("/fundPaysOperateEditData")
-    public JsonResult<List<HfPaymentAccountBo>> postFundPaysOperateData(PageInfo pageInfo) {
+    public JsonResult<List<HfPaymentAccountBo>> postFundPaysOperateEditData(PageInfo pageInfo) {
+        // 支付状态: 1 ,可付(默认)   2,送审   3 汇缴(已申请到财务部 ) 4  财务部批退  5,财务部审批通过  6 出票 7  回单
+        // 只有可付和送审才允许编辑
+        String paymentState = pageInfo.getParams().getString("paymentState");
+        if ("1".equals(paymentState) || "2".equals(paymentState)){
+            PageRows<HfPaymentAccountBo> pageRows = hfPaymentAccountService.getFundPaysEditOperationData(pageInfo);
+            return JsonResultKit.ofPage(pageRows);
+        }else{
+            return JsonResultKit.of(0,"当前状态，不允许编辑！");
+        }
+
+    }
+
+    /**
+     * 公积金汇缴支付详细操作数据
+     * @param pageInfo 查询条件
+     * @return 查询结果
+     */
+    @PostMapping("/fundPaysOperateDetailData")
+    public JsonResult<List<HfPaymentAccountBo>> postFundPaysOperateDetailData(PageInfo pageInfo) {
         PageRows<HfPaymentAccountBo> pageRows = hfPaymentAccountService.getFundPaysEditOperationData(pageInfo);
         return JsonResultKit.ofPage(pageRows);
     }

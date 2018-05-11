@@ -219,13 +219,11 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
                 out.setPaymentMonth(paymentYearMonth.substring(4,6));
             }
             out.setIsRemitted(true);//汇缴打钩
-            if (Optional.ofNullable(in.getRepairAmount()).orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0) { //存在补缴
-                out.setRepairCountEmp(null);
-                out.setRepairAmount(null);
-            }
+            out.setRepairCountEmp(null);
+            out.setRepairAmount(null);
             retListPrint.add(out);
 
-            if (Optional.ofNullable(in.getRepairAmount()).orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0) { //存在补缴
+            if (in.getRepairAmount()!=null &&  in.getRepairAmount().compareTo(BigDecimal.ZERO) > 0) { //存在补缴
                 out = new HfPrintRemittedBookBO();
                 BeanUtils.copyProperties(in, out);
                 out.setCurYear(LocalDate.now().getYear());

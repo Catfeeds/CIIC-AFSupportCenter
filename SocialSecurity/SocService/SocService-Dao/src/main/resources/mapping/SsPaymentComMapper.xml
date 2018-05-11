@@ -71,16 +71,16 @@
         FROM
           ss_payment_com SPC
           INNER JOIN ss_com_account SCA ON SCA.com_account_id = SPC.com_account_id
-            AND SCA.is_active = '1'
+            AND SCA.is_active = 1
             <if test = "ssAccountType != null and ssAccountType != ''">
               AND SCA.ss_account_type = #{ssAccountType}
             </if>
           LEFT JOIN sal_company SC ON SC.company_id = SPC.company_id
-            AND SC.is_active = '1'
+            AND SC.is_active = 1
           LEFT JOIN ss_payment SP ON SP.payment_id = SPC.payment_id
-            AND SP.is_active = '1'
+            AND SP.is_active = 1
         WHERE
-            SPC.is_active = '1'
+            SPC.is_active = 1
             <if test = "companyId != null and companyId != ''">
               AND SPC.company_id = #{companyId}
             </if>
@@ -118,7 +118,7 @@
         FROM
         ss_payment_com SPC
         WHERE
-        SPC.is_active = '1'
+        SPC.is_active = 1
           AND SPC.payment_id = #{paymentId}
     </select>
 
@@ -131,19 +131,19 @@
           ss_com_account SCA
         ON
           SCA.com_account_id = SPC.com_account_id
-          AND SCA.is_active = '1'
+          AND SCA.is_active = 1
         LEFT JOIN
           sal_company SC
         ON
           SC.company_id = SPC.company_id
-          AND SC.is_active = '1'
+          AND SC.is_active = 1
         LEFT JOIN
           ss_payment SP
         ON
           SP.payment_id = SPC.payment_id
-          AND SP.is_active = '1'
+          AND SP.is_active = 1
         WHERE
-          SPC.is_active = '1'
+          SPC.is_active = 1
           AND SPC.payment_com_id = #{paymentComId}
     </select>
 
@@ -153,7 +153,7 @@
         FROM
             ss_payment_com SPC
         WHERE
-            SPC.is_active = '1'
+            SPC.is_active = 1
             AND SPC.payment_id = #{paymentId}
     </select>
 
@@ -163,7 +163,7 @@
         FROM
             ss_payment_com SPC
         WHERE
-            SPC.is_active = '1'
+            SPC.is_active = 1
             AND (
                 SPC.payment_id != #{paymentId}
                 OR	SPC.payment_id IS NULL
