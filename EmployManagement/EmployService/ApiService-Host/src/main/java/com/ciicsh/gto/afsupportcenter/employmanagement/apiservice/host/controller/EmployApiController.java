@@ -23,7 +23,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/employ")
-@Api(value = "soc-api-service",description = "support interface for other center")
+@Api(value = "employ-api-service",description = "support interface for other center")
 public class EmployApiController implements EmployApiProxy {
 
    @Autowired
