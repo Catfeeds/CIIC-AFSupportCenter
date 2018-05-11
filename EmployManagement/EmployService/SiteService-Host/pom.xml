@@ -99,7 +99,7 @@
     </dependencies>
 
     <build>
-        <finalName>afsupportcenter-employmanagement-siteservice-host</finalName>
+        <finalName>gt1.afsupportcenter.employmanagement.siteservice-host</finalName>
 
         <resources>
             <resource>

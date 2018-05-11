@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Import;
  */
 
 @MapperScan("com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao")
-@SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business","com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.controller","com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate"})
+@SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business","com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host","com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate"})
 @Import({CustomConfiguration.class, MybatisPlusConfig.class})
 @EnableFeignClients({
     "com.ciicsh.gto.sheetservice.api",

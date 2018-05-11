@@ -319,8 +319,8 @@
         SELECT
         COUNT(hpa.hf_type) fCount,
         SUM(hpc.remitted_amount) AS remitted_amount,
-        hpc.repair_amount,
-        hpc.remitted_count_emp,
+        SUM(hpc.repair_amount) AS repair_amount,
+        SUM(hpc.remitted_count_emp) AS remitted_count_emp,
         hpa.payment_month,
         hpc.company_id,
         hpa.hf_type,
