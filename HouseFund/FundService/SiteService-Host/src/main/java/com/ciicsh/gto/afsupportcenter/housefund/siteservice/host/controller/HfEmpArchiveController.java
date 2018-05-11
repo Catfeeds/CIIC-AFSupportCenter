@@ -71,18 +71,11 @@ public class HfEmpArchiveController extends  BasicController<HfEmpArchiveService
 
     @RequestMapping(value = "/xlsImportEmpAccount",consumes = {"multipart/form-data"})
     @ResponseBody
-    public JsonResult<String> xlsImportEmpAccount(MultipartFile file) throws Exception {
+    public JsonResult xlsImportEmpAccount(MultipartFile file) throws Exception {
         List<EmpAccountImpXsl> optList = ExcelUtil.importExcel(file,0,1,EmpAccountImpXsl.class,false);
-        JsonResult<String> json = new JsonResult<String>();
-        String result = business.xlsImportEmpAccount(optList,file.getOriginalFilename());
-        if(Optional.ofNullable(result).isPresent()){
-            json.setCode(0);
-            json.setMessage("导入成功!");
-        } else {
-            json.setCode(1);
-            json.setMessage("导入失败!原因是雇员姓名和身份证号在系统中找不到,名单如下： \n" + result.substring(0,result.length()-1));
-        }
-        return json;
+        JsonResult result = business.xlsImportEmpAccount(optList,file.getOriginalFilename());
+        return  result;
+
     }
 
 
