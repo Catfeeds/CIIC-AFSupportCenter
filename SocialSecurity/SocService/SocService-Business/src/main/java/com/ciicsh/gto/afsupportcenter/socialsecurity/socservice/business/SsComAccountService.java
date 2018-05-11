@@ -92,5 +92,5 @@ public interface SsComAccountService extends IService<SsComAccount> {
      * @param comAccountId
      * @return
      */
-    Integer getSerialByComAccountId(Long comAccountId);
+    Long getSerialByComAccountId(Long comAccountId);
 }

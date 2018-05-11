@@ -52,11 +52,11 @@
             <if test="idNum != null and idNum != ''">
                 AND id_num LIKE concat(concat('%',#{idNum}),'%')
             </if>
-            <if test="status != null and status != ''">
-                AND status LIKE concat(concat('%',#{status}),'%')
+            <if test="status != null">
+                AND status = #{status}
             </if>
             <if test="type != null and type != ''">
-                AND type LIKE concat(concat('%',#{type}),'%')
+                AND type = #{type}
             </if>
         </trim>
     </sql>

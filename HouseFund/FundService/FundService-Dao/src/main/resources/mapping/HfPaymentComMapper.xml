@@ -51,32 +51,6 @@
 
     </resultMap>
 
-    <!--查询公积金汇缴支付详细操作数据-->
-    <select id="getFundPaysDetailOperationData" resultMap="GetFundPaysDetailOperationDataResultMap">
-        SELECT
-        ht.hf_type_name,
-        p.payment_month,
-        pc.company_id,
-        com.title,
-        pc.payment_bank,
-        pc.remitted_amount,
-        pc.repair_amount,
-        pc.remitted_count_emp
-        FROM hf_payment_com pc
-        INNER JOIN hf_payment p ON p.payment_id = pc.payment_id
-        INNER JOIN sal_company com ON com.company_id = pc.company_id
-        INNER JOIN hf_type ht ON ht.hf_type_id = pc.hf_type
-        <where>
-            pc.is_active = 1
-            <if test="paymentId != null and paymentId != ''">
-                AND p.payment_id = #{paymentId}
-            </if>
-        </where>
-        ORDER BY
-        pc.payment_com_id
-    </select>
-
-
     <!--生成制作汇缴名单-->
     <!--费用种类：1标准 2 开户 3 转入  4启封 5 调整启封 6 补缴  7 转出 8 封存 9调整封存 10 销户 11 差额补缴-->
     <!--parameterType="java.util.List"-->
@@ -199,20 +173,6 @@
             </foreach>
         </if>
 
-    </update>
-
-    <!-- 删除公积金汇缴支付编辑操作数据：更新hf_payment_com表的is_active为不可用-->
-    <update id="updateHpcById" parameterType="java.lang.Long">
-        update hf_payment_com
-        set is_active = 0
-        WHERE  payment_id=#{paymentId}
-    </update>
-
-    <!-- 添加公积金汇缴支付编辑操作数据：更新hf_payment_com表的is_active为可用-->
-    <update id="updatePaymentComById" parameterType="java.lang.Long">
-        update hf_payment_com
-        set is_active = 1
-        WHERE  payment_id=#{paymentId}
     </update>
 
     <!-- 添加公积金汇缴支付编辑操作数据：查出当前汇缴支付批次下的当月汇缴支付总金额-->

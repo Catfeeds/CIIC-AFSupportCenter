@@ -18,8 +18,6 @@ import java.util.List;
 @Repository
 public interface HfPaymentComMapper extends BaseMapper<HfPaymentCom> {
 
-    List<HfPaymentComBo> getFundPaysDetailOperationData(HfPaymentComBo hfPaymentBo);
-
     /**
      * 更新前端传递的list参数查询企业账户
      *
@@ -30,10 +28,6 @@ public interface HfPaymentComMapper extends BaseMapper<HfPaymentCom> {
     List<HfCreatePaymentAccountBO> selectPaymentAccount(HfFundPayCreatePaymentAccountPara params);
 
     Integer updatePaymentAccount(HfFundPayCreatePaymentAccountPara hfFundPayCreatePaymentAccountPara);
-
-    void updateHpcById(Long paymentId);
-
-    void updatePaymentComById(Long paymentId);
 
     List<HfPaymentComBo> getCompanyIdList(@Param("paymentId") Long paymentId, @Param("comAccountId") Long comAccountId);
 

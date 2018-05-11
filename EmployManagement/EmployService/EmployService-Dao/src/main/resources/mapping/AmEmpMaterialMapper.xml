@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmEmpMaterialMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpMaterial">
+		<id column="emp_material_id" property="empMaterialId" />
+		<result column="material_name" property="materialName" />
+		<result column="submitter_id" property="submitterId" />
+		<result column="submitter_name" property="submitterName" />
+		<result column="submitter_date" property="submitterDate" />
+		<result column="receive_id" property="receiveId" />
+		<result column="receive_name" property="receiveName" />
+		<result column="receive_date" property="receiveDate" />
+		<result column="reject_id" property="rejectId" />
+		<result column="reject_name" property="rejectName" />
+		<result column="reject_date" property="rejectDate" />
+		<result column="reject_reason" property="rejectReason" />
+		<result column="operate_type" property="operateType" />
+		<result column="is_active" property="isActive" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="created_by" property="createdBy" />
+		<result column="modified_by" property="modifiedBy" />
+		<result column="emp_task_id" property="empTaskId" />
+        <result column="extension" property="extension" />
+	</resultMap>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMapDTO" extends="BaseResultMap"
+               type="com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmpMaterialBO">
+
+    </resultMap>
+
+    <select id="queryAmEmpMaterial" resultMap="BaseResultMapDTO">
+        SELECT  * from  am_emp_material where is_active = 1 and  emp_task_id = #{empTaskId}  and operate_type = #{operateType}
+    </select>
+
+    <select id="queryMaterialDic" resultMap="BaseResultMapDTO">
+        SELECT  material_name  from  cmy_af_material_dic  where material_type = '2'
+    </select>
+
+    <select id="queryMaterialByTaskId" resultMap="BaseResultMapDTO">
+        SELECT  material_name,receive_name,receive_date,receive_id  from  am_emp_material where is_active = 1 and  emp_task_id = #{empTaskId}
+    </select>
+
+    <update id="updateMaterialByTaskId">
+        UPDATE am_emp_material  set receive_name = #{receiveName},receive_date = #{receiveDate},receive_id = #{receiveId},modified_time = #{receiveDate},modified_by=#{receiveId} where  emp_task_id = #{empTaskId}
+    </update>
+
+
+</mapper>

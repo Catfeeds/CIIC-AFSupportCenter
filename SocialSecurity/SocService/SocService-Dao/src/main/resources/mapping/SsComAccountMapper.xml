@@ -307,7 +307,7 @@
     </update>
 
     <!-- 根据社保账号获得社保序号 -->
-    <select id="getSerialByComAccountId" resultType="java.lang.Integer">
+    <select id="getSerialByComAccountId" resultType="java.lang.Long">
         SELECT
             CA.ss_serial
         FROM
