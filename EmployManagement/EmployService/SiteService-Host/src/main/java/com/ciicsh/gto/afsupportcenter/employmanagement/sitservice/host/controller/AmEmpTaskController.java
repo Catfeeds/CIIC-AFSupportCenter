@@ -278,8 +278,8 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     @Log("保存用工信息")
     @RequestMapping("/saveEmployee")
     public JsonResult<AmEmployment> saveEmployee(AmEmployment entity) {
-        String userId = UserContext.getUserId();
-        String userName = UserContext.getUser().getDisplayName();
+        String userId = ReasonUtil.getUserId();
+        String userName = ReasonUtil.getUserName();
         LocalDateTime now = LocalDateTime.now();
         if(entity.getEmploymentId()==null){
             entity.setCreatedTime(now);
