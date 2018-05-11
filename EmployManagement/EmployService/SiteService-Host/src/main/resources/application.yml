@@ -1,0 +1,58 @@
+server:
+  port: 6011
+  context-path: /
+
+spring:
+  application:
+    name: support-center-employmanagement-site-service
+  profiles:
+    active: dev
+  http:
+    multipart:
+      enabled: true
+      max-file-size: 2MB
+###################  spring cloud eureka  ###################
+eureka:
+  instance:
+    lease-expiration-duration-in-seconds: 40
+    lease-renewal-interval-in-seconds: 30
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+#mybatis
+mybatis-plus:
+  mapper-locations: classpath*:/mapping*/*Mapper.xml
+  typeAliasesPackage: com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity
+  plugins:
+    - catMybatisInterceptor
+#  typeEnumsPackage: com.baomidou.springboot.entity.enums
+  global-config:
+    id-type: 0
+    field-strategy: 2
+    db-column-underline: true
+    refresh-mapper: true
+    logic-delete-value: 0
+    logic-not-delete-value: 1
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+
+app:
+  id: 10006006
+
+endpoints:
+  shutdown:
+    enabled: true
+    sensitive: false
+  health:
+    enabled: true
+
+management:
+  security:
+    enabled: false
+  port: 6012
+  context-path: /admin
+
+http:
+  multipart:
+  enabled: true
+  max-file-size: 2MB

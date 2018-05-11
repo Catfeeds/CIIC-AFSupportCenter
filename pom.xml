@@ -341,12 +341,13 @@
         <module>./HouseFund/FundService/ApiService-Host</module>
         <module>./HouseFund/FundService/MessageService-Host</module>
 
-        <module>./EmployManagement/EmployCommandService/EmployCommandService-Host</module>
-        <module>./EmployManagement/EmployCommandService/EmployCommandService-Api</module>
-        <module>./EmployManagement/EmployCommandService/EmployCommandService-Dao</module>
-        <module>./EmployManagement/EmployCommandService/EmployCommandService-Business</module>
-        <module>./EmployManagement/EmployCommandService/EmployCommandService-Entity</module>
-
+        <module>./EmployManagement/EmployService/SiteService-Host</module>
+        <module>./EmployManagement/EmployService/EmployService-Api</module>
+        <module>./EmployManagement/EmployService/EmployService-Dao</module>
+        <module>./EmployManagement/EmployService/EmployService-Business</module>
+        <module>./EmployManagement/EmployService/EmployService-Entity</module>
+        <module>./EmployManagement/EmployService/ApiService-Host</module>
+        <module>./EmployManagement/EmployService/MessageService-Host</module>
 
         <module>./Job/FundJob/FundJob-Host</module>
         <module>./Job/FundJob/FundJob-Dao</module>

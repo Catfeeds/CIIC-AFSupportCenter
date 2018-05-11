@@ -138,7 +138,7 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
 
         // 手动填写的社保序号若大于当前种子，则更新为最新的种子
         if (map.get("comAccountId") != null && StringUtils.isNotEmpty(ssEmpSerial)) {
-            Integer existsSsSerial = ssComAccountService.getSerialByComAccountId(Long.valueOf(map.get("comAccountId")));
+            Long existsSsSerial = ssComAccountService.getSerialByComAccountId(Long.valueOf(map.get("comAccountId")));
             long ssSerial = Long.parseLong(ssEmpSerial);
             if (existsSsSerial == null || ssSerial > existsSsSerial) {
                 SsComAccount ssComAccount = new SsComAccount();
