@@ -1,10 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.api;
 
 import com.ciicsh.common.entity.JsonResult;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccountExtDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccountDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccountParamDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComTaskDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.*;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,4 +41,7 @@ public interface FundApiProxy {
      */
     @GetMapping("/getAccountByCompany")
     JsonResult<HfComAccountExtDTO> getAccountByCompany(@RequestParam("companyId") String companyId);
+
+    @PostMapping("/getHfEmpInfo")
+    JsonResult<List<HfEmpInfoDTO>> getHfEmpInfo(@RequestBody List<HfEmpInfoParamDTO> paramDTOList);
 }
