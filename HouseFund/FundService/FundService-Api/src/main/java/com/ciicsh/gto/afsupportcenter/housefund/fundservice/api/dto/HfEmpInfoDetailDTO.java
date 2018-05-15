@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  **/
 public class HfEmpInfoDetailDTO {
     /**
-     * 类型
+     * 类型1：基本公积金2：补充公积金
      */
     private String hfType;
     /**
