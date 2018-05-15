@@ -152,10 +152,16 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
                 amEmpTask.setTaskStatus(Integer.parseInt(bo.getResignFeedback()));
             }
 
-            taskService.insertOrUpdate(amEmpTask);
-            if(isFinish==0){
+            if(isFinish==0)
+            {
                 isFinish = this.isResginFinish(bo,amEmpTask);
             }
+            if(isFinish==1){
+                amEmpTask.setFinish(true);
+            }
+
+            taskService.insertOrUpdate(amEmpTask);
+
             entity.setIsFinish(isFinish);
 
             AmResignLink amResignLink = new AmResignLink();

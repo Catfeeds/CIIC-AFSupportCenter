@@ -100,6 +100,15 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
             AmEmployment amEmployment = amEmploymentService.selectById(entity.getEmploymentId());
             amEmpTask = amEmpTaskService.selectById(amEmployment.getEmpTaskId());
             amEmpTask.setTaskStatus(Integer.parseInt(entity.getEmployFeedback()));
+            if("11".equals(entity.getEmployFeedback()))
+            {
+
+            }else{
+                if(entity.getEmployFeedback()!=null)
+                {
+                    amEmpTask.setFinish(true);
+                }
+            }
             amEmpTaskService.insertOrUpdate(amEmpTask);
             map.put("taskId",amEmpTask.getTaskId());
         }
