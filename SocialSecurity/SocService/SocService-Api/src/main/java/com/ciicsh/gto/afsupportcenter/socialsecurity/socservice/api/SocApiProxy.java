@@ -1,11 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api;
 
 import com.ciicsh.common.entity.JsonResult;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.ComAccountExtDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.ComTaskParamDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountParamDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComTaskDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.*;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,13 +18,16 @@ import java.util.List;
 public interface SocApiProxy {
     /**
      * 保存企业任务单
+     *
      * @param ssComTaskDTO
      * @return
      */
     @PostMapping("/saveComTask")
     JsonResult saveComTask(@RequestBody SsComTaskDTO ssComTaskDTO);
+
     /**
      * 获取企业社保账户信息表
+     *
      * @param paramDto
      * @return
      */
@@ -38,4 +37,7 @@ public interface SocApiProxy {
 
     @PostMapping("/getAccountByCompany")
     JsonResult<ComAccountExtDTO> getAccountByCompany(@RequestBody ComTaskParamDTO paramDTO);
+
+    @PostMapping("/getSsEmpInfo")
+    JsonResult<List<SsEmpInfoDTO>> getSsEmpInfo(@RequestBody List<SsEmpInfoParamDTO> paramDTOList);
 }

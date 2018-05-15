@@ -5,10 +5,7 @@ import com.ciicsh.common.entity.JsonResult;
 import com.ciicsh.gto.afsupportcenter.housefund.apiservice.host.enumeration.Const;
 import com.ciicsh.gto.afsupportcenter.housefund.apiservice.host.translator.ApiTranslator;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.FundApiProxy;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccountDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccountExtDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComAccountParamDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfComTaskDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountInfoBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
@@ -162,5 +159,10 @@ public class FundApiController implements FundApiProxy{
         }
         log.info(LogMessage.create().setTitle(Const.GETACCOUNTBYCOMPANY.getKey()).setContent("Response: "+JSON.toJSONString(extDTO)));
         return JsonResult.success(extDTO);
+    }
+
+    @Override
+    public JsonResult<List<HfEmpInfoDTO>> getHfEmpInfo(@RequestBody List<HfEmpInfoParamDTO> paramDTOList) {
+        return null;
     }
 }
