@@ -143,7 +143,7 @@ public class SocApiController implements SocApiProxy {
     }
 
     @Override
-    public JsonResult<List<SsEmpInfoDTO>> getSsEmpInfo(List<SsEmpInfoParamDTO> paramDTOList) {
+    public JsonResult<List<SsEmpInfoDTO>> getSsEmpInfo(@RequestBody List<SsEmpInfoParamDTO> paramDTOList) {
         return null;
     }
 }
