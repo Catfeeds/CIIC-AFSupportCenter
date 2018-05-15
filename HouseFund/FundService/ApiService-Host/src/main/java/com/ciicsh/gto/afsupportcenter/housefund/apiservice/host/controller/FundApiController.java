@@ -162,7 +162,7 @@ public class FundApiController implements FundApiProxy{
     }
 
     @Override
-    public JsonResult<List<HfEmpInfoDTO>> getHfEmpInfo(List<HfEmpInfoParamDTO> paramDTOList) {
+    public JsonResult<List<HfEmpInfoDTO>> getHfEmpInfo(@RequestBody List<HfEmpInfoParamDTO> paramDTOList) {
         return null;
     }
 }
