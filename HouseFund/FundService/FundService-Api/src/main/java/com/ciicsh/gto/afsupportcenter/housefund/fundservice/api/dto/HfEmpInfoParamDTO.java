@@ -20,7 +20,7 @@ public class HfEmpInfoParamDTO {
     /**
      * 公积金所属月份 yyyyMM
      */
-    private String ssMonth;
+    private String hfMonth;
 
     public String getEmployeeId() {
         return employeeId;
@@ -38,11 +38,11 @@ public class HfEmpInfoParamDTO {
         this.companyId = companyId;
     }
 
-    public String getSsMonth() {
-        return ssMonth;
+    public String getHfMonth() {
+        return hfMonth;
     }
 
-    public void setSsMonth(String ssMonth) {
-        this.ssMonth = ssMonth;
+    public void setHfMonth(String ssMonth) {
+        this.hfMonth = ssMonth;
     }
 }
