@@ -141,4 +141,9 @@ public class SocApiController implements SocApiProxy {
         }
         return JsonResult.success(extDTO);
     }
+
+    @Override
+    public JsonResult<List<SsEmpInfoDTO>> getSsEmpInfo(@RequestBody List<SsEmpInfoParamDTO> paramDTOList) {
+        return null;
+    }
 }
