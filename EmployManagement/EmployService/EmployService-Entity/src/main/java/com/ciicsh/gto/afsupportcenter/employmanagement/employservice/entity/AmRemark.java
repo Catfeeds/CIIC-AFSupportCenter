@@ -70,12 +70,6 @@ public class AmRemark implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
-    /**
-     * 雇员id
-     */
-    @TableField("employee_id")
-    private String employeeId;
-
     @TableField("emp_task_id")
     private Long  empTaskId;
 
@@ -85,14 +79,6 @@ public class AmRemark implements Serializable {
 
     public void setEmpTaskId(Long empTaskId) {
         this.empTaskId = empTaskId;
-    }
-
-    public String getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(String employeeId) {
-        this.employeeId = employeeId;
     }
 
 	public Long getRemarkId() {
