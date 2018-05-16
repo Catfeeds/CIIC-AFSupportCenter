@@ -6,11 +6,15 @@ import com.ciicsh.gto.afsupportcenter.housefund.apiservice.host.enumeration.Cons
 import com.ciicsh.gto.afsupportcenter.housefund.apiservice.host.translator.ApiTranslator;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.FundApiProxy;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.*;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpInfoBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpInfoDetailBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpInfoParamBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.AccountInfoBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComTaskService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpArchiveService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
@@ -21,12 +25,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,6 +47,9 @@ public class FundApiController implements FundApiProxy{
 
     @Autowired
     private LogApiUtil log;
+
+    @Autowired
+    private HfEmpArchiveService hfEmpArchiveService;
 
     /**
      * 企业公积金账户开户、变更、转移、转出的 创建任务单接口
@@ -162,7 +164,30 @@ public class FundApiController implements FundApiProxy{
     }
 
     @Override
+    @ApiOperation(value = "获取雇员公积金账户详细信息接口", notes = "根据雇员编号、客户编号、所属月份获取公积金详细信息")
+    @ApiImplicitParam(name = "paramDTOList", value = "雇员信息集合 paramDTOList", required = true, dataType = "List<HfEmpInfoParamDTO>")
+    @PostMapping("/getHfEmpInfo")
     public JsonResult<List<HfEmpInfoDTO>> getHfEmpInfo(@RequestBody List<HfEmpInfoParamDTO> paramDTOList) {
-        return null;
+        List<HfEmpInfoParamBO> paramBOList = new ArrayList<>();
+        for (HfEmpInfoParamDTO paramDTO : paramDTOList) {
+            HfEmpInfoParamBO paramBO = new HfEmpInfoParamBO();
+            BeanUtils.copyProperties(paramDTO, paramBO);
+            paramBOList.add(paramBO);
+        }
+        List<HfEmpInfoBO> resultBoList = hfEmpArchiveService.getHfEmpArchiveInfo(paramBOList);
+        List<HfEmpInfoDTO> resultDTOList = new ArrayList<>();
+        for (HfEmpInfoBO resultBO : resultBoList) {
+            HfEmpInfoDTO resultDTO = new HfEmpInfoDTO();
+            BeanUtils.copyProperties(resultBO, resultDTO);
+            List<HfEmpInfoDetailDTO> targetDTOList = new ArrayList<>();
+            for (HfEmpInfoDetailBO sourceBO : resultBO.getHfEmpInfoDetailBOList()) {
+                HfEmpInfoDetailDTO targetDTO = new HfEmpInfoDetailDTO();
+                BeanUtils.copyProperties(sourceBO, targetDTO);
+                targetDTOList.add(targetDTO);
+            }
+            resultDTO.setHfEmpInfoDetailDTOList(targetDTOList);
+            resultDTOList.add(resultDTO);
+        }
+        return JsonResult.success(resultDTOList);
     }
 }

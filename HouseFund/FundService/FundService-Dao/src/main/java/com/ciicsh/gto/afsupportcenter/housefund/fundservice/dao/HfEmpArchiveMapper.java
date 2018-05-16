@@ -1,5 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfEmpInfoDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto.HfEmpInfoDetailDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
@@ -30,4 +32,5 @@ public interface HfEmpArchiveMapper extends BaseMapper<HfEmpArchive> {
     int updateArchiveEmpAccount(@Param("hfEmpAccount")String hfEmpAccount, @Param("empArchiveId")Long empArchiveId);
     HfEmpComBO fetchManager(@Param("companyId")String companyId, @Param("employeeId")String employeeId);
     String getEmpAccountByEmployeeId(@Param("employeeId")String employeeId, @Param("hfType") Integer hfType);
+    List<HfEmpInfoDetailBO> getHfEmpInfo(@Param("employeeId")String employeeId, @Param("companyId")String companyId, @Param("hfMonthBelong")String hfMonthBelong);
 }

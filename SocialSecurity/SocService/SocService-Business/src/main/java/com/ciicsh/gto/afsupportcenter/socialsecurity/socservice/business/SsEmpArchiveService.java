@@ -2,6 +2,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpArchiveBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpInfoBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpInfoParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpArchive;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.empSSSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -58,4 +60,6 @@ public interface SsEmpArchiveService extends IService<SsEmpArchive> {
      * @return true:验证成功
      */
     boolean checkSerial( Long comAccountId,String employeeId,String empSsSerial);
+
+    List<SsEmpInfoBO> getSsEmpArchiveInfo(List<SsEmpInfoParamBO> paramBoList);
 }

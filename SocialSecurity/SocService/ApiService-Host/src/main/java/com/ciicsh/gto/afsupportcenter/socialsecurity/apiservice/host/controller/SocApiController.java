@@ -7,11 +7,15 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.apiservice.host.translator.
 import com.ciicsh.gto.afsupportcenter.socialsecurity.apiservice.host.validator.SocApiValidator;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.SocApiProxy;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.*;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpInfoBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpInfoDetailBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpInfoParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountExtBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComTaskParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComAccountService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpArchiveService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.ComAccountExtPO;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
@@ -53,6 +57,8 @@ public class SocApiController implements SocApiProxy {
 
     @Autowired
     LogApiUtil logApiUtil;
+    @Autowired
+    private SsEmpArchiveService ssEmpArchiveService;
 
 
     @Override
@@ -143,7 +149,30 @@ public class SocApiController implements SocApiProxy {
     }
 
     @Override
+    @ApiOperation(value = "获取企业社保雇员信息接口", notes = "根据List<SsEmpInfoParamDTO>集合获取")
+    @ApiImplicitParam(name = "List<SsEmpInfoParamDTO>", value = "企业社保雇员集合 List<SsEmpInfoParamDTO>", required = true, dataType = "ComTaskParamDTO")
+    @PostMapping("/getSsEmpInfo")
     public JsonResult<List<SsEmpInfoDTO>> getSsEmpInfo(@RequestBody List<SsEmpInfoParamDTO> paramDTOList) {
-        return null;
+        List<SsEmpInfoParamBO> paramBOList = new ArrayList<>();
+        for (SsEmpInfoParamDTO paramDTO : paramDTOList) {
+            SsEmpInfoParamBO paramBO = new SsEmpInfoParamBO();
+            BeanUtils.copyProperties(paramDTO, paramBO);
+            paramBOList.add(paramBO);
+        }
+        List<SsEmpInfoBO> resultBoList = ssEmpArchiveService.getSsEmpArchiveInfo(paramBOList);
+        List<SsEmpInfoDTO> resultDTOList = new ArrayList<>();
+        for (SsEmpInfoBO resultBO : resultBoList) {
+            SsEmpInfoDTO resultDTO = new SsEmpInfoDTO();
+            BeanUtils.copyProperties(resultBO, resultDTO);
+            List<SsEmpInfoDetailDTO> targetDTOList = new ArrayList<>();
+            for (SsEmpInfoDetailBO sourceBO : resultBO.getSsEmpInfoDetailBOList()) {
+                SsEmpInfoDetailDTO targetDTO = new SsEmpInfoDetailDTO();
+                BeanUtils.copyProperties(sourceBO, targetDTO);
+                targetDTOList.add(targetDTO);
+            }
+            resultDTO.setSsEmpInfoDetailDTOList(targetDTOList);
+            resultDTOList.add(resultDTO);
+        }
+        return JsonResult.success(resultDTOList);
     }
 }
