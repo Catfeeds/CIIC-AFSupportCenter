@@ -20,7 +20,7 @@ public class SsEmpInfoParamDTO {
     /**
      * 社保所属月份 yyyyMM
      */
-    private String ssMonth;
+    private String ssMonthBelong;
 
     public String getEmployeeId() {
         return employeeId;
@@ -38,11 +38,11 @@ public class SsEmpInfoParamDTO {
         this.companyId = companyId;
     }
 
-    public String getSsMonth() {
-        return ssMonth;
+    public String getSsMonthBelong() {
+        return ssMonthBelong;
     }
 
-    public void setSsMonth(String ssMonth) {
-        this.ssMonth = ssMonth;
+    public void setSsMonthBelong(String ssMonthBelong) {
+        this.ssMonthBelong = ssMonthBelong;
     }
 }
