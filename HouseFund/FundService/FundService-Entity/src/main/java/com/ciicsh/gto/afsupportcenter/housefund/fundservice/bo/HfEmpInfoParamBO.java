@@ -1,13 +1,13 @@
-package com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto;/**
- * Created by zhengj on 2018/5/14
+package com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo;/**
+ * Created by baofeng on 2018/5/14
  */
 
 /**
- * 公积金输入参数Class
- * @author: zhengj
- * @date: 2018/5/14 18:42
+ * 公积金输入BO
+ * @author: baofeng
+ * @date: 2018-5-15 19:58:15
  **/
-public class HfEmpInfoParamDTO {
+public class HfEmpInfoParamBO {
 
     /**
      * 雇员编号

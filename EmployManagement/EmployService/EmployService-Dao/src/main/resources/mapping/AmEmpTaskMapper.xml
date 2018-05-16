@@ -34,6 +34,7 @@
         <result column="modified_by" property="modifiedBy" />
         <result column="emp_company_id" property="empCompanyId" />
         <result column="change" property="change" />
+        <result column="is_finish" property="isFinish" />
 	</resultMap>
 
     <!-- 通用查询映射结果 -->
@@ -43,7 +44,9 @@
         <result column="handle_type" property="handleType" />
         <result column="employ_property" property="employProperty" />
         <result column="employ_way" property="employWay" />
+        <result column="yuliu_doc_type" property="yuliuDocType" />
         <result column="yuliu_doc_num" property="yuliuDocNum" />
+        <result column="doc_type" property="docType" />
         <result column="doc_num" property="docNum" />
         <result column="title" property="title" />
         <result column="employee_name" property="employeeName"/>
@@ -108,7 +111,9 @@
         b.employment_id,
         b.employ_way,/*用工方式 */
         b.employ_property,/*用工属性 */
+        c.yuliu_doc_type,
         c.yuliu_doc_num,/*预留档案编号 */
+        c.doc_type,
         c.doc_num,/*档案编号 */
         c.diaodang_feedback,/*调档反馈 */
         c.employ_feedback_opt_date,/*用工反馈操作日期 */
@@ -160,7 +165,9 @@
         b.employment_id,
         b.employ_way,/*用工方式 */
         b.employ_property,/*用工属性 */
+        c.yuliu_doc_type,/*预留档案类别 */
         c.yuliu_doc_num,/*预留档案编号 */
+        c.doc_type,/*档案类别 */
         c.doc_num,/*档案编号 */
         c.diaodang_feedback,/*调档反馈 */
         c.employ_feedback_opt_date,/*用工反馈操作日期 */

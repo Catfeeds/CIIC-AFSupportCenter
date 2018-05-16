@@ -1,13 +1,13 @@
-package com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto;/**
- * Created by zhengj on 2018/5/14
+package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo;/**
+ * Created by baofeng on 2018/5/16
  */
 
 /**
- * 公积金输入参数Class
- * @author: zhengj
- * @date: 2018/5/14 18:42
+ * 社保输入BO
+ * @author: baofeng
+ * @date: 2018-5-16 09:28:04
  **/
-public class HfEmpInfoParamDTO {
+public class SsEmpInfoParamBO {
 
     /**
      * 雇员编号
@@ -18,9 +18,9 @@ public class HfEmpInfoParamDTO {
      */
     private String companyId;
     /**
-     * 公积金所属月份 yyyyMM
+     * 社保所属月份 yyyyMM
      */
-    private String hfMonthBelong;
+    private String ssMonthBelong;
 
     public String getEmployeeId() {
         return employeeId;
@@ -38,11 +38,12 @@ public class HfEmpInfoParamDTO {
         this.companyId = companyId;
     }
 
-    public String getHfMonthBelong() {
-        return hfMonthBelong;
+    public String getSsMonthBelong() {
+        return ssMonthBelong;
     }
 
-    public void setHfMonthBelong(String hfMonthBelong) {
-        this.hfMonthBelong = hfMonthBelong;
+    public void setSsMonthBelong(String ssMonthBelong) {
+        this.ssMonthBelong = ssMonthBelong;
     }
+
 }

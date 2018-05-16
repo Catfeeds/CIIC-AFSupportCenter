@@ -2,6 +2,8 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpArchiveBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpInfoBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpInfoParamBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.EmpAccountImpXsl;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -19,4 +21,5 @@ public interface HfEmpArchiveService extends IService<HfEmpArchive> {
     int deleteHfEmpArchiveByEmpTaskIds(List<Long> empTaskIdList);
     Map queryHfEmpArchiveByEmpTaskIds(List<Long> empTaskIdList);
     String getEmpAccountByEmployeeId(String employeeId, Integer hfType);
+    List<HfEmpInfoBO> getHfEmpArchiveInfo(List<HfEmpInfoParamBO> paramBoList);
 }

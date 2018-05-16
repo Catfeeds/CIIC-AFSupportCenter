@@ -1,16 +1,17 @@
-package com.ciicsh.gto.afsupportcenter.housefund.fundservice.api.dto;/**
- * Created by zhengj on 2018/5/14
+package com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo;/**
+ * Created by baofeng on 2018/5/14
  */
 
 import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * 公积金输出参数Class
- * @author: zhengj
- * @date: 2018/5/14 18:42
+ * 公积金输出BO
+ *
+ * @author: baofeng
+ * @date: 2018-5-15 19:56:56
  **/
-public class HfEmpInfoDTO {
+public class HfEmpInfoBO {
     /**
      * 雇员编号
      */
@@ -38,7 +39,8 @@ public class HfEmpInfoDTO {
     /**
      * 险种明细
      */
-    private List<HfEmpInfoDetailDTO> hfEmpInfoDetailDTOList;
+
+    private List<HfEmpInfoDetailBO> hfEmpInfoDetailBOList;
 
     public String getEmployeeId() {
         return employeeId;
@@ -80,11 +82,11 @@ public class HfEmpInfoDTO {
         this.hfMonth = hfMonth;
     }
 
-    public List<HfEmpInfoDetailDTO> getHfEmpInfoDetailDTOList() {
-        return hfEmpInfoDetailDTOList;
+    public List<HfEmpInfoDetailBO> getHfEmpInfoDetailBOList() {
+        return hfEmpInfoDetailBOList;
     }
 
-    public void setHfEmpInfoDetailDTOList(List<HfEmpInfoDetailDTO> hfEmpInfoDetailDTOList) {
-        this.hfEmpInfoDetailDTOList = hfEmpInfoDetailDTOList;
+    public void setHfEmpInfoDetailBOList(List<HfEmpInfoDetailBO> hfEmpInfoDetailBOList) {
+        this.hfEmpInfoDetailBOList = hfEmpInfoDetailBOList;
     }
 }

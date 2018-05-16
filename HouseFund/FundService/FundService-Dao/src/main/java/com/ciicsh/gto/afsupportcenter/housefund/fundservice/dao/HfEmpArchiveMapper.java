@@ -30,4 +30,5 @@ public interface HfEmpArchiveMapper extends BaseMapper<HfEmpArchive> {
     int updateArchiveEmpAccount(@Param("hfEmpAccount")String hfEmpAccount, @Param("empArchiveId")Long empArchiveId);
     HfEmpComBO fetchManager(@Param("companyId")String companyId, @Param("employeeId")String employeeId);
     String getEmpAccountByEmployeeId(@Param("employeeId")String employeeId, @Param("hfType") Integer hfType);
+    List<HfEmpInfoDetailBO> getHfEmpInfo(@Param("employeeId")String employeeId, @Param("companyId")String companyId, @Param("hfMonthBelong")String hfMonthBelong);
 }

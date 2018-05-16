@@ -170,6 +170,16 @@ public class AmEmpTask implements Serializable {
     @TableField("emp_company_id")
     private String empCompanyId;
 
+    @TableField("is_finish")
+    private  Boolean isFinish;
+
+    public Boolean getFinish() {
+        return isFinish;
+    }
+
+    public void setFinish(Boolean finish) {
+        isFinish = finish;
+    }
 
     public String getChange() {
         return change;

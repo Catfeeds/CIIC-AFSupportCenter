@@ -13,6 +13,10 @@ public class AmEmpTaskBO extends AmEmpTask {
      */
     private String handleType;
     /**
+     * 预留档案类别
+     */
+    private String yuliuDocType;
+    /**
      * 预留档案编号
      */
     private String yuliuDocNum;
@@ -21,8 +25,11 @@ public class AmEmpTaskBO extends AmEmpTask {
      */
     private String idNum;
     /**
+     * 档案类别
+     */
+    private String docType;
+    /**
      * 档案编号
-
      */
     private String docNum;
     /**
@@ -38,7 +45,7 @@ public class AmEmpTaskBO extends AmEmpTask {
      */
     private LocalDate employFeedbackOptDate;
     /**
-     *  调档反馈操作日期
+     * 调档反馈操作日期
      */
     private String diaodangFeedback;
     /**
@@ -48,11 +55,11 @@ public class AmEmpTaskBO extends AmEmpTask {
     /**
      * 退工状态数量
      */
-    private  Integer count;
+    private Integer count;
     /**
      * 服务中心
      */
-    private  String serviceCenter;
+    private String serviceCenter;
     /**
      * 客服经理
      */
@@ -68,13 +75,13 @@ public class AmEmpTaskBO extends AmEmpTask {
 
     private String params;
 
-    private  String remarkType;
+    private String remarkType;
     /**
-     *  证件类型
+     * 证件类型
      */
     private Integer idCardType;
 
-    private  String sex;
+    private String sex;
 
     private String mobile;
     /**
@@ -94,7 +101,7 @@ public class AmEmpTaskBO extends AmEmpTask {
     /**
      * 缴费区县
      */
-    private  String settlementArea;
+    private String settlementArea;
     /**
      * 首次进中智日期
      */
@@ -106,11 +113,11 @@ public class AmEmpTaskBO extends AmEmpTask {
     /**
      * 合同起始日期
      */
-    private String  laborStartDate;
+    private String laborStartDate;
     /**
      * 合同截至日期
      */
-    private String  laborEndDate;
+    private String laborEndDate;
     /**
      * 岗位
      */
@@ -137,21 +144,21 @@ public class AmEmpTaskBO extends AmEmpTask {
      */
     private String employWay;
 
-    private  String openAfDate;
+    private String openAfDate;
     /**
      * 客服用工属性
      */
-    private  String templateType;
+    private String templateType;
 
-    private  String archivePlace;
+    private String archivePlace;
 
     private Long employmentId;
     /**
      * 社保账户名称
      */
-    private  String comAccountName;
+    private String comAccountName;
 
-    private  LocalDate accountRepairDate;
+    private LocalDate accountRepairDate;
     /**
      * 用工公司特殊情况
      */
@@ -185,7 +192,7 @@ public class AmEmpTaskBO extends AmEmpTask {
     /**
      * 单位性质
      */
-    private  String  companyType;
+    private String companyType;
 
     private String phone;
     /**
@@ -193,7 +200,7 @@ public class AmEmpTaskBO extends AmEmpTask {
      */
     private String fileFee;
 
-    private  String cici;
+    private String cici;
 
     public String getCici() {
         return cici;
@@ -500,7 +507,7 @@ public class AmEmpTaskBO extends AmEmpTask {
     public void setResignDate(LocalDate resignDate) {
         this.resignDate = resignDate;
     }
-    
+
     public LocalDate getEmployDate() {
         return employDate;
     }
@@ -628,5 +635,21 @@ public class AmEmpTaskBO extends AmEmpTask {
 
     public void setEmployStyle(String employStyle) {
         this.employStyle = employStyle;
+    }
+
+    public String getYuliuDocType() {
+        return yuliuDocType;
+    }
+
+    public void setYuliuDocType(String yuliuDocType) {
+        this.yuliuDocType = yuliuDocType;
+    }
+
+    public String getDocType() {
+        return docType;
+    }
+
+    public void setDocType(String docType) {
+        this.docType = docType;
     }
 }
