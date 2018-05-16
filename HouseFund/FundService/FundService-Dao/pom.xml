@@ -36,11 +36,6 @@
             <groupId>com.dianping.cat</groupId>
             <artifactId>cat-client</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.ciicsh.gt1.afsupportcenter.housefund</groupId>
-            <artifactId>gt1.afsupportcenter.housefund.fundservice-api</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
 
     </dependencies>
 
