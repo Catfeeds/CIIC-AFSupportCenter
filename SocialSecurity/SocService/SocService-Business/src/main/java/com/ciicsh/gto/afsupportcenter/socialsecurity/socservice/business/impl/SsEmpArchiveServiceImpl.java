@@ -190,20 +190,26 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
     public List<SsEmpInfoBO> getSsEmpArchiveInfo(List<SsEmpInfoParamBO> paramBoList) {
         List<SsEmpInfoBO> resultBoList = new ArrayList<>();
         for (SsEmpInfoParamBO paramBO : paramBoList) {
+            // 如果detailBOList查无数据，MapperMethod.class返回的是一个new ArrayList<>()
             List<SsEmpInfoDetailBO> detailBOList = baseMapper.getSsEmpInfo(paramBO.getEmployeeId(), paramBO.getCompanyId(), paramBO.getSsMonthBelong());
             BigDecimal empAmountTotal = BigDecimal.ZERO;
+            // detailBOList不会出现null，如果查无数据，detailBOList.size()==0,返回查询入参
             for (SsEmpInfoDetailBO detailBO : detailBOList) {
                 empAmountTotal = empAmountTotal.add(detailBO.getEmpAmount());
             }
             SsEmpInfoBO resultBO = new SsEmpInfoBO();
-            resultBO.setEmployeeId(paramBO.getEmployeeId());
-            resultBO.setCompanyId(paramBO.getCompanyId());
-            resultBO.setSsMonthBelong(paramBO.getSsMonthBelong());
-            resultBO.setSsMonth(detailBOList.get(0).getSsMonth());
+            resultBO.setEmployeeId(parseValue(paramBO.getEmployeeId()));
+            resultBO.setCompanyId(parseValue(paramBO.getCompanyId()));
+            resultBO.setSsMonthBelong(parseValue(paramBO.getSsMonthBelong()));
+            resultBO.setSsMonth(detailBOList != null && detailBOList.size() > 0 ? detailBOList.get(0).getSsMonth() : "");
             resultBO.setEmpAmountTotal(empAmountTotal);
             resultBO.setSsEmpInfoDetailBOList(detailBOList);
             resultBoList.add(resultBO);
         }
         return resultBoList;
+    }
+
+    private String parseValue(String value) {
+        return value == null ? "" : value;
     }
 }

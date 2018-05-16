@@ -131,20 +131,26 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
     public List<HfEmpInfoBO> getHfEmpArchiveInfo(List<HfEmpInfoParamBO> paramBoList) {
         List<HfEmpInfoBO> resultBoList = new ArrayList<>();
         for (HfEmpInfoParamBO paramBO : paramBoList) {
+            // 如果detailBOList查无数据，MapperMethod.class返回的是一个new ArrayList<>()
             List<HfEmpInfoDetailBO> detailBOList = baseMapper.getHfEmpInfo(paramBO.getEmployeeId(), paramBO.getCompanyId(), paramBO.getHfMonthBelong());
             BigDecimal empAmountTotal = BigDecimal.ZERO;
+            // detailBOList不会出现null，如果查无数据，detailBOList.size()==0,返回查询入参
             for (HfEmpInfoDetailBO detailBO : detailBOList) {
                 empAmountTotal = empAmountTotal.add(detailBO.getEmpAmount());
             }
             HfEmpInfoBO resultBO = new HfEmpInfoBO();
-            resultBO.setEmployeeId(paramBO.getEmployeeId());
-            resultBO.setCompanyId(paramBO.getCompanyId());
-            resultBO.setHfMonthBelong(paramBO.getHfMonthBelong());
-            resultBO.setHfMonth(detailBOList.get(0).getHfMonth());
+            resultBO.setEmployeeId(parseValue(paramBO.getEmployeeId()));
+            resultBO.setCompanyId(parseValue(paramBO.getCompanyId()));
+            resultBO.setHfMonthBelong(parseValue(paramBO.getHfMonthBelong()));
+            resultBO.setHfMonth(detailBOList != null && detailBOList.size() > 0 ? detailBOList.get(0).getHfMonth() : "");
             resultBO.setEmpAmountTotal(empAmountTotal);
             resultBO.setHfEmpInfoDetailBOList(detailBOList);
             resultBoList.add(resultBO);
         }
         return resultBoList;
+    }
+
+    private String parseValue(String value) {
+        return value == null ? "" : value;
     }
 }

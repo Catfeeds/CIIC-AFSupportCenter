@@ -232,17 +232,11 @@
         INNER JOIN ss_emp_archive sea
         ON sea.emp_archive_id = smc.emp_archive_id
         WHERE smc.is_active = 1
-        AND smci.is_active = 1
-        AND sea.is_active = 1
-        <if test="employeeId != null and employeeId != ''">
-            AND smc.employee_id = #{employeeId}
-        </if>
-        <if test="companyId != null and companyId != ''">
-            AND sea.company_id = #{companyId}
-        </if>
-        <if test="ssMonthBelong != null and ssMonthBelong != ''">
-            AND smc.ss_month_belong = #{ssMonthBelong}
-        </if>
+          AND smci.is_active = 1
+          AND sea.is_active = 1
+          AND smc.employee_id = #{employeeId}
+          AND sea.company_id = #{companyId}
+          AND smc.ss_month_belong = #{ssMonthBelong}
         GROUP BY smci.ss_type
     </select>
 </mapper>
