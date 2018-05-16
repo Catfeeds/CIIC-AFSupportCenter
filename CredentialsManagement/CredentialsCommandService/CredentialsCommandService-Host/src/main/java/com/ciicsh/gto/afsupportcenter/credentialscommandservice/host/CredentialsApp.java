@@ -24,6 +24,7 @@ import org.springframework.context.annotation.Import;
     "com.ciicsh.gto.billcenter.afmodule.cmd.api.proxy",
     "com.ciicsh.gto.identityservice.api",
     "com.ciicsh.gto.entityidservice.api",
+    "com.ciicsh.gto.logservice.api",
     "com.ciicsh.gto.productcenter.apiservice.api.proxy"})
 @Import({CorsConfiguration.class, MybatisPlusConfig.class})
 public class CredentialsApp extends SpringBootServletInitializer {

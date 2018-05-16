@@ -1,12 +1,14 @@
 package com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.configuration;
 
-import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.JsonResult;
+import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
+import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.WebRequest;
 
 import javax.security.auth.message.AuthException;
 
@@ -16,7 +18,19 @@ import javax.security.auth.message.AuthException;
  */
 @ControllerAdvice(annotations = RestController.class)
 public class RestExceptionHandler {
-    private static Logger log = LoggerFactory.getLogger(RestExceptionHandler.class);
+
+    /**
+     * 捕捉业务异常
+     *
+     * @param ex
+     * @param req
+     * @return
+     */
+    @ExceptionHandler(value = {BusinessException.class})
+    @ResponseBody
+    public Object handleSysIllegalArgumentException(BusinessException ex, WebRequest req) {
+        return JsonResult.errorsInfo("3",ex.getMessage());
+    }
 
     /**
      * 验证异常
@@ -27,10 +41,18 @@ public class RestExceptionHandler {
     @ExceptionHandler(AuthException.class)
     @ResponseBody
     public Object handleAuthException(Exception ex) {
-        JsonResult jsonResult = new JsonResult();
-        jsonResult.setCode(JsonResult.MsgCode.NO_PERMISSION.getCode());
-        jsonResult.setMsg(ex.getMessage());
-        return jsonResult;
+        return JsonResult.errorsInfo("2", ex.getMessage());
     }
 
+    /**
+     * 捕捉系统异常
+     *
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(Exception.class)
+    @ResponseBody
+    public Object handleException(Exception ex) {
+        return JsonResult.errorsInfo("1", ex.getMessage());
+    }
 }
