@@ -168,6 +168,9 @@ public class FundApiController implements FundApiProxy{
     @ApiImplicitParam(name = "paramDTOList", value = "雇员信息集合 paramDTOList", required = true, dataType = "List<HfEmpInfoParamDTO>")
     @PostMapping("/getHfEmpInfo")
     public JsonResult<List<HfEmpInfoDTO>> getHfEmpInfo(@RequestBody List<HfEmpInfoParamDTO> paramDTOList) {
+        // 对参数集合做null值判断，如果paramDTOList非null但对象为空，则根据输出约定返回对应空对象
+        boolean checkFlag = checkHfParam(paramDTOList);
+        if (!checkFlag) return JsonResult.message(false, "传入的参数集合为null");
         List<HfEmpInfoParamBO> paramBOList = new ArrayList<>();
         for (HfEmpInfoParamDTO paramDTO : paramDTOList) {
             HfEmpInfoParamBO paramBO = new HfEmpInfoParamBO();
@@ -176,6 +179,7 @@ public class FundApiController implements FundApiProxy{
         }
         List<HfEmpInfoBO> resultBoList = hfEmpArchiveService.getHfEmpArchiveInfo(paramBOList);
         List<HfEmpInfoDTO> resultDTOList = new ArrayList<>();
+        // resultBoList不会为null
         for (HfEmpInfoBO resultBO : resultBoList) {
             HfEmpInfoDTO resultDTO = new HfEmpInfoDTO();
             BeanUtils.copyProperties(resultBO, resultDTO);
@@ -189,5 +193,9 @@ public class FundApiController implements FundApiProxy{
             resultDTOList.add(resultDTO);
         }
         return JsonResult.success(resultDTOList);
+    }
+
+    private boolean checkHfParam(List<HfEmpInfoParamDTO> paramDTOList) {
+        return paramDTOList != null ? true : false;
     }
 }

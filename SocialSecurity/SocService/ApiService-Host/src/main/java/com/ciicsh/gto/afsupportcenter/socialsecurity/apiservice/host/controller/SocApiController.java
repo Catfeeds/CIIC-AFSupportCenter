@@ -153,6 +153,9 @@ public class SocApiController implements SocApiProxy {
     @ApiImplicitParam(name = "List<SsEmpInfoParamDTO>", value = "企业社保雇员集合 List<SsEmpInfoParamDTO>", required = true, dataType = "ComTaskParamDTO")
     @PostMapping("/getSsEmpInfo")
     public JsonResult<List<SsEmpInfoDTO>> getSsEmpInfo(@RequestBody List<SsEmpInfoParamDTO> paramDTOList) {
+        // 对参数集合做null值判断，如果paramDTOList非null但对象为空，则根据输出约定返回对应空对象
+        boolean checkFlag = checkSsParam(paramDTOList);
+        if (!checkFlag) return JsonResult.message(false, "传入的参数集合为null");
         List<SsEmpInfoParamBO> paramBOList = new ArrayList<>();
         for (SsEmpInfoParamDTO paramDTO : paramDTOList) {
             SsEmpInfoParamBO paramBO = new SsEmpInfoParamBO();
@@ -161,6 +164,7 @@ public class SocApiController implements SocApiProxy {
         }
         List<SsEmpInfoBO> resultBoList = ssEmpArchiveService.getSsEmpArchiveInfo(paramBOList);
         List<SsEmpInfoDTO> resultDTOList = new ArrayList<>();
+        // resultBoList不会为null
         for (SsEmpInfoBO resultBO : resultBoList) {
             SsEmpInfoDTO resultDTO = new SsEmpInfoDTO();
             BeanUtils.copyProperties(resultBO, resultDTO);
@@ -174,5 +178,9 @@ public class SocApiController implements SocApiProxy {
             resultDTOList.add(resultDTO);
         }
         return JsonResult.success(resultDTOList);
+    }
+
+    private boolean checkSsParam(List<SsEmpInfoParamDTO> paramDTOList) {
+        return paramDTOList != null ? true : false;
     }
 }
