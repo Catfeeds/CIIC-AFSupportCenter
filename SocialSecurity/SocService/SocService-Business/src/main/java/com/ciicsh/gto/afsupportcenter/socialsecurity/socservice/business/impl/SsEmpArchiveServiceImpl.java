@@ -2,8 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpArchiveBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsComAccountService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpArchiveService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpBasePeriodService;
@@ -25,7 +24,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -183,5 +184,26 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
         } else {
             return false;
         }
+    }
+
+    @Override
+    public List<SsEmpInfoBO> getSsEmpArchiveInfo(List<SsEmpInfoParamBO> paramBoList) {
+        List<SsEmpInfoBO> resultBoList = new ArrayList<>();
+        for (SsEmpInfoParamBO paramBO : paramBoList) {
+            List<SsEmpInfoDetailBO> detailBOList = baseMapper.getSsEmpInfo(paramBO.getEmployeeId(), paramBO.getCompanyId(), paramBO.getSsMonthBelong());
+            BigDecimal empAmountTotal = BigDecimal.ZERO;
+            for (SsEmpInfoDetailBO detailBO : detailBOList) {
+                empAmountTotal = empAmountTotal.add(detailBO.getEmpAmount());
+            }
+            SsEmpInfoBO resultBO = new SsEmpInfoBO();
+            resultBO.setEmployeeId(paramBO.getEmployeeId());
+            resultBO.setCompanyId(paramBO.getCompanyId());
+            resultBO.setSsMonthBelong(paramBO.getSsMonthBelong());
+            resultBO.setSsMonth(detailBOList.get(0).getSsMonth());
+            resultBO.setEmpAmountTotal(empAmountTotal);
+            resultBO.setSsEmpInfoDetailBOList(detailBOList);
+            resultBoList.add(resultBO);
+        }
+        return resultBoList;
     }
 }

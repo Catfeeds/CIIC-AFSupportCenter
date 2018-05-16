@@ -1,19 +1,20 @@
-package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto;/**
- * Created by zhengj on 2018/5/14
+package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo;/**
+ * Created by baofeng on 2018/5/16
  */
 
 import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * 社保输出参数Class
- * @author: zhengj
- * @date: 2018/5/14 18:42
+ * 社保输出BO
+ * @author: baofeng
+ * @date: 2018-5-16 09:26:49
  **/
-public class SsEmpInfoDTO {
+public class SsEmpInfoBO {
     /**
      * 雇员编号
      */
+
     private String employeeId;
     /**
      * 客户编号
@@ -23,7 +24,6 @@ public class SsEmpInfoDTO {
      * 社保所属月份 yyyyMM
      */
     private String ssMonthBelong;
-
     /**
      * 社保汇缴月份 yyyyMM
      */
@@ -35,7 +35,7 @@ public class SsEmpInfoDTO {
     /**
      * 险种明细
      */
-    private List<SsEmpInfoDetailDTO> ssEmpInfoDetailDTOList;
+    private List<SsEmpInfoDetailBO> ssEmpInfoDetailBOList;
 
     public String getEmployeeId() {
         return employeeId;
@@ -65,12 +65,12 @@ public class SsEmpInfoDTO {
         this.empAmountTotal = empAmountTotal;
     }
 
-    public List<SsEmpInfoDetailDTO> getSsEmpInfoDetailDTOList() {
-        return ssEmpInfoDetailDTOList;
+    public List<SsEmpInfoDetailBO> getSsEmpInfoDetailBOList() {
+        return ssEmpInfoDetailBOList;
     }
 
-    public void setSsEmpInfoDetailDTOList(List<SsEmpInfoDetailDTO> ssEmpInfoDetailDTOList) {
-        this.ssEmpInfoDetailDTOList = ssEmpInfoDetailDTOList;
+    public void setSsEmpInfoDetailBOList(List<SsEmpInfoDetailBO> ssEmpInfoDetailBOList) {
+        this.ssEmpInfoDetailBOList = ssEmpInfoDetailBOList;
     }
 
     public String getSsMonth() {

@@ -1,10 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfArchiveBasePeriodBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfComAccountBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpArchiveBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpComBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpArchiveService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpArchiveMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.EmpAccountImpXsl;
@@ -18,10 +15,8 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * <p>
@@ -130,5 +125,26 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
     @Override
     public String getEmpAccountByEmployeeId(String employeeId, Integer hfType) {
         return baseMapper.getEmpAccountByEmployeeId(employeeId, hfType);
+    }
+
+    @Override
+    public List<HfEmpInfoBO> getHfEmpArchiveInfo(List<HfEmpInfoParamBO> paramBoList) {
+        List<HfEmpInfoBO> resultBoList = new ArrayList<>();
+        for (HfEmpInfoParamBO paramBO : paramBoList) {
+            List<HfEmpInfoDetailBO> detailBOList = baseMapper.getHfEmpInfo(paramBO.getEmployeeId(), paramBO.getCompanyId(), paramBO.getHfMonthBelong());
+            BigDecimal empAmountTotal = BigDecimal.ZERO;
+            for (HfEmpInfoDetailBO detailBO : detailBOList) {
+                empAmountTotal = empAmountTotal.add(detailBO.getEmpAmount());
+            }
+            HfEmpInfoBO resultBO = new HfEmpInfoBO();
+            resultBO.setEmployeeId(paramBO.getEmployeeId());
+            resultBO.setCompanyId(paramBO.getCompanyId());
+            resultBO.setHfMonthBelong(paramBO.getHfMonthBelong());
+            resultBO.setHfMonth(detailBOList.get(0).getHfMonth());
+            resultBO.setEmpAmountTotal(empAmountTotal);
+            resultBO.setHfEmpInfoDetailBOList(detailBOList);
+            resultBoList.add(resultBO);
+        }
+        return resultBoList;
     }
 }

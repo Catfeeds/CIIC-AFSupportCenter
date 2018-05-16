@@ -58,6 +58,16 @@
 
     </resultMap>
 
+    <resultMap id="getEmpInfoResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpInfoDetailBO" >
+        <result column="employee_id" property="employeeId"/>
+        <result column="company_id" property="companyId"/>
+        <result column="hf_type" property="hfType"/>
+        <result column="hf_month" property="hfMonth"/>
+        <result column="ss_month_belong" property="hfMonthBelong"/>
+        <result column="emp_amount" property="empAmount"/>
+        <result column="hf_type_name" property="hfTypeName"/>
+    </resultMap>
+
     <!--雇员公积金查询 下面SQL是考虑到 bpo fc af 一拖三表 ，SQL暂时用不到 -->
     <!--<select id="queryEmpArchive" resultMap="queryEmpArchiveResultMap">
         SELECT
@@ -407,6 +417,37 @@
             AND employee_id = #{employeeId}
             AND hf_type = #{hfType}
             AND hf_emp_account IS NOT NULL
+        </where>
+    </select>
+
+    <select id="getHfEmpInfo" resultMap="getEmpInfoResultMap">
+        SELECT
+        hmc.employee_id,
+        hmc.company_id,
+        hmc.hf_month AS hf_month,
+        hmc.ss_month_belong AS hf_month_belong,
+        hmc.emp_amount,
+        hmc.hf_type,
+        CASE
+        hmc.hf_type
+        WHEN 1
+        THEN '基本公积金'
+        WHEN 2
+        THEN '补充公积金'
+        END hf_type_name
+        FROM
+        hf_month_charge hmc
+        <where>
+            hmc.is_active = 1
+            <if test="employeeId != null and employeeId != ''">
+                AND hmc.employee_id = #{employeeId}
+            </if>
+            <if test="companyId != null and companyId != ''">
+                AND hmc.company_id = #{companyId}
+            </if>
+            <if test="hfMonthBelong != null and hfMonthBelong != ''">
+                AND hmc.ss_month_belong = #{hfMonthBelong}
+            </if>
         </where>
     </select>
 </mapper>
