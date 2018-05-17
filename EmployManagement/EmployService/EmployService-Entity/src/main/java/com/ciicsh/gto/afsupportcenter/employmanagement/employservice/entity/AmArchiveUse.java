@@ -29,11 +29,7 @@ public class AmArchiveUse implements Serializable {
      */
 	@TableField("use_borrow")
 	private Integer useBorrow;
-    /**
-     * 雇员id
-     */
-	@TableField("employee_id")
-	private String employeeId;
+
     /**
      * 使用材料:档案、党员材料、学籍资料、职工登记表、劳动力登记表、学生登记表、职称评定表、劳动手册、上家退工单、存档卡、落户通知书、其他
             借出材料:档案、党员材料、劳动手册、上家退工单、存档卡、其他
@@ -116,13 +112,6 @@ public class AmArchiveUse implements Serializable {
 		this.useBorrow = useBorrow;
 	}
 
-	public String getEmployeeId() {
-		return employeeId;
-	}
-
-	public void setEmployeeId(String employeeId) {
-		this.employeeId = employeeId;
-	}
 
 	public String getMaterial() {
 		return material;
@@ -233,7 +222,6 @@ public class AmArchiveUse implements Serializable {
 		return "AmArchiveUse{" +
 			", archiveUseId=" + archiveUseId +
 			", useBorrow=" + useBorrow +
-			", employeeId=" + employeeId +
 			", material=" + material +
 			", purpose=" + purpose +
 			", useMan=" + useMan +

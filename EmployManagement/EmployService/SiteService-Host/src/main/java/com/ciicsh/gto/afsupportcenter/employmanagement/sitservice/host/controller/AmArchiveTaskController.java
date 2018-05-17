@@ -498,7 +498,6 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         PageInfo pageInfo = new PageInfo();
         JSONObject params = new JSONObject();
-        params.put("employeeId",archiveUse.getEmployeeId());
         params.put("archiveId",archiveUse.getArchiveId());
         params.put("useBorrow",0);
         pageInfo.setParams(params);

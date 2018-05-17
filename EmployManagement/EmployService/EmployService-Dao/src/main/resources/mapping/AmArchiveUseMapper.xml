@@ -6,7 +6,6 @@
 	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveUse">
 		<id column="archive_use_id" property="archiveUseId" />
 		<result column="use_borrow" property="useBorrow" />
-		<result column="employee_id" property="employeeId" />
 		<result column="material" property="material" />
 		<result column="purpose" property="purpose" />
 		<result column="use_man" property="useMan" />
@@ -30,7 +29,7 @@
     </resultMap>
 
     <select id="queryAmArchiveUseList" resultMap="BaseResultMapDTO">
-        select * from  am_archive_use  where is_active = 1 and employee_id = #{employeeId} and archive_id = #{archiveId} and use_borrow = #{useBorrow}
+        select * from  am_archive_use  where is_active = 1  and archive_id = #{archiveId} and use_borrow = #{useBorrow}
     </select>
 
     <update id="deleteAmArchiveUse">
