@@ -22,6 +22,7 @@ import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
+import com.ciicsh.gto.afsupportcenter.util.web.response.ExportResponseUtil;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -259,15 +260,16 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
 
             TemplateExportParams params = new TemplateExportParams("/template/ssAccount_reportYear.xls", 0, 1, 2);
             Workbook workbook = ExcelExportUtil.exportExcel(alMap, params);
-            String fileName = URLEncoder.encode("ssAccount_reportYear.xls"
+            String fileName = "ssAccount_reportYear.xls"
                 .replace("ssAccount", ssAnnualAdjustAccount.getSsAccount())
-                .replace("reportYear", String.valueOf(reportYear)), "UTF-8");
+                .replace("reportYear", String.valueOf(reportYear));
 
             response.reset();
             response.setCharacterEncoding("UTF-8");
             response.setHeader("content-Type", "application/vnd.ms-excel");
 //                response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+//            response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+            ExportResponseUtil.encodeExportFileName(response, fileName);
             workbook.write(response.getOutputStream());
             workbook.close();
         }

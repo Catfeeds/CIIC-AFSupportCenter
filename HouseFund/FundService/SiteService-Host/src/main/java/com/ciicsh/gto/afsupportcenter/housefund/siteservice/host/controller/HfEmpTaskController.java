@@ -22,6 +22,7 @@ import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
+import com.ciicsh.gto.afsupportcenter.util.web.response.ExportResponseUtil;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.commons.lang.ArrayUtils;
@@ -108,14 +109,15 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
             }
             ExcelExportUtil.closeExportBigExcel();
         }
-        String fileName = URLEncoder.encode("雇员公积金任务信息.xlsx", "UTF-8");
+        String fileName = "雇员公积金任务信息.xlsx";
 
         response.reset();
         response.setCharacterEncoding("UTF-8");
 //            response.setHeader("content-Type", "application/vnd.ms-excel");
         response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition",
-            "attachment;filename=" + fileName);
+//        response.setHeader("Content-Disposition",
+//            "attachment;filename=" + fileName);
+        ExportResponseUtil.encodeExportFileName(response, fileName);
         workbook.write(response.getOutputStream());
         workbook.close();
     }
@@ -170,14 +172,15 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
             }
             ExcelExportUtil.closeExportBigExcel();
         }
-        String fileName = URLEncoder.encode("批退雇员公积金任务信息.xlsx", "UTF-8");
+        String fileName = "批退雇员公积金任务信息.xlsx";
 
         response.reset();
         response.setCharacterEncoding("UTF-8");
 //            response.setHeader("content-Type", "application/vnd.ms-excel");
         response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition",
-            "attachment;filename=" + fileName);
+//        response.setHeader("Content-Disposition",
+//            "attachment;filename=" + fileName);
+        ExportResponseUtil.encodeExportFileName(response, fileName);
         workbook.write(response.getOutputStream());
         workbook.close();
     }
@@ -308,11 +311,12 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
             writer.append(title);
         }
 
-        String fileName = URLEncoder.encode("开户文件.txt", "UTF-8");
+        String fileName = "开户文件.txt";
 
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "text/plain");
-        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+//        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+        ExportResponseUtil.encodeExportFileName(response, fileName);
         writer.close();
     }
 }

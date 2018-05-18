@@ -21,6 +21,7 @@ import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.afsupportcenter.util.web.response.ExportResponseUtil;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
@@ -211,12 +212,12 @@ public class HfFundPayController {
                     }
                 }
 
-                String fileName = URLEncoder.encode("网银文件_补缴TXT.zip", "UTF-8");
+                String fileName = "网银文件_补缴TXT.zip";
                 response.reset();
                 response.setCharacterEncoding("UTF-8");
                 response.setHeader("content-Type", "application/zip");
-                response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
-
+//                response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+                ExportResponseUtil.encodeExportFileName(response, fileName);
                 ZipUtil.createZipFileWithTxtFiles(response.getOutputStream(), repairMap);
             }
         } catch (Exception e) {
@@ -285,12 +286,12 @@ public class HfFundPayController {
                     }
                 }
 
-                String fileName = URLEncoder.encode("网银文件_变更TXT.zip", "UTF-8");
+                String fileName = "网银文件_变更TXT.zip";
                 response.reset();
                 response.setCharacterEncoding("UTF-8");
                 response.setHeader("content-Type", "application/zip");
-                response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
-
+//                response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+                ExportResponseUtil.encodeExportFileName(response, fileName);
                 ZipUtil.createZipFileWithTxtFiles(response.getOutputStream(), changeMap);
             }
         } catch (Exception e) {
@@ -326,8 +327,9 @@ public class HfFundPayController {
         try{
         response.setCharacterEncoding("UTF-8");
        // response.setHeader("content-Type", "application/vnd.ms-excel");
-        response.setHeader("Content-Disposition", "attachment;filename=" +  URLEncoder.encode("付款凭证打印.xlsx", "UTF-8"));
+//        response.setHeader("Content-Disposition", "attachment;filename=" +  URLEncoder.encode("付款凭证打印.xlsx", "UTF-8"));
         response.setContentType("application/octet-stream;charset=utf-8");
+        ExportResponseUtil.encodeExportFileName(response, "付款凭证打印.xlsx");
         response.setContentLength(content.length);
         outputStream = response.getOutputStream();
         InputStream is = new ByteArrayInputStream(content);

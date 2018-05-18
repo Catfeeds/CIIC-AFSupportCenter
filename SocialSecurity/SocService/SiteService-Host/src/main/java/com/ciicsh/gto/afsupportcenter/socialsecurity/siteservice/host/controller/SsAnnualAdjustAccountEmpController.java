@@ -19,6 +19,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
+import com.ciicsh.gto.afsupportcenter.util.web.response.ExportResponseUtil;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -123,8 +124,9 @@ public class SsAnnualAdjustAccountEmpController extends BasicController<SsAnnual
             response.setCharacterEncoding("UTF-8");
 //            response.setHeader("content-Type", "application/vnd.ms-excel");
             response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setHeader("Content-Disposition",
-                "attachment;filename=" + URLEncoder.encode("社保月平均工资申报表匹配结果.xlsx", "UTF-8"));
+//            response.setHeader("Content-Disposition",
+//                "attachment;filename=" + URLEncoder.encode("社保月平均工资申报表匹配结果.xlsx", "UTF-8"));
+            ExportResponseUtil.encodeExportFileName(response, "社保月平均工资申报表匹配结果.xlsx");
             workbook.write(response.getOutputStream());
             workbook.close();
         } catch (IOException e) {

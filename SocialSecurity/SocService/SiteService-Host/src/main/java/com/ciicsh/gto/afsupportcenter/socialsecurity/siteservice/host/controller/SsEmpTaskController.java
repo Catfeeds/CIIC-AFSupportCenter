@@ -29,6 +29,7 @@ import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
+import com.ciicsh.gto.afsupportcenter.util.web.response.ExportResponseUtil;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.commons.collections.CollectionUtils;
@@ -364,15 +365,15 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
                 ExcelExportUtil.closeExportBigExcel();
             }
 
-            String fileName = URLEncoder.encode("sheetName.xlsx"
-                .replace("sheetName", sheetName), "UTF-8");
+            String fileName = "sheetName.xlsx".replace("sheetName", sheetName);
 
             response.reset();
             response.setCharacterEncoding("UTF-8");
 //            response.setHeader("content-Type", "application/vnd.ms-excel");
             response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setHeader("Content-Disposition",
-                "attachment;filename=" + fileName);
+//            response.setHeader("Content-Disposition",
+//                "attachment;filename=" + fileName);
+            ExportResponseUtil.encodeExportFileName(response, fileName);
             workbook.write(response.getOutputStream());
             workbook.close();
         } catch (IOException e) {
