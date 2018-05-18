@@ -22,4 +22,11 @@ public class SsMonthEmpChangeServiceImpl extends ServiceImpl<SsMonthEmpChangeMap
     public SsMonthEmpChangeBO serachMonthEmpChangeByStatementId(SsMonthEmpChangeBO ssMonthEmpChangeBO) {
         return baseMapper.serachMonthEmpChangeByStatementId(ssMonthEmpChangeBO);
     }
+
+    @Override
+    public String getSsMonthChangeId(String ssMonth, String comAccountId) {
+       return baseMapper.getSsMonthEmpChangeId(ssMonth,comAccountId);
+    }
+
+
 }
