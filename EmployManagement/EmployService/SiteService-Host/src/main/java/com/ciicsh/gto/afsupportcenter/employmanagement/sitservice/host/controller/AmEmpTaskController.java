@@ -237,9 +237,13 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
         //客户信息
-        resultMap.put("customerInfo",amCustomBO1);
+        if(null!=amCustomBO1){
+            resultMap.put("customerInfo",amCustomBO1);
+        }
         //雇员信息
-        resultMap.put("amEmpTaskBO",amEmpEmployeeBO);
+        if(null!=amEmpEmployeeBO){
+            resultMap.put("amEmpTaskBO",amEmpEmployeeBO);
+        }
 
         resultMap.put("amMaterialBO",amMaterialBO);
 

@@ -294,9 +294,13 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         Map<String, Object> resultMap = new HashMap<>();
         //客户信息
-        resultMap.put("customerInfo",amCustomBO);
+        if(null!=amCustomBO){
+            resultMap.put("customerInfo",amCustomBO);
+        }
         //雇员信息
-        resultMap.put("amEmpTaskBO",amEmpEmployeeBO);
+        if(null!=amEmpEmployeeBO){
+            resultMap.put("amEmpTaskBO",amEmpEmployeeBO);
+        }
 
         resultMap.put("resignBO",amResignBO);
 
