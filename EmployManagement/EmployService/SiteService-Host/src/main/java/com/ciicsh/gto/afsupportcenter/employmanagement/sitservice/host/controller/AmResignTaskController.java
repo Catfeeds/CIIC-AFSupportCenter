@@ -237,9 +237,14 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
         //客户信息
-        resultMap.put("customerInfo",amCustomBO);
+        if(null!=amCustomBO){
+            resultMap.put("customerInfo",amCustomBO);
+        }
+
         //雇员信息
-        resultMap.put("amEmpTaskBO",amEmpEmployeeBO);
+        if(null!=amEmpEmployeeBO){
+            resultMap.put("amEmpTaskBO",amEmpEmployeeBO);
+        }
 
 
         //退工备注
