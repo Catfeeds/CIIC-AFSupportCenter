@@ -19,6 +19,7 @@ import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
+import com.ciicsh.gto.afsupportcenter.util.web.response.ExportResponseUtil;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.commons.lang.ArrayUtils;
@@ -142,12 +143,13 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
             String templateFilePath;
             List<Map<String, Object>> printList = business.printTransferTask(empTaskTransferBo);
             templateFilePath = "/template/SH_HF_TRANSFER_TMP.pdf";
-            String fileName = URLEncoder.encode("上海市公积金转移通知书.pdf", "UTF-8");
+            String fileName = "上海市公积金转移通知书.pdf";
             response.reset();
             response.setCharacterEncoding("UTF-8");
             response.setHeader("content-Type", "application/pdf");
-            response.setHeader("Content-Disposition",
-                "attachment;filename=" + fileName);
+//            response.setHeader("Content-Disposition",
+//                "attachment;filename=" + fileName);
+            ExportResponseUtil.encodeExportFileName(response, fileName);
             PdfUtil.createPdfByTemplate(templateFilePath,
                 PdfUtil.DEFAULT_FONT_NAME,
                 PdfUtil.DEFAULT_FONT_ENCODING,
@@ -261,7 +263,7 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
             sheet.getFooter().setCenter(center);
         }
         try {
-            String fileName = URLEncoder.encode("上海市公积金雇员转移清册.xlsx", "UTF-8");
+            String fileName = "上海市公积金雇员转移清册.xlsx";
 
             response.reset();
 //            response.addHeader("Access-Control-Allow-Origin", "*");
@@ -272,7 +274,8 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
             response.setCharacterEncoding("UTF-8");
 //            response.setHeader("content-Type", "application/vnd.ms-excel");
             response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+//            response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+            ExportResponseUtil.encodeExportFileName(response, fileName);
             workbook.write(response.getOutputStream());
             workbook.close();
         } catch (IOException e) {
@@ -310,11 +313,12 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
                 writer.append(output);
             }
         }
-        String fileName = URLEncoder.encode("上海市公积金雇员转移TXT.txt", "UTF-8");
+        String fileName = "上海市公积金雇员转移TXT.txt";
 
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "text/plain");
-        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+//        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+        ExportResponseUtil.encodeExportFileName(response, fileName);
         writer.close();
     }
 

@@ -7,6 +7,7 @@ import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import cn.afterturn.easypoi.word.WordExportUtil;
+import com.ciicsh.gto.afsupportcenter.util.web.response.ExportResponseUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -78,8 +79,9 @@ public class ExcelUtil {
         try {
             response.setCharacterEncoding("UTF-8");
             response.setHeader("content-Type", "application/vnd.ms-excel");
-            response.setHeader("Content-Disposition",
-                "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
+//            response.setHeader("Content-Disposition",
+//                "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
+            ExportResponseUtil.encodeExportFileName(response, fileName);
             workbook.write(response.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
