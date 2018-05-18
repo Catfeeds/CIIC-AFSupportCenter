@@ -168,7 +168,11 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
             amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amEmployment.getEmpTaskId());
 
-            amCustomBO = amEmpCustomService.getCustom(amEmpEmployeeBO.getEmpTaskId());
+            if(null!=amEmpEmployeeBO)
+            {
+                amCustomBO = amEmpCustomService.getCustom(amEmpEmployeeBO.getEmpTaskId());
+            }
+
         }else {
             /**
              * 否则通过雇佣id和公司id查询最新的雇员信息绑定退工
