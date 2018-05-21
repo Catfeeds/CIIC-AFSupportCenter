@@ -16,7 +16,7 @@ spring:
     database: 0
     host: 172.16.22.102
     port: 6379
-    password:
+    password: redis
     timeout: 1000
 #spring cloud eureka
 eureka:
