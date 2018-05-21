@@ -1595,6 +1595,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             if (null == ssEmpArchiveBO.getEmpArchiveId()) {
                 throw new BusinessException("[" + bo.getEmployeeName() + "]该雇员未做新进或者转入");
             }
+            bo.setEmpArchiveId(ssEmpArchiveBO.getEmpArchiveId());
         }
 
     }
