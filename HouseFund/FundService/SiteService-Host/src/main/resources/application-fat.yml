@@ -12,7 +12,12 @@ spring:
       filter:
         stat:
           enabled: true
-
+  redis:
+    database: 0
+    host: 172.16.9.28
+    port: 6379
+    password: redis
+    timeout: 1000
 #spring cloud eureka
 eureka:
   client:
