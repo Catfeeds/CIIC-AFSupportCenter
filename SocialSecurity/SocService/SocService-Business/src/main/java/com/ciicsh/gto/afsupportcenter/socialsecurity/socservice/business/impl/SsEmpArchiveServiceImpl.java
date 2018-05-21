@@ -79,7 +79,7 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
                 if (null == ssEmpArchiveBO.getEmpArchiveId()) {
                     EntityWrapper<SsEmpArchive> entityWrapper = new EntityWrapper<>();
                     entityWrapper.where("employee_id={0}", ssEmpArchiveBO.getEmployeeId())
-                        .and("company_id={1}", ssEmpArchiveBO.getCompanyId())
+                        .and("company_id={0}", ssEmpArchiveBO.getCompanyId())
                         .and("is_active=1").orderBy("created_time", false).last("LIMIT 1");
                     SsEmpArchive ssEmpArchive = this.selectOne(entityWrapper);
                     if (ssEmpArchive != null) {
