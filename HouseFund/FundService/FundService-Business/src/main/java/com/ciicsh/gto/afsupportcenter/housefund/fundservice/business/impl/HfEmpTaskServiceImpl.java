@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpAgreementDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
@@ -93,7 +94,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
     public boolean addEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer processCategory,Integer taskCategory, String oldAgreementId, Integer isChange,
                               Map<String, Object> cityCodeMap, AfEmployeeInfoDTO dto, AfEmpSocialDTO socialDTO, AfCompanyDetailResponseDTO afCompanyDetailResponseDTO) throws Exception {
         AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
-
+        AfEmpAgreementDTO afEmpAgreementDTO = dto.getNowAgreement();
         HfEmpTask hfEmpTask = new HfEmpTask();
         hfEmpTask.setTaskId(taskMsgDTO.getTaskId());
         hfEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
@@ -116,7 +117,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         if(null != companyDto){
             hfEmpTask.setCompanyId(companyDto.getCompanyId());
             hfEmpTask.setEmployeeId(companyDto.getEmployeeId());
-            hfEmpTask.setSubmitterId(companyDto.getCreatedBy());
+            hfEmpTask.setSubmitterId(afEmpAgreementDTO.getCreatedBy());
             hfEmpTask.setSubmitterRemark(companyDto.getRemark());
             //福利办理方
             hfEmpTask.setWelfareUnit(companyDto.getFundUnit());
@@ -126,10 +127,10 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
             if(null != companyDto.getOutDate()){
                 hfEmpTask.setOutDate(LocalDateTime.ofInstant(companyDto.getOutDate().toInstant(), ZoneId.systemDefault()));
             }
-            hfEmpTask.setCreatedBy(companyDto.getCreatedBy() != null ? companyDto.getCreatedBy() : "system");
-            hfEmpTask.setCreatedDisplayName(companyDto.getCreatedDisplayName());
-            hfEmpTask.setModifiedBy(companyDto.getModifiedBy() != null ? companyDto.getModifiedBy() : "system");
-            hfEmpTask.setModifiedDisplayName(companyDto.getCreatedDisplayName());
+            hfEmpTask.setCreatedBy(afEmpAgreementDTO.getCreatedBy() != null ? afEmpAgreementDTO.getCreatedBy() : "system");
+            hfEmpTask.setCreatedDisplayName(afEmpAgreementDTO.getCreatedDisplayName());
+            hfEmpTask.setModifiedBy(afEmpAgreementDTO.getCreatedBy() != null ? afEmpAgreementDTO.getCreatedBy() : "system");
+            hfEmpTask.setModifiedDisplayName(afEmpAgreementDTO.getCreatedDisplayName());
             hfEmpTask.setLeaderShipId(companyDto.getLeadershipId() != null ? companyDto.getLeadershipId() : "system");
             hfEmpTask.setLeaderShipName(companyDto.getLeadershipName() != null ? companyDto.getLeadershipName() : "system");
 
@@ -207,7 +208,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
 
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
         AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
-
+        AfEmpAgreementDTO afEmpAgreementDTO = dto.getNowAgreement();
         HfEmpTask hfEmpTask = new HfEmpTask();
         hfEmpTask.setTaskId(paramMap.get("oldTaskId").toString());
 
@@ -222,7 +223,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         if(null != companyDto){
             hfEmpTask.setCompanyId(companyDto.getCompanyId());
             hfEmpTask.setEmployeeId(companyDto.getEmployeeId());
-            hfEmpTask.setSubmitterId(companyDto.getCreatedBy());
+            hfEmpTask.setSubmitterId(afEmpAgreementDTO.getCreatedBy());
             hfEmpTask.setSubmitterRemark(companyDto.getRemark());
             //福利办理方
             hfEmpTask.setWelfareUnit(companyDto.getFundUnit());
@@ -232,8 +233,8 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
             if(null != companyDto.getOutDate()){
                 hfEmpTask.setOutDate(LocalDateTime.ofInstant(companyDto.getOutDate().toInstant(), ZoneId.systemDefault()));
             }
-            hfEmpTask.setModifiedBy(companyDto.getModifiedBy() != null ? companyDto.getModifiedBy() : "system");
-            hfEmpTask.setModifiedDisplayName(companyDto.getCreatedDisplayName());
+            hfEmpTask.setModifiedBy(afEmpAgreementDTO.getModifiedBy() != null ? afEmpAgreementDTO.getModifiedBy() : "system");
+            hfEmpTask.setModifiedDisplayName(afEmpAgreementDTO.getModifiedDisplayName());
             hfEmpTask.setLeaderShipId(companyDto.getLeadershipId() != null ? companyDto.getLeadershipId() : "system");
             hfEmpTask.setLeaderShipName(companyDto.getLeadershipName() != null ? companyDto.getLeadershipName() : "system");
         }
