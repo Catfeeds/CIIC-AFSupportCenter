@@ -60,6 +60,11 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
             dictItemList.stream().forEach((d) -> hfStatusMap.put(d.getDicItemValue(), d.getDicItemText()));
             DictUtil.getInstance().putDictByTypeValue(DictUtil.TYPE_VALUE_SOCIAL_SECURITY_STATUS, hfStatusMap, false);
 
+            dictItemList = business.listByDicId(DictUtil.DICT_ID_WELFARE_UNIT);
+            Map<String, String> welfareUnitMap = new LinkedHashMap<>();
+            dictItemList.stream().forEach((d) -> welfareUnitMap.put(d.getDicItemValue(), d.getDicItemText()));
+            DictUtil.getInstance().putDictByTypeValue(DictUtil.TYPE_VALUE_WELFARE_UNIT, welfareUnitMap, false);
+
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.PROCESS_PERIOD_KEY, SocialSecurityConst.PROCESS_PERIOD_MAP, false);
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.FUND_TYPE_KEY, SocialSecurityConst.FUND_TYPE_MAP, false);
 //            DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.PAY_BANK_KEY, SocialSecurityConst.PAY_BANK_MAP, false);
