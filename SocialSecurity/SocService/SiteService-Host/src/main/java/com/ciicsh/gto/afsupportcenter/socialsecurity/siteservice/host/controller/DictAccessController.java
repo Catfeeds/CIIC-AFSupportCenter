@@ -52,6 +52,11 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
             Map<String, String> employeeClassifyMap = new LinkedHashMap<>();
             dictItemList.stream().forEach((d) -> employeeClassifyMap.put(d.getDicItemValue(), d.getDicItemText()));
             DictUtil.getInstance().putDictByTypeValue(DictUtil.TYPE_VALUE_SOCIAL_SECURITY_EMPLOYEE_CLASSIFY, employeeClassifyMap, false);
+
+            dictItemList = business.listByDicId(DictUtil.DICT_ID_WELFARE_UNIT);
+            Map<String, String> welfareUnitMap = new LinkedHashMap<>();
+            dictItemList.stream().forEach((d) -> welfareUnitMap.put(d.getDicItemValue(), d.getDicItemText()));
+            DictUtil.getInstance().putDictByTypeValue(DictUtil.TYPE_VALUE_WELFARE_UNIT, welfareUnitMap, false);
         } catch (Exception e) {
             LogMessage logMessage = LogMessage.create().setTitle("上海社保字典项及常量项")
                 .setContent("加载字典项（访问字典公共接口）或常量项失败" + e.getMessage());
