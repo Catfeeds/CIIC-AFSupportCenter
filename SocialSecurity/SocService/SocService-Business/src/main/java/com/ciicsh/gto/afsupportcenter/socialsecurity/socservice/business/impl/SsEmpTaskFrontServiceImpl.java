@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpAgreementDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
@@ -119,6 +120,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                                  AfCompanyDetailResponseDTO afCompanyDetailResponseDTO, Map<String, Object> cityCodeMap) throws Exception {
         //基本信息
         AfEmployeeCompanyDTO afEmployeeCompanyDTO = dto.getEmployeeCompany();
+        AfEmpAgreementDTO afEmpAgreementDTO = dto.getNowAgreement();
 
         //险种明细
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
@@ -146,7 +148,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
             }
         }
 
-        ssEmpTask.setSubmitterId(afEmployeeCompanyDTO.getCreatedBy());
+        ssEmpTask.setSubmitterId(afEmpAgreementDTO.getCreatedBy());
         ssEmpTask.setSalary(afEmployeeCompanyDTO.getSalary());
         ssEmpTask.setSubmitterRemark(afEmployeeCompanyDTO.getRemark());
         ssEmpTask.setSubmitTime(LocalDateTime.now());
@@ -189,11 +191,11 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         ssEmpTask.setActive(true);
         //福利办理方
         ssEmpTask.setWelfareUnit(afEmployeeCompanyDTO.getSocialUnit());
-        ssEmpTask.setModifiedBy(afEmployeeCompanyDTO.getCreatedBy());
-        ssEmpTask.setModifiedDisplayName(afEmployeeCompanyDTO.getCreatedDisplayName());
+        ssEmpTask.setModifiedBy(afEmpAgreementDTO.getCreatedBy());
+        ssEmpTask.setModifiedDisplayName(afEmpAgreementDTO.getCreatedDisplayName());
         ssEmpTask.setModifiedTime(LocalDateTime.now());
-        ssEmpTask.setCreatedBy(afEmployeeCompanyDTO.getCreatedBy());
-        ssEmpTask.setCreatedDisplayName(afEmployeeCompanyDTO.getCreatedDisplayName());
+        ssEmpTask.setCreatedBy(afEmpAgreementDTO.getCreatedBy());
+        ssEmpTask.setCreatedDisplayName(afEmpAgreementDTO.getCreatedDisplayName());
         ssEmpTask.setCreatedTime(LocalDateTime.now());
         ssEmpTask.setLeaderShipId(afEmployeeCompanyDTO.getLeadershipId());
         ssEmpTask.setLeaderShipName(afEmployeeCompanyDTO.getLeadershipName());
@@ -262,11 +264,11 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                             ssEmpTaskFront.setEndMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getEndDate(), "yyyyMM")));
                         }
                         ssEmpTaskFront.setActive(true);
-                        ssEmpTaskFront.setModifiedBy(afEmployeeCompanyDTO.getCreatedBy());
-                        ssEmpTaskFront.setModifiedDisplayName(afEmployeeCompanyDTO.getCreatedDisplayName());
+                        ssEmpTaskFront.setModifiedBy(afEmpAgreementDTO.getCreatedBy());
+                        ssEmpTaskFront.setModifiedDisplayName(afEmpAgreementDTO.getCreatedDisplayName());
                         ssEmpTaskFront.setModifiedTime(LocalDateTime.now());
-                        ssEmpTaskFront.setCreatedBy(afEmployeeCompanyDTO.getCreatedBy());
-                        ssEmpTaskFront.setCreatedDisplayName(afEmployeeCompanyDTO.getCreatedDisplayName());
+                        ssEmpTaskFront.setCreatedBy(afEmpAgreementDTO.getCreatedBy());
+                        ssEmpTaskFront.setCreatedDisplayName(afEmpAgreementDTO.getCreatedDisplayName());
                         ssEmpTaskFront.setCreatedTime(LocalDateTime.now());
                         ssEmpTaskFront.setLeaderShipId(afEmployeeCompanyDTO.getLeadershipId());
                         ssEmpTaskFront.setLeaderShipName(afEmployeeCompanyDTO.getLeadershipName());
@@ -336,6 +338,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         Map<String, Object> paramMap = taskMsgDTO.getVariables();
 
         AfEmployeeCompanyDTO companyDto = dto.getEmployeeCompany();
+        AfEmpAgreementDTO afEmpAgreementDTO = dto.getNowAgreement();
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
         //根据oldTaskId获取SsEmpTask对象
         String oldTaskId = paramMap.get("oldTaskId").toString();
@@ -348,7 +351,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
         ssEmpTask.setEmployeeId(companyDto.getEmployeeId());
         //未处理任务单更正时，由于前道生成的新的雇员服务协议记录，因此需要更新businessInterfaceId
         ssEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
-        ssEmpTask.setSubmitterName(companyDto.getCreatedBy());
+        ssEmpTask.setSubmitterName(afEmpAgreementDTO.getCreatedBy());
         ssEmpTask.setSalary(companyDto.getSalary());
         ssEmpTask.setSubmitterRemark(companyDto.getRemark());
 
@@ -401,7 +404,8 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
             }
         }
 
-        ssEmpTask.setModifiedBy(companyDto.getCreatedBy());
+        ssEmpTask.setModifiedBy(afEmpAgreementDTO.getCreatedBy());
+        ssEmpTask.setModifiedDisplayName(afEmpAgreementDTO.getModifiedDisplayName());
         ssEmpTask.setModifiedTime(LocalDateTime.now());
         ssEmpTaskMapper.updateById(ssEmpTask);
 
@@ -439,7 +443,7 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                             "yyyyMM")));
                     }
 
-                    ssEmpTaskFront.setModifiedBy(companyDto.getCreatedBy());
+                    ssEmpTaskFront.setModifiedBy(afEmpAgreementDTO.getCreatedBy());
                     ssEmpTaskFront.setModifiedTime(LocalDateTime.now());
                     eleList.add(ssEmpTaskFront);
                 }
