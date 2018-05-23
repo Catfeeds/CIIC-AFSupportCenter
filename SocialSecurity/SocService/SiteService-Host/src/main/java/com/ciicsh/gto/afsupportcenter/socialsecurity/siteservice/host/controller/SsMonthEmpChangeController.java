@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -34,6 +35,13 @@ public class SsMonthEmpChangeController  extends BasicController<SsMonthEmpChang
         JsonResult<SsMonthEmpChangeBO> result = new JsonResult<>();
         result.setData(resultDto);
 
+        return result;
+    }
+    @PostMapping("/getSsMonthEmpChangeId")
+    public JsonResult getMonthEmpChangeId(@RequestParam(value = "ssMonth", required = true) String ssMonth,
+                                          @RequestParam(value = "comAccountId", required = true) String comAccountId ){
+        JsonResult result=new JsonResult();
+        result.setData(business.getSsMonthChangeId(ssMonth,comAccountId));
         return result;
     }
 }
