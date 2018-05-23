@@ -127,7 +127,7 @@ public class ExcelUtil {
         try {
             list = ExcelImportUtil.importExcel(file.getInputStream(), pojoClass, params);
         }catch (NoSuchElementException e){
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new NoSuchElementException("excel文件不能为空");
         } catch (Exception e) {
             throw new Exception(e.getMessage());
