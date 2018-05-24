@@ -12,6 +12,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.util.FeedbackDateVerifyHandler;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.PdfUtil;
+import com.ciicsh.gto.afsupportcenter.util.constant.HouseFundConst;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
@@ -62,7 +63,6 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
     private static final int MULTI_EXPORT_CREATED_BY_MAX_LENTH = 22;
-
     /**
      * 雇员公积金转移任务查询
      *
@@ -100,6 +100,9 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
                                                                  @RequestParam(value = "hfType", required = false) String hfType,
                                                                  @RequestParam(value = "empTaskId", required = false) String empTaskId) {
         HfEmpTaskHandleVo hfEmpTaskHandleBo = new HfEmpTaskHandleVo();
+        if(hfType == null){
+            hfType = HouseFundConst.HF_TYPE_BASE;
+        }
         hfEmpTaskHandleBo.setHfType(Integer.parseInt(hfType));
         long employeeTaskId = 0;
         if (Optional.ofNullable(empTaskId).isPresent()) {
@@ -107,7 +110,6 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
         }
         //获取企业账户和雇员信息
         hfEmpTaskHandleBo = business.queryComEmpTransferForm(employeeId, companyId, employeeTaskId);
-
         //获取转移任务单信息
         hfEmpTaskHandleBo.setProcessCategory(9);
         hfEmpTaskHandleBo.setTaskCategory(8);//转移任务单
