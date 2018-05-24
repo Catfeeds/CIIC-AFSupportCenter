@@ -5,6 +5,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controlle
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementResultBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsStatementResultService;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -51,7 +55,17 @@ public class SsStatementResultController extends BasicController<SsStatementResu
 
         return jsonResult;
     }
-
+    /**
+     * 雇员公积金任务导出
+     * @param
+     * @return
+     */
+    @RequestMapping("/diffExportOpt")
+    public void diffExportOpt(HttpServletResponse response, SsStatementResultBO ssStatementResultDTO) throws Exception {
+        List<SsStatementResultBO> resultList =business.statementResultQuery(ssStatementResultDTO);
+        String fileNme = "对账差异对比结果_"+ StringUtil.getDateString(new Date())+".xls";
+        ExcelUtil.exportExcel(resultList,SsStatementResultBO.class,fileNme,response);
+    }
     /**
      * 重算对账结果
      * @param statementId
