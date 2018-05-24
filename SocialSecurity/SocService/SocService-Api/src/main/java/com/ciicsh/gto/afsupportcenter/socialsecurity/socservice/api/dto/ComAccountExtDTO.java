@@ -11,7 +11,7 @@ public class ComAccountExtDTO {
      */
     private Long comAccountId;
     /**
-     * 多租户Id
+     * 多租户Id test
      */
     private String customerId;
 
