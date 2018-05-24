@@ -1,6 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo;
 
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -20,11 +22,14 @@ public class SsStatementResultBO {
     /**
      * 雇员名
      */
+
+    @Excel(name = "姓名", orderNum = "2")
     private String employeeName;
 
     /**
      * 记录Id
      */
+
     private Long statementResultId;
     /**
      * 外键，对账单Id
@@ -33,6 +38,7 @@ public class SsStatementResultBO {
     /**
      * 外键:雇员Id
      */
+    @Excel(name = "雇员编号", orderNum = "1")
     private String employeeId;
     /**
      * 变更类型
@@ -49,6 +55,7 @@ public class SsStatementResultBO {
     /**
      * 项目名称
      */
+    @Excel(name = "项目", orderNum = "4")
     private String projectTypeName;
     /**
      * 外键：险种
@@ -57,18 +64,22 @@ public class SsStatementResultBO {
     /**
      * 社保险种名称
      */
+    @Excel(name = "险种", orderNum = "3")
     private String ssTypeName;
     /**
      * 从社保局导入金额
      */
+    @Excel(name = "导入金额", orderNum = "5")
     private BigDecimal impAmount;
     /**
      * 社保系统计算出的金额
      */
+    @Excel(name = "系统金额", orderNum = "6")
     private BigDecimal ssAmount;
     /**
      * 差值
      */
+    @Excel(name = "差异", orderNum = "7")
     private BigDecimal diffAmount;
     /**
      * 0 正常差异 1 系统不存在  2 导入不存在
