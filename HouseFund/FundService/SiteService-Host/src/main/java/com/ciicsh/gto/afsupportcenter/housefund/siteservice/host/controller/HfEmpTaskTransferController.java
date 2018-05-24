@@ -62,7 +62,7 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
     private static final int MULTI_EXPORT_CREATED_BY_MAX_LENTH = 22;
-
+    private static final String HF_TYPE_BASE = "1";
     /**
      * 雇员公积金转移任务查询
      *
@@ -101,7 +101,7 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
                                                                  @RequestParam(value = "empTaskId", required = false) String empTaskId) {
         HfEmpTaskHandleVo hfEmpTaskHandleBo = new HfEmpTaskHandleVo();
         if(hfType == null){
-            hfType = "1";
+            hfType = HF_TYPE_BASE;
         }
         hfEmpTaskHandleBo.setHfType(Integer.parseInt(hfType));
         long employeeTaskId = 0;
@@ -110,7 +110,6 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
         }
         //获取企业账户和雇员信息
         hfEmpTaskHandleBo = business.queryComEmpTransferForm(employeeId, companyId, employeeTaskId);
-
         //获取转移任务单信息
         hfEmpTaskHandleBo.setProcessCategory(9);
         hfEmpTaskHandleBo.setTaskCategory(8);//转移任务单
