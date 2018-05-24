@@ -100,6 +100,9 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
                                                                  @RequestParam(value = "hfType", required = false) String hfType,
                                                                  @RequestParam(value = "empTaskId", required = false) String empTaskId) {
         HfEmpTaskHandleVo hfEmpTaskHandleBo = new HfEmpTaskHandleVo();
+        if(hfType == null){
+            hfType = "1";
+        }
         hfEmpTaskHandleBo.setHfType(Integer.parseInt(hfType));
         long employeeTaskId = 0;
         if (Optional.ofNullable(empTaskId).isPresent()) {
