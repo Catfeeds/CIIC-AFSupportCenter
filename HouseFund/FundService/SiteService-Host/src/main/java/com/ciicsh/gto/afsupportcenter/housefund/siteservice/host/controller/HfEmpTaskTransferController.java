@@ -62,7 +62,7 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
     private static final int MULTI_EXPORT_CREATED_BY_MAX_LENTH = 22;
-    private static final String HF_TYPE_BASE = "1";
+    private static final String HF_TYPE_BASE = "1"; //基本公积金
     /**
      * 雇员公积金转移任务查询
      *
