@@ -108,4 +108,13 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
         return false;
     }
 
+    @Override
+    public boolean updateMaterialBatch(AmEmpMaterialBO amEmpMaterialBO) {
+        Integer i = baseMapper.updateMaterialBatch(amEmpMaterialBO);
+        if(i>0){
+            return  true;
+        }
+        return false;
+    }
+
 }

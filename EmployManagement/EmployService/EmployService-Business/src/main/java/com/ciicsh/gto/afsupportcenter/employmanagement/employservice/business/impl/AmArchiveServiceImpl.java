@@ -75,6 +75,11 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
     }
 
     @Override
+    public List<AmArchive> queryAmArchiveByEmploymentId(Long employmentId) {
+        return null;
+    }
+
+    @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public Map<String,Object> saveArchive(AmArchiveBO amArchiveBO) {
         Map<String,Object> map = new HashMap<>();

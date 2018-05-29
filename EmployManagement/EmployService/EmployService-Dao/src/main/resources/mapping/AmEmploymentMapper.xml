@@ -328,4 +328,13 @@
         </foreach>
     </select>
 
+    <select id="queryAmEmploymentBatch">
+        SELECT  employment_id,emp_task_id,company_id,employee_id  FROM  am_employment
+        <where>
+            <foreach collection="empTaskIds" item="item" open="emp_task_id IN (" separator="," close=")">
+                #{item}
+            </foreach>
+        </where>
+    </select>
+
 </mapper>
