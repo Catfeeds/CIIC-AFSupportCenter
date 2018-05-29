@@ -86,6 +86,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
                     HfEmpTaskBo hfEmpTaskBo = new HfEmpTaskBo();
                     hfEmpTaskBo.setCompanyId(hfEmpTaskExportBo.getCompanyId());
                     hfEmpTaskBo.setEmployeeId(hfEmpTaskExportBo.getEmployeeId());
+                    hfEmpTaskBo.setHfType(hfEmpTaskExportBo.getHfType());
                     List<Long> outEmpTaskIdList = business.queryOutEmpTaskId(hfEmpTaskBo);
 
                     if (CollectionUtils.isNotEmpty(outEmpTaskIdList)) {

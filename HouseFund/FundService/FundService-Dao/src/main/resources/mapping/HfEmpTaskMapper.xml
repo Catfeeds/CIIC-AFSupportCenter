@@ -88,6 +88,7 @@
 		<result column="task_id" property="taskId" />
         <result column="created_by" property="createdBy" />
         <result column="created_display_name" property="createdDisplayName" />
+        <result column="hf_account_type" property="hfAccountType" />
 	</resultMap>
 
     <resultMap id="RejectResultMapBo" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo" extends="BaseResultMapBo">
@@ -413,7 +414,9 @@
         tmp.submit_time,
         tmp.task_id,
         tmp.created_by,
-        tmp.created_display_name
+        tmp.created_display_name,
+        tmp.hf_account_type,
+        tmp.handle_remark
         FROM (
             SELECT
             DISTINCT
@@ -434,7 +437,9 @@
             het.task_id,
             het.created_by,
             het.created_display_name,
-            het.created_time
+            het.created_time,
+            3 AS hf_account_type,
+            het.handle_remark
             FROM hf_emp_task het
             INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
             INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
@@ -534,7 +539,9 @@
             het.task_id,
             het.created_by,
             het.created_display_name,
-            het.created_time
+            het.created_time,
+            CASE WHEN het.welfare_unit = 2 THEN 1 ELSE 2 END AS hf_account_type,
+            het.handle_remark
             FROM hf_emp_task het
             INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
             INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
@@ -1119,8 +1126,8 @@
             is_active = 1
             AND company_id = #{companyId}
             AND employee_id = #{employeeId}
+            AND hf_type = #{hfType}
             AND task_category IN (4, 5, 12, 13)
-            AND task_status = 1
         </where>
     </select>
 </mapper>

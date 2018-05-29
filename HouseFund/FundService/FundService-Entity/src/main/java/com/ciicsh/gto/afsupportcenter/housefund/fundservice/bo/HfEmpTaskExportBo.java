@@ -50,6 +50,8 @@ public class HfEmpTaskExportBo implements Serializable{
     @Excel(name = "发起人", orderNum = "9",  width = 20)
     private String createdDisplayName;
     private Integer hasOut;
+    private Integer hfAccountType;
+    private String handleRemark;
 
     public Long getEmpTaskId() {
         return empTaskId;
@@ -254,5 +256,21 @@ public class HfEmpTaskExportBo implements Serializable{
 
     public void setHasOut(Integer hasOut) {
         this.hasOut = hasOut;
+    }
+
+    public Integer getHfAccountType() {
+        return hfAccountType;
+    }
+
+    public void setHfAccountType(Integer hfAccountType) {
+        this.hfAccountType = hfAccountType;
+    }
+
+    public String getHandleRemark() {
+        return handleRemark;
+    }
+
+    public void setHandleRemark(String handleRemark) {
+        this.handleRemark = handleRemark;
     }
 }
