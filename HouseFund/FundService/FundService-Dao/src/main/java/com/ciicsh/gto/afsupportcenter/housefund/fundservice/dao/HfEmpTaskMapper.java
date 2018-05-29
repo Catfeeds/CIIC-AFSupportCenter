@@ -76,4 +76,5 @@ public interface HfEmpTaskMapper extends BaseMapper<HfEmpTask> {
 
     Map<String,String> fetchPrintInfo(Long empTaskId);
 
+    List<Long> queryOutEmpTaskId(HfEmpTaskBo hfEmpTaskBo);
 }

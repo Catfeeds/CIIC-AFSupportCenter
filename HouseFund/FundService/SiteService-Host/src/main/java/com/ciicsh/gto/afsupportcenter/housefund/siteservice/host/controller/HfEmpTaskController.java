@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBatchRejectBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.EmpEmployeeService;
@@ -66,11 +67,34 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
      */
     @RequestMapping("/hfEmpTaskQuery")
     public JsonResult<PageRows> hfEmpTaskQuery(@RequestBody PageInfo pageInfo) {
-        return JsonResultKit.of(business.queryHfEmpTaskInPage(pageInfo, UserContext.getUserId(), StringUtils.join(
+        PageRows<HfEmpTaskExportBo> hfEmpTaskExportBoPageRows = business.queryHfEmpTaskInPage(pageInfo, UserContext.getUserId(), StringUtils.join(
             new Integer[] {
                 HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK
 //                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
-            }, ',')));
+            }, ','));
+
+        List<HfEmpTaskExportBo> hfEmpTaskExportBoList = hfEmpTaskExportBoPageRows.getRows();
+
+        if (CollectionUtils.isNotEmpty(hfEmpTaskExportBoList)) {
+            for (HfEmpTaskExportBo hfEmpTaskExportBo : hfEmpTaskExportBoList) {
+                if (hfEmpTaskExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_ADD
+                    || hfEmpTaskExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN
+                    || hfEmpTaskExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN
+                    || hfEmpTaskExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_ADD
+                    || hfEmpTaskExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_IN
+                    || hfEmpTaskExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_OPEN) {
+                    HfEmpTaskBo hfEmpTaskBo = new HfEmpTaskBo();
+                    hfEmpTaskBo.setCompanyId(hfEmpTaskExportBo.getCompanyId());
+                    hfEmpTaskBo.setEmployeeId(hfEmpTaskExportBo.getEmployeeId());
+                    List<Long> outEmpTaskIdList = business.queryOutEmpTaskId(hfEmpTaskBo);
+
+                    if (CollectionUtils.isNotEmpty(outEmpTaskIdList)) {
+                        hfEmpTaskExportBo.setHasOut(1);
+                    }
+                }
+            }
+        }
+        return JsonResultKit.of(hfEmpTaskExportBoPageRows);
     }
 
     /**
