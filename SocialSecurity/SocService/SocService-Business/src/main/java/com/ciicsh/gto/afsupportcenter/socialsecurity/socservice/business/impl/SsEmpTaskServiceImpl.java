@@ -1930,6 +1930,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             bo.setListEmpBasePeriod(basePeriodsList);
             bo.setCompanyConfirmAmount(new BigDecimal(0));
             bo.setPersonalConfirmAmount(new BigDecimal(0));
+            bo.setTaskStatus(TaskStatusConst.REJECTION);
             taskCompletCallBack(bo);
             ssEmpTask.setRejectionRemark(remark);
             ssEmpTask.setTaskStatus(TaskStatusConst.REJECTION);
