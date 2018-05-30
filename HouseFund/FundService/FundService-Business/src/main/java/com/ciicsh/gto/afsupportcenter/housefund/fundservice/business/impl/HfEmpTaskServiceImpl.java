@@ -329,6 +329,11 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         return baseMapper.queryOutEmpTaskId(hfEmpTaskBo);
     }
 
+    @Override
+    public Integer getExistHandleRemarkCount(HfEmpTaskBo hfEmpTaskBo) {
+        return baseMapper.getExistHandleRemarkCount(hfEmpTaskBo);
+    }
+
 
     /**
      * 转出单位(来源地)

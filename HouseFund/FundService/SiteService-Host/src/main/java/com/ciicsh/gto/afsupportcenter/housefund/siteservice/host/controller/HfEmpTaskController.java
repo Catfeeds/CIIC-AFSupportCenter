@@ -154,11 +154,35 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
      */
     @RequestMapping("/hfEmpTaskRejectQuery")
     public JsonResult<PageRows> hfEmpTaskRejectQuery(@RequestBody PageInfo pageInfo) {
-        return JsonResultKit.of(business.queryHfEmpTaskRejectInPage(pageInfo, UserContext.getUserId(), StringUtils.join(
+         PageRows<HfEmpTaskRejectExportBo> hfEmpTaskRejectExportBoPageRows = business.queryHfEmpTaskRejectInPage(pageInfo, UserContext.getUserId(), StringUtils.join(
             new Integer[] {
                 HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK
 //                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
-            }, ',')));
+            }, ','));
+
+        List<HfEmpTaskRejectExportBo> hfEmpTaskRejectExportBoList = hfEmpTaskRejectExportBoPageRows.getRows();
+
+        if (CollectionUtils.isNotEmpty(hfEmpTaskRejectExportBoList)) {
+            for (HfEmpTaskRejectExportBo hfEmpTaskRejectExportBo : hfEmpTaskRejectExportBoList) {
+                if (hfEmpTaskRejectExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_ADD
+                    || hfEmpTaskRejectExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN
+                    || hfEmpTaskRejectExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN
+                    || hfEmpTaskRejectExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_ADD
+                    || hfEmpTaskRejectExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_IN
+                    || hfEmpTaskRejectExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_OPEN) {
+                    HfEmpTaskBo hfEmpTaskBo = new HfEmpTaskBo();
+                    hfEmpTaskBo.setCompanyId(hfEmpTaskRejectExportBo.getCompanyId());
+                    hfEmpTaskBo.setEmployeeId(hfEmpTaskRejectExportBo.getEmployeeId());
+                    hfEmpTaskBo.setHfType(hfEmpTaskRejectExportBo.getHfType());
+                    List<Long> outEmpTaskIdList = business.queryOutEmpTaskId(hfEmpTaskBo);
+
+                    if (CollectionUtils.isNotEmpty(outEmpTaskIdList)) {
+                        hfEmpTaskRejectExportBo.setHasOut(1);
+                    }
+                }
+            }
+        }
+        return JsonResultKit.of(hfEmpTaskRejectExportBoPageRows);
     }
 
     /**

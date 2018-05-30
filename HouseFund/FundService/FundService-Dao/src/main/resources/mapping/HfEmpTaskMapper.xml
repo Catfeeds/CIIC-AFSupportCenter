@@ -176,7 +176,8 @@
         tmp.modified_by,
         tmp.modified_display_name,
         tmp.modified_time,
-        tmp.rejection_remark
+        tmp.rejection_remark,
+        tmp.hf_account_type
         FROM (
             SELECT
             het.emp_task_id,
@@ -200,7 +201,8 @@
             het.modified_by,
             het.modified_display_name,
             het.modified_time,
-            het.rejection_remark
+            het.rejection_remark,
+            3 AS hf_account_type
             FROM hf_emp_task het
             INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
             INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
@@ -308,7 +310,8 @@
             het.modified_by,
             het.modified_display_name,
             het.modified_time,
-            het.rejection_remark
+            het.rejection_remark,
+            CASE WHEN het.welfare_unit = 2 THEN 1 ELSE 2 END AS hf_account_type
             FROM hf_emp_task het
             INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
             INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
@@ -1128,6 +1131,19 @@
             AND employee_id = #{employeeId}
             AND hf_type = #{hfType}
             AND task_category IN (4, 5, 12, 13)
+        </where>
+    </select>
+
+    <select id="getExistHandleRemarkCount" resultType="java.lang.Integer">
+        SELECT
+          COUNT(emp_task_id)
+        FROM hf_emp_task
+        <where>
+            is_active = 1
+            AND company_id = #{companyId}
+            AND employee_id = #{employeeId}
+            AND hf_type = #{hfType}
+            AND handle_remark IS NOT NULL
         </where>
     </select>
 </mapper>
