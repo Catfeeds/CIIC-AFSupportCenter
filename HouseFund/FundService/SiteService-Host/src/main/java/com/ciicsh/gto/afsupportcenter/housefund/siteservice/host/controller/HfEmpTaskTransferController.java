@@ -163,8 +163,8 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
             e.printStackTrace();
             response.reset();
             response.setCharacterEncoding("UTF-8");
-            response.setHeader("content-Type", "text/plain");
-            response.getWriter().write(e.getMessage());
+            response.setHeader("content-Type", "text/html");
+            response.getWriter().write(e.getMessage() + "<a href=\"javascript:history.go(-1)\">返回</a>");
         }
 
     }
@@ -211,14 +211,14 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
                 for (int j = 0; j < list.size(); j++) {
                     if (!transferOutUnitAccounts[i].equals(list.get(j).getTransferOutUnitAccount())) {
                         response.setCharacterEncoding("UTF-8");
-                        response.setHeader("content-Type", "text/plain");
-                        response.getWriter().write("仅支持一次导出相同转出单位公积金账号的信息");
+                        response.setHeader("content-Type", "text/html");
+                        response.getWriter().write("仅支持一次导出相同转出单位公积金账号的信息<a href=\"javascript:history.go(-1)\">返回</a>");
                         return;
                     }
                     if (!transferInUnitAccounts[i].equals(list.get(j).getTransferInUnitAccount())) {
                         response.setCharacterEncoding("UTF-8");
-                        response.setHeader("content-Type", "text/plain");
-                        response.getWriter().write("仅支持一次导出相同转入单位公积金账号的信息");
+                        response.setHeader("content-Type", "text/html");
+                        response.getWriter().write("仅支持一次导出相同转入单位公积金账号的信息<a href=\"javascript:history.go(-1)\">返回</a>");
                         return;
                     }
 
