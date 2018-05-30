@@ -553,20 +553,22 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             {
                 AmArchiveBO amArchiveBO1 = amArchiveBOList.get(0);
                 entity.setArchiveId(amArchiveBO1.getArchiveId());
-                entity.setYuliuDocNum(amArchiveBO1.getYuliuDocNum());
-                entity.setDocNum(amArchiveBO1.getDocNum());
+                entity.setCreatedTime(amArchiveBO1.getCreatedTime());
+                entity.setCreatedBy(amArchiveBO1.getCreatedBy());
             }else{
                 entity.setCreatedTime(now);
                 entity.setCreatedBy(ReasonUtil.getUserId());
-
-                yuliuDocNumInt = yuliuDocNumInt + i;
-                docNumInt = docNumInt + i;
-                entity.setYuliuDocNum(yuliuDocNumInt.toString());
-                entity.setDocNum(docNumInt.toString());
-                ++i;
             }
 
+            yuliuDocNumInt = yuliuDocNumInt + i;
+            docNumInt = docNumInt + i;
+            entity.setYuliuDocNum(yuliuDocNumInt.toString());
+            entity.setDocNum(docNumInt.toString());
+            ++i;
+
             entity.setEmploymentId(temp.getEmploymentId());
+            entity.setEmployeeId(temp.getEmployeeId());
+            entity.setCompanyId(temp.getCompanyId());
             entity.setModifiedTime(now);
 
             entity.setModifiedBy(ReasonUtil.getUserId());
@@ -593,7 +595,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         }
 
         this.insertOrUpdateBatch(amEmpTaskList);
-        result =  amArchiveService.insertOrUpdateBatch(amArchiveList);
+        result =  amArchiveService.insertOrUpdateAllColumnBatch(amArchiveList);
         if(result)
         {
             // 修改预留档案编号 seq
@@ -649,6 +651,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             {
                 AmEmploymentBO amEmploymentBO = amEmploymentBOList.get(0);
                 entity.setEmploymentId(amEmploymentBO.getEmploymentId());
+                entity.setCreatedBy(amEmploymentBO.getCreatedBy());
+                entity.setCreatedTime(amEmploymentBO.getCreatedTime());
             }else{
 
                 entity.setCreatedTime(now);
@@ -658,10 +662,11 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             entity.setEmpTaskId(emTaskId);
             entity.setEmployProperty(employeeBatchBO.getEmployProperty());
             entity.setEmployDate(employeeBatchBO.getEmployDate());
-            entity.setOpenAfDate(LocalDate.now());
-            entity.setEmployStyle("1");//默认全日制
+            entity.setOpenAfDate(employeeBatchBO.getOpenAfDate());
+            entity.setEmployStyle(employeeBatchBO.getEmployStyle());//默认全日制
             entity.setEmployeeId(amEmpTask.getEmployeeId());
             entity.setCompanyId(amEmpTask.getCompanyId());
+            entity.setEmployOperateMan(userName);
 
             entity.setModifiedTime(now);
             entity.setModifiedBy(userId);
@@ -693,7 +698,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         amEmpMaterialBO.setModifiedTime(now);
         amEmpMaterialService.updateMaterialBatch(amEmpMaterialBO);
 
-        boolean b = amEmploymentService.insertOrUpdateBatch(list);
+        boolean b = amEmploymentService.insertOrUpdateAllColumnBatch(list);
 
         return b;
     }
