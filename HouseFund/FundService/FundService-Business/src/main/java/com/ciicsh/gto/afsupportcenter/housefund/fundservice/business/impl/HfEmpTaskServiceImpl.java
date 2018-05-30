@@ -324,6 +324,11 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         return socialDTO;
     }
 
+    @Override
+    public List<Long> queryOutEmpTaskId(HfEmpTaskBo hfEmpTaskBo) {
+        return baseMapper.queryOutEmpTaskId(hfEmpTaskBo);
+    }
+
 
     /**
      * 转出单位(来源地)

@@ -1111,4 +1111,16 @@
 
     </select>
 
+    <select id="queryOutEmpTaskId" resultType="java.lang.Long">
+        SELECT
+          emp_task_id
+        FROM hf_emp_task
+        <where>
+            is_active = 1
+            AND company_id = #{companyId}
+            AND employee_id = #{employeeId}
+            AND task_category IN (4, 5, 12, 13)
+            AND task_status = 1
+        </where>
+    </select>
 </mapper>
