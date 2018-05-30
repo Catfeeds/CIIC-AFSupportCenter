@@ -49,7 +49,6 @@ public class HfEmpTaskExportBo implements Serializable{
     private String createdBy;
     @Excel(name = "发起人", orderNum = "9",  width = 20)
     private String createdDisplayName;
-    private Integer hasOut;
 
     public Long getEmpTaskId() {
         return empTaskId;
@@ -246,13 +245,5 @@ public class HfEmpTaskExportBo implements Serializable{
 
     public void setCreatedDisplayName(String createdDisplayName) {
         this.createdDisplayName = createdDisplayName;
-    }
-
-    public Integer getHasOut() {
-        return hasOut;
-    }
-
-    public void setHasOut(Integer hasOut) {
-        this.hasOut = hasOut;
     }
 }

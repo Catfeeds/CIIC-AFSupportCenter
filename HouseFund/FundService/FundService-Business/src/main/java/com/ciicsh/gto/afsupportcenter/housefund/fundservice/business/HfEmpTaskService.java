@@ -74,6 +74,4 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
     List<HfEmpTask> queryByTaskId(HfEmpTask ssEmpTask);
 
     AfEmpSocialDTO getAfEmpSocialByType(List<AfEmpSocialDTO> socialDTOS, String fundCategory);
-
-    List<Long> queryOutEmpTaskId(HfEmpTaskBo hfEmpTaskBo);
 }
