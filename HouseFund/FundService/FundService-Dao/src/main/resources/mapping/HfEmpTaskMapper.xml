@@ -1110,4 +1110,5 @@
         where et.is_active=1 AND et.emp_task_id=#{empTaskId}
 
     </select>
+
 </mapper>

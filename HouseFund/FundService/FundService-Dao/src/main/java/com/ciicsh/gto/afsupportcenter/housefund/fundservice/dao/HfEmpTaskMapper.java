@@ -75,4 +75,5 @@ public interface HfEmpTaskMapper extends BaseMapper<HfEmpTask> {
     List<EmpTaskTransferBo> queryEmpTaskTransferNewTask(EmpTaskTransferBo empTaskTransferBo);
 
     Map<String,String> fetchPrintInfo(Long empTaskId);
+
 }
