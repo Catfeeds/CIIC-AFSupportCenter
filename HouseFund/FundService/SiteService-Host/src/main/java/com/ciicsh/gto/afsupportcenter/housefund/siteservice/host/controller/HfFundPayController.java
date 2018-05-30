@@ -224,8 +224,8 @@ public class HfFundPayController {
             logApiUtil.error(LogMessage.create().setTitle("生成网银文件补缴").setContent(e.getMessage()));
             response.reset();
             response.setCharacterEncoding("UTF-8");
-            response.setHeader("content-Type", "text/plain");
-            response.getWriter().write(e.getMessage());
+            response.setHeader("content-Type", "text/html");
+            response.getWriter().write(e.getMessage() + "<a href=\"javascript:history.go(-1)\">返回</a>");
         }
     }
 
@@ -298,8 +298,8 @@ public class HfFundPayController {
             logApiUtil.error(LogMessage.create().setTitle("生成网银文件变更").setContent(e.getMessage()));
             response.reset();
             response.setCharacterEncoding("UTF-8");
-            response.setHeader("content-Type", "text/plain");
-            response.getWriter().write(e.getMessage());
+            response.setHeader("content-Type", "text/html");
+            response.getWriter().write(e.getMessage() + "<a href=\"javascript:history.go(-1)\">返回</a>");
         }
     }
     /**
@@ -325,44 +325,46 @@ public class HfFundPayController {
         ServletOutputStream outputStream = null;
         BufferedInputStream bis = null;
         try{
-        response.setCharacterEncoding("UTF-8");
-       // response.setHeader("content-Type", "application/vnd.ms-excel");
-//        response.setHeader("Content-Disposition", "attachment;filename=" +  URLEncoder.encode("付款凭证打印.xlsx", "UTF-8"));
-        response.setContentType("application/octet-stream;charset=utf-8");
-        ExportResponseUtil.encodeExportFileName(response, "付款凭证打印.xlsx");
-        response.setContentLength(content.length);
-        outputStream = response.getOutputStream();
-        InputStream is = new ByteArrayInputStream(content);
-        bis = new BufferedInputStream(is);
-        bos = new BufferedOutputStream(outputStream);
+            response.setCharacterEncoding("UTF-8");
+            // response.setHeader("content-Type", "application/vnd.ms-excel");
+            // response.setHeader("Content-Disposition", "attachment;filename=" +  URLEncoder.encode("付款凭证打印.xlsx", "UTF-8"));
+            response.setContentType("application/octet-stream;charset=utf-8");
+            ExportResponseUtil.encodeExportFileName(response, "付款凭证打印.xlsx");
+            response.setContentLength(content.length);
+            outputStream = response.getOutputStream();
+            InputStream is = new ByteArrayInputStream(content);
+            bis = new BufferedInputStream(is);
+            bos = new BufferedOutputStream(outputStream);
 
-        byte[] buff = new byte[8192];
-        int bytesRead;
-        while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
-            bos.write(buff, 0, bytesRead);
-        }
+            byte[] buff = new byte[8192];
+            int bytesRead;
+            while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+                bos.write(buff, 0, bytesRead);
+            }
         }catch (Exception e){
-            e.printStackTrace();
+            logApiUtil.error(LogMessage.create().setTitle("HfFundPayController#printFinancePayVoucher").setContent(e.getMessage()));
+//            e.printStackTrace();
         }finally {
             try {
-                bis.close();
+                if (bis != null) {
+                    bis.close();
+                }
             } catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
             }
             try {
-                bos.close();
+                if (bos != null) {
+                    bos.close();
+                }
             } catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
             }
             try {
-                outputStream.flush();
+                if (outputStream != null) {
+                    outputStream.close();
+                }
             } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                outputStream.close();
-            } catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
             }
         }
     }
