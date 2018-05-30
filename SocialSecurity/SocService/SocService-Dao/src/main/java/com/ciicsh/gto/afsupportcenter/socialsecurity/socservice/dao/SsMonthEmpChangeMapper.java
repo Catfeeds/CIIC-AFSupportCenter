@@ -4,6 +4,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpCha
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsMonthEmpChange;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,4 +28,6 @@ public interface SsMonthEmpChangeMapper extends BaseMapper<SsMonthEmpChange> {
      * @return  SsMonthEmpChangeBO
      */
     SsMonthEmpChangeBO serachMonthEmpChangeByStatementId(SsMonthEmpChangeBO ssMonthEmpChangeBO);
+
+    String getSsMonthEmpChangeId(@Param("ssMonth") String ssMonth, @Param("comAccountId")String comAccountId);
 }

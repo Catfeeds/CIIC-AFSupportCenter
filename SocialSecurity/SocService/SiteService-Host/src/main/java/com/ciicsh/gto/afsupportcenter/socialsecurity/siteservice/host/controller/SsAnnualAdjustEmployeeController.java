@@ -10,6 +10,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsAnnualA
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
+import com.ciicsh.gto.afsupportcenter.util.web.response.ExportResponseUtil;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -72,16 +73,17 @@ public class SsAnnualAdjustEmployeeController extends BasicController<SsAnnualAd
         SsAnnualAdjustEmployeeDTO ssAnnualAdjustEmployeeDTO = pageInfo.toJavaObject(SsAnnualAdjustEmployeeDTO.class);
         Calendar calendar = Calendar.getInstance();
         int adjustYear = calendar.get(Calendar.YEAR);
-        String fileName = URLEncoder.encode("系统申报表_companyId_adjustYear.xlsx"
+        String fileName = "系统申报表_companyId_adjustYear.xlsx"
             .replace("companyId", ssAnnualAdjustEmployeeDTO.getCompanyId())
-            .replace("adjustYear", String.valueOf(adjustYear)), "UTF-8");
+            .replace("adjustYear", String.valueOf(adjustYear));
 
         response.reset();
         response.setCharacterEncoding("UTF-8");
 //            response.setHeader("content-Type", "application/vnd.ms-excel");
         response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition",
-                "attachment;filename=" + fileName);
+//        response.setHeader("Content-Disposition",
+//                "attachment;filename=" + fileName);
+        ExportResponseUtil.encodeExportFileName(response, fileName);
         workbook.write(response.getOutputStream());
         workbook.close();
     }

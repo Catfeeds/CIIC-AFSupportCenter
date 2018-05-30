@@ -51,7 +51,18 @@
         AND  mec.month_emp_change_id=#{monthEmpChangeId,jdbcType=VARCHAR}
     </select>
 
-
+    <select id="getSsMonthEmpChangeId" resultType="String">
+        SELECT month_emp_change_id FROM
+        ss_month_emp_change
+        WHERE
+        is_active = 1
+        AND
+        compute_type ='YYS'
+        AND
+        ss_month=#{ssMonth}
+        AND
+        com_account_id=#{comAccountId}
+    </select>
 
 
 </mapper>

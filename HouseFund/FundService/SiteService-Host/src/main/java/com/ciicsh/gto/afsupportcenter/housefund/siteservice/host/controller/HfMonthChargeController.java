@@ -14,6 +14,7 @@ import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
+import com.ciicsh.gto.afsupportcenter.util.web.response.ExportResponseUtil;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -57,20 +58,21 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
         } else {
             workbook = ExcelExportUtil.exportBigExcel(exportParams, HFMonthChargeReportBO.class, result.getRows());
             int pageNum = (int) Math.ceil(total * 1.0 / pageInfo.getPageSize());
-            for(int i = 2; i <= pageNum; i++) {
+            for (int i = 2; i <= pageNum; i++) {
                 pageInfo.setPageNum(i);
                 result = business.queryHfMonthChargeReport(pageInfo, UserContext.getUserId());
                 workbook = ExcelExportUtil.exportBigExcel(exportParams, HfEmpTaskExportBo.class, result.getRows());
             }
             ExcelExportUtil.closeExportBigExcel();
         }
-        String fileName = URLEncoder.encode("雇员公积金报表.xlsx", "UTF-8");
+        String fileName = "雇员公积金报表.xlsx";
 
         response.reset();
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition",
-            "attachment;filename=" + fileName);
+//            response.setHeader("Content-Disposition",
+//                "attachment;filename=" + fileName);
+        ExportResponseUtil.encodeExportFileName(response, fileName);
         workbook.write(response.getOutputStream());
         workbook.close();
     }
@@ -98,12 +100,13 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
                 hfTypeName = "补充";
                 templateFilePath = "/template/SH_ADD_HF_CHG_DTL_TMP.pdf";
             }
-            String fileName = URLEncoder.encode(String.format("上海市%1$s公积金汇缴变更清册_%2$s.pdf", hfTypeName, hfMonthChargeQueryBO.getHfMonth()), "UTF-8");
+            String fileName = String.format("上海市%1$s公积金汇缴变更清册_%2$s.pdf", hfTypeName, hfMonthChargeQueryBO.getHfMonth());
             response.reset();
             response.setCharacterEncoding("UTF-8");
             response.setHeader("content-Type", "application/pdf");
-            response.setHeader("Content-Disposition",
-                "attachment;filename=" + fileName);
+//            response.setHeader("Content-Disposition",
+//                "attachment;filename=" + fileName);
+            ExportResponseUtil.encodeExportFileName(response, fileName);
 
             PdfUtil.createPdfByTemplate(templateFilePath,
                 PdfUtil.DEFAULT_FONT_NAME,
@@ -144,12 +147,13 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
                 hfTypeName = "补充";
                 templateFilePath = "/template/SH_ADD_HF_REP_DTL_TMP.pdf";
             }
-            String fileName = URLEncoder.encode(String.format("上海市%1$s住房公积金补缴清册_%2$s.pdf", hfTypeName, hfMonthChargeQueryBO.getHfMonth()), "UTF-8");
+            String fileName = String.format("上海市%1$s住房公积金补缴清册_%2$s.pdf", hfTypeName, hfMonthChargeQueryBO.getHfMonth());
             response.reset();
             response.setCharacterEncoding("UTF-8");
             response.setHeader("content-Type", "application/pdf");
-            response.setHeader("Content-Disposition",
-                "attachment;filename=" + fileName);
+//            response.setHeader("Content-Disposition",
+//                "attachment;filename=" + fileName);
+            ExportResponseUtil.encodeExportFileName(response, fileName);
 
             PdfUtil.createPdfByTemplate(templateFilePath,
                 PdfUtil.DEFAULT_FONT_NAME,
@@ -177,12 +181,13 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
         exportParams.setType(ExcelType.XSSF);
         exportParams.setSheetName("公积金汇缴支付明细");
         Workbook workbook = workbook = ExcelExportUtil.exportExcel(exportParams, HfPaymentAccountReportBo.class, result.getRows());
-        String fileName = URLEncoder.encode("公积金汇缴支付明细-" + System.currentTimeMillis() + ".xlsx", "UTF-8");
+        String fileName = "公积金汇缴支付明细-" + System.currentTimeMillis() + ".xlsx";
         response.reset();
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition",
-            "attachment;filename=" + fileName);
+//        response.setHeader("Content-Disposition",
+//            "attachment;filename=" + fileName);
+        ExportResponseUtil.encodeExportFileName(response, fileName);
         workbook.write(response.getOutputStream());
         workbook.close();
     }

@@ -1056,15 +1056,19 @@
             AND et.service_center_id = #{serviceCenterValue}
         </if>
     </select>
-
+    <!--查询雇员档案表以及未办理任务单（未落档案表）的雇员-->
     <select id="queryEmpTaskTransferNewTask" resultMap="EmpTaskTransferRM">
     SELECT
     com.company_id,com.title,emp.employee_id,emp.employee_name,emp.id_num,eoop.`status`,eoop.in_date,ea.hf_type
     from emp_af_emp_company eoop
-		INNER JOIN hf_emp_archive ea ON eoop.company_id=ea.company_id and eoop.employee_id=ea.employee_id
+	LEFT JOIN hf_emp_archive ea ON eoop.company_id=ea.company_id and eoop.employee_id=ea.employee_id
     INNER JOIN emp_employee emp ON emp.employee_id=eoop.employee_id
     INNER JOIN sal_company com ON com.company_id=eoop.company_id
     WHERE eoop.is_active=1
+        AND (
+        ea.emp_archive_id is not null  OR
+        EXISTS(select 1 from hf_emp_task et where et.is_active=1 and et.company_id=eoop.company_id and et.employee_id=eoop.employee_id)
+        )
         <if test="companyId != null">
             AND com.company_id  LIKE CONCAT('%',#{companyId},'%')
         </if>

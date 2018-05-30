@@ -34,7 +34,7 @@ public class MessageController {
             message.setSsMonth(ssMonth);
             message.setGeneralMethod(generalMethod);
             sender.sendSocReportMsg(message);
-            RedisManager.set(key,message, ExpireTime.NONE);
+            RedisManager.set(key,message, ExpireTime.ONE_MIN);
             json.setCode(0);
             json.setMessage("开始计算！");
         }

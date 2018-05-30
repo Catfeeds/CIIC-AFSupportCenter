@@ -16,7 +16,7 @@ spring:
     database: 0
     host: 172.16.9.54
     port: 7001
-    password:
+    password: redis
     timeout: 1000
   cloud:
     stream:

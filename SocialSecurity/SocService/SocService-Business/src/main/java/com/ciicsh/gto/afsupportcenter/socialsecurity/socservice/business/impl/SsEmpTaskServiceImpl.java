@@ -1595,6 +1595,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             if (null == ssEmpArchiveBO.getEmpArchiveId()) {
                 throw new BusinessException("[" + bo.getEmployeeName() + "]该雇员未做新进或者转入");
             }
+            bo.setEmpArchiveId(ssEmpArchiveBO.getEmpArchiveId());
         }
 
     }
@@ -1651,15 +1652,16 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 detailsList.add(detail);
             });
             p.setListEmpBaseDetail(detailsList);
-
-            SsEmpBaseDetail ssEmpBaseDetail = new SsEmpBaseDetail();
-            ssEmpBaseDetail.setActive(false);
-            ssEmpBaseDetail.setModifiedTime(LocalDateTime.now());
-            ssEmpBaseDetail.setModifiedBy(modifiedBy);
-            Wrapper<SsEmpBaseDetail> wrapper = new EntityWrapper<>();
-            wrapper.eq("emp_archive_id", empArchiveId);
-            wrapper.eq("emp_base_period_id", empBasePeriodId);
-            ssEmpBaseDetailService.saveForSsEmpBaseDetail(detailsList, ssEmpBaseDetail, wrapper);
+            if(empArchiveId != null){
+                SsEmpBaseDetail ssEmpBaseDetail = new SsEmpBaseDetail();
+                ssEmpBaseDetail.setActive(false);
+                ssEmpBaseDetail.setModifiedTime(LocalDateTime.now());
+                ssEmpBaseDetail.setModifiedBy(modifiedBy);
+                Wrapper<SsEmpBaseDetail> wrapper = new EntityWrapper<>();
+                wrapper.eq("emp_archive_id", empArchiveId);
+                wrapper.eq("emp_base_period_id", empBasePeriodId);
+                ssEmpBaseDetailService.saveForSsEmpBaseDetail(detailsList, ssEmpBaseDetail, wrapper);
+            }
         });
     }
 
@@ -1887,6 +1889,56 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     @Override
     public List<SsEmpTask> queryEmpTaskById(Long empTaskId, String userId) {
         return baseMapper.queryEmpTaskById(empTaskId, userId);
+    }
+
+    /**
+     * 批量批退操作
+     * @param ids
+     * @param remark
+     * @return
+     */
+    @Override
+    public Boolean batchRejection(List<Long> ids, String remark) {
+        int length = ids.size();
+        List<String> list = new ArrayList<>(length);
+        for (int i = 0; i < length; i++) {
+            list.add(ids.get(i).toString());
+        }
+        List<SsEmpTask> empTaskList = baseMapper.selectBatchIds(list);
+        for(SsEmpTask ssEmpTask : empTaskList){
+            SsEmpTaskBO bo =new SsEmpTaskBO();
+            BeanUtils.copyProperties(ssEmpTask,bo);
+            SsEmpTaskFront ssEmpTaskFront =new SsEmpTaskFront();
+            ssEmpTaskFront.setEmpTaskId(ssEmpTask.getEmpTaskId());
+            EntityWrapper wrapper = new EntityWrapper(ssEmpTaskFront);
+            List<SsEmpTaskFront> taskFrontPeriods =  ssEmpTaskFrontService.selectList(wrapper);
+            List<SsEmpBasePeriod> basePeriodsList =new ArrayList();
+            taskFrontPeriods.stream().forEach(period->{
+                SsEmpBasePeriod ssEmpBasePeriod=new SsEmpBasePeriod();
+                ssEmpBasePeriod.setStartMonth(period.getStartMonth().toString());
+                ssEmpBasePeriod.setEndMonth(null == period.getEndMonth()?"":period.getEndMonth().toString());
+                ssEmpBasePeriod.setBaseAmount(period.getCompanyBase());
+                basePeriodsList.add(ssEmpBasePeriod);
+            });
+            // 险种的数据段 （前道传递过来的）
+            List<SsEmpTaskFront> empSocials = getEmpSocials(bo);
+            if (empSocials.size() == 0) {
+                throw new BusinessException("前道传递险种详细信息为空");
+            }
+            // 添加明细
+            addEmpBaseDetail(basePeriodsList, empSocials, bo.getEmpArchiveId(), bo.getModifiedBy(), bo.getRoundTypeMap());
+            bo.setListEmpBasePeriod(basePeriodsList);
+            bo.setCompanyConfirmAmount(new BigDecimal(0));
+            bo.setPersonalConfirmAmount(new BigDecimal(0));
+            bo.setTaskStatus(TaskStatusConst.REJECTION);
+            taskCompletCallBack(bo);
+            ssEmpTask.setRejectionRemark(remark);
+            ssEmpTask.setTaskStatus(TaskStatusConst.REJECTION);
+            ssEmpTask.setRejectionRemarkDate(LocalDate.now());
+            ssEmpTask.setRejectionRemarkMan(UserContext.getUser().getDisplayName());
+            baseMapper.updateById(ssEmpTask);
+        } //for
+        return true;
     }
 
     /**

@@ -23,4 +23,5 @@ public interface SsMonthEmpChangeService extends IService<SsMonthEmpChange> {
      * @return  SsMonthEmpChangeBO
      */
     SsMonthEmpChangeBO serachMonthEmpChangeByStatementId(SsMonthEmpChangeBO ssMonthEmpChangeBO);
+    String getSsMonthChangeId(String ssMonth,String comAccountId);
 }

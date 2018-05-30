@@ -44,7 +44,9 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
         List listEmpTransferBo = baseMapper.listEmpTransfer(empArchiveId);
 
         HfEmpComBO hfEmpComBO = baseMapper.fetchManager(companyId, viewEmpArchiveBo.getEmployeeId());
-        org.springframework.beans.BeanUtils.copyProperties(hfEmpComBO, viewComAccountBo);
+        if(hfEmpComBO != null){
+            org.springframework.beans.BeanUtils.copyProperties(hfEmpComBO, viewComAccountBo);
+        }
         resultMap.put("viewEmpArchive", viewEmpArchiveBo);
         resultMap.put("viewEmpPeriod", viewEmpPeriodBo);
         resultMap.put("viewEmpPeriodAdd", viewEmpPeriodAddBo);
