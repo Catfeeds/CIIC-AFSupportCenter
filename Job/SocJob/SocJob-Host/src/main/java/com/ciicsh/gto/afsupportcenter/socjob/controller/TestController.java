@@ -4,6 +4,7 @@ import com.ciicsh.gto.afsupportcenter.socjob.service.PaymentService;
 import com.ciicsh.gto.afsupportcenter.socjob.service.SsPaymentComService;
 import com.ciicsh.gto.afsupportcenter.socjob.service.TaskStatusService;
 import com.ciicsh.gto.afsupportcenter.socjob.util.CommonUtils;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.EmployeeMonthlyDataProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeMonthlyDataProxyDTO;
@@ -42,6 +43,13 @@ public class TestController {
         }else{
             paymentComService.generateSocPaymentInfo(ssMonth);
         }
+        return "完成";
+    }
+    //数据导入，客户要求先生成4个月的支付数据
+    @RequestMapping("/createPaymentComForImpData")
+    public String createPaymentComForImpData(@RequestParam String ssMonth) throws Exception{
+
+            paymentComService.generateSocPaymentInfoForImpData(ssMonth);
         return "完成";
     }
     /*
