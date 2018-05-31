@@ -67,35 +67,11 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
      */
     @RequestMapping("/hfEmpTaskQuery")
     public JsonResult<PageRows> hfEmpTaskQuery(@RequestBody PageInfo pageInfo) {
-        PageRows<HfEmpTaskExportBo> hfEmpTaskExportBoPageRows = business.queryHfEmpTaskInPage(pageInfo, UserContext.getUserId(), StringUtils.join(
+        return JsonResultKit.of(business.queryHfEmpTaskInPage(pageInfo, UserContext.getUserId(), StringUtils.join(
             new Integer[] {
                 HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK
 //                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
-            }, ','));
-
-        List<HfEmpTaskExportBo> hfEmpTaskExportBoList = hfEmpTaskExportBoPageRows.getRows();
-
-        if (CollectionUtils.isNotEmpty(hfEmpTaskExportBoList)) {
-            for (HfEmpTaskExportBo hfEmpTaskExportBo : hfEmpTaskExportBoList) {
-                if (hfEmpTaskExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_ADD
-                    || hfEmpTaskExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN
-                    || hfEmpTaskExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN
-                    || hfEmpTaskExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_ADD
-                    || hfEmpTaskExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_IN
-                    || hfEmpTaskExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_OPEN) {
-                    HfEmpTaskBo hfEmpTaskBo = new HfEmpTaskBo();
-                    hfEmpTaskBo.setCompanyId(hfEmpTaskExportBo.getCompanyId());
-                    hfEmpTaskBo.setEmployeeId(hfEmpTaskExportBo.getEmployeeId());
-                    hfEmpTaskBo.setHfType(hfEmpTaskExportBo.getHfType());
-                    List<Long> outEmpTaskIdList = business.queryOutEmpTaskId(hfEmpTaskBo);
-
-                    if (CollectionUtils.isNotEmpty(outEmpTaskIdList)) {
-                        hfEmpTaskExportBo.setHasOut(1);
-                    }
-                }
-            }
-        }
-        return JsonResultKit.of(hfEmpTaskExportBoPageRows);
+            }, ',')));
     }
 
     /**
@@ -154,35 +130,11 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
      */
     @RequestMapping("/hfEmpTaskRejectQuery")
     public JsonResult<PageRows> hfEmpTaskRejectQuery(@RequestBody PageInfo pageInfo) {
-         PageRows<HfEmpTaskRejectExportBo> hfEmpTaskRejectExportBoPageRows = business.queryHfEmpTaskRejectInPage(pageInfo, UserContext.getUserId(), StringUtils.join(
+        return JsonResultKit.of(business.queryHfEmpTaskRejectInPage(pageInfo, UserContext.getUserId(), StringUtils.join(
             new Integer[] {
                 HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK
 //                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
-            }, ','));
-
-        List<HfEmpTaskRejectExportBo> hfEmpTaskRejectExportBoList = hfEmpTaskRejectExportBoPageRows.getRows();
-
-        if (CollectionUtils.isNotEmpty(hfEmpTaskRejectExportBoList)) {
-            for (HfEmpTaskRejectExportBo hfEmpTaskRejectExportBo : hfEmpTaskRejectExportBoList) {
-                if (hfEmpTaskRejectExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_ADD
-                    || hfEmpTaskRejectExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN
-                    || hfEmpTaskRejectExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN
-                    || hfEmpTaskRejectExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_ADD
-                    || hfEmpTaskRejectExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_IN
-                    || hfEmpTaskRejectExportBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_OPEN) {
-                    HfEmpTaskBo hfEmpTaskBo = new HfEmpTaskBo();
-                    hfEmpTaskBo.setCompanyId(hfEmpTaskRejectExportBo.getCompanyId());
-                    hfEmpTaskBo.setEmployeeId(hfEmpTaskRejectExportBo.getEmployeeId());
-                    hfEmpTaskBo.setHfType(hfEmpTaskRejectExportBo.getHfType());
-                    List<Long> outEmpTaskIdList = business.queryOutEmpTaskId(hfEmpTaskBo);
-
-                    if (CollectionUtils.isNotEmpty(outEmpTaskIdList)) {
-                        hfEmpTaskRejectExportBo.setHasOut(1);
-                    }
-                }
-            }
-        }
-        return JsonResultKit.of(hfEmpTaskRejectExportBoPageRows);
+            }, ',')));
     }
 
     /**

@@ -325,11 +325,6 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
     }
 
     @Override
-    public List<Long> queryOutEmpTaskId(HfEmpTaskBo hfEmpTaskBo) {
-        return baseMapper.queryOutEmpTaskId(hfEmpTaskBo);
-    }
-
-    @Override
     public Integer getExistHandleRemarkCount(HfEmpTaskBo hfEmpTaskBo) {
         return baseMapper.getExistHandleRemarkCount(hfEmpTaskBo);
     }
