@@ -36,6 +36,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,6 +47,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -96,21 +98,9 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     @PostMapping("/rejection")
     public JsonResult<Boolean> rejection(RejectionParam param) {
         List<Long> ids = Optional.ofNullable(param.getIds()).orElse(Collections.emptyList());
-        int length = ids.size();
         String remark = param.getRemark();
-        List<SsEmpTask> list = new ArrayList<>(length);
-
-        for (int i = 0; i < length; i++) {
-            SsEmpTask task = new SsEmpTask();
-            task.setEmpTaskId(ids.get(i));
-            task.setRejectionRemark(remark);
-            task.setTaskStatus(TaskStatusConst.REJECTION);
-            list.add(task);
-            //调用工作流
-            TaskCommonUtils.completeTask(String.valueOf(task.getEmpTaskId()), commonApiUtils, UserContext.getUserName());
-        }
-        boolean isSuccess = business.updateBatchById(list);
-        return JsonResultKit.of(isSuccess);
+        business.batchRejection(ids,remark);
+        return JsonResultKit.of();
     }
 
     /**

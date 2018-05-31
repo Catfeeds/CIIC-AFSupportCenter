@@ -92,4 +92,6 @@ public interface SsEmpTaskService extends IService<SsEmpTask> {
     SsEmpTaskBO selectIdNumByEmployeeId(String employeeId);
 
     List<SsEmpTask> queryEmpTaskById(Long empTaskId, String userId);
+
+    Boolean batchRejection(List<Long> task,String remark);
 }

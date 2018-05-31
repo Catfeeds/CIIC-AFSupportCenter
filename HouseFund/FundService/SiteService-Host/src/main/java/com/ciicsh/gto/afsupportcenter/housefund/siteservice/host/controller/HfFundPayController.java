@@ -224,8 +224,8 @@ public class HfFundPayController {
             logApiUtil.error(LogMessage.create().setTitle("生成网银文件补缴").setContent(e.getMessage()));
             response.reset();
             response.setCharacterEncoding("UTF-8");
-            response.setHeader("content-Type", "text/plain");
-            response.getWriter().write(e.getMessage());
+            response.setHeader("content-Type", "text/html");
+            response.getWriter().write(e.getMessage() + "<a href=\"javascript:history.go(-1)\">返回</a>");
         }
     }
 
@@ -298,8 +298,8 @@ public class HfFundPayController {
             logApiUtil.error(LogMessage.create().setTitle("生成网银文件变更").setContent(e.getMessage()));
             response.reset();
             response.setCharacterEncoding("UTF-8");
-            response.setHeader("content-Type", "text/plain");
-            response.getWriter().write(e.getMessage());
+            response.setHeader("content-Type", "text/html");
+            response.getWriter().write(e.getMessage() + "<a href=\"javascript:history.go(-1)\">返回</a>");
         }
     }
     /**

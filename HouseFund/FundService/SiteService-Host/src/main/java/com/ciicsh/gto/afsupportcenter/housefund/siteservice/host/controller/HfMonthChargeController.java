@@ -118,8 +118,8 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
         } catch (Exception e) {
             response.reset();
             response.setCharacterEncoding("UTF-8");
-            response.setHeader("content-Type", "text/plain");
-            response.getWriter().write(e.getMessage());
+            response.setHeader("content-Type", "text/html");
+            response.getWriter().write(e.getMessage() + "<a href=\"javascript:history.go(-1)\">返回</a>");
         }
     }
 
@@ -165,8 +165,8 @@ public class HfMonthChargeController extends BasicController<HfMonthChargeServic
         } catch (Exception e) {
             response.reset();
             response.setCharacterEncoding("UTF-8");
-            response.setHeader("content-Type", "text/plain");
-            response.getWriter().write(e.getMessage());
+            response.setHeader("content-Type", "text/html");
+            response.getWriter().write(e.getMessage() + "<a href=\"javascript:history.go(-1)\">返回</a>");
         }
     }
 

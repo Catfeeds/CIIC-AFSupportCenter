@@ -203,7 +203,11 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
             List<SsAnnualAdjustAccountBO> boList = business.getUnitAvgMonthSalaryByAnnualAdjustAccountId(ssAnnualAdjustAccountDTO.getAnnualAdjustAccountId());
             if (CollectionUtils.isNotEmpty(boList)) {
                 if (boList.size() > 1) {
-                    throw new Exception("存在不同的单位平均工资信息，数据不正确");
+//                    throw new Exception("存在不同的单位平均工资信息，数据不正确");
+                    response.setCharacterEncoding("UTF-8");
+                    response.setHeader("content-Type", "text/html");
+                    response.getWriter().write("存在不同的单位平均工资信息，数据不正确<a href=\"javascript:history.go(-1)\">返回</a>");
+                    return;
                 }
             }
 
