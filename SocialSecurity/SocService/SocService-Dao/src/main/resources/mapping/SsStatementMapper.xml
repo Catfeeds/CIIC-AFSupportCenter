@@ -92,7 +92,7 @@
                     AND s.diff_sum_by_emp >= #{minDiffSumByEmp,jdbcType=INTEGER}
                  ]]>
             </if>
-        ORDER BY mec.ss_month DESC,mec.last_compute_time
+        ORDER BY mec.ss_month DESC,mec.last_compute_time DESC
     </select>
 
     <select id="serachStatementByStatementId" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementBO" resultMap="DtoResultMap">
