@@ -680,7 +680,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
         ssMonthEmpChange.setCreatedTime(LocalDateTime.now());
         ssMonthEmpChange.setCreatedBy(userName);
         ssMonthEmpChange.setModifiedTime(LocalDateTime.now());
-        ssMonthEmpChange.setModifiedBy("system");
+        ssMonthEmpChange.setModifiedBy(userName);
         monthEmpChangeMapper.insert(ssMonthEmpChange);
         return ssMonthEmpChange;
     }
