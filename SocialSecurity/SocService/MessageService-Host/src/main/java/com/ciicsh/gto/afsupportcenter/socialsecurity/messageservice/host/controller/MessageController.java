@@ -21,7 +21,8 @@ public class MessageController {
     private KafkaSender sender;
 
     @RequestMapping(value = "/summarycalculate")
-    public JsonResult<String> summaryCalculate(@RequestParam Long comAccountId, @RequestParam String ssMonth, @RequestParam String generalMethod){
+    public JsonResult<String> summaryCalculate(@RequestParam Long comAccountId, @RequestParam String ssMonth, @RequestParam String generalMethod,
+                                               @RequestParam(required=false) String userName){
         String key = "-com-account-"+comAccountId+"-"+ssMonth+"-"+generalMethod+"-";
         SocReportMessage message = RedisManager.get(key,SocReportMessage.class);
         JsonResult<String> json = new JsonResult();
@@ -33,6 +34,10 @@ public class MessageController {
             message.setComAccountId(comAccountId);
             message.setSsMonth(ssMonth);
             message.setGeneralMethod(generalMethod);
+            if(null==userName || userName.equals("")){
+                userName = "system";
+            }
+            message.setLastComputeUser(userName);
             sender.sendSocReportMsg(message);
             RedisManager.set(key,message, ExpireTime.ONE_MIN);
             json.setCode(0);

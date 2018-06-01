@@ -39,7 +39,7 @@ public class MessageReceiver {
                     paymentComService.generateSocPaymentInfo(message.getComAccountId(),message.getSsMonth());
                     break;
                case "generateMonthEmpChangeReport":
-                    paymentComService.generateMonthEmpChangeReport(message.getComAccountId(),message.getSsMonth());
+                    paymentComService.generateMonthEmpChangeReport(message);
                     break;
                 case "generatePaymentDetailReport":
                     paymentComService.generatePaymentDetailReport(message.getComAccountId(),message.getSsMonth());
