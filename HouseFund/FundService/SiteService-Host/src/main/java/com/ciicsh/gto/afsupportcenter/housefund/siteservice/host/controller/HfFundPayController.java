@@ -347,8 +347,9 @@ public class HfFundPayController {
     @PostMapping("/printRemittedBookByCom")
     public JsonResult printRemittedBookByCom(@RequestParam(value = "companyId", required = true) String companyId,
                                              @RequestParam(value = "hfMonth", required = true) String hfMonth,
-                                             @RequestParam(value = "hfType", required = true) Integer hfType){
-        return hfPaymentService.printRemittedBookByCom(companyId,hfMonth,hfType);
+                                             @RequestParam(value = "hfType", required = true) Integer hfType,
+                                             @RequestParam(value = "hfAccountType", required = true) Integer hfAccountType){
+        return hfPaymentService.printRemittedBookByCom(companyId,hfMonth,hfType,hfAccountType);
     }
     /**
      * 付款凭证打印
