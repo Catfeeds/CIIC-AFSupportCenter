@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socjob.service;
 
 import com.ciicsh.gto.afsupportcenter.socjob.entity.custom.SsAccountComExt;
+import com.ciicsh.gto.afsupportcenter.util.kafkaMessage.SocReportMessage;
 
 /**
  * Created by houwanhua on 2018/1/11.
@@ -20,7 +21,7 @@ public interface SsPaymentComService {
      */
     void generateSocPaymentInfo(Long comAccountId,String paymentMonth)throws Exception;
 
-    void generateMonthEmpChangeReport(Long comAccountId,String paymentMonth)throws Exception;
+    void generateMonthEmpChangeReport(SocReportMessage message)throws Exception;
 
     void generatePaymentDetailReport(Long comAccountId,String paymentMonth)throws Exception;
 }

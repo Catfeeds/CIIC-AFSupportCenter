@@ -193,85 +193,102 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
      */
     @RequestMapping("/accountEmpAvgMonthSalaryExport")
     public void accountEmpAvgMonthSalaryExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
-        SsAnnualAdjustAccountDTO ssAnnualAdjustAccountDTO = pageInfo.toJavaObject(SsAnnualAdjustAccountDTO.class);
-        Map<String, Object> queryCondition = new HashMap<>();
-        queryCondition.put("annual_adjust_account_id", ssAnnualAdjustAccountDTO.getAnnualAdjustAccountId());
-        SsAnnualAdjustAccountEmpDTO ssAnnualAdjustAccountEmpDTO = new SsAnnualAdjustAccountEmpDTO();
-        ssAnnualAdjustAccountEmpDTO.setAnnualAdjustAccountId(ssAnnualAdjustAccountDTO.getAnnualAdjustAccountId());
-        SsAnnualAdjustAccount ssAnnualAdjustAccount = business.selectById(ssAnnualAdjustAccountDTO.getAnnualAdjustAccountId());
-        if (ssAnnualAdjustAccount != null && ssAnnualAdjustAccount.getActive()) {
-            List<SsAnnualAdjustAccountBO> boList = business.getUnitAvgMonthSalaryByAnnualAdjustAccountId(ssAnnualAdjustAccountDTO.getAnnualAdjustAccountId());
-            if (CollectionUtils.isNotEmpty(boList)) {
-                if (boList.size() > 1) {
-                    throw new Exception("存在不同的单位平均工资信息，数据不正确");
+        try {
+            SsAnnualAdjustAccountDTO ssAnnualAdjustAccountDTO = pageInfo.toJavaObject(SsAnnualAdjustAccountDTO.class);
+            Map<String, Object> queryCondition = new HashMap<>();
+            queryCondition.put("annual_adjust_account_id", ssAnnualAdjustAccountDTO.getAnnualAdjustAccountId());
+            SsAnnualAdjustAccountEmpDTO ssAnnualAdjustAccountEmpDTO = new SsAnnualAdjustAccountEmpDTO();
+            ssAnnualAdjustAccountEmpDTO.setAnnualAdjustAccountId(ssAnnualAdjustAccountDTO.getAnnualAdjustAccountId());
+            SsAnnualAdjustAccount ssAnnualAdjustAccount = business.selectById(ssAnnualAdjustAccountDTO.getAnnualAdjustAccountId());
+            if (ssAnnualAdjustAccount != null && ssAnnualAdjustAccount.getActive()) {
+                List<SsAnnualAdjustAccountBO> boList = business.getUnitAvgMonthSalaryByAnnualAdjustAccountId(ssAnnualAdjustAccountDTO.getAnnualAdjustAccountId());
+                if (CollectionUtils.isNotEmpty(boList)) {
+                    if (boList.size() > 1) {
+//                    throw new Exception("存在不同的单位平均工资信息，数据不正确");
+                        response.setCharacterEncoding("UTF-8");
+                        response.setHeader("content-Type", "text/html");
+                        response.getWriter().write("存在不同的单位平均工资信息，数据不正确<a href=\"javascript:history.go(-1)\">返回</a>");
+                        return;
+                    }
+                } else {
+                    response.setCharacterEncoding("UTF-8");
+                    response.setHeader("content-Type", "text/html");
+                    response.getWriter().write("该企业账户不存在单位平均工资信息，请先导入数据<a href=\"javascript:history.go(-1)\">返回</a>");
+                    return;
                 }
-            }
 
-            List<SsAnnualAdjustAccountEmpBO> list;
+                List<SsAnnualAdjustAccountEmpBO> list;
 
-            Calendar calendar = Calendar.getInstance();
-            int reportYear = calendar.get(Calendar.YEAR) - 1;
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
-            String printDate = sdf.format(new Date());
-            Map<Integer, Map<String, Object>> alMap = new HashMap<>();
+                Calendar calendar = Calendar.getInstance();
+                int reportYear = calendar.get(Calendar.YEAR) - 1;
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+                String printDate = sdf.format(new Date());
+                Map<Integer, Map<String, Object>> alMap = new HashMap<>();
 
-            for (int i = 0; i < 2; i++) {
+                for (int i = 0; i < 2; i++) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("reportYear", reportYear);
+                    map.put("comAccountName", ssAnnualAdjustAccount.getComAccountName());
+                    map.put("ssAccount", ssAnnualAdjustAccount.getSsAccount());
+                    map.put("printDate", printDate);
+
+                    List<Map<String, Object>> mapList = null;
+                    ssAnnualAdjustAccountEmpDTO.setAccountStatus(i + 1);
+                    list = ssAnnualAdjustAccountEmpService.queryAnnualAdjustAccountEmp(ssAnnualAdjustAccountEmpDTO);
+
+                    if (CollectionUtils.isEmpty(list)) {
+                        map.put("empTotal", 0);
+                    } else {
+                        map.put("empTotal", list.size());
+                        mapList = new ArrayList<>();
+                        for (SsAnnualAdjustAccountEmpBO bo : list) {
+                            Map<String, Object> lm = new HashMap<>();
+                            lm.put("ssSerial", bo.getSsSerial());
+                            lm.put("employeeName", bo.getEmployeeName());
+                            lm.put("idNum", bo.getIdNum() == null ? "" : bo.getIdNum());
+                            lm.put("emp", "");
+                            lm.put("paymentMonths", bo.getPaymentMonths() == null ? "" : bo.getPaymentMonths());
+                            lm.put("avgMonthSalary", bo.getAvgMonthSalary() == null ? "" : bo.getAvgMonthSalary());
+                            mapList.add(lm);
+                        }
+                    }
+                    map.put("maplist", mapList);
+                    alMap.put(i, map);
+                }
                 Map<String, Object> map = new HashMap<>();
                 map.put("reportYear", reportYear);
                 map.put("comAccountName", ssAnnualAdjustAccount.getComAccountName());
                 map.put("ssAccount", ssAnnualAdjustAccount.getSsAccount());
                 map.put("printDate", printDate);
+                BigDecimal accountAvgMonthSalary = boList.get(0).getAccountAvgMonthSalary();
+                BigDecimal allTotalAmount = boList.get(0).getAccountSalaryAmount();
+                BigDecimal allEmpTotal = boList.get(0).getAccountEmpCount();
+                map.put("accountAvgMonthSalary", accountAvgMonthSalary == null ? "" : accountAvgMonthSalary);
+                map.put("allTotalAmount", allTotalAmount == null ? "" : allTotalAmount);
+                map.put("allEmpTotal", allEmpTotal == null ? "" : allEmpTotal);
+                alMap.put(2, map);
 
-                List<Map<String, Object>> mapList = null;
-                ssAnnualAdjustAccountEmpDTO.setAccountStatus(i + 1);
-                list = ssAnnualAdjustAccountEmpService.queryAnnualAdjustAccountEmp(ssAnnualAdjustAccountEmpDTO);
+                TemplateExportParams params = new TemplateExportParams("/template/ssAccount_reportYear.xls", 0, 1, 2);
+                Workbook workbook = ExcelExportUtil.exportExcel(alMap, params);
+                String fileName = "ssAccount_reportYear.xls"
+                    .replace("ssAccount", ssAnnualAdjustAccount.getSsAccount())
+                    .replace("reportYear", String.valueOf(reportYear));
 
-                if (CollectionUtils.isEmpty(list)) {
-                    map.put("empTotal", 0);
-                } else {
-                    map.put("empTotal", list.size());
-                    mapList = new ArrayList<>();
-                    for (SsAnnualAdjustAccountEmpBO bo : list) {
-                        Map<String, Object> lm = new HashMap<>();
-                        lm.put("ssSerial", bo.getSsSerial());
-                        lm.put("employeeName", bo.getEmployeeName());
-                        lm.put("idNum", bo.getIdNum() == null ? "" : bo.getIdNum());
-                        lm.put("emp", "");
-                        lm.put("paymentMonths", bo.getPaymentMonths() == null ? "" : bo.getPaymentMonths());
-                        lm.put("avgMonthSalary", bo.getAvgMonthSalary() == null ? "" : bo.getAvgMonthSalary());
-                        mapList.add(lm);
-                    }
-                }
-                map.put("maplist", mapList);
-                alMap.put(i, map);
-            }
-            Map<String, Object> map = new HashMap<>();
-            map.put("reportYear", reportYear);
-            map.put("comAccountName", ssAnnualAdjustAccount.getComAccountName());
-            map.put("ssAccount", ssAnnualAdjustAccount.getSsAccount());
-            map.put("printDate", printDate);
-            BigDecimal accountAvgMonthSalary = boList.get(0).getAccountAvgMonthSalary();
-            BigDecimal allTotalAmount = boList.get(0).getAccountSalaryAmount();
-            BigDecimal allEmpTotal = boList.get(0).getAccountEmpCount();
-            map.put("accountAvgMonthSalary", accountAvgMonthSalary == null ? "" : accountAvgMonthSalary);
-            map.put("allTotalAmount", allTotalAmount == null ? "" : allTotalAmount);
-            map.put("allEmpTotal", allEmpTotal == null ? "" : allEmpTotal);
-            alMap.put(2, map);
-
-            TemplateExportParams params = new TemplateExportParams("/template/ssAccount_reportYear.xls", 0, 1, 2);
-            Workbook workbook = ExcelExportUtil.exportExcel(alMap, params);
-            String fileName = "ssAccount_reportYear.xls"
-                .replace("ssAccount", ssAnnualAdjustAccount.getSsAccount())
-                .replace("reportYear", String.valueOf(reportYear));
-
-            response.reset();
-            response.setCharacterEncoding("UTF-8");
-            response.setHeader("content-Type", "application/vnd.ms-excel");
+                response.reset();
+                response.setCharacterEncoding("UTF-8");
+                response.setHeader("content-Type", "application/vnd.ms-excel");
 //                response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 //            response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
-            ExportResponseUtil.encodeExportFileName(response, fileName);
-            workbook.write(response.getOutputStream());
-            workbook.close();
+                ExportResponseUtil.encodeExportFileName(response, fileName);
+                workbook.write(response.getOutputStream());
+                workbook.close();
+            }
+        } catch (Exception e) {
+            logApiUtil.error(LogMessage.create().setContent("SsAnnualAdjustAccountController#accountEmpAvgMonthSalaryExport").setContent(e.getMessage()));
+            response.setCharacterEncoding("UTF-8");
+            response.setHeader("content-Type", "text/html");
+            response.getWriter().write("服务器异常[" + e.getMessage() + "]<a href=\"javascript:history.go(-1)\">返回</a>");
+            return;
         }
     }
 

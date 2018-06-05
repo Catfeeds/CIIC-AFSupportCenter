@@ -283,7 +283,7 @@
         and pc.hf_type=#{hfType}
         and p.payment_month = (select period_add(payment_month,-1) from hf_payment where payment_id=#{paymentId})
         GROUP BY pc.com_account_id,pc.hf_type
-        ) lastMonth ON lastMonth.com_account_id=ca.com_account_id and curMonth.hf_type=pa.hf_type
+        ) lastMonth ON lastMonth.com_account_id=ca.com_account_id and lastMonth.hf_type=pa.hf_type
         WHERE
         pa.is_active = 1
         and pa.hf_type=#{hfType}

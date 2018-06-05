@@ -6,7 +6,7 @@ spring:
   application:
     name: support-center-soc-job
   profiles:
-    active: fat
+    active: dev
   cloud:
     stream:
       bindings:
