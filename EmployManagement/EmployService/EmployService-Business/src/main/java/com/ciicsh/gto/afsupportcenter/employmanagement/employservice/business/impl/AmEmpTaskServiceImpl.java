@@ -629,6 +629,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     }
 
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public boolean batchSaveEmployment(EmployeeBatchBO employeeBatchBO) {
 
         Map<String,Object> param = new HashMap<>();
