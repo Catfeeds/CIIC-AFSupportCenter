@@ -69,7 +69,6 @@
         LEFT JOIN ss_com_account ca ON ca.com_account_id=mec.com_account_id
         WHERE
         1=1
-
             <if test = "statementId != null and statementId != ''">
                 AND s.statement_id = #{statementId,jdbcType=VARCHAR}
             </if>
@@ -92,6 +91,9 @@
                     AND s.diff_sum_by_emp >= #{minDiffSumByEmp,jdbcType=INTEGER}
                  ]]>
             </if>
+        <if test = "companyId != null and companyId != ''">
+            AND EXISTS (SELECT 1 FROM  ss_account_com_relation acr WHERE  acr.com_account_id=ca.com_account_id AND  acr.company_id LIKE CONCAT('%', #{companyId}, '%'))
+        </if>
         ORDER BY mec.ss_month DESC,mec.last_compute_time
     </select>
 
