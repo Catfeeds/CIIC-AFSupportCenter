@@ -88,20 +88,22 @@ public class SsEmpArchiveController extends BasicController<SsEmpArchiveService>
      * @return
      */
     @RequestMapping("/employeeDetailInfoQuery")
-    public JsonResult employeeDetailInfoQuery(String empArchiveId) {
-
-        if(null==empArchiveId)return JsonResultKit.ofError("ID为空");
-        //查询客户基本信息和雇员信息
-        SsEmpArchiveBO ssEmpArchiveBO =  business.queryEmployeeDetailInfo(empArchiveId);
-        //查询社保汇缴信息
-        List<SsEmpBasePeriod> empBasePeriodList= ssEmpBasePeriodService.queryPeriodByEmpArchiveId(empArchiveId);
-        //查询变动历史(任务单)
-        List<SsEmpTask> ssEmpTasksList = ssEmpTaskService.queryTaskByEmpArchiveId(empArchiveId);
+    public JsonResult employeeDetailInfoQuery(@RequestParam(required = false) String empArchiveId,
+                                              @RequestParam(required = false)String companyId,
+                                              @RequestParam(required = false)String employeeId) {
+        //if(null==empArchiveId)return JsonResultKit.ofError("ID为空");
         Map<String, Object> resultMap = new HashMap<String, Object>();
+        //查询客户基本信息和雇员信息
+        SsEmpArchiveBO ssEmpArchiveBO =  business.queryEmployeeDetailInfo(empArchiveId,companyId,employeeId);
         resultMap.put("ssEmpArchive",ssEmpArchiveBO);
-        resultMap.put("empBasePeriod",empBasePeriodList);
-        resultMap.put("ssEmpTasks",ssEmpTasksList);
-
+        if(null!=empArchiveId){
+            //查询社保汇缴信息
+            List<SsEmpBasePeriod> empBasePeriodList= ssEmpBasePeriodService.queryPeriodByEmpArchiveId(empArchiveId);
+            resultMap.put("empBasePeriod",empBasePeriodList);
+            //查询变动历史(任务单)
+            List<SsEmpTask> ssEmpTasksList = ssEmpTaskService.queryTaskByEmpArchiveId(empArchiveId);
+            resultMap.put("ssEmpTasks",ssEmpTasksList);
+        }
         return JsonResultKit.of(resultMap);
     }
     /**

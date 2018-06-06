@@ -82,7 +82,7 @@
         WHERE
             SPC.is_active = 1
             <if test = "companyId != null and companyId != ''">
-              AND SPC.company_id = #{companyId}
+              AND SPC.company_id LIKE concat(concat('%',#{companyId}),'%')
             </if>
             <if test = "paymentMonthMin != null and paymentMonthMin != ''">
               <![CDATA[

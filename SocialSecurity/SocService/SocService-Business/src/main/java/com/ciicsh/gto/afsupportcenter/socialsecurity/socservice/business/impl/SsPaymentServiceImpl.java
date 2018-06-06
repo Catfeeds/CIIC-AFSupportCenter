@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -179,13 +180,13 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
     public JsonResult<String> addPayment(SsPayment ssPayment) {
         JsonResult<String> json = new JsonResult<>();
         json.setCode(0);
-
         SsPayment newSsPayment = new SsPayment();
         //传入值
         newSsPayment.setPaymentMonth(ssPayment.getPaymentMonth());
-        newSsPayment.setPaymentBatchNum(ssPayment.getPaymentBatchNum());
         newSsPayment.setAccountType(ssPayment.getAccountType());
         //默认值
+        DateTimeFormatter formatter= DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        newSsPayment.setPaymentBatchNum( LocalDateTime.now().format(formatter).toString());
         newSsPayment.setPaymentState(3);
         newSsPayment.setTotalEmpCount(0);
         newSsPayment.setTotalCom(0);
@@ -195,7 +196,6 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         newSsPayment.setCreatedBy(UserContext.getUser().getDisplayName());
         newSsPayment.setModifiedBy(UserContext.getUser().getDisplayName());
         newSsPayment.setCreatedTime(LocalDateTime.now());
-
         baseMapper.insert(newSsPayment);
 
         return json;

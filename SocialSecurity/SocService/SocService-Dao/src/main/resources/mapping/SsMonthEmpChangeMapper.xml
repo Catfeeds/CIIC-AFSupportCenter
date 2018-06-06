@@ -27,6 +27,8 @@
         <result column="compute_type" property="computeType" />
         <result column="compute_user_id" property="computeUserId" />
         <result column="com_account_id" property="comAccountId" />
+        <result column="companyIds" property="companyIds" />
+        <result column="ss_account" property="ssAccount" />
         <result column="com_account_name" property="comAccountName" />
         <result column="is_active" property="isActive" />
         <result column="created_time" property="createdTime" />
@@ -37,7 +39,8 @@
 
     <select id="serachMonthEmpChangeByStatementId" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeBO" resultMap="DtoResultMap">
         SELECT
-          mec.*,ca.com_account_name
+          mec.*,ca.com_account_name,ca.ss_account,
+          (select group_concat(company_id) from ss_account_com_relation acr where acr.com_account_id=ca.com_account_id ) companyIds
         FROM
           ss_month_emp_change mec
           LEFT JOIN

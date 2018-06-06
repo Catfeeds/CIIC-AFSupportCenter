@@ -12,7 +12,7 @@ public interface SsPaymentComService {
      * @param paymentMonth 支付年月
      */
     void generateSocPaymentInfo(String paymentMonth) throws Exception;
-
+    void generateSocPaymentInfoForImpData(String paymentMonth) throws Exception;
 
     /**
      * 根据支付年月和社保账户生成社保支付信息
