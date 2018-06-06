@@ -2,6 +2,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthChargeBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsYysReportBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsYysReportParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsMonthCharge;
 
 import java.math.BigDecimal;
@@ -21,4 +23,6 @@ public interface SsMonthChargeService extends IService<SsMonthCharge> {
     int deleteOldDate(String employeeId, String paymentMonth, String handleMonth,Integer costCategory, String modifiedBy);
 
     List<SsMonthChargeBO>  selectTotalFromOld(String employeeId, String paymentMonth, Integer costCategory);
+
+    List<SsYysReportBO> queryYysReport(SsYysReportParamBO ssYysReportParamBO);
 }

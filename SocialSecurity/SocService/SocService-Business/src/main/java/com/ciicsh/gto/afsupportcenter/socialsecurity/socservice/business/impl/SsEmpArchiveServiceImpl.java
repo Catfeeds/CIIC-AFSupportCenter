@@ -89,7 +89,7 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
                 //查询旧基数
                 if (null != ssEmpArchiveBO.getEmpArchiveId()) {
                     EntityWrapper<SsEmpBasePeriod> ew = new EntityWrapper<>();
-                    ew.where("emp_archive_id={0}", ssEmpArchiveBO.getEmpArchiveId()).and("is_active=1").orderBy("created_time", false).last("LIMIT 1");
+                    ew.where("emp_archive_id={0}", ssEmpArchiveBO.getEmpArchiveId()).and("is_active=1").orderBy("start_month", false).last("LIMIT 1");
                     SsEmpBasePeriod ssEmpBasePeriod = ssEmpBasePeriodService.selectOne(ew);
                     ssEmpArchiveBO.setOldEmpBase(ssEmpBasePeriod.getBaseAmount());
                 }
