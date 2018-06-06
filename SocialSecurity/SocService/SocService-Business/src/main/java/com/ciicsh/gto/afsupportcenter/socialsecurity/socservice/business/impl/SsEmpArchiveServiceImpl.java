@@ -131,9 +131,15 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
     }
 
     @Override
-    public SsEmpArchiveBO queryEmployeeDetailInfo(String empArchiveId) {
+    public SsEmpArchiveBO queryEmployeeDetailInfo(String empArchiveId,String companyId,String employeeId) {
+        SsEmpArchiveBO ssEmpArchiveBO = new SsEmpArchiveBO();
+        if (empArchiveId == null){
+            ssEmpArchiveBO = baseMapper.queryEmployeeDetailInfoByComEmp(companyId,employeeId);
+        }else {
+            ssEmpArchiveBO = baseMapper.queryEmployeeDetailInfo(empArchiveId);
+        }
+        return ssEmpArchiveBO;
 
-        return baseMapper.queryEmployeeDetailInfo(empArchiveId);
     }
 
     public String saveEmpSerial(Map<String, String> map) {

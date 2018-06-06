@@ -46,7 +46,7 @@ public interface SsEmpArchiveService extends IService<SsEmpArchive> {
      * @param empArchiveId
      * @return
      */
-    public SsEmpArchiveBO queryEmployeeDetailInfo(@Param("empArchiveId") String empArchiveId);
+    public SsEmpArchiveBO queryEmployeeDetailInfo(String empArchiveId,String companyId,String employeeId);
 
     public String saveEmpSerial(Map<String,String> map);
 

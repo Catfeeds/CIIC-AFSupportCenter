@@ -127,14 +127,14 @@
     <select id="queryEmployee" resultMap="BaseResultMapDTO">
         SELECT
         <include refid="queryEmployee_select"/>
-        FROM ss_emp_archive sea
-        LEFT JOIN sal_company sc ON sc.company_id=sea.company_id AND sc.is_active = 1
-        LEFT JOIN emp_employee emp ON emp.employee_id =sea.employee_id
-        LEFT JOIN ss_com_account sca ON sca.com_account_id=sea.com_account_id AND sca.is_active =1
-        LEFT JOIN emp_af_emp_company afemp on afemp.employee_id=sea.employee_id AND afemp.company_id=sea.company_id AND afemp.in_date=sea.in_date
+        FROM emp_af_emp_company afemp
+        INNER JOIN sal_company sc ON sc.company_id=afemp.company_id AND sc.is_active = 1
+        INNER JOIN emp_employee emp ON emp.employee_id =afemp.employee_id
+        LEFT JOIN ss_emp_archive sea on afemp.employee_id=sea.employee_id AND afemp.company_id=sea.company_id AND afemp.in_date=sea.in_date AND sea.is_active = 1
+        LEFT JOIN ss_com_account sca ON sca.com_account_id=sea.com_account_id AND sca.is_active = 1
 
         <where>
-             sea.is_active = 1
+            afemp.is_active = 1
             <include refid="queryEmployee_where"/>
         </where>
     </select>
@@ -162,11 +162,11 @@
     <select id="empSSSearchExport" resultMap="RM_empSSSearchExportOpt">
         SELECT
         <include refid="queryEmployee_select"/>
-        FROM ss_emp_archive sea
-        LEFT JOIN sal_company sc ON sc.company_id=sea.company_id AND sc.is_active = 1
-        LEFT JOIN emp_employee emp ON emp.employee_id =sea.employee_id
-        LEFT JOIN ss_com_account sca ON sca.com_account_id=sea.com_account_id AND sca.is_active =1
-        LEFT JOIN emp_af_emp_company afemp on afemp.employee_id=sea.employee_id AND afemp.company_id=sea.company_id AND afemp.in_date=sea.in_date
+        FROM emp_af_emp_company afemp
+        INNER JOIN sal_company sc ON sc.company_id=afemp.company_id AND sc.is_active = 1
+        INNER JOIN emp_employee emp ON emp.employee_id =afemp.employee_id
+        LEFT JOIN ss_emp_archive sea on afemp.employee_id=sea.employee_id AND afemp.company_id=sea.company_id AND afemp.in_date=sea.in_date AND sea.is_active = 1
+        LEFT JOIN ss_com_account sca ON sca.com_account_id=sea.com_account_id AND sca.is_active = 1
         <where>
             sea.is_active = 1
             <include refid="queryEmployee_where"/>
@@ -196,6 +196,31 @@
         WHERE  sea.is_active = 1
         AND emp_archive_id = #{empArchiveId}
     </select>
+    <select id="queryEmployeeDetailInfoByComEmp"  resultMap="BaseResultMapDTO" >
+        SELECT
+        sea.emp_archive_id,
+        sc.company_id,
+        sc.title,
+        emp.employee_id,
+        emp.employee_name,
+        emp.id_num,
+        sea.in_date,
+        sea.ss_serial,
+        sca.ss_account,
+        sea.emp_classify,
+        sea.com_account_id,
+        afemp.leadership_name,
+        sea.out_date
+        FROM emp_af_emp_company afemp
+        INNER JOIN sal_company sc ON sc.company_id=afemp.company_id AND sc.is_active = 1
+        INNER JOIN emp_employee emp ON emp.employee_id =afemp.employee_id
+        LEFT JOIN ss_emp_archive sea on afemp.employee_id=sea.employee_id AND afemp.company_id=sea.company_id AND afemp.in_date=sea.in_date AND sea.is_active = 1
+        LEFT JOIN ss_com_account sca ON sca.com_account_id=sea.com_account_id AND sca.is_active = 1
+        WHERE  afemp.is_active = 1
+        AND afemp.company_id = #{companyId}
+        AND afemp.employee_id = #{employeeId}
+    </select>
+
     <!--检查雇员社保序号是否重复-->
     <select id="checkSerialDuplicate" resultType="Integer">
         SELECT count(1) FROM ss_emp_archive ea WHERE ea.emp_archive_id!=${empArchiveId}

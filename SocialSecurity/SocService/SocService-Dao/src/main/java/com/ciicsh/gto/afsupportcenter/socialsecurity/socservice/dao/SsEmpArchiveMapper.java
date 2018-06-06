@@ -42,7 +42,7 @@ public interface SsEmpArchiveMapper extends BaseMapper<SsEmpArchive> {
      * @return
      */
     public SsEmpArchiveBO queryEmployeeDetailInfo(@Param("empArchiveId") String empArchiveId);
-
+    public SsEmpArchiveBO queryEmployeeDetailInfoByComEmp(@Param("companyId") String companyId,@Param("employeeId") String employeeId);
     /**
      *
      * */
