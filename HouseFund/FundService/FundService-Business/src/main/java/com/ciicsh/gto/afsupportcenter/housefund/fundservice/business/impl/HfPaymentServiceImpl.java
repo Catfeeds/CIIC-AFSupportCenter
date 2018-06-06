@@ -250,6 +250,11 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         return JsonResultKit.of(retListPrint);
     }
 
+    @Override
+    public JsonResult printRemittedBookByCom(String companyId, String hfMonth, Integer hfType,Integer hfAccountType) {
+        return null;
+    }
+
     private JsonResult isCanPayment(HfPayment payment) {
         if (payment == null) {
             return JsonResultKit.of(1, "支付信息为空！");

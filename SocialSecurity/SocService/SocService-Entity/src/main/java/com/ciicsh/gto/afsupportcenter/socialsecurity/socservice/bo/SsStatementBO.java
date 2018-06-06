@@ -49,6 +49,7 @@ public class SsStatementBO {
      * 外键, 企业社保账户Id
      */
     private String comAccountId;
+    private String companyId;
     /**
      * 社保月份
      */
@@ -106,6 +107,13 @@ public class SsStatementBO {
      */
     private String modifiedBy;
 
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
 
     public Long getStatementId() {
         return statementId;
