@@ -163,8 +163,8 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
             e.printStackTrace();
             response.reset();
             response.setCharacterEncoding("UTF-8");
-            response.setHeader("content-Type", "text/plain");
-            response.getWriter().write(e.getMessage());
+            response.setHeader("content-Type", "text/html");
+            response.getWriter().write(e.getMessage() + "<a href=\"javascript:history.go(-1)\">返回</a>");
         }
 
     }
@@ -184,7 +184,7 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
      * @return
      */
     @RequestMapping("/multiEmpTaskTransferExport")
-    public JsonResult multiEmpTaskTransferExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
+    public void multiEmpTaskTransferExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         EmpTaskTransferBo empTaskTransferBo = pageInfo.toJavaObject(EmpTaskTransferBo.class);
         List<EmpTaskTransferBo> empTaskTransferBoList = business.queryEmpTaskTransfer(empTaskTransferBo);
 
@@ -210,18 +210,16 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
 
                 for (int j = 0; j < list.size(); j++) {
                     if (!transferOutUnitAccounts[i].equals(list.get(j).getTransferOutUnitAccount())) {
-//                        throw new BusinessException("仅支持一次导出相同转出单位公积金账号的信息");
-                        JsonResult jsonResult = new JsonResult();
-                        jsonResult.setCode(5);
-                        jsonResult.setMessage("仅支持一次导出相同转出单位公积金账号的信息");
-                        return jsonResult;
+                        response.setCharacterEncoding("UTF-8");
+                        response.setHeader("content-Type", "text/html");
+                        response.getWriter().write("仅支持一次导出相同转出单位公积金账号的信息<a href=\"javascript:history.go(-1)\">返回</a>");
+                        return;
                     }
                     if (!transferInUnitAccounts[i].equals(list.get(j).getTransferInUnitAccount())) {
-//                        throw new BusinessException("仅支持一次导出相同转入单位公积金账号的信息");
-                        JsonResult jsonResult = new JsonResult();
-                        jsonResult.setCode(5);
-                        jsonResult.setMessage("仅支持一次导出相同转出单位公积金账号的信息");
-                        return jsonResult;
+                        response.setCharacterEncoding("UTF-8");
+                        response.setHeader("content-Type", "text/html");
+                        response.getWriter().write("仅支持一次导出相同转入单位公积金账号的信息<a href=\"javascript:history.go(-1)\">返回</a>");
+                        return;
                     }
 
                     Map<String, Object> lm = new HashMap<>();
@@ -268,11 +266,6 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
             String fileName = "上海市公积金雇员转移清册.xlsx";
 
             response.reset();
-//            response.addHeader("Access-Control-Allow-Origin", "*");
-//            response.addHeader("Access-Control-Allow-Credentials", "true");
-//            response.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT, HEAD");
-//            response.addHeader("Access-Control-Allow-Headers", "Content-Type");
-//            response.addHeader("Access-Control-Max-Age", "3600");
             response.setCharacterEncoding("UTF-8");
 //            response.setHeader("content-Type", "application/vnd.ms-excel");
             response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -283,7 +276,6 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
         } catch (IOException e) {
             logApiUtil.error(LogMessage.create().setTitle("HfEmpTaskTransferController#multiEmpTaskTransferExport").setContent(e.getMessage()));
         }
-        return null;
     }
 
     /**
