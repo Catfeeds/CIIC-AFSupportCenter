@@ -54,12 +54,12 @@ public class AmArchiveAdvanceController extends BasicController<IAmArchiveAdvanc
 
     @RequestMapping("/saveAmArchiveAdvance")
     public JsonResult<Boolean> saveAmArchiveAdvance(AmArchiveAdvanceBO amArchiveAdvanceBO){
-//        if(amArchiveAdvanceBO.isExist()){
-//            AmArchiveAdvanceBO isHave = business.queryAmArchiveAdvanceByNameIdcard(amArchiveAdvanceBO.getEmployeeName(),amArchiveAdvanceBO.getEmployeeIdcardNo());
-//            if(isHave!=null){
-//                return JsonResultKit.of(false);
-//            }
-//        }
+        if(amArchiveAdvanceBO.isExist()){
+            AmArchiveAdvanceBO isHave = business.queryAmArchiveAdvanceByNameIdcard(amArchiveAdvanceBO.getEmployeeName(),amArchiveAdvanceBO.getEmployeeIdcardNo());
+            if(isHave!=null){
+                return JsonResultKit.of(false);
+            }
+        }
         Boolean result = business.saveAmArchiveAdvance(amArchiveAdvanceBO);
         return JsonResultKit.of(result);
     }
