@@ -25,33 +25,33 @@ public class SsYysReportBO {
     private String employeeName;
     @Excel(name = "变更类型", orderNum = "7")
     private String changeTypeName;
-    @Excel(name = "个人月缴纳基数",width = 20, orderNum = "8")
+    @Excel(name = "个人月缴纳基数",width = 20, orderNum = "8", type=10)
     private BigDecimal baseAmount;
-    @Excel(name = "养老单位缴费额",width = 20, orderNum = "9")
+    @Excel(name = "养老单位缴费额",width = 20, orderNum = "9", type=10)
     private BigDecimal comAmountPension;
-    @Excel(name = "养老个人缴费额",width = 20, orderNum = "10")
+    @Excel(name = "养老个人缴费额",width = 20, orderNum = "10", type=10)
     private BigDecimal empAmountPension;
-    @Excel(name = "养老单位补缴", width = 20,orderNum = "11")
+    @Excel(name = "养老单位补缴", width = 20,orderNum = "11", type=10)
     private BigDecimal comCompensatedAmountPension;
-    @Excel(name = "养老个人补缴", width = 20,orderNum = "12")
+    @Excel(name = "养老个人补缴", width = 20,orderNum = "12", type=10)
     private BigDecimal empCompensatedAmountPension;
-    @Excel(name = "养老一次性支付", width = 20,orderNum = "13")
+    @Excel(name = "养老一次性支付", width = 20,orderNum = "13", type=10)
     private BigDecimal onePaymentPension;
-    @Excel(name = "医疗单位缴费额", width = 20,orderNum = "14")
+    @Excel(name = "医疗单位缴费额", width = 20,orderNum = "14", type=10)
     private BigDecimal comAmountMedical;
-    @Excel(name = "医疗个人缴费额", width = 20,orderNum = "15")
+    @Excel(name = "医疗个人缴费额", width = 20,orderNum = "15", type=10)
     private BigDecimal empAmountMedical;
-    @Excel(name = "医疗单位补缴", width = 20,orderNum = "16")
+    @Excel(name = "医疗单位补缴", width = 20,orderNum = "16", type=10)
     private BigDecimal comCompensatedAmountMedical;
-    @Excel(name = "医疗个人补缴", width = 20,orderNum = "17")
+    @Excel(name = "医疗个人补缴", width = 20,orderNum = "17", type=10)
     private BigDecimal empCompensatedAmountMedical;
-    @Excel(name = "失业单位缴费额", width = 20,orderNum = "18")
+    @Excel(name = "失业单位缴费额", width = 20,orderNum = "18", type=10)
     private BigDecimal comAmountUnemployment;
-    @Excel(name = "失业个人缴费额", width = 20,orderNum = "19")
+    @Excel(name = "失业个人缴费额", width = 20,orderNum = "19", type=10)
     private BigDecimal empAmountUnemployment;
-    @Excel(name = "失业单位补缴", width = 20,orderNum = "20")
+    @Excel(name = "失业单位补缴", width = 20,orderNum = "20", type=10)
     private BigDecimal comCompensatedAmountUnemployment;
-    @Excel(name = "失业个人补缴", width = 20,orderNum = "21")
+    @Excel(name = "失业个人补缴", width = 20,orderNum = "21", type=10)
     private BigDecimal empCompensatedAmountUnemployment;
 
     private Integer category;
