@@ -7,4 +7,6 @@ public class SsYysReportParamBO {
     private Integer ssAccountType;
     private String ssMonth;
     private Long comAccountId;
+    private String ssAccount;
+    private String companyId;
 }

@@ -34,6 +34,10 @@
     </resultMap>
 
     <resultMap id="YysReportMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsYysReportBO">
+        <result column="com_account_name" property="comAccountName" />
+        <result column="ss_account" property="ssAccount" />
+        <result column="company_id" property="companyId" />
+        <result column="ss_serial" property="ssSerial" />
         <result column="employee_id" property="employeeId" />
         <result column="employee_name" property="employeeName" />
         <result column="base_amount" property="baseAmount" />
@@ -146,7 +150,9 @@
     </select>
 
     <select id="queryYysReport" resultMap="YysReportMap">
-        SELECT tmp.employee_id, ee.employee_name, tmp.base_amount, tmp.category,
+        SELECT
+          tmp.com_account_name, tmp.ss_account, tmp.company_id, tmp.ss_serial,
+          tmp.employee_id, tmp.employee_name, tmp.base_amount, tmp.category,
           CASE tmp.category
           WHEN 1 THEN '标准'
           WHEN 2 THEN '新进'
@@ -170,10 +176,15 @@
           SUM(tmp.unemployment_com_repay_amount) AS com_compensated_amount_unemployment,
           SUM(tmp.unemployment_emp_repay_amount) AS emp_compensated_amount_unemployment
         FROM (
-             SELECT
+              SELECT
                 a.com_account_id,
+                sca.com_account_name,
+                sca.ss_account,
+                sea.company_id,
+                sea.ss_serial,
                 a.ss_month,
                 a.employee_id,
+                ee.employee_name,
                 a.base_amount,
                 a.cost_category AS category,
                 b.ss_type,
@@ -191,6 +202,8 @@
                 CASE WHEN b.ss_type = 'DIT00046' THEN SUM(b.emp_amount) END AS unemployment_emp_repay_amount
               FROM ss_month_charge a INNER JOIN ss_month_charge_item b ON a.month_charge_id = b.month_charge_id
               INNER JOIN ss_com_account sca ON a.com_account_id = sca.com_account_id AND sca.is_active = 1
+              INNER JOIN ss_emp_archive sea ON a.com_account_id = sea.com_account_id AND a.employee_id = sea.employee_id AND a.emp_archive_id = sea.emp_archive_id AND sea.is_active = 1
+              INNER JOIN emp_employee ee ON a.employee_id = ee.employee_id AND ee.is_active = 1
               WHERE a.is_active = 1
                 AND b.is_active = 1
                 AND a.cost_category != 1
@@ -198,8 +211,11 @@
                 <if test="ssAccountType != null">
                     AND sca.ss_account_type = #{ssAccountType}
                 </if>
-                <if test="comAccountId != null">
-                    AND sca.com_account_id = #{comAccountId}
+                <if test="ssAccount != null">
+                    AND sca.ss_account LIKE CONCAT('%', #{ssAccount}, '%')
+                </if>
+                <if test="companyId != null">
+                    AND sea.company_id LIKE CONCAT('%', #{companyId}, '%')
                 </if>
                 AND a.ss_month = #{ssMonth}
                 AND b.ss_type IN ('DIT00042', 'DIT00043', 'DIT00046')
@@ -208,8 +224,13 @@
               UNION ALL
               SELECT
                 a.com_account_id,
+                sca.com_account_name,
+                sca.ss_account,
+                sea.company_id,
+                sea.ss_serial,
                 a.ss_month,
                 a.employee_id,
+                ee.employee_name,
                 a.base_amount,
                 a.cost_category AS category,
                 b.ss_type,
@@ -227,6 +248,8 @@
                 0 AS unemployment_emp_repay_amount
               FROM ss_month_charge a INNER JOIN ss_month_charge_item b ON a.month_charge_id = b.month_charge_id
               INNER JOIN ss_com_account sca ON a.com_account_id = sca.com_account_id AND sca.is_active = 1
+              INNER JOIN ss_emp_archive sea ON a.com_account_id = sea.com_account_id AND a.employee_id = sea.employee_id AND a.emp_archive_id = sea.emp_archive_id AND sea.is_active = 1
+              INNER JOIN emp_employee ee ON a.employee_id = ee.employee_id AND ee.is_active = 1
               WHERE a.is_active = 1
                 AND b.is_active = 1
                 AND a.cost_category != 1
@@ -234,15 +257,18 @@
                 <if test="ssAccountType != null">
                     AND sca.ss_account_type = #{ssAccountType}
                 </if>
-                <if test="comAccountId != null">
-                    AND sca.com_account_id = #{comAccountId}
+                <if test="ssAccount != null">
+                    AND sca.ss_account LIKE CONCAT('%', #{ssAccount}, '%')
+                </if>
+                <if test="companyId != null">
+                    AND sea.company_id LIKE CONCAT('%', #{companyId}, '%')
                 </if>
                 AND a.ss_month = #{ssMonth}
                 AND b.ss_type IN ('DIT00042', 'DIT00043', 'DIT00046')
                 AND a.cost_category != 4 AND a.cost_category != 9
               GROUP BY a.com_account_id, a.employee_id, a.cost_category, b.ss_type
         ) tmp
-        INNER JOIN emp_employee ee ON tmp.employee_id = ee.employee_id AND ee.is_active = 1
-        GROUP BY tmp.employee_id, ee.employee_name, tmp.base_amount, tmp.category, change_type_name
+        GROUP BY tmp.com_account_name, tmp.ss_account, tmp.company_id, tmp.ss_serial, tmp.employee_id, tmp.employee_name, tmp.base_amount, tmp.category, change_type_name
+        ORDER BY tmp.ss_account, tmp.company_id, tmp.ss_serial
     </select>
 </mapper>
