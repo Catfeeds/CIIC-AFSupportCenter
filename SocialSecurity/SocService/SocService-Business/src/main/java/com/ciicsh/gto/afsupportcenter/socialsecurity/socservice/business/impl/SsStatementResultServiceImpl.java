@@ -3,14 +3,10 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementResultBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementResultCompareBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsMonthEmpChangeDetailMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsStatementImpMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsStatementMapper;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsMonthEmpChangeDetail;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsStatement;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsStatementImp;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsStatementResult;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsStatementResultMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsStatementResultService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
@@ -33,8 +29,11 @@ import java.util.*;
 @Service
 public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultMapper, SsStatementResult> implements SsStatementResultService {
 
+//    @Autowired
+//    SsMonthEmpChangeDetailMapper ssMonthEmpChangeDetailMapper;
+
     @Autowired
-    SsMonthEmpChangeDetailMapper ssMonthEmpChangeDetailMapper;
+    SsMonthChargeItemMapper ssMonthChargeItemMapper;
 
     @Autowired
     SsStatementImpMapper ssStatementImpMapper;
@@ -76,9 +75,13 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
         //将导入结果进行拆解
         dealImpDetailToResultModle(resultPOMap,impDetailPOList);
 
+        SsStatement ssStatement = new SsStatement();
+        ssStatement.setStatementId(statementId);
+        ssStatement = ssStatementMapper.selectOne(ssStatement);
 
         //取出汇总结果
-        List<SsMonthEmpChangeDetailBO> changeDetailBOList = ssMonthEmpChangeDetailMapper.serachMonthEmpChangeDetailPOByStatementId(statementId);
+        List<SsMonthEmpChangeDetailBO> changeDetailBOList = ssMonthChargeItemMapper.searchYysDetailByComAccountIdAndSsMonth(ssStatement.getComAccountId(), ssStatement.getSsMonth());
+//        List<SsMonthEmpChangeDetailBO> changeDetailBOList = ssMonthEmpChangeDetailMapper.serachMonthEmpChangeDetailPOByStatementId(statementId);
 
         //将汇总结果进行拆解
         dealChangeDetailToResultModle(resultPOMap,changeDetailBOList);
@@ -114,10 +117,7 @@ public class SsStatementResultServiceImpl extends ServiceImpl<SsStatementResultM
                 baseMapper.insert(result);
             }
         }
-        //更新主表字段
-        SsStatement ssStatement = new SsStatement();
-        ssStatement.setStatementId(statementId);
-        ssStatement = ssStatementMapper.selectOne(ssStatement);
+
         //更新操作人字段
         ssStatement.setStatementUserId(UserContext.getUser().getDisplayName());
         ssStatement.setStatementTime(dealTime);
