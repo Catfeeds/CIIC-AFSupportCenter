@@ -59,13 +59,21 @@
         <result column="statement_time" property="statementTime" />
     </resultMap>
     <select id="statementQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementBO" resultMap="DtoResultMap">
-
-        SELECT
-        mec.month_emp_change_id,s.statement_id,mec.com_account_id,mec.ss_month,mec.compute_type as 'imp_file_type',s.imp_file_name,
-        s.imp_file_path,s.statement_user_id,s.statement_time,s.imp_record_sum,s.diff_sum_by_emp,s.diff_sum_by_item
-        ,ca.com_account_name
-        FROM ss_month_emp_change mec
-        LEFT JOIN ss_statement s ON s.statement_id=mec.statement_id
+        select
+        s.statement_id,
+        mec.com_account_id,
+        mec.ss_month,
+        s.imp_file_name,
+        s.imp_file_path,
+        s.statement_user_id,
+        s.statement_time,
+        s.imp_record_sum,
+        s.diff_sum_by_emp,
+        s.diff_sum_by_item         ,
+        ca.com_account_name
+        FROM
+        (SELECT DISTINCT ss_month,com_account_id from ss_month_charge where cost_category!= 1 ) mec
+        LEFT JOIN ss_statement s ON s.ss_month=mec.ss_month and s.com_account_id=mec.com_account_id and s.imp_file_type='YYS'
         LEFT JOIN ss_com_account ca ON ca.com_account_id=mec.com_account_id
         WHERE
         1=1
@@ -78,9 +86,9 @@
             <if test = "comAccountId != null and comAccountId != ''">
                 AND ca.ss_account = #{comAccountId,jdbcType=VARCHAR}
             </if>
-            <if test = "impFileType != null and impFileType != ''">
-                AND mec.compute_type = #{impFileType,jdbcType=VARCHAR}
-            </if>
+            <!--<if test = "impFileType != null and impFileType != ''">-->
+                <!--AND s.imp_file_type = #{impFileType,jdbcType=VARCHAR}-->
+            <!--</if>-->
             <if test = "maxDiffSumByEmp != null and maxDiffSumByEmp != ''">
                 <![CDATA[
                     AND s.diff_sum_by_emp <= #{maxDiffSumByEmp,jdbcType=INTEGER}
@@ -94,7 +102,7 @@
         <if test = "companyId != null and companyId != ''">
             AND EXISTS (SELECT 1 FROM  ss_account_com_relation acr WHERE  acr.com_account_id=ca.com_account_id AND  acr.company_id LIKE CONCAT('%', #{companyId}, '%'))
         </if>
-        ORDER BY mec.ss_month DESC,mec.last_compute_time DESC
+        ORDER BY mec.ss_month DESC
     </select>
 
     <select id="serachStatementByStatementId" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsStatementBO" resultMap="DtoResultMap">

@@ -40,7 +40,7 @@
         <result column="settlement_area" property="settlementArea"/>
         <result column="title" property="title"/>
         <result column="com_account_name" property="comAccountName"/>
-        <result column="ssPwd" property="ssPwd"/>
+        <result column="ss_pwd" property="ssPwd"/>
         <result column="leadership_name" property="leaderShipName"/>
     </resultMap>
 
