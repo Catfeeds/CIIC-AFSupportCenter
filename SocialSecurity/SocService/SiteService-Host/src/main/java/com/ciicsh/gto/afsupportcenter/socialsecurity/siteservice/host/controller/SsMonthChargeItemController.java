@@ -15,12 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 雇员月度费用明细项目 前端控制器
@@ -38,7 +35,7 @@ public class SsMonthChargeItemController extends BasicController<SsMonthChargeIt
     @ResponseBody
     public JsonResult<List<SsMonthChargeItemBO>> queryEmlpyeeMonthFeeDetail(SsMonthChargeItemBO ssMonthChargeItemBO){
         if(StringUtils.isBlank(ssMonthChargeItemBO.getSsMonth()) || null == ssMonthChargeItemBO.getSsAccount())
-            throw new BusinessException("条件不足");
+            throw new BusinessException("缺少必要的传递参数");
         ssMonthChargeItemBO.setSsMonth(ssMonthChargeItemBO.getSsMonth().substring(0,6));
         List<SsMonthChargeItemBO> ssMonthChargeItemBOList = dealEmpChangeDetailDTO(business.queryEmlpyeeMonthFeeDetail(ssMonthChargeItemBO));
 
@@ -84,7 +81,26 @@ public class SsMonthChargeItemController extends BasicController<SsMonthChargeIt
         }
         //行转列
         rowToColumn(dealMap,resultDTOList);
-
+        if (resultDTOList.size()==0){
+            return resultDTOList;
+        }
+        SsMonthChargeItemBO sum=new SsMonthChargeItemBO();
+        sum.setEmployeeName("合计：");
+        sum.setBirthRiskTotalFee(new BigDecimal(0));
+        sum.setInjuryOnJobTotalFee(new BigDecimal(0));
+        sum.setMedicalTotalFee(new BigDecimal(0));
+        sum.setPensionTotalFee(new BigDecimal(0));
+        sum.setUnemploymentTotalFee(new BigDecimal(0));
+        sum.setTotalAmount(new BigDecimal(0));
+        resultDTOList.forEach(item -> {
+            sum.setBirthRiskTotalFee(sum.getBirthRiskTotalFee().add(Optional.ofNullable(item.getBirthRiskTotalFee()).orElse(new BigDecimal(0))));
+            sum.setInjuryOnJobTotalFee(sum.getInjuryOnJobTotalFee().add(Optional.ofNullable(item.getInjuryOnJobTotalFee()).orElse(new BigDecimal(0))));
+            sum.setMedicalTotalFee(sum.getMedicalTotalFee().add(Optional.ofNullable(item.getMedicalTotalFee()).orElse(new BigDecimal(0))));
+            sum.setPensionTotalFee(sum.getPensionTotalFee().add(Optional.ofNullable(item.getPensionTotalFee()).orElse(new BigDecimal(0))));
+            sum.setUnemploymentTotalFee(sum.getUnemploymentTotalFee().add(Optional.ofNullable(item.getUnemploymentTotalFee()).orElse(new BigDecimal(0))));
+            sum.setTotalAmount(sum.getTotalAmount().add(Optional.ofNullable(item.getTotalAmount()).orElse(new BigDecimal(0))));
+        });
+        resultDTOList.add(sum);
         return resultDTOList;
     }
 

@@ -5,6 +5,8 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.util.kit.T
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAuthorityService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.*;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.afsupportcenter.util.ui.core.CascaderNode;
+import com.ciicsh.gto.afsupportcenter.util.ui.core.CascderInstall;
 import com.ciicsh.gto.afsupportcenter.util.ui.core.TreeKit;
 import com.ciicsh.gto.afsupportcenter.util.ui.core.TreeNode;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
@@ -85,7 +87,17 @@ public class SsAuthorityController {
 
         return JsonResultKit.ofList(TreeKit.tree(deptNodes));
     }
-
+    /**
+     * 获取下拉框客服中心数据
+     * @return
+     */
+    @RequestMapping("getSsCustomerData")
+    public JsonResult<List<CascaderNode>> getCascaderData(){
+        List<SsDepartmentDTO> list = ssAuthorityService.querySubDepartmentsOfLevel(new Integer[] {4, 5});
+        List<CascaderNode> cascaderNodes = new ArrayList<>();
+        list.forEach((e) -> cascaderNodes.add(TreeNodeConvertKit.DEPT.toCascaderNode(e)));
+        return JsonResultKit.ofList(CascderInstall.createCascder(cascaderNodes));
+    }
     /**
      * 保存客户权限配置
      *

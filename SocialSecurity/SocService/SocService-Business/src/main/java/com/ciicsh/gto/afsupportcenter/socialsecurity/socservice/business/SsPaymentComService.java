@@ -11,6 +11,8 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 
+import java.util.List;
+
 /**
  * <p>
  * 本地社保应付金额交易记录主表,每月1号生成此表记录，用户也可以人工生成此表记录 服务类
@@ -29,7 +31,7 @@ public interface SsPaymentComService extends IService<SsPaymentCom> {
      * @return  PageRows<SsPaymentComBO>
      */
     PageRows<SsPaymentComBO> paymentComQuery(PageInfo pageInfo);
-
+    List<SsPaymentComBO> paymentComQueryExport(SsPaymentComBO ssPaymentComBO);
     /**
      * <p>Description: 保存调整结果</p>
      *

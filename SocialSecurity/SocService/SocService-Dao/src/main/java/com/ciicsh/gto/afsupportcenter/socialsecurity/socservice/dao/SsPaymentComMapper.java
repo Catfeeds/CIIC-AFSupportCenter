@@ -3,7 +3,9 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentComBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPaymentCom;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -64,5 +66,6 @@ public interface SsPaymentComMapper extends BaseMapper<SsPaymentCom> {
      */
     Integer getPaymentComCountNotInPayment(SsPaymentCom ssPaymentCom);
 
+    BigDecimal getExtraAmountByComAccountId(@Param("paymentMonth") String paymentMonth, @Param("comAccountId")Long comAccountId);
 
 }

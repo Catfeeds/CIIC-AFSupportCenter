@@ -30,4 +30,6 @@ public interface SsAuthorityService {
     SsDataauthWelfareUnitDTO querySsDataauthWelfareUnit(String userId);
 
     SsDataauthWelfareUnitDTO queryAuthorityTaskCategory(String userId);
+
+    List<SsDepartmentDTO> querySubDepartmentsOfLevel(Integer[] levels);
 }

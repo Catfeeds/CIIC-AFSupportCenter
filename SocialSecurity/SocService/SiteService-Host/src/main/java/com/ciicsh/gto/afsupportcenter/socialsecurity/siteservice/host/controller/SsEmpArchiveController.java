@@ -2,9 +2,11 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controlle
 
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpArchiveBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.AmEmpTaskOfSsService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpArchiveService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpBasePeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.AmEmpTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBasePeriod;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.empSSSearchExportOpt;
@@ -42,6 +44,9 @@ public class SsEmpArchiveController extends BasicController<SsEmpArchiveService>
     private SsEmpBasePeriodService ssEmpBasePeriodService;
     @Autowired
     private SsEmpTaskService ssEmpTaskService;
+    @Autowired
+    private AmEmpTaskOfSsService amEmpTaskOfSsService;
+
     /**
      * 根据雇员任务 ID 查询 雇员本地社保档案信息
      *
@@ -104,6 +109,14 @@ public class SsEmpArchiveController extends BasicController<SsEmpArchiveService>
             List<SsEmpTask> ssEmpTasksList = ssEmpTaskService.queryTaskByEmpArchiveId(empArchiveId);
             resultMap.put("ssEmpTasks",ssEmpTasksList);
         }
+        //用工信息
+        AmEmpTaskDTO amEmpTaskDTO = null;
+        amEmpTaskDTO = amEmpTaskOfSsService.queryReworkInfo(ssEmpArchiveBO.getEmployeeId(), ssEmpArchiveBO.getCompanyId(),  1);
+        if (amEmpTaskDTO == null) {
+            amEmpTaskDTO = new AmEmpTaskDTO();
+            amEmpTaskDTO.setTaskCategory(1);
+        }
+        resultMap.put("amEmpTask",amEmpTaskDTO);
         return JsonResultKit.of(resultMap);
     }
     /**

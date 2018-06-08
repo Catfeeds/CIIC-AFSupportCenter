@@ -47,6 +47,11 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
     }
 
     @Override
+    public List<SsPaymentComBO> paymentComQueryExport(SsPaymentComBO ssPaymentComBO) {
+        return baseMapper.paymentComQuery(ssPaymentComBO);
+    }
+
+    @Override
     public JsonResult<String> saveAdjustment(SsPaymentComBO ssPaymentComBO) {
         JsonResult<String> json = new JsonResult<String>();
         //验证状态

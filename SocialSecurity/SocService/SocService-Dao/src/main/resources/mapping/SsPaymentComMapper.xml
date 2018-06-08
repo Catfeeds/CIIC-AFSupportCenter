@@ -76,7 +76,7 @@
               AND SCA.ss_account_type = #{ssAccountType}
             </if>
           LEFT JOIN sal_company SC ON SC.company_id = SPC.company_id
-            AND SC.is_active = 1
+          LEFT JOIN sal_af_company sac ON sac.company_id = SPC.company_id
           LEFT JOIN ss_payment SP ON SP.payment_id = SPC.payment_id
             AND SP.is_active = 1
         WHERE
@@ -103,13 +103,16 @@
             <if test = "ssAccount != null and ssAccount != ''">
                 AND SCA.ss_account LIKE concat(concat('%',#{ssAccount}),'%')
             </if>
-
-        <if test = "paymentId != null and paymentId != ''">
+            <if test = "paymentId != null and paymentId != ''">
                 AND SPC.payment_id = #{paymentId}
             </if>
             <if test = "paymentBatchNum != null and paymentBatchNum != ''">
                 AND SP.payment_batch_num = #{paymentBatchNum}
             </if>
+            <if test = "serviceCenterValue != null and serviceCenterValue != ''">
+                AND sac.service_center_id = #{serviceCenterValue}
+            </if>
+
     </select>
 
     <select id="getPaymentComByPaymentId" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -170,5 +173,16 @@
             )
             AND SPC.payment_month = #{paymentMonth}
             AND SPC.com_account_id = #{comAccountId}
+    </select>
+
+    <select id="getExtraAmountByComAccountId" resultType="java.math.BigDecimal">
+        SELECT
+            sum(ifnull(pc.extra_amount,0)) extra_amount
+        FROM
+            ss_payment_com pc
+        WHERE
+            pc.is_active = 1
+            AND pc.payment_month = #{paymentMonth}
+            AND pc.com_account_id = #{comAccountId}
     </select>
 </mapper>

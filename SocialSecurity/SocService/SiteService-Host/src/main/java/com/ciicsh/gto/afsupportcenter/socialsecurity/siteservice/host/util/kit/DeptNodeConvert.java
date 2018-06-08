@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.util.kit;
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.SsDepartmentDTO;
+import com.ciicsh.gto.afsupportcenter.util.ui.core.CascaderNode;
 import com.ciicsh.gto.afsupportcenter.util.ui.core.TreeNode;
 import com.ciicsh.gto.afsupportcenter.util.ui.core.TreeNodeConvert;
 
@@ -25,4 +26,11 @@ public class DeptNodeConvert implements TreeNodeConvert<SsDepartmentDTO> {
     node.put("description", e.getDescription());
     return node;
   }
+    public CascaderNode toCascaderNode(SsDepartmentDTO e){
+        CascaderNode cascaderNode = new CascaderNode();
+        cascaderNode.setLabel(e.getDepartmentName());
+        cascaderNode.setValue(String.valueOf(e.getDepartmentId()));
+        cascaderNode.setPvalue(String.valueOf(e.getParentDepartmentId()));
+        return cascaderNode;
+    }
 }
