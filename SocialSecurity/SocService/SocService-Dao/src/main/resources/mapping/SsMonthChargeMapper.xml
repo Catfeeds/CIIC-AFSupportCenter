@@ -36,6 +36,7 @@
     <resultMap id="YysReportMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsYysReportBO">
         <result column="com_account_name" property="comAccountName" />
         <result column="ss_account" property="ssAccount" />
+        <result column="ss_pwd" property="ssPwd" />
         <result column="company_id" property="companyId" />
         <result column="service_center" property="serviceCenter" />
         <result column="ss_serial" property="ssSerial" />
@@ -152,8 +153,8 @@
 
     <select id="queryYysReport" resultMap="YysReportMap">
         SELECT
-          tmp.com_account_name, tmp.ss_account, tmp.company_id, tmp.service_center, tmp.ss_serial,
-        tmp.employee_id, tmp.employee_name, tmp.base_amount, tmp.category,
+          tmp.com_account_name, tmp.ss_account, tmp.ss_pwd, tmp.company_id, tmp.service_center, tmp.ss_serial,
+          tmp.employee_id, tmp.employee_name, tmp.base_amount, tmp.category,
           CASE tmp.category
           WHEN 1 THEN '标准'
           WHEN 2 THEN '新进'
@@ -181,6 +182,7 @@
                 a.com_account_id,
                 sca.com_account_name,
                 sca.ss_account,
+                sca.ss_pwd,
                 sea.company_id,
                 sea.ss_serial,
                 sea.service_center,
@@ -228,6 +230,7 @@
                 a.com_account_id,
                 sca.com_account_name,
                 sca.ss_account,
+                sca.ss_pwd,
                 sea.company_id,
                 sea.ss_serial,
                 sea.service_center,
