@@ -15,4 +15,5 @@ public class AccountCompanyRelationOpt {
     private String comAccountName;
     private String companyId;
     private String companyName;
+    private String companyIds;
 }

@@ -76,4 +76,5 @@ public interface HfEmpTaskMapper extends BaseMapper<HfEmpTask> {
 
     Map<String,String> fetchPrintInfo(Long empTaskId);
 
+    Integer getExistHandleRemarkCount(HfEmpTaskBo hfEmpTaskBo);
 }

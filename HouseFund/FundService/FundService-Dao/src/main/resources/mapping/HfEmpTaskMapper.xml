@@ -88,6 +88,8 @@
 		<result column="task_id" property="taskId" />
         <result column="created_by" property="createdBy" />
         <result column="created_display_name" property="createdDisplayName" />
+        <result column="hf_account_type" property="hfAccountType" />
+        <result column="has_out" property="hasOut" />
 	</resultMap>
 
     <resultMap id="RejectResultMapBo" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo" extends="BaseResultMapBo">
@@ -175,7 +177,9 @@
         tmp.modified_by,
         tmp.modified_display_name,
         tmp.modified_time,
-        tmp.rejection_remark
+        tmp.rejection_remark,
+        tmp.hf_account_type,
+        tmp.has_out
         FROM (
             SELECT
             het.emp_task_id,
@@ -189,7 +193,7 @@
             het.company_id,
             sc.title company_name,
             het.hf_type,
-            het.hf_emp_account,
+            hea.hf_emp_account,
             het.submitter_id,
             het.submit_time,
             het.task_id,
@@ -199,7 +203,9 @@
             het.modified_by,
             het.modified_display_name,
             het.modified_time,
-            het.rejection_remark
+            het.rejection_remark,
+            3 AS hf_account_type,
+            CASE WHEN hetl.employee_id IS NULL THEN 0 ELSE 1 END AS has_out
             FROM hf_emp_task het
             INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
             INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
@@ -224,6 +230,10 @@
                 hcac.hf_type = het.hf_type
                 AND hcac.hf_com_account = #{hfComAccount}
             </if>
+            LEFT JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
+            AND hea.is_active = 1 AND hea.hf_type = het.hf_type
+            LEFT JOIN hf_emp_task hetl ON het.company_id = hetl.company_id AND het.employee_id = hetl.employee_id
+            AND hetl.is_active = 1 AND het.hf_type = hetl.hf_type AND het.task_category IN (1, 2, 3, 9, 10, 11) AND hetl.task_category IN (4, 5, 12, 13)
             <where>
                 het.is_active = 1 AND IFNULL(het.task_status, 1) = 4 AND het.welfare_unit = 1
                 <if test="exceptTaskCategories != null">
@@ -297,7 +307,7 @@
             het.company_id,
             sc.title company_name,
             het.hf_type,
-            het.hf_emp_account,
+            hea.hf_emp_account,
             het.submitter_id,
             het.submit_time,
             het.task_id,
@@ -307,7 +317,9 @@
             het.modified_by,
             het.modified_display_name,
             het.modified_time,
-            het.rejection_remark
+            het.rejection_remark,
+            CASE WHEN het.welfare_unit = 2 THEN 1 ELSE 2 END AS hf_account_type,
+            CASE WHEN hetl.employee_id IS NULL THEN 0 ELSE 1 END AS has_out
             FROM hf_emp_task het
             INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
             INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
@@ -331,6 +343,10 @@
                 hcac.hf_type = het.hf_type
                 AND hcac.hf_com_account = #{hfComAccount}
             </if>
+            LEFT JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
+            AND hea.is_active = 1 AND hea.hf_type = het.hf_type
+            LEFT JOIN hf_emp_task hetl ON het.company_id = hetl.company_id AND het.employee_id = hetl.employee_id
+            AND hetl.is_active = 1 AND het.hf_type = hetl.hf_type AND het.task_category IN (1, 2, 3, 9, 10, 11) AND hetl.task_category IN (4, 5, 12, 13)
             <where>
                 het.is_active = 1 AND IFNULL(het.task_status, 1) = 4 AND het.welfare_unit > 1
                 <if test="exceptTaskCategories != null">
@@ -413,7 +429,10 @@
         tmp.submit_time,
         tmp.task_id,
         tmp.created_by,
-        tmp.created_display_name
+        tmp.created_display_name,
+        tmp.hf_account_type,
+        tmp.handle_remark,
+        tmp.has_out
         FROM (
             SELECT
             DISTINCT
@@ -434,7 +453,10 @@
             het.task_id,
             het.created_by,
             het.created_display_name,
-            het.created_time
+            het.created_time,
+            3 AS hf_account_type,
+            het.handle_remark,
+            CASE WHEN hetl.employee_id IS NULL THEN 0 ELSE 1 END AS has_out
             FROM hf_emp_task het
             INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
             INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
@@ -461,6 +483,8 @@
             </if>
             LEFT JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
             AND hea.is_active = 1 AND hea.hf_type = het.hf_type
+            LEFT JOIN hf_emp_task hetl ON het.company_id = hetl.company_id AND het.employee_id = hetl.employee_id
+            AND hetl.is_active = 1 AND het.hf_type = hetl.hf_type AND het.task_category IN (1, 2, 3, 9, 10, 11) AND hetl.task_category IN (4, 5, 12, 13)
             <where>
                 het.is_active = 1 AND IFNULL(het.task_status, 1) != 5 AND het.welfare_unit = 1
                 <if test="exceptTaskCategories != null">
@@ -534,7 +558,10 @@
             het.task_id,
             het.created_by,
             het.created_display_name,
-            het.created_time
+            het.created_time,
+            CASE WHEN het.welfare_unit = 2 THEN 1 ELSE 2 END AS hf_account_type,
+            het.handle_remark,
+            CASE WHEN hetl.employee_id IS NULL THEN 0 ELSE 1 END AS has_out
             FROM hf_emp_task het
             INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
             INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
@@ -560,6 +587,8 @@
             </if>
             LEFT JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
             AND hea.is_active = 1 AND hea.hf_type = het.hf_type
+            LEFT JOIN hf_emp_task hetl ON het.company_id = hetl.company_id AND het.employee_id = hetl.employee_id
+            AND hetl.is_active = 1 AND het.hf_type = hetl.hf_type AND het.task_category IN (1, 2, 3, 9, 10, 11) AND hetl.task_category IN (4, 5, 12, 13)
             <where>
                 het.is_active = 1 AND IFNULL(het.task_status, 1) != 5 AND het.welfare_unit > 1
                 <if test="exceptTaskCategories != null">
@@ -607,7 +636,6 @@
                 <if test="processStatus == 1">
                     AND het.submit_time <![CDATA[ <= ]]>
                     str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',if(isnull(hcas.close_day),25,hcas.close_day)),'%Y-%m-%d')
-
                 </if>
                 <if test="processStatus == 2">
                     AND het.submit_time >
@@ -1111,4 +1139,16 @@
 
     </select>
 
+    <select id="getExistHandleRemarkCount" resultType="java.lang.Integer">
+        SELECT
+          COUNT(emp_task_id)
+        FROM hf_emp_task
+        <where>
+            is_active = 1
+            AND company_id = #{companyId}
+            AND employee_id = #{employeeId}
+            AND hf_type = #{hfType}
+            AND handle_remark IS NOT NULL
+        </where>
+    </select>
 </mapper>

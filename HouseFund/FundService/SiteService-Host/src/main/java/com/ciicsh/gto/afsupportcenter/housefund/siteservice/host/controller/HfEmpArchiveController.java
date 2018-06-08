@@ -1,8 +1,11 @@
 package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 
 
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpArchiveService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpArchiveBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpArchiveConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.EmpAccountImpXsl;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -10,6 +13,8 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
@@ -27,6 +32,8 @@ import java.util.*;
 @Controller
 @RequestMapping("/api/fundcommandservice/hfEmpArchive")
 public class HfEmpArchiveController extends  BasicController<HfEmpArchiveService>{
+    @Autowired
+    HfEmpTaskService hfEmpTaskService;
 
     /**
      * 雇员公积金查询
@@ -38,7 +45,26 @@ public class HfEmpArchiveController extends  BasicController<HfEmpArchiveService
     @ResponseBody
     public JsonResult<PageRows> queryEmpArchive(PageInfo pageInfo) {
         PageRows<HfEmpArchiveBo> result = business.queryEmpArchive(pageInfo);
+        List<HfEmpArchiveBo> hfEmpArchiveBoList = result.getRows();
+
+        if (CollectionUtils.isNotEmpty(hfEmpArchiveBoList)) {
+            for (HfEmpArchiveBo hfEmpArchiveBo : hfEmpArchiveBoList) {
+                HfEmpTaskBo hfEmpTaskBo = new HfEmpTaskBo();
+                hfEmpTaskBo.setCompanyId(hfEmpArchiveBo.getCompanyId());
+                hfEmpTaskBo.setEmployeeId(hfEmpArchiveBo.getEmployeeId());
+                hfEmpTaskBo.setHfType(hfEmpArchiveBo.getHfType());
+
+                if (hfEmpTaskService.getExistHandleRemarkCount(hfEmpTaskBo) > 0) {
+                    hfEmpArchiveBo.setHandleRemark("有备注");
+                }
+
+                if ("3".equals(hfEmpArchiveBo.getEmpStatus())) {
+                    hfEmpArchiveBo.setHasOut(1);
+                }
+            }
+        }
         return JsonResultKit.of(result);
+
     }
 
     @RequestMapping("/impTemplateFile")

@@ -32,4 +32,6 @@ public class HfEmpArchiveBo extends HfEmpArchive{
     private String serviceSpecialist;
     private String serviceCenter;
     private String leaderShipName;
+    private Integer hasOut;
+    private String handleRemark;
 }

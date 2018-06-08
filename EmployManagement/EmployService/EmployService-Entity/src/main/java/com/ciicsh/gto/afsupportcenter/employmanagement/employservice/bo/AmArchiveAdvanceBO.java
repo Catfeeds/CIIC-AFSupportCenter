@@ -94,7 +94,7 @@ public class AmArchiveAdvanceBO{
      */
     private String modifiedBy;
 
-    private boolean isExist;
+    private boolean exist;
 
     public Long getArchiveAdvanceId() {
         return archiveAdvanceId;
@@ -227,15 +227,16 @@ public class AmArchiveAdvanceBO{
     public String getDeleteRemark() {
         return deleteRemark;
     }
+
     public void setDeleteRemark(String deleteRemark) {
         this.deleteRemark = deleteRemark;
     }
 
     public boolean isExist() {
-        return isExist;
+        return exist;
     }
 
     public void setExist(boolean exist) {
-        isExist = exist;
+        this.exist = exist;
     }
 }

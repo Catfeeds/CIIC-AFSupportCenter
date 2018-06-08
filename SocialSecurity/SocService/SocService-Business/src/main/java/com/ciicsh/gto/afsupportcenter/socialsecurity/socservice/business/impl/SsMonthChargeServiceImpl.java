@@ -4,6 +4,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthChargeBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsYysReportBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsYysReportParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsMonthChargeItemService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsMonthChargeService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsMonthChargeMapper;
@@ -59,5 +61,10 @@ public class SsMonthChargeServiceImpl extends ServiceImpl<SsMonthChargeMapper, S
     @Override
     public  List<SsMonthChargeBO> selectTotalFromOld(String employeeId, String paymentMonth, Integer costCategory) {
         return baseMapper.selectTotalFromOld(employeeId,paymentMonth, costCategory);
+    }
+
+    @Override
+    public List<SsYysReportBO> queryYysReport(SsYysReportParamBO ssYysReportParamBO) {
+        return baseMapper.queryYysReport(ssYysReportParamBO);
     }
 }

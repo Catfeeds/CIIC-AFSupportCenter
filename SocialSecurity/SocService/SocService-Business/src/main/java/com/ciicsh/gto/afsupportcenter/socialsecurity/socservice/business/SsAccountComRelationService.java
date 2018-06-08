@@ -39,6 +39,6 @@ public interface SsAccountComRelationService extends IService<SsAccountComRelati
      * @param comAccountId 企业社保账户
      * @return 返回企业社保账户获取公司信息
      */
-    AccountCompanyRelationOpt getAccountCompanyRelationByAccountId(Long comAccountId);
+    List<AccountCompanyRelationOpt> getAccountCompanyRelationByAccountId(Long comAccountId);
 
 }
