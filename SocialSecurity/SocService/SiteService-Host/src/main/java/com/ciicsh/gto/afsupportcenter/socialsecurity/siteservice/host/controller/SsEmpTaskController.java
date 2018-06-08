@@ -164,11 +164,11 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         //查询该雇员是否还有其他已办理或者未办理的任务
         EntityWrapper<SsEmpTask> ew = new EntityWrapper<SsEmpTask>();
         ew.where("employee_id={0}", dto.getEmployeeId())
-            // .and("task_category={0}",dto.getTaskCategory())
+            .and("company_id={0}",dto.getCompanyId())
             .and("is_active=1")
             .and("emp_task_id!={0}", dto.getEmpTaskId())
-            .and("task_status=1")
-            .orderBy("created_time", true);
+            .and("task_status>1")
+            .orderBy("created_time", false);
         List<SsEmpTask> ssEmpTaskList = business.selectList(ew);
         if (ssEmpTaskList.size() > 0) {
             dto.setTheSameTask(ssEmpTaskList);
