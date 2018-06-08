@@ -97,6 +97,21 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
     }
 
     @Override
+    public JsonResult<String> doCheck(Long paymentComId) {
+        JsonResult<String> json = new JsonResult<>();
+        json.setCode(0);
+        json.setMessage("成功");
+        SsPaymentCom ssPaymentCom =new SsPaymentCom();
+        ssPaymentCom.setIfCheck(1);
+        ssPaymentCom.setPaymentComId(paymentComId);
+        ssPaymentCom.setModifiedBy(UserContext.getUser().getUserId());
+        ssPaymentCom.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+        ssPaymentCom.setModifiedTime(LocalDateTime.now());
+        baseMapper.updateById(ssPaymentCom);
+        return json;
+    }
+
+    @Override
     public JsonResult<String> doAddBatch(SsAddPaymentBO ssAddPaymentBO) {
         JsonResult<String> json = new JsonResult<>();
         json.setCode(0);

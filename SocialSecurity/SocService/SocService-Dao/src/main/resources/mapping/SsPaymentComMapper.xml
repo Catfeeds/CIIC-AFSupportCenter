@@ -62,7 +62,7 @@
         <result column="com_account_name" property="comAccountName" />
         <result column="ss_account" property="ssAccount" />
         <result column="finance_payment_date" property="financePaymentDate" />
-
+        <result column="if_check" property="ifCheck" />
     </resultMap>
 
     <select id="paymentComQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentComBO" resultMap="DtoResultMap">
@@ -105,6 +105,9 @@
             </if>
             <if test = "paymentId != null and paymentId != ''">
                 AND SPC.payment_id = #{paymentId}
+            </if>
+            <if test = "ifCheck != null and ifCheck != ''">
+                AND SPC.if_check = #{ifCheck}
             </if>
             <if test = "paymentBatchNum != null and paymentBatchNum != ''">
                 AND SP.payment_batch_num = #{paymentBatchNum}

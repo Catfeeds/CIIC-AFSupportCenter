@@ -41,7 +41,7 @@ public interface SsPaymentComService extends IService<SsPaymentCom> {
      * @return  JsonResult<>
      */
     JsonResult<String> saveAdjustment(SsPaymentComBO ssPaymentComBO);
-
+    JsonResult<String> doCheck(Long paymentComId);
     /**
      * <p>Description: 添加至支付批次</p>
      *
