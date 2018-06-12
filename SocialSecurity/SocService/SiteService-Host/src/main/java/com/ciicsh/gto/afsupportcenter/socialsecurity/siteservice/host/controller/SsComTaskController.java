@@ -436,6 +436,8 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         ssComAccount.setPaymentBank(isNotNull(map.get("paymentBank")) ? map.get("paymentBank") : null);
         //付款方式
         ssComAccount.setPaymentWay(isNotNull(map.get("paymentWay")) ? Integer.valueOf(map.get("paymentWay")) : null);
+        //付款类型
+        ssComAccount.setPaymentType(isNotNull(map.get("paymentType")) ? Integer.valueOf(map.get("paymentType")) : null);
         //账单接收方
         ssComAccount.setBillReceiver(isNotNull(map.get("billReceiver")) ? Integer.valueOf(map.get("billReceiver")) :
             null);
@@ -468,14 +470,14 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         //ssComAccount.setProvideCertificateTime(isNotNull(map.get("provideCertificateTime")) ? LocalDate.parse(map.get
         //    ("provideCertificateTime"), dateFormatter) : null);
         //变更时间
-        ssComAccount.setChangeTime(isNotNull(map.get("changeTime")) ? LocalDateTime.parse(map.get("changeTime"),
-            timeFormatter) : null);
-        //收到日期
-        ssComAccount.setReceiveDate(isNotNull(map.get("receiveDate")) ? LocalDate.parse(map.get("receiveDate"),
-            dateFormatter) : null);
-        //转入日期
-        ssComAccount.setIntoDate(isNotNull(map.get("intoDate")) ? LocalDate.parse(map.get("intoDate"), dateFormatter)
-            : null);
+//        ssComAccount.setChangeTime(isNotNull(map.get("changeTime")) ? LocalDateTime.parse(map.get("changeTime"),
+//            timeFormatter) : null);
+//        //收到日期
+//        ssComAccount.setReceiveDate(isNotNull(map.get("receiveDate")) ? LocalDate.parse(map.get("receiveDate"),
+//            dateFormatter) : null);
+//        //转入日期
+//        ssComAccount.setIntoDate(isNotNull(map.get("intoDate")) ? LocalDate.parse(map.get("intoDate"), dateFormatter)
+//            : null);
         //发出材料
         ssComAccount.setDispatchMaterial(isNotNull(map.get("dispatchMaterial")) ? map.get("dispatchMaterial") : null);
         //设置每个月截止时间
@@ -526,6 +528,8 @@ public class SsComTaskController extends BasicController<SsComTaskService>{
         ssComTask.setPaymentBank(isNotNull(map.get("paymentBank")) ? map.get("paymentBank") : null);
 
         ssComTask.setPaymentWay(isNotNull(map.get("paymentWay")) ? Integer.valueOf(map.get("paymentWay")) : null);
+
+        ssComTask.setPaymentType(isNotNull(map.get("paymentType")) ? Integer.valueOf(map.get("paymentType")) : null);
 
         ssComTask.setBillReceiver(isNotNull(map.get("billReceiver")) ? Integer.valueOf(map.get("billReceiver")) : null);
 

@@ -56,6 +56,11 @@ public class SsComAccountDTO {
      3-我司垫付
      */
     private Integer paymentWay;
+
+    private Integer paymentType;
+
+
+
     /**
      * 社保帐单寄到哪里: 1 我司，2 客户公司
      */
@@ -187,7 +192,13 @@ public class SsComAccountDTO {
      * 企业工伤比例变更(查询) 1对多
      */
     private List<SsAccountRatio> ssAccountRatioList;
+    public Integer getPaymentType() {
+        return paymentType;
+    }
 
+    public void setPaymentType(Integer paymentType) {
+        this.paymentType = paymentType;
+    }
     public Long getComAccountId() {
         return comAccountId;
     }
