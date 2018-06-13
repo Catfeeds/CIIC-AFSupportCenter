@@ -48,6 +48,8 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
     private HfEmpArchiveService hfEmpArchiveService;
     @Autowired
     private HfEmpPreInputService hfEmpPreInputService;
+    @Autowired
+    private HfMonthChargeService hfMonthChargeService;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
@@ -103,6 +105,8 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                 }
                 hfEmpTaskHandleBo.setHfEmpAccount(empAccount);
             }
+
+            hfMonthChargeService.getMonthChargeByInOut(hfEmpTaskHandleBo);
 
             // 根据雇员档案ID获取雇员基本公积金汇缴月份段信息
             Map<String, Object> condition = new HashMap<>();
