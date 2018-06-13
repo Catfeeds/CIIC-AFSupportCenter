@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 public class MyExcelVerifyHandler implements IExcelVerifyHandler<IExcelModel> {
-    @Autowired
     private LogApiUtil logApiUtil;
 
     private Map<String, Integer> fieldLengthMap;
@@ -30,7 +29,8 @@ public class MyExcelVerifyHandler implements IExcelVerifyHandler<IExcelModel> {
      * @param skipFields      跳过字段名称
      * @param verifyConfigMap 需要校验的字段配置Map
      */
-    public MyExcelVerifyHandler(Map<String, Integer> fieldLengthMap, Map<String, Object> setValueMap, List<String> skipFields, Map<String, Object> verifyConfigMap) {
+    public MyExcelVerifyHandler(LogApiUtil logApiUtil, Map<String, Integer> fieldLengthMap, Map<String, Object> setValueMap, List<String> skipFields, Map<String, Object> verifyConfigMap) {
+        this.logApiUtil = logApiUtil;
         this.fieldLengthMap = fieldLengthMap;
         this.setValueMap = setValueMap;
         this.skipFields = skipFields;

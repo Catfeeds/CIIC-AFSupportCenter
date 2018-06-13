@@ -20,12 +20,12 @@ import java.util.stream.Collectors;
 
 public class FeedbackDateVerifyHandler implements IExcelVerifyHandler<IExcelModel> {
 
-    @Autowired
     private LogApiUtil logApiUtil;
     private List<EmpTaskTransferBo> empTaskTransferBoList;
     private Set<String> employeeIdSet;
 
-    public FeedbackDateVerifyHandler(List<EmpTaskTransferBo> empTaskTransferBoList) {
+    public FeedbackDateVerifyHandler(LogApiUtil logApiUtil, List<EmpTaskTransferBo> empTaskTransferBoList) {
+        this.logApiUtil = logApiUtil;
         this.empTaskTransferBoList = empTaskTransferBoList;
         this.employeeIdSet = new HashSet<>();
     }
