@@ -150,6 +150,7 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
         }
         String ssEmpSerial = Optional.of(map.get("ssSerial")).orElse(" ");
         ssEmpArchive.setSsSerial(ssEmpSerial);
+        ssEmpArchive.setEmpClassify( Integer.parseInt(Optional.ofNullable(map.get("empClassify")).orElse("0")));
         ssEmpArchive.setEmpArchiveId(Long.valueOf(map.get("empArchiveId")));
         baseMapper.updateById(ssEmpArchive);
 
