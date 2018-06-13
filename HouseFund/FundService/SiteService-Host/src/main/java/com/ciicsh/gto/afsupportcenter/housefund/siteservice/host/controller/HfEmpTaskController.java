@@ -2,23 +2,32 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
+import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpPreInputBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBatchRejectBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.EmpEmployeeService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskHandleService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTaskTransferBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTransferTemplateImpXsl;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.ImportFeedbackDateBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.EmpEmployee;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpPreInput;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.util.FeedbackDateVerifyHandler;
+import com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.util.HfEmpPreInputVerifyHandler;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -29,10 +38,15 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -56,6 +70,14 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
     HfEmpTaskHandleService hfEmpTaskHandleService;
     @Autowired
     EmpEmployeeService empEmployeeService;
+    @Autowired
+    HfEmpPreInputService hfEmpPreInputService;
+    @Autowired
+    HfFileImportService hfFileImportService;
+    @Autowired
+    HFImportEmpPreInputService hfImportEmpPreInputService;
+    @Autowired
+    LogApiUtil logApiUtil;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 
@@ -318,5 +340,38 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
 //        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
         ExportResponseUtil.encodeExportFileName(response, fileName);
         writer.close();
+    }
+
+    @RequestMapping(value = "/empPreInputUpload", consumes = "multipart/form-data")
+    public JsonResult empPreInputUpload(HttpServletRequest request) {
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        MultiValueMap<String, MultipartFile> files = multipartRequest.getMultiFileMap();//得到文件map对象
+        ImportParams importParams = new ImportParams();
+        List<HfEmpPreInputBO> successList = new ArrayList<>();
+        List<HfEmpPreInputBO> failList = new ArrayList<>();
+
+        try {
+            importParams.setKeyIndex(null);
+            importParams.setNeedVerfiy(true);
+            importParams.setVerifyHanlder(new HfEmpPreInputVerifyHandler(hfEmpPreInputService, logApiUtil));
+            hfFileImportService.executeExcelImport(hfFileImportService.IMPORT_TYPE_EMP_PRE_INPUT, hfFileImportService.DEFAULT_RELATED_UNIT_ID,
+                null, hfImportEmpPreInputService, successList, failList,
+                importParams, files, UserContext.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogMessage logMessage = LogMessage.create().setTitle("文件上传")
+                .setContent("上传雇员公积金账号预录入信息：" + e.getMessage());
+            logApiUtil.error(logMessage);
+            return JsonResultKit.ofError("文件读取失败，请先检查文件格式是否正确");
+        }
+
+        return JsonResultKit.of(failList);
+    }
+
+    @RequestMapping("/downloadEmpPreInputTemplate")
+    public void downloadEmpPreInputTemplate(HttpServletResponse response) {
+        String fileNme = "雇员公积金账号预录入模板.xls";
+        List<EmpTransferTemplateImpXsl> opts = new ArrayList();
+        ExcelUtil.exportExcel(opts, HfEmpPreInputBO.class, fileNme, response);
     }
 }
