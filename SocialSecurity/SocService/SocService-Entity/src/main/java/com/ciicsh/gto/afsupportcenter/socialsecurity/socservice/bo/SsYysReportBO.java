@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(callSuper = false)
 @ExcelTarget("SsYysReportBO")
 public class SsYysReportBO {
+
     @Excel(name = "客户编号", width = 25, orderNum = "1")
     private String companyId;
     @Excel(name = "雇员编号", width = 20, orderNum = "2")
@@ -49,13 +50,14 @@ public class SsYysReportBO {
     private BigDecimal comCompensatedAmountUnemployment;
     @Excel(name = "失业个人补缴", width = 20,orderNum = "19", type=10)
     private BigDecimal empCompensatedAmountUnemployment;
-    @Excel(name = "社保登记码", width = 20, orderNum = "20")
+    @Excel(name = "企业社保账户名称", width = 20, orderNum = "20")
+    private String comAccountName;
+    @Excel(name = "社保登记码", width = 20, orderNum = "21")
     private String ssAccount;
-    @Excel(name = "服务中心", width = 30, orderNum = "21")
+    @Excel(name = "服务中心", width = 30, orderNum = "22")
     private String serviceCenter;
-    @Excel(name = "法人一证通密码", width = 25, orderNum = "22")
+    @Excel(name = "法人一证通密码", width = 25, orderNum = "23")
     private String ssPwd;
 
-    private String comAccountName;
     private Integer category;
 }

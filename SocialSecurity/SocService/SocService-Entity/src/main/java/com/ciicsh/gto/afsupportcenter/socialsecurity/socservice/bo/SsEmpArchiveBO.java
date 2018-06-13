@@ -46,6 +46,18 @@ public class SsEmpArchiveBO extends SsEmpArchive {
     //客服中心
     private String serviceCenter;
 
+    private Integer empClassify;
+
+    @Override
+    public Integer getEmpClassify() {
+        return empClassify;
+    }
+
+    @Override
+    public void setEmpClassify(Integer empClassify) {
+        this.empClassify = empClassify;
+    }
+
     @Override
     public String getServiceCenter() {
         return serviceCenter;
