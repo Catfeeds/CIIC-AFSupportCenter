@@ -69,13 +69,20 @@ public class SsPaymentComController  extends BasicController<SsPaymentComService
         json.setCode(0);
         json.setMessage("成功");
 
-        //数据校验
-
-        //计算并保存
         business.saveAdjustment(ssPaymentComBO);
         return json;
     }
+    @PostMapping("/doCheck")
+    public JsonResult<String> doCheck(Long paymentComId) {
 
+        business.doCheck(paymentComId);
+        JsonResult<String> json = new JsonResult<String>();
+        json.setCode(0);
+        json.setMessage("成功");
+
+
+        return json;
+    }
     /**
      * 添加至支付批次
      * @param ssAddPaymentDTO 添加条件

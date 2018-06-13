@@ -157,6 +157,7 @@
             <result column="settlement_area" property="settlementArea"/>
             <result column="payment_bank" property="paymentBank"/>
             <result column="payment_way" property="paymentWay"/>
+            <result column="payment_type" property="paymentType"/>
             <result column="bill_receiver" property="billReceiver"/>
             <result column="expire_date_acc" property="expireDate"/>
             <result column="ss_username" property="ssUsername"/>
@@ -593,6 +594,7 @@
         sca.settlement_area,
         sca.payment_bank,
         sca.payment_way,
+        sca.payment_type,
         sca.bill_receiver,
         sca.expire_date AS expire_date_acc,
         sca.ss_username,

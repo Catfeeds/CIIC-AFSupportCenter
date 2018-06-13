@@ -161,6 +161,16 @@ public class SsPaymentComBO {
     //客服中心
     private Integer serviceCenterValue;
 
+    private  Integer ifCheck;
+
+    public Integer getIfCheck() {
+        return ifCheck;
+    }
+
+    public void setIfCheck(Integer ifCheck) {
+        this.ifCheck = ifCheck;
+    }
+
     public Integer getServiceCenterValue() {
         return serviceCenterValue;
     }

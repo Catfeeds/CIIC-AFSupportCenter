@@ -127,6 +127,7 @@ public class SsComTaskDTO{
      3-我司垫付
      */
     private Integer paymentWay;
+    private Integer paymentType;
     /**
      * 社保帐单寄到哪里: 1 我司，2 客户公司（前道传递）
      */
@@ -229,6 +230,14 @@ public class SsComTaskDTO{
      */
 
     private String isComplete;
+
+    public Integer getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(Integer paymentType) {
+        this.paymentType = paymentType;
+    }
 
     public Long getComTaskId() {
         return comTaskId;

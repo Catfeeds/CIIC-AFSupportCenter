@@ -78,6 +78,18 @@ public class SsComAccount implements Serializable {
      */
 	@TableField("payment_way")
 	private Integer paymentWay;
+
+    @TableField("payment_type")
+    private Integer paymentType;
+
+    public Integer getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(Integer paymentType) {
+        this.paymentType = paymentType;
+    }
+
     /**
      * 社保帐单寄到哪里: 1 我司，2 客户公司
      */
