@@ -120,6 +120,8 @@
         <result column="com_account_name" property="comAccountName" />
         <result column="basic_com_account_class_id" property="basicComAccountClassId" />
         <result column="added_com_account_class_id" property="addedComAccountClassId" />
+        <result column="emp_bas_last_month" property="empBasLastMonth" />
+        <result column="emp_add_last_month" property="empAddLastMonth" />
         <result column="basic_com_task_status" property="basicComTaskStatus" />
         <result column="added_com_task_status" property="addedComTaskStatus" />
         <result column="hf_account_type" property="hfAccountType" />
@@ -667,6 +669,8 @@
         hcaca.com_account_class_id AS added_com_account_class_id,
         CASE WHEN hcacb.com_account_class_id IS NOT NULL THEN 3 ELSE hctb.task_status END AS basic_com_task_status,
         CASE WHEN hcaca.com_account_class_id IS NOT NULL THEN 3 ELSE hcta.task_status END AS added_com_task_status,
+        CASE WHEN hcacb.com_hf_month IS NULL OR hcacb.com_hf_month = hcacb.com_start_month THEN NULL ELSE PERIOD_ADD(hcacb.com_hf_month, -1) END AS emp_bas_last_month,
+        CASE WHEN hcaca.com_hf_month IS NULL OR hcaca.com_hf_month = hcaca.com_start_month THEN NULL ELSE PERIOD_ADD(hcaca.com_hf_month, -1) END AS emp_add_last_month,
         IFNULL(hca.hf_account_type, 3) AS hf_account_type,
         IFNULL(hcacb.hf_com_account, hctb.hf_com_account) AS basic_hf_com_account,
         IFNULL(hcacb.com_hf_month, CONVERT(hctb.com_start_month, SIGNED)) AS basic_com_hf_month,

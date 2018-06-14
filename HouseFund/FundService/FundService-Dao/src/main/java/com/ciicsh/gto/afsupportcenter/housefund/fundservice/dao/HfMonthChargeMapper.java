@@ -59,4 +59,14 @@ public interface HfMonthChargeMapper extends BaseMapper<HfMonthCharge> {
      * @return 导出结果
      */
     List<HfPaymentAccountReportBo> getOperateDetailReport(HfPaymentAccountBo hfPaymentAccountBo);
+
+    /**
+     * 查询雇员转入或转出汇缴明细
+     *
+     * @param hfMonthChargeBo
+     * @return
+     */
+    HfMonthChargeBo getMonthChargeByIn(HfMonthChargeBo hfMonthChargeBo);
+    HfMonthChargeBo getMonthChargeByOut(HfMonthChargeBo hfMonthChargeBo);
+    HfMonthChargeBo getMonthChargeByInOut(HfMonthChargeBo hfMonthChargeBo);
 }

@@ -8,6 +8,8 @@ import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRe
 import com.ciicsh.gto.basicdataservice.api.DicItemServiceProxy;
 import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import com.ciicsh.gto.basicdataservice.api.dto.EmptyDicItemDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.AfEmployeeDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeIdQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
@@ -118,6 +120,11 @@ public class CommonApiUtils {
     public com.ciicsh.gto.employeecenter.apiservice.api.dto.JsonResult<EmployeeInfoDTO> getEmployeeInfo(
         @RequestBody EmployeeQueryDTO var1) throws Exception {
         return employeeInfoProxy.getEmployeeInfo(var1);
+    }
+
+    public com.ciicsh.gto.employeecenter.apiservice.api.dto.JsonResult<AfEmployeeDTO> getAfEmployeeInfo(
+        @RequestBody EmployeeIdQueryDTO var1) throws Exception {
+        return employeeInfoProxy.getAfEmployee(var1);
     }
 
     /**

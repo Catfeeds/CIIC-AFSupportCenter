@@ -27,6 +27,7 @@
         <result column="welfare_unit" property="welfareUnit" />
         <result column="service_center_id" property="serviceCenterId" />
         <result column="service_center" property="serviceCenter" />
+        <result column="af_bpo_fc" property="afBpoFc" />
     </resultMap>
 
     <!-- 通用查询映射结果 -->
@@ -34,6 +35,7 @@
                type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpArchiveBO">
         <result column="employee_id" property="employeeId"/>
         <result column="employee_name" property="employeeName"/>
+        <result column="id_card_type" property="idCardType"/>
         <result column="id_num" property="idNum"/>
         <result column="ss_account" property="ssAccount"/>
         <result column="ss_account_type" property="ssAccountType"/>
@@ -60,6 +62,7 @@
             et.employee_id,
             ea.*,
             e.employee_name,
+            e.id_card_type,
             e.id_num,
             sca.ss_account_type
             FROM ss_emp_task et
