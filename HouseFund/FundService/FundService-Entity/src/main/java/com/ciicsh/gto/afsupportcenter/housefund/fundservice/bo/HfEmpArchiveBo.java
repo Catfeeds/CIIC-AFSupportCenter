@@ -34,4 +34,5 @@ public class HfEmpArchiveBo extends HfEmpArchive{
     private String leaderShipName;
     private Integer hasOut;
     private String handleRemark;
+    private Integer hfType;
 }

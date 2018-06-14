@@ -240,6 +240,7 @@
         WHERE  afemp.is_active = 1
         AND afemp.company_id = #{companyId}
         AND afemp.employee_id = #{employeeId}
+        ORDER  BY afemp.emp_company_id DESC LIMIT 1
     </select>
 
     <!--检查雇员社保序号是否重复-->

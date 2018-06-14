@@ -76,10 +76,12 @@ public class HfEmpArchiveController extends  BasicController<HfEmpArchiveService
 
     @RequestMapping("/viewEmpArchiveInfo")
     @ResponseBody
-    public JsonResult viewEmpArchiveInfo(@RequestParam("empArchiveId") String empArchiveId, @RequestParam("companyId") String companyId) {
-       if(null==empArchiveId)return JsonResultKit.ofError("ID不能为空");
+    public JsonResult viewEmpArchiveInfo(@RequestParam(required = false) String empArchiveId,
+                                         @RequestParam(required = false)String companyId,
+                                         @RequestParam(required = false)String employeeId ) {
+      // if(empArchiveId == null)return JsonResultKit.ofError("ID不能为空");
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        resultMap= business.viewEmpArchiveInfo(empArchiveId,companyId);
+        resultMap= business.viewEmpArchiveInfo(empArchiveId,companyId,employeeId);
         return JsonResultKit.of(resultMap);
     }
 
