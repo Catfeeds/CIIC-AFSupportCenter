@@ -146,6 +146,9 @@ public class SsEmpArchive implements Serializable {
     @TableField("service_center")
     private String serviceCenter;
 
+    @TableField("af_bpo_fc")
+    private Integer afBpoFc;
+
 	public Long getEmpArchiveId() {
 		return empArchiveId;
 	}
@@ -330,6 +333,14 @@ public class SsEmpArchive implements Serializable {
         this.serviceCenter = serviceCenter;
     }
 
+    public Integer getAfBpoFc() {
+        return afBpoFc;
+    }
+
+    public void setAfBpoFc(Integer afBpoFc) {
+        this.afBpoFc = afBpoFc;
+    }
+
     @Override
 	public String toString() {
 		return "SsEmpArchive{" +
@@ -356,6 +367,7 @@ public class SsEmpArchive implements Serializable {
             ", welfareUnit=" + welfareUnit +
             ", serviceCenterId=" + serviceCenterId +
             ", serviceCenter=" + serviceCenter +
+            ", afBpoFc=" + afBpoFc +
 			"}";
 	}
 }

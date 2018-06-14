@@ -48,6 +48,10 @@ public class SsEmpArchiveBO extends SsEmpArchive {
 
     private Integer empClassify;
 
+    private String zipCode;
+
+    private Integer idCardType;
+
     @Override
     public Integer getEmpClassify() {
         return empClassify;
@@ -202,5 +206,21 @@ public class SsEmpArchiveBO extends SsEmpArchive {
 
     public void setLeaderShipName(String leaderShipName) {
         this.leaderShipName = leaderShipName;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public Integer getIdCardType() {
+        return idCardType;
+    }
+
+    public void setIdCardType(Integer idCardType) {
+        this.idCardType = idCardType;
     }
 }
