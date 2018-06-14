@@ -5,8 +5,9 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.Arc
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.EmploymentDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.ResignDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.TaskParamDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmpTaskBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmTaskParamBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.EmployeeBatchBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.employSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -39,8 +40,6 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
 
     AmEmpTask getAmEmpTaskById(Long amEmpTaskId);
 
-    Map<String, Object>  getInformation(AmTaskParamBO param);
-
     boolean insertTaskFire(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) throws Exception;
 
     List<employSearchExportOpt>  queryAmEmpTaskList(AmEmpTaskBO amEmpTaskBO);
@@ -57,5 +56,8 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
 
     ResignDTO getResignByTaskId(TaskParamDTO taskParamDTO);
 
+    Map<String,Object> batchSaveEmployee(AmArchiveBO amArchiveBO);
+
+    boolean batchSaveEmployment(EmployeeBatchBO employeeBatchBO);
 
 }

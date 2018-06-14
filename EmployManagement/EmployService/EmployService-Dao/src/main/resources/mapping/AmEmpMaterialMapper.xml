@@ -48,5 +48,14 @@
         UPDATE am_emp_material  set receive_name = #{receiveName},receive_date = #{receiveDate},receive_id = #{receiveId},modified_time = #{receiveDate},modified_by=#{receiveId} where  emp_task_id = #{empTaskId}
     </update>
 
+    <update id="updateMaterialBatch">
+        UPDATE am_emp_material  set receive_name = #{receiveName},receive_date = #{receiveDate},receive_id = #{receiveId},modified_time = #{receiveDate},modified_by=#{receiveId}
+        <where>
+            <foreach collection="empTaskIdList" item="item" open="emp_task_id IN (" separator="," close=")">
+                #{item}
+            </foreach>
+        </where>
+    </update>
+
 
 </mapper>

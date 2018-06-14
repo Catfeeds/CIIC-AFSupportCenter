@@ -26,4 +26,6 @@ public interface IAmEmpMaterialService extends IService<AmEmpMaterial> {
     List<MaterialDTO> queryMaterialByTaskId(Long empTaskId);
 
     boolean updateMaterialByTaskId(MaterialUpdateDTO materialUpdateDTO);
+
+    boolean updateMaterialBatch(AmEmpMaterialBO amEmpMaterialBO);
 }

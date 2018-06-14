@@ -16,10 +16,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.ut
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.employSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmEmpTaskMapper;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpCustom;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpEmployee;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpMaterial;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
@@ -29,6 +26,7 @@ import com.ciicsh.gto.employeecenter.apiservice.api.dto.*;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.CompanyTypeDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -74,6 +72,17 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Autowired
     private AfEmployeeProductProxy afEmployeeProductProxy;
+
+    @Autowired
+    private IAmEmploymentService amEmploymentService;
+
+    @Autowired
+    private  IAmArchiveService  amArchiveService;
+
+    @Autowired
+    private IAmRemarkService amRemarkService;
+
+
 
 
     @Override
@@ -431,188 +440,6 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     }
 
     @Override
-    public Map<String, Object> getInformation(AmTaskParamBO param) {
-
-        Map<String,Object> map = new HashMap<>();
-
-        AmCustomBO customBO = new AmCustomBO();//客户信息
-        AmEmpTaskBO employeeBO = new AmEmpTaskBO();//雇佣信息
-        AmEmpTask amEmpTask = null;
-        String  missId = "";
-        customBO.setCompanyId(param.getCompanyId());
-        try {
-            if(null!=param.getEmpTaskId()&&param.isResign()==false)
-            {
-                amEmpTask = super.selectById(param.getEmpTaskId());
-                missId = amEmpTask.getBusinessInterfaceId();
-                employeeBO.setArchiveDirection(amEmpTask==null?"":amEmpTask.getArchiveDirection());
-                employeeBO.setEmployeeNature(amEmpTask==null?"":amEmpTask.getEmployeeNature());
-                employeeBO.setEmployProperty(amEmpTask==null?"":amEmpTask.getEmployProperty());
-            }else{
-                AmEmpTaskBO amEmpTaskBO = new AmEmpTaskBO();
-                amEmpTaskBO.setCompanyId(param.getCompanyId());
-                amEmpTaskBO.setEmployeeId(param.getEmployeeId());
-
-                amEmpTask = this.queryEmpTask(amEmpTaskBO);
-                missId = amEmpTask.getBusinessInterfaceId();
-                employeeBO.setArchiveDirection(amEmpTask==null?"":amEmpTask.getArchiveDirection());
-                employeeBO.setEmployeeNature(amEmpTask==null?"":amEmpTask.getEmployeeNature());
-                employeeBO.setEmployProperty(amEmpTask==null?"":amEmpTask.getEmployProperty());
-
-            }
-
-        } catch (Exception e) {
-            logger.error(e.getMessage(),e);
-        }
-
-        //调用前道接口
-        AfEmployeeCompanyDTO afEmployeeCompanyDTO = null;
-        try {
-            TaskCreateMsgDTO taskMsgDTO = new TaskCreateMsgDTO();
-            taskMsgDTO.setMissionId(amEmpTask.getBusinessInterfaceId());
-            AfEmployeeInfoDTO afEmployeeInfoDTO = employeeInfoProxy.callInfByMissId(taskMsgDTO);
-            afEmployeeCompanyDTO = afEmployeeInfoDTO.getEmployeeCompany();
-        } catch (Exception e) {
-            logger.error(e.getMessage(),e);
-        }
-
-        if(afEmployeeCompanyDTO!=null)
-        {
-            employeeBO.setTemplateType(ReasonUtil.getYgsx(afEmployeeCompanyDTO.getHireUnit()==null?"":afEmployeeCompanyDTO.getHireUnit().toString()));
-            employeeBO.setPosition(afEmployeeCompanyDTO.getPosition());
-
-            Map<String,Object> param0 = new HashMap<>();
-            List<AmEmpTaskBO> list = null;
-            if(afEmployeeCompanyDTO.getHireUnit()==1){ //独立户
-                param0.put("companyId",param.getCompanyId());
-                list = baseMapper.querySocial(param0);
-            }else {//大库
-                list = baseMapper.querySocialCi();
-            }
-
-            if(list!=null&&list.size()>0)
-            {
-                employeeBO.setSsAccount(list.get(0).getSsAccount());
-                employeeBO.setSettlementArea(list.get(0).getSettlementArea());
-                employeeBO.setAccountRepairDate(list.get(0).getAccountRepairDate());
-                employeeBO.setSsPwd(list.get(0).getSsPwd());
-            }
-        }
-
-        EmployeeQueryDTO var1 = new EmployeeQueryDTO();
-        var1.setBusinessType(1);
-        var1.setIdCardType(param.getIdCardType());
-        var1.setIdNum(param.getIdNum());
-        JsonResult<EmployeeInfoDTO> jsonResult = null;//雇佣信息接口
-
-        try {
-            jsonResult = employeeInfoProxy.getEmployeeInfo(var1);
-        } catch (Exception e) {
-            logger.error(e.getMessage(),e);
-        }
-
-        if(null!=jsonResult&&null!=jsonResult.getData()){
-            EmployeeInfoDTO employeeInfoDTO = jsonResult.getData();
-            employeeBO.setEmployeeId(employeeInfoDTO.getEmployeeId());
-            employeeBO.setIdNum(employeeInfoDTO.getIdNum());
-            employeeBO.setEmployeeName(employeeInfoDTO.getEmployeeName());
-            employeeBO.setSex(employeeInfoDTO.getGender()==0?"女":"男");
-            employeeBO.setMobile(employeeInfoDTO.getMobile());
-            employeeBO.setResidenceAddress(employeeInfoDTO.getResidenceAddress());
-        }
-
-        EmployeeHireInfoQueryDTO employeeHireInfoQueryDTO = new EmployeeHireInfoQueryDTO();
-        employeeHireInfoQueryDTO.setCompanyId(param.getCompanyId());
-        employeeHireInfoQueryDTO.setEmployeeId(param.getEmployeeId());
-        JsonResult<EmployeeHireInfoDTO> employeeHireInfo = null;//雇佣雇佣信息接口
-
-        try {
-            employeeHireInfo = employeeInfoProxy.getEmployeeHireInfo(employeeHireInfoQueryDTO);
-        } catch (Exception e) {
-            logger.error(e.getMessage(),e);
-        }
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        if(employeeHireInfo!=null&&null!=employeeHireInfo.getData()){
-            EmployeeHireInfoDTO employeeHireInfoDTO = employeeHireInfo.getData();
-            employeeBO.setFirstInDate(employeeHireInfoDTO.getFirstInDate()==null?"":sdf.format(employeeHireInfoDTO.getFirstInDate()));
-            employeeBO.setFirstInCompanyDate(employeeHireInfoDTO.getFirstInCompanyDate()==null?"":sdf.format(employeeHireInfoDTO.getFirstInCompanyDate()));
-            employeeBO.setOrganizationCode(employeeHireInfoDTO.getOrganizationCode());
-            employeeBO.setPosition(employeeHireInfoDTO.getPosition());
-            employeeBO.setLaborStartDate(employeeHireInfoDTO.getLaborStartDate()==null?"":sdf.format(employeeHireInfoDTO.getLaborStartDate()));
-            employeeBO.setLaborEndDate(employeeHireInfoDTO.getLaborEndDate()==null?"":sdf.format(employeeHireInfoDTO.getLaborEndDate()));
-            if(employeeHireInfoDTO.getLaborEndDate()==null)
-            {
-                employeeBO.setIsUnlimitedContract("是");
-            }else{
-                employeeBO.setIsUnlimitedContract("否");
-
-                if(employeeHireInfoDTO.getLaborStartDate()!=null){
-                    String d = ReasonUtil.getCondemnationYears(employeeHireInfoDTO.getLaborStartDate(),employeeHireInfoDTO.getLaborEndDate());
-                    employeeBO.setSendCondemnationYears(d);
-                }
-            }
-
-            SMUserInfoDTO smUserInfoDTO = null;
-            if(!StringUtil.isEmpty(employeeHireInfoDTO.getEmployeeCenterOperator()))
-            {
-                smUserInfoDTO = employeeInfoProxy.getUserInfo(employeeHireInfoDTO.getEmployeeCenterOperator());
-            }
-
-            customBO.setEmployeeCenterOperator(smUserInfoDTO==null?"":smUserInfoDTO.getDisplayName());
-
-        }
-
-        AmCompanySetBO amCompanySetBO = new AmCompanySetBO();
-        amCompanySetBO.setCompanyId(param.getCompanyId());
-        AmCompanySetBO amCompanySetBO1 = amCompanySetService.queryAmCompanySet(amCompanySetBO);
-        if(amCompanySetBO1!=null)
-        {
-            employeeBO.setEmploySpecial(ReasonUtil.removeMark(amCompanySetBO1.getEmploySpecial()));
-            employeeBO.setKeyType(amCompanySetBO1.getKeyType());
-            employeeBO.setKeyCode(amCompanySetBO1.getKeyCode());
-            employeeBO.setKeyPwd(amCompanySetBO1.getKeyPwd());
-            employeeBO.setKeyStatus(amCompanySetBO1.getKeyStatus());
-        }
-
-        //档案费
-        try {
-            Long ll = Long.parseLong(missId);
-            List<AfEmpProductDTO> afEmpProductDTOList = afEmployeeProductProxy.getByEmpAgreement(ll,1);
-            for(AfEmpProductDTO afEmpProductDTO:afEmpProductDTOList)
-            {
-                if("CPJSW1800005".equals(afEmpProductDTO.getBasicProductId())){
-                    employeeBO.setFileFee("有");
-                }
-            }
-        } catch (NumberFormatException e) {
-
-        }
-
-
-        //获取服务中心
-        AfCompanyDetailResponseDTO afCompanyDetailResponseDTO = employeeInfoProxy.getCompanyDetail(param.getCompanyId());
-        customBO.setServiceCenter(afCompanyDetailResponseDTO==null?"":afCompanyDetailResponseDTO.getServiceCenter());//服务中心
-        String companyName = afCompanyDetailResponseDTO==null?"":afCompanyDetailResponseDTO.getCompanyName();
-        this.setCustomBO(amEmpTask,customBO,companyName);
-
-        try {
-            AmCustomBO amCustomBO  = amEmpCustomService.getCustom(param.getEmpTaskId());
-            customBO.setLeaderShipName(amCustomBO==null?"":amCustomBO.getLeaderShipName());//客服经理
-            customBO.setCreatedDisplayName(amCustomBO==null?"":amCustomBO.getCreatedDisplayName());//客服专员
-        } catch (Exception e) {
-            logger.error(e.getMessage(),e);
-        }
-
-        map.put("customBO",customBO);
-        map.put("employeeBO",employeeBO);
-
-        return map;
-    }
-
-
-
-    @Override
     public List<employSearchExportOpt> queryAmEmpTaskList(AmEmpTaskBO amEmpTaskBO) {
         return  baseMapper.queryAmEmpTaskList(amEmpTaskBO);
     }
@@ -695,6 +522,186 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             return  resignDTO;
         }
         return null;
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public Map<String,Object> batchSaveEmployee(AmArchiveBO amArchiveBO) {
+        Map<String,Object> map = new HashMap<>();
+        List<String> taskIdList = new ArrayList<>();
+        LocalDateTime now = LocalDateTime.now();
+        boolean result = false;
+        Map<String,Object> param = new HashMap<>();
+
+        List<AmEmploymentBO> amEmploymentBOList = amEmploymentService.queryAmEmploymentBatch(Arrays.asList(amArchiveBO.getEmpTaskIds()));
+
+        List<AmArchive> amArchiveList = new ArrayList<>();
+        List<AmEmpTask> amEmpTaskList = new ArrayList<>();
+        String yuliuDocNum = amArchiveBO.getYuliuDocNum();
+        String docNum = amArchiveBO.getDocNum();
+        Integer yuliuDocNumInt = Integer.parseInt(yuliuDocNum);
+        Integer docNumInt = Integer.parseInt(docNum);
+
+        int i = 0;
+        for(AmEmployment temp:amEmploymentBOList)
+        {
+            param.put("employmentId",temp.getEmploymentId());
+            List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchiveList(param);
+            AmArchive entity = new AmArchive();
+            BeanUtils.copyProperties(amArchiveBO,entity);
+            if(null!=amArchiveBOList&&amArchiveBOList.size()>0)
+            {
+                AmArchiveBO amArchiveBO1 = amArchiveBOList.get(0);
+                entity.setArchiveId(amArchiveBO1.getArchiveId());
+                entity.setCreatedTime(amArchiveBO1.getCreatedTime());
+                entity.setCreatedBy(amArchiveBO1.getCreatedBy());
+            }else{
+                entity.setCreatedTime(now);
+                entity.setCreatedBy(ReasonUtil.getUserId());
+            }
+
+            yuliuDocNumInt = yuliuDocNumInt + i;
+            docNumInt = docNumInt + i;
+            entity.setYuliuDocNum(yuliuDocNumInt.toString());
+            entity.setDocNum(docNumInt.toString());
+            ++i;
+
+            entity.setEmploymentId(temp.getEmploymentId());
+            entity.setEmployeeId(temp.getEmployeeId());
+            entity.setCompanyId(temp.getCompanyId());
+            entity.setModifiedTime(now);
+
+            entity.setModifiedBy(ReasonUtil.getUserId());
+            entity.setIsActive(1);
+
+            AmEmpTask amEmpTask = null;
+            if(!StringUtil.isEmpty(entity.getEmployFeedback()))
+            {
+                amEmpTask = baseMapper.selectById(temp.getEmpTaskId());
+                amEmpTask.setTaskStatus(Integer.parseInt(entity.getEmployFeedback()));
+                taskIdList.add(amEmpTask.getTaskId());
+                if("0".equals(amArchiveBO.getIsFrist()))
+                {
+                    if("11".equals(entity.getEmployFeedback()))
+                    {
+
+                    }else{
+                        amEmpTask.setFinish(true);
+                    }
+                }
+            }
+            amArchiveList.add(entity);
+            amEmpTaskList.add(amEmpTask);
+        }
+
+        this.insertOrUpdateBatch(amEmpTaskList);
+        result =  amArchiveService.insertOrUpdateAllColumnBatch(amArchiveList);
+        if(result)
+        {
+            // 修改预留档案编号 seq
+            if(amArchiveBO.getYuliuDocNum() != null && amArchiveBO.getYuliuDocType() != null){
+                AmArchiveDocSeq seq = new AmArchiveDocSeq();
+                seq.setType(1);
+                seq.setDocType(amArchiveBO.getYuliuDocType());
+                seq.setDocSeq(yuliuDocNumInt);
+                List<AmArchiveDocSeqBO> list1 = amArchiveService.queryCountHaveAbove(seq);
+                // 比原有的seq要大
+                if(list1.size() == 0){
+                    amArchiveService.updateByTypeAndDocType(seq);
+                }
+            }
+            // 修改档案编号 seq
+            if(amArchiveBO.getDocNum() != null && amArchiveBO.getDocType() != null){
+                AmArchiveDocSeq seq2 = new AmArchiveDocSeq();
+                seq2.setType(2);
+                seq2.setDocType(amArchiveBO.getDocType());
+                seq2.setDocSeq(docNumInt);
+                List<AmArchiveDocSeqBO> list2 = amArchiveService.queryCountHaveAbove(seq2);
+                // 比原有的seq要大
+                if(list2.size() == 0){
+                    amArchiveService.updateByTypeAndDocType(seq2);
+                }
+            }
+        }
+        map.put("result",result);
+        map.put("taskIdList",taskIdList);
+        return map;
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public boolean batchSaveEmployment(EmployeeBatchBO employeeBatchBO) {
+
+        Map<String,Object> param = new HashMap<>();
+        List<AmRemark> amRemarkList = new ArrayList<>();
+        List<AmEmployment> list = new ArrayList<>();
+
+        LocalDateTime now = LocalDateTime.now();
+        String userId = ReasonUtil.getUserId();
+        String userName = ReasonUtil.getUserName();
+        for(Long emTaskId:employeeBatchBO.getEmpTaskIds())
+        {
+            AmEmpTask amEmpTask = this.getAmEmpTaskById(emTaskId);
+            AmEmployment entity = null;
+            param.put("empTaskId",emTaskId);
+            List<AmEmploymentBO>  amEmploymentBOList = amEmploymentService.queryAmEmployment(param);
+
+            entity = new AmEmployment();
+
+            if(amEmploymentBOList!=null&&amEmploymentBOList.size()>0)
+            {
+                AmEmploymentBO amEmploymentBO = amEmploymentBOList.get(0);
+                entity.setEmploymentId(amEmploymentBO.getEmploymentId());
+                entity.setCreatedBy(amEmploymentBO.getCreatedBy());
+                entity.setCreatedTime(amEmploymentBO.getCreatedTime());
+            }else{
+
+                entity.setCreatedTime(now);
+                entity.setCreatedBy(userId);
+            }
+
+            entity.setEmpTaskId(emTaskId);
+            entity.setEmployProperty(employeeBatchBO.getEmployProperty());
+            entity.setEmployDate(employeeBatchBO.getEmployDate());
+            entity.setOpenAfDate(employeeBatchBO.getOpenAfDate());
+            entity.setEmployStyle(employeeBatchBO.getEmployStyle());//默认全日制
+            entity.setEmployeeId(amEmpTask.getEmployeeId());
+            entity.setCompanyId(amEmpTask.getCompanyId());
+            entity.setEmployOperateMan(userName);
+
+            entity.setModifiedTime(now);
+            entity.setModifiedBy(userId);
+            entity.setIsActive(1);
+
+            AmRemark amRemark = new AmRemark();
+            amRemark.setEmpTaskId(emTaskId);
+            amRemark.setRemarkContent(employeeBatchBO.getRemarkContent());
+            amRemark.setRemarkType(1);
+            amRemark.setRemarkMan(userName);
+            amRemark.setCreatedBy(userId);
+            amRemark.setCreatedTime(now);
+            amRemark.setModifiedBy(userId);
+            amRemark.setModifiedTime(now);
+
+            amRemarkList.add(amRemark);
+
+            list.add(entity);
+        }
+
+        amRemarkService.insertBatch(amRemarkList);
+
+        AmEmpMaterialBO amEmpMaterialBO = new AmEmpMaterialBO();
+        amEmpMaterialBO.setEmpTaskIdList(employeeBatchBO.getEmpTaskIds());
+        amEmpMaterialBO.setReceiveDate(employeeBatchBO.getReceiveDate());
+        amEmpMaterialBO.setReceiveId(userId);
+        amEmpMaterialBO.setReceiveName(userName);
+        amEmpMaterialBO.setModifiedBy(userId);
+        amEmpMaterialBO.setModifiedTime(now);
+        amEmpMaterialService.updateMaterialBatch(amEmpMaterialBO);
+
+        boolean b = amEmploymentService.insertOrUpdateAllColumnBatch(list);
+
+        return b;
     }
 
 

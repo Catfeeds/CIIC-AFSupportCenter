@@ -21,4 +21,6 @@ public interface AmEmpEmployeeService extends IService<AmEmpEmployee> {
 
     AmEmpEmployeeBO queryDefaultAmEmployee(AmTaskParamBO amTaskParamBO);
 
+    AmEmpEmployeeBO queryAmEmployeeByTaskIdDefault(Long empTaskId);
+
 }

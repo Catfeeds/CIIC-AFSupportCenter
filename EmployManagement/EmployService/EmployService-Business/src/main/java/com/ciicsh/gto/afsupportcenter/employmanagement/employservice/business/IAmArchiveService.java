@@ -24,4 +24,8 @@ public interface IAmArchiveService extends IService<AmArchive> {
 
     Map<String,Object>  saveArchive(AmArchiveBO amArchiveBO);
 
+    List<AmArchiveDocSeqBO> queryCountHaveAbove(AmArchiveDocSeq seq);
+
+    List<AmArchive> queryAmArchiveByEmploymentId(Long employmentId);
+
 }

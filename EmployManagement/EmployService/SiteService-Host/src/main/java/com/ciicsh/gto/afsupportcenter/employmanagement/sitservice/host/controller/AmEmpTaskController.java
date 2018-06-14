@@ -557,5 +557,45 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         return JsonResultKit.of(resultMap);
     }
 
+    @PostMapping("/saveBatchEmploy")
+    public JsonResult<AmArchiveBO>  saveBatchEmploy(@RequestBody AmArchiveBO amArchiveBO) {
+        Map<String,Object>  map  = business.batchSaveEmployee(amArchiveBO);
+        Boolean result = (Boolean)map.get("result");
+
+        if(result)
+        {
+            /**
+             * 如果数据保存成功并且用工完成，调用工作流
+             */
+            if(null!=amArchiveBO.getEmployFeedback()&&!"11".equals(amArchiveBO.getEmployFeedback()))
+            {
+                Map<String,Object> variables = new HashMap<>();
+                variables.put("status", ReasonUtil.getYgResult(amArchiveBO.getEmployFeedback()));
+                variables.put("remark",ReasonUtil.getYgfk(amArchiveBO.getEmployFeedback()));
+                String userName = "system";
+                try {
+                    userName = UserContext.getUser().getDisplayName();
+                } catch (Exception e) {
+
+                }
+                variables.put("assignee",userName);
+                List<String> taskIdList = (List<String>)map.get("taskIdList");
+                for(String taskId:taskIdList)
+                {
+                    TaskCommonUtils.completeTask(taskId,employeeInfoProxy,variables);
+                }
+                amArchiveBO.setEnd(true);
+            }
+        }
+
+        return JsonResultKit.of(amArchiveBO);
+    }
+
+    @RequestMapping("/batchSaveEmployment")
+    public JsonResult<Boolean> batchSaveEmployment(EmployeeBatchBO employeeBatchBO){
+        Boolean b = business.batchSaveEmployment(employeeBatchBO);
+        return  JsonResultKit.of(b);
+    }
+
 }
 

@@ -11,6 +11,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.T
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
@@ -87,6 +88,23 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         SsEmpTaskBO dto = pageInfo.toJavaObject(SsEmpTaskBO.class);
         dto.setUserId(userId);
         handleTaskCategory(dto);
+        //
+        List<String> param = new ArrayList<String>();
+        List<String> orderParam = new ArrayList<String>();
+        if (!StringUtil.isEmpty(dto.getParams()))
+        {
+            String arr[] = dto.getParams().split(",");
+            for (int i = 0; i < arr.length; i++) {
+                if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
+                    orderParam.add(arr[i]);
+                }else {
+                    param.add(arr[i]);
+                }
+            }
+        }
+        dto.setParam(param);
+        dto.setOrderParam(orderParam);
+        //
         if (2 == dto.getOperatorType()) {
             return PageKit.doSelectPage(pageInfo, () -> baseMapper.employeeSpecialOperatorQuery(dto));
         } else {

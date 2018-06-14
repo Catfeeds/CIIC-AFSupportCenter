@@ -16,12 +16,12 @@ public interface AmEmpMaterialMapper extends BaseMapper<AmEmpMaterial> {
 
     List<AmEmpMaterialBO> queryAmEmpMaterial(AmEmpMaterialBO amEmpMaterialBO);
 
-
     List<AmEmpMaterialBO>  queryMaterialDic();
 
     List<AmEmpMaterialBO>  queryMaterialByTaskId(Long empTaskId);
 
     Integer updateMaterialByTaskId(MaterialUpdateDTO materialUpdateDTO);
 
+    Integer updateMaterialBatch(AmEmpMaterialBO amEmpMaterialBO);
 
 }

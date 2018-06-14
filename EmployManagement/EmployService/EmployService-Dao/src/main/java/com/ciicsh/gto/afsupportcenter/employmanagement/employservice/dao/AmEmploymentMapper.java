@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmploymentBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.EmployeeBatchBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmployment;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.archiveSearchExportOpt;
 
@@ -28,5 +29,7 @@ public interface AmEmploymentMapper extends BaseMapper<AmEmployment> {
     List<AmEmploymentBO> queryAmEmploymentResign(Map<String, Object> param);
 
     List<AmEmploymentBO>  queryAmArchiveResign(AmEmploymentBO amEmploymentBO);
+
+    List<AmEmploymentBO> queryAmEmploymentBatch(EmployeeBatchBO employeeBatchBO);
 
 }

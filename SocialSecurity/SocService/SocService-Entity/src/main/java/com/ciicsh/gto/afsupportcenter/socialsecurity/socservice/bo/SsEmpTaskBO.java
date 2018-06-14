@@ -167,4 +167,8 @@ public class SsEmpTaskBO implements Serializable {
     private String oldCityCode;
     private String newCityCode;
     private Boolean socialStartAndStop;
+
+    private List<String> param;
+    private  String params;
+    private List<String> orderParam;
 }
