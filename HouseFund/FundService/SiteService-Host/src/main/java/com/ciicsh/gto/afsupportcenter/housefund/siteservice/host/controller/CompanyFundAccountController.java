@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfComTaskBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountCompanyDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountDTO;
@@ -14,6 +15,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccoun
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountClassNamePO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountNamePO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
@@ -29,6 +32,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -67,6 +72,14 @@ public class CompanyFundAccountController extends BasicController<HfComAccountSe
 
     }
 
+    @RequestMapping("/getComFundAccountListExp")
+    public void getComFundAccountList(HttpServletResponse response, PageInfo pageInfo) {
+        Date date = new Date();
+        String fileNme = "企业账户信息_" + StringUtil.getDateString(date) + ".xls";
+        GetComFundAccountListRequestDTO hfComAccountBo = pageInfo.toJavaObject(GetComFundAccountListRequestDTO.class);
+        List<ComFundAccountPO>  hfComAccountBos = business.getComFundAccountList(hfComAccountBo);
+        ExcelUtil.exportExcel(hfComAccountBos, ComFundAccountPO.class, fileNme, response);
+    }
     /**
      * 根据筛选条件检索企业公积金账户名称信息
      * @param pageInfo

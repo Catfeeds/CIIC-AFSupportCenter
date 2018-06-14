@@ -3,9 +3,13 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controlle
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsAddPaymentBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsDelPaymentBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpArchiveBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentComBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsPaymentComService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.empSSSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -16,6 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,7 +46,13 @@ public class SsPaymentComController  extends BasicController<SsPaymentComService
         return JsonResultKit.ofPage(pageRows);
     }
 
-
+    @RequestMapping("/paymentComQueryExport")
+    public void paymentComQueryExport(HttpServletResponse response, SsPaymentComBO ssPaymentComBO) {
+        Date date = new Date();
+        String fileNme = "社保支付_"+ StringUtil.getDateString(date)+".xls";
+        List<SsPaymentComBO> opts = business.paymentComQueryExport(ssPaymentComBO);
+        ExcelUtil.exportExcel(opts,SsPaymentComBO.class,fileNme,response);
+    }
     /**
      * 保存调整结果
      * @param ssPaymentComDTO 保存的数据
@@ -57,13 +69,20 @@ public class SsPaymentComController  extends BasicController<SsPaymentComService
         json.setCode(0);
         json.setMessage("成功");
 
-        //数据校验
-
-        //计算并保存
         business.saveAdjustment(ssPaymentComBO);
         return json;
     }
+    @PostMapping("/doCheck")
+    public JsonResult<String> doCheck(Long paymentComId) {
 
+        business.doCheck(paymentComId);
+        JsonResult<String> json = new JsonResult<String>();
+        json.setCode(0);
+        json.setMessage("成功");
+
+
+        return json;
+    }
     /**
      * 添加至支付批次
      * @param ssAddPaymentDTO 添加条件

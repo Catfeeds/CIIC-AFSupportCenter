@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity;
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.ciicsh.gto.afsupportcenter.util.model.BasicModel;
 
 /**
@@ -26,11 +27,13 @@ public class ComFundAccountPO {
     /**
      * 企业账户名称
      */
+    @Excel(name = "企业公积金名称", orderNum = "1")
     private String comAccountName;
 
     /**
      * 1 基本公积金、2 补充公积金
      */
+    @Excel(name = "公积金类型",replace = {"基本公积金_1","补充公积金_2"},  orderNum = "3")
     private Byte hfType;
 
     /**
@@ -56,22 +59,26 @@ public class ComFundAccountPO {
      * 公积金企业U盾代管情况
      * 0-没有 1-有(客户自办)  2-有(中智代办)
      */
+    @Excel(name = "U盾代管情况",replace = {"没有_0","有(客户自办)_1","有(中智代办)_2"}, orderNum = "4")
     private Byte ukeyStore;
 
     /**
      * 缴费支行编号
-     * 1 徐汇—X、2 西郊—C、3 东方路—P、4 卢湾—L、5 黄浦—H
+     * "徐汇—X_15","西郊—C_16","东方路—P_17","卢湾—L_18","黄浦—H_19"
      */
+    @Excel(name = "缴费银行", replace = {"徐汇—X_15","西郊—C_16","东方路—P_17","卢湾—L_18","黄浦—H_19"},orderNum = "6")
     private Byte paymentBank;
 
     /**
      * 账户备注说明
      */
+    @Excel(name = "备注说明", orderNum = "7")
     private String remark;
 
     /**
      * 基本公积金账户编号
      */
+    @Excel(name = "公积金账号", orderNum = "2")
     private String comAccount;
 
 
@@ -84,7 +91,7 @@ public class ComFundAccountPO {
      * 公积金缴费截止年月
      */
     private String payEndMonth;
-
+    @Excel(name = "客户汇缴月", orderNum = "5")
     private  String comHfMonth;
     /**
      * 公积金账号是否属于临时保管

@@ -15,10 +15,12 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpArch
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBasePeriod;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.empSSSearchExportOpt;
+import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.AfEmployeeDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,20 +58,27 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
         SsEmpArchiveBO ssEmpArchiveBO = new SsEmpArchiveBO();
         try {
             if ("1".equals(operatorType) || "2".equals(operatorType) || "12".equals(operatorType) || "13".equals(operatorType)) {
-                SsEmpTask ssEmpTask = (SsEmpTask) ssEmpTaskService.selectById(empTaskId);
+                SsEmpTask ssEmpTask = ssEmpTaskService.selectById(empTaskId);
                 //查询证件号码
                 SsEmpTaskBO ssEmpTaskBO = ssEmpTaskService.selectIdNumByEmployeeId(ssEmpTask.getEmployeeId());
                 //调用外部接口 查询雇员信息
-                EmployeeInfoDTO employeeInfoDTO = TaskCommonUtils.getEmployeeInfo(commonApiUtils, ssEmpTaskBO.getIdNum(), ssEmpTaskBO.getIdCardType(), 1);
+                EmployeeInfoDTO employeeInfoDTO = TaskCommonUtils.getEmployeeInfo(commonApiUtils, ssEmpTaskBO.getIdNum(), ssEmpTaskBO.getIdCardType(), ssEmpTask.getAfBpoFc());
                 //获取雇员信息
                 if (null != employeeInfoDTO) {
                     setEmlpoyeeInfo(ssEmpArchiveBO, employeeInfoDTO);
+
+                    if (ssEmpTask.getAfBpoFc() == SocialSecurityConst.SS_BUSINESS_TYPE_AF) {
+                        AfEmployeeDTO afEmployeeDTO = TaskCommonUtils.getAfEmployeeInfo(commonApiUtils, ssEmpTaskBO.getIdNum(), ssEmpTaskBO.getIdCardType());
+
+                        if (afEmployeeDTO != null) {
+                            ssEmpArchiveBO.setZipCode(afEmployeeDTO.getZipCode());
+                        }
+                    }
                 }
                 ssEmpArchiveBO.setInDate(ssEmpTask.getInDate());
                 ssEmpArchiveBO.setEmployeeId(ssEmpTask.getEmployeeId());
                 ssEmpArchiveBO.setSsEmpTask(ssEmpTask);
                 ssEmpArchiveBO.setOldEmpBase(ssEmpTask.getEmpBase());
-                return ssEmpArchiveBO;
             } else {
                 //先调用外部接口查询雇员信息
 
@@ -89,13 +98,13 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
                 //查询旧基数
                 if (null != ssEmpArchiveBO.getEmpArchiveId()) {
                     EntityWrapper<SsEmpBasePeriod> ew = new EntityWrapper<>();
-                    ew.where("emp_archive_id={0}", ssEmpArchiveBO.getEmpArchiveId()).and("is_active=1").orderBy("created_time", false).last("LIMIT 1");
+                    ew.where("emp_archive_id={0}", ssEmpArchiveBO.getEmpArchiveId()).and("is_active=1").orderBy("start_month", false).last("LIMIT 1");
                     SsEmpBasePeriod ssEmpBasePeriod = ssEmpBasePeriodService.selectOne(ew);
                     ssEmpArchiveBO.setOldEmpBase(ssEmpBasePeriod.getBaseAmount());
                 }
-
-                return ssEmpArchiveBO;
             }
+
+            return ssEmpArchiveBO;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -131,9 +140,15 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
     }
 
     @Override
-    public SsEmpArchiveBO queryEmployeeDetailInfo(String empArchiveId) {
+    public SsEmpArchiveBO queryEmployeeDetailInfo(String empArchiveId,String companyId,String employeeId) {
+        SsEmpArchiveBO ssEmpArchiveBO = new SsEmpArchiveBO();
+        if (empArchiveId == null){
+            ssEmpArchiveBO = baseMapper.queryEmployeeDetailInfoByComEmp(companyId,employeeId);
+        }else {
+            ssEmpArchiveBO = baseMapper.queryEmployeeDetailInfo(empArchiveId);
+        }
+        return ssEmpArchiveBO;
 
-        return baseMapper.queryEmployeeDetailInfo(empArchiveId);
     }
 
     public String saveEmpSerial(Map<String, String> map) {
@@ -144,6 +159,7 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
         }
         String ssEmpSerial = Optional.of(map.get("ssSerial")).orElse(" ");
         ssEmpArchive.setSsSerial(ssEmpSerial);
+        ssEmpArchive.setEmpClassify( Integer.parseInt(Optional.ofNullable(map.get("empClassify")).orElse("0")));
         ssEmpArchive.setEmpArchiveId(Long.valueOf(map.get("empArchiveId")));
         baseMapper.updateById(ssEmpArchive);
 

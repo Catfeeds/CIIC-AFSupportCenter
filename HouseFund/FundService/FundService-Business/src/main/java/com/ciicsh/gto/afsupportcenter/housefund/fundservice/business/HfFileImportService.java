@@ -6,4 +6,5 @@ import com.ciicsh.gto.afsupportcenter.util.fileImportService.FileImportService;
 public interface HfFileImportService<T> extends FileImportService<T, SsFileImport> {
 
     int IMPORT_TYPE_EMP_TASK_TRANS_FEEDBACK_DATE = 11; // 转移任务单回单日期导入
+    int IMPORT_TYPE_EMP_PRE_INPUT = 12; // 雇员公积金账号预录入
 }

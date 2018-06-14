@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.Ac
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -121,7 +122,20 @@ public class SsAccountComRelationController extends BasicController<SsAccountCom
      */
     @RequestMapping("/getAccountCompanyRelationByAccountId")
     public JsonResult<AccountCompanyRelationOpt> getAccountCompanyRelationByAccountId(@RequestParam("comAccountId") Long comAccountId) {
-        AccountCompanyRelationOpt relationOpt = business.getAccountCompanyRelationByAccountId(comAccountId);
+        List<AccountCompanyRelationOpt> relationOptList = business.getAccountCompanyRelationByAccountId(comAccountId);
+        AccountCompanyRelationOpt relationOpt = new AccountCompanyRelationOpt();
+
+        if (CollectionUtils.isNotEmpty(relationOptList)) {
+            relationOpt = relationOptList.get(0);
+            StringBuilder stringBuilder = new StringBuilder(relationOpt.getCompanyId());
+
+            for (int i = 1; i < relationOptList.size(); i++) {
+                stringBuilder.append(",");
+                stringBuilder.append(relationOptList.get(i).getCompanyId());
+            }
+
+            relationOpt.setCompanyIds(stringBuilder.toString());
+        }
         return JsonResultKit.of(relationOpt);
     }
 }

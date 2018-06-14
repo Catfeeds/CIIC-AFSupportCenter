@@ -38,7 +38,7 @@ public interface SsAccountComRelationMapper extends BaseMapper<SsAccountComRelat
      * @param comAccountId 企业社保账户
      * @return 返回企业社保账户获取公司信息
      */
-    AccountCompanyRelationOpt getAccountCompanyRelationByAccountId(@Param("comAccountId") Long comAccountId);
+    List<AccountCompanyRelationOpt> getAccountCompanyRelationByAccountId(@Param("comAccountId") Long comAccountId);
 
     Integer isExistCompany(@Param("companyId") String companyId);
 

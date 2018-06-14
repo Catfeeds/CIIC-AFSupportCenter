@@ -1,6 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo;
 
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,22 +21,25 @@ public class SsPaymentComBO {
     /**
      * 出账批号
      */
+
     private String paymentBatchNum;
     /**
      * 账户类型：1:中智大库 2中智外包 3独立户
      */
+    @Excel(name = "社保账户类型", orderNum = "8",replace = {"中智大库_1","中智外包_2","独立户_3"})
     private Integer ssAccountType;
 
     /**
      * 公司名(社保账户名)
      */
     private String comAccountName;
-
+    @Excel(name = "企业社保账号", orderNum = "7")
     private String ssAccount;
 
     /**
      * 客户名
      */
+    @Excel(name = "客户名称", orderNum = "3")
     private String title;
 
     /**
@@ -59,18 +64,22 @@ public class SsPaymentComBO {
      * 客户Id,能关联到客户和社保账户,
      比如欧莱雅10家分公司分开支付
      */
+    @Excel(name = "客户编号", orderNum = "2")
     private String companyId;
     /**
      * 支付年月,格式yyyyMM
      */
+    @Excel(name = "支付年月", orderNum = "1")
     private String paymentMonth;
     /**
      * 应缴纳金额
      */
+    @Excel(name = "应缴纳金额", orderNum = "5")
     private BigDecimal oughtAmount;
     /**
      * 申请支付的金额合计,=TotalComPayAmount+TotalEmpPayAmount+extra_amount
      */
+    @Excel(name = "申请支付总金额", orderNum = "6")
     private BigDecimal totalPayAmount;
     /**
      * 申请支付的公司部分的总金额
@@ -83,14 +92,17 @@ public class SsPaymentComBO {
     /**
      * 退账抵扣费用
      */
+    @Excel(name = "退账抵扣费用", orderNum = "10")
     private BigDecimal refundDeducted;
     /**
      * 调整抵扣费用
      */
+    @Excel(name = "调整抵扣费用", orderNum = "11")
     private BigDecimal adjustDeducted;
     /**
      * 额外金
      */
+    @Excel(name = "额外金", orderNum = "9")
     private BigDecimal extraAmount;
     /**
      * 加入批次人的系统用户
@@ -107,10 +119,12 @@ public class SsPaymentComBO {
     /**
      * 申请备注
      */
+    @Excel(name = "额外金备注", orderNum = "13")
     private String remark;
     /**
      * 财务实际支付日期
      */
+    @Excel(name = "财务实际支付日期", orderNum = "12")
     private LocalDate actualPaymentDate;
     /**
      * 支付总人头数
@@ -119,6 +133,7 @@ public class SsPaymentComBO {
     /**
      * 支付状态: 1,未到帐  2,无需支付  3 ,可付 4,申请中  5,内部审批批退 6,已申请到财务部  7,财务部批退  8,财务部支付成功
      */
+    @Excel(name = "支付状态", orderNum = "4",replace = {"未到帐_1","无需支付_2","可付_3","申请中_4","内部审批批退_5","已申请到财务部_6","财务部批退_7","财务部支付成功_8"})
     private Integer paymentState;
     /**
      * 是否可用
@@ -142,6 +157,27 @@ public class SsPaymentComBO {
     private String modifiedBy;
 
     private LocalDate financePaymentDate;
+
+    //客服中心
+    private Integer serviceCenterValue;
+
+    private  Integer ifCheck;
+
+    public Integer getIfCheck() {
+        return ifCheck;
+    }
+
+    public void setIfCheck(Integer ifCheck) {
+        this.ifCheck = ifCheck;
+    }
+
+    public Integer getServiceCenterValue() {
+        return serviceCenterValue;
+    }
+
+    public void setServiceCenterValue(Integer serviceCenterValue) {
+        this.serviceCenterValue = serviceCenterValue;
+    }
 
     public LocalDate getFinancePaymentDate() {
         return financePaymentDate;

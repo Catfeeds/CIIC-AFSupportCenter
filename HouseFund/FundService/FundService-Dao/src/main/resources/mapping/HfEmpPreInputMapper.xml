@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpPreInputMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpPreInput">
+        <id column="input_id" property="inputId"/>
+        <result column="employee_id" property="employeeId"/>
+        <result column="id_num" property="idNum"/>
+        <result column="employee_name" property="employeeName"/>
+        <result column="hf_emp_bas_account" property="hfEmpBasAccount"/>
+        <result column="hf_emp_add_account" property="hfEmpAddAccount"/>
+        <result column="is_active" property="isActive"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="modified_time" property="modifiedTime"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="modified_by" property="modifiedBy"/>
+    </resultMap>
+
+
+</mapper>

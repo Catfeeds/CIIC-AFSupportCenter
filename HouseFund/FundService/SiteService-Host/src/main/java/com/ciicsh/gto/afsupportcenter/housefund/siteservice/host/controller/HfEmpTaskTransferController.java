@@ -331,13 +331,13 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
         try {
             importParams.setKeyIndex(null);
             importParams.setNeedVerfiy(true);
-            importParams.setVerifyHanlder(new FeedbackDateVerifyHandler(empTaskTransferBoList));
+            importParams.setVerifyHanlder(new FeedbackDateVerifyHandler(logApiUtil, empTaskTransferBoList));
             hfFileImportService.executeExcelImport(hfFileImportService.IMPORT_TYPE_EMP_TASK_TRANS_FEEDBACK_DATE, hfFileImportService.DEFAULT_RELATED_UNIT_ID,
                 null, hfImportFeedbackDateService, successList, failList,
                 importParams, files, UserContext.getUserId());
         } catch (Exception e) {
             LogMessage logMessage = LogMessage.create().setTitle("文件上传")
-                .setContent("根据客户编号上传该客户所属雇员的年调收集信息" + e.getMessage());
+                .setContent("上传回单日期：" + e.getMessage());
             logApiUtil.error(logMessage);
             return JsonResultKit.ofError("文件读取失败，请先检查文件格式是否正确");
         }

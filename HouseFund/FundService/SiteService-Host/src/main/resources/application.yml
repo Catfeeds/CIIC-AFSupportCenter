@@ -8,7 +8,7 @@ spring:
   application:
     name: support-center-housefund-site-service
   profiles:
-    active: fat
+    active: dev
 ###################  spring cloud eureka  ###################
 eureka:
   instance:

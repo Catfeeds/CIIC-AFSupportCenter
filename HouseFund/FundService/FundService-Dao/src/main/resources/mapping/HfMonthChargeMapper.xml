@@ -92,6 +92,13 @@
         <result column="com_account_id" property="comAccountId" />
     </resultMap>
 
+    <resultMap id="MonthChargeByInOutResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfMonthChargeBo">
+        <result column="hf_month" property="hfMonth" />
+        <result column="hf_stop_month" property="hfStopMonth" />
+        <result column="ss_month_belong_start" property="ssMonthBelongStart" />
+        <result column="ss_month_belong_end" property="ssMonthBelongEnd" />
+    </resultMap>
+
 	<update id="updateHfMonthCharge">
         UPDATE hf_month_charge
         SET
@@ -349,5 +356,72 @@
         AND hpa.com_account_id = hpc.com_account_id
         GROUP BY hpa.com_account_id,
         hpa.hf_type
+    </select>
+
+    <select id="getMonthChargeByIn" resultMap="MonthChargeByInOutResultMap">
+        SELECT
+        MIN(hmc.ss_month_belong) AS ss_month_belong_start, MIN(hmc.hf_month) AS hf_month
+        FROM hf_month_charge hmc
+        <where>
+            hmc.is_active = 1
+            AND hmc.payment_type IN (2, 3, 4, 5, 6)
+            <if test="hfType != null">
+                AND hmc.hf_type = #{hfType}
+            </if>
+            <if test="companyId != null">
+                AND hmc.company_id = #{companyId}
+            </if>
+            <if test="employeeId != null">
+                AND hmc.employee_id = #{employeeId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getMonthChargeByOut" resultMap="MonthChargeByInOutResultMap">
+        SELECT
+            hmc.ss_month_belong AS ss_month_belong_end,
+            hmc.hf_month AS hf_stop_month
+        FROM hf_month_charge hmc
+        <where>
+            hmc.is_active = 1
+            AND hmc.payment_type IN (7, 8)
+            <if test="hfType != null">
+                AND hmc.hf_type = #{hfType}
+            </if>
+            <if test="companyId != null">
+                AND hmc.company_id = #{companyId}
+            </if>
+            <if test="employeeId != null">
+                AND hmc.employee_id = #{employeeId}
+            </if>
+        </where>
+        ORDER BY hmc.created_time DESC LIMIT 1
+    </select>
+
+    <select id="getMonthChargeByInOut" resultMap="MonthChargeByInOutResultMap">
+        SELECT
+            hmc.ss_month_belong AS ss_month_belong_start,
+            hmc.hf_month,
+            hmco.ss_month_belong AS ss_month_belong_end,
+            hmco.hf_month AS hf_stop_month
+        FROM hf_month_charge hmc INNER JOIN hf_month_charge hmco ON hmc.company_id = hmco.company_id
+        AND hmc.employee_id = hmco.employee_id
+        AND hmc.hf_type = hmco.hf_type
+        AND hmc.ss_month_belong = PERIOD_ADD(hmco.ss_month_belong, 1)
+        AND hmco.payment_type IN (7, 8)
+        <where>
+            hmc.is_active = 0
+            AND hmco.is_active = 0
+            AND hmc.payment_type IN (2, 3, 4)
+            <if test="hfType != null">
+                AND hmc.hf_type = #{hfType}
+            </if>
+            <if test="companyId != null">
+                AND hmc.company_id = #{companyId}
+            </if>
+            <if test="employeeId != null">
+                AND hmc.employee_id = #{employeeId}
+            </if>
+        </where>
     </select>
 </mapper>

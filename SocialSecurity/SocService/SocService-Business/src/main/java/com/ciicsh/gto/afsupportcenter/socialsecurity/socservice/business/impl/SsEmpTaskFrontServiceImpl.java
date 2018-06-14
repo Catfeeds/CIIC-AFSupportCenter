@@ -257,11 +257,11 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                         ssEmpTaskFront.setPersonalRatio(socialDto.getPersonalRatio());
                         ssEmpTaskFront.setPersonalBase(socialDto.getPersonalBase());
                         ssEmpTaskFront.setPersonalAmount(socialDto.getPersonalAmount());
-                        if (socialDto.getStartDate() != null) {
-                            ssEmpTaskFront.setStartMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getStartDate(), "yyyyMM")));
+                        if (ssEmpTask.getStartMonth() != null) {
+                            ssEmpTaskFront.setStartMonth(Integer.parseInt(ssEmpTask.getStartMonth()));
                         }
-                        if (socialDto.getEndDate() != null) {
-                            ssEmpTaskFront.setEndMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getEndDate(), "yyyyMM")));
+                        if (ssEmpTask.getEndMonth() != null) {
+                            ssEmpTaskFront.setEndMonth(Integer.parseInt(ssEmpTask.getEndMonth()));
                         }
                         ssEmpTaskFront.setActive(true);
                         ssEmpTaskFront.setModifiedBy(afEmpAgreementDTO.getCreatedBy());

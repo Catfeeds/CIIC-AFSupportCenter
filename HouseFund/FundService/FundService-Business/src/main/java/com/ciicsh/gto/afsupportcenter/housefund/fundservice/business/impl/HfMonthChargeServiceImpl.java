@@ -905,4 +905,55 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         result.setRows(reportList);
         return result;
     }
+
+    @Override
+    public void getMonthChargeByInOut(HfEmpTaskHandleBo hfEmpTaskHandleBo) {
+        HfMonthChargeBo paramBo = new HfMonthChargeBo();
+        paramBo.setCompanyId(hfEmpTaskHandleBo.getCompanyId());
+        paramBo.setEmployeeId(hfEmpTaskHandleBo.getEmployeeId());
+
+        paramBo.setHfType(HfEmpTaskConstant.HF_TYPE_BASIC);
+        HfMonthChargeBo resultBo = baseMapper.getMonthChargeByInOut(paramBo);
+
+        if (resultBo != null) {
+            hfEmpTaskHandleBo.setEmpBasStartMonth(resultBo.getSsMonthBelongStart());
+            hfEmpTaskHandleBo.setEmpBasHandleMonth(resultBo.getHfMonth());
+            hfEmpTaskHandleBo.setEmpBasEndMonth(resultBo.getSsMonthBelongEnd());
+            hfEmpTaskHandleBo.setEmpBasStopHandleMonth(resultBo.getHfStopMonth());
+        }
+        resultBo = baseMapper.getMonthChargeByIn(paramBo);
+
+        if (resultBo != null) {
+            hfEmpTaskHandleBo.setEmpBasStartMonth(resultBo.getSsMonthBelongStart());
+            hfEmpTaskHandleBo.setEmpBasHandleMonth(resultBo.getHfMonth());
+        }
+        resultBo = baseMapper.getMonthChargeByOut(paramBo);
+
+        if (resultBo != null) {
+            hfEmpTaskHandleBo.setEmpBasEndMonth(resultBo.getSsMonthBelongEnd());
+            hfEmpTaskHandleBo.setEmpBasStopHandleMonth(resultBo.getHfStopMonth());
+        }
+
+        paramBo.setHfType(HfEmpTaskConstant.HF_TYPE_ADDED);
+        resultBo = baseMapper.getMonthChargeByInOut(paramBo);
+
+        if (resultBo != null) {
+            hfEmpTaskHandleBo.setEmpAddStartMonth(resultBo.getSsMonthBelongStart());
+            hfEmpTaskHandleBo.setEmpAddHandleMonth(resultBo.getHfMonth());
+            hfEmpTaskHandleBo.setEmpAddEndMonth(resultBo.getSsMonthBelongEnd());
+            hfEmpTaskHandleBo.setEmpAddStopHandleMonth(resultBo.getHfStopMonth());
+        }
+        resultBo = baseMapper.getMonthChargeByIn(paramBo);
+
+        if (resultBo != null) {
+            hfEmpTaskHandleBo.setEmpAddStartMonth(resultBo.getSsMonthBelongStart());
+            hfEmpTaskHandleBo.setEmpAddHandleMonth(resultBo.getHfMonth());
+        }
+        resultBo = baseMapper.getMonthChargeByOut(paramBo);
+
+        if (resultBo != null) {
+            hfEmpTaskHandleBo.setEmpAddEndMonth(resultBo.getSsMonthBelongEnd());
+            hfEmpTaskHandleBo.setEmpAddStopHandleMonth(resultBo.getHfStopMonth());
+        }
+    }
 }

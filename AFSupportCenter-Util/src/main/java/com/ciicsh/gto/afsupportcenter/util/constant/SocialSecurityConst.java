@@ -216,11 +216,16 @@ public interface SocialSecurityConst {
     @Deprecated
     public static final Map<String, String> EMP_CLASSIFY_MAP = new HashMap<String, String>() {
         {
-            put("1", "本地");
-            put("2", "外地");
-            put("3", "外籍三险");
-            put("4", "外籍五险");
-            put("5", "延迟退休人员");
+            {
+                put("1", "上海人");
+                put("2", "外来城镇人员");
+                put("3", "外籍三险");
+                put("4", "外籍五险");
+                put("5", "非全日制仅工伤");
+                put("6", "柔性退休");
+                put("7", "工伤仅医疗");
+                put("8", "外籍互免");
+            }
         }
     };
 
@@ -416,4 +421,8 @@ public interface SocialSecurityConst {
      * 企业任务单处理状态 0：初始1：受理中2：送审中3：已完成4：批退
      */
     int COM_TASK_STATUS_4 = 4;
+
+    int SS_BUSINESS_TYPE_AF = 1;
+    int SS_BUSINESS_TYPE_BPO = 2;
+    int SS_BUSINESS_TYPE_FC = 3;
 }

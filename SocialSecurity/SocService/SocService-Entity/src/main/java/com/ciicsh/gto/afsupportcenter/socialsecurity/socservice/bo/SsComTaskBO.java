@@ -85,6 +85,8 @@ public class SsComTaskBO {
 
     private Integer paymentWay;
 
+    private Integer paymentType;
+
     private Integer billReceiver;
 
     private String industryCategory;

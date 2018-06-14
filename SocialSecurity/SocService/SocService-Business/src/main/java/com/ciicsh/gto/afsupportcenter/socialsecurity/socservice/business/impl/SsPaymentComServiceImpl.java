@@ -47,6 +47,11 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
     }
 
     @Override
+    public List<SsPaymentComBO> paymentComQueryExport(SsPaymentComBO ssPaymentComBO) {
+        return baseMapper.paymentComQuery(ssPaymentComBO);
+    }
+
+    @Override
     public JsonResult<String> saveAdjustment(SsPaymentComBO ssPaymentComBO) {
         JsonResult<String> json = new JsonResult<String>();
         //验证状态
@@ -88,6 +93,21 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
 
         //如果有批次则重算批次的值
 
+        return json;
+    }
+
+    @Override
+    public JsonResult<String> doCheck(Long paymentComId) {
+        JsonResult<String> json = new JsonResult<>();
+        json.setCode(0);
+        json.setMessage("成功");
+        SsPaymentCom ssPaymentCom =new SsPaymentCom();
+        ssPaymentCom.setIfCheck(1);
+        ssPaymentCom.setPaymentComId(paymentComId);
+        ssPaymentCom.setModifiedBy(UserContext.getUser().getUserId());
+        ssPaymentCom.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+        ssPaymentCom.setModifiedTime(LocalDateTime.now());
+        baseMapper.updateById(ssPaymentCom);
         return json;
     }
 

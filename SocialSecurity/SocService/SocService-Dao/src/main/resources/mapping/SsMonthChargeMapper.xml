@@ -32,6 +32,34 @@
             <result column="sub_total_amount" property="subTotalAmount" />
         </collection>
     </resultMap>
+
+    <resultMap id="YysReportMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsYysReportBO">
+        <result column="com_account_name" property="comAccountName" />
+        <result column="ss_account" property="ssAccount" />
+        <result column="ss_pwd" property="ssPwd" />
+        <result column="company_id" property="companyId" />
+        <result column="service_center" property="serviceCenter" />
+        <result column="ss_serial" property="ssSerial" />
+        <result column="employee_id" property="employeeId" />
+        <result column="employee_name" property="employeeName" />
+        <result column="base_amount" property="baseAmount" />
+        <result column="category" property="category" />
+        <result column="change_type_name" property="changeTypeName" />
+        <result column="com_amount_pension" property="comAmountPension" />
+        <result column="emp_amount_pension" property="empAmountPension" />
+        <result column="one_payment_pension" property="onePaymentPension" />
+        <result column="com_amount_medical" property="comAmountMedical" />
+        <result column="emp_amount_medical" property="empAmountMedical" />
+        <result column="com_amount_unemployment" property="comAmountUnemployment" />
+        <result column="emp_amount_unemployment" property="empAmountUnemployment" />
+        <result column="com_compensated_amount_pension" property="comCompensatedAmountPension" />
+        <result column="emp_compensated_amount_pension" property="empCompensatedAmountPension" />
+        <result column="com_compensated_amount_medical" property="comCompensatedAmountMedical" />
+        <result column="emp_compensated_amount_medical" property="empCompensatedAmountMedical" />
+        <result column="com_compensated_amount_unemployment" property="comCompensatedAmountUnemployment" />
+        <result column="emp_compensated_amount_unemployment" property="empCompensatedAmountUnemployment" />
+    </resultMap>
+
     <!--判断当月是否首次生成明细报表-->
     <select id="countIfMonthFirstReport" resultType="java.util.HashMap">
         SELECT count(1) AS count_mc FROM ss_month_charge mc
@@ -123,4 +151,130 @@
          AND smc.cost_category = #{costCategory}
     </select>
 
+    <select id="queryYysReport" resultMap="YysReportMap">
+        SELECT
+          tmp.com_account_name, tmp.ss_account, tmp.ss_pwd, tmp.company_id, tmp.service_center, tmp.ss_serial,
+          tmp.employee_id, tmp.employee_name, tmp.base_amount, tmp.category,
+          CASE tmp.category
+          WHEN 1 THEN '标准'
+          WHEN 2 THEN '新进'
+          WHEN 3 THEN '转入'
+          WHEN 4 THEN '补缴'
+          WHEN 5 THEN '调整'
+          WHEN 6 THEN '转出'
+          WHEN 7 THEN '封存'
+          ELSE '逆调' END AS change_type_name,
+          SUM(tmp.pension_com_amount) AS com_amount_pension,
+          SUM(tmp.pension_emp_amount) AS emp_amount_pension,
+          0.00 AS one_payment_pension,
+          SUM(tmp.medical_com_amount) AS com_amount_medical,
+          SUM(tmp.medical_emp_amount) AS emp_amount_medical,
+          SUM(tmp.unemployment_com_amount) AS com_amount_unemployment,
+          SUM(tmp.unemployment_emp_amount) AS emp_amount_unemployment,
+          SUM(tmp.pension_com_repay_amount) AS com_compensated_amount_pension,
+          SUM(tmp.pension_emp_repay_amount) AS emp_compensated_amount_pension,
+          SUM(tmp.medical_com_repay_amount) AS com_compensated_amount_medical,
+          SUM(tmp.medical_emp_repay_amount) AS emp_compensated_amount_medical,
+          SUM(tmp.unemployment_com_repay_amount) AS com_compensated_amount_unemployment,
+          SUM(tmp.unemployment_emp_repay_amount) AS emp_compensated_amount_unemployment
+        FROM (
+              SELECT
+                a.com_account_id,
+                sca.com_account_name,
+                sca.ss_account,
+                sca.ss_pwd,
+                sea.company_id,
+                sea.ss_serial,
+                sea.service_center,
+                a.ss_month,
+                a.employee_id,
+                ee.employee_name,
+                a.base_amount,
+                a.cost_category AS category,
+                b.ss_type,
+                0 AS pension_com_amount,
+                0 AS pension_emp_amount,
+                0 AS medical_com_amount,
+                0 AS medical_emp_amount,
+                0 AS unemployment_com_amount,
+                0 AS unemployment_emp_amount,
+                CASE WHEN b.ss_type = 'DIT00042' THEN SUM(b.com_amount) END AS pension_com_repay_amount,
+                CASE WHEN b.ss_type = 'DIT00042' THEN SUM(b.emp_amount) END AS pension_emp_repay_amount,
+                CASE WHEN b.ss_type = 'DIT00043' THEN SUM(b.com_amount) END AS medical_com_repay_amount,
+                CASE WHEN b.ss_type = 'DIT00043' THEN SUM(b.emp_amount) END AS medical_emp_repay_amount,
+                CASE WHEN b.ss_type = 'DIT00046' THEN SUM(b.com_amount) END AS unemployment_com_repay_amount,
+                CASE WHEN b.ss_type = 'DIT00046' THEN SUM(b.emp_amount) END AS unemployment_emp_repay_amount
+              FROM ss_month_charge a INNER JOIN ss_month_charge_item b ON a.month_charge_id = b.month_charge_id
+              INNER JOIN ss_com_account sca ON a.com_account_id = sca.com_account_id AND sca.is_active = 1
+              INNER JOIN ss_emp_archive sea ON a.com_account_id = sea.com_account_id AND a.employee_id = sea.employee_id AND a.emp_archive_id = sea.emp_archive_id AND sea.is_active = 1
+              INNER JOIN emp_employee ee ON a.employee_id = ee.employee_id AND ee.is_active = 1
+              WHERE a.is_active = 1
+                AND b.is_active = 1
+                AND a.cost_category != 1
+                AND a.cost_category != 8
+                <if test="ssAccountType != null">
+                    AND sca.ss_account_type = #{ssAccountType}
+                </if>
+                <if test="ssAccount != null">
+                    AND sca.ss_account LIKE CONCAT('%', #{ssAccount}, '%')
+                </if>
+                <if test="companyId != null">
+                    AND sea.company_id LIKE CONCAT('%', #{companyId}, '%')
+                </if>
+                AND a.ss_month = #{ssMonth}
+                AND b.ss_type IN ('DIT00042', 'DIT00043', 'DIT00046')
+                AND (a.cost_category = 4 OR a.cost_category = 9)
+              GROUP BY a.com_account_id, a.employee_id, a.cost_category, b.ss_type
+              UNION ALL
+              SELECT
+                a.com_account_id,
+                sca.com_account_name,
+                sca.ss_account,
+                sca.ss_pwd,
+                sea.company_id,
+                sea.ss_serial,
+                sea.service_center,
+                a.ss_month,
+                a.employee_id,
+                ee.employee_name,
+                a.base_amount,
+                a.cost_category AS category,
+                b.ss_type,
+                CASE WHEN b.ss_type = 'DIT00042' THEN SUM(b.com_amount) END AS pension_com_amount,
+                CASE WHEN b.ss_type = 'DIT00042' THEN SUM(b.emp_amount) END AS pension_emp_amount,
+                CASE WHEN b.ss_type = 'DIT00043' THEN SUM(b.com_amount) END AS medical_com_amount,
+                CASE WHEN b.ss_type = 'DIT00043' THEN SUM(b.emp_amount) END AS medical_emp_amount,
+                CASE WHEN b.ss_type = 'DIT00046' THEN SUM(b.com_amount) END AS unemployment_com_amount,
+                CASE WHEN b.ss_type = 'DIT00046' THEN SUM(b.emp_amount) END AS unemployment_emp_amount,
+                0 AS pension_com_repay_amount,
+                0 AS pension_emp_repay_amount,
+                0 AS medical_com_repay_amount,
+                0 AS medical_emp_repay_amount,
+                0 AS unemployment_com_repay_amount,
+                0 AS unemployment_emp_repay_amount
+              FROM ss_month_charge a INNER JOIN ss_month_charge_item b ON a.month_charge_id = b.month_charge_id
+              INNER JOIN ss_com_account sca ON a.com_account_id = sca.com_account_id AND sca.is_active = 1
+              INNER JOIN ss_emp_archive sea ON a.com_account_id = sea.com_account_id AND a.employee_id = sea.employee_id AND a.emp_archive_id = sea.emp_archive_id AND sea.is_active = 1
+              INNER JOIN emp_employee ee ON a.employee_id = ee.employee_id AND ee.is_active = 1
+              WHERE a.is_active = 1
+                AND b.is_active = 1
+                AND a.cost_category != 1
+                AND a.cost_category != 8
+                <if test="ssAccountType != null">
+                    AND sca.ss_account_type = #{ssAccountType}
+                </if>
+                <if test="ssAccount != null">
+                    AND sca.ss_account LIKE CONCAT('%', #{ssAccount}, '%')
+                </if>
+                <if test="companyId != null">
+                    AND sea.company_id LIKE CONCAT('%', #{companyId}, '%')
+                </if>
+                AND a.ss_month = #{ssMonth}
+                AND b.ss_type IN ('DIT00042', 'DIT00043', 'DIT00046')
+                AND a.cost_category != 4 AND a.cost_category != 9
+              GROUP BY a.com_account_id, a.employee_id, a.cost_category, b.ss_type
+        ) tmp
+        GROUP BY tmp.com_account_name, tmp.ss_account, tmp.company_id, tmp.service_center, tmp.ss_serial, tmp.employee_id, tmp.employee_name, tmp.base_amount, tmp.category, change_type_name
+        ORDER BY tmp.ss_account, tmp.company_id, tmp.ss_serial
+    </select>
 </mapper>

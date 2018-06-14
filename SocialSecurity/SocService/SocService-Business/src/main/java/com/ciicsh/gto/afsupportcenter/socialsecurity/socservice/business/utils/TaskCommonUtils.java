@@ -12,9 +12,7 @@ import com.ciicsh.gto.afsupportcenter.util.kit.DateKit;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsRequestDTO;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.GetSSPItemsResposeDTO;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.item.SSPItemDTO;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeInfoDTO;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeQueryDTO;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.JsonResult;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.*;
 import com.ciicsh.gto.sheetservice.api.dto.Result;
 import com.ciicsh.gto.sheetservice.api.dto.request.TaskRequestDTO;
 import org.apache.commons.lang3.StringUtils;
@@ -360,6 +358,31 @@ public class TaskCommonUtils {
         return new EmployeeInfoDTO();
     }
 
+    /**
+     * 获取雇员信息（支持中心调用雇员中心）
+     *
+     * @param commonApiUtils
+     * @param idNum          传入证件号码
+     * @param idCardType     传入证件类型
+     * @return
+     */
+    public static AfEmployeeDTO getAfEmployeeInfo(CommonApiUtils commonApiUtils, String idNum, Integer idCardType) {
+        EmployeeIdQueryDTO employeeIdQueryDTO = new EmployeeIdQueryDTO();
+        employeeIdQueryDTO.setIdCardType(idCardType);
+        employeeIdQueryDTO.setIdNum(idNum);
+        try {
+            JsonResult<AfEmployeeDTO> result = commonApiUtils.getAfEmployeeInfo(employeeIdQueryDTO);
+            AfEmployeeDTO afEmployeeDTO = result.getData();
+            if (null == afEmployeeDTO) {
+                return new AfEmployeeDTO();
+            }
+            return afEmployeeDTO;
+        } catch (Exception e) {
+//            e.printStackTrace();
+            //throw new BusinessException("雇员信息查询异常");
+        }
+        return new AfEmployeeDTO();
+    }
 
     /**
      * 字符串转date

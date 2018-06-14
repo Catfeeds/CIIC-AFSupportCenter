@@ -15,6 +15,8 @@ public class SsEmpArchiveBO extends SsEmpArchive {
     private String idNum;
     //企业社保账号
     private String ssAccount;
+    //养老金独立开户密码
+    private String ssPwd;
     //社保类型
     private Integer ssAccountType;
     //结算区县
@@ -39,6 +41,52 @@ public class SsEmpArchiveBO extends SsEmpArchive {
     private BigDecimal oldEmpBase;
     //客服经理
     private String leaderShipName;
+    //客服中心
+    private Integer serviceCenterValue;
+    //客服中心
+    private String serviceCenter;
+
+    private Integer empClassify;
+
+    private String zipCode;
+
+    private Integer idCardType;
+
+    @Override
+    public Integer getEmpClassify() {
+        return empClassify;
+    }
+
+    @Override
+    public void setEmpClassify(Integer empClassify) {
+        this.empClassify = empClassify;
+    }
+
+    @Override
+    public String getServiceCenter() {
+        return serviceCenter;
+    }
+
+    @Override
+    public void setServiceCenter(String serviceCenter) {
+        this.serviceCenter = serviceCenter;
+    }
+
+    public Integer getServiceCenterValue() {
+        return serviceCenterValue;
+    }
+
+    public String getSsPwd() {
+        return ssPwd;
+    }
+
+    public void setSsPwd(String ssPwd) {
+        this.ssPwd = ssPwd;
+    }
+
+    public void setServiceCenterValue(Integer serviceCenterValue) {
+        this.serviceCenterValue = serviceCenterValue;
+    }
 
     public String getEmployeeName() {
         return employeeName;
@@ -158,5 +206,21 @@ public class SsEmpArchiveBO extends SsEmpArchive {
 
     public void setLeaderShipName(String leaderShipName) {
         this.leaderShipName = leaderShipName;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public Integer getIdCardType() {
+        return idCardType;
+    }
+
+    public void setIdCardType(Integer idCardType) {
+        this.idCardType = idCardType;
     }
 }

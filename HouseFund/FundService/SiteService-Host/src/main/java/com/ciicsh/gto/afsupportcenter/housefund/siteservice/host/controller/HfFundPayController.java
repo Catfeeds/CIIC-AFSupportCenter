@@ -14,7 +14,9 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentCo
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfPaymentService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfComAccountConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfMonthChargeConstant;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfPaymentAccountMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.HfFundPayCreatePaymentAccountPara;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPaymentAccount;
 import com.ciicsh.gto.afsupportcenter.util.ZipUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
@@ -41,6 +43,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -166,7 +169,34 @@ public class HfFundPayController {
 
        return hfPaymentComService.createPaymentCom(hfFundPayCreatePaymentAccountPara);
     }
+    //临时生成支付数据
+    @Autowired
+    HfPaymentAccountMapper hfPaymentAccountMapper;
+    @PostMapping("/createPaymentComListImpData")
+    public JsonResult createPaymentComListImpData(String month,String createdBy){
+        //验证前端传递的数据是否合法,代码暂不写
+        //开始生成支付客户名单
+        HfFundPayCreatePaymentAccountPara hfFundPayCreatePaymentAccountPara=new HfFundPayCreatePaymentAccountPara();
+        List list=new ArrayList();
+        Map m=new HashMap();
+        m.put("is_active","1");
+        m.put("created_by","impdata");
+        m.put("payment_month",month);
+        List<HfPaymentAccount> account= hfPaymentAccountMapper.selectByMap(m);
+        account.stream().forEach(dd->{
+            list.add(dd.getComAccountId());
+        });
+        UserContext.getUser().setDisplayName(createdBy);
+        hfFundPayCreatePaymentAccountPara.setListData(list);
+        hfFundPayCreatePaymentAccountPara.setPaymentMonth(month);
+        hfFundPayCreatePaymentAccountPara.setPaymentWay(3);
+        hfFundPayCreatePaymentAccountPara.setPayee("住房资金归集待结算户");
+        hfPaymentComService.createPaymentCom(hfFundPayCreatePaymentAccountPara);
 
+
+
+        return JsonResultKit.of();
+    }
     /**
      * 公积金汇缴支付-生成网银文件,补缴.txt
      * @param response
@@ -311,7 +341,16 @@ public class HfFundPayController {
 
         return hfPaymentService.printRemittedBook(paymentId,hfType);
     }
-
+    /**
+     * 按客户实时打印汇缴书，报表引用
+     */
+    @PostMapping("/printRemittedBookByCom")
+    public JsonResult printRemittedBookByCom(@RequestParam(value = "companyId", required = true) String companyId,
+                                             @RequestParam(value = "hfMonth", required = true) String hfMonth,
+                                             @RequestParam(value = "hfType", required = true) Integer hfType,
+                                             @RequestParam(value = "hfAccountType", required = true) Integer hfAccountType){
+        return hfPaymentService.printRemittedBookByCom(companyId,hfMonth,hfType,hfAccountType);
+    }
     /**
      * 付款凭证打印
      */

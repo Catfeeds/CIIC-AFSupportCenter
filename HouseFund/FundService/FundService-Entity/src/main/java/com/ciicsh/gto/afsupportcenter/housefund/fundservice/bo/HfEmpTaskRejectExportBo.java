@@ -60,6 +60,9 @@ public class HfEmpTaskRejectExportBo implements Serializable{
     @Excel(name = "发起人", orderNum = "9",  width = 20)
     private String createdDisplayName;
 
+    private Integer hasOut;
+    private Integer hfAccountType;
+
     public Long getEmpTaskId() {
         return empTaskId;
     }
@@ -310,5 +313,21 @@ public class HfEmpTaskRejectExportBo implements Serializable{
 
     public void setCreatedDisplayName(String createdDisplayName) {
         this.createdDisplayName = createdDisplayName;
+    }
+
+    public Integer getHasOut() {
+        return hasOut;
+    }
+
+    public void setHasOut(Integer hasOut) {
+        this.hasOut = hasOut;
+    }
+
+    public Integer getHfAccountType() {
+        return hfAccountType;
+    }
+
+    public void setHfAccountType(Integer hfAccountType) {
+        this.hfAccountType = hfAccountType;
     }
 }

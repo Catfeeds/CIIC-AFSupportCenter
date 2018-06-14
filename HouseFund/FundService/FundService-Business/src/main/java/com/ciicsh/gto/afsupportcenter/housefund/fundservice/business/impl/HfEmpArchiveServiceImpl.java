@@ -32,28 +32,39 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryEmpArchive(dto));
     }
 
-    public Map<String, Object> viewEmpArchiveInfo(String empArchiveId, String companyId) {
+    public Map<String, Object> viewEmpArchiveInfo(String empArchiveId, String companyId,String employeeId) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
-
-        HfEmpArchiveBo viewEmpArchiveBo = baseMapper.viewEmpArchive(empArchiveId);
-        HfArchiveBasePeriodBo viewEmpPeriodBo = baseMapper.viewEmpPeriod(empArchiveId, "1");//基本
-        HfArchiveBasePeriodBo viewEmpPeriodAddBo = baseMapper.viewEmpPeriod(empArchiveId, "2");//补充
+        HfEmpArchiveBo viewEmpArchiveBo=null;
+        if(empArchiveId == null){
+            viewEmpArchiveBo = baseMapper.viewEmpInfo(companyId,employeeId);
+        }else{
+            viewEmpArchiveBo = baseMapper.viewEmpArchive(empArchiveId);
+            HfArchiveBasePeriodBo viewEmpPeriodBo = baseMapper.viewEmpPeriod(empArchiveId, "1");//基本
+            HfArchiveBasePeriodBo viewEmpPeriodAddBo = baseMapper.viewEmpPeriod(empArchiveId, "2");//补充
+            List listEmpTaskPeriodBo = baseMapper.listEmpTaskPeriod(empArchiveId, "1");//基本
+            List listEmpTaskPeriodAddBo = baseMapper.listEmpTaskPeriod(empArchiveId, "2");//补充
+            List listEmpTransferBo = baseMapper.listEmpTransfer(empArchiveId);
+            resultMap.put("viewEmpPeriod", viewEmpPeriodBo);
+            resultMap.put("viewEmpPeriodAdd", viewEmpPeriodAddBo);
+            resultMap.put("listEmpTaskPeriod", listEmpTaskPeriodBo);
+            resultMap.put("listEmpTaskPeriodAdd", listEmpTaskPeriodAddBo);
+            resultMap.put("listEmpTransfer", listEmpTransferBo);
+        }
         HfComAccountBo viewComAccountBo = baseMapper.viewComAccount(companyId);
-        List listEmpTaskPeriodBo = baseMapper.listEmpTaskPeriod(empArchiveId, "1");//基本
-        List listEmpTaskPeriodAddBo = baseMapper.listEmpTaskPeriod(empArchiveId, "2");//补充
-        List listEmpTransferBo = baseMapper.listEmpTransfer(empArchiveId);
-
+        if (viewComAccountBo == null){
+            viewComAccountBo = new HfComAccountBo();
+        }
         HfEmpComBO hfEmpComBO = baseMapper.fetchManager(companyId, viewEmpArchiveBo.getEmployeeId());
         if(hfEmpComBO != null){
             org.springframework.beans.BeanUtils.copyProperties(hfEmpComBO, viewComAccountBo);
         }
+        if(viewComAccountBo.getCompanyId() == null){
+            viewComAccountBo.setCompanyId(viewEmpArchiveBo.getCompanyId());
+            viewComAccountBo.setTitle(viewEmpArchiveBo.getTitle());
+        }
         resultMap.put("viewEmpArchive", viewEmpArchiveBo);
-        resultMap.put("viewEmpPeriod", viewEmpPeriodBo);
-        resultMap.put("viewEmpPeriodAdd", viewEmpPeriodAddBo);
         resultMap.put("viewComAccount", viewComAccountBo);
-        resultMap.put("listEmpTaskPeriod", listEmpTaskPeriodBo);
-        resultMap.put("listEmpTaskPeriodAdd", listEmpTaskPeriodAddBo);
-        resultMap.put("listEmpTransfer", listEmpTransferBo);
+
         return resultMap;
     }
 

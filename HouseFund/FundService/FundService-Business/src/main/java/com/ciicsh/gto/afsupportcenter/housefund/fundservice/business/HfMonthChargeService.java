@@ -70,4 +70,11 @@ public interface HfMonthChargeService extends IService<HfMonthCharge> {
      * @return 导出结果
      */
     PageRows<HfPaymentAccountReportBo> getOperateDetailReport(PageInfo pageInfo, String userId);
+
+    /**
+     * 查询雇员转入或转出相关信息
+     *
+     * @param hfEmpTaskHandleBo
+     */
+    void getMonthChargeByInOut(HfEmpTaskHandleBo hfEmpTaskHandleBo);
 }
