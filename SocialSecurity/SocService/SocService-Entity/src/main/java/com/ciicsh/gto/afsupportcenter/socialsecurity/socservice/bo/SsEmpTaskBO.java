@@ -3,10 +3,12 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo;
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.AmEmpTaskDTO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBaseDetail;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBasePeriod;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTaskPeriod;
+import com.ciicsh.gto.afsupportcenter.util.DateUtil;
+import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
+import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -30,25 +32,24 @@ public class SsEmpTaskBO implements Serializable {
     private String customerId;
     private Long empArchiveId;
     private Integer isChange;
-    @Excel(name = "任务单类型",replace = {"新进_1","转入_2","调整_3","补缴_4","转出_5","封存_6","退账_7","集体转入_10","集体转出_11"}, orderNum = "1")
     private Integer taskCategory;
+    @Excel(name = "变更内容", orderNum = "8")
+    private String taskCategoryName;
     private Integer taskCategorySpecial;
-    @Excel(name = "是否加急",replace={"是_1","否_0","否_null"}, orderNum = "2")
     private Integer urgent;
     private String submitterId;
     private String submitterName;
     private String submitterDeptId;
     private String submitterDeptName;
-    @Excel(name = "发起时间", orderNum = "9")
     private LocalDateTime submitTime;
     private LocalDate expireDate;
     private String submitterRemark;
     private String handleUserId;
     private String handleUserName;
+    @Excel(name = "序号", orderNum = "1", width = 15)
     private String empSsSerial;
     private Integer handleWay;
     private String handleMonth;
-    @Excel(name = "备注", orderNum = "10")
     private String handleRemark;
     private String handleRemarkMan;
     private LocalDate handleRemarkDate;
@@ -64,7 +65,11 @@ public class SsEmpTaskBO implements Serializable {
     private String taskFormContent;
     private BigDecimal salary;
     private Integer empClassify;
+    @Excel(name = "个人属性", orderNum = "5", width = 15)
+    private String empClassifyName;
+    @Excel(name = "社保基数", orderNum = "9", width = 15)
     private BigDecimal empBase;
+    @Excel(name = "截止月份", orderNum = "11")
     private String endMonth;
     private LocalDate outDate;
     private String businessInterfaceId;
@@ -79,8 +84,10 @@ public class SsEmpTaskBO implements Serializable {
     private String createdDisplayName;
     private String modifiedDisplayName;
     private String leaderShipId;
+    @Excel(name = "客户经理", orderNum = "15")
     private String leaderShipName;
     private Integer serviceCenterId;
+    @Excel(name = "服务中心", orderNum = "14", width = 20)
     private String serviceCenter;
     private String userId;
 
@@ -105,34 +112,34 @@ public class SsEmpTaskBO implements Serializable {
     @Excel(name = "雇员姓名", orderNum = "3")
     private String employeeName;
     // 雇员编号
-    @Excel(name = "雇员编号", orderNum = "4")
+    @Excel(name = "雇员编号", orderNum = "2", width = 20)
     private String employeeId;
     // 雇员证件号
-    @Excel(name = "雇员证件号", orderNum = "5")
+    @Excel(name = "雇员证件号", orderNum = "4", width = 30)
     private String idNum;
     // 来源表 sal_company
     // 客户编号
-    @Excel(name = "客户编号", orderNum = "8")
+    @Excel(name = "客户编号", orderNum = "12", width = 20)
     private String companyId;
     // 客户名称
-    @Excel(name = "客户名称",width = 30,orderNum = "9")
+    @Excel(name = "公司名称", orderNum = "13", width = 20)
     private String title;
     // 来源表 ss_com_account
     // 企业社保账户Id
     private Long comAccountId;
     // 养老金独立开户密码（使用U盾登陆的密码）
-    @Excel(name = "UKEY密码", orderNum = "7")
+    @Excel(name = "密码", orderNum = "17", width = 20)
     private String ssPwd;
     // 结算区县(社保局所在上海地区)
     private String settlementArea;
     // 账户类型：1:中智大库 2中智外包 3独立户
     private Integer ssAccountType;
     // 参保户登记码（账号）
-    @Excel(name = "企业社保账号", width = 25,orderNum = "6")
     private String ssAccount;
     // 供应商Id
     private String supplierId;
     // 社保起缴月份
+    @Excel(name = "起缴月份", orderNum = "10")
     private String startMonth;
     //入职日期
     private LocalDate inDate;
@@ -171,4 +178,63 @@ public class SsEmpTaskBO implements Serializable {
     private List<String> param;
     private  String params;
     private List<String> orderParam;
+
+    private Integer afBpoFc;
+    @Excel(name = "用工成功", replace = {"是_1", "否_0"}, orderNum = "15")
+    private Integer employmentSuccess;
+    private LocalDate openAfDate;
+    @Excel(name = "开AF单日期", orderNum = "14", width = 15)
+    private String openAfDateName;
+    private Integer outReason;
+    @Excel(name = "中止原因", orderNum = "16", width = 25)
+    private String outReasonName;
+    @Excel(name = "联系地址", orderNum = "7", width = 35)
+    private String address;
+    @Excel(name = "户口所在地", orderNum = "6", width = 25)
+    private String residenceAddress;
+
+    public String getTaskCategoryName() {
+        return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.taskCategory), DictUtil.TYPE_VALUE_SOC_LOCAL_TASK_CATEGORY, false);
+    }
+
+    public void setTaskCategoryName(String taskCategoryName) {
+        this.taskCategoryName = taskCategoryName;
+    }
+
+    public String getEmpClassifyName() {
+        if (this.empClassify != null) {
+            return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.empClassify), DictUtil.TYPE_VALUE_SOCIAL_SECURITY_EMPLOYEE_CLASSIFY, false);
+        }
+        return empClassifyName;
+    }
+
+    public void setEmpClassifyName(String empClassifyName) {
+        this.empClassifyName = empClassifyName;
+    }
+
+    public String getOpenAfDateName() {
+        if (openAfDateName != null) {
+            return DateUtil.yyyyMMddHyphen(openAfDate);
+        }
+        return openAfDateName;
+    }
+
+    public void setOpenAfDateName(String openAfDateName) {
+        this.openAfDateName = openAfDateName;
+    }
+
+    public String getOutReasonName() {
+        if (this.outReason != null) {
+            if (this.afBpoFc == 1) {
+                return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.outReason), SocialSecurityConst.AF_EMP_OUT_REASON_KEY, false);
+            } else if (this.afBpoFc == 2) {
+                return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.outReason), SocialSecurityConst.BPO_EMP_OUT_REASON_KEY,false);
+            }
+        }
+        return outReasonName;
+    }
+
+    public void setOutReasonName(String outReasonName) {
+        this.outReasonName = outReasonName;
+    }
 }

@@ -22,6 +22,9 @@ public interface SocialSecurityConst {
 //    public static final String HF_TASK_CATEGORY_KEY = "HFTaskCategory";
     public static final String EMP_ARCHIVE_STATUS = "EmpArchiveStatus";
 
+    String AF_EMP_OUT_REASON_KEY = "afEmpOutReason";
+    String BPO_EMP_OUT_REASON_KEY = "bpoEmpOutReason";
+
     String CENTER_BASIC_COM_ACCOUNT = "881383287";
     String CENTER_ADDED_COM_ACCOUNT = "881383288";
     String SHANGHAI_CITY_CODE = "310000";
@@ -359,6 +362,34 @@ public interface SocialSecurityConst {
             put("1", "已办");
             put("2", "已做");
             put("3", "封存");
+        }
+    };
+
+    Map<String, String> AF_EMP_OUT_REASON_MAP = new HashMap<String, String>() {
+        {
+            put("1", "辞职");
+            put("2", "协商解除");
+            put("3", "公司解聘");
+            put("4", "合同到期");
+            put("5", "关闭");
+            put("6", "出国");
+            put("7", "退休");
+            put("8", "工伤死亡");
+            put("9", "取消入职通知");
+            put("10", "死亡");
+            put("11", "转科技人才");
+            put("12", "转用工单位（翻牌）");
+            put("13", "公司自行管理, 无需退工");
+            put("14", "公司自行管理, 需办退工");
+            put("15", "转其他公司管理, 无需退工");
+            put("16", "转其他公司管理, 需办退工");
+        }
+    };
+
+    Map<String, String> BPO_EMP_OUT_REASON_MAP = new HashMap<String, String>() {
+        {
+            put("0", "自愿离职");
+            put("1", "辞退");
         }
     };
 

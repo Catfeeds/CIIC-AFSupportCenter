@@ -95,6 +95,11 @@
         <result column="start_month" property="startMonth"/>
         <result column="submitter_name" property="submitterName"/>
 
+        <result column="employment_success" property="employmentSuccess"/>
+        <result column="open_af_date" property="openAfDate"/>
+        <result column="out_reason" property="outReason"/>
+        <result column="address" property="address"/>
+        <result column="residence_address" property="residenceAddress"/>
     </resultMap>
 
     <resultMap id="QueryBachResultMap" extends="BaseResultMapDto"
@@ -125,6 +130,7 @@
         et.expire_date,
         et.submitter_remark,
         et.task_form_content,
+        et.emp_base,
         et.salary,
         et.handle_user_id,
         et.handle_user_name,
@@ -160,7 +166,16 @@
         ca.ss_account,
         ca.supplier_id,
         c.company_id,
-        c.title
+        c.title,
+        CASE WHEN aa.employ_feedback = '3' OR aa.employ_feedback = '10' OR aa.employ_feedback = '12' OR aa.employ_feedback = '13' THEN 1 ELSE 0 END AS employment_success,
+        ae.open_af_date,
+        et.af_bpo_fc,
+        CASE WHEN et.af_bpo_fc = 1 THEN eaec.out_reason WHEN et.af_bpo_fc = 2 THEN ebec.quit_work_reason END AS out_reason,
+        CASE WHEN et.af_bpo_fc = 1 THEN eae.address WHEN et.af_bpo_fc = 2 THEN ebe.address ELSE efe.address END AS address,
+        CASE WHEN et.af_bpo_fc = 1 THEN eae.residence_address WHEN et.af_bpo_fc = 2 THEN ebe.residence_address ELSE efe.residence_address END AS residence_address,
+        et.emp_classify,
+        et.service_center,
+        et.leader_ship_name
     </sql>
     <sql id="employeeDailyOperatorQuery_where">
         <if test="employeeName != null">
@@ -286,6 +301,14 @@
         LEFT JOIN emp_employee e ON et.employee_id = e.employee_id
         LEFT JOIN ss_account_com_relation ssac ON ssac.company_id = c.company_id AND ssac.is_active = 1
         LEFT JOIN ss_com_account ca ON ca.com_account_id = ssac.com_account_id AND ca.is_active = 1
+        LEFT JOIN am_archive aa ON et.company_id = aa.company_id AND et.employee_id = aa.employee_id AND aa.is_active = 1
+        LEFT JOIN am_employment ae ON et.company_id = ae.company_id AND et.employee_id = ae.employee_id AND ae.is_active = 1
+        LEFT JOIN emp_af_emp_company eaec ON et.company_id = eaec.company_id AND et.employee_id = eaec.employee_id AND eaec.is_active = 1
+       <!-- LEFT JOIN emp_fc_emp_company efec ON et.company_id = efec.company_id AND et.employee_id = efec.employee_id AND efec.is_active = 1 -->
+        LEFT JOIN emp_bpo_emp_company ebec ON et.company_id = ebec.company_id AND et.employee_id = ebec.employee_id AND ebec.is_active = 1
+        LEFT JOIN emp_af_employee eae ON et.employee_id = eae.employee_id
+        LEFT JOIN emp_fc_employee efe ON et.employee_id = efe.employee_id
+        LEFT JOIN emp_bpo_employee ebe ON et.employee_id = ebe.employee_id
         <where>
             AND et.is_active = 1
             <include refid="newEmployeeDailyOperatorQuery_where"/>

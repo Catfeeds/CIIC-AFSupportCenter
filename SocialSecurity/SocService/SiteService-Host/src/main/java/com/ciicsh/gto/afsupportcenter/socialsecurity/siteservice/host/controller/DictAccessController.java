@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controlle
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
+import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -57,6 +58,9 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
             Map<String, String> welfareUnitMap = new LinkedHashMap<>();
             dictItemList.stream().forEach((d) -> welfareUnitMap.put(d.getDicItemValue(), d.getDicItemText()));
             DictUtil.getInstance().putDictByTypeValue(DictUtil.TYPE_VALUE_WELFARE_UNIT, welfareUnitMap, false);
+
+            DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.AF_EMP_OUT_REASON_KEY, SocialSecurityConst.AF_EMP_OUT_REASON_MAP, false);
+            DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.BPO_EMP_OUT_REASON_KEY, SocialSecurityConst.BPO_EMP_OUT_REASON_MAP, false);
         } catch (Exception e) {
             LogMessage logMessage = LogMessage.create().setTitle("上海社保字典项及常量项")
                 .setContent("加载字典项（访问字典公共接口）或常量项失败" + e.getMessage());

@@ -11,6 +11,7 @@ import java.util.Date;
 public class DateUtil {
 
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
+    private static DateTimeFormatter yyyyMMddHyphenFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 
     //转换日期类型
     public static Date localDateToDate(LocalDate localDate) {
@@ -37,5 +38,9 @@ public class DateUtil {
     public static String minusMonth(String month, int months){
         YearMonth hfMonthDate = YearMonth.parse(month , formatter);
         return hfMonthDate.minusMonths(months).format(formatter);
+    }
+
+    public static String yyyyMMddHyphen(LocalDate localDate) {
+        return localDate.format(yyyyMMddHyphenFormatter);
     }
 }
