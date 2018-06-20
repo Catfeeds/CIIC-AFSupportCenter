@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfRemittedBookParam;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.EmpTaskStatusBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentComBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentEmpBO;
@@ -251,7 +252,10 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
     }
 
     @Override
-    public JsonResult printRemittedBookByCom(String companyId, String hfMonth, Integer hfType,Integer hfAccountType) {
+    public JsonResult printRemittedBookByReport(String companyId, String hfMonth, Integer hfType,Integer hfAccountType) {
+        HfRemittedBookParam hfRemittedBookParam = new HfRemittedBookParam();
+
+        baseMapper.printRemittedBookByReport(hfRemittedBookParam);
         return null;
     }
 

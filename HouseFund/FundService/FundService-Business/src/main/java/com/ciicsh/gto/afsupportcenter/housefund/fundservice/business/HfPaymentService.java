@@ -43,5 +43,6 @@ public interface HfPaymentService {
      * 打印汇缴书
      */
     JsonResult printRemittedBook(Long paymentId,Integer hfType);
-    JsonResult printRemittedBookByCom(String companyId,String hfMonth,Integer hfType,Integer hfAccountType);
+
+    JsonResult printRemittedBookByReport(String companyId,String hfMonth,Integer hfType,Integer hfAccountType);
 }

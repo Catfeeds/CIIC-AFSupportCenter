@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socjob.message;
 
 import com.ciicsh.gto.RedisManager;
+import com.ciicsh.gto.afsupportcenter.socjob.service.PaymentService;
 import com.ciicsh.gto.afsupportcenter.socjob.service.SsPaymentComService;
 import com.ciicsh.gto.afsupportcenter.util.kafkaMessage.SocReportMessage;
 import org.slf4j.Logger;
@@ -28,27 +29,33 @@ public class MessageReceiver {
     @Autowired
     private SsPaymentComService paymentComService;
 
+    @Autowired
+    private PaymentService paymentService;
+
     @StreamListener(TaskSink.SOC_REPORT_INPUT)
-    public void receive(SocReportMessage message){
+    public void receive(SocReportMessage message) {
         logger.info("开始，当前时间：" + dateFormat.format(new Date()));
-        logger.info("received from comAccountId : " + message.getComAccountId()+", received from ssMonth: " + message.getSsMonth());
-        String key = "-com-account-"+message.getComAccountId()+"-"+message.getSsMonth()+"-"+message.getGeneralMethod()+"-";
+        logger.info("received from comAccountId : " + message.getComAccountId() + ", received from ssMonth: " + message.getSsMonth());
+        String key = "-com-account-" + message.getComAccountId() + "-" + message.getSsMonth() + "-" + message.getGeneralMethod() + "-";
         try {
-            switch (message.getGeneralMethod()){
-               case "generateSocPaymentInfo":
-                    paymentComService.generateSocPaymentInfo(message.getComAccountId(),message.getSsMonth());
+            switch (message.getGeneralMethod()) {
+                case "generateSocPaymentInfo":
+                    paymentComService.generateSocPaymentInfo(message.getComAccountId(), message.getSsMonth());
                     break;
-               case "generateMonthEmpChangeReport":
+                case "generateMonthEmpChangeReport":
                     paymentComService.generateMonthEmpChangeReport(message);
                     break;
                 case "generatePaymentDetailReport":
-                    paymentComService.generatePaymentDetailReport(message.getComAccountId(),message.getSsMonth());
+                    paymentComService.generatePaymentDetailReport(message.getComAccountId(), message.getSsMonth());
+                    break;
+                case "enquireFinanceComAccount":
+                    paymentService.enquireFinanceComAccount(message.getSsMonth());
                     break;
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
-            if(RedisManager.get(key,SocReportMessage.class) != null){
+        } finally {
+            if (RedisManager.get(key, SocReportMessage.class) != null) {
                 RedisManager.del(key);
             }
         }

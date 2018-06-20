@@ -5,6 +5,8 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Date;
 
 public class SsEmpArchiveBO extends SsEmpArchive {
 
@@ -51,6 +53,58 @@ public class SsEmpArchiveBO extends SsEmpArchive {
     private String zipCode;
 
     private Integer idCardType;
+
+    private LocalDate laborStartDate;
+
+    private LocalDate laborEndDate;
+
+    private Integer afempStatus;
+
+    private LocalDate outOperateDate;
+
+    private String endMonth;
+
+    @Override
+    public String getEndMonth() {
+        return endMonth;
+    }
+
+    @Override
+    public void setEndMonth(String endMonth) {
+        this.endMonth = endMonth;
+    }
+
+    public LocalDate getLaborStartDate() {
+        return laborStartDate;
+    }
+
+    public void setLaborStartDate(LocalDate laborStartDate) {
+        this.laborStartDate = laborStartDate;
+    }
+
+    public LocalDate getLaborEndDate() {
+        return laborEndDate;
+    }
+
+    public void setLaborEndDate(LocalDate laborEndDate) {
+        this.laborEndDate = laborEndDate;
+    }
+
+    public Integer getAfempStatus() {
+        return afempStatus;
+    }
+
+    public void setAfempStatus(Integer afempStatus) {
+        this.afempStatus = afempStatus;
+    }
+
+    public LocalDate getOutOperateDate() {
+        return outOperateDate;
+    }
+
+    public void setOutOperateDate(LocalDate outOperateDate) {
+        this.outOperateDate = outOperateDate;
+    }
 
     @Override
     public Integer getEmpClassify() {

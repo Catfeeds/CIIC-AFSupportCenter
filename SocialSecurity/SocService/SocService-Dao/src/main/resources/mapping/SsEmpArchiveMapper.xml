@@ -44,6 +44,11 @@
         <result column="com_account_name" property="comAccountName"/>
         <result column="ss_pwd" property="ssPwd"/>
         <result column="leadership_name" property="leaderShipName"/>
+        <result column="labor_start_date" property="laborStartDate"/>
+        <result column="labor_end_date" property="laborEndDate"/>
+        <result column="afempStatus" property="afempStatus"/>
+        <result column="outOperateDate" property="outOperateDate"/>
+        <result column="end_month" property="endMonth"/>
     </resultMap>
 
     <resultMap id="getSsEmpInfoResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpInfoDetailBO" >
@@ -202,8 +207,8 @@
         sac.service_center,
         sea.emp_classify,
         sea.com_account_id,
-        afemp.leadership_name,
-        sea.out_date
+        afemp.leadership_name,afemp.labor_start_date,afemp.labor_end_date,afemp.status AS 'afempStatus',afemp.modified_time AS 'outOperateDate',
+        sea.out_date,sea.end_month
         FROM ss_emp_archive sea
         LEFT JOIN sal_company sc ON sc.company_id=sea.company_id AND sc.is_active = 1
         LEFT JOIN sal_af_company sac ON sac.company_id=sea.company_id
@@ -227,13 +232,13 @@
         sca.ss_account_type,
         sea.emp_classify,
         sea.com_account_id,
-        afemp.leadership_name,
+        afemp.leadership_name,afemp.labor_start_date,afemp.labor_end_date,afemp.status AS 'afempStatus',afemp.modified_time AS 'outOperateDate',
         sca.ss_account,
         sca.com_account_name,
         sca.ss_pwd,
         sca.settlement_area,
         sac.service_center,
-        sea.out_date
+        afemp.out_date,sea.end_month
         FROM emp_af_emp_company afemp
         INNER JOIN sal_af_company sac ON sac.company_id=afemp.company_id
         INNER JOIN sal_company sc ON sc.company_id=afemp.company_id
