@@ -50,14 +50,14 @@ public class SocScheduledTask {
         logger.info("结束，当前时间：" + dateFormat.format(new Date()));
     }
 
-    @Scheduled(cron = "0 0 4 ? * *") //暂定每天上午4:00触发
+
+    @Scheduled(cron = "0 0 0,12 * * ? ")// 每天晚上12点以及每天中午12点 触发
     public void execEnquireFinanceComAccount() {
         logger.info("社保每日询问财务是否可付定时任务启动，当前时间：" + dateFormat.format(new Date()));
         paymentService.enquireFinanceComAccount(StringUtil.getYear_Month(new Date()));
         logger.info("社保每日询问财务是否可付定时任务结束，当前时间：" + dateFormat.format(new Date()));
     }
 
-    //@Scheduled(cron = "0 15 10 ? * *")//暂定每天上午10:15触发
     @Scheduled(cron = "0 0 1 1 * ?")  //每月1号凌晨1点
     public void execUpdateTaskStatus(){
         String log="社保每月1日更新办理状态，当前时间：";
