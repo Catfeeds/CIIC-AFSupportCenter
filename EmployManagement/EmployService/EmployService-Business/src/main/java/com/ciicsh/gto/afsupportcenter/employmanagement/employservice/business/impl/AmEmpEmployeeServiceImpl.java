@@ -62,9 +62,10 @@ public class AmEmpEmployeeServiceImpl extends ServiceImpl<AmEmpEmployeeMapper, A
             if(amCompanySetBO1!=null)
             {
                 amEmpEmployeeBO.setEmploySpecial(ReasonUtil.removeMark(amCompanySetBO1.getEmploySpecial()));
-                amEmpEmployeeBO.setKeyType(amCompanySetBO1.getKeyType());
-                amEmpEmployeeBO.setKeyCode(amCompanySetBO1.getKeyCode());
-                amEmpEmployeeBO.setKeyPwd(amCompanySetBO1.getKeyPwd());
+                //已经LEFT JOIN Ukey 信息表 按组织机构代码已关联Ukey信息
+//                amEmpEmployeeBO.setKeyType(amCompanySetBO1.getKeyType());
+//                amEmpEmployeeBO.setKeyCode(amCompanySetBO1.getKeyCode());
+//                amEmpEmployeeBO.setKeyPwd(amCompanySetBO1.getKeyPwd());
                 amEmpEmployeeBO.setKeyStatus(amCompanySetBO1.getKeyStatus());
 
                 amEmpEmployeeBO.setPhone(amCompanySetBO1.getPhone());

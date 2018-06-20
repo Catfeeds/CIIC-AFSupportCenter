@@ -4,12 +4,12 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveAdvanceBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveDocSeqBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.SalCompanyBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmploymentBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmArchiveAdvanceService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmArchiveService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.advanceSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveAdvanceMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveDocSeqMapper;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmEmploymentMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveAdvance;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveDocSeq;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
@@ -38,6 +38,9 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
 
     @Autowired
     private AmArchiveDocSeqMapper amArchiveDocSeqMapper;
+
+    @Autowired
+    private AmEmploymentMapper amEmploymentMapper;
 
     @Override
     public PageRows<AmArchiveAdvanceBO> queryAmArchiveAdvanceList(PageInfo pageInfo) {
@@ -72,9 +75,11 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
         AmArchiveAdvance po = new AmArchiveAdvance();
         BeanUtils.copyProperties(amArchiveAdvanceBO, po);
         po.setStatus(1);
-        po.setCreatedBy(UserContext.getUserName());
         Date nowTime = new Date();
-        po.setCreatedTime(nowTime);
+        if(amArchiveAdvanceBO.getArchiveAdvanceId() == null || amArchiveAdvanceBO.getArchiveAdvanceId() == 0){
+            po.setCreatedBy(UserContext.getUserName());
+            po.setCreatedTime(nowTime);
+        }
         po.setModifiedBy(UserContext.getUserName());
         po.setModifiedTime(nowTime);
         boolean result = this.insertOrUpdate(po);
@@ -121,21 +126,28 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
         for (AmArchiveAdvance am: list) {
             advanceSearchExportOpt opt = new advanceSearchExportOpt();
             BeanUtils.copyProperties(am,opt);
+            if(am.getStatus() == 1){
+                opt.setStruts("未匹配");
+            }else if(am.getStatus() == 2){
+                opt.setStruts("已匹配");
+            }
             result.add(opt);
         }
         return result;
     }
 
     @Override
-    public boolean updateAmArchiveAdvance(AmArchiveAdvanceBO amArchiveAdvanceBO) {
-        AmArchiveAdvance po = new AmArchiveAdvance();
-        BeanUtils.copyProperties(amArchiveAdvanceBO, po);
-        po.setStatus(2);
-        po.setModifiedBy(UserContext.getUserName());
-        po.setModifiedTime(new Date());
-        Integer result = baseMapper.updateById(po);
-        return result > 0;
+    public AmEmploymentBO queryAmArchiveByEmployeeNameIdCard(String employeeName, String idCard) {
+        AmEmploymentBO amEmploymentBO = new AmEmploymentBO();
+        List<String> param = new ArrayList<>();
+        param.add("d.employee_name = '"+ employeeName +"'");
+        param.add("d.id_num = '"+ idCard +"'");
+        amEmploymentBO.setParam(param);
+        List<AmEmploymentBO> boList = amEmploymentMapper.queryAmArchive(amEmploymentBO);
+        if(boList != null && boList.size() > 0){
+            return boList.get(0);
+        }
+        return null;
     }
-
 
 }
