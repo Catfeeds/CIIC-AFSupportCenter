@@ -1,11 +1,9 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.controller;
 
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveAdvanceBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveUkeyBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmArchiveAdvanceService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveUkeyRenewBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmArchiveUkeyService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.advanceSearchExportOpt;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveUkey;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.ukeySearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -21,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by liyuelong on 2018/5/31.
+ * Created by liyuelong on 2018/6/14.
  */
 
 @RestController
@@ -36,6 +34,20 @@ public class AmArchiveUkeyController extends BasicController<IAmArchiveUkeyServi
         return JsonResultKit.of(result);
     }
 
+    @RequestMapping("/queryAmArchiveUkey")
+    public JsonResult<AmArchiveUkeyBO> queryAmArchiveUkey(Long id){
+        AmArchiveUkeyBO result = business.queryAmArchiveUkey(id);
+
+        return JsonResultKit.of(result);
+    }
+
+    @RequestMapping("/queryAmArchiveUkeyRenew")
+    public JsonResult<List<AmArchiveUkeyRenewBO>> queryAmArchiveUkeyRenew(Long id){
+        List<AmArchiveUkeyRenewBO> result = business.queryAmArchiveUkeyRenew(id);
+
+        return JsonResultKit.of(result);
+    }
+
     @RequestMapping("/deleteAmArchiveUkey")
     public JsonResult<Boolean> deleteAmArchiveUkey(Long id){
 
@@ -44,14 +56,29 @@ public class AmArchiveUkeyController extends BasicController<IAmArchiveUkeyServi
     }
 
     @RequestMapping("/saveAmArchiveUkey")
-    public JsonResult<Boolean> saveAmArchiveUkey(AmArchiveUkeyBO amArchiveUkeyBO){
+    public JsonResult<Integer> saveAmArchiveUkey(AmArchiveUkeyBO amArchiveUkeyBO){
+        AmArchiveUkeyBO bo = business.queryAmArchiveUkey(amArchiveUkeyBO.getOrganizationCode());
+        if(bo!=null){
+            return JsonResultKit.of(0);
+        }
         Boolean result = business.saveAmArchiveUkey(amArchiveUkeyBO);
-        return JsonResultKit.of(result);
+        return JsonResultKit.of(1);
     }
 
     @RequestMapping("/amArchiveUkeyRenew")
-    public JsonResult<Boolean> amArchiveUkeyRenew(Long keyId,String keyFee,String keyRenewFee){
-        Boolean result = business.amArchiveUkeyRenew(keyId, keyFee, keyRenewFee);
+    public JsonResult<Boolean> amArchiveUkeyRenew(AmArchiveUkeyBO amArchiveUkeyBO){
+        Boolean result = business.amArchiveUkeyRenew(amArchiveUkeyBO);
         return JsonResultKit.of(result);
+    }
+
+    @RequestMapping("/uekySearchExportOpt")
+    public void uekySearchExportOpt(HttpServletResponse response, AmArchiveUkeyBO amArchiveUkeyBO) {
+
+        Date date = new Date();
+        String fileNme = "Ukey列表_"+ StringUtil.getDateString(date)+".xls";
+
+        List<ukeySearchExportOpt> opts = business.queryAdvanceSearchExportOpt(amArchiveUkeyBO);
+
+        ExcelUtil.exportExcel(opts,ukeySearchExportOpt.class,fileNme,response);
     }
 }

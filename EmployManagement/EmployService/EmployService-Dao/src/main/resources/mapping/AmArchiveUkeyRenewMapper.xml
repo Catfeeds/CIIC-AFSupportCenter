@@ -6,9 +6,9 @@
 	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveUkeyRenew">
 		<id column="id" property="id" />
 		<result column="key_id" property="keyId" />
-		<result column="key_fee" property="keyFee" />
-        <result column="key_renew_fee" property="keyRenewFee" />
-        <result column="key_renew_time" property="keyRenewTime" />
+		<result column="due_date" property="dueDate" />
+        <result column="renew_date" property="renewDate" />
+        <result column="type" property="type" />
         <result column="is_active" property="isActive" />
         <result column="created_time" property="createdTime" />
         <result column="modified_time" property="modifiedTime" />
