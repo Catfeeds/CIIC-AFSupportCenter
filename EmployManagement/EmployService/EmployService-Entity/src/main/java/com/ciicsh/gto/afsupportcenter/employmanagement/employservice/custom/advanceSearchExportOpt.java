@@ -15,6 +15,9 @@ import java.time.LocalDate;
 @ExcelTarget("advanceSearchExportOpt")
 public class advanceSearchExportOpt {
 
+    @Excel(name = "状态", orderNum = "0")
+    private String struts;
+
     @Excel(name = "预留档案类型", orderNum = "1")
     private String reservedArchiveType;
 
@@ -35,4 +38,10 @@ public class advanceSearchExportOpt {
 
     @Excel(name = "存档地", orderNum = "7")
     private String archivalPlace;
+
+    @Excel(name = "操作人", orderNum = "8")
+    private String createdBy;
+
+    @Excel(name = "备注", orderNum = "9")
+    private String remark;
 }

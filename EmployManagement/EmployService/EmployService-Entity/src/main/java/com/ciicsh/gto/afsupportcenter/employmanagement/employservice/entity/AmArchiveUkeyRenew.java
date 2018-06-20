@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -34,22 +35,22 @@ public class AmArchiveUkeyRenew implements Serializable {
     private Long keyId;
 
     /**
-     * 费用
+     * 到期日期
      */
-    @TableField("key_fee")
-    private String keyFee;
+    @TableField("due_date")
+    private LocalDate dueDate;
 
     /**
-     * 续签费用
+     * 续签时间 操作时间
      */
-    @TableField("key_renew_fee")
-    private String keyRenewFee;
+    @TableField("renew_date")
+    private LocalDate renewDate;
 
     /**
-     * 续签时间
+     * 更新方式  网办 柜面
      */
-    @TableField("key_renew_time")
-    private Date keyRenewTime;
+    @TableField("type")
+    private String type;
 
     /**
      * 是否可用
@@ -97,28 +98,28 @@ public class AmArchiveUkeyRenew implements Serializable {
         this.keyId = keyId;
     }
 
-    public String getKeyFee() {
-        return keyFee;
+    public LocalDate getDueDate() {
+        return dueDate;
     }
 
-    public void setKeyFee(String keyFee) {
-        this.keyFee = keyFee;
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
     }
 
-    public String getKeyRenewFee() {
-        return keyRenewFee;
+    public LocalDate getRenewDate() {
+        return renewDate;
     }
 
-    public void setKeyRenewFee(String keyRenewFee) {
-        this.keyRenewFee = keyRenewFee;
+    public void setRenewDate(LocalDate renewDate) {
+        this.renewDate = renewDate;
     }
 
-    public Date getKeyRenewTime() {
-        return keyRenewTime;
+    public String getType() {
+        return type;
     }
 
-    public void setKeyRenewTime(Date keyRenewTime) {
-        this.keyRenewTime = keyRenewTime;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Integer getIsActive() {

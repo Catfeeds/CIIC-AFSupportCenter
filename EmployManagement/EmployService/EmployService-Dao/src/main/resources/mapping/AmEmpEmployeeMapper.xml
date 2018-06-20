@@ -43,10 +43,14 @@
         a.*,
         b.archive_direction,
         b.employee_nature,
-        b.employ_property
+        b.employ_property,
+        c.key_type as keyType,
+        c.key_code as keyCode,
+        c.key_pwd as keyPwd
         FROM
         am_emp_employee a
         LEFT JOIN am_emp_task b ON a.emp_task_id = b.emp_task_id
+        LEFT JOIN am_archive_ukey c ON a.organization_code = c.organization_code
         WHERE
         a.emp_task_id = #{empTaskId}
     </select>

@@ -83,10 +83,10 @@ public class AmArchiveAdvance implements Serializable {
     private String archivalPlace;
 
     /**
-     * 删除备注
+     * 备注
      */
-    @TableField("delete_remark")
-    private String deleteRemark;
+    @TableField("remark")
+    private String remark;
 
     /**
      * 状态0：删除1：未匹配2：已匹配
@@ -124,12 +124,12 @@ public class AmArchiveAdvance implements Serializable {
     @TableField("modified_by")
     private String modifiedBy;
 
-    public String getDeleteRemark() {
-        return deleteRemark;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setDeleteRemark(String deleteRemark) {
-        this.deleteRemark = deleteRemark;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public Long getArchiveAdvanceId() {

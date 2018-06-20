@@ -60,9 +60,9 @@ public class AmArchiveAdvanceBO{
     private String archivalPlace;
 
     /**
-     * 删除备注
+     * 备注
      */
-    private String deleteRemark;
+    private String remark;
 
     /**
      * 状态0：删除1：未匹配2：已匹配
@@ -224,12 +224,12 @@ public class AmArchiveAdvanceBO{
         this.modifiedBy = modifiedBy;
     }
 
-    public String getDeleteRemark() {
-        return deleteRemark;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setDeleteRemark(String deleteRemark) {
-        this.deleteRemark = deleteRemark;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public boolean isExist() {

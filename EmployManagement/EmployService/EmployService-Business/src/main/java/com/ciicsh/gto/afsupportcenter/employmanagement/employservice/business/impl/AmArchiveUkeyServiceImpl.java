@@ -2,20 +2,15 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.i
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveAdvanceBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveDocSeqBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveUkeyBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmArchiveAdvanceService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveUkeyRenewBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmArchiveUkeyService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.advanceSearchExportOpt;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveAdvanceMapper;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveDocSeqMapper;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.ukeySearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveUkeyMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveUkeyRenewMapper;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveAdvance;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveDocSeq;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveUkey;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveUkeyRenew;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
@@ -45,19 +40,63 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
 
     @Override
     public PageRows<AmArchiveUkeyBO> queryAmArchiveUkeyList(PageInfo pageInfo) {
-
-        PageRows<AmArchiveUkeyBO> result = new PageRows<>();
-        AmArchiveUkey pojo = pageInfo.toJavaObject(AmArchiveUkey.class);
-        pojo.setIsActive(1);
-        PageRows<AmArchiveUkey> resultPo = PageKit.doSelectPage(pageInfo, () -> baseMapper.selectList(new EntityWrapper<>(pojo)));
-        result.setTotal(resultPo.getTotal());
+        AmArchiveUkeyBO bo = pageInfo.toJavaObject(AmArchiveUkeyBO.class);
+        List<String> param = new ArrayList<String>();
+        if(!StringUtil.isEmpty(bo.getParams()))
+        {
+            String arr[] = bo.getParams().split(",");
+            for(int i=0;i<arr.length;i++) {
+                param.add(arr[i]);
+            }
+        }
+        bo.setParam(param);
+        List<AmArchiveUkey> ukeyList = baseMapper.queryUkeyList(bo);
         List<AmArchiveUkeyBO> boList = new ArrayList<>();
-        for (AmArchiveUkey po : resultPo.getRows()) {
-            AmArchiveUkeyBO bo = new AmArchiveUkeyBO();
-            BeanUtils.copyProperties(po, bo);
+        for (AmArchiveUkey ueky:ukeyList) {
+            AmArchiveUkeyBO b = new AmArchiveUkeyBO();
+            BeanUtils.copyProperties(ueky,b);
+            boList.add(b);
+        }
+        return PageKit.doSelectPage(pageInfo,() -> boList);
+    }
+
+    @Override
+    public AmArchiveUkeyBO queryAmArchiveUkey(Long id) {
+        AmArchiveUkeyBO result = new AmArchiveUkeyBO();
+        AmArchiveUkey ukey = new AmArchiveUkey();
+        ukey.setId(id);
+        AmArchiveUkey po = baseMapper.selectOne(ukey);
+        if(po == null){
+            return null;
+        }
+        BeanUtils.copyProperties(po,result);
+        return result;
+    }
+
+    @Override
+    public List<AmArchiveUkeyRenewBO> queryAmArchiveUkeyRenew(Long id) {
+        AmArchiveUkeyRenew renew = new AmArchiveUkeyRenew();
+        renew.setKeyId(id);
+        List<AmArchiveUkeyRenew> renews = amArchiveUkeyRenewMapper.selectList(new EntityWrapper<>(renew));
+        List<AmArchiveUkeyRenewBO> boList = new ArrayList<>();
+        for (AmArchiveUkeyRenew r:renews) {
+            AmArchiveUkeyRenewBO bo = new AmArchiveUkeyRenewBO();
+            BeanUtils.copyProperties(r,bo);
             boList.add(bo);
         }
-        result.setRows(boList);
+        return boList;
+    }
+
+    @Override
+    public AmArchiveUkeyBO queryAmArchiveUkey(String organizationCode) {
+        AmArchiveUkeyBO result = new AmArchiveUkeyBO();
+        AmArchiveUkey ukey = new AmArchiveUkey();
+        ukey.setOrganizationCode(organizationCode);
+        AmArchiveUkey po = baseMapper.selectOne(ukey);
+        if(po == null){
+            return null;
+        }
+        BeanUtils.copyProperties(po,result);
         return result;
     }
 
@@ -88,19 +127,50 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
     }
 
     @Override
-    public boolean amArchiveUkeyRenew(Long keyId, String keyFee, String keyRenewFee) {
+    public boolean amArchiveUkeyRenew(AmArchiveUkeyBO amArchiveUkeyBO) {
         AmArchiveUkeyRenew renew = new AmArchiveUkeyRenew();
-        renew.setKeyId(keyId);
-        renew.setKeyFee(keyFee);
-        renew.setKeyRenewFee(keyRenewFee);
+        renew.setKeyId(amArchiveUkeyBO.getId());
+        renew.setType(amArchiveUkeyBO.getType());
+        renew.setDueDate(amArchiveUkeyBO.getRenewDueDate());
+        renew.setRenewDate(amArchiveUkeyBO.getRenewDate());
         Date nowDate = new Date();
-        renew.setKeyRenewTime(nowDate);
+        renew.setIsActive(1);
         renew.setCreatedBy(UserContext.getUserName());
         renew.setCreatedTime(nowDate);
         renew.setModifiedBy(UserContext.getUserName());
         renew.setModifiedTime(nowDate);
-        renew.setIsActive(1);
-        return amArchiveUkeyRenewMapper.insert(renew) > 0;
+        amArchiveUkeyRenewMapper.insert(renew);
+
+        AmArchiveUkey ukey = new AmArchiveUkey();
+        ukey.setId(amArchiveUkeyBO.getId());
+        ukey.setDueDate(amArchiveUkeyBO.getRenewDueDate());
+        ukey.setDueDate(amArchiveUkeyBO.getRenewDueDate());
+        ukey.setModifiedBy(UserContext.getUserName());
+        ukey.setModifiedTime(nowDate);
+        baseMapper.updateById(ukey);
+        return true;
+    }
+
+    @Override
+    public List<ukeySearchExportOpt> queryAdvanceSearchExportOpt(AmArchiveUkeyBO bo) {
+        List<ukeySearchExportOpt> result = new ArrayList<>();
+        List<String> param = new ArrayList<String>();
+        if(!StringUtil.isEmpty(bo.getParams()))
+        {
+            String arr[] = bo.getParams().split(",");
+            for(int i=0;i<arr.length;i++) {
+                param.add(arr[i]);
+            }
+        }
+        bo.setParam(param);
+        List<AmArchiveUkey> ukeyList = baseMapper.queryUkeyList(bo);
+
+        for (AmArchiveUkey ueky:ukeyList) {
+            ukeySearchExportOpt opt = new ukeySearchExportOpt();
+            BeanUtils.copyProperties(ueky,opt);
+            result.add(opt);
+        }
+        return result;
     }
 
 
