@@ -238,7 +238,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
 
     @RequestMapping("/newEmpTaskTxtExport")
     public void newEmpTaskTxtExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
-        try {
+//        try {
             Collection<Object> objects = pageInfo.getParams().values();
 
             Writer writer = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
@@ -341,9 +341,9 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
 //        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
             ExportResponseUtil.encodeExportFileName(response, fileName);
             writer.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     @RequestMapping(value = "/empPreInputUpload", consumes = "multipart/form-data")
