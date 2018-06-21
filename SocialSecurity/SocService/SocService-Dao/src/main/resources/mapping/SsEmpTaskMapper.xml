@@ -281,6 +281,9 @@
             <!--close=")">#{task_category}-->
             <!--</foreach>-->
         </if>
+        <if test="taskCategory != null">
+            AND et.task_category = #{taskCategory}
+        </if>
         ORDER BY
         <foreach collection="orderParam" item="plid" open="" close="" separator="">
             ${plid},

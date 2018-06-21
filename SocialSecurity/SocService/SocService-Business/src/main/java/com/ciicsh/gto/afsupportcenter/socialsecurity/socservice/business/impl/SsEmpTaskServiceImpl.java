@@ -133,6 +133,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         ssEmpTaskBO.setUserId(userId);
         return PageKit.doSelectPage(pageInfo, () -> {
             List<T> rollInBOs = null;
+            ssEmpTaskBO.setParam(new ArrayList<>());
+            ssEmpTaskBO.setOrderParam(new ArrayList<>());
             List<SsEmpTaskBO> list = baseMapper.employeeDailyOperatorQuery(ssEmpTaskBO);
             if (list != null) {
                 rollInBOs = new ArrayList<>();

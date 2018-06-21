@@ -238,108 +238,112 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
 
     @RequestMapping("/newEmpTaskTxtExport")
     public void newEmpTaskTxtExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
-        Collection<Object> objects = pageInfo.getParams().values();
+        try {
+            Collection<Object> objects = pageInfo.getParams().values();
 
-        Writer writer = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
-        String title = "序号|1|||姓名|单边比例|单边比例|||缴费金额|1010|身份证号码|出生日期|性别|单边金额|单边金额||缴费基数|||||||||-1|";
-        String template = "%1$d|1|||{%2$s}.{employeeName}|%3$s|%4$s|||%5$s|1010|{%2$s}.{idNum}|{%2$s}.{birthday}|{%2$s}.{gender}|%6$s|%7$s||%8$s|||||||||-1|";
+            Writer writer = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
+            String title = "序号|1|||姓名|单边比例|单边比例|||缴费金额|1010|身份证号码|出生日期|性别|单边金额|单边金额||缴费基数|||||||||-1|";
+            String template = "%1$d|1|||{%2$s}.{employeeName}|%3$s|%4$s|||%5$s|1010|{%2$s}.{idNum}|{%2$s}.{birthday}|{%2$s}.{gender}|%6$s|%7$s||%8$s|||||||||-1|";
 
 
-        if (objects != null) {
-            List<String> outputList = new ArrayList<>(objects.size());
-            Set<String> employeeIdSet = new HashSet<>();
-            Wrapper<HfEmpTask> wrapper = new EntityWrapper<>();
-            wrapper.in("emp_task_id", StringUtils.join(objects, ','));
-            wrapper.eq("task_category", 1);
-            wrapper.eq("is_active", 1);
+            if (objects != null) {
+                List<String> outputList = new ArrayList<>(objects.size());
+                Set<String> employeeIdSet = new HashSet<>();
+                Wrapper<HfEmpTask> wrapper = new EntityWrapper<>();
+                wrapper.in("emp_task_id", StringUtils.join(objects, ','));
+                wrapper.eq("task_category", 1);
+                wrapper.eq("is_active", 1);
 
-            List<HfEmpTask> list = business.selectList(wrapper);
-            Map<Long, int[]> roundTypesMap = new HashMap<>();
+                List<HfEmpTask> list = business.selectList(wrapper);
+                Map<Long, int[]> roundTypesMap = new HashMap<>();
 
-            if (CollectionUtils.isNotEmpty(list)) {
-                for(int i = 0; i < list.size(); i++) {
-                    HfEmpTask hfEmpTask = list.get(i);
-                    employeeIdSet.add(hfEmpTask.getEmployeeId());
-                    String policyId = hfEmpTask.getPolicyDetailId();
-                    Integer welfareUnit = hfEmpTask.getWelfareUnit();
-                    String effectiveMonth = hfEmpTask.getStartMonth();
-                    if (StringUtils.isEmpty(effectiveMonth)) {
-                        effectiveMonth = hfEmpTask.getEndMonth();
-                    }
-                    String hfTypeDicItemCode = DictUtil.DICT_ITEM_ID_FUND_BASIC;
-                    if (hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_ADDED) {
-                        hfTypeDicItemCode = DictUtil.DICT_ITEM_ID_FUND_ADDED;
-                    }
-                    int[] roundTypes = null;
-                    if (StringUtils.isNotEmpty(policyId)) {
-                        roundTypes = hfEmpTaskHandleService.getRoundTypeProxy(policyId, welfareUnit, effectiveMonth, hfTypeDicItemCode);
-                        if (roundTypes != null) {
-                            if (roundTypes.length != 2) {
-                                throw new BusinessException("内控中心取得进位方式不正确");
-                            } else {
-                                if (roundTypes[0] < 1 || roundTypes[0] > 10) {
-                                    roundTypes[0] = 1;
+                if (CollectionUtils.isNotEmpty(list)) {
+                    for (int i = 0; i < list.size(); i++) {
+                        HfEmpTask hfEmpTask = list.get(i);
+                        employeeIdSet.add(hfEmpTask.getEmployeeId());
+                        String policyId = hfEmpTask.getPolicyDetailId();
+                        Integer welfareUnit = hfEmpTask.getWelfareUnit();
+                        String effectiveMonth = hfEmpTask.getStartMonth();
+                        if (StringUtils.isEmpty(effectiveMonth)) {
+                            effectiveMonth = hfEmpTask.getEndMonth();
+                        }
+                        String hfTypeDicItemCode = DictUtil.DICT_ITEM_ID_FUND_BASIC;
+                        if (hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_ADDED) {
+                            hfTypeDicItemCode = DictUtil.DICT_ITEM_ID_FUND_ADDED;
+                        }
+                        int[] roundTypes = null;
+                        if (StringUtils.isNotEmpty(policyId)) {
+                            roundTypes = hfEmpTaskHandleService.getRoundTypeProxy(policyId, welfareUnit, effectiveMonth, hfTypeDicItemCode);
+                            if (roundTypes != null) {
+                                if (roundTypes.length != 2) {
+                                    throw new BusinessException("内控中心取得进位方式不正确");
+                                } else {
+                                    if (roundTypes[0] < 1 || roundTypes[0] > 10) {
+                                        roundTypes[0] = 1;
+                                    }
+                                    if (roundTypes[1] < 1 || roundTypes[1] > 10) {
+                                        roundTypes[1] = 1;
+                                    }
                                 }
-                                if (roundTypes[1] < 1 || roundTypes[1] > 10) {
-                                    roundTypes[1] = 1;
+                            }
+                        }
+                        if (roundTypes == null) {
+                            roundTypes = new int[]{1, 1};
+                        }
+                        roundTypesMap.put(hfEmpTask.getEmpTaskId(), roundTypes);
+                        BigDecimal comRatio = hfEmpTask.getRatioCom();
+                        BigDecimal empRatio = hfEmpTask.getRatioEmp();
+                        BigDecimal amount = CalculateSocialUtils.calculateByRoundType(hfEmpTask.getAmount(),
+                            CalculateSocialUtils.getRoundTypeInWeight(roundTypesMap.get(hfEmpTask.getEmpTaskId())[0], roundTypesMap.get(hfEmpTask.getEmpTaskId())[1]));
+                        BigDecimal comAmount = amount.multiply(comRatio).divide(comRatio.add(empRatio), 3, BigDecimal.ROUND_HALF_UP);
+                        BigDecimal empAmount = amount.multiply(comRatio).divide(comRatio.add(empRatio), 3, BigDecimal.ROUND_HALF_UP);
+                        comAmount = CalculateSocialUtils.calculateByRoundType(comAmount, roundTypesMap.get(hfEmpTask.getEmpTaskId())[0]);
+                        empAmount = CalculateSocialUtils.calculateByRoundType(empAmount, roundTypesMap.get(hfEmpTask.getEmpTaskId())[1]);
+                        String comRatioStr = CalculateSocialUtils.digitInSimpleFormat(comRatio.multiply(BigDecimal.valueOf(100)));
+                        String empRatioStr = CalculateSocialUtils.digitInSimpleFormat(empRatio.multiply(BigDecimal.valueOf(100)));
+                        String baseAmount = CalculateSocialUtils.digitInSimpleFormat(hfEmpTask.getEmpBase());
+                        outputList.add(String.format(template, i + 1, hfEmpTask.getEmployeeId(), comRatioStr, empRatioStr, amount.toString(), comAmount.toString(), empAmount.toString(), baseAmount));
+                    }
+                }
+
+                writer.append(title);
+                if (CollectionUtils.isNotEmpty(outputList)) {
+                    if (!employeeIdSet.isEmpty()) {
+                        Wrapper<EmpEmployee> empWrapper = new EntityWrapper<>();
+                        empWrapper.in("employee_id", employeeIdSet);
+                        List<EmpEmployee> empList = empEmployeeService.selectList(empWrapper);
+
+                        String employeeIdKey;
+                        for (String output : outputList) {
+                            for (EmpEmployee emp : empList) {
+                                employeeIdKey = "{" + emp.getEmployeeId() + "}";
+                                if (output.contains(employeeIdKey)) {
+                                    output = output.replace(employeeIdKey + ".{employeeName}", emp.getEmployeeName())
+                                        .replace(employeeIdKey + ".{idNum}", emp.getIdNum())
+                                        .replace(employeeIdKey + ".{birthday}", (emp.getBirthday() != null)? emp.getBirthday().format(formatter) : "")
+                                        .replace(employeeIdKey + ".{gender}", (emp.getGender() != null && emp.getGender()) ? "01" : "02");
+                                    writer.append("\r\n");
+                                    writer.append(output);
+                                    break;
                                 }
                             }
                         }
                     }
-                    if (roundTypes == null) {
-                        roundTypes = new int[]{1, 1};
-                    }
-                    roundTypesMap.put(hfEmpTask.getEmpTaskId(), roundTypes);
-                    BigDecimal comRatio = hfEmpTask.getRatioCom();
-                    BigDecimal empRatio = hfEmpTask.getRatioEmp();
-                    BigDecimal amount = CalculateSocialUtils.calculateByRoundType(hfEmpTask.getAmount(),
-                        CalculateSocialUtils.getRoundTypeInWeight(roundTypesMap.get(hfEmpTask.getEmpTaskId())[0], roundTypesMap.get(hfEmpTask.getEmpTaskId())[1]));
-                    BigDecimal comAmount = amount.multiply(comRatio).divide(comRatio.add(empRatio), 3, BigDecimal.ROUND_HALF_UP);
-                    BigDecimal empAmount = amount.multiply(comRatio).divide(comRatio.add(empRatio), 3, BigDecimal.ROUND_HALF_UP);
-                    comAmount = CalculateSocialUtils.calculateByRoundType(comAmount, roundTypesMap.get(hfEmpTask.getEmpTaskId())[0]);
-                    empAmount = CalculateSocialUtils.calculateByRoundType(empAmount, roundTypesMap.get(hfEmpTask.getEmpTaskId())[1]);
-                    String comRatioStr = CalculateSocialUtils.digitInSimpleFormat(comRatio.multiply(BigDecimal.valueOf(100)));
-                    String empRatioStr = CalculateSocialUtils.digitInSimpleFormat(empRatio.multiply(BigDecimal.valueOf(100)));
-                    String baseAmount = CalculateSocialUtils.digitInSimpleFormat(hfEmpTask.getEmpBase());
-                    outputList.add(String.format(template, i + 1, hfEmpTask.getEmployeeId(), comRatioStr, empRatioStr, amount.toString(), comAmount.toString(), empAmount.toString(), baseAmount));
                 }
+            } else {
+                writer.append(title);
             }
 
-            writer.append(title);
-            if (CollectionUtils.isNotEmpty(outputList)) {
-                if (!employeeIdSet.isEmpty()) {
-                    Wrapper<EmpEmployee> empWrapper = new EntityWrapper<>();
-                    empWrapper.in("employee_id", employeeIdSet);
-                    List<EmpEmployee> empList = empEmployeeService.selectList(empWrapper);
+            String fileName = "开户文件.txt";
 
-                    String employeeIdKey;
-                    for (String output : outputList) {
-                        for (EmpEmployee emp : empList) {
-                            employeeIdKey = "{" + emp.getEmployeeId() + "}";
-                            if (output.contains(employeeIdKey)) {
-                                output = output.replace(employeeIdKey + ".{employeeName}", emp.getEmployeeName())
-                                    .replace(employeeIdKey + ".{idNum}", emp.getIdNum())
-                                    .replace(employeeIdKey + ".{birthday}", emp.getBirthday().format(formatter))
-                                    .replace(employeeIdKey + ".{gender}", (emp.getGender() != null && emp.getGender()) ? "01" : "02");
-                                writer.append("\r\n");
-                                writer.append(output);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
-            writer.append(title);
-        }
-
-        String fileName = "开户文件.txt";
-
-        response.setCharacterEncoding("UTF-8");
-        response.setHeader("content-Type", "text/plain");
+            response.setCharacterEncoding("UTF-8");
+            response.setHeader("content-Type", "text/plain");
 //        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
-        ExportResponseUtil.encodeExportFileName(response, fileName);
-        writer.close();
+            ExportResponseUtil.encodeExportFileName(response, fileName);
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @RequestMapping(value = "/empPreInputUpload", consumes = "multipart/form-data")
