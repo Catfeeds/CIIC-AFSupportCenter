@@ -368,28 +368,26 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
     @PostMapping("/saveAmRemark")
     @Log("保存用工备注信息")
-    public JsonResult  saveAmRemark(@RequestBody List<AmRemark> list) {
+    public JsonResult  saveAmRemark(AmRemark bo) {
 
-         for(AmRemark bo:list)
-         {
-             if(bo.getRemarkId()==null){
-                 LocalDateTime now = LocalDateTime.now();
-                 bo.setCreatedTime(now);
-                 bo.setModifiedTime(now);
-                 bo.setCreatedBy(ReasonUtil.getUserId());
-                 bo.setModifiedBy(ReasonUtil.getUserId());
-             }
-         }
+        if(bo.getRemarkId()==null)
+        {
+            LocalDateTime now = LocalDateTime.now();
+            bo.setCreatedTime(now);
+            bo.setModifiedTime(now);
+            bo.setCreatedBy(ReasonUtil.getUserId());
+            bo.setModifiedBy(ReasonUtil.getUserId());
+        }
 
         boolean result = false;
         try {
-            result = amRemarkService.insertOrUpdateBatch(list);
+            result = amRemarkService.insert(bo);
         } catch (Exception e) {
 
         }
         Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("result",result);
-        resultMap.put("data",list);
+        resultMap.put("data",bo);
 
         return JsonResultKit.of(resultMap);
 
