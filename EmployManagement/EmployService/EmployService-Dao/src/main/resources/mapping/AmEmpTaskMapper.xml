@@ -108,6 +108,7 @@
         a.archive_direction,
         a.employ_code,
         a.change,
+        a.created_time,
         b.employment_id,
         b.employ_way,/*用工方式 */
         b.employ_property,/*用工属性 */
@@ -124,7 +125,8 @@
         cs.employ_special,
         h.title,/*公司名称 */
         h.service_center,/*服务中心 */
-        h.leader_ship_name  /*客服经理*/
+        h.leader_ship_name,  /*客服经理*/
+        e.settlement_area
         FROM
         am_emp_task a
         LEFT JOIN
@@ -135,6 +137,8 @@
         on  a.employee_id = d.employee_id
         LEFT JOIN
         am_emp_custom h on h.emp_task_id = a.emp_task_id
+        LEFT JOIN
+        am_emp_employee  e on e.emp_task_id = a.emp_task_id
         LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id
@@ -178,7 +182,8 @@
         cs.employ_special,
         h.title,/*公司名称 */
         h.service_center,/*服务中心 */
-        h.leader_ship_name  /*客服经理*/
+        h.leader_ship_name,  /*客服经理*/
+        e.settlement_area
         FROM
         am_emp_task a
         LEFT JOIN
@@ -189,6 +194,8 @@
         on  a.employee_id = d.employee_id
         LEFT JOIN
         am_emp_custom h on h.emp_task_id = a.emp_task_id
+        LEFT JOIN
+        am_emp_employee  e on e.emp_task_id = a.emp_task_id
         LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id
@@ -225,6 +232,8 @@
         on  a.employee_id = d.employee_id
         LEFT JOIN
         am_emp_custom h on h.emp_task_id = a.emp_task_id
+        LEFT JOIN
+        am_emp_employee  e on e.emp_task_id = a.emp_task_id
         LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id
