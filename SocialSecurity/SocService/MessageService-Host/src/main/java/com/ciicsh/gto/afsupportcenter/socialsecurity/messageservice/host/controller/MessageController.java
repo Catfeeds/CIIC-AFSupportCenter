@@ -39,7 +39,11 @@ public class MessageController {
             }
             message.setLastComputeUser(userName);
             sender.sendSocReportMsg(message);
-            RedisManager.set(key,message, ExpireTime.ONE_MIN);
+            ExpireTime expireTime = ExpireTime.ONE_MIN;
+            if("enquireFinanceComAccount".equals(generalMethod)){ // 询问财务是否可付 设置 redis 5分钟过期
+                expireTime = ExpireTime.FIVE_MIN;
+            }
+            RedisManager.set(key,message, expireTime);
             json.setCode(0);
             json.setMessage("开始计算！");
         }
