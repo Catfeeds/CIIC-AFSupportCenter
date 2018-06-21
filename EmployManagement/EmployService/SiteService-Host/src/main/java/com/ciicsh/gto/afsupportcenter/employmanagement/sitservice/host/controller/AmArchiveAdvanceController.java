@@ -53,12 +53,18 @@ public class AmArchiveAdvanceController extends BasicController<IAmArchiveAdvanc
     }
 
     @RequestMapping("/saveAmArchiveAdvance")
-    public JsonResult<Boolean> saveAmArchiveAdvance(AmArchiveAdvanceBO amArchiveAdvanceBO){
+    public JsonResult<Object> saveAmArchiveAdvance(AmArchiveAdvanceBO amArchiveAdvanceBO){
+        // 是否已有姓名加身份证的雇员信息在预增表中
         if(amArchiveAdvanceBO.isExist()){
             AmArchiveAdvanceBO isHave = business.queryAmArchiveAdvanceByNameIdcard(amArchiveAdvanceBO.getEmployeeName(),amArchiveAdvanceBO.getEmployeeIdcardNo());
             if(isHave!=null){
                 return JsonResultKit.of(false);
             }
+        }
+        // 是否已有档案
+        AmEmploymentBO bo = business.queryAmArchiveByEmployeeNameIdCard(amArchiveAdvanceBO.getEmployeeName(),amArchiveAdvanceBO.getEmployeeIdcardNo());
+        if(bo != null){
+            return JsonResultKit.of(bo);
         }
         Boolean result = business.saveAmArchiveAdvance(amArchiveAdvanceBO);
         return JsonResultKit.of(result);

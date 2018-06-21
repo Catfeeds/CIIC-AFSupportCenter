@@ -4,14 +4,11 @@ import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveAdvanceBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmploymentBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.advanceSearchExportOpt;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.archiveSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveAdvance;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmployment;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -30,5 +27,5 @@ public interface IAmArchiveAdvanceService extends IService<AmArchiveAdvance> {
 
     List<advanceSearchExportOpt> queryAdvanceSearchExportOpt(AmArchiveAdvanceBO amArchiveAdvanceBO);
 
-    boolean updateAmArchiveAdvance(AmArchiveAdvanceBO amArchiveAdvanceBO);
+    AmEmploymentBO queryAmArchiveByEmployeeNameIdCard(String employeeName,String idCard);
 }

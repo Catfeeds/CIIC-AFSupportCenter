@@ -86,6 +86,20 @@
 		<result column="submitter_id" property="submitterId" />
         <result column="submit_time" property="submitTime" />
 		<result column="task_id" property="taskId" />
+        <result column="start_month" property="startMonth" />
+        <result column="end_month" property="endMonth" />
+        <result column="amount" property="amount" />
+        <result column="emp_base" property="empBase" />
+        <result column="ratio_emp" property="ratioEmp" />
+        <result column="ratio_com" property="ratioCom" />
+        <result column="handle_date" property="handleDate" />
+        <result column="com_account_name" property="comAccountName" />
+        <result column="state" property="state" />
+        <result column="hf_com_account" property="hfComAccount" />
+        <result column="leader_ship_name" property="leaderShipName" />
+        <result column="archive_status" property="archiveStatus" />
+        <result column="operation_remind_date" property="operationRemindDate" />
+        <result column="operation_remind" property="operationRemind" />
         <result column="created_by" property="createdBy" />
         <result column="created_display_name" property="createdDisplayName" />
         <result column="hf_account_type" property="hfAccountType" />
@@ -157,7 +171,7 @@
         <result column="service_center" property="serviceCenter" />
     </resultMap>
 
-    <select id="queryHfEmpTaskReject" resultMap="RejectResultMapBo">
+    <select id="queryHfEmpTaskRejectBak" resultMap="RejectResultMapBo">
         SELECT
         tmp.emp_task_id,
         tmp.process_category,
@@ -216,11 +230,8 @@
                 INNER JOIN hf_dataauth_welfare_unit hdwu ON het.welfare_unit = hdwu.welfare_unit AND hdwu.user_id = #{userId}
                 INNER JOIN hf_dataauth_task_category hdtc ON het.task_category = hdtc.task_category AND hdtc.user_id = #{userId}
             </if>
-            <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
-                INNER JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
-                INNER JOIN hf_com_account hcas ON hcas.com_account_id = hacr.com_account_id AND hcas.is_active = 1 AND
-                hcas.hf_account_type = 3
-            </if>
+            INNER JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
+            INNER JOIN hf_com_account hcas ON hcas.com_account_id = hacr.com_account_id AND hcas.is_active = 1 AND hcas.hf_account_type = 3
             <if test="hfAccountType != null">
                 AND hcas.hf_account_type = #{hfAccountType}
             </if>
@@ -330,10 +341,8 @@
                 INNER JOIN hf_dataauth_welfare_unit hdwu ON het.welfare_unit = hdwu.welfare_unit AND hdwu.user_id = #{userId}
                 INNER JOIN hf_dataauth_task_category hdtc ON het.task_category = hdtc.task_category AND hdtc.user_id = #{userId}
             </if>
-            <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
-                INNER JOIN hf_com_account hcas ON hcas.is_active = 1 AND
-                ((hcas.hf_account_type = 1 AND het.welfare_unit = 2) OR (hcas.hf_account_type = 2 AND het.welfare_unit = 3))
-            </if>
+            INNER JOIN hf_com_account hcas ON hcas.is_active = 1 AND
+            ((hcas.hf_account_type = 1 AND het.welfare_unit = 2) OR (hcas.hf_account_type = 2 AND het.welfare_unit = 3))
             <if test="hfAccountType != null">
                 AND hcas.hf_account_type = #{hfAccountType}
             </if>
@@ -467,11 +476,8 @@
                 INNER JOIN hf_dataauth_welfare_unit hdwu ON het.welfare_unit = hdwu.welfare_unit AND hdwu.user_id = #{userId}
                 INNER JOIN hf_dataauth_task_category hdtc ON het.task_category = hdtc.task_category AND hdtc.user_id = #{userId}
             </if>
-            <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
-                INNER JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
-                INNER JOIN hf_com_account hcas ON hcas.com_account_id = hacr.com_account_id AND hcas.is_active = 1 AND
-                hcas.hf_account_type = 3
-            </if>
+            INNER JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
+            INNER JOIN hf_com_account hcas ON hcas.com_account_id = hacr.com_account_id AND hcas.is_active = 1 AND hcas.hf_account_type = 3
             <if test="hfAccountType != null">
                 AND hcas.hf_account_type = #{hfAccountType}
             </if>
@@ -572,10 +578,8 @@
                 INNER JOIN hf_dataauth_welfare_unit hdwu ON het.welfare_unit = hdwu.welfare_unit AND hdwu.user_id = #{userId}
                 INNER JOIN hf_dataauth_task_category hdtc ON het.task_category = hdtc.task_category AND hdtc.user_id = #{userId}
             </if>
-            <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
-                INNER JOIN hf_com_account hcas ON hcas.is_active = 1 AND
-                ((hcas.hf_account_type = 1 AND het.welfare_unit = 2) OR (hcas.hf_account_type = 2 AND het.welfare_unit = 3))
-            </if>
+            INNER JOIN hf_com_account hcas ON hcas.is_active = 1 AND
+            ((hcas.hf_account_type = 1 AND het.welfare_unit = 2) OR (hcas.hf_account_type = 2 AND het.welfare_unit = 3))
             <if test="hfAccountType != null">
                 AND hcas.hf_account_type = #{hfAccountType}
             </if>
@@ -648,26 +652,8 @@
         ORDER BY tmp.created_time DESC
     </select>
 
-    <select id="queryHfEmpTask" resultMap="BaseResultMapBo">
-        SELECT
-        tmp.emp_task_id,
-        tmp.process_category,
-        tmp.task_category,
-        tmp.urgent,
-        tmp.is_change,
-        tmp.employee_id,
-        tmp.employee_name,
-        tmp.id_num,
-        tmp.company_id,
-        tmp.company_name,
-        tmp.hf_type,
-        tmp.hf_emp_account,
-        tmp.submitter_id,
-        tmp.submit_time,
-        tmp.task_id,
-        tmp.created_by,
-        tmp.created_display_name
-        FROM (
+    <sql id="queryHfEmpTaskMain">
+        (
         SELECT
         DISTINCT
         het.emp_task_id,
@@ -681,13 +667,42 @@
         het.company_id,
         sc.title company_name,
         het.hf_type,
-        hea.hf_emp_account,
+        <if test="preInput == null or preInput == 1">
+            CASE WHEN hea.hf_emp_account IS NULL THEN
+                CASE WHEN het.hf_type = 1 THEN hepi.hf_emp_bas_account
+                ELSE hepi.hf_emp_add_account END
+            ELSE hea.hf_emp_account END hf_emp_account,
+        </if>
+        <if test="preInput == 0">
+            hea.hf_emp_account,
+        </if>
         het.submitter_id,
         het.submit_time,
         het.task_id,
+        het.start_month,
+        het.end_month,
+        het.amount,
+        het.emp_base,
+        het.ratio_emp,
+        het.ratio_com,
+        het.handle_date,
+        hcas.com_account_name,
+        hcas.state,
+        hcac.hf_com_account,
+        het.leader_ship_name,
+        hea.archive_status,
+        het.operation_remind_date,
+        het.operation_remind,
         het.created_by,
         het.created_display_name,
-        het.created_time
+        het.created_time,
+        het.modified_by,
+        het.modified_display_name,
+        het.modified_time,
+        het.rejection_remark,
+        3 AS hf_account_type,
+        het.handle_remark,
+        CASE WHEN hetl.employee_id IS NULL THEN 0 ELSE 1 END AS has_out
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
@@ -696,23 +711,34 @@
             INNER JOIN hf_dataauth_welfare_unit hdwu ON het.welfare_unit = hdwu.welfare_unit AND hdwu.user_id = #{userId}
             INNER JOIN hf_dataauth_task_category hdtc ON het.task_category = hdtc.task_category AND hdtc.user_id = #{userId}
         </if>
-        <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
-            INNER JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
-            INNER JOIN hf_com_account hcas ON hcas.com_account_id = hacr.com_account_id AND hcas.is_active = 1 AND
-            hcas.hf_account_type = 3
+        <if test="preInput == null">
+            LEFT JOIN hf_emp_pre_input hepi ON het.employee_id = hepi.employee_id AND hepi.is_active = 1
         </if>
-        <if test="hfComAccount != null">
-            INNER JOIN hf_com_account_class hcac ON hcas.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND
-            hcac.hf_type = het.hf_type
-            AND hcac.hf_com_account = #{hfComAccount}
+        <if test="preInput == 1">
+            INNER JOIN hf_emp_pre_input hepi ON het.employee_id = hepi.employee_id AND hepi.is_active = 1
+        </if>
+        <if test="hfAccountType != null or paymentBank != null or hfComAccount != null">
+            INNER JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
+            INNER JOIN hf_com_account hcas ON hcas.com_account_id = hacr.com_account_id AND hcas.is_active = 1 AND hcas.hf_account_type = 3
+            INNER JOIN hf_com_account_class hcac ON hcas.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = het.hf_type
+        </if>
+        <if test="hfAccountType == null and paymentBank == null and hfComAccount == null">
+            LEFT JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
+            LEFT JOIN hf_com_account hcas ON hcas.com_account_id = hacr.com_account_id AND hcas.is_active = 1 AND hcas.hf_account_type = 3
+            LEFT JOIN hf_com_account_class hcac ON hcas.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = het.hf_type
         </if>
         LEFT JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
         AND hea.is_active = 1 AND hea.hf_type = het.hf_type
+        LEFT JOIN hf_emp_task hetl ON het.company_id = hetl.company_id AND het.employee_id = hetl.employee_id
+        AND hetl.is_active = 1 AND het.hf_type = hetl.hf_type AND het.task_category IN (1, 2, 3, 9, 10, 11) AND hetl.task_category IN (4, 5, 12, 13)
         <where>
-            het.is_active = 1 AND IFNULL(het.task_status, 1) != 5 AND het.welfare_unit = 1
+            het.is_active = 1 AND het.task_status != 5 AND het.welfare_unit = 1
             <foreach collection="param" item="plid" open="" close="" separator="">
                 and  ${plid}
             </foreach>
+            <if test="taskStatus != null">
+                AND het.task_status = #{taskStatus}
+            </if>
             <if test="processStatus == 1">
                 AND het.submit_time <![CDATA[ <= ]]>
                 str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',if(isnull(hcas.close_day),25,hcas.close_day)),'%Y-%m-%d')
@@ -726,6 +752,9 @@
             </if>
             <if test="includeTaskCategories != null">
                 AND het.task_category IN (${includeTaskCategories})
+            </if>
+            <if test="preInput == 0">
+                AND NOT EXISTS (SELECT 1 FROM hf_emp_pre_input hepi WHERE hepi.employee_id = het.employee_id AND hepi.is_active = 1)
             </if>
         </where>
         UNION ALL
@@ -742,13 +771,42 @@
         het.company_id,
         sc.title company_name,
         het.hf_type,
-        hea.hf_emp_account,
+        <if test="preInput == null or preInput == 1">
+            CASE WHEN hea.hf_emp_account IS NULL THEN
+                CASE WHEN het.hf_type = 1 THEN hepi.hf_emp_bas_account
+                ELSE hepi.hf_emp_add_account END
+            ELSE hea.hf_emp_account END hf_emp_account,
+        </if>
+        <if test="preInput == 0">
+            hea.hf_emp_account,
+        </if>
         het.submitter_id,
         het.submit_time,
         het.task_id,
+        het.start_month,
+        het.end_month,
+        het.amount,
+        het.emp_base,
+        het.ratio_emp,
+        het.ratio_com,
+        het.handle_date,
+        hcas.com_account_name,
+        hcas.state,
+        hcac.hf_com_account,
+        het.leader_ship_name,
+        hea.archive_status,
+        het.operation_remind_date,
+        het.operation_remind,
         het.created_by,
         het.created_display_name,
-        het.created_time
+        het.created_time,
+        het.modified_by,
+        het.modified_display_name,
+        het.modified_time,
+        het.rejection_remark,
+        CASE WHEN het.welfare_unit = 2 THEN 1 ELSE 2 END AS hf_account_type,
+        het.handle_remark,
+        CASE WHEN hetl.employee_id IS NULL THEN 0 ELSE 1 END AS has_out
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
@@ -757,22 +815,34 @@
             INNER JOIN hf_dataauth_welfare_unit hdwu ON het.welfare_unit = hdwu.welfare_unit AND hdwu.user_id = #{userId}
             INNER JOIN hf_dataauth_task_category hdtc ON het.task_category = hdtc.task_category AND hdtc.user_id = #{userId}
         </if>
-        <if test="hfAccountType != null or paymentBank != null or hfComAccount != null or processStatus != null">
+        <if test="preInput == null">
+            LEFT JOIN hf_emp_pre_input hepi ON het.employee_id = hepi.employee_id AND hepi.is_active = 1
+        </if>
+        <if test="preInput == 1">
+            INNER JOIN hf_emp_pre_input hepi ON het.employee_id = hepi.employee_id AND hepi.is_active = 1
+        </if>
+        <if test="hfAccountType != null or paymentBank != null or hfComAccount != null">
             INNER JOIN hf_com_account hcas ON hcas.is_active = 1 AND
             ((hcas.hf_account_type = 1 AND het.welfare_unit = 2) OR (hcas.hf_account_type = 2 AND het.welfare_unit = 3))
+            INNER JOIN hf_com_account_class hcac ON hcas.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = het.hf_type
         </if>
-        <if test="hfComAccount != null">
-            INNER JOIN hf_com_account_class hcac ON hcas.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND
-            hcac.hf_type = het.hf_type
-            AND hcac.hf_com_account = #{hfComAccount}
+        <if test="hfAccountType == null and paymentBank == null and hfComAccount == null">
+            LEFT JOIN hf_com_account hcas ON hcas.is_active = 1 AND
+            ((hcas.hf_account_type = 1 AND het.welfare_unit = 2) OR (hcas.hf_account_type = 2 AND het.welfare_unit = 3))
+            LEFT JOIN hf_com_account_class hcac ON hcas.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = het.hf_type
         </if>
         LEFT JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
         AND hea.is_active = 1 AND hea.hf_type = het.hf_type
+        LEFT JOIN hf_emp_task hetl ON het.company_id = hetl.company_id AND het.employee_id = hetl.employee_id
+        AND hetl.is_active = 1 AND het.hf_type = hetl.hf_type AND het.task_category IN (1, 2, 3, 9, 10, 11) AND hetl.task_category IN (4, 5, 12, 13)
         <where>
-            het.is_active = 1 AND IFNULL(het.task_status, 1) != 5 AND het.welfare_unit > 1
+            het.is_active = 1 AND het.task_status != 5 AND het.welfare_unit > 1
             <foreach collection="param" item="plid" open="" close="" separator="">
                 and  ${plid}
             </foreach>
+            <if test="taskStatus != null">
+                AND het.task_status = #{taskStatus}
+            </if>
             <if test="processStatus == 1">
                 AND het.submit_time <![CDATA[ <= ]]>
                 str_to_date(CONCAT(date_format(CURTIME(),'%Y-%m'),'-',if(isnull(hcas.close_day),25,hcas.close_day)),'%Y-%m-%d')
@@ -787,6 +857,9 @@
             <if test="includeTaskCategories != null">
                 AND het.task_category IN (${includeTaskCategories})
             </if>
+            <if test="preInput == 0">
+                AND NOT EXISTS (SELECT 1 FROM hf_emp_pre_input hepi WHERE hepi.employee_id = het.employee_id AND hepi.is_active = 1)
+            </if>
         </where>
         ) tmp
         ORDER BY
@@ -794,6 +867,89 @@
             ${plid},
         </foreach>
         tmp.created_time DESC
+    </sql>
+
+    <select id="queryHfEmpTask" resultMap="BaseResultMapBo">
+        SELECT
+            tmp.emp_task_id,
+            tmp.process_category,
+            tmp.task_category,
+            tmp.urgent,
+            tmp.is_change,
+            tmp.employee_id,
+            tmp.employee_name,
+            tmp.id_num,
+            tmp.company_id,
+            tmp.company_name,
+            tmp.hf_type,
+            tmp.hf_emp_account,
+            tmp.submitter_id,
+            tmp.submit_time,
+            tmp.task_id,
+            tmp.start_month,
+            tmp.end_month,
+            tmp.amount,
+            tmp.emp_base,
+            tmp.ratio_emp,
+            tmp.ratio_com,
+            tmp.handle_date,
+            tmp.com_account_name,
+            tmp.state,
+            tmp.hf_com_account,
+            tmp.leader_ship_name,
+            tmp.archive_status,
+            tmp.operation_remind_date,
+            tmp.operation_remind,
+            tmp.created_by,
+            tmp.created_display_name,
+            tmp.hf_account_type,
+            tmp.handle_remark,
+            tmp.has_out
+        FROM
+        <include refid="queryHfEmpTaskMain"/>
+    </select>
+
+    <select id="queryHfEmpTaskReject" resultMap="RejectResultMapBo">
+        SELECT
+        tmp.emp_task_id,
+        tmp.process_category,
+        tmp.task_category,
+        tmp.urgent,
+        tmp.is_change,
+        tmp.employee_id,
+        tmp.employee_name,
+        tmp.id_num,
+        tmp.company_id,
+        tmp.company_name,
+        tmp.hf_type,
+        tmp.hf_emp_account,
+        tmp.submitter_id,
+        tmp.submit_time,
+        tmp.task_id,
+        tmp.start_month,
+        tmp.end_month,
+        tmp.amount,
+        tmp.emp_base,
+        tmp.ratio_emp,
+        tmp.ratio_com,
+        tmp.handle_date,
+        tmp.com_account_name,
+        tmp.state,
+        tmp.hf_com_account,
+        tmp.leader_ship_name,
+        tmp.archive_status,
+        tmp.operation_remind_date,
+        tmp.operation_remind,
+        tmp.created_by,
+        tmp.created_display_name,
+        tmp.modified_by,
+        tmp.modified_display_name,
+        tmp.modified_time,
+        tmp.rejection_remark,
+        tmp.hf_account_type,
+        tmp.has_out
+        FROM
+        <include refid="queryHfEmpTaskMain"/>
     </select>
 
     <select id="getEmpTaskHandleData" resultMap="BaseResultHandleBo">

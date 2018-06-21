@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao;
 
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfRemittedBookParam;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.EmpTaskStatusBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentComBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentEmpBO;
@@ -33,5 +34,7 @@ public interface HfPaymentMapper extends BaseMapper<HfPayment> {
     List<EmpTaskStatusBO> getEmpTaskStatusByPaymentId(@Param("paymentId") Long paymentId);
 
     List<HfPrintRemittedBookBO> printRemittedBook(@Param("paymentId") Long paymentId, @Param("hfType") Integer hfType);
+
+    List<HfPrintRemittedBookBO> printRemittedBookByReport(HfRemittedBookParam hfRemittedBookParam);
 
 }

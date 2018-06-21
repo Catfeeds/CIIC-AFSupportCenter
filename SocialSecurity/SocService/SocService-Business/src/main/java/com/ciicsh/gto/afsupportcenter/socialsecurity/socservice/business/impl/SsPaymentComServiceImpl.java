@@ -102,7 +102,9 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
         json.setCode(0);
         json.setMessage("成功");
         SsPaymentCom ssPaymentCom =new SsPaymentCom();
-        ssPaymentCom.setIfCheck(1);
+        ssPaymentCom.setPaymentComId(paymentComId);
+        ssPaymentCom = baseMapper.selectOne(ssPaymentCom);
+        ssPaymentCom.setIfCheck("1".equals(Optional.ofNullable(ssPaymentCom.getIfCheck()).orElse(0).toString()) ? 0:1);
         ssPaymentCom.setPaymentComId(paymentComId);
         ssPaymentCom.setModifiedBy(UserContext.getUser().getUserId());
         ssPaymentCom.setModifiedDisplayName(UserContext.getUser().getDisplayName());

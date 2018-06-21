@@ -70,6 +70,11 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                     String regexp = "\'";
                     String status = str[2].replaceAll(regexp, "");
                     hfEmpTaskBo.setProcessStatus(Integer.parseInt(status));
+                }else if(arr[i].indexOf("preInput")!=-1){
+                        String str[] = arr[i].split(" ");
+                        String regexp = "\'";
+                        String preInput = str[2].replaceAll(regexp, "");
+                        hfEmpTaskBo.setPreInput(Integer.parseInt(preInput));
                 }else{
 
                     if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
@@ -97,7 +102,6 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                             hfEmpTaskBo.setHfComAccount(status);
                         }
 
-
                         param.add(arr[i]);
                     }
 
@@ -118,6 +122,61 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         if (StringUtils.isNotBlank(exceptTaskCategories)) {
             hfEmpTaskBo.setExceptTaskCategories(exceptTaskCategories);
         }
+
+        List<String> param = new ArrayList<String>();
+        List<String> orderParam = new ArrayList<String>();
+
+        if (!StringUtil.isEmpty(hfEmpTaskBo.getParams())) {
+            String arr[] = hfEmpTaskBo.getParams().split(",");
+            for (int i = 0; i < arr.length; i++) {
+                if(arr[i].indexOf("processStatus")!=-1){
+                    String str[] = arr[i].split(" ");
+                    String regexp = "\'";
+                    String status = str[2].replaceAll(regexp, "");
+                    hfEmpTaskBo.setProcessStatus(Integer.parseInt(status));
+                }else if(arr[i].indexOf("preInput")!=-1){
+                    String str[] = arr[i].split(" ");
+                    String regexp = "\'";
+                    String preInput = str[2].replaceAll(regexp, "");
+                    hfEmpTaskBo.setPreInput(Integer.parseInt(preInput));
+                }else{
+
+                    if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
+                        orderParam.add(arr[i]);
+                    }else {
+//                        if(arr[i].indexOf("hf_account_type")!=-1)
+//                        {
+//                            String str[] = arr[i].split(" ");
+//                            String regexp = "\'";
+//                            String status = str[2].replaceAll(regexp, "");
+//                            hfEmpTaskBo.setHfAccountType(Integer.parseInt(status));
+//                        }
+//                        if(arr[i].indexOf("payment_bank")!=-1)
+//                        {
+//                            String str[] = arr[i].split(" ");
+//                            String regexp = "\'";
+//                            String status = str[2].replaceAll(regexp, "");
+//                            hfEmpTaskBo.setPaymentBank(Integer.parseInt(status));
+//                        }
+//                        if(arr[i].indexOf("hf_com_account")!=-1)
+//                        {
+//                            String str[] = arr[i].split(" ");
+//                            String regexp = "\'";
+//                            String status = str[2].replaceAll(regexp, "");
+//                            hfEmpTaskBo.setHfComAccount(status);
+//                        }
+
+
+                        param.add(arr[i]);
+                    }
+
+                }
+
+            }
+        }
+
+        hfEmpTaskBo.setParam(param);
+        hfEmpTaskBo.setOrderParam(orderParam);
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryHfEmpTaskReject(hfEmpTaskBo));
     }
 

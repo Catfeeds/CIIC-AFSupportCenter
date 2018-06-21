@@ -29,6 +29,48 @@ public class AmArchiveUkey implements Serializable {
 	private Long id;
 
     /**
+     * 材料签收日期
+     */
+    @TableField("material_receive_date")
+    private LocalDate materialReceiveDate;
+
+    /**
+     * 材料送办日期
+     */
+    @TableField("material_delivery_date")
+    private LocalDate materialDeliveryDate;
+
+    /**
+     * 材料反馈日期
+     */
+    @TableField("material_feedback_date")
+    private LocalDate materialFeedbackDate;
+
+    /**
+     * 绑定的公司名称
+     */
+    @TableField("company_name")
+    private String companyName;
+
+    /**
+     * 组织机构代码
+     */
+    @TableField("organization_code")
+    private String organizationCode;
+
+    /**
+     * 到期日期
+     */
+    @TableField("due_date")
+    private LocalDate dueDate;
+
+    /**
+     * 注销日期
+     */
+    @TableField("logout_date")
+    private LocalDate logoutDate;
+
+    /**
      * Ukey类别
      */
 	@TableField("key_type")
@@ -41,40 +83,22 @@ public class AmArchiveUkey implements Serializable {
 	private String keyCode;
 
     /**
-     * Ukey序列号
-     */
-	@TableField("key_seq")
-	private String keySeq;
-
-    /**
      * 档案部uKey密码
      */
     @TableField("key_pwd")
     private String keyPwd;
 
     /**
-     * uKey状态
+     * Ukey序列号
      */
-    @TableField("key_status")
-    private String keyStatus;
+	@TableField("key_seq")
+	private String keySeq;
 
     /**
      * 费用
      */
     @TableField("key_fee")
     private String keyFee;
-
-    /**
-     * 绑定的公司ID
-     */
-    @TableField("company_id")
-    private String companyId;
-
-    /**
-     * 绑定的公司名称
-     */
-    @TableField("company_name")
-    private String companyName;
 
     /**
      * 是否可用
@@ -114,6 +138,62 @@ public class AmArchiveUkey implements Serializable {
         this.id = id;
     }
 
+    public LocalDate getMaterialReceiveDate() {
+        return materialReceiveDate;
+    }
+
+    public void setMaterialReceiveDate(LocalDate materialReceiveDate) {
+        this.materialReceiveDate = materialReceiveDate;
+    }
+
+    public LocalDate getMaterialDeliveryDate() {
+        return materialDeliveryDate;
+    }
+
+    public void setMaterialDeliveryDate(LocalDate materialDeliveryDate) {
+        this.materialDeliveryDate = materialDeliveryDate;
+    }
+
+    public LocalDate getMaterialFeedbackDate() {
+        return materialFeedbackDate;
+    }
+
+    public void setMaterialFeedbackDate(LocalDate materialFeedbackDate) {
+        this.materialFeedbackDate = materialFeedbackDate;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getOrganizationCode() {
+        return organizationCode;
+    }
+
+    public void setOrganizationCode(String organizationCode) {
+        this.organizationCode = organizationCode;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public LocalDate getLogoutDate() {
+        return logoutDate;
+    }
+
+    public void setLogoutDate(LocalDate logoutDate) {
+        this.logoutDate = logoutDate;
+    }
+
     public String getKeyType() {
         return keyType;
     }
@@ -130,14 +210,6 @@ public class AmArchiveUkey implements Serializable {
         this.keyCode = keyCode;
     }
 
-    public String getKeySeq() {
-        return keySeq;
-    }
-
-    public void setKeySeq(String keySeq) {
-        this.keySeq = keySeq;
-    }
-
     public String getKeyPwd() {
         return keyPwd;
     }
@@ -146,12 +218,12 @@ public class AmArchiveUkey implements Serializable {
         this.keyPwd = keyPwd;
     }
 
-    public String getKeyStatus() {
-        return keyStatus;
+    public String getKeySeq() {
+        return keySeq;
     }
 
-    public void setKeyStatus(String keyStatus) {
-        this.keyStatus = keyStatus;
+    public void setKeySeq(String keySeq) {
+        this.keySeq = keySeq;
     }
 
     public String getKeyFee() {
@@ -160,22 +232,6 @@ public class AmArchiveUkey implements Serializable {
 
     public void setKeyFee(String keyFee) {
         this.keyFee = keyFee;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
     }
 
     public Integer getIsActive() {

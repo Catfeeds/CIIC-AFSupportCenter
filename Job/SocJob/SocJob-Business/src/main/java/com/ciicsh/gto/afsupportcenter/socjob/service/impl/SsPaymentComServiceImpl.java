@@ -158,7 +158,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
 
 
         /******生成变更汇总表*****/
-        generateMonthEmpChange(accountComExt, paymentMonth,"system");
+       // generateMonthEmpChange(accountComExt, paymentMonth,"system");
 
         /*****生成社保通知书*****/
         generatePaymentDetail(accountComExt, paymentMonth);

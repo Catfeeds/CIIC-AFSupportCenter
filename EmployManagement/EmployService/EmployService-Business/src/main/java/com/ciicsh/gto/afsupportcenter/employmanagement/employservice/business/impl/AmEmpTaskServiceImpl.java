@@ -22,11 +22,13 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMUserInfoDTO;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.*;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoQueryDTO;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.JsonResult;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.CompanyTypeDTO;
+import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
-import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -81,6 +83,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Autowired
     private IAmRemarkService amRemarkService;
+
+    @Autowired
+    private CompanyProxy companyProxy;
 
 
 
@@ -809,7 +814,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         employeeHireInfoQueryDTO.setCompanyId(bo.getCompanyId());
         employeeHireInfoQueryDTO.setEmployeeId(bo.getEmployeeId());
         JsonResult<EmployeeHireInfoDTO> employeeHireInfo = null;//雇佣雇佣信息接口
-
+        com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<CompanyTypeDTO> comDto = null;
         try {
             employeeHireInfo = employeeInfoProxy.getEmployeeHireInfo(employeeHireInfoQueryDTO);
 
@@ -825,7 +830,11 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             amEmpEmployee.setIdNum(employeeHireInfoDTO.getIdNum());
             amEmpEmployee.setEmployeeName(employeeHireInfoDTO.getEmployeeName());
             amEmpEmployee.setPosition(employeeHireInfoDTO.getPosition());
-            amEmpEmployee.setOrganizationCode(employeeHireInfoDTO.getOrganizationCode());
+            //amEmpEmployee.setOrganizationCode(employeeHireInfoDTO.getOrganizationCode());
+            comDto = companyProxy.getCompanyCoreInfo(bo.getCompanyId());
+            if(comDto.getObject() != null){
+                amEmpEmployee.setOrganizationCode(comDto.getObject().getOrganizationCode());
+            }
             amEmpEmployee.setFirstInDate(employeeHireInfoDTO.getFirstInDate());
             amEmpEmployee.setFirstInCompanyDate(employeeHireInfoDTO.getFirstInCompanyDate());
             amEmpEmployee.setResidenceAddress(employeeHireInfoDTO.getResidenceAddress());
