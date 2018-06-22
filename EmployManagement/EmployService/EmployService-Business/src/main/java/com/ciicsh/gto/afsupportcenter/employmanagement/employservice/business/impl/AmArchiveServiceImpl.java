@@ -1,8 +1,10 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveAdvanceBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveDocSeqBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmArchiveAdvanceService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmArchiveService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmploymentService;
@@ -44,6 +46,9 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
 
     @Autowired
     private CommonApiUtils employeeInfoProxy;
+
+    @Autowired
+    private IAmArchiveAdvanceService amArchiveAdvanceService;
 
     @Override
     public List<AmArchiveBO> queryAmArchiveList(Map<String, Object> param) {
@@ -127,7 +132,15 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
         }
 
         boolean result = this.insertOrUpdateAllColumn(entity);
-
+        // 如果是匹配到的预增档案信息  修改为已匹配
+        if(result){
+            if(amArchiveBO.getFormAdvance()){
+                AmArchiveAdvanceBO bo = amArchiveAdvanceService.queryAmArchiveAdvanceByNameIdcard(amArchiveBO.getEmployeeName(),amArchiveBO.getIdNum(),1);
+                if(bo != null){
+                    amArchiveAdvanceService.updateAmArchiveAdvance(bo);
+                }
+            }
+        }
         map.put("result",new Boolean(result));
         map.put("entity",entity);
 

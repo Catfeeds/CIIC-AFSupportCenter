@@ -23,9 +23,11 @@ public interface IAmArchiveAdvanceService extends IService<AmArchiveAdvance> {
 
     boolean saveAmArchiveAdvance(AmArchiveAdvanceBO amArchiveAdvanceBO);
 
-    AmArchiveAdvanceBO queryAmArchiveAdvanceByNameIdcard(String name,String idCard);
+    AmArchiveAdvanceBO queryAmArchiveAdvanceByNameIdcard(String name,String idCard,Integer status);
 
     List<advanceSearchExportOpt> queryAdvanceSearchExportOpt(AmArchiveAdvanceBO amArchiveAdvanceBO);
 
     AmEmploymentBO queryAmArchiveByEmployeeNameIdCard(String employeeName,String idCard);
+
+    boolean updateAmArchiveAdvance(AmArchiveAdvanceBO amArchiveAdvanceBO);
 }

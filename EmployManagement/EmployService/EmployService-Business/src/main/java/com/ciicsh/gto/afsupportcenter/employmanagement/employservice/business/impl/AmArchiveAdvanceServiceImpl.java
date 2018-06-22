@@ -100,11 +100,12 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
     }
 
     @Override
-    public AmArchiveAdvanceBO queryAmArchiveAdvanceByNameIdcard(String name,String idCard) {
+    public AmArchiveAdvanceBO queryAmArchiveAdvanceByNameIdcard(String name,String idCard,Integer status) {
 
         AmArchiveAdvance po = new AmArchiveAdvance();
         po.setEmployeeName(name);
         po.setEmployeeIdcardNo(idCard);
+        po.setStatus(status);
         AmArchiveAdvance queryPO = baseMapper.selectOne(po);
         if(queryPO == null){
             return null;
@@ -148,6 +149,17 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
             return boList.get(0);
         }
         return null;
+    }
+
+    @Override
+    public boolean updateAmArchiveAdvance(AmArchiveAdvanceBO amArchiveAdvanceBO) {
+        AmArchiveAdvance po = new AmArchiveAdvance();
+        BeanUtils.copyProperties(amArchiveAdvanceBO, po);
+        po.setStatus(2);
+        po.setModifiedBy(UserContext.getUserName());
+        po.setModifiedTime(new Date());
+        Integer result = baseMapper.updateById(po);
+        return result > 0;
     }
 
 }
