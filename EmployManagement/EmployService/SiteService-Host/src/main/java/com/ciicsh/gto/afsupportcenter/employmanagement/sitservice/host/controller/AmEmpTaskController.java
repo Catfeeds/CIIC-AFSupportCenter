@@ -63,6 +63,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     @Autowired
     private  IAmEmpCustomService amEmpCustomService;
 
+    @Autowired
+    private IAmArchiveAdvanceService amArchiveAdvanceService;
+
 
     /**
      *用工资料任务单查询
@@ -249,6 +252,18 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         if(null!=amArchiveBO){
             resultMap.put("amArchaiveBo",amArchiveBO);
+        }else{
+            // 是否能在档案预增中匹配
+            AmArchiveAdvanceBO advanceBO = amArchiveAdvanceService.queryAmArchiveAdvanceByNameIdcard(amEmpEmployeeBO.getEmployeeName(),amEmpEmployeeBO.getIdNum(),1);
+            if(advanceBO != null){
+                amArchiveBO = new AmArchiveBO();
+                amArchiveBO.setFormAdvance(true);
+                amArchiveBO.setYuliuDocType(advanceBO.getReservedArchiveType());
+                amArchiveBO.setYuliuDocNum(advanceBO.getReservedArchiveNo() == null ? "" : advanceBO.getReservedArchiveNo().toString());
+                amArchiveBO.setDocFrom(advanceBO.getArchiveSource());// 档案来源
+                amArchiveBO.setArchivePlace(advanceBO.getArchivalPlace());// 存档地
+                resultMap.put("amArchaiveBo",amArchiveBO);
+            }
         }
 
         // 预留档案类别

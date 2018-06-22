@@ -1,33 +1,22 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.*;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.*;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveAdvanceBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmploymentBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmArchiveAdvanceService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.advanceSearchExportOpt;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.archiveSearchExportOpt;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.resignSearchExportOpt;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmArchiveDTO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
-import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by liyuelong on 2018/5/25.
@@ -56,7 +45,7 @@ public class AmArchiveAdvanceController extends BasicController<IAmArchiveAdvanc
     public JsonResult<Object> saveAmArchiveAdvance(AmArchiveAdvanceBO amArchiveAdvanceBO){
         // 是否已有姓名加身份证的雇员信息在预增表中
         if(amArchiveAdvanceBO.isExist()){
-            AmArchiveAdvanceBO isHave = business.queryAmArchiveAdvanceByNameIdcard(amArchiveAdvanceBO.getEmployeeName(),amArchiveAdvanceBO.getEmployeeIdcardNo());
+            AmArchiveAdvanceBO isHave = business.queryAmArchiveAdvanceByNameIdcard(amArchiveAdvanceBO.getEmployeeName(),amArchiveAdvanceBO.getEmployeeIdcardNo(),null);
             if(isHave!=null){
                 return JsonResultKit.of(false);
             }
