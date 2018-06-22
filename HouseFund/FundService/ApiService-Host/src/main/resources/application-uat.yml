@@ -15,6 +15,6 @@ spring:
 
 #spring cloud eureka
 eureka:
-  client:mst
+  client:
     serviceUrl:
       defaultZone: "http://172.16.9.56:9602/eureka"  #uat注册中心eureka地址
