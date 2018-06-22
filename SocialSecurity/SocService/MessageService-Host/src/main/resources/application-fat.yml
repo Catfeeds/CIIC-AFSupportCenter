@@ -24,6 +24,9 @@ spring:
         binder:
           brokers: 172.16.9.17:9092,172.16.9.18:9092
           zk-nodes: 172.16.9.19:2181,172.16.9.20:2181,172.16.9.21:2181
+  boot:
+    admin:
+      url: http://172.16.9.24:9625
 
 #spring cloud eureka
 eureka:

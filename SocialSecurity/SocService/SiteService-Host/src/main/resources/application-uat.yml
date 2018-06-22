@@ -18,6 +18,9 @@ spring:
     port: 7001
     password: redis
     timeout: 1000
+  boot:
+    admin:
+      url: http://172.16.9.56:9625
 #spring cloud eureka
 eureka:
   client:
