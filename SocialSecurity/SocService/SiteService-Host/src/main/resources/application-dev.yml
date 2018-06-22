@@ -1,23 +1,13 @@
 spring:
-  datasource:
-    druid:
-      driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://172.16.9.15:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
-      username: root
-      password: a111111
-      max-active: 20
-      min-idle: 8
-      initial-size: 10
-      validation-query: SELECT 'x'
-      filter:
-        stat:
-          enabled: true
   redis:
     database: 0
     host: 172.16.9.16
     port: 6379
     password: redis
     timeout: 1000
+  boot:
+    admin:
+      url: http://172.16.9.31:9625
 #spring cloud eureka
 eureka:
   client:
@@ -26,3 +16,6 @@ eureka:
 
 seaweed:
   masterHost: "172.16.9.15:9333"
+
+druid:
+  configPath:  /data/appdatas/gt1/gtobusinessdb_dev.properties
