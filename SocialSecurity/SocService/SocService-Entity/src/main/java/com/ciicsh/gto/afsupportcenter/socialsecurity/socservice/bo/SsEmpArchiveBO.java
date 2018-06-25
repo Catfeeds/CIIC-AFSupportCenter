@@ -64,6 +64,18 @@ public class SsEmpArchiveBO extends SsEmpArchive {
 
     private String endMonth;
 
+    private Integer archiveTaskStatus;
+
+    @Override
+    public Integer getArchiveTaskStatus() {
+        return archiveTaskStatus;
+    }
+
+    @Override
+    public void setArchiveTaskStatus(Integer archiveTaskStatus) {
+        this.archiveTaskStatus = archiveTaskStatus;
+    }
+
     @Override
     public String getEndMonth() {
         return endMonth;

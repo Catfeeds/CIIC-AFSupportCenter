@@ -49,6 +49,8 @@
         <result column="afempStatus" property="afempStatus"/>
         <result column="outOperateDate" property="outOperateDate"/>
         <result column="end_month" property="endMonth"/>
+        <result column="archive_task_status" property="archiveTaskStatus"/>
+
     </resultMap>
 
     <resultMap id="getSsEmpInfoResultMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpInfoDetailBO" >
@@ -200,6 +202,7 @@
         emp.id_num,
         sea.in_date,
         sea.ss_serial,
+        sea.archive_task_status,
         sca.ss_account,
         sca.ss_account_type,
         sca.ss_pwd,
@@ -226,12 +229,13 @@
         emp.employee_id,
         emp.employee_name,
         emp.id_num,
-        sea.in_date,
+        afemp.in_date,
         sea.ss_serial,
         sca.ss_account,
         sca.ss_account_type,
         sea.emp_classify,
         sea.com_account_id,
+        sea.archive_task_status,
         afemp.leadership_name,afemp.labor_start_date,afemp.labor_end_date,afemp.status AS 'afempStatus',afemp.modified_time AS 'outOperateDate',
         sca.ss_account,
         sca.com_account_name,
@@ -293,5 +297,31 @@
           AND sea.company_id = #{companyId}
           AND smc.ss_month_belong = #{ssMonthBelong}
         GROUP BY smci.ss_type
+    </select>
+
+    <resultMap id="ssEmpInfoRM" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpInfoBO" >
+        <result column="employee_id" property="employeeId"/>
+        <result column="company_id" property="companyId"/>
+        <result column="archive_status" property="archiveStatus"/>
+        <result column="archiveStatusName" property="archiveStatusName"/>
+    </resultMap>
+    <!--获取雇员社保信息 API调用-->
+    <select id="getSsEmpInfoById" resultMap="ssEmpInfoRM">
+      SELECT
+           ea.employee_id,
+            ea.company_id,
+            ea.archive_status,
+           CASE ea.archive_status WHEN 0 THEN '未办理'
+            WHEN 1 THEN '已办'
+            WHEN 2 THEN '已做'
+            WHEN 3 THEN '封存'
+           END AS 'archiveStatusName'
+        FROM
+            ss_emp_archive ea
+        WHERE
+            ea.is_active = 1
+            AND ea.company_id = #{companyId}
+            AND ea.employee_id = #{employeeId}
+            ORDER BY ea.in_date DESC LIMIT 1
     </select>
 </mapper>

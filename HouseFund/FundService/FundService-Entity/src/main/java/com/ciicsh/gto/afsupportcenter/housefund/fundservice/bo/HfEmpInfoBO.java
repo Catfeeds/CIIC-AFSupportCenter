@@ -35,12 +35,31 @@ public class HfEmpInfoBO {
      * 公积金合计
      */
     private BigDecimal empAmountTotal;
-
+    // 基本公积金账号
+    private String hfEmpAccount;
+    // 补充公积金账号
+    private String hfEmpAccountBC;
     /**
      * 险种明细
      */
 
     private List<HfEmpInfoDetailBO> hfEmpInfoDetailBOList;
+
+    public String getHfEmpAccount() {
+        return hfEmpAccount;
+    }
+
+    public void setHfEmpAccount(String hfEmpAccount) {
+        this.hfEmpAccount = hfEmpAccount;
+    }
+
+    public String getHfEmpAccountBC() {
+        return hfEmpAccountBC;
+    }
+
+    public void setHfEmpAccountBC(String hfEmpAccountBC) {
+        this.hfEmpAccountBC = hfEmpAccountBC;
+    }
 
     public String getEmployeeId() {
         return employeeId;

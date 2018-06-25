@@ -81,4 +81,6 @@ public interface SsComAccountMapper extends BaseMapper<SsComAccount> {
      * @return
      */
     Long getSerialByComAccountId(@Param("comAccountId") Long comAccountId);
+
+    ComAccountExtPO getSsComAccountByComId(@Param("companyId") String companyId);
 }

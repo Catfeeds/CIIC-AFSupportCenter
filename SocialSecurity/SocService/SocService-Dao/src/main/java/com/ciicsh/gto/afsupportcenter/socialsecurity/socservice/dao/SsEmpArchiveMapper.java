@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpArchiveBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpInfoBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpInfoDetailBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpArchive;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.empSSSearchExportOpt;
@@ -56,4 +57,6 @@ public interface SsEmpArchiveMapper extends BaseMapper<SsEmpArchive> {
     int checkSerial(SsEmpArchive ssEmpArchive);
 
     List<SsEmpInfoDetailBO> getSsEmpInfo(@Param("employeeId")String employeeId, @Param("companyId")String companyId, @Param("ssMonthBelong")String ssMonthBelong);
+
+    SsEmpInfoBO getSsEmpInfoById(@Param("companyId")String companyId, @Param("employeeId")String employeeId);
 }

@@ -32,10 +32,30 @@ public class SsEmpInfoBO {
      * 社保合计
      */
     private BigDecimal empAmountTotal;
+
+    private Integer archiveStatus;
+    private String archiveStatusName;
+
     /**
      * 险种明细
      */
     private List<SsEmpInfoDetailBO> ssEmpInfoDetailBOList;
+
+    public Integer getArchiveStatus() {
+        return archiveStatus;
+    }
+
+    public void setArchiveStatus(Integer archiveStatus) {
+        this.archiveStatus = archiveStatus;
+    }
+
+    public String getArchiveStatusName() {
+        return archiveStatusName;
+    }
+
+    public void setArchiveStatusName(String archiveStatusName) {
+        this.archiveStatusName = archiveStatusName;
+    }
 
     public String getEmployeeId() {
         return employeeId;

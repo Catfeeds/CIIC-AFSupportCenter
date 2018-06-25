@@ -7,6 +7,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.apiservice.host.translator.
 import com.ciicsh.gto.afsupportcenter.socialsecurity.apiservice.host.validator.SocApiValidator;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.SocApiProxy;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.*;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsComAccountBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpInfoBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpInfoDetailBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpInfoParamBO;
@@ -26,13 +27,11 @@ import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -178,6 +177,35 @@ public class SocApiController implements SocApiProxy {
             resultDTOList.add(resultDTO);
         }
         return JsonResult.success(resultDTOList);
+    }
+
+    @Override
+    @ApiOperation(value = "获取企业社保账户信息接口", notes = "根据客户ID获取对象")
+    @ApiImplicitParam(name = "companyId", value = "客户Id", required = true, dataType = "String")
+    @PostMapping("/getSsComAccountByComId")
+    public JsonResult<SsComAccountDTO> getSsComAccountByComId(@RequestParam("companyId")String companyId) {
+        ComAccountExtPO comAccountExtPO = accountService.getSsComAccountByComId(companyId);
+        SsComAccountDTO ssComAccountDTO =new SsComAccountDTO();
+        if(comAccountExtPO !=null){
+            BeanUtils.copyProperties(comAccountExtPO, ssComAccountDTO);
+            return JsonResult.success(ssComAccountDTO,"数据获取成功");
+        }
+        return JsonResult.faultMessage("支持中心反馈：无数据");
+
+
+    }
+
+    @Override
+    @ApiOperation(value = "获取社保雇员信息接口", notes = "根据客户ID和雇员ID获取对象")
+    @PostMapping("/getSsEmpInfoById")
+    public JsonResult<SsEmpInfoDTO> getSsEmpInfoById(@RequestParam("companyId")String companyId, @RequestParam("employeeId")String employeeId) {
+        SsEmpInfoBO ssEmpInfoBO = accountService.getSsEmpInfoById(companyId,employeeId);
+        SsEmpInfoDTO ssEmpInfoDTO=new SsEmpInfoDTO();
+        if(ssEmpInfoBO!=null){
+            BeanUtils.copyProperties(ssEmpInfoBO,ssEmpInfoDTO);
+            return JsonResult.success(ssEmpInfoDTO,"数据获取成功");
+        }
+        return JsonResult.faultMessage("支持中心反馈：无数据");
     }
 
     private boolean checkSsParam(List<SsEmpInfoParamDTO> paramDTOList) {

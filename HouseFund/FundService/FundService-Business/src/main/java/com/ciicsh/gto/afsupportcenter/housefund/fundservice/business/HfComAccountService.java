@@ -98,4 +98,6 @@ public interface HfComAccountService extends IService<HfComAccount> {
     List<ComAccountExtBo> queryHfComAccountList(ComAccountParamExtBo extBo);
 
     JsonResult submitCompanyFundAccount(ComFundAccountDetailDTO comFundAccountDetailDTO);
+
+    ComAccountExtBo getHfComAccountByComId(String companyId);
 }
