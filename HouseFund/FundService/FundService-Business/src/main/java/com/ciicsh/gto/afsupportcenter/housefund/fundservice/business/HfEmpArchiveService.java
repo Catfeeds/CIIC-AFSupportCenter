@@ -22,4 +22,5 @@ public interface HfEmpArchiveService extends IService<HfEmpArchive> {
     Map queryHfEmpArchiveByEmpTaskIds(List<Long> empTaskIdList);
     String getEmpAccountByEmployeeId(String employeeId, Integer hfType);
     List<HfEmpInfoBO> getHfEmpArchiveInfo(List<HfEmpInfoParamBO> paramBoList);
+    HfEmpInfoBO getHfEmpInfoById(String companyId ,String employeeId);
 }

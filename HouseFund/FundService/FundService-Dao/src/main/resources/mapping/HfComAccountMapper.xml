@@ -25,6 +25,7 @@
         <result column="com_account_name" property="comAccountName" />
         <result column="payment_way" property="paymentWay" />
         <result column="close_day" property="closeDay" />
+        <result column="payment_bank" property="paymentBank" />
         <result column="company_id" property="companyId" />
         <result column="hf_type" property="hfType" />
         <result column="hf_com_account" property="hfComAccount" />
@@ -164,6 +165,7 @@
         SELECT
         b.com_account_name,
         b.payment_way,
+        b.payment_bank,
         b.close_day,
         a.company_id,
         c.hf_type,

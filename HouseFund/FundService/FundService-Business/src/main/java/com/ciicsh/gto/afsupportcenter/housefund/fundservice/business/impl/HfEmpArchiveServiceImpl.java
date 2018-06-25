@@ -163,6 +163,12 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
         return resultBoList;
     }
 
+    @Override
+    public HfEmpInfoBO getHfEmpInfoById(String companyId, String employeeId) {
+        HfEmpInfoBO hfEmpInfoBO = baseMapper.getHfEmpInfoById(companyId,employeeId);
+        return hfEmpInfoBO;
+    }
+
     private String parseValue(String value) {
         return value == null ? "" : value;
     }
