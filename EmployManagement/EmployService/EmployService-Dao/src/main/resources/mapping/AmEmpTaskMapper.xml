@@ -126,7 +126,8 @@
         h.title,/*公司名称 */
         h.service_center,/*服务中心 */
         h.leader_ship_name,  /*客服经理*/
-        e.settlement_area
+        e.settlement_area,
+        w.out_reason
         FROM
         am_emp_task a
         LEFT JOIN
@@ -145,6 +146,8 @@
         LEFT JOIN
         am_company_set cs
         on cs.company_id = a.company_id
+        LEFT JOIN am_resign f ON f.employment_id = b.employment_id
+        LEFT JOIN am_emp_task w on f.emp_task_id = w.emp_task_id
         where   a.task_category = '1'
         and  a.employee_id is not null
         and  a.company_id  is not null
