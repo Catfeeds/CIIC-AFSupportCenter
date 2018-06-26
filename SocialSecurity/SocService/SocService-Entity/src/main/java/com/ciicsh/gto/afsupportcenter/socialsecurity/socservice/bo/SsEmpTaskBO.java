@@ -213,7 +213,7 @@ public class SsEmpTaskBO implements Serializable {
     }
 
     public String getOpenAfDateName() {
-        if (openAfDateName != null) {
+        if (openAfDate != null) {
             return DateUtil.yyyyMMddHyphen(openAfDate);
         }
         return openAfDateName;
