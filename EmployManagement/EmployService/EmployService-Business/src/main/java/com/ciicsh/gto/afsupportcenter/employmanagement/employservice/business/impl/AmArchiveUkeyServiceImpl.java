@@ -40,6 +40,7 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
 
     @Override
     public PageRows<AmArchiveUkeyBO> queryAmArchiveUkeyList(PageInfo pageInfo) {
+        PageRows<AmArchiveUkeyBO> result = new PageRows<>();
         AmArchiveUkeyBO bo = pageInfo.toJavaObject(AmArchiveUkeyBO.class);
         List<String> param = new ArrayList<String>();
         if(!StringUtil.isEmpty(bo.getParams()))
@@ -50,14 +51,17 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
             }
         }
         bo.setParam(param);
-        List<AmArchiveUkey> ukeyList = baseMapper.queryUkeyList(bo);
+        PageRows<AmArchiveUkey> resultPo = PageKit.doSelectPage(pageInfo,() -> baseMapper.queryUkeyList(bo));
+        result.setTotal(resultPo.getTotal());
         List<AmArchiveUkeyBO> boList = new ArrayList<>();
-        for (AmArchiveUkey ueky:ukeyList) {
+        List<AmArchiveUkey> poList = resultPo.getRows();
+        for (AmArchiveUkey ueky:poList) {
             AmArchiveUkeyBO b = new AmArchiveUkeyBO();
             BeanUtils.copyProperties(ueky,b);
             boList.add(b);
         }
-        return PageKit.doSelectPage(pageInfo,() -> boList);
+        result.setRows(boList);
+        return result;
     }
 
     @Override
