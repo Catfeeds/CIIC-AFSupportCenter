@@ -47,6 +47,12 @@ public class AmArchiveUkey implements Serializable {
     private LocalDate materialFeedbackDate;
 
     /**
+     * 绑定的公司编号
+     */
+    @TableField("company_id")
+    private String companyId;
+
+    /**
      * 绑定的公司名称
      */
     @TableField("company_name")
@@ -129,6 +135,14 @@ public class AmArchiveUkey implements Serializable {
      */
     @TableField("modified_by")
     private String modifiedBy;
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
 
     public Long getId() {
         return id;

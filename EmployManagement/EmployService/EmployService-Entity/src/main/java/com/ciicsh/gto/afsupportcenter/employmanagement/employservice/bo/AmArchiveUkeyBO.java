@@ -29,6 +29,11 @@ public class AmArchiveUkeyBO {
     private LocalDate materialFeedbackDate;
 
     /**
+     * 绑定的公司编号
+     */
+    private String companyId;
+
+    /**
      * 绑定的公司名称
      */
     private String companyName;
@@ -116,6 +121,14 @@ public class AmArchiveUkeyBO {
      * 续签到期日期
      */
     private LocalDate renewDueDate;
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
 
     public LocalDate getRenewDueDate() {
         return renewDueDate;

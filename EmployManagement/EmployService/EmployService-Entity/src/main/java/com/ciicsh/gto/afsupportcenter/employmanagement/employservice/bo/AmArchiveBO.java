@@ -14,7 +14,7 @@ public class AmArchiveBO extends AmArchive {
 
     private Long[] empTaskIds;
 
-    private Boolean formAdvance;
+    private boolean formAdvance=false;
 
     private String employeeName;
 
@@ -44,11 +44,11 @@ public class AmArchiveBO extends AmArchive {
         this.end = end;
     }
 
-    public Boolean getFormAdvance() {
+    public boolean getFormAdvance() {
         return formAdvance;
     }
 
-    public void setFormAdvance(Boolean formAdvance) {
+    public void setFormAdvance(boolean formAdvance) {
         this.formAdvance = formAdvance;
     }
 

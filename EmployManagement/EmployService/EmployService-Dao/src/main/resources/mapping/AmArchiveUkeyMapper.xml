@@ -8,6 +8,7 @@
 		<result column="material_receive_date" property="materialReceiveDate" />
 		<result column="material_delivery_date" property="materialDeliveryDate" />
 		<result column="material_feedback_date" property="materialFeedbackDate" />
+		<result column="company_id" property="companyId" />
 		<result column="company_name" property="companyName" />
 		<result column="organization_code" property="organizationCode" />
 		<result column="due_date" property="dueDate" />
