@@ -45,7 +45,7 @@ public class AmArchiveAdvanceController extends BasicController<IAmArchiveAdvanc
     public JsonResult<Object> saveAmArchiveAdvance(AmArchiveAdvanceBO amArchiveAdvanceBO){
         // 是否已有姓名加身份证的雇员信息在预增表中
         if(amArchiveAdvanceBO.isExist()){
-            AmArchiveAdvanceBO isHave = business.queryAmArchiveAdvanceByNameIdcard(amArchiveAdvanceBO.getEmployeeName(),amArchiveAdvanceBO.getEmployeeIdcardNo(),null);
+            AmArchiveAdvanceBO isHave = business.queryAmArchiveAdvanceByNameIdcard(amArchiveAdvanceBO.getEmployeeName(),amArchiveAdvanceBO.getEmployeeIdcardNo(),1);
             if(isHave!=null){
                 return JsonResultKit.of(false);
             }

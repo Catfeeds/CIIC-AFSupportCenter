@@ -57,11 +57,13 @@ public class AmArchiveUkeyController extends BasicController<IAmArchiveUkeyServi
 
     @RequestMapping("/saveAmArchiveUkey")
     public JsonResult<Integer> saveAmArchiveUkey(AmArchiveUkeyBO amArchiveUkeyBO){
-        AmArchiveUkeyBO bo = business.queryAmArchiveUkey(amArchiveUkeyBO.getOrganizationCode());
-        if(bo!=null){
-            return JsonResultKit.of(0);
+        if(amArchiveUkeyBO.isFlag()){
+            AmArchiveUkeyBO bo = business.queryAmArchiveUkey(amArchiveUkeyBO.getOrganizationCode());
+            if(bo!=null){
+                return JsonResultKit.of(0);
+            }
         }
-        Boolean result = business.saveAmArchiveUkey(amArchiveUkeyBO);
+        business.saveAmArchiveUkey(amArchiveUkeyBO);
         return JsonResultKit.of(1);
     }
 

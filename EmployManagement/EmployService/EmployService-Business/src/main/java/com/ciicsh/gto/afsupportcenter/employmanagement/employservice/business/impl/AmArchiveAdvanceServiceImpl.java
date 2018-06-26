@@ -82,7 +82,11 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
         }
         po.setModifiedBy(UserContext.getUserName());
         po.setModifiedTime(nowTime);
-        boolean result = this.insertOrUpdate(po);
+        //boolean result = this.insertOrUpdate(po);
+        po.setIsActive(1);
+        po.setCreatedTime(nowTime);
+        po.setCreatedBy(UserContext.getUserName());
+        boolean result = this.insertOrUpdateAllColumn(po);
         if (result) {
             // 修改预留档案编号 seq
             if (po.getReservedArchiveType() != null && po.getReservedArchiveNo() != null) {
