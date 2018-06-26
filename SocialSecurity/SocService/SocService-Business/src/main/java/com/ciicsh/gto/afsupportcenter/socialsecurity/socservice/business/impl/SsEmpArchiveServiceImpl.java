@@ -147,7 +147,7 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
         }else {
             ssEmpArchiveBO = baseMapper.queryEmployeeDetailInfo(empArchiveId);
         }
-        if("3".equals(ssEmpArchiveBO.getAfempStatus())){ // 3 = 离职
+        if(!"3".equals(ssEmpArchiveBO.getAfempStatus())){ // 3 = 离职
             ssEmpArchiveBO.setOutOperateDate(null);
         }
         return ssEmpArchiveBO;

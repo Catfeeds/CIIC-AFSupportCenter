@@ -25,7 +25,7 @@ public interface HfStatementCompareMapper extends BaseMapper<HfStatementCompareP
      * @param hfComAccount
      * @return
      */
-    List<HFStatementCompareBO> getHFStatementCompareRecord(@Param("hfMonth") String hfMonth, @Param("hfComAccount") String hfComAccount);
+    List<HFStatementCompareBO> getHFStatementCompareRecord(@Param("hfMonth") String hfMonth, @Param("hfComAccount") String hfComAccount,@Param("companyId") String companyId);
 
     /**
      * 删除对账单

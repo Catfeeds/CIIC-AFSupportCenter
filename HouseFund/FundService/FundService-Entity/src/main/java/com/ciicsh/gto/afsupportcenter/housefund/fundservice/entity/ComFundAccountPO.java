@@ -66,7 +66,7 @@ public class ComFundAccountPO {
      * 缴费支行编号
      * "徐汇—X_15","西郊—C_16","东方路—P_17","卢湾—L_18","黄浦—H_19"
      */
-    @Excel(name = "缴费银行", replace = {"徐汇—X_15","西郊—C_16","东方路—P_17","卢湾—L_18","黄浦—H_19"},orderNum = "6")
+    @Excel(name = "缴费银行", replace = {"徐汇—X_15","西郊—C_16","东方路—P_17","卢湾—L_18","黄浦—H_0"},orderNum = "6")
     private Byte paymentBank;
 
     /**
