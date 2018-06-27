@@ -122,6 +122,16 @@ public class AmArchiveUkeyBO {
      */
     private LocalDate renewDueDate;
 
+    private boolean flag = false;
+
+    public boolean isFlag() {
+        return flag;
+    }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
+    }
+
     public String getCompanyId() {
         return companyId;
     }
