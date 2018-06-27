@@ -610,5 +610,11 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         return  JsonResultKit.of(b);
     }
 
+    @RequestMapping("/batchCheck")
+    public JsonResult  batchCheck(EmployeeBatchBO employeeBatchBO){
+        Map<String,Object>  map = business.batchCheck(employeeBatchBO);
+        return  JsonResultKit.of(map);
+    }
+
 }
 
