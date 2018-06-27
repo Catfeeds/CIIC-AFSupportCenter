@@ -1,14 +1,16 @@
 spring:
-  datasource:
-    url: jdbc:mysql://172.16.9.15:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
-    username: root
-    password: a111111
   cloud:
     stream:
       kafka:
         binder:
           brokers: 172.16.9.11:9092
           zk-nodes: 172.16.9.11:2181
+  boot:
+    admin:
+      url: http://172.16.9.31:9625
+      client:
+        prefer-ip: true
+      api-path: instances
 
 eureka:
   client:
@@ -44,3 +46,6 @@ log4j:
                 PreparedStatement: DEBUG
                 Statement: DEBUG
     rootLogger: DEBUG,ServerDailyRollingFile,stdout
+
+druid:
+  configPath:  /data/appdatas/gt1/gtobusinessdb_dev.properties
