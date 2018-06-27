@@ -4,6 +4,7 @@ import com.ciicsh.gto.identityservice.api.IdentityServiceProxy;
 import com.ciicsh.gto.identityservice.api.dto.Result;
 import com.ciicsh.gto.identityservice.api.dto.response.UserInfoResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
@@ -23,9 +24,17 @@ public class AuthenticateInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private IdentityServiceProxy identityServiceProxy;
 
+    @Value("${spring.boot.admin.url}")
+    private String sbaUrl;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String headers = request.getHeader("Access-Control-Request-Headers");
+
+        String host = request.getRemoteHost();
+        if(sbaUrl.contains(host)) {
+            return true;
+        }
         if (headers == null || Stream.of(headers.split(",")).noneMatch(header ->
                 header.equalsIgnoreCase("token"))) {
             String token = request.getHeader("token");
