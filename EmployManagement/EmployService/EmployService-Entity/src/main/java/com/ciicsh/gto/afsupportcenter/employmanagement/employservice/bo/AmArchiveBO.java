@@ -2,10 +2,9 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo;
 
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchive;
 
+import java.util.List;
 
-/**
- * Created by zhangzhiwen on 2018/1/29.
- */
+
 public class AmArchiveBO extends AmArchive {
 
     private  Boolean  end;
@@ -19,6 +18,16 @@ public class AmArchiveBO extends AmArchive {
     private String employeeName;
 
     private String idNum;
+
+    private List<Long> employmentIds;
+
+    public List<Long> getEmploymentIds() {
+        return employmentIds;
+    }
+
+    public void setEmploymentIds(List<Long> employmentIds) {
+        this.employmentIds = employmentIds;
+    }
 
     public Long[] getEmpTaskIds() {
         return empTaskIds;
