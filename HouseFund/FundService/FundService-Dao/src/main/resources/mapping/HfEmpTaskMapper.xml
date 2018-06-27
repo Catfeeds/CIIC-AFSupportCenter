@@ -679,8 +679,12 @@
         het.submitter_id,
         het.submit_time,
         het.task_id,
-        het.start_month,
-        het.end_month,
+        CASE WHEN (het.task_category = 1 OR het.task_category = 2 OR het.task_category = 3 OR het.task_category = 6
+          OR het.task_category = 7 OR het.task_category = 9 OR het.task_category = 10  OR het.task_category = 11)
+        AND tmp.start_month IS NOT NULL THEN tmp.start_month ELSE het.start_month END start_month,
+        CASE WHEN (het.task_category = 4 OR het.task_category = 5 OR het.task_category = 6 OR het.task_category = 12
+          OR het.task_category = 13)
+        AND tmp.end_month IS NOT NULL THEN tmp.end_month ELSE het.end_month END end_month,
         het.amount,
         het.emp_base,
         het.ratio_emp,
@@ -731,6 +735,12 @@
         AND hea.is_active = 1 AND hea.hf_type = het.hf_type
         LEFT JOIN hf_emp_task hetl ON het.company_id = hetl.company_id AND het.employee_id = hetl.employee_id
         AND hetl.is_active = 1 AND het.hf_type = hetl.hf_type AND het.task_category IN (1, 2, 3, 9, 10, 11) AND hetl.task_category IN (4, 5, 12, 13)
+        LEFT JOIN (
+            SELECT MIN(start_month) start_month, MAX(end_month) end_month, hetp.emp_task_id
+            FROM hf_emp_task_period hetp
+            WHERE hetp.is_active = 1
+            GROUP BY hetp.emp_task_id
+        )tmp ON het.emp_task_id = tmp.emp_task_id
         <where>
             het.is_active = 1 AND het.task_status != 5 AND het.welfare_unit = 1
             <foreach collection="param" item="plid" open="" close="" separator="">
@@ -783,8 +793,12 @@
         het.submitter_id,
         het.submit_time,
         het.task_id,
-        het.start_month,
-        het.end_month,
+        CASE WHEN (het.task_category = 1 OR het.task_category = 2 OR het.task_category = 3 OR het.task_category = 6
+          OR het.task_category = 7 OR het.task_category = 9 OR het.task_category = 10  OR het.task_category = 11)
+        AND tmp.start_month IS NOT NULL THEN tmp.start_month ELSE het.start_month END start_month,
+        CASE WHEN (het.task_category = 4 OR het.task_category = 5 OR het.task_category = 6 OR het.task_category = 12
+          OR het.task_category = 13)
+        AND tmp.end_month IS NOT NULL THEN tmp.end_month ELSE het.end_month END end_month,
         het.amount,
         het.emp_base,
         het.ratio_emp,
@@ -835,6 +849,12 @@
         AND hea.is_active = 1 AND hea.hf_type = het.hf_type
         LEFT JOIN hf_emp_task hetl ON het.company_id = hetl.company_id AND het.employee_id = hetl.employee_id
         AND hetl.is_active = 1 AND het.hf_type = hetl.hf_type AND het.task_category IN (1, 2, 3, 9, 10, 11) AND hetl.task_category IN (4, 5, 12, 13)
+        LEFT JOIN (
+            SELECT MIN(start_month) start_month, MAX(end_month) end_month, hetp.emp_task_id
+            FROM hf_emp_task_period hetp
+            WHERE hetp.is_active = 1
+            GROUP BY hetp.emp_task_id
+        )tmp ON het.emp_task_id = tmp.emp_task_id
         <where>
             het.is_active = 1 AND het.task_status != 5 AND het.welfare_unit > 1
             <foreach collection="param" item="plid" open="" close="" separator="">
