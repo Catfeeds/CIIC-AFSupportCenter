@@ -26,6 +26,6 @@ public interface IAmArchiveService extends IService<AmArchive> {
 
     List<AmArchiveDocSeqBO> queryCountHaveAbove(AmArchiveDocSeq seq);
 
-    List<AmArchive> queryAmArchiveByEmploymentId(Long employmentId);
+    List<AmArchiveBO>  queryAmArchiveBatch(AmArchiveBO amArchiveBO);
 
 }

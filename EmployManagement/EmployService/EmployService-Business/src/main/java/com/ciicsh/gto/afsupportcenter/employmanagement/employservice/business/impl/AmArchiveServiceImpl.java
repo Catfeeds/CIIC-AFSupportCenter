@@ -80,8 +80,8 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
     }
 
     @Override
-    public List<AmArchive> queryAmArchiveByEmploymentId(Long employmentId) {
-        return null;
+    public List<AmArchiveBO> queryAmArchiveBatch(AmArchiveBO amArchiveBO) {
+        return baseMapper.queryAmArchiveBatch(amArchiveBO);
     }
 
     @Override

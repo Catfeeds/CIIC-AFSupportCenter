@@ -60,4 +60,6 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
 
     boolean batchSaveEmployment(EmployeeBatchBO employeeBatchBO);
 
+    Map<String,Object> batchCheck(EmployeeBatchBO employeeBatchBO);
+
 }
