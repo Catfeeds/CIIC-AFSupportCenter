@@ -1,11 +1,13 @@
+info:
+  app:
+    name: 支持中心证件管理Site后端服务模块
+    version: 1.0.0
+    description: 支持中心证件管理Site后端服务模块
 spring:
   application:
     name: afsupport-center-credentials-command-service
-  datasource:
-      type: com.alibaba.druid.pool.DruidDataSource
-      driver-class-name: com.mysql.jdbc.Driver
   profiles:
-    active: fat
+    active: dev
   jpa:
     database: MYSQL
     show-sql: true
