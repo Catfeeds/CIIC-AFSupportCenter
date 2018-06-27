@@ -6,10 +6,11 @@ spring:
           brokers: 172.16.9.17:9092,172.16.9.18:9092
           zk-nodes: 172.16.9.19:2181,172.16.9.20:2181,172.16.9.21:2181
   boot:
-      admin:
-        url: http://172.16.9.24:9625
-        client:
-          prefer-ip: true
+    admin:
+      url: http://172.16.9.24:9625
+      client:
+        prefer-ip: true
+      api-path: instances
 
 #spring cloud eureka
 eureka:

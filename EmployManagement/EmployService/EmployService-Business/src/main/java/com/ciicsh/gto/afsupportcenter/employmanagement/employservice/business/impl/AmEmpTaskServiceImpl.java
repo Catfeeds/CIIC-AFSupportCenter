@@ -709,6 +709,32 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         return b;
     }
 
+    @Override
+    public Map<String, Object> batchCheck(EmployeeBatchBO employeeBatchBO) {
+        List<AmEmploymentBO> amEmploymentBOList = amEmploymentService.queryAmEmploymentBatch(employeeBatchBO.getEmpTaskIds());
+        Map<String,Object> resultMap = new HashMap<>();
+        if(amEmploymentBOList!=null&&amEmploymentBOList.size()>0)
+        {
+            AmArchiveBO amArchiveBO = new AmArchiveBO();
+            List<Long> employmentIds = new ArrayList<>();
+            for(AmEmploymentBO amEmploymentBO:amEmploymentBOList)
+            {
+                employmentIds.add(amEmploymentBO.getEmploymentId());
+            }
+            amArchiveBO.setEmploymentIds(employmentIds);
+            List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchiveBatch(amArchiveBO);
+            resultMap.put("employmentCount",amEmploymentBOList.size());
+            if(amArchiveBOList!=null&&amArchiveBOList.size()>0)
+            {
+                resultMap.put("ArchiveCount",amArchiveBOList.size());
+            }
+
+        }else{
+            resultMap.put("employmentCount",0);
+        }
+        return resultMap;
+    }
+
 
     AmEmpTaskBO  defaultRule(AmEmpTaskBO amEmpTaskBO){
         if("外来三险".equals(amEmpTaskBO.getEmployeeNature())||"外地人员".equals(amEmpTaskBO.getEmployeeNature()))

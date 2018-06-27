@@ -16,4 +16,6 @@ public interface AmArchiveMapper extends BaseMapper<AmArchive> {
 
     List<AmArchiveBO> queryAmArchiveList(Map<String, Object> param);
 
+    List<AmArchiveBO> queryAmArchiveBatch(AmArchiveBO amArchiveBO);
+
 }

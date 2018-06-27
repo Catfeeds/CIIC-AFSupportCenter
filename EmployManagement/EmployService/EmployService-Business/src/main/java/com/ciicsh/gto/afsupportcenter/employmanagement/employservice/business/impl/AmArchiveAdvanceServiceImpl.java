@@ -2,14 +2,10 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.i
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveAdvanceBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveDocSeqBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmploymentBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmArchiveAdvanceService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.advanceSearchExportOpt;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveAdvanceMapper;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveDocSeqMapper;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmEmploymentMapper;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveAdvance;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveDocSeq;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
@@ -41,6 +37,12 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
 
     @Autowired
     private AmEmploymentMapper amEmploymentMapper;
+
+    @Autowired
+    private AmEmpTaskMapper amEmpTaskMapper;
+
+    @Autowired
+    private AmResignMapper amResignMapper;
 
     @Override
     public PageRows<AmArchiveAdvanceBO> queryAmArchiveAdvanceList(PageInfo pageInfo) {
@@ -143,12 +145,35 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
 
     @Override
     public AmEmploymentBO queryAmArchiveByEmployeeNameIdCard(String employeeName, String idCard) {
-        AmEmploymentBO amEmploymentBO = new AmEmploymentBO();
+
         List<String> param = new ArrayList<>();
         param.add("d.employee_name = '"+ employeeName +"'");
         param.add("d.id_num = '"+ idCard +"'");
+
+        // 是否有用工 任务单
+        AmEmpTaskBO amEmpTaskBO = new AmEmpTaskBO();
+        amEmpTaskBO.setParam(param);
+        List<AmEmpTaskBO> amEmpTaskBOList = amEmpTaskMapper.queryAmEmpTask(amEmpTaskBO);
+        if(amEmpTaskBOList == null || amEmpTaskBOList.size() == 0){
+            return null;
+        }
+
+        // 是否有退工 任务单
+        AmResignBO amResignBO = new AmResignBO();
+        amResignBO.setParam(param);
+        List<AmResignBO> amResignBOList = amResignMapper.queryAmResign(amResignBO);
+        if(amResignBOList != null && amResignBOList.size() > 0){
+            // 有退工任务单 退工日期是否为null
+            if(amResignBOList.get(0).getOutDate() != null){
+                return null;
+            }
+        }
+
+        // 是否有档案
+        AmEmploymentBO amEmploymentBO = new AmEmploymentBO();
         amEmploymentBO.setParam(param);
         List<AmEmploymentBO> boList = amEmploymentMapper.queryAmArchive(amEmploymentBO);
+
         if(boList != null && boList.size() > 0){
             return boList.get(0);
         }

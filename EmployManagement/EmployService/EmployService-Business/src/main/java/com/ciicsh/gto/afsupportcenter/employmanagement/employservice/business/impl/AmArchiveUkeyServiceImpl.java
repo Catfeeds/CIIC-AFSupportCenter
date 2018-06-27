@@ -126,7 +126,10 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
         }
         po.setModifiedBy(UserContext.getUserName());
         po.setModifiedTime(nowTime);
-        boolean result = this.insertOrUpdate(po);
+        po.setIsActive(1);
+        po.setCreatedBy(UserContext.getUserName());
+        po.setCreatedTime(nowTime);
+        boolean result = this.insertOrUpdateAllColumn(po);
         return result;
     }
 
