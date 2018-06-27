@@ -16,6 +16,7 @@ spring:
       url: http://172.16.9.56:9625
       client:
         prefer-ip: true
+      api-path: instances
 
 #spring cloud eureka
 eureka:
