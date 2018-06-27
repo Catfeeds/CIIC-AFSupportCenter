@@ -61,8 +61,8 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
      * @return
      */
     @Override
-    public List<HFStatementCompareBO> getHFStatementCompareRecord(String hfMonth, String hfComAccount) {
-        return baseMapper.getHFStatementCompareRecord(hfMonth,hfComAccount);
+    public List<HFStatementCompareBO> getHFStatementCompareRecord(String hfMonth, String hfComAccount,String companyId) {
+        return baseMapper.getHFStatementCompareRecord(hfMonth,hfComAccount,companyId);
     }
 
     /**

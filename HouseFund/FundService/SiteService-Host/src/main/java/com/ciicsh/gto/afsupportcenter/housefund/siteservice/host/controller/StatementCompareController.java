@@ -44,7 +44,8 @@ public class StatementCompareController extends BasicController<HFStatementCompa
 
         String hfMonth = pageInfo.getParams().getString("hfMonth");
         String hfComAccount = pageInfo.getParams().getString("hfComAccount");
-        PageRows<HFStatementCompareBO> users = PageKit.doSelectPage(pageInfo, () -> business.getHFStatementCompareRecord(hfMonth, hfComAccount));
+        String companyId =pageInfo.getParams().getString("companyId");
+        PageRows<HFStatementCompareBO> users = PageKit.doSelectPage(pageInfo, () -> business.getHFStatementCompareRecord(hfMonth, hfComAccount,companyId));
 
         List<HFStatementCompareDTO> dtos = JsonKit.castToList(users.getRows(), HFStatementCompareDTO.class);
         PageRows<HFStatementCompareDTO> result = new PageRows<>();
