@@ -682,6 +682,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             amRemark.setEmpTaskId(emTaskId);
             amRemark.setRemarkContent(employeeBatchBO.getRemarkContent());
             amRemark.setRemarkType(1);
+            amRemark.setRemarkDate(LocalDate.now());
             amRemark.setRemarkMan(userName);
             amRemark.setCreatedBy(userId);
             amRemark.setCreatedTime(now);
