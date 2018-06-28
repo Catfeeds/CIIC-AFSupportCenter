@@ -17,6 +17,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -109,12 +110,17 @@ public class SsEmpArchiveController extends BasicController<SsEmpArchiveService>
             List<SsEmpTask> ssEmpTasksList = ssEmpTaskService.queryTaskByEmpArchiveId(empArchiveId);
             resultMap.put("ssEmpTasks",ssEmpTasksList);
         }
+        String feedback="";
+        feedback = amEmpTaskOfSsService.queryEmployFeedback(ssEmpArchiveBO.getEmployeeId(), ssEmpArchiveBO.getCompanyId());
         //用工信息
         AmEmpTaskDTO amEmpTaskDTO = null;
         amEmpTaskDTO = amEmpTaskOfSsService.queryReworkInfo(ssEmpArchiveBO.getEmployeeId(), ssEmpArchiveBO.getCompanyId(),  1);
         if (amEmpTaskDTO == null) {
             amEmpTaskDTO = new AmEmpTaskDTO();
             amEmpTaskDTO.setTaskCategory(1);
+        }
+        if (StringUtils.isNotEmpty(feedback)) {
+            amEmpTaskDTO.setTaskStatus(Integer.parseInt(feedback));
         }
         resultMap.put("amEmpTask",amEmpTaskDTO);
         return JsonResultKit.of(resultMap);
