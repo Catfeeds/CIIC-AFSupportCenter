@@ -16,12 +16,16 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.enumeration.ProcessCategory;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +36,7 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -43,6 +48,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask> implements HfEmpTaskService {
+    @Autowired
+    private LogApiUtil logApiUtil;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
@@ -300,6 +307,23 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         //公积金类型:1 基本 2 补充
         Integer hfType = fundCategory.equals(DictUtil.DICT_ITEM_ID_FUND_BASIC) ? 1 : 2;
         hfEmpTask.setHfType(hfType);
+
+        // 重复任务单校验
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("business_interface_id", hfEmpTask.getBusinessInterfaceId());
+        condition.put("task_id", hfEmpTask.getTaskId());
+        condition.put("is_change", hfEmpTask.getIsChange());
+        condition.put("is_active", 1);
+        List<HfEmpTask> hfEmpTaskList = baseMapper.selectByMap(condition);
+
+        if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
+            logApiUtil.warn(LogMessage.create().setTitle("HfEmpTaskServiceImpl#addEmpTask")
+                .setContent("任务单幂等校验未通过。business_interface_id=" + String.valueOf(hfEmpTask.getBusinessInterfaceId())
+                    + ", task_id=" + String.valueOf(hfEmpTask.getTaskId())
+                    + ", is_change=" + String.valueOf(hfEmpTask.getIsChange())));
+            hfEmpTask.setActive(false);
+        }
+
         baseMapper.insert(hfEmpTask);
 
         return true;
