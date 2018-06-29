@@ -280,7 +280,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                 if (hfEmpTaskPeriods.size() > 1) {
                     return JsonResultKit.ofError("当前雇员任务单费用段数据不正确");
                 }
-                hfEmpTaskHandleBo.setEndMonth(hfEmpTaskPeriods.get(0).getEndMonth());
+//                hfEmpTaskHandleBo.setEndMonth(hfEmpTaskPeriods.get(0).getEndMonth());
             }
             hfEmpTaskHandleBo.setEmpTaskPeriods(hfEmpTaskPeriods);
 

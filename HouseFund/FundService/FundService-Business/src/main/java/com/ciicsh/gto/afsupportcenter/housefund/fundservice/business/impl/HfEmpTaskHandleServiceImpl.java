@@ -359,6 +359,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             inputHfEmpTask.setNewCityCode(hfEmpTask.getNewCityCode());
         } else {
             this.updateById(inputHfEmpTask);
+            inputHfEmpTask.setStartMonth(params.getString("startMonth"));
+            inputHfEmpTask.setEndMonth(params.getString("endMonth"));
         }
 
         List<HfArchiveBasePeriod> hfArchiveBasePeriodList = null;
@@ -1476,7 +1478,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 endMonthDate = YearMonth.parse(endMonth, formatter);
                 startMonthDate = endMonthDate;
 
-//                // 如果是转出任务单，雇员月度汇缴明细库汇缴当月已生成的标准数据需删除
+                // 如果是转出任务单，雇员月度汇缴明细库汇缴当月已生成的标准数据需删除
                 HfMonthChargeBo hfMonthChargeBo = new HfMonthChargeBo();
                 hfMonthChargeBo.setInactive(true);
                 hfMonthChargeBo.setEmpArchiveId(e.getEmpArchiveId());
@@ -1485,6 +1487,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 hfMonthChargeBo.setSsMonthBelongStart(e.getHfMonth());
                 hfMonthChargeBo.setSsMonthBelongEnd(e.getHfMonth());
                 hfMonthChargeBo.setModifiedBy(hfEmpTask.getModifiedBy());
+                // TODO
 //                hfMonthChargeBo.setPaymentTypes(String.valueOf(HfMonthChargeConstant.PAYMENT_TYPE_NORMAL));
 //                hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
 
