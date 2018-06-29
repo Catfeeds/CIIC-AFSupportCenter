@@ -433,7 +433,7 @@ public class HfEmpTaskRejectExportBo implements Serializable{
     }
 
     public String getHfAccountTypeName() {
-        return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.hfAccountType), DictUtil.DICT_ID_SOCIAL_SECURITY_ACCOUNT_TYPE, false);
+        return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.hfAccountType), DictUtil.TYPE_VALUE_SOCIAL_SECURITY_ACCOUNT_TYPE, false);
     }
 
     public void setHfAccountTypeName(String hfAccountTypeName) {
