@@ -5,6 +5,7 @@ import cn.afterturn.easypoi.handler.inter.IExcelModel;
 import cn.afterturn.easypoi.handler.inter.IExcelVerifyHandler;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpPreInputService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpPreInput;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
@@ -34,6 +35,8 @@ public class HfEmpPreInputVerifyHandler implements IExcelVerifyHandler<IExcelMod
             HfEmpPreInput hfEmpPreInput = null;
             HfEmpPreInput existEmpPreInput = null;
             boolean isAccountEmpty = false;
+            boolean isBasNotExists = false;
+            boolean isAddNotExists = false;
 
             for (Field field : model.getClass().getDeclaredFields()) {
                 String fieldName = field.getName();
@@ -91,6 +94,8 @@ public class HfEmpPreInputVerifyHandler implements IExcelVerifyHandler<IExcelMod
                             } else if (hfEmpPreInput != null) {
                                 hfEmpPreInput.setHfEmpBasAccount(fieldValue);
                             }
+
+                            isBasNotExists = hfEmpPreInputService.isEmpAccountNotExists(fieldValue, HfEmpTaskConstant.HF_TYPE_BASIC, null);
                         }
                     }
 
@@ -113,6 +118,26 @@ public class HfEmpPreInputVerifyHandler implements IExcelVerifyHandler<IExcelMod
                             } else if (hfEmpPreInput != null) {
                                 hfEmpPreInput.setHfEmpAddAccount(fieldValue);
                             }
+
+                            isAddNotExists = hfEmpPreInputService.isEmpAccountNotExists(fieldValue, HfEmpTaskConstant.HF_TYPE_ADDED, null);
+                        }
+
+                        if (!isBasNotExists && !isAddNotExists) {
+                            rtn.setSuccess(false);
+                            rtn.setMsg("该雇员基本公积金和补充公积金账号属于其他雇员");
+                            return rtn;
+                        }
+
+                        if (!isBasNotExists) {
+                            rtn.setSuccess(false);
+                            rtn.setMsg("该雇员基本公积金账号属于其他雇员");
+                            return rtn;
+                        }
+
+                        if (!isAddNotExists) {
+                            rtn.setSuccess(false);
+                            rtn.setMsg("该雇员补充公积金账号属于其他雇员");
+                            return rtn;
                         }
                     }
 

@@ -146,6 +146,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             roundTypes = new int[]{1, 1};
         }
         int roundTypeInWeight = CalculateSocialUtils.getRoundTypeInWeight(roundTypes[0], roundTypes[1]);
+        inputHfEmpTask.setHfEmpAccount(params.getString("hfEmpAccount"));
 
         // 任务单费用段是否存在判断
         JSONArray operatorListData = params.getJSONArray("operatorListData");
@@ -153,11 +154,25 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
             case HfEmpTaskConstant.TASK_CATEGORY_IN_ADD:
             case HfEmpTaskConstant.TASK_CATEGORY_IN_TRANS_IN:
             case HfEmpTaskConstant.TASK_CATEGORY_IN_OPEN:
-            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST:
-            case HfEmpTaskConstant.TASK_CATEGORY_REPAIR:
             case HfEmpTaskConstant.TASK_CATEGORY_FLOP_ADD:
             case HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_IN:
             case HfEmpTaskConstant.TASK_CATEGORY_FLOP_OPEN:
+                if (isHandle && hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_ADDED && params.getLong("belongEmpArchiveId") == null) {
+                    return JsonResultKit.ofError("当前雇员的基本公积金档案不存在，请先办理基本公积金");
+                }
+                if (CollectionUtils.isEmpty(operatorListData)) {
+                    return JsonResultKit.ofError("当前任务单费用段信息为空");
+                }
+                if (StringUtils.isNotEmpty(inputHfEmpTask.getHfEmpAccount())) {
+                    boolean isNotExists = hfEmpArchiveService.isEmpAccountNotExists(inputHfEmpTask.getHfEmpAccount(), hfEmpTask.getHfType(), hfEmpTask.getEmployeeId(), true);
+
+                    if (!isNotExists) {
+                        return JsonResultKit.ofError(String.format("该%s公积金账号属于其他雇员，请核查", (hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC)? "基本" : "补充"));
+                    }
+                }
+                break;
+            case HfEmpTaskConstant.TASK_CATEGORY_ADJUST:
+            case HfEmpTaskConstant.TASK_CATEGORY_REPAIR:
                 if (isHandle && hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_ADDED && params.getLong("belongEmpArchiveId") == null) {
                     return JsonResultKit.ofError("当前雇员的基本公积金档案不存在，请先办理基本公积金");
                 }
@@ -184,7 +199,6 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 break;
         }
 
-        inputHfEmpTask.setHfEmpAccount(params.getString("hfEmpAccount"));
         inputHfEmpTask.setOperationRemind(params.getInteger("operationRemind"));
         String operationRemindDateStr = params.getString("operationRemindDate");
         if (StringUtils.isNotBlank(operationRemindDateStr)) {

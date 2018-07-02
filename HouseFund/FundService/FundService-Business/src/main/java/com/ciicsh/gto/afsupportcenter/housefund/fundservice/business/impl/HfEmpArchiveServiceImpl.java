@@ -1,8 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpArchiveService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpArchiveConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpArchiveMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.EmpAccountImpXsl;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
@@ -167,6 +171,29 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
     public HfEmpInfoBO getHfEmpInfoById(String companyId, String employeeId) {
         HfEmpInfoBO hfEmpInfoBO = baseMapper.getHfEmpInfoById(companyId,employeeId);
         return hfEmpInfoBO;
+    }
+
+    @Override
+    public boolean isEmpAccountNotExists(String empAccount, int hfType, String employeeId, boolean isIncludeClosed) {
+        Wrapper<HfEmpArchive> wrapper = new EntityWrapper<>();
+        wrapper.where("is_active = 1")
+            .and("hf_emp_account = {0}", empAccount)
+            .and("hf_type = {0}", hfType);
+        wrapper.orderBy("created_time", false);
+        List<HfEmpArchive> hfEmpArchiveList = selectList(wrapper);
+
+        if (CollectionUtils.isNotEmpty(hfEmpArchiveList)) {
+            HfEmpArchive hfEmpArchive = hfEmpArchiveList.get(0);
+
+            if (StringUtils.isNotEmpty(employeeId) && employeeId.equals(hfEmpArchive.getEmployeeId())
+                && (!isIncludeClosed || hfEmpArchive.getArchiveStatus() == HfEmpArchiveConstant.ARCHIVE_STATUS_CLOSED)
+                ) {
+                return true;
+            }
+
+            return false;
+        }
+        return true;
     }
 
     private String parseValue(String value) {
