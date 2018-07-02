@@ -164,7 +164,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                     return JsonResultKit.ofError("当前任务单费用段信息为空");
                 }
                 if (StringUtils.isNotEmpty(inputHfEmpTask.getHfEmpAccount())) {
-                    boolean isNotExists = hfEmpArchiveService.isEmpAccountNotExists(inputHfEmpTask.getHfEmpAccount(), hfEmpTask.getHfType(), hfEmpTask.getEmployeeId(), true);
+                    boolean isNotExists = hfEmpArchiveService.isEmpAccountNotExists(inputHfEmpTask.getHfEmpAccount(), hfEmpTask.getHfType(), hfEmpTask.getEmployeeId(), false);
 
                     if (!isNotExists) {
                         return JsonResultKit.ofError(String.format("该%s公积金账号属于其他雇员，请核查", (hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC)? "基本" : "补充"));
