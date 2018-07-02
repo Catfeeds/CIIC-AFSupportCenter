@@ -73,7 +73,8 @@
             e.id_num,
             sca.ss_account_type
             FROM ss_emp_task et
-            LEFT JOIN ss_emp_archive ea ON ea.company_id = et.company_id AND et.employee_id = ea.employee_id AND ea.is_active = 1 AND ea.archive_status!=3
+            LEFT JOIN ss_emp_archive ea ON ea.company_id = et.company_id AND et.employee_id = ea.employee_id AND ea.is_active = 1 AND ((
+                ea.archive_status!=3 AND et.emp_archive_id IS NULL) OR et.emp_archive_id = ea.emp_archive_id)
             LEFT JOIN emp_employee e on e.employee_id = et.employee_id
             LEFT JOIN ss_account_com_relation sacr ON sacr.company_id = et.company_id AND sacr.is_active = 1
             LEFT JOIN ss_com_account sca ON sca.com_account_id = sacr.com_account_id AND sca.is_active =1

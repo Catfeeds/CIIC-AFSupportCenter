@@ -57,6 +57,9 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
     public SsEmpArchiveBO queryByEmpTaskId(String empTaskId, String operatorType) {
         SsEmpArchiveBO ssEmpArchiveBO = new SsEmpArchiveBO();
         try {
+            //再查询本地数据库中已存在的数据
+            ssEmpArchiveBO = baseMapper.queryByEmpTaskId(empTaskId);
+
             if ("1".equals(operatorType) || "2".equals(operatorType) || "12".equals(operatorType) || "13".equals(operatorType)) {
                 SsEmpTask ssEmpTask = ssEmpTaskService.selectById(empTaskId);
                 //查询证件号码
@@ -75,15 +78,14 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
                         }
                     }
                 }
-                ssEmpArchiveBO.setInDate(ssEmpTask.getInDate());
-                ssEmpArchiveBO.setEmployeeId(ssEmpTask.getEmployeeId());
+                if (null == ssEmpArchiveBO.getEmpArchiveId()) {
+                    ssEmpArchiveBO.setInDate(ssEmpTask.getInDate());
+                    ssEmpArchiveBO.setEmployeeId(ssEmpTask.getEmployeeId());
+                    ssEmpArchiveBO.setOldEmpBase(ssEmpTask.getEmpBase());
+                }
                 ssEmpArchiveBO.setSsEmpTask(ssEmpTask);
-                ssEmpArchiveBO.setOldEmpBase(ssEmpTask.getEmpBase());
             } else {
                 //先调用外部接口查询雇员信息
-
-                //再查询本地数据库中已存在的数据
-                ssEmpArchiveBO = baseMapper.queryByEmpTaskId(empTaskId);
 
                 if (null == ssEmpArchiveBO.getEmpArchiveId()) {
                     EntityWrapper<SsEmpArchive> entityWrapper = new EntityWrapper<>();
@@ -95,6 +97,7 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
                         ssEmpArchiveBO.setEmpArchiveId(ssEmpArchive.getEmpArchiveId());
                     }
                 }
+
                 //查询旧基数
                 if (null != ssEmpArchiveBO.getEmpArchiveId()) {
                     EntityWrapper<SsEmpBasePeriod> ew = new EntityWrapper<>();
