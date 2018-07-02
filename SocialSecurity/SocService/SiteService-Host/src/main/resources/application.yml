@@ -13,7 +13,7 @@ spring:
   application:
     name: support-center-soc-site-service
   profiles:
-    active: fat
+    active: dev
   http:
     multipart:
       enabled: true
