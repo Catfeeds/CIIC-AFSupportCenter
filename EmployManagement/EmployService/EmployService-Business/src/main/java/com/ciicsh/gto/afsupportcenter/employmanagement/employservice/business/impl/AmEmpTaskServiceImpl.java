@@ -673,28 +673,36 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             entity.setEmployeeId(amEmpTask.getEmployeeId());
             entity.setCompanyId(amEmpTask.getCompanyId());
             entity.setEmployOperateMan(userName);
+            entity.setHandleType(employeeBatchBO.getHandleType());
+            entity.setEmployWay(employeeBatchBO.getEmployWay());
 
             entity.setModifiedTime(now);
             entity.setModifiedBy(userId);
             entity.setIsActive(1);
 
-            AmRemark amRemark = new AmRemark();
-            amRemark.setEmpTaskId(emTaskId);
-            amRemark.setRemarkContent(employeeBatchBO.getRemarkContent());
-            amRemark.setRemarkType(1);
-            amRemark.setRemarkDate(LocalDate.now());
-            amRemark.setRemarkMan(userName);
-            amRemark.setCreatedBy(userId);
-            amRemark.setCreatedTime(now);
-            amRemark.setModifiedBy(userId);
-            amRemark.setModifiedTime(now);
+            if(!StringUtil.isEmpty(employeeBatchBO.getRemarkContent())){
+                AmRemark amRemark = new AmRemark();
+                amRemark.setEmpTaskId(emTaskId);
+                amRemark.setRemarkContent(employeeBatchBO.getRemarkContent());
+                amRemark.setRemarkType(1);
+                amRemark.setRemarkDate(LocalDate.now());
+                amRemark.setRemarkMan(userName);
+                amRemark.setCreatedBy(userId);
+                amRemark.setCreatedTime(now);
+                amRemark.setModifiedBy(userId);
+                amRemark.setModifiedTime(now);
 
-            amRemarkList.add(amRemark);
+                amRemarkList.add(amRemark);
+            }
+
 
             list.add(entity);
         }
 
-        amRemarkService.insertBatch(amRemarkList);
+        if(amRemarkList.size()>0)
+        {
+            amRemarkService.insertBatch(amRemarkList);
+        }
 
         AmEmpMaterialBO amEmpMaterialBO = new AmEmpMaterialBO();
         amEmpMaterialBO.setEmpTaskIdList(employeeBatchBO.getEmpTaskIds());
