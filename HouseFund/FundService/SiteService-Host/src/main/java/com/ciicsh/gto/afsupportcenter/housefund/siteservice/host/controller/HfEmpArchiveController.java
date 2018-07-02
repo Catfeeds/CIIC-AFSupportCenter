@@ -87,14 +87,10 @@ public class HfEmpArchiveController extends  BasicController<HfEmpArchiveService
 
     @RequestMapping("saveEmpAccount")
     @ResponseBody
-    public JsonResult<Boolean> saveEmpAccount(@RequestParam Map<String,String> updateDto){
+    public JsonResult saveEmpAccount(@RequestParam Map<String,String> updateDto){
 
-        boolean result=business.saveComAccount(updateDto);
-        if(result) {
-            return JsonResultKit.of(result);
-        }else {
-            return JsonResultKit.ofError("");
-        }
+        return business.saveComAccount(updateDto);
+
     }
 
     @RequestMapping(value = "/xlsImportEmpAccount",consumes = {"multipart/form-data"})

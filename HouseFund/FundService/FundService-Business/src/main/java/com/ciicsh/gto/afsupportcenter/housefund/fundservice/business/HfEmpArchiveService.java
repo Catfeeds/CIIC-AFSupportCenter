@@ -16,7 +16,7 @@ import java.util.Map;
 public interface HfEmpArchiveService extends IService<HfEmpArchive> {
     PageRows<HfEmpArchiveBo> queryEmpArchive(PageInfo pageInfo);
     Map<String, Object> viewEmpArchiveInfo(String empArchiveId , String companyId ,String employeeId);
-    boolean saveComAccount(Map<String,String> updateDto);
+    JsonResult saveComAccount(Map<String,String> updateDto);
     JsonResult xlsImportEmpAccount(List<EmpAccountImpXsl> opts, String fileName);
     int deleteHfEmpArchiveByEmpTaskIds(List<Long> empTaskIdList);
     Map queryHfEmpArchiveByEmpTaskIds(List<Long> empTaskIdList);

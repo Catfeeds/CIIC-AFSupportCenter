@@ -422,7 +422,7 @@
     </select>
     <!--根据身份证号+姓名找到雇员公积金账户信息-->
     <select id="selectEmpByCardIdAndName" resultType="java.util.Map">
-        SELECT ea.emp_archive_id,ea.hf_emp_account FROM
+        SELECT ea.emp_archive_id,ea.hf_emp_account,ea.employee_id FROM
         emp_employee emp INNER JOIN hf_emp_archive ea on ea.employee_id=emp.employee_id and ea.hf_type=1
         WHERE ea.is_active=1 and emp.employee_name = #{empName} and emp.id_num= #{idNum};
     </select>
