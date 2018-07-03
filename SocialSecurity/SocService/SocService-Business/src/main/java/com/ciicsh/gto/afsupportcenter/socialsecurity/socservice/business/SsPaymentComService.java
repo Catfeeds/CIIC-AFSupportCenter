@@ -52,6 +52,7 @@ public interface SsPaymentComService extends IService<SsPaymentCom> {
      */
     JsonResult<String> doAddBatch(SsAddPaymentBO ssAddPaymentBO);
 
+    JsonResult<String> addPaymentBatch(SsAddPaymentBO ssAddPaymentBO);
     /**
      * <p>Description: 从支付批次移除</p>
      *

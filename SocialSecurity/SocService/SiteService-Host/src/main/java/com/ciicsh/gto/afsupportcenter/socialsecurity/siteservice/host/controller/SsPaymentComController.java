@@ -95,10 +95,16 @@ public class SsPaymentComController  extends BasicController<SsPaymentComService
         com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsAddPaymentBO ssAddPaymentBO = CommonTransform.convertToEntity(ssAddPaymentDTO, com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsAddPaymentBO.class);
         //执行业务
         json = business.doAddBatch(ssAddPaymentBO);
-
         return json;
     }
-
+    //生成支付批次
+    @PostMapping("/addPaymentBatch")
+    public JsonResult<String> addPaymentBatch(SsAddPaymentBO ssAddPaymentDTO) {
+        JsonResult<String> json = new JsonResult<String>();
+        //执行业务
+        json = business.doAddBatch(ssAddPaymentDTO);
+        return json;
+    }
     /**
      * 从支付批次移出
      * @param ssDelPaymentDTO 移出条件条件

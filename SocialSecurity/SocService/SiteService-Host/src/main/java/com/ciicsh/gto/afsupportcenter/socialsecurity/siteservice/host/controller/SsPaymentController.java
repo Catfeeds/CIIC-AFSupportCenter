@@ -205,5 +205,8 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
         json = business.doRejection(ssPayment);
         return json;
     }
+
+
+
 }
 
