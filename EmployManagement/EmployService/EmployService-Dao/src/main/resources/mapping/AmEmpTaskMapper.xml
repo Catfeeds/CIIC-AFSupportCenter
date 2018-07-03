@@ -468,5 +468,13 @@
         SELECT  archive_direction from  emp_archive_direction  where id = #{id}
     </select>
 
+    <select id="queryIsFinish" resultMap="BaseResultMapDTO">
+        SELECT  emp_task_id  FROM  am_emp_task
+        where
+        is_finish = 1 and
+        <foreach collection="empTaskIds" item="item" open="emp_task_id IN (" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 
 </mapper>
