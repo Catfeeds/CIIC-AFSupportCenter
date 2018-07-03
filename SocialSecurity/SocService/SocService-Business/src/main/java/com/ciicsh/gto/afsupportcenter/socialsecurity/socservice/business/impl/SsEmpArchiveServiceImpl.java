@@ -81,8 +81,8 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
                 if (null == ssEmpArchiveBO.getEmpArchiveId()) {
                     ssEmpArchiveBO.setInDate(ssEmpTask.getInDate());
                     ssEmpArchiveBO.setEmployeeId(ssEmpTask.getEmployeeId());
-                    ssEmpArchiveBO.setOldEmpBase(ssEmpTask.getEmpBase());
                 }
+                ssEmpArchiveBO.setOldEmpBase(ssEmpTask.getEmpBase());
                 ssEmpArchiveBO.setSsEmpTask(ssEmpTask);
             } else {
                 //先调用外部接口查询雇员信息

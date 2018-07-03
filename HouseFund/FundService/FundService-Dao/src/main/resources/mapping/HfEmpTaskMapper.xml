@@ -734,7 +734,7 @@
         LEFT JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
         AND hea.is_active = 1 AND hea.hf_type = het.hf_type
         LEFT JOIN hf_emp_task hetl ON het.company_id = hetl.company_id AND het.employee_id = hetl.employee_id
-        AND hetl.is_active = 1 AND het.hf_type = hetl.hf_type AND het.task_category IN (1, 2, 3, 9, 10, 11) AND hetl.task_category IN (4, 5, 12, 13)
+        AND hetl.is_active = 1 AND het.hf_type = hetl.hf_type AND hetl.task_category IN (4, 5, 12, 13)
         LEFT JOIN (
             SELECT MIN(start_month) start_month, MAX(end_month) end_month, hetp.emp_task_id
             FROM hf_emp_task_period hetp
@@ -848,7 +848,7 @@
         LEFT JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
         AND hea.is_active = 1 AND hea.hf_type = het.hf_type
         LEFT JOIN hf_emp_task hetl ON het.company_id = hetl.company_id AND het.employee_id = hetl.employee_id
-        AND hetl.is_active = 1 AND het.hf_type = hetl.hf_type AND het.task_category IN (1, 2, 3, 9, 10, 11) AND hetl.task_category IN (4, 5, 12, 13)
+        AND hetl.is_active = 1 AND het.hf_type = hetl.hf_type AND hetl.task_category IN (4, 5, 12, 13)
         LEFT JOIN (
             SELECT MIN(start_month) start_month, MAX(end_month) end_month, hetp.emp_task_id
             FROM hf_emp_task_period hetp
