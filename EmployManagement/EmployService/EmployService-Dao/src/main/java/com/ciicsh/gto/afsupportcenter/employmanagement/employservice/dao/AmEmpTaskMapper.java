@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.EmployeeBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.EmployeeBatchBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.employSearchExportOpt;
 
@@ -50,5 +51,7 @@ public interface AmEmpTaskMapper extends BaseMapper<AmEmpTask> {
     EmployeeBO queryNature(String id);
 
     EmployeeBO queryArchiveDriection(String id);
+
+    List<AmEmpTaskBO> queryIsFinish(EmployeeBatchBO employeeBatchBO);
 
 }
