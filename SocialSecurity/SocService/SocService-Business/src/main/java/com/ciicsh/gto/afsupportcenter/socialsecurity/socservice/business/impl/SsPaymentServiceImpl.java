@@ -26,7 +26,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -173,7 +175,6 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
             }
         }
         return json;
-
     }
 
     @Override
@@ -366,4 +367,33 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         }
         return json;
     }
+
+    /**
+     * 反馈社保日常操作是否可办理，
+     * @param ssMonth
+     * @param companyId
+     * @return
+     */
+    public boolean ssCanDeal(String ssMonth,String companyId){
+
+        return  true;
+    }
+
+    /**
+     * 获取社保支付状态
+     * @param ssMonth
+     * @param companyId
+     * @return
+     */
+    public Map<String,String> getSsPaymentComStauts(String ssMonth, String companyId){
+        Map<String,String> map =new HashMap<>();
+        return map;
+    }
+    /**
+     * 更新支付状态为未到账，前提状态是可付，
+     */
+    public void updateSsPaymentComStatus(String ssMonth,String companyId){
+
+    }
+
 }

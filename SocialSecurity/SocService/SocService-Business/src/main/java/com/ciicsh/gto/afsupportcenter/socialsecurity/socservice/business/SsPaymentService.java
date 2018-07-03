@@ -9,6 +9,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -92,5 +93,12 @@ public interface SsPaymentService extends IService<SsPayment> {
      */
     JsonResult<String> doRejection(SsPayment ssPayment);
 
+    /**
+     * 根据社保月份，客户ID，返回是否可办理
+     */
+    boolean ssCanDeal(String ssMonth,String companyId);
 
+    Map<String,String> getSsPaymentComStauts(String ssMonth, String companyId);
+
+    void updateSsPaymentComStatus(String ssMonth,String companyId);
 }
