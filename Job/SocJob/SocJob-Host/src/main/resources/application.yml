@@ -1,3 +1,9 @@
+info:
+  app:
+    name: 支持中心Job后端服务模块
+    version: 1.0.0
+    description: 支持中心Job后端服务模块
+
 server:
   port: 6033
   context-path: /
