@@ -1,7 +1,7 @@
 spring:
   boot:
     admin:
-      url: http://172.16.9.31:9625
+      url: http://172.16.9.68:9625
       client:
         prefer-ip: true
       api-path: instances
