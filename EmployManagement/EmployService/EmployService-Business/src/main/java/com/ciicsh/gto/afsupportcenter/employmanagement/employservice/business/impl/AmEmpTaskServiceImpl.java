@@ -573,7 +573,6 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 entity.setCreatedTime(now);
                 entity.setCreatedBy(ReasonUtil.getUserId());
             }
-
             if(yuliuDocNumInt!=null){
                 yuliuDocNumInt = yuliuDocNumInt + i;
                 entity.setYuliuDocNum(yuliuDocNumInt.toString());
