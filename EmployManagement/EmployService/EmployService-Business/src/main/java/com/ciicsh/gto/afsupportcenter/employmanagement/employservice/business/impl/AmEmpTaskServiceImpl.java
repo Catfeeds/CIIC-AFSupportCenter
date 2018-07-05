@@ -102,6 +102,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             for (int i = 0; i < arr.length; i++) {
                 param.add(arr[i]);
             }
+            if(amEmpTaskBO.getParams().indexOf("material_name")!=-1){
+                amEmpTaskBO.setMaterial("1");
+            }
         }
 
         amEmpTaskBO.setParam(param);
@@ -544,8 +547,14 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         List<AmEmpTask> amEmpTaskList = new ArrayList<>();
         String yuliuDocNum = amArchiveBO.getYuliuDocNum();
         String docNum = amArchiveBO.getDocNum();
-        Integer yuliuDocNumInt = Integer.parseInt(yuliuDocNum);
-        Integer docNumInt = Integer.parseInt(docNum);
+        Integer yuliuDocNumInt = null;
+        if(!StringUtil.isEmpty(yuliuDocNum)){
+            yuliuDocNumInt = Integer.parseInt(yuliuDocNum);
+        }
+        Integer docNumInt = null;
+        if(!StringUtil.isEmpty(docNum)){
+            docNumInt = Integer.parseInt(docNum);
+        }
 
         int i = 0;
         for(AmEmployment temp:amEmploymentBOList)
@@ -564,11 +573,14 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 entity.setCreatedTime(now);
                 entity.setCreatedBy(ReasonUtil.getUserId());
             }
-
-            yuliuDocNumInt = yuliuDocNumInt + i;
-            docNumInt = docNumInt + i;
-            entity.setYuliuDocNum(yuliuDocNumInt.toString());
-            entity.setDocNum(docNumInt.toString());
+            if(yuliuDocNumInt!=null){
+                yuliuDocNumInt = yuliuDocNumInt + i;
+                entity.setYuliuDocNum(yuliuDocNumInt.toString());
+            }
+            if(docNumInt!=null){
+                docNumInt = docNumInt + i;
+                entity.setDocNum(docNumInt.toString());
+            }
             ++i;
 
             entity.setEmploymentId(temp.getEmploymentId());

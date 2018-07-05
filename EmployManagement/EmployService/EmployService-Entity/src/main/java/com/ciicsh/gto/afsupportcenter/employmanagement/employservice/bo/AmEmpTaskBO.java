@@ -202,6 +202,16 @@ public class AmEmpTaskBO extends AmEmpTask {
 
     private String cici;
 
+    private String material;
+
+    public String getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(String material) {
+        this.material = material;
+    }
+
     public String getCici() {
         return cici;
     }
