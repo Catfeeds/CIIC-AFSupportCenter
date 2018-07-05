@@ -59,6 +59,12 @@ public class AmArchiveUkey implements Serializable {
     private String companyName;
 
     /**
+     * 服务中心
+     */
+    @TableField("service_center")
+    private String serviceCenter;
+
+    /**
      * 组织机构代码
      */
     @TableField("organization_code")
@@ -135,6 +141,14 @@ public class AmArchiveUkey implements Serializable {
      */
     @TableField("modified_by")
     private String modifiedBy;
+
+    public String getServiceCenter() {
+        return serviceCenter;
+    }
+
+    public void setServiceCenter(String serviceCenter) {
+        this.serviceCenter = serviceCenter;
+    }
 
     public String getCompanyId() {
         return companyId;
