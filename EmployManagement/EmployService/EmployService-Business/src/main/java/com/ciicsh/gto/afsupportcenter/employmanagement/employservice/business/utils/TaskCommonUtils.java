@@ -49,7 +49,7 @@ public class TaskCommonUtils {
             Result result = commonApiUtils.completeTask(taskRequestDTO);
             handleWorkflowResult(result);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new BusinessException("调用工作流异常");
         }
     }

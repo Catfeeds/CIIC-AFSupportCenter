@@ -543,18 +543,15 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
         List<AmEmploymentBO> amEmploymentBOList = amEmploymentService.queryAmEmploymentBatch(Arrays.asList(amArchiveBO.getEmpTaskIds()));
 
+        if(amEmploymentBOList==null||amEmploymentBOList.size()==0){
+            map.put("size",false);
+            return  map;
+        }
+
         List<AmArchive> amArchiveList = new ArrayList<>();
         List<AmEmpTask> amEmpTaskList = new ArrayList<>();
-        String yuliuDocNum = amArchiveBO.getYuliuDocNum();
+        String ylDocNum = amArchiveBO.getYuliuDocNum();
         String docNum = amArchiveBO.getDocNum();
-        Integer yuliuDocNumInt = null;
-        if(!StringUtil.isEmpty(yuliuDocNum)){
-            yuliuDocNumInt = Integer.parseInt(yuliuDocNum);
-        }
-        Integer docNumInt = null;
-        if(!StringUtil.isEmpty(docNum)){
-            docNumInt = Integer.parseInt(docNum);
-        }
 
         int i = 0;
         for(AmEmployment temp:amEmploymentBOList)
@@ -573,12 +570,12 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 entity.setCreatedTime(now);
                 entity.setCreatedBy(ReasonUtil.getUserId());
             }
-            if(yuliuDocNumInt!=null){
-                yuliuDocNumInt = yuliuDocNumInt + i;
-                entity.setYuliuDocNum(yuliuDocNumInt.toString());
+            if(!StringUtil.isEmpty(ylDocNum)){
+                Integer  ylDocNumInt = Integer.parseInt(ylDocNum) + i;
+                entity.setYuliuDocNum(ylDocNumInt.toString());
             }
-            if(docNumInt!=null){
-                docNumInt = docNumInt + i;
+            if(!StringUtil.isEmpty(docNum)){
+                Integer docNumInt = Integer.parseInt(docNum) + i;
                 entity.setDocNum(docNumInt.toString());
             }
             ++i;
@@ -620,6 +617,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 AmArchiveDocSeq seq = new AmArchiveDocSeq();
                 seq.setType(1);
                 seq.setDocType(amArchiveBO.getYuliuDocType());
+                Integer yuliuDocNumInt = Integer.parseInt(amArchiveBO.getYuliuDocNum())+i-1;
                 seq.setDocSeq(yuliuDocNumInt);
                 List<AmArchiveDocSeqBO> list1 = amArchiveService.queryCountHaveAbove(seq);
                 // 比原有的seq要大
@@ -632,6 +630,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 AmArchiveDocSeq seq2 = new AmArchiveDocSeq();
                 seq2.setType(2);
                 seq2.setDocType(amArchiveBO.getDocType());
+                Integer docNumInt = Integer.parseInt(amArchiveBO.getDocNum())+i-1;
                 seq2.setDocSeq(docNumInt);
                 List<AmArchiveDocSeqBO> list2 = amArchiveService.queryCountHaveAbove(seq2);
                 // 比原有的seq要大
