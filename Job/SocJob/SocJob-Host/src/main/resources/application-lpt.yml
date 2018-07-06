@@ -18,7 +18,6 @@ spring:
         prefer-ip: true
       api-path: instances
 
-#spring cloud eureka
 eureka:
   client:
     serviceUrl:

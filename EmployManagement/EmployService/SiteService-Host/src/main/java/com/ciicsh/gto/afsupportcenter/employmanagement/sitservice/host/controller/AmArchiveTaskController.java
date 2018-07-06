@@ -214,7 +214,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         /**
          * 获取雇员信息
          */
-        AmEmpEmployeeBO amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amTaskParamBO.getEmpTaskId());
+        AmEmpEmployeeBO amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amTaskParamBO.getEmpTaskId(),2);
 
         AmCustomBO amCustomBO = amEmpCustomService.getCustom(amTaskParamBO.getEmpTaskId());
 

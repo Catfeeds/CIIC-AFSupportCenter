@@ -1,3 +1,8 @@
+info:
+  app:
+    name: 支持中心Job后端服务模块
+    version: 1.0.0
+    description: 支持中心Job后端服务模块
 #项目启动端口
 server:
   port: 6035

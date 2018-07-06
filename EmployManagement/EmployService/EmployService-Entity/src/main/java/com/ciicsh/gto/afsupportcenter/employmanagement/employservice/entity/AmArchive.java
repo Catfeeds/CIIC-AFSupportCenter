@@ -253,7 +253,7 @@ public class AmArchive implements Serializable {
      * 退工档案费缴至
      */
 	@TableField("resign_doc_payment_to")
-	private String resignDocPaymentTo;
+	private LocalDate resignDocPaymentTo;
     /**
      * 支付档案费金额
      */
@@ -695,11 +695,11 @@ public class AmArchive implements Serializable {
 		this.closeFeeDate = closeFeeDate;
 	}
 
-	public String getResignDocPaymentTo() {
+	public LocalDate getResignDocPaymentTo() {
 		return resignDocPaymentTo;
 	}
 
-	public void setResignDocPaymentTo(String resignDocPaymentTo) {
+	public void setResignDocPaymentTo(LocalDate resignDocPaymentTo) {
 		this.resignDocPaymentTo = resignDocPaymentTo;
 	}
 

@@ -24,5 +24,6 @@ eureka:
     serviceUrl:
       defaultZone: "http://172.16.9.68:9602/eureka"  #fat注册中心eureka地址
 
+
 druid:
   configPath:  /data/appdatas/gt1/gtobusinessdb_lpt.properties

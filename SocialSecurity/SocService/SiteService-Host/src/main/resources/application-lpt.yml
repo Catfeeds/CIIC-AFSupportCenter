@@ -5,24 +5,20 @@ spring:
     port: 6379
     password: redis
     timeout: 1000
-  cloud:
-    stream:
-      kafka:
-        binder:
-          brokers: 172.16.9.64:9092
-          zk-nodes: 172.16.9.64:2181
   boot:
     admin:
       url: http://172.16.9.68:9625
       client:
         prefer-ip: true
       api-path: instances
-
 #spring cloud eureka
 eureka:
   client:
     serviceUrl:
       defaultZone: "http://172.16.9.68:9602/eureka"  #fat注册中心eureka地址
+
+seaweed:
+  masterHost: "172.16.9.19:9333"
 
 druid:
   configPath:  /data/appdatas/gt1/gtobusinessdb_lpt.properties
