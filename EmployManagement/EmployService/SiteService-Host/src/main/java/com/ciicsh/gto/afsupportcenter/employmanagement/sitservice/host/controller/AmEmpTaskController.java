@@ -575,6 +575,12 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         Map<String,Object>  map  = business.batchSaveEmployee(amArchiveBO);
         Boolean result = (Boolean)map.get("result");
 
+        if(null!=map.get("size"))
+        {
+            amArchiveBO.setRemark("请先保存用工");
+            return JsonResultKit.of(amArchiveBO);
+        }
+
         if(result)
         {
             /**
