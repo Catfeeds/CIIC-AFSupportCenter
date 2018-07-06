@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/soc/messageservice")
+@RequestMapping("/hf/messageservice")
 public class MessageController {
 
     @Autowired
@@ -22,6 +22,8 @@ public class MessageController {
     public JsonResult<String> summaryCalculate(@RequestParam Long comAccountId, @RequestParam String ssMonth, @RequestParam String generalMethod,
                                                @RequestParam(required=false) String userName){
         String key = "-com-account-"+comAccountId+"-"+ssMonth+"-"+generalMethod+"-";
+        System.out.println("==========");
+       //System.out.println("=========="+ RedisManager.getStr("max_name"));
         SocReportMessage message = RedisManager.get(key,SocReportMessage.class);
         JsonResult<String> json = new JsonResult();
         if(null != message){
