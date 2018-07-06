@@ -251,13 +251,6 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         return JsonResultKit.of(retListPrint);
     }
 
-    @Override
-    public JsonResult printRemittedBookByReport(String companyId, String hfMonth, Integer hfType,Integer hfAccountType) {
-        HfRemittedBookParam hfRemittedBookParam = new HfRemittedBookParam();
-
-        baseMapper.printRemittedBookByReport(hfRemittedBookParam);
-        return null;
-    }
 
     private JsonResult isCanPayment(HfPayment payment) {
         if (payment == null) {

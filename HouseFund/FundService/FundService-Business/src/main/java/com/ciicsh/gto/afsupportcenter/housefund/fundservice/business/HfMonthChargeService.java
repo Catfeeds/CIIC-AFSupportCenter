@@ -10,6 +10,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 
 import java.util.List;
 import java.util.Map;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 
 public interface HfMonthChargeService extends IService<HfMonthCharge> {
     /**
@@ -77,4 +78,8 @@ public interface HfMonthChargeService extends IService<HfMonthCharge> {
      * @param hfEmpTaskHandleBo
      */
     void getMonthChargeByInOut(HfEmpTaskHandleBo hfEmpTaskHandleBo);
+
+    PageRows<HfRimittedBookReportBO> queryHfRimittedBookReport(PageInfo pageInfo, String userId);
+
+    JsonResult printRemittedBook(Long comAccountClassId,String paymentMonth);
 }

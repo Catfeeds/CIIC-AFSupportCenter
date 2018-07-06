@@ -35,6 +35,5 @@ public interface HfPaymentMapper extends BaseMapper<HfPayment> {
 
     List<HfPrintRemittedBookBO> printRemittedBook(@Param("paymentId") Long paymentId, @Param("hfType") Integer hfType);
 
-    List<HfPrintRemittedBookBO> printRemittedBookByReport(HfRemittedBookParam hfRemittedBookParam);
 
 }

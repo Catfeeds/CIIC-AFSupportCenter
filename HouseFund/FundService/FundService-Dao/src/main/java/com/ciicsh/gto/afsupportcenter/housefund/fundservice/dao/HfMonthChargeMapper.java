@@ -69,4 +69,6 @@ public interface HfMonthChargeMapper extends BaseMapper<HfMonthCharge> {
     HfMonthChargeBo getMonthChargeByIn(HfMonthChargeBo hfMonthChargeBo);
     HfMonthChargeBo getMonthChargeByOut(HfMonthChargeBo hfMonthChargeBo);
     HfMonthChargeBo getMonthChargeByInOut(HfMonthChargeBo hfMonthChargeBo);
+
+    List<HfRimittedBookReportBO> queryHfRimittedBookReport(HFMonthChargeQueryBO hfMonthChargeQueryBO);
 }
