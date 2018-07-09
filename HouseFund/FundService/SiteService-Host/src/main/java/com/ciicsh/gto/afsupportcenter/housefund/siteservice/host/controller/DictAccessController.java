@@ -126,8 +126,8 @@ public class DictAccessController extends BasicController<CommonApiUtils> {
                 exists.add(new DefaultKeyValue(key, hfComAccountPaymentBank.getPaymentBankValue()));
             }
             DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.PAY_BANK_KEY, map, true);
-        } else {
-            DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.PAY_BANK_KEY, null, true);
+//        } else {
+//            DictUtil.getInstance().putDictByTypeValue(SocialSecurityConst.PAY_BANK_KEY, null, true);
         }
     }
 }
