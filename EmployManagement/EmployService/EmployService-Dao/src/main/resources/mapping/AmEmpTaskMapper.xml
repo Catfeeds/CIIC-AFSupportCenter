@@ -161,7 +161,11 @@
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
         </foreach>
-        order by a.created_time desc
+        order by
+        <foreach collection="orderParam" item="plid" open="" close="" separator="">
+            ${plid},
+        </foreach>
+        a.created_time desc
     </select>
 
     <select id="queryAmEmpTaskOther" resultMap="BaseResultMapDTO">

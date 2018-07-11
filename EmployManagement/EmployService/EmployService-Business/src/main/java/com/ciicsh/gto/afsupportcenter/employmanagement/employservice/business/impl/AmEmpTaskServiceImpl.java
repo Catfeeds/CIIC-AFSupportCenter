@@ -96,11 +96,19 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         AmEmpTaskBO amEmpTaskBO = pageInfo.toJavaObject(AmEmpTaskBO.class);
 
         List<String> param = new ArrayList<String>();
-
+        List<String> orderParam = new ArrayList<String>();
         if (!StringUtil.isEmpty(amEmpTaskBO.getParams())) {
             String arr[] = amEmpTaskBO.getParams().split(",");
             for (int i = 0; i < arr.length; i++) {
-                param.add(arr[i]);
+                if(!StringUtil.isEmpty(arr[i]))
+                {
+                    if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
+                        orderParam.add(arr[i]);
+                    }else {
+                        param.add(arr[i]);
+                    }
+                }
+
             }
             if(amEmpTaskBO.getParams().indexOf("material_name")!=-1){
                 amEmpTaskBO.setMaterial("1");
@@ -108,6 +116,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         }
 
         amEmpTaskBO.setParam(param);
+        amEmpTaskBO.setOrderParam(orderParam);
 
         if (null != amEmpTaskBO.getTaskStatus() && amEmpTaskBO.getTaskStatus() == 0) {
             amEmpTaskBO.setTaskStatus(null);

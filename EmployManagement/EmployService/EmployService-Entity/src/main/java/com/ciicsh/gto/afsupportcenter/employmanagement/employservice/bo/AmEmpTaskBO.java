@@ -204,6 +204,16 @@ public class AmEmpTaskBO extends AmEmpTask {
 
     private String material;
 
+    private List<String> orderParam;
+
+    public List<String> getOrderParam() {
+        return orderParam;
+    }
+
+    public void setOrderParam(List<String> orderParam) {
+        this.orderParam = orderParam;
+    }
+
     public String getMaterial() {
         return material;
     }
