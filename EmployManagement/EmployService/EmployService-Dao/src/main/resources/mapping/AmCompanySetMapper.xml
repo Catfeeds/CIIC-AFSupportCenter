@@ -62,7 +62,7 @@
     </resultMap>
 
     <select id="queryAmCompanySet" resultMap="BaseResultMapDTO">
-        SELECT  a.*,b.organization_code  from  am_company_set a LEFT JOIN sal_company b on a.company_id = b.company_id
+        SELECT  a.*,b.organization_code,b.key_code,b.key_pwd,key_seq,b.key_type  from  am_company_set a LEFT JOIN am_archive_ukey b on a.company_id = b.company_id
         where 1=1
         <if test="companyId!=null">
             and a.company_id = #{companyId}
