@@ -45,7 +45,19 @@
     </select>
 
     <update id="updateMaterialByTaskId">
-        UPDATE am_emp_material  set receive_name = #{receiveName},receive_date = #{receiveDate},receive_id = #{receiveId},modified_time = #{receiveDate},modified_by=#{receiveId} where  emp_task_id = #{empTaskId}
+        UPDATE am_emp_material
+        <set>
+            <if test="receiveName != null">receive_name=#{receiveName},</if>
+            <if test="receiveDate != null">receive_date=#{receiveDate},</if>
+            <if test="receiveId != null">receive_id=#{receiveId},</if>
+            <if test="receiveDate != null">modified_time=#{receiveDate},</if>
+            <if test="receiveId != null">modified_by=#{receiveId},</if>
+            <if test="rejectId != null">reject_id=#{rejectId},</if>
+            <if test="rejectName != null">reject_name=#{rejectName},</if>
+            <if test="rejectDate != null">reject_date=#{rejectDate}</if>
+        </set>
+            where
+              emp_task_id = #{empTaskId}
     </update>
 
     <update id="updateMaterialBatch">
