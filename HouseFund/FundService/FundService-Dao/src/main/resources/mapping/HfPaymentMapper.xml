@@ -31,8 +31,7 @@
         <result column="create_payment_date_string" property="createPaymentDateString" />
         <result column="finance_payment_date_string" property="financePaymentDateString" />
         <result column="pay_apply_code" property="payApplyCode" />
-
-
+        <result column="payment_way" property="paymentWay" />
     </resultMap>
 
     <resultMap id="PaymentComResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentComBO">
@@ -72,6 +71,7 @@
         hfp.payment_month,
         hfp.payment_state,
         hfp.pay_apply_code,
+        hfp.payment_way,
         hfps.payment_state_value,
         hfp.create_payment_user,
         DATE_FORMAT(hfp.create_payment_date, '%Y-%m-%d') AS create_payment_date_string,
