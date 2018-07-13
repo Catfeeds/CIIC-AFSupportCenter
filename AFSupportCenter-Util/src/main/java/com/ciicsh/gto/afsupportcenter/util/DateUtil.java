@@ -5,11 +5,13 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.chrono.ChronoZonedDateTime;
-import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class DateUtil {
+
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
+    private static DateTimeFormatter yyyyMMddHyphenFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 
     //转换日期类型
     public static Date localDateToDate(LocalDate localDate) {
@@ -28,9 +30,17 @@ public class DateUtil {
         ZoneId zoneId  = ZoneId.systemDefault();
         return instant.atZone(zoneId).toLocalDate();
     }
-    public static String plusMonth(String month,int months){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
+    public static String plusMonth(String month, int months){
         YearMonth hfMonthDate = YearMonth.parse(month , formatter);
         return hfMonthDate.plusMonths(months).format(formatter);
+    }
+
+    public static String minusMonth(String month, int months){
+        YearMonth hfMonthDate = YearMonth.parse(month , formatter);
+        return hfMonthDate.minusMonths(months).format(formatter);
+    }
+
+    public static String yyyyMMddHyphen(LocalDate localDate) {
+        return localDate.format(yyyyMMddHyphenFormatter);
     }
 }

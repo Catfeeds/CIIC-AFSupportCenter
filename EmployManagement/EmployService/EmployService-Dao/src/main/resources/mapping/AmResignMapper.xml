@@ -93,6 +93,7 @@
 
     <select id="queryAmResign" resultMap="BaseResultMapDTO">
         SELECT
+        DISTINCT
         a.emp_task_id,
         a.employee_id,
         a.company_id,
@@ -128,6 +129,7 @@
         LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = b.emp_task_id
+        LEFT JOIN am_emp_employee  e on e.emp_task_id = b.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
         WHERE
         a.task_category = '2'
@@ -146,6 +148,7 @@
 
     <select id="queryAmResignOther" resultMap="BaseResultMapDTO">
         SELECT
+        DISTINCT
         a.emp_task_id,
         a.employee_id,
         a.company_id,
@@ -160,7 +163,6 @@
         a.out_reason,
         a.out_date,
         f.job_centre_feedback_date,
-        d.employee_id,
         d.employee_name,
         d.id_num,
         d.id_card_type,
@@ -169,7 +171,6 @@
         c.archive_place,
         c.storage_out_date,
         c.employ_feedback,
-        c.luyong_handle_end,
         h.title,
         h.service_center,
         h.leader_ship_name,

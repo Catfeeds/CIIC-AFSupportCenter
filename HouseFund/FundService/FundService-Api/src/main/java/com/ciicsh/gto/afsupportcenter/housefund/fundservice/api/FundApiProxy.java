@@ -44,4 +44,24 @@ public interface FundApiProxy {
 
     @PostMapping("/getHfEmpInfo")
     JsonResult<List<HfEmpInfoDTO>> getHfEmpInfo(@RequestBody List<HfEmpInfoParamDTO> paramDTOList);
+
+    /**
+     * 接口调用方：雇员中心
+     * 根据客户Id获取客户公积金账户信息
+     * @param companyId
+     * @return
+     */
+    @PostMapping("/getHfComAccountByComId")
+    JsonResult<HfComAccountDTO> getHfComAccountByComId(@RequestParam("companyId") String companyId);
+
+    /**
+     * 接口调用方：雇员中心
+     * 根据客户Id和雇员Id获取雇员公积金信息
+     * @param companyId
+     * @param employeeId
+     * @return
+     */
+    @PostMapping("/getHfEmpInfoById")
+    JsonResult<HfEmpInfoDTO> getHfEmpInfoById(@RequestParam("companyId")String companyId,@RequestParam("employeeId")String employeeId);
+
 }

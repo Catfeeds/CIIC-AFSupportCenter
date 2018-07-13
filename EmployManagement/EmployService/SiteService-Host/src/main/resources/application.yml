@@ -1,3 +1,8 @@
+info:
+  app:
+    name: 支持中心雇佣管理Site后端服务模块
+    version: 1.0.0
+    description: 支持中心雇佣管理Site后端服务模块
 server:
   port: 6011
   context-path: /

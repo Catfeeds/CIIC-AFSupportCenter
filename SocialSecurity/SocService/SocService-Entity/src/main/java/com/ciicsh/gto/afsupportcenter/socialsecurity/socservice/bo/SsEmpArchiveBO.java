@@ -5,6 +5,8 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Date;
 
 public class SsEmpArchiveBO extends SsEmpArchive {
 
@@ -15,6 +17,8 @@ public class SsEmpArchiveBO extends SsEmpArchive {
     private String idNum;
     //企业社保账号
     private String ssAccount;
+    //养老金独立开户密码
+    private String ssPwd;
     //社保类型
     private Integer ssAccountType;
     //结算区县
@@ -39,6 +43,116 @@ public class SsEmpArchiveBO extends SsEmpArchive {
     private BigDecimal oldEmpBase;
     //客服经理
     private String leaderShipName;
+    //客服中心
+    private Integer serviceCenterValue;
+    //客服中心
+    private String serviceCenter;
+
+    private Integer empClassify;
+
+    private String zipCode;
+
+    private Integer idCardType;
+
+    private LocalDate laborStartDate;
+
+    private LocalDate laborEndDate;
+
+    private Integer afempStatus;
+
+    private LocalDate outOperateDate;
+
+    private String endMonth;
+
+    private Integer archiveTaskStatus;
+
+    @Override
+    public Integer getArchiveTaskStatus() {
+        return archiveTaskStatus;
+    }
+
+    @Override
+    public void setArchiveTaskStatus(Integer archiveTaskStatus) {
+        this.archiveTaskStatus = archiveTaskStatus;
+    }
+
+    @Override
+    public String getEndMonth() {
+        return endMonth;
+    }
+
+    @Override
+    public void setEndMonth(String endMonth) {
+        this.endMonth = endMonth;
+    }
+
+    public LocalDate getLaborStartDate() {
+        return laborStartDate;
+    }
+
+    public void setLaborStartDate(LocalDate laborStartDate) {
+        this.laborStartDate = laborStartDate;
+    }
+
+    public LocalDate getLaborEndDate() {
+        return laborEndDate;
+    }
+
+    public void setLaborEndDate(LocalDate laborEndDate) {
+        this.laborEndDate = laborEndDate;
+    }
+
+    public Integer getAfempStatus() {
+        return afempStatus;
+    }
+
+    public void setAfempStatus(Integer afempStatus) {
+        this.afempStatus = afempStatus;
+    }
+
+    public LocalDate getOutOperateDate() {
+        return outOperateDate;
+    }
+
+    public void setOutOperateDate(LocalDate outOperateDate) {
+        this.outOperateDate = outOperateDate;
+    }
+
+    @Override
+    public Integer getEmpClassify() {
+        return empClassify;
+    }
+
+    @Override
+    public void setEmpClassify(Integer empClassify) {
+        this.empClassify = empClassify;
+    }
+
+    @Override
+    public String getServiceCenter() {
+        return serviceCenter;
+    }
+
+    @Override
+    public void setServiceCenter(String serviceCenter) {
+        this.serviceCenter = serviceCenter;
+    }
+
+    public Integer getServiceCenterValue() {
+        return serviceCenterValue;
+    }
+
+    public String getSsPwd() {
+        return ssPwd;
+    }
+
+    public void setSsPwd(String ssPwd) {
+        this.ssPwd = ssPwd;
+    }
+
+    public void setServiceCenterValue(Integer serviceCenterValue) {
+        this.serviceCenterValue = serviceCenterValue;
+    }
 
     public String getEmployeeName() {
         return employeeName;
@@ -158,5 +272,21 @@ public class SsEmpArchiveBO extends SsEmpArchive {
 
     public void setLeaderShipName(String leaderShipName) {
         this.leaderShipName = leaderShipName;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public Integer getIdCardType() {
+        return idCardType;
+    }
+
+    public void setIdCardType(Integer idCardType) {
+        this.idCardType = idCardType;
     }
 }

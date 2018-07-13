@@ -46,6 +46,10 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
     private HfComAccountService hfComAccountService;
     @Autowired
     private HfEmpArchiveService hfEmpArchiveService;
+    @Autowired
+    private HfEmpPreInputService hfEmpPreInputService;
+    @Autowired
+    private HfMonthChargeService hfMonthChargeService;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
@@ -84,18 +88,25 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
             }
 
             if (StringUtils.isEmpty(hfEmpTaskHandleBo.getHfEmpAccount())) {
-//                Wrapper<HfEmpArchive> wrapper = new EntityWrapper<>();
-//                wrapper.where(" is_active = 1 AND company_id={0} AND employee_id={1} AND hf_type={2}",
-//                    hfEmpTaskHandleBo.getCompanyId(),
-//                    hfEmpTaskHandleBo.getEmployeeId(),
-//                    hfEmpTaskHandleBo.getHfType());
-//                wrapper.orderBy("created_time", false);
                 String empAccount = hfEmpArchiveService.getEmpAccountByEmployeeId(hfEmpTaskHandleBo.getEmployeeId(), hfEmpTaskHandleBo.getHfType());
-//                List<HfEmpArchive> hfEmpArchiveList = hfEmpArchiveService.selectList(wrapper);
-//                if (CollectionUtils.isNotEmpty(hfEmpArchiveList)) {
+
+                if (StringUtils.isEmpty(empAccount)) {
+                    EntityWrapper<HfEmpPreInput> wrapper = new EntityWrapper<>();
+                    wrapper.where("is_active = 1").and("employee_id = {0}", hfEmpTaskHandleBo.getEmployeeId());
+                    HfEmpPreInput hfEmpPreInput = hfEmpPreInputService.selectOne(wrapper);
+
+                    if (hfEmpPreInput != null) {
+                        if (hfEmpTaskHandleBo.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
+                            empAccount = hfEmpPreInput.getHfEmpBasAccount();
+                        } else {
+                            empAccount = hfEmpPreInput.getHfEmpAddAccount();
+                        }
+                    }
+                }
                 hfEmpTaskHandleBo.setHfEmpAccount(empAccount);
-//                }
             }
+
+            hfMonthChargeService.getMonthChargeByInOut(hfEmpTaskHandleBo);
 
             // 根据雇员档案ID获取雇员基本公积金汇缴月份段信息
             Map<String, Object> condition = new HashMap<>();
@@ -269,7 +280,7 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                 if (hfEmpTaskPeriods.size() > 1) {
                     return JsonResultKit.ofError("当前雇员任务单费用段数据不正确");
                 }
-                hfEmpTaskHandleBo.setEndMonth(hfEmpTaskPeriods.get(0).getEndMonth());
+//                hfEmpTaskHandleBo.setEndMonth(hfEmpTaskPeriods.get(0).getEndMonth());
             }
             hfEmpTaskHandleBo.setEmpTaskPeriods(hfEmpTaskPeriods);
 

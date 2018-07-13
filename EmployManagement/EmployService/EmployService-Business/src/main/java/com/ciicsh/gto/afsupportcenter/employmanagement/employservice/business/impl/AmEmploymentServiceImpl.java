@@ -2,6 +2,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.i
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmploymentBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.EmployeeBatchBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmploymentService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmEmploymentMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmployment;
@@ -119,6 +120,13 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
     @Override
     public List<AmEmploymentBO> queryAmEmploymentResign(Map<String, Object> param) {
         return baseMapper.queryAmEmploymentResign(param);
+    }
+
+    @Override
+    public List<AmEmploymentBO> queryAmEmploymentBatch(List<Long> empTaskIds) {
+        EmployeeBatchBO employeeBatchBO = new  EmployeeBatchBO();
+        employeeBatchBO.setEmpTaskIds(empTaskIds);
+        return baseMapper.queryAmEmploymentBatch(employeeBatchBO);
     }
 
 }

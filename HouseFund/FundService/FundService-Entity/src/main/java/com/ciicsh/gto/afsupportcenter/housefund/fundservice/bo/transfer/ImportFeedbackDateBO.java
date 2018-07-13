@@ -4,6 +4,7 @@ import cn.afterturn.easypoi.excel.annotation.Excel;
 import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import cn.afterturn.easypoi.handler.inter.IExcelModel;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.io.Serializable;
@@ -16,9 +17,11 @@ public class ImportFeedbackDateBO implements Serializable, IExcelModel {
 
     @Excel(name = "雇员编号" )
     @NotBlank(message = "雇员编号不能为空")
+    @Length(max=16, message = "雇员编号最大长度为16位")
     private String employeeId;
     @Excel(name = "姓名", orderNum = "1")
     @NotBlank(message = "姓名不能为空")
+    @Length(max=100, message = "姓名最大长度为100位")
     private String employeeName;
     @Excel(name = "回单日期", orderNum = "2")
     @NotBlank(message = "回单日期不能为空")

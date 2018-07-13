@@ -42,6 +42,8 @@ public class SsComAccountBO {
 
     private Integer paymentWay;
 
+    private Integer paymentType;
+
     private Integer billReceiver;
 
     private Integer expireDate;

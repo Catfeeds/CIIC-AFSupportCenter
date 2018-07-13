@@ -16,6 +16,7 @@ public class HfMonthChargeBo implements Serializable {
     private List<Long> empTaskIdList;
     private Integer hfType;
     private String hfMonth;
+    private String hfStopMonth;
     private String ssMonthBelongStart;
     private String ssMonthBelongEnd;
     private String paymentTypes;

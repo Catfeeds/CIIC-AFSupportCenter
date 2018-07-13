@@ -65,14 +65,13 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
        for(AmResignBO amResignBO:data)
        {
-           if(null!=amResignBO.getLuyongHandleEnd()&&amResignBO.getLuyongHandleEnd()){
-               amResignBO.setLuyongHandleEndStr("是");
-           }else {
-               amResignBO.setLuyongHandleEndStr("否");
-           }
 
            if(!StringUtil.isEmpty(amResignBO.getResignFeedback())){
                amResignBO.setResignFeedback(ReasonUtil.getTgfk(amResignBO.getResignFeedback()));
+           }
+
+           if(!StringUtil.isEmpty(amResignBO.getEmployFeedback())){
+               amResignBO.setEmployFeedback(ReasonUtil.getYgfk(amResignBO.getEmployFeedback()));
            }
 
            if(amResignBO!=null&&amResignBO.getEmployCode()!=null)
@@ -166,7 +165,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
              */
             amEmployment = amEmploymentService.selectById(amTaskParamBO.getEmploymentId());
 
-            amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amEmployment.getEmpTaskId());
+            amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amEmployment.getEmpTaskId(),1);
 
             if(null!=amEmpEmployeeBO)
             {

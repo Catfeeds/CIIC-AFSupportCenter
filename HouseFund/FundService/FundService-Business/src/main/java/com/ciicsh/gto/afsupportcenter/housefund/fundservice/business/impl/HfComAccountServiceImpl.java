@@ -12,6 +12,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfComTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountDetailDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.GetComFundAccountListRequestDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
+import com.ciicsh.gto.afsupportcenter.util.constant.HouseFundConst;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
@@ -20,10 +21,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>
@@ -181,5 +179,23 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
             return JsonResultKit.ofError("保存数据异常！");
         }
         return JsonResultKit.of();
+    }
+
+    @Override
+    public ComAccountExtBo getHfComAccountByComId(String companyId) {
+        ComAccountExtBo comAccountExtBo = new ComAccountExtBo();
+        AccountInfoBO basicAccount = this.getAccountInfo(companyId,Integer.valueOf(HouseFundConst.HF_TYPE_BASE));
+        if(basicAccount!=null){
+            comAccountExtBo.setHfComAccount(basicAccount.getHfComAccount());
+            comAccountExtBo.setPaymentBank(basicAccount.getPaymentBank());
+            comAccountExtBo.setPaymentBankName(HouseFundConst.BANK_MAP.get(Optional.ofNullable(basicAccount.getPaymentBank()).orElse(-1).toString()));
+        }else {
+            return null;
+        }
+        basicAccount = this.getAccountInfo(companyId,Integer.valueOf(HouseFundConst.HF_TYPE_ADD));
+        if(basicAccount!=null){
+            comAccountExtBo.setHfComAccountBC(basicAccount.getHfComAccount());
+        }
+        return comAccountExtBo;
     }
 }

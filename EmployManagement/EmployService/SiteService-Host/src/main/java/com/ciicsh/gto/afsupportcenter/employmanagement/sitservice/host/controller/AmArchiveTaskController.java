@@ -214,7 +214,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         /**
          * 获取雇员信息
          */
-        AmEmpEmployeeBO amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amTaskParamBO.getEmpTaskId());
+        AmEmpEmployeeBO amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amTaskParamBO.getEmpTaskId(),2);
 
         AmCustomBO amCustomBO = amEmpCustomService.getCustom(amTaskParamBO.getEmpTaskId());
 
@@ -426,9 +426,6 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             bo.setModifiedTime(now);
             bo.setCreatedBy(userId);
             bo.setModifiedBy(userId);
-            bo.setRejectDate(LocalDate.now());
-            bo.setRejectId(userId);
-            bo.setRejectName(userName);
             bo.setSubmitterDate(LocalDate.now());
             if(bo.getEmpMaterialId()==null){
                 data.add(bo);

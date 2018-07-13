@@ -19,7 +19,7 @@ public interface HFStatementCompareService
      * @param hfComAccount
      * @return
      */
-    List<HFStatementCompareBO> getHFStatementCompareRecord(String hfMonth, String hfComAccount);
+    List<HFStatementCompareBO> getHFStatementCompareRecord(String hfMonth, String hfComAccount,String companyId);
 
     /**
      * 添加新的对账

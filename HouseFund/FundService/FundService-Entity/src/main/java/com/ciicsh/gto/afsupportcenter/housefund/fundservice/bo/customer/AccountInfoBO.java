@@ -53,6 +53,16 @@ public class AccountInfoBO {
      */
     private String remark;
 
+    private Integer paymentBank;
+
+    public Integer getPaymentBank() {
+        return paymentBank;
+    }
+
+    public void setPaymentBank(Integer paymentBank) {
+        this.paymentBank = paymentBank;
+    }
+
     public String getCompanyId() {
         return companyId;
     }

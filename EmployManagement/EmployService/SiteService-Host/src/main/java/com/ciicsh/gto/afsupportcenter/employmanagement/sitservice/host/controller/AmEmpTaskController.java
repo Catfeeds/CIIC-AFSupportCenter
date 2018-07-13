@@ -63,6 +63,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     @Autowired
     private  IAmEmpCustomService amEmpCustomService;
 
+    @Autowired
+    private IAmArchiveAdvanceService amArchiveAdvanceService;
+
 
     /**
      *用工资料任务单查询
@@ -169,7 +172,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         /**
          * 获取雇员信息
          */
-        AmEmpEmployeeBO amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amTaskParamBO.getEmpTaskId());
+        AmEmpEmployeeBO amEmpEmployeeBO = amEmpEmployeeService.queryAmEmployeeByTaskId(amTaskParamBO.getEmpTaskId(),0);
 
         AmCustomBO amCustomBO1 = amEmpCustomService.getCustom(amTaskParamBO.getEmpTaskId());
 
@@ -249,6 +252,18 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         if(null!=amArchiveBO){
             resultMap.put("amArchaiveBo",amArchiveBO);
+        }else{
+            // 是否能在档案预增中匹配
+            AmArchiveAdvanceBO advanceBO = amArchiveAdvanceService.queryAmArchiveAdvanceByNameIdcard(amEmpEmployeeBO.getEmployeeName(),amEmpEmployeeBO.getIdNum(),1);
+            if(advanceBO != null){
+                amArchiveBO = new AmArchiveBO();
+                amArchiveBO.setFormAdvance(true);
+                amArchiveBO.setYuliuDocType(advanceBO.getReservedArchiveType());
+                amArchiveBO.setYuliuDocNum(advanceBO.getReservedArchiveNo() == null ? "" : advanceBO.getReservedArchiveNo().toString());
+                amArchiveBO.setDocFrom(advanceBO.getArchiveSource());// 档案来源
+                amArchiveBO.setArchivePlace(advanceBO.getArchivalPlace());// 存档地
+                resultMap.put("amArchaiveBo",amArchiveBO);
+            }
         }
 
         // 预留档案类别
@@ -368,28 +383,26 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
     @PostMapping("/saveAmRemark")
     @Log("保存用工备注信息")
-    public JsonResult  saveAmRemark(@RequestBody List<AmRemark> list) {
+    public JsonResult  saveAmRemark(AmRemark bo) {
 
-         for(AmRemark bo:list)
-         {
-             if(bo.getRemarkId()==null){
-                 LocalDateTime now = LocalDateTime.now();
-                 bo.setCreatedTime(now);
-                 bo.setModifiedTime(now);
-                 bo.setCreatedBy(ReasonUtil.getUserId());
-                 bo.setModifiedBy(ReasonUtil.getUserId());
-             }
-         }
+        if(bo.getRemarkId()==null)
+        {
+            LocalDateTime now = LocalDateTime.now();
+            bo.setCreatedTime(now);
+            bo.setModifiedTime(now);
+            bo.setCreatedBy(ReasonUtil.getUserId());
+            bo.setModifiedBy(ReasonUtil.getUserId());
+        }
 
         boolean result = false;
         try {
-            result = amRemarkService.insertOrUpdateBatch(list);
+            result = amRemarkService.insert(bo);
         } catch (Exception e) {
 
         }
         Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("result",result);
-        resultMap.put("data",list);
+        resultMap.put("data",bo);
 
         return JsonResultKit.of(resultMap);
 
@@ -555,6 +568,58 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         resultMap.put("docSeqList",boList);
         resultMap.put("docSeqList2",boList2);
         return JsonResultKit.of(resultMap);
+    }
+
+    @PostMapping("/saveBatchEmploy")
+    public JsonResult<AmArchiveBO>  saveBatchEmploy(@RequestBody AmArchiveBO amArchiveBO) {
+        Map<String,Object>  map  = business.batchSaveEmployee(amArchiveBO);
+        Boolean result = (Boolean)map.get("result");
+
+        if(null!=map.get("size"))
+        {
+            amArchiveBO.setRemark("请先保存用工");
+            return JsonResultKit.of(amArchiveBO);
+        }
+
+        if(result)
+        {
+            /**
+             * 如果数据保存成功并且用工完成，调用工作流
+             */
+            if(null!=amArchiveBO.getEmployFeedback()&&!"11".equals(amArchiveBO.getEmployFeedback()))
+            {
+                Map<String,Object> variables = new HashMap<>();
+                variables.put("status", ReasonUtil.getYgResult(amArchiveBO.getEmployFeedback()));
+                variables.put("remark",ReasonUtil.getYgfk(amArchiveBO.getEmployFeedback()));
+                String userName = "system";
+                try {
+                    userName = UserContext.getUser().getDisplayName();
+                } catch (Exception e) {
+
+                }
+                variables.put("assignee",userName);
+                List<String> taskIdList = (List<String>)map.get("taskIdList");
+                for(String taskId:taskIdList)
+                {
+                    TaskCommonUtils.completeTask(taskId,employeeInfoProxy,variables);
+                }
+                amArchiveBO.setEnd(true);
+            }
+        }
+
+        return JsonResultKit.of(amArchiveBO);
+    }
+
+    @RequestMapping("/batchSaveEmployment")
+    public JsonResult<Boolean> batchSaveEmployment(EmployeeBatchBO employeeBatchBO){
+        Boolean b = business.batchSaveEmployment(employeeBatchBO);
+        return  JsonResultKit.of(b);
+    }
+
+    @RequestMapping("/batchCheck")
+    public JsonResult  batchCheck(EmployeeBatchBO employeeBatchBO){
+        Map<String,Object>  map = business.batchCheck(employeeBatchBO);
+        return  JsonResultKit.of(map);
     }
 
 }

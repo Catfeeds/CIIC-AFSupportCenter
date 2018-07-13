@@ -25,7 +25,10 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -172,20 +175,19 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
             }
         }
         return json;
-
     }
 
     @Override
     public JsonResult<String> addPayment(SsPayment ssPayment) {
         JsonResult<String> json = new JsonResult<>();
         json.setCode(0);
-
         SsPayment newSsPayment = new SsPayment();
         //传入值
         newSsPayment.setPaymentMonth(ssPayment.getPaymentMonth());
-        newSsPayment.setPaymentBatchNum(ssPayment.getPaymentBatchNum());
         newSsPayment.setAccountType(ssPayment.getAccountType());
         //默认值
+        DateTimeFormatter formatter= DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        newSsPayment.setPaymentBatchNum( LocalDateTime.now().format(formatter).toString());
         newSsPayment.setPaymentState(3);
         newSsPayment.setTotalEmpCount(0);
         newSsPayment.setTotalCom(0);
@@ -195,7 +197,6 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         newSsPayment.setCreatedBy(UserContext.getUser().getDisplayName());
         newSsPayment.setModifiedBy(UserContext.getUser().getDisplayName());
         newSsPayment.setCreatedTime(LocalDateTime.now());
-
         baseMapper.insert(newSsPayment);
 
         return json;
@@ -366,4 +367,33 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         }
         return json;
     }
+
+    /**
+     * 反馈社保日常操作是否可办理，
+     * @param ssMonth
+     * @param companyId
+     * @return
+     */
+    public boolean ssCanDeal(String ssMonth,String companyId){
+
+        return  true;
+    }
+
+    /**
+     * 获取社保支付状态
+     * @param ssMonth
+     * @param companyId
+     * @return
+     */
+    public Map<String,String> getSsPaymentComStauts(String ssMonth, String companyId){
+        Map<String,String> map =new HashMap<>();
+        return map;
+    }
+    /**
+     * 更新支付状态为未到账，前提状态是可付，
+     */
+    public void updateSsPaymentComStatus(String ssMonth,String companyId){
+
+    }
+
 }

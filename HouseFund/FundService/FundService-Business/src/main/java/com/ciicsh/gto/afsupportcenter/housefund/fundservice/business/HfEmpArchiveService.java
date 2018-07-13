@@ -15,11 +15,14 @@ import java.util.Map;
 
 public interface HfEmpArchiveService extends IService<HfEmpArchive> {
     PageRows<HfEmpArchiveBo> queryEmpArchive(PageInfo pageInfo);
-    Map<String, Object> viewEmpArchiveInfo(String empArchiveId , String companyId);
-    boolean saveComAccount(Map<String,String> updateDto);
+    Map<String, Object> viewEmpArchiveInfo(String empArchiveId , String companyId ,String employeeId);
+    JsonResult saveComAccount(Map<String,String> updateDto);
     JsonResult xlsImportEmpAccount(List<EmpAccountImpXsl> opts, String fileName);
     int deleteHfEmpArchiveByEmpTaskIds(List<Long> empTaskIdList);
     Map queryHfEmpArchiveByEmpTaskIds(List<Long> empTaskIdList);
     String getEmpAccountByEmployeeId(String employeeId, Integer hfType);
     List<HfEmpInfoBO> getHfEmpArchiveInfo(List<HfEmpInfoParamBO> paramBoList);
+    HfEmpInfoBO getHfEmpInfoById(String companyId ,String employeeId);
+
+    boolean isEmpAccountNotExists(String empAccount, int hfType, String employeeId, boolean isIncludeClosed);
 }

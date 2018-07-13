@@ -140,8 +140,26 @@ public class SsPaymentCom implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+	private Integer ifCheck;
+    private String modifiedDisplayName;
 
-	public Long getPaymentComId() {
+    public String getModifiedDisplayName() {
+        return modifiedDisplayName;
+    }
+
+    public void setModifiedDisplayName(String modifiedDisplayName) {
+        this.modifiedDisplayName = modifiedDisplayName;
+    }
+
+    public Integer getIfCheck() {
+        return ifCheck;
+    }
+
+    public void setIfCheck(Integer ifCheck) {
+        this.ifCheck = ifCheck;
+    }
+
+    public Long getPaymentComId() {
 		return paymentComId;
 	}
 

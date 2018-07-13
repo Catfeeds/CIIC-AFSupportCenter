@@ -43,7 +43,7 @@ public class SsAccountComRelationServiceImpl extends ServiceImpl<SsAccountComRel
     }
 
     @Override
-    public AccountCompanyRelationOpt getAccountCompanyRelationByAccountId(Long comAccountId) {
+    public List<AccountCompanyRelationOpt> getAccountCompanyRelationByAccountId(Long comAccountId) {
         return baseMapper.getAccountCompanyRelationByAccountId(comAccountId);
     }
 }

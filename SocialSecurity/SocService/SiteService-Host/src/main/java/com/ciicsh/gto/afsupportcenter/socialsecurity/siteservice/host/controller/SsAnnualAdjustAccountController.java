@@ -153,7 +153,7 @@ public class SsAnnualAdjustAccountController extends BasicController<SsAnnualAdj
         importParams.setNeedVerfiy(true);
         importParams.setTitleRows(5);
         importParams.setLastOfInvalidRow(2);
-        importParams.setVerifyHanlder(new MyExcelVerifyHandler(fieldLengthMap, setValueMap, skipFields, null));
+        importParams.setVerifyHanlder(new MyExcelVerifyHandler(logApiUtil, fieldLengthMap, setValueMap, skipFields, null));
 
         try {
             ssFileImportService.deleteExistData(ssAnnualAdjustAccountEmpTempService, condition);

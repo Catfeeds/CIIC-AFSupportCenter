@@ -9,15 +9,13 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.dto.emptas
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskRollInBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskRollOutBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.AmEmpTaskOfSsService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpRefundService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskPeriodService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.AmEmpTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpRefund;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTaskFront;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTaskPeriod;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
@@ -72,6 +70,8 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     private CommonApiUtils commonApiUtils;
     @Autowired
     private AmEmpTaskOfSsService amEmpTaskOfSsService;
+    @Autowired
+    private SsEmpTaskFrontService ssEmpTaskFrontService;
     @Autowired
     private LogApiUtil logApiUtil;
 
@@ -164,7 +164,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         //查询该雇员是否还有其他已办理或者未办理的任务
         EntityWrapper<SsEmpTask> ew = new EntityWrapper<SsEmpTask>();
         ew.where("employee_id={0}", dto.getEmployeeId())
-            // .and("task_category={0}",dto.getTaskCategory())
+            .and("company_id={0}",dto.getCompanyId())
             .and("is_active=1")
             .and("emp_task_id!={0}", dto.getEmpTaskId())
             .and("task_status=1")
@@ -369,6 +369,32 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         } catch (IOException e) {
             logApiUtil.error(LogMessage.create().setTitle("SsEmpTaskController#employeeDailyOperatorDiskExport").setContent(e.getMessage()));
         }
+    }
+
+    @PostMapping("/queryHistoryEmpTask")
+    public JsonResult<List<SsEmpTask>> queryHistoryEmpTask(@RequestParam("empTaskId") String empTaskId) {
+        Long taskId = Long.parseLong(empTaskId);
+        SsEmpTask ssEmpTask = business.selectById(taskId);
+
+        //查询该雇员是否还有其他已办理或者未办理的任务
+        EntityWrapper<SsEmpTask> ew = new EntityWrapper<SsEmpTask>();
+        ew.where("employee_id={0}", ssEmpTask.getEmployeeId())
+            .and("company_id={0}",ssEmpTask.getCompanyId())
+            .and("is_active=1")
+            .and("emp_task_id!={0}", taskId)
+            .and("task_status>1")
+            .orderBy("created_time", false);
+        List<SsEmpTask> ssEmpTaskList = business.selectList(ew);
+        return JsonResultKit.of(ssEmpTaskList);
+    }
+
+    @PostMapping("/getOriginEmpTask")
+    public JsonResult<SsEmpTaskFront> getOriginEmpTask(@RequestParam("empTaskId") String empTaskId) {
+        EntityWrapper<SsEmpTaskFront> ew = new EntityWrapper<>();
+        ew.where("emp_task_id={0}", Long.parseLong(empTaskId))
+            .and("is_active=1");
+        SsEmpTaskFront ssEmpTaskFront = ssEmpTaskFrontService.selectOne(ew);
+        return JsonResultKit.of(ssEmpTaskFront);
     }
 
     /**

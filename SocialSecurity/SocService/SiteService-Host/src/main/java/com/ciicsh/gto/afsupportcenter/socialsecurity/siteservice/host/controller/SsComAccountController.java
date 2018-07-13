@@ -16,9 +16,7 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
@@ -128,6 +126,12 @@ public class SsComAccountController extends BasicController<SsComAccountService>
     public JsonResult<SsComAccount> getAccountByAccountId(@RequestParam("comAccountId") Long comAccountId) {
         SsComAccount comAccount = business.getAccountById(comAccountId);
         return JsonResultKit.of(comAccount);
+    }
+
+    @PostMapping("/ssComAccountSave")
+    public JsonResult ssComAccountSave(@RequestBody SsComAccount comAccount) {
+        business.updateById(comAccount);
+        return JsonResultKit.of();
     }
 
 }

@@ -195,6 +195,33 @@ public class FundApiController implements FundApiProxy{
         return JsonResult.success(resultDTOList);
     }
 
+    @Override
+    @ApiOperation(value = "获取企业社保账户信息接口", notes = "根据客户ID获取对象")
+    @ApiImplicitParam(name = "companyId", value = "客户Id", required = true, dataType = "String")
+    @PostMapping("/getHfComAccountByComId")
+    public JsonResult<HfComAccountDTO> getHfComAccountByComId(@RequestParam("companyId")String companyId) {
+        ComAccountExtBo comAccountExtBo = hfComAccountService.getHfComAccountByComId(companyId);
+        HfComAccountDTO hfComAccountDTO = new HfComAccountDTO();
+        if(comAccountExtBo!=null){
+            BeanUtils.copyProperties(comAccountExtBo,hfComAccountDTO);
+            return JsonResult.success(hfComAccountDTO,"数据获取成功");
+        }
+        return JsonResult.faultMessage("支持中心反馈：无数据");
+    }
+
+    @Override
+    @ApiOperation(value = "获取社保雇员信息接口", notes = "根据客户ID和雇员ID获取对象")
+    @PostMapping("/getHfEmpInfoById")
+    public JsonResult<HfEmpInfoDTO> getHfEmpInfoById(@RequestParam("companyId")String companyId, @RequestParam("employeeId")String employeeId) {
+        HfEmpInfoBO hfEmpInfoBO = hfEmpArchiveService.getHfEmpInfoById(companyId,employeeId);
+        HfEmpInfoDTO hfEmpInfoDTO=new HfEmpInfoDTO();
+        if(hfEmpInfoBO!=null){
+            BeanUtils.copyProperties(hfEmpInfoBO,hfEmpInfoDTO);
+            return JsonResult.success(hfEmpInfoDTO,"数据获取成功");
+        }
+        return JsonResult.faultMessage("支持中心反馈：无数据");
+    }
+
     private boolean checkHfParam(List<HfEmpInfoParamDTO> paramDTOList) {
         return paramDTOList != null ? true : false;
     }

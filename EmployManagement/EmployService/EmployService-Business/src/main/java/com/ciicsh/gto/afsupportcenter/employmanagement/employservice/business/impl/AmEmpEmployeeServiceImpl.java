@@ -32,7 +32,7 @@ public class AmEmpEmployeeServiceImpl extends ServiceImpl<AmEmpEmployeeMapper, A
 
 
     @Override
-    public AmEmpEmployeeBO queryAmEmployeeByTaskId(Long empTaskId) {
+    public AmEmpEmployeeBO queryAmEmployeeByTaskId(Long empTaskId,Integer type) {
 
         List<AmEmpEmployeeBO> list = baseMapper.queryAmEmployeeByTaskId(empTaskId);
 
@@ -61,11 +61,21 @@ public class AmEmpEmployeeServiceImpl extends ServiceImpl<AmEmpEmployeeMapper, A
             AmCompanySetBO amCompanySetBO1 = amCompanySetService.queryAmCompanySet(amCompanySetBO);
             if(amCompanySetBO1!=null)
             {
-                amEmpEmployeeBO.setEmploySpecial(ReasonUtil.removeMark(amCompanySetBO1.getEmploySpecial()));
-                amEmpEmployeeBO.setKeyType(amCompanySetBO1.getKeyType());
-                amEmpEmployeeBO.setKeyCode(amCompanySetBO1.getKeyCode());
-                amEmpEmployeeBO.setKeyPwd(amCompanySetBO1.getKeyPwd());
-                amEmpEmployeeBO.setKeyStatus(amCompanySetBO1.getKeyStatus());
+                String special="";
+                if(type==0)
+                {
+                    special = amCompanySetBO1.getEmploySpecial();
+                }else if(type==1){
+                    special = amCompanySetBO1.getRefuseSpecial();
+                }else if(type==2){
+                    special = amCompanySetBO1.getEmploySpecial()+amCompanySetBO1.getRefuseSpecial()+amCompanySetBO1.getArchiveSpecial();
+                }
+                amEmpEmployeeBO.setEmploySpecial(ReasonUtil.removeMark(special));
+                //已经LEFT JOIN Ukey 信息表 按组织机构代码已关联Ukey信息
+//                amEmpEmployeeBO.setKeyType(amCompanySetBO1.getKeyType());
+//                amEmpEmployeeBO.setKeyCode(amCompanySetBO1.getKeyCode());
+//                amEmpEmployeeBO.setKeyPwd(amCompanySetBO1.getKeyPwd());
+//                amEmpEmployeeBO.setKeyStatus(amCompanySetBO1.getKeyStatus());
 
                 amEmpEmployeeBO.setPhone(amCompanySetBO1.getPhone());
                 amEmpEmployeeBO.setPostCode(amCompanySetBO1.getPostCode());
@@ -115,11 +125,11 @@ public class AmEmpEmployeeServiceImpl extends ServiceImpl<AmEmpEmployeeMapper, A
             AmCompanySetBO amCompanySetBO1 = amCompanySetService.queryAmCompanySet(amCompanySetBO);
             if(amCompanySetBO1!=null)
             {
-                amEmpEmployeeBO.setEmploySpecial(ReasonUtil.removeMark(amCompanySetBO1.getEmploySpecial()));
-                amEmpEmployeeBO.setKeyType(amCompanySetBO1.getKeyType());
-                amEmpEmployeeBO.setKeyCode(amCompanySetBO1.getKeyCode());
-                amEmpEmployeeBO.setKeyPwd(amCompanySetBO1.getKeyPwd());
-                amEmpEmployeeBO.setKeyStatus(amCompanySetBO1.getKeyStatus());
+                amEmpEmployeeBO.setEmploySpecial(ReasonUtil.removeMark(amCompanySetBO1.getRefuseSpecial()));
+//                amEmpEmployeeBO.setKeyType(amCompanySetBO1.getKeyType());
+//                amEmpEmployeeBO.setKeyCode(amCompanySetBO1.getKeyCode());
+//                amEmpEmployeeBO.setKeyPwd(amCompanySetBO1.getKeyPwd());
+//                amEmpEmployeeBO.setKeyStatus(amCompanySetBO1.getKeyStatus());
             }
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -138,6 +148,16 @@ public class AmEmpEmployeeServiceImpl extends ServiceImpl<AmEmpEmployeeMapper, A
     public AmEmpEmployeeBO queryDefaultAmEmployee(AmTaskParamBO amTaskParamBO) {
         List<AmEmpEmployeeBO> list = baseMapper.queryAmEmployee(amTaskParamBO);
         if(list!=null&&list.size()>0)
+        {
+            return  list.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public AmEmpEmployeeBO queryAmEmployeeByTaskIdDefault(Long empTaskId) {
+        List<AmEmpEmployeeBO> list = baseMapper.queryAmEmployeeByTaskId(empTaskId);
+        if(null!=list&&list.size()>0)
         {
             return  list.get(0);
         }

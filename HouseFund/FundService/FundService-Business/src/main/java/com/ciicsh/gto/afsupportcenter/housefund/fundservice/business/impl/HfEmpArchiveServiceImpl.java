@@ -1,8 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpArchiveService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpArchiveConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpArchiveMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.EmpAccountImpXsl;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
@@ -13,6 +17,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -26,47 +31,69 @@ import java.util.*;
  */
 @Service
 public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfEmpArchive> implements HfEmpArchiveService {
+    @Autowired
+    HfEmpArchiveService hfEmpArchiveService;
 
     public PageRows<HfEmpArchiveBo> queryEmpArchive(PageInfo pageInfo) {
         HfEmpArchiveBo dto = pageInfo.toJavaObject(HfEmpArchiveBo.class);
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryEmpArchive(dto));
     }
 
-    public Map<String, Object> viewEmpArchiveInfo(String empArchiveId, String companyId) {
+    public Map<String, Object> viewEmpArchiveInfo(String empArchiveId, String companyId,String employeeId) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
-
-        HfEmpArchiveBo viewEmpArchiveBo = baseMapper.viewEmpArchive(empArchiveId);
-        HfArchiveBasePeriodBo viewEmpPeriodBo = baseMapper.viewEmpPeriod(empArchiveId, "1");//基本
-        HfArchiveBasePeriodBo viewEmpPeriodAddBo = baseMapper.viewEmpPeriod(empArchiveId, "2");//补充
+        HfEmpArchiveBo viewEmpArchiveBo=null;
+        if(empArchiveId == null){
+            viewEmpArchiveBo = baseMapper.viewEmpInfo(companyId,employeeId);
+        }else{
+            viewEmpArchiveBo = baseMapper.viewEmpArchive(empArchiveId);
+            HfArchiveBasePeriodBo viewEmpPeriodBo = baseMapper.viewEmpPeriod(empArchiveId, "1");//基本
+            HfArchiveBasePeriodBo viewEmpPeriodAddBo = baseMapper.viewEmpPeriod(empArchiveId, "2");//补充
+            List listEmpTaskPeriodBo = baseMapper.listEmpTaskPeriod(empArchiveId, "1");//基本
+            List listEmpTaskPeriodAddBo = baseMapper.listEmpTaskPeriod(empArchiveId, "2");//补充
+            List listEmpTransferBo = baseMapper.listEmpTransfer(empArchiveId);
+            resultMap.put("viewEmpPeriod", viewEmpPeriodBo);
+            resultMap.put("viewEmpPeriodAdd", viewEmpPeriodAddBo);
+            resultMap.put("listEmpTaskPeriod", listEmpTaskPeriodBo);
+            resultMap.put("listEmpTaskPeriodAdd", listEmpTaskPeriodAddBo);
+            resultMap.put("listEmpTransfer", listEmpTransferBo);
+        }
         HfComAccountBo viewComAccountBo = baseMapper.viewComAccount(companyId);
-        List listEmpTaskPeriodBo = baseMapper.listEmpTaskPeriod(empArchiveId, "1");//基本
-        List listEmpTaskPeriodAddBo = baseMapper.listEmpTaskPeriod(empArchiveId, "2");//补充
-        List listEmpTransferBo = baseMapper.listEmpTransfer(empArchiveId);
-
+        if (viewComAccountBo == null){
+            viewComAccountBo = new HfComAccountBo();
+        }
         HfEmpComBO hfEmpComBO = baseMapper.fetchManager(companyId, viewEmpArchiveBo.getEmployeeId());
         if(hfEmpComBO != null){
             org.springframework.beans.BeanUtils.copyProperties(hfEmpComBO, viewComAccountBo);
         }
+        if(viewComAccountBo.getCompanyId() == null){
+            viewComAccountBo.setCompanyId(viewEmpArchiveBo.getCompanyId());
+            viewComAccountBo.setTitle(viewEmpArchiveBo.getTitle());
+        }
         resultMap.put("viewEmpArchive", viewEmpArchiveBo);
-        resultMap.put("viewEmpPeriod", viewEmpPeriodBo);
-        resultMap.put("viewEmpPeriodAdd", viewEmpPeriodAddBo);
         resultMap.put("viewComAccount", viewComAccountBo);
-        resultMap.put("listEmpTaskPeriod", listEmpTaskPeriodBo);
-        resultMap.put("listEmpTaskPeriodAdd", listEmpTaskPeriodAddBo);
-        resultMap.put("listEmpTransfer", listEmpTransferBo);
+
         return resultMap;
     }
 
-    public boolean saveComAccount(Map<String, String> updateDto) {
+    public JsonResult saveComAccount(Map<String, String> updateDto) {
+        boolean isEmpAccountNotExists=true;
         try {
+            isEmpAccountNotExists = hfEmpArchiveService.isEmpAccountNotExists(updateDto.get("hfEmpAccount"),1,updateDto.get("employeeId"),false);
+            if(isEmpAccountNotExists==false){
+                return JsonResultKit.of(0, "基本公积金重复！");
+            }
             baseMapper.updateArchiveEmpAccount(updateDto.get("hfEmpAccount"), Long.valueOf(updateDto.get("empArchiveId")));
             if (Optional.ofNullable(updateDto.get("empArchiveIdBc")).isPresent()) {
+                isEmpAccountNotExists = hfEmpArchiveService.isEmpAccountNotExists(updateDto.get("hfEmpAccountBc"),2,updateDto.get("employeeId"),false);
+                if(isEmpAccountNotExists==false){
+                    return JsonResultKit.of(0, "补充公积金重复！");
+                }
                 baseMapper.updateArchiveEmpAccount(updateDto.get("hfEmpAccountBc"), Long.valueOf(updateDto.get("empArchiveIdBc")));
             }
         } catch (Exception e) {
-            return false;
+            return JsonResultKit.of(0, "保存异常！");
         }
-        return true;
+        return JsonResultKit.of(200, "保存成功！");
     }
 
     public JsonResult xlsImportEmpAccount(List<EmpAccountImpXsl> xls, String fileName) {
@@ -84,6 +111,12 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
                 Map map = baseMapper.selectEmpByCardIdAndName(xlsRecord.getEmpName(), xlsRecord.getIdNum());
                 if (map == null) {
                     type = 2;
+                    retStr.append(xlsRecord.getEmpName());
+                    break;
+                }
+                boolean isEmpAccountNotExists = hfEmpArchiveService.isEmpAccountNotExists(xlsRecord.getEmpAccount(),1, map.get("employee_id").toString(),false);
+                if(isEmpAccountNotExists==false){
+                    type = 4;
                     retStr.append(xlsRecord.getEmpName());
                     break;
                 }
@@ -105,6 +138,9 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
                 break;
             case 3:
                 ret = "保存导出数据是发生异常！";
+                break;
+            case 4:
+                ret = retStr.toString() + "基本公积金账号重复！";
                 break;
         }
         if (type == 0) {
@@ -150,6 +186,35 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
             resultBoList.add(resultBO);
         }
         return resultBoList;
+    }
+
+    @Override
+    public HfEmpInfoBO getHfEmpInfoById(String companyId, String employeeId) {
+        HfEmpInfoBO hfEmpInfoBO = baseMapper.getHfEmpInfoById(companyId,employeeId);
+        return hfEmpInfoBO;
+    }
+
+    @Override
+    public boolean isEmpAccountNotExists(String empAccount, int hfType, String employeeId, boolean isIncludeClosed) {
+        Wrapper<HfEmpArchive> wrapper = new EntityWrapper<>();
+        wrapper.where("is_active = 1")
+            .and("hf_emp_account = {0}", empAccount)
+            .and("hf_type = {0}", hfType);
+        wrapper.orderBy("created_time", false);
+        List<HfEmpArchive> hfEmpArchiveList = selectList(wrapper);
+
+        if (CollectionUtils.isNotEmpty(hfEmpArchiveList)) {
+            HfEmpArchive hfEmpArchive = hfEmpArchiveList.get(0);
+
+            if (StringUtils.isNotEmpty(employeeId) && employeeId.equals(hfEmpArchive.getEmployeeId())
+                && (!isIncludeClosed || hfEmpArchive.getArchiveStatus() == HfEmpArchiveConstant.ARCHIVE_STATUS_CLOSED)
+                ) {
+                return true;
+            }
+
+            return false;
+        }
+        return true;
     }
 
     private String parseValue(String value) {

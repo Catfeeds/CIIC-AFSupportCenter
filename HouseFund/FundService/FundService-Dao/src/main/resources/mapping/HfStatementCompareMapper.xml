@@ -80,6 +80,10 @@
             <if test="hfComAccount != null and hfComAccount != ''">
                 AND c.hf_com_account = #{hfComAccount}
             </if>
+            <if test="companyId != null and companyId != ''">
+                AND EXISTS (SELECT 1 FROM hf_account_com_relation acr WHERE acr.com_account_id=b.com_account_id AND acr.company_id like concat(concat('%',#{companyId}),'%'))
+            </if>
+
             ORDER  BY a.statement_compare_id DESC
         </where>
     </select>

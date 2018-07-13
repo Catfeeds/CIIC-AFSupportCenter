@@ -17,8 +17,11 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.enumeration.ProcessCategory;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,10 +32,7 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * <p>
@@ -42,7 +42,8 @@ import java.util.Optional;
 @Service
 public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper, SsEmpTaskFront> implements
     SsEmpTaskFrontService {
-
+    @Autowired
+    LogApiUtil logApiUtil;
     @Autowired
     private SsEmpTaskMapper ssEmpTaskMapper;
     @Autowired
@@ -238,6 +239,22 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
 
         //boolean insertRes = ssEmpTaskMapper.insertEmpTask(ssEmpTask);
         //resetTaskSubmitTime(ssEmpTask);
+        // 重复任务单校验
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("business_interface_id", ssEmpTask.getBusinessInterfaceId());
+        condition.put("task_id", ssEmpTask.getTaskId());
+        condition.put("is_change", ssEmpTask.getIsChange());
+        condition.put("is_active", 1);
+        List<SsEmpTask> ssEmpTaskList = ssEmpTaskMapper.selectByMap(condition);
+
+        if (CollectionUtils.isNotEmpty(ssEmpTaskList)) {
+            logApiUtil.warn(LogMessage.create().setTitle("SsEmpTaskFrontServiceImpl#saveSsEmpTask")
+                .setContent("任务单幂等校验未通过。business_interface_id=" + String.valueOf(ssEmpTask.getBusinessInterfaceId())
+                    + ", task_id=" + String.valueOf(ssEmpTask.getTaskId())
+                    + ", is_change=" + String.valueOf(ssEmpTask.getIsChange())));
+            ssEmpTask.setActive(false);
+        }
+
         Integer insertRes = ssEmpTaskMapper.insert(ssEmpTask);
         if (insertRes > 0) {
             List<SsEmpTaskFront> ssEmpTaskFrontList = new ArrayList<>();
@@ -257,13 +274,13 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
                         ssEmpTaskFront.setPersonalRatio(socialDto.getPersonalRatio());
                         ssEmpTaskFront.setPersonalBase(socialDto.getPersonalBase());
                         ssEmpTaskFront.setPersonalAmount(socialDto.getPersonalAmount());
-                        if (socialDto.getStartDate() != null) {
-                            ssEmpTaskFront.setStartMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getStartDate(), "yyyyMM")));
+                        if (ssEmpTask.getStartMonth() != null) {
+                            ssEmpTaskFront.setStartMonth(Integer.parseInt(ssEmpTask.getStartMonth()));
                         }
-                        if (socialDto.getEndDate() != null) {
-                            ssEmpTaskFront.setEndMonth(Integer.parseInt(StringUtil.dateToString(socialDto.getEndDate(), "yyyyMM")));
+                        if (ssEmpTask.getEndMonth() != null) {
+                            ssEmpTaskFront.setEndMonth(Integer.parseInt(ssEmpTask.getEndMonth()));
                         }
-                        ssEmpTaskFront.setActive(true);
+                        ssEmpTaskFront.setActive(ssEmpTask.getActive());
                         ssEmpTaskFront.setModifiedBy(afEmpAgreementDTO.getCreatedBy());
                         ssEmpTaskFront.setModifiedDisplayName(afEmpAgreementDTO.getCreatedDisplayName());
                         ssEmpTaskFront.setModifiedTime(LocalDateTime.now());

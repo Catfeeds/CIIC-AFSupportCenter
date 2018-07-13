@@ -131,11 +131,7 @@ public class AmCompanySet implements Serializable {
      */
 	@TableField("company_special19")
 	private Integer companySpecial19;
-    /**
-     * 网办并退工单送职介？？？
-     */
-	@TableField("company_special20")
-	private Integer companySpecial20;
+
     /**
      * 社保自办
      */
@@ -170,27 +166,6 @@ public class AmCompanySet implements Serializable {
      */
 	@TableField("social_special")
 	private String socialSpecial;
-	private Integer key;
-    /**
-     * Ukey类别
-     */
-	@TableField("key_type")
-	private String keyType;
-    /**
-     * Ukey编码
-     */
-	@TableField("key_code")
-	private String keyCode;
-    /**
-     * Ukey密码
-     */
-	@TableField("key_pwd")
-	private String keyPwd;
-    /**
-     * Ukey状态
-     */
-	@TableField("key_status")
-	private String keyStatus;
     /**
      * 是否有特殊
      */
@@ -421,14 +396,6 @@ public class AmCompanySet implements Serializable {
 		this.companySpecial19 = companySpecial19;
 	}
 
-	public Integer getCompanySpecial20() {
-		return companySpecial20;
-	}
-
-	public void setCompanySpecial20(Integer companySpecial20) {
-		this.companySpecial20 = companySpecial20;
-	}
-
 	public Integer getCompanySpecial21() {
 		return companySpecial21;
 	}
@@ -483,46 +450,6 @@ public class AmCompanySet implements Serializable {
 
 	public void setSocialSpecial(String socialSpecial) {
 		this.socialSpecial = socialSpecial;
-	}
-
-	public Integer getKey() {
-		return key;
-	}
-
-	public void setKey(Integer key) {
-		this.key = key;
-	}
-
-	public String getKeyType() {
-		return keyType;
-	}
-
-	public void setKeyType(String keyType) {
-		this.keyType = keyType;
-	}
-
-	public String getKeyCode() {
-		return keyCode;
-	}
-
-	public void setKeyCode(String keyCode) {
-		this.keyCode = keyCode;
-	}
-
-	public String getKeyPwd() {
-		return keyPwd;
-	}
-
-	public void setKeyPwd(String keyPwd) {
-		this.keyPwd = keyPwd;
-	}
-
-	public String getKeyStatus() {
-		return keyStatus;
-	}
-
-	public void setKeyStatus(String keyStatus) {
-		this.keyStatus = keyStatus;
 	}
 
 	public String getSpecial() {
@@ -638,7 +565,6 @@ public class AmCompanySet implements Serializable {
 			", companySpecial17=" + companySpecial17 +
 			", companySpecial18=" + companySpecial18 +
 			", companySpecial19=" + companySpecial19 +
-			", companySpecial20=" + companySpecial20 +
 			", companySpecial21=" + companySpecial21 +
 			", companySpecial22=" + companySpecial22 +
 			", remark=" + remark +
@@ -646,11 +572,6 @@ public class AmCompanySet implements Serializable {
 			", refuseSpecial=" + refuseSpecial +
 			", archiveSpecial=" + archiveSpecial +
 			", socialSpecial=" + socialSpecial +
-			", key=" + key +
-			", keyType=" + keyType +
-			", keyCode=" + keyCode +
-			", keyPwd=" + keyPwd +
-			", keyStatus=" + keyStatus +
 			", special=" + special +
 			", mailAdress=" + mailAdress +
 			", recipient=" + recipient +

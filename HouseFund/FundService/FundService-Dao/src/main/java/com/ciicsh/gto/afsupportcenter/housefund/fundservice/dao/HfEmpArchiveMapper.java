@@ -20,6 +20,7 @@ import java.util.Map;
 public interface HfEmpArchiveMapper extends BaseMapper<HfEmpArchive> {
     List<HfEmpArchiveBo> queryEmpArchive(HfEmpArchiveBo dto);
     HfEmpArchiveBo viewEmpArchive(@Param("empArchiveId")String empArchiveId);
+    HfEmpArchiveBo viewEmpInfo(@Param("companyId")String companyId,@Param("employeeId")String employeeId);
     HfComAccountBo viewComAccount(@Param("companyId")String companyId);
     HfArchiveBasePeriodBo viewEmpPeriod(@Param("empArchiveId")String empArchiveId, @Param("hfType")String hfType);
     List<HfEmpTaskPeriodBo> listEmpTaskPeriod(@Param("empArchiveId")String empArchiveId, @Param("hfType") String hfType);
@@ -31,4 +32,6 @@ public interface HfEmpArchiveMapper extends BaseMapper<HfEmpArchive> {
     HfEmpComBO fetchManager(@Param("companyId")String companyId, @Param("employeeId")String employeeId);
     String getEmpAccountByEmployeeId(@Param("employeeId")String employeeId, @Param("hfType") Integer hfType);
     List<HfEmpInfoDetailBO> getHfEmpInfo(@Param("employeeId")String employeeId, @Param("companyId")String companyId, @Param("hfMonthBelong")String hfMonthBelong);
+    HfEmpInfoBO getHfEmpInfoById(@Param("companyId")String companyId, @Param("employeeId")String employeeId);
+
 }

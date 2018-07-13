@@ -22,6 +22,9 @@ public interface SocialSecurityConst {
 //    public static final String HF_TASK_CATEGORY_KEY = "HFTaskCategory";
     public static final String EMP_ARCHIVE_STATUS = "EmpArchiveStatus";
 
+    String AF_EMP_OUT_REASON_KEY = "afEmpOutReason";
+    String BPO_EMP_OUT_REASON_KEY = "bpoEmpOutReason";
+
     String CENTER_BASIC_COM_ACCOUNT = "881383287";
     String CENTER_ADDED_COM_ACCOUNT = "881383288";
     String SHANGHAI_CITY_CODE = "310000";
@@ -216,11 +219,16 @@ public interface SocialSecurityConst {
     @Deprecated
     public static final Map<String, String> EMP_CLASSIFY_MAP = new HashMap<String, String>() {
         {
-            put("1", "本地");
-            put("2", "外地");
-            put("3", "外籍三险");
-            put("4", "外籍五险");
-            put("5", "延迟退休人员");
+            {
+                put("1", "上海人");
+                put("2", "外来城镇人员");
+                put("3", "外籍三险");
+                put("4", "外籍五险");
+                put("5", "非全日制仅工伤");
+                put("6", "柔性退休");
+                put("7", "工伤仅医疗");
+                put("8", "外籍互免");
+            }
         }
     };
 
@@ -357,6 +365,34 @@ public interface SocialSecurityConst {
         }
     };
 
+    Map<String, String> AF_EMP_OUT_REASON_MAP = new HashMap<String, String>() {
+        {
+            put("1", "辞职");
+            put("2", "协商解除");
+            put("3", "公司解聘");
+            put("4", "合同到期");
+            put("5", "关闭");
+            put("6", "出国");
+            put("7", "退休");
+            put("8", "工伤死亡");
+            put("9", "取消入职通知");
+            put("10", "死亡");
+            put("11", "转科技人才");
+            put("12", "转用工单位（翻牌）");
+            put("13", "公司自行管理, 无需退工");
+            put("14", "公司自行管理, 需办退工");
+            put("15", "转其他公司管理, 无需退工");
+            put("16", "转其他公司管理, 需办退工");
+        }
+    };
+
+    Map<String, String> BPO_EMP_OUT_REASON_MAP = new HashMap<String, String>() {
+        {
+            put("0", "自愿离职");
+            put("1", "辞退");
+        }
+    };
+
     /**
      * 政策类型 1-社保 2-公积金 3-补充公积金（此定义从内控得来）
      */
@@ -416,4 +452,8 @@ public interface SocialSecurityConst {
      * 企业任务单处理状态 0：初始1：受理中2：送审中3：已完成4：批退
      */
     int COM_TASK_STATUS_4 = 4;
+
+    int SS_BUSINESS_TYPE_AF = 1;
+    int SS_BUSINESS_TYPE_BPO = 2;
+    int SS_BUSINESS_TYPE_FC = 3;
 }

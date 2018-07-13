@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class HfEmpTaskBo implements Serializable {
@@ -30,6 +31,10 @@ public class HfEmpTaskBo implements Serializable {
     private String includeTaskCategories;
     private String hfComAccount;
     private String userId;
+    private List<String> param;
+    private  String params;
+    private List<String> orderParam;
+    private Integer preInput;
 
 //    public void setSubmitTime(String[] submitTime) {
 //        this.submitTime = submitTime;

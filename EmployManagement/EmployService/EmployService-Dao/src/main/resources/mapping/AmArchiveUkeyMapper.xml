@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveUkeyMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveUkey">
+		<id column="id" property="id" />
+		<result column="material_receive_date" property="materialReceiveDate" />
+		<result column="material_delivery_date" property="materialDeliveryDate" />
+		<result column="material_feedback_date" property="materialFeedbackDate" />
+		<result column="company_id" property="companyId" />
+		<result column="company_name" property="companyName" />
+		<result column="organization_code" property="organizationCode" />
+		<result column="due_date" property="dueDate" />
+		<result column="logout_date" property="logoutDate" />
+		<result column="key_type" property="keyType" />
+		<result column="key_code" property="keyCode" />
+        <result column="key_pwd" property="keyPwd" />
+        <result column="key_seq" property="keySeq" />
+        <result column="key_fee" property="keyFee" />
+        <result column="is_active" property="isActive" />
+        <result column="created_time" property="createdTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="modified_by" property="modifiedBy" />
+	</resultMap>
+
+
+    <select id="queryUkeyList" resultMap="BaseResultMap">
+        SELECT  * from am_archive_ukey u
+        WHERE
+        1 = 1
+        <foreach collection="param" item="plid" open="" close="" separator="">
+            and  ${plid}
+        </foreach>
+    </select>
+</mapper>

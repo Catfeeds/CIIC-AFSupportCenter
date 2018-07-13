@@ -34,6 +34,7 @@ public class HfComAccountDTO {
      * 缴费区县：1 徐汇—X、2 西郊—C、3 东方路—P、4 卢湾—L、5 黄浦—H
      */
     private Integer paymentBank;
+    private String paymentBankName;
     /**
      * 备注
      */
@@ -76,6 +77,8 @@ public class HfComAccountDTO {
      * 企业基本补充公积金账号（前道传递）
      */
     private String hfComAccount;
+
+    private String hfComAccountBC;
     /**
      * 客户缴费起始年月（前道传递）
      */
@@ -89,6 +92,22 @@ public class HfComAccountDTO {
      * 1 销户 2 公司自做 3 转其他代理商（前道传递）
      */
     private Integer endType;
+
+    public String getPaymentBankName() {
+        return paymentBankName;
+    }
+
+    public void setPaymentBankName(String paymentBankName) {
+        this.paymentBankName = paymentBankName;
+    }
+
+    public String getHfComAccountBC() {
+        return hfComAccountBC;
+    }
+
+    public void setHfComAccountBC(String hfComAccountBC) {
+        this.hfComAccountBC = hfComAccountBC;
+    }
 
     public String getCompanyId() {
         return companyId;

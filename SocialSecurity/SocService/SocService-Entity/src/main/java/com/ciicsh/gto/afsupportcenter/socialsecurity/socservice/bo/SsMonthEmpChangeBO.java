@@ -69,6 +69,24 @@ public class SsMonthEmpChangeBO {
      */
     private String modifiedBy;
 
+    private String ssAccount;
+    private String companyIds;
+
+    public String getCompanyIds() {
+        return companyIds;
+    }
+
+    public void setCompanyIds(String companyIds) {
+        this.companyIds = companyIds;
+    }
+
+    public String getSsAccount() {
+        return ssAccount;
+    }
+
+    public void setSsAccount(String ssAccount) {
+        this.ssAccount = ssAccount;
+    }
 
     public Long getMonthEmpChangeId() {
         return monthEmpChangeId;

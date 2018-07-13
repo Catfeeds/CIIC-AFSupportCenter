@@ -25,6 +25,26 @@ public class SsAddPaymentBO {
      */
     private List<Long> paymentComIdList;
 
+    private String paymentMonth;
+
+    private Integer ssAccountType;
+
+    public String getPaymentMonth() {
+        return paymentMonth;
+    }
+
+    public void setPaymentMonth(String paymentMonth) {
+        this.paymentMonth = paymentMonth;
+    }
+
+    public Integer getSsAccountType() {
+        return ssAccountType;
+    }
+
+    public void setSsAccountType(Integer ssAccountType) {
+        this.ssAccountType = ssAccountType;
+    }
+
     public List<Long> getPaymentComIdList() {
         return paymentComIdList;
     }

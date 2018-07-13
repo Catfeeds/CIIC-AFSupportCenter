@@ -101,6 +101,7 @@
 
     <select id="queryAmEmpTask" resultMap="BaseResultMapDTO">
         SELECT
+        DISTINCT
         a.emp_task_id,/*任务id */
         a.employee_id,/*雇员id */
         a.company_id,/*客户Id*/
@@ -108,6 +109,7 @@
         a.archive_direction,
         a.employ_code,
         a.change,
+        a.created_time,
         b.employment_id,
         b.employ_way,/*用工方式 */
         b.employ_property,/*用工属性 */
@@ -124,7 +126,9 @@
         cs.employ_special,
         h.title,/*公司名称 */
         h.service_center,/*服务中心 */
-        h.leader_ship_name  /*客服经理*/
+        h.leader_ship_name,  /*客服经理*/
+        e.settlement_area,
+        w.out_reason
         FROM
         am_emp_task a
         LEFT JOIN
@@ -136,11 +140,18 @@
         LEFT JOIN
         am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN
+        am_emp_employee  e on e.emp_task_id = a.emp_task_id
+        LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id
         LEFT JOIN
         am_company_set cs
         on cs.company_id = a.company_id
+        LEFT JOIN am_resign f ON f.employment_id = b.employment_id
+        LEFT JOIN am_emp_task w on f.emp_task_id = w.emp_task_id
+        <if test="material!=null">
+            LEFT JOIN am_emp_material m  on m.emp_task_id = a.emp_task_id
+        </if>
         where   a.task_category = '1'
         and  a.employee_id is not null
         and  a.company_id  is not null
@@ -155,6 +166,7 @@
 
     <select id="queryAmEmpTaskOther" resultMap="BaseResultMapDTO">
         SELECT
+        DISTINCT
         a.emp_task_id,/*任务id */
         a.employee_id,/*雇员id */
         a.company_id,/*客户Id*/
@@ -178,7 +190,8 @@
         cs.employ_special,
         h.title,/*公司名称 */
         h.service_center,/*服务中心 */
-        h.leader_ship_name  /*客服经理*/
+        h.leader_ship_name,  /*客服经理*/
+        e.settlement_area
         FROM
         am_emp_task a
         LEFT JOIN
@@ -190,11 +203,18 @@
         LEFT JOIN
         am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN
+        am_emp_employee  e on e.emp_task_id = a.emp_task_id
+        LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id
         LEFT JOIN
         am_company_set cs
         on cs.company_id = a.company_id
+        LEFT JOIN am_resign f ON f.employment_id = b.employment_id
+        LEFT JOIN am_emp_task w on f.emp_task_id = w.emp_task_id
+        <if test="material!=null">
+            LEFT JOIN am_emp_material m  on m.emp_task_id = a.emp_task_id
+        </if>
         where   a.task_category = '1'
         and  a.employee_id is not null
         and  a.company_id  is not null
@@ -225,6 +245,8 @@
         on  a.employee_id = d.employee_id
         LEFT JOIN
         am_emp_custom h on h.emp_task_id = a.emp_task_id
+        LEFT JOIN
+        am_emp_employee  e on e.emp_task_id = a.emp_task_id
         LEFT JOIN
         am_archive c
         ON b.employment_id = c.employment_id
@@ -456,5 +478,13 @@
         SELECT  archive_direction from  emp_archive_direction  where id = #{id}
     </select>
 
+    <select id="queryIsFinish" resultMap="BaseResultMapDTO">
+        SELECT  emp_task_id  FROM  am_emp_task
+        where
+        is_finish = 1 and
+        <foreach collection="empTaskIds" item="item" open="emp_task_id IN (" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 
 </mapper>

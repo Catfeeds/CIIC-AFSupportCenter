@@ -76,6 +76,39 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
             });
         }
     }
+    //数据导入，客户要求先生成4个月的支付数据
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void generateSocPaymentInfoForImpData(String paymentMonth) throws Exception {
+        //根据社保参保户登记码获取待生成的列表数据
+        List<SsAccountComExt> accountComExts = accountMapper.getSsComAccounts();
+        if (null != accountComExts && accountComExts.size() > 0) {
+            accountComExts.forEach(accountComExt -> {
+                this.generateInfoForImpData(accountComExt, paymentMonth);
+            });
+        }
+    }
+    private void generateInfoForImpData(SsAccountComExt accountComExt, String paymentMonth) {
+        //是否存在支付信息
+        Integer val = paymentComMapper.ifExistPayment(accountComExt.getComAccountId(), paymentMonth);
+        if (val <= 0) {
+            //新增支付信息
+            addPaymentCom(accountComExt, paymentMonth);
+        }
+        /*****生成雇员社保明细****/
+        //如果数据已经存在，先删除已经存在的数据(标准数据)
+        String ssMonth = DateUtil.plusMonth(paymentMonth, 1);
+
+        /******生成变更汇总表*****/
+        generateMonthEmpChange(accountComExt, paymentMonth,"system");
+
+        /*****生成社保通知书*****/
+        generatePaymentDetail(accountComExt, paymentMonth);
+
+        /*****更新paymentCom表中的合计金额*****/
+        paymentComMapper.updateSsMonthChargeTotalAmount(accountComExt.getComAccountId(), paymentMonth);
+
+    }
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
@@ -125,7 +158,7 @@ public class SsPaymentComServiceImpl implements SsPaymentComService {
 
 
         /******生成变更汇总表*****/
-        generateMonthEmpChange(accountComExt, paymentMonth,"system");
+       // generateMonthEmpChange(accountComExt, paymentMonth,"system");
 
         /*****生成社保通知书*****/
         generatePaymentDetail(accountComExt, paymentMonth);

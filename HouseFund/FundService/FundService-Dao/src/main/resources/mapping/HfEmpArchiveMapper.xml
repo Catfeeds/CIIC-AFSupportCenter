@@ -55,7 +55,7 @@
         <result column="service_center" property="serviceCenter"/>
         <result column="leadership_name" property="leaderShipName"/>
         <result column="company_id" property="companyId"/>
-
+        <result column="hf_type" property="hfType"/>
     </resultMap>
 
     <resultMap id="getEmpInfoResultMap"
@@ -147,30 +147,63 @@
     <!--雇员公积金查询 下面SQL是考虑到 bpo fc af 一拖三表 ，SQL暂时用不到 -->
     <select id="queryEmpArchive" resultMap="queryEmpArchiveResultMap">
         SELECT
-        ea.emp_archive_id,eab.emp_archive_id_bc,com.company_id,com.title,ea.belong_vendor,
-        af.custom_group,afemp.status AS 'emp_status',
-        ca.hf_account_type,emp.employee_id,emp.employee_name,emp.id_num,ea.hf_emp_account,ea.archive_task_status
-        ,eab.hf_emp_account_bc,eab.archive_task_status_bc,ea.operation_remind,ea.operation_remind_date
-        ,afemp.created_display_name as 'service_specialist',ea.service_center,afemp.leadership_name
-        FROM hf_emp_archive ea
-        LEFT JOIN sal_company com ON com.company_id=ea.company_id
-        INNER JOIN emp_employee emp ON emp.employee_id=ea.employee_id
-        INNER JOIN hf_com_account ca ON ca.com_account_id=ea.com_account_id
-        LEFT JOIN (SELECT hea.emp_archive_id as 'emp_archive_id_bc',hea.belong_emp_archive_id,hea.hf_emp_account as
-        'hf_emp_account_bc',hea.archive_task_status as 'archive_task_status_bc'
-        FROM hf_emp_archive hea WHERE hea.is_active=1 AND hea.hf_type=2)eab ON
-        eab.belong_emp_archive_id=ea.emp_archive_id
-        LEFT JOIN sal_af_company af on ea.company_id=af.company_id
-        LEFT JOIN emp_af_emp_company afemp on afemp.employee_id=ea.employee_id AND afemp.company_id=ea.company_id AND
-        afemp.in_date=ea.in_date
-        WHERE
-        ea.is_active=1
+        ea.emp_archive_id,
+        eab.emp_archive_id_bc,
+        sc.company_id,
+        sc.title,
+        ea.belong_vendor,
+        sac.custom_group,
+        afemp.status AS 'emp_status',
+        ea.hf_type,
+        ca.hf_account_type,
+        emp.employee_id,
+        emp.employee_name,
+        emp.id_num,
+        ea.hf_emp_account,
+        ea.archive_task_status         ,
+        eab.hf_emp_account_bc,
+        eab.archive_task_status_bc,
+        ea.operation_remind,
+        ea.operation_remind_date         ,
+        afemp.created_display_name as 'service_specialist',
+        ea.service_center,
+        afemp.leadership_name
+        FROM emp_af_emp_company afemp
+        INNER JOIN
+        sal_af_company sac ON sac.company_id=afemp.company_id
+        INNER JOIN
+        sal_company sc ON sc.company_id=afemp.company_id
+        INNER JOIN
+        emp_employee emp ON emp.employee_id =afemp.employee_id
+        LEFT JOIN
+        hf_emp_archive ea ON afemp.employee_id=ea.employee_id
+        AND afemp.company_id=ea.company_id
+        AND afemp.in_date=ea.in_date
         AND ea.hf_type=1
+        LEFT JOIN hf_com_account ca
+        ON ca.com_account_id=ea.com_account_id
+        AND ca.is_active = 1
+        LEFT JOIN
+        (
+            SELECT
+            hea.emp_archive_id as 'emp_archive_id_bc',
+            hea.belong_emp_archive_id,
+            hea.hf_emp_account as 'hf_emp_account_bc',
+            hea.archive_task_status as 'archive_task_status_bc'
+            FROM
+            hf_emp_archive hea
+            WHERE
+            hea.is_active=1
+            AND hea.hf_type=2
+        )eab
+        ON  eab.belong_emp_archive_id=ea.emp_archive_id
+        WHERE
+        afemp.is_active = 1
         <if test="employeeId !=null">
-            AND ea.employee_id=#{employeeId}
+            AND emp.employee_id=#{employeeId}
         </if>
         <if test="companyId !=null">
-            AND ea.company_id=#{companyId}
+            AND sc.company_id=#{companyId}
         </if>
         <if test="employeeName !=null">
             AND emp.employee_name LIKE CONCAT('%',#{employeeName}, '%')
@@ -190,6 +223,9 @@
         <if test="operationRemind !=null">
             AND ea.operation_remind=#{operationRemind}
         </if>
+        <if test="hfEmpAccount !=null">
+            AND ea.hf_emp_account LIKE CONCAT('%',#{hfEmpAccount}, '%')
+        </if>
         <if test="empStatus !=null">
             AND afemp.status=#{empStatus}
         </if>
@@ -198,8 +234,7 @@
         </if>
         <if test="hfComAccount !=null">
             AND EXISTS (select 1 from hf_com_account_class cac WHERE cac.com_account_class_id=ea.com_account_class_id
-            AND
-            cac.hf_com_account=${hfComAccount})
+            AND cac.hf_com_account=${hfComAccount})
         </if>
     </select>
     <resultMap id="viewEmpArchiveResultMap" extends="queryEmpArchiveResultMap"
@@ -259,6 +294,21 @@
          AND ea.hf_type=1
          AND ea.emp_archive_id=#{empArchiveId}
      </select>
+
+    <!--雇员公积金查询==>查看雇员信息。 仅查看雇员基本信息-->
+    <select id="viewEmpInfo" resultMap="viewEmpArchiveResultMap">
+        SELECT emp.employee_id,emp.employee_name,emp.id_num,com.company_id,com.title,
+        af.in_date,af.out_date
+        FROM
+        emp_af_emp_company af
+        INNER JOIN emp_employee emp ON af.employee_id=emp.employee_id
+        INNER JOIN sal_company com ON com.company_id=af.company_id
+        WHERE
+        af.is_active=1
+        AND af.employee_id=#{employeeId}
+        AND af.company_id=#{companyId}
+        ORDER  BY af.emp_company_id DESC LIMIT 1
+    </select>
 
     <resultMap id="viewComAccountResultMap"
                type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfComAccountBo">
@@ -372,7 +422,7 @@
     </select>
     <!--根据身份证号+姓名找到雇员公积金账户信息-->
     <select id="selectEmpByCardIdAndName" resultType="java.util.Map">
-        SELECT ea.emp_archive_id,ea.hf_emp_account FROM
+        SELECT ea.emp_archive_id,ea.hf_emp_account,ea.employee_id FROM
         emp_employee emp INNER JOIN hf_emp_archive ea on ea.employee_id=emp.employee_id and ea.hf_type=1
         WHERE ea.is_active=1 and emp.employee_name = #{empName} and emp.id_num= #{idNum};
     </select>
@@ -453,5 +503,36 @@
           AND hmc.employee_id = #{employeeId}
           AND hmc.company_id = #{companyId}
           AND hmc.ss_month_belong = #{hfMonthBelong}
+    </select>
+    <resultMap id="HfEmpInfoBORM" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpInfoBO">
+        <result column="employee_id" property="employeeId"/>
+        <result column="company_id" property="companyId"/>
+        <result column="hf_emp_account" property="hfEmpAccount"/>
+        <result column="hf_emp_account_bc" property="hfEmpAccountBC"/>
+    </resultMap>
+    <select id="getHfEmpInfoById" resultMap="HfEmpInfoBORM">
+        SELECT
+          ea.employee_id,
+          ea.company_id,
+          ea.hf_emp_account,
+          ea.archive_status,
+          eabc.hf_emp_account as 'hf_emp_account_bc'
+        FROM
+          hf_emp_archive ea
+          LEFT JOIN (SELECT
+          belong_emp_archive_id,hf_emp_account
+          FROM hf_emp_archive
+          WHERE belong_emp_archive_id is not NULL
+          AND is_active = 1
+          AND employee_id = #{employeeId}
+          AND company_id = #{companyId}
+          AND hf_type = 2
+          ) eabc on eabc.belong_emp_archive_id=ea.emp_archive_id
+        WHERE
+            ea.is_active = 1
+            AND ea.employee_id = #{employeeId}
+            AND ea.company_id = #{companyId}
+            AND ea.hf_type = 1
+            ORDER BY ea.in_date DESC LIMIT 1
     </select>
 </mapper>

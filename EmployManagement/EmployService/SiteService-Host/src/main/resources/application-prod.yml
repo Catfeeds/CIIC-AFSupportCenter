@@ -1,25 +1,15 @@
 spring:
-  datasource:
-    druid:
-      driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://172.16.22.106:3306/gtobusinessdb?characterEncoding=utf8&useSSL=true
-      username: root
-      password: a111111
-      max-active: 20
-      min-idle: 8
-      initial-size: 10
-      validation-query: SELECT 'x'
-      filter:
-        stat:
-          enabled: true
-  cloud:
-    stream:
-      kafka:
-        binder:
-          brokers: 172.16.100.101:9092
-          zk-nodes: 172.16.100.101:2181,172.16.100.102:2181,172.16.100.109:2181
+  boot:
+    admin:
+      url: http://172.16.100.103:9625
+      client:
+        prefer-ip: true
+      api-path: instances
   #spring cloud eureka
 eureka:
   client:
     serviceUrl:
       defaultZone: "http://172.16.100.103:9602/eureka,http://172.16.100.104:9602/eureka"
+
+druid:
+  configPath:  /data/appdatas/gt1/gtobusinessdb_prd.properties

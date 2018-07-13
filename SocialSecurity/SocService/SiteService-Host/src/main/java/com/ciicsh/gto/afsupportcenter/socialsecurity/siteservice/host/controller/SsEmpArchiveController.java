@@ -2,9 +2,11 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controlle
 
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpArchiveBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.AmEmpTaskOfSsService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpArchiveService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpBasePeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.AmEmpTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBasePeriod;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.empSSSearchExportOpt;
@@ -15,6 +17,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,6 +45,9 @@ public class SsEmpArchiveController extends BasicController<SsEmpArchiveService>
     private SsEmpBasePeriodService ssEmpBasePeriodService;
     @Autowired
     private SsEmpTaskService ssEmpTaskService;
+    @Autowired
+    private AmEmpTaskOfSsService amEmpTaskOfSsService;
+
     /**
      * 根据雇员任务 ID 查询 雇员本地社保档案信息
      *
@@ -88,20 +94,35 @@ public class SsEmpArchiveController extends BasicController<SsEmpArchiveService>
      * @return
      */
     @RequestMapping("/employeeDetailInfoQuery")
-    public JsonResult employeeDetailInfoQuery(String empArchiveId) {
-
-        if(null==empArchiveId)return JsonResultKit.ofError("ID为空");
-        //查询客户基本信息和雇员信息
-        SsEmpArchiveBO ssEmpArchiveBO =  business.queryEmployeeDetailInfo(empArchiveId);
-        //查询社保汇缴信息
-        List<SsEmpBasePeriod> empBasePeriodList= ssEmpBasePeriodService.queryPeriodByEmpArchiveId(empArchiveId);
-        //查询变动历史(任务单)
-        List<SsEmpTask> ssEmpTasksList = ssEmpTaskService.queryTaskByEmpArchiveId(empArchiveId);
+    public JsonResult employeeDetailInfoQuery(@RequestParam(required = false) String empArchiveId,
+                                              @RequestParam(required = false)String companyId,
+                                              @RequestParam(required = false)String employeeId) {
+        //if(null==empArchiveId)return JsonResultKit.ofError("ID为空");
         Map<String, Object> resultMap = new HashMap<String, Object>();
+        //查询客户基本信息和雇员信息
+        SsEmpArchiveBO ssEmpArchiveBO =  business.queryEmployeeDetailInfo(empArchiveId,companyId,employeeId);
         resultMap.put("ssEmpArchive",ssEmpArchiveBO);
-        resultMap.put("empBasePeriod",empBasePeriodList);
-        resultMap.put("ssEmpTasks",ssEmpTasksList);
-
+        if(null!=empArchiveId){
+            //查询社保汇缴信息
+            List<SsEmpBasePeriod> empBasePeriodList= ssEmpBasePeriodService.queryPeriodByEmpArchiveId(empArchiveId);
+            resultMap.put("empBasePeriod",empBasePeriodList);
+            //查询变动历史(任务单)
+            List<SsEmpTask> ssEmpTasksList = ssEmpTaskService.queryTaskByEmpArchiveId(empArchiveId);
+            resultMap.put("ssEmpTasks",ssEmpTasksList);
+        }
+        String feedback="";
+        feedback = amEmpTaskOfSsService.queryEmployFeedback(ssEmpArchiveBO.getEmployeeId(), ssEmpArchiveBO.getCompanyId());
+        //用工信息
+        AmEmpTaskDTO amEmpTaskDTO = null;
+        amEmpTaskDTO = amEmpTaskOfSsService.queryReworkInfo(ssEmpArchiveBO.getEmployeeId(), ssEmpArchiveBO.getCompanyId(),  1);
+        if (amEmpTaskDTO == null) {
+            amEmpTaskDTO = new AmEmpTaskDTO();
+            amEmpTaskDTO.setTaskCategory(1);
+        }
+        if (StringUtils.isNotEmpty(feedback)) {
+            amEmpTaskDTO.setTaskStatus(Integer.parseInt(feedback));
+        }
+        resultMap.put("amEmpTask",amEmpTaskDTO);
         return JsonResultKit.of(resultMap);
     }
     /**

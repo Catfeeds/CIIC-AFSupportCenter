@@ -3,10 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api;
 import com.ciicsh.common.entity.JsonResult;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.*;
 import org.springframework.cloud.netflix.feign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,4 +37,25 @@ public interface SocApiProxy {
 
     @PostMapping("/getSsEmpInfo")
     JsonResult<List<SsEmpInfoDTO>> getSsEmpInfo(@RequestBody List<SsEmpInfoParamDTO> paramDTOList);
+
+    /**
+     * 接口调用方：雇员中心
+     * 根据客户Id获取客户社保账户信息
+     * @param companyId
+     * @return
+     */
+    @PostMapping("/getSsComAccountByComId")
+    JsonResult<SsComAccountDTO> getSsComAccountByComId(@RequestParam("companyId")String companyId);
+
+
+    /**
+     * 接口调用方：雇员中心
+     * 根据客户Id和雇员Id获取雇员社保信息
+     * @param companyId
+     * @param employeeId
+     * @return
+     */
+    @PostMapping("/getSsEmpInfoById")
+    JsonResult<SsEmpInfoDTO> getSsEmpInfoById(@RequestParam("companyId")String companyId,@RequestParam("employeeId")String employeeId);
+
 }

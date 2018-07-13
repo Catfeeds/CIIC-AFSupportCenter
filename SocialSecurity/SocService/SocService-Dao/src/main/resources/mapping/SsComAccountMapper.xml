@@ -315,4 +315,17 @@
         WHERE
             CA.com_account_id = #{comAccountId}
     </select>
+
+    <select id="getSsComAccountByComId" resultMap="ComAccountExtMap">
+        select
+            ca.com_account_id,
+            ca.ss_account,
+            ca.com_account_name
+        FROM
+         ss_com_account ca
+        INNER JOIN ss_account_com_relation ssac on ca.com_account_id = ssac.com_account_id
+        and ca.is_active = 1
+        and ssac.is_active = 1
+        and ssac.company_id= #{companyId}
+    </select>
 </mapper>

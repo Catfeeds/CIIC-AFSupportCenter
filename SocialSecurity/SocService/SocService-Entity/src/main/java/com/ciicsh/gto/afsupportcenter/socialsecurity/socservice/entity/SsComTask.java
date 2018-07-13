@@ -169,6 +169,9 @@ public class SsComTask implements Serializable {
      */
 	@TableField("payment_way")
 	private Integer paymentWay;
+
+    @TableField("payment_type")
+    private Integer paymentType;
     /**
      * 社保帐单寄到哪里: 1 我司，2 客户公司（前道传递）
      */
@@ -255,8 +258,15 @@ public class SsComTask implements Serializable {
     @TableField("leader_ship_name")
     private String leaderShipName;
 
+    public Integer getPaymentType() {
+        return paymentType;
+    }
 
-	public Long getComTaskId() {
+    public void setPaymentType(Integer paymentType) {
+        this.paymentType = paymentType;
+    }
+
+    public Long getComTaskId() {
 		return comTaskId;
 	}
 
