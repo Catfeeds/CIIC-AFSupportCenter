@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveUkeyBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveUkeyRenewBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.SalCompanyBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmArchiveUkeyService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.ukeySearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveUkeyMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveUkeyRenewMapper;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.SalCompanyMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveUkey;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveUkeyRenew;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
@@ -37,6 +39,9 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
 
     @Autowired
     private AmArchiveUkeyRenewMapper amArchiveUkeyRenewMapper;
+
+    @Autowired
+    private SalCompanyMapper salCompanyMapper;
 
     @Override
     public PageRows<AmArchiveUkeyBO> queryAmArchiveUkeyList(PageInfo pageInfo) {
@@ -129,6 +134,12 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
         po.setIsActive(1);
         po.setCreatedBy(UserContext.getUserName());
         po.setCreatedTime(nowTime);
+        SalCompanyBO bo = new SalCompanyBO();
+        bo.setTitle(po.getCompanyName());
+        List<SalCompanyBO> boList = salCompanyMapper.querySalCompanyList(bo);
+        if(boList != null && boList.size() > 0){
+            po.setCompanyId(boList.get(0).getCompanyId());
+        }
         boolean result = this.insertOrUpdateAllColumn(po);
         return result;
     }
