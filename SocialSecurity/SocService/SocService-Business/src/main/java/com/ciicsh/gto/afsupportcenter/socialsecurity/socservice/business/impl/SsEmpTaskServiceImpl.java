@@ -97,18 +97,6 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             for (int i = 0; i < arr.length; i++) {
                 if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
                     orderParam.add(arr[i]);
-                }else if(arr[i].indexOf("taskStatus")!=-1){
-                     String str[] = arr[i].split(" ");
-                     if(!StringUtil.isEmpty(str[2]))
-                     {
-                         String content = str[2].replaceAll("\'","");
-                         // 0 代表不需处理之外的其它状态
-                         if("0".equals(content)){
-                             dto.setTaskStatus(null);
-                         }else{
-                             dto.setTaskStatus(Integer.parseInt(content));
-                         }
-                     }
                 }else {
                     param.add(arr[i]);
                 }
