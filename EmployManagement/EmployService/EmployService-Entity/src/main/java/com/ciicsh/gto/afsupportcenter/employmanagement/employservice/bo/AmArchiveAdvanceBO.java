@@ -1,7 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo;
 
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveAdvance;
-
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -65,6 +63,11 @@ public class AmArchiveAdvanceBO{
     private String remark;
 
     /**
+     * 退出寄出地日期
+     */
+    private LocalDate exitThePlaceDate;
+
+    /**
      * 状态0：删除1：未匹配2：已匹配
      */
     private Integer status;
@@ -95,6 +98,14 @@ public class AmArchiveAdvanceBO{
     private String modifiedBy;
 
     private boolean exist;
+
+    public LocalDate getExitThePlaceDate() {
+        return exitThePlaceDate;
+    }
+
+    public void setExitThePlaceDate(LocalDate exitThePlaceDate) {
+        this.exitThePlaceDate = exitThePlaceDate;
+    }
 
     public Long getArchiveAdvanceId() {
         return archiveAdvanceId;

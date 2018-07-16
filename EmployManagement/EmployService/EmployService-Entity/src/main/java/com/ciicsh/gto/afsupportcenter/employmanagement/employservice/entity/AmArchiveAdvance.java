@@ -89,6 +89,12 @@ public class AmArchiveAdvance implements Serializable {
     private String remark;
 
     /**
+     * 退出寄出地日期
+     */
+    @TableField("exit_the_place_date")
+    private LocalDate exitThePlaceDate;
+
+    /**
      * 状态0：删除1：未匹配2：已匹配
      */
     @TableField("status")
@@ -123,6 +129,14 @@ public class AmArchiveAdvance implements Serializable {
      */
     @TableField("modified_by")
     private String modifiedBy;
+
+    public LocalDate getExitThePlaceDate() {
+        return exitThePlaceDate;
+    }
+
+    public void setExitThePlaceDate(LocalDate exitThePlaceDate) {
+        this.exitThePlaceDate = exitThePlaceDate;
+    }
 
     public String getRemark() {
         return remark;

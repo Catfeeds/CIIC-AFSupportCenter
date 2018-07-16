@@ -41,6 +41,13 @@ public class AmArchiveUkeyController extends BasicController<IAmArchiveUkeyServi
         return JsonResultKit.of(result);
     }
 
+    @RequestMapping("/queryOrganizationCodeByCid")
+    public JsonResult<AmArchiveUkeyBO> queryOrganizationCodeByCid(String companyId, String companyName){
+        AmArchiveUkeyBO result = business.queryOrganizationCodeByCid(companyId,companyName);
+
+        return JsonResultKit.of(result);
+    }
+
     @RequestMapping("/queryAmArchiveUkeyRenew")
     public JsonResult<List<AmArchiveUkeyRenewBO>> queryAmArchiveUkeyRenew(Long id){
         List<AmArchiveUkeyRenewBO> result = business.queryAmArchiveUkeyRenew(id);
