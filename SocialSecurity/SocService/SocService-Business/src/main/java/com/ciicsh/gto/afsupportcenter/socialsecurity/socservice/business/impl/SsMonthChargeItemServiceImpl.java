@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpLastPaymentBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthChargeItemBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsMonthChargeItem;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsMonthChargeItemMapper;
@@ -26,5 +27,9 @@ public class SsMonthChargeItemServiceImpl extends ServiceImpl<SsMonthChargeItemM
          return ssMonthChargeItemBOList;
     }
 
+    @Override
+    public List<SsEmpLastPaymentBO> searchDetailLastPaymentMonth(String companyId, String employeeId, String ssMonth) {
+        return baseMapper.searchDetailLastPaymentMonth(companyId, employeeId, ssMonth);
+    }
 
 }

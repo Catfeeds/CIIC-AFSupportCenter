@@ -201,4 +201,18 @@
         AND hpc.com_account_id = #{comAccountId}
     </select>
 
+    <select id="getLastPaymentMonth" resultType="string">
+        SELECT
+        MAX(hp.payment_month) AS payment_month
+        FROM
+        hf_payment_com hpc
+        INNER JOIN hf_payment hp ON hpc.payment_id = hp.payment_id
+        <where>
+        hpc.is_active = 1 AND hp.is_active = 1
+        AND hp.payment_state in (5,6,7)
+        AND hpc.company_id = #{companyId}
+        AND hpc.hf_type = #{hfType}
+        GROUP BY hpc.company_id
+        </where>
+    </select>
 </mapper>

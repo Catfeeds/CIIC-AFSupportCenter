@@ -956,4 +956,9 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             hfEmpTaskHandleBo.setEmpAddStopHandleMonth(resultBo.getHfStopMonth());
         }
     }
+
+    @Override
+    public List<HfEmpLastPaymentBO> searchByLastPaymentMonth(String companyId, String employeeId, String hfMonth) {
+        return baseMapper.searchByLastPaymentMonth(companyId, employeeId, hfMonth);
+    }
 }

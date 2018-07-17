@@ -99,6 +99,19 @@
         <result column="ss_month_belong_end" property="ssMonthBelongEnd" />
     </resultMap>
 
+    <resultMap id="LastPaymentMonthResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpLastPaymentBO">
+        <result column="company_id" property="companyId" />
+        <result column="employee_id" property="employeeId" />
+        <result column="hf_type" property="hfType" />
+        <result column="amount" property="amount" />
+        <result column="com_amount" property="comAmount" />
+        <result column="emp_amount" property="empAmount" />
+        <result column="base" property="base" />
+        <result column="ratio" property="ratio" />
+        <result column="ratio_com" property="ratioCom" />
+        <result column="ratio_emp" property="ratioEmp" />
+    </resultMap>
+
 	<update id="updateHfMonthCharge">
         UPDATE hf_month_charge
         SET
@@ -423,5 +436,58 @@
                 AND hmc.employee_id = #{employeeId}
             </if>
         </where>
+    </select>
+
+    <select id="searchByLastPaymentMonth" resultMap="LastPaymentMonthResultMap">
+        SELECT
+        hmc.company_id,
+        hmc.employee_id,
+        hmc.hf_type,
+        SUM(hmc.amount) amount,
+        SUM(hmc.com_amount) com_amount,
+        SUM(hmc.emp_amount) emp_amount,
+        CASE WHEN hmc.hf_type = 1 THEN tmp.base ELSE tmp2.base END base,
+        CASE WHEN hmc.hf_type = 1 THEN tmp.ratio ELSE tmp2.ratio END ratio,
+        CASE WHEN hmc.hf_type = 1 THEN tmp.ratio_com ELSE tmp2.ratio_com END ratio_com,
+        CASE WHEN hmc.hf_type = 1 THEN tmp.ratio_emp ELSE tmp2.ratio_emp END ratio_emp
+        FROM hf_month_charge hmc
+        LEFT JOIN (
+            SELECT
+          hmc.emp_archive_id,
+          hmc.hf_type,
+          hmc.base,
+          hmc.ratio*100 ratio,
+          hmc.ratio_com*100 ratio_com,
+          hmc.ratio_emp*100 ratio_emp
+          FROM hf_month_charge hmc
+          WHERE hmc.is_active = 1
+            AND hmc.company_id = #{companyId}
+            AND hmc.employee_id = #{employeeId}
+            AND hmc.hf_month = #{hfMonth}
+          AND hmc.hf_type = 1
+          ORDER BY hmc.ss_month_belong DESC LIMIT 1
+        ) tmp ON hmc.emp_archive_id = tmp.emp_archive_id AND hmc.hf_type = tmp.hf_type
+        LEFT JOIN (
+            SELECT
+          hmc.emp_archive_id,
+          hmc.hf_type,
+          hmc.hf_month,
+          hmc.base,
+          hmc.ratio*100 ratio,
+          hmc.ratio_com*100 ratio_com,
+          hmc.ratio_emp*100 ratio_emp
+          FROM hf_month_charge hmc
+          WHERE hmc.is_active = 1
+            AND hmc.company_id = #{companyId}
+            AND hmc.employee_id = #{employeeId}
+            AND hmc.hf_month = #{hfMonth}
+          AND hmc.hf_type = 2
+          ORDER BY hmc.ss_month_belong DESC LIMIT 1
+        ) tmp2 ON hmc.emp_archive_id = tmp2.emp_archive_id AND hmc.hf_type = tmp2.hf_type
+        WHERE hmc.is_active = 1
+        AND hmc.company_id = #{companyId}
+        AND hmc.employee_id = #{employeeId}
+        AND hmc.hf_month = #{hfMonth}
+        GROUP BY hmc.company_id, hmc.employee_id, hmc.hf_month, hmc.hf_type
     </select>
 </mapper>

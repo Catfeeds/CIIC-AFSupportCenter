@@ -186,4 +186,9 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
         hfPaymentMapper.updateById(hfPayment);
         return JsonResultKit.of();
     }
+
+    @Override
+    public String getLastPaymentMonth(String companyId, Integer hfType) {
+        return baseMapper.getLastPaymentMonth(companyId, hfType);
+    }
 }

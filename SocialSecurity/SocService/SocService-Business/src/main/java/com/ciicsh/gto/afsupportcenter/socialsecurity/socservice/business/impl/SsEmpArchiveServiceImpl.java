@@ -243,6 +243,11 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
         return resultBoList;
     }
 
+    @Override
+    public SsEmpArchiveBO getSsEmployee(String companyId, String employeeId) {
+        return baseMapper.getSsEmployee(companyId, employeeId);
+    }
+
     private String parseValue(String value) {
         return value == null ? "" : value;
     }

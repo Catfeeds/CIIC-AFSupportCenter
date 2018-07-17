@@ -62,4 +62,6 @@ public interface SsEmpArchiveService extends IService<SsEmpArchive> {
     boolean checkSerial( Long comAccountId,String employeeId,String empSsSerial);
 
     List<SsEmpInfoBO> getSsEmpArchiveInfo(List<SsEmpInfoParamBO> paramBoList);
+
+    SsEmpArchiveBO getSsEmployee(String companyId, String employeeId);
 }

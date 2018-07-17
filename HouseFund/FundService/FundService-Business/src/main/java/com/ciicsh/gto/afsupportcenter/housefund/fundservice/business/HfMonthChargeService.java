@@ -77,4 +77,6 @@ public interface HfMonthChargeService extends IService<HfMonthCharge> {
      * @param hfEmpTaskHandleBo
      */
     void getMonthChargeByInOut(HfEmpTaskHandleBo hfEmpTaskHandleBo);
+
+    List<HfEmpLastPaymentBO> searchByLastPaymentMonth(String companyId, String employeeId, String hfMonth);
 }
