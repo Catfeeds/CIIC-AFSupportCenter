@@ -165,6 +165,7 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
         if(amResignBOList != null && amResignBOList.size() > 0){
             // 有退工任务单 退工日期是否为null
             if(amResignBOList.get(0).getOutDate() != null){
+                //amResignBOList.get(0).getJobCentreFeedbackDate();
                 return null;
             }
         }

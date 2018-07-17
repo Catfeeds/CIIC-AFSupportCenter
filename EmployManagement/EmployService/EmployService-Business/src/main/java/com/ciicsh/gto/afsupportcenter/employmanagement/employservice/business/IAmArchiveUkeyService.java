@@ -21,6 +21,8 @@ public interface IAmArchiveUkeyService extends IService<AmArchiveUkey> {
 
     AmArchiveUkeyBO queryAmArchiveUkey(Long id);
 
+    AmArchiveUkeyBO queryOrganizationCodeByCid(String companyId,String companyName);
+
     List<AmArchiveUkeyRenewBO> queryAmArchiveUkeyRenew(Long id);
 
     AmArchiveUkeyBO queryAmArchiveUkey(String organizationCode);

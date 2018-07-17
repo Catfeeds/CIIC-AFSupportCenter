@@ -115,11 +115,12 @@ public class SsPaymentComBO {
     /**
      * 抵扣费用是否纳入支付申请: 0-不纳入 1-纳入
      */
+    @Excel(name = "抵扣金额是否纳入支付",replace = "是_1,否_0",orderNum = "13")
     private Integer ifDeductedIntoPay;
     /**
      * 申请备注
      */
-    @Excel(name = "额外金备注", orderNum = "13")
+    @Excel(name = "额外金备注", orderNum = "14")
     private String remark;
     /**
      * 财务实际支付日期

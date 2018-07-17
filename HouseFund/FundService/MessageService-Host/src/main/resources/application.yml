@@ -57,6 +57,11 @@ spring:
           group: ${spring.application.name}
           consumer:
             partitioned: true
+        hf_report_output_channel:
+                  destination: af_hf_report_generate # topic name
+                  content-type: application/json
+                  producer:
+                    partitionCount: 1
       instance-count: 2 # The number of deployed instances of an application.
                         # Must be set for partitioning and if using Kafka.
                         # used to partition data across different consumers.

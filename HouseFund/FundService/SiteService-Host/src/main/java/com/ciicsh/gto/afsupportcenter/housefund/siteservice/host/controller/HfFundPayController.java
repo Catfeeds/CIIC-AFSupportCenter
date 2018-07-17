@@ -341,16 +341,7 @@ public class HfFundPayController {
 
         return hfPaymentService.printRemittedBook(paymentId,hfType);
     }
-    /**
-     * 按客户实时打印汇缴书，报表引用
-     */
-    @PostMapping("/printRemittedBookByReport")
-    public JsonResult printRemittedBookByReport(@RequestParam(value = "companyId", required = false) String companyId,
-                                             @RequestParam(value = "hfMonth", required = true) String hfMonth,
-                                             @RequestParam(value = "hfType", required = true) Integer hfType,
-                                             @RequestParam(value = "hfAccountType", required = true) Integer hfAccountType){
-        return hfPaymentService.printRemittedBookByReport(companyId,hfMonth,hfType,hfAccountType);
-    }
+
     /**
      * 付款凭证打印
      */

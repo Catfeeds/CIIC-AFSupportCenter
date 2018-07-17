@@ -72,4 +72,6 @@ public interface HfMonthChargeMapper extends BaseMapper<HfMonthCharge> {
     HfMonthChargeBo getMonthChargeByInOut(HfMonthChargeBo hfMonthChargeBo);
 
     List<HfEmpLastPaymentBO> searchByLastPaymentMonth(@Param("companyId") String companyId, @Param("employeeId") String employeeId, @Param("hfMonth") String hfMonth);
+
+    List<HfRimittedBookReportBO> queryHfRimittedBookReport(HFMonthChargeQueryBO hfMonthChargeQueryBO);
 }

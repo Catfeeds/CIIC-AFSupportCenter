@@ -25,6 +25,23 @@ public class MaterialUpdateDTO {
      */
     private Date receiveDate;
 
+    /**
+     * 批退人ID
+     */
+    private String rejectId;
+
+    /**
+     * 批退人姓名
+     */
+    private String rejectName;
+
+    /**
+     * 批退日期
+     */
+    private Date rejectDate;
+
+
+
     public String getReceiveId() {
         return receiveId;
     }
@@ -55,5 +72,29 @@ public class MaterialUpdateDTO {
 
     public void setReceiveDate(Date receiveDate) {
         this.receiveDate = receiveDate;
+    }
+
+    public String getRejectId() {
+        return rejectId;
+    }
+
+    public void setRejectId(String rejectId) {
+        this.rejectId = rejectId;
+    }
+
+    public String getRejectName() {
+        return rejectName;
+    }
+
+    public void setRejectName(String rejectName) {
+        this.rejectName = rejectName;
+    }
+
+    public Date getRejectDate() {
+        return rejectDate;
+    }
+
+    public void setRejectDate(Date rejectDate) {
+        this.rejectDate = rejectDate;
     }
 }

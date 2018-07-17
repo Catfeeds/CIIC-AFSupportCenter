@@ -369,19 +369,30 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
     }
 
     /**
-     * 反馈社保日常操作是否可办理，
-     * @param ssMonth
+     * 反馈社保日常操作是否可办理
+     * 1,未到帐       2,无需支付     3 ,可付     4,申请中     5,内部审批批退     6,已申请到财务部     7,财务部批退     8,财务部支付成功
+     * @param ssMonth  办理月份
      * @param companyId
      * @return
      */
     public boolean ssCanDeal(String ssMonth,String companyId){
-
+        SsPaymentCom paymentCom =new SsPaymentCom();
+        paymentCom.setPaymentMonth(ssMonth);
+        paymentCom.setCompanyId(companyId);
+        paymentCom = ssPaymentComMapper.selectOne(paymentCom);
+        if(paymentCom==null){
+            return true;
+        }
+        Integer paymentState = paymentCom.getPaymentState();
+        if(paymentState == 4 || paymentState == 6 || paymentState==8){
+            return false;
+        }
         return  true;
     }
 
     /**
      * 获取社保支付状态
-     * @param ssMonth
+     * @param ssMonth 办理月份
      * @param companyId
      * @return
      */
@@ -390,10 +401,16 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         return map;
     }
     /**
+     * 社保办理时调用
      * 更新支付状态为未到账，前提状态是可付，
      */
     public void updateSsPaymentComStatus(String ssMonth,String companyId){
-
+        SsPaymentCom paymentCom =new SsPaymentCom();
+        paymentCom.setPaymentMonth(ssMonth);
+        paymentCom.setCompanyId(companyId);
+        paymentCom = ssPaymentComMapper.selectOne(paymentCom);
+        paymentCom.setPaymentState(1); //未到账
+        ssPaymentComMapper.updateById(paymentCom);
     }
 
 }
