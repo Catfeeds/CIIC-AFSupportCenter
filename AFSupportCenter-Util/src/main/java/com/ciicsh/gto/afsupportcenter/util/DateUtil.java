@@ -40,6 +40,12 @@ public class DateUtil {
         return hfMonthDate.minusMonths(months).format(formatter);
     }
 
+    public static int compareMonth(String reference, String compared) {
+        YearMonth referenceDate = YearMonth.parse(reference , formatter);
+        YearMonth comparedDate = YearMonth.parse(compared , formatter);
+        return referenceDate.compareTo(comparedDate);
+    }
+
     public static String yyyyMMddHyphen(LocalDate localDate) {
         return localDate.format(yyyyMMddHyphenFormatter);
     }
