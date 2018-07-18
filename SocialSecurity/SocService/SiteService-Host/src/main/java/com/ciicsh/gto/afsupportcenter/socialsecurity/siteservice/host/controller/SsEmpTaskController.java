@@ -183,12 +183,16 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
      * 雇员任务办理（新进和转入）
      */
     @PostMapping("/handle")
-    public JsonResult<Boolean> handle(@RequestBody SsEmpTaskBO bo) {
+    public JsonResult<String> handle(@RequestBody SsEmpTaskBO bo) {
         bo.setModifiedBy(UserContext.getUserId());
         bo.setModifiedDisplayName(UserContext.getUser().getDisplayName());
         //false 表示单个办理
-        boolean result = business.saveHandleData(bo, false);
-        return JsonResultKit.of(result);
+        String result = business.saveHandleData(bo, false);
+        if("succ".equals(result)){
+            return JsonResultKit.of(result);
+        }
+        return JsonResultKit.ofError(result);
+
     }
 
     /**

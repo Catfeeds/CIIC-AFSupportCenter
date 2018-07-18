@@ -83,6 +83,7 @@ public interface HfComAccountService extends IService<HfComAccount> {
     Integer isExistAccount(String companyId, Integer hfType);
 
     /**
+     * 接口调用方：客服中心
      * 根据公司信息查询账户信息
      * @param companyId 公司ID
      * @return
