@@ -76,4 +76,6 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
     AfEmpSocialDTO getAfEmpSocialByType(List<AfEmpSocialDTO> socialDTOS, String fundCategory);
 
     Integer getExistHandleRemarkCount(HfEmpTaskBo hfEmpTaskBo);
+
+    void createTransferTask(HfEmpTask inputHfEmpTask, Long comAccountId);
 }

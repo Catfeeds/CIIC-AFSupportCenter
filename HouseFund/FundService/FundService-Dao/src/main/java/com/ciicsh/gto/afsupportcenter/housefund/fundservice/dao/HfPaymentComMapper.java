@@ -35,5 +35,5 @@ public interface HfPaymentComMapper extends BaseMapper<HfPaymentCom> {
 
     List<HfPaymentComBo> detailList(@Param("paymentId") Long paymentId);
 
-
+    String getLastPaymentMonth(@Param("companyId") String companyId, @Param("hfType") Integer hfType);
 }

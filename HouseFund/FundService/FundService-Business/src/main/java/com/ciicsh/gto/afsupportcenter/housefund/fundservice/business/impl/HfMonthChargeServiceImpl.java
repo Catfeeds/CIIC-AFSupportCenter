@@ -1030,4 +1030,9 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         return JsonResultKit.of(retListPrint);
 
     }
+
+    @Override
+    public List<HfEmpLastPaymentBO> searchByLastPaymentMonth(String companyId, String employeeId, String hfMonth) {
+        return baseMapper.searchByLastPaymentMonth(companyId, employeeId, hfMonth);
+    }
 }

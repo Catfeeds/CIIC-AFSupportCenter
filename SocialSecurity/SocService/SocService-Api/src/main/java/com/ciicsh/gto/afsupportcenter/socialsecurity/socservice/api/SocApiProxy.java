@@ -68,4 +68,26 @@ public interface SocApiProxy {
     @PostMapping("/getSsEmpInfoById")
     JsonResult<SsEmpInfoDTO> getSsEmpInfoById(@RequestParam("companyId")String companyId,@RequestParam("employeeId")String employeeId);
 
+    /**
+     * 接口调用方：雇员中心
+     * 根据客户Id和雇员Id获取雇员已缴纳的社保信息
+     * @param companyId
+     * @param employeeId
+     * @return
+     */
+    @PostMapping("/getSocialSecurity")
+    JsonResult<SocialSecurityDTO> getSocialSecurity(@RequestParam("companyId")String companyId,@RequestParam("employeeId")String employeeId);
+
+    /**
+     * 接口调用方：雇员中心
+     * 根据客户Id和雇员Id及年份获取雇员该年的社保变更记录
+     * @param companyId
+     * @param employeeId
+     * @param year
+     * @return
+     */
+    @PostMapping("/getSocialSecurityChangeInformation")
+    JsonResult<List<SocialSecurityChangeInformationDTO>> getSocialSecurityChangeInformation(@RequestParam("companyId")String companyId,
+                                                                                      @RequestParam("employeeId")String employeeId,
+                                                                                      @RequestParam("year")String year);
 }

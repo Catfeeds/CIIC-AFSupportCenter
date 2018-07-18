@@ -82,4 +82,6 @@ public interface HfMonthChargeService extends IService<HfMonthCharge> {
     PageRows<HfRimittedBookReportBO> queryHfRimittedBookReport(PageInfo pageInfo, String userId);
 
     JsonResult printRemittedBook(Long comAccountClassId,String paymentMonth);
+
+    List<HfEmpLastPaymentBO> searchByLastPaymentMonth(String companyId, String employeeId, String hfMonth);
 }

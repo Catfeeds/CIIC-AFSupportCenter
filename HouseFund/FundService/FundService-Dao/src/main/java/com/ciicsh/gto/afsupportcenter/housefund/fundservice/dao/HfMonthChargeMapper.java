@@ -6,6 +6,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBank
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -69,6 +70,8 @@ public interface HfMonthChargeMapper extends BaseMapper<HfMonthCharge> {
     HfMonthChargeBo getMonthChargeByIn(HfMonthChargeBo hfMonthChargeBo);
     HfMonthChargeBo getMonthChargeByOut(HfMonthChargeBo hfMonthChargeBo);
     HfMonthChargeBo getMonthChargeByInOut(HfMonthChargeBo hfMonthChargeBo);
+
+    List<HfEmpLastPaymentBO> searchByLastPaymentMonth(@Param("companyId") String companyId, @Param("employeeId") String employeeId, @Param("hfMonth") String hfMonth);
 
     List<HfRimittedBookReportBO> queryHfRimittedBookReport(HFMonthChargeQueryBO hfMonthChargeQueryBO);
 }

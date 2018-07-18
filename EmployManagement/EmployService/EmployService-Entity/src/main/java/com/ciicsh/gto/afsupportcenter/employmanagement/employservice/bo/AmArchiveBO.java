@@ -19,7 +19,17 @@ public class AmArchiveBO extends AmArchive {
 
     private String idNum;
 
+    private  String remark;
+
     private List<Long> employmentIds;
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public List<Long> getEmploymentIds() {
         return employmentIds;

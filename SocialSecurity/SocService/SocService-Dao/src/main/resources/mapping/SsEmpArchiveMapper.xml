@@ -325,4 +325,17 @@
             AND ea.employee_id = #{employeeId}
             ORDER BY ea.in_date DESC LIMIT 1
     </select>
+
+    <select id="getSsEmployee" resultMap="BaseResultMapDTO">
+      SELECT
+          ea.employee_id,
+          ea.company_id,
+          ea.com_account_id,
+          ee.id_num
+      FROM ss_emp_archive ea INNER JOIN emp_employee ee ON ea.employee_id = ee.employee_id
+      WHERE ea.is_active = 1 AND ee.is_active = 1
+            AND ea.company_id = #{companyId}
+            AND ea.employee_id = #{employeeId}
+            ORDER BY ea.created_time DESC LIMIT 1
+    </select>
 </mapper>
