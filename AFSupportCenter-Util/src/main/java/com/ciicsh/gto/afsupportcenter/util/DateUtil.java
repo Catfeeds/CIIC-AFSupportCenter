@@ -1,9 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.util;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.chrono.ChronoZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -30,6 +27,25 @@ public class DateUtil {
         ZoneId zoneId  = ZoneId.systemDefault();
         return instant.atZone(zoneId).toLocalDate();
     }
+
+    public static LocalDateTime dateToLocaleDateTime(Date date){
+        if(date==null){
+            return null;
+        }
+        Instant instant = date.toInstant();
+        ZoneId zone = ZoneId.systemDefault();
+        return LocalDateTime.ofInstant(instant, zone);
+    }
+
+    public static Date localDateTimeToDate(LocalDateTime localDateTime) {
+        if(localDateTime==null){
+            return null;
+        }
+        ZoneId zone = ZoneId.systemDefault();
+        Instant instant = localDateTime.atZone(zone).toInstant();
+        return Date.from(instant);
+    }
+
     public static String plusMonth(String month, int months){
         YearMonth hfMonthDate = YearMonth.parse(month , formatter);
         return hfMonthDate.plusMonths(months).format(formatter);

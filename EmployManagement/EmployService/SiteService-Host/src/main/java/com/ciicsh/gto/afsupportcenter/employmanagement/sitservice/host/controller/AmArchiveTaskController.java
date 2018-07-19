@@ -1,16 +1,15 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmResTaskCountBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.archiveSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmArchiveDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveUse;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpMaterial;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmInjury;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.archiveSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
@@ -21,6 +20,7 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -388,6 +388,10 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         return JsonResultKit.of(map);
     }
 
+
+    @Transactional(
+        rollbackFor = {Exception.class}
+    )
     @PostMapping("/saveAmEmpMaterial")
     public JsonResult  saveAmEmpMaterial(@RequestBody List<AmEmpMaterial> list) {
         String userId = "System";
@@ -426,7 +430,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             bo.setModifiedTime(now);
             bo.setCreatedBy(userId);
             bo.setModifiedBy(userId);
-            bo.setSubmitterDate(LocalDate.now());
+            bo.setSubmitterDate(now);
             if(bo.getEmpMaterialId()==null){
                 data.add(bo);
             }
@@ -435,6 +439,16 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         boolean result = false;
         try {
             result = amEmpMaterialService.insertOrUpdateBatch(data);
+            // 退工归还材料签收 提交材料操作流水日志
+            if(result){
+                AmEmpMaterialOperationLogBO bo = new AmEmpMaterialOperationLogBO();
+                bo.setEmpTaskId(data.get(0).getEmpTaskId());
+                bo.setOperationTime(new Date());
+                bo.setOperationType(3);
+                bo.setOperationBy(UserContext.getUserId());
+                bo.setOperationName(UserContext.getUserName());
+                amEmpMaterialService.insertAmEmpMaterialOperationLog(bo);
+            }
         } catch (Exception e) {
 
         }

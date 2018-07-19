@@ -57,7 +57,7 @@
             <if test="rejectDate != null">reject_date=#{rejectDate}</if>
         </set>
             where
-              emp_task_id = #{empTaskId}
+              emp_task_id = #{empTaskId} and is_active = 1
     </update>
 
     <update id="updateMaterialBatch">

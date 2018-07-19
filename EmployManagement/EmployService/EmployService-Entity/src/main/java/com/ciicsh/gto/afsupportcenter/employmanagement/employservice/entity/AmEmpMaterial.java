@@ -43,7 +43,7 @@ public class AmEmpMaterial implements Serializable {
      * 前道提交时间
      */
     @TableField("submitter_date")
-    private LocalDate submitterDate;
+    private LocalDateTime submitterDate;
     @TableField("receive_id")
     private String receiveId;
     /**
@@ -165,11 +165,11 @@ public class AmEmpMaterial implements Serializable {
         this.submitterName = submitterName;
     }
 
-    public LocalDate getSubmitterDate() {
+    public LocalDateTime getSubmitterDate() {
         return submitterDate;
     }
 
-    public void setSubmitterDate(LocalDate submitterDate) {
+    public void setSubmitterDate(LocalDateTime submitterDate) {
         this.submitterDate = submitterDate;
     }
 

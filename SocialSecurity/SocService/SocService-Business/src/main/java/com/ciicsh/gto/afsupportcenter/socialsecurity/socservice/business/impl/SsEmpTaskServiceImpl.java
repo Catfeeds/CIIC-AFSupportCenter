@@ -75,6 +75,9 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     SsMonthChargeItemService ssMonthChargeItemService;
     @Autowired
     SsComAccountService ssComAccountService;
+    @Autowired
+    SsPaymentService ssPaymentService;
+
 
     //个人进位方式
     private final static String PERSONROUNDTYPE = "personRoundType";
@@ -164,10 +167,17 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean saveHandleData(SsEmpTaskBO bo, boolean isBatch) {
+    public String saveHandleData(SsEmpTaskBO bo, boolean isBatch) {
         //办理类型1、未办 2 、已办  3 已做 4、批退 5、不需处理
         int taskStatus = bo.getTaskStatus();
         int taskCategory = bo.getTaskCategory();
+
+        //业务校验
+        boolean canDeal = ssPaymentService.ssCanDeal(bo.getHandleMonth(),bo.getCompanyId());
+        if(!canDeal){
+            return "该雇员的办理月份已经在支付申请中，无法办理！";
+        }
+
         // 更新任务单费用段
         List<SsEmpTaskPeriod> periods = bo.getEmpTaskPeriods();
         if (periods != null) {
@@ -243,7 +253,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 taskCompletCallBack(bo);
             }
         }
-        return true;
+        return "SUCC";
     }
 
     @Override

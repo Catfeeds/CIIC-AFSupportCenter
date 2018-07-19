@@ -26,6 +26,7 @@ public interface FundApiProxy {
     JsonResult<List<HfComAccountDTO>> getComAccountList(@RequestBody HfComAccountParamDTO paramDto);
 
     /**
+     * 接口调用方：客服中心
      * 保存企业任务单
      * @param comTaskDTO
      * @return
@@ -35,6 +36,7 @@ public interface FundApiProxy {
 
 
     /**
+     * 接口调用方：客服中心
      * 根据公司ID和公积金类别获取公积金账户信息
      * @param companyId 公司ID
      * @return
@@ -42,6 +44,12 @@ public interface FundApiProxy {
     @GetMapping("/getAccountByCompany")
     JsonResult<HfComAccountExtDTO> getAccountByCompany(@RequestParam("companyId") String companyId);
 
+    /**
+     * 接口调用方：薪酬结算中心
+     *
+     * @param paramDTOList
+     * @return
+     */
     @PostMapping("/getHfEmpInfo")
     JsonResult<List<HfEmpInfoDTO>> getHfEmpInfo(@RequestBody List<HfEmpInfoParamDTO> paramDTOList);
 
