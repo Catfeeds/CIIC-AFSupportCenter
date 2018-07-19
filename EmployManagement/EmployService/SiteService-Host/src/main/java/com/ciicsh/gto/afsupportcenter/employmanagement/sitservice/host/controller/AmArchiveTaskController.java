@@ -430,7 +430,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             bo.setModifiedTime(now);
             bo.setCreatedBy(userId);
             bo.setModifiedBy(userId);
-            bo.setSubmitterDate(LocalDate.now());
+            bo.setSubmitterDate(now);
             if(bo.getEmpMaterialId()==null){
                 data.add(bo);
             }

@@ -463,7 +463,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         AmEmpTask amEmpTask = business.selectById(list.get(0).getEmpTaskId());
         // 调用雇员中心 签收
-        String message = iAmEmpMaterialService.receiveMaterial(amEmpTask.getTaskId(),1,null);
+        String message = iAmEmpMaterialService.receiveMaterial(amEmpTask.getHireTaskId(),1,null);
         if("签收成功".equals(message)){
             amEmpTask.setTaskStatus(2);
             business.insertOrUpdate(amEmpTask);
@@ -492,11 +492,12 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             material.setRejectName(userName);
             material.setRejectId(userId);
             material.setModifiedTime(LocalDateTime.now());
+            material.setActive(false);
         }
 
         AmEmpTask amEmpTask = business.selectById(list.get(0).getEmpTaskId());
         // 调用雇员中心 批退
-        String message = iAmEmpMaterialService.receiveMaterial(amEmpTask.getTaskId(),2,list.get(0).getRejectReason());
+        String message = iAmEmpMaterialService.receiveMaterial(amEmpTask.getHireTaskId(),2,list.get(0).getRejectReason());
         if("批退成功".equals(message)){
             boolean result =  iAmEmpMaterialService.updateBatchById(list);
         }

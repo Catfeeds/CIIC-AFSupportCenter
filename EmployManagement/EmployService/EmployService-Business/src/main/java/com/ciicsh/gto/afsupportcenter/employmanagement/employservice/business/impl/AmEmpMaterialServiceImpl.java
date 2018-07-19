@@ -72,10 +72,11 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
         HireMaterialTransferRecordDTO dto = jsonResult.getData();
 
         PageRows<AmEmpMaterialBO> pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpMaterial(amEmpMaterialBO));
+
         if (dto != null && dto.getOperation() == 3) {
             if (pageRows.getRows().size() > 0) {
-                Date d = DateUtil.localDateToDate(pageRows.getRows().get(0).getSubmitterDate());
-                if (d.getTime() == dto.getOperateTime().getTime()) {
+                Date d = DateUtil.localDateTimeToDate(pageRows.getRows().get(0).getSubmitterDate());
+                if(dto.getOperateTime().before(d)){
                     return pageRows;
                 }else{
                     Wrapper<AmEmpMaterial> wrapper = new EntityWrapper<>();
@@ -86,13 +87,12 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
                     baseMapper.update(material, wrapper);
                 }
             }
-
             JsonResult<List<HireMaterialBillDTO>> dtoResult = sheetInfoProxy.getHireMaterialBillList(task.getHireTaskId());
             List<HireMaterialBillDTO> dtoList = dtoResult.getData();
             if(dtoList != null && dtoList.size() > 0){
                 String extension = "";
                 com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<List<SMUserInfoDTO>>
-                smUserInfo = smUserInfoProxy.getColleaguesByUserId(dtoList.get(0).getCreatedBy());
+                smUserInfo = smUserInfoProxy.getUsersByUserId(dtoList.get(0).getCreatedBy());
                 List<SMUserInfoDTO> userList = smUserInfo.getData();
                 if(userList != null && userList.size() > 0){
                     extension = userList.get(0).getExtension();
@@ -103,7 +103,7 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
                     amEmpMaterial.setMaterialName(hire.getMaterialName());
                     amEmpMaterial.setSubmitterId(hire.getCreatedBy());
                     amEmpMaterial.setSubmitterName(hire.getCreatedBy());
-                    amEmpMaterial.setSubmitterDate(DateUtil.dateToLocaleDate(hire.getCreatedTime()));
+                    amEmpMaterial.setSubmitterDate(DateUtil.dateToLocaleDateTime(hire.getCreatedTime()));
                     amEmpMaterial.setEmployeeId(amEmpMaterialBO.getEmployeeId());
                     amEmpMaterial.setOperateType(1);
                     amEmpMaterial.setActive(true);
