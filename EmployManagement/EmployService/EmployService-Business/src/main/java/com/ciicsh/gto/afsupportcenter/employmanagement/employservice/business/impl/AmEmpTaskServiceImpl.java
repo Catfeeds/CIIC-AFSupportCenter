@@ -161,6 +161,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         amEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
         amEmpTask.setTaskCategory(taskCategory);
         amEmpTask.setTaskStatus(1);
+        amEmpTask.setHireTaskId(taskMsgDTO.getVariables().get("hireTaskId").toString());
+
 
         if(StringUtil.isEmpty(taskMsgDTO.getVariables().get("empCompanyId")))
         {
@@ -244,49 +246,49 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         } catch (Exception e) {
 
         }
-
-        try {
-            List<String> list = (List<String>) map.get("materialList");
-            SMUserInfoDTO smUserInfoDTO = null;
-            if(!StringUtil.isEmpty(submitterId))
-            {
-                smUserInfoDTO = employeeInfoProxy.getUserInfo(submitterId);
-            }
-            List<AmEmpMaterial> amEmpMaterialsList = new ArrayList<>();
-            if(null!=list)
-            {
-                for(String str:list)
-                {
-                    AmEmpMaterial amEmpMaterial = new AmEmpMaterial();
-                    amEmpMaterial.setMaterialName(str);
-                    amEmpMaterial.setEmployeeId(bo.getEmployeeId());
-                    amEmpMaterial.setOperateType(1);
-                    amEmpMaterial.setActive(true);
-                    String createdBy = "System";
-                    try {
-                        createdBy = smUserInfoDTO.getUserId();
-                    } catch (Exception e) {
-
-                    }
-                    amEmpMaterial.setCreatedBy(createdBy);
-                    amEmpMaterial.setCreatedTime(LocalDateTime.now());
-                    amEmpMaterial.setModifiedTime(LocalDateTime.now());
-                    amEmpMaterial.setModifiedBy(createdBy);
-                    amEmpMaterial.setSubmitterDate(LocalDate.now());
-                    amEmpMaterial.setSubmitterId(submitterId);
-                    amEmpMaterial.setSubmitterName(smUserInfoDTO==null?"":smUserInfoDTO.getDisplayName());
-                    amEmpMaterial.setExtension(smUserInfoDTO==null?"":smUserInfoDTO.getExtension());
-                    amEmpMaterial.setEmpTaskId(amEmpTask.getEmpTaskId());
-                    amEmpMaterialsList.add(amEmpMaterial);
-                }
-                amEmpMaterialService.insertBatch(amEmpMaterialsList);
-            }else{
-                logger.info("materialList",map.get("materialList"));
-            }
-
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
+//        目前材料不从任务单过来，调用雇员中心接口取材料
+//        try {
+//            List<String> list = (List<String>) map.get("materialList");
+//            SMUserInfoDTO smUserInfoDTO = null;
+//            if(!StringUtil.isEmpty(submitterId))
+//            {
+//                smUserInfoDTO = employeeInfoProxy.getUserInfo(submitterId);
+//            }
+//            List<AmEmpMaterial> amEmpMaterialsList = new ArrayList<>();
+//            if(null!=list)
+//            {
+//                for(String str:list)
+//                {
+//                    AmEmpMaterial amEmpMaterial = new AmEmpMaterial();
+//                    amEmpMaterial.setMaterialName(str);
+//                    amEmpMaterial.setEmployeeId(bo.getEmployeeId());
+//                    amEmpMaterial.setOperateType(1);
+//                    amEmpMaterial.setActive(true);
+//                    String createdBy = "System";
+//                    try {
+//                        createdBy = smUserInfoDTO.getUserId();
+//                    } catch (Exception e) {
+//
+//                    }
+//                    amEmpMaterial.setCreatedBy(createdBy);
+//                    amEmpMaterial.setCreatedTime(LocalDateTime.now());
+//                    amEmpMaterial.setModifiedTime(LocalDateTime.now());
+//                    amEmpMaterial.setModifiedBy(createdBy);
+//                    amEmpMaterial.setSubmitterDate(LocalDate.now());
+//                    amEmpMaterial.setSubmitterId(submitterId);
+//                    amEmpMaterial.setSubmitterName(smUserInfoDTO==null?"":smUserInfoDTO.getDisplayName());
+//                    amEmpMaterial.setExtension(smUserInfoDTO==null?"":smUserInfoDTO.getExtension());
+//                    amEmpMaterial.setEmpTaskId(amEmpTask.getEmpTaskId());
+//                    amEmpMaterialsList.add(amEmpMaterial);
+//                }
+//                amEmpMaterialService.insertBatch(amEmpMaterialsList);
+//            }else{
+//                logger.info("materialList",map.get("materialList"));
+//            }
+//
+//        } catch (Exception e) {
+//            logger.error(e.getMessage(), e);
+//        }
 
         return true;
     }
@@ -480,15 +482,15 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         {
             /**
              * 用工属性根据雇佣类型  派遣默认中智
-              */
-          if(null!=amEmpEmployeeBO.getHireUnit()&&amEmpEmployeeBO.getHireUnit()==1)
-          {
-              amEmpTaskBO1.setEmployProperty("独立");
-          }
+             */
+            if(null!=amEmpEmployeeBO.getHireUnit()&&amEmpEmployeeBO.getHireUnit()==1)
+            {
+                amEmpTaskBO1.setEmployProperty("独立");
+            }
 
-          if(null!=amEmpEmployeeBO.getLaborStartDate()){
-              amEmpTaskBO1.setFirstInDate(sdf.format(amEmpEmployeeBO.getLaborStartDate()));//实际录用日期,合同开始日期
-          }
+            if(null!=amEmpEmployeeBO.getLaborStartDate()){
+                amEmpTaskBO1.setFirstInDate(sdf.format(amEmpEmployeeBO.getLaborStartDate()));//实际录用日期,合同开始日期
+            }
         }
 
         amEmpTaskBO1.setOpenAfDate(sdf.format(new Date()));

@@ -167,11 +167,23 @@ public class AmEmpTask implements Serializable {
      */
     @TableField("modified_by")
     private String modifiedBy;
+
     @TableField("emp_company_id")
     private String empCompanyId;
 
     @TableField("is_finish")
     private  Boolean isFinish;
+
+    @TableField("hire_task_id")
+    private String hireTaskId;
+
+    public String getHireTaskId() {
+        return hireTaskId;
+    }
+
+    public void setHireTaskId(String hireTaskId) {
+        this.hireTaskId = hireTaskId;
+    }
 
     public Boolean getFinish() {
         return isFinish;
