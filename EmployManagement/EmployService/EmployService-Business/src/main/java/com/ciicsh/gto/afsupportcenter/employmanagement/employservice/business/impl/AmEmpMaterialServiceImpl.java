@@ -103,7 +103,7 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
                     amEmpMaterial.setMaterialName(hire.getMaterialName());
                     amEmpMaterial.setSubmitterId(hire.getCreatedBy());
                     amEmpMaterial.setSubmitterName(hire.getCreatedBy());
-                    amEmpMaterial.setSubmitterDate(DateUtil.dateToLocaleDateTime(hire.getCreatedTime()));
+                    amEmpMaterial.setSubmitterDate(DateUtil.dateToLocaleDateTime(dto.getOperateTime()));
                     amEmpMaterial.setEmployeeId(amEmpMaterialBO.getEmployeeId());
                     amEmpMaterial.setOperateType(1);
                     amEmpMaterial.setActive(true);
@@ -197,27 +197,37 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
     )
     public boolean updateMaterialByTaskId(MaterialUpdateDTO materialUpdateDTO) {
 
-        Integer i = baseMapper.updateMaterialByTaskId(materialUpdateDTO);
 
-        if(i>0){
-            AmEmpMaterialOperationLogBO logBO = new AmEmpMaterialOperationLogBO();
-            logBO.setEmpTaskId(materialUpdateDTO.getEmpTaskId());
-            logBO.setOperationType(materialUpdateDTO.getOperationType());
-            logBO.setRemark(materialUpdateDTO.getRemark());
-            if(materialUpdateDTO.getOperationType() == 1){
-                // 签收
-                logBO.setOperationBy(materialUpdateDTO.getReceiveId());
-                logBO.setOperationName(materialUpdateDTO.getReceiveName());
-                logBO.setOperationTime(materialUpdateDTO.getReceiveDate());
-            }else if(materialUpdateDTO.getOperationType() == 2){
-                // 批退
-                logBO.setOperationBy(materialUpdateDTO.getRejectId());
-                logBO.setOperationName(materialUpdateDTO.getRejectName());
-                logBO.setOperationTime(materialUpdateDTO.getRejectDate());
-            }
-            return insertAmEmpMaterialOperationLog(logBO);
+        AmEmpMaterial material = new AmEmpMaterial();
+        material.setModifiedTime(LocalDateTime.now());
+        AmEmpMaterialOperationLogBO logBO = new AmEmpMaterialOperationLogBO();
+        logBO.setEmpTaskId(materialUpdateDTO.getEmpTaskId());
+        logBO.setOperationType(materialUpdateDTO.getOperationType());
+        logBO.setRemark(materialUpdateDTO.getRemark());
+        if(materialUpdateDTO.getOperationType() == 1){
+            material.setReceiveId(materialUpdateDTO.getReceiveId());
+            material.setReceiveName(materialUpdateDTO.getReceiveName());
+            material.setReceiveDate(DateUtil.dateToLocaleDate(materialUpdateDTO.getReceiveDate()));
+
+            // 签收
+            logBO.setOperationBy(materialUpdateDTO.getReceiveId());
+            logBO.setOperationName(materialUpdateDTO.getReceiveName());
+            logBO.setOperationTime(materialUpdateDTO.getReceiveDate());
+        }else if(materialUpdateDTO.getOperationType() == 2){
+            material.setRejectId(materialUpdateDTO.getRejectId());
+            material.setRejectName(materialUpdateDTO.getRejectName());
+            material.setRejectDate(DateUtil.dateToLocaleDate(materialUpdateDTO.getRejectDate()));
+
+            // 批退
+            logBO.setOperationBy(materialUpdateDTO.getRejectId());
+            logBO.setOperationName(materialUpdateDTO.getRejectName());
+            logBO.setOperationTime(materialUpdateDTO.getRejectDate());
         }
-        return false;
+        Wrapper<AmEmpMaterial> wrapper = new EntityWrapper<>();
+        wrapper.eq("is_active",1);
+        wrapper.eq("emp_task_id", materialUpdateDTO.getEmpTaskId());
+        baseMapper.update(material,wrapper);
+        return insertAmEmpMaterialOperationLog(logBO);
     }
 
     @Override
