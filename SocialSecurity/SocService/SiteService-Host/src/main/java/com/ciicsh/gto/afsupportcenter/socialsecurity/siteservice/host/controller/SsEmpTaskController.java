@@ -392,7 +392,8 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     public JsonResult<SsEmpTaskFront> getOriginEmpTask(@RequestParam("empTaskId") String empTaskId) {
         EntityWrapper<SsEmpTaskFront> ew = new EntityWrapper<>();
         ew.where("emp_task_id={0}", Long.parseLong(empTaskId))
-            .and("is_active=1");
+            .and("is_active=1")
+            .last("limit 1");
         SsEmpTaskFront ssEmpTaskFront = ssEmpTaskFrontService.selectOne(ew);
         return JsonResultKit.of(ssEmpTaskFront);
     }
