@@ -253,7 +253,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 taskCompletCallBack(bo);
             }
         }
-        return "";
+        return "SUCC";
     }
 
     @Override

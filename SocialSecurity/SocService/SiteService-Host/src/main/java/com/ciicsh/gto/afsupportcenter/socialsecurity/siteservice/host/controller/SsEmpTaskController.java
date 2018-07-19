@@ -188,7 +188,7 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         bo.setModifiedDisplayName(UserContext.getUser().getDisplayName());
         //false 表示单个办理
         String result = business.saveHandleData(bo, false);
-        if("succ".equals(result)){
+        if("SUCC".equals(result)){
             return JsonResultKit.of(result);
         }
         return JsonResultKit.ofError(result);

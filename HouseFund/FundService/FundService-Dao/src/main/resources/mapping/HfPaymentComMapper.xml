@@ -146,8 +146,8 @@
             AND ea.company_id=acr.company_id
             AND mc.payment_type IN (7, 8, 9, 10)
         ) AS remitted_count_emp_reduce,
-        (SELECT remitted_emp_count_standard + remitted_count_emp_add - remitted_count_emp_reduce) AS remitted_count_emp,
-        (SELECT ifnull(amount_standard,0) + ifnull(remitted_amount_add,0) - ifnull(remitted_amount_reduce,0)) AS remitted_amount
+        (SELECT remitted_emp_count_standard + remitted_count_emp_add ) AS remitted_count_emp,
+        (SELECT ifnull(amount_standard,0) + ifnull(remitted_amount_add,0) ) AS remitted_amount
 
         FROM hf_payment_account pa
         INNER JOIN hf_account_com_relation acr ON acr.com_account_id=pa.com_account_id
