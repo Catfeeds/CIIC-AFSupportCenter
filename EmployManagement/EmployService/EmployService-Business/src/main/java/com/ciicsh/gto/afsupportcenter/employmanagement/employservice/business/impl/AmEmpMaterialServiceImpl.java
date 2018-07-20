@@ -67,7 +67,8 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
 
         AmEmpTask task = amEmpTaskMapper.selectById(amEmpMaterialBO.getEmpTaskId());
 
-        JsonResult<HireMaterialTransferRecordDTO> jsonResult = sheetInfoProxy.getHireMaterialNewestTransferRecord(task.getHireTaskId());
+        //JsonResult<HireMaterialTransferRecordDTO> jsonResult = sheetInfoProxy.getHireMaterialNewestTransferRecord(task.getHireTaskId());
+        JsonResult<HireMaterialTransferRecordDTO> jsonResult = new JsonResult();
 
         HireMaterialTransferRecordDTO dto = jsonResult.getData();
 
