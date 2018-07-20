@@ -1479,4 +1479,45 @@
             AND handle_remark IS NOT NULL
         </where>
     </select>
+
+    <select id="queryHistoryEmpTask" resultMap="BaseResultMapBo">
+        SELECT
+            het.emp_task_id,
+            het.task_category,
+            het.task_status,
+            MIN(hetp.start_month) AS start_month,
+            CASE WHEN
+            het.task_category = 1 OR het.task_category = 2
+            OR het.task_category = 3 OR het.task_category = 7
+            OR het.task_category = 9 OR het.task_category = 10 THEN NULL
+            ELSE MAX(hetp.end_month) END AS end_month,
+            hetp.hf_month,
+            IFNULL(hetp.base_amount, het.emp_base) AS emp_base,
+            het.operation_remind,
+            het.operation_remind_date,
+            het.modified_time,
+            het.modified_display_name
+        FROM hf_emp_task het
+        <if test="isSelf != null and !isSelf">
+            INNER JOIN hf_emp_task hetc ON het.company_id = hetc.company_id
+            AND het.employee_id = hetc.employee_id
+            AND het.emp_task_id != hetc.emp_task_id
+            AND het.hf_type != hetc.hf_type
+            AND hetc.is_active = 1
+        </if>
+        INNER JOIN hf_emp_task_period hetp ON het.emp_task_id = hetp.emp_task_id
+        <where>
+            het.is_active = 1
+            AND het.task_status > 1
+            AND het.task_category != 8
+            <if test="isSelf != null and !isSelf">
+                AND hetc.emp_task_id = #{empTaskId}
+            </if>
+            <if test="isSelf != null and isSelf">
+                AND het.emp_task_id = #{empTaskId}
+            </if>
+        </where>
+        GROUP BY het.emp_task_id
+        ORDER BY het.created_time DESC
+    </select>
 </mapper>

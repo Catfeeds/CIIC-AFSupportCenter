@@ -91,6 +91,11 @@ public class HfEmpTaskExportBo implements Serializable{
     @Excel(name = "操作提示", orderNum = "17", width = 20)
     private String operationRemindName;
 
+    private String taskStatusName;
+    private LocalDateTime modifiedTime;
+    private String modifiedDisplayName;
+    private String hfMonth;
+
     public Long getEmpTaskId() {
         return empTaskId;
     }
@@ -460,5 +465,40 @@ public class HfEmpTaskExportBo implements Serializable{
 
     public void setOperationRemindName(String operationRemindName) {
         this.operationRemindName = operationRemindName;
+    }
+
+    public String getTaskStatusName() {
+        if (this.taskStatus != null) {
+            return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.taskStatus), DictUtil.TYPE_VALUE_TASK_PROCESS_STATUS, false);
+        }
+        return taskStatusName;
+    }
+
+    public void setTaskStatusName(String taskStatusName) {
+        this.taskStatusName = taskStatusName;
+    }
+
+    public LocalDateTime getModifiedTime() {
+        return modifiedTime;
+    }
+
+    public void setModifiedTime(LocalDateTime modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+
+    public String getModifiedDisplayName() {
+        return modifiedDisplayName;
+    }
+
+    public void setModifiedDisplayName(String modifiedDisplayName) {
+        this.modifiedDisplayName = modifiedDisplayName;
+    }
+
+    public String getHfMonth() {
+        return hfMonth;
+    }
+
+    public void setHfMonth(String hfMonth) {
+        this.hfMonth = hfMonth;
     }
 }
