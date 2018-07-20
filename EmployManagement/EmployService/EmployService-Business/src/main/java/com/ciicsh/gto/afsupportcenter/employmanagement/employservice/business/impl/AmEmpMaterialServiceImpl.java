@@ -70,7 +70,7 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
         //JsonResult<HireMaterialTransferRecordDTO> jsonResult = sheetInfoProxy.getHireMaterialNewestTransferRecord(task.getHireTaskId());
         JsonResult<HireMaterialTransferRecordDTO> jsonResult = new JsonResult();
 
-        HireMaterialTransferRecordDTO dto = jsonResult.getData();
+         HireMaterialTransferRecordDTO dto = jsonResult.getData();
 
         PageRows<AmEmpMaterialBO> pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpMaterial(amEmpMaterialBO));
 

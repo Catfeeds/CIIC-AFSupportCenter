@@ -19,9 +19,9 @@ public class MessageController {
     private KafkaSender sender;
 
     @RequestMapping(value = "/summarycalculate")
-    public JsonResult<String> summaryCalculate(@RequestParam Long comAccountId, @RequestParam String hfMonth, @RequestParam String generalMethod,
+    public JsonResult<String> summaryCalculate(@RequestParam Long comAccountId, @RequestParam String ssMonth, @RequestParam String generalMethod,
                                                @RequestParam(required=false) String userName){
-        String key = "-com-account-"+comAccountId+"-"+hfMonth+"-"+generalMethod+"-";
+        String key = "-com-account-"+comAccountId+"-"+ssMonth+"-"+generalMethod+"-";
         SocReportMessage message = RedisManager.get(key,SocReportMessage.class);
         JsonResult<String> json = new JsonResult();
         if(null != message){
@@ -30,7 +30,7 @@ public class MessageController {
         }else{
             message = new SocReportMessage();
             message.setComAccountId(comAccountId);
-            message.setSsMonth(hfMonth);
+            message.setSsMonth(ssMonth);
             message.setGeneralMethod(generalMethod);
             if(null==userName || userName.equals("")){
                 userName = "system";
