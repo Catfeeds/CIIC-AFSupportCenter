@@ -236,6 +236,8 @@ public class FundApiController implements FundApiProxy{
     }
 
     @Override
+    @ApiOperation(value = "微信端获取雇员公积金信息接口", notes = "根据客户ID和雇员ID获取对象")
+    @PostMapping("/getFund")
     public JsonResult<FundDTO> getFund(String companyId, String employeeId) {
         Wrapper<HfEmpArchive> hfEmpArchiveWrapper = new EntityWrapper<>();
         hfEmpArchiveWrapper.where("is_active = 1");
@@ -275,33 +277,33 @@ public class FundApiController implements FundApiProxy{
                 addStatus = "封存";
             }
         }
-        String paymentMonth = hfPaymentComService.getLastPaymentMonth(companyId, 1);
+//        String paymentMonth = hfPaymentComService.getLastPaymentMonth(companyId, 1);
+//
+//        if (paymentMonth != null) {
+        Wrapper<HfMonthCharge> hfMonthChargeWrapper = new EntityWrapper<>();
+        hfMonthChargeWrapper.where("is_active = 1");
+        hfMonthChargeWrapper.and("company_id = {0}", hfEmpArchive.getCompanyId());
+        hfMonthChargeWrapper.and("employee_id = {0}", hfEmpArchive.getEmployeeId());
+        hfMonthChargeWrapper.and("hf_type = 2");
+        hfMonthChargeWrapper.orderBy("hf_month desc");
+        hfMonthChargeWrapper.last("limit 1");
+        HfMonthCharge hfMonthCharge = hfMonthChargeService.selectOne(hfMonthChargeWrapper);
 
-        if (paymentMonth != null) {
-            Wrapper<HfMonthCharge> hfMonthChargeWrapper = new EntityWrapper<>();
-            hfMonthChargeWrapper.where("is_active = 1");
-            hfMonthChargeWrapper.and("company_id = {0}", hfEmpArchive.getCompanyId());
-            hfMonthChargeWrapper.and("employee_id = {0}", hfEmpArchive.getEmployeeId());
-            hfMonthChargeWrapper.and("hf_type = 2");
-            hfMonthChargeWrapper.orderBy("hf_month desc");
-            hfMonthChargeWrapper.last("limit 1");
-            HfMonthCharge hfMonthCharge = hfMonthChargeService.selectOne(hfMonthChargeWrapper);
+        if (hfMonthCharge != null) {
+            String hfMonth = hfMonthCharge.getHfMonth();
 
-            if (hfMonthCharge != null) {
-                String hfMonth = hfMonthCharge.getHfMonth();
-
-                if (hfMonthCharge.getPaymentType() == HfMonthChargeConstant.PAYMENT_TYPE_TRANS_OUT
-                    || hfMonthCharge.getPaymentType() == HfMonthChargeConstant.PAYMENT_TYPE_CLOSE
-                    ) {
-                    hfMonth = hfMonthCharge.getSsMonthBelong();
-                }
-
-                if (DateUtil.compareMonth(hfMonth, paymentMonth) < 0) {
-                    paymentMonth = hfMonth;
-                }
+            if (hfMonthCharge.getPaymentType() == HfMonthChargeConstant.PAYMENT_TYPE_TRANS_OUT
+                || hfMonthCharge.getPaymentType() == HfMonthChargeConstant.PAYMENT_TYPE_CLOSE
+                ) {
+                hfMonth = hfMonthCharge.getSsMonthBelong();
             }
 
-            List<HfEmpLastPaymentBO> hfEmpLastPaymentBOList = hfMonthChargeService.searchByLastPaymentMonth(companyId, employeeId, paymentMonth);
+//                if (DateUtil.compareMonth(hfMonth, paymentMonth) < 0) {
+//                    paymentMonth = hfMonth;
+//                }
+//        }
+
+            List<HfEmpLastPaymentBO> hfEmpLastPaymentBOList = hfMonthChargeService.searchByLastPaymentMonth(companyId, employeeId, hfMonth);
 
             if (CollectionUtils.isNotEmpty(hfEmpLastPaymentBOList)) {
                 List<FundDetailDTO> fundDetailDTOList = new ArrayList<>(hfEmpLastPaymentBOList.size());
@@ -333,46 +335,44 @@ public class FundApiController implements FundApiProxy{
     }
 
     @Override
+    @ApiOperation(value = "微信端获取雇员公积金变更信息接口", notes = "根据客户ID，雇员ID，年份获取对象")
+    @PostMapping("/getFundChangeInformation")
     public JsonResult<List<FundChangeInformationDTO>> getFundChangeInformation(String companyId, String employeeId, String year) {
-        String paymentMonth = hfPaymentComService.getLastPaymentMonth(companyId, 1);
+//        String paymentMonth = hfPaymentComService.getLastPaymentMonth(companyId, 1);
+//
+//        if (paymentMonth != null) {
+        Wrapper<HfMonthCharge> hfMonthChargeWrapper = new EntityWrapper<>();
+        hfMonthChargeWrapper.where("is_active = 1");
+        hfMonthChargeWrapper.and("company_id = {0}", companyId);
+        hfMonthChargeWrapper.and("employee_id = {0}", employeeId);
+        hfMonthChargeWrapper.and("LEFT(hf_month, 4) = {0}", year);
+//                hfMonthChargeWrapper.and("hf_month <= {0}", paymentMonth);
+        hfMonthChargeWrapper.and("payment_type != 1");
+        hfMonthChargeWrapper.orderBy("company_id,employee_id,hf_month,ss_month_belong,hf_type");
+        List<HfMonthCharge> hfMonthChargeList = hfMonthChargeService.selectList(hfMonthChargeWrapper);
 
-        if (paymentMonth != null) {
-            try {
-                Wrapper<HfMonthCharge> hfMonthChargeWrapper = new EntityWrapper<>();
-                hfMonthChargeWrapper.where("is_active = 1");
-                hfMonthChargeWrapper.and("company_id = {0}", companyId);
-                hfMonthChargeWrapper.and("employee_id = {0}", employeeId);
-                hfMonthChargeWrapper.and("LEFT(hf_month, 4) = {0}", year);
-                hfMonthChargeWrapper.and("hf_month <= {0}", paymentMonth);
-                hfMonthChargeWrapper.and("payment_type != 1");
-                hfMonthChargeWrapper.orderBy("company_id,employee_id,hf_month,ss_month_belong,hf_type");
-                List<HfMonthCharge> hfMonthChargeList = hfMonthChargeService.selectList(hfMonthChargeWrapper);
+        if (CollectionUtils.isNotEmpty(hfMonthChargeList)) {
+            List<FundChangeInformationDTO> fundChangeInformationDTOList = new ArrayList<>(hfMonthChargeList.size());
+            String[] paymentTypes = {"标准", "开户", "转入", "启封", "调整启封", "补缴", "转出", "封存", "调整封存", "销户", "差额补缴"};
 
-                if (CollectionUtils.isNotEmpty(hfMonthChargeList)) {
-                    List<FundChangeInformationDTO> fundChangeInformationDTOList = new ArrayList<>(hfMonthChargeList.size());
-                    String[] paymentTypes = {"标准", "开户", "转入", "启封", "调整启封", "补缴", "转出", "封存", "调整封存", "销户", "差额补缴"};
+            for (HfMonthCharge hfMonthCharge : hfMonthChargeList) {
+                FundChangeInformationDTO fundChangeInformationDTO = new FundChangeInformationDTO();
+                fundChangeInformationDTO.setWageBase(CalculateSocialUtils.digitInSimpleFormat(hfMonthCharge.getBase()));
+                String fundType = "基本";
 
-                    for (HfMonthCharge hfMonthCharge : hfMonthChargeList) {
-                        FundChangeInformationDTO fundChangeInformationDTO = new FundChangeInformationDTO();
-                        fundChangeInformationDTO.setWageBase(CalculateSocialUtils.digitInSimpleFormat(hfMonthCharge.getBase()));
-                        String fundType = "基本";
-
-                        if (hfMonthCharge.getHfType() == HfEmpTaskConstant.HF_TYPE_ADDED) {
-                            fundType = "补充";
-                        }
-                        fundChangeInformationDTO.setFundType(fundType);
-                        fundChangeInformationDTO.setExecutionDate(hfMonthCharge.getHfMonth());
-                        fundChangeInformationDTO.setChangeContent(paymentTypes[hfMonthCharge.getPaymentType() - 1]);
-                        fundChangeInformationDTOList.add(fundChangeInformationDTO);
-                    }
-
-                    return JsonResult.success(fundChangeInformationDTOList, "数据获取成功");
-
+                if (hfMonthCharge.getHfType() == HfEmpTaskConstant.HF_TYPE_ADDED) {
+                    fundType = "补充";
                 }
-            } catch (Exception e){
-                e.printStackTrace();
+                fundChangeInformationDTO.setFundType(fundType);
+                fundChangeInformationDTO.setExecutionDate(hfMonthCharge.getHfMonth());
+                fundChangeInformationDTO.setChangeContent(paymentTypes[hfMonthCharge.getPaymentType() - 1]);
+                fundChangeInformationDTOList.add(fundChangeInformationDTO);
             }
+
+            return JsonResult.success(fundChangeInformationDTOList, "数据获取成功");
+
         }
+//        }
         return JsonResult.faultMessage("支持中心反馈：无数据");
     }
 
