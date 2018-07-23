@@ -197,6 +197,8 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         PageRows<AmEmpMaterialBO> result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
         if(result!=null&&result.getRows().size()>0)
         {
+            List<AmEmpMaterialOperationLogBO> logList = iAmEmpMaterialService.queryAmEmpMaterialOperationLogList(pageInfo);
+            amMaterialBO.setLogBOList(logList);
             empMaterialList.addAll(result.getRows());
             String submitterId = result.getRows().get(0).getSubmitterId();
             String submitterName = result.getRows().get(0).getSubmitterName();

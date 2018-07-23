@@ -44,7 +44,7 @@ public class AmEmpMaterialOperationLog implements Serializable {
      * 操作时间
      */
     @TableField("operation_time")
-    private Date operationTime;
+    private LocalDateTime operationTime;
 
     /**
      * 操作人ID
@@ -123,11 +123,11 @@ public class AmEmpMaterialOperationLog implements Serializable {
         this.operationType = operationType;
     }
 
-    public Date getOperationTime() {
+    public LocalDateTime getOperationTime() {
         return operationTime;
     }
 
-    public void setOperationTime(Date operationTime) {
+    public void setOperationTime(LocalDateTime operationTime) {
         this.operationTime = operationTime;
     }
 

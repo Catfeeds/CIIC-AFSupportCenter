@@ -923,6 +923,11 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         return composedEmpBasePeriodBOList;
     }
 
+    @Override
+    public List<HfEmpTask> queryHistoryEmpTask(Boolean isSelf, Long empTaskId) {
+        return baseMapper.queryHistoryEmpTask(isSelf, empTaskId);
+    }
+
     /**
      * 补缴任务时雇员档案费用分段表数据处理
      * 分全额补缴及差额补缴
