@@ -23,7 +23,6 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
-import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import io.swagger.annotations.Api;
@@ -59,8 +58,8 @@ public class FundApiController implements FundApiProxy{
 
     @Autowired
     private HfEmpArchiveService hfEmpArchiveService;
-    @Autowired
-    private HfPaymentComService hfPaymentComService;
+//    @Autowired
+//    private HfPaymentComService hfPaymentComService;
     @Autowired
     private HfMonthChargeService hfMonthChargeService;
 

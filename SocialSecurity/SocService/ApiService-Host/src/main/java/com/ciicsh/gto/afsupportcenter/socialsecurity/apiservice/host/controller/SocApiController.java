@@ -16,13 +16,10 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComA
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComTaskParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComTask;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpArchive;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsMonthCharge;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPaymentCom;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.ComAccountExtPO;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
-import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.enumeration.LogInfo;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
@@ -61,8 +58,8 @@ public class SocApiController implements SocApiProxy {
     @Autowired
     private SsEmpArchiveService ssEmpArchiveService;
 
-    @Autowired
-    private SsPaymentComService ssPaymentComService;
+//    @Autowired
+//    private SsPaymentComService ssPaymentComService;
 
     @Autowired
     private SsMonthChargeService ssMonthChargeService;
