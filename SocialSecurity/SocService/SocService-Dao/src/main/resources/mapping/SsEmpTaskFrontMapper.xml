@@ -25,6 +25,17 @@
 		<result column="modified_by" property="modifiedBy" />
 	</resultMap>
 
+    <resultMap id="OriginEmpTaskMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskFrontBO">
+        <result column="emp_task_id" property="empTaskId" />
+		<result column="task_category" property="taskCategory" />
+        <result column="task_status" property="taskStatus" />
+        <result column="emp_company_base" property="empCompanyBase" />
+		<result column="start_month" property="startMonth" />
+        <result column="end_month" property="endMonth" />
+		<result column="created_display_name" property="createdDisplayName" />
+        <result column="created_time" property="createdTime" />
+    </resultMap>
+
     <select id="getEmpTaskDetailCount" resultType="integer">
         SELECT COUNT(DISTINCT setf.item_dic_id)
         FROM ss_emp_task_front setf
@@ -33,5 +44,26 @@
             et.is_active = 1
             AND et.business_interface_id = #{businessInterfaceId}
         </where>
+    </select>
+
+    <select id="getOriginEmpTask" resultMap="OriginEmpTaskMap">
+        SELECT
+            et.emp_task_id,
+            et.task_category,
+            et.task_status,
+            etf.emp_company_base,
+            etf.start_month,
+            etf.end_month,
+            et.created_display_name,
+            et.created_time
+        FROM ss_emp_task_front etf
+        INNER JOIN ss_emp_task et ON etf.emp_task_id = et.emp_task_id
+        INNER JOIN ss_emp_archive ea ON et.company_id = ea.company_id AND et.employee_id = ea.employee_id
+        <where>
+            et.is_active = 1
+            AND ea.is_active = 1
+            AND ea.emp_archive_id = #{empArchiveId}
+        </where>
+        ORDER BY et.created_time DESC
     </select>
 </mapper>

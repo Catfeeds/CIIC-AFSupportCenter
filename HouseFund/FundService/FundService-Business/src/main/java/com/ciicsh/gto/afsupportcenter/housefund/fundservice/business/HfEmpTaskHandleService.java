@@ -34,5 +34,7 @@ public interface HfEmpTaskHandleService extends IService<HfEmpTask> {
 
     List<ComposedEmpBasePeriodBO> composeEmpBasePeriod(List<HfArchiveBasePeriod> existsHfArchiveBasePeriodList);
 
-    List<HfEmpTask> queryHistoryEmpTask(Boolean isSelf, Long empTaskId);
+    List<HfEmpTaskExportBo> queryHistoryEmpTask(Boolean isSelf, Long empTaskId);
+
+    List<HfEmpTaskExportBo> getOriginEmpTask(Long empArchiveId);
 }

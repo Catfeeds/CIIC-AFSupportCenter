@@ -92,6 +92,7 @@ public class HfEmpTaskExportBo implements Serializable{
     private String operationRemindName;
 
     private String taskStatusName;
+    private LocalDateTime createdTime;
     private LocalDateTime modifiedTime;
     private String modifiedDisplayName;
     private String hfMonth;
@@ -500,5 +501,13 @@ public class HfEmpTaskExportBo implements Serializable{
 
     public void setHfMonth(String hfMonth) {
         this.hfMonth = hfMonth;
+    }
+
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
     }
 }

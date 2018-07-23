@@ -1,8 +1,11 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao;
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskFrontBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTaskFront;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,4 +15,6 @@ import org.apache.ibatis.annotations.Param;
 public interface SsEmpTaskFrontMapper extends BaseMapper<SsEmpTaskFront> {
 
     Integer getEmpTaskDetailCount(@Param("businessInterfaceId") String businessInterfaceId);
+
+    List<SsEmpTaskFrontBO> getOriginEmpTask(@Param("empArchiveId") Long empArchiveId);
 }

@@ -1520,4 +1520,25 @@
         GROUP BY het.emp_task_id
         ORDER BY het.created_time DESC
     </select>
+
+    <select id="getOriginEmpTask" resultMap="BaseResultMapBo">
+        SELECT
+        het.emp_task_id,
+        het.task_category,
+        het.task_status,
+        het.start_month,
+        het.end_month,
+        het.emp_base,
+        het.created_time,
+        het.created_display_name
+        FROM hf_emp_task het
+        INNER JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
+        <where>
+            het.is_active = 1
+            AND het.task_category != 8
+            AND hea.is_active = 1
+            AND hea.emp_archive_id = #{empArchiveId}
+        </where>
+        ORDER BY het.created_time DESC
+    </select>
 </mapper>

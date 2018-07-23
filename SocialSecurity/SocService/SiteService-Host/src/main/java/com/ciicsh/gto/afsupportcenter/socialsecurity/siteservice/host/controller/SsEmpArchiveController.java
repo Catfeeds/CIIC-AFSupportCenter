@@ -2,10 +2,8 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.siteservice.host.controlle
 
 
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpArchiveBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.AmEmpTaskOfSsService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpArchiveService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpBasePeriodService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskFrontBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.AmEmpTaskDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBasePeriod;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
@@ -47,6 +45,8 @@ public class SsEmpArchiveController extends BasicController<SsEmpArchiveService>
     private SsEmpTaskService ssEmpTaskService;
     @Autowired
     private AmEmpTaskOfSsService amEmpTaskOfSsService;
+    @Autowired
+    private SsEmpTaskFrontService ssEmpTaskFrontService;
 
     /**
      * 根据雇员任务 ID 查询 雇员本地社保档案信息
@@ -139,5 +139,18 @@ public class SsEmpArchiveController extends BasicController<SsEmpArchiveService>
 
     }
 
+    @RequestMapping("/getOriginEmpTaskList")
+    public JsonResult<List<SsEmpTaskFrontBO>> getOriginEmpTaskList(@RequestParam("empArchiveId") String empArchiveId) {
+        Long archiveId = Long.parseLong(empArchiveId);
+        List<SsEmpTaskFrontBO> ssEmpTaskFrontBOList = ssEmpTaskFrontService.getOriginEmpTaskList(archiveId);
+        return JsonResultKit.of(ssEmpTaskFrontBOList);
+    }
+
+    @RequestMapping("/queryHistoryEmpTask")
+    public JsonResult<SsEmpTask> queryHistoryEmpTask(@RequestParam("empTaskId") String empTaskId) {
+        Long taskId = Long.parseLong(empTaskId);
+        SsEmpTask ssEmpTask = ssEmpTaskService.selectById(taskId);
+        return JsonResultKit.of(ssEmpTask);
+    }
 }
 

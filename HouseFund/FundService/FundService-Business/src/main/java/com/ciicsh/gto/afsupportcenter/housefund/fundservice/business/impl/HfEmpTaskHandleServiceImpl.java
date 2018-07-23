@@ -924,8 +924,13 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
     }
 
     @Override
-    public List<HfEmpTask> queryHistoryEmpTask(Boolean isSelf, Long empTaskId) {
+    public List<HfEmpTaskExportBo> queryHistoryEmpTask(Boolean isSelf, Long empTaskId) {
         return baseMapper.queryHistoryEmpTask(isSelf, empTaskId);
+    }
+
+    @Override
+    public List<HfEmpTaskExportBo> getOriginEmpTask(Long empArchiveId) {
+        return baseMapper.getOriginEmpTask(empArchiveId);
     }
 
     /**

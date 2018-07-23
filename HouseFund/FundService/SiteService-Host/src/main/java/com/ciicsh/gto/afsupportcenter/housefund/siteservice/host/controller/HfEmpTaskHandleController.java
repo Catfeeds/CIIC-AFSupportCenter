@@ -524,10 +524,10 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         return JsonResultKit.ofError("该雇员的转移任务单数据不存在");
     }
 
-    @PostMapping("/queryHistoryEmpTask")
-    public JsonResult<List<HfEmpTask>> queryHistoryEmpTask(@RequestParam("empTaskId") String empTaskId) {
+    @PostMapping("/queryHistoryEmpTaskList")
+    public JsonResult<List<HfEmpTaskExportBo>> queryHistoryEmpTaskList(@RequestParam("empTaskId") String empTaskId) {
         Long taskId = Long.parseLong(empTaskId);
-        List<HfEmpTask> hfEmpTaskList = business.queryHistoryEmpTask(false, taskId);
+        List<HfEmpTaskExportBo> hfEmpTaskList = business.queryHistoryEmpTask(false, taskId);
         return JsonResultKit.of(hfEmpTaskList);
     }
 
