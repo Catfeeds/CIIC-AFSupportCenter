@@ -11,6 +11,9 @@ public class AmMaterialBO {
     private String reasonValue;
     private  List<AmEmpMaterialBO> materialsData;
 
+    // 用工材料操作记录
+    private List<AmEmpMaterialOperationLogBO> logBOList;
+
     public String getReasonValue() {
         return reasonValue;
     }
@@ -41,5 +44,13 @@ public class AmMaterialBO {
 
     public void setMaterialsData(List<AmEmpMaterialBO> materialsData) {
         this.materialsData = materialsData;
+    }
+
+    public List<AmEmpMaterialOperationLogBO> getLogBOList() {
+        return logBOList;
+    }
+
+    public void setLogBOList(List<AmEmpMaterialOperationLogBO> logBOList) {
+        this.logBOList = logBOList;
     }
 }
