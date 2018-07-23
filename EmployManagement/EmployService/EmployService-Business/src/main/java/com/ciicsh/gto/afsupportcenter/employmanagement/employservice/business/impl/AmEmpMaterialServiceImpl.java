@@ -67,17 +67,18 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
 
         AmEmpTask task = amEmpTaskMapper.selectById(amEmpMaterialBO.getEmpTaskId());
 
-        //JsonResult<HireMaterialTransferRecordDTO> jsonResult = sheetInfoProxy.getHireMaterialNewestTransferRecord(task.getHireTaskId());
-        JsonResult<HireMaterialTransferRecordDTO> jsonResult = new JsonResult();
-
-         HireMaterialTransferRecordDTO dto = jsonResult.getData();
-
         PageRows<AmEmpMaterialBO> pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpMaterial(amEmpMaterialBO));
+        if(task.getHireTaskId() == null){ // 以前的老任务单没有 交互的 hireTaskId
+            return pageRows;
+        }
 
+        JsonResult<List<HireMaterialTransferRecordDTO>> jsonResult = sheetInfoProxy.getHireMaterialNewestTransferRecords(task.getHireTaskId());
+
+        HireMaterialTransferRecordDTO dto = jsonResult.getData().get(0);
         if (dto != null && dto.getOperation() == 3) {
             if (pageRows.getRows().size() > 0) {
                 Date d = DateUtil.localDateTimeToDate(pageRows.getRows().get(0).getSubmitterDate());
-                if(dto.getOperateTime().before(d)){
+                if(dto.getOperateTime().before(d) || dto.getOperateTime().getTime() == d.getTime()){
                     return pageRows;
                 }else{
                     Wrapper<AmEmpMaterial> wrapper = new EntityWrapper<>();
@@ -125,8 +126,49 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
     }
 
     @Override
+    public List<AmEmpMaterialOperationLogBO> queryAmEmpMaterialOperationLogList(PageInfo pageInfo) {
+        AmEmpMaterialBO amEmpMaterialBO = pageInfo.toJavaObject(AmEmpMaterialBO.class);
+        AmEmpTask task = amEmpTaskMapper.selectById(amEmpMaterialBO.getEmpTaskId());
+        List<AmEmpMaterialOperationLogBO> result = new ArrayList<>();
+        if(task.getHireTaskId() == null){
+            return result;
+        }
+        JsonResult<List<HireMaterialTransferRecordDTO>> jsonResult = sheetInfoProxy.getHireMaterialNewestTransferRecords(task.getHireTaskId());
+        List<HireMaterialTransferRecordDTO> dtoList = jsonResult.getData();
+        for (HireMaterialTransferRecordDTO dto:dtoList) {
+            AmEmpMaterialOperationLogBO bo = new AmEmpMaterialOperationLogBO();
+            bo.setRemark(dto.getRemark());
+            bo.setOperationType(dto.getOperation());
+            bo.setOperationTime(DateUtil.dateToLocaleDateTime(dto.getOperateTime()));
+            bo.setOperationName(dto.getOperator());
+            bo.setOperationBy(dto.getCreatedBy());
+            result.add(bo);
+        }
+        return result;
+    }
+
+    @Override
     public List<AmEmpMaterialBO> queryAmEmpMaterialList(AmEmpMaterialBO amEmpMaterialBO) {
         return baseMapper.queryAmEmpMaterial(amEmpMaterialBO);
+    }
+
+    @Override
+    public List<AmEmpMaterialOperationLogBO> queryAmEmpMaterialLogList(AmEmpMaterialBO amEmpMaterialBO) {
+        if(amEmpMaterialBO.getEmpTaskId() == null){
+            return null;
+        }
+        List<AmEmpMaterialOperationLogBO> result = new ArrayList<>();
+        Wrapper<AmEmpMaterialOperationLog> wrapper = new EntityWrapper<>();
+        wrapper.eq("is_active",1);
+        wrapper.eq("emp_task_id",amEmpMaterialBO.getEmpTaskId());
+        wrapper.orderBy("operation_time",false);
+        List<AmEmpMaterialOperationLog> logList = operationLogMapper.selectList(wrapper);
+        for (AmEmpMaterialOperationLog log:logList) {
+            AmEmpMaterialOperationLogBO bo = new AmEmpMaterialOperationLogBO();
+            BeanUtils.copyProperties(log,bo);
+            result.add(bo);
+        }
+        return result;
     }
 
     @Override
@@ -213,7 +255,7 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
             // 签收
             logBO.setOperationBy(materialUpdateDTO.getReceiveId());
             logBO.setOperationName(materialUpdateDTO.getReceiveName());
-            logBO.setOperationTime(materialUpdateDTO.getReceiveDate());
+            logBO.setOperationTime(DateUtil.dateToLocaleDateTime(materialUpdateDTO.getReceiveDate()));
         }else if(materialUpdateDTO.getOperationType() == 2){
             material.setRejectId(materialUpdateDTO.getRejectId());
             material.setRejectName(materialUpdateDTO.getRejectName());
@@ -222,7 +264,7 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
             // 批退
             logBO.setOperationBy(materialUpdateDTO.getRejectId());
             logBO.setOperationName(materialUpdateDTO.getRejectName());
-            logBO.setOperationTime(materialUpdateDTO.getRejectDate());
+            logBO.setOperationTime(DateUtil.dateToLocaleDateTime(materialUpdateDTO.getRejectDate()));
         }
         Wrapper<AmEmpMaterial> wrapper = new EntityWrapper<>();
         wrapper.eq("is_active",1);

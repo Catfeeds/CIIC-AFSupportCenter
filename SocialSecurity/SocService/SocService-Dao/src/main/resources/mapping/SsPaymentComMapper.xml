@@ -84,6 +84,11 @@
             <if test = "companyId != null and companyId != ''">
               AND SPC.company_id LIKE concat(concat('%',#{companyId}),'%')
             </if>
+            <if test = "paymentMonth != null and paymentMonth != ''">
+                <![CDATA[
+                    AND SPC.payment_month = #{paymentMonth}
+                  ]]>
+            </if>
             <if test = "paymentMonthMin != null and paymentMonthMin != ''">
               <![CDATA[
                 AND SPC.payment_month >= #{paymentMonthMin}

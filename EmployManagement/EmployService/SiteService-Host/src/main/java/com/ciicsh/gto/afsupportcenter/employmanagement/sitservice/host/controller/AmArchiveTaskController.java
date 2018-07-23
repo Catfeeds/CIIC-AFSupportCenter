@@ -343,6 +343,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         //退工归还材料签收
         if(null!=amEmpMaterialBOList&&amEmpMaterialBOList.size()>0){
             resultMap.put("materialList",amEmpMaterialBOList);
+            // 材料流转记录
+            List<AmEmpMaterialOperationLogBO> materialLogList = amEmpMaterialService.queryAmEmpMaterialLogList(amEmpMaterialBO);
+            resultMap.put("materialLogList",materialLogList);
         }
         //退工材料字典
         resultMap.put("resultMaterial",resultMaterial);
@@ -443,7 +446,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             if(result){
                 AmEmpMaterialOperationLogBO bo = new AmEmpMaterialOperationLogBO();
                 bo.setEmpTaskId(data.get(0).getEmpTaskId());
-                bo.setOperationTime(new Date());
+                bo.setOperationTime(LocalDateTime.now());
                 bo.setOperationType(3);
                 bo.setOperationBy(UserContext.getUserId());
                 bo.setOperationName(UserContext.getUserName());
