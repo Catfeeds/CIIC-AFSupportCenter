@@ -87,6 +87,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     @Autowired
     private CompanyProxy companyProxy;
 
+    @Autowired
+    private IAmArchiveAdvanceService amArchiveAdvanceService;
+
 
 
 
@@ -561,9 +564,10 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         List<AmEmpTask> amEmpTaskList = new ArrayList<>();
         String ylDocNum = amArchiveBO.getYuliuDocNum();
         String docNum = amArchiveBO.getDocNum();
+        List<Long> archiveAdvanceIdList = new ArrayList<>();
 
         int i = 0;
-        for(AmEmployment temp:amEmploymentBOList)
+        for(AmEmploymentBO temp:amEmploymentBOList)
         {
             param.put("employmentId",temp.getEmploymentId());
             List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchiveList(param);
@@ -592,6 +596,23 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             entity.setEmploymentId(temp.getEmploymentId());
             entity.setEmployeeId(temp.getEmployeeId());
             entity.setCompanyId(temp.getCompanyId());
+            //档案预增匹配
+            boolean isPi = false;
+            if(!StringUtil.isEmpty(temp.getArchivePlace()))
+            {
+                entity.setArchivePlace(temp.getArchivePlace());
+                isPi = true;
+            }
+            if(!StringUtil.isEmpty(temp.getDocFrom()))
+            {
+                entity.setDocFrom(temp.getDocFrom());
+                isPi = true;
+            }
+            if(isPi)
+            {
+                archiveAdvanceIdList.add(temp.getArchiveAdvanceId());
+            }
+
             entity.setModifiedTime(now);
 
             entity.setModifiedBy(ReasonUtil.getUserId());
@@ -616,7 +637,18 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             amArchiveList.add(entity);
             amEmpTaskList.add(amEmpTask);
         }
-
+        if(archiveAdvanceIdList.size()>0)
+        {
+            List<AmArchiveAdvance> amArchiveAdvancesList = new ArrayList<>();
+            for(Long archiveAdvanceId:archiveAdvanceIdList)
+            {
+                AmArchiveAdvance amArchiveAdvance = new AmArchiveAdvance();
+                amArchiveAdvance.setArchiveAdvanceId(archiveAdvanceId);
+                amArchiveAdvance.setStatus(2);
+                amArchiveAdvancesList.add(amArchiveAdvance);
+            }
+            amArchiveAdvanceService.updateBatchById(amArchiveAdvancesList);
+        }
         this.insertOrUpdateBatch(amEmpTaskList);
         result =  amArchiveService.insertOrUpdateAllColumnBatch(amArchiveList);
         if(result)
@@ -724,8 +756,19 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             amRemarkService.insertBatch(amRemarkList);
         }
 
+
+        List<AmEmpTaskBO> changeList = baseMapper.queryChange(employeeBatchBO);
+        List<Long> tempChangeList = new ArrayList<>();
+        for(AmEmpTaskBO tempBO:changeList)
+        {
+            tempChangeList.add(tempBO.getEmpTaskId());
+        }
+        //翻盘不需要材料签收
+        List<Long> taskIds  = employeeBatchBO.getEmpTaskIds();
+        taskIds.removeAll(tempChangeList);
+
         AmEmpMaterialBO amEmpMaterialBO = new AmEmpMaterialBO();
-        amEmpMaterialBO.setEmpTaskIdList(employeeBatchBO.getEmpTaskIds());
+        amEmpMaterialBO.setEmpTaskIdList(taskIds);
         amEmpMaterialBO.setReceiveDate(employeeBatchBO.getReceiveDate());
         amEmpMaterialBO.setReceiveId(userId);
         amEmpMaterialBO.setReceiveName(userName);
@@ -739,7 +782,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     }
 
     @Override
-    public Map<String, Object> batchCheck(EmployeeBatchBO employeeBatchBO) {
+    public Map<String, Object>  batchCheck(EmployeeBatchBO employeeBatchBO) {
         Map<String,Object> resultMap = new HashMap<>();
         List<AmEmpTaskBO> amEmpTaskBOList = baseMapper.queryIsFinish(employeeBatchBO);
         if(null!=amEmpTaskBOList&&amEmpTaskBOList.size()>0)

@@ -491,4 +491,9 @@
         </foreach>
     </select>
 
+    <select id="queryChange" resultMap="BaseResultMapDTO">
+        SELECT  emp_task_id from am_emp_task a where a.change = '否'
+    </select>
+
+
 </mapper>

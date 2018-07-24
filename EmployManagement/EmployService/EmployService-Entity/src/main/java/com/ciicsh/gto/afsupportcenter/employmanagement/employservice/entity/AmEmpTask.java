@@ -173,6 +173,17 @@ public class AmEmpTask implements Serializable {
     @TableField("is_finish")
     private  Boolean isFinish;
 
+    @TableField("job")
+    private  String job;
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
     public Boolean getFinish() {
         return isFinish;
     }

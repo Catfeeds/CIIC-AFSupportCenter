@@ -42,8 +42,6 @@
 
     <resultMap id="BaseResultMapDTO" extends="BaseResultMap"
                type="com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmResignBO">
-        <result column="employee_id" property="employeeId" />
-        <result column="company_id" property="companyId" />
         <result column="employ_style" property="employStyle" />
         <result column="handle_type" property="handleType" />
         <result column="employ_property" property="employProperty" />
@@ -65,6 +63,7 @@
         <result column="employ_feedback" property="employFeedback" />
         <result column="out_reason" property="outReason" />
         <result column="luyong_handle_end" property="luyongHandleEnd" />
+        <result column="job" property="job" />
     </resultMap>
 
     <resultMap id="RM_resignSearchExportOpt" type="com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.resignSearchExportOpt">
@@ -107,8 +106,8 @@
         f.resign_feedback,
         a.out_reason,
         a.out_date,
+        a.job,
         f.job_centre_feedback_date,
-        d.employee_id,
         d.employee_name,
         d.id_num,
         d.id_card_type,
@@ -143,7 +142,11 @@
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
         </foreach>
-        order by a.created_time desc
+        order by
+        <foreach collection="orderParam" item="plid" open="" close="" separator="">
+            ${plid},
+        </foreach>
+        a.created_time desc
     </select>
 
     <select id="queryAmResignOther" resultMap="BaseResultMapDTO">
@@ -308,6 +311,23 @@
             and  ${plid}
         </foreach>
 
+    </select>
+
+    <select id="queryResignIds" resultMap="BaseResultMapDTO">
+        SELECT
+        a.emp_task_id,
+        a.employee_id,
+        a.company_id,
+        a.is_finish,
+        b.resign_id
+        FROM
+        am_emp_task a
+        LEFT JOIN am_resign b ON a.emp_task_id = b.emp_task_id
+        <where>
+            <foreach collection="empTaskIds" item="item" open="a.emp_task_id IN (" separator="," close=")">
+                #{item}
+            </foreach>
+        </where>
     </select>
 
 </mapper>

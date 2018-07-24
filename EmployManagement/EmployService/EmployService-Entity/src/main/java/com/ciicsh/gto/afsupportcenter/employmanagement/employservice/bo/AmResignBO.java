@@ -137,6 +137,48 @@ public class AmResignBO extends AmResign {
 
     private String yuliuDocType;
 
+    private Long[] empTaskIds;
+
+    private String remark;
+
+    private String job;
+
+    private List<String> param;
+
+    private List<String> orderParam;
+
+    public List<String> getOrderParam() {
+        return orderParam;
+    }
+
+    public void setOrderParam(List<String> orderParam) {
+        this.orderParam = orderParam;
+    }
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Long[] getEmpTaskIds() {
+        return empTaskIds;
+    }
+
+    public void setEmpTaskIds(Long[] empTaskIds) {
+        this.empTaskIds = empTaskIds;
+    }
+
     public String getDocType() {
         return docType;
     }
@@ -208,10 +250,6 @@ public class AmResignBO extends AmResign {
     public void setIfLaborManualReturnStr(String ifLaborManualReturnStr) {
         this.ifLaborManualReturnStr = ifLaborManualReturnStr;
     }
-
-
-
-    private List<String> param;
 
     public String getOutDate() {
         return outDate;

@@ -111,6 +111,40 @@ public class AmEmploymentBO extends AmEmployment {
     private Integer taskCategoryResign;
 
     private String change;
+    /**
+     * 档案预增表主键
+     */
+    private Long archiveAdvanceId;
+    /**
+     * 档案来源
+     */
+    private String docFrom;
+
+    private String job;
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
+    public String getDocFrom() {
+        return docFrom;
+    }
+
+    public void setDocFrom(String docFrom) {
+        this.docFrom = docFrom;
+    }
+
+    public Long getArchiveAdvanceId() {
+        return archiveAdvanceId;
+    }
+
+    public void setArchiveAdvanceId(Long archiveAdvanceId) {
+        this.archiveAdvanceId = archiveAdvanceId;
+    }
 
     public String getChange() {
         return change;

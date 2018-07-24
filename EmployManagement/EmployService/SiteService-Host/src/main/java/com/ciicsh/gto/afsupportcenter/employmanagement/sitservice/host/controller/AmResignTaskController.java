@@ -453,4 +453,21 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         ExcelUtil.exportExcel(opts,resignSearchExportOpt.class,fileNme,response);
     }
 
+
+    @RequestMapping("/saveAmResignBatch")
+    public JsonResult<AmResignBO> saveAmResignBatch(AmResignBO bo) {
+
+        Map<String,Object>  param = business.batchSaveResign(bo);
+        if(param.get("message")!=null){
+            bo.setRemark(param.get("message").toString());
+        }
+        return JsonResultKit.of(bo);
+    }
+
+    @RequestMapping("/batchCheck")
+    public JsonResult  batchCheck(AmResignBO bo){
+        Map<String,Object>  map = business.batchCheck(bo);
+        return  JsonResultKit.of(map);
+    }
+
 }

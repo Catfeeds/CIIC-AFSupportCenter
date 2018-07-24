@@ -29,4 +29,10 @@ public interface IAmResignService extends IService<AmResign> {
     List<resignSearchExportOpt> queryAmResignList(AmResignBO amResignBO);
 
     AmResign  saveAmResign(AmResignBO bo);
+
+    Map<String,Object> batchSaveResign(AmResignBO bo);
+
+    List<AmResignBO> queryResignIds(AmResignBO amResignBO);
+
+    Map<String,Object> batchCheck(AmResignBO amResignBO);
 }

@@ -54,4 +54,6 @@ public interface AmEmpTaskMapper extends BaseMapper<AmEmpTask> {
 
     List<AmEmpTaskBO> queryIsFinish(EmployeeBatchBO employeeBatchBO);
 
+    List<AmEmpTaskBO> queryChange(EmployeeBatchBO employeeBatchBO);
+
 }
