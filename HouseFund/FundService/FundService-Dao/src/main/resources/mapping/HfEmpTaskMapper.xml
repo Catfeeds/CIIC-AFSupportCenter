@@ -1532,7 +1532,7 @@
         het.created_time,
         het.created_display_name
         FROM hf_emp_task het
-        INNER JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
+        INNER JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id AND het.hf_type = hea.hf_type
         <where>
             het.is_active = 1
             AND het.task_category != 8
