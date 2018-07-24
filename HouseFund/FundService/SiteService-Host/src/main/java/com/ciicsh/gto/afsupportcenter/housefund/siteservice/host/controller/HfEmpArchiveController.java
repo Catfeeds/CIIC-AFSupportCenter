@@ -2,10 +2,11 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 
 
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpArchiveService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpArchiveBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskHandleService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpArchiveConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.EmpAccountImpXsl;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -17,7 +18,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -29,11 +29,13 @@ import java.util.*;
 由中智代缴过社保的雇员在此表必有一条记录，如果雇员跳槽到另外一家客户，就会在此表产 前端控制器
  * </p>
  */
-@Controller
+@RestController
 @RequestMapping("/api/fundcommandservice/hfEmpArchive")
 public class HfEmpArchiveController extends  BasicController<HfEmpArchiveService>{
     @Autowired
     HfEmpTaskService hfEmpTaskService;
+    @Autowired
+    HfEmpTaskHandleService hfEmpTaskHandleService;
 
     /**
      * 雇员公积金查询
@@ -42,7 +44,6 @@ public class HfEmpArchiveController extends  BasicController<HfEmpArchiveService
      * @return
      */
     @RequestMapping("/queryEmpArchive")
-    @ResponseBody
     public JsonResult<PageRows> queryEmpArchive(PageInfo pageInfo) {
         PageRows<HfEmpArchiveBo> result = business.queryEmpArchive(pageInfo);
         List<HfEmpArchiveBo> hfEmpArchiveBoList = result.getRows();
@@ -75,7 +76,6 @@ public class HfEmpArchiveController extends  BasicController<HfEmpArchiveService
     }
 
     @RequestMapping("/viewEmpArchiveInfo")
-    @ResponseBody
     public JsonResult viewEmpArchiveInfo(@RequestParam(required = false) String empArchiveId,
                                          @RequestParam(required = false)String companyId,
                                          @RequestParam(required = false)String employeeId ) {
@@ -85,8 +85,7 @@ public class HfEmpArchiveController extends  BasicController<HfEmpArchiveService
         return JsonResultKit.of(resultMap);
     }
 
-    @RequestMapping("saveEmpAccount")
-    @ResponseBody
+    @RequestMapping("/saveEmpAccount")
     public JsonResult saveEmpAccount(@RequestParam Map<String,String> updateDto){
 
         return business.saveComAccount(updateDto);
@@ -94,7 +93,6 @@ public class HfEmpArchiveController extends  BasicController<HfEmpArchiveService
     }
 
     @RequestMapping(value = "/xlsImportEmpAccount",consumes = {"multipart/form-data"})
-    @ResponseBody
     public JsonResult xlsImportEmpAccount(MultipartFile file) throws Exception {
         List<EmpAccountImpXsl> optList = ExcelUtil.importExcel(file,0,1,EmpAccountImpXsl.class,false);
         JsonResult result = business.xlsImportEmpAccount(optList,file.getOriginalFilename());
@@ -102,6 +100,21 @@ public class HfEmpArchiveController extends  BasicController<HfEmpArchiveService
 
     }
 
+    @PostMapping("/queryHistoryEmpTask")
+    public JsonResult<HfEmpTaskExportBo> queryHistoryEmpTask(@RequestParam("empTaskId") String empTaskId) {
+        Long taskId = Long.parseLong(empTaskId);
+        List<HfEmpTaskExportBo> hfEmpTaskList = hfEmpTaskHandleService.queryHistoryEmpTask(true, taskId);
+        if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
+            return JsonResultKit.of(hfEmpTaskList.get(0));
+        }
+        return JsonResultKit.of();
+    }
 
+    @PostMapping("/getOriginEmpTaskList")
+    public JsonResult<List<HfEmpTaskExportBo>> getOriginEmpTaskList(@RequestParam("empArchiveId") String empArchiveId) {
+        Long archiveId = Long.parseLong(empArchiveId);
+        List<HfEmpTaskExportBo> hfEmpTaskList = hfEmpTaskHandleService.getOriginEmpTask(archiveId);
+        return JsonResultKit.of(hfEmpTaskList);
+    }
 }
 

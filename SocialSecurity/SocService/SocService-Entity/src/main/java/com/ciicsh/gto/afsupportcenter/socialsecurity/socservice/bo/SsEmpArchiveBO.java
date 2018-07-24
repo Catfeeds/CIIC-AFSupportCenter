@@ -38,7 +38,7 @@ public class SsEmpArchiveBO extends SsEmpArchive {
     //雇员属性
     private String employeeAttribute;
     //新增和转入 对应一些雇员信息，比如人员属性和工资等
-    private SsEmpTask SsEmpTask;
+    private SsEmpTask ssEmpTask;
     //旧基数
     private BigDecimal oldEmpBase;
     //客服经理
@@ -250,12 +250,12 @@ public class SsEmpArchiveBO extends SsEmpArchive {
         this.employeeAttribute = employeeAttribute;
     }
 
-    public com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask getSsEmpTask() {
-        return SsEmpTask;
+    public SsEmpTask getSsEmpTask() {
+        return ssEmpTask;
     }
 
-    public void setSsEmpTask(com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask ssEmpTask) {
-        SsEmpTask = ssEmpTask;
+    public void setSsEmpTask(SsEmpTask ssEmpTask) {
+        this.ssEmpTask = ssEmpTask;
     }
 
     public BigDecimal getOldEmpBase() {

@@ -7,6 +7,7 @@ import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpAgreeme
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskFrontBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpArchiveService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskFrontService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpTaskFrontMapper;
@@ -303,6 +304,11 @@ public class SsEmpTaskFrontServiceImpl extends ServiceImpl<SsEmpTaskFrontMapper,
     @Override
     public Integer getEmpTaskDetailCount(String businessInterfaceId) {
         return baseMapper.getEmpTaskDetailCount(businessInterfaceId);
+    }
+
+    @Override
+    public List<SsEmpTaskFrontBO> getOriginEmpTaskList(Long empArchiveId) {
+        return baseMapper.getOriginEmpTask(empArchiveId);
     }
 
     /**

@@ -289,9 +289,9 @@
             smc.is_active = 1 AND sea.is_active = 1
             AND smc.cost_category != 1
             AND LEFT(smc.ss_month_belong, 4) = #{year}
-            AND #{ssMonth} >= smc.ss_month
             AND sea.company_id = #{companyId}
             AND smc.employee_id = #{employeeId}
         </where>
+        ORDER BY sea.company_id,smc.employee_id,smc.ss_month,smc.ss_month_belong
     </select>
 </mapper>

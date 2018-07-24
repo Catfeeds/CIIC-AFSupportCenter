@@ -79,5 +79,7 @@ public interface HfEmpTaskMapper extends BaseMapper<HfEmpTask> {
 
     Integer getExistHandleRemarkCount(HfEmpTaskBo hfEmpTaskBo);
 
-    List<HfEmpTask> queryHistoryEmpTask(@Param("isSelf") Boolean isSelf, @Param("empTaskId") Long empTaskId);
+    List<HfEmpTaskExportBo> queryHistoryEmpTask(@Param("isSelf") Boolean isSelf, @Param("empTaskId") Long empTaskId);
+
+    List<HfEmpTaskExportBo> getOriginEmpTask(@Param("empArchiveId") Long empArchiveId);
 }

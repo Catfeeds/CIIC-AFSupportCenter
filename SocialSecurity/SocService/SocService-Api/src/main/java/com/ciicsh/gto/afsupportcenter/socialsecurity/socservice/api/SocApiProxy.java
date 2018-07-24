@@ -70,7 +70,7 @@ public interface SocApiProxy {
 
     /**
      * 接口调用方：雇员中心
-     * 根据客户Id和雇员Id获取雇员已缴纳的社保信息
+     * 根据客户Id和雇员Id获取雇员已办理的社保信息
      * @param companyId
      * @param employeeId
      * @return

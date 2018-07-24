@@ -16,13 +16,10 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComA
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComTaskParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComTask;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpArchive;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsMonthCharge;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPaymentCom;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.ComAccountExtPO;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
-import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.enumeration.LogInfo;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
@@ -61,8 +58,8 @@ public class SocApiController implements SocApiProxy {
     @Autowired
     private SsEmpArchiveService ssEmpArchiveService;
 
-    @Autowired
-    private SsPaymentComService ssPaymentComService;
+//    @Autowired
+//    private SsPaymentComService ssPaymentComService;
 
     @Autowired
     private SsMonthChargeService ssMonthChargeService;
@@ -219,7 +216,7 @@ public class SocApiController implements SocApiProxy {
     }
 
     @Override
-    @ApiOperation(value = "微信端获取社保雇员信息接口", notes = "根据客户ID和雇员ID获取对象")
+    @ApiOperation(value = "微信端获取雇员社保信息接口", notes = "根据客户ID和雇员ID获取对象")
     @PostMapping("/getSocialSecurity")
     public JsonResult<SocialSecurityDTO> getSocialSecurity(String companyId, String employeeId) {
         SsEmpArchiveBO ssEmpArchiveBO = ssEmpArchiveService.getSsEmployee(companyId, employeeId);
@@ -229,43 +226,43 @@ public class SocApiController implements SocApiProxy {
         }
 
         SocialSecurityDTO socialSecurityDTO = new SocialSecurityDTO();
-        socialSecurityDTO.setPensionAccounts(ssEmpArchiveBO.getIdNum());
+        socialSecurityDTO.setPensionAccounts(ssEmpArchiveBO.getSsSerial());
         socialSecurityDTO.setCityName("上海");
 
-        // 获取最后的支付年月
-        Wrapper<SsPaymentCom> ssPaymentComWrapper = new EntityWrapper<>();
-        ssPaymentComWrapper.where("is_active = 1");
-        ssPaymentComWrapper.and("company_id = {0}", companyId);
-        ssPaymentComWrapper.and("payment_state = 8");
-        ssPaymentComWrapper.orderBy("payment_month desc");
-        ssPaymentComWrapper.last("limit 1");
-        SsPaymentCom ssPaymentCom = ssPaymentComService.selectOne(ssPaymentComWrapper);
+//        // 获取最后的支付年月
+//        Wrapper<SsPaymentCom> ssPaymentComWrapper = new EntityWrapper<>();
+//        ssPaymentComWrapper.where("is_active = 1");
+//        ssPaymentComWrapper.and("company_id = {0}", companyId);
+//        ssPaymentComWrapper.and("payment_state = 8");
+//        ssPaymentComWrapper.orderBy("payment_month desc");
+//        ssPaymentComWrapper.last("limit 1");
+//        SsPaymentCom ssPaymentCom = ssPaymentComService.selectOne(ssPaymentComWrapper);
+//
+//        if (ssPaymentCom != null) {
+//            String paymentMonth = ssPaymentCom.getPaymentMonth();
 
-        if (ssPaymentCom != null) {
-            String paymentMonth = ssPaymentCom.getPaymentMonth();
+        Wrapper<SsMonthCharge> ssMonthChargeWrapper = new EntityWrapper<>();
+        ssMonthChargeWrapper.where("is_active = 1");
+        ssMonthChargeWrapper.and("com_account_id = {0}", ssEmpArchiveBO.getComAccountId());
+        ssMonthChargeWrapper.and("employee_id = {0}", employeeId);
+        ssMonthChargeWrapper.orderBy("ss_month desc");
+        ssMonthChargeWrapper.last("limit 1");
+        SsMonthCharge ssMonthCharge = ssMonthChargeService.selectOne(ssMonthChargeWrapper);
 
-            Wrapper<SsMonthCharge> ssMonthChargeWrapper = new EntityWrapper<>();
-            ssMonthChargeWrapper.where("is_active = 1");
-            ssMonthChargeWrapper.and("com_account_id = {0}", ssEmpArchiveBO.getComAccountId());
-            ssMonthChargeWrapper.and("employee_id = {0}", employeeId);
-            ssMonthChargeWrapper.orderBy("ss_month desc");
-            ssMonthChargeWrapper.last("limit 1");
-            SsMonthCharge ssMonthCharge = ssMonthChargeService.selectOne(ssMonthChargeWrapper);
+        if (ssMonthCharge != null) {
+            String ssMonth = ssMonthCharge.getSsMonth();
 
-            if (ssMonthCharge != null) {
-                String ssMonth = ssMonthCharge.getSsMonth();
-
-                if (ssMonthCharge.getCostCategory() == 6 || ssMonthCharge.getCostCategory() == 7) {
-                    ssMonth = ssMonthCharge.getSsMonthBelong();
-                }
-
-                if (DateUtil.compareMonth(ssMonth, paymentMonth) < 0) {
-                    paymentMonth = ssMonth;
-                }
+            if (ssMonthCharge.getCostCategory() == 6 || ssMonthCharge.getCostCategory() == 7) {
+                ssMonth = ssMonthCharge.getSsMonthBelong();
             }
 
+//                if (DateUtil.compareMonth(ssMonth, paymentMonth) < 0) {
+//                    paymentMonth = ssMonth;
+//                }
+//            }
+
             // 获取雇员末次支付年月社保各险种的支付金额合计，社保基数各险种比例等信息
-            List<SsEmpLastPaymentBO> ssEmpLastPaymentBOList = ssMonthChargeItemService.searchDetailLastPaymentMonth(companyId, employeeId, paymentMonth);
+            List<SsEmpLastPaymentBO> ssEmpLastPaymentBOList = ssMonthChargeItemService.searchDetailLastPaymentMonth(companyId, employeeId, ssMonth);
 
             if (CollectionUtils.isNotEmpty(ssEmpLastPaymentBOList)) {
                 List<SocialSecurityDetailDTO> socialSecurityDetailDTOList = new ArrayList<>(ssEmpLastPaymentBOList.size());
@@ -284,40 +281,44 @@ public class SocApiController implements SocApiProxy {
                     socialSecurityDetailDTOList.add(socialSecurityDetailDTO);
                 }
                 socialSecurityDTO.setSocialSecurityDetails(socialSecurityDetailDTOList);
+
+                return JsonResult.success(socialSecurityDTO,"数据获取成功");
             }
         }
-        return JsonResult.success(socialSecurityDTO,"数据获取成功");
+        return JsonResult.faultMessage("支持中心反馈：无数据");
     }
 
     @Override
+    @ApiOperation(value = "微信端获取雇员社保变更信息接口", notes = "根据客户ID，雇员ID，年份获取对象")
+    @PostMapping("/getSocialSecurityChangeInformation")
     public JsonResult<List<SocialSecurityChangeInformationDTO>> getSocialSecurityChangeInformation(String companyId, String employeeId, String year) {
         // 获取最后的支付年月
-        Wrapper<SsPaymentCom> ssPaymentComWrapper = new EntityWrapper<>();
-        ssPaymentComWrapper.where("is_active = 1");
-        ssPaymentComWrapper.and("company_id = {0}", companyId);
-        ssPaymentComWrapper.and("payment_state = 8");
-        ssPaymentComWrapper.orderBy("payment_month desc");
-        ssPaymentComWrapper.last("limit 1");
-        SsPaymentCom ssPaymentCom = ssPaymentComService.selectOne(ssPaymentComWrapper);
+//        Wrapper<SsPaymentCom> ssPaymentComWrapper = new EntityWrapper<>();
+//        ssPaymentComWrapper.where("is_active = 1");
+//        ssPaymentComWrapper.and("company_id = {0}", companyId);
+//        ssPaymentComWrapper.and("payment_state = 8");
+//        ssPaymentComWrapper.orderBy("payment_month desc");
+//        ssPaymentComWrapper.last("limit 1");
+//        SsPaymentCom ssPaymentCom = ssPaymentComService.selectOne(ssPaymentComWrapper);
+//
+//        if (ssPaymentCom != null) {
+//            String paymentMonth = ssPaymentCom.getPaymentMonth();
+        List<SsMonthCharge> ssMonthChargeList = ssMonthChargeService.getSocialSecurityChangeInformation(companyId, employeeId, null, year);
 
-        if (ssPaymentCom != null) {
-            String paymentMonth = ssPaymentCom.getPaymentMonth();
-            List<SsMonthCharge> ssMonthChargeList = ssMonthChargeService.getSocialSecurityChangeInformation(companyId, employeeId, paymentMonth, year);
-
-            if (CollectionUtils.isNotEmpty(ssMonthChargeList)) {
-                List<SocialSecurityChangeInformationDTO> socialSecurityChangeInformationDTOList = new ArrayList<>(ssMonthChargeList.size());
-                String[] costCategories = { "标准", "新进", "转入", "补缴", "调整（顺调）", "转出", "封存", "退账", "调整（倒调）" };
-                for(SsMonthCharge ssMonthCharge : ssMonthChargeList) {
-                    SocialSecurityChangeInformationDTO socialSecurityChangeInformationDTO = new SocialSecurityChangeInformationDTO();
-                    socialSecurityChangeInformationDTO.setWageBase(CalculateSocialUtils.digitInSimpleFormat(ssMonthCharge.getBaseAmount()));
-                    socialSecurityChangeInformationDTO.setExecutionDate(ssMonthCharge.getSsMonth());
-                    socialSecurityChangeInformationDTO.setChangeContent(costCategories[ssMonthCharge.getCostCategory() - 1]);
-                    socialSecurityChangeInformationDTOList.add(socialSecurityChangeInformationDTO);
-                }
-
-                JsonResult.success(socialSecurityChangeInformationDTOList,"数据获取成功");
+        if (CollectionUtils.isNotEmpty(ssMonthChargeList)) {
+            List<SocialSecurityChangeInformationDTO> socialSecurityChangeInformationDTOList = new ArrayList<>(ssMonthChargeList.size());
+            String[] costCategories = { "标准", "新进", "转入", "补缴", "调整（顺调）", "转出", "封存", "退账", "调整（倒调）" };
+            for(SsMonthCharge ssMonthCharge : ssMonthChargeList) {
+                SocialSecurityChangeInformationDTO socialSecurityChangeInformationDTO = new SocialSecurityChangeInformationDTO();
+                socialSecurityChangeInformationDTO.setWageBase(CalculateSocialUtils.digitInSimpleFormat(ssMonthCharge.getBaseAmount()));
+                socialSecurityChangeInformationDTO.setExecutionDate(ssMonthCharge.getSsMonth());
+                socialSecurityChangeInformationDTO.setChangeContent(costCategories[ssMonthCharge.getCostCategory() - 1]);
+                socialSecurityChangeInformationDTOList.add(socialSecurityChangeInformationDTO);
             }
+
+            return JsonResult.success(socialSecurityChangeInformationDTOList,"数据获取成功");
         }
+//        }
 
         return JsonResult.faultMessage("支持中心反馈：无数据");
     }
