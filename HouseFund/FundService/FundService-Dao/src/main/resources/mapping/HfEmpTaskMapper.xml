@@ -1502,7 +1502,7 @@
             INNER JOIN hf_emp_task hetc ON het.company_id = hetc.company_id
             AND het.employee_id = hetc.employee_id
             AND het.emp_task_id != hetc.emp_task_id
-            AND het.hf_type != hetc.hf_type
+            AND het.hf_type = hetc.hf_type
             AND hetc.is_active = 1
         </if>
         INNER JOIN hf_emp_task_period hetp ON het.emp_task_id = hetp.emp_task_id

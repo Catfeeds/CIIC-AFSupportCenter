@@ -8,15 +8,9 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialUpdateDateDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.CommonApiUtils;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpArchiveConstant;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskPeriodConstant;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfMonthChargeConstant;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
@@ -211,30 +205,56 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         inputHfEmpTask.setModifiedTime(LocalDateTime.now());
 
         if (isHandle) {
-            ComAccountParamExtBo comAccountParamExtBo = new ComAccountParamExtBo();
-            comAccountParamExtBo.setCompanyId(hfEmpTask.getCompanyId());
-            comAccountParamExtBo.setHfType(hfEmpTask.getHfType());
-            List<ComAccountExtBo> hfComAccountList = hfComAccountService.getHfComAccountList(comAccountParamExtBo);
-            if (CollectionUtils.isNotEmpty(hfComAccountList)) {
-                if (hfComAccountList.size() > 1) {
-                    return JsonResultKit.ofError("当前雇员任务单所属的企业账户数据有误");
+//            ComAccountParamExtBo comAccountParamExtBo = new ComAccountParamExtBo();
+//            comAccountParamExtBo.setCompanyId(hfEmpTask.getCompanyId());
+//            comAccountParamExtBo.setHfType(hfEmpTask.getHfType());
+//
+//            List<ComAccountExtBo> hfComAccountList = hfComAccountService.getHfComAccountListByAccountType(comAccountParamExtBo);
+//            if (CollectionUtils.isNotEmpty(hfComAccountList)) {
+//                if (hfComAccountList.size() > 1) {
+//                    return JsonResultKit.ofError("当前雇员任务单所属的企业账户数据有误");
+//                }
+//            } else {
+//                return JsonResultKit.ofError("当前雇员任务单所属的企业账户不存在");
+//            }
+//            Map<String, Object> condition = new HashMap<>();
+//            condition.put("is_active", 1);
+//            condition.put("com_account_id", hfComAccountList.get(0).getComAccountId());
+//            condition.put("hf_type", hfEmpTask.getHfType());
+//            condition.put("payment_month", hfComAccountList.get(0).getComHfMonth());
+
+            List<String> inList = new ArrayList<>();
+            if (CollectionUtils.isNotEmpty(operatorListData)) {
+                for (int i = 0; i < operatorListData.size(); i++) {
+                    JSONObject data = operatorListData.getJSONObject(i);
+                    inList.add(data.getString("hfMonth"));
                 }
             } else {
-                return JsonResultKit.ofError("当前雇员任务单所属的企业账户不存在");
+                inList.add(params.getString("hfMonth"));
+            }
+            Wrapper<HfPaymentAccount> hfPaymentAccountWrapper = new EntityWrapper<>();
+            hfPaymentAccountWrapper.where("is_active = 1");
+            hfPaymentAccountWrapper.and("com_account_id = {0}", params.getInteger("comAccountId"));
+            hfPaymentAccountWrapper.and();
+            hfPaymentAccountWrapper.in("payment_month", inList);
+            hfPaymentAccountWrapper.and("hf_type = {0}", hfEmpTask.getHfType());
+
+            List<HfPaymentAccount> hfPaymentAccountList = hfPaymentAccountService.selectList(hfPaymentAccountWrapper);
+
+            if (CollectionUtils.isNotEmpty(hfPaymentAccountList)) {
+                for (HfPaymentAccount hfPaymentAccount : hfPaymentAccountList) {
+                    if (hfPaymentAccount.getPaymentId() != null
+                        && !hfPaymentAccount.getPaymentId().equals(0L)) {
+                        return JsonResultKit.ofError("当前雇员所属的企业账户在当前汇缴月已经开始汇缴支付，不能再办理任务单");
+                    }
+                }
             }
 
-            Map<String, Object> condition = new HashMap<>();
-            condition.put("is_active", 1);
-            condition.put("com_account_id", hfComAccountList.get(0).getComAccountId());
-            condition.put("hf_type", hfEmpTask.getHfType());
-            condition.put("payment_month", hfComAccountList.get(0).getComHfMonth());
-            List<HfPaymentAccount> hfPaymentAccountList = hfPaymentAccountService.selectByMap(condition);
-
-            if (CollectionUtils.isNotEmpty(hfPaymentAccountList)
-                && hfPaymentAccountList.get(0).getPaymentId() != null
-                && !hfPaymentAccountList.get(0).getPaymentId().equals(0L)) {
-                return JsonResultKit.ofError("当前任务单所属的企业账户在当前汇缴月已经开始汇缴支付，不能再办理任务单");
-            }
+//            if (CollectionUtils.isNotEmpty(hfPaymentAccountList)
+//                && hfPaymentAccountList.get(0).getPaymentId() != null
+//                && !hfPaymentAccountList.get(0).getPaymentId().equals(0L)) {
+//                return JsonResultKit.ofError("当前任务单所属的企业账户在当前汇缴月已经开始汇缴支付，不能再办理任务单");
+//            }
 
             if (hfEmpTask.getIsChange() == HfEmpTaskConstant.IS_CHANGE_YES
                 && (hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_ADD
