@@ -47,7 +47,7 @@
     </select>
 
     <select id="getOriginEmpTask" resultMap="OriginEmpTaskMap">
-        SELECT
+        SELECT DISTINCT
             et.emp_task_id,
             et.task_category,
             et.task_status,
