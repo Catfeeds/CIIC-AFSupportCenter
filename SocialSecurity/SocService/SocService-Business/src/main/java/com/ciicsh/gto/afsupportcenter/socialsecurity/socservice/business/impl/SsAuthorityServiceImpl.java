@@ -2,8 +2,6 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsDataauthCompanyBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsDataauthWelfareUnitBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAuthorityService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsDataauthCompanyMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsDataauthTaskCategoryMapper;
@@ -17,6 +15,7 @@ import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.SMDepartmentProxy;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.SMUserInfoProxy;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMDepartmentDTO;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMUserInfoDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.CompanyManagementDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
@@ -85,9 +84,9 @@ public class SsAuthorityServiceImpl extends ServiceImpl<SsDataauthCompanyMapper,
     @Override
     public List<SsDepartmentDTO> querySubDepartmentsOfLevel() {
         // 调用内控接口,查询上海社保的组织架构树
-        JsonResult<List<com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMDepartmentDTO>> result
+        JsonResult<List<SMDepartmentDTO>> result
             = smDepartmentProxy.getChildDepartments(SocialSecurityConst.DEP_COMPANY_CENTER_ID);
-        List<com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMDepartmentDTO> list = result.getData();
+        List<SMDepartmentDTO> list = result.getData();
         //转换成上海社保的DTO
         List<SsDepartmentDTO> resultList = new ArrayList<>();
         for (com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMDepartmentDTO dto : list) {
@@ -100,9 +99,9 @@ public class SsAuthorityServiceImpl extends ServiceImpl<SsDataauthCompanyMapper,
     @Override
     public List<SsDepartmentDTO> querySubDepartmentsOfLevel(Integer[] levels) {
         // 调用内控接口,查询上海社保的组织架构树
-        JsonResult<List<com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMDepartmentDTO>> result
+        JsonResult<List<SMDepartmentDTO>> result
             = smDepartmentProxy.getChildDepartments(SocialSecurityConst.DEP_COMPANY_CENTER_ID);
-        List<com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMDepartmentDTO> list = result.getData();
+        List<SMDepartmentDTO> list = result.getData();
         //转换成上海社保的DTO
         List<SsDepartmentDTO> resultList = new ArrayList<>();
         for (com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMDepartmentDTO dto : list) {
