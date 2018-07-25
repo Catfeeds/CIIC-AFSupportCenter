@@ -29,6 +29,10 @@ public interface SocialSecurityConst {
     String CENTER_ADDED_COM_ACCOUNT = "881383288";
     String SHANGHAI_CITY_CODE = "310000";
 
+    int DEP_WELFARE_DEPARTMENT_ID = 445;
+    int DEP_SOCIAL_SECURITY_TEAM_ID = 515;
+    int DEP_COMPANY_CENTER_ID = 415;
+
     //结算区县
     public static final Map<String, String> DISTRICT_MAP = new HashMap<String, String>() {
         {
