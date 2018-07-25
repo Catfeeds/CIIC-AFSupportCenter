@@ -10,6 +10,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.dataauth.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfDataauthCompany;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfDataauthTaskCategory;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfDataauthWelfareUnit;
+import com.ciicsh.gto.afsupportcenter.util.constant.HouseFundConst;
+import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.SMDepartmentProxy;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.SMUserInfoProxy;
@@ -55,12 +57,19 @@ public class HfAuthorityServiceImpl extends ServiceImpl<HfDataauthCompanyMapper,
 
     @Override
     public List<HfUserInfoDTO> queryUsersByDepartmentId() {
-        // 查询上海社保 配置客户的人员列表
-        JsonResult<List<SMUserInfoDTO>> result = smUserInfoProxy.getUsersByDepartmentId(514);
-
         List<HfUserInfoDTO> resultDate = new ArrayList<>();
-        // 转换成社保DTO
+        JsonResult<List<SMUserInfoDTO>> result =  smUserInfoProxy.getUsersByDeptId(SocialSecurityConst.DEP_WELFARE_DEPARTMENT_ID);
         List<SMUserInfoDTO> smDtos = result.getData();
+        for (SMUserInfoDTO dto: smDtos) {
+            HfUserInfoDTO d = new HfUserInfoDTO();
+            BeanUtils.copyProperties(dto,d);
+            resultDate.add(d);
+        }
+
+        // 查询上海社保 配置客户的人员列表
+        result = smUserInfoProxy.getUsersByDepartmentId(HouseFundConst.DEP_HOUSE_FUND_TEAM_ID);
+        // 转换成社保DTO
+        smDtos = result.getData();
         for (SMUserInfoDTO dto: smDtos) {
             HfUserInfoDTO d = new HfUserInfoDTO();
             BeanUtils.copyProperties(dto,d);
@@ -78,7 +87,7 @@ public class HfAuthorityServiceImpl extends ServiceImpl<HfDataauthCompanyMapper,
     public List<HfDepartmentDTO> querySubDepartmentsOfLevel(Integer[] levels) {
         // 调用内控接口,查询上海社保的组织架构树
         JsonResult<List<com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMDepartmentDTO>> result
-            = smDepartmentProxy.getChildDepartments(415);
+            = smDepartmentProxy.getChildDepartments(SocialSecurityConst.DEP_COMPANY_CENTER_ID);
         List<com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMDepartmentDTO> list = result.getData();
         //转换成上海社保的DTO
         List<HfDepartmentDTO> resultList = new ArrayList<>();
