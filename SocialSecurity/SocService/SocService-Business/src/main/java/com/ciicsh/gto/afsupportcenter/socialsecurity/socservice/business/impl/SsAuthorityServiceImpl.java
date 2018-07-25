@@ -2,8 +2,6 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsDataauthCompanyBO;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsDataauthWelfareUnitBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsAuthorityService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsDataauthCompanyMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsDataauthTaskCategoryMapper;
@@ -12,10 +10,12 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.dataauth.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsDataauthCompany;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsDataauthTaskCategory;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsDataauthWelfareUnit;
+import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.SMDepartmentProxy;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.SMUserInfoProxy;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMDepartmentDTO;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMUserInfoDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.CompanyManagementDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
@@ -58,12 +58,19 @@ public class SsAuthorityServiceImpl extends ServiceImpl<SsDataauthCompanyMapper,
 
     @Override
     public List<SsUserInfoDTO> queryUsersByDepartmentId() {
-        // 查询上海社保 配置客户的人员列表
-        JsonResult<List<SMUserInfoDTO>> result = smUserInfoProxy.getUsersByDepartmentId(515);
-
         List<SsUserInfoDTO> resultDate = new ArrayList<>();
-        // 转换成社保DTO
+        JsonResult<List<SMUserInfoDTO>> result = smUserInfoProxy.getUsersByDeptId(SocialSecurityConst.DEP_WELFARE_DEPARTMENT_ID);
         List<SMUserInfoDTO> smDtos = result.getData();
+        for (SMUserInfoDTO dto: smDtos) {
+            SsUserInfoDTO d = new SsUserInfoDTO();
+            BeanUtils.copyProperties(dto,d);
+            resultDate.add(d);
+        }
+
+        // 查询上海社保 配置客户的人员列表
+        result = smUserInfoProxy.getUsersByDepartmentId(SocialSecurityConst.DEP_SOCIAL_SECURITY_TEAM_ID);
+        // 转换成社保DTO
+        smDtos = result.getData();
         for (SMUserInfoDTO dto: smDtos) {
             SsUserInfoDTO d = new SsUserInfoDTO();
             BeanUtils.copyProperties(dto,d);
@@ -77,9 +84,9 @@ public class SsAuthorityServiceImpl extends ServiceImpl<SsDataauthCompanyMapper,
     @Override
     public List<SsDepartmentDTO> querySubDepartmentsOfLevel() {
         // 调用内控接口,查询上海社保的组织架构树
-        JsonResult<List<com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMDepartmentDTO>> result
-            = smDepartmentProxy.getChildDepartments(415);
-        List<com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMDepartmentDTO> list = result.getData();
+        JsonResult<List<SMDepartmentDTO>> result
+            = smDepartmentProxy.getChildDepartments(SocialSecurityConst.DEP_COMPANY_CENTER_ID);
+        List<SMDepartmentDTO> list = result.getData();
         //转换成上海社保的DTO
         List<SsDepartmentDTO> resultList = new ArrayList<>();
         for (com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMDepartmentDTO dto : list) {
@@ -92,9 +99,9 @@ public class SsAuthorityServiceImpl extends ServiceImpl<SsDataauthCompanyMapper,
     @Override
     public List<SsDepartmentDTO> querySubDepartmentsOfLevel(Integer[] levels) {
         // 调用内控接口,查询上海社保的组织架构树
-        JsonResult<List<com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMDepartmentDTO>> result
-            = smDepartmentProxy.getChildDepartments(415);
-        List<com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMDepartmentDTO> list = result.getData();
+        JsonResult<List<SMDepartmentDTO>> result
+            = smDepartmentProxy.getChildDepartments(SocialSecurityConst.DEP_COMPANY_CENTER_ID);
+        List<SMDepartmentDTO> list = result.getData();
         //转换成上海社保的DTO
         List<SsDepartmentDTO> resultList = new ArrayList<>();
         for (com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMDepartmentDTO dto : list) {
