@@ -193,4 +193,9 @@
             AND pc.payment_month = #{paymentMonth}
             AND pc.com_account_id = #{comAccountId}
     </select>
+    <select id="ssCanDeal" resultType="java.lang.Integer">
+    SELECT payment_state FROM ss_payment_com pc
+    INNER JOIN ss_com_account ca ON ca.com_account_id=pc.com_account_id AND ca.is_active=1
+    WHERE pc.is_active=1 AND ca.ss_account_type=#{ssAccountType} AND pc.payment_month=#{paymentMonth} limit 1
+    </select>
 </mapper>

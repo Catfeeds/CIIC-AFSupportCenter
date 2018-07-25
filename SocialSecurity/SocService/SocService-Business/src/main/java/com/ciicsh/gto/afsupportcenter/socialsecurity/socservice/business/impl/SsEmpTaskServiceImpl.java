@@ -173,7 +173,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         int taskCategory = bo.getTaskCategory();
 
         //业务校验
-        boolean canDeal = ssPaymentService.ssCanDeal(bo.getHandleMonth(),bo.getCompanyId());
+        boolean canDeal = ssPaymentService.ssCanDeal(bo.getHandleMonth(),bo.getCompanyId(),bo.getWelfareUnit());
         if(!canDeal){
             return "该雇员的办理月份已经在支付申请中，无法办理！";
         }
