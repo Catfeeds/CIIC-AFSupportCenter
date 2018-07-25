@@ -395,8 +395,8 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         } else {
             return false;
         }
-
-        if (paymentState == 4 || paymentState == 6 || paymentState == 8) {
+        //if (paymentState == 4 || paymentState == 6 || paymentState == 8) {
+        if (paymentState != null) {
             return false;
         }
         return true;
