@@ -111,6 +111,9 @@
             <if test = "paymentId != null and paymentId != ''">
                 AND SPC.payment_id = #{paymentId}
             </if>
+            <if test = "ifCreateBatch != null and ifCreateBatch != ''">
+                AND ifnull(SPC.payment_id,0) = 0
+            </if>
             <if test = "ifCheck != null and ifCheck != ''">
                 AND SPC.if_check = #{ifCheck}
             </if>

@@ -102,7 +102,7 @@ public class SsPaymentComController  extends BasicController<SsPaymentComService
     public JsonResult<String> addPaymentBatch(SsAddPaymentBO ssAddPaymentDTO) {
         JsonResult<String> json = new JsonResult<String>();
         //执行业务
-        json = business.doAddBatch(ssAddPaymentDTO);
+        json = business.addPaymentBatch(ssAddPaymentDTO);
         return json;
     }
     /**
