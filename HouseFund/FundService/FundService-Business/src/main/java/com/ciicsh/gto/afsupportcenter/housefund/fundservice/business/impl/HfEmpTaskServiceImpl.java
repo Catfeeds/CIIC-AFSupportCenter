@@ -332,8 +332,11 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         }
 
         baseMapper.insert(hfEmpTask);
-        // 转出或封存任务单，同时生成转移任务单
-        createTransferTask(hfEmpTask, null);
+
+        if (hfEmpTask.getActive()) {
+            // 转出或封存任务单，同时生成转移任务单
+            createTransferTask(hfEmpTask, null);
+        }
         return true;
     }
 
