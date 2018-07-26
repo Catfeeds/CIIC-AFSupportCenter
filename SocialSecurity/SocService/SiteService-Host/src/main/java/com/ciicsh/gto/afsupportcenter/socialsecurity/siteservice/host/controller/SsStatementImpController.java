@@ -27,8 +27,10 @@ public class SsStatementImpController  extends BasicController<SsStatementImpSer
     @RequestMapping(value = "/optImport",consumes = {"multipart/form-data"})
     @ResponseBody
     public JsonResult<String> optImport(String ssMonth,String fileType,Long comAccountId,MultipartFile file) throws Exception {
+
         JsonResult<String> json = new JsonResult<String>();
-        switch (fileType){
+        json = yysmxOptImport(file,ssMonth,fileType,comAccountId);
+ /*       switch (fileType){
             case "YYS":
                 json = yysmxOptImport(file,ssMonth,fileType,comAccountId);
                 break;
@@ -37,7 +39,7 @@ public class SsStatementImpController  extends BasicController<SsStatementImpSer
                 break;
             default:
                 break;
-        }
+        }*/
         return json;
     }
 
