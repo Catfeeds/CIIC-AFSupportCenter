@@ -215,7 +215,8 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                             // 如果任务单类型是新开且账户分类是独立户则客户汇缴月=企业末次汇缴月 + 1
                             if ((hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_ADD
                                  || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_ADD)
-                                && hfEmpTaskHandleBo.getHfAccountType() == HfComAccountConstant.HF_ACCOUNT_TYPE_INDEPENDENT) {
+                                && hfEmpTaskHandleBo.getHfAccountType() == HfComAccountConstant.HF_ACCOUNT_TYPE_INDEPENDENT
+                                && hfEmpTaskHandleBo.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
                                 hfEmpTaskPeriod.setHfMonth(hfMonthDate.plusMonths(1).format(formatter));
                             } else {
                                 // 否则客户汇缴月=企业末次汇缴月
