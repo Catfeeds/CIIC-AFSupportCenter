@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = false)
 @ExcelTarget("StatementExportOpt")
 public class StatementExportOpt {
-    // @Excel(name = "社保导入文件",width = 20, orderNum = "1")
+    @Excel(name = "社保导入文件",width = 20, orderNum = "1")
     private String impFileName;
     @Excel(name = "社保月份",width = 20, orderNum = "2")
     private String ssMonth;
