@@ -148,9 +148,13 @@
             and a.task_category = ${taskCategory}
         </if>
         <foreach collection="param" item="plid" open="" close="" separator="">
-            and ${plid}
+            and  ${plid}
         </foreach>
-        order by b.created_time desc
+        order by
+        <foreach collection="orderParam" item="plid" open="" close="" separator="">
+            ${plid},
+        </foreach>
+        a.created_time desc
     </select>
     <select id="queryAmArchiveResign" resultMap="BaseResultMapDTO">
         SELECT
