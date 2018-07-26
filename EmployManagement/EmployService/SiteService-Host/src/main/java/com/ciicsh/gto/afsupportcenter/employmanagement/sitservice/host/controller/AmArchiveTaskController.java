@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -357,40 +356,6 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         return  JsonResultKit.of(resultMap);
     }
 
-    @PostMapping("/saveAmInjury")
-    public JsonResult  saveAmInjury(@RequestBody List<AmInjury> list) {
-        List<AmInjury>  data = new ArrayList<AmInjury>();
-        for(AmInjury bo:list)
-        {
-            LocalDateTime now = LocalDateTime.now();
-            bo.setCreatedTime(now);
-            bo.setModifiedTime(now);
-            bo.setCreatedBy(ReasonUtil.getUserId());
-            bo.setModifiedBy(ReasonUtil.getUserId());
-            if(bo.getInjuryId()==null){
-                data.add(bo);
-            }
-        }
-
-        boolean result = false;
-        try {
-            result = amInjuryService.insertBatch(data);
-        } catch (Exception e) {
-
-        }
-
-        AmInjuryBO amInjuryBO = new AmInjuryBO();
-        amInjuryBO.setArchiveId(list.get(0).getArchiveId());
-
-        List<AmInjuryBO>  amInjuryBOList = amInjuryService.queryAmInjury(amInjuryBO);
-
-        Map<String,Object> map = new HashMap<>();
-        map.put("result",result);
-        map.put("data",amInjuryBOList);
-
-        return JsonResultKit.of(map);
-    }
-
 
     @Transactional(
         rollbackFor = {Exception.class}
@@ -593,6 +558,42 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         }
 
         ExcelUtil.exportExcel(opts,archiveSearchExportOpt.class,fileNme,response);
+    }
+
+    @RequestMapping("/saveAmInjury")
+    public JsonResult  saveAmInjury(AmInjury amInjury){
+        LocalDateTime now = LocalDateTime.now();
+        if(amInjury.getInjuryId()==null){
+            amInjury.setCreatedTime(now);
+            amInjury.setModifiedTime(now);
+            amInjury.setCreatedBy(ReasonUtil.getUserId());
+            amInjury.setModifiedBy(ReasonUtil.getUserId());
+        }else{
+            amInjury.setModifiedTime(now);
+            amInjury.setModifiedBy(ReasonUtil.getUserId());
+        }
+        boolean result = false;
+        try {
+            result = amInjuryService.insertOrUpdate(amInjury);
+        } catch (Exception e) {
+
+        }
+        AmInjuryBO amInjuryBO = new AmInjuryBO();
+        amInjuryBO.setArchiveId(amInjury.getArchiveId());
+        List<AmInjuryBO> list = amInjuryService.queryAmInjury(amInjuryBO);
+        Map<String,Object> resultMap = new HashMap<>();
+        resultMap.put("result",result);
+        resultMap.put("data",list);
+
+        return JsonResultKit.of(resultMap);
+
+    }
+
+    @RequestMapping("/queryAmInjury")
+    public JsonResult  queryAmInjury(AmInjury amInjury){
+        AmInjury amInjury1 = amInjuryService.selectById(amInjury);
+        return JsonResultKit.of( amInjury1);
+
     }
 
 }

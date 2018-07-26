@@ -93,6 +93,7 @@
         w.emp_task_id as empTaskResignId,
         a.emp_task_id,
         a.change,
+        a.job,
         b.employment_id,
         b.employee_id,
         b.company_id,
@@ -147,9 +148,13 @@
             and a.task_category = ${taskCategory}
         </if>
         <foreach collection="param" item="plid" open="" close="" separator="">
-            and ${plid}
+            and  ${plid}
         </foreach>
-        order by b.created_time desc
+        order by
+        <foreach collection="orderParam" item="plid" open="" close="" separator="">
+            ${plid},
+        </foreach>
+        a.created_time desc
     </select>
     <select id="queryAmArchiveResign" resultMap="BaseResultMapDTO">
         SELECT
@@ -329,9 +334,9 @@
     </select>
 
     <select id="queryAmEmploymentBatch" resultMap="BaseResultMapDTO">
-        SELECT  employment_id,emp_task_id,company_id,employee_id  FROM  am_employment
+        SELECT  a.employment_id,a.emp_task_id,a.company_id,a.employee_id,b.id_num,b.employee_name  FROM  am_employment a LEFT JOIN am_emp_employee b  on a.emp_task_id = b.emp_task_id
         <where>
-            <foreach collection="empTaskIds" item="item" open="emp_task_id IN (" separator="," close=")">
+            <foreach collection="empTaskIds" item="item" open="a.emp_task_id IN (" separator="," close=")">
                 #{item}
             </foreach>
         </where>

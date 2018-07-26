@@ -162,7 +162,11 @@
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
         </foreach>
-        order by a.created_time desc
+        order by
+        <foreach collection="orderParam" item="plid" open="" close="" separator="">
+            ${plid},
+        </foreach>
+        a.created_time desc
     </select>
 
     <select id="queryAmEmpTaskOther" resultMap="BaseResultMapDTO">
@@ -487,5 +491,10 @@
             #{item}
         </foreach>
     </select>
+
+    <select id="queryChange" resultMap="BaseResultMapDTO">
+        SELECT  emp_task_id from am_emp_task a where a.change = '否'
+    </select>
+
 
 </mapper>

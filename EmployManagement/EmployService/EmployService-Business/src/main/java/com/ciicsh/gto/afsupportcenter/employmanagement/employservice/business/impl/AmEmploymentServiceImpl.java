@@ -46,17 +46,25 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
         }
 
         List<String> param = new ArrayList<String>();
-
+        List<String> orderParam = new ArrayList<String>();
         if(!StringUtil.isEmpty(amEmploymentBO.getParams()))
         {
             String arr[] = amEmploymentBO.getParams().split(",");
             for(int i=0;i<arr.length;i++) {
-                param.add(arr[i]);
+                if(!StringUtil.isEmpty(arr[i]))
+                {
+                    if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
+                        orderParam.add(arr[i]);
+                    }else {
+                        param.add(arr[i]);
+                    }
+                }
+
             }
         }
 
         amEmploymentBO.setParam(param);
-
+        amEmploymentBO.setOrderParam(orderParam);
         //如果是查询用工总的数量就不需要状态了
         if(null!=amEmploymentBO.getTaskStatus()&&amEmploymentBO.getTaskStatus()==0){
             amEmploymentBO.setTaskStatus(null);
