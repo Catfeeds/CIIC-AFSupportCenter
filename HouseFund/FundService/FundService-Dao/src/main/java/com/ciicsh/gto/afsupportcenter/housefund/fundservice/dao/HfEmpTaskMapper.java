@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer.EmpTaskT
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -77,4 +78,8 @@ public interface HfEmpTaskMapper extends BaseMapper<HfEmpTask> {
     Map<String,String> fetchPrintInfo(Long empTaskId);
 
     Integer getExistHandleRemarkCount(HfEmpTaskBo hfEmpTaskBo);
+
+    List<HfEmpTaskExportBo> queryHistoryEmpTask(@Param("isSelf") Boolean isSelf, @Param("empTaskId") Long empTaskId);
+
+    List<HfEmpTaskExportBo> getOriginEmpTask(@Param("companyId") String companyId, @Param("employeeId") String employeeId, @Param("hfType") Integer hfType);
 }

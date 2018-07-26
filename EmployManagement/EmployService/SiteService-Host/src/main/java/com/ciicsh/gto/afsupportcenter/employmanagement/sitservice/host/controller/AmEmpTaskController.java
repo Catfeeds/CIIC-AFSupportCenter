@@ -21,6 +21,7 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -196,6 +197,8 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         PageRows<AmEmpMaterialBO> result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
         if(result!=null&&result.getRows().size()>0)
         {
+            List<AmEmpMaterialOperationLogBO> logList = iAmEmpMaterialService.queryAmEmpMaterialOperationLogList(pageInfo);
+            amMaterialBO.setLogBOList(logList);
             empMaterialList.addAll(result.getRows());
             String submitterId = result.getRows().get(0).getSubmitterId();
             String submitterName = result.getRows().get(0).getSubmitterName();
@@ -432,6 +435,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     }
 
     @PostMapping("/receiveMaterial")
+    @Transactional(
+        rollbackFor = {Exception.class}
+    )
     public JsonResult receiveMaterial(@RequestBody List<AmEmpMaterial> list){
         String userName = "system";
         String userId = "system";
@@ -458,12 +464,15 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         }
 
         AmEmpTask amEmpTask = business.selectById(list.get(0).getEmpTaskId());
-        amEmpTask.setTaskStatus(2);
-        business.insertOrUpdate(amEmpTask);
-
-        boolean result =  iAmEmpMaterialService.updateBatchById(list);
+        // 调用雇员中心 签收
+        String message = iAmEmpMaterialService.receiveMaterial(amEmpTask.getHireTaskId(),1,null);
+        if("签收成功".equals(message)){
+            amEmpTask.setTaskStatus(2);
+            business.insertOrUpdate(amEmpTask);
+            boolean result =  iAmEmpMaterialService.updateBatchById(list);
+        }
         Map<String,Object> map = new HashMap<>();
-        map.put("result",result);
+        map.put("result",message);
         map.put("data",list);
         return JsonResultKit.of(map);
     }
@@ -485,11 +494,17 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             material.setRejectName(userName);
             material.setRejectId(userId);
             material.setModifiedTime(LocalDateTime.now());
+            material.setActive(false);
         }
 
-        boolean result =  iAmEmpMaterialService.updateBatchById(list);
+        AmEmpTask amEmpTask = business.selectById(list.get(0).getEmpTaskId());
+        // 调用雇员中心 批退
+        String message = iAmEmpMaterialService.receiveMaterial(amEmpTask.getHireTaskId(),2,list.get(0).getRejectReason());
+        if("批退成功".equals(message)){
+            boolean result =  iAmEmpMaterialService.updateBatchById(list);
+        }
         Map<String,Object> map = new HashMap<>();
-        map.put("result",result);
+        map.put("result",message);
         map.put("data",list);
         return JsonResultKit.of(map);
     }
@@ -546,6 +561,230 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         ExcelUtil.exportExcel(opts,employSearchExportOpt.class,fileNme,response);
     }
+
+    /**
+     * 用工录用名册打印导出Word
+     */
+//    @RequestMapping("/employSearchExportOptUseWord")
+//    public @ResponseBody
+//    void employSearchExportOptUseWord(HttpServletResponse response, HttpServletRequest request){
+//        Map<String, Object> map = new HashMap<String, Object>();
+//        map.put("name", "111");
+//        map.put("idCard", "222");
+//        map.put("date","333");
+//        map.put("type", "444");
+//        map.put("remark", "555");
+//
+//        List<ListBO> boList = new ArrayList<>();
+//        ListBO listBO = new ListBO();
+//        AmEmpTaskBO bo1 = new AmEmpTaskBO();
+//        bo1.setCompanyName("123");
+//        bo1.setCompanyType("456");
+//        listBO.setBo1(bo1);
+//        AmEmpTaskBO bo2 = new AmEmpTaskBO();
+//        bo2.setCompanyName("123");
+//        bo2.setCompanyType("456");
+//        listBO.setBo2(bo2);
+//        AmEmpTaskBO bo3 = new AmEmpTaskBO();
+//        bo3.setCompanyName("123");
+//        bo3.setCompanyType("456");
+//        listBO.setBo3(bo3);
+//
+//        ListBO listBO2 = new ListBO();
+//        listBO2.setBo1(bo1);
+//        listBO2.setBo2(bo2);
+//        listBO2.setBo3(bo3);
+//        boList.add(listBO);
+//        boList.add(listBO2);
+//        boList.add(listBO);
+//        boList.add(listBO2);
+//        boList.add(listBO);
+//        boList.add(listBO2);
+//        map.put("list",boList);
+//
+//        try {
+//            WordUtils.exportMillCertificateWord(request,response,map,"用工录用名册","用工录用名册模板.ftl");
+//        } catch (IOException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//    }
+
+    /**
+     * 派遣录用名册打印导出Word
+     */
+//    @RequestMapping("/employSearchExportOptDispatchWord")
+//    public @ResponseBody
+//    void employSearchExportOptDispatchWord(HttpServletResponse response, HttpServletRequest request){
+//        Map<String, Object> map = new HashMap<String, Object>();
+//        map.put("name", "111");
+//        map.put("idCard", "222");
+//        map.put("date","333");
+//        map.put("type", "444");
+//        map.put("remark", "555");
+//
+//        List<ListBO> boList = new ArrayList<>();
+//        ListBO listBO = new ListBO();
+//        AmEmpTaskBO bo1 = new AmEmpTaskBO();
+//        bo1.setCompanyName("123");
+//        bo1.setCompanyType("456");
+//        listBO.setBo1(bo1);
+//        AmEmpTaskBO bo2 = new AmEmpTaskBO();
+//        bo2.setCompanyName("123");
+//        bo2.setCompanyType("456");
+//        listBO.setBo2(bo2);
+//        AmEmpTaskBO bo3 = new AmEmpTaskBO();
+//        bo3.setCompanyName("123");
+//        bo3.setCompanyType("456");
+//        listBO.setBo3(bo3);
+//
+//        ListBO listBO2 = new ListBO();
+//        listBO2.setBo1(bo1);
+//        listBO2.setBo2(bo2);
+//        listBO2.setBo3(bo3);
+//        boList.add(listBO);
+//        boList.add(listBO2);
+//        map.put("list",boList);
+//
+//        try {
+//            WordUtils.exportMillCertificateWord(request,response,map,"派遣录用名册","派遣录用名册模板.ftl");
+//        } catch (IOException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//    }
+
+    /**
+     * 外来独立打印导出Word
+     */
+//    @RequestMapping("/employSearchExportOptAlonehWord")
+//    public @ResponseBody
+//    void employSearchExportOptAlonehWord(HttpServletResponse response, HttpServletRequest request){
+//        Map<String, Object> map = new HashMap<String, Object>();
+//        map.put("name", "111");
+//        map.put("idCard", "222");
+//        map.put("date","333");
+//        map.put("type", "444");
+//        map.put("remark", "555");
+//
+//        List<ListBO> boList = new ArrayList<>();
+//        ListBO listBO = new ListBO();
+//        AmEmpTaskBO bo1 = new AmEmpTaskBO();
+//        bo1.setCompanyName("123");
+//        bo1.setCompanyType("456");
+//        listBO.setBo1(bo1);
+//        AmEmpTaskBO bo2 = new AmEmpTaskBO();
+//        bo2.setCompanyName("123");
+//        bo2.setCompanyType("456");
+//        listBO.setBo2(bo2);
+//        AmEmpTaskBO bo3 = new AmEmpTaskBO();
+//        bo3.setCompanyName("123");
+//        bo3.setCompanyType("456");
+//        listBO.setBo3(bo3);
+//
+//        ListBO listBO2 = new ListBO();
+//        listBO2.setBo1(bo1);
+//        listBO2.setBo2(bo2);
+//        listBO2.setBo3(bo3);
+//        boList.add(listBO);
+//        boList.add(listBO2);
+//        map.put("list",boList);
+//
+//        try {
+//            WordUtils.exportMillCertificateWord(request,response,map,"外来独立","外来独立模板.ftl");
+//        } catch (IOException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//    }
+
+    /**
+     * 外来派遣导出Word
+     */
+//    @RequestMapping("/employSearchExportOptExtDispatchWord")
+//    public @ResponseBody
+//    void employSearchExportOptExtDispatchWord(HttpServletResponse response, HttpServletRequest request){
+//        Map<String, Object> map = new HashMap<String, Object>();
+//        map.put("name", "111");
+//        map.put("idCard", "222");
+//        map.put("date","333");
+//        map.put("type", "444");
+//        map.put("remark", "555");
+//
+//        List<ListBO> boList = new ArrayList<>();
+//        ListBO listBO = new ListBO();
+//        AmEmpTaskBO bo1 = new AmEmpTaskBO();
+//        bo1.setCompanyName("123");
+//        bo1.setCompanyType("456");
+//        listBO.setBo1(bo1);
+//        AmEmpTaskBO bo2 = new AmEmpTaskBO();
+//        bo2.setCompanyName("123");
+//        bo2.setCompanyType("456");
+//        listBO.setBo2(bo2);
+//        AmEmpTaskBO bo3 = new AmEmpTaskBO();
+//        bo3.setCompanyName("123");
+//        bo3.setCompanyType("456");
+//        listBO.setBo3(bo3);
+//
+//        ListBO listBO2 = new ListBO();
+//        listBO2.setBo1(bo1);
+//        listBO2.setBo2(bo2);
+//        listBO2.setBo3(bo3);
+//        boList.add(listBO);
+//        boList.add(listBO2);
+//        map.put("list",boList);
+//
+//        try {
+//            WordUtils.exportMillCertificateWord(request,response,map,"外来派遣","外来派遣模板.ftl");
+//        } catch (IOException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//    }
+
+    /**
+     * 采集表汇总表导出Word
+     */
+//    @RequestMapping("/employSearchExportOptExtCollectWord")
+//    public @ResponseBody
+//    void employSearchExportOptExtCollectWord(HttpServletResponse response, HttpServletRequest request){
+//        Map<String, Object> map = new HashMap<String, Object>();
+//        map.put("name", "111");
+//        map.put("idCard", "222");
+//        map.put("date","333");
+//        map.put("type", "444");
+//        map.put("remark", "555");
+//
+//        List<ListBO> boList = new ArrayList<>();
+//        ListBO listBO = new ListBO();
+//        AmEmpTaskBO bo1 = new AmEmpTaskBO();
+//        bo1.setCompanyName("123");
+//        bo1.setCompanyType("456");
+//        listBO.setBo1(bo1);
+//        AmEmpTaskBO bo2 = new AmEmpTaskBO();
+//        bo2.setCompanyName("123");
+//        bo2.setCompanyType("456");
+//        listBO.setBo2(bo2);
+//        AmEmpTaskBO bo3 = new AmEmpTaskBO();
+//        bo3.setCompanyName("123");
+//        bo3.setCompanyType("456");
+//        listBO.setBo3(bo3);
+//
+//        ListBO listBO2 = new ListBO();
+//        listBO2.setBo1(bo1);
+//        listBO2.setBo2(bo2);
+//        listBO2.setBo3(bo3);
+//        boList.add(listBO);
+//        boList.add(listBO2);
+//        map.put("list",boList);
+//
+//        try {
+//            WordUtils.exportMillCertificateWord(request,response,map,"采集表汇总表","采集表汇总表模板.ftl");
+//        } catch (IOException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//    }
 
     @RequestMapping("/getDefualtEmployBO")
     public  JsonResult<AmEmpTaskBO>  getDefualtEmployBO(AmEmpTaskBO amEmpTaskBO){

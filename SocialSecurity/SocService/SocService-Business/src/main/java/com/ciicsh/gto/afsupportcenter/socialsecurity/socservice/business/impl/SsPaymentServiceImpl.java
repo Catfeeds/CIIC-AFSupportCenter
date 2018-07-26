@@ -186,8 +186,8 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         newSsPayment.setPaymentMonth(ssPayment.getPaymentMonth());
         newSsPayment.setAccountType(ssPayment.getAccountType());
         //默认值
-        DateTimeFormatter formatter= DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        newSsPayment.setPaymentBatchNum( LocalDateTime.now().format(formatter).toString());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        newSsPayment.setPaymentBatchNum(LocalDateTime.now().format(formatter).toString());
         newSsPayment.setPaymentState(3);
         newSsPayment.setTotalEmpCount(0);
         newSsPayment.setTotalCom(0);
@@ -246,15 +246,15 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         List<PayapplyEmployeeProxyDTO> paymentEmpList = baseMapper.getPaymentEmpList(ssPayment.getPaymentId(),
             ssPayment.getPaymentMonth());
 
-        List<com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyCompanyProxyDTO> companyDtos = paymentComList.stream().map(x->{
+        List<com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyCompanyProxyDTO> companyDtos = paymentComList.stream().map(x -> {
             com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyCompanyProxyDTO pdto = new com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyCompanyProxyDTO();
-            BeanUtils.copyProperties(x,pdto);
+            BeanUtils.copyProperties(x, pdto);
             return pdto;
         }).collect(Collectors.toList());
 
-        List<com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyEmployeeProxyDTO> employeeDtos = paymentEmpList.stream().map(x->{
+        List<com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyEmployeeProxyDTO> employeeDtos = paymentEmpList.stream().map(x -> {
             com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyEmployeeProxyDTO pdto = new com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayapplyEmployeeProxyDTO();
-            BeanUtils.copyProperties(x,pdto);
+            BeanUtils.copyProperties(x, pdto);
             return pdto;
         }).collect(Collectors.toList());
 
@@ -369,31 +369,62 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
     }
 
     /**
-     * 反馈社保日常操作是否可办理，
-     * @param ssMonth
+     * 反馈社保日常操作是否可办理
+     * 1,未到帐       2,无需支付     3 ,可付     4,申请中     5,内部审批批退     6,已申请到财务部     7,财务部批退     8,财务部支付成功
+     *
+     * @param ssMonth   办理月份
      * @param companyId
      * @return
      */
-    public boolean ssCanDeal(String ssMonth,String companyId){
-
-        return  true;
+    public boolean ssCanDeal(String ssMonth, String companyId, Integer welfareUnit) {
+        SsPaymentCom paymentCom = new SsPaymentCom();
+        paymentCom.setPaymentMonth(ssMonth);
+        Integer paymentState = 0;
+        if (welfareUnit == 1) {  //独立户
+            paymentCom.setCompanyId(companyId);
+            paymentCom = ssPaymentComMapper.selectOne(paymentCom);
+            if (paymentCom == null) {
+                return true;
+            }else{
+                paymentState =paymentCom.getPaymentState();
+            }
+        } else if (welfareUnit == 2) {  //中智大库
+            paymentState = ssPaymentComMapper.ssCanDeal(ssMonth, 1);
+        } else if (welfareUnit == 3) {  //中智外包
+            paymentState = ssPaymentComMapper.ssCanDeal(ssMonth, 2);
+        } else {
+            return false;
+        }
+        //if (paymentState == 4 || paymentState == 6 || paymentState == 8) {
+        if (paymentState != null) {
+            return false;
+        }
+        return true;
     }
 
     /**
      * 获取社保支付状态
-     * @param ssMonth
+     *
+     * @param ssMonth   办理月份
      * @param companyId
      * @return
      */
-    public Map<String,String> getSsPaymentComStauts(String ssMonth, String companyId){
-        Map<String,String> map =new HashMap<>();
+    public Map<String, String> getSsPaymentComStauts(String ssMonth, String companyId) {
+        Map<String, String> map = new HashMap<>();
         return map;
     }
+
     /**
+     * 社保办理时调用
      * 更新支付状态为未到账，前提状态是可付，
      */
-    public void updateSsPaymentComStatus(String ssMonth,String companyId){
-
+    public void updateSsPaymentComStatus(String ssMonth, String companyId) {
+        SsPaymentCom paymentCom = new SsPaymentCom();
+        paymentCom.setPaymentMonth(ssMonth);
+        paymentCom.setCompanyId(companyId);
+        paymentCom = ssPaymentComMapper.selectOne(paymentCom);
+        paymentCom.setPaymentState(1); //未到账
+        ssPaymentComMapper.updateById(paymentCom);
     }
 
 }

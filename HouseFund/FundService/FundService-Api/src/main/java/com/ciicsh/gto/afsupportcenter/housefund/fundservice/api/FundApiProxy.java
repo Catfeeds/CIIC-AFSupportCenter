@@ -26,6 +26,7 @@ public interface FundApiProxy {
     JsonResult<List<HfComAccountDTO>> getComAccountList(@RequestBody HfComAccountParamDTO paramDto);
 
     /**
+     * 接口调用方：客服中心
      * 保存企业任务单
      * @param comTaskDTO
      * @return
@@ -35,6 +36,7 @@ public interface FundApiProxy {
 
 
     /**
+     * 接口调用方：客服中心
      * 根据公司ID和公积金类别获取公积金账户信息
      * @param companyId 公司ID
      * @return
@@ -42,6 +44,12 @@ public interface FundApiProxy {
     @GetMapping("/getAccountByCompany")
     JsonResult<HfComAccountExtDTO> getAccountByCompany(@RequestParam("companyId") String companyId);
 
+    /**
+     * 接口调用方：薪酬结算中心
+     *
+     * @param paramDTOList
+     * @return
+     */
     @PostMapping("/getHfEmpInfo")
     JsonResult<List<HfEmpInfoDTO>> getHfEmpInfo(@RequestBody List<HfEmpInfoParamDTO> paramDTOList);
 
@@ -64,4 +72,26 @@ public interface FundApiProxy {
     @PostMapping("/getHfEmpInfoById")
     JsonResult<HfEmpInfoDTO> getHfEmpInfoById(@RequestParam("companyId")String companyId,@RequestParam("employeeId")String employeeId);
 
+    /**
+     * 接口调用方：雇员中心
+     * 根据客户Id和雇员Id获取雇员已办理的公积金信息
+     * @param companyId
+     * @param employeeId
+     * @return
+     */
+    @PostMapping("/getFund")
+    JsonResult<FundDTO> getFund(@RequestParam("companyId")String companyId,@RequestParam("employeeId")String employeeId);
+
+    /**
+     * 接口调用方：雇员中心
+     * 根据客户Id和雇员Id及年份获取雇员该年的公积金变更记录
+     * @param companyId
+     * @param employeeId
+     * @param year
+     * @return
+     */
+    @PostMapping("/getFundChangeInformation")
+    JsonResult<List<FundChangeInformationDTO>> getFundChangeInformation(@RequestParam("companyId")String companyId,
+                                                                  @RequestParam("employeeId")String employeeId,
+                                                                  @RequestParam("year")String year);
 }

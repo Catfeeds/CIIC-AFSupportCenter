@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao;
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpLastPaymentBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthChargeItemBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsMonthEmpChangeDetailBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsMonthChargeItem;
@@ -28,4 +29,5 @@ public interface SsMonthChargeItemMapper extends BaseMapper<SsMonthChargeItem> {
      */
    List<SsMonthChargeItemBO> queryEmlpyeeMonthFeeDetail(SsMonthChargeItemBO ssMonthChargeItemBO);
    List<SsMonthEmpChangeDetailBO> searchYysDetailByComAccountIdAndSsMonth(@Param("comAccountId") Long comAccountId, @Param("ssMonth") String ssMonth);
+   List<SsEmpLastPaymentBO> searchDetailLastPaymentMonth(@Param("companyId") String companyId, @Param("employeeId") String employeeId, @Param("ssMonth") String ssMonth);
 }

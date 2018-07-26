@@ -17,9 +17,14 @@ import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.company.CompanyTypeDTO;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult;
+import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,6 +47,9 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
 
     @Autowired
     private SalCompanyMapper salCompanyMapper;
+
+    @Autowired
+    private CompanyProxy companyProxy;
 
     @Override
     public PageRows<AmArchiveUkeyBO> queryAmArchiveUkeyList(PageInfo pageInfo) {
@@ -134,17 +142,14 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
         po.setIsActive(1);
         po.setCreatedBy(UserContext.getUserName());
         po.setCreatedTime(nowTime);
-        SalCompanyBO bo = new SalCompanyBO();
-        bo.setTitle(po.getCompanyName());
-        List<SalCompanyBO> boList = salCompanyMapper.querySalCompanyList(bo);
-        if(boList != null && boList.size() > 0){
-            po.setCompanyId(boList.get(0).getCompanyId());
-        }
         boolean result = this.insertOrUpdateAllColumn(po);
         return result;
     }
 
     @Override
+    @Transactional(
+        rollbackFor = {Exception.class}
+    )
     public boolean amArchiveUkeyRenew(AmArchiveUkeyBO amArchiveUkeyBO) {
         AmArchiveUkeyRenew renew = new AmArchiveUkeyRenew();
         renew.setKeyId(amArchiveUkeyBO.getId());
@@ -192,4 +197,28 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
     }
 
 
+    @Override
+    public AmArchiveUkeyBO queryOrganizationCodeByCid(String companyId, String companyName) {
+        if(companyId == null){
+            return null;
+        }
+        SalCompanyBO bo = new SalCompanyBO();
+        bo.setCompanyId(companyId);
+        List<SalCompanyBO> companyList = salCompanyMapper.querySalCompanyList(bo);
+        AmArchiveUkeyBO result = new AmArchiveUkeyBO();
+        if(companyList != null && companyList.size() > 0){
+            result.setCompanyName(companyList.get(0).getTitle());
+        }
+        // 查询组织机构
+        JsonResult<CompanyTypeDTO> comDto = companyProxy.getCompanyCoreInfo(companyId);
+        if(comDto.getObject() != null){
+            result.setOrganizationCode(comDto.getObject().getOrganizationCode());
+        }
+        // 查询服务中心
+        JsonResult<AfCompanyDetailResponseDTO> detailDto = companyProxy.afDetail(companyId);
+        if(detailDto.getObject() != null){
+            result.setServiceCenter(detailDto.getObject().getServiceCenter());
+        }
+        return result;
+    }
 }

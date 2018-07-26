@@ -7,6 +7,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccou
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankExportBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HFNetBankQueryBO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.payment.HfPrintRemittedBookBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountClassService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfMonthChargeService;
@@ -20,6 +21,8 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComAccountC
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfPayment;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
+import com.ciicsh.gto.afsupportcenter.util.MoneyToCN;
+import com.ciicsh.gto.afsupportcenter.util.constant.HouseFundConst;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
@@ -27,12 +30,16 @@ import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -880,6 +887,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         newHFMonthChargeRepairDetailBO.setRowNo(hfMonthChargeRepairDetailBOList.size() + 1);
         hfMonthChargeRepairDetailBOList.add(newHFMonthChargeRepairDetailBO);
     }
+
     /**
      * 导出公积金汇缴支付编辑/详情操作数据
      *
@@ -891,11 +899,11 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         HfPaymentAccountBo hfPaymentAccountBo = pageInfo.toJavaObject(HfPaymentAccountBo.class);
         PageRows<HfPaymentAccountReportBo> result = PageKit.doSelectPage(pageInfo, () -> baseMapper.getOperateDetailReport(hfPaymentAccountBo));
         List<HfPaymentAccountReportBo> reportList = result.getRows();
-        for(int i = 0; i < reportList.size(); i++){
+        for (int i = 0; i < reportList.size(); i++) {
             StringBuffer companyId = new StringBuffer();
             StringBuffer title = new StringBuffer();
-            List<HfPaymentComBo> companyIdList = hfPaymentComMapper.getCompanyIdList(hfPaymentAccountBo.getPaymentId(),reportList.get(i).getComAccountId());
-            for(HfPaymentComBo comBo : companyIdList){
+            List<HfPaymentComBo> companyIdList = hfPaymentComMapper.getCompanyIdList(hfPaymentAccountBo.getPaymentId(), reportList.get(i).getComAccountId());
+            for (HfPaymentComBo comBo : companyIdList) {
                 companyId = companyId.append(comBo.getCompanyId()).append(",");
                 title = title.append(comBo.getTitle()).append(",");
             }
@@ -955,5 +963,76 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             hfEmpTaskHandleBo.setEmpAddEndMonth(resultBo.getSsMonthBelongEnd());
             hfEmpTaskHandleBo.setEmpAddStopHandleMonth(resultBo.getHfStopMonth());
         }
+    }
+
+    @Override
+    public PageRows<HfRimittedBookReportBO> queryHfRimittedBookReport(PageInfo pageInfo, String userId) {
+        HFMonthChargeQueryBO hfMonthChargeQueryBO = pageInfo.toJavaObject(HFMonthChargeQueryBO.class);
+        hfMonthChargeQueryBO.setUserId(userId);
+        return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryHfRimittedBookReport(hfMonthChargeQueryBO));
+    }
+
+    @Override
+    public JsonResult printRemittedBook(Long comAccountClassId ,String paymentMonth) {
+        HFMonthChargeQueryBO hfMonthChargeQueryBO = new HFMonthChargeQueryBO();
+        hfMonthChargeQueryBO.setComAccountClassId(comAccountClassId);
+        hfMonthChargeQueryBO.setHfMonth(paymentMonth);
+        List<HfRimittedBookReportBO> list = baseMapper.queryHfRimittedBookReport(hfMonthChargeQueryBO);
+        if (list.size() == 0) {
+            return JsonResultKit.of();
+        }
+
+        //转换打印汇缴书结果数据
+        List<HfPrintRemittedBookBO> retListPrint = new ArrayList();
+        HfRimittedBookReportBO in = list.get(0);
+            HfPrintRemittedBookBO out = new HfPrintRemittedBookBO();
+            BeanUtils.copyProperties(in, out);
+            out.setBankName(HouseFundConst.BANK_MAP.get(in.getPaymentBank()));
+            out.setMoneyCN(MoneyToCN.number2CNMontrayUnit(in.getRemittedAmount()));
+            out.setRemittedAmountArrange("¥"+in.getRemittedAmount().toString().replace(".",""));
+            out.setCurYear(LocalDate.now().getYear());
+            out.setCurMonth(LocalDate.now().getMonth().getValue());
+            out.setCurDay(LocalDate.now().getDayOfMonth());
+            String paymentYearMonth =  in.getPaymentMonth();
+            if (paymentYearMonth != null) {
+                out.setPaymentYear(paymentYearMonth.substring(0,4));
+                out.setPaymentMonth(paymentYearMonth.substring(4,6));
+            }
+            out.setIsRemitted(true);//汇缴打钩
+            out.setRepairCountEmp(null);
+            out.setRepairAmount(null);
+            retListPrint.add(out);
+
+            if (in.getRepairAmount()!=null &&  in.getRepairAmount().compareTo(BigDecimal.ZERO) > 0) { //存在补缴
+                out = new HfPrintRemittedBookBO();
+                BeanUtils.copyProperties(in, out);
+                out.setBankName(HouseFundConst.BANK_MAP.get(in.getPaymentBank()));
+                out.setCurYear(LocalDate.now().getYear());
+                out.setCurMonth(LocalDate.now().getMonth().getValue());
+                out.setCurDay(LocalDate.now().getDayOfMonth());
+                out.setIsRemitted(false);
+                out.setPaymentYear(null);
+                out.setPaymentMonth(null);
+                out.setIsRepair(true);//补缴打钩
+                out.setMoneyCN(MoneyToCN.number2CNMontrayUnit(in.getRepairAmount()));
+                out.setRemittedAmountArrange("¥"+in.getRepairAmount().toString().replace(".",""));
+                out.setRemittedAmountAdd(null);
+                out.setRemittedAmountLast(null);
+                out.setRemittedCountEmp(null);
+                out.setRemittedAmountReduce(null);
+                out.setRemittedCountEmpAdd(null);
+                out.setRemittedCountEmpLast(null);
+                out.setRemittedCountEmpReduce(null);
+                out.setRemittedAmount(null);
+                retListPrint.add(out);
+            }
+
+        return JsonResultKit.of(retListPrint);
+
+    }
+
+    @Override
+    public List<HfEmpLastPaymentBO> searchByLastPaymentMonth(String companyId, String employeeId, String hfMonth) {
+        return baseMapper.searchByLastPaymentMonth(companyId, employeeId, hfMonth);
     }
 }

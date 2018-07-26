@@ -146,14 +146,13 @@
             AND ea.company_id=acr.company_id
             AND mc.payment_type IN (7, 8, 9, 10)
         ) AS remitted_count_emp_reduce,
-        (SELECT remitted_emp_count_standard + remitted_count_emp_add - remitted_count_emp_reduce) AS remitted_count_emp,
-        (SELECT ifnull(amount_standard,0) + ifnull(remitted_amount_add,0) - ifnull(remitted_amount_reduce,0)) AS remitted_amount
+        (SELECT remitted_emp_count_standard + remitted_count_emp_add ) AS remitted_count_emp,
+        (SELECT ifnull(amount_standard,0) + ifnull(remitted_amount_add,0) ) AS remitted_amount
 
         FROM hf_payment_account pa
         INNER JOIN hf_account_com_relation acr ON acr.com_account_id=pa.com_account_id
         INNER JOIN hf_com_account ca ON ca.com_account_id=pa.com_account_id
         WHERE pa.is_active=1
-        AND pa.payment_status=3
         AND pa.com_account_id in
         (SELECT com_account_id FROM hf_payment_account WHERE
          payment_month= #{paymentMonth} AND ifnull(payment_id,0)=0 AND
@@ -201,4 +200,18 @@
         AND hpc.com_account_id = #{comAccountId}
     </select>
 
+    <select id="getLastPaymentMonth" resultType="string">
+        SELECT
+        MAX(hp.payment_month) AS payment_month
+        FROM
+        hf_payment_com hpc
+        INNER JOIN hf_payment hp ON hpc.payment_id = hp.payment_id
+        <where>
+        hpc.is_active = 1 AND hp.is_active = 1
+        AND hp.payment_state in (5,6,7)
+        AND hpc.company_id = #{companyId}
+        AND hpc.hf_type = #{hfType}
+        GROUP BY hpc.company_id
+        </where>
+    </select>
 </mapper>

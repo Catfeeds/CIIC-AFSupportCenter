@@ -84,6 +84,11 @@
             <if test = "companyId != null and companyId != ''">
               AND SPC.company_id LIKE concat(concat('%',#{companyId}),'%')
             </if>
+            <if test = "paymentMonth != null and paymentMonth != ''">
+                <![CDATA[
+                    AND SPC.payment_month = #{paymentMonth}
+                  ]]>
+            </if>
             <if test = "paymentMonthMin != null and paymentMonthMin != ''">
               <![CDATA[
                 AND SPC.payment_month >= #{paymentMonthMin}
@@ -105,6 +110,9 @@
             </if>
             <if test = "paymentId != null and paymentId != ''">
                 AND SPC.payment_id = #{paymentId}
+            </if>
+            <if test = "ifCreateBatch != null and ifCreateBatch != ''">
+                AND ifnull(SPC.payment_id,0) = 0
             </if>
             <if test = "ifCheck != null and ifCheck != ''">
                 AND SPC.if_check = #{ifCheck}
@@ -187,5 +195,10 @@
             pc.is_active = 1
             AND pc.payment_month = #{paymentMonth}
             AND pc.com_account_id = #{comAccountId}
+    </select>
+    <select id="ssCanDeal" resultType="java.lang.Integer">
+    SELECT payment_state FROM ss_payment_com pc
+    INNER JOIN ss_com_account ca ON ca.com_account_id=pc.com_account_id AND ca.is_active=1
+    WHERE pc.is_active=1 AND ca.ss_account_type=#{ssAccountType} AND pc.payment_month=#{paymentMonth} limit 1
     </select>
 </mapper>

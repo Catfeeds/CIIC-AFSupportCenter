@@ -3,10 +3,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFMonthChargeQueryBO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFMonthChargeReportBO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfPaymentAccountReportBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfMonthChargeService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.util.PdfUtil;
@@ -18,7 +15,9 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.ExportResponseUtil;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
@@ -30,13 +29,68 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/fundcommandservice/hfMonthCharge")
 public class HfMonthChargeController extends BasicController<HfMonthChargeService> {
+    /**
+     * 实时查询客户汇缴书
+     * @param pageInfo
+     * @return
+     */
+    @RequestMapping("/queryHfRimittedBookReport")
+    public JsonResult<PageRows<HfRimittedBookReportBO>> queryHfRimittedBookReport(PageInfo pageInfo) {
+        PageRows<HfRimittedBookReportBO> result = business.queryHfRimittedBookReport(pageInfo, UserContext.getUserId());
+        return JsonResultKit.of(result);
+    }
+
+    /**
+     * 导出实时查询客户汇缴书
+     * @param response
+     * @param pageInfo
+     * @throws Exception
+     */
+    @RequestMapping("/queryHfRimittedBookReportExport")
+    public void queryHfRimittedBookReportExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
+        pageInfo.setPageSize(10000);
+        pageInfo.setPageNum(1);
+        PageRows<HfRimittedBookReportBO> result = business.queryHfRimittedBookReport(pageInfo, UserContext.getUserId());
+        long total = result.getTotal();
+        ExportParams exportParams = new ExportParams();
+        exportParams.setType(ExcelType.XSSF);
+        exportParams.setSheetName("企业账户汇缴书");
+        Workbook workbook;
+        if (total <= pageInfo.getPageSize()) {
+            workbook = ExcelExportUtil.exportExcel(exportParams, HfRimittedBookReportBO.class, result.getRows());
+        } else {
+            workbook = ExcelExportUtil.exportBigExcel(exportParams, HfRimittedBookReportBO.class, result.getRows());
+            int pageNum = (int) Math.ceil(total * 1.0 / pageInfo.getPageSize());
+            for (int i = 2; i <= pageNum; i++) {
+                pageInfo.setPageNum(i);
+                result = business.queryHfRimittedBookReport(pageInfo, UserContext.getUserId());
+                workbook = ExcelExportUtil.exportBigExcel(exportParams, HfRimittedBookReportBO.class, result.getRows());
+            }
+            ExcelExportUtil.closeExportBigExcel();
+        }
+        String fileName = "企业公积金账户汇缴书清单.xlsx";
+        response.reset();
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader("content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        ExportResponseUtil.encodeExportFileName(response, fileName);
+        workbook.write(response.getOutputStream());
+        workbook.close();
+    }
+
+    /**
+     * 打印汇缴书
+     */
+    @PostMapping("/printRemittedBook")
+    public JsonResult printRemittedBook(@RequestParam(value = "comAccountClassId", required = true) Long comAccountClassId,
+                                        @RequestParam(value = "paymentMonth", required = true) String paymentMonth ){
+        return business.printRemittedBook(comAccountClassId,paymentMonth);
+    }
 
     @RequestMapping("/hfMonthChargeQuery")
     public JsonResult<PageRows<HFMonthChargeReportBO>> hfMonthChargeQuery(PageInfo pageInfo) {
         PageRows<HFMonthChargeReportBO> result = business.queryHfMonthChargeReport(pageInfo, UserContext.getUserId());
         return JsonResultKit.of(result);
     }
-
     /**
      * 雇员公积金任务导出
      * @param

@@ -35,6 +35,7 @@
         <result column="emp_company_id" property="empCompanyId" />
         <result column="change" property="change" />
         <result column="is_finish" property="isFinish" />
+        <result column="hire_task_id" property="hireTaskId"/>
 	</resultMap>
 
     <!-- 通用查询映射结果 -->

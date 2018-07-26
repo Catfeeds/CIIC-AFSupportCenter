@@ -67,4 +67,9 @@ public class SsMonthChargeServiceImpl extends ServiceImpl<SsMonthChargeMapper, S
     public List<SsYysReportBO> queryYysReport(SsYysReportParamBO ssYysReportParamBO) {
         return baseMapper.queryYysReport(ssYysReportParamBO);
     }
+
+    @Override
+    public List<SsMonthCharge> getSocialSecurityChangeInformation(String companyId, String employeeId, String paymentMonth, String year) {
+        return baseMapper.getSocialSecurityChangeInformation(companyId, employeeId, paymentMonth, year);
+    }
 }

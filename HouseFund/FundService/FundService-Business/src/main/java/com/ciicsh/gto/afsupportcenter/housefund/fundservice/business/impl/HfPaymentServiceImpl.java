@@ -138,7 +138,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         HfPayment payment = new HfPayment();
         payment.setPaymentId(Long.parseLong(processParmBO.getPaymentId()));
         payment = hfPaymentMapper.selectOne(payment);
-        if (payment.getPaymentState().equals(5)) {
+        if ( payment.getPaymentState().equals(5) || payment.getPaymentState().equals(0) ) {
             List<HfComAccountClass> comAccountClasses = comAccountClassMapper.getAccountClassByPaymentId(Long.parseLong(processParmBO.getPaymentId()));
 //            //校验月份是否匹配
 //            if (null != comAccountClasses && comAccountClasses.size() > 0) {
@@ -251,13 +251,6 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         return JsonResultKit.of(retListPrint);
     }
 
-    @Override
-    public JsonResult printRemittedBookByReport(String companyId, String hfMonth, Integer hfType,Integer hfAccountType) {
-        HfRemittedBookParam hfRemittedBookParam = new HfRemittedBookParam();
-
-        baseMapper.printRemittedBookByReport(hfRemittedBookParam);
-        return null;
-    }
 
     private JsonResult isCanPayment(HfPayment payment) {
         if (payment == null) {

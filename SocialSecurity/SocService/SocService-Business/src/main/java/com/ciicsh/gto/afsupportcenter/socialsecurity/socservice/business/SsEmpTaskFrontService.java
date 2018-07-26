@@ -2,10 +2,12 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskFrontBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTaskFront;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -55,4 +57,6 @@ public interface SsEmpTaskFrontService extends IService<SsEmpTaskFront> {
                           AfCompanyDetailResponseDTO afCompanyDetailResponseDTO, Map<String, Object> cityCodeMap) throws Exception;
 
     Integer getEmpTaskDetailCount(String businessInterfaceId);
+
+    List<SsEmpTaskFrontBO> getOriginEmpTaskList(Long empArchiveId);
 }

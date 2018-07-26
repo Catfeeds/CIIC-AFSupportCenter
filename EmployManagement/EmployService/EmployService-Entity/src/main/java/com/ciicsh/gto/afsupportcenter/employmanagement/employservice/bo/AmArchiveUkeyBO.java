@@ -39,6 +39,11 @@ public class AmArchiveUkeyBO {
     private String companyName;
 
     /**
+     * 服务中心
+     */
+    private String serviceCenter;
+
+    /**
      * 组织机构代码
      */
     private String organizationCode;
@@ -123,6 +128,14 @@ public class AmArchiveUkeyBO {
     private LocalDate renewDueDate;
 
     private boolean flag = false;
+
+    public String getServiceCenter() {
+        return serviceCenter;
+    }
+
+    public void setServiceCenter(String serviceCenter) {
+        this.serviceCenter = serviceCenter;
+    }
 
     public boolean isFlag() {
         return flag;

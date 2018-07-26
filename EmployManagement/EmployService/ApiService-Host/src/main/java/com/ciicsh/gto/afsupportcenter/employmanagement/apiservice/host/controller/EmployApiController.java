@@ -9,10 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -57,7 +54,7 @@ public class EmployApiController implements EmployApiProxy {
     }
 
     @Override
-    public List<MaterialDTO> queryMaterialByTaskId(@RequestBody Long empTaskId) {
+    public List<MaterialDTO> queryMaterialByTaskId(@PathVariable(value = "empTaskId") Long empTaskId) {
         return amEmpMaterialService.queryMaterialByTaskId(empTaskId);
     }
 
@@ -76,5 +73,15 @@ public class EmployApiController implements EmployApiProxy {
     public CompanyDTO queryCompanyDTO(@RequestBody CompanyParamDTO companyParamDTO) {
 
         return amCompanySetService.queryCompanyDTO(companyParamDTO);
+    }
+
+    @Override
+    public MaterialOperationLogDTO queryMaterialLastOperationLog(@PathVariable(value = "empTaskId") String empTaskId) {
+        return amEmpMaterialService.queryMaterialLastOperationLog(empTaskId);
+    }
+
+    @Override
+    public List<MaterialOperationLogDTO> queryMaterialOperationLogList(@PathVariable(value = "empTaskId") String empTaskId) {
+        return amEmpMaterialService.queryMaterialOperationLogList(empTaskId);
     }
 }

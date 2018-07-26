@@ -59,4 +59,6 @@ public interface SsEmpArchiveMapper extends BaseMapper<SsEmpArchive> {
     List<SsEmpInfoDetailBO> getSsEmpInfo(@Param("employeeId")String employeeId, @Param("companyId")String companyId, @Param("ssMonthBelong")String ssMonthBelong);
 
     SsEmpInfoBO getSsEmpInfoById(@Param("companyId")String companyId, @Param("employeeId")String employeeId);
+
+    SsEmpArchiveBO getSsEmployee(@Param("companyId")String companyId, @Param("employeeId")String employeeId);
 }

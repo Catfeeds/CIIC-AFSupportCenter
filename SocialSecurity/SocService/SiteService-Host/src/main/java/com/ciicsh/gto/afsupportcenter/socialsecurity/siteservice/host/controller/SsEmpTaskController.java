@@ -34,7 +34,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -183,12 +182,16 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
      * 雇员任务办理（新进和转入）
      */
     @PostMapping("/handle")
-    public JsonResult<Boolean> handle(@RequestBody SsEmpTaskBO bo) {
+    public JsonResult<String> handle(@RequestBody SsEmpTaskBO bo) {
         bo.setModifiedBy(UserContext.getUserId());
         bo.setModifiedDisplayName(UserContext.getUser().getDisplayName());
         //false 表示单个办理
-        boolean result = business.saveHandleData(bo, false);
-        return JsonResultKit.of(result);
+        String result = business.saveHandleData(bo, false);
+        if("SUCC".equals(result)){
+            return JsonResultKit.of(result);
+        }
+        return JsonResultKit.ofError(result);
+
     }
 
     /**
@@ -371,8 +374,8 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
         }
     }
 
-    @PostMapping("/queryHistoryEmpTask")
-    public JsonResult<List<SsEmpTask>> queryHistoryEmpTask(@RequestParam("empTaskId") String empTaskId) {
+    @PostMapping("/queryHistoryEmpTaskList")
+    public JsonResult<List<SsEmpTask>> queryHistoryEmpTaskList(@RequestParam("empTaskId") String empTaskId) {
         Long taskId = Long.parseLong(empTaskId);
         SsEmpTask ssEmpTask = business.selectById(taskId);
 
@@ -392,7 +395,8 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
     public JsonResult<SsEmpTaskFront> getOriginEmpTask(@RequestParam("empTaskId") String empTaskId) {
         EntityWrapper<SsEmpTaskFront> ew = new EntityWrapper<>();
         ew.where("emp_task_id={0}", Long.parseLong(empTaskId))
-            .and("is_active=1");
+            .and("is_active=1")
+            .last("limit 1");
         SsEmpTaskFront ssEmpTaskFront = ssEmpTaskFrontService.selectOne(ew);
         return JsonResultKit.of(ssEmpTaskFront);
     }
