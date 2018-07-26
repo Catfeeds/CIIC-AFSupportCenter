@@ -36,5 +36,5 @@ public interface HfEmpTaskHandleService extends IService<HfEmpTask> {
 
     List<HfEmpTaskExportBo> queryHistoryEmpTask(Boolean isSelf, Long empTaskId);
 
-    List<HfEmpTaskExportBo> getOriginEmpTask(Long empArchiveId);
+    List<HfEmpTaskExportBo> getOriginEmpTask(String companyId, String employeeId, Integer hfType);
 }

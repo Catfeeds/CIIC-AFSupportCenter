@@ -283,7 +283,7 @@ public class FundApiController implements FundApiProxy{
         hfMonthChargeWrapper.where("is_active = 1");
         hfMonthChargeWrapper.and("company_id = {0}", hfEmpArchive.getCompanyId());
         hfMonthChargeWrapper.and("employee_id = {0}", hfEmpArchive.getEmployeeId());
-        hfMonthChargeWrapper.and("hf_type = 2");
+        hfMonthChargeWrapper.and("hf_type = 1");
         hfMonthChargeWrapper.orderBy("hf_month desc");
         hfMonthChargeWrapper.last("limit 1");
         HfMonthCharge hfMonthCharge = hfMonthChargeService.selectOne(hfMonthChargeWrapper);
@@ -326,8 +326,9 @@ public class FundApiController implements FundApiProxy{
                     fundDetailDTO.setStatus(status);
                     fundDetailDTOList.add(fundDetailDTO);
                 }
+                fundDTO.setFundDetails(fundDetailDTOList);
 
-                return JsonResult.success(fundDetailDTOList,"数据获取成功");
+                return JsonResult.success(fundDTO,"数据获取成功");
             }
         }
         return JsonResult.faultMessage("支持中心反馈：无数据");
