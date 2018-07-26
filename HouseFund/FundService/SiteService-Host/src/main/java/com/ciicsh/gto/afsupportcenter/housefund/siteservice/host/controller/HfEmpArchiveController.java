@@ -111,9 +111,10 @@ public class HfEmpArchiveController extends  BasicController<HfEmpArchiveService
     }
 
     @PostMapping("/getOriginEmpTaskList")
-    public JsonResult<List<HfEmpTaskExportBo>> getOriginEmpTaskList(@RequestParam("empArchiveId") String empArchiveId) {
-        Long archiveId = Long.parseLong(empArchiveId);
-        List<HfEmpTaskExportBo> hfEmpTaskList = hfEmpTaskHandleService.getOriginEmpTask(archiveId);
+    public JsonResult<List<HfEmpTaskExportBo>> getOriginEmpTaskList(@RequestParam("companyId") String companyId,
+                                                                    @RequestParam("employeeId") String employeeId,
+                                                                    @RequestParam("hfType") Integer hfType) {
+        List<HfEmpTaskExportBo> hfEmpTaskList = hfEmpTaskHandleService.getOriginEmpTask(companyId, employeeId, hfType);
         return JsonResultKit.of(hfEmpTaskList);
     }
 }

@@ -496,15 +496,15 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                 List<ComAccountTransBo> comAccountTransBoList;
 
                 // 如果转出或封存时，转入单位统一为市公积金中心
-                if (inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
-                    || inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT) {
+//                if (inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
+//                    || inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT) {
                     String transferInUnit = SocialSecurityConst.FUND_OUT_UNIT_LIST.get(0); //市公积金中心单位名称
                     hfEmpTaskCreateTransBo.setTransferInUnit(transferInUnit);
                     String transferInUnitAccount =
                         (inputHfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) ? SocialSecurityConst.CENTER_BASIC_COM_ACCOUNT
                             : SocialSecurityConst.CENTER_ADDED_COM_ACCOUNT;
                     hfEmpTaskCreateTransBo.setTransferInUnitAccount(transferInUnitAccount);
-                }
+//                }
                 comAccountTransBo.setHfType(inputHfEmpTask.getHfType());
                 if (comAccountId != null) {
                     comAccountTransBo.setComAccountId(comAccountId);
@@ -513,7 +513,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                     comAccountTransBo.setCompanyId(inputHfEmpTask.getCompanyId());
                 }
                 comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
-                if (com.baomidou.mybatisplus.toolkit.CollectionUtils.isNotEmpty(comAccountTransBoList)) {
+                if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
                     if (comAccountTransBoList.size() > 1) {
                         String hfTypeName = (comAccountTransBo.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) ? "基本公积金" : "补充公积金";
                         throw new BusinessException("转出单位的" + hfTypeName + "账户存在重复数据");

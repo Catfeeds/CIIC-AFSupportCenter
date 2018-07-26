@@ -949,8 +949,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
     }
 
     @Override
-    public List<HfEmpTaskExportBo> getOriginEmpTask(Long empArchiveId) {
-        return baseMapper.getOriginEmpTask(empArchiveId);
+    public List<HfEmpTaskExportBo> getOriginEmpTask(String companyId, String employeeId, Integer hfType) {
+        return baseMapper.getOriginEmpTask(companyId, employeeId, hfType);
     }
 
     /**
