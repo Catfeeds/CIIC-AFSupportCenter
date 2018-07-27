@@ -23,8 +23,6 @@ eureka:
 mybatis-plus:
   mapper-locations: classpath*:mapper/**.xml
   type-aliases-package: com.ciicsh.gto.afsupportcenter.credentialscommandservice.customer
-  plugins:
-    - catMybatisInterceptor
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
