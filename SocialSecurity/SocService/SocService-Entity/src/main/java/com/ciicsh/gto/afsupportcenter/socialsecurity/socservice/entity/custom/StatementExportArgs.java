@@ -14,4 +14,5 @@ public class StatementExportArgs {
     private String impFileType;
     private Integer minDiffSumByEmp;
     private Integer maxDiffSumByEmp;
+    private String companyId;
 }

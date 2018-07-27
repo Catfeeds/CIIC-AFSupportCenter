@@ -114,11 +114,11 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
             map.put("paymentComId", paymentComId);
             if (cnt == 0) {
                 map.put("paymentState", 3);//  3 =可付
-                map.put("modifiedBy", "sysJob");
+                map.put("modifiedBy", "system");
                 ssPaymentMapper.updateSsPaymentCom(map);
             } else {
                 map.put("paymentState", 1);
-                map.put("modifiedBy", "sysJob");
+                map.put("modifiedBy", "system");
                 ssPaymentMapper.updateSsPaymentCom(map);
             }
         }else {

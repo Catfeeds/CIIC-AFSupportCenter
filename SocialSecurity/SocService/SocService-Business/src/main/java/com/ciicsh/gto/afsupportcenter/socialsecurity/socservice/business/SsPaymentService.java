@@ -96,7 +96,7 @@ public interface SsPaymentService extends IService<SsPayment> {
     /**
      * 根据社保月份，客户ID，返回是否可办理
      */
-    boolean ssCanDeal(String ssMonth,String companyId,Integer welfareUnit);
+    boolean ssCanDeal(String ssMonth,Long empTaskId,Integer welfareUnit);
 
     Map<String,String> getSsPaymentComStauts(String ssMonth, String companyId);
 
