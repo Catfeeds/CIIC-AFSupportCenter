@@ -27,8 +27,6 @@ eureka:
 mybatis-plus:
   mapper-locations: classpath*:/mapping*/*Mapper.xml
   typeAliasesPackage: com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity
-  plugins:
-    - catMybatisInterceptor
 #  typeEnumsPackage: com.baomidou.springboot.entity.enums
   global-config:
     id-type: 0
