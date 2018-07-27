@@ -22,10 +22,14 @@
     <!--根据接口返回的数据批量更新客户的支付状态-->
     <update id="updateHfPaymentAcc" parameterType="java.util.HashMap">
         UPDATE hf_payment_account SET
-        payment_status=#{paymentStatus},
+        <if test="paymentStatus != null and paymentStatus != ''">
+            payment_status=#{paymentStatus},
+        </if>
         modified_by=#{modifiedBy},
-        modified_time=sysdate(),
-        finance_ret_msg=#{financeRetMsg}
+        modified_time=sysdate()
+        <if test="financeRetMsg != null and financeRetMsg != ''">
+            ,finance_ret_msg=#{financeRetMsg}
+        </if>
         where payment_account_id=#{paymentAccountId} AND payment_month=#{paymentMonth}
     </update>
 

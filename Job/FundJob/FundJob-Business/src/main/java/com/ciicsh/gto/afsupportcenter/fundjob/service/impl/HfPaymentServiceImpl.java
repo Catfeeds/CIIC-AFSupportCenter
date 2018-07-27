@@ -81,48 +81,58 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         proxyDTO.setBusinessType("2");
         proxyDTO.setBatchMonth(paymentMonth);
         proxyDTO.setEmployeeList(proxyDTOList);
-
+        Map<String, Object> map = new HashMap<>();
+        map.put("paymentAccountId", paymentAccountId);
+        map.put("paymentMonth", paymentMonth);
         //判断雇员是否垫付、是否可付接口，返回雇员的垫付状态
-        com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult<EmployeeMonthlyDataProxyDTO> res =
-            employeeMonthlyDataProxy.employeeCanPay(proxyDTO);
+        try {
+            com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult<EmployeeMonthlyDataProxyDTO> res =
+                employeeMonthlyDataProxy.employeeCanPay(proxyDTO);
 
-        if ("0".equals(res.getCode())) {
-            Map<String, Object> map = new HashMap<>();
 
-            if (res.getData() != null) {
-                List<Map<String, Object>> resDto = (List) res.getData();
-                //4 财务接口返回的结果更新ss_month_charge
-                //isAdvance: 0:不可付;1:来款可付;2:垫付可付
-                for (Map<String, Object> ele : resDto) {
-                    //map.put("monthChargeId", ele.get("objId"));
-                    map.put("empPaymentStatus", ele.get("isAdvance"));
-                    map.put("companyId", ele.get("companyId"));
-                    map.put("employeeId", ele.get("employeeId"));
-                    map.put("hfMonthBelong", ele.get("payMonth"));
-                    map.put("hfMonth", paymentMonth);
-                    hfEmpMonthChargeMapper.updateMonthCharge(map);
+            if ("0".equals(res.getCode())) {
+                if (res.getData() != null) {
+                    List<Map<String, Object>> resDto = (List) res.getData();
+                    //4 财务接口返回的结果更新ss_month_charge
+                    //isAdvance: 0:不可付;1:来款可付;2:垫付可付
+                    for (Map<String, Object> ele : resDto) {
+                        //map.put("monthChargeId", ele.get("objId"));
+                        map.put("empPaymentStatus", ele.get("isAdvance"));
+                        map.put("companyId", ele.get("companyId"));
+                        map.put("employeeId", ele.get("employeeId"));
+                        map.put("hfMonthBelong", ele.get("payMonth"));
+                        map.put("hfMonth", paymentMonth);
+                        hfEmpMonthChargeMapper.updateMonthCharge(map);
+                    }
                 }
-            }
-            //5 查询 客户下有多少 不可付的记录
-            map.clear();
-            map.put("paymentAccountId", paymentAccountId);
-            map.put("paymentMonth", paymentMonth);
-            Integer cnt = hfEmpMonthChargeMapper.countByEmpPaymentStatus(map);
+                //5 查询 客户下有多少 不可付的记录
+                map.clear();
+                map.put("paymentAccountId", paymentAccountId);
+                map.put("paymentMonth", paymentMonth);
+                Integer cnt = hfEmpMonthChargeMapper.countByEmpPaymentStatus(map);
 
-            //更新客户的支付状态
+                //更新客户的支付状态
 
-            map.put("comAccountId", comAccountId);
-            if (cnt == 0) {
-                map.put("paymentStatus", 3);
+
+                if (cnt == 0) {
+                    map.put("paymentStatus", 3);
+                    map.put("modifiedBy", "system");
+                    hfPaymentAccountMapper.updateHfPaymentAcc(map);
+                } else {
+                    map.put("paymentStatus", 1);
+                    map.put("modifiedBy", "system");
+                    hfPaymentAccountMapper.updateHfPaymentAcc(map);
+                }
+            }else {
+                map.put("financeRetMsg", res.getMsg());
                 map.put("modifiedBy", "system");
                 hfPaymentAccountMapper.updateHfPaymentAcc(map);
-            } else {
-                map.put("paymentStatus", 1);
-                map.put("modifiedBy", "system");
-                hfPaymentAccountMapper.updateHfPaymentAcc(map);
+                System.out.println("结算中心返回接口："+res.getMsg());
             }
-        }else {
-            System.out.println("结算中心返回接口："+res.getMsg());
+        }catch (Exception e){
+            map.put("financeRetMsg",e.getMessage());
+            map.put("modifiedBy", "system");
+            hfPaymentAccountMapper.updateHfPaymentAcc(map);
         }
     }
 
