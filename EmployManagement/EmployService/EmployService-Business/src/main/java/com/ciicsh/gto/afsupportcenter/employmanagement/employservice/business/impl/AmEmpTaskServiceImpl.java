@@ -258,49 +258,6 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         } catch (Exception e) {
 
         }
-//        目前材料不从任务单过来，调用雇员中心接口取材料
-//        try {
-//            List<String> list = (List<String>) map.get("materialList");
-//            SMUserInfoDTO smUserInfoDTO = null;
-//            if(!StringUtil.isEmpty(submitterId))
-//            {
-//                smUserInfoDTO = employeeInfoProxy.getUserInfo(submitterId);
-//            }
-//            List<AmEmpMaterial> amEmpMaterialsList = new ArrayList<>();
-//            if(null!=list)
-//            {
-//                for(String str:list)
-//                {
-//                    AmEmpMaterial amEmpMaterial = new AmEmpMaterial();
-//                    amEmpMaterial.setMaterialName(str);
-//                    amEmpMaterial.setEmployeeId(bo.getEmployeeId());
-//                    amEmpMaterial.setOperateType(1);
-//                    amEmpMaterial.setActive(true);
-//                    String createdBy = "System";
-//                    try {
-//                        createdBy = smUserInfoDTO.getUserId();
-//                    } catch (Exception e) {
-//
-//                    }
-//                    amEmpMaterial.setCreatedBy(createdBy);
-//                    amEmpMaterial.setCreatedTime(LocalDateTime.now());
-//                    amEmpMaterial.setModifiedTime(LocalDateTime.now());
-//                    amEmpMaterial.setModifiedBy(createdBy);
-//                    amEmpMaterial.setSubmitterDate(LocalDate.now());
-//                    amEmpMaterial.setSubmitterId(submitterId);
-//                    amEmpMaterial.setSubmitterName(smUserInfoDTO==null?"":smUserInfoDTO.getDisplayName());
-//                    amEmpMaterial.setExtension(smUserInfoDTO==null?"":smUserInfoDTO.getExtension());
-//                    amEmpMaterial.setEmpTaskId(amEmpTask.getEmpTaskId());
-//                    amEmpMaterialsList.add(amEmpMaterial);
-//                }
-//                amEmpMaterialService.insertBatch(amEmpMaterialsList);
-//            }else{
-//                logger.info("materialList",map.get("materialList"));
-//            }
-//
-//        } catch (Exception e) {
-//            logger.error(e.getMessage(), e);
-//        }
 
         return true;
     }
@@ -593,26 +550,20 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 Integer docNumInt = Integer.parseInt(docNum) + i;
                 entity.setDocNum(docNumInt.toString());
             }
-            ++i;
+
 
             entity.setEmploymentId(temp.getEmploymentId());
             entity.setEmployeeId(temp.getEmployeeId());
             entity.setCompanyId(temp.getCompanyId());
             //档案预增匹配
-            boolean isPi = false;
-            if(!StringUtil.isEmpty(temp.getArchivePlace()))
-            {
+            if(!StringUtil.isEmpty(temp.getDocNum())){
+                entity.setDocNum(temp.getDocNum());
+                entity.setDocType(temp.getDocType());
                 entity.setArchivePlace(temp.getArchivePlace());
-                isPi = true;
-            }
-            if(!StringUtil.isEmpty(temp.getDocFrom()))
-            {
-                entity.setDocFrom(temp.getDocFrom());
-                isPi = true;
-            }
-            if(isPi)
-            {
+                entity.setArchivePlace(temp.getArchivePlace());
                 archiveAdvanceIdList.add(temp.getArchiveAdvanceId());
+            }else{
+                ++i;
             }
 
             entity.setModifiedTime(now);
