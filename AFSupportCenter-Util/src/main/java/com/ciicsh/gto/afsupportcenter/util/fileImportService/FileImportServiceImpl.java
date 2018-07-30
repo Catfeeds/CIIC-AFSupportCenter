@@ -10,6 +10,7 @@ import com.ciicsh.gt1.FileHandler;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -88,16 +89,22 @@ public abstract class FileImportServiceImpl<M extends BaseMapper<E>, E> extends 
                         inputStreams.add(multipartFile.getInputStream());
                         fileNames.add(multipartFile.getOriginalFilename());
                     }
-
                     List<String> urls = FileHandler.uploadInputStreams(inputStreams);
 
                     reentrantLock.lock();
                     long importBatchId = getLastImportBatchId(importType, relatedUnitId) + 1;
+                    String url = null;
 
-                    for (int i = 0; i < fileNames.size(); i++) {
-                        String url = urls.get(i);
-                        url = url.substring(url.lastIndexOf('/') + 1);
-                        insertFileImport(importType, relatedUnitId, importBatchId, storageFileId, url, fileNames.get(i), createdBy);
+                    if (!CollectionUtils.isEmpty(urls)) {
+                        int urlSize = urls.size();
+
+                        for (int i = 0; i < fileNames.size(); i++) {
+                            if (urlSize > i) {
+                                url = urls.get(i);
+                                url = url.substring(url.lastIndexOf('/') + 1);
+                            }
+                            insertFileImport(importType, relatedUnitId, importBatchId, storageFileId, url, fileNames.get(i), createdBy);
+                        }
                     }
                     reentrantLock.unlock();
                 } catch (IOException e) {

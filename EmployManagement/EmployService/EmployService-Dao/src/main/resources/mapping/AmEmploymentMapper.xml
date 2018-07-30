@@ -334,8 +334,22 @@
     </select>
 
     <select id="queryAmEmploymentBatch" resultMap="BaseResultMapDTO">
-        SELECT  a.employment_id,a.emp_task_id,a.company_id,a.employee_id,b.id_num,b.employee_name  FROM  am_employment a LEFT JOIN am_emp_employee b  on a.emp_task_id = b.emp_task_id
+        SELECT
+        a.employment_id,
+        a.emp_task_id,
+        a.company_id,
+        a.employee_id,
+        c.archival_place,
+        c.archive_source as doc_from,
+        c.reserved_archive_type as doc_type,
+        c.reserved_archive_no as doc_num,
+        c.archive_advance_id
+        FROM
+        am_employment a
+        LEFT JOIN am_emp_employee b ON a.emp_task_id = b.emp_task_id
+        LEFT JOIN am_archive_advance c on c.employee_idcard_no = b.id_num and c.employee_name= b.employee_name
         <where>
+            c.status = 1  and
             <foreach collection="empTaskIds" item="item" open="a.emp_task_id IN (" separator="," close=")">
                 #{item}
             </foreach>

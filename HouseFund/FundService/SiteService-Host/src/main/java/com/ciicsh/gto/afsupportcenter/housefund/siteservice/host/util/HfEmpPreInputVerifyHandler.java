@@ -21,11 +21,15 @@ public class HfEmpPreInputVerifyHandler implements IExcelVerifyHandler<IExcelMod
     private HfEmpPreInputService hfEmpPreInputService;
     private LogApiUtil logApiUtil;
     private Set<String> employeeIdSet;
+    private Set<String> basAccountSet;
+    private Set<String> addAccountSet;
 
     public HfEmpPreInputVerifyHandler(HfEmpPreInputService hfEmpPreInputService, LogApiUtil logApiUtil) {
         this.hfEmpPreInputService = hfEmpPreInputService;
         this.logApiUtil = logApiUtil;
         this.employeeIdSet = new HashSet<>();
+        this.basAccountSet = new HashSet<>();
+        this.addAccountSet = new HashSet<>();
     }
 
     @Override
@@ -35,8 +39,8 @@ public class HfEmpPreInputVerifyHandler implements IExcelVerifyHandler<IExcelMod
             HfEmpPreInput hfEmpPreInput = null;
             HfEmpPreInput existEmpPreInput = null;
             boolean isAccountEmpty = false;
-            boolean isBasNotExists = false;
-            boolean isAddNotExists = false;
+            boolean isBasNotExists = true;
+            boolean isAddNotExists = true;
 
             for (Field field : model.getClass().getDeclaredFields()) {
                 String fieldName = field.getName();
@@ -74,7 +78,7 @@ public class HfEmpPreInputVerifyHandler implements IExcelVerifyHandler<IExcelMod
                     }
 
                     if ("employeeName".equals(fieldName)) {
-                        if (StringUtils.isNotEmpty(fieldValue) && hfEmpPreInput != null) {
+                        if (StringUtils.isNotEmpty(fieldValue) && hfEmpPreInput != null && !"null".equals(fieldValue)) {
                             hfEmpPreInput.setEmployeeName(fieldValue);
                         }
                     }
@@ -83,6 +87,13 @@ public class HfEmpPreInputVerifyHandler implements IExcelVerifyHandler<IExcelMod
                         if (StringUtils.isEmpty(fieldValue) || "null".equals(fieldValue)) {
                             isAccountEmpty = true;
                         } else {
+                            if (this.basAccountSet.contains(fieldValue)) {
+                                rtn.setSuccess(false);
+                                rtn.setMsg("雇员基本公积金账号重复");
+                                return rtn;
+                            }
+                            this.basAccountSet.add(fieldValue);
+
                             if (existEmpPreInput != null) {
                                 if (StringUtils.isNotEmpty(existEmpPreInput.getHfEmpBasAccount())) {
                                     rtn.setSuccess(false);
@@ -107,6 +118,13 @@ public class HfEmpPreInputVerifyHandler implements IExcelVerifyHandler<IExcelMod
                             rtn.setMsg("基本公积金账号和补充公积金账号都为空");
                             return rtn;
                         } else if (!isAddEmpty) {
+                            if (this.addAccountSet.contains(fieldValue)) {
+                                rtn.setSuccess(false);
+                                rtn.setMsg("雇员补充公积金账号重复");
+                                return rtn;
+                            }
+                            this.addAccountSet.add(fieldValue);
+
                             if (existEmpPreInput != null) {
                                 if (StringUtils.isNotEmpty(existEmpPreInput.getHfEmpAddAccount())) {
                                     rtn.setSuccess(false);
