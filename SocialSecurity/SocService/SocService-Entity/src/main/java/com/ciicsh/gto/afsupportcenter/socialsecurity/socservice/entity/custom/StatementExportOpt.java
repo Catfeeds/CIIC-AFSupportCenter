@@ -16,19 +16,15 @@ import java.time.LocalDateTime;
 public class StatementExportOpt {
     @Excel(name = "社保导入文件",width = 20, orderNum = "1")
     private String impFileName;
-    @Excel(name = "社保月份", orderNum = "2")
+    @Excel(name = "社保月份",width = 20, orderNum = "2")
     private String ssMonth;
     @Excel(name = "企业社保账户",width = 20, orderNum = "3")
     private String comAccountName;
-    @Excel(name = "下载月度变更",width = 20, orderNum = "4")
-    private String downLoadMonthChange;
-    @Excel(name = "变更汇总表类型",width = 20, orderNum = "5")
-    private String monthChangeType;
-    @Excel(name = "差异数（按雇员）",width = 20, orderNum = "6")
+    @Excel(name = "差异数（按雇员）",width = 20, orderNum = "4")
     private String diffSumByEmp;
-    @Excel(name = "对账操作人",width = 20, orderNum = "7")
+   @Excel(name = "对账操作人",width = 20, orderNum = "5")
     private String statementUserId;
-    @Excel(name = "最近对账时间",width = 20,format = "yyyy-MM-dd", orderNum = "8")
+    @Excel(name = "最近对账时间",width = 20,format = "yyyy-MM-dd", orderNum = "6")
     private LocalDateTime statementTime;
     private Long comAccountId;
     private String impFileType;

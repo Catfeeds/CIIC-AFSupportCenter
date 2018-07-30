@@ -3,11 +3,14 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentSrarchBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsPaymentService;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsPaymentComMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsPaymentMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.PayapplyCompanyProxyDTO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dto.PayapplyEmployeeProxyDTO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPayment;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPaymentCom;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
@@ -47,6 +50,9 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
 
     @Autowired
     private PayapplyServiceProxy payapplyServiceProxy;
+
+    @Autowired
+    private SsEmpTaskMapper ssEmpTaskMapper;
 
     @Override
     public PageRows<SsPaymentBO> paymentQuery(PageInfo pageInfo) {
@@ -228,7 +234,8 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
         PayApplyProxyDTO resDto = financePayApi(ssPayment);
         com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult<PayApplyProxyDTO> jsRes =
             payapplyServiceProxy.addShSocialInsurancePayApply(resDto);
-
+        String payApplyCode = jsRes.getData().getPayapplyCode();
+        json.setData(payApplyCode);
         json.setCode(Integer.parseInt(jsRes.getCode()));
         json.setMessage(jsRes.getMsg());
         return json;
@@ -373,14 +380,18 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
      * 1,未到帐       2,无需支付     3 ,可付     4,申请中     5,内部审批批退     6,已申请到财务部     7,财务部批退     8,财务部支付成功
      *
      * @param ssMonth   办理月份
-     * @param companyId
+     * @param empTaskId
      * @return
      */
-    public boolean ssCanDeal(String ssMonth, String companyId, Integer welfareUnit) {
+    public boolean ssCanDeal(String ssMonth, Long empTaskId, Integer welfareUnit) {
         SsPaymentCom paymentCom = new SsPaymentCom();
         paymentCom.setPaymentMonth(ssMonth);
         Integer paymentState = 0;
         if (welfareUnit == 1) {  //独立户
+            SsEmpTask ssEmpTask = new SsEmpTask();
+            ssEmpTask.setEmpTaskId(empTaskId);
+            String companyId="";
+            companyId = ssEmpTaskMapper.selectOne(ssEmpTask).getCompanyId();
             paymentCom.setCompanyId(companyId);
             paymentCom = ssPaymentComMapper.selectOne(paymentCom);
             if (paymentCom == null) {

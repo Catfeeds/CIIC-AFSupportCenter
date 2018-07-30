@@ -27,12 +27,11 @@
 
     <!--查询未支付客户-->
     <select id="getPaymentAccountList" resultMap="BaseResultMapExt">
-
         SELECT pa.payment_account_id,ca.com_account_id,ca.payment_way,pa.payment_month
         FROM hf_payment_account pa INNER JOIN hf_com_account ca on ca.com_account_id=pa.com_account_id
         WHERE ca.is_active=1 AND pa.is_active=1
         AND pa.payment_status=1
-        AND day(CURDATE()) > ca.close_day
+        AND day(CURDATE()) >= ca.close_day
     </select>
 
 </mapper>

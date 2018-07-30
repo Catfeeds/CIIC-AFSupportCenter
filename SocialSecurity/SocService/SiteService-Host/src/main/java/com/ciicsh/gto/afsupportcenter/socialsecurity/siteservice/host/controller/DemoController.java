@@ -240,8 +240,6 @@ public class DemoController {
         opt.setSsMonth("201801");
         opt.setComAccountId((long)1);
         opt.setComAccountName("上海微软");
-        opt.setDownLoadMonthChange("养医失月度明细下载");
-        opt.setMonthChangeType("YYS(养医失)");
         opt.setDiffSumByEmp("200");
         opt.setStatementUserId("张三");
         opt.setStatementTime(LocalDateTime.now());
@@ -253,8 +251,6 @@ public class DemoController {
         opt.setSsMonth("201801");
         opt.setComAccountId((long)1);
         opt.setComAccountName("上海微软");
-        opt.setDownLoadMonthChange("工伤生育月度明细下载");
-        opt.setMonthChangeType("GSY(工伤生育)");
         opt.setDiffSumByEmp("200");
         opt.setStatementUserId("李四");
         opt.setStatementTime(LocalDateTime.now());
