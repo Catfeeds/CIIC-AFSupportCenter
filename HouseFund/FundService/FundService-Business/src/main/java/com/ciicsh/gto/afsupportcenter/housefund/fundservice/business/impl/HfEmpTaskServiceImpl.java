@@ -158,34 +158,32 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                     if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
                         orderParam.add(arr[i]);
                     }else {
-//                        if(arr[i].indexOf("hf_account_type")!=-1)
-//                        {
-//                            String str[] = arr[i].split(" ");
-//                            String regexp = "\'";
-//                            String status = str[2].replaceAll(regexp, "");
-//                            hfEmpTaskBo.setHfAccountType(Integer.parseInt(status));
-//                        }
-//                        if(arr[i].indexOf("payment_bank")!=-1)
-//                        {
-//                            String str[] = arr[i].split(" ");
-//                            String regexp = "\'";
-//                            String status = str[2].replaceAll(regexp, "");
-//                            hfEmpTaskBo.setPaymentBank(Integer.parseInt(status));
-//                        }
-//                        if(arr[i].indexOf("hf_com_account")!=-1)
-//                        {
-//                            String str[] = arr[i].split(" ");
-//                            String regexp = "\'";
-//                            String status = str[2].replaceAll(regexp, "");
-//                            hfEmpTaskBo.setHfComAccount(status);
-//                        }
+                        if (arr[i].indexOf("desc") > 0 || arr[i].indexOf("asc") > 0) {
+                            orderParam.add(arr[i]);
+                        } else {
+                            if (arr[i].indexOf("hf_account_type") != -1) {
+                                String str[] = arr[i].split(" ");
+                                String regexp = "\'";
+                                String status = str[2].replaceAll(regexp, "");
+                                hfEmpTaskBo.setHfAccountType(Integer.parseInt(status));
+                            }
+                            if (arr[i].indexOf("payment_bank") != -1) {
+                                String str[] = arr[i].split(" ");
+                                String regexp = "\'";
+                                String status = str[2].replaceAll(regexp, "");
+                                hfEmpTaskBo.setPaymentBank(Integer.parseInt(status));
+                            }
+                            if (arr[i].indexOf("hf_com_account") != -1) {
+                                String str[] = arr[i].split(" ");
+                                String regexp = "\'";
+                                String status = str[2].replaceAll(regexp, "");
+                                hfEmpTaskBo.setHfComAccount(status);
+                            }
 
-
-                        param.add(arr[i]);
+                            param.add(arr[i]);
+                        }
                     }
-
                 }
-
             }
         }
 
