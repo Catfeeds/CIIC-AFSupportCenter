@@ -64,6 +64,15 @@ public class SsStatementResultController extends BasicController<SsStatementResu
     public void diffExportOpt(HttpServletResponse response, SsStatementResultBO ssStatementResultDTO) throws Exception {
         List<SsStatementResultBO> resultList =business.statementResultQuery(ssStatementResultDTO);
         String fileNme = "对账差异对比结果_"+ StringUtil.getDateString(new Date())+".xls";
+        resultList.stream().forEach(ssStatementResultBO -> {
+                if(ssStatementResultBO.getDiffHeadcount()==1){
+                    ssStatementResultBO.setDiffName("系统不存在");
+                }else if(ssStatementResultBO.getDiffHeadcount()==2){
+                    ssStatementResultBO.setDiffName("导入不存在");
+                }else {
+                    ssStatementResultBO.setDiffName(ssStatementResultBO.getDiffAmount().toString());
+                }
+        });
         ExcelUtil.exportExcel(resultList,SsStatementResultBO.class,fileNme,response);
     }
     /**

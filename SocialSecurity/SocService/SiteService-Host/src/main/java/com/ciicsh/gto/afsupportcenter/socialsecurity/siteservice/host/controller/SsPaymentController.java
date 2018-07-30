@@ -8,17 +8,25 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsPayme
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsPaymentService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPayment;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
+import com.ciicsh.gto.afsupportcenter.util.web.response.ExportResponseUtil;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyProxyDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -32,7 +40,10 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
     private SsPaymentComService ssPaymentComService;
     @Autowired
     private SsPaymentService ssPaymentService;
-
+    @Autowired
+    private LogApiUtil logApiUtil;
+    @Autowired
+    private PayapplyServiceProxy payapplyServiceProxy;
     /**
      * 查询社保支付-支付批次(列表页)
      * @param pageInfo 翻页检索条件
@@ -143,7 +154,62 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
         json = business.addPayment(ssPayment);
         return json;
     }
+    /**
+     * 付款凭证打印
+     */
+    @RequestMapping("/printFinancePayVoucher")
+    public void printFinancePayVoucher(String payApplyCode,HttpServletResponse response) throws IOException {
 
+        com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult<PayApplyProxyDTO> res =
+            payapplyServiceProxy.downloadPayVoucher(payApplyCode);
+        byte[] content = res.getContents();
+        BufferedOutputStream bos = null;
+        ServletOutputStream outputStream = null;
+        BufferedInputStream bis = null;
+        try{
+            response.setCharacterEncoding("UTF-8");
+            // response.setHeader("content-Type", "application/vnd.ms-excel");
+            // response.setHeader("Content-Disposition", "attachment;filename=" +  URLEncoder.encode("付款凭证打印.xlsx", "UTF-8"));
+            response.setContentType("application/octet-stream;charset=utf-8");
+            ExportResponseUtil.encodeExportFileName(response, "付款凭证打印.xlsx");
+            response.setContentLength(content.length);
+            outputStream = response.getOutputStream();
+            InputStream is = new ByteArrayInputStream(content);
+            bis = new BufferedInputStream(is);
+            bos = new BufferedOutputStream(outputStream);
+
+            byte[] buff = new byte[8192];
+            int bytesRead;
+            while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+                bos.write(buff, 0, bytesRead);
+            }
+        }catch (Exception e){
+            logApiUtil.error(LogMessage.create().setTitle("HfFundPayController#printFinancePayVoucher").setContent(e.getMessage()));
+//            e.printStackTrace();
+        }finally {
+            try {
+                if (bis != null) {
+                    bis.close();
+                }
+            } catch (Exception e) {
+//                e.printStackTrace();
+            }
+            try {
+                if (bos != null) {
+                    bos.close();
+                }
+            } catch (Exception e) {
+//                e.printStackTrace();
+            }
+            try {
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            } catch (Exception e) {
+//                e.printStackTrace();
+            }
+        }
+    }
     /**
      * 查询社保支付审核-审核批次(列表页)
      * @param pageInfo 翻页检索条件
