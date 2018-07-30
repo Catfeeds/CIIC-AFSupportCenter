@@ -138,8 +138,18 @@ public class SsPayment implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+    @TableField("pay_apply_code")
+    private String payApplyCode;
 
-	public Long getPaymentId() {
+    public String getPayApplyCode() {
+        return payApplyCode;
+    }
+
+    public void setPayApplyCode(String payApplyCode) {
+        this.payApplyCode = payApplyCode;
+    }
+
+    public Long getPaymentId() {
 		return paymentId;
 	}
 

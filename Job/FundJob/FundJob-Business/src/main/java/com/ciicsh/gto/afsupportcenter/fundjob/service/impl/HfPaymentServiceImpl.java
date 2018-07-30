@@ -116,10 +116,12 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
 
                 if (cnt == 0) {
                     map.put("paymentStatus", 3);
+                    map.put("financeRetMsg", "");
                     map.put("modifiedBy", "system");
                     hfPaymentAccountMapper.updateHfPaymentAcc(map);
                 } else {
                     map.put("paymentStatus", 1);
+                    map.put("financeRetMsg", "");
                     map.put("modifiedBy", "system");
                     hfPaymentAccountMapper.updateHfPaymentAcc(map);
                 }
