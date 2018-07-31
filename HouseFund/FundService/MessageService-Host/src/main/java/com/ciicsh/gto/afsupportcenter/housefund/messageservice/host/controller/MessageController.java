@@ -19,7 +19,7 @@ import java.util.Date;
 @RestController
 @RequestMapping("/hf/messageservice")
 public class MessageController {
-    private final Logger logger = LoggerFactory.getLogger(KafkaSender.class);
+    private final Logger logger = LoggerFactory.getLogger(MessageController.class);
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     @Autowired
     private KafkaSender sender;
