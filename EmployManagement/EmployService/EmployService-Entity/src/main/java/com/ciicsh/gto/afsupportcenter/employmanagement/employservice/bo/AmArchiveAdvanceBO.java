@@ -13,12 +13,12 @@ public class AmArchiveAdvanceBO{
     private Long archiveAdvanceId;
 
     /**
-     * 预留档案类型 A、Aa、B、Bb......Z、Zz
+     * 档案类型 档案预增固定显示为 Cc
      */
     private String reservedArchiveType;
 
     /**
-     * 预留档案编号
+     * 档案编号
      */
     private Integer reservedArchiveNo;
 

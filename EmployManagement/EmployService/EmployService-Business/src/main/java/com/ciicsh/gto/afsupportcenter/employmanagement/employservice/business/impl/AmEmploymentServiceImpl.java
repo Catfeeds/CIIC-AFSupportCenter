@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmploy
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.EmployeeBatchBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmploymentService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmEmploymentMapper;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmReturnListExportDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmployment;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.archiveSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
@@ -123,6 +124,15 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
     @Override
     public List<archiveSearchExportOpt> queryAmArchiveList(AmEmploymentBO amEmploymentBO) {
         return baseMapper.queryAmArchiveList(amEmploymentBO);
+    }
+
+    @Override
+    public List<AmReturnListExportDTO> queryAmReturnList(AmEmploymentBO amEmploymentBO) {
+
+
+        baseMapper.queryAmArchiveList(amEmploymentBO);
+
+        return null;
     }
 
     @Override

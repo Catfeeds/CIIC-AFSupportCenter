@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -356,6 +357,40 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         return  JsonResultKit.of(resultMap);
     }
 
+    @PostMapping("/saveAmInjury")
+    public JsonResult  saveAmInjury(@RequestBody List<AmInjury> list) {
+        List<AmInjury>  data = new ArrayList<AmInjury>();
+        for(AmInjury bo:list)
+        {
+            LocalDateTime now = LocalDateTime.now();
+            bo.setCreatedTime(now);
+            bo.setModifiedTime(now);
+            bo.setCreatedBy(ReasonUtil.getUserId());
+            bo.setModifiedBy(ReasonUtil.getUserId());
+            if(bo.getInjuryId()==null){
+                data.add(bo);
+            }
+        }
+
+        boolean result = false;
+        try {
+            result = amInjuryService.insertBatch(data);
+        } catch (Exception e) {
+
+        }
+
+        AmInjuryBO amInjuryBO = new AmInjuryBO();
+        amInjuryBO.setArchiveId(list.get(0).getArchiveId());
+
+        List<AmInjuryBO>  amInjuryBOList = amInjuryService.queryAmInjury(amInjuryBO);
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("result",result);
+        map.put("data",amInjuryBOList);
+
+        return JsonResultKit.of(map);
+    }
+
 
     @Transactional(
         rollbackFor = {Exception.class}
@@ -414,7 +449,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
                 bo.setOperationTime(LocalDateTime.now());
                 bo.setOperationType(3);
                 bo.setOperationBy(UserContext.getUserId());
-                bo.setOperationName(UserContext.getUserName());
+                bo.setOperationName(UserContext.getUser().getDisplayName());
                 amEmpMaterialService.insertAmEmpMaterialOperationLog(bo);
             }
         } catch (Exception e) {
@@ -593,6 +628,33 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     public JsonResult  queryAmInjury(AmInjury amInjury){
         AmInjury amInjury1 = amInjuryService.selectById(amInjury);
         return JsonResultKit.of( amInjury1);
+
+    }
+
+    /**
+     * 批量打印退工单
+     * @param request
+     * @param response
+     * @param amEmploymentBO
+     */
+    @RequestMapping("/archiveSearchExportReturnList")
+    public void archiveSearchExportReturnList(HttpServletRequest request, HttpServletResponse response, AmEmploymentBO amEmploymentBO) {
+        List<String> param = new ArrayList<String>();
+
+        if(!StringUtil.isEmpty(amEmploymentBO.getParams()))
+        {
+            String arr[] = amEmploymentBO.getParams().split(",");
+            for(int i=0;i<arr.length;i++) {
+                param.add(arr[i]);
+            }
+        }
+
+        amEmploymentBO.setParam(param);
+
+        if(null!=amEmploymentBO.getTaskStatus()&&amEmploymentBO.getTaskStatus()==0){
+            amEmploymentBO.setTaskStatus(null);
+        }
+
 
     }
 

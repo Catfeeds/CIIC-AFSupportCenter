@@ -331,7 +331,7 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
         dto.setTaskId(taskId);
         dto.setOperation(operation);
         dto.setRemark(remark);
-        dto.setOperator(UserContext.getUserName());
+        dto.setOperator(UserContext.getUser().getDisplayName());
         dto.setOperateTime(new Date());
         return sheetInfoProxy.feedbackHireMaterialOperationInfo(dto).getData();
     }
