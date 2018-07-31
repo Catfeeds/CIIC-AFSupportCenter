@@ -27,7 +27,7 @@ public class MessageController {
     @RequestMapping(value = "/summarycalculate")
     public JsonResult<String> summaryCalculate(@RequestParam Long comAccountId, @RequestParam String ssMonth, @RequestParam String generalMethod,
                                                @RequestParam(required=false) String userName){
-        logger.info("summaryCalculate开始，当前时间：" + dateFormat.format(new Date()));
+        logger.info("summaryCalculate开始");
         String key = "-com-account-"+comAccountId+"-"+ssMonth+"-"+generalMethod+"-";
         SocReportMessage message = RedisManager.get(key,SocReportMessage.class);
         JsonResult<String> json = new JsonResult();
@@ -52,6 +52,7 @@ public class MessageController {
             json.setCode(0);
             json.setMessage("开始计算！");
         }
+        logger.info("summaryCalculate结束");
         return json;
     }
 }
