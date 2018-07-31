@@ -33,7 +33,7 @@ public class MessageController {
         JsonResult<String> json = new JsonResult();
         if(null != message){
             json.setCode(1);
-            json.setMessage("正在计算中，请稍后再试！");
+            json.setMessage("正在计算中，请稍后再试！！");
         }else{
             message = new SocReportMessage();
             message.setComAccountId(comAccountId);
