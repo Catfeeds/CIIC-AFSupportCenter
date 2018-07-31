@@ -170,12 +170,10 @@
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
         </foreach>
-        <if test="orderParam!=null">
-            order by
-            <foreach collection="orderParam" item="plid" open="" close="" separator="">
-                ${plid},
-            </foreach>
-        </if>
+        order by
+        <foreach collection="orderParam" item="plid" open="" close="" separator="">
+            ${plid},
+        </foreach>
 
         a.created_time desc
     </select>
