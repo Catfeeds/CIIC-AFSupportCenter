@@ -337,6 +337,7 @@
         a.employee_id = #{employeeId}
         and
         a.company_id = #{companyId}
+        order by a.created_time desc
     </select>
 
     <update id="updateTaskStatus">
