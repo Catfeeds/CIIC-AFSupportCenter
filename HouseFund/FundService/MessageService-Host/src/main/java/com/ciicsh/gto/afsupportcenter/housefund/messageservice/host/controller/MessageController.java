@@ -3,6 +3,8 @@ package com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.controller;
 import com.ciicsh.gto.RedisManager;
 import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.message.KafkaSender;
 import com.ciicsh.gto.afsupportcenter.util.kafkaMessage.SocReportMessage;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.util.ExpireTime;
 import org.slf4j.Logger;
@@ -19,15 +21,18 @@ import java.util.Date;
 @RestController
 @RequestMapping("/hf/messageservice")
 public class MessageController {
-    private final Logger logger = LoggerFactory.getLogger(MessageController.class);
+
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     @Autowired
     private KafkaSender sender;
+    @Autowired
+    private LogApiUtil logApiUtil;
 
     @RequestMapping(value = "/summarycalculate")
     public JsonResult<String> summaryCalculate(@RequestParam Long comAccountId, @RequestParam String ssMonth, @RequestParam String generalMethod,
                                                @RequestParam(required=false) String userName){
-        logger.info("summaryCalculate开始");
+
+        logApiUtil.info(LogMessage.create().setTitle("summaryCalculate开始"));
         String key = "-com-account-"+comAccountId+"-"+ssMonth+"-"+generalMethod+"-";
         SocReportMessage message = RedisManager.get(key,SocReportMessage.class);
         JsonResult<String> json = new JsonResult();
@@ -52,7 +57,8 @@ public class MessageController {
             json.setCode(0);
             json.setMessage("开始计算！");
         }
-        logger.info("summaryCalculate结束");
+        logApiUtil.info(LogMessage.create().setTitle("summaryCalculate结束"));
+
         return json;
     }
 }
