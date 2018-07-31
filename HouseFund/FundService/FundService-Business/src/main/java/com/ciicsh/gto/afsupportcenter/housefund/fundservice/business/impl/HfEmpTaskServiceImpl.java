@@ -174,18 +174,27 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                                 String str[] = arr[i].split(" ");
                                 String regexp = "\'";
                                 String status = str[2].replaceAll(regexp, "");
+                                if ("null".equals(status)) {
+                                    status = "0";
+                                }
                                 hfEmpTaskBo.setHfAccountType(Integer.parseInt(status));
                             }
                             if (arr[i].indexOf("payment_bank") != -1) {
                                 String str[] = arr[i].split(" ");
                                 String regexp = "\'";
                                 String status = str[2].replaceAll(regexp, "");
+                                if ("null".equals(status)) {
+                                    status = "0";
+                                }
                                 hfEmpTaskBo.setPaymentBank(Integer.parseInt(status));
                             }
                             if (arr[i].indexOf("hf_com_account") != -1) {
                                 String str[] = arr[i].split(" ");
                                 String regexp = "\'";
                                 String status = str[2].replaceAll(regexp, "");
+                                if ("null".equals(status)) {
+                                    status = "0";
+                                }
                                 hfEmpTaskBo.setHfComAccount(status);
                             }
 
