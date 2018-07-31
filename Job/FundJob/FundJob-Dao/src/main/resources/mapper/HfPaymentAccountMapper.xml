@@ -27,7 +27,7 @@
         </if>
         modified_by=#{modifiedBy},
         modified_time=sysdate()
-        <if test="financeRetMsg != null and financeRetMsg != ''">
+        <if test="financeRetMsg != null">
             ,finance_ret_msg=#{financeRetMsg}
         </if>
         where payment_account_id=#{paymentAccountId} AND payment_month=#{paymentMonth}

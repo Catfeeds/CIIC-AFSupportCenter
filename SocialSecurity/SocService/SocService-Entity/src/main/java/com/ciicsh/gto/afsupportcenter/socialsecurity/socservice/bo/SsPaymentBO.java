@@ -129,7 +129,15 @@ public class SsPaymentBO {
      */
     private String modifiedBy;
 
+    private String payApplyCode;
 
+    public String getPayApplyCode() {
+        return payApplyCode;
+    }
+
+    public void setPayApplyCode(String payApplyCode) {
+        this.payApplyCode = payApplyCode;
+    }
 
     public String getPaymentBatchNum() {
         return paymentBatchNum;

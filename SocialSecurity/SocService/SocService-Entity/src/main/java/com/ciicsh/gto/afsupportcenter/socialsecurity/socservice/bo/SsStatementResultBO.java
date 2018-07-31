@@ -79,7 +79,7 @@ public class SsStatementResultBO {
     /**
      * 差值
      */
-    @Excel(name = "差异", orderNum = "7")
+
     private BigDecimal diffAmount;
     /**
      * 0 正常差异 1 系统不存在  2 导入不存在
@@ -106,6 +106,16 @@ public class SsStatementResultBO {
      */
     private String modifiedBy;
 
+    @Excel(name = "差异", orderNum = "7")
+    private String diffName;
+
+    public String getDiffName() {
+        return diffName;
+    }
+
+    public void setDiffName(String diffName) {
+        this.diffName = diffName;
+    }
 
     public Long getStatementDetailId() {
         return statementResultId;

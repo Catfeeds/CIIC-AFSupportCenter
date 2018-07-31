@@ -1347,7 +1347,8 @@
         INNER JOIN emp_af_emp_company eoop ON eoop.company_id=et.company_id AND eoop.employee_id=et.employee_id AND eoop.is_active=1
         INNER JOIN emp_employee emp ON emp.employee_id=eoop.employee_id
         INNER JOIN sal_company com ON com.company_id=eoop.company_id AND com.is_active=1
-        LEFT JOIN hf_com_account ca ON ca.com_account_id=ea.com_account_id AND ca.is_active=1
+        LEFT JOIN hf_account_com_relation acr ON acr.company_id=com.company_id AND  acr.is_active=1
+        INNER JOIN hf_com_account ca ON ca.com_account_id=acr.com_account_id AND ca.is_active=1
         WHERE et.is_active=1 AND et.task_category = 8
 
         <if test="empTaskId != null">
@@ -1398,14 +1399,14 @@
         <if test="paymentBank != null">
             AND ca.payment_bank = #{paymentBank}
         </if>
-        <if test="comAccountId != null">
-            AND ea.com_account_id = #{comAccountId}
-        </if>
         <if test="hfAccountType != null">
             AND ca.hf_account_type = #{hfAccountType}
         </if>
         <if test="empArchiveId != null">
             AND ea.emp_archive_id = #{empArchiveId}
+        </if>
+        <if test="comAccountId != null">
+            AND ea.com_account_id = #{comAccountId}
         </if>
         <if test="serviceCenterValue != null">
             AND et.service_center_id = #{serviceCenterValue}
