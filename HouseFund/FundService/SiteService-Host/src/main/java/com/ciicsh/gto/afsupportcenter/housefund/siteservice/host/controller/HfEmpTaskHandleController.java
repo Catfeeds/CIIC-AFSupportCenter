@@ -533,9 +533,9 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
     }
 
     @PostMapping("/getOriginEmpTask")
-    public JsonResult<HfEmpTask> getOriginEmpTask(@RequestParam("empTaskId") String empTaskId) {
+    public JsonResult<HfEmpTaskExportBo> getOriginEmpTask(@RequestParam("empTaskId") String empTaskId) {
         Long taskId = Long.parseLong(empTaskId);
-        HfEmpTask hfEmpTask = business.selectById(taskId);
-        return JsonResultKit.of(hfEmpTask);
+        HfEmpTaskExportBo hfEmpTaskExportBo = business.getOriginEmpTaskById(taskId);
+        return JsonResultKit.of(hfEmpTaskExportBo);
     }
 }

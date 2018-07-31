@@ -1493,6 +1493,9 @@
             ELSE MAX(hetp.end_month) END AS end_month,
             hetp.hf_month,
             IFNULL(hetp.base_amount, het.emp_base) AS emp_base,
+            het.ratio_emp,
+            het.ratio_com,
+            het.amount,
             het.operation_remind,
             het.operation_remind_date,
             het.modified_time,
@@ -1538,9 +1541,18 @@
         <where>
             het.is_active = 1
             AND het.task_category != 8
-            AND het.company_id = #{companyId}
-            AND het.employee_id = #{employeeId}
-            AND het.hf_type = #{hfType}
+            <if test="companyId != null">
+              AND het.company_id = #{companyId}
+            </if>
+            <if test="employeeId != null">
+              AND het.employee_id = #{employeeId}
+            </if>
+            <if test="hfType != null">
+              AND het.hf_type = #{hfType}
+            </if>
+            <if test="empTaskId != null">
+              AND het.emp_task_id = #{empTaskId}
+            </if>
         </where>
         ORDER BY het.created_time DESC
     </select>
