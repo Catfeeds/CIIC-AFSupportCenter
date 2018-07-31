@@ -542,8 +542,8 @@
             AND ea.com_account_class_id = pa.com_account_class_id
             AND mc.payment_type IN (7, 8, 9, 10)
         ) AS remitted_count_emp_reduce,
-        (SELECT remitted_emp_count_standard + remitted_count_emp_add - remitted_count_emp_reduce) AS remitted_count_emp,
-        (SELECT ifnull(amount_standard,0) + ifnull(remitted_amount_add,0) - ifnull(remitted_amount_reduce,0)) AS remitted_amount
+        (SELECT remitted_emp_count_standard + remitted_count_emp_add ) AS remitted_count_emp,
+        (SELECT ifnull(amount_standard,0) + ifnull(remitted_amount_add,0) ) AS remitted_amount
         FROM
         (SELECT #{hfMonth} AS payment_month,cac.* from hf_com_account_class cac WHERE cac.is_active = 1) pa
         LEFT JOIN hf_com_account ca ON ca.com_account_id = pa.com_account_id
@@ -558,7 +558,6 @@
             INNER JOIN hf_payment p ON p.payment_id = pc.payment_id
             WHERE
                 pc.is_active = 1
-            AND pc.hf_type = 1
             AND p.payment_month = period_add( #{hfMonth} ,- 1)
             GROUP BY
                 pc.com_account_id,
