@@ -28,7 +28,7 @@ public class MessageReceiver {
 
     @StreamListener(TaskSink.HF_REPORT_INPUT)
     public void receive(SocReportMessage message) {
-        logger.info("开始，当前时间：" + dateFormat.format(new Date()));
+        logger.info("MessageReceiver开始，当前时间：" + dateFormat.format(new Date()));
         logger.info("received from comAccountId : " + message.getComAccountId() + ", received from ssMonth: " + message.getSsMonth());
         String key = "-com-account-" + message.getComAccountId() + "-" + message.getSsMonth() + "-" + message.getGeneralMethod() + "-";
         try {
@@ -44,6 +44,6 @@ public class MessageReceiver {
                 RedisManager.del(key);
             }
         }
-        logger.info("结束，当前时间：" + dateFormat.format(new Date()));
+        logger.info("MessageReceiver结束，当前时间：" + dateFormat.format(new Date()));
     }
 }
