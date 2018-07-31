@@ -167,11 +167,6 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
             }
             if(isFinish==1){
                 amEmpTask.setFinish(true);
-                amEmpTask.setJob("N");
-                AmEmployment amEmployment = amEmploymentService.selectById(bo.getEmploymentId());
-                AmEmpTask yamEmpTask = taskService.selectById(amEmployment.getEmpTaskId());
-                yamEmpTask.setJob("N");
-                taskService.insertOrUpdate(yamEmpTask);
             }
 
             taskService.insertOrUpdate(amEmpTask);

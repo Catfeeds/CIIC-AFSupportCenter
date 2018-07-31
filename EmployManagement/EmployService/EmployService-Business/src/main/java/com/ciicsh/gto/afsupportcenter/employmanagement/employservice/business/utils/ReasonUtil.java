@@ -83,6 +83,10 @@ public class ReasonUtil {
     }
 
     public  static  String  getReasonOut(String code){
+        if(StringUtil.isEmpty(code)||!param.containsKey(code))
+        {
+            return  "";
+        }
         return param.get(code);
 
     }

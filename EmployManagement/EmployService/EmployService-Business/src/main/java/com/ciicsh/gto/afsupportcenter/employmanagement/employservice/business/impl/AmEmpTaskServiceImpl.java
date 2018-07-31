@@ -342,6 +342,16 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amEmpTask.setSubmitterId(employeeCompany.getCreatedBy());
             }
 
+            //是否在职
+            if("emp_agreement_adjust".equals(taskMsgDTO.getProcessDefinitionKey())||"emp_agreement_update".equals(taskMsgDTO.getProcessDefinitionKey()))
+            {
+
+            }else if("emp_company_change".equals(taskMsgDTO.getProcessDefinitionKey())){
+                amEmpTask.setJob("N");
+            }else{
+                amEmpTask.setJob("N");
+            }
+
             try {
                 //更新离职原因
                 AmEmpTaskBO amEmpTaskBO = new AmEmpTaskBO();
@@ -354,6 +364,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                     amEmpTask1.setOutDate(amEmpTask.getOutDate());
                     amEmpTask1.setOutReason(amEmpTask.getOutReason());
                     amEmpTask1.setOutReasonCode(amEmpTask.getOutReasonCode());
+                    if("N".equals(amEmpTask.getJob())){
+                        amEmpTask1.setJob("N");
+                    }
 
                     this.insertOrUpdate(amEmpTask1);
                 }
