@@ -5,22 +5,29 @@ import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.message.Kafk
 import com.ciicsh.gto.afsupportcenter.util.kafkaMessage.SocReportMessage;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.util.ExpireTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 @RestController
 @RequestMapping("/hf/messageservice")
 public class MessageController {
-
+    private final Logger logger = LoggerFactory.getLogger(KafkaSender.class);
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     @Autowired
     private KafkaSender sender;
 
     @RequestMapping(value = "/summarycalculate")
     public JsonResult<String> summaryCalculate(@RequestParam Long comAccountId, @RequestParam String ssMonth, @RequestParam String generalMethod,
                                                @RequestParam(required=false) String userName){
+        logger.info("summaryCalculate开始，当前时间：" + dateFormat.format(new Date()));
         String key = "-com-account-"+comAccountId+"-"+ssMonth+"-"+generalMethod+"-";
         SocReportMessage message = RedisManager.get(key,SocReportMessage.class);
         JsonResult<String> json = new JsonResult();
