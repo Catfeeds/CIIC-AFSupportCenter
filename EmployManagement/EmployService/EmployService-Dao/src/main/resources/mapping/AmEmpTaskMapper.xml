@@ -61,6 +61,8 @@
         <result column="accout_modified" property="accoutModified"/>
         <result column="settlement_area" property="settlementArea"/>
         <result column="ss_account" property="ssAccount"/>
+        <result column="labor_start_date" property="laborStartDate"/>
+        <result column="labor_end_date" property="laborEndDate"/>
 
     </resultMap>
 
@@ -114,6 +116,12 @@
         b.employment_id,
         b.employ_way,/*用工方式 */
         b.employ_property,/*用工属性 */
+        b.employ_date,
+        b.employ_style,
+        b.handle_type,
+        e.labor_start_date,
+        e.labor_end_date,
+        e.position,
         c.yuliu_doc_type,
         c.yuliu_doc_num,/*预留档案编号 */
         c.doc_type,
@@ -162,11 +170,54 @@
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
         </foreach>
-        order by
-        <foreach collection="orderParam" item="plid" open="" close="" separator="">
-            ${plid},
-        </foreach>
+        <if test="orderParam!=null">
+            order by
+            <foreach collection="orderParam" item="plid" open="" close="" separator="">
+                ${plid},
+            </foreach>
+        </if>
+
         a.created_time desc
+    </select>
+
+    <select id="queryAmEmpTaskCompanys" resultType="java.lang.String">
+        SELECT
+        DISTINCT
+        a.company_id/*公司名称 */
+        FROM
+        am_emp_task a
+        LEFT JOIN
+        am_employment b
+        ON  a.emp_task_id = b.emp_task_id
+        LEFT JOIN
+        emp_employee d
+        on  a.employee_id = d.employee_id
+        LEFT JOIN
+        am_emp_custom h on h.emp_task_id = a.emp_task_id
+        LEFT JOIN
+        am_emp_employee  e on e.emp_task_id = a.emp_task_id
+        LEFT JOIN
+        am_archive c
+        ON b.employment_id = c.employment_id
+        LEFT JOIN
+        am_company_set cs
+        on cs.company_id = a.company_id
+        LEFT JOIN am_resign f ON f.employment_id = b.employment_id
+        LEFT JOIN am_emp_task w on f.emp_task_id = w.emp_task_id
+        <if test="material!=null">
+            LEFT JOIN am_emp_material m  on m.emp_task_id = a.emp_task_id
+        </if>
+        where   a.task_category = '1'
+        and  a.employee_id is not null
+        and  a.company_id  is not null
+        <if test="taskStatus!=null">
+            and a.task_status = ${taskStatus}
+        </if>
+        <foreach collection="param" item="plid" open="" close="" separator="">
+            and  ${plid}
+        </foreach>
+        group by h.title
+        order by a.created_time desc
     </select>
 
     <select id="queryAmEmpTaskOther" resultMap="BaseResultMapDTO">

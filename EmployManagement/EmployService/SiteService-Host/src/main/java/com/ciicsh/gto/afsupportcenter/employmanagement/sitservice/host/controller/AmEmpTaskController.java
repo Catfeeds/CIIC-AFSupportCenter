@@ -8,7 +8,9 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.ut
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.employSearchExportOpt;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpDispatchExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.*;
+import com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.util.WordUtils;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
@@ -22,12 +24,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -565,226 +566,121 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     /**
      * 用工录用名册打印导出Word
      */
-//    @RequestMapping("/employSearchExportOptUseWord")
-//    public @ResponseBody
-//    void employSearchExportOptUseWord(HttpServletResponse response, HttpServletRequest request){
-//        Map<String, Object> map = new HashMap<String, Object>();
-//        map.put("name", "111");
-//        map.put("idCard", "222");
-//        map.put("date","333");
-//        map.put("type", "444");
-//        map.put("remark", "555");
-//
-//        List<ListBO> boList = new ArrayList<>();
-//        ListBO listBO = new ListBO();
-//        AmEmpTaskBO bo1 = new AmEmpTaskBO();
-//        bo1.setCompanyName("123");
-//        bo1.setCompanyType("456");
-//        listBO.setBo1(bo1);
-//        AmEmpTaskBO bo2 = new AmEmpTaskBO();
-//        bo2.setCompanyName("123");
-//        bo2.setCompanyType("456");
-//        listBO.setBo2(bo2);
-//        AmEmpTaskBO bo3 = new AmEmpTaskBO();
-//        bo3.setCompanyName("123");
-//        bo3.setCompanyType("456");
-//        listBO.setBo3(bo3);
-//
-//        ListBO listBO2 = new ListBO();
-//        listBO2.setBo1(bo1);
-//        listBO2.setBo2(bo2);
-//        listBO2.setBo3(bo3);
-//        boList.add(listBO);
-//        boList.add(listBO2);
-//        boList.add(listBO);
-//        boList.add(listBO2);
-//        boList.add(listBO);
-//        boList.add(listBO2);
-//        map.put("list",boList);
-//
-//        try {
-//            WordUtils.exportMillCertificateWord(request,response,map,"用工录用名册","用工录用名册模板.ftl");
-//        } catch (IOException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//    }
+    @RequestMapping("/employSearchExportOptUseWord")
+    public @ResponseBody
+    void employSearchExportOptUseWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response, HttpServletRequest request){
+
+        // 中智大库
+        List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,12);
+
+        // 外包
+        List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(amEmpTaskBO,3,12);
+
+        //独立户
+        List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(amEmpTaskBO,12);
+
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
+
+        try {
+
+            WordUtils.exportMillCertificateWord(request,response,map,"用工录用名册","AM_USE_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 派遣录用名册打印导出Word
      */
-//    @RequestMapping("/employSearchExportOptDispatchWord")
-//    public @ResponseBody
-//    void employSearchExportOptDispatchWord(HttpServletResponse response, HttpServletRequest request){
-//        Map<String, Object> map = new HashMap<String, Object>();
-//        map.put("name", "111");
-//        map.put("idCard", "222");
-//        map.put("date","333");
-//        map.put("type", "444");
-//        map.put("remark", "555");
-//
-//        List<ListBO> boList = new ArrayList<>();
-//        ListBO listBO = new ListBO();
-//        AmEmpTaskBO bo1 = new AmEmpTaskBO();
-//        bo1.setCompanyName("123");
-//        bo1.setCompanyType("456");
-//        listBO.setBo1(bo1);
-//        AmEmpTaskBO bo2 = new AmEmpTaskBO();
-//        bo2.setCompanyName("123");
-//        bo2.setCompanyType("456");
-//        listBO.setBo2(bo2);
-//        AmEmpTaskBO bo3 = new AmEmpTaskBO();
-//        bo3.setCompanyName("123");
-//        bo3.setCompanyType("456");
-//        listBO.setBo3(bo3);
-//
-//        ListBO listBO2 = new ListBO();
-//        listBO2.setBo1(bo1);
-//        listBO2.setBo2(bo2);
-//        listBO2.setBo3(bo3);
-//        boList.add(listBO);
-//        boList.add(listBO2);
-//        map.put("list",boList);
-//
-//        try {
-//            WordUtils.exportMillCertificateWord(request,response,map,"派遣录用名册","派遣录用名册模板.ftl");
-//        } catch (IOException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//    }
+    @RequestMapping("/employSearchExportOptDispatchWord")
+    public @ResponseBody
+    void employSearchExportOptDispatchWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response, HttpServletRequest request){
+
+        // 中智大库
+        List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,9);
+
+        // 外包
+        List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(amEmpTaskBO,3,9);
+
+        //独立户
+        List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(amEmpTaskBO,9);
+
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
+
+        try {
+            WordUtils.exportMillCertificateWord(request,response,map,"派遣录用名册","AM_DISPATCH_TEMP.ftl");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args){
+
+        int i = 7;
+        System.out.println(i%7);
+        System.out.println(i/7);
+    }
 
     /**
      * 外来独立打印导出Word
      */
-//    @RequestMapping("/employSearchExportOptAlonehWord")
-//    public @ResponseBody
-//    void employSearchExportOptAlonehWord(HttpServletResponse response, HttpServletRequest request){
-//        Map<String, Object> map = new HashMap<String, Object>();
-//        map.put("name", "111");
-//        map.put("idCard", "222");
-//        map.put("date","333");
-//        map.put("type", "444");
-//        map.put("remark", "555");
-//
-//        List<ListBO> boList = new ArrayList<>();
-//        ListBO listBO = new ListBO();
-//        AmEmpTaskBO bo1 = new AmEmpTaskBO();
-//        bo1.setCompanyName("123");
-//        bo1.setCompanyType("456");
-//        listBO.setBo1(bo1);
-//        AmEmpTaskBO bo2 = new AmEmpTaskBO();
-//        bo2.setCompanyName("123");
-//        bo2.setCompanyType("456");
-//        listBO.setBo2(bo2);
-//        AmEmpTaskBO bo3 = new AmEmpTaskBO();
-//        bo3.setCompanyName("123");
-//        bo3.setCompanyType("456");
-//        listBO.setBo3(bo3);
-//
-//        ListBO listBO2 = new ListBO();
-//        listBO2.setBo1(bo1);
-//        listBO2.setBo2(bo2);
-//        listBO2.setBo3(bo3);
-//        boList.add(listBO);
-//        boList.add(listBO2);
-//        map.put("list",boList);
-//
-//        try {
-//            WordUtils.exportMillCertificateWord(request,response,map,"外来独立","外来独立模板.ftl");
-//        } catch (IOException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//    }
+    @RequestMapping("/employSearchExportOptAlonehWord")
+    public @ResponseBody
+    void employSearchExportOptAlonehWord(HttpServletResponse response, HttpServletRequest request){
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("list",new ArrayList<>());
+
+        try {
+            WordUtils.exportMillCertificateWord(request,response,map,"外来独立","外来独立模板.ftl");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 外来派遣导出Word
      */
-//    @RequestMapping("/employSearchExportOptExtDispatchWord")
-//    public @ResponseBody
-//    void employSearchExportOptExtDispatchWord(HttpServletResponse response, HttpServletRequest request){
-//        Map<String, Object> map = new HashMap<String, Object>();
-//        map.put("name", "111");
-//        map.put("idCard", "222");
-//        map.put("date","333");
-//        map.put("type", "444");
-//        map.put("remark", "555");
-//
-//        List<ListBO> boList = new ArrayList<>();
-//        ListBO listBO = new ListBO();
-//        AmEmpTaskBO bo1 = new AmEmpTaskBO();
-//        bo1.setCompanyName("123");
-//        bo1.setCompanyType("456");
-//        listBO.setBo1(bo1);
-//        AmEmpTaskBO bo2 = new AmEmpTaskBO();
-//        bo2.setCompanyName("123");
-//        bo2.setCompanyType("456");
-//        listBO.setBo2(bo2);
-//        AmEmpTaskBO bo3 = new AmEmpTaskBO();
-//        bo3.setCompanyName("123");
-//        bo3.setCompanyType("456");
-//        listBO.setBo3(bo3);
-//
-//        ListBO listBO2 = new ListBO();
-//        listBO2.setBo1(bo1);
-//        listBO2.setBo2(bo2);
-//        listBO2.setBo3(bo3);
-//        boList.add(listBO);
-//        boList.add(listBO2);
-//        map.put("list",boList);
-//
-//        try {
-//            WordUtils.exportMillCertificateWord(request,response,map,"外来派遣","外来派遣模板.ftl");
-//        } catch (IOException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//    }
+    @RequestMapping("/employSearchExportOptExtDispatchWord")
+    public @ResponseBody
+    void employSearchExportOptExtDispatchWord(HttpServletResponse response, HttpServletRequest request){
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        map.put("list",new ArrayList<>());
+
+        try {
+            WordUtils.exportMillCertificateWord(request,response,map,"外来派遣","外来派遣模板.ftl");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 采集表汇总表导出Word
      */
-//    @RequestMapping("/employSearchExportOptExtCollectWord")
-//    public @ResponseBody
-//    void employSearchExportOptExtCollectWord(HttpServletResponse response, HttpServletRequest request){
-//        Map<String, Object> map = new HashMap<String, Object>();
-//        map.put("name", "111");
-//        map.put("idCard", "222");
-//        map.put("date","333");
-//        map.put("type", "444");
-//        map.put("remark", "555");
-//
-//        List<ListBO> boList = new ArrayList<>();
-//        ListBO listBO = new ListBO();
-//        AmEmpTaskBO bo1 = new AmEmpTaskBO();
-//        bo1.setCompanyName("123");
-//        bo1.setCompanyType("456");
-//        listBO.setBo1(bo1);
-//        AmEmpTaskBO bo2 = new AmEmpTaskBO();
-//        bo2.setCompanyName("123");
-//        bo2.setCompanyType("456");
-//        listBO.setBo2(bo2);
-//        AmEmpTaskBO bo3 = new AmEmpTaskBO();
-//        bo3.setCompanyName("123");
-//        bo3.setCompanyType("456");
-//        listBO.setBo3(bo3);
-//
-//        ListBO listBO2 = new ListBO();
-//        listBO2.setBo1(bo1);
-//        listBO2.setBo2(bo2);
-//        listBO2.setBo3(bo3);
-//        boList.add(listBO);
-//        boList.add(listBO2);
-//        map.put("list",boList);
-//
-//        try {
-//            WordUtils.exportMillCertificateWord(request,response,map,"采集表汇总表","采集表汇总表模板.ftl");
-//        } catch (IOException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//    }
+    @RequestMapping("/employSearchExportOptExtCollectWord")
+    public @ResponseBody
+    void employSearchExportOptExtCollectWord(HttpServletResponse response, HttpServletRequest request){
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        map.put("list",new ArrayList<>());
+
+        try {
+            WordUtils.exportMillCertificateWord(request,response,map,"采集表汇总表","采集表汇总表模板.ftl");
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
     @RequestMapping("/getDefualtEmployBO")
     public  JsonResult<AmEmpTaskBO>  getDefualtEmployBO(AmEmpTaskBO amEmpTaskBO){

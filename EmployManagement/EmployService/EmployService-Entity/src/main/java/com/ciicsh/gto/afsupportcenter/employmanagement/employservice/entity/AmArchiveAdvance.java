@@ -29,13 +29,13 @@ public class AmArchiveAdvance implements Serializable {
 	private Long archiveAdvanceId;
 
     /**
-     * 预留档案类型 A、Aa、B、Bb......Z、Zz
+     * 档案类型 档案预增固定为Cc
      */
 	@TableField("reserved_archive_type")
 	private String reservedArchiveType;
 
     /**
-     * 预留档案编号
+     * 档案编号
      */
 	@TableField("reserved_archive_no")
 	private Integer reservedArchiveNo;
