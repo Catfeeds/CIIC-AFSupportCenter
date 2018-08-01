@@ -629,12 +629,27 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @RequestMapping("/employSearchExportOptAlonehWord")
     public @ResponseBody
-    void employSearchExportOptAlonehWord(HttpServletResponse response, HttpServletRequest request){
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("list",new ArrayList<>());
+    void employSearchExportOptAlonehWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response, HttpServletRequest request){
+
+        // 中智大库
+        List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,10);
+
+        // 外包
+        List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(amEmpTaskBO,3,10);
+
+        //独立户
+        List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(amEmpTaskBO,10);
+
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
+
 
         try {
-            WordUtils.exportMillCertificateWord(request,response,map,"外来独立","外来独立模板.ftl");
+            WordUtils.exportMillCertificateWord(request,response,map,"外来独立","AM_ALONE_TEMP.ftl");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -645,13 +660,26 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @RequestMapping("/employSearchExportOptExtDispatchWord")
     public @ResponseBody
-    void employSearchExportOptExtDispatchWord(HttpServletResponse response, HttpServletRequest request){
-        Map<String, Object> map = new HashMap<String, Object>();
+    void employSearchExportOptExtDispatchWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response, HttpServletRequest request){
 
-        map.put("list",new ArrayList<>());
+        // 中智大库
+        List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,9);
+
+        // 外包
+        List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(amEmpTaskBO,3,9);
+
+        //独立户
+        List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(amEmpTaskBO,9);
+
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
 
         try {
-            WordUtils.exportMillCertificateWord(request,response,map,"外来派遣","外来派遣模板.ftl");
+            WordUtils.exportMillCertificateWord(request,response,map,"外来派遣","AM_EXT_DISPATCH_TEMP.ftl");
         } catch (IOException e) {
             e.printStackTrace();
         }
