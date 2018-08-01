@@ -624,13 +624,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         }
     }
 
-    public static void main(String[] args){
-
-        int i = 7;
-        System.out.println(i%7);
-        System.out.println(i/7);
-    }
-
     /**
      * 外来独立打印导出Word
      */

@@ -1017,8 +1017,13 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     }
 
 
+    @Override
+    public List<AmEmpDispatchExportPageDTO> queryExportOptDispatch(AmEmpTaskBO amEmpTaskBO, Integer employCode, Integer pageCount) {
 
-    public List<String> getParam(AmEmpTaskBO amEmpTaskBO){
+        List<AmEmpDispatchExportPageDTO> result = new ArrayList<>();
+
+
+
         List<String> param = new ArrayList<String>();
         List<String> orderParam = new ArrayList<String>();
         if (!StringUtil.isEmpty(amEmpTaskBO.getParams())) {
@@ -1039,19 +1044,10 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             }
         }
 
-        return param;
-    }
-
-    @Override
-    public List<AmEmpDispatchExportPageDTO> queryExportOptDispatch(AmEmpTaskBO amEmpTaskBO, Integer employCode, Integer pageCount) {
-
-        List<AmEmpDispatchExportPageDTO> result = new ArrayList<>();
-
-        List<String> param = getParam(amEmpTaskBO);
         // 中智大库 还是外包
         param.add("a.employ_code=" + employCode);
-
         amEmpTaskBO.setParam(param);
+        amEmpTaskBO.setOrderParam(orderParam);
 
         if (null != amEmpTaskBO.getTaskStatus() && amEmpTaskBO.getTaskStatus() == 0) {
             amEmpTaskBO.setTaskStatus(null);
@@ -1156,16 +1152,34 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
         List<AmEmpDispatchExportPageDTO> result = new ArrayList<>();
 
-        List<String> param = getParam(amEmpTaskBO);
-        // 1 固定为独立户
-        param.add("a.employ_code=" + 1);
+        List<String> param = new ArrayList<String>();
+        List<String> orderParam = new ArrayList<String>();
+        if (!StringUtil.isEmpty(amEmpTaskBO.getParams())) {
+            String arr[] = amEmpTaskBO.getParams().split(",");
+            for (int i = 0; i < arr.length; i++) {
+                if(!StringUtil.isEmpty(arr[i]))
+                {
+                    if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
+                        orderParam.add(arr[i]);
+                    }else {
+                        param.add(arr[i]);
+                    }
+                }
 
+            }
+            if(amEmpTaskBO.getParams().indexOf("material_name")!=-1){
+                amEmpTaskBO.setMaterial("1");
+            }
+        }
+
+        // 固定为独立户
+        param.add("a.employ_code=" + 1);
         amEmpTaskBO.setParam(param);
+        amEmpTaskBO.setOrderParam(orderParam);
 
         if (null != amEmpTaskBO.getTaskStatus() && amEmpTaskBO.getTaskStatus() == 0) {
             amEmpTaskBO.setTaskStatus(null);
         }
-
 
         List<String> companys = baseMapper.queryAmEmpTaskCompanys(amEmpTaskBO);
 
