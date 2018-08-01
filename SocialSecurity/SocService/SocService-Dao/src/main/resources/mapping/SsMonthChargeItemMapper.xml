@@ -87,11 +87,14 @@
         FROM
         ss_month_charge_item mci
         INNER JOIN ss_month_charge mc ON mc.month_charge_id=mci.month_charge_id
-        INNER JOIN 	ss_emp_archive ea ON ea.emp_archive_id=mc.emp_archive_id
+        INNER JOIN ss_emp_archive ea ON ea.emp_archive_id=mc.emp_archive_id
         INNER JOIN ss_com_account ca ON ca.com_account_id = ea.com_account_id
         LEFT JOIN emp_employee emp ON emp.employee_id=ea.employee_id
         WHERE
         mci.is_active = 1 AND ca.ss_account = #{ssAccount} AND mc.ss_month  =#{ssMonth}
+        <if test="companyId!=null and companyId!=''">
+          AND ea.company_id=#{companyId}
+        </if>
         ORDER  BY emp.employee_id, mc.cost_category
  </select>
 

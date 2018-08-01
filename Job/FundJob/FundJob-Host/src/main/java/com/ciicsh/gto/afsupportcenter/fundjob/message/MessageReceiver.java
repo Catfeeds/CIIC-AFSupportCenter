@@ -34,8 +34,6 @@ public class MessageReceiver {
         logApiUtil.info(LogMessage.create().setTitle("MessageReceiver开始").setContent(
             "received from comAccountId : " + message.getComAccountId() + ", received from ssMonth: " + message.getSsMonth()
         ));
-
-
         String key = "-com-account-" + message.getComAccountId() + "-" + message.getSsMonth() + "-" + message.getGeneralMethod() + "-";
         try {
             switch (message.getGeneralMethod()) {

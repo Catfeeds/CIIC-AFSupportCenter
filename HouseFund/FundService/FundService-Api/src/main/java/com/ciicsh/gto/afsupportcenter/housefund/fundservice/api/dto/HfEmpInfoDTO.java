@@ -39,6 +39,15 @@ public class HfEmpInfoDTO {
     // 补充公积金账号
     private String hfEmpAccountBC;
 
+    private String archiveStatusName;
+
+    public String getArchiveStatusName() {
+        return archiveStatusName;
+    }
+
+    public void setArchiveStatusName(String archiveStatusName) {
+        this.archiveStatusName = archiveStatusName;
+    }
 
     /**
      * 险种明细

@@ -506,6 +506,7 @@
     <resultMap id="HfEmpInfoBORM" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpInfoBO">
         <result column="employee_id" property="employeeId"/>
         <result column="company_id" property="companyId"/>
+        <result column="archiveStatusName" property="archiveStatusName"/>
         <result column="hf_emp_account" property="hfEmpAccount"/>
         <result column="hf_emp_account_bc" property="hfEmpAccountBC"/>
     </resultMap>
@@ -515,6 +516,11 @@
           ea.company_id,
           ea.hf_emp_account,
           ea.archive_status,
+          CASE ea.archive_status WHEN 0 THEN '未办理'
+            WHEN 1 THEN '已办'
+            WHEN 2 THEN '已做'
+            WHEN 3 THEN '封存'
+           END AS 'archiveStatusName',
           eabc.hf_emp_account as 'hf_emp_account_bc'
         FROM
           hf_emp_archive ea
