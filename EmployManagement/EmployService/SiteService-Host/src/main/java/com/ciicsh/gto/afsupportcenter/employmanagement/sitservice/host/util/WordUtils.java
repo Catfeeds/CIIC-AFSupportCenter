@@ -3,8 +3,6 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.util;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.util.ResourceUtils;
 
 import javax.servlet.ServletOutputStream;
