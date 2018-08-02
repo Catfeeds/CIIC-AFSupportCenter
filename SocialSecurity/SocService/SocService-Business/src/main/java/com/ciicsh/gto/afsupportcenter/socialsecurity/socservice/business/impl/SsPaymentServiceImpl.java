@@ -393,6 +393,7 @@ public class SsPaymentServiceImpl extends ServiceImpl<SsPaymentMapper, SsPayment
             String companyId="";
             companyId = ssEmpTaskMapper.selectOne(ssEmpTask).getCompanyId();
             paymentCom.setCompanyId(companyId);
+            paymentCom.setActive(true);
             paymentCom = ssPaymentComMapper.selectOne(paymentCom);
             if (paymentCom == null) {
                 return true;

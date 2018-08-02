@@ -1,6 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentDetailBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsPaymentDetailService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsPaymentComMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsPaymentDetailMapper;
@@ -26,7 +27,7 @@ public class SsPaymentDetailServiceImpl extends ServiceImpl<SsPaymentDetailMappe
     @Autowired
     SsPaymentComMapper ssPaymentComMapper;
     @Override
-    public List<SsPaymentDetail> paymentDetailQuery(SsPaymentDetail ssPaymentDetail) {
+    public List<SsPaymentDetail> paymentDetailQuery(SsPaymentDetailBO ssPaymentDetail) {
         List<SsPaymentDetail> detailList = baseMapper.paymentDetailQuery(ssPaymentDetail);
         ssPaymentDetailListAdd(detailList);
         BigDecimal extraAmount = ssPaymentComMapper.getExtraAmountByComAccountId(ssPaymentDetail.getPaymentMonth(),ssPaymentDetail.getComAccountId());

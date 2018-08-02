@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -271,8 +273,13 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
         json = business.doRejection(ssPayment);
         return json;
     }
-
-
+    @PostMapping("/getLastMonth")
+    public JsonResult<String> getLastMonth(){
+        JsonResult<String> json = new JsonResult<String>();
+        String yyyyMM = LocalDate.now().minusMonths(1).format(DateTimeFormatter.ofPattern("yyyy/MM"));
+        json.setData(yyyyMM);
+        return json;
+    }
 
 }
 

@@ -138,7 +138,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         HfPayment payment = new HfPayment();
         payment.setPaymentId(Long.parseLong(processParmBO.getPaymentId()));
         payment = hfPaymentMapper.selectOne(payment);
-        if ( payment.getPaymentState().equals(5) || (payment.getPaymentWay()==0 &&  payment.getPaymentWay()==2)) {
+        if ( payment.getPaymentState().equals(5) || (payment.getPaymentWay().equals(0) &&  payment.getPaymentState().equals(2))) {
             List<HfComAccountClass> comAccountClasses = comAccountClassMapper.getAccountClassByPaymentId(Long.parseLong(processParmBO.getPaymentId()));
 //            //校验月份是否匹配
 //            if (null != comAccountClasses && comAccountClasses.size() > 0) {
