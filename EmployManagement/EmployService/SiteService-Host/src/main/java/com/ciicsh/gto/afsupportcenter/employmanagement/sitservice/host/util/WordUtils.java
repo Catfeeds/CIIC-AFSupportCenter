@@ -27,7 +27,7 @@ public class WordUtils {
             // 以上方式不行 只能在本地拿到模板  发布到linux上去 打成jar包 要以这种方式读取模板
             ClassPathResource classPathResource = new ClassPathResource("template");
 
-            classPathResource.getInputStream();
+//            classPathResource.getInputStream();
 
             File file = classPathResource.getFile();
 
@@ -42,11 +42,11 @@ public class WordUtils {
     }
 
     public static void exportMillCertificateWord(HttpServletRequest request, HttpServletResponse response, Map map,String title,String ftlFile) throws IOException {
-        Template freemarkerTemplate = configuration.getTemplate(ftlFile);
         File file = null;
         InputStream fin = null;
         ServletOutputStream out = null;
         try {
+            Template freemarkerTemplate = configuration.getTemplate(ftlFile);
             // 调用工具类的createDoc方法生成Word文档
             file = createDoc(map,freemarkerTemplate);
             fin = new FileInputStream(file);
@@ -65,7 +65,10 @@ public class WordUtils {
             while((bytesToRead = fin.read(buffer)) != -1) {
                 out.write(buffer, 0, bytesToRead);
             }
-        } finally {
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            throw new RuntimeException(ex);
+        }finally {
             if(fin != null) fin.close();
             if(out != null) out.close();
             if(file != null) file.delete(); // 删除临时文件
