@@ -153,6 +153,7 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
         // 是否有用工 任务单
         AmEmpTaskBO amEmpTaskBO = new AmEmpTaskBO();
         amEmpTaskBO.setParam(param);
+        amEmpTaskBO.setOrderParam(new ArrayList<String>());
         List<AmEmpTaskBO> amEmpTaskBOList = amEmpTaskMapper.queryAmEmpTask(amEmpTaskBO);
         if(amEmpTaskBOList == null || amEmpTaskBOList.size() == 0){
             return null;

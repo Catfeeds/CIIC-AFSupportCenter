@@ -1062,7 +1062,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         for (AmEmpTaskBO bo:list) {
             count += bo.getCount();
         }
-        Integer pageSize = (count-1)/9 +1;
+        Integer pageSize = (count-1)/pageCount +1;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         for (int i = 1;i<=pageSize;i++){
             pageInfo.setPageNum(i);
@@ -1201,7 +1201,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             for (AmEmpTaskBO bo:list) {
                 count += bo.getCount();
             }
-            Integer pageSize = (count-1)/9 +1;
+            Integer pageSize = (count-1)/pageCount +1;
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             for (int i = 1;i<=pageSize;i++){
                 pageInfo.setPageNum(i);
