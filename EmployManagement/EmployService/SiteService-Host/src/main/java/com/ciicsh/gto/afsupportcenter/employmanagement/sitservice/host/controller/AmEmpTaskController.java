@@ -15,6 +15,8 @@ import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -67,6 +69,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
     @Autowired
     private IAmArchiveAdvanceService amArchiveAdvanceService;
+
+    @Autowired
+    private LogApiUtil logApiUtil;
 
 
     /**
@@ -570,6 +575,8 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     public @ResponseBody
     void employSearchExportOptUseWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response, HttpServletRequest request){
 
+        logApiUtil.error(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent("用工录用名册打印 start"));
+
         // 中智大库
         List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,12);
 
@@ -589,7 +596,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         try {
 
             WordUtils.exportMillCertificateWord(request,response,map,"用工录用名册","AM_USE_TEMP.ftl");
+
         } catch (Exception e) {
+            logApiUtil.error(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent(e.getMessage()));
             e.printStackTrace();
         }
     }
