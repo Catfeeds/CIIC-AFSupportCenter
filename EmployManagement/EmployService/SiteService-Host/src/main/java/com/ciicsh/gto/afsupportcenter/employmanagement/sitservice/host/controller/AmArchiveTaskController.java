@@ -357,41 +357,6 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         return  JsonResultKit.of(resultMap);
     }
 
-    @PostMapping("/saveAmInjury")
-    public JsonResult  saveAmInjury(@RequestBody List<AmInjury> list) {
-        List<AmInjury>  data = new ArrayList<AmInjury>();
-        for(AmInjury bo:list)
-        {
-            LocalDateTime now = LocalDateTime.now();
-            bo.setCreatedTime(now);
-            bo.setModifiedTime(now);
-            bo.setCreatedBy(ReasonUtil.getUserId());
-            bo.setModifiedBy(ReasonUtil.getUserId());
-            if(bo.getInjuryId()==null){
-                data.add(bo);
-            }
-        }
-
-        boolean result = false;
-        try {
-            result = amInjuryService.insertBatch(data);
-        } catch (Exception e) {
-
-        }
-
-        AmInjuryBO amInjuryBO = new AmInjuryBO();
-        amInjuryBO.setArchiveId(list.get(0).getArchiveId());
-
-        List<AmInjuryBO>  amInjuryBOList = amInjuryService.queryAmInjury(amInjuryBO);
-
-        Map<String,Object> map = new HashMap<>();
-        map.put("result",result);
-        map.put("data",amInjuryBOList);
-
-        return JsonResultKit.of(map);
-    }
-
-
     @Transactional(
         rollbackFor = {Exception.class}
     )

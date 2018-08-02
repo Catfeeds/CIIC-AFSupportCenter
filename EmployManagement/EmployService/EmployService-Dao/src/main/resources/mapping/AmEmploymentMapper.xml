@@ -339,7 +339,7 @@
         a.emp_task_id,
         a.company_id,
         a.employee_id,
-        c.archival_place,
+        c.archive_place,
         c.archive_source as doc_from,
         c.reserved_archive_type as doc_type,
         c.reserved_archive_no as doc_num,
