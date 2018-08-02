@@ -1,8 +1,11 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.util;
 
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +19,11 @@ import java.util.Date;
 import java.util.Map;
 
 
+
 public class WordUtils {
+
+    @Autowired
+    private static LogApiUtil logApiUtil;
 
     private static Configuration configuration = null;
     static {
@@ -30,8 +37,10 @@ public class WordUtils {
             File file = classPathResource.getFile();
 
             configuration.setDirectoryForTemplateLoading(file);
+
         } catch (IOException e) {
             e.printStackTrace();
+            logApiUtil.error(LogMessage.create().setTitle("WordUtils.static").setContent(e.getMessage()));
         }
     }
 
@@ -54,6 +63,7 @@ public class WordUtils {
             freemarkerTemplate.process(map,w);
             w.close();
         }catch (Exception ex) {
+            logApiUtil.error(LogMessage.create().setTitle("WordUtils.exportMillCertificateWord").setContent(ex.getMessage()));
             ex.printStackTrace();
             throw new RuntimeException(ex);
         }
