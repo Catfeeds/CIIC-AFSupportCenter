@@ -630,7 +630,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         try {
             WordUtils.exportMillCertificateWord(request,response,map,"派遣录用名册","AM_DISPATCH_TEMP.ftl");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -661,7 +661,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         try {
             WordUtils.exportMillCertificateWord(request,response,map,"外来独立","AM_ALONE_TEMP.ftl");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -691,7 +691,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         try {
             WordUtils.exportMillCertificateWord(request,response,map,"外来派遣","AM_EXT_DISPATCH_TEMP.ftl");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -708,7 +708,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         try {
             WordUtils.exportMillCertificateWord(request,response,map,"采集表汇总表","采集表汇总表模板.ftl");
-        } catch (IOException e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

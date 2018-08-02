@@ -7,6 +7,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,16 +20,15 @@ import java.util.Date;
 import java.util.Map;
 
 
-
 public class WordUtils {
 
     @Autowired
     private static LogApiUtil logApiUtil;
 
     private static Configuration configuration = null;
-    static {
+    static void init() {
         try {
-            logApiUtil.error(LogMessage.create().setTitle("WordUtils.static").setContent("Configuration load start"));
+//            logApiUtil.error(LogMessage.create().setTitle("WordUtils.static").setContent("Configuration load start"));
             configuration = new Configuration();
             configuration.setDefaultEncoding("utf-8");
 
@@ -41,7 +41,7 @@ public class WordUtils {
 
         } catch (Exception e) {
             e.printStackTrace();
-            logApiUtil.error(LogMessage.create().setTitle("WordUtils.static").setContent(e.getMessage()));
+//            logApiUtil.error(LogMessage.create().setTitle("WordUtils.static").setContent(e.getMessage()));
         }
     }
 
@@ -49,9 +49,10 @@ public class WordUtils {
         throw new AssertionError();
     }
 
-    public static void exportMillCertificateWord(HttpServletRequest request, HttpServletResponse response, Map map,String title,String ftlFile) throws IOException {
+    public static void exportMillCertificateWord(HttpServletRequest request, HttpServletResponse response, Map map,String title,String ftlFile) throws Exception {
 
         try {
+            init();
             Template freemarkerTemplate = configuration.getTemplate(ftlFile);
 
             response.setCharacterEncoding("utf-8");
@@ -64,9 +65,9 @@ public class WordUtils {
             freemarkerTemplate.process(map,w);
             w.close();
         }catch (Exception ex) {
-            logApiUtil.error(LogMessage.create().setTitle("WordUtils.exportMillCertificateWord").setContent(ex.getMessage()));
+//            logApiUtil.error(LogMessage.create().setTitle("WordUtils.exportMillCertificateWord").setContent(ex.getMessage()));
             ex.printStackTrace();
-            throw new RuntimeException(ex);
+            throw ex;
         }
     }
 
