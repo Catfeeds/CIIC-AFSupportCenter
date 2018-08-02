@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.util;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.ResourceUtils;
 
 import javax.servlet.ServletOutputStream;
@@ -21,7 +22,11 @@ public class WordUtils {
         configuration = new Configuration();
         configuration.setDefaultEncoding("utf-8");
         try {
-            File file = ResourceUtils.getFile("classpath:template");
+//            File file = ResourceUtils.getFile("classpath:template");
+
+            // 以上方式不行 只能在本地拿到模板  发布到linux上去 打成jar包 要以这种方式读取模板
+            ClassPathResource classPathResource = new ClassPathResource("template");
+            File file = classPathResource.getFile();
 
             configuration.setDirectoryForTemplateLoading(file);
         } catch (IOException e) {
