@@ -26,6 +26,9 @@ public class WordUtils {
 
             // 以上方式不行 只能在本地拿到模板  发布到linux上去 打成jar包 要以这种方式读取模板
             ClassPathResource classPathResource = new ClassPathResource("template");
+
+            classPathResource.getInputStream();
+
             File file = classPathResource.getFile();
 
             configuration.setDirectoryForTemplateLoading(file);
