@@ -27,9 +27,9 @@ public class WordUtils {
 
     private static Configuration configuration = null;
     static {
-        configuration = new Configuration();
-        configuration.setDefaultEncoding("utf-8");
         try {
+            configuration = new Configuration();
+            configuration.setDefaultEncoding("utf-8");
 
             // 以上方式不行 只能在本地拿到模板  发布到linux上去 打成jar包 要以这种方式读取模板
             ClassPathResource classPathResource = new ClassPathResource("template");
@@ -38,7 +38,7 @@ public class WordUtils {
 
             configuration.setDirectoryForTemplateLoading(file);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             logApiUtil.error(LogMessage.create().setTitle("WordUtils.static").setContent(e.getMessage()));
         }
