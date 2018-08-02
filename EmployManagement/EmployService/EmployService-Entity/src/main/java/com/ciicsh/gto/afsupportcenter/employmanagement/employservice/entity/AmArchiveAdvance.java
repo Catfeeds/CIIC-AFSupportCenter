@@ -79,8 +79,8 @@ public class AmArchiveAdvance implements Serializable {
     /**
      * 存档地
      */
-    @TableField("archival_place")
-    private String archivalPlace;
+    @TableField("archive_place")
+    private String archivePlace;
 
     /**
      * 备注
@@ -218,12 +218,12 @@ public class AmArchiveAdvance implements Serializable {
         this.archiveSource = archiveSource;
     }
 
-    public String getArchivalPlace() {
-        return archivalPlace;
+    public String getArchivePlace() {
+        return archivePlace;
     }
 
-    public void setArchivalPlace(String archivalPlace) {
-        this.archivalPlace = archivalPlace;
+    public void setArchivePlace(String archivePlace) {
+        this.archivePlace = archivePlace;
     }
 
     public Integer getStatus() {

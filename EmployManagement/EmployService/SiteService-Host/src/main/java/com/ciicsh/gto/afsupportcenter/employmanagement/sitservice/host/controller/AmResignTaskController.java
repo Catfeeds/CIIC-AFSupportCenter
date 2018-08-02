@@ -464,8 +464,8 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         return JsonResultKit.of(bo);
     }
 
-    @RequestMapping("/batchCheck")
-    public JsonResult  batchCheck(AmResignBO bo){
+    @RequestMapping("/batchResignCheck")
+    public JsonResult  batchResignCheck(AmResignBO bo){
         Map<String,Object>  map = business.batchCheck(bo);
         return  JsonResultKit.of(map);
     }
