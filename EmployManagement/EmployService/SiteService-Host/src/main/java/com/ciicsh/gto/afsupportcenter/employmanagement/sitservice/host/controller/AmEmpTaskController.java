@@ -196,15 +196,17 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         AmMaterialBO amMaterialBO = new AmMaterialBO();
         List<AmEmpMaterialBO> empMaterialList = new ArrayList<>();
         PageRows<AmEmpMaterialBO> result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
-        if(result!=null&&result.getRows().size()>0)
-        {
-            List<AmEmpMaterialOperationLogBO> logList = iAmEmpMaterialService.queryAmEmpMaterialOperationLogList(pageInfo);
-            amMaterialBO.setLogBOList(logList);
-            empMaterialList.addAll(result.getRows());
+            // 加了事务 回查
+        result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
+        //用工材料流转记录
+        List<AmEmpMaterialOperationLogBO> logList = iAmEmpMaterialService.queryAmEmpMaterialOperationLogList(pageInfo);
+        amMaterialBO.setLogBOList(logList);
+        empMaterialList.addAll(result.getRows());
+        amMaterialBO.setMaterialsData(empMaterialList);
+        if(result.getRows().size()>0){
             String submitterId = result.getRows().get(0).getSubmitterId();
             String submitterName = result.getRows().get(0).getSubmitterName();
             String extension = result.getRows().get(0).getExtension();
-            amMaterialBO.setMaterialsData(empMaterialList);
             if(null!=result.getRows().get(0)){
                 amMaterialBO.setReasonValue(result.getRows().get(0).getRejectReason());
             }
@@ -215,7 +217,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                 amMaterialBO.setSubmitName(submitterName);
                 amMaterialBO.setExtension(extension);
             }
-
         }
 
         //用工信息
@@ -495,9 +496,8 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             material.setRejectName(userName);
             material.setRejectId(userId);
             material.setModifiedTime(LocalDateTime.now());
-            material.setActive(false);
+//            material.setActive(false);
         }
-
         AmEmpTask amEmpTask = business.selectById(list.get(0).getEmpTaskId());
         // 调用雇员中心 批退
         String message = iAmEmpMaterialService.receiveMaterial(amEmpTask.getHireTaskId(),2,list.get(0).getRejectReason());

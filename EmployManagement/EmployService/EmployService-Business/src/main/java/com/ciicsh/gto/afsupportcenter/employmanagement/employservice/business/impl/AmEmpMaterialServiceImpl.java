@@ -93,18 +93,21 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
             List<HireMaterialBillDTO> dtoList = dtoResult.getData();
             if(dtoList != null && dtoList.size() > 0){
                 String extension = "";
+                String createdByDisName = "";
                 com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<List<SMUserInfoDTO>>
                 smUserInfo = smUserInfoProxy.getUsersByUserId(dtoList.get(0).getCreatedBy());
                 List<SMUserInfoDTO> userList = smUserInfo.getData();
                 if(userList != null && userList.size() > 0){
                     extension = userList.get(0).getExtension();
+                    createdByDisName = userList.get(0).getDisplayName();
                 }
                 List<AmEmpMaterial> amEmpMaterialsList = new ArrayList<>();
                 for (HireMaterialBillDTO hire : dtoList) {
                     AmEmpMaterial amEmpMaterial = new AmEmpMaterial();
+                    AmEmpMaterialBO bo = new AmEmpMaterialBO();
                     amEmpMaterial.setMaterialName(hire.getMaterialName());
                     amEmpMaterial.setSubmitterId(hire.getCreatedBy());
-                    amEmpMaterial.setSubmitterName(hire.getCreatedBy());
+                    amEmpMaterial.setSubmitterName(createdByDisName);
                     amEmpMaterial.setSubmitterDate(DateUtil.dateToLocaleDateTime(dto.getOperateTime()));
                     amEmpMaterial.setEmployeeId(amEmpMaterialBO.getEmployeeId());
                     amEmpMaterial.setOperateType(1);
@@ -119,7 +122,7 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
                 }
                 insertBatch(amEmpMaterialsList);
             }
-            return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpMaterial(amEmpMaterialBO));
+            return pageRows;
         }else{
             return pageRows;
         }
