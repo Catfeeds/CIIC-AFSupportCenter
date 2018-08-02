@@ -575,25 +575,27 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     public @ResponseBody
     void employSearchExportOptUseWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response, HttpServletRequest request){
 
-        logApiUtil.error(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent("用工录用名册打印 start"));
-
-        // 中智大库
-        List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,12);
-
-        // 外包
-        List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(amEmpTaskBO,3,12);
-
-        //独立户
-        List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(amEmpTaskBO,12);
-
-
-        Map<String, Object> map = new HashMap<>();
-
-        map.put("list",dtoList);
-        map.put("list2",dtoList2);
-        map.put("list3",dtoList3);
-
         try {
+
+            logApiUtil.error(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent("用工录用名册打印 start"));
+
+            // 中智大库
+            List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,12);
+
+            // 外包
+            List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(amEmpTaskBO,3,12);
+
+            //独立户
+            List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(amEmpTaskBO,12);
+
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("list",dtoList);
+            map.put("list2",dtoList2);
+            map.put("list3",dtoList3);
+
+            logApiUtil.error(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent("用工录用名册打印 start red temp"));
 
             WordUtils.exportMillCertificateWord(request,response,map,"用工录用名册","AM_USE_TEMP.ftl");
 

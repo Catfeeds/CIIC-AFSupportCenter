@@ -28,6 +28,7 @@ public class WordUtils {
     private static Configuration configuration = null;
     static {
         try {
+            logApiUtil.error(LogMessage.create().setTitle("WordUtils.static").setContent("Configuration load start"));
             configuration = new Configuration();
             configuration.setDefaultEncoding("utf-8");
 
