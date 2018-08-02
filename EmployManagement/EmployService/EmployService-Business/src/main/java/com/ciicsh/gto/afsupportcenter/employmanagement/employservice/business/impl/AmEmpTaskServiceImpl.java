@@ -803,7 +803,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             amCompanySetBO.setCompanyId(amEmpTaskBO.getCompanyId());
             AmCompanySetBO amCompanySetBO1 = iAmCompanySetService.queryAmCompanySet(amCompanySetBO);
 
-            if(amCompanySetBO1.getCompanySpecial8()!=null&&amCompanySetBO1.getCompanySpecial8()==1){
+            if(amCompanySetBO1!=null&&amCompanySetBO1.getCompanySpecial8()!=null&&amCompanySetBO1.getCompanySpecial8()==1){
                 amEmpTaskBO.setHandleType("调档");
             }else {
                 amEmpTaskBO.setHandleType("属地管理");
