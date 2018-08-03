@@ -25,7 +25,7 @@ public class WordUtils {
     private static LogApiUtil logApiUtil;
 
     private static Configuration configuration = null;
-    static void init() {
+    static File init() {
         try {
 //            logApiUtil.error(LogMessage.create().setTitle("WordUtils.static").setContent("Configuration load start"));
             configuration = new Configuration();
@@ -34,22 +34,23 @@ public class WordUtils {
             // 以上方式不行 只能在本地拿到模板  发布到linux上去 打成jar包 要以这种方式读取模板
             ClassPathResource classPathResource = new ClassPathResource("template");
 
-            classPathResource.getInputStream();
+//            classPathResource.getInputStream();
 
             File file = classPathResource.getFile();
 
-//            configuration.setDirectoryForTemplateLoading(file);
+            configuration.setDirectoryForTemplateLoading(file);
 
 
 
-            FileTemplateLoader templateLoader = new FileTemplateLoader(file);
-            configuration.setTemplateLoader(templateLoader);
+//            FileTemplateLoader templateLoader = new FileTemplateLoader(file);
+//            configuration.setTemplateLoader(templateLoader);
 
-
+            return file;
         } catch (Exception e) {
             e.printStackTrace();
 //            logApiUtil.error(LogMessage.create().setTitle("WordUtils.static").setContent(e.getMessage()));
         }
+        return null;
     }
 
     private WordUtils() {
@@ -57,9 +58,10 @@ public class WordUtils {
     }
 
     public static void exportMillCertificateWord(HttpServletRequest request, HttpServletResponse response, Map map,String title,String ftlFile) throws Exception {
-
+        File file = null;
         try {
-            init();
+            file = init();
+
             Template freemarkerTemplate = configuration.getTemplate(ftlFile);
 
             response.setCharacterEncoding("utf-8");
@@ -74,7 +76,10 @@ public class WordUtils {
         }catch (Exception ex) {
 //            logApiUtil.error(LogMessage.create().setTitle("WordUtils.exportMillCertificateWord").setContent(ex.getMessage()));
             ex.printStackTrace();
-            throw ex;
+//            throw ex;
+            if (file != null) {
+                throw new Exception(file.getAbsolutePath() + "; getCanonicalPath=" + file.getCanonicalPath() + "; getPath=" + file.getPath());
+            }
         }
     }
 
