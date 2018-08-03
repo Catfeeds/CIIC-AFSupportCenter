@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.util;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
+import freemarker.cache.FileTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +12,10 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.*;
 import java.net.URLEncoder;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -35,9 +34,17 @@ public class WordUtils {
             // 以上方式不行 只能在本地拿到模板  发布到linux上去 打成jar包 要以这种方式读取模板
             ClassPathResource classPathResource = new ClassPathResource("template");
 
+            classPathResource.getInputStream();
+
             File file = classPathResource.getFile();
 
-            configuration.setDirectoryForTemplateLoading(file);
+//            configuration.setDirectoryForTemplateLoading(file);
+
+
+
+            FileTemplateLoader templateLoader = new FileTemplateLoader(file);
+            configuration.setTemplateLoader(templateLoader);
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,6 +76,50 @@ public class WordUtils {
             ex.printStackTrace();
             throw ex;
         }
+    }
+
+
+
+
+    public static void main(String[] args) {
+
+        Configuration configuration = new Configuration();
+
+        configuration.setClassForTemplateLoading(WordUtils.class, "/");
+
+
+        try {
+
+
+            ClassPathResource classPathResource = new ClassPathResource("template");
+
+            classPathResource.getInputStream();
+
+            File file = classPathResource.getFile();
+
+
+            FileTemplateLoader templateLoader = new FileTemplateLoader(file);
+            configuration.setTemplateLoader(templateLoader);
+
+
+
+
+
+
+            Template helloTemp= configuration.getTemplate("AM_ALONE_TEMP.ftl");
+            StringWriter writer = new StringWriter();
+            Map<String,Object> helloMap = new HashMap<String,Object>();
+            helloMap.put("name","gokhan");
+
+            helloTemp.process(helloMap,writer);
+
+            System.out.println(writer);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+
     }
 
 }
