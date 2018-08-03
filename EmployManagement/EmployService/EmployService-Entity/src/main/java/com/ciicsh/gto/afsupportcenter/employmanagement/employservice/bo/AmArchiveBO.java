@@ -14,7 +14,7 @@ public class AmArchiveBO extends AmArchive {
 
     private Long[] empTaskIds;
 
-    private boolean formAdvance=false;
+    private Boolean formAdvance;
 
     private String employeeName;
 
