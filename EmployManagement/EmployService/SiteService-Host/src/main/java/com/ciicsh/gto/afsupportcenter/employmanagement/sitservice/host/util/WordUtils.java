@@ -27,9 +27,10 @@ public class WordUtils {
     public static final String TEMPLATE_FILE_VOUCHER_PATH = "template/";
 
 
-    
+
     private static Configuration configuration = null;
-    static File init() {
+    static File init() throws Exception {
+        File file = null;
         try {
 //            logApiUtil.error(LogMessage.create().setTitle("WordUtils.static").setContent("Configuration load start"));
             configuration = new Configuration();
@@ -40,7 +41,7 @@ public class WordUtils {
 
 //            classPathResource.getInputStream();
 
-            File file = classPathResource.getFile();
+            file = classPathResource.getFile();
 
             configuration.setDirectoryForTemplateLoading(file);
 
@@ -52,6 +53,9 @@ public class WordUtils {
             return file;
         } catch (Exception e) {
             e.printStackTrace();
+            if (file != null) {
+                throw new Exception(file.getAbsolutePath() + "; getCanonicalPath=" + file.getCanonicalPath() + "; getPath=" + file.getPath());
+            }
 //            logApiUtil.error(LogMessage.create().setTitle("WordUtils.static").setContent(e.getMessage()));
         }
         return null;
