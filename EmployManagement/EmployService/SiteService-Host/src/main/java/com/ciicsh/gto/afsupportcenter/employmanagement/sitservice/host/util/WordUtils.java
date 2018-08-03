@@ -3,13 +3,9 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.util;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
-import freemarker.cache.ByteArrayTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
-import freemarker.cache.StringTemplateLoader;
-import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
@@ -31,9 +27,9 @@ public class WordUtils {
     public static final String TEMPLATE_FILE_VOUCHER_PATH = "template/";
 
 
-
+    
     private static Configuration configuration = null;
-    static void init() {
+    static File init() {
         try {
 //            logApiUtil.error(LogMessage.create().setTitle("WordUtils.static").setContent("Configuration load start"));
             configuration = new Configuration();
@@ -42,34 +38,23 @@ public class WordUtils {
             // 以上方式不行 只能在本地拿到模板  发布到linux上去 打成jar包 要以这种方式读取模板
             ClassPathResource classPathResource = new ClassPathResource("template");
 
-            classPathResource.getInputStream();
+//            classPathResource.getInputStream();
 
             File file = classPathResource.getFile();
 
-            System.out.println(classPathResource.getPath());
-            System.out.println(classPathResource.getFilename());
-            System.out.println(classPathResource.getURL());
-            System.out.println(classPathResource.getFile());
-            System.out.println(classPathResource.getDescription());
-            System.out.println(classPathResource.getClassLoader());
-
-//            configuration.setDirectoryForTemplateLoading(file);
+            configuration.setDirectoryForTemplateLoading(file);
 
 
 
-            FileTemplateLoader templateLoader = new FileTemplateLoader(file,true);
+//            FileTemplateLoader templateLoader = new FileTemplateLoader(file);
+//            configuration.setTemplateLoader(templateLoader);
 
-
-
-            configuration.setTemplateLoader(templateLoader);
-
-//            configuration.
-
-
+            return file;
         } catch (Exception e) {
             e.printStackTrace();
 //            logApiUtil.error(LogMessage.create().setTitle("WordUtils.static").setContent(e.getMessage()));
         }
+        return null;
     }
 
     private WordUtils() {
@@ -77,20 +62,9 @@ public class WordUtils {
     }
 
     public static void exportMillCertificateWord(HttpServletRequest request, HttpServletResponse response, Map map,String title,String ftlFile) throws Exception {
-
+        File file = null;
         try {
-            init();
-
-//            InputStream stream = WordUtils.class.getClassLoader().getResourceAsStream(TEMPLATE_FILE_VOUCHER_PATH + ftlFile);
-
-//            System.out.println(WordUtils.class.getClassLoader().getResourceAsStream(TEMPLATE_FILE_VOUCHER_PATH + ftlFile));
-
-
-
-//            POIFSFileSystem fs = new POIFSFileSystem(stream);
-
-//            stream.read();
-
+            file = init();
 
             Template freemarkerTemplate = configuration.getTemplate(ftlFile);
 
@@ -106,7 +80,10 @@ public class WordUtils {
         }catch (Exception ex) {
 //            logApiUtil.error(LogMessage.create().setTitle("WordUtils.exportMillCertificateWord").setContent(ex.getMessage()));
             ex.printStackTrace();
-            throw ex;
+//            throw ex;
+            if (file != null) {
+                throw new Exception(file.getAbsolutePath() + "; getCanonicalPath=" + file.getCanonicalPath() + "; getPath=" + file.getPath());
+            }
         }
     }
 
