@@ -15,6 +15,8 @@ import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -67,6 +69,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
     @Autowired
     private IAmArchiveAdvanceService amArchiveAdvanceService;
+
+    @Autowired
+    private LogApiUtil logApiUtil;
 
 
     /**
@@ -196,15 +201,17 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         AmMaterialBO amMaterialBO = new AmMaterialBO();
         List<AmEmpMaterialBO> empMaterialList = new ArrayList<>();
         PageRows<AmEmpMaterialBO> result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
-        if(result!=null&&result.getRows().size()>0)
-        {
-            List<AmEmpMaterialOperationLogBO> logList = iAmEmpMaterialService.queryAmEmpMaterialOperationLogList(pageInfo);
-            amMaterialBO.setLogBOList(logList);
-            empMaterialList.addAll(result.getRows());
+            // 加了事务 回查
+        result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
+        //用工材料流转记录
+        List<AmEmpMaterialOperationLogBO> logList = iAmEmpMaterialService.queryAmEmpMaterialOperationLogList(pageInfo);
+        amMaterialBO.setLogBOList(logList);
+        empMaterialList.addAll(result.getRows());
+        amMaterialBO.setMaterialsData(empMaterialList);
+        if(result.getRows().size()>0){
             String submitterId = result.getRows().get(0).getSubmitterId();
             String submitterName = result.getRows().get(0).getSubmitterName();
             String extension = result.getRows().get(0).getExtension();
-            amMaterialBO.setMaterialsData(empMaterialList);
             if(null!=result.getRows().get(0)){
                 amMaterialBO.setReasonValue(result.getRows().get(0).getRejectReason());
             }
@@ -215,7 +222,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                 amMaterialBO.setSubmitName(submitterName);
                 amMaterialBO.setExtension(extension);
             }
-
         }
 
         //用工信息
@@ -495,9 +501,8 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             material.setRejectName(userName);
             material.setRejectId(userId);
             material.setModifiedTime(LocalDateTime.now());
-            material.setActive(false);
+//            material.setActive(false);
         }
-
         AmEmpTask amEmpTask = business.selectById(list.get(0).getEmpTaskId());
         // 调用雇员中心 批退
         String message = iAmEmpMaterialService.receiveMaterial(amEmpTask.getHireTaskId(),2,list.get(0).getRejectReason());
@@ -570,26 +575,32 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     public @ResponseBody
     void employSearchExportOptUseWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response, HttpServletRequest request){
 
-        // 中智大库
-        List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,12);
-
-        // 外包
-        List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(amEmpTaskBO,3,12);
-
-        //独立户
-        List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(amEmpTaskBO,12);
-
-
-        Map<String, Object> map = new HashMap<>();
-
-        map.put("list",dtoList);
-        map.put("list2",dtoList2);
-        map.put("list3",dtoList3);
-
         try {
 
+            logApiUtil.error(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent("用工录用名册打印 start"));
+
+            // 中智大库
+            List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,12);
+
+            // 外包
+            List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(amEmpTaskBO,3,12);
+
+            //独立户
+            List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(amEmpTaskBO,12);
+
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("list",dtoList);
+            map.put("list2",dtoList2);
+            map.put("list3",dtoList3);
+
+            logApiUtil.error(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent("用工录用名册打印 start red temp"));
+
             WordUtils.exportMillCertificateWord(request,response,map,"用工录用名册","AM_USE_TEMP.ftl");
+
         } catch (Exception e) {
+            logApiUtil.error(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent(e.getMessage()));
             e.printStackTrace();
         }
     }
@@ -619,7 +630,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         try {
             WordUtils.exportMillCertificateWord(request,response,map,"派遣录用名册","AM_DISPATCH_TEMP.ftl");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -650,7 +661,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         try {
             WordUtils.exportMillCertificateWord(request,response,map,"外来独立","AM_ALONE_TEMP.ftl");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -680,7 +691,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         try {
             WordUtils.exportMillCertificateWord(request,response,map,"外来派遣","AM_EXT_DISPATCH_TEMP.ftl");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -697,7 +708,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         try {
             WordUtils.exportMillCertificateWord(request,response,map,"采集表汇总表","采集表汇总表模板.ftl");
-        } catch (IOException e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

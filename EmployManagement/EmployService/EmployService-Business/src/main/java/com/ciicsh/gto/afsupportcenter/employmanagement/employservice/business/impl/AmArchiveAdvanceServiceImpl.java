@@ -153,6 +153,7 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
         // 是否有用工 任务单
         AmEmpTaskBO amEmpTaskBO = new AmEmpTaskBO();
         amEmpTaskBO.setParam(param);
+        amEmpTaskBO.setOrderParam(new ArrayList<String>());
         List<AmEmpTaskBO> amEmpTaskBOList = amEmpTaskMapper.queryAmEmpTask(amEmpTaskBO);
         if(amEmpTaskBOList == null || amEmpTaskBOList.size() == 0){
             return null;
@@ -161,6 +162,7 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
         // 是否有退工 任务单
         AmResignBO amResignBO = new AmResignBO();
         amResignBO.setParam(param);
+        amResignBO.setOrderParam(new ArrayList<String>());
         List<AmResignBO> amResignBOList = amResignMapper.queryAmResign(amResignBO);
         if(amResignBOList != null && amResignBOList.size() > 0){
             // 有退工任务单 退工日期是否为null
@@ -173,6 +175,7 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
         // 是否有档案
         AmEmploymentBO amEmploymentBO = new AmEmploymentBO();
         amEmploymentBO.setParam(param);
+        amEmploymentBO.setOrderParam(new ArrayList<String>());
         List<AmEmploymentBO> boList = amEmploymentMapper.queryAmArchive(amEmploymentBO);
 
         if(boList != null && boList.size() > 0){

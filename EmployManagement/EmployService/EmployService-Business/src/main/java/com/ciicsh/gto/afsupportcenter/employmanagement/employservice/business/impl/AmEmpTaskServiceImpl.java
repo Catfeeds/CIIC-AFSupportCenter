@@ -543,6 +543,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         List<Long> archiveAdvanceIdList = new ArrayList<>();
 
         int i = 0;
+        int cCnum = 0;
         for(AmEmploymentBO temp:amEmploymentBOList)
         {
             param.put("employmentId",temp.getEmploymentId());
@@ -577,11 +578,17 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 entity.setDocNum(temp.getDocNum());
                 entity.setDocType(temp.getDocType());
                 entity.setArchivePlace(temp.getArchivePlace());
-                entity.setArchivePlace(temp.getArchivePlace());
+                entity.setDocFrom(temp.getDocFrom());
                 archiveAdvanceIdList.add(temp.getArchiveAdvanceId());
+                if(cCnum==0){
+                    cCnum = Integer.parseInt(temp.getDocNum());
+                }else if(cCnum<Integer.parseInt(temp.getDocNum())){
+                    cCnum = Integer.parseInt(temp.getDocNum());
+                }
             }else{
                 ++i;
             }
+
 
             entity.setModifiedTime(now);
 
@@ -647,6 +654,18 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 // 比原有的seq要大
                 if(list2.size() == 0){
                     amArchiveService.updateByTypeAndDocType(seq2);
+                }
+            }
+            if(archiveAdvanceIdList.size()>0)
+            {
+                AmArchiveDocSeq seq3 = new AmArchiveDocSeq();
+                seq3.setType(2);
+                seq3.setDocType("Cc");
+                seq3.setDocSeq(cCnum);
+                List<AmArchiveDocSeqBO> list2 = amArchiveService.queryCountHaveAbove(seq3);
+                // 比原有的seq要大
+                if(list2.size() == 0){
+                    amArchiveService.updateByTypeAndDocType(seq3);
                 }
             }
         }
@@ -803,7 +822,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             amCompanySetBO.setCompanyId(amEmpTaskBO.getCompanyId());
             AmCompanySetBO amCompanySetBO1 = iAmCompanySetService.queryAmCompanySet(amCompanySetBO);
 
-            if(amCompanySetBO1.getCompanySpecial8()!=null&&amCompanySetBO1.getCompanySpecial8()==1){
+            if(amCompanySetBO1!=null&&amCompanySetBO1.getCompanySpecial8()!=null&&amCompanySetBO1.getCompanySpecial8()==1){
                 amEmpTaskBO.setHandleType("调档");
             }else {
                 amEmpTaskBO.setHandleType("属地管理");
@@ -1062,7 +1081,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         for (AmEmpTaskBO bo:list) {
             count += bo.getCount();
         }
-        Integer pageSize = (count-1)/9 +1;
+        Integer pageSize = (count-1)/pageCount +1;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         for (int i = 1;i<=pageSize;i++){
             pageInfo.setPageNum(i);
@@ -1201,7 +1220,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             for (AmEmpTaskBO bo:list) {
                 count += bo.getCount();
             }
-            Integer pageSize = (count-1)/9 +1;
+            Integer pageSize = (count-1)/pageCount +1;
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             for (int i = 1;i<=pageSize;i++){
                 pageInfo.setPageNum(i);

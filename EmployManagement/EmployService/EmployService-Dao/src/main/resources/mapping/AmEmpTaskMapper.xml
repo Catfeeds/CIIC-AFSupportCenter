@@ -113,6 +113,7 @@
         a.employ_code,
         a.change,
         a.created_time,
+        a.job,
         b.employment_id,
         b.employ_way,/*用工方式 */
         b.employ_property,/*用工属性 */
