@@ -3,9 +3,13 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.util;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
+import freemarker.cache.ByteArrayTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
+import freemarker.cache.StringTemplateLoader;
+import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
@@ -24,6 +28,10 @@ public class WordUtils {
     @Autowired
     private static LogApiUtil logApiUtil;
 
+    public static final String TEMPLATE_FILE_VOUCHER_PATH = "template/";
+
+
+
     private static Configuration configuration = null;
     static void init() {
         try {
@@ -38,12 +46,24 @@ public class WordUtils {
 
             File file = classPathResource.getFile();
 
+            System.out.println(classPathResource.getPath());
+            System.out.println(classPathResource.getFilename());
+            System.out.println(classPathResource.getURL());
+            System.out.println(classPathResource.getFile());
+            System.out.println(classPathResource.getDescription());
+            System.out.println(classPathResource.getClassLoader());
+
 //            configuration.setDirectoryForTemplateLoading(file);
 
 
 
-            FileTemplateLoader templateLoader = new FileTemplateLoader(file);
+            FileTemplateLoader templateLoader = new FileTemplateLoader(file,true);
+
+
+
             configuration.setTemplateLoader(templateLoader);
+
+//            configuration.
 
 
         } catch (Exception e) {
@@ -60,6 +80,18 @@ public class WordUtils {
 
         try {
             init();
+
+//            InputStream stream = WordUtils.class.getClassLoader().getResourceAsStream(TEMPLATE_FILE_VOUCHER_PATH + ftlFile);
+
+//            System.out.println(WordUtils.class.getClassLoader().getResourceAsStream(TEMPLATE_FILE_VOUCHER_PATH + ftlFile));
+
+
+
+//            POIFSFileSystem fs = new POIFSFileSystem(stream);
+
+//            stream.read();
+
+
             Template freemarkerTemplate = configuration.getTemplate(ftlFile);
 
             response.setCharacterEncoding("utf-8");
