@@ -24,6 +24,10 @@ public class WordUtils {
     @Autowired
     private static LogApiUtil logApiUtil;
 
+    public static final String TEMPLATE_FILE_VOUCHER_PATH = "template/";
+
+
+    
     private static Configuration configuration = null;
     static File init() {
         try {
