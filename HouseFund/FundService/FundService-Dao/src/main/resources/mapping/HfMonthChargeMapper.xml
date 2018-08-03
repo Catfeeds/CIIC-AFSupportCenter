@@ -460,7 +460,7 @@
     <select id="queryHfRimittedBookReport" resultMap="RimittedBookReportRM">
     SELECT pa.com_account_id,pa.com_account_class_id,pa.hf_type,ca.com_account_name,ca.payment_bank,
             ca.hf_account_type,pa.hf_com_account,pa.payment_month,lastMonth.remitted_amount_last,lastMonth.remitted_count_emp_last,
-        (select acr.company_id from hf_account_com_relation acr where acr.com_account_id=pa.com_account_id and acr.major_com=1 ORDER BY CREATEd_time desc LIMIT 1)company_id,
+        (select group_concat(acr.company_id) from hf_account_com_relation acr where acr.com_account_id=pa.com_account_id and acr.major_com=1 ORDER BY CREATEd_time desc LIMIT 1)company_id,
 		(SELECT SUM(ifnull(amount, 0)) FROM hf_month_charge mc
         INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
         WHERE mc.is_active = 1
