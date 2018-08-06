@@ -267,8 +267,8 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             if(advanceBO != null){
                 amArchiveBO = new AmArchiveBO();
                 amArchiveBO.setFormAdvance(true);
-                amArchiveBO.setYuliuDocType(advanceBO.getReservedArchiveType());
-                amArchiveBO.setYuliuDocNum(advanceBO.getReservedArchiveNo() == null ? "" : advanceBO.getReservedArchiveNo().toString());
+                amArchiveBO.setDocType(advanceBO.getReservedArchiveType());
+                amArchiveBO.setDocNum(advanceBO.getReservedArchiveNo() == null ? "" : advanceBO.getReservedArchiveNo().toString());
                 amArchiveBO.setDocFrom(advanceBO.getArchiveSource());// 档案来源
                 amArchiveBO.setArchivePlace(advanceBO.getArchivePlace());// 存档地
                 resultMap.put("amArchaiveBo",amArchiveBO);
