@@ -55,7 +55,7 @@ public class AmArchiveAdvanceBO{
     /**
      * 存档地
      */
-    private String archivalPlace;
+    private String archivePlace;
 
     /**
      * 备注
@@ -179,12 +179,12 @@ public class AmArchiveAdvanceBO{
         this.archiveSource = archiveSource;
     }
 
-    public String getArchivalPlace() {
-        return archivalPlace;
+    public String getArchivePlace() {
+        return archivePlace;
     }
 
-    public void setArchivalPlace(String archivalPlace) {
-        this.archivalPlace = archivalPlace;
+    public void setArchivePlace(String archivePlace) {
+        this.archivePlace = archivePlace;
     }
 
     public Integer getStatus() {
