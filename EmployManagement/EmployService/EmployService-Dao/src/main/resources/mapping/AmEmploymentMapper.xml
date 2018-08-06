@@ -127,7 +127,7 @@
         h.title,
         h.service_center,/*服务中心 */
         h.leader_ship_name, /*客服经理*/
-        cs.archive_special
+        CONCAT(cs.employ_special,cs.refuse_special,cs.archive_special) as archive_special
         FROM
         am_employment b
         LEFT JOIN am_emp_task a on a.emp_task_id = b.emp_task_id
