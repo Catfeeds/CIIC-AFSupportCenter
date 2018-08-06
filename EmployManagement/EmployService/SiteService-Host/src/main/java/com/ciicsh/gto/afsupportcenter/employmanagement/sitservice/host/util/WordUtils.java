@@ -13,6 +13,7 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,7 +29,7 @@ public class WordUtils {
     @Autowired
     private static LogApiUtil logApiUtil;
 
-    public static final String TEMPLATE_FILE_VOUCHER_PATH = "template/";
+    public static final String TEMPLATE_FILE_VOUCHER_PATH = "template";
 
 
 
@@ -39,33 +40,34 @@ public class WordUtils {
             configuration = new Configuration();
             configuration.setDefaultEncoding("utf-8");
 
+
+
+
+            configuration.setClassLoaderForTemplateLoading(WordUtils.class.getClassLoader(),TEMPLATE_FILE_VOUCHER_PATH);
+
             // 以上方式不行 只能在本地拿到模板  发布到linux上去 打成jar包 要以这种方式读取模板
-            ClassPathResource classPathResource = new ClassPathResource("template");
-
-            classPathResource.getInputStream();
-
-            File file = classPathResource.getFile();
-
-            System.out.println(classPathResource.getPath());
-            System.out.println(classPathResource.getFilename());
-            System.out.println(classPathResource.getURL());
-            System.out.println(classPathResource.getFile());
-            System.out.println(classPathResource.getDescription());
-            System.out.println(classPathResource.getClassLoader());
-
-//            configuration.setDirectoryForTemplateLoading(file);
+//            ClassPathResource classPathResource = new ClassPathResource("template");
+//
+//            classPathResource.getInputStream();
+//
+//            File file = classPathResource.getFile();
+//            FileTemplateLoader templateLoader = new FileTemplateLoader(file,true);
+//            configuration.setTemplateLoader(templateLoader);
 
 
 
-            FileTemplateLoader templateLoader = new FileTemplateLoader(file,true);
-
-
-
-            configuration.setTemplateLoader(templateLoader);
-
-//            configuration.
-
-
+            //获取跟目录
+//            File path = new File(ResourceUtils.getURL("classpath:template").getPath());
+//            File upload = new File(path.getAbsolutePath(),"");
+//            System.out.println(path.getPath());
+//            System.out.println(path.getName());
+//            System.out.println(path.getAbsolutePath());
+//            System.out.println(upload.getPath());
+//            System.out.println(upload.getName());
+//            System.out.println(upload.getAbsolutePath());
+//            FileTemplateLoader templateLoader = new FileTemplateLoader(path,true);
+//            configuration.setTemplateLoader(templateLoader);
+//            System.out.println(configuration);
         } catch (Exception e) {
             e.printStackTrace();
 //            logApiUtil.error(LogMessage.create().setTitle("WordUtils.static").setContent(e.getMessage()));
