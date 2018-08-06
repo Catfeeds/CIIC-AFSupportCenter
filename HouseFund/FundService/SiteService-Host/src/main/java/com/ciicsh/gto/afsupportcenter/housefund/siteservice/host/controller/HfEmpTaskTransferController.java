@@ -295,7 +295,7 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
         String template = "%1$d|%2$s||||";
         List<String> outputList = new ArrayList<>();
 
-        writer.append(title);
+       // writer.append(title);
         if (CollectionUtils.isNotEmpty(empTaskTransferBoList)) {
             for (int i = 0; i < empTaskTransferBoList.size(); i++) {
                 empTaskTransferBo = empTaskTransferBoList.get(i);
