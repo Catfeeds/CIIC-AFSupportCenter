@@ -203,10 +203,10 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         AmMaterialBO amMaterialBO = new AmMaterialBO();
         List<AmEmpMaterialBO> empMaterialList = new ArrayList<>();
         PageRows<AmEmpMaterialBO> result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
-            // 加了事务 回查
+        // 加了事务 回查
         result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
         //用工材料流转记录
-        List<AmEmpMaterialOperationLogBO> logList = iAmEmpMaterialService.queryAmEmpMaterialOperationLogList(pageInfo);
+        List<AmEmpMaterialOperationLogBO> logList = iAmEmpMaterialService.queryAmEmpMaterialOperationLogList(amTaskParamBO.getEmpTaskId());
         amMaterialBO.setLogBOList(logList);
         empMaterialList.addAll(result.getRows());
         amMaterialBO.setMaterialsData(empMaterialList);
@@ -273,7 +273,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                 amArchiveBO.setYuliuDocType(advanceBO.getReservedArchiveType());
                 amArchiveBO.setYuliuDocNum(advanceBO.getReservedArchiveNo() == null ? "" : advanceBO.getReservedArchiveNo().toString());
                 amArchiveBO.setDocFrom(advanceBO.getArchiveSource());// 档案来源
-                amArchiveBO.setArchivePlace(advanceBO.getArchivalPlace());// 存档地
+                amArchiveBO.setArchivePlace(advanceBO.getArchivePlace());// 存档地
                 resultMap.put("amArchaiveBo",amArchiveBO);
             }
         }
@@ -475,12 +475,14 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         AmEmpTask amEmpTask = business.selectById(list.get(0).getEmpTaskId());
         // 调用雇员中心 签收
         String message = iAmEmpMaterialService.receiveMaterial(amEmpTask.getHireTaskId(),1,null);
-//        if("签收成功".equals(message)){
-//            amEmpTask.setTaskStatus(2);
-//            business.insertOrUpdate(amEmpTask);
-//            boolean result =  iAmEmpMaterialService.updateBatchById(list);
-//        }
         Map<String,Object> map = new HashMap<>();
+        if("签收成功".equals(message)){
+            amEmpTask.setTaskStatus(2);
+            business.insertOrUpdate(amEmpTask);
+            boolean result =  iAmEmpMaterialService.updateBatchById(list);
+            List<AmEmpMaterialOperationLogBO> logList = iAmEmpMaterialService.queryAmEmpMaterialOperationLogList(list.get(0).getEmpTaskId());
+            map.put("logList",logList);
+        }
         map.put("result",message);
         map.put("data",list);
         return JsonResultKit.of(map);
@@ -508,10 +510,12 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         AmEmpTask amEmpTask = business.selectById(list.get(0).getEmpTaskId());
         // 调用雇员中心 批退
         String message = iAmEmpMaterialService.receiveMaterial(amEmpTask.getHireTaskId(),2,list.get(0).getRejectReason());
+        Map<String,Object> map = new HashMap<>();
         if("批退成功".equals(message)){
             boolean result =  iAmEmpMaterialService.updateBatchById(list);
+            List<AmEmpMaterialOperationLogBO> logList = iAmEmpMaterialService.queryAmEmpMaterialOperationLogList(list.get(0).getEmpTaskId());
+            map.put("logList",logList);
         }
-        Map<String,Object> map = new HashMap<>();
         map.put("result",message);
         map.put("data",list);
         return JsonResultKit.of(map);
@@ -579,7 +583,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         try {
 
-            logApiUtil.error(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent("用工录用名册打印 start"));
+            logApiUtil.info(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent("用工录用名册打印 start"));
 
             // 中智大库
             List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,12);
@@ -599,7 +603,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
             logApiUtil.error(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent("用工录用名册打印 start red temp"));
 
-            WordUtils.exportMillCertificateWord(request,response,map,"用工录用名册","AM_USE_TEMP.ftl");
+            WordUtils.exportMillCertificateWord(response,map,"用工录用名册","AM_USE_TEMP.ftl");
 
         } catch (Exception e) {
             logApiUtil.error(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent(e.getMessage()));
@@ -631,7 +635,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         map.put("list3",dtoList3);
 
         try {
-            WordUtils.exportMillCertificateWord(request,response,map,"派遣录用名册","AM_DISPATCH_TEMP.ftl");
+            WordUtils.exportMillCertificateWord(response,map,"派遣录用名册","AM_DISPATCH_TEMP.ftl");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -662,7 +666,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
 
         try {
-            WordUtils.exportMillCertificateWord(request,response,map,"外来独立","AM_ALONE_TEMP.ftl");
+            WordUtils.exportMillCertificateWord(response,map,"外来独立","AM_ALONE_TEMP.ftl");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -692,7 +696,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         map.put("list3",dtoList3);
 
         try {
-            WordUtils.exportMillCertificateWord(request,response,map,"外来派遣","AM_EXT_DISPATCH_TEMP.ftl");
+            WordUtils.exportMillCertificateWord(response,map,"外来派遣","AM_EXT_DISPATCH_TEMP.ftl");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -709,9 +713,8 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         map.put("list",new ArrayList<>());
 
         try {
-            WordUtils.exportMillCertificateWord(request,response,map,"采集表汇总表","采集表汇总表模板.ftl");
+            WordUtils.exportMillCertificateWord(response,map,"采集表汇总表","采集表汇总表模板.ftl");
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
