@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -140,8 +139,11 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             if(1==status){
                 amEmpTaskCountBO.setNoSign(amEmpTaskBO.getCount());
                 num = num + amEmpTaskBO.getCount();
-            }else if(2==status){
-                amEmpTaskCountBO.setFinished(amEmpTaskBO.getCount());
+            }else if(10==status){
+                amEmpTaskCountBO.setNoRecord(amEmpTaskBO.getCount());
+                num = num + amEmpTaskBO.getCount();
+            }else if(11==status){
+                amEmpTaskCountBO.setBorrowKey(amEmpTaskBO.getCount());
                 num = num + amEmpTaskBO.getCount();
             }else if(3==status){
                 amEmpTaskCountBO.setEmploySuccess(amEmpTaskBO.getCount());
@@ -473,11 +475,11 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         AmEmpTask amEmpTask = business.selectById(list.get(0).getEmpTaskId());
         // 调用雇员中心 签收
         String message = iAmEmpMaterialService.receiveMaterial(amEmpTask.getHireTaskId(),1,null);
-        if("签收成功".equals(message)){
-            amEmpTask.setTaskStatus(2);
-            business.insertOrUpdate(amEmpTask);
-            boolean result =  iAmEmpMaterialService.updateBatchById(list);
-        }
+//        if("签收成功".equals(message)){
+//            amEmpTask.setTaskStatus(2);
+//            business.insertOrUpdate(amEmpTask);
+//            boolean result =  iAmEmpMaterialService.updateBatchById(list);
+//        }
         Map<String,Object> map = new HashMap<>();
         map.put("result",message);
         map.put("data",list);

@@ -124,8 +124,8 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             if(1==status){
                 amEmpTaskCountBO.setNoSign(amEmploymentBO.getCount());
                 num = num + amEmploymentBO.getCount();
-            }else if(2==status){
-                amEmpTaskCountBO.setFinished(amEmploymentBO.getCount());
+            }else if(10==status){
+                amEmpTaskCountBO.setNoRecord(amEmploymentBO.getCount());
                 num = num + amEmploymentBO.getCount();
             }else if(3==status){
                 amEmpTaskCountBO.setEmploySuccess(amEmploymentBO.getCount());
