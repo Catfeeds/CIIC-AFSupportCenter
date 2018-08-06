@@ -22,6 +22,8 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -93,6 +95,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Autowired
     private IAmArchiveAdvanceService amArchiveAdvanceService;
+
+    @Autowired
+    private LogApiUtil logApiUtil;
 
 
 
@@ -182,6 +187,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
         if(StringUtil.isEmpty(taskMsgDTO.getVariables().get("empCompanyId")))
         {
+            LogMessage logMessage = LogMessage.create().setTitle("用工任务单").setContent("empCompanyId is null ...");
+            logApiUtil.info(logMessage);
             logger.info("empCompanyId is null ...");
             return false;
         }
@@ -291,6 +298,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amEmpTask.setOutReason(ReasonUtil.getReasonOut(employeeCompany.getOutReason().toString()));
             }else{
                 if(employeeCompany!=null){
+                    LogMessage logMessage = LogMessage.create().setTitle("退工任务单").setContent(JSON.toJSONString(employeeCompany));
+                    logApiUtil.info(logMessage);
                     logger.info(JSON.toJSONString(employeeCompany));
                 }
                 logger.info("outReason is null "+"  MissionId is "+taskMsgDTO.getMissionId());
@@ -773,6 +782,12 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     @Override
     public Map<String, Object>  batchCheck(EmployeeBatchBO employeeBatchBO) {
         Map<String,Object> resultMap = new HashMap<>();
+        List<AmEmpTaskBO> materialList = baseMapper.queryIsReject(employeeBatchBO);
+        if(null!=materialList&&materialList.size()>0)
+        {
+            resultMap.put("empMaterial",materialList.size());
+            return  resultMap;
+        }
         List<AmEmpTaskBO> amEmpTaskBOList = baseMapper.queryIsFinish(employeeBatchBO);
         if(null!=amEmpTaskBOList&&amEmpTaskBOList.size()>0)
         {
@@ -897,6 +912,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
             amEmpCustomService.insert(amEmpCustom);
         } catch (Exception e) {
+            LogMessage logMessage = LogMessage.create().setTitle("用工任务单").setContent(e.getMessage());
+            logApiUtil.info(logMessage);
             logger.error(e.getMessage(),e);
         }
 
@@ -997,6 +1014,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
             amEmpEmployeeService.insert(amEmpEmployee);
         } catch (Exception e) {
+            LogMessage logMessage = LogMessage.create().setTitle("用工任务单").setContent(e.getMessage());
+            logApiUtil.info(logMessage);
             logger.error(e.getMessage(),e);
         }
 
