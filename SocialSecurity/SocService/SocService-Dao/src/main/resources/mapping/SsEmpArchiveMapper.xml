@@ -139,7 +139,9 @@
         <if test="serviceCenterValue != null">
             AND sac.service_center_id = #{serviceCenterValue}
         </if>
-
+        <if test="ssSerial != null">
+            AND sea.ss_serial = #{ssSerial}
+        </if>
     </sql>
     <!--雇员查询-->
     <select id="queryEmployee" resultMap="BaseResultMapDTO">

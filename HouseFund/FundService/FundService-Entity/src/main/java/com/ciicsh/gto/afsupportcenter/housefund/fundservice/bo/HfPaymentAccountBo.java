@@ -75,4 +75,8 @@ public class HfPaymentAccountBo extends HfPaymentAccount {
     // 公司名称
     private String title;
     private Long paymentId;
+    //服务中心
+    private int serviceCenterValue;
+    //客服经理
+    private String leaderShipName;
 }

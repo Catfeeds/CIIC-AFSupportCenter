@@ -66,6 +66,18 @@ public class SsEmpArchiveBO extends SsEmpArchive {
 
     private Integer archiveTaskStatus;
 
+    private String ssSerial;
+
+    @Override
+    public String getSsSerial() {
+        return ssSerial;
+    }
+
+    @Override
+    public void setSsSerial(String ssSerial) {
+        this.ssSerial = ssSerial;
+    }
+
     @Override
     public Integer getArchiveTaskStatus() {
         return archiveTaskStatus;

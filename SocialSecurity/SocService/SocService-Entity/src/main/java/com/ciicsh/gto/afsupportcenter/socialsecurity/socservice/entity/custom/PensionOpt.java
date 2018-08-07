@@ -15,12 +15,12 @@ import java.math.BigDecimal;
 public class PensionOpt{
     @Excel(name = "单位缴费额", orderNum = "1")
     private BigDecimal comAccount;
-    @Excel(name = "个人缴费额", orderNum = "2")
+    @Excel(name = "个人缴费额", orderNum = "2",type=10)
     private BigDecimal empAccount;
-    @Excel(name = "单位补缴", orderNum = "3")
+    @Excel(name = "单位补缴", orderNum = "3",type=10)
     private BigDecimal comRepayAccount;
-    @Excel(name = "个人补缴", orderNum = "4")
+    @Excel(name = "个人补缴", orderNum = "4",type=10)
     private BigDecimal empRepayAccount;
-    @Excel(name = "一次性支付", orderNum = "5")
+    @Excel(name = "一次性支付", orderNum = "5",type=10)
     private BigDecimal oncePaymentAccount;
 }
