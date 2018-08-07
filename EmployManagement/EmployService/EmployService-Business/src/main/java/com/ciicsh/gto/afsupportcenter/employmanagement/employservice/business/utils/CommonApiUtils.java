@@ -5,6 +5,8 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.u
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeQueryDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfEmployeeCompanyProxy;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.SMUserInfoProxy;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMUserInfoDTO;
 import com.ciicsh.gto.employeecenter.apiservice.api.dto.*;
@@ -46,6 +48,9 @@ public class CommonApiUtils {
     @Autowired
     private SMUserInfoProxy smUserInfoProxy;
 
+    @Autowired
+    private LogApiUtil logApiUtil;
+
 
     public  JsonResult<EmployeeInfoDTO> getEmployeeInfo(@RequestBody EmployeeQueryDTO var1){
        return employeeInfoProxy.getEmployeeInfo(var1);
@@ -74,6 +79,8 @@ public class CommonApiUtils {
             }
             resDto = afEmployeeCompanyProxy.getEmployeeCompany(taskRequestDTO);
         } catch (Exception e) {
+            LogMessage logMessage = LogMessage.create().setTitle("客户中心接口").setContent(e.getMessage());
+            logApiUtil.info(logMessage);
             logger.error("call kehuzhongxin jiekou error!");
             logger.error(e.getMessage(),e);
         }

@@ -69,4 +69,6 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
 
     List<AmEmpDispatchExportPageDTO> queryExportOptDispatch(AmEmpTaskBO amEmpTaskBO,Integer pageSize);
 
+    List<AmEmpDispatchExportPageDTO> queryExportOptCollect(AmEmpTaskBO amEmpTaskBO);
+
 }
