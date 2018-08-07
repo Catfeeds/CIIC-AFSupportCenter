@@ -2,13 +2,16 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.controll
 
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.*;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmployment;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmResign;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.resignSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
+import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -54,6 +57,9 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
     @Autowired
     private  IAmEmpCustomService amEmpCustomService;
+
+    @Autowired
+    private CommonApiUtils employeeInfoProxy;
 
 
 
@@ -458,6 +464,31 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
     public JsonResult<AmResignBO> saveAmResignBatch(AmResignBO bo) {
 
         Map<String,Object>  param = business.batchSaveResign(bo);
+        List<AmEmpTask> amEmpTaskList = (List<AmEmpTask>)param.get("taskList");
+        Boolean result = (Boolean) param.get("result");
+        if(null!=result&&result)
+        {
+            for(AmEmpTask amEmpTask:amEmpTaskList)
+            {
+                Map<String,Object> variables = new HashMap<>();
+                variables.put("status", true);
+                variables.put("remark",ReasonUtil.getTgfk(bo.getResignFeedback()));
+                String userName = "system";
+                try {
+                    userName = UserContext.getUser().getDisplayName();
+                } catch (Exception e) {
+
+                }
+                variables.put("assignee",userName);
+                variables.put("fire_material",true);
+                variables.put("empTaskId",amEmpTask.getEmpTaskId());
+                try {
+                    TaskCommonUtils.completeTask(amEmpTask.getTaskId(),employeeInfoProxy,variables);
+                } catch (Exception e) {
+
+                }
+            }
+        }
         if(param.get("message")!=null){
             bo.setRemark(param.get("message").toString());
         }
