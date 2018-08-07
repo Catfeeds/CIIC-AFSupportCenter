@@ -245,9 +245,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             //如果是翻盘
             if("emp_company_change".equals(taskMsgDTO.getProcessDefinitionKey()))
             {
-                amEmpTask.setChange("是");
+                amEmpTask.setChangeCompany("是");
             }else{
-                amEmpTask.setChange("否");
+                amEmpTask.setChangeCompany("否");
             }
 
 
@@ -339,9 +339,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             //如果是翻盘
             if("emp_company_change".equals(taskMsgDTO.getProcessDefinitionKey()))
             {
-                amEmpTask.setChange("是");
+                amEmpTask.setChangeCompany("是");
             }else{
-                amEmpTask.setChange("否");
+                amEmpTask.setChangeCompany("否");
             }
             if(employeeCompany!=null&&employeeCompany.getHireUnit()!=null)
             {
@@ -763,7 +763,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         }
         //翻盘不需要材料签收
         List<Long> taskIds  = employeeBatchBO.getEmpTaskIds();
-        taskIds.removeAll(tempChangeList);
+        if(tempChangeList.size()>0){
+            taskIds.removeAll(tempChangeList);
+        }
 
         AmEmpMaterialBO amEmpMaterialBO = new AmEmpMaterialBO();
         amEmpMaterialBO.setEmpTaskIdList(taskIds);

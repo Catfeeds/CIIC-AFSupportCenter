@@ -109,7 +109,7 @@ public class AmEmploymentBO extends AmEmployment {
 
     private Integer taskCategoryResign;
 
-    private String change;
+    private String changeCompany;
     /**
      * 档案预增表主键
      */
