@@ -140,8 +140,8 @@ public class AmEmpTask implements Serializable {
 	/**
 	 * 是否翻盘
 	 */
-	@TableField("change")
-	private  String  change;
+	@TableField("change_company")
+	private  String  changeCompany;
 	/**
 	 * 是否可用
 	 */
@@ -204,15 +204,15 @@ public class AmEmpTask implements Serializable {
 		isFinish = finish;
 	}
 
-	public String getChange() {
-		return change;
-	}
+    public String getChangeCompany() {
+        return changeCompany;
+    }
 
-	public void setChange(String change) {
-		this.change = change;
-	}
+    public void setChangeCompany(String changeCompany) {
+        this.changeCompany = changeCompany;
+    }
 
-	public String getOutReasonCode() {
+    public String getOutReasonCode() {
 		return outReasonCode;
 	}
 

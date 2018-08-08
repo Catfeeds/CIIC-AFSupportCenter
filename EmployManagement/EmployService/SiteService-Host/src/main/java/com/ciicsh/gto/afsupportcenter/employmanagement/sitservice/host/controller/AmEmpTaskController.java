@@ -382,7 +382,11 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
                     }
                     variables.put("assignee",userName);
-                    TaskCommonUtils.completeTask(taskId,employeeInfoProxy,variables);
+                    try {
+                        TaskCommonUtils.completeTask(taskId,employeeInfoProxy,variables);
+                    } catch (Exception e) {
+                        logApiUtil.error(LogMessage.create().setTitle("EmployMaterial").setContent(e.getMessage()));
+                    }
                 }
             }
         }
@@ -770,7 +774,11 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                 List<String> taskIdList = (List<String>)map.get("taskIdList");
                 for(String taskId:taskIdList)
                 {
-                    TaskCommonUtils.completeTask(taskId,employeeInfoProxy,variables);
+                    try {
+                        TaskCommonUtils.completeTask(taskId,employeeInfoProxy,variables);
+                    } catch (Exception e) {
+                        logApiUtil.error(LogMessage.create().setTitle("EmployMaterial").setContent(e.getMessage()));
+                    }
                 }
                 amArchiveBO.setEnd(true);
             }

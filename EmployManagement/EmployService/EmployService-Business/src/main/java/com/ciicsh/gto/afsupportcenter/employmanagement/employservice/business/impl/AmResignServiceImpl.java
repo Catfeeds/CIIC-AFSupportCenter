@@ -210,6 +210,7 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
     }
 
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public Map<String, Object> batchSaveResign(AmResignBO bo) {
         Map<String, Object> result = new HashMap<>();
         String userId = "sys";
@@ -277,35 +278,21 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
                 taskService.insertOrUpdate(amEmpTask);
                 amEmpTaskList.add(amEmpTask);
                 entity.setIsFinish(isFinish);
+                entity.setEmpTaskId(amEmpTask.getEmpTaskId());
             }
             //
             entity.setEmploymentId(resultEmployList.get(0).getEmploymentId());
+            entity.setEmployeeId(temp.getEmployeeId());
+            entity.setCompanyId(temp.getCompanyId());
             amResignList.add(entity);
             bo.setIsFinish(isFinish);
         }
 
         Boolean isInsert = super.insertOrUpdateBatch(amResignList);
-        if(isFinish==1&&isInsert)
-        {
-           for(AmEmpTask amEmpTask:amEmpTaskList)
-           {
-               Map<String,Object> variables = new HashMap<>();
-               variables.put("status", true);
-               variables.put("remark",ReasonUtil.getTgfk(bo.getResignFeedback()));
-               String userName = "system";
-               try {
-                   userName = UserContext.getUser().getDisplayName();
-               } catch (Exception e) {
+        Boolean returnResult = (isFinish==1&&isInsert);
 
-               }
-               variables.put("assignee",userName);
-               variables.put("fire_material",true);
-               variables.put("empTaskId",amEmpTask.getEmpTaskId());
-               TaskCommonUtils.completeTask(amEmpTask.getTaskId(),employeeInfoProxy,variables);
-           }
-        }
-
-        result.put("result",isInsert);
+        result.put("result",returnResult);
+        result.put("taskList",amEmpTaskList);
         return  result;
     }
 
