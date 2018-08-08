@@ -67,7 +67,7 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
         AmArchiveAdvance po = new AmArchiveAdvance();
         BeanUtils.copyProperties(amArchiveAdvanceBO, po);
         po.setStatus(0);
-        po.setModifiedBy(UserContext.getUserName());
+        po.setModifiedBy(UserContext.getUser().getDisplayName());
         po.setModifiedTime(new Date());
         Integer result = baseMapper.updateById(po);
         return result > 0;
@@ -83,15 +83,15 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
         po.setStatus(1);
         Date nowTime = new Date();
         if(amArchiveAdvanceBO.getArchiveAdvanceId() == null || amArchiveAdvanceBO.getArchiveAdvanceId() == 0){
-            po.setCreatedBy(UserContext.getUserName());
+            po.setCreatedBy(UserContext.getUser().getDisplayName());
             po.setCreatedTime(nowTime);
         }
-        po.setModifiedBy(UserContext.getUserName());
+        po.setModifiedBy(UserContext.getUser().getDisplayName());
         po.setModifiedTime(nowTime);
         //boolean result = this.insertOrUpdate(po);
         po.setIsActive(1);
         po.setCreatedTime(nowTime);
-        po.setCreatedBy(UserContext.getUserName());
+        po.setCreatedBy(UserContext.getUser().getDisplayName());
         boolean result = this.insertOrUpdateAllColumn(po);
         if (result) {
             // 修改预留档案编号 seq
@@ -193,7 +193,7 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
         AmArchiveAdvance po = new AmArchiveAdvance();
         BeanUtils.copyProperties(amArchiveAdvanceBO, po);
         po.setStatus(2);
-        po.setModifiedBy(UserContext.getUserName());
+        po.setModifiedBy(UserContext.getUser().getDisplayName());
         po.setModifiedTime(new Date());
         Integer result = baseMapper.updateById(po);
         return result > 0;
