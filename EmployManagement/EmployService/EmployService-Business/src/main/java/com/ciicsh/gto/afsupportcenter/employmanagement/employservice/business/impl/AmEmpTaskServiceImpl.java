@@ -16,6 +16,8 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.ut
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.employSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmEmpTaskMapper;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpCollectExportDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpCollectExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpDispatchExportDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpDispatchExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.*;
@@ -1366,13 +1368,179 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     }
 
     @Override
-    public List<AmEmpDispatchExportPageDTO> queryExportOptCollect(AmEmpTaskBO amEmpTaskBO) {
+    public List<AmEmpCollectExportPageDTO> queryExportOptCollect(AmEmpTaskBO amEmpTaskBO, Integer employCode) {
 
+        List<AmEmpCollectExportPageDTO> result = new ArrayList<>();
 
+        List<String> param = new ArrayList<String>();
+        List<String> orderParam = new ArrayList<String>();
+        if (!StringUtil.isEmpty(amEmpTaskBO.getParams())) {
+            String arr[] = amEmpTaskBO.getParams().split(",");
+            for (int i = 0; i < arr.length; i++) {
+                if(!StringUtil.isEmpty(arr[i]))
+                {
+                    if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
+                        orderParam.add(arr[i]);
+                    }else {
+                        param.add(arr[i]);
+                    }
+                }
 
+            }
+            if(amEmpTaskBO.getParams().indexOf("material_name")!=-1){
+                amEmpTaskBO.setMaterial("1");
+            }
+        }
 
-        return null;
+        // 中智大库 还是外包
+        param.add("a.employ_code=" + employCode);
+        amEmpTaskBO.setParam(param);
+        amEmpTaskBO.setOrderParam(orderParam);
+
+        if (null != amEmpTaskBO.getTaskStatus() && amEmpTaskBO.getTaskStatus() == 0) {
+            amEmpTaskBO.setTaskStatus(null);
+        }
+        PageInfo pageInfo  = new PageInfo();
+        pageInfo.setPageSize(30);
+        List<AmEmpTaskBO> list = baseMapper.taskCount(amEmpTaskBO);
+        Integer count = 0;
+        for (AmEmpTaskBO bo:list) {
+            count += bo.getCount();
+        }
+        Integer pageSize = (count-1)/30 +1;
+        for (int i = 1;i<=pageSize;i++){
+            pageInfo.setPageNum(i);
+            PageRows<AmEmpTaskBO> pageRows = null;
+            if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
+                pageRows =  PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTaskOther(amEmpTaskBO));
+            }else{
+                pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
+            }
+            AmEmpCollectExportPageDTO pageDTO = new AmEmpCollectExportPageDTO();
+            if(employCode == 2){
+                pageDTO.setCompanyName("中智上海经济技术合作公司");
+            }
+            if(employCode == 3){
+                pageDTO.setCompanyName("上海中智项目外包咨询服务有限公司");
+            }
+            List<AmEmpTaskBO> boList = pageRows.getRows();
+            List<AmEmpCollectExportDTO> list1 = new ArrayList<>();
+            List<AmEmpCollectExportDTO> list2 = new ArrayList<>();
+            List<AmEmpCollectExportDTO> list3 = new ArrayList<>();
+             for (int n = 0;n<boList.size();n++){
+                AmEmpCollectExportDTO collectDto = new AmEmpCollectExportDTO();
+                collectDto.setId((n+1));
+                 collectDto.setIdNum(boList.get(n).getIdNum());
+                 collectDto.setEmployeeName(boList.get(n).getEmployeeName());
+                if(n<=9){
+                    list1.add(collectDto);
+                }else if(n>9 && n<=19){
+                    list2.add(collectDto);
+                }else if(n>19){
+                    list3.add(collectDto);
+                }
+            }
+            pageDTO.setList1(list1);
+            pageDTO.setList2(list2);
+            pageDTO.setList3(list3);
+            result.add(pageDTO);
+        }
+        return result;
     }
+
+    @Override
+    public List<AmEmpCollectExportPageDTO> queryExportOptCollect(AmEmpTaskBO amEmpTaskBO) {
+
+        List<AmEmpCollectExportPageDTO> result = new ArrayList<>();
+
+        List<String> param = new ArrayList<String>();
+        List<String> orderParam = new ArrayList<String>();
+        if (!StringUtil.isEmpty(amEmpTaskBO.getParams())) {
+            String arr[] = amEmpTaskBO.getParams().split(",");
+            for (int i = 0; i < arr.length; i++) {
+                if(!StringUtil.isEmpty(arr[i]))
+                {
+                    if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
+                        orderParam.add(arr[i]);
+                    }else {
+                        param.add(arr[i]);
+                    }
+                }
+
+            }
+            if(amEmpTaskBO.getParams().indexOf("material_name")!=-1){
+                amEmpTaskBO.setMaterial("1");
+            }
+        }
+
+        if (null != amEmpTaskBO.getTaskStatus() && amEmpTaskBO.getTaskStatus() == 0) {
+            amEmpTaskBO.setTaskStatus(null);
+        }
+
+        // 独立户
+        param.add("a.employ_code=" + 1);
+        amEmpTaskBO.setOrderParam(orderParam);
+        amEmpTaskBO.setParam(param);
+        List<String> companys = baseMapper.queryAmEmpTaskCompanys(amEmpTaskBO);
+        for (String company:companys) {
+            param.add("a.company_id='"+company+"'");
+            amEmpTaskBO.setParam(param);
+            PageInfo pageInfo  = new PageInfo();
+            pageInfo.setPageSize(30);
+            List<AmEmpTaskBO> list = baseMapper.taskCount(amEmpTaskBO);
+            Integer count = 0;
+            for (AmEmpTaskBO bo:list) {
+                count += bo.getCount();
+            }
+            Integer pageSize = (count-1)/30 +1;
+            for (int i = 1;i<=pageSize;i++){
+                pageInfo.setPageNum(i);
+                PageRows<AmEmpTaskBO> pageRows = null;
+                if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
+                    pageRows =  PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTaskOther(amEmpTaskBO));
+                }else{
+                    pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
+                }
+                AmEmpCollectExportPageDTO pageDTO = new AmEmpCollectExportPageDTO();
+                // 独立户公司title信息
+                com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(company);
+                pageDTO.setCompanyName(companyDto.getObject().getCompanyName());
+//                pageDTO.setSsAccount(); 社会保险登记码
+                List<AmEmpTaskBO> boList = pageRows.getRows();
+                List<AmEmpCollectExportDTO> list1 = new ArrayList<>();
+                List<AmEmpCollectExportDTO> list2 = new ArrayList<>();
+                List<AmEmpCollectExportDTO> list3 = new ArrayList<>();
+                for (int n = 0;n<boList.size();n++){
+                    AmEmpCollectExportDTO collectDto = new AmEmpCollectExportDTO();
+                    collectDto.setId((n+1));
+                    collectDto.setEmployeeName(boList.get(n).getEmployeeName());
+                    collectDto.setIdNum(boList.get(n).getIdNum());
+                    if(n<=9){
+                        list1.add(collectDto);
+                    }else if(n>9 && n<=19){
+                        list2.add(collectDto);
+                    }else if(n>19){
+                        list3.add(collectDto);
+                    }
+                }
+                pageDTO.setList1(list1);
+                pageDTO.setList2(list2);
+                pageDTO.setList3(list3);
+                result.add(pageDTO);
+            }
+            param.remove(param.size()-1);
+        }
+
+
+
+
+
+
+
+        return result;
+    }
+
+
 }
 
 

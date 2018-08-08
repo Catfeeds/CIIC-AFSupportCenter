@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.ut
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.employSearchExportOpt;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpCollectExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpDispatchExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.util.WordUtils;
@@ -580,7 +581,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @RequestMapping("/employSearchExportOptUseWord")
     public @ResponseBody
-    void employSearchExportOptUseWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response, HttpServletRequest request){
+    void employSearchExportOptUseWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response){
 
         try {
 
@@ -602,7 +603,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             map.put("list2",dtoList2);
             map.put("list3",dtoList3);
 
-            logApiUtil.error(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent("用工录用名册打印 start red temp"));
 
             WordUtils.exportMillCertificateWord(response,map,"用工录用名册","AM_USE_TEMP.ftl");
 
@@ -617,7 +617,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @RequestMapping("/employSearchExportOptDispatchWord")
     public @ResponseBody
-    void employSearchExportOptDispatchWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response, HttpServletRequest request){
+    void employSearchExportOptDispatchWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response){
 
         // 中智大库
         List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,9);
@@ -647,7 +647,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @RequestMapping("/employSearchExportOptAlonehWord")
     public @ResponseBody
-    void employSearchExportOptAlonehWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response, HttpServletRequest request){
+    void employSearchExportOptAlonehWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response){
 
         // 中智大库
         List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,10);
@@ -678,7 +678,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @RequestMapping("/employSearchExportOptExtDispatchWord")
     public @ResponseBody
-    void employSearchExportOptExtDispatchWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response, HttpServletRequest request){
+    void employSearchExportOptExtDispatchWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response){
 
         // 中智大库
         List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,9);
@@ -708,13 +708,25 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @RequestMapping("/employSearchExportOptExtCollectWord")
     public @ResponseBody
-    void employSearchExportOptExtCollectWord(HttpServletResponse response, HttpServletRequest request){
-        Map<String, Object> map = new HashMap<String, Object>();
+    void employSearchExportOptExtCollectWord(HttpServletResponse response, AmEmpTaskBO amEmpTaskBO){
+        // 中智大库
+        List<AmEmpCollectExportPageDTO> dtoList = business.queryExportOptCollect(amEmpTaskBO,2);
 
-        map.put("list",new ArrayList<>());
+        // 外包
+        List<AmEmpCollectExportPageDTO> dtoList2 = business.queryExportOptCollect(amEmpTaskBO,3);
+
+        //独立户
+        List<AmEmpCollectExportPageDTO> dtoList3 = business.queryExportOptCollect(amEmpTaskBO);
+
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
 
         try {
-            WordUtils.exportMillCertificateWord(response,map,"采集表汇总表","采集表汇总表模板.ftl");
+            WordUtils.exportMillCertificateWord(response,map,"采集表汇总表","AM_COLLECT_TEMP.ftl");
         } catch (Exception e) {
             e.printStackTrace();
         }
