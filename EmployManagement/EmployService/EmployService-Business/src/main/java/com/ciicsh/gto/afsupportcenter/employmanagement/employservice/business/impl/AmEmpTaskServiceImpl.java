@@ -28,9 +28,8 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMUserInfoDTO;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoDTO;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.EmployeeHireInfoQueryDTO;
-import com.ciicsh.gto.employeecenter.apiservice.api.dto.JsonResult;
+import com.ciicsh.gto.employeecenter.apiservice.api.dto.*;
+import com.ciicsh.gto.employeecenter.apiservice.api.proxy.SheetInfoProxy;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.CompanyTypeDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyProxy;
@@ -98,6 +97,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Autowired
     private LogApiUtil logApiUtil;
+
+    @Autowired
+    private SheetInfoProxy sheetInfoProxy;
 
 
 
@@ -578,7 +580,6 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 entity.setDocNum(docNumInt.toString());
             }
 
-
             entity.setEmploymentId(temp.getEmploymentId());
             entity.setEmployeeId(temp.getEmployeeId());
             entity.setCompanyId(temp.getCompanyId());
@@ -598,9 +599,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 ++i;
             }
 
-
             entity.setModifiedTime(now);
-
             entity.setModifiedBy(ReasonUtil.getUserId());
             entity.setIsActive(1);
 
@@ -685,7 +684,44 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public boolean batchSaveEmployment(EmployeeBatchBO employeeBatchBO) {
+    public Map<String,Object> batchSaveEmployment(EmployeeBatchBO employeeBatchBO) {
+        Map<String,Object> map = new HashMap<>();
+        List<AmEmpTaskBO> amEmpTaskMaterialList = baseMapper.queryIsMaterial(employeeBatchBO);
+        List<HireMaterialTransferRecordDTO> hireMaterialTransferRecordDTOList = new ArrayList<>();
+        Map<String,String> tempMap = new HashMap<>();
+        for(AmEmpTaskBO taskBO:amEmpTaskMaterialList)
+        {
+            if(!StringUtil.isEmpty(taskBO.getHireTaskId()))
+            {
+                tempMap.put(taskBO.getHireTaskId(),taskBO.getEmployeeId());
+                HireMaterialTransferRecordDTO dto = new HireMaterialTransferRecordDTO();
+                dto.setTaskId(taskBO.getHireTaskId());
+                dto.setOperation(1);
+                dto.setRemark("");
+                dto.setOperator(UserContext.getUser().getDisplayName());
+                hireMaterialTransferRecordDTOList.add(dto);
+            }
+        }
+        HireMaterialTransferRecordBatchDTO hireMaterialTransferRecordBatchDTO = new HireMaterialTransferRecordBatchDTO();
+        hireMaterialTransferRecordBatchDTO.setHireMaterialTransferRecordDTOList(hireMaterialTransferRecordDTOList);
+
+        JsonResult jsonResult = null;
+        try {
+            jsonResult = sheetInfoProxy.feedbackHireMaterialOperationInfoList(hireMaterialTransferRecordBatchDTO);
+        } catch (Exception e) {
+            LogMessage logMessage = LogMessage.create().setTitle("employee_sheetInfoProxy").setContent(e.getMessage());
+            logApiUtil.error(logMessage);
+        }
+
+        if(jsonResult==null){
+           map.put("message","雇员中心接口异常");
+           return map;
+        }else{
+            if(jsonResult.getCode()==1){
+                map.put("message",jsonResult.getMessage());
+                return map;
+            }
+        }
 
         Map<String,Object> param = new HashMap<>();
         List<AmRemark> amRemarkList = new ArrayList<>();
@@ -745,7 +781,6 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amRemarkList.add(amRemark);
             }
 
-
             list.add(entity);
         }
 
@@ -778,7 +813,10 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
         boolean b = amEmploymentService.insertOrUpdateAllColumnBatch(list);
 
-        return b;
+        map.put("result",b);
+
+
+        return map;
     }
 
     @Override
@@ -789,6 +827,49 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         {
             resultMap.put("empMaterial",materialList.size());
             return  resultMap;
+        }
+        List<AmEmpTaskBO> amEmpTaskMaterialList = baseMapper.queryIsMaterial(employeeBatchBO);
+        List<HireMaterialTransferRecordDTO> hireMaterialTransferRecordDTOList = new ArrayList<>();
+        Map<String,String> tempMap = new HashMap<>();
+        for(AmEmpTaskBO taskBO:amEmpTaskMaterialList)
+        {
+            if(!StringUtil.isEmpty(taskBO.getHireTaskId()))
+            {
+                tempMap.put(taskBO.getHireTaskId(),taskBO.getEmployeeId());
+                HireMaterialTransferRecordDTO dto = new HireMaterialTransferRecordDTO();
+                dto.setTaskId(taskBO.getHireTaskId());
+                dto.setOperation(1);
+                dto.setRemark("");
+                dto.setOperator(UserContext.getUser().getDisplayName());
+                hireMaterialTransferRecordDTOList.add(dto);
+            }
+        }
+        HireMaterialTransferRecordBatchDTO hireMaterialTransferRecordBatchDTO = new HireMaterialTransferRecordBatchDTO();
+        hireMaterialTransferRecordBatchDTO.setHireMaterialTransferRecordDTOList(hireMaterialTransferRecordDTOList);
+        JsonResult<List<FeedbackMessageDTO>> jsonResult = null;
+        try {
+            jsonResult = sheetInfoProxy.validateHireMaterialOperation(hireMaterialTransferRecordBatchDTO);
+        } catch (Exception e) {
+            LogMessage logMessage = LogMessage.create().setTitle("employee_sheetInfoProxy").setContent(e.getMessage());
+            logApiUtil.info(logMessage);
+        }
+        if(null==jsonResult)
+        {
+            resultMap.put("isMaterial","雇员中心接口调用异常...");
+            return  resultMap;
+        }else{
+            List<FeedbackMessageDTO> data = jsonResult.getData();
+            if(null!=data&&data.size()>0)
+            {
+                String empId = tempMap.get(data.get(0).getTaskId())==null?"":tempMap.get(data.get(0).getTaskId());
+                StringBuffer buf = new StringBuffer();
+                buf.append("雇员编号是");
+                buf.append(empId);
+                buf.append(",原因是");
+                buf.append(data.get(0).getMessage());
+                resultMap.put("isMaterial",buf.toString());
+                return  resultMap;
+            }
         }
         List<AmEmpTaskBO> amEmpTaskBOList = baseMapper.queryIsFinish(employeeBatchBO);
         if(null!=amEmpTaskBOList&&amEmpTaskBOList.size()>0)
