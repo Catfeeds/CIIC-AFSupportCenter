@@ -788,9 +788,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     }
 
     @RequestMapping("/batchSaveEmployment")
-    public JsonResult<Boolean> batchSaveEmployment(EmployeeBatchBO employeeBatchBO){
-        Boolean b = business.batchSaveEmployment(employeeBatchBO);
-        return  JsonResultKit.of(b);
+    public JsonResult batchSaveEmployment(EmployeeBatchBO employeeBatchBO){
+        Map<String,Object> map = business.batchSaveEmployment(employeeBatchBO);
+        return  JsonResultKit.of(map);
     }
 
     @RequestMapping("/batchCheck")
