@@ -131,7 +131,7 @@ public class AmResignBO extends AmResign {
 
     private String archiveDirection;
 
-    private String change;
+    private String changeCompany;
 
     private String docType;
 

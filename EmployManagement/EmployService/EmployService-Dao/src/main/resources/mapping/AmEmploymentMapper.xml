@@ -92,7 +92,7 @@
         w.out_date,
         w.emp_task_id as empTaskResignId,
         a.emp_task_id,
-        a.change,
+        a.change_company,
         a.job,
         b.employment_id,
         b.employee_id,
@@ -127,7 +127,7 @@
         h.title,
         h.service_center,/*服务中心 */
         h.leader_ship_name, /*客服经理*/
-        cs.archive_special
+        CONCAT(cs.employ_special,cs.refuse_special,cs.archive_special) as archive_special
         FROM
         am_employment b
         LEFT JOIN am_emp_task a on a.emp_task_id = b.emp_task_id
@@ -279,7 +279,7 @@
         w.out_date,
         w.emp_task_id as empTaskResignId,
         a.emp_task_id,
-        a.change,
+        a.change_company,
         b.employment_id,
         b.employee_id,
         b.company_id,
@@ -347,9 +347,8 @@
         FROM
         am_employment a
         LEFT JOIN am_emp_employee b ON a.emp_task_id = b.emp_task_id
-        LEFT JOIN am_archive_advance c on c.employee_idcard_no = b.id_num and c.employee_name= b.employee_name
+        LEFT JOIN am_archive_advance c on c.employee_idcard_no = b.id_num and c.employee_name= b.employee_name and  c.status = 1
         <where>
-            c.status = 1  and
             <foreach collection="empTaskIds" item="item" open="a.emp_task_id IN (" separator="," close=")">
                 #{item}
             </foreach>

@@ -20,6 +20,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
+import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
@@ -309,7 +310,10 @@ public class SsEmpTaskController extends BasicController<SsEmpTaskService> {
             p.setModifiedTime(LocalDateTime.now());
             p.setModifiedBy(UserContext.getUserId());
             //true 表示批量办理
-            business.saveHandleData(p, true);
+            String ret = business.saveHandleData(p, true);
+            if (!"SUCC".equals(ret)){
+                throw new BusinessException("该雇员存在多个未转出的雇员档案，数据不正确");
+            }
         });
         long endTime = new Date().getTime();
         logApiUtil.info(LogMessage.create().setTitle("本地社保雇员任务单批量办理").setContent("cost time(ms): " + (endTime - beginTime)));

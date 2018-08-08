@@ -22,6 +22,8 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -93,6 +95,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Autowired
     private IAmArchiveAdvanceService amArchiveAdvanceService;
+
+    @Autowired
+    private LogApiUtil logApiUtil;
 
 
 
@@ -182,6 +187,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
         if(StringUtil.isEmpty(taskMsgDTO.getVariables().get("empCompanyId")))
         {
+            LogMessage logMessage = LogMessage.create().setTitle("用工任务单").setContent("empCompanyId is null ...");
+            logApiUtil.info(logMessage);
             logger.info("empCompanyId is null ...");
             return false;
         }
@@ -238,9 +245,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             //如果是翻盘
             if("emp_company_change".equals(taskMsgDTO.getProcessDefinitionKey()))
             {
-                amEmpTask.setChange("是");
+                amEmpTask.setChangeCompany("是");
             }else{
-                amEmpTask.setChange("否");
+                amEmpTask.setChangeCompany("否");
             }
 
 
@@ -291,6 +298,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amEmpTask.setOutReason(ReasonUtil.getReasonOut(employeeCompany.getOutReason().toString()));
             }else{
                 if(employeeCompany!=null){
+                    LogMessage logMessage = LogMessage.create().setTitle("退工任务单").setContent(JSON.toJSONString(employeeCompany));
+                    logApiUtil.info(logMessage);
                     logger.info(JSON.toJSONString(employeeCompany));
                 }
                 logger.info("outReason is null "+"  MissionId is "+taskMsgDTO.getMissionId());
@@ -330,9 +339,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             //如果是翻盘
             if("emp_company_change".equals(taskMsgDTO.getProcessDefinitionKey()))
             {
-                amEmpTask.setChange("是");
+                amEmpTask.setChangeCompany("是");
             }else{
-                amEmpTask.setChange("否");
+                amEmpTask.setChangeCompany("否");
             }
             if(employeeCompany!=null&&employeeCompany.getHireUnit()!=null)
             {
@@ -754,7 +763,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         }
         //翻盘不需要材料签收
         List<Long> taskIds  = employeeBatchBO.getEmpTaskIds();
-        taskIds.removeAll(tempChangeList);
+        if(tempChangeList.size()>0){
+            taskIds.removeAll(tempChangeList);
+        }
 
         AmEmpMaterialBO amEmpMaterialBO = new AmEmpMaterialBO();
         amEmpMaterialBO.setEmpTaskIdList(taskIds);
@@ -773,6 +784,12 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     @Override
     public Map<String, Object>  batchCheck(EmployeeBatchBO employeeBatchBO) {
         Map<String,Object> resultMap = new HashMap<>();
+        List<AmEmpTaskBO> materialList = baseMapper.queryIsReject(employeeBatchBO);
+        if(null!=materialList&&materialList.size()>0)
+        {
+            resultMap.put("empMaterial",materialList.size());
+            return  resultMap;
+        }
         List<AmEmpTaskBO> amEmpTaskBOList = baseMapper.queryIsFinish(employeeBatchBO);
         if(null!=amEmpTaskBOList&&amEmpTaskBOList.size()>0)
         {
@@ -897,6 +914,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
             amEmpCustomService.insert(amEmpCustom);
         } catch (Exception e) {
+            LogMessage logMessage = LogMessage.create().setTitle("用工任务单").setContent(e.getMessage());
+            logApiUtil.info(logMessage);
             logger.error(e.getMessage(),e);
         }
 
@@ -997,6 +1016,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
             amEmpEmployeeService.insert(amEmpEmployee);
         } catch (Exception e) {
+            LogMessage logMessage = LogMessage.create().setTitle("用工任务单").setContent(e.getMessage());
+            logApiUtil.info(logMessage);
             logger.error(e.getMessage(),e);
         }
 
@@ -1041,8 +1062,6 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
         List<AmEmpDispatchExportPageDTO> result = new ArrayList<>();
 
-
-
         List<String> param = new ArrayList<String>();
         List<String> orderParam = new ArrayList<String>();
         if (!StringUtil.isEmpty(amEmpTaskBO.getParams())) {
@@ -1074,74 +1093,26 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
         PageInfo pageInfo  = new PageInfo();
         pageInfo.setPageSize(pageCount);
-
-
         List<AmEmpTaskBO> list = baseMapper.taskCount(amEmpTaskBO);
         Integer count = 0;
         for (AmEmpTaskBO bo:list) {
             count += bo.getCount();
         }
         Integer pageSize = (count-1)/pageCount +1;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         for (int i = 1;i<=pageSize;i++){
             pageInfo.setPageNum(i);
             AmEmpDispatchExportPageDTO dtoList = new AmEmpDispatchExportPageDTO();
-
             List<AmEmpDispatchExportDTO> exportList = new ArrayList<>();
-
-
             PageRows<AmEmpTaskBO> pageRows = null;
             if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
                 pageRows =  PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTaskOther(amEmpTaskBO));
             }else{
-                try {
-
-                    pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+                pageRows = PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTask(amEmpTaskBO));
             }
 
             List<AmEmpTaskBO> amList = pageRows.getRows();
             for (AmEmpTaskBO b:amList ) {
-                AmEmpDispatchExportDTO dto = new AmEmpDispatchExportDTO();
-                BeanUtils.copyProperties(b,dto);
-                try {
-                    if(b.getLaborStartDate()!=null){
-                        dto.setLaborStartDate(sdf.parse(b.getLaborStartDate()));
-                    }
-                    if(b.getLaborEndDate()!=null){
-                        dto.setLaborEndDate(sdf.parse(b.getLaborEndDate()));
-                    }
-                    dto.setEmploymentStartDate(DateUtil.localDateToDate(b.getEmployDate()));
-                    // 派遣期限
-                    if(dto.getLaborEndDate() == null || dto.getLaborStartDate() == null){
-                        dto.setTimeLimitForDispatch("4");
-                    }else{
-                        String s1 = sdf.format(dto.getLaborStartDate());
-                        String s2 = sdf.format(dto.getLaborEndDate());
-                        Integer i1 = Integer.parseInt(s1.substring(0,4));
-                        Integer i2 = Integer.parseInt(s2.substring(0,4));
-                        switch ((i2-i1)){
-                            case 0:
-                            case 1:
-                                dto.setTimeLimitForDispatch("1");
-                                break;
-                            case 2:
-                                dto.setTimeLimitForDispatch("2");
-                                break;
-                            case 3:
-                            case 4:
-                            case 5:
-                                dto.setTimeLimitForDispatch("3");
-                                break;
-                            default:
-                                dto.setTimeLimitForDispatch("4");
-                                break;
-                        }
-                    }
-                }catch (Exception e){
-                }
+                AmEmpDispatchExportDTO dto =  getAmEmpDispatchExportDTO(b);
                 exportList.add(dto);
             }
             if(exportList.size()!=0){
@@ -1163,6 +1134,49 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             }
         }
         return result;
+    }
+
+    public AmEmpDispatchExportDTO getAmEmpDispatchExportDTO(AmEmpTaskBO b){
+        AmEmpDispatchExportDTO dto = new AmEmpDispatchExportDTO();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        BeanUtils.copyProperties(b,dto);
+        try {
+            if(b.getLaborStartDate()!=null){
+                dto.setLaborStartDate(sdf.parse(b.getLaborStartDate()));
+            }
+            if(b.getLaborEndDate()!=null){
+                dto.setLaborEndDate(sdf.parse(b.getLaborEndDate()));
+            }
+            dto.setEmploymentStartDate(DateUtil.localDateToDate(b.getEmployDate()));
+            // 派遣期限
+            if(dto.getLaborEndDate() == null || dto.getLaborStartDate() == null){
+                dto.setTimeLimitForDispatch("4");
+            }else{
+                String s1 = sdf.format(dto.getLaborStartDate());
+                String s2 = sdf.format(dto.getLaborEndDate());
+                Integer i1 = Integer.parseInt(s1.substring(0,4));
+                Integer i2 = Integer.parseInt(s2.substring(0,4));
+                switch ((i2-i1)){
+                    case 0:
+                    case 1:
+                        dto.setTimeLimitForDispatch("1");
+                        break;
+                    case 2:
+                        dto.setTimeLimitForDispatch("2");
+                        break;
+                    case 3:
+                    case 4:
+                    case 5:
+                        dto.setTimeLimitForDispatch("3");
+                        break;
+                    default:
+                        dto.setTimeLimitForDispatch("4");
+                        break;
+                }
+            }
+        }catch (Exception e){
+        }
+        return dto;
     }
 
 
@@ -1221,14 +1235,11 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 count += bo.getCount();
             }
             Integer pageSize = (count-1)/pageCount +1;
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             for (int i = 1;i<=pageSize;i++){
                 pageInfo.setPageNum(i);
                 AmEmpDispatchExportPageDTO dtoList = new AmEmpDispatchExportPageDTO();
 
                 List<AmEmpDispatchExportDTO> exportList = new ArrayList<>();
-
-
                 PageRows<AmEmpTaskBO> pageRows = null;
                 if(amEmpTaskBO.getTaskStatus()!=null&&amEmpTaskBO.getTaskStatus()==6){
                     pageRows =  PageKit.doSelectPage(pageInfo, () -> baseMapper.queryAmEmpTaskOther(amEmpTaskBO));
@@ -1238,44 +1249,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
                 List<AmEmpTaskBO> amList = pageRows.getRows();
                 for (AmEmpTaskBO b:amList ) {
-                    AmEmpDispatchExportDTO dto = new AmEmpDispatchExportDTO();
-                    BeanUtils.copyProperties(b,dto);
-                    try {
-                        if(b.getLaborStartDate()!=null){
-                            dto.setLaborStartDate(sdf.parse(b.getLaborStartDate()));
-                        }
-                        if(b.getLaborEndDate()!=null){
-                            dto.setLaborEndDate(sdf.parse(b.getLaborEndDate()));
-                        }
-                        dto.setEmploymentStartDate(DateUtil.localDateToDate(b.getEmployDate()));
-                        // 派遣期限
-                        if(dto.getLaborEndDate() == null || dto.getLaborStartDate() == null){
-                            dto.setTimeLimitForDispatch("4");
-                        }else{
-                            String s1 = sdf.format(dto.getLaborStartDate());
-                            String s2 = sdf.format(dto.getLaborEndDate());
-                            Integer i1 = Integer.parseInt(s1.substring(0,4));
-                            Integer i2 = Integer.parseInt(s2.substring(0,4));
-                            switch ((i2-i1)){
-                                case 0:
-                                case 1:
-                                    dto.setTimeLimitForDispatch("1");
-                                    break;
-                                case 2:
-                                    dto.setTimeLimitForDispatch("2");
-                                    break;
-                                case 3:
-                                case 4:
-                                case 5:
-                                    dto.setTimeLimitForDispatch("3");
-                                    break;
-                                default:
-                                    dto.setTimeLimitForDispatch("4");
-                                    break;
-                            }
-                        }
-                    }catch (Exception e){
-                    }
+                    AmEmpDispatchExportDTO dto = getAmEmpDispatchExportDTO(b);
                     exportList.add(dto);
                 }
                 if(exportList.size()!=0){
@@ -1310,6 +1284,14 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         return null;
     }
 
+    @Override
+    public List<AmEmpDispatchExportPageDTO> queryExportOptCollect(AmEmpTaskBO amEmpTaskBO) {
+
+
+
+
+        return null;
+    }
 }
 
 

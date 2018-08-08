@@ -376,22 +376,22 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             AmEmpMaterial amEmpMaterial = list.get(0);
             AmEmpMaterialBO amEmpMaterialBO = new AmEmpMaterialBO();
             BeanUtils.copyProperties(amEmpMaterial,amEmpMaterialBO);
-            List<AmEmpMaterialBO> list1 = amEmpMaterialService.queryAmEmpMaterialList(amEmpMaterialBO);
-            for(AmEmpMaterialBO amEmpMaterialBO1:list1){
-                if(!StringUtil.isEmpty(amEmpMaterialBO1.getReceiveName()))
-                {
-                    resultMap.put("data",2);
-                    resultMap.put("result",list1);
-                    return JsonResultKit.of(resultMap);
-                }
-            }
+//            List<AmEmpMaterialBO> list1 = amEmpMaterialService.queryAmEmpMaterialList(amEmpMaterialBO);
+//            for(AmEmpMaterialBO amEmpMaterialBO1:list1){
+//                if(!StringUtil.isEmpty(amEmpMaterialBO1.getReceiveName()))
+//                {
+//                    resultMap.put("data",2);
+//                    resultMap.put("result",list1);
+//                    return JsonResultKit.of(resultMap);
+//                }
+//            }
         }
         List<AmEmpMaterial>  data = new ArrayList<AmEmpMaterial>();
         for(AmEmpMaterial bo:list)
         {
-            if(bo.getReceiveName() != null){
-                return JsonResultKit.of(2);
-            }
+//            if(bo.getReceiveName() != null){
+//                return JsonResultKit.of(2);
+//            }
             bo.setOperateType(2);
             LocalDateTime now = LocalDateTime.now();
             bo.setCreatedTime(now);
@@ -425,8 +425,11 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         BeanUtils.copyProperties(amEmpMaterial,amEmpMaterialBO);
         List<AmEmpMaterialBO> list1 = amEmpMaterialService.queryAmEmpMaterialList(amEmpMaterialBO);
 
+        List<AmEmpMaterialOperationLogBO> materialLogList = amEmpMaterialService.queryAmEmpMaterialLogList(amEmpMaterialBO);
+
         resultMap.put("data",result?1:0);
         resultMap.put("result",list1);
+        resultMap.put("logList",materialLogList);
         return  JsonResultKit.of(resultMap);
     }
 

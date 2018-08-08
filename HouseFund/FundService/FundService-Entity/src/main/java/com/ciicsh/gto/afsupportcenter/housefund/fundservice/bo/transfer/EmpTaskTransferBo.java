@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import lombok.Data;
 
@@ -43,6 +44,8 @@ public class EmpTaskTransferBo {
     private Integer hfAccountType;
     private String createdDisplayName;
     private Integer serviceCenterValue;
+    private String handleUserId;
+    private String handleUserName;
 
     public String getTransferDateFormat() {
         if (this.transferDate != null) {

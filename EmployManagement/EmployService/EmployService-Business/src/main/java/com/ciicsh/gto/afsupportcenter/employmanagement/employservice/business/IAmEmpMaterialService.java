@@ -19,7 +19,7 @@ public interface IAmEmpMaterialService extends IService<AmEmpMaterial> {
 
     PageRows<AmEmpMaterialBO> queryAmEmpMaterial(PageInfo pageInfo);
 
-    List<AmEmpMaterialOperationLogBO> queryAmEmpMaterialOperationLogList(PageInfo pageInfo);
+    List<AmEmpMaterialOperationLogBO> queryAmEmpMaterialOperationLogList(Long empTaskId);
 
     List<AmEmpMaterialBO> queryAmEmpMaterialList(AmEmpMaterialBO amEmpMaterialBO);
 
