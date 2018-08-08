@@ -449,33 +449,22 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     }
 
 
-    @PostMapping("/saveAmArchiveUse")
-    public JsonResult<Boolean>  saveAmArchiveUse(@RequestBody List<AmArchiveUse> list) {
+    @RequestMapping("/saveAmArchiveUse")
+    public JsonResult<Boolean>  saveAmArchiveUse(AmArchiveUse amArchiveUse) {
 
-        for(AmArchiveUse bo:list)
-        {
-            LocalDateTime now = LocalDateTime.now();
-
-            if(bo.getArchiveUseId()==null){
-                bo.setCreatedTime(now);
-                bo.setModifiedTime(now);
-                bo.setCreatedBy(ReasonUtil.getUserId());
-                bo.setModifiedBy(ReasonUtil.getUserId());
-            }else {
-                bo.setModifiedTime(now);
-                bo.setModifiedBy(ReasonUtil.getUserId());
-            }
-
-                bo.setHandleMan(ReasonUtil.getUserName());
+        LocalDateTime now = LocalDateTime.now();
+        if(amArchiveUse.getArchiveUseId()==null){
+            amArchiveUse.setCreatedTime(now);
+            amArchiveUse.setModifiedTime(now);
+            amArchiveUse.setCreatedBy(ReasonUtil.getUserId());
+            amArchiveUse.setModifiedBy(ReasonUtil.getUserId());
+            amArchiveUse.setHandleMan(ReasonUtil.getUserName());
+        }else{
+            amArchiveUse.setModifiedTime(now);
+            amArchiveUse.setModifiedBy(ReasonUtil.getUserId());
         }
 
-        boolean result = false;
-        try {
-            result = iAmArchiveUseService.insertOrUpdateBatch(list);
-        } catch (Exception e) {
-
-        }
-
+        boolean result = iAmArchiveUseService.insertOrUpdate(amArchiveUse);
         return JsonResultKit.of(result);
     }
 
