@@ -425,8 +425,11 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         BeanUtils.copyProperties(amEmpMaterial,amEmpMaterialBO);
         List<AmEmpMaterialBO> list1 = amEmpMaterialService.queryAmEmpMaterialList(amEmpMaterialBO);
 
+        List<AmEmpMaterialOperationLogBO> materialLogList = amEmpMaterialService.queryAmEmpMaterialLogList(amEmpMaterialBO);
+
         resultMap.put("data",result?1:0);
         resultMap.put("result",list1);
+        resultMap.put("logList",materialLogList);
         return  JsonResultKit.of(resultMap);
     }
 
