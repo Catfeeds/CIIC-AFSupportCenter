@@ -600,15 +600,6 @@
         </foreach>
     </select>
 
-    <select id="queryIsReject" resultMap="BaseResultMapDTO">
-        SELECT  emp_task_id  from am_emp_material
-        where
-        operate_type = 1 and reject_reason !='' and
-        <foreach collection="empTaskIds" item="item" open="emp_task_id IN (" separator="," close=")">
-            #{item}
-        </foreach>
-    </select>
-
     <select id="queryIsMaterial" resultMap="BaseResultMapDTO">
         SELECT  emp_task_id,hire_task_id,employee_id  from am_emp_task
         where
