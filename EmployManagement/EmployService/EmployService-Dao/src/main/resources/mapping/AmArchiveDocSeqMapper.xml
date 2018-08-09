@@ -33,14 +33,14 @@
                 AND `type` = #{type}
             </if>
             <if test="docType != null">
-                AND doc_type = #{docType}
+                AND binary doc_type = #{docType}
             </if>
         </where>
     </select>
 
     <update id="updateByTypeAndDocType"
             parameterType="com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveDocSeq">
-        update am_archive_doc_seq set doc_seq = #{docSeq} where `type` = #{type} and doc_type = #{docType}
+        update am_archive_doc_seq set doc_seq = #{docSeq} where `type` = #{type} and binary doc_type = #{docType}
     </update>
 
     <select id="queryCountHaveAbove" resultMap="ModelResultMap"
@@ -51,7 +51,7 @@
                 AND `type` = #{type}
             </if>
             <if test="docType != null">
-                AND doc_type = #{docType}
+                AND binary doc_type = #{docType}
             </if>
             <if test="docType != null">
                 AND doc_seq  &gt;= #{docSeq}
