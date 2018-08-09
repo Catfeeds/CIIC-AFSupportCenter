@@ -9,6 +9,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiv
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.EmployeeBatchBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.employSearchExportOpt;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpCollectExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpDispatchExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -69,6 +70,8 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
 
     List<AmEmpDispatchExportPageDTO> queryExportOptDispatch(AmEmpTaskBO amEmpTaskBO,Integer pageSize);
 
-    List<AmEmpDispatchExportPageDTO> queryExportOptCollect(AmEmpTaskBO amEmpTaskBO);
+    List<AmEmpCollectExportPageDTO> queryExportOptCollect(AmEmpTaskBO amEmpTaskBO, Integer employCode);
+
+    List<AmEmpCollectExportPageDTO> queryExportOptCollect(AmEmpTaskBO amEmpTaskBO);
 
 }
