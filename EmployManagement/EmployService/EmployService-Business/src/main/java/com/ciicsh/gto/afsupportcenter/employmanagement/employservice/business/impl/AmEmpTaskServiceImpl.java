@@ -186,12 +186,23 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         amEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
         amEmpTask.setTaskCategory(taskCategory);
         amEmpTask.setTaskStatus(1);
-        amEmpTask.setHireTaskId(taskMsgDTO.getVariables().get("hireTaskId").toString());
+        if(null!=taskMsgDTO.getVariables())
+        {
+            /**
+             * 翻盘根本不传hireTaskId值 写的时候要判断
+             */
+            if(taskMsgDTO.getVariables().containsKey("hireTaskId"))
+            {
+                String hireTaskId = taskMsgDTO.getVariables().get("hireTaskId")==null?"":taskMsgDTO.getVariables().get("hireTaskId").toString();
+                amEmpTask.setHireTaskId(hireTaskId);
+            }
+        }
+        String taskId = taskMsgDTO.getTaskId()==null?"":taskMsgDTO.getTaskId();
 
 
         if(StringUtil.isEmpty(taskMsgDTO.getVariables().get("empCompanyId")))
         {
-            LogMessage logMessage = LogMessage.create().setTitle("用工任务单").setContent("empCompanyId is null ...");
+            LogMessage logMessage = LogMessage.create().setTitle("用工任务单").setContent(taskId+"empCompanyId is null ...");
             logApiUtil.info(logMessage);
             logger.info("empCompanyId is null ...");
             return false;
@@ -211,18 +222,29 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         Map<String, Object> map = null;
         try {
             map = taskMsgDTO.getVariables();
-
-            archiveDirection = (String)map.get("archiveDirection");
-            employeeNature = (String)map.get("employeeNature");
-            EmployeeBO personNature = baseMapper.queryNature(employeeNature);
-            EmployeeBO employeeBO  = baseMapper.queryArchiveDriection(archiveDirection);
-            if(null!=personNature){
-                amEmpTask.setEmployeeNature(personNature.getPersonNature());
+            if(map!=null)
+            {
+                if(map.containsKey("archiveDirection"))
+                {
+                    archiveDirection = (String)map.get("archiveDirection");
+                    EmployeeBO employeeBO  = baseMapper.queryArchiveDriection(archiveDirection);
+                    if(null!=employeeBO){
+                        amEmpTask.setArchiveDirection(employeeBO.getArchiveDirection());
+                    }
+                }
+                if(map.containsKey("employeeNature"))
+                {
+                    employeeNature = (String)map.get("employeeNature");
+                    EmployeeBO personNature = baseMapper.queryNature(employeeNature);
+                    if(null!=personNature){
+                        amEmpTask.setEmployeeNature(personNature.getPersonNature());
+                    }
+                }
+                if(map.containsKey("submitterId"))
+                {
+                    submitterId = taskMsgDTO.getVariables().get("submitterId")==null?"":map.get("submitterId").toString();
+                }
             }
-            if(null!=employeeBO){
-                amEmpTask.setArchiveDirection(employeeBO.getArchiveDirection());
-            }
-            submitterId = taskMsgDTO.getVariables().get("submitterId")==null?"":map.get("submitterId").toString();
 
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -256,6 +278,12 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
 
         } catch (Exception e) {
+            try {
+                LogMessage logMessage = LogMessage.create().setTitle("用工任务单").setContent(taskId+e.getMessage());
+                logApiUtil.info(logMessage);
+            } catch (Exception e1) {
+
+            }
             logger.error(e.getMessage(), e);
         }
 
