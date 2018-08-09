@@ -96,7 +96,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         List<String> orderParam = new ArrayList<String>();
         if (!StringUtil.isEmpty(dto.getParams()))
         {
-            String arr[] = dto.getParams().split(",");
+            String arr[] = dto.getParams().split(";");
             for (int i = 0; i < arr.length; i++) {
                 if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
                     orderParam.add(arr[i]);
