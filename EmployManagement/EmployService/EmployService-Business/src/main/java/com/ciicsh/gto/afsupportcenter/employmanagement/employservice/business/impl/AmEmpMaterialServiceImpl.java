@@ -129,9 +129,11 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
     }
 
     @Override
-    public List<AmEmpMaterialOperationLogBO> queryAmEmpMaterialOperationLogList(PageInfo pageInfo) {
-        AmEmpMaterialBO amEmpMaterialBO = pageInfo.toJavaObject(AmEmpMaterialBO.class);
-        AmEmpTask task = amEmpTaskMapper.selectById(amEmpMaterialBO.getEmpTaskId());
+    public List<AmEmpMaterialOperationLogBO> queryAmEmpMaterialOperationLogList(Long empTaskId) {
+        if(empTaskId == null){
+            return new ArrayList<>();
+        }
+        AmEmpTask task = amEmpTaskMapper.selectById(empTaskId);
         List<AmEmpMaterialOperationLogBO> result = new ArrayList<>();
         if(task.getHireTaskId() == null){
             return result;
@@ -308,6 +310,7 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
         MaterialOperationLogDTO dto = new MaterialOperationLogDTO();
         if(list != null && list.size() > 0){
             BeanUtils.copyProperties(list.get(0),dto);
+            dto.setOperationTime(DateUtil.localDateTimeToDate(list.get(0).getOperationTime()));
         }
         return dto;
     }
@@ -323,6 +326,7 @@ public class AmEmpMaterialServiceImpl extends ServiceImpl<AmEmpMaterialMapper, A
         for (AmEmpMaterialOperationLog log:list) {
             MaterialOperationLogDTO dto = new MaterialOperationLogDTO();
             BeanUtils.copyProperties(log,dto);
+            dto.setOperationTime(DateUtil.localDateTimeToDate(log.getOperationTime()));
             result.add(dto);
         }
         return result;

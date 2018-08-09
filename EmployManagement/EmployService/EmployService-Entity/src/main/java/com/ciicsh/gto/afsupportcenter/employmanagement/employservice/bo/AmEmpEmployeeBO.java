@@ -1,10 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo;
 
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpEmployee;
+import lombok.Data;
 
 /**
  * Created by zhangzhiwen on 2018/4/9.
  */
+@Data
 public class AmEmpEmployeeBO extends AmEmpEmployee {
 
     private  String sex;
@@ -83,163 +85,4 @@ public class AmEmpEmployeeBO extends AmEmpEmployee {
      */
     private String phone;
 
-    public Boolean getMailContinue() {
-        return mailContinue;
-    }
-
-    public void setMailContinue(Boolean mailContinue) {
-        this.mailContinue = mailContinue;
-    }
-
-    public String getMailAdress() {
-        return mailAdress;
-    }
-
-    public void setMailAdress(String mailAdress) {
-        this.mailAdress = mailAdress;
-    }
-
-    public String getRecipient() {
-        return recipient;
-    }
-
-    public void setRecipient(String recipient) {
-        this.recipient = recipient;
-    }
-
-    public String getPostCode() {
-        return postCode;
-    }
-
-    public void setPostCode(String postCode) {
-        this.postCode = postCode;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getFirstInDateStr() {
-        return firstInDateStr;
-    }
-
-    public void setFirstInDateStr(String firstInDateStr) {
-        this.firstInDateStr = firstInDateStr;
-    }
-
-    public String getLaborStartDateStr() {
-        return laborStartDateStr;
-    }
-
-    public void setLaborStartDateStr(String laborStartDateStr) {
-        this.laborStartDateStr = laborStartDateStr;
-    }
-
-    public String getLaborEndDateStr() {
-        return laborEndDateStr;
-    }
-
-    public void setLaborEndDateStr(String laborEndDateStr) {
-        this.laborEndDateStr = laborEndDateStr;
-    }
-
-    public String getFirstInCompanyDateStr() {
-        return firstInCompanyDateStr;
-    }
-
-    public void setFirstInCompanyDateStr(String firstInCompanyDateStr) {
-        this.firstInCompanyDateStr = firstInCompanyDateStr;
-    }
-
-    public String getKeyStatus() {
-        return keyStatus;
-    }
-
-    public void setKeyStatus(String keyStatus) {
-        this.keyStatus = keyStatus;
-    }
-
-    public String getEmploySpecial() {
-        return employSpecial;
-    }
-
-    public void setEmploySpecial(String employSpecial) {
-        this.employSpecial = employSpecial;
-    }
-
-    public String getKeyType() {
-        return keyType;
-    }
-
-    public void setKeyType(String keyType) {
-        this.keyType = keyType;
-    }
-
-    public String getKeyCode() {
-        return keyCode;
-    }
-
-    public void setKeyCode(String keyCode) {
-        this.keyCode = keyCode;
-    }
-
-    public String getKeyPwd() {
-        return keyPwd;
-    }
-
-    public void setKeyPwd(String keyPwd) {
-        this.keyPwd = keyPwd;
-    }
-
-    public String getEmployProperty() {
-        return employProperty;
-    }
-
-    public void setEmployProperty(String employProperty) {
-        this.employProperty = employProperty;
-    }
-
-    public String getArchiveDirection() {
-        return archiveDirection;
-    }
-
-    public void setArchiveDirection(String archiveDirection) {
-        this.archiveDirection = archiveDirection;
-    }
-
-    public String getEmployeeNature() {
-        return employeeNature;
-    }
-
-    public void setEmployeeNature(String employeeNature) {
-        this.employeeNature = employeeNature;
-    }
-
-    public String getIsUnlimitedContract() {
-        return isUnlimitedContract;
-    }
-
-    public void setIsUnlimitedContract(String isUnlimitedContract) {
-        this.isUnlimitedContract = isUnlimitedContract;
-    }
-
-    public String getSendCondemnationYears() {
-        return sendCondemnationYears;
-    }
-
-    public void setSendCondemnationYears(String sendCondemnationYears) {
-        this.sendCondemnationYears = sendCondemnationYears;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
 }

@@ -9,6 +9,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiv
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.EmployeeBatchBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.employSearchExportOpt;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpCollectExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpDispatchExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -61,12 +62,16 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
 
     Map<String,Object> batchSaveEmployee(AmArchiveBO amArchiveBO);
 
-    boolean batchSaveEmployment(EmployeeBatchBO employeeBatchBO);
+    Map<String,Object> batchSaveEmployment(EmployeeBatchBO employeeBatchBO);
 
     Map<String,Object> batchCheck(EmployeeBatchBO employeeBatchBO);
 
     List<AmEmpDispatchExportPageDTO> queryExportOptDispatch(AmEmpTaskBO amEmpTaskBO,Integer employCode,Integer pageSize);
 
     List<AmEmpDispatchExportPageDTO> queryExportOptDispatch(AmEmpTaskBO amEmpTaskBO,Integer pageSize);
+
+    List<AmEmpCollectExportPageDTO> queryExportOptCollect(AmEmpTaskBO amEmpTaskBO, Integer employCode);
+
+    List<AmEmpCollectExportPageDTO> queryExportOptCollect(AmEmpTaskBO amEmpTaskBO);
 
 }

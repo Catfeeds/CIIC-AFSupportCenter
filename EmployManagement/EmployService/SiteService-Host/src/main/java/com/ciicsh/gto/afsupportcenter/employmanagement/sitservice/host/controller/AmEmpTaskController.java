@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.ut
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.employSearchExportOpt;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpCollectExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpDispatchExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.util.WordUtils;
@@ -30,7 +31,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -201,10 +201,10 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         AmMaterialBO amMaterialBO = new AmMaterialBO();
         List<AmEmpMaterialBO> empMaterialList = new ArrayList<>();
         PageRows<AmEmpMaterialBO> result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
-            // 加了事务 回查
+        // 加了事务 回查
         result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
         //用工材料流转记录
-        List<AmEmpMaterialOperationLogBO> logList = iAmEmpMaterialService.queryAmEmpMaterialOperationLogList(pageInfo);
+        List<AmEmpMaterialOperationLogBO> logList = iAmEmpMaterialService.queryAmEmpMaterialOperationLogList(amTaskParamBO.getEmpTaskId());
         amMaterialBO.setLogBOList(logList);
         empMaterialList.addAll(result.getRows());
         amMaterialBO.setMaterialsData(empMaterialList);
@@ -268,10 +268,10 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             if(advanceBO != null){
                 amArchiveBO = new AmArchiveBO();
                 amArchiveBO.setFormAdvance(true);
-                amArchiveBO.setYuliuDocType(advanceBO.getReservedArchiveType());
-                amArchiveBO.setYuliuDocNum(advanceBO.getReservedArchiveNo() == null ? "" : advanceBO.getReservedArchiveNo().toString());
+                amArchiveBO.setDocType(advanceBO.getReservedArchiveType());
+                amArchiveBO.setDocNum(advanceBO.getReservedArchiveNo() == null ? "" : advanceBO.getReservedArchiveNo().toString());
                 amArchiveBO.setDocFrom(advanceBO.getArchiveSource());// 档案来源
-                amArchiveBO.setArchivePlace(advanceBO.getArchivalPlace());// 存档地
+                amArchiveBO.setArchivePlace(advanceBO.getArchivePlace());// 存档地
                 resultMap.put("amArchaiveBo",amArchiveBO);
             }
         }
@@ -383,7 +383,11 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
                     }
                     variables.put("assignee",userName);
-                    TaskCommonUtils.completeTask(taskId,employeeInfoProxy,variables);
+                    try {
+                        TaskCommonUtils.completeTask(taskId,employeeInfoProxy,variables);
+                    } catch (Exception e) {
+                        logApiUtil.error(LogMessage.create().setTitle("EmployMaterial").setContent(e.getMessage()));
+                    }
                 }
             }
         }
@@ -473,12 +477,14 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         AmEmpTask amEmpTask = business.selectById(list.get(0).getEmpTaskId());
         // 调用雇员中心 签收
         String message = iAmEmpMaterialService.receiveMaterial(amEmpTask.getHireTaskId(),1,null);
+        Map<String,Object> map = new HashMap<>();
         if("签收成功".equals(message)){
             amEmpTask.setTaskStatus(2);
             business.insertOrUpdate(amEmpTask);
             boolean result =  iAmEmpMaterialService.updateBatchById(list);
+            List<AmEmpMaterialOperationLogBO> logList = iAmEmpMaterialService.queryAmEmpMaterialOperationLogList(list.get(0).getEmpTaskId());
+            map.put("logList",logList);
         }
-        Map<String,Object> map = new HashMap<>();
         map.put("result",message);
         map.put("data",list);
         return JsonResultKit.of(map);
@@ -506,10 +512,12 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         AmEmpTask amEmpTask = business.selectById(list.get(0).getEmpTaskId());
         // 调用雇员中心 批退
         String message = iAmEmpMaterialService.receiveMaterial(amEmpTask.getHireTaskId(),2,list.get(0).getRejectReason());
+        Map<String,Object> map = new HashMap<>();
         if("批退成功".equals(message)){
             boolean result =  iAmEmpMaterialService.updateBatchById(list);
+            List<AmEmpMaterialOperationLogBO> logList = iAmEmpMaterialService.queryAmEmpMaterialOperationLogList(list.get(0).getEmpTaskId());
+            map.put("logList",logList);
         }
-        Map<String,Object> map = new HashMap<>();
         map.put("result",message);
         map.put("data",list);
         return JsonResultKit.of(map);
@@ -573,11 +581,11 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @RequestMapping("/employSearchExportOptUseWord")
     public @ResponseBody
-    void employSearchExportOptUseWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response, HttpServletRequest request){
+    void employSearchExportOptUseWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response){
 
         try {
 
-            logApiUtil.error(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent("用工录用名册打印 start"));
+            logApiUtil.info(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent("用工录用名册打印 start"));
 
             // 中智大库
             List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,12);
@@ -595,9 +603,8 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             map.put("list2",dtoList2);
             map.put("list3",dtoList3);
 
-            logApiUtil.error(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent("用工录用名册打印 start red temp"));
 
-            WordUtils.exportMillCertificateWord(request,response,map,"用工录用名册","AM_USE_TEMP.ftl");
+            WordUtils.exportMillCertificateWord(response,map,"用工录用名册","AM_USE_TEMP.ftl");
 
         } catch (Exception e) {
             logApiUtil.error(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent(e.getMessage()));
@@ -610,7 +617,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @RequestMapping("/employSearchExportOptDispatchWord")
     public @ResponseBody
-    void employSearchExportOptDispatchWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response, HttpServletRequest request){
+    void employSearchExportOptDispatchWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response){
 
         // 中智大库
         List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,9);
@@ -629,7 +636,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         map.put("list3",dtoList3);
 
         try {
-            WordUtils.exportMillCertificateWord(request,response,map,"派遣录用名册","AM_DISPATCH_TEMP.ftl");
+            WordUtils.exportMillCertificateWord(response,map,"派遣录用名册","AM_DISPATCH_TEMP.ftl");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -640,7 +647,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @RequestMapping("/employSearchExportOptAlonehWord")
     public @ResponseBody
-    void employSearchExportOptAlonehWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response, HttpServletRequest request){
+    void employSearchExportOptAlonehWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response){
 
         // 中智大库
         List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,10);
@@ -660,7 +667,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
 
         try {
-            WordUtils.exportMillCertificateWord(request,response,map,"外来独立","AM_ALONE_TEMP.ftl");
+            WordUtils.exportMillCertificateWord(response,map,"外来独立","AM_ALONE_TEMP.ftl");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -671,7 +678,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @RequestMapping("/employSearchExportOptExtDispatchWord")
     public @ResponseBody
-    void employSearchExportOptExtDispatchWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response, HttpServletRequest request){
+    void employSearchExportOptExtDispatchWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response){
 
         // 中智大库
         List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,9);
@@ -690,7 +697,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         map.put("list3",dtoList3);
 
         try {
-            WordUtils.exportMillCertificateWord(request,response,map,"外来派遣","AM_EXT_DISPATCH_TEMP.ftl");
+            WordUtils.exportMillCertificateWord(response,map,"外来派遣","AM_EXT_DISPATCH_TEMP.ftl");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -701,15 +708,26 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
      */
     @RequestMapping("/employSearchExportOptExtCollectWord")
     public @ResponseBody
-    void employSearchExportOptExtCollectWord(HttpServletResponse response, HttpServletRequest request){
-        Map<String, Object> map = new HashMap<String, Object>();
+    void employSearchExportOptExtCollectWord(HttpServletResponse response, AmEmpTaskBO amEmpTaskBO){
+        // 中智大库
+        List<AmEmpCollectExportPageDTO> dtoList = business.queryExportOptCollect(amEmpTaskBO,2);
 
-        map.put("list",new ArrayList<>());
+        // 外包
+        List<AmEmpCollectExportPageDTO> dtoList2 = business.queryExportOptCollect(amEmpTaskBO,3);
+
+        //独立户
+        List<AmEmpCollectExportPageDTO> dtoList3 = business.queryExportOptCollect(amEmpTaskBO);
+
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
 
         try {
-            WordUtils.exportMillCertificateWord(request,response,map,"采集表汇总表","采集表汇总表模板.ftl");
+            WordUtils.exportMillCertificateWord(response,map,"采集表汇总表","AM_COLLECT_TEMP.ftl");
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -768,7 +786,11 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                 List<String> taskIdList = (List<String>)map.get("taskIdList");
                 for(String taskId:taskIdList)
                 {
-                    TaskCommonUtils.completeTask(taskId,employeeInfoProxy,variables);
+                    try {
+                        TaskCommonUtils.completeTask(taskId,employeeInfoProxy,variables);
+                    } catch (Exception e) {
+                        logApiUtil.error(LogMessage.create().setTitle("EmployMaterial").setContent(e.getMessage()));
+                    }
                 }
                 amArchiveBO.setEnd(true);
             }
@@ -778,9 +800,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     }
 
     @RequestMapping("/batchSaveEmployment")
-    public JsonResult<Boolean> batchSaveEmployment(EmployeeBatchBO employeeBatchBO){
-        Boolean b = business.batchSaveEmployment(employeeBatchBO);
-        return  JsonResultKit.of(b);
+    public JsonResult batchSaveEmployment(EmployeeBatchBO employeeBatchBO){
+        Map<String,Object> map = business.batchSaveEmployment(employeeBatchBO);
+        return  JsonResultKit.of(map);
     }
 
     @RequestMapping("/batchCheck")

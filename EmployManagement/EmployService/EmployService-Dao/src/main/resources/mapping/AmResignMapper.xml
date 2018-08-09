@@ -96,7 +96,7 @@
         a.emp_task_id,
         a.employee_id,
         a.company_id,
-        a.change,
+        a.change_company,
         a.employ_code,
         f.employment_id,
         b.employ_property,
@@ -156,7 +156,7 @@
         a.employee_id,
         a.company_id,
         a.employ_code,
-        a.change,
+        a.change_company,
         f.employment_id,
         b.employ_property,
         b.employ_date,
@@ -208,19 +208,50 @@
         FROM
         (
         SELECT
-        a.task_status
+        DISTINCT
+        a.emp_task_id,
+        a.employee_id,
+        a.company_id,
+        a.change_company,
+        a.employ_code,
+        a.task_status,
+        f.employment_id,
+        b.employ_property,
+        b.employ_date,
+        b.handle_type,
+        f.resign_date,
+        f.resign_feedback,
+        a.out_reason,
+        a.out_date,
+        a.job,
+        f.job_centre_feedback_date,
+        d.employee_name,
+        d.id_num,
+        d.id_card_type,
+        c.doc_num,
+        c.yuliu_doc_num,
+        c.archive_place,
+        c.storage_out_date,
+        c.employ_feedback,
+        c.luyong_handle_end,
+        h.title,
+        h.service_center,
+        h.leader_ship_name,
+        cs.refuse_special
         FROM
         am_emp_task a
         LEFT JOIN am_resign f  ON f.emp_task_id = a.emp_task_id
         LEFT JOIN am_employment b  ON  b.employment_id = f.employment_id
         LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
-        LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
+        LEFT JOIN am_emp_custom h on h.emp_task_id = b.emp_task_id
+        LEFT JOIN am_emp_employee  e on e.emp_task_id = b.emp_task_id
+        LEFT JOIN am_company_set cs on cs.company_id = a.company_id
         WHERE
         a.task_category = '2'
         and
         a.employee_id is not null
-        AND
+        and
         a.company_id  is not null
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
@@ -266,7 +297,7 @@
         a.employee_id,
         a.company_id,
         a.employ_code,
-        a.change,
+        a.change_company,
         f.employment_id,
         b.employ_property,
         b.employ_date,
