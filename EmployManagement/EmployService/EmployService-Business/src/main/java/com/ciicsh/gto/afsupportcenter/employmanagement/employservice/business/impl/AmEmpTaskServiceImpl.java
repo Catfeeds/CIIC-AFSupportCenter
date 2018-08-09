@@ -716,6 +716,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     @Transactional(rollbackFor = RuntimeException.class)
     public Map<String,Object> batchSaveEmployment(EmployeeBatchBO employeeBatchBO) {
         Map<String,Object> map = new HashMap<>();
+
         List<AmEmpTaskBO> amEmpTaskMaterialList = baseMapper.queryIsMaterial(employeeBatchBO);
         List<HireMaterialTransferRecordDTO> hireMaterialTransferRecordDTOList = new ArrayList<>();
         Map<String,String> tempMap = new HashMap<>();
@@ -742,7 +743,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             LogMessage logMessage = LogMessage.create().setTitle("employee_sheetInfoProxy").setContent(e.getMessage());
             logApiUtil.error(logMessage);
         }
-
+        LocalDateTime now = LocalDateTime.now();
+        String userId = ReasonUtil.getUserId();
+        String userName = ReasonUtil.getUserName();
         if(jsonResult==null){
            map.put("message","雇员中心接口异常");
            return map;
@@ -750,6 +753,26 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             if(jsonResult.getCode()==1){
                 map.put("message",jsonResult.getMessage());
                 return map;
+            }else{
+                List<AmEmpTaskBO> changeList = baseMapper.queryChange(employeeBatchBO);
+                List<Long> tempChangeList = new ArrayList<>();
+                for(AmEmpTaskBO tempBO:changeList)
+                {
+                    tempChangeList.add(tempBO.getEmpTaskId());
+                }
+                //翻盘不需要材料签收
+                List<Long> taskIds  = employeeBatchBO.getEmpTaskIds();
+                if(tempChangeList.size()>0){
+                    taskIds.removeAll(tempChangeList);
+                }
+                AmEmpMaterialBO amEmpMaterialBO = new AmEmpMaterialBO();
+                amEmpMaterialBO.setEmpTaskIdList(taskIds);
+                amEmpMaterialBO.setReceiveDate(LocalDate.now());
+                amEmpMaterialBO.setReceiveId(userId);
+                amEmpMaterialBO.setReceiveName(userName);
+                amEmpMaterialBO.setModifiedBy(userId);
+                amEmpMaterialBO.setModifiedTime(now);
+                amEmpMaterialService.updateMaterialBatch(amEmpMaterialBO);
             }
         }
 
@@ -757,9 +780,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         List<AmRemark> amRemarkList = new ArrayList<>();
         List<AmEmployment> list = new ArrayList<>();
 
-        LocalDateTime now = LocalDateTime.now();
-        String userId = ReasonUtil.getUserId();
-        String userName = ReasonUtil.getUserName();
+
         for(Long emTaskId:employeeBatchBO.getEmpTaskIds())
         {
             AmEmpTask amEmpTask = this.getAmEmpTaskById(emTaskId);
@@ -813,39 +834,12 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
             list.add(entity);
         }
-
         if(amRemarkList.size()>0)
         {
             amRemarkService.insertBatch(amRemarkList);
         }
-
-
-        List<AmEmpTaskBO> changeList = baseMapper.queryChange(employeeBatchBO);
-        List<Long> tempChangeList = new ArrayList<>();
-        for(AmEmpTaskBO tempBO:changeList)
-        {
-            tempChangeList.add(tempBO.getEmpTaskId());
-        }
-        //翻盘不需要材料签收
-        List<Long> taskIds  = employeeBatchBO.getEmpTaskIds();
-        if(tempChangeList.size()>0){
-            taskIds.removeAll(tempChangeList);
-        }
-
-        AmEmpMaterialBO amEmpMaterialBO = new AmEmpMaterialBO();
-        amEmpMaterialBO.setEmpTaskIdList(taskIds);
-        amEmpMaterialBO.setReceiveDate(employeeBatchBO.getReceiveDate());
-        amEmpMaterialBO.setReceiveId(userId);
-        amEmpMaterialBO.setReceiveName(userName);
-        amEmpMaterialBO.setModifiedBy(userId);
-        amEmpMaterialBO.setModifiedTime(now);
-        amEmpMaterialService.updateMaterialBatch(amEmpMaterialBO);
-
         boolean b = amEmploymentService.insertOrUpdateAllColumnBatch(list);
-
         map.put("result",b);
-
-
         return map;
     }
 
