@@ -822,12 +822,6 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     @Override
     public Map<String, Object>  batchCheck(EmployeeBatchBO employeeBatchBO) {
         Map<String,Object> resultMap = new HashMap<>();
-        List<AmEmpTaskBO> materialList = baseMapper.queryIsReject(employeeBatchBO);
-        if(null!=materialList&&materialList.size()>0)
-        {
-            resultMap.put("empMaterial",materialList.size());
-            return  resultMap;
-        }
         List<AmEmpTaskBO> amEmpTaskMaterialList = baseMapper.queryIsMaterial(employeeBatchBO);
         List<HireMaterialTransferRecordDTO> hireMaterialTransferRecordDTOList = new ArrayList<>();
         Map<String,String> tempMap = new HashMap<>();
