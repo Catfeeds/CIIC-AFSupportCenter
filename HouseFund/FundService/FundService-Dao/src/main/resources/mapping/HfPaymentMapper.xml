@@ -252,7 +252,7 @@
         <result column="remitted_count_emp_last" property="remittedCountEmpLast"/>
         <result column="repair_amount" property="repairAmount"/>
         <result column="repair_count_emp" property="repairCountEmp"/>
-
+        <result column="company_id" property="companyId"/>
 
     </resultMap>
 
@@ -261,7 +261,8 @@
         ca.com_account_name,cac.hf_com_account,p.payment_month,DATE_FORMAT(CURDATE(),'%Y-%m-%d') as curdate,sba.bank_name
         ,curMonth.remitted_amount_add,curMonth.remitted_amount_reduce,curMonth.remitted_amount,
         curMonth.remitted_count_emp_add,curMonth.remitted_count_emp_reduce,curMonth.remitted_count_emp,
-        lastMonth.remitted_amount_last,lastMonth.remitted_count_emp_last,curMonth.repair_amount,curMonth.repair_count_emp
+        lastMonth.remitted_amount_last,lastMonth.remitted_count_emp_last,curMonth.repair_amount,curMonth.repair_count_emp,
+        (SELECT group_concat(company_id) FROM hf_account_com_relation where is_active=1 and com_account_id=ca.com_account_id AND major_com=1 limit 5 ) as company_id
         from hf_payment_account pa
         LEFT JOIN hf_com_account ca ON ca.com_account_id=pa.com_account_id
         LEFT JOIN hf_com_account_class cac ON cac.com_account_class_id=pa.com_account_class_id

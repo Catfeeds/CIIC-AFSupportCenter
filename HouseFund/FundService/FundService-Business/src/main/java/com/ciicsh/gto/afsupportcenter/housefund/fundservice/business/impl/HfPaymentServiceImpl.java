@@ -288,7 +288,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             dto.setPayReason("支付独立户公积金费用" + hfPayment.getPaymentMonth());
         }
         dto.setPayPurpose(dto.getPayReason());
-        if (hfPayment.getPaymentWay() != 2) {//如果付款方式不是支票
+        if (hfPayment.getPaymentWay() != 2) {//如果付款方式不是支票 即转账方式
             dto.setReceiveAccountId(hfPaymentMapper.getHfPaymentBankId(hfPayment.getPaymentId())); //付款银行ID
         }
         List<PayapplyCompanyProxyDTO> paymentComList = baseMapper.getHfPaymentComList(hfPayment.getPaymentId(), hfPayment.getPaymentMonth()).stream().map(x -> toCompanyDto(x)).collect(Collectors.toList());

@@ -37,12 +37,12 @@ public class HfPaymentAccountBo extends HfPaymentAccount {
     private String fundAccountType;
 
     /**
-     * 缴费银行：1 徐汇—X、2 西郊—C、3 东方路—P、4 卢湾—L、5 黄浦—H
+     * 缴费银行：15 徐汇—X、16 西郊—C、17东方路—P、18 卢湾—L、0 黄浦—H
      */
     private String paymentBankValue;
 
     /**
-     * 缴费银行编号：1 徐汇—X、2 西郊—C、3 东方路—P、4 卢湾—L、5 黄浦—H
+     * 缴费银行编号：15 徐汇—X、16 西郊—C、17东方路—P、18 卢湾—L、0 黄浦—H
      */
     private Integer paymentBank;
 
