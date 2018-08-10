@@ -94,4 +94,17 @@ public interface FundApiProxy {
     JsonResult<List<FundChangeInformationDTO>> getFundChangeInformation(@RequestParam("companyId")String companyId,
                                                                   @RequestParam("employeeId")String employeeId,
                                                                   @RequestParam("year")String year);
+
+    /**
+     * 接口调用方：雇员中心
+     * 根据客户Id，雇员Id和公积金类型获取雇员的公积金信息
+     * @param companyId
+     * @param employeeId
+     * @param hfType
+     * @return
+     */
+    @PostMapping("/getEmpFundInfo")
+    JsonResult<EmpFundInfoDTO> getEmpFundInfo(@RequestParam("companyId")String companyId,
+                                              @RequestParam("employeeId")String employeeId,
+                                              @RequestParam("hfType")Integer hfType);
 }

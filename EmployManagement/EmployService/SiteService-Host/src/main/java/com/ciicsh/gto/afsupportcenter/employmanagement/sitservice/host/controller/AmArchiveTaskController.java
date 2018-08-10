@@ -97,10 +97,14 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
                 }
             }
 
-            if(!StringUtil.isEmpty(amEmploymentBO.getArchiveSpecial()))
+            StringBuffer buf = new StringBuffer();
+            buf.append(amEmploymentBO.getEmploySpecial()==null?"":amEmploymentBO.getEmploySpecial());
+            buf.append(amEmploymentBO.getRefuseSpecial()==null?"":amEmploymentBO.getRefuseSpecial());
+            buf.append(amEmploymentBO.getArchiveSpecial()==null?"":amEmploymentBO.getArchiveSpecial());
+            if(!StringUtil.isEmpty(buf.toString()))
             {
-                int last = amEmploymentBO.getArchiveSpecial().lastIndexOf(",");
-                amEmploymentBO.setArchiveSpecial(amEmploymentBO.getArchiveSpecial().substring(0,last));
+                int last = buf.lastIndexOf(",");
+                amEmploymentBO.setArchiveSpecial(buf.substring(0,last));
             }
         }
 
