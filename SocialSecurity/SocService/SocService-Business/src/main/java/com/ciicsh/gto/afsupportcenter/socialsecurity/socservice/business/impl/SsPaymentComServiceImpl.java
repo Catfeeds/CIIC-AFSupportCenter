@@ -232,7 +232,9 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
         //处理业务
         SsPayment newSsPayment = new SsPayment();
         //传入值
-        newSsPayment.setPaymentMonth(LocalDate.now().plusMonths(-1).format( DateTimeFormatter.ofPattern("yyyyMM")));
+
+        //newSsPayment.setPaymentMonth(LocalDate.now().plusMonths(-1).format( DateTimeFormatter.ofPattern("yyyyMM")));
+        newSsPayment.setPaymentMonth(ssAddPaymentBO.getPaymentMonth());
         newSsPayment.setAccountType(ssAddPaymentBO.getSsAccountType());
         //默认值
         DateTimeFormatter formatter= DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
