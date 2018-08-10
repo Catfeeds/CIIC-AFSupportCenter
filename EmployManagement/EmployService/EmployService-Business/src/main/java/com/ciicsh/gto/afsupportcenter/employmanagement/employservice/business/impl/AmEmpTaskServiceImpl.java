@@ -302,6 +302,59 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
         }
 
+        if(map.containsKey("materialList"))
+        {
+            try {
+                List<String> list = (List<String>) map.get("materialList");
+                SMUserInfoDTO smUserInfoDTO = null;
+                if(!StringUtil.isEmpty(submitterId))
+                {
+                    try {
+                        smUserInfoDTO = employeeInfoProxy.getUserInfo(submitterId);
+                    } catch (Exception e) {
+                        LogMessage logMessage = LogMessage.create().setTitle("用工任务单").setContent(e.getMessage());
+                        logApiUtil.error(logMessage);
+                    }
+                }
+                List<AmEmpMaterial> amEmpMaterialsList = new ArrayList<>();
+                if(null!=list)
+                {
+                    for(String str:list)
+                    {
+                        AmEmpMaterial amEmpMaterial = new AmEmpMaterial();
+                        amEmpMaterial.setMaterialName(str);
+                        amEmpMaterial.setEmployeeId(bo.getEmployeeId());
+                        amEmpMaterial.setOperateType(1);
+                        amEmpMaterial.setActive(true);
+                        String createdBy = "System";
+                        try {
+                            createdBy = smUserInfoDTO.getUserId();
+                        } catch (Exception e) {
+
+                        }
+                        amEmpMaterial.setCreatedBy(createdBy);
+                        amEmpMaterial.setCreatedTime(LocalDateTime.now());
+                        amEmpMaterial.setModifiedTime(LocalDateTime.now());
+                        amEmpMaterial.setModifiedBy(createdBy);
+                        amEmpMaterial.setSubmitterDate(LocalDateTime.now());
+                        amEmpMaterial.setSubmitterId(submitterId);
+                        amEmpMaterial.setSubmitterName(smUserInfoDTO==null?"":smUserInfoDTO.getDisplayName());
+                        amEmpMaterial.setExtension(smUserInfoDTO==null?"":smUserInfoDTO.getExtension());
+                        amEmpMaterial.setEmpTaskId(amEmpTask.getEmpTaskId());
+                        amEmpMaterialsList.add(amEmpMaterial);
+                    }
+                    amEmpMaterialService.insertBatch(amEmpMaterialsList);
+                }else{
+                    logger.info("materialList",map.get("materialList"));
+                }
+
+            } catch (Exception e) {
+                LogMessage logMessage = LogMessage.create().setTitle("用工任务单").setContent(e.getMessage());
+                logApiUtil.error(logMessage);
+            }
+        }
+
+
         return true;
     }
 
@@ -716,15 +769,15 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     @Transactional(rollbackFor = RuntimeException.class)
     public Map<String,Object> batchSaveEmployment(EmployeeBatchBO employeeBatchBO) {
         Map<String,Object> map = new HashMap<>();
-
+        LocalDateTime now = LocalDateTime.now();
+        String userId = ReasonUtil.getUserId();
+        String userName = ReasonUtil.getUserName();
         List<AmEmpTaskBO> amEmpTaskMaterialList = baseMapper.queryIsMaterial(employeeBatchBO);
         List<HireMaterialTransferRecordDTO> hireMaterialTransferRecordDTOList = new ArrayList<>();
-        Map<String,String> tempMap = new HashMap<>();
         for(AmEmpTaskBO taskBO:amEmpTaskMaterialList)
         {
             if(!StringUtil.isEmpty(taskBO.getHireTaskId()))
             {
-                tempMap.put(taskBO.getHireTaskId(),taskBO.getEmployeeId());
                 HireMaterialTransferRecordDTO dto = new HireMaterialTransferRecordDTO();
                 dto.setTaskId(taskBO.getHireTaskId());
                 dto.setOperation(1);
@@ -733,53 +786,55 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 hireMaterialTransferRecordDTOList.add(dto);
             }
         }
-        HireMaterialTransferRecordBatchDTO hireMaterialTransferRecordBatchDTO = new HireMaterialTransferRecordBatchDTO();
-        hireMaterialTransferRecordBatchDTO.setHireMaterialTransferRecordDTOList(hireMaterialTransferRecordDTOList);
+        if(hireMaterialTransferRecordDTOList.size()>0)
+        {
+            HireMaterialTransferRecordBatchDTO hireMaterialTransferRecordBatchDTO = new HireMaterialTransferRecordBatchDTO();
+            hireMaterialTransferRecordBatchDTO.setHireMaterialTransferRecordDTOList(hireMaterialTransferRecordDTOList);
 
-        JsonResult jsonResult = null;
-        try {
-            jsonResult = sheetInfoProxy.feedbackHireMaterialOperationInfoList(hireMaterialTransferRecordBatchDTO);
-        } catch (Exception e) {
-            LogMessage logMessage = LogMessage.create().setTitle("employee_sheetInfoProxy").setContent(e.getMessage());
-            logApiUtil.error(logMessage);
-        }
-        LocalDateTime now = LocalDateTime.now();
-        String userId = ReasonUtil.getUserId();
-        String userName = ReasonUtil.getUserName();
-        if(jsonResult==null){
-           map.put("message","雇员中心接口异常");
-           return map;
-        }else{
-            if(jsonResult.getCode()==1){
-                map.put("message",jsonResult.getMessage());
+            JsonResult jsonResult = null;
+            try {
+                jsonResult = sheetInfoProxy.feedbackHireMaterialOperationInfoList(hireMaterialTransferRecordBatchDTO);
+            } catch (Exception e) {
+                LogMessage logMessage = LogMessage.create().setTitle("employee_sheetInfoProxy").setContent(e.getMessage());
+                logApiUtil.error(logMessage);
+            }
+
+            if(jsonResult==null){
+                map.put("message","雇员中心接口异常");
                 return map;
             }else{
-                List<AmEmpTaskBO> changeList = baseMapper.queryChange(employeeBatchBO);
-                List<Long> tempChangeList = new ArrayList<>();
-                for(AmEmpTaskBO tempBO:changeList)
-                {
-                    tempChangeList.add(tempBO.getEmpTaskId());
-                }
-                //翻盘不需要材料签收
-                List<Long> taskIds  = employeeBatchBO.getEmpTaskIds();
-                if(tempChangeList.size()>0){
-                    taskIds.removeAll(tempChangeList);
-                }
-                AmEmpMaterialBO amEmpMaterialBO = new AmEmpMaterialBO();
-                amEmpMaterialBO.setEmpTaskIdList(taskIds);
-                amEmpMaterialBO.setReceiveDate(LocalDate.now());
-                amEmpMaterialBO.setReceiveId(userId);
-                amEmpMaterialBO.setReceiveName(userName);
-                amEmpMaterialBO.setModifiedBy(userId);
-                amEmpMaterialBO.setModifiedTime(now);
-                try {
-                    amEmpMaterialService.updateMaterialBatch(amEmpMaterialBO);
-                } catch (Exception e) {
-                    LogMessage logMessage = LogMessage.create().setTitle("用工材料批量签收").setContent(e.getMessage());
-                    logApiUtil.error(logMessage);
+                if(jsonResult.getCode()==1){
+                    map.put("message",jsonResult.getMessage());
+                    return map;
+                }else{
+                    List<AmEmpTaskBO> changeList = baseMapper.queryChange(employeeBatchBO);
+                    List<Long> tempChangeList = new ArrayList<>();
+                    for(AmEmpTaskBO tempBO:changeList)
+                    {
+                        tempChangeList.add(tempBO.getEmpTaskId());
+                    }
+                    //翻盘不需要材料签收
+                    List<Long> taskIds  = employeeBatchBO.getEmpTaskIds();
+                    if(tempChangeList.size()>0){
+                        taskIds.removeAll(tempChangeList);
+                    }
+                    AmEmpMaterialBO amEmpMaterialBO = new AmEmpMaterialBO();
+                    amEmpMaterialBO.setEmpTaskIdList(taskIds);
+                    amEmpMaterialBO.setReceiveDate(LocalDate.now());
+                    amEmpMaterialBO.setReceiveId(userId);
+                    amEmpMaterialBO.setReceiveName(userName);
+                    amEmpMaterialBO.setModifiedBy(userId);
+                    amEmpMaterialBO.setModifiedTime(now);
+                    try {
+                        amEmpMaterialService.updateMaterialBatch(amEmpMaterialBO);
+                    } catch (Exception e) {
+                        LogMessage logMessage = LogMessage.create().setTitle("用工材料批量签收").setContent(e.getMessage());
+                        logApiUtil.error(logMessage);
+                    }
                 }
             }
         }
+
 
         Map<String,Object> param = new HashMap<>();
         List<AmRemark> amRemarkList = new ArrayList<>();
@@ -867,31 +922,34 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 hireMaterialTransferRecordDTOList.add(dto);
             }
         }
-        HireMaterialTransferRecordBatchDTO hireMaterialTransferRecordBatchDTO = new HireMaterialTransferRecordBatchDTO();
-        hireMaterialTransferRecordBatchDTO.setHireMaterialTransferRecordDTOList(hireMaterialTransferRecordDTOList);
-        JsonResult<List<FeedbackMessageDTO>> jsonResult = null;
-        try {
-            jsonResult = sheetInfoProxy.validateHireMaterialOperation(hireMaterialTransferRecordBatchDTO);
-        } catch (Exception e) {
-            LogMessage logMessage = LogMessage.create().setTitle("employee_sheetInfoProxy").setContent(e.getMessage());
-            logApiUtil.info(logMessage);
-        }
-        if(null==jsonResult)
+        if(hireMaterialTransferRecordDTOList.size()>0)
         {
-            resultMap.put("isMaterial","雇员中心接口调用异常...");
-            return  resultMap;
-        }else{
-            List<FeedbackMessageDTO> data = jsonResult.getData();
-            if(null!=data&&data.size()>0)
+            HireMaterialTransferRecordBatchDTO hireMaterialTransferRecordBatchDTO = new HireMaterialTransferRecordBatchDTO();
+            hireMaterialTransferRecordBatchDTO.setHireMaterialTransferRecordDTOList(hireMaterialTransferRecordDTOList);
+            JsonResult<List<FeedbackMessageDTO>> jsonResult = null;
+            try {
+                jsonResult = sheetInfoProxy.validateHireMaterialOperation(hireMaterialTransferRecordBatchDTO);
+            } catch (Exception e) {
+                LogMessage logMessage = LogMessage.create().setTitle("employee_sheetInfoProxy").setContent(e.getMessage());
+                logApiUtil.error(logMessage);
+            }
+            if(null==jsonResult)
             {
-                String empId = tempMap.get(data.get(0).getTaskId())==null?"":tempMap.get(data.get(0).getTaskId());
-                StringBuffer buf = new StringBuffer();
-                buf.append("雇员编号是");
-                buf.append(empId);
-                buf.append(",原因是");
-                buf.append(data.get(0).getMessage());
-                resultMap.put("isMaterial",buf.toString());
+                resultMap.put("isMaterial","雇员中心接口调用异常...");
                 return  resultMap;
+            }else{
+                List<FeedbackMessageDTO> data = jsonResult.getData();
+                if(null!=data&&data.size()>0)
+                {
+                    String empId = tempMap.get(data.get(0).getTaskId())==null?"":tempMap.get(data.get(0).getTaskId());
+                    StringBuffer buf = new StringBuffer();
+                    buf.append("雇员编号是");
+                    buf.append(empId);
+                    buf.append(",原因是");
+                    buf.append(data.get(0).getMessage());
+                    resultMap.put("isMaterial",buf.toString());
+                    return  resultMap;
+                }
             }
         }
         List<AmEmpTaskBO> amEmpTaskBOList = baseMapper.queryIsFinish(employeeBatchBO);
@@ -1552,7 +1610,6 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             }
             param.remove(param.size()-1);
         }
-
 
 
 

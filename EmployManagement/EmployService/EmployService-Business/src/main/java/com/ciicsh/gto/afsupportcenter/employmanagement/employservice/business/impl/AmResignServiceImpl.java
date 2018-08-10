@@ -239,6 +239,7 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
             }else{
                 entity.setResignId(temp.getResignId());
             }
+            entity.setResignOperateMan(ReasonUtil.getUserName());
             param.put("employeeId",temp.getEmployeeId());
             param.put("companyId",temp.getCompanyId());
             List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmploymentResign(param);
