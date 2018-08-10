@@ -1363,7 +1363,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                     dtoList.setSuperiorDepartment("无");
                     dtoList.setCompanyName(companyDto.getObject().getCompanyName());
                     dtoList.setCompanyType("国有");
-                    dtoList.setOrganizationCode(companyDto.getObject().getOrganizationCode());
+                    dtoList.setOrganizationCode(companyDto.getObject().getOrganizationCode()==null || companyDto.getObject().getOrganizationCode().length()<9?"         "
+                        :companyDto.getObject().getOrganizationCode());
                     dtoList.setCompanyAddress(companyDto.getObject().getRegisteredAddress());
                     dtoList.setPostalCode("200030");
                     dtoList.setIndustryCategory("职业中介");

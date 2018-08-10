@@ -1031,7 +1031,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>中央属</w:t>
+            <w:t>无</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -1124,51 +1124,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>衡山路</w:t>
-          </w:r>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:ascii="宋体"/>
-              <wx:font wx:val="宋体"/>
-              <w:color w:val="000000"/>
-              <w:kern w:val="0"/>
-              <w:sz w:val="20"/>
-              <w:sz-cs w:val="24"/>
-            </w:rPr>
-            <w:t>922</w:t>
-          </w:r>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:ascii="宋体" w:hint="fareast"/>
-              <wx:font wx:val="宋体"/>
-              <w:color w:val="000000"/>
-              <w:kern w:val="0"/>
-              <w:sz w:val="20"/>
-              <w:sz-cs w:val="24"/>
-            </w:rPr>
-            <w:t>号</w:t>
-          </w:r>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:ascii="宋体"/>
-              <wx:font wx:val="宋体"/>
-              <w:color w:val="000000"/>
-              <w:kern w:val="0"/>
-              <w:sz w:val="20"/>
-              <w:sz-cs w:val="24"/>
-            </w:rPr>
-            <w:t>19</w:t>
-          </w:r>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:ascii="宋体" w:hint="fareast"/>
-              <wx:font wx:val="宋体"/>
-              <w:color w:val="000000"/>
-              <w:kern w:val="0"/>
-              <w:sz w:val="20"/>
-              <w:sz-cs w:val="24"/>
-            </w:rPr>
-            <w:t>楼</w:t>
+            <w:t>上海市徐汇区衡山路922号18楼</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -5480,7 +5436,7 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="21"/>
             </w:rPr>
-            <w:t>3</w:t>
+            <w:t>6</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -5703,7 +5659,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>中央属</w:t>
+            <w:t>无</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -5796,51 +5752,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>衡山路</w:t>
-          </w:r>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:ascii="宋体"/>
-              <wx:font wx:val="宋体"/>
-              <w:color w:val="000000"/>
-              <w:kern w:val="0"/>
-              <w:sz w:val="20"/>
-              <w:sz-cs w:val="24"/>
-            </w:rPr>
-            <w:t>922</w:t>
-          </w:r>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:ascii="宋体" w:hint="fareast"/>
-              <wx:font wx:val="宋体"/>
-              <w:color w:val="000000"/>
-              <w:kern w:val="0"/>
-              <w:sz w:val="20"/>
-              <w:sz-cs w:val="24"/>
-            </w:rPr>
-            <w:t>号</w:t>
-          </w:r>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:ascii="宋体"/>
-              <wx:font wx:val="宋体"/>
-              <w:color w:val="000000"/>
-              <w:kern w:val="0"/>
-              <w:sz w:val="20"/>
-              <w:sz-cs w:val="24"/>
-            </w:rPr>
-            <w:t>19</w:t>
-          </w:r>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:ascii="宋体" w:hint="fareast"/>
-              <wx:font wx:val="宋体"/>
-              <w:color w:val="000000"/>
-              <w:kern w:val="0"/>
-              <w:sz w:val="20"/>
-              <w:sz-cs w:val="24"/>
-            </w:rPr>
-            <w:t>楼</w:t>
+            <w:t>上海市徐汇区衡山路922号8楼</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -7342,7 +7254,7 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="21"/>
             </w:rPr>
-            <w:t>0</w:t>
+            <w:t>9</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -7854,7 +7766,7 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="21"/>
             </w:rPr>
-            <w:t>1</w:t>
+            <w:t>6</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -7885,7 +7797,7 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="21"/>
             </w:rPr>
-            <w:t>2</w:t>
+            <w:t>9</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -7916,7 +7828,7 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="21"/>
             </w:rPr>
-            <w:t>2</w:t>
+            <w:t>3</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -7947,7 +7859,7 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="21"/>
             </w:rPr>
-            <w:t>2</w:t>
+            <w:t>5</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -7978,7 +7890,7 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="21"/>
             </w:rPr>
-            <w:t>4</w:t>
+            <w:t>9</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -8009,7 +7921,7 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="21"/>
             </w:rPr>
-            <w:t>0</w:t>
+            <w:t>3</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -8040,7 +7952,7 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="21"/>
             </w:rPr>
-            <w:t>3</w:t>
+            <w:t>4</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -10163,7 +10075,9 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="21"/>
             </w:rPr>
-            <w:t>3</w:t>
+              <#if subList3.organizationCode?? >
+                  <w:t>${(subList3.organizationCode?substring(1,2))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -10386,7 +10300,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>中央属</w:t>
+            <w:t>无</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -12025,7 +11939,9 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="21"/>
             </w:rPr>
-            <w:t>0</w:t>
+              <#if subList3.organizationCode?? >
+                  <w:t>${(subList3.organizationCode?substring(8,9))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -12537,7 +12453,9 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="21"/>
             </w:rPr>
-            <w:t>1</w:t>
+              <#if subList3.organizationCode?? >
+                  <w:t>${(subList3.organizationCode?substring(0,1))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -12568,7 +12486,9 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="21"/>
             </w:rPr>
-            <w:t>2</w:t>
+              <#if subList3.organizationCode?? >
+                  <w:t>${(subList3.organizationCode?substring(2,3))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -12599,7 +12519,9 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="21"/>
             </w:rPr>
-            <w:t>2</w:t>
+              <#if subList3.organizationCode?? >
+                  <w:t>${(subList3.organizationCode?substring(3,4))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -12630,7 +12552,9 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="21"/>
             </w:rPr>
-            <w:t>2</w:t>
+              <#if subList3.organizationCode?? >
+                  <w:t>${(subList3.organizationCode?substring(4,5))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -12661,7 +12585,9 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="21"/>
             </w:rPr>
-            <w:t>4</w:t>
+              <#if subList3.organizationCode?? >
+                  <w:t>${(subList3.organizationCode?substring(5,6))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -12692,7 +12618,9 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="21"/>
             </w:rPr>
-            <w:t>0</w:t>
+              <#if subList3.organizationCode?? >
+                  <w:t>${(subList3.organizationCode?substring(6,7))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -12723,7 +12651,9 @@
               <w:kern w:val="0"/>
               <w:sz-cs w:val="21"/>
             </w:rPr>
-            <w:t>3</w:t>
+              <#if subList3.organizationCode?? >
+                  <w:t>${(subList3.organizationCode?substring(7,8))!}</w:t>
+              </#if>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
