@@ -127,7 +127,9 @@
         h.title,
         h.service_center,/*服务中心 */
         h.leader_ship_name, /*客服经理*/
-        CONCAT(cs.employ_special,cs.refuse_special,cs.archive_special) as archive_special
+        cs.employ_special,
+        cs.refuse_special,
+        cs.archive_special
         FROM
         am_employment b
         LEFT JOIN am_emp_task a on a.emp_task_id = b.emp_task_id
@@ -163,6 +165,8 @@
         w.out_date,
         w.emp_task_id as empTaskResignId,
         a.emp_task_id,
+        a.change_company,
+        a.job,
         b.employment_id,
         b.employee_id,
         b.company_id,
@@ -196,6 +200,8 @@
         h.title,
         h.service_center,/*服务中心 */
         h.leader_ship_name, /*客服经理*/
+        cs.employ_special,
+        cs.refuse_special,
         cs.archive_special
         FROM
         am_employment b

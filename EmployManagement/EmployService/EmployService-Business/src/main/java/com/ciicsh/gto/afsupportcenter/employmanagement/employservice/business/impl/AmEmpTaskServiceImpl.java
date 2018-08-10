@@ -772,7 +772,12 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 amEmpMaterialBO.setReceiveName(userName);
                 amEmpMaterialBO.setModifiedBy(userId);
                 amEmpMaterialBO.setModifiedTime(now);
-                amEmpMaterialService.updateMaterialBatch(amEmpMaterialBO);
+                try {
+                    amEmpMaterialService.updateMaterialBatch(amEmpMaterialBO);
+                } catch (Exception e) {
+                    LogMessage logMessage = LogMessage.create().setTitle("用工材料批量签收").setContent(e.getMessage());
+                    logApiUtil.error(logMessage);
+                }
             }
         }
 
