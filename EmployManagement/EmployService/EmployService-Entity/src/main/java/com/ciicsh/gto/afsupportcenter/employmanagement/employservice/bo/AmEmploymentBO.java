@@ -129,5 +129,9 @@ public class AmEmploymentBO extends AmEmployment {
      */
     private List<String> orderParam;
 
+    private String refuseSpecial;
+
+    private String employSpecial;
+
 
 }
