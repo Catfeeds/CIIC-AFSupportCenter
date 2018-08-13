@@ -77,7 +77,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         List<String> orderParam = new ArrayList<String>();
 
         if (!StringUtil.isEmpty(hfEmpTaskBo.getParams())) {
-            String arr[] = hfEmpTaskBo.getParams().split(",");
+            String arr[] = hfEmpTaskBo.getParams().split(";");
             for (int i = 0; i < arr.length; i++) {
                 if(arr[i].indexOf("processStatus")!=-1){
                     String str[] = arr[i].split(" ");
@@ -150,7 +150,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         List<String> orderParam = new ArrayList<String>();
 
         if (!StringUtil.isEmpty(hfEmpTaskBo.getParams())) {
-            String arr[] = hfEmpTaskBo.getParams().split(",");
+            String arr[] = hfEmpTaskBo.getParams().split(";");
             for (int i = 0; i < arr.length; i++) {
                 if(arr[i].indexOf("processStatus")!=-1){
                     String str[] = arr[i].split(" ");
