@@ -60,4 +60,6 @@ public interface AmEmpTaskMapper extends BaseMapper<AmEmpTask> {
 
     List<AmEmpTaskBO> queryIsMaterial(EmployeeBatchBO employeeBatchBO);
 
+    List<AmEmpTaskBO> queryByTaskId(String taskId);
+
 }

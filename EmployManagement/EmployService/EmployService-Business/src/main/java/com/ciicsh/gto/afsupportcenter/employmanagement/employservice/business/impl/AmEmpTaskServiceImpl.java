@@ -180,7 +180,16 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     )
     @Override
     public boolean  insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) throws Exception {
-
+        if(!StringUtil.isEmpty(taskMsgDTO.getTaskId()))
+        {
+            List<AmEmpTaskBO> taskBOList = baseMapper.queryByTaskId(taskMsgDTO.getTaskId());
+            if(null!=taskBOList&&taskBOList.size()>0)
+            {
+                LogMessage logMessage = LogMessage.create().setTitle("用工任务单").setContent(taskMsgDTO.getTaskId()+"is repetition");
+                logApiUtil.info(logMessage);
+                return false;
+            }
+        }
         AmEmpTask amEmpTask = new AmEmpTask();
         amEmpTask.setTaskId(taskMsgDTO.getTaskId());
         amEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
@@ -360,7 +369,16 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Override
     public boolean insertTaskFire(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) throws Exception {
-
+        if(!StringUtil.isEmpty(taskMsgDTO.getTaskId()))
+        {
+            List<AmEmpTaskBO> taskBOList = baseMapper.queryByTaskId(taskMsgDTO.getTaskId());
+            if(null!=taskBOList&&taskBOList.size()>0)
+            {
+                LogMessage logMessage = LogMessage.create().setTitle("退工任务单").setContent(taskMsgDTO.getTaskId()+"is repetition");
+                logApiUtil.info(logMessage);
+                return false;
+            }
+        }
         AmEmpTask amEmpTask = new AmEmpTask();
         amEmpTask.setTaskId(taskMsgDTO.getTaskId());
         amEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());

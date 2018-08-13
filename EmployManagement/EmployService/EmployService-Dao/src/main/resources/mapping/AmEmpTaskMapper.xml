@@ -608,5 +608,9 @@
         </foreach>
     </select>
 
+    <select id="queryByTaskId" resultMap="BaseResultMapDTO">
+        SELECT task_id,business_interface_id from am_emp_task where task_id = #{taskId}
+    </select>
+
 
 </mapper>
