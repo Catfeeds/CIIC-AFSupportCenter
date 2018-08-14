@@ -393,7 +393,26 @@
         </where>
         ORDER BY hca.com_account_name, hca.com_account_id
     </select>
-
+    <select id="queryComAccountByCompanyIdTransBoList" resultMap="ComAccountTransBo">
+        SELECT
+        hca.com_account_id,
+        hca.com_account_name,
+        hcac.com_account_class_id,
+        hcac.hf_com_account
+        FROM hf_com_account hca
+        INNER JOIN hf_account_com_relation hacr
+        ON hacr.com_account_id = hca.com_account_id AND hacr.is_active = 1
+        LEFT JOIN hf_com_account_class hcac
+        ON hca.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = #{hfType}
+        <where>
+                hca.is_active = 1
+                AND hca.hf_account_type = 3
+            <if test="companyId != null">
+                AND hacr.company_id = #{companyId}
+            </if>
+        </where>
+        ORDER BY hca.com_account_name, hca.com_account_id
+    </select>
     <select id="queryHfComAccountList" resultMap="ComAccountExtMap">
         SELECT DISTINCT
             hca.com_account_id,

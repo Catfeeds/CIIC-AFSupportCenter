@@ -467,13 +467,19 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         }
 
         if (CollectionUtils.isEmpty(rtnList)) {
-            comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
-
-            if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
-                RedisManager.set(key, comAccountTransBoList, ExpireTime.TEN_MIN);
-                rtnList = comAccountTransBoList.stream().filter(e ->
-                    e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
+            if("原单位".equals(comAccountTransBo.getComAccountName())){
+                comAccountTransBoList = hfComAccountService.queryComAccountByCompanyIdTransBoList(comAccountTransBo);
+                rtnList =comAccountTransBoList;
+            }else {
+                comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
+                if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
+                    RedisManager.set(key, comAccountTransBoList, ExpireTime.TEN_MIN);
+                    rtnList = comAccountTransBoList.stream().filter(e ->
+                        e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
+                }
             }
+
+
         }
 
         return JsonResultKit.of(rtnList);

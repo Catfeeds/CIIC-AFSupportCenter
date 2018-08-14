@@ -91,7 +91,10 @@
         INNER JOIN ss_com_account ca ON ca.com_account_id = ea.com_account_id
         LEFT JOIN emp_employee emp ON emp.employee_id=ea.employee_id
         WHERE
-        mci.is_active = 1 AND ca.ss_account = #{ssAccount} AND mc.ss_month  =#{ssMonth}
+        mci.is_active = 1 AND mc.ss_month  =#{ssMonth}
+        <if test="ssAccount!=null and ssAccount!=''">
+          AND ca.ss_account = #{ssAccount}
+        </if>
         <if test="companyId!=null and companyId!=''">
           AND ea.company_id=#{companyId}
         </if>
