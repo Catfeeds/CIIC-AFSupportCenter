@@ -456,7 +456,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
 
     @RequestMapping("/saveAmArchiveUse")
-    public JsonResult<Boolean>  saveAmArchiveUse(AmArchiveUse amArchiveUse) {
+    public JsonResult  saveAmArchiveUse(AmArchiveUse amArchiveUse) {
 
         LocalDateTime now = LocalDateTime.now();
         if(amArchiveUse.getArchiveUseId()==null){
@@ -471,7 +471,18 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         }
 
         boolean result = iAmArchiveUseService.insertOrUpdate(amArchiveUse);
-        return JsonResultKit.of(result);
+
+        PageInfo pageInfo = new PageInfo();
+        JSONObject params = new JSONObject();
+        params.put("archiveId",amArchiveUse.getArchiveId());
+        params.put("useBorrow",amArchiveUse.getUseBorrow());
+        pageInfo.setParams(params);
+        Map<String, Object> resultMap = new HashMap<>();
+        PageRows<AmArchiveUse>  amArchiveUsePageRows  = iAmArchiveUseService.queryAmArchiveUse(pageInfo);
+        if(null!=amArchiveUsePageRows&&amArchiveUsePageRows.getRows().size()>0){
+            resultMap.put("amArchiveUsePageRows",amArchiveUsePageRows);
+        }
+        return JsonResultKit.of(resultMap);
     }
 
     @RequestMapping("/queryArchiveUse")
