@@ -24,6 +24,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
+import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import io.swagger.annotations.Api;
@@ -396,7 +397,7 @@ public class FundApiController implements FundApiProxy{
         if (hfEmpArchive != null) {
             if (hfEmpArchive.getArchiveStatus().equals(HfEmpArchiveConstant.ARCHIVE_STATUS_CLOSED)) {
                 EmpFundInfoDTO empFundInfoDTO = new EmpFundInfoDTO();
-                empFundInfoDTO.setEndMonth(hfEmpArchive.getEndMonth());
+                empFundInfoDTO.setEndMonth(DateUtil.yyyyMMCN(hfEmpArchive.getEndMonth()));
                 return JsonResult.success(empFundInfoDTO, "数据获取成功");
             } else {
                 // 如果雇员档案非封存状态，查询雇员转出或封存任务单获取信息，获取相关信息
@@ -404,7 +405,7 @@ public class FundApiController implements FundApiProxy{
 
                 if (hfEmpTask != null) {
                     EmpFundInfoDTO empFundInfoDTO = new EmpFundInfoDTO();
-                    empFundInfoDTO.setEndMonth(hfEmpTask.getEndMonth());
+                    empFundInfoDTO.setEndMonth(DateUtil.yyyyMMCN(hfEmpTask.getEndMonth()));
                     return JsonResult.success(empFundInfoDTO, "数据获取成功");
                 }
             }
@@ -414,7 +415,7 @@ public class FundApiController implements FundApiProxy{
 
             if (hfEmpTask != null) {
                 EmpFundInfoDTO empFundInfoDTO = new EmpFundInfoDTO();
-                empFundInfoDTO.setEndMonth(hfEmpTask.getEndMonth());
+                empFundInfoDTO.setEndMonth(DateUtil.yyyyMMCN(hfEmpTask.getEndMonth()));
                 return JsonResult.success(empFundInfoDTO, "数据获取成功");
             }
         }
