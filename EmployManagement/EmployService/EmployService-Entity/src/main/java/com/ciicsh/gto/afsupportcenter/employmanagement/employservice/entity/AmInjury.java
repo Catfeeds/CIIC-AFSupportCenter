@@ -27,8 +27,8 @@ public class AmInjury implements Serializable {
     /**
      * 外健
      */
-	@TableField("archive_id")
-	private String archiveId;
+    @TableId(value="emp_task_id")
+    private Long empTaskId;
     /**
      * 工伤认定日期
      */
@@ -93,6 +93,9 @@ public class AmInjury implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+    @TableId(value="remark")
+    private String remark;
+
     public LocalDate getEvaluationDate() {
         return evaluationDate;
     }
@@ -109,15 +112,15 @@ public class AmInjury implements Serializable {
 		this.injuryId = injuryId;
 	}
 
-	public String getArchiveId() {
-		return archiveId;
-	}
+    public Long getEmpTaskId() {
+        return empTaskId;
+    }
 
-	public void setArchiveId(String archiveId) {
-		this.archiveId = archiveId;
-	}
+    public void setEmpTaskId(Long empTaskId) {
+        this.empTaskId = empTaskId;
+    }
 
-	public LocalDate getAffirmDate() {
+    public LocalDate getAffirmDate() {
 		return affirmDate;
 	}
 
@@ -213,11 +216,18 @@ public class AmInjury implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	@Override
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    @Override
 	public String toString() {
 		return "AmInjury{" +
 			", injuryId=" + injuryId +
-			", archiveId=" + archiveId +
 			", affirmDate=" + affirmDate +
 			", evaluation=" + evaluation +
 			", declareUnit=" + declareUnit +
