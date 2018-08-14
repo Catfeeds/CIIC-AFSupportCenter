@@ -180,7 +180,16 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     )
     @Override
     public boolean  insertTaskTb(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) throws Exception {
-
+        if(!StringUtil.isEmpty(taskMsgDTO.getTaskId()))
+        {
+            List<AmEmpTaskBO> taskBOList = baseMapper.queryByTaskId(taskMsgDTO.getTaskId());
+            if(null!=taskBOList&&taskBOList.size()>0)
+            {
+                LogMessage logMessage = LogMessage.create().setTitle("用工任务单").setContent(taskMsgDTO.getTaskId()+"is repetition");
+                logApiUtil.info(logMessage);
+                return false;
+            }
+        }
         AmEmpTask amEmpTask = new AmEmpTask();
         amEmpTask.setTaskId(taskMsgDTO.getTaskId());
         amEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
@@ -360,7 +369,16 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Override
     public boolean insertTaskFire(TaskCreateMsgDTO taskMsgDTO, Integer taskCategory) throws Exception {
-
+        if(!StringUtil.isEmpty(taskMsgDTO.getTaskId()))
+        {
+            List<AmEmpTaskBO> taskBOList = baseMapper.queryByTaskId(taskMsgDTO.getTaskId());
+            if(null!=taskBOList&&taskBOList.size()>0)
+            {
+                LogMessage logMessage = LogMessage.create().setTitle("退工任务单").setContent(taskMsgDTO.getTaskId()+"is repetition");
+                logApiUtil.info(logMessage);
+                return false;
+            }
+        }
         AmEmpTask amEmpTask = new AmEmpTask();
         amEmpTask.setTaskId(taskMsgDTO.getTaskId());
         amEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
@@ -1418,16 +1436,17 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                     // 独立户公司title信息
                     com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(companyId);
 
-                    dtoList.setSuperiorDepartment("无");
+                    dtoList.setSuperiorDepartment("无");// 上级部门主管
                     dtoList.setCompanyName(companyDto.getObject().getCompanyName());
-                    dtoList.setCompanyType("国有");
+                    dtoList.setCompanyType(companyDto.getObject().getCompanyTypeName());// 单位性质
                     dtoList.setOrganizationCode(companyDto.getObject().getOrganizationCode()==null || companyDto.getObject().getOrganizationCode().length()<9?"         "
-                        :companyDto.getObject().getOrganizationCode());
-                    dtoList.setCompanyAddress(companyDto.getObject().getRegisteredAddress());
-                    dtoList.setPostalCode("200030");
-                    dtoList.setIndustryCategory("职业中介");
+                        :companyDto.getObject().getOrganizationCode());// 组织机构代码
+                    dtoList.setCompanyAddress(companyDto.getObject().getBusinessAddress());// 营业地址
+                    dtoList.setPostalCode(companyDto.getObject().getBusinessZipCode()==null || companyDto.getObject().getBusinessZipCode().length()<6?"         "
+                        :companyDto.getObject().getBusinessZipCode());// 邮箱
+                    dtoList.setIndustryCategory(companyDto.getObject().getIndustryCategoryName());
                     dtoList.setMembership("");
-                    dtoList.setLinkman("");
+                    dtoList.setLinkman(UserContext.getUser().getDisplayName());
                     dtoList.setLinkPhone("54594545");
                     dtoList.setCreatedBy(UserContext.getUser().getDisplayName());
                     dtoList.setCreatedTime(new Date());

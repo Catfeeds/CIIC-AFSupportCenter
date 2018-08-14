@@ -22,6 +22,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsMonthCh
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.ComAccountExtPO;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.enumeration.LogInfo;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
@@ -344,7 +345,7 @@ public class SocApiController implements SocApiProxy {
         if (ssEmpArchive != null) {
             if (ssEmpArchive.getArchiveStatus().equals(3)) {
                 EmpSocialSecurityInfoDTO empSocialSecurityInfoDTO = new EmpSocialSecurityInfoDTO();
-                empSocialSecurityInfoDTO.setEndMonth(ssEmpArchive.getEndMonth());
+                empSocialSecurityInfoDTO.setEndMonth(DateUtil.yyyyMMCN(ssEmpArchive.getEndMonth()));
                 return JsonResult.success(empSocialSecurityInfoDTO, "数据获取成功");
             } else {
                 // 如果雇员档案非封存状态，查询雇员转出或封存任务单获取信息，获取相关信息
@@ -352,7 +353,7 @@ public class SocApiController implements SocApiProxy {
 
                 if (ssEmpTask != null) {
                     EmpSocialSecurityInfoDTO empSocialSecurityInfoDTO = new EmpSocialSecurityInfoDTO();
-                    empSocialSecurityInfoDTO.setEndMonth(ssEmpTask.getEndMonth());
+                    empSocialSecurityInfoDTO.setEndMonth(DateUtil.yyyyMMCN(ssEmpTask.getEndMonth()));
                     return JsonResult.success(empSocialSecurityInfoDTO, "数据获取成功");
                 }
             }
@@ -362,7 +363,7 @@ public class SocApiController implements SocApiProxy {
 
             if (ssEmpTask != null) {
                 EmpSocialSecurityInfoDTO empSocialSecurityInfoDTO = new EmpSocialSecurityInfoDTO();
-                empSocialSecurityInfoDTO.setEndMonth(ssEmpTask.getEndMonth());
+                empSocialSecurityInfoDTO.setEndMonth(DateUtil.yyyyMMCN(ssEmpTask.getEndMonth()));
                 return JsonResult.success(empSocialSecurityInfoDTO, "数据获取成功");
             }
         }

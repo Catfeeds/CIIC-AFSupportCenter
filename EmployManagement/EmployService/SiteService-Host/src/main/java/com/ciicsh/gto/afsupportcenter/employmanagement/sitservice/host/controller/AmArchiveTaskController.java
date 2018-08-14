@@ -320,15 +320,17 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             resultMap.put("amArchaiveBo",amArchiveBO);
             BeanUtils.copyProperties(amArchiveBO,amArchiveDTO);
 
+        }
+        try {
             AmInjuryBO amInjuryBO = new AmInjuryBO();
-            amInjuryBO.setArchiveId(amArchiveBO.getArchiveId().toString());
-
+            amInjuryBO.setEmpTaskId(amTaskParamBO.getEmpTaskId());
             List<AmInjuryBO>  amInjuryBOList = amInjuryService.queryAmInjury(amInjuryBO);
-
             if(null!=amInjuryBOList&&amInjuryBOList.size()>0)
             {
                 resultMap.put("amInjuryBOList",amInjuryBOList);
             }
+        } catch (Exception e) {
+
         }
 
         resultMap.put("amEmploymentBO",amEmploymentBO);
@@ -586,7 +588,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         }
         AmInjuryBO amInjuryBO = new AmInjuryBO();
-        amInjuryBO.setArchiveId(amInjury.getArchiveId());
+        amInjuryBO.setEmpTaskId(amInjury.getEmpTaskId());
         List<AmInjuryBO> list = amInjuryService.queryAmInjury(amInjuryBO);
         Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("result",result);
