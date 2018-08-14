@@ -1725,7 +1725,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>无</w:t>
+            <w:t>国资委</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -4426,7 +4426,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>无</w:t>
+            <w:t>国资委</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
