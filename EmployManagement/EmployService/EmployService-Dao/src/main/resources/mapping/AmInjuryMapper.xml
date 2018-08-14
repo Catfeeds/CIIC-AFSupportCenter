@@ -5,7 +5,7 @@
 	<!-- 通用查询映射结果 -->
 	<resultMap id="BaseResultMap" type="com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmInjury">
 		<id column="injury_id" property="injuryId" />
-		<result column="archive_id" property="archiveId" />
+		<result column="emp_task_id" property="empTaskId" />
 		<result column="affirm_date" property="affirmDate" />
 		<result column="evaluation" property="evaluation" />
 		<result column="declare_unit" property="declareUnit" />
@@ -18,6 +18,7 @@
 		<result column="modified_time" property="modifiedTime" />
 		<result column="created_by" property="createdBy" />
 		<result column="modified_by" property="modifiedBy" />
+        <result column="remark" property="remark" />
 	</resultMap>
 
     <!-- 通用查询映射结果 -->
@@ -28,7 +29,7 @@
 
 
     <select id="queryAmInjury" resultMap="BaseResultMapDTO">
-        SELECT  *  from  am_injury  where archive_id = #{archiveId} and  is_active = 1
+        SELECT  *  from  am_injury  where emp_task_id = #{empTaskId} and  is_active = 1
     </select>
 
 </mapper>
