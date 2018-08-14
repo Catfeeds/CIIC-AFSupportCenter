@@ -16,10 +16,13 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComA
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComTaskParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.*;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComTask;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpArchive;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsMonthCharge;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.ComAccountExtPO;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.enumeration.LogInfo;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
@@ -66,6 +69,9 @@ public class SocApiController implements SocApiProxy {
 
     @Autowired
     private SsMonthChargeItemService ssMonthChargeItemService;
+
+    @Autowired
+    private SsEmpTaskService ssEmpTaskService;
 
     @Override
     @ApiOperation(value = "企业社保账户开户、变更、转移、转出的 创建任务单接口", notes = "根据ComTask对象创建")
@@ -321,6 +327,61 @@ public class SocApiController implements SocApiProxy {
 //        }
 
         return JsonResult.faultMessage("支持中心反馈：无数据");
+    }
+
+    @Override
+    @ApiOperation(value = "获取雇员的社保信息接口", notes = "客户Id，雇员Id")
+    @PostMapping("/getEmpSocialSecurityInfo")
+    public JsonResult<EmpSocialSecurityInfoDTO> getEmpSocialSecurityInfo(String companyId, String employeeId) {
+        // 从雇员档案获取信息
+        Wrapper<SsEmpArchive> ssEmpArchiveWrapper = new EntityWrapper<>();
+        ssEmpArchiveWrapper.where("is_active = 1");
+        ssEmpArchiveWrapper.and("company_id = {0}", companyId);
+        ssEmpArchiveWrapper.and("employee_id = {0}", employeeId);
+        ssEmpArchiveWrapper.orderBy("created_time desc");
+        ssEmpArchiveWrapper.last("limit 1");
+        SsEmpArchive ssEmpArchive = ssEmpArchiveService.selectOne(ssEmpArchiveWrapper);
+
+        if (ssEmpArchive != null) {
+            if (ssEmpArchive.getArchiveStatus().equals(3)) {
+                EmpSocialSecurityInfoDTO empSocialSecurityInfoDTO = new EmpSocialSecurityInfoDTO();
+                empSocialSecurityInfoDTO.setEndMonth(DateUtil.yyyyMMCN(ssEmpArchive.getEndMonth()));
+                return JsonResult.success(empSocialSecurityInfoDTO, "数据获取成功");
+            } else {
+                // 如果雇员档案非封存状态，查询雇员转出或封存任务单获取信息，获取相关信息
+                SsEmpTask ssEmpTask = getEmpEndTask(companyId, employeeId);
+
+                if (ssEmpTask != null) {
+                    EmpSocialSecurityInfoDTO empSocialSecurityInfoDTO = new EmpSocialSecurityInfoDTO();
+                    empSocialSecurityInfoDTO.setEndMonth(DateUtil.yyyyMMCN(ssEmpTask.getEndMonth()));
+                    return JsonResult.success(empSocialSecurityInfoDTO, "数据获取成功");
+                }
+            }
+        } else {
+            // 如果雇员档案不存在，查询雇员任务单尚未办理，从雇员任务单获取信息
+            SsEmpTask ssEmpTask = getEmpEndTask(companyId, employeeId);
+
+            if (ssEmpTask != null) {
+                EmpSocialSecurityInfoDTO empSocialSecurityInfoDTO = new EmpSocialSecurityInfoDTO();
+                empSocialSecurityInfoDTO.setEndMonth(DateUtil.yyyyMMCN(ssEmpTask.getEndMonth()));
+                return JsonResult.success(empSocialSecurityInfoDTO, "数据获取成功");
+            }
+        }
+
+        return JsonResult.faultMessage("支持中心反馈：无数据");
+    }
+
+    private SsEmpTask getEmpEndTask(String companyId, String employeeId) {
+        Wrapper<SsEmpTask> ssEmpTaskWrapper = new EntityWrapper<>();
+        ssEmpTaskWrapper.where("is_active = 1");
+        ssEmpTaskWrapper.and("company_id = {0}", companyId);
+        ssEmpTaskWrapper.and("employee_id = {0}", employeeId);
+        ssEmpTaskWrapper.and("task_status in (1, 4, 5)");
+        ssEmpTaskWrapper.and("task_category in (5, 6, 14, 15)");
+        ssEmpTaskWrapper.orderBy("created_time desc");
+        ssEmpTaskWrapper.last("limit 1");
+
+        return ssEmpTaskService.selectOne(ssEmpTaskWrapper);
     }
 
     private boolean checkSsParam(List<SsEmpInfoParamDTO> paramDTOList) {

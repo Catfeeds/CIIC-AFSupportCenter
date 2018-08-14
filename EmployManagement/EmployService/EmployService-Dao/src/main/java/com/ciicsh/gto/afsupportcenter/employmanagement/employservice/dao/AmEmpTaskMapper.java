@@ -58,6 +58,8 @@ public interface AmEmpTaskMapper extends BaseMapper<AmEmpTask> {
 
     List<AmEmpTaskBO> queryChange(EmployeeBatchBO employeeBatchBO);
 
-    List<AmEmpTaskBO>  queryIsReject(EmployeeBatchBO employeeBatchBO);
+    List<AmEmpTaskBO> queryIsMaterial(EmployeeBatchBO employeeBatchBO);
+
+    List<AmEmpTaskBO> queryByTaskId(String taskId);
 
 }

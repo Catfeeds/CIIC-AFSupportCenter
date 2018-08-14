@@ -21,8 +21,10 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskCo
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfMonthChargeConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfComTask;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpArchive;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfMonthCharge;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
+import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import io.swagger.annotations.Api;
@@ -62,6 +64,8 @@ public class FundApiController implements FundApiProxy{
 //    private HfPaymentComService hfPaymentComService;
     @Autowired
     private HfMonthChargeService hfMonthChargeService;
+    @Autowired
+    private HfEmpTaskService hfEmpTaskService;
 
     /**
      * 企业公积金账户开户、变更、转移、转出的 创建任务单接口
@@ -376,6 +380,62 @@ public class FundApiController implements FundApiProxy{
         return JsonResult.faultMessage("支持中心反馈：无数据");
     }
 
+    @Override
+    @ApiOperation(value = "获取雇员的公积金信息接口", notes = "客户Id，雇员Id，公积金类型")
+    @PostMapping("/getEmpFundInfo")
+    public JsonResult<EmpFundInfoDTO> getEmpFundInfo(String companyId, String employeeId, Integer hfType) {
+        // 从雇员档案获取信息
+        Wrapper<HfEmpArchive> hfEmpArchiveWrapper = new EntityWrapper<>();
+        hfEmpArchiveWrapper.where("is_active = 1");
+        hfEmpArchiveWrapper.and("company_id = {0}", companyId);
+        hfEmpArchiveWrapper.and("employee_id = {0}", employeeId);
+        hfEmpArchiveWrapper.and("hf_type = {0}", hfType);
+        hfEmpArchiveWrapper.orderBy("created_time desc");
+        hfEmpArchiveWrapper.last("limit 1");
+        HfEmpArchive hfEmpArchive = hfEmpArchiveService.selectOne(hfEmpArchiveWrapper);
+
+        if (hfEmpArchive != null) {
+            if (hfEmpArchive.getArchiveStatus().equals(HfEmpArchiveConstant.ARCHIVE_STATUS_CLOSED)) {
+                EmpFundInfoDTO empFundInfoDTO = new EmpFundInfoDTO();
+                empFundInfoDTO.setEndMonth(DateUtil.yyyyMMCN(hfEmpArchive.getEndMonth()));
+                return JsonResult.success(empFundInfoDTO, "数据获取成功");
+            } else {
+                // 如果雇员档案非封存状态，查询雇员转出或封存任务单获取信息，获取相关信息
+                HfEmpTask hfEmpTask = getEmpEndTask(companyId, employeeId, hfType);
+
+                if (hfEmpTask != null) {
+                    EmpFundInfoDTO empFundInfoDTO = new EmpFundInfoDTO();
+                    empFundInfoDTO.setEndMonth(DateUtil.yyyyMMCN(hfEmpTask.getEndMonth()));
+                    return JsonResult.success(empFundInfoDTO, "数据获取成功");
+                }
+            }
+        } else {
+            // 如果雇员档案不存在，查询雇员任务单尚未办理，从雇员任务单获取信息
+            HfEmpTask hfEmpTask = getEmpEndTask(companyId, employeeId, hfType);
+
+            if (hfEmpTask != null) {
+                EmpFundInfoDTO empFundInfoDTO = new EmpFundInfoDTO();
+                empFundInfoDTO.setEndMonth(DateUtil.yyyyMMCN(hfEmpTask.getEndMonth()));
+                return JsonResult.success(empFundInfoDTO, "数据获取成功");
+            }
+        }
+
+        return JsonResult.faultMessage("支持中心反馈：无数据");
+    }
+
+    private HfEmpTask getEmpEndTask(String companyId, String employeeId, Integer hfType) {
+        Wrapper<HfEmpTask> hfEmpTaskWrapper = new EntityWrapper<>();
+        hfEmpTaskWrapper.where("is_active = 1");
+        hfEmpTaskWrapper.and("company_id = {0}", companyId);
+        hfEmpTaskWrapper.and("employee_id = {0}", employeeId);
+        hfEmpTaskWrapper.and("hf_type = {0}", hfType);
+        hfEmpTaskWrapper.and("task_status in (1, 4, 5)");
+        hfEmpTaskWrapper.and("task_category in (4, 5, 12, 13)");
+        hfEmpTaskWrapper.orderBy("created_time desc");
+        hfEmpTaskWrapper.last("limit 1");
+
+        return hfEmpTaskService.selectOne(hfEmpTaskWrapper);
+    }
 
     private boolean checkHfParam(List<HfEmpInfoParamDTO> paramDTOList) {
         return paramDTOList != null ? true : false;

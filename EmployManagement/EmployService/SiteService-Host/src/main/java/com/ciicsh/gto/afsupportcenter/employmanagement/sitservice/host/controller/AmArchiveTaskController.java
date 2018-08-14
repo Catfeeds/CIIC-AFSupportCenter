@@ -97,10 +97,14 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
                 }
             }
 
-            if(!StringUtil.isEmpty(amEmploymentBO.getArchiveSpecial()))
+            StringBuffer buf = new StringBuffer();
+            buf.append(amEmploymentBO.getEmploySpecial()==null?"":amEmploymentBO.getEmploySpecial());
+            buf.append(amEmploymentBO.getRefuseSpecial()==null?"":amEmploymentBO.getRefuseSpecial());
+            buf.append(amEmploymentBO.getArchiveSpecial()==null?"":amEmploymentBO.getArchiveSpecial());
+            if(!StringUtil.isEmpty(buf.toString()))
             {
-                int last = amEmploymentBO.getArchiveSpecial().lastIndexOf(",");
-                amEmploymentBO.setArchiveSpecial(amEmploymentBO.getArchiveSpecial().substring(0,last));
+                int last = buf.lastIndexOf(",");
+                amEmploymentBO.setArchiveSpecial(buf.substring(0,last));
             }
         }
 
@@ -316,15 +320,17 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             resultMap.put("amArchaiveBo",amArchiveBO);
             BeanUtils.copyProperties(amArchiveBO,amArchiveDTO);
 
+        }
+        try {
             AmInjuryBO amInjuryBO = new AmInjuryBO();
-            amInjuryBO.setArchiveId(amArchiveBO.getArchiveId().toString());
-
+            amInjuryBO.setEmpTaskId(amTaskParamBO.getEmpTaskId());
             List<AmInjuryBO>  amInjuryBOList = amInjuryService.queryAmInjury(amInjuryBO);
-
             if(null!=amInjuryBOList&&amInjuryBOList.size()>0)
             {
                 resultMap.put("amInjuryBOList",amInjuryBOList);
             }
+        } catch (Exception e) {
+
         }
 
         resultMap.put("amEmploymentBO",amEmploymentBO);
@@ -571,7 +577,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
         }
         AmInjuryBO amInjuryBO = new AmInjuryBO();
-        amInjuryBO.setArchiveId(amInjury.getArchiveId());
+        amInjuryBO.setEmpTaskId(amInjury.getEmpTaskId());
         List<AmInjuryBO> list = amInjuryService.queryAmInjury(amInjuryBO);
         Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("result",result);

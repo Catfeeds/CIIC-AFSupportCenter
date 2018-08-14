@@ -1,5 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.time.*;
 import java.time.chrono.ChronoZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -8,6 +10,7 @@ import java.util.Date;
 public class DateUtil {
 
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
+    private static DateTimeFormatter yyyyMMCNformatter = DateTimeFormatter.ofPattern("uuuu年MM月");
     private static DateTimeFormatter yyyyMMddHyphenFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 
     //转换日期类型
@@ -64,5 +67,13 @@ public class DateUtil {
 
     public static String yyyyMMddHyphen(LocalDate localDate) {
         return localDate.format(yyyyMMddHyphenFormatter);
+    }
+
+    public static String yyyyMMCN(String yyyyMM) {
+        if (StringUtils.isEmpty(yyyyMM)) {
+            return yyyyMM;
+        }
+        YearMonth monthDate = YearMonth.parse(yyyyMM , formatter);
+        return monthDate.format(yyyyMMCNformatter);
     }
 }

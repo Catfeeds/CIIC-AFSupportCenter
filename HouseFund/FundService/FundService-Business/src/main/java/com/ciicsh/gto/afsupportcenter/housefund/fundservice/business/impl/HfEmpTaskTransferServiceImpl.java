@@ -122,6 +122,8 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         if(result <= 0){
             return JsonResultKit.ofError("该雇员所在公司没有开户！");
         }
+        empTaskTransferBo.setHandleUserId(UserContext.getUser().getUserId());
+        empTaskTransferBo.setHandleUserName(UserContext.getUser().getDisplayName());
        /* Wrapper<HfEmpArchive> wrapper = new EntityWrapper<>();
         wrapper.eq("company_id", empTaskTransferBo.getCompanyId());
         wrapper.eq("employee_id", empTaskTransferBo.getEmployeeId());

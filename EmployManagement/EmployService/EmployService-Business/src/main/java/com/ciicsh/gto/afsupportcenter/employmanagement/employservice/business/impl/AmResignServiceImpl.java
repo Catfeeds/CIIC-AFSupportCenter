@@ -12,7 +12,6 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.ut
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmResignMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmployment;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmResign;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmResignLink;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.resignSearchExportOpt;
@@ -239,6 +238,7 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
             }else{
                 entity.setResignId(temp.getResignId());
             }
+            entity.setResignOperateMan(ReasonUtil.getUserName());
             param.put("employeeId",temp.getEmployeeId());
             param.put("companyId",temp.getCompanyId());
             List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmploymentResign(param);
@@ -321,8 +321,9 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
             resultMap.put("empTask",empCount);
             return  resultMap;
         }
-        if(resignCount>1){
+        if(resignCount>0){
             resultMap.put("resignCount",resignCount);
+            return  resultMap;
         }
 
         return resultMap;
