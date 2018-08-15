@@ -195,12 +195,7 @@
         WHERE
             pc.is_active = 1
             AND pc.payment_month = #{paymentMonth}
-            <if test="comAccountId!=null and comAccountId!=''">
-                AND pc.com_account_id = #{comAccountId}
-            </if>
-            <if test="ssAccount!=null and ssAccount!=''">
-                AND ca.com_account = #{comAccount}
-            </if>
+            AND ca.ss_account = #{ssAccount}
     </select>
     <select id="ssCanDeal" resultType="java.lang.Integer">
     SELECT payment_state FROM ss_payment_com pc
