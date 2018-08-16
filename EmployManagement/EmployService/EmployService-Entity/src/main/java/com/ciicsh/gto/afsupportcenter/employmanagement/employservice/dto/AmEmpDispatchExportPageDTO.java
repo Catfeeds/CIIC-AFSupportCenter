@@ -42,8 +42,21 @@ public class AmEmpDispatchExportPageDTO {
     // 操作人
     private String createdBy;
 
+    /**
+     * 公司社保登记码
+     */
+    private String ssAccount;
+
     // 循环表格
     private List<AmEmpDispatchExportDTO> list;
+
+    public String getSsAccount() {
+        return ssAccount;
+    }
+
+    public void setSsAccount(String ssAccount) {
+        this.ssAccount = ssAccount;
+    }
 
     public Date getCreatedTime() {
         return createdTime;
