@@ -130,6 +130,7 @@
         <result column="state" property="state" />
         <result column="payment_way" property="paymentWay" />
         <result column="ukey_store" property="ukeyStore" />
+        <result column="close_day" property="closeDay" />
         <result column="com_account_id" property="comAccountId" />
         <result column="com_account_name" property="comAccountName" />
         <result column="basic_com_account_class_id" property="basicComAccountClassId" />
@@ -988,6 +989,7 @@
         hca.state,
         hca.payment_way,
         hca.ukey_store,
+        hca.close_day,
         IFNULL(hca.com_account_name, hctb.com_account_name) AS com_account_name,
         hcacb.com_account_class_id AS basic_com_account_class_id,
         hcaca.com_account_class_id AS added_com_account_class_id,
@@ -1041,18 +1043,18 @@
         </if>
         LEFT JOIN
         (
-        SELECT DISTINCT hcas.com_account_id,het.welfare_unit,hcas.payment_bank,hcas.state,hcas.payment_way,hcas.ukey_store,hcas.hf_account_type,hcas.com_account_name
+        SELECT DISTINCT hcas.com_account_id,het.welfare_unit,hcas.payment_bank,hcas.state,hcas.payment_way,hcas.ukey_store,close_day,hcas.hf_account_type,hcas.com_account_name
         FROM hf_emp_task het
         LEFT JOIN hf_account_com_relation hacr ON hacr.company_id = het.company_id AND hacr.is_active = 1
         LEFT JOIN hf_com_account hcas ON hcas.com_account_id = hacr.com_account_id AND hcas.is_active = 1 AND hcas.hf_account_type = 3
         WHERE het.is_active = 1 AND het.welfare_unit = 1 AND het.emp_task_id = #{empTaskId}
         UNION ALL
-        SELECT DISTINCT hcas.com_account_id,2 AS welfare_unit,hcas.payment_bank,hcas.state,hcas.payment_way,hcas.ukey_store,hcas.hf_account_type,hcas.com_account_name
+        SELECT DISTINCT hcas.com_account_id,2 AS welfare_unit,hcas.payment_bank,hcas.state,hcas.payment_way,hcas.ukey_store,close_day,hcas.hf_account_type,hcas.com_account_name
         FROM hf_com_account hcas
         LEFT JOIN hf_account_com_relation hacr ON hcas.com_account_id = hacr.com_account_id AND hacr.is_active = 1
         WHERE hcas.is_active = 1 AND hcas.hf_account_type = 1
         UNION ALL
-        SELECT DISTINCT hcas.com_account_id,3 AS welfare_unit,hcas.payment_bank,hcas.state,hcas.payment_way,hcas.ukey_store,hcas.hf_account_type,hcas.com_account_name
+        SELECT DISTINCT hcas.com_account_id,3 AS welfare_unit,hcas.payment_bank,hcas.state,hcas.payment_way,hcas.ukey_store,close_day,hcas.hf_account_type,hcas.com_account_name
         FROM hf_com_account hcas
         LEFT JOIN hf_account_com_relation hacr ON hcas.com_account_id = hacr.com_account_id AND hacr.is_active = 1
         WHERE hcas.is_active = 1 AND hcas.hf_account_type = 2
