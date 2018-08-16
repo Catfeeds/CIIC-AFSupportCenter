@@ -121,9 +121,6 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             if(99==status){
                 amEmpTaskCountBO.setNoFeedback(amResignBO.getCount());
                 num = num + amResignBO.getCount();
-            }else if(98==status){
-                amEmpTaskCountBO.setRefuseWaitFinished(amResignBO.getCount());
-                num = num + amResignBO.getCount();
             }else if(1==status){
                 amEmpTaskCountBO.setRefuseFinished(amResignBO.getCount());
                 num = num + amResignBO.getCount();

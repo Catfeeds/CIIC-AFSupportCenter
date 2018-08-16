@@ -410,6 +410,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             bo.setCreatedBy(ReasonUtil.getUserId());
             bo.setModifiedBy(ReasonUtil.getUserId());
         }
+        bo.setRemarkDate(LocalDate.now());
 
         boolean result = false;
         try {

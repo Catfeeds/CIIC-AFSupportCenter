@@ -55,7 +55,6 @@ public class AmEmpEmployeeServiceImpl extends ServiceImpl<AmEmpEmployeeMapper, A
 
             amEmpEmployeeBO.setSex(amEmpEmployeeBO.getGender()==0?"女":"男");
 
-
             AmCompanySetBO amCompanySetBO = new AmCompanySetBO();
             amCompanySetBO.setCompanyId(amEmpEmployeeBO.getCompanyId());
             AmCompanySetBO amCompanySetBO1 = amCompanySetService.queryAmCompanySet(amCompanySetBO);
@@ -71,11 +70,6 @@ public class AmEmpEmployeeServiceImpl extends ServiceImpl<AmEmpEmployeeMapper, A
                     special = amCompanySetBO1.getEmploySpecial()+amCompanySetBO1.getRefuseSpecial()+amCompanySetBO1.getArchiveSpecial();
                 }
                 amEmpEmployeeBO.setEmploySpecial(ReasonUtil.removeMark(special));
-                //已经LEFT JOIN Ukey 信息表 按组织机构代码已关联Ukey信息
-//                amEmpEmployeeBO.setKeyType(amCompanySetBO1.getKeyType());
-//                amEmpEmployeeBO.setKeyCode(amCompanySetBO1.getKeyCode());
-//                amEmpEmployeeBO.setKeyPwd(amCompanySetBO1.getKeyPwd());
-//                amEmpEmployeeBO.setKeyStatus(amCompanySetBO1.getKeyStatus());
 
                 amEmpEmployeeBO.setPhone(amCompanySetBO1.getPhone());
                 amEmpEmployeeBO.setPostCode(amCompanySetBO1.getPostCode());

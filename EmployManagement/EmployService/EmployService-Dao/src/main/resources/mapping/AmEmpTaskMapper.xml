@@ -518,7 +518,8 @@
         c.employ_feedback,
         c.employ_feedback_opt_date,
         a.employ_operate_man,
-        d.labor_start_date
+        d.labor_start_date,
+        a.employ_property
         FROM
         am_employment a
         LEFT JOIN  am_emp_task b ON a.emp_task_id = b.emp_task_id
@@ -539,11 +540,15 @@
         a.employ_doc_payment_to,
         a.doc_code,
         a.hukou_code,
-        a.diaodang_feedback
+        a.diaodang_feedback,
+        a.yuliu_doc_num,
+        a.luyong_handle_end
         FROM
         am_archive a
+        LEFT JOIN am_employment b on a.employment_id = b.employment_id
+        LEFT JOIN am_emp_task c on c.emp_task_id = b.emp_task_id
         where
-        employee_id = #{employeeId}
+        c.emp_company_id = #{empCompanyId}
         order by
         a.created_time desc
     </select>
