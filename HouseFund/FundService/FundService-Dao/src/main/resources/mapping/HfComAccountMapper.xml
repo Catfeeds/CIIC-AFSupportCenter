@@ -293,11 +293,17 @@
         a.hf_account_type,
         b.hf_com_account
         FROM
-        hf_com_account a LEFT JOIN hf_com_account_class b ON a.com_account_id=b.com_account_id
+        hf_com_account a
+        LEFT JOIN hf_com_account_class b ON a.com_account_id=b.com_account_id
         <where>
             AND a.state=1 AND a.is_active=1 AND b.hf_type=#{hfType}
             <if test="comAccountName != null and comAccountName != ''">
-                AND a.com_account_name LIKE CONCAT('%', #{comAccountName}, '%')
+                AND (
+                  a.com_account_name LIKE CONCAT('%', #{comAccountName}, '%')
+                OR
+                  EXISTS (SELECT 1 FROM hf_account_com_relation acr WHERE acr.com_account_id=a.com_account_id AND acr.company_id LIKE CONCAT('%', #{comAccountName}, '%') )
+                )
+
             </if>
             <if test="hfAccountType != null and hfAccountType > 0">
                 AND a.hf_account_type=#{hfAccountType}
