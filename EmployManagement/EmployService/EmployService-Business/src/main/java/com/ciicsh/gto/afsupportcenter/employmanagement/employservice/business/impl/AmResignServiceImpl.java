@@ -202,7 +202,11 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
             variables.put("assignee",userName);
             variables.put("fire_material",true);
             variables.put("empTaskId",bo.getEmpTaskId());
-            TaskCommonUtils.completeTask(amEmpTask.getTaskId(),employeeInfoProxy,variables);
+            try {
+                TaskCommonUtils.completeTask(amEmpTask.getTaskId(),employeeInfoProxy,variables);
+            } catch (Exception e) {
+
+            }
         }
 
         return  entity;

@@ -20,6 +20,8 @@
 		<result column="modified_by" property="modifiedBy" />
 		<result column="archive_id" property="archiveId" />
         <result column="type" property="type" />
+        <result column="employee_id" property="employeeId" />
+        <result column="employee_name" property="employeeName" />
 
 	</resultMap>
 
