@@ -20,7 +20,7 @@ public class SsStatementBO {
      * 外键, 企业社保账户名
      */
     private String comAccountName;
-
+    private String ssAccount;
     /**
      * 最小差异数（按雇员）
      */
@@ -106,6 +106,14 @@ public class SsStatementBO {
      * 修改者登录名
      */
     private String modifiedBy;
+
+    public String getSsAccount() {
+        return ssAccount;
+    }
+
+    public void setSsAccount(String ssAccount) {
+        this.ssAccount = ssAccount;
+    }
 
     public String getCompanyId() {
         return companyId;

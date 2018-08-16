@@ -319,11 +319,11 @@
             LEFT JOIN am_employment ae ON aa.employment_id = ae.employment_id AND ae.is_active = 1
             WHERE aa.is_active = 1
             GROUP BY aa.company_id, aa.employee_id
-            ORDER BY aa.created_time DESC
+            ORDER BY aa.created_time DESC LIMIT 1
         ) amt ON amt.company_id = et.company_id AND amt.employee_id = et.employee_id
-        LEFT JOIN emp_af_emp_company eaec ON et.company_id = eaec.company_id AND et.employee_id = eaec.employee_id AND eaec.is_active = 1
+        LEFT JOIN emp_af_emp_company eaec ON et.company_id = eaec.company_id AND et.employee_id = eaec.employee_id AND et.in_date = eaec.in_date AND eaec.is_active = 1
        <!-- LEFT JOIN emp_fc_emp_company efec ON et.company_id = efec.company_id AND et.employee_id = efec.employee_id AND efec.is_active = 1 -->
-        LEFT JOIN emp_bpo_emp_company ebec ON et.company_id = ebec.company_id AND et.employee_id = ebec.employee_id AND ebec.is_active = 1
+        LEFT JOIN emp_bpo_emp_company ebec ON et.company_id = ebec.company_id AND et.employee_id = ebec.employee_id AND et.in_date = ebec.entry_work_date AND ebec.is_active = 1
         LEFT JOIN emp_af_employee eae ON et.employee_id = eae.employee_id
         LEFT JOIN emp_fc_employee efe ON et.employee_id = efe.employee_id
         LEFT JOIN emp_bpo_employee ebe ON et.employee_id = ebe.employee_id

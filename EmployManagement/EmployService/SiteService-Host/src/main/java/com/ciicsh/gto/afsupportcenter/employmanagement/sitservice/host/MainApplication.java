@@ -30,7 +30,8 @@ import org.springframework.context.annotation.Import;
     "com.ciicsh.gto.salecenter.apiservice.api.proxy",
     "com.ciicsh.gto.afsystemmanagecenter.apiservice.api",
     "com.ciicsh.gto.identityservice.api",
-    "com.ciicsh.gto.logservice.api"
+    "com.ciicsh.gto.logservice.api",
+    "com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api"
 })
 @EnableDiscoveryClient
 public class MainApplication{

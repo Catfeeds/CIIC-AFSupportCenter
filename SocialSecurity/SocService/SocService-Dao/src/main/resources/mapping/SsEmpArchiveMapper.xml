@@ -190,7 +190,7 @@
         LEFT JOIN ss_emp_archive sea on afemp.employee_id=sea.employee_id AND afemp.company_id=sea.company_id AND afemp.in_date=sea.in_date AND sea.is_active = 1
         LEFT JOIN ss_com_account sca ON sca.com_account_id=sea.com_account_id AND sca.is_active = 1
         <where>
-            sea.is_active = 1
+            afemp.is_active = 1
             <include refid="queryEmployee_where"/>
         </where>
     </select>

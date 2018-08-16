@@ -21,6 +21,8 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpCo
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpDispatchExportDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpDispatchExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.*;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.SocApiProxy;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountDTO;
 import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
@@ -102,6 +104,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
 
     @Autowired
     private SheetInfoProxy sheetInfoProxy;
+
+    @Autowired
+    private SocApiProxy socApiProxy;
 
 
 
@@ -1309,6 +1314,12 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 dtoList.setLinkPhone("54594545");
                 dtoList.setCreatedBy(UserContext.getUser().getDisplayName());
                 dtoList.setCreatedTime(new Date());
+                dtoList.setSsAccount("        ");//社保登记码
+//                com.ciicsh.common.entity.JsonResult<SsComAccountDTO> accountResult = socApiProxy.getSsComAccountByComId(companyId);
+//                if(accountResult.getData()!=null){
+//                    String account = accountResult.getData().getSsAccount();
+//                    dtoList.setSsAccount(account==null||account.length()<8?"        ":account);//社保登记码
+//                }
                 dtoList.setList(exportList);
                 result.add(dtoList);
             }
@@ -1443,13 +1454,18 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                         :companyDto.getObject().getOrganizationCode());// 组织机构代码
                     dtoList.setCompanyAddress(companyDto.getObject().getBusinessAddress());// 营业地址
                     dtoList.setPostalCode(companyDto.getObject().getBusinessZipCode()==null || companyDto.getObject().getBusinessZipCode().length()<6?"         "
-                        :companyDto.getObject().getBusinessZipCode());// 邮箱
-                    dtoList.setIndustryCategory(companyDto.getObject().getIndustryCategoryName());
+                        :companyDto.getObject().getBusinessZipCode());// 邮编
+                    dtoList.setIndustryCategory(companyDto.getObject().getIndustryCategoryName());// 行业类别
                     dtoList.setMembership("");
                     dtoList.setLinkman(UserContext.getUser().getDisplayName());
                     dtoList.setLinkPhone("54594545");
                     dtoList.setCreatedBy(UserContext.getUser().getDisplayName());
                     dtoList.setCreatedTime(new Date());
+                    com.ciicsh.common.entity.JsonResult<SsComAccountDTO> accountResult = socApiProxy.getSsComAccountByComId(companyId);
+                    if(accountResult.getData()!=null){
+                        String account = accountResult.getData().getSsAccount();
+                        dtoList.setSsAccount(account==null||account.length()<8?"        ":account);//社保登记码
+                    }
                     dtoList.setList(exportList);
                     result.add(dtoList);
                 }
