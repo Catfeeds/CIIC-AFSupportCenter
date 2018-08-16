@@ -29,6 +29,7 @@
 
         <result column="com_account_id" property="comAccountId" />
         <result column="com_account_name" property="comAccountName" />
+        <result column="ss_account" property="ssAccount" />
         <result column="ss_month" property="ssMonth" />
         <result column="imp_file_type" property="impFileType" />
         <result column="imp_file_name" property="impFileName" />
@@ -70,7 +71,8 @@
         s.imp_record_sum,
         s.diff_sum_by_emp,
         s.diff_sum_by_item,
-        ca.com_account_name
+        ca.com_account_name,
+        ca.ss_account
         FROM
         (SELECT DISTINCT ss_month,com_account_id from ss_month_charge where cost_category!= 1 ) mec
         LEFT JOIN ss_statement s ON s.ss_month=mec.ss_month and s.com_account_id=mec.com_account_id and s.imp_file_type='YYS'
