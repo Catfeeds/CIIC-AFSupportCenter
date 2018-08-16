@@ -141,15 +141,6 @@ public class ReasonUtil {
 
     }
 
-    public static String removeMark(String str){
-        if (StringUtil.isEmpty(str))
-        {
-           return "";
-        }
-        int last = str.lastIndexOf(",");
-        return  str.substring(0,last);
-    }
-
     public  static  String  getCondemnationYears(Date start,Date end)
     {
         long time = end.getTime()-start.getTime();
