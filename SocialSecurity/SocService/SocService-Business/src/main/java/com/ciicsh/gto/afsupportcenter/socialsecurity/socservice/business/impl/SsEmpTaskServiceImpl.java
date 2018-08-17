@@ -2183,24 +2183,44 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 //        for (int i = startMonth; i <= endMonth; i = TaskCommonUtils.getNextMonthInt(i)) {
 //            ssMonthCharge.setSsMonthBelong(String.valueOf(i));
         for (long i = 0; i <= months; i++) {
+            ssMonthCharge.setBaseAmount(ssEmpBasePeriod.getBaseAmount());
+
             if (isOut) {
 //                // 如果是转出任务单，雇员月度汇缴明细库汇缴当月已生成的标准数据需删除
 //                ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 1, ssEmpTaskBO.getModifiedBy());
 
                 // 如果是转出任务单，雇员月度汇缴明细库转入数据可能被删除（当月转入当月转出），且不生成转出数据
-                int rslt = ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 2, ssEmpTaskBO.getModifiedBy());
-                if (rslt > 0) {
-                    continue;
+                Wrapper<SsMonthCharge> wrapper = new EntityWrapper<>();
+                wrapper.where("is_active = 1");
+                wrapper.and("company_id = {0}", ssEmpTaskBO.getCompanyId());
+                wrapper.and("employee_id = {0}", ssEmpTaskBO.getEmployeeId());
+                wrapper.and("cost_category in (4, 8)");
+                wrapper.and("ss_month >= {0}", ssEmpTaskBO.getHandleMonth());
+                int repairCnt = ssMonthChargeService.selectCount(wrapper);
+                int rslt;
+
+                // 如果新开的当月，还存在补缴，那么新开及转出记录需保留
+                ssMonthCharge.setSsMonthBelong(startMonthDate.minusMonths(1).plusMonths(i).format(formatter));
+                if (repairCnt == 0) {
+                    rslt = ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 2, ssEmpTaskBO.getModifiedBy());
+                    if (rslt > 0) {
+                        ssMonthCharge.setActive(false);
+                        ssMonthChargeService.insert(ssMonthCharge);
+                        continue;
+                    }
                 }
                 rslt = ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 3, ssEmpTaskBO.getModifiedBy());
                 if (rslt > 0) {
+                    ssMonthCharge.setActive(false);
+                    ssMonthChargeService.insert(ssMonthCharge);
                     continue;
                 }
                 rslt = ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 5, ssEmpTaskBO.getModifiedBy());
                 if (rslt > 0) {
+                    ssMonthCharge.setActive(false);
+                    ssMonthChargeService.insert(ssMonthCharge);
                     continue;
                 }
-                ssMonthCharge.setSsMonthBelong(startMonthDate.minusMonths(1).plusMonths(i).format(formatter));
             } else {
                 if (2 == ssMonthCharge.getCostCategory() || 3 == ssMonthCharge.getCostCategory() || 5 == ssMonthCharge.getCostCategory()) { // 新开或转入或顺调当月数据清除
                     ssMonthChargeService.deleteOldDate(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), ssEmpTaskBO.getHandleMonth(), 2, ssEmpTaskBO.getModifiedBy());
@@ -2209,8 +2229,6 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 }
                 ssMonthCharge.setSsMonthBelong(startMonthDate.plusMonths(i).format(formatter));
             }
-            //转出和封存是负数
-            ssMonthCharge.setBaseAmount(ssEmpBasePeriod.getBaseAmount());
 
             if (5 == ssMonthCharge.getCostCategory()) {  // 如果是顺调，那么则根据标准数据，计算调整后差额录入
                 List<SsMonthChargeBO> ssMonthChargeBOList = ssMonthChargeService.selectTotalFromOld(ssEmpTaskBO.getEmployeeId(), ssEmpTaskBO.getHandleMonth(), 1);

@@ -295,7 +295,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         if (dto.getNowAgreement() != null && dto.getNowAgreement().getFundPolicyId() != null) {
             hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getFundPolicyId());
         }
-        //TODO 表中加字段
+
         //办理状态：1、未处理 2 、处理中(已办)  3 已完成(已做) 4、批退 5、不需处理
         hfEmpTask.setTaskStatus(1);
         //入职日期
@@ -408,7 +408,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         if (dto.getNowAgreement() != null && dto.getNowAgreement().getFundPolicyId() != null) {
             hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getFundPolicyId());
         }
-        //TODO 表中加字段
+
         hfEmpTask.setModifiedTime(LocalDateTime.now());
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
         if(null != socialList && socialList.size() > 0){
