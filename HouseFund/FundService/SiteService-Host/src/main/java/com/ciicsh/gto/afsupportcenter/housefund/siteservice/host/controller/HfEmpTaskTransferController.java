@@ -13,6 +13,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.util.FeedbackDa
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.PdfUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.HouseFundConst;
+import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
@@ -186,7 +187,7 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
     @RequestMapping("/multiEmpTaskTransferExport")
     public void multiEmpTaskTransferExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         EmpTaskTransferBo empTaskTransferBo = pageInfo.toJavaObject(EmpTaskTransferBo.class);
-        empTaskTransferBo.setTransferInUnit(HouseFundConst.CENTER_ACCOUNT_NAME);
+        empTaskTransferBo.setTransferInUnit(SocialSecurityConst.FUND_OUT_UNIT_LIST.get(0));
         List<EmpTaskTransferBo> empTaskTransferBoList = business.queryEmpTaskTransfer(empTaskTransferBo);
 
         Map<Integer, Map<String, Object>> alMap = new HashMap<>();
