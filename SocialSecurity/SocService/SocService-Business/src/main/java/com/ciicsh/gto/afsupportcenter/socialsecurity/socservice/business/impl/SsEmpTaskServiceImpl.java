@@ -2192,8 +2192,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 // 如果是转出任务单，雇员月度汇缴明细库转入数据可能被删除（当月转入当月转出），且不生成转出数据
                 Wrapper<SsMonthCharge> wrapper = new EntityWrapper<>();
                 wrapper.where("is_active = 1");
-                wrapper.and("company_id = {0}", ssEmpTaskBO.getCompanyId());
-                wrapper.and("employee_id = {0}", ssEmpTaskBO.getEmployeeId());
+                wrapper.and("emp_archive_id = {0}", ssEmpTaskBO.getEmpArchiveId());
                 wrapper.and("cost_category in (4, 8)");
                 wrapper.and("ss_month >= {0}", ssEmpTaskBO.getHandleMonth());
                 int repairCnt = ssMonthChargeService.selectCount(wrapper);
