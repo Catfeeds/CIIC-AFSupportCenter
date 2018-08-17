@@ -619,23 +619,24 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     public @ResponseBody
     void employSearchExportOptDispatchWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response){
 
-        // 中智大库
-        List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,9);
 
-        // 外包
-        List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(amEmpTaskBO,3,9);
-
-        //独立户
-        List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(amEmpTaskBO,9);
-
-
-        Map<String, Object> map = new HashMap<>();
-
-        map.put("list",dtoList);
-        map.put("list2",dtoList2);
-        map.put("list3",dtoList3);
 
         try {
+            // 中智大库
+            List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,9);
+
+            // 外包
+            List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(amEmpTaskBO,3,9);
+
+            //独立户
+            List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(amEmpTaskBO,9);
+
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("list",dtoList);
+            map.put("list2",dtoList2);
+            map.put("list3",dtoList3);
             WordUtils.exportMillCertificateWord(response,map,"派遣录用名册","AM_DISPATCH_TEMP.ftl");
         } catch (Exception e) {
             e.printStackTrace();
