@@ -197,6 +197,13 @@ public class AmEmpTaskBO extends AmEmpTask {
     private String companyType;
 
     private String phone;
+
+    /**
+     * 用工操作员
+     */
+    private String employOperateMan;
+
+
     /**
      * 档案费
      */

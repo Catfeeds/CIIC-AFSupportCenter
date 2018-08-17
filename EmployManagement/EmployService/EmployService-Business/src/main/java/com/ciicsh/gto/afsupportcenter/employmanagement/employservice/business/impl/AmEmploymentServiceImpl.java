@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmploy
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.EmployeeBatchBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmploymentService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmEmploymentMapper;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmArchiveReturnPrintDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmReturnListExportDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmployment;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.archiveSearchExportOpt;
@@ -147,4 +148,20 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
         return baseMapper.queryAmEmploymentBatch(employeeBatchBO);
     }
 
+    @Override
+    public List<AmArchiveReturnPrintDTO> queryAmArchiveForeignerPritDate(PageInfo pageInfo) {
+        List<AmArchiveReturnPrintDTO> result = new ArrayList<>();
+        pageInfo.setPageNum(1);
+        pageInfo.setPageSize(1000);
+        PageRows<AmEmploymentBO> pageRows = this.queryAmArchive(pageInfo);
+        List<AmEmploymentBO> datas = pageRows.getRows();
+        for (AmEmploymentBO bo:datas) {
+
+        }
+
+
+
+
+        return result;
+    }
 }
