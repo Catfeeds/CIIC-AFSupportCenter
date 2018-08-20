@@ -871,6 +871,16 @@
               <w:sz w:val="24"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
+              <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:hint="fareast"/>
+              <wx:font wx:val="宋体"/>
+              <w:kern w:val="0"/>
+              <w:sz w:val="18"/>
+              <w:sz-cs w:val="18"/>
+            </w:rPr>
+            <w:t>${(subList.settlementArea)!}</w:t>
+          </w:r>
           </w:pPr>
         </w:p>
       </wx:pBdrGroup>
@@ -1018,7 +1028,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3587" w:y="9041"/>
+            <w:framePr w:w="800" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3587" w:y="9041"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -1040,7 +1050,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>人</w:t>
+            <w:t>${(subList.list1?size+subList.list2?size+subList.list3?size)!} 人</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -1051,7 +1061,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3587" w:y="9521"/>
+            <w:framePr w:w="800" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3587" w:y="9521"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -1073,7 +1083,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>人</w:t>
+            <w:t>${(sum)!} 人</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -1474,7 +1484,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="12947" w:y="10481"/>
+            <w:framePr w:w="700" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="12947" w:y="10481"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -1496,7 +1506,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>年</w:t>
+            <w:t>     年</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -1507,7 +1517,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="13907" w:y="10481"/>
+            <w:framePr w:w="500" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="13907" w:y="10481"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -1529,7 +1539,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>月</w:t>
+            <w:t>   月</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -1540,7 +1550,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="14867" w:y="10481"/>
+            <w:framePr w:w="500" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="14867" w:y="10481"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -1562,7 +1572,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>日</w:t>
+            <w:t>   日</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -1573,7 +1583,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="12947" w:y="9521"/>
+            <w:framePr w:w="700" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="12947" w:y="9521"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -1595,7 +1605,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>年</w:t>
+            <w:t>${.now?string("yyyy")} 年</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -1606,7 +1616,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="13907" w:y="9521"/>
+            <w:framePr w:w="500" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="13907" w:y="9521"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -1628,7 +1638,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>月</w:t>
+            <w:t>${.now?string("MM")} 月</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -1639,7 +1649,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="14867" w:y="9521"/>
+            <w:framePr w:w="500" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="14867" w:y="9521"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -1661,7 +1671,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>日</w:t>
+            <w:t>${.now?string("dd")} 日</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3343,6 +3353,16 @@
               <w:sz-cs w:val="24"/>
             </w:rPr>
           </w:pPr>
+            <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:hint="fareast"/>
+              <wx:font wx:val="宋体"/>
+              <w:kern w:val="0"/>
+              <w:sz w:val="18"/>
+              <w:sz-cs w:val="18"/>
+            </w:rPr>
+            <w:t>${(subList2.settlementArea)!}</w:t>
+          </w:r>
         </w:p>
       </wx:pBdrGroup>
       <wx:pBdrGroup>
@@ -3489,7 +3509,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3587" w:y="9041"/>
+            <w:framePr w:w="800" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3587" w:y="9041"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -3511,7 +3531,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>人</w:t>
+            <w:t>${(subList2.list1?size+subList2.list2?size+subList2.list3?size)!} 人</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3522,7 +3542,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3587" w:y="9521"/>
+            <w:framePr w:w="800" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3587" w:y="9521"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -3544,7 +3564,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>人</w:t>
+            <w:t>${(sum)!} 人</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3945,7 +3965,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="12947" w:y="10481"/>
+            <w:framePr w:w="700" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="12947" w:y="10481"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -3967,7 +3987,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>年</w:t>
+            <w:t>     年</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3978,7 +3998,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="13907" w:y="10481"/>
+            <w:framePr w:w="500" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="13907" w:y="10481"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -4000,7 +4020,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>月</w:t>
+            <w:t>   月</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -4011,7 +4031,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="14867" w:y="10481"/>
+            <w:framePr w:w="500" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="14867" w:y="10481"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -4033,7 +4053,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>日</w:t>
+            <w:t>   日</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -4044,7 +4064,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="12947" w:y="9521"/>
+            <w:framePr w:w="700" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="12947" w:y="9521"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -4066,7 +4086,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>年</w:t>
+            <w:t>${.now?string("yyyy")} 年</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -4077,7 +4097,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="13907" w:y="9521"/>
+            <w:framePr w:w="500" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="13907" w:y="9521"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -4099,7 +4119,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>月</w:t>
+            <w:t>${.now?string("MM")} 月</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -4110,7 +4130,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="14867" w:y="9521"/>
+            <w:framePr w:w="500" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="14867" w:y="9521"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -4132,7 +4152,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>日</w:t>
+            <w:t>${.now?string("dd")} 日</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -5805,6 +5825,16 @@
               <w:sz w:val="24"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
+              <w:r>
+            <w:rPr>
+              <w:rFonts w:ascii="宋体" w:hint="fareast"/>
+              <wx:font wx:val="宋体"/>
+              <w:kern w:val="0"/>
+              <w:sz w:val="18"/>
+              <w:sz-cs w:val="18"/>
+            </w:rPr>
+            <w:t>${(subList3.settlementArea)!}</w:t>
+          </w:r>
           </w:pPr>
         </w:p>
       </wx:pBdrGroup>
@@ -5952,7 +5982,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3587" w:y="9041"/>
+            <w:framePr w:w="800" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3587" w:y="9041"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -5974,7 +6004,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>人</w:t>
+            <w:t>${(subList3.list1?size+subList3.list2?size+subList3.list3?size)!} 人</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -5985,7 +6015,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3587" w:y="9521"/>
+            <w:framePr w:w="800" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3587" w:y="9521"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -6007,7 +6037,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>人</w:t>
+            <w:t>${(sum)!} 人</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -6408,7 +6438,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="12947" w:y="10481"/>
+            <w:framePr w:w="700" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="12947" w:y="10481"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -6430,7 +6460,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>年</w:t>
+            <w:t>     年</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -6441,7 +6471,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="13907" w:y="10481"/>
+            <w:framePr w:w="500" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="13907" w:y="10481"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -6463,7 +6493,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>月</w:t>
+            <w:t>   月</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -6474,7 +6504,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="14867" w:y="10481"/>
+            <w:framePr w:w="500" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="14867" w:y="10481"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -6496,7 +6526,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>日</w:t>
+            <w:t>   日</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -6507,7 +6537,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="12947" w:y="9521"/>
+            <w:framePr w:w="700" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="12947" w:y="9521"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -6529,7 +6559,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>年</w:t>
+            <w:t>${.now?string("yyyy")} 年</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -6540,7 +6570,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="13907" w:y="9521"/>
+            <w:framePr w:w="500" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="13907" w:y="9521"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -6562,7 +6592,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>月</w:t>
+            <w:t>${.now?string("MM")} 月</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -6573,7 +6603,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00C90D54" wsp:rsidRDefault="00C90D54">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="14867" w:y="9521"/>
+            <w:framePr w:w="500" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="14867" w:y="9521"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -6595,7 +6625,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>日</w:t>
+            <w:t>${.now?string("dd")} 日</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
