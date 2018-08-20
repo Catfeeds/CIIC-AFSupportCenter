@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.impl;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpBasePeriodBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpBasePeriodService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpBaseDetailMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpBasePeriodMapper;
@@ -102,5 +103,10 @@ public class SsEmpBasePeriodServiceImpl extends ServiceImpl<SsEmpBasePeriodMappe
     @Override
     public List<SsEmpBasePeriod> queryPeriodByEmployeeIdAndCompanyId(String companyId, String employeeId) {
         return baseMapper.queryPeriodByEmployeeIdAndCompanyId(companyId, employeeId);
+    }
+
+    @Override
+    public List<SsEmpBasePeriodBO> getEmpBasePeriodByIntervalYear(String companyId, String employeeId, Integer intervalYear) {
+        return baseMapper.getEmpBasePeriodByIntervalYear(companyId, employeeId, intervalYear);
     }
 }

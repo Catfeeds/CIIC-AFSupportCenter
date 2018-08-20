@@ -1,7 +1,7 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business;
 
 import com.baomidou.mybatisplus.service.IService;
-import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpBasePeriodBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBasePeriod;
 import org.apache.ibatis.annotations.Param;
 
@@ -67,4 +67,6 @@ public interface SsEmpBasePeriodService extends IService<SsEmpBasePeriod> {
     Integer updateReductionById(SsEmpBasePeriod ssEmpBasePeriod);
 
     List<SsEmpBasePeriod> queryPeriodByEmployeeIdAndCompanyId(@Param("companyId")String companyId, @Param("employeeId")String employeeId);
+
+    List<SsEmpBasePeriodBO> getEmpBasePeriodByIntervalYear(String companyId, String employeeId, Integer intervalYear);
 }

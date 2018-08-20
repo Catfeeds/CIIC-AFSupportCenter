@@ -1,8 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao;
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpBasePeriodBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpBasePeriod;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -30,4 +30,6 @@ public interface SsEmpBasePeriodMapper extends BaseMapper<SsEmpBasePeriod> {
     Integer updateReductionById(SsEmpBasePeriod ssEmpBasePeriod);
 
     List<SsEmpBasePeriod> queryPeriodByEmployeeIdAndCompanyId(@Param("companyId")String companyId, @Param("employeeId")String employeeId);
+
+    List<SsEmpBasePeriodBO> getEmpBasePeriodByIntervalYear(@Param("companyId")String companyId, @Param("employeeId")String employeeId, @Param("intervalYear")Integer intervalYear);
 }
