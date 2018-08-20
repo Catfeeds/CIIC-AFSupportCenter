@@ -37,7 +37,7 @@ public class AmEmpDispatchExportPageDTO {
     private String linkPhone;
 
     // 操作时间
-    private Date createdTime;
+    private String createdTime;
 
     // 操作人
     private String createdBy;
@@ -47,8 +47,21 @@ public class AmEmpDispatchExportPageDTO {
      */
     private String ssAccount;
 
+    /**
+     * 结算区县
+     */
+    private String settlementArea;
+
     // 循环表格
     private List<AmEmpDispatchExportDTO> list;
+
+    public String getSettlementArea() {
+        return settlementArea;
+    }
+
+    public void setSettlementArea(String settlementArea) {
+        this.settlementArea = settlementArea;
+    }
 
     public String getSsAccount() {
         return ssAccount;
@@ -58,11 +71,11 @@ public class AmEmpDispatchExportPageDTO {
         this.ssAccount = ssAccount;
     }
 
-    public Date getCreatedTime() {
+    public String getCreatedTime() {
         return createdTime;
     }
 
-    public void setCreatedTime(Date createdTime) {
+    public void setCreatedTime(String createdTime) {
         this.createdTime = createdTime;
     }
 

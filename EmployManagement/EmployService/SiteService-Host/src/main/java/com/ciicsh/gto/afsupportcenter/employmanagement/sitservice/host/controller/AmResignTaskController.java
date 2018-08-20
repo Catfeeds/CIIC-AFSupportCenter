@@ -477,7 +477,10 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
 
                 }
                 variables.put("assignee",userName);
-                variables.put("fire_material",true);
+                if(null!=amEmpTask&&!"是".equals(amEmpTask.getChangeCompany()))
+                {
+                    variables.put("fire_material",true);
+                }
                 variables.put("empTaskId",amEmpTask.getEmpTaskId());
                 try {
                     TaskCommonUtils.completeTask(amEmpTask.getTaskId(),employeeInfoProxy,variables);

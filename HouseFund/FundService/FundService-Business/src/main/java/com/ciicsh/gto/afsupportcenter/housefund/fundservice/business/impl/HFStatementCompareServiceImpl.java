@@ -175,6 +175,15 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
             int diffCount = 0;
 
             for (HfStatementCompareImpPO impPO : compareImpPOList) {
+                if(Optional.ofNullable(impPO.getEmpAccount()).isPresent()==false){
+                    throw new Exception("导入的个人账号不能为空");
+                }
+                if(Optional.ofNullable(impPO.getEmpName()).isPresent()==false){
+                    throw new Exception("导入的姓名不能为空");
+                }
+                if(Optional.ofNullable(impPO.getEmpCardNum()).isPresent()==false){
+                    throw new Exception("导入的身份证号码不能为空");
+                }
                 HfStatementCompareResultPO resultPO = new HfStatementCompareResultPO();
                 resultPO.setStatementCompareId(statementId);
                 resultPO.setImpAmount(impPO.getMonthlyAmount());
@@ -209,7 +218,7 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
             baseMapper.updateById(statementPO);
         }
         catch (Exception e){
-            throw new Exception("对账导入文件的格式和系统要求的不一致");
+            throw new Exception(e.getMessage());
         }
 
     }

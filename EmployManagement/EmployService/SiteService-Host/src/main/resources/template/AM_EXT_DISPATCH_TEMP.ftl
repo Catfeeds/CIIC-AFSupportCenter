@@ -1286,7 +1286,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>浦东</w:t>
+            <w:t>${(subList.settlementArea)!}</w:t>
           </w:r>
         </w:p>
         <w:p wsp:rsidR="00096AED" wsp:rsidRDefault="00096AED">
@@ -2539,7 +2539,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00906834" wsp:rsidRDefault="00906834">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3602" w:y="9431"/>
+            <w:framePr w:w="500" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3602" w:y="9431"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -2561,7 +2561,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>人</w:t>
+            <w:t>${(count)!} 人</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -2877,7 +2877,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>周蕾</w:t>
+            <w:t>${(subList.createdBy)!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -2917,7 +2917,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>${(subList.createdTime?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>${.now?string("yyyy-MM-dd")}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -4619,7 +4619,26 @@
                   <w:sz w:val="20"/>
                   <w:sz-cs w:val="24"/>
                 </w:rPr>
-                <w:t>${(subList.companyType)!}</w:t>
+                  <#if sub.sendOut??>
+                      <#if sub.sendOut == "国企">
+                          <w:t>4</w:t>
+                      </#if>
+                      <#if sub.sendOut == "民营企业">
+                          <w:t>5</w:t>
+                      </#if>
+                      <#if sub.sendOut == "港澳台">
+                          <w:t>6</w:t>
+                      </#if>
+                      <#if sub.sendOut == "股份制">
+                          <w:t>8</w:t>
+                      </#if>
+                      <#if sub.sendOut == "其它有限责任">
+                          <w:t>8</w:t>
+                      </#if>
+                      <#if sub.sendOut == "外资">
+                          <w:t>6</w:t>
+                      </#if>
+                  </#if>
               </w:r>
             </w:p>
           </w:tc>
@@ -4652,7 +4671,20 @@
                   <w:sz w:val="20"/>
                   <w:sz-cs w:val="24"/>
                 </w:rPr>
-                <w:t>${(sub.timeLimitForDispatch)!}</w:t>
+                  <#if sub.timeLimitForDispatch??>
+                      <#if sub.timeLimitForDispatch == "1年(含)及以下">
+                          <w:t>1</w:t>
+                      </#if>
+                      <#if sub.timeLimitForDispatch == "1年-2年(含)">
+                          <w:t>2</w:t>
+                      </#if>
+                      <#if sub.timeLimitForDispatch == "2年-5年(含)">
+                          <w:t>3</w:t>
+                      </#if>
+                      <#if sub.timeLimitForDispatch == "5年以上">
+                          <w:t>4</w:t>
+                      </#if>
+                  </#if>
               </w:r>
             </w:p>
           </w:tc>
@@ -5567,7 +5599,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>浦东</w:t>
+            <w:t>${(subList2.settlementArea)!}</w:t>
           </w:r>
         </w:p>
         <w:p wsp:rsidR="00096AED" wsp:rsidRDefault="00096AED">
@@ -6820,7 +6852,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00906834" wsp:rsidRDefault="00906834">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3602" w:y="9431"/>
+            <w:framePr w:w="500" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3602" w:y="9431"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -6842,7 +6874,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>人</w:t>
+            <w:t>${(count)!} 人</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -7158,7 +7190,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>周蕾</w:t>
+            <w:t>${(subList2.createdBy)!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -7198,7 +7230,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>${(subList2.createdTime?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>${.now?string("yyyy-MM-dd")}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -8900,7 +8932,26 @@
                   <w:sz w:val="20"/>
                   <w:sz-cs w:val="24"/>
                 </w:rPr>
-                <w:t>${(subList2.companyType)!}</w:t>
+                  <#if sub.sendOut??>
+                      <#if sub.sendOut == "国企">
+                          <w:t>4</w:t>
+                      </#if>
+                      <#if sub.sendOut == "民营企业">
+                          <w:t>5</w:t>
+                      </#if>
+                      <#if sub.sendOut == "港澳台">
+                          <w:t>6</w:t>
+                      </#if>
+                      <#if sub.sendOut == "股份制">
+                          <w:t>8</w:t>
+                      </#if>
+                      <#if sub.sendOut == "其它有限责任">
+                          <w:t>8</w:t>
+                      </#if>
+                      <#if sub.sendOut == "外资">
+                          <w:t>6</w:t>
+                      </#if>
+                  </#if>
               </w:r>
             </w:p>
           </w:tc>
@@ -8933,7 +8984,20 @@
                   <w:sz w:val="20"/>
                   <w:sz-cs w:val="24"/>
                 </w:rPr>
-                <w:t>${(sub.timeLimitForDispatch)!}</w:t>
+                  <#if sub.timeLimitForDispatch??>
+                      <#if sub.timeLimitForDispatch == "1年(含)及以下">
+                          <w:t>1</w:t>
+                      </#if>
+                      <#if sub.timeLimitForDispatch == "1年-2年(含)">
+                          <w:t>2</w:t>
+                      </#if>
+                      <#if sub.timeLimitForDispatch == "2年-5年(含)">
+                          <w:t>3</w:t>
+                      </#if>
+                      <#if sub.timeLimitForDispatch == "5年以上">
+                          <w:t>4</w:t>
+                      </#if>
+                  </#if>
               </w:r>
             </w:p>
           </w:tc>
@@ -9864,7 +9928,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>浦东</w:t>
+            <w:t>${(subList3.settlementArea)!}</w:t>
           </w:r>
         </w:p>
         <w:p wsp:rsidR="00096AED" wsp:rsidRDefault="00096AED">
@@ -11117,7 +11181,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00906834" wsp:rsidRDefault="00906834">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3602" w:y="9431"/>
+            <w:framePr w:w="500" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3602" w:y="9431"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -11139,7 +11203,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>人</w:t>
+            <w:t>${(count)!} 人</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -11455,7 +11519,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>周蕾</w:t>
+            <w:t>${(subList3.createdBy)!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -11495,7 +11559,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>${(subList3.createdTime?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>${.now?string("yyyy-MM-dd")}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -13203,7 +13267,26 @@
                   <w:sz w:val="20"/>
                   <w:sz-cs w:val="24"/>
                 </w:rPr>
-                <w:t>${(subList3.companyType)!}</w:t>
+                  <#if sub.sendOut??>
+                      <#if sub.sendOut == "国企">
+                          <w:t>4</w:t>
+                      </#if>
+                      <#if sub.sendOut == "民营企业">
+                          <w:t>5</w:t>
+                      </#if>
+                      <#if sub.sendOut == "港澳台">
+                          <w:t>6</w:t>
+                      </#if>
+                      <#if sub.sendOut == "股份制">
+                          <w:t>8</w:t>
+                      </#if>
+                      <#if sub.sendOut == "其它有限责任">
+                          <w:t>8</w:t>
+                      </#if>
+                      <#if sub.sendOut == "外资">
+                          <w:t>6</w:t>
+                      </#if>
+                  </#if>
               </w:r>
             </w:p>
           </w:tc>
@@ -13236,7 +13319,20 @@
                   <w:sz w:val="20"/>
                   <w:sz-cs w:val="24"/>
                 </w:rPr>
-                <w:t>${(sub.timeLimitForDispatch)!}</w:t>
+                  <#if sub.timeLimitForDispatch??>
+                      <#if sub.timeLimitForDispatch == "1年(含)及以下">
+                          <w:t>1</w:t>
+                      </#if>
+                      <#if sub.timeLimitForDispatch == "1年-2年(含)">
+                          <w:t>2</w:t>
+                      </#if>
+                      <#if sub.timeLimitForDispatch == "2年-5年(含)">
+                          <w:t>3</w:t>
+                      </#if>
+                      <#if sub.timeLimitForDispatch == "5年以上">
+                          <w:t>4</w:t>
+                      </#if>
+                  </#if>
               </w:r>
             </w:p>
           </w:tc>

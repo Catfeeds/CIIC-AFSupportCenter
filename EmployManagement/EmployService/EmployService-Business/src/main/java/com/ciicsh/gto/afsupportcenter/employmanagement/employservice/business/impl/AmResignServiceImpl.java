@@ -17,6 +17,8 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmRe
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.resignSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -50,6 +52,9 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
 
     @Autowired
     private IAmEmploymentService amEmploymentService;
+
+    @Autowired
+    private LogApiUtil logApiUtil;
 
     public PageRows<AmResignBO> queryAmResign(PageInfo pageInfo){
 
@@ -200,12 +205,16 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
 
             }
             variables.put("assignee",userName);
-            variables.put("fire_material",true);
+            if(null!=amEmpTask&&!"是".equals(amEmpTask.getChangeCompany()))
+            {
+                variables.put("fire_material",true);
+            }
             variables.put("empTaskId",bo.getEmpTaskId());
             try {
                 TaskCommonUtils.completeTask(amEmpTask.getTaskId(),employeeInfoProxy,variables);
             } catch (Exception e) {
-
+                LogMessage logMessage = LogMessage.create().setTitle("退工办理").setContent(e.getMessage());
+                logApiUtil.info(logMessage);
             }
         }
 

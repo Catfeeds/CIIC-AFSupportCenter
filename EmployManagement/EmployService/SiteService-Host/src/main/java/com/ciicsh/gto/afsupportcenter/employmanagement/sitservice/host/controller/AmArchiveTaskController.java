@@ -10,6 +10,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmAr
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpMaterial;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmInjury;
+import com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.util.WordUtils;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
@@ -607,26 +608,21 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
     /**
      * 批量打印退工单
-     * @param request
      * @param response
-     * @param amEmploymentBO
      */
     @RequestMapping("/archiveSearchExportReturnList")
-    public void archiveSearchExportReturnList(HttpServletRequest request, HttpServletResponse response, AmEmploymentBO amEmploymentBO) {
-        List<String> param = new ArrayList<String>();
+    public void archiveSearchExportReturnList(HttpServletResponse response, PageInfo pageInfo) {
 
-        if(!StringUtil.isEmpty(amEmploymentBO.getParams()))
-        {
-            String arr[] = amEmploymentBO.getParams().split(",");
-            for(int i=0;i<arr.length;i++) {
-                param.add(arr[i]);
-            }
-        }
+        PageRows<AmEmploymentBO> result = business.queryAmArchive(pageInfo);
+        List<AmEmploymentBO> data = result.getRows();
 
-        amEmploymentBO.setParam(param);
 
-        if(null!=amEmploymentBO.getTaskStatus()&&amEmploymentBO.getTaskStatus()==0){
-            amEmploymentBO.setTaskStatus(null);
+
+        Map<String,Object> map = new HashMap<>();
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"外来退工备案登记表","AM_RETURN_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 
