@@ -1214,7 +1214,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>      职介中介</w:t>
+            <w:t>      职业中介</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -2276,7 +2276,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>${(subList.createdTime?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>${(subList.createdTime)!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -4038,8 +4038,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t></w:t>
-              <#--行业类别-->
+            <w:t>     人事外包</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -5101,7 +5100,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>${(subList2.createdTime?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>${(subList2.createdTime)!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -7902,7 +7901,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>${(subList3.createdTime?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>${(subList3.createdTime)!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
