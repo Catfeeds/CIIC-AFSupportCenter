@@ -42,6 +42,7 @@
         <result column="repair_amount" property="repairAmount" />
         <result column="remitted_count_emp" property="remittedCountEmp" />
         <result column="title" property="title" />
+        <result column="company_id" property="companyId" />
     </resultMap>
 
     <!--查询公积金制作汇缴清单-->
@@ -59,6 +60,7 @@
         hpat.account_type_value,
         hcapb.payment_bank_value,
         pa.payment_month,
+        (SELECT group_concat(company_id) FROM hf_account_com_relation where is_active=1 and com_account_id=ca.com_account_id AND major_com=1 limit 5 ) as company_id,
         (
         SELECT
         sum(ifnull(amount, 0))

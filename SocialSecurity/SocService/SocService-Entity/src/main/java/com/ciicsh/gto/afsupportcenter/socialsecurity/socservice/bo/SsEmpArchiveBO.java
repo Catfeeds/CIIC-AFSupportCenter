@@ -68,6 +68,18 @@ public class SsEmpArchiveBO extends SsEmpArchive {
 
     private String ssSerial;
 
+    private String ssMonth;
+
+    @Override
+    public String getSsMonth() {
+        return ssMonth;
+    }
+
+    @Override
+    public void setSsMonth(String ssMonth) {
+        this.ssMonth = ssMonth;
+    }
+
     @Override
     public String getSsSerial() {
         return ssSerial;
