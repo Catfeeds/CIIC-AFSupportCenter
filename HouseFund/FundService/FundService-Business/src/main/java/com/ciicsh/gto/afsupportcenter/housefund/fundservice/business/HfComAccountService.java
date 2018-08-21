@@ -74,6 +74,7 @@ public interface HfComAccountService extends IService<HfComAccount> {
      */
     List<ComAccountTransBo> queryComAccountTransBoList(ComAccountTransBo comAccountTransBo);
 
+    List<ComAccountTransBo> queryComAccountByCompanyIdTransBoList(ComAccountTransBo comAccountTransBo);
     /**
      * 根据公司和公积金类型判断是否存在账户
      * @param companyId 公司ID

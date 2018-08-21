@@ -42,6 +42,7 @@
         <result column="repair_amount" property="repairAmount" />
         <result column="remitted_count_emp" property="remittedCountEmp" />
         <result column="title" property="title" />
+        <result column="company_id" property="companyId" />
     </resultMap>
 
     <!--查询公积金制作汇缴清单-->
@@ -59,6 +60,7 @@
         hpat.account_type_value,
         hcapb.payment_bank_value,
         pa.payment_month,
+        (SELECT group_concat(company_id) FROM hf_account_com_relation where is_active=1 and com_account_id=ca.com_account_id AND major_com=1 limit 5 ) as company_id,
         (
         SELECT
         sum(ifnull(amount, 0))
@@ -68,8 +70,8 @@
         WHERE
         mc.is_active = 1
         AND ea.is_active = 1
-        <if test="paymentMonth != null and paymentMonth != ''">
-            AND mc.hf_month = TRIM(#{paymentMonth})
+        <if test="paymentMonthValue != null and paymentMonthValue != ''">
+            AND mc.hf_month = TRIM(#{paymentMonthValue})
         </if>
         AND mc.hf_type = pa.hf_type
         AND ea.com_account_class_id = pa.com_account_class_id
@@ -84,8 +86,8 @@
         WHERE
         mc.is_active = 1
         AND ea.is_active = 1
-        <if test="paymentMonth != null and paymentMonth != ''">
-            AND mc.hf_month = TRIM(#{paymentMonth})
+        <if test="paymentMonthValue != null and paymentMonthValue != ''">
+            AND mc.hf_month = TRIM(#{paymentMonthValue})
         </if>
         AND mc.hf_type = pa.hf_type
         AND ea.com_account_class_id = pa.com_account_class_id
@@ -101,8 +103,8 @@
         WHERE
         mc.is_active = 1
         AND ea.is_active = 1
-        <if test="paymentMonth != null and paymentMonth != ''">
-            AND mc.hf_month = TRIM(#{paymentMonth})
+        <if test="paymentMonthValue != null and paymentMonthValue != ''">
+            AND mc.hf_month = TRIM(#{paymentMonthValue})
         </if>
         AND mc.hf_type = pa.hf_type
         AND ea.com_account_class_id = pa.com_account_class_id
@@ -138,6 +140,14 @@
                 AND EXISTS (select 1 from hf_account_com_relation acr INNER  JOIN  sal_company com ON  com.company_id=acr.company_id
                 where acr.com_account_id=ca.com_account_id and com.title LIKE concat('%',#{companyName},'%') )
             </if>
+            <if test="serviceCenterValue!= null and serviceCenterValue != ''">
+                AND EXISTS (select 1 from hf_emp_archive ea WHERE ea.com_account_id=ca.com_account_id and ea.service_center_id=#{serviceCenterValue})
+            </if>
+            <if test="leaderShipName!= null and leaderShipName != ''">
+                AND EXISTS (select 1 from hf_account_com_relation acr INNER  JOIN  emp_af_emp_company afemp ON  afemp.company_id=acr.company_id
+                where acr.com_account_id=ca.com_account_id and afemp.leadership_name LIKE CONCAT('%',#{leaderShipName}, '%') )
+            </if>
+
         </where>
         ORDER BY
         pa.payment_account_id

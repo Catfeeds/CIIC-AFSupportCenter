@@ -2,10 +2,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HFStatementCompareBO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HFStatementCompareService;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.FundStatementDetailDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.HFStatementCompareDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.NewStatementDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.FundStatementItemDTO;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.*;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
@@ -25,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -114,7 +112,12 @@ public class StatementCompareController extends BasicController<HFStatementCompa
             }
         }
     }
-
+    @RequestMapping("/downTemplate")
+    public void downTemplate(HttpServletResponse response){
+        String fileNme = "公积金对账模板.xls";
+        List<EmpAccountImpXsl> opts = new ArrayList();
+        ExcelUtil.exportExcel(opts,EmpAccountTemplateXsl.class,fileNme,response);
+    }
     /**
      * 执行对账
      *
