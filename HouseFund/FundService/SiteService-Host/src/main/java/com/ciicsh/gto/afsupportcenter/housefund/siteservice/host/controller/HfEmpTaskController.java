@@ -251,7 +251,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
                 Set<String> employeeIdSet = new HashSet<>();
                 Wrapper<HfEmpTask> wrapper = new EntityWrapper<>();
                 wrapper.in("emp_task_id", StringUtils.join(objects, ','));
-                wrapper.eq("task_category", 1);
+                wrapper.in("task_category", "1,9");
                 wrapper.eq("is_active", 1);
 
                 List<HfEmpTask> list = business.selectList(wrapper);

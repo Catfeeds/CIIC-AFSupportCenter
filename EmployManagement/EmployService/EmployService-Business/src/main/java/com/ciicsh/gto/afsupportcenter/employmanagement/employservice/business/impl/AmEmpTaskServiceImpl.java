@@ -1298,6 +1298,18 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             List<AmEmpTaskBO> amList = pageRows.getRows();
             for (AmEmpTaskBO b:amList ) {
                 AmEmpDispatchExportDTO dto =  getAmEmpDispatchExportDTO(b);
+                if(dtoList.getCreatedBy() == null){// 用工操作员
+                    dtoList.setCreatedBy(b.getEmployOperateMan());
+                }
+                if(dtoList.getCreatedTime() == null){// 开F单日期
+                    dtoList.setCreatedTime(b.getOpenAfDate());
+                }
+                if(dto.getLaborStartDate()==null||dto.getLaborEndDate()==null){
+                    dto.setTimeLimitForDispatch("5年以上");
+                }else{
+                    dto.setTimeLimitForDispatch(ReasonUtil.getCondemnationYears(dto.getLaborStartDate(),dto.getLaborEndDate()));
+                }
+                dto.setSendOut(b.getCompanyType());
                 exportList.add(dto);
             }
             if(exportList.size()!=0){
@@ -1312,14 +1324,8 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 dtoList.setMembership(employCode==2?"中央属":employCode==3?"无":"");
                 dtoList.setLinkman("");
                 dtoList.setLinkPhone("54594545");
-                dtoList.setCreatedBy(UserContext.getUser().getDisplayName());
-                dtoList.setCreatedTime(new Date());
-                dtoList.setSsAccount("        ");//社保登记码
-//                com.ciicsh.common.entity.JsonResult<SsComAccountDTO> accountResult = socApiProxy.getSsComAccountByComId(companyId);
-//                if(accountResult.getData()!=null){
-//                    String account = accountResult.getData().getSsAccount();
-//                    dtoList.setSsAccount(account==null||account.length()<8?"        ":account);//社保登记码
-//                }
+                dtoList.setSsAccount(employCode==2?"00048926":employCode==3?"00309096":"");//社保登记码
+                dtoList.setSettlementArea("徐汇");
                 dtoList.setList(exportList);
                 result.add(dtoList);
             }
@@ -1441,6 +1447,18 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 List<AmEmpTaskBO> amList = pageRows.getRows();
                 for (AmEmpTaskBO b:amList ) {
                     AmEmpDispatchExportDTO dto = getAmEmpDispatchExportDTO(b);
+                    if(dtoList.getCreatedBy() == null){// 用工操作员
+                        dtoList.setCreatedBy(b.getEmployOperateMan());
+                    }
+                    if(dtoList.getCreatedTime() == null){// 开F单日期
+                        dtoList.setCreatedTime(b.getOpenAfDate());
+                    }
+                    if(dto.getLaborStartDate()==null||dto.getLaborEndDate()==null){
+                        dto.setTimeLimitForDispatch("5年以上");
+                    }else{
+                        dto.setTimeLimitForDispatch(ReasonUtil.getCondemnationYears(dto.getLaborStartDate(),dto.getLaborEndDate()));
+                    }
+                    dto.setSendOut(b.getCompanyType());
                     exportList.add(dto);
                 }
                 if(exportList.size()!=0){
@@ -1459,12 +1477,11 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                     dtoList.setMembership("");
                     dtoList.setLinkman(UserContext.getUser().getDisplayName());
                     dtoList.setLinkPhone("54594545");
-                    dtoList.setCreatedBy(UserContext.getUser().getDisplayName());
-                    dtoList.setCreatedTime(new Date());
                     com.ciicsh.common.entity.JsonResult<SsComAccountDTO> accountResult = socApiProxy.getSsComAccountByComId(companyId);
                     if(accountResult.getData()!=null){
                         String account = accountResult.getData().getSsAccount();
                         dtoList.setSsAccount(account==null||account.length()<8?"        ":account);//社保登记码
+                        dtoList.setSettlementArea(accountResult.getData().getSettlementArea());
                     }
                     dtoList.setList(exportList);
                     result.add(dtoList);
@@ -1534,9 +1551,13 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             AmEmpCollectExportPageDTO pageDTO = new AmEmpCollectExportPageDTO();
             if(employCode == 2){
                 pageDTO.setCompanyName("中智上海经济技术合作公司");
+                pageDTO.setSsAccount("00048926");
+                pageDTO.setSettlementArea("徐汇");
             }
             if(employCode == 3){
                 pageDTO.setCompanyName("上海中智项目外包咨询服务有限公司");
+                pageDTO.setSsAccount("00309096");
+                pageDTO.setSettlementArea("徐汇");
             }
             List<AmEmpTaskBO> boList = pageRows.getRows();
             List<AmEmpCollectExportDTO> list1 = new ArrayList<>();
@@ -1558,7 +1579,9 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             pageDTO.setList1(list1);
             pageDTO.setList2(list2);
             pageDTO.setList3(list3);
-            result.add(pageDTO);
+            if(list1.size()>0){
+                result.add(pageDTO);
+            }
         }
         return result;
     }
@@ -1620,7 +1643,12 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 // 独立户公司title信息
                 com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<AfCompanyDetailResponseDTO> companyDto = companyProxy.afDetail(company);
                 pageDTO.setCompanyName(companyDto.getObject().getCompanyName());
-//                pageDTO.setSsAccount(); 社会保险登记码
+                com.ciicsh.common.entity.JsonResult<SsComAccountDTO> accountResult = socApiProxy.getSsComAccountByComId(company);
+                if(accountResult.getData()!=null){
+                    String account = accountResult.getData().getSsAccount();
+                    pageDTO.setSsAccount(account==null||account.length()<8?"        ":account);//社保登记码
+                    pageDTO.setSettlementArea(accountResult.getData().getSettlementArea());
+                }
                 List<AmEmpTaskBO> boList = pageRows.getRows();
                 List<AmEmpCollectExportDTO> list1 = new ArrayList<>();
                 List<AmEmpCollectExportDTO> list2 = new ArrayList<>();

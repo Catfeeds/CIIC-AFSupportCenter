@@ -49,6 +49,10 @@ public class ComFundAccountDetailDTO
      */
     private String comStartMonth;
     private String comStartMonthValue;
+
+    private String comHfMonth;
+    private String comHfMonthValue;
+
     /**
      * 企业账户备注
      */
@@ -108,6 +112,7 @@ public class ComFundAccountDetailDTO
         ukeyStore = 0;
         closeDay = 0;
         comStartMonth = "";
+        comHfMonth = "";
         remark = "";
         basicAccountTempStore = 0;
         compensativeAccountTempStore = 0;
@@ -208,5 +213,21 @@ public class ComFundAccountDetailDTO
 
     public void setCompensativeAccountTempStore(Integer compensativeAccountTempStore) {
         this.compensativeAccountTempStore = compensativeAccountTempStore;
+    }
+
+    public String getComHfMonth() {
+        return comHfMonth;
+    }
+
+    public void setComHfMonth(String comHfMonth) {
+        this.comHfMonth = comHfMonth;
+    }
+
+    public String getComHfMonthValue() {
+        return comHfMonthValue;
+    }
+
+    public void setComHfMonthValue(String comHfMonthValue) {
+        this.comHfMonthValue = comHfMonthValue;
     }
 }

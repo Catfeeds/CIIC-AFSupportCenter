@@ -91,6 +91,7 @@
         <result column="ukey_store" jdbcType="TINYINT" property="ukeyStore"/>
         <result column="close_day" jdbcType="TINYINT" property="closeDay"/>
         <result column="com_start_month" jdbcType="VARCHAR" property="comStartMonth"/>
+        <result column="com_hf_month" jdbcType="VARCHAR" property="comHfMonth"/>
         <result column="remark" jdbcType="VARCHAR" property="remark"/>
         <result column="basic_account_temp_store" jdbcType="TINYINT" property="basicAccountTempStore"/>
         <result column="compensative_account_temp_store" jdbcType="TINYINT" property="compensativeAccountTempStore"/>
@@ -322,9 +323,11 @@
             b.close_day,
             <if test="hfType == 1">
                 a.com_start_month,
+                a.com_hf_month,
             </if>
             <if test="hfType == 2">
                 c.com_start_month,
+                c.com_hf_month,
             </if>
             b.remark,
             IFNULL(a.account_temp_store, 0) basic_account_temp_store,

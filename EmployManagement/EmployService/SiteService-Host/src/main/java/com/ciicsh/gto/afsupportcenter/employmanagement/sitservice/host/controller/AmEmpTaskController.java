@@ -619,23 +619,24 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     public @ResponseBody
     void employSearchExportOptDispatchWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response){
 
-        // 中智大库
-        List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,9);
 
-        // 外包
-        List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(amEmpTaskBO,3,9);
-
-        //独立户
-        List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(amEmpTaskBO,9);
-
-
-        Map<String, Object> map = new HashMap<>();
-
-        map.put("list",dtoList);
-        map.put("list2",dtoList2);
-        map.put("list3",dtoList3);
 
         try {
+            // 中智大库
+            List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,9);
+
+            // 外包
+            List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(amEmpTaskBO,3,9);
+
+            //独立户
+            List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(amEmpTaskBO,9);
+
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("list",dtoList);
+            map.put("list2",dtoList2);
+            map.put("list3",dtoList3);
             WordUtils.exportMillCertificateWord(response,map,"派遣录用名册","AM_DISPATCH_TEMP.ftl");
         } catch (Exception e) {
             e.printStackTrace();
@@ -658,13 +659,23 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         //独立户
         List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(amEmpTaskBO,10);
 
+        Integer count = 0;
+        for (AmEmpDispatchExportPageDTO dto:dtoList) {
+            count += dto.getList().size();
+        }
+        for (AmEmpDispatchExportPageDTO dto:dtoList2) {
+            count += dto.getList().size();
+        }
+        for (AmEmpDispatchExportPageDTO dto:dtoList3) {
+            count += dto.getList().size();
+        }
 
         Map<String, Object> map = new HashMap<>();
 
         map.put("list",dtoList);
         map.put("list2",dtoList2);
         map.put("list3",dtoList3);
-
+        map.put("count",count);
 
         try {
             WordUtils.exportMillCertificateWord(response,map,"外来独立","AM_ALONE_TEMP.ftl");
@@ -689,12 +700,23 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         //独立户
         List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(amEmpTaskBO,9);
 
+        Integer count = 0;
+        for (AmEmpDispatchExportPageDTO dto:dtoList) {
+            count += dto.getList().size();
+        }
+        for (AmEmpDispatchExportPageDTO dto:dtoList2) {
+            count += dto.getList().size();
+        }
+        for (AmEmpDispatchExportPageDTO dto:dtoList3) {
+            count += dto.getList().size();
+        }
 
         Map<String, Object> map = new HashMap<>();
 
         map.put("list",dtoList);
         map.put("list2",dtoList2);
         map.put("list3",dtoList3);
+        map.put("count",count);
 
         try {
             WordUtils.exportMillCertificateWord(response,map,"外来派遣","AM_EXT_DISPATCH_TEMP.ftl");
@@ -718,12 +740,30 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         //独立户
         List<AmEmpCollectExportPageDTO> dtoList3 = business.queryExportOptCollect(amEmpTaskBO);
 
+        Integer sum = 0;
+
+        for (AmEmpCollectExportPageDTO dto:dtoList) {
+            sum += dto.getList1().size();
+            sum += dto.getList2().size();
+            sum += dto.getList3().size();
+        }
+        for (AmEmpCollectExportPageDTO dto:dtoList2) {
+            sum += dto.getList1().size();
+            sum += dto.getList2().size();
+            sum += dto.getList3().size();
+        }
+        for (AmEmpCollectExportPageDTO dto:dtoList3) {
+            sum += dto.getList1().size();
+            sum += dto.getList2().size();
+            sum += dto.getList3().size();
+        }
 
         Map<String, Object> map = new HashMap<>();
 
         map.put("list",dtoList);
         map.put("list2",dtoList2);
         map.put("list3",dtoList3);
+        map.put("sum",sum);
 
         try {
             WordUtils.exportMillCertificateWord(response,map,"采集表汇总表","AM_COLLECT_TEMP.ftl");

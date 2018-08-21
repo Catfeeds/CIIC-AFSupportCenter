@@ -63,6 +63,9 @@
         <result column="ss_account" property="ssAccount"/>
         <result column="labor_start_date" property="laborStartDate"/>
         <result column="labor_end_date" property="laborEndDate"/>
+        <result column="open_af_date" property="openAfDate"/>
+        <result column="employ_operate_man" property="employOperateMan"/>
+        <result column="company_type" property="companyType"/>
 
     </resultMap>
 
@@ -120,9 +123,12 @@
         b.employ_date,
         b.employ_style,
         b.handle_type,
+        b.open_af_date,
+        b.employ_operate_man,
         e.labor_start_date,
         e.labor_end_date,
         e.position,
+        e.company_type,
         c.yuliu_doc_type,
         c.yuliu_doc_num,/*预留档案编号 */
         c.doc_type,

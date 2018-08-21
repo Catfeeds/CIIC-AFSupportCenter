@@ -1171,7 +1171,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>徐汇</w:t>
+            <w:t>${(subList.settlementArea)!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -1247,7 +1247,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>4700</w:t>
+            <#--<w:t>4700</w:t>-->
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -1753,7 +1753,7 @@
         </wx:apo>
         <w:p wsp:rsidR="003A04B0" wsp:rsidRDefault="003A04B0">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3602" w:y="9431"/>
+            <w:framePr w:w="500" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3602" w:y="9431"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -1775,7 +1775,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>人</w:t>
+            <w:t>${(count)!} 人</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -2090,7 +2090,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>周蕾</w:t>
+            <w:t>${(subList.createdBy)!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -2129,7 +2129,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>${(subList.createdTime?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>${.now?string("yyyy-MM-dd")}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -2469,9 +2469,7 @@
               <w:sz w:val="23"/>
               <w:sz-cs w:val="23"/>
             </w:rPr>
-              <#if subList.ssAccount?? >
-                  <w:t>${(subList.ssAccount?substring(0,1))!}</w:t>
-              </#if>
+                  <w:t>0</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -2504,9 +2502,7 @@
               <w:sz w:val="23"/>
               <w:sz-cs w:val="23"/>
             </w:rPr>
-              <#if subList.ssAccount?? >
-                  <w:t>${(subList.ssAccount?substring(1,2))!}</w:t>
-              </#if>
+                  <w:t>0</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -2539,9 +2535,7 @@
               <w:sz w:val="23"/>
               <w:sz-cs w:val="23"/>
             </w:rPr>
-              <#if subList.ssAccount?? >
-                  <w:t>${(subList.ssAccount?substring(2,3))!}</w:t>
-              </#if>
+                  <w:t>0</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -2574,9 +2568,7 @@
               <w:sz w:val="23"/>
               <w:sz-cs w:val="23"/>
             </w:rPr>
-              <#if subList.ssAccount?? >
-                  <w:t>${(subList.ssAccount?substring(3,4))!}</w:t>
-              </#if>
+                  <w:t>4</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -2609,9 +2601,7 @@
               <w:sz w:val="23"/>
               <w:sz-cs w:val="23"/>
             </w:rPr>
-              <#if subList.ssAccount?? >
-                  <w:t>${(subList.ssAccount?substring(4,5))!}</w:t>
-              </#if>
+                  <w:t>8</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -2644,9 +2634,7 @@
               <w:sz w:val="23"/>
               <w:sz-cs w:val="23"/>
             </w:rPr>
-              <#if subList.ssAccount?? >
-                  <w:t>${(subList.ssAccount?substring(5,6))!}</w:t>
-              </#if>
+                  <w:t>9</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -2679,9 +2667,7 @@
               <w:sz w:val="23"/>
               <w:sz-cs w:val="23"/>
             </w:rPr>
-              <#if subList.ssAccount?? >
-                  <w:t>${(subList.ssAccount?substring(6,7))!}</w:t>
-              </#if>
+                  <w:t>2</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -2819,9 +2805,7 @@
               <w:sz w:val="23"/>
               <w:sz-cs w:val="23"/>
             </w:rPr>
-              <#if subList.ssAccount?? >
-                  <w:t>${(subList.ssAccount?substring(7,8))!}</w:t>
-              </#if>
+                  <w:t>6</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -4699,7 +4683,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>徐汇</w:t>
+            <w:t>${(subList2.settlementArea)!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -4775,7 +4759,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>4700</w:t>
+            <#--<w:t>4700</w:t>-->
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -5281,7 +5265,7 @@
         </wx:apo>
         <w:p wsp:rsidR="003A04B0" wsp:rsidRDefault="003A04B0">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3602" w:y="9431"/>
+            <w:framePr w:w="500" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3602" w:y="9431"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -5303,7 +5287,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>人</w:t>
+            <w:t>${(count)!} 人</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -5618,7 +5602,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>周蕾</w:t>
+            <w:t>${(subList2.createdBy)!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -5657,7 +5641,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>${(subList2.createdTime?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>${.now?string("yyyy-MM-dd")}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -5997,9 +5981,7 @@
               <w:sz w:val="23"/>
               <w:sz-cs w:val="23"/>
             </w:rPr>
-              <#if subList2.ssAccount?? >
-                  <w:t>${(subList2.ssAccount?substring(0,1))!}</w:t>
-              </#if>
+                  <w:t>0</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -6032,9 +6014,7 @@
               <w:sz w:val="23"/>
               <w:sz-cs w:val="23"/>
             </w:rPr>
-              <#if subList2.ssAccount?? >
-                  <w:t>${(subList2.ssAccount?substring(1,2))!}</w:t>
-              </#if>
+                  <w:t>0</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -6067,9 +6047,7 @@
               <w:sz w:val="23"/>
               <w:sz-cs w:val="23"/>
             </w:rPr>
-              <#if subList2.ssAccount?? >
-                  <w:t>${(subList2.ssAccount?substring(2,3))!}</w:t>
-              </#if>
+                  <w:t>3</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -6102,9 +6080,7 @@
               <w:sz w:val="23"/>
               <w:sz-cs w:val="23"/>
             </w:rPr>
-              <#if subList2.ssAccount?? >
-                  <w:t>${(subList2.ssAccount?substring(3,4))!}</w:t>
-              </#if>
+                  <w:t>0</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -6137,9 +6113,7 @@
               <w:sz w:val="23"/>
               <w:sz-cs w:val="23"/>
             </w:rPr>
-              <#if subList2.ssAccount?? >
-                  <w:t>${(subList2.ssAccount?substring(4,5))!}</w:t>
-              </#if>
+                  <w:t>9</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -6172,9 +6146,7 @@
               <w:sz w:val="23"/>
               <w:sz-cs w:val="23"/>
             </w:rPr>
-              <#if subList2.ssAccount?? >
-                  <w:t>${(subList2.ssAccount?substring(5,6))!}</w:t>
-              </#if>
+                  <w:t>0</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -6207,9 +6179,7 @@
               <w:sz w:val="23"/>
               <w:sz-cs w:val="23"/>
             </w:rPr>
-              <#if subList2.ssAccount?? >
-                  <w:t>${(subList2.ssAccount?substring(6,7))!}</w:t>
-              </#if>
+                  <w:t>9</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -6347,9 +6317,7 @@
               <w:sz w:val="23"/>
               <w:sz-cs w:val="23"/>
             </w:rPr>
-              <#if subList2.ssAccount?? >
-                  <w:t>${(subList2.ssAccount?substring(7,8))!}</w:t>
-              </#if>
+                  <w:t>6</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -8229,7 +8197,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>徐汇</w:t>
+            <w:t>${(subList3.settlementArea)!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -8305,7 +8273,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>4700</w:t>
+            <#--<w:t>4700</w:t>-->
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -8811,7 +8779,7 @@
         </wx:apo>
         <w:p wsp:rsidR="003A04B0" wsp:rsidRDefault="003A04B0">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3602" w:y="9431"/>
+            <w:framePr w:w="500" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3602" w:y="9431"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -8833,7 +8801,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>人</w:t>
+            <w:t>${(count)!} 人</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -9148,7 +9116,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>周蕾</w:t>
+            <w:t>${(subList3.createdBy)!}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -9187,7 +9155,7 @@
               <w:sz w:val="20"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>${(subList3.createdTime?string("yyyy-MM-dd"))!}</w:t>
+            <w:t>${.now?string("yyyy-MM-dd")}</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>

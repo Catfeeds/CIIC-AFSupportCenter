@@ -320,7 +320,8 @@
         select
             ca.com_account_id,
             ca.ss_account,
-            ca.com_account_name
+            ca.com_account_name,
+            ca.settlement_area
         FROM
          ss_com_account ca
         INNER JOIN ss_account_com_relation ssac on ca.com_account_id = ssac.com_account_id

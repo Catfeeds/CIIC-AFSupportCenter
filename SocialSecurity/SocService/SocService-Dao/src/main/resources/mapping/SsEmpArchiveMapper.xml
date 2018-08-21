@@ -177,6 +177,8 @@
         <result column="end_month" property="endMonth"/>
         <result column="ss_month" property="ssMonth"/>
         <result column="in_date" property="inDate"/>
+        <result column="service_center" property="serviceCenter"/>
+
     </resultMap>
 
     <!--雇员查询导出。这里为何导出要单独查询？原因是查询返回的bean 对象不一样，empSSSearchExportOpt 是带@excle。 最终要合并成一条查询语句  -->

@@ -160,6 +160,7 @@ public class HfComAccountServiceImpl extends ServiceImpl<HfComAccountMapper, HfC
             String comAccount=comFundAccountDetailDTO.getHfType()==1?comFundAccountDetailDTO.getBasicComAccount():comFundAccountDetailDTO.getCompensativeComAccount();
             hfComAccountClass.setHfComAccount(comAccount);
             hfComAccountClass.setComStartMonth(comFundAccountDetailDTO.getComStartMonthValue());
+            hfComAccountClass.setComHfMonth(comFundAccountDetailDTO.getComHfMonthValue());
             String[] tempstore=comFundAccountDetailDTO.getTmpStore();
             boolean tmpStore=comFundAccountDetailDTO.getHfType()==1?
                 Arrays.stream(tempstore).filter(i->"基本暂保管".equals(i)).findFirst().isPresent():
