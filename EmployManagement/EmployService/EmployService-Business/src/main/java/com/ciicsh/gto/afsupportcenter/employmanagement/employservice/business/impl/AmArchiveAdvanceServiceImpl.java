@@ -1,6 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.impl;
 
+import com.baomidou.mybatisplus.enums.SqlLike;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmArchiveAdvanceService;
@@ -50,7 +52,14 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
 
         PageRows<AmArchiveAdvanceBO> result = new PageRows<>();
         AmArchiveAdvance pojo = pageInfo.toJavaObject(AmArchiveAdvance.class);
-        PageRows<AmArchiveAdvance> resultPo = PageKit.doSelectPage(pageInfo, () -> baseMapper.selectList(new EntityWrapper<>(pojo)));
+        Wrapper<AmArchiveAdvance> wrapper = new EntityWrapper<>();
+        wrapper.like("employee_idcard_no",pojo.getEmployeeIdcardNo(),SqlLike.DEFAULT);
+        wrapper.like("employee_name",pojo.getEmployeeName(),SqlLike.DEFAULT);
+        if(pojo.getStatus()!=null){
+            wrapper.eq("status",pojo.getStatus());
+        }
+        wrapper.eq("is_active",1);
+        PageRows<AmArchiveAdvance> resultPo = PageKit.doSelectPage(pageInfo, () -> baseMapper.selectList(wrapper));
         result.setTotal(resultPo.getTotal());
         List<AmArchiveAdvanceBO> boList = new ArrayList<>();
         for (AmArchiveAdvance po : resultPo.getRows()) {
