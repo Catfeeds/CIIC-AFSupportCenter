@@ -38,6 +38,10 @@ public class EmploymentDTO {
      * 合同起始日期
      */
     private Date laborStartDate;
+    /**
+     * 用工属性
+     */
+    private String employProperty;
 
     public Date getLaborStartDate() {
         return laborStartDate;
@@ -101,5 +105,13 @@ public class EmploymentDTO {
 
     public void setEmployOperateMan(String employOperateMan) {
         this.employOperateMan = employOperateMan;
+    }
+
+    public String getEmployProperty() {
+        return employProperty;
+    }
+
+    public void setEmployProperty(String employProperty) {
+        this.employProperty = employProperty;
     }
 }

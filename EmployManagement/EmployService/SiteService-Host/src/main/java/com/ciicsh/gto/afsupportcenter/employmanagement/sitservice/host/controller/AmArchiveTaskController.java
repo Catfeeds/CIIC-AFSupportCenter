@@ -129,8 +129,8 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             if(1==status){
                 amEmpTaskCountBO.setNoSign(amEmploymentBO.getCount());
                 num = num + amEmploymentBO.getCount();
-            }else if(2==status){
-                amEmpTaskCountBO.setFinished(amEmploymentBO.getCount());
+            }else if(10==status){
+                amEmpTaskCountBO.setNoRecord(amEmploymentBO.getCount());
                 num = num + amEmploymentBO.getCount();
             }else if(3==status){
                 amEmpTaskCountBO.setEmploySuccess(amEmploymentBO.getCount());
@@ -456,34 +456,34 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     }
 
 
-    @PostMapping("/saveAmArchiveUse")
-    public JsonResult<Boolean>  saveAmArchiveUse(@RequestBody List<AmArchiveUse> list) {
+    @RequestMapping("/saveAmArchiveUse")
+    public JsonResult  saveAmArchiveUse(AmArchiveUse amArchiveUse) {
 
-        for(AmArchiveUse bo:list)
-        {
-            LocalDateTime now = LocalDateTime.now();
-
-            if(bo.getArchiveUseId()==null){
-                bo.setCreatedTime(now);
-                bo.setModifiedTime(now);
-                bo.setCreatedBy(ReasonUtil.getUserId());
-                bo.setModifiedBy(ReasonUtil.getUserId());
-            }else {
-                bo.setModifiedTime(now);
-                bo.setModifiedBy(ReasonUtil.getUserId());
-            }
-
-                bo.setHandleMan(ReasonUtil.getUserName());
+        LocalDateTime now = LocalDateTime.now();
+        if(amArchiveUse.getArchiveUseId()==null){
+            amArchiveUse.setCreatedTime(now);
+            amArchiveUse.setModifiedTime(now);
+            amArchiveUse.setCreatedBy(ReasonUtil.getUserId());
+            amArchiveUse.setModifiedBy(ReasonUtil.getUserId());
+            amArchiveUse.setHandleMan(ReasonUtil.getUserName());
+        }else{
+            amArchiveUse.setModifiedTime(now);
+            amArchiveUse.setModifiedBy(ReasonUtil.getUserId());
         }
 
-        boolean result = false;
-        try {
-            result = iAmArchiveUseService.insertOrUpdateBatch(list);
-        } catch (Exception e) {
+        boolean result = iAmArchiveUseService.insertOrUpdate(amArchiveUse);
 
+        PageInfo pageInfo = new PageInfo();
+        JSONObject params = new JSONObject();
+        params.put("archiveId",amArchiveUse.getArchiveId());
+        params.put("useBorrow",amArchiveUse.getUseBorrow());
+        pageInfo.setParams(params);
+        Map<String, Object> resultMap = new HashMap<>();
+        PageRows<AmArchiveUse>  amArchiveUsePageRows  = iAmArchiveUseService.queryAmArchiveUse(pageInfo);
+        if(null!=amArchiveUsePageRows&&amArchiveUsePageRows.getRows().size()>0){
+            resultMap.put("amArchiveUsePageRows",amArchiveUsePageRows);
         }
-
-        return JsonResultKit.of(result);
+        return JsonResultKit.of(resultMap);
     }
 
     @RequestMapping("/queryArchiveUse")

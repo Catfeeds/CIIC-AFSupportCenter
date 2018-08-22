@@ -1674,12 +1674,12 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             param.remove(param.size()-1);
         }
 
-
-
-
-
-
         return result;
+    }
+
+    @Override
+    public List<AmEmpTaskBO> jobCount(AmEmpTaskBO amEmpTaskBO) {
+        return  baseMapper.jobCount(amEmpTaskBO);
     }
 
 

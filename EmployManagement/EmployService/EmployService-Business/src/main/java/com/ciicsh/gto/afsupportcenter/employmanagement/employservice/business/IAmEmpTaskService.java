@@ -74,4 +74,6 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
 
     List<AmEmpCollectExportPageDTO> queryExportOptCollect(AmEmpTaskBO amEmpTaskBO);
 
+    List<AmEmpTaskBO>  jobCount(AmEmpTaskBO amEmpTaskBO);
+
 }
