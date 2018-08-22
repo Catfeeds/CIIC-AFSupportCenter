@@ -30,4 +30,5 @@ public class HfPrintRemittedBookBO {
     private Boolean isRepair;//打钩补缴
     private Integer pageNum;
     private String moneyCN;
+    private String companyId;
 }

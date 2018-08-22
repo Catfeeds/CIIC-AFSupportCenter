@@ -11,4 +11,6 @@ import java.util.List;
 public class AmEmpTaskCollection {
 
     private List<AmEmpTaskCountBO> row;
+
+    private AmTaskStatusBO amTaskStatusBO;
 }

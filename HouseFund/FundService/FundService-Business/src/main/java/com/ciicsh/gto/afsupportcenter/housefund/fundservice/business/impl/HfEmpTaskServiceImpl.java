@@ -77,7 +77,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         List<String> orderParam = new ArrayList<String>();
 
         if (!StringUtil.isEmpty(hfEmpTaskBo.getParams())) {
-            String arr[] = hfEmpTaskBo.getParams().split(",");
+            String arr[] = hfEmpTaskBo.getParams().split(";");
             for (int i = 0; i < arr.length; i++) {
                 if(arr[i].indexOf("processStatus")!=-1){
                     String str[] = arr[i].split(" ");
@@ -150,7 +150,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         List<String> orderParam = new ArrayList<String>();
 
         if (!StringUtil.isEmpty(hfEmpTaskBo.getParams())) {
-            String arr[] = hfEmpTaskBo.getParams().split(",");
+            String arr[] = hfEmpTaskBo.getParams().split(";");
             for (int i = 0; i < arr.length; i++) {
                 if(arr[i].indexOf("processStatus")!=-1){
                     String str[] = arr[i].split(" ");
@@ -295,7 +295,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         if (dto.getNowAgreement() != null && dto.getNowAgreement().getFundPolicyId() != null) {
             hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getFundPolicyId());
         }
-        //TODO 表中加字段
+
         //办理状态：1、未处理 2 、处理中(已办)  3 已完成(已做) 4、批退 5、不需处理
         hfEmpTask.setTaskStatus(1);
         //入职日期
@@ -408,7 +408,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         if (dto.getNowAgreement() != null && dto.getNowAgreement().getFundPolicyId() != null) {
             hfEmpTask.setPolicyDetailId(dto.getNowAgreement().getFundPolicyId());
         }
-        //TODO 表中加字段
+
         hfEmpTask.setModifiedTime(LocalDateTime.now());
         List<AfEmpSocialDTO> socialList = dto.getEmpSocialList();
         if(null != socialList && socialList.size() > 0){
@@ -512,15 +512,15 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                 List<ComAccountTransBo> comAccountTransBoList;
 
                 // 如果转出或封存时，转入单位统一为市公积金中心
-//                if (inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
-//                    || inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT) {
+                if (inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
+                    || inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT) {
                     String transferInUnit = SocialSecurityConst.FUND_OUT_UNIT_LIST.get(0); //市公积金中心单位名称
                     hfEmpTaskCreateTransBo.setTransferInUnit(transferInUnit);
                     String transferInUnitAccount =
                         (inputHfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) ? SocialSecurityConst.CENTER_BASIC_COM_ACCOUNT
                             : SocialSecurityConst.CENTER_ADDED_COM_ACCOUNT;
                     hfEmpTaskCreateTransBo.setTransferInUnitAccount(transferInUnitAccount);
-//                }
+                }
                 comAccountTransBo.setHfType(inputHfEmpTask.getHfType());
                 if (comAccountId != null) {
                     comAccountTransBo.setComAccountId(comAccountId);

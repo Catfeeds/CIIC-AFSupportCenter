@@ -1460,14 +1460,29 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
 
                 // 如果是转出任务单，雇员月度汇缴明细库转入数据可能被删除（当月转入当月转出），且不生成转出数据
-                hfMonthChargeBo.setPaymentTypes(StringUtils.join(new Integer[]{
-                    HfMonthChargeConstant.PAYMENT_TYPE_NEW,
-                    HfMonthChargeConstant.PAYMENT_TYPE_TRANS_IN,
-                    HfMonthChargeConstant.PAYMENT_TYPE_OPEN,
-                    HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_OPEN
-                }, ','));
+                Wrapper<HfMonthCharge> wrapper = new EntityWrapper<>();
+                wrapper.where("is_active = 1");
+                wrapper.and("emp_archive_id = {0}", e.getEmpArchiveId());
+                wrapper.and("payment_type = 6");
+                wrapper.and("hf_month >= {0}", e.getHfMonth());
+                int repairCnt = hfMonthChargeService.selectCount(wrapper);
+                int rslt = 0;
+
+                // 如果新开的当月，还存在补缴，那么新开及转出记录需保留
+                if (repairCnt == 0) {
+                    hfMonthChargeBo.setPaymentTypes(StringUtils.join(new Integer[]{
+                        HfMonthChargeConstant.PAYMENT_TYPE_NEW
+                    }, ','));
+                } else {
+                    hfMonthChargeBo.setPaymentTypes(StringUtils.join(new Integer[]{
+                        HfMonthChargeConstant.PAYMENT_TYPE_TRANS_IN,
+                        HfMonthChargeConstant.PAYMENT_TYPE_OPEN,
+                        HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_OPEN
+                    }, ','));
+                }
                 hfMonthChargeBo.setExceptEmpTaskId(hfEmpTask.getEmpTaskId());
-                int rslt = hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
+                rslt = hfMonthChargeService.updateHfMonthCharge(hfMonthChargeBo);
+
                 if (rslt > 0) {
                     HfMonthCharge hfMonthCharge = new HfMonthCharge();
                     hfMonthCharge.setEmpArchiveId(e.getEmpArchiveId());

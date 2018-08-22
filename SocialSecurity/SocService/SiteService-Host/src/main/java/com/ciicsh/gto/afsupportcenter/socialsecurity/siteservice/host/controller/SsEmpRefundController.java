@@ -27,8 +27,11 @@ public class SsEmpRefundController  extends BasicController<SsEmpRefundService> 
      */
    @RequestMapping("/queryRefundDetails")
     public JsonResult<List<SsEmpRefundBO>> queryRefundDetails(SsEmpRefundBO ssEmpRefundBO){
-        if(StringUtils.isBlank(ssEmpRefundBO.getSsMonth()) || null == ssEmpRefundBO.getSsAccount())
+        if(StringUtils.isBlank(ssEmpRefundBO.getSsMonth())  )
             throw new BusinessException("条件不足");
+       if(null == ssEmpRefundBO.getCompanyId() && null == ssEmpRefundBO.getSsAccount())
+           throw new BusinessException("企业社保账号和客户编号必选一项");
+
         ssEmpRefundBO.setSsMonth(ssEmpRefundBO.getSsMonth().substring(0,6));
         List<SsEmpRefundBO> ssEmpRefundBOList= business.selectRefundDetail(ssEmpRefundBO);
         return JsonResultKit.of(ssEmpRefundBOList);

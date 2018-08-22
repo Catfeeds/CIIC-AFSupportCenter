@@ -101,4 +101,15 @@ public interface SocApiProxy {
     @PostMapping("/getEmpSocialSecurityInfo")
     JsonResult<EmpSocialSecurityInfoDTO> getEmpSocialSecurityInfo(@RequestParam("companyId")String companyId,
                                                                   @RequestParam("employeeId")String employeeId);
+
+    /**
+     * 接口调用方：证件管理中心
+     * 根据客户Id，雇员Id获取雇员的社保福利段信息
+     * @param companyId
+     * @param employeeId
+     * @return
+     */
+    @PostMapping("/getEmpBasePeriodInfo")
+    JsonResult<List<SsEmpBasePeriodDTO>> getEmpBasePeriodInfo(@RequestParam("companyId")String companyId,
+                                                        @RequestParam("employeeId")String employeeId);
 }

@@ -263,7 +263,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         int allCount;
         List<HFMonthChargeBasChgDetailBO> hfMonthChargeBasChgDetailBOList = null;
         List<HFMonthChargeAddChgDetailBO> hfMonthChargeAddChgDetailBOList = null;
-        Set<String> companyIdSet = new HashSet<>();
+        Set<String> companyIdSet = new LinkedHashSet<>();
 
         if (hfMonthChargeQueryBO.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
             hfMonthChargeBasChgDetailBOList = getBasChgDetailList(companyIdSet, inHfMonthChargeReportBOList, outHfMonthChargeReportBOList);
@@ -702,7 +702,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         }
 
         int allCount;
-        Set<String> companyIdSet = new HashSet<>();
+        Set<String> companyIdSet = new LinkedHashSet<>();
         List<HFMonthChargeRepairDetailBO> hfMonthChargeRepairDetailBOList = getRepairDetailList(companyIdSet, hfMonthChargeReportBOList);
         allCount = hfMonthChargeRepairDetailBOList.size();
 

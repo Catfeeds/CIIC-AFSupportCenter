@@ -39,7 +39,7 @@ public class ComAccountExtBo {
      */
     private Integer ukeyStore;
     /**
-     * 缴费区县：1 徐汇—X、2 西郊—C、3 东方路—P、4 卢湾—L、5 黄浦—H
+     * 缴费区县：15 徐汇—X、16 西郊—C、17东方路—P、18 卢湾—L、0 黄浦—H
      */
     private Integer paymentBank;
     private String paymentBankName;

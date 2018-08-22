@@ -12,4 +12,6 @@ public class AmResignCollection {
 
     private List<AmResTaskCountBO> row;
 
+    private AmTaskStatusBO amTaskStatusBO;
+
 }

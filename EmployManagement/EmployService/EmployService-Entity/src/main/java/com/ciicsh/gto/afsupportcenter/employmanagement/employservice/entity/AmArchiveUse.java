@@ -96,6 +96,18 @@ public class AmArchiveUse implements Serializable {
 	@TableField("archive_id")
 	private String archiveId;
 
+    /**
+     * 雇员id
+     */
+    @TableField("employee_id")
+    private String employeeId;
+
+    /**
+     * 雇员姓名
+     */
+    @TableField("employee_name")
+    private String employeeName;
+
     public Long getArchiveUseId() {
 		return archiveUseId;
 	}
@@ -217,7 +229,23 @@ public class AmArchiveUse implements Serializable {
 		this.archiveId = archiveId;
 	}
 
-	@Override
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
+
+    @Override
 	public String toString() {
 		return "AmArchiveUse{" +
 			", archiveUseId=" + archiveUseId +
