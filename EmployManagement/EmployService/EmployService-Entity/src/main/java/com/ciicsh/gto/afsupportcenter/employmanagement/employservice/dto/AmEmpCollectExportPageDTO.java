@@ -14,11 +14,24 @@ public class AmEmpCollectExportPageDTO {
      */
     private String ssAccount;
 
+    /**
+     * 结算区县(社保局所在上海地区)
+     */
+    private String settlementArea;
+
     List<AmEmpCollectExportDTO> list1;
 
     List<AmEmpCollectExportDTO> list2;
 
     List<AmEmpCollectExportDTO> list3;
+
+    public String getSettlementArea() {
+        return settlementArea;
+    }
+
+    public void setSettlementArea(String settlementArea) {
+        this.settlementArea = settlementArea;
+    }
 
     public String getCompanyName() {
         return companyName;

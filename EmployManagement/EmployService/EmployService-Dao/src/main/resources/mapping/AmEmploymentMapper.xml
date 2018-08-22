@@ -31,6 +31,7 @@
         <result column="yuliu_doc_num" property="yuliuDocNum"/>
         <result column="doc_type" property="docType"/>
         <result column="doc_num" property="docNum"/>
+        <result column="gender" property="gender"/>
         <result column="resign_handle_date" property="resignHandleDate"/>
         <result column="return_doc_date" property="returnDocDate"/>
         <result column="resign_feedback1" property="resignFeedback1"/>
@@ -51,6 +52,8 @@
         <result column="job_centre_feedback_date" property="jobCentreFeedbackDate"/>
         <result column="out_reason" property="outReason"/>
         <result column="out_date" property="outDate"/>
+        <result column="end_type" property="endType"/>
+
 
     </resultMap>
 
@@ -113,6 +116,7 @@
         d.id_num,/*证件号 */
         d.id_card_type,
         d.employee_name,
+        d.gender,
         b.employ_date,
         /**退工日期*/
         f.resign_date,
@@ -124,6 +128,7 @@
         /**退工送办日期*/
         f.resign_handle_date,
         f.job_centre_feedback_date,
+        f.end_type,
         h.title,
         h.service_center,/*服务中心 */
         h.leader_ship_name, /*客服经理*/

@@ -31,8 +31,6 @@ public interface IAmEmploymentService extends IService<AmEmployment> {
 
     List<archiveSearchExportOpt>  queryAmArchiveList(AmEmploymentBO amEmploymentBO);
 
-    List<AmReturnListExportDTO>  queryAmReturnList(AmEmploymentBO amEmploymentBO);
-
     List<AmEmploymentBO> queryAmEmploymentResign(Map<String, Object> param);
 
     List<AmEmploymentBO> queryAmEmploymentBatch(List<Long> empTaskIds);

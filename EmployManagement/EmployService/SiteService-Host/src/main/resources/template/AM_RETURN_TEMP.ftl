@@ -737,6 +737,7 @@
     </wsp:rsids>
   </w:docPr>
   <w:body>
+<#list list as sub>
     <wx:sect>
       <w:p wsp:rsidR="0026679F" wsp:rsidRDefault="00D27BE8">
         <w:pPr>
@@ -766,13 +767,10 @@
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                       </w:rPr>
-                      <w:t>C</w:t>
-                    </w:r>
-                    <w:r wsp:rsidR="006B09F1">
-                      <w:t>c</w:t>
+                      <w:t>${(sub.docType)!}</w:t>
                     </w:r>
                     <w:r>
-                      <w:t>88888888</w:t>
+                      <w:t>${(sub.docNum)!}</w:t>
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="00280B5E" wsp:rsidRDefault="00280B5E"/>
@@ -786,7 +784,7 @@
                       <w:rPr>
                         <w:rFonts w:hint="fareast"/>
                       </w:rPr>
-                      <w:t>56565615565</w:t>
+                      <w:t>${(sub.employeeId)!}</w:t>
                     </w:r>
                   </w:p>
                 </w:txbxContent>
@@ -854,7 +852,7 @@
             <w:sz w:val="30"/>
             <w:sz-cs w:val="30"/>
           </w:rPr>
-          <w:t>123456789</w:t>
+          <w:t>${(sub.hfAccount)!}</w:t>
         </w:r>
       </w:p>
       <w:p wsp:rsidR="0026679F" wsp:rsidRPr="0011336C" wsp:rsidRDefault="0011336C">
@@ -887,13 +885,7 @@
             <w:rFonts w:hint="fareast"/>
             <w:sz w:val="28"/>
           </w:rPr>
-          <w:t>123</w:t>
-        </w:r>
-        <w:r wsp:rsidR="008323B5">
-          <w:rPr>
-            <w:sz w:val="28"/>
-          </w:rPr>
-          <w:t>4567891231</w:t>
+          <w:t>${(sub.hfAccountBC)!}</w:t>
         </w:r>
       </w:p>
       <w:p wsp:rsidR="0026679F" wsp:rsidRDefault="0026679F" wsp:rsidP="0050192A">
@@ -938,15 +930,7 @@
             <w:sz w:val="28"/>
             <w:u w:val="single"/>
           </w:rPr>
-          <w:t>李</w:t>
-        </w:r>
-        <w:r wsp:rsidR="003A08F3">
-          <w:rPr>
-            <wx:font wx:val="宋体"/>
-            <w:sz w:val="28"/>
-            <w:u w:val="single"/>
-          </w:rPr>
-          <w:t>跃龙</w:t>
+          <w:t>${(sub.employeeName)!}</w:t>
         </w:r>
         <w:r>
           <w:rPr>
@@ -986,14 +970,28 @@
           </w:rPr>
           <w:t> </w:t>
         </w:r>
-        <w:r wsp:rsidR="00D373EC">
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
-            <wx:font wx:val="宋体"/>
-            <w:sz w:val="28"/>
-          </w:rPr>
-          <w:sym w:font="Wingdings 2" w:char="F052"/>
-        </w:r>
+          <#if sub.gender??>
+              <#if sub.gender == 1>
+                  <w:r wsp:rsidR="00D373EC">
+                      <w:rPr>
+                        <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+                        <wx:font wx:val="宋体"/>
+                        <w:sz w:val="28"/>
+                      </w:rPr>
+                      <w:sym w:font="Wingdings 2" w:char="F052"/>
+                    </w:r>
+              </#if>
+              <#if sub.gender == 0>
+                  <w:r>
+                      <w:rPr>
+                        <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+                        <wx:font wx:val="宋体"/>
+                        <w:sz w:val="28"/>
+                      </w:rPr>
+                      <w:t>□</w:t>
+                    </w:r>
+              </#if>
+          </#if>
         <w:r>
           <w:rPr>
             <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
@@ -1018,13 +1016,35 @@
           </w:rPr>
           <w:t> </w:t>
         </w:r>
+          <#if sub.gender??>
+              <#if sub.gender == 0>
+                  <w:r wsp:rsidR="00D373EC">
+                      <w:rPr>
+                        <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+                        <wx:font wx:val="宋体"/>
+                        <w:sz w:val="28"/>
+                      </w:rPr>
+                      <w:sym w:font="Wingdings 2" w:char="F052"/>
+                    </w:r>
+              </#if>
+              <#if sub.gender == 1>
+                  <w:r>
+                      <w:rPr>
+                        <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
+                        <wx:font wx:val="宋体"/>
+                        <w:sz w:val="28"/>
+                      </w:rPr>
+                      <w:t>□</w:t>
+                    </w:r>
+              </#if>
+          </#if>
         <w:r>
           <w:rPr>
             <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
             <wx:font wx:val="宋体"/>
             <w:sz w:val="28"/>
           </w:rPr>
-          <w:t>□ 女 自</w:t>
+          <w:t> 女 自</w:t>
         </w:r>
         <w:r>
           <w:rPr>
@@ -1398,7 +1418,9 @@
                         <w:sz w:val="23"/>
                         <w:sz-cs w:val="23"/>
                       </w:rPr>
-                      <w:t>0</w:t>
+                        <#if sub.idNum?? >
+                            <w:t>${(sub.idNum?substring(17,18))!}</w:t>
+                        </#if>
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="00870B80" wsp:rsidRDefault="00870B80">
@@ -1465,7 +1487,9 @@
                         <w:sz w:val="23"/>
                         <w:sz-cs w:val="23"/>
                       </w:rPr>
-                      <w:t>0</w:t>
+                        <#if sub.idNum?? >
+                            <w:t>${(sub.idNum?substring(16,17))!}</w:t>
+                        </#if>
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="00870B80" wsp:rsidRDefault="00870B80">
@@ -1532,7 +1556,9 @@
                         <w:sz w:val="23"/>
                         <w:sz-cs w:val="23"/>
                       </w:rPr>
-                      <w:t>0</w:t>
+                        <#if sub.idNum?? >
+                            <w:t>${(sub.idNum?substring(15,16))!}</w:t>
+                        </#if>
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="00870B80" wsp:rsidRDefault="00870B80">
@@ -1599,7 +1625,9 @@
                         <w:sz w:val="23"/>
                         <w:sz-cs w:val="23"/>
                       </w:rPr>
-                      <w:t>0</w:t>
+                        <#if sub.idNum?? >
+                            <w:t>${(sub.idNum?substring(14,15))!}</w:t>
+                        </#if>
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="00870B80" wsp:rsidRDefault="00870B80">
@@ -1666,7 +1694,9 @@
                         <w:sz w:val="23"/>
                         <w:sz-cs w:val="23"/>
                       </w:rPr>
-                      <w:t>0</w:t>
+                        <#if sub.idNum?? >
+                            <w:t>${(sub.idNum?substring(13,14))!}</w:t>
+                        </#if>
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="00870B80" wsp:rsidRDefault="00870B80">
@@ -1733,7 +1763,9 @@
                         <w:sz w:val="23"/>
                         <w:sz-cs w:val="23"/>
                       </w:rPr>
-                      <w:t>0</w:t>
+                        <#if sub.idNum?? >
+                            <w:t>${(sub.idNum?substring(12,13))!}</w:t>
+                        </#if>
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="00EE644F" wsp:rsidRDefault="00EE644F">
@@ -1800,7 +1832,9 @@
                         <w:sz w:val="23"/>
                         <w:sz-cs w:val="23"/>
                       </w:rPr>
-                      <w:t>0</w:t>
+                        <#if sub.idNum?? >
+                            <w:t>${(sub.idNum?substring(11,12))!}</w:t>
+                        </#if>
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="004D5917" wsp:rsidRDefault="004D5917">
@@ -1867,7 +1901,9 @@
                         <w:sz w:val="23"/>
                         <w:sz-cs w:val="23"/>
                       </w:rPr>
-                      <w:t>0</w:t>
+                        <#if sub.idNum?? >
+                            <w:t>${(sub.idNum?substring(10,11))!}</w:t>
+                        </#if>
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="004D5917" wsp:rsidRDefault="004D5917">
@@ -1934,7 +1970,9 @@
                         <w:sz w:val="23"/>
                         <w:sz-cs w:val="23"/>
                       </w:rPr>
-                      <w:t>0</w:t>
+                        <#if sub.idNum?? >
+                            <w:t>${(sub.idNum?substring(9,10))!}</w:t>
+                        </#if>
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="004D5917" wsp:rsidRDefault="004D5917">
@@ -2001,7 +2039,9 @@
                         <w:sz w:val="23"/>
                         <w:sz-cs w:val="23"/>
                       </w:rPr>
-                      <w:t>0</w:t>
+                        <#if sub.idNum?? >
+                            <w:t>${(sub.idNum?substring(8,9))!}</w:t>
+                        </#if>
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="004D5917" wsp:rsidRDefault="004D5917">
@@ -2068,7 +2108,9 @@
                         <w:sz w:val="23"/>
                         <w:sz-cs w:val="23"/>
                       </w:rPr>
-                      <w:t>0</w:t>
+                        <#if sub.idNum?? >
+                            <w:t>${(sub.idNum?substring(7,8))!}</w:t>
+                        </#if>
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="004D5917" wsp:rsidRDefault="004D5917">
@@ -2135,7 +2177,9 @@
                         <w:sz w:val="23"/>
                         <w:sz-cs w:val="23"/>
                       </w:rPr>
-                      <w:t>0</w:t>
+                        <#if sub.idNum?? >
+                            <w:t>${(sub.idNum?substring(6,7))!}</w:t>
+                        </#if>
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="004D5917" wsp:rsidRDefault="004D5917">
@@ -2202,7 +2246,9 @@
                         <w:sz w:val="23"/>
                         <w:sz-cs w:val="23"/>
                       </w:rPr>
-                      <w:t>3</w:t>
+                        <#if sub.idNum?? >
+                            <w:t>${(sub.idNum?substring(5,6))!}</w:t>
+                        </#if>
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="00CC130F" wsp:rsidRDefault="00CC130F">
@@ -2269,7 +2315,9 @@
                         <w:sz w:val="23"/>
                         <w:sz-cs w:val="23"/>
                       </w:rPr>
-                      <w:t>0</w:t>
+                        <#if sub.idNum?? >
+                            <w:t>${(sub.idNum?substring(4,5))!}</w:t>
+                        </#if>
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="00CC130F" wsp:rsidRDefault="00CC130F">
@@ -2336,7 +2384,9 @@
                         <w:sz w:val="23"/>
                         <w:sz-cs w:val="23"/>
                       </w:rPr>
-                      <w:t>5</w:t>
+                        <#if sub.idNum?? >
+                            <w:t>${(sub.idNum?substring(3,4))!}</w:t>
+                        </#if>
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="00CC130F" wsp:rsidRDefault="00CC130F">
@@ -2403,7 +2453,9 @@
                         <w:sz w:val="23"/>
                         <w:sz-cs w:val="23"/>
                       </w:rPr>
-                      <w:t>2</w:t>
+                        <#if sub.idNum?? >
+                            <w:t>${(sub.idNum?substring(2,3))!}</w:t>
+                        </#if>
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="009060B1" wsp:rsidRDefault="009060B1">
@@ -2470,7 +2522,9 @@
                         <w:sz w:val="23"/>
                         <w:sz-cs w:val="23"/>
                       </w:rPr>
-                      <w:t>3</w:t>
+                        <#if sub.idNum?? >
+                            <w:t>${(sub.idNum?substring(1,2))!}</w:t>
+                        </#if>
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="009060B1" wsp:rsidRDefault="009060B1">
@@ -2537,7 +2591,9 @@
                         <w:sz w:val="23"/>
                         <w:sz-cs w:val="23"/>
                       </w:rPr>
-                      <w:t>4</w:t>
+                        <#if sub.idNum?? >
+                            <w:t>${(sub.idNum?substring(0,1))!}</w:t>
+                        </#if>
                     </w:r>
                   </w:p>
                   <w:p wsp:rsidR="00B20F44" wsp:rsidRDefault="00B20F44">
@@ -2846,25 +2902,7 @@
             <w:sz w:val="28"/>
             <w:u w:val="single"/>
           </w:rPr>
-          <w:t>徐</w:t>
-        </w:r>
-        <w:r wsp:rsidR="00211C84">
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
-            <wx:font wx:val="宋体"/>
-            <w:sz w:val="28"/>
-            <w:u w:val="single"/>
-          </w:rPr>
-          <w:t>家汇</w:t>
-        </w:r>
-        <w:r wsp:rsidR="00044370">
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
-            <wx:font wx:val="宋体"/>
-            <w:sz w:val="28"/>
-            <w:u w:val="single"/>
-          </w:rPr>
-          <w:t>阿悄</w:t>
+          <w:t>${(sub.residentArea)!}</w:t>
         </w:r>
         <w:r wsp:rsidR="0026679F">
           <w:rPr>
@@ -2905,24 +2943,6 @@
           </w:rPr>
           <w:t>     </w:t>
         </w:r>
-        <w:r wsp:rsidR="004D5917">
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
-            <wx:font wx:val="宋体"/>
-            <w:sz w:val="28"/>
-            <w:u w:val="single"/>
-          </w:rPr>
-          <w:t>一</w:t>
-        </w:r>
-        <w:r wsp:rsidR="004D5917">
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
-            <wx:font wx:val="宋体"/>
-            <w:sz w:val="28"/>
-            <w:u w:val="single"/>
-          </w:rPr>
-          <w:t>二</w:t>
-        </w:r>
         <w:r wsp:rsidR="00211C84">
           <w:rPr>
             <w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast"/>
@@ -2930,16 +2950,7 @@
             <w:sz w:val="28"/>
             <w:u w:val="single"/>
           </w:rPr>
-          <w:t>衡山</w:t>
-        </w:r>
-        <w:r wsp:rsidR="00211C84">
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
-            <wx:font wx:val="宋体"/>
-            <w:sz w:val="28"/>
-            <w:u w:val="single"/>
-          </w:rPr>
-          <w:t>路</w:t>
+          <w:t>${(sub.residentStreet)!}</w:t>
         </w:r>
         <w:r>
           <w:rPr>
@@ -3019,16 +3030,7 @@
             <w:sz w:val="28"/>
             <w:u w:val="single"/>
           </w:rPr>
-          <w:t>一</w:t>
-        </w:r>
-        <w:r wsp:rsidR="004D5917">
-          <w:rPr>
-            <w:rFonts w:ascii="宋体" w:h-ansi="宋体"/>
-            <wx:font wx:val="宋体"/>
-            <w:sz w:val="28"/>
-            <w:u w:val="single"/>
-          </w:rPr>
-          <w:t>二三</w:t>
+          <w:t>${(sub.residentWay)!}</w:t>
         </w:r>
         <w:r>
           <w:rPr>
@@ -3081,7 +3083,7 @@
             <w:sz w:val="28"/>
             <w:u w:val="single"/>
           </w:rPr>
-          <w:t>91</w:t>
+          <w:t>${(sub.residentVillage)!}</w:t>
         </w:r>
         <w:r>
           <w:rPr>
@@ -3134,7 +3136,7 @@
             <w:sz w:val="28"/>
             <w:u w:val="single"/>
           </w:rPr>
-          <w:t>888</w:t>
+          <w:t>${(sub.residentCard)!}</w:t>
         </w:r>
         <w:r>
           <w:rPr>
@@ -3169,7 +3171,7 @@
             <w:sz w:val="28"/>
             <w:u w:val="single"/>
           </w:rPr>
-          <w:t>501</w:t>
+          <w:t>${(sub.residentRoom)!}</w:t>
         </w:r>
         <w:r>
           <w:rPr>
@@ -3521,7 +3523,7 @@
               <w:kern w:val="0"/>
               <w:sz w:val="23"/>
             </w:rPr>
-            <w:t>3</w:t>
+            <w:t>b</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3707,7 +3709,7 @@
               <w:kern w:val="0"/>
               <w:sz w:val="23"/>
             </w:rPr>
-            <w:t>3</w:t>
+            <w:t>h</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -3953,14 +3955,7 @@
             <wx:font wx:val="宋体"/>
             <w:sz w:val="28"/>
           </w:rPr>
-          <w:t>李</w:t>
-        </w:r>
-        <w:r wsp:rsidR="003A08F3">
-          <w:rPr>
-            <wx:font wx:val="宋体"/>
-            <w:sz w:val="28"/>
-          </w:rPr>
-          <w:t>跃龙</w:t>
+          <w:t>${(sub.operationName)!}</w:t>
         </w:r>
         <w:r>
           <w:rPr>
@@ -4444,5 +4439,6 @@
         <w:docGrid w:type="lines" w:line-pitch="312"/>
       </w:sectPr>
     </wx:sect>
+</#list>
   </w:body>
 </w:wordDocument>

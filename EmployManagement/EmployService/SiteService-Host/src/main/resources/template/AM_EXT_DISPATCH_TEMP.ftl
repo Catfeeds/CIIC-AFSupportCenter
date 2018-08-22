@@ -2539,7 +2539,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00906834" wsp:rsidRDefault="00906834">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3602" w:y="9431"/>
+            <w:framePr w:w="500" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3602" w:y="9431"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -2561,7 +2561,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>人</w:t>
+            <w:t>${(count)!} 人</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -6852,7 +6852,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00906834" wsp:rsidRDefault="00906834">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3602" w:y="9431"/>
+            <w:framePr w:w="500" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3602" w:y="9431"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -6874,7 +6874,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>人</w:t>
+            <w:t>${(count)!} 人</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
@@ -11181,7 +11181,7 @@
         </wx:apo>
         <w:p wsp:rsidR="00906834" wsp:rsidRDefault="00906834">
           <w:pPr>
-            <w:framePr w:w="240" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3602" w:y="9431"/>
+            <w:framePr w:w="500" w:h="211" w:h-rule="exact" w:wrap="auto" w:vanchor="page" w:hanchor="page" w:x="3602" w:y="9431"/>
             <w:autoSpaceDE w:val="off"/>
             <w:autoSpaceDN w:val="off"/>
             <w:adjustRightInd w:val="off"/>
@@ -11203,7 +11203,7 @@
               <w:sz w:val="19"/>
               <w:sz-cs w:val="24"/>
             </w:rPr>
-            <w:t>人</w:t>
+            <w:t>${(count)!} 人</w:t>
           </w:r>
         </w:p>
       </wx:pBdrGroup>
