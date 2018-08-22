@@ -90,15 +90,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         {
             for(AmEmpTaskBO amEmpTaskBO:list)
             {
-                if(!StringUtil.isEmpty(amEmpTaskBO.getEmploySpecial()))
-                {
-                    int last = amEmpTaskBO.getEmploySpecial().lastIndexOf(",");
-                    amEmpTaskBO.setEmploySpecial(amEmpTaskBO.getEmploySpecial().substring(0,last));
-                }
-
-            }
-            for(AmEmpTaskBO amEmpTaskBO:list)
-            {
                 if(amEmpTaskBO!=null&&amEmpTaskBO.getEmployCode()!=null)
                 {
                     if(amEmpTaskBO.getEmployCode()==1){//是独立
@@ -109,8 +100,11 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                         amEmpTaskBO.setCici("上海中智项目外包咨询服务有限公司");
                     }
                 }
+                if(!StringUtil.isEmpty(amEmpTaskBO.getEmploySpecial()))
+                {
+                    amEmpTaskBO.setEmploySpecial("有");
+                }
             }
-
         }
 
         return JsonResultKit.of(result);
@@ -167,6 +161,37 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         temp.add(amEmpTaskCountBO);
         AmEmpTaskCollection amEmpTaskCollection = new AmEmpTaskCollection();
         amEmpTaskCollection.setRow(temp);
+
+        AmEmpTaskBO amEmpTaskBOCount = pageInfo.toJavaObject(AmEmpTaskBO.class);
+        AmTaskStatusBO amTaskStatusBO = new AmTaskStatusBO();
+        List<String> param = new ArrayList<String>();
+
+        if (!StringUtil.isEmpty(amEmpTaskBOCount.getParams())) {
+            String arr[] = amEmpTaskBOCount.getParams().split(",");
+            for (int i = 0; i < arr.length; i++) {
+                param.add(arr[i]);
+            }
+        }
+        amEmpTaskBOCount.setParam(param);
+        if(StringUtil.isEmpty(amEmpTaskBOCount.getJob()))
+        {
+            amEmpTaskBOCount.setJob("Y");
+            List<AmEmpTaskBO> jobList = business.jobCount(amEmpTaskBOCount);
+            amTaskStatusBO.setJob(jobList.get(0).getCount());
+            amTaskStatusBO.setNoJob(num-jobList.get(0).getCount());
+        }else{
+            List<AmEmpTaskBO> jobList = business.jobCount(amEmpTaskBOCount);
+            if("Y".equals(amEmpTaskBOCount.getJob()))
+            {
+                amTaskStatusBO.setJob(jobList.get(0).getCount());
+                amTaskStatusBO.setNoJob(list.size()-jobList.get(0).getCount());
+            }else{
+                amTaskStatusBO.setJob(list.size()-jobList.get(0).getCount());
+                amTaskStatusBO.setNoJob(jobList.get(0).getCount());
+            }
+        }
+
+        amEmpTaskCollection.setAmTaskStatusBO(amTaskStatusBO);
         return  JsonResultKit.of(amEmpTaskCollection);
     }
 

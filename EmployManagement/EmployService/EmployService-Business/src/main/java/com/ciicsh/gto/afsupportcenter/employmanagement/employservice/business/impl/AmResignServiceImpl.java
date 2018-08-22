@@ -342,6 +342,11 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
         return resultMap;
     }
 
+    @Override
+    public List<AmResignBO> jobCount(AmResignBO amEmpTaskBO) {
+        return baseMapper.jobCount(amEmpTaskBO);
+    }
+
     /**
      *判断是否完成退工详情见v6版退工反馈
      * @param bo

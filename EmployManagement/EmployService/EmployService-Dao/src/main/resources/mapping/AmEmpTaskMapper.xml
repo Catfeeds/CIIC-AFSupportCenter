@@ -174,6 +174,9 @@
         <if test="taskStatus!=null">
             and a.task_status = ${taskStatus}
         </if>
+        <if test="job!=null">
+            and a.job = #{job}
+        </if>
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
         </foreach>
@@ -282,6 +285,9 @@
         <if test="taskStatus!=null">
             and a.task_status not in ('1','2','3','4','5')
         </if>
+        <if test="job!=null">
+            and a.job = #{job}
+        </if>
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
         </foreach>
@@ -353,6 +359,9 @@
         LEFT JOIN
         am_resign f
         ON f.employment_id = b.employment_id
+
+
+
         LEFT JOIN
         am_emp_task w
         on f.emp_task_id = w.emp_task_id
@@ -623,5 +632,82 @@
         SELECT task_id,business_interface_id from am_emp_task where task_id = #{taskId}
     </select>
 
+    <select id="jobCount"  resultMap="BaseResultMapDTO">
+        SELECT
+        COUNT(t.job) as count
+        FROM
+        (
+        SELECT
+        DISTINCT         a.emp_task_id,
+        a.employee_id,
+        a.company_id,
+        a.employee_nature,
+        a.archive_direction,
+        a.employ_code,
+        a.change_company,
+        a.created_time,
+        a.job,
+        a.task_status,
+        b.employment_id,
+        b.employ_way,
+        b.employ_property,
+        b.employ_date,
+        b.employ_style,
+        b.handle_type,
+        e.labor_start_date,
+        e.labor_end_date,
+        e.position,
+        c.yuliu_doc_type,
+        c.yuliu_doc_num,
+        c.doc_type,
+        c.doc_num,
+        c.diaodang_feedback,
+        c.employ_feedback_opt_date,
+        c.diaodang_feedback_opt_date,
+        d.employee_name,
+        d.id_num,
+        d.id_card_type,
+        cs.employ_special,
+        h.title,
+        h.service_center,
+        h.leader_ship_name,
+        e.settlement_area,
+        w.out_reason
+        FROM
+        am_emp_task a
+        LEFT JOIN
+        am_employment b
+        ON  a.emp_task_id = b.emp_task_id
+        LEFT JOIN
+        emp_employee d
+        on  a.employee_id = d.employee_id
+        LEFT JOIN
+        am_emp_custom h
+        on h.emp_task_id = a.emp_task_id
+        LEFT JOIN
+        am_emp_employee  e
+        on e.emp_task_id = a.emp_task_id
+        LEFT JOIN
+        am_archive c
+        ON b.employment_id = c.employment_id
+        LEFT JOIN
+        am_company_set cs
+        on cs.company_id = a.company_id
+        LEFT JOIN
+        am_resign f
+        ON f.employment_id = b.employment_id
+        LEFT JOIN
+        am_emp_task w
+        on f.emp_task_id = w.emp_task_id
+        where
+        a.task_category = '1'
+        and  a.employee_id is not null
+        and  a.company_id  is not null
+        and  a.job = #{job}
+        <foreach collection = "param" item = "plid"  open=""  close=""  separator="" >
+            AND  ${ plid }
+        </foreach >
+        )  t
+    </select>
 
 </mapper>
