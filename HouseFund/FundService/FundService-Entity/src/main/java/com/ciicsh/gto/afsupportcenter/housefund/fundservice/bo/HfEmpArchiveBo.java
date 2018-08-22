@@ -35,4 +35,6 @@ public class HfEmpArchiveBo extends HfEmpArchive{
     private Integer hasOut;
     private String handleRemark;
     private Integer hfType;
+    private String startMonthBc;
+    private String endMonthBc;
 }

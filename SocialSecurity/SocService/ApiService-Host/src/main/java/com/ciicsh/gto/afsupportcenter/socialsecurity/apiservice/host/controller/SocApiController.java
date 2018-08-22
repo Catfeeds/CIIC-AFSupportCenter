@@ -15,6 +15,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComA
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComAccountParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.customer.ComTaskParamBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.*;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsComTask;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpArchive;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsEmpTask;
@@ -23,10 +24,12 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.Co
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.DateUtil;
+import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.enumeration.LogInfo;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
+import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -37,7 +40,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -72,6 +77,14 @@ public class SocApiController implements SocApiProxy {
 
     @Autowired
     private SsEmpTaskService ssEmpTaskService;
+
+    @Autowired
+    private SsEmpBasePeriodService ssEmpBasePeriodService;
+
+    @Autowired
+    private CommonApiUtils commonApiUtils;
+
+    private static Map<String, String> ssLocalTaskCategoryMap;
 
     @Override
     @ApiOperation(value = "企业社保账户开户、变更、转移、转出的 创建任务单接口", notes = "根据ComTask对象创建")
@@ -368,6 +381,39 @@ public class SocApiController implements SocApiProxy {
             }
         }
 
+        return JsonResult.faultMessage("支持中心反馈：无数据");
+    }
+
+
+    @Override
+    @ApiOperation(value = "获取雇员的社保福利段信息接口", notes = "客户Id，雇员Id")
+    @PostMapping("/getEmpBasePeriodInfo")
+    public JsonResult<List<SsEmpBasePeriodDTO>> getEmpBasePeriodInfo(String companyId, String employeeId) {
+        List<SsEmpBasePeriodBO> ssEmpBasePeriodBOList = ssEmpBasePeriodService.getEmpBasePeriodByIntervalYear(companyId, employeeId, 4);
+
+        if (ssLocalTaskCategoryMap == null) {
+            try {
+                List<DicItemDTO> dictItemList = commonApiUtils.listByDicId(DictUtil.DICT_ID_SOC_LOCAL_TASK_CATEGORY);
+                ssLocalTaskCategoryMap = new LinkedHashMap<>();
+                dictItemList.stream().forEach((d) -> ssLocalTaskCategoryMap.put(d.getDicItemValue(), d.getDicItemText()));
+            } catch (Exception e) {
+                return JsonResult.faultMessage("支持中心反馈：获取字典数据失败");
+            }
+        }
+
+        if (CollectionUtils.isNotEmpty(ssEmpBasePeriodBOList)) {
+            List<SsEmpBasePeriodDTO> ssEmpBasePeriodDTOList = new ArrayList<>(ssEmpBasePeriodBOList.size());
+
+            for(SsEmpBasePeriodBO ssEmpBasePeriodBO : ssEmpBasePeriodBOList) {
+                SsEmpBasePeriodDTO ssEmpBasePeriodDTO = new SsEmpBasePeriodDTO();
+                ssEmpBasePeriodDTO.setBaseAmount(ssEmpBasePeriodBO.getBaseAmount());
+                ssEmpBasePeriodDTO.setStartMonth(ssEmpBasePeriodBO.getStartMonth());
+                ssEmpBasePeriodDTO.setEndMonth(ssEmpBasePeriodBO.getEndMonth());
+                ssEmpBasePeriodDTO.setChgContent(ssLocalTaskCategoryMap.get(String.valueOf(ssEmpBasePeriodBO.getTaskCategory())));
+                ssEmpBasePeriodDTOList.add(ssEmpBasePeriodDTO);
+            }
+            return JsonResult.success(ssEmpBasePeriodDTOList, "数据获取成功");
+        }
         return JsonResult.faultMessage("支持中心反馈：无数据");
     }
 

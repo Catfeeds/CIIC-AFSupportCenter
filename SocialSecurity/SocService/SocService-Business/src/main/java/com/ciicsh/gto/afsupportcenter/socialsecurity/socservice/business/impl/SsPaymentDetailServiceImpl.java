@@ -30,7 +30,7 @@ public class SsPaymentDetailServiceImpl extends ServiceImpl<SsPaymentDetailMappe
     public List<SsPaymentDetail> paymentDetailQuery(SsPaymentDetailBO ssPaymentDetail) {
         List<SsPaymentDetail> detailList = baseMapper.paymentDetailQuery(ssPaymentDetail);
         ssPaymentDetailListAdd(detailList);
-        BigDecimal extraAmount = ssPaymentComMapper.getExtraAmountByComAccountId(ssPaymentDetail.getPaymentMonth(),ssPaymentDetail.getComAccountId());
+        BigDecimal extraAmount = ssPaymentComMapper.getExtraAmountBySsAccount(ssPaymentDetail.getPaymentMonth(),ssPaymentDetail.getSsAccount());
         detailList.stream().filter(detail -> detail.getPaymentItemName().equals("额外金")).findFirst().get().setBasePensionAmount(extraAmount);
         return detailList;
     }

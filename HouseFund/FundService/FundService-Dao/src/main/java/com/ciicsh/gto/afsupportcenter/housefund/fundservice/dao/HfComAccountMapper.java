@@ -80,6 +80,7 @@ public interface HfComAccountMapper extends BaseMapper<HfComAccount> {
      * @return
      */
     List<ComAccountTransBo> queryComAccountTransBoList(ComAccountTransBo comAccountTransBo);
+    List<ComAccountTransBo> queryComAccountByCompanyIdTransBoList(ComAccountTransBo comAccountTransBo);
 
     Integer isExistAccount(@Param("companyId") String companyId,@Param("hfType") Integer hfType);
 

@@ -294,11 +294,17 @@
         a.hf_account_type,
         b.hf_com_account
         FROM
-        hf_com_account a LEFT JOIN hf_com_account_class b ON a.com_account_id=b.com_account_id
+        hf_com_account a
+        LEFT JOIN hf_com_account_class b ON a.com_account_id=b.com_account_id
         <where>
             AND a.state=1 AND a.is_active=1 AND b.hf_type=#{hfType}
             <if test="comAccountName != null and comAccountName != ''">
-                AND a.com_account_name LIKE CONCAT('%', #{comAccountName}, '%')
+                AND (
+                  a.com_account_name LIKE CONCAT('%', #{comAccountName}, '%')
+                OR
+                  EXISTS (SELECT 1 FROM hf_account_com_relation acr WHERE acr.com_account_id=a.com_account_id AND acr.company_id LIKE CONCAT('%', #{comAccountName}, '%') )
+                )
+
             </if>
             <if test="hfAccountType != null and hfAccountType > 0">
                 AND a.hf_account_type=#{hfAccountType}
@@ -396,7 +402,26 @@
         </where>
         ORDER BY hca.com_account_name, hca.com_account_id
     </select>
-
+    <select id="queryComAccountByCompanyIdTransBoList" resultMap="ComAccountTransBo">
+        SELECT
+        hca.com_account_id,
+        hca.com_account_name,
+        hcac.com_account_class_id,
+        hcac.hf_com_account
+        FROM hf_com_account hca
+        INNER JOIN hf_account_com_relation hacr
+        ON hacr.com_account_id = hca.com_account_id AND hacr.is_active = 1
+        LEFT JOIN hf_com_account_class hcac
+        ON hca.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = #{hfType}
+        <where>
+                hca.is_active = 1
+                AND hca.hf_account_type = 3
+            <if test="companyId != null">
+                AND hacr.company_id = #{companyId}
+            </if>
+        </where>
+        ORDER BY hca.com_account_name, hca.com_account_id
+    </select>
     <select id="queryHfComAccountList" resultMap="ComAccountExtMap">
         SELECT DISTINCT
             hca.com_account_id,
