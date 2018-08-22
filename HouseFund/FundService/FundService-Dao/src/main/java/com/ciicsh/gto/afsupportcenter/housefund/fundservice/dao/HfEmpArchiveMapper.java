@@ -24,7 +24,7 @@ public interface HfEmpArchiveMapper extends BaseMapper<HfEmpArchive> {
     HfComAccountBo viewComAccount(@Param("companyId")String companyId);
     HfArchiveBasePeriodBo viewEmpPeriod(@Param("empArchiveId")String empArchiveId, @Param("hfType")String hfType);
     List<HfEmpTaskPeriodBo> listEmpTaskPeriod(@Param("empArchiveId")String empArchiveId, @Param("hfType") String hfType);
-    List<HfEmpTask> listEmpTransfer (@Param("empArchiveId")String empArchiveId);
+    List<HfEmpTask> listEmpTransfer (@Param("employeeId")String employeeId);
     Map selectEmpByCardIdAndName(@Param("empName")String empName, @Param("idNum")String idNum);
     int deleteHfEmpArchiveByEmpTaskIds(List<Long> empTaskIdList);
     Map queryHfEmpArchiveByEmpTaskIds(List<Long> empTaskIdList);

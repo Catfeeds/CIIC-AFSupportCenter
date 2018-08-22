@@ -412,12 +412,11 @@
         et.task_status,et.transfer_date,et.feedback_date,et.operate_date
         from
         hf_emp_task et
-        INNER JOIN hf_emp_archive ea ON ea.emp_archive_id=et.emp_archive_id
         WHERE
         et.is_active=1
         and et.task_category=8
-        and et.emp_archive_id
-        in(select emp_archive_id from hf_emp_archive where emp_archive_id=#{empArchiveId} OR belong_emp_archive_id=#{empArchiveId} )
+        and et.employee_id = #{employeeId}
+
     </select>
     <!--根据身份证号+姓名找到雇员公积金账户信息-->
     <select id="selectEmpByCardIdAndName" resultType="java.util.Map">
