@@ -6,6 +6,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.archiveSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmArchiveDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmArchiveReturnPrintDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveUse;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpMaterial;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
@@ -19,6 +20,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -72,6 +73,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
     @Autowired
     private  IAmEmpCustomService amEmpCustomService;
+
+    @Autowired
+    private EmployeeInfoProxy employeeInfoProxy;
 
     @RequestMapping("/queryAmArchive")
     public JsonResult<PageRows> queryAmArchive(PageInfo pageInfo){
@@ -613,12 +617,11 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     @RequestMapping("/archiveSearchExportReturnList")
     public void archiveSearchExportReturnList(HttpServletResponse response, PageInfo pageInfo) {
 
-        PageRows<AmEmploymentBO> result = business.queryAmArchive(pageInfo);
-        List<AmEmploymentBO> data = result.getRows();
-
+        List<AmArchiveReturnPrintDTO> list = business.queryAmArchiveForeignerPritDate(pageInfo);
 
 
         Map<String,Object> map = new HashMap<>();
+        map.put("list",list);
         try {
             WordUtils.exportMillCertificateWord(response,map,"外来退工备案登记表","AM_RETURN_TEMP.ftl");
         } catch (Exception e) {
