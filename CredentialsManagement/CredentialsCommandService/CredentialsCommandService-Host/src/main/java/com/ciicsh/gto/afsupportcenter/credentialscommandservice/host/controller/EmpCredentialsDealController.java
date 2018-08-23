@@ -5,6 +5,7 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskFol
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.business.TaskTypeService;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.CompanyExtDTO;
+import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.EmpBasePeriodRequestDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskDetialDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskFollowDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskListDTO;
@@ -13,21 +14,32 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Task;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskFollow;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskType;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.host.utils.SelectionUtils;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.SocApiProxy;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsEmpBasePeriodDTO;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.result.JsonResult;
+import com.ciicsh.gto.basicdataservice.api.DicItemServiceProxy;
+import com.ciicsh.gto.basicdataservice.api.dto.DicItemDTO;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.quotation.QuotationProductResponseDTO;
+import com.ciicsh.gto.salecenter.apiservice.api.proxy.QuotationProxy;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @Author: guwei
@@ -46,6 +58,12 @@ public class EmpCredentialsDealController {
     private CompanyExtService companyExtService;
     @Autowired
     private TaskTypeService taskTypeService;
+
+    @Autowired
+    private DicItemServiceProxy dicItemServiceProxy;
+
+    @Autowired
+    private SocApiProxy socApiProxy;
 
     /**
      * 查询任务单跟进记录
@@ -103,6 +121,19 @@ public class EmpCredentialsDealController {
             if (i.getPayType() != null) {
                 taskListDTO.setPayType(String.valueOf(i.getPayType()));
             }
+
+            List<DicItemDTO> qualification = dicItemServiceProxy.listByDicValue("education");
+            Map<String, String> qualificationMap = qualification.stream().collect(Collectors.toMap(DicItemDTO::getDicItemValue, DicItemDTO::getDicItemText));
+            List<DicItemDTO> degree = dicItemServiceProxy.listByDicValue("degree");
+            Map<String, String> degreeMap = degree.stream().collect(Collectors.toMap(DicItemDTO::getDicItemValue, DicItemDTO::getDicItemText));
+            if (taskListDTO.getQualification() != null) {
+                taskListDTO.setQualificationName(
+                    Optional.ofNullable(qualificationMap).map(qualificationItem -> qualificationItem.get(String.valueOf(taskListDTO.getQualification()))).orElse(""));
+            }
+            if (taskListDTO.getDegree() != null) {
+                taskListDTO.setDegreeName(
+                    Optional.ofNullable(degreeMap).map(degreeItem -> degreeItem.get(String.valueOf(taskListDTO.getDegree()))).orElse(""));
+            }
             Integer taskType = i.getCredentialsType();
             Integer taskDealType = i.getCredentialsDealType();
             TaskType taskTypeInfo = taskTypeService.selectById(taskDealType == null ? taskType : taskDealType);
@@ -144,27 +175,25 @@ public class EmpCredentialsDealController {
      */
     @PostMapping("/saveOrUpdate/task")
     public JsonResult saveOrUpdateTask(@RequestBody TaskDetialDTO taskDetialDTO){
-        int i = taskService.saveOrUpdateTask(taskDetialDTO);
-        String errorMsg = "";
-        if (i == 0) {
-            return JsonResult.success(null);
-        }
-        if (i == 1) {
-            errorMsg = "任务单保存失败";
-        }
-        if (i == 2) {
-            errorMsg = "材料收缴信息保存失败";
-        }
-        if (i == 3) {
-            errorMsg = "账单生成失败";
-        }
-        return JsonResult.faultMessage(errorMsg);
+        return JsonResult.success(taskService.saveOrUpdateTask(taskDetialDTO));
     }
 
     @GetMapping("/findTaskTypeDetial")
     public JsonResult findTaskType(String taskTypeId) {
         TaskType taskType = taskTypeService.selectById(taskTypeId);
         return JsonResult.success(taskType);
+    }
+
+    /**
+     * 获取近四年雇员社保变更记录
+     * @param empBasePeriodRequestDTO
+     * @return
+     */
+    @PostMapping("/getEmpBasePeriodInfo")
+    public JsonResult getEmpBasePeriodInfo(@RequestBody EmpBasePeriodRequestDTO empBasePeriodRequestDTO) {
+        Assert.notNull(empBasePeriodRequestDTO,"请求参数不能为空");
+        List<SsEmpBasePeriodDTO> data = socApiProxy.getEmpBasePeriodInfo(empBasePeriodRequestDTO.getCompanyId(), empBasePeriodRequestDTO.getEmployeeId()).getData();
+        return JsonResult.success(data);
     }
 
 }

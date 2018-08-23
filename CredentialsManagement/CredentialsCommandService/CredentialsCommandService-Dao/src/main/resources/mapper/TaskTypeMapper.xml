@@ -8,6 +8,7 @@
         <result column="task_type_code" property="taskTypeCode" />
         <result column="task_type_name" property="taskTypeName" />
         <result column="basic_product_id" property="basicProductId" />
+        <result column="product_id" property="productId" />
         <result column="level" property="level" />
         <result column="pid" property="pid" />
         <result column="is_active" property="isActive" />
