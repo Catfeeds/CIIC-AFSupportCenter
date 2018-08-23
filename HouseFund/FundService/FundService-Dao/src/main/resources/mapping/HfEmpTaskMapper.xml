@@ -1453,8 +1453,10 @@
             AND eoop.status = #{status}
         </if>
     </select>
+    <!-- 在系统库里不存在字典 徐汇—X、西郊—C、东方路—P、卢湾—L、黄浦—H -->
     <select id="fetchPrintInfo" resultType="Map">
-        SELECT et.*,emp.employee_name,ea.hf_emp_account as emp_account
+        SELECT et.*,emp.employee_name,ea.hf_emp_account as emp_account,
+        capb.payment_bank_value as 'payment_bank'
         FROM hf_emp_task et
         LEFT JOIN hf_emp_archive ea
                 ON  ea.employee_id=et.employee_id
@@ -1465,6 +1467,8 @@
         LEFT JOIN hf_com_account ca
                 ON  ea.com_account_id=ca.com_account_id
                 AND ca.is_active=1
+        LEFT JOIN hf_com_account_payment_bank capb ON capb.payment_bank_code=ca.payment_bank
+
         INNER  JOIN emp_employee emp ON  emp.employee_id=et.employee_id
         where et.is_active=1 AND et.emp_task_id=#{empTaskId}
 

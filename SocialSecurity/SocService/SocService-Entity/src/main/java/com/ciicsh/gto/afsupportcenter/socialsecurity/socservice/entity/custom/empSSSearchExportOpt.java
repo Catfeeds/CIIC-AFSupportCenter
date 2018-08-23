@@ -26,15 +26,15 @@ public class empSSSearchExportOpt {
     private String ssAccount;
     @Excel(name = "开户密码",width = 20, orderNum = "6")
     private String ssPwd;
-    @Excel(name = "社保状态", orderNum = "7", replace = {"已办_1","已做_2","转出_3","_null"})
+    @Excel(name = "社保状态", orderNum = "7", replace = {"已办_1","已做_2","转出_3"})
     private Integer archiveTaskStatus;
     //客服经理
     @Excel(name = "客服经理",width = 20, orderNum = "8")
     private String leaderShipName;
     //客服中心
     @Excel(name = "客服中心",width = 20, orderNum = "9")
-    private String serviceCenter;
-    @Excel(name = "社保账户类型", orderNum = "10", replace = {"中智大库_1","中智外包_2","独立户_3","_null"})
+    private Integer serviceCenterValue;
+    @Excel(name = "社保账户类型", orderNum = "10", replace = {"中智大库_1","中智外包_2","独立户_3"})
     private Integer ssAccountType;
     @Excel(name = "结算区县", orderNum = "11")
     private String settlementArea;

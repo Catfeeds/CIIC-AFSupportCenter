@@ -28,7 +28,9 @@
             spd.*
             FROM ss_payment_detail spd
             INNER JOIN ss_com_account ca ON ca.com_account_id=spd.com_account_id
+           <if test="companyId!=null and companyId!=''">
             INNER JOIN ss_account_com_relation acr ON acr.com_account_id=ca.com_account_id
+           </if>
             WHERE
             spd.is_active = 1
             <if test = "ssAccount != null and ssAccount != ''">

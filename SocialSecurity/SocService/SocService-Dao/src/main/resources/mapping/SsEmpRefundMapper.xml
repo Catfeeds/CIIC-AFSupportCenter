@@ -54,7 +54,9 @@
         INNER JOIN ss_com_account ca ON ca.com_account_id = ea.com_account_id
         where
         eba.ss_month=#{ssMonth}
-        AND ca.ss_account=#{ssAccount}
+        <if test="ssAccount!=null and ssAccount!=''">
+          AND ca.ss_account=#{ssAccount}
+        </if>
         AND eba.comemp_diff_amount <![CDATA[<]]> 0
         AND eba.is_active=1
         <if test="companyId!=null and companyId!=''">

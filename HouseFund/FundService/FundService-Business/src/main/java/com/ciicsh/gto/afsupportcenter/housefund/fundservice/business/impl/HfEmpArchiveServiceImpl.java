@@ -42,15 +42,18 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
     public Map<String, Object> viewEmpArchiveInfo(String empArchiveId, String companyId,String employeeId) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         HfEmpArchiveBo viewEmpArchiveBo=null;
+        List listEmpTransferBo = null;
         if(empArchiveId == null){
             viewEmpArchiveBo = baseMapper.viewEmpInfo(companyId,employeeId);
+            listEmpTransferBo = baseMapper.listEmpTransfer(employeeId);
+
         }else{
             viewEmpArchiveBo = baseMapper.viewEmpArchive(empArchiveId);
             HfArchiveBasePeriodBo viewEmpPeriodBo = baseMapper.viewEmpPeriod(empArchiveId, "1");//基本
             HfArchiveBasePeriodBo viewEmpPeriodAddBo = baseMapper.viewEmpPeriod(empArchiveId, "2");//补充
             List listEmpTaskPeriodBo = baseMapper.listEmpTaskPeriod(empArchiveId, "1");//基本
             List listEmpTaskPeriodAddBo = baseMapper.listEmpTaskPeriod(empArchiveId, "2");//补充
-            List listEmpTransferBo = baseMapper.listEmpTransfer(empArchiveId);
+            listEmpTransferBo = baseMapper.listEmpTransfer(employeeId);
             resultMap.put("viewEmpPeriod", viewEmpPeriodBo);
             resultMap.put("viewEmpPeriodAdd", viewEmpPeriodAddBo);
             resultMap.put("listEmpTaskPeriod", listEmpTaskPeriodBo);
@@ -71,7 +74,7 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
         }
         resultMap.put("viewEmpArchive", viewEmpArchiveBo);
         resultMap.put("viewComAccount", viewComAccountBo);
-
+        resultMap.put("listEmpTransfer", listEmpTransferBo);
         return resultMap;
     }
 

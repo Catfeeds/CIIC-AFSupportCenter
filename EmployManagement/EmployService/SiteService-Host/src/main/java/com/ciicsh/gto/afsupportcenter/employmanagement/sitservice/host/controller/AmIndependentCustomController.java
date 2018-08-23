@@ -10,8 +10,11 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.salecenter.apiservice.api.dto.company.CompanyNameHistoryDTO;
+import com.ciicsh.gto.salecenter.apiservice.api.proxy.CompanyNameHistoryProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -26,6 +29,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/employservice/salCompany")
 public class AmIndependentCustomController extends BasicController<IAmCompanySetService> {
+
+    @Autowired
+    private CompanyNameHistoryProxy companyNameHistoryProxy;
 
     @Autowired
     private  ISalCompanyService salCompanyService;
@@ -101,6 +107,7 @@ public class AmIndependentCustomController extends BasicController<IAmCompanySet
     }
 
     @RequestMapping("/queryCompanySetDetail")
+    @ResponseBody
     public  JsonResult  queryCompanySetDetail(AmCompanySetBO amCompanySetBO){
 
         AmCompanySetBO amCompanySetBO1 = business.queryAmCompanySet(amCompanySetBO);
@@ -109,6 +116,9 @@ public class AmIndependentCustomController extends BasicController<IAmCompanySet
         salCompanyBO.setCompanyId(amCompanySetBO.getCompanyId());
 
         List<SalCompanyBO> salCompanyBOList = salCompanyService.getSalCompanyList(salCompanyBO);
+
+        com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<List<CompanyNameHistoryDTO>>
+        companyListResult = companyNameHistoryProxy.getCompanyNameHistoryListByCompanyId(salCompanyBO.getCompanyId());
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
@@ -119,6 +129,10 @@ public class AmIndependentCustomController extends BasicController<IAmCompanySet
 
         if(null!=salCompanyBOList&&salCompanyBOList.size()>0){
             resultMap.put("salCompanyBO",salCompanyBOList.get(0));
+        }
+
+        if(null!=companyListResult.getObject()){
+            resultMap.put("companyNameList",companyListResult.getObject());
         }
 
         return JsonResultKit.of(resultMap);

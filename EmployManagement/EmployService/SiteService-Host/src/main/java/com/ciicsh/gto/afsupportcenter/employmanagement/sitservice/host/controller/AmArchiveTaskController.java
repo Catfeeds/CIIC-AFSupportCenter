@@ -6,6 +6,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.archiveSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmArchiveDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmArchiveReturnPrintDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveUse;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpMaterial;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
@@ -19,6 +20,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -72,6 +73,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
     @Autowired
     private  IAmEmpCustomService amEmpCustomService;
+
+    @Autowired
+    private EmployeeInfoProxy employeeInfoProxy;
 
     @RequestMapping("/queryAmArchive")
     public JsonResult<PageRows> queryAmArchive(PageInfo pageInfo){
@@ -129,8 +133,8 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             if(1==status){
                 amEmpTaskCountBO.setNoSign(amEmploymentBO.getCount());
                 num = num + amEmploymentBO.getCount();
-            }else if(2==status){
-                amEmpTaskCountBO.setFinished(amEmploymentBO.getCount());
+            }else if(10==status){
+                amEmpTaskCountBO.setNoRecord(amEmploymentBO.getCount());
                 num = num + amEmploymentBO.getCount();
             }else if(3==status){
                 amEmpTaskCountBO.setEmploySuccess(amEmploymentBO.getCount());
@@ -456,34 +460,34 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     }
 
 
-    @PostMapping("/saveAmArchiveUse")
-    public JsonResult<Boolean>  saveAmArchiveUse(@RequestBody List<AmArchiveUse> list) {
+    @RequestMapping("/saveAmArchiveUse")
+    public JsonResult  saveAmArchiveUse(AmArchiveUse amArchiveUse) {
 
-        for(AmArchiveUse bo:list)
-        {
-            LocalDateTime now = LocalDateTime.now();
-
-            if(bo.getArchiveUseId()==null){
-                bo.setCreatedTime(now);
-                bo.setModifiedTime(now);
-                bo.setCreatedBy(ReasonUtil.getUserId());
-                bo.setModifiedBy(ReasonUtil.getUserId());
-            }else {
-                bo.setModifiedTime(now);
-                bo.setModifiedBy(ReasonUtil.getUserId());
-            }
-
-                bo.setHandleMan(ReasonUtil.getUserName());
+        LocalDateTime now = LocalDateTime.now();
+        if(amArchiveUse.getArchiveUseId()==null){
+            amArchiveUse.setCreatedTime(now);
+            amArchiveUse.setModifiedTime(now);
+            amArchiveUse.setCreatedBy(ReasonUtil.getUserId());
+            amArchiveUse.setModifiedBy(ReasonUtil.getUserId());
+            amArchiveUse.setHandleMan(ReasonUtil.getUserName());
+        }else{
+            amArchiveUse.setModifiedTime(now);
+            amArchiveUse.setModifiedBy(ReasonUtil.getUserId());
         }
 
-        boolean result = false;
-        try {
-            result = iAmArchiveUseService.insertOrUpdateBatch(list);
-        } catch (Exception e) {
+        boolean result = iAmArchiveUseService.insertOrUpdate(amArchiveUse);
 
+        PageInfo pageInfo = new PageInfo();
+        JSONObject params = new JSONObject();
+        params.put("archiveId",amArchiveUse.getArchiveId());
+        params.put("useBorrow",amArchiveUse.getUseBorrow());
+        pageInfo.setParams(params);
+        Map<String, Object> resultMap = new HashMap<>();
+        PageRows<AmArchiveUse>  amArchiveUsePageRows  = iAmArchiveUseService.queryAmArchiveUse(pageInfo);
+        if(null!=amArchiveUsePageRows&&amArchiveUsePageRows.getRows().size()>0){
+            resultMap.put("amArchiveUsePageRows",amArchiveUsePageRows);
         }
-
-        return JsonResultKit.of(result);
+        return JsonResultKit.of(resultMap);
     }
 
     @RequestMapping("/queryArchiveUse")
@@ -613,12 +617,11 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     @RequestMapping("/archiveSearchExportReturnList")
     public void archiveSearchExportReturnList(HttpServletResponse response, PageInfo pageInfo) {
 
-        PageRows<AmEmploymentBO> result = business.queryAmArchive(pageInfo);
-        List<AmEmploymentBO> data = result.getRows();
-
+        List<AmArchiveReturnPrintDTO> list = business.queryAmArchiveForeignerPritDate(pageInfo);
 
 
         Map<String,Object> map = new HashMap<>();
+        map.put("list",list);
         try {
             WordUtils.exportMillCertificateWord(response,map,"外来退工备案登记表","AM_RETURN_TEMP.ftl");
         } catch (Exception e) {
