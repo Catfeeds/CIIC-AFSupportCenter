@@ -154,7 +154,7 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
                 /**
                  * 退工任务单签收 但退工成功日期为空
                  */
-                amEmpTask.setTaskStatus(98);
+//                amEmpTask.setTaskStatus(98);
             }else if("1".equals(bo.getResignFeedback())&&bo.getJobCentreFeedbackDate()!=null){
                 /**
                  * 更加v6文档有退工成功返回日期 并且 退工任务单签收 代表退工成功
@@ -340,6 +340,11 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
         }
 
         return resultMap;
+    }
+
+    @Override
+    public List<AmResignBO> jobCount(AmResignBO amEmpTaskBO) {
+        return baseMapper.jobCount(amEmpTaskBO);
     }
 
     /**

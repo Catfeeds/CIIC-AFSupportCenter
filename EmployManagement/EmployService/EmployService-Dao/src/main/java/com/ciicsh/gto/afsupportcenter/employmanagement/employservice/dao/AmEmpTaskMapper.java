@@ -62,4 +62,6 @@ public interface AmEmpTaskMapper extends BaseMapper<AmEmpTask> {
 
     List<AmEmpTaskBO> queryByTaskId(String taskId);
 
+    List<AmEmpTaskBO>  jobCount(AmEmpTaskBO amEmpTaskBO);
+
 }

@@ -9,6 +9,8 @@ public class TaskParamDTO {
 
     private String employeeId;
 
+    private String empCompanyId;
+
     public String getTaskId() {
         return taskId;
     }
@@ -23,5 +25,13 @@ public class TaskParamDTO {
 
     public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
+    }
+
+    public String getEmpCompanyId() {
+        return empCompanyId;
+    }
+
+    public void setEmpCompanyId(String empCompanyId) {
+        this.empCompanyId = empCompanyId;
     }
 }
