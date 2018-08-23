@@ -90,6 +90,12 @@ public class AmEmploymentBO extends AmEmployment {
 
     private String cici;
 
+    // 姓别
+    private Integer gender;
+
+    // 合同终止类型
+    private String endType;
+
     /**
      * 服务中心
      */

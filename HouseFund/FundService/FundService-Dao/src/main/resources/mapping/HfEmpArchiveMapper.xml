@@ -336,7 +336,7 @@
     <!--雇员公积金查询==>查看企业公积金账户信息-->
     <select id="viewComAccount" resultMap="viewComAccountResultMap">
         SELECT ca.com_account_name,ca.payment_way,ca.hf_account_type,ca.close_day,ca.ukey_store,ca.payment_bank,ca.state,
-        cac.hf_type,cac.hf_com_account,cac.com_start_month,cac.end_month,cac.com_hf_month,addAc.add_com_account,
+        cac.hf_type,cac.hf_com_account,cac.com_start_month,cac.end_month,PERIOD_ADD(cac.com_hf_month,-1) AS com_hf_month,addAc.add_com_account,
         com.company_id,com.title,addAc.account_temp_store_bc,cac.account_temp_store
         FROM
         hf_com_account_class cac
@@ -416,12 +416,11 @@
         et.task_status,et.transfer_date,et.feedback_date,et.operate_date
         from
         hf_emp_task et
-        INNER JOIN hf_emp_archive ea ON ea.emp_archive_id=et.emp_archive_id
         WHERE
         et.is_active=1
         and et.task_category=8
-        and et.emp_archive_id
-        in(select emp_archive_id from hf_emp_archive where emp_archive_id=#{empArchiveId} OR belong_emp_archive_id=#{empArchiveId} )
+        and et.employee_id = #{employeeId}
+
     </select>
     <!--根据身份证号+姓名找到雇员公积金账户信息-->
     <select id="selectEmpByCardIdAndName" resultType="java.util.Map">
