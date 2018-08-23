@@ -1,6 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpAgreementDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
@@ -16,6 +18,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskSe
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
+import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
@@ -102,7 +105,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                             if ("null".equals(status)) {
                                 status = "0";
                             }
-                            hfEmpTaskBo.setHfAccountType(Integer.parseInt(status));
+                            hfEmpTaskBo.setHfAccountType(0);
                         }
                         if(arr[i].indexOf("payment_bank")!=-1)
                         {
@@ -112,7 +115,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                             if ("null".equals(status)) {
                                 status = "0";
                             }
-                            hfEmpTaskBo.setPaymentBank(Integer.parseInt(status));
+                            hfEmpTaskBo.setPaymentBank(0);
                         }
                         if(arr[i].indexOf("hf_com_account")!=-1)
                         {
@@ -177,7 +180,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                                 if ("null".equals(status)) {
                                     status = "0";
                                 }
-                                hfEmpTaskBo.setHfAccountType(Integer.parseInt(status));
+                                hfEmpTaskBo.setHfAccountType(0);
                             }
                             if (arr[i].indexOf("payment_bank") != -1) {
                                 String str[] = arr[i].split(" ");
@@ -186,7 +189,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                                 if ("null".equals(status)) {
                                     status = "0";
                                 }
-                                hfEmpTaskBo.setPaymentBank(Integer.parseInt(status));
+                                hfEmpTaskBo.setPaymentBank(0);
                             }
                             if (arr[i].indexOf("hf_com_account") != -1) {
                                 String str[] = arr[i].split(" ");
@@ -585,6 +588,52 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         }
     }
 
+//    @Override
+//    public void autoOffset(String companyId, String employeeId) {
+//        Wrapper<HfEmpTask> hfEmpTaskWrapper = new EntityWrapper<>();
+//        hfEmpTaskWrapper.where("is_active = 1");
+//        hfEmpTaskWrapper.and("company_id = ", companyId);
+//        hfEmpTaskWrapper.and("employee_id = ", employeeId);
+//        hfEmpTaskWrapper.and("task_status = 1");
+//        hfEmpTaskWrapper.and("task_category = -1");
+//        List<HfEmpTask> hfEmpTaskList = this.selectList(hfEmpTaskWrapper);
+//
+//        if (com.baomidou.mybatisplus.toolkit.CollectionUtils.isNotEmpty(hfEmpTaskList)) {
+//            hfEmpTaskWrapper = new EntityWrapper<>();
+//            hfEmpTaskWrapper.where("is_active = 1");
+//            hfEmpTaskWrapper.and("company_id = ", companyId);
+//            hfEmpTaskWrapper.and("employee_id = ", employeeId);
+//            hfEmpTaskWrapper.and("task_status = 1");
+//            hfEmpTaskWrapper.and("task_category in (1, 2, 3, 9, 10, 11)");
+//
+//            List<HfEmpTask> inHfEmpTaskList = this.selectList(hfEmpTaskWrapper);
+//
+//            hfEmpTaskWrapper = new EntityWrapper<>();
+//            hfEmpTaskWrapper.where("is_active = 1");
+//            hfEmpTaskWrapper.and("company_id = ", companyId);
+//            hfEmpTaskWrapper.and("employee_id = ", employeeId);
+//            hfEmpTaskWrapper.and("task_status = 1");
+//            hfEmpTaskWrapper.and("task_category in (4, 5, 12, 13)");
+//
+//            List<HfEmpTask> outHfEmpTaskList = this.selectList(hfEmpTaskWrapper);
+//
+//            if (com.baomidou.mybatisplus.toolkit.CollectionUtils.isNotEmpty(inHfEmpTaskList)
+//                && com.baomidou.mybatisplus.toolkit.CollectionUtils.isNotEmpty(outHfEmpTaskList)
+//                && inHfEmpTaskList.size() == 1 && outHfEmpTaskList.size() == 1
+//                ) {
+//                HfEmpTask inHfEmpTask = inHfEmpTaskList.get(0);
+//                HfEmpTask outHfEmpTask = outHfEmpTaskList.get(0);
+//
+//                if (DateUtil.compareMonth(inHfEmpTask.getStartMonth(), outHfEmpTask.getEndMonth()) > 0) {
+//                    // 新增类任务单批退，回调任务单完成接口和实际金额回调接口
+//
+//                    // 停办类任务单批退，仅回调任务单完成接口
+//
+//                    // 不做任务单，逻辑删除
+//                }
+//            }
+//        }
+//    }
 
     /**
      * 转出单位(来源地)
