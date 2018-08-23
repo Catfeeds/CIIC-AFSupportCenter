@@ -288,10 +288,13 @@
         and p.payment_month = (select period_add(payment_month,-1) from hf_payment where payment_id=#{paymentId})
         GROUP BY pc.com_account_id,pc.hf_type
         ) lastMonth ON lastMonth.com_account_id=ca.com_account_id and lastMonth.hf_type=pa.hf_type
+        LEFT JOIN (SELECT com_account_id,MIN(company_id)as company_id from hf_account_com_relation group by com_account_id) odr
+        ON pa.com_account_id=odr.com_account_id
         WHERE
         pa.is_active = 1
         and pa.hf_type=#{hfType}
         and pa.payment_id=#{paymentId}
+        ORDER BY odr.company_id
     </select>
 
 </mapper>

@@ -70,6 +70,16 @@ public class SsEmpArchiveBO extends SsEmpArchive {
 
     private String ssMonth;
 
+    private Integer hasOut;
+
+    public Integer getHasOut() {
+        return hasOut;
+    }
+
+    public void setHasOut(Integer hasOut) {
+        this.hasOut = hasOut;
+    }
+
     @Override
     public String getSsMonth() {
         return ssMonth;
