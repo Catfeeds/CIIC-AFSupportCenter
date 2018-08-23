@@ -17,10 +17,11 @@ import org.springframework.context.annotation.Import;
     "com.ciicsh.gto.salecenter.apiservice.api.proxy",
     "com.ciicsh.gto.afsystemmanagecenter.apiservice.api",
     "com.ciicsh.gto.logservice.api",
-    "com.ciicsh.gto.identityservice.api"
+    "com.ciicsh.gto.identityservice.api",
+    "com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api"
 })
 @MapperScan("com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao")
-@SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.employmanagement.messageservice.host","com.ciicsh.gto","com.ciicsh.common"})
+@SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.employmanagement.messageservice.host","com.ciicsh.gto","com.ciicsh.common","com.ciicsh.gto.afsupportcenter.util.logService"})
 @EnableDiscoveryClient
 @Import({CustomConfiguration.class, MybatisPlusConfig.class})
 public class EmployMessageServiceApp {

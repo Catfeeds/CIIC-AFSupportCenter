@@ -8,11 +8,16 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.ut
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.TaskCommonUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.employSearchExportOpt;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpCollectExportPageDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpDispatchExportPageDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.*;
+import com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.util.WordUtils;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.aspect.log.Log;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
@@ -21,11 +26,10 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -65,6 +69,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
     @Autowired
     private IAmArchiveAdvanceService amArchiveAdvanceService;
+
+    @Autowired
+    private LogApiUtil logApiUtil;
 
 
     /**
@@ -194,13 +201,17 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         AmMaterialBO amMaterialBO = new AmMaterialBO();
         List<AmEmpMaterialBO> empMaterialList = new ArrayList<>();
         PageRows<AmEmpMaterialBO> result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
-        if(result!=null&&result.getRows().size()>0)
-        {
-            empMaterialList.addAll(result.getRows());
+        // 加了事务 回查
+        result = iAmEmpMaterialService.queryAmEmpMaterial(pageInfo);
+        //用工材料流转记录
+        List<AmEmpMaterialOperationLogBO> logList = iAmEmpMaterialService.queryAmEmpMaterialOperationLogList(amTaskParamBO.getEmpTaskId());
+        amMaterialBO.setLogBOList(logList);
+        empMaterialList.addAll(result.getRows());
+        amMaterialBO.setMaterialsData(empMaterialList);
+        if(result.getRows().size()>0){
             String submitterId = result.getRows().get(0).getSubmitterId();
             String submitterName = result.getRows().get(0).getSubmitterName();
             String extension = result.getRows().get(0).getExtension();
-            amMaterialBO.setMaterialsData(empMaterialList);
             if(null!=result.getRows().get(0)){
                 amMaterialBO.setReasonValue(result.getRows().get(0).getRejectReason());
             }
@@ -211,7 +222,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                 amMaterialBO.setSubmitName(submitterName);
                 amMaterialBO.setExtension(extension);
             }
-
         }
 
         //用工信息
@@ -258,10 +268,10 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             if(advanceBO != null){
                 amArchiveBO = new AmArchiveBO();
                 amArchiveBO.setFormAdvance(true);
-                amArchiveBO.setYuliuDocType(advanceBO.getReservedArchiveType());
-                amArchiveBO.setYuliuDocNum(advanceBO.getReservedArchiveNo() == null ? "" : advanceBO.getReservedArchiveNo().toString());
+                amArchiveBO.setDocType(advanceBO.getReservedArchiveType());
+                amArchiveBO.setDocNum(advanceBO.getReservedArchiveNo() == null ? "" : advanceBO.getReservedArchiveNo().toString());
                 amArchiveBO.setDocFrom(advanceBO.getArchiveSource());// 档案来源
-                amArchiveBO.setArchivePlace(advanceBO.getArchivalPlace());// 存档地
+                amArchiveBO.setArchivePlace(advanceBO.getArchivePlace());// 存档地
                 resultMap.put("amArchaiveBo",amArchiveBO);
             }
         }
@@ -373,7 +383,11 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
                     }
                     variables.put("assignee",userName);
-                    TaskCommonUtils.completeTask(taskId,employeeInfoProxy,variables);
+                    try {
+                        TaskCommonUtils.completeTask(taskId,employeeInfoProxy,variables);
+                    } catch (Exception e) {
+                        logApiUtil.error(LogMessage.create().setTitle("EmployMaterial").setContent(e.getMessage()));
+                    }
                 }
             }
         }
@@ -432,6 +446,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     }
 
     @PostMapping("/receiveMaterial")
+    @Transactional(
+        rollbackFor = {Exception.class}
+    )
     public JsonResult receiveMaterial(@RequestBody List<AmEmpMaterial> list){
         String userName = "system";
         String userId = "system";
@@ -458,12 +475,17 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         }
 
         AmEmpTask amEmpTask = business.selectById(list.get(0).getEmpTaskId());
-        amEmpTask.setTaskStatus(2);
-        business.insertOrUpdate(amEmpTask);
-
-        boolean result =  iAmEmpMaterialService.updateBatchById(list);
+        // 调用雇员中心 签收
+        String message = iAmEmpMaterialService.receiveMaterial(amEmpTask.getHireTaskId(),1,null);
         Map<String,Object> map = new HashMap<>();
-        map.put("result",result);
+        if("签收成功".equals(message)){
+            amEmpTask.setTaskStatus(2);
+            business.insertOrUpdate(amEmpTask);
+            boolean result =  iAmEmpMaterialService.updateBatchById(list);
+            List<AmEmpMaterialOperationLogBO> logList = iAmEmpMaterialService.queryAmEmpMaterialOperationLogList(list.get(0).getEmpTaskId());
+            map.put("logList",logList);
+        }
+        map.put("result",message);
         map.put("data",list);
         return JsonResultKit.of(map);
     }
@@ -485,11 +507,18 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             material.setRejectName(userName);
             material.setRejectId(userId);
             material.setModifiedTime(LocalDateTime.now());
+//            material.setActive(false);
         }
-
-        boolean result =  iAmEmpMaterialService.updateBatchById(list);
+        AmEmpTask amEmpTask = business.selectById(list.get(0).getEmpTaskId());
+        // 调用雇员中心 批退
+        String message = iAmEmpMaterialService.receiveMaterial(amEmpTask.getHireTaskId(),2,list.get(0).getRejectReason());
         Map<String,Object> map = new HashMap<>();
-        map.put("result",result);
+        if("批退成功".equals(message)){
+            boolean result =  iAmEmpMaterialService.updateBatchById(list);
+            List<AmEmpMaterialOperationLogBO> logList = iAmEmpMaterialService.queryAmEmpMaterialOperationLogList(list.get(0).getEmpTaskId());
+            map.put("logList",logList);
+        }
+        map.put("result",message);
         map.put("data",list);
         return JsonResultKit.of(map);
     }
@@ -547,6 +576,202 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         ExcelUtil.exportExcel(opts,employSearchExportOpt.class,fileNme,response);
     }
 
+    /**
+     * 用工录用名册打印导出Word
+     */
+    @RequestMapping("/employSearchExportOptUseWord")
+    public @ResponseBody
+    void employSearchExportOptUseWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response){
+
+        try {
+
+            logApiUtil.info(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent("用工录用名册打印 start"));
+
+            // 中智大库
+            List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,12);
+
+            // 外包
+            List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(amEmpTaskBO,3,12);
+
+            //独立户
+            List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(amEmpTaskBO,12);
+
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("list",dtoList);
+            map.put("list2",dtoList2);
+            map.put("list3",dtoList3);
+
+
+            WordUtils.exportMillCertificateWord(response,map,"用工录用名册","AM_USE_TEMP.ftl");
+
+        } catch (Exception e) {
+            logApiUtil.error(LogMessage.create().setTitle("employSearchExportOptUseWord").setContent(e.getMessage()));
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 派遣录用名册打印导出Word
+     */
+    @RequestMapping("/employSearchExportOptDispatchWord")
+    public @ResponseBody
+    void employSearchExportOptDispatchWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response){
+
+
+
+        try {
+            // 中智大库
+            List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,9);
+
+            // 外包
+            List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(amEmpTaskBO,3,9);
+
+            //独立户
+            List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(amEmpTaskBO,9);
+
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("list",dtoList);
+            map.put("list2",dtoList2);
+            map.put("list3",dtoList3);
+            WordUtils.exportMillCertificateWord(response,map,"派遣录用名册","AM_DISPATCH_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 外来独立打印导出Word
+     */
+    @RequestMapping("/employSearchExportOptAlonehWord")
+    public @ResponseBody
+    void employSearchExportOptAlonehWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response){
+
+        // 中智大库
+        List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,10);
+
+        // 外包
+        List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(amEmpTaskBO,3,10);
+
+        //独立户
+        List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(amEmpTaskBO,10);
+
+        Integer count = 0;
+        for (AmEmpDispatchExportPageDTO dto:dtoList) {
+            count += dto.getList().size();
+        }
+        for (AmEmpDispatchExportPageDTO dto:dtoList2) {
+            count += dto.getList().size();
+        }
+        for (AmEmpDispatchExportPageDTO dto:dtoList3) {
+            count += dto.getList().size();
+        }
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
+        map.put("count",count);
+
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"外来独立","AM_ALONE_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 外来派遣导出Word
+     */
+    @RequestMapping("/employSearchExportOptExtDispatchWord")
+    public @ResponseBody
+    void employSearchExportOptExtDispatchWord(AmEmpTaskBO amEmpTaskBO,HttpServletResponse response){
+
+        // 中智大库
+        List<AmEmpDispatchExportPageDTO> dtoList = business.queryExportOptDispatch(amEmpTaskBO,2,9);
+
+        // 外包
+        List<AmEmpDispatchExportPageDTO> dtoList2 = business.queryExportOptDispatch(amEmpTaskBO,3,9);
+
+        //独立户
+        List<AmEmpDispatchExportPageDTO> dtoList3 = business.queryExportOptDispatch(amEmpTaskBO,9);
+
+        Integer count = 0;
+        for (AmEmpDispatchExportPageDTO dto:dtoList) {
+            count += dto.getList().size();
+        }
+        for (AmEmpDispatchExportPageDTO dto:dtoList2) {
+            count += dto.getList().size();
+        }
+        for (AmEmpDispatchExportPageDTO dto:dtoList3) {
+            count += dto.getList().size();
+        }
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
+        map.put("count",count);
+
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"外来派遣","AM_EXT_DISPATCH_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 采集表汇总表导出Word
+     */
+    @RequestMapping("/employSearchExportOptExtCollectWord")
+    public @ResponseBody
+    void employSearchExportOptExtCollectWord(HttpServletResponse response, AmEmpTaskBO amEmpTaskBO){
+        // 中智大库
+        List<AmEmpCollectExportPageDTO> dtoList = business.queryExportOptCollect(amEmpTaskBO,2);
+
+        // 外包
+        List<AmEmpCollectExportPageDTO> dtoList2 = business.queryExportOptCollect(amEmpTaskBO,3);
+
+        //独立户
+        List<AmEmpCollectExportPageDTO> dtoList3 = business.queryExportOptCollect(amEmpTaskBO);
+
+        Integer sum = 0;
+
+        for (AmEmpCollectExportPageDTO dto:dtoList) {
+            sum += dto.getList1().size();
+            sum += dto.getList2().size();
+            sum += dto.getList3().size();
+        }
+        for (AmEmpCollectExportPageDTO dto:dtoList2) {
+            sum += dto.getList1().size();
+            sum += dto.getList2().size();
+            sum += dto.getList3().size();
+        }
+        for (AmEmpCollectExportPageDTO dto:dtoList3) {
+            sum += dto.getList1().size();
+            sum += dto.getList2().size();
+            sum += dto.getList3().size();
+        }
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list",dtoList);
+        map.put("list2",dtoList2);
+        map.put("list3",dtoList3);
+        map.put("sum",sum);
+
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"采集表汇总表","AM_COLLECT_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @RequestMapping("/getDefualtEmployBO")
     public  JsonResult<AmEmpTaskBO>  getDefualtEmployBO(AmEmpTaskBO amEmpTaskBO){
         AmEmpTaskBO amEmpTaskBO1 = business.getDefualtEmployBO(amEmpTaskBO);
@@ -601,7 +826,11 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
                 List<String> taskIdList = (List<String>)map.get("taskIdList");
                 for(String taskId:taskIdList)
                 {
-                    TaskCommonUtils.completeTask(taskId,employeeInfoProxy,variables);
+                    try {
+                        TaskCommonUtils.completeTask(taskId,employeeInfoProxy,variables);
+                    } catch (Exception e) {
+                        logApiUtil.error(LogMessage.create().setTitle("EmployMaterial").setContent(e.getMessage()));
+                    }
                 }
                 amArchiveBO.setEnd(true);
             }
@@ -611,9 +840,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
     }
 
     @RequestMapping("/batchSaveEmployment")
-    public JsonResult<Boolean> batchSaveEmployment(EmployeeBatchBO employeeBatchBO){
-        Boolean b = business.batchSaveEmployment(employeeBatchBO);
-        return  JsonResultKit.of(b);
+    public JsonResult batchSaveEmployment(EmployeeBatchBO employeeBatchBO){
+        Map<String,Object> map = business.batchSaveEmployment(employeeBatchBO);
+        return  JsonResultKit.of(map);
     }
 
     @RequestMapping("/batchCheck")

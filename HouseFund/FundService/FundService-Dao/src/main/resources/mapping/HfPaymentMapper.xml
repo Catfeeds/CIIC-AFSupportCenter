@@ -31,8 +31,7 @@
         <result column="create_payment_date_string" property="createPaymentDateString" />
         <result column="finance_payment_date_string" property="financePaymentDateString" />
         <result column="pay_apply_code" property="payApplyCode" />
-
-
+        <result column="payment_way" property="paymentWay" />
     </resultMap>
 
     <resultMap id="PaymentComResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.PaymentComBO">
@@ -72,6 +71,7 @@
         hfp.payment_month,
         hfp.payment_state,
         hfp.pay_apply_code,
+        hfp.payment_way,
         hfps.payment_state_value,
         hfp.create_payment_user,
         DATE_FORMAT(hfp.create_payment_date, '%Y-%m-%d') AS create_payment_date_string,
@@ -116,7 +116,7 @@
             <if test="paymentBatchNum != null and paymentBatchNum != ''">
                 AND hfp.payment_batch_num = #{paymentBatchNum}
             </if>
-            <if test="paymentState!= null and paymentState != ''">
+            <if test="paymentState!= null">
                 AND hfp.payment_state = #{paymentState}
             </if>
             <if test="hfAccountType!= null and hfAccountType != ''">
@@ -290,125 +290,4 @@
         and pa.payment_id=#{paymentId}
     </select>
 
-    <select id="printRemittedBookByReport"  resultMap="printRemittedBookRM">
-
-      SELECT pa.com_account_id,acr.company_id,pa.com_account_class_id,ca.payment_bank,pa.hf_type,ca.hf_account_type
-        ,(SELECT SUM(ifnull(amount, 0)) FROM hf_month_charge mc
-            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
-            WHERE mc.is_active = 1
-            AND ea.is_active = 1
-            AND mc.hf_month = pa.payment_month
-            AND mc.hf_type = pa.hf_type
-            AND ea.com_account_class_id = pa.com_account_class_id
-            AND mc.payment_type = 1
-        ) AS amount_standard,
-        (SELECT SUM(ifnull(amount, 0)) FROM hf_month_charge mc
-            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
-            WHERE mc.is_active = 1
-            AND ea.is_active = 1
-            AND mc.hf_month = pa.payment_month
-            AND mc.hf_type = pa.hf_type
-            AND ea.com_account_class_id = pa.com_account_class_id
-            AND mc.payment_type IN (2, 3, 4, 5)
-        ) AS remitted_amount_add,
-        (SELECT SUM(ifnull(amount, 0)) FROM hf_month_charge mc
-            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
-            WHERE mc.is_active = 1
-            AND ea.is_active = 1
-            AND mc.hf_month = pa.payment_month
-            AND mc.hf_type = pa.hf_type
-            AND ea.com_account_class_id = pa.com_account_class_id
-            AND mc.payment_type IN (7, 8, 9, 10)
-        ) AS remitted_amount_reduce,
-
-        (SELECT SUM(ifnull(amount, 0))
-            FROM  hf_month_charge mc
-            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
-            WHERE mc.is_active = 1
-            AND ea.is_active = 1
-            AND mc.hf_month = pa.payment_month
-            AND mc.hf_type = pa.hf_type
-            AND ea.com_account_class_id = pa.com_account_class_id
-            AND mc.payment_type IN (6, 11)
-        ) AS repair_amount,
-        (SELECT
-            count(DISTINCT mc.employee_id)
-            FROM hf_month_charge mc
-            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
-            WHERE mc.is_active = 1
-            AND ea.is_active = 1
-            AND mc.hf_month = pa.payment_month
-            AND mc.hf_type = pa.hf_type
-            AND ea.com_account_class_id = pa.com_account_class_id
-            AND mc.payment_type IN (6, 11)
-        ) AS repair_count_emp,
-        (SELECT
-            count(DISTINCT mc.employee_id)
-            FROM hf_month_charge mc
-            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
-            WHERE mc.is_active = 1
-            AND ea.is_active = 1
-            AND mc.hf_month = pa.payment_month
-            AND mc.hf_type = pa.hf_type
-            AND ea.com_account_class_id = pa.com_account_class_id
-            AND mc.payment_type = 1
-        ) AS remitted_emp_count_standard,
-        (SELECT
-            count(DISTINCT mc.employee_id)
-            FROM hf_month_charge mc
-            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
-            WHERE mc.is_active = 1
-            AND ea.is_active = 1
-            AND mc.hf_month = pa.payment_month
-            AND mc.hf_type = pa.hf_type
-            AND ea.com_account_class_id = pa.com_account_class_id
-            AND mc.payment_type IN ( 2, 3, 4, 5)
-        ) AS remitted_count_emp_add,
-        (SELECT
-            count(DISTINCT mc.employee_id)
-            FROM hf_month_charge mc
-            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
-            WHERE mc.is_active = 1
-            AND ea.is_active = 1
-            AND mc.hf_month = pa.payment_month
-            AND mc.hf_type = pa.hf_type
-            AND ea.com_account_class_id = pa.com_account_class_id
-            AND mc.payment_type IN (7, 8, 9, 10)
-        ) AS remitted_count_emp_reduce,
-        (SELECT remitted_emp_count_standard + remitted_count_emp_add - remitted_count_emp_reduce) AS remitted_count_emp,
-        (SELECT ifnull(amount_standard,0) + ifnull(remitted_amount_add,0) - ifnull(remitted_amount_reduce,0)) AS remitted_amount
-        FROM
-				(
-					SELECT
-						#{paymentMonth} AS payment_month,
-						#{hfType} AS hf_type,
-						#{comAccountClassId} AS com_account_class_id,
-						#{comAccountId} AS com_account_id,
-						'-1' AS link
-				) pa
-				LEFT JOIN (
-					SELECT
-						#{paymentBank} AS payment_bank,
-						#{hfAccountType} AS hf_account_type,
-						'-1' AS link
-				) ca ON ca.link = pa.link
-				LEFT JOIN (
-					SELECT
-						pc.com_account_id,
-						pc.hf_type,
-						sum(remitted_amount) remitted_amount_last,
-						sum(remitted_count_emp) remitted_count_emp_last
-					FROM
-						hf_payment_com pc
-					INNER JOIN hf_payment p ON p.payment_id = pc.payment_id
-					WHERE
-						pc.is_active = 1
-					AND pc.hf_type = #{hfType}
-					AND p.payment_month =  period_add(#{paymentMonth},-1)
-					GROUP BY
-						pc.com_account_id,
-						pc.hf_type
-				) lastMonth ON lastMonth.com_account_id = pa.com_account_id
-				AND lastMonth.hf_type = pa.hf_type
-    </select>
 </mapper>

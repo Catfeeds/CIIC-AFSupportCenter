@@ -44,5 +44,4 @@ public interface HfPaymentService {
      */
     JsonResult printRemittedBook(Long paymentId,Integer hfType);
 
-    JsonResult printRemittedBookByReport(String companyId,String hfMonth,Integer hfType,Integer hfAccountType);
 }

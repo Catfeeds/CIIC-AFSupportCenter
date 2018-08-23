@@ -2,9 +2,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api;
 
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.api.dto.*;
 import org.springframework.cloud.netflix.feign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,8 +25,8 @@ public interface EmployApiProxy {
     @PostMapping({"/getArchiveByEmployeeId"})
     ArchiveDTO  getArchiveByEmployeeId(@RequestBody TaskParamDTO taskParamDTO);
 
-    @PostMapping({"/queryMaterialByTaskId"})
-    List<MaterialDTO> queryMaterialByTaskId(@RequestBody Long empTaskId);
+    @GetMapping({"/queryMaterialByTaskId/{empTaskId}"})
+    List<MaterialDTO> queryMaterialByTaskId(@PathVariable(value = "empTaskId") Long empTaskId);
 
     @PostMapping({"/updateMaterialByTaskId"})
     boolean updateMaterialByTaskId(@RequestBody MaterialUpdateDTO materialUpdateDTO);
@@ -39,5 +37,9 @@ public interface EmployApiProxy {
     @PostMapping({"/queryCompanyDTO"})
     CompanyDTO queryCompanyDTO(@RequestBody CompanyParamDTO companyParamDTO);
 
+    @GetMapping({"/queryMaterialLastOperationLog/{empTaskId}"})
+    MaterialOperationLogDTO queryMaterialLastOperationLog(@PathVariable(value = "empTaskId") String empTaskId);
 
+    @GetMapping({"/queryMaterialOperationLogList/{empTaskId}"})
+    List<MaterialOperationLogDTO> queryMaterialOperationLogList(@PathVariable(value = "empTaskId") String empTaskId);
 }

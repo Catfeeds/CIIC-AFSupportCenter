@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -231,6 +232,8 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
         //处理业务
         SsPayment newSsPayment = new SsPayment();
         //传入值
+
+        //newSsPayment.setPaymentMonth(LocalDate.now().plusMonths(-1).format( DateTimeFormatter.ofPattern("yyyyMM")));
         newSsPayment.setPaymentMonth(ssAddPaymentBO.getPaymentMonth());
         newSsPayment.setAccountType(ssAddPaymentBO.getSsAccountType());
         //默认值
@@ -254,7 +257,7 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
             baseMapper.updateById(ssPaymentCom);
         }
         //重算批次信息
-        json = calculatePayment(ssAddPaymentBO.getPaymentId());
+        json = calculatePayment(newSsPayment.getPaymentId());
 
         return json;
     }

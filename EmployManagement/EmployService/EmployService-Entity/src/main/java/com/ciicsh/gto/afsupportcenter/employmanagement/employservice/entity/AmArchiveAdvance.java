@@ -29,13 +29,13 @@ public class AmArchiveAdvance implements Serializable {
 	private Long archiveAdvanceId;
 
     /**
-     * 预留档案类型 A、Aa、B、Bb......Z、Zz
+     * 档案类型 档案预增固定为Cc
      */
 	@TableField("reserved_archive_type")
 	private String reservedArchiveType;
 
     /**
-     * 预留档案编号
+     * 档案编号
      */
 	@TableField("reserved_archive_no")
 	private Integer reservedArchiveNo;
@@ -79,14 +79,20 @@ public class AmArchiveAdvance implements Serializable {
     /**
      * 存档地
      */
-    @TableField("archival_place")
-    private String archivalPlace;
+    @TableField("archive_place")
+    private String archivePlace;
 
     /**
      * 备注
      */
     @TableField("remark")
     private String remark;
+
+    /**
+     * 退出寄出地日期
+     */
+    @TableField("exit_the_place_date")
+    private LocalDate exitThePlaceDate;
 
     /**
      * 状态0：删除1：未匹配2：已匹配
@@ -123,6 +129,14 @@ public class AmArchiveAdvance implements Serializable {
      */
     @TableField("modified_by")
     private String modifiedBy;
+
+    public LocalDate getExitThePlaceDate() {
+        return exitThePlaceDate;
+    }
+
+    public void setExitThePlaceDate(LocalDate exitThePlaceDate) {
+        this.exitThePlaceDate = exitThePlaceDate;
+    }
 
     public String getRemark() {
         return remark;
@@ -204,12 +218,12 @@ public class AmArchiveAdvance implements Serializable {
         this.archiveSource = archiveSource;
     }
 
-    public String getArchivalPlace() {
-        return archivalPlace;
+    public String getArchivePlace() {
+        return archivePlace;
     }
 
-    public void setArchivalPlace(String archivalPlace) {
-        this.archivalPlace = archivalPlace;
+    public void setArchivePlace(String archivePlace) {
+        this.archivePlace = archivePlace;
     }
 
     public Integer getStatus() {

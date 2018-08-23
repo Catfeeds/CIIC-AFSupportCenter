@@ -56,6 +56,16 @@
         <result column="one_payment" property="onePayment" />
     </resultMap>
 
+    <resultMap id="LastPaymentMap" type="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpLastPaymentBO">
+        <result column="ss_type_name" property="ssTypeName" />
+        <result column="com_amount" property="comAmount" />
+        <result column="emp_amount" property="empAmount" />
+        <result column="sub_total_amount" property="subTotalAmount" />
+        <result column="com_ratio" property="comRatio" />
+        <result column="emp_ratio" property="empRatio" />
+        <result column="base_amount" property="baseAmount" />
+    </resultMap>
+
     <select id="queryEmlpyeeMonthFeeDetail" resultMap="resultMap">
         SELECT
         mc.month_charge_id,
@@ -77,11 +87,14 @@
         FROM
         ss_month_charge_item mci
         INNER JOIN ss_month_charge mc ON mc.month_charge_id=mci.month_charge_id
-        INNER JOIN 	ss_emp_archive ea ON ea.emp_archive_id=mc.emp_archive_id
+        INNER JOIN ss_emp_archive ea ON ea.emp_archive_id=mc.emp_archive_id
         INNER JOIN ss_com_account ca ON ca.com_account_id = ea.com_account_id
         LEFT JOIN emp_employee emp ON emp.employee_id=ea.employee_id
         WHERE
         mci.is_active = 1 AND ca.ss_account = #{ssAccount} AND mc.ss_month  =#{ssMonth}
+        <if test="companyId!=null and companyId!=''">
+          AND ea.company_id=#{companyId}
+        </if>
         ORDER  BY emp.employee_id, mc.cost_category
  </select>
 
@@ -120,5 +133,39 @@
             AND smc.ss_month = #{ssMonth}
             AND sea.is_active = 1
         GROUP BY smc.employee_id, change_type, smci.ss_type
+    </select>
+    
+    <select id="searchDetailLastPaymentMonth" resultMap="LastPaymentMap">
+        SELECT
+        smci.ss_type_name,
+        SUM(smci.com_amount) AS com_amount,
+        SUM(smci.emp_amount) AS emp_amount,
+        SUM(smci.sub_total_amount) AS sub_total_amount,
+        CONVERT(SUM(smci.com_amount)/tmp.base_amount, DECIMAL(5, 4))*100 AS com_ratio,
+        CONVERT(SUM(smci.emp_amount)/tmp.base_amount, DECIMAL(5, 4))*100 AS emp_ratio,
+        tmp.base_amount
+        FROM ss_month_charge smc
+        INNER JOIN ss_month_charge_item smci ON smc.month_charge_id = smci.month_charge_id
+        INNER JOIN ss_emp_archive sea ON smc.emp_archive_id = sea.emp_archive_id
+        INNER JOIN (
+            SELECT
+              sea.emp_archive_id,
+              smc.ss_month,
+              smc.base_amount
+              FROM ss_month_charge smc
+              INNER JOIN ss_emp_archive sea ON smc.emp_archive_id = sea.emp_archive_id
+              WHERE smc.is_active = 1 AND sea.is_active = 1
+                AND sea.company_id = #{companyId}
+                AND smc.employee_id = #{employeeId}
+                AND smc.ss_month = #{ssMonth}
+              ORDER BY smc.ss_month_belong DESC LIMIT 1
+        ) tmp ON smc.emp_archive_id = tmp.emp_archive_id
+        <where>
+            smc.is_active = 1 AND smci.is_active = 1 AND sea.is_active = 1
+            AND sea.company_id = #{companyId}
+            AND smc.employee_id = #{employeeId}
+            AND smc.ss_month = #{ssMonth}
+            GROUP BY sea.company_id, smc.employee_id, smc.ss_month, smci.ss_type
+        </where>
     </select>
 </mapper>

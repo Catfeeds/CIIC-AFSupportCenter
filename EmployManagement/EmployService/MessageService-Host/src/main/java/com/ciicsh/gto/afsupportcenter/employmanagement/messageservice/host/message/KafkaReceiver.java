@@ -2,6 +2,8 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.messageservice.host.mess
 
 import com.alibaba.fastjson.JSON;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,9 @@ public class KafkaReceiver {
     @Autowired
     private IAmEmpTaskService iAmEmpTaskService;
 
+    @Autowired
+    private LogApiUtil logApiUtil;
+
     /**
      * 订阅用工办理任务单
      *
@@ -34,6 +39,8 @@ public class KafkaReceiver {
         boolean res = false;
         if (TaskSink.HIRE.equals(taskMsgDTO.getTaskType())) {
             logger.info("receive empIn: " + JSON.toJSONString(taskMsgDTO));
+            LogMessage logMessage = LogMessage.create().setTitle("用工任务单").setContent(JSON.toJSONString(taskMsgDTO));
+            logApiUtil.info(logMessage);
             try {
                 res = insertAmEmpTaskTb(taskMsgDTO, 1);
             } catch (Exception e) {
@@ -55,6 +62,8 @@ public class KafkaReceiver {
         boolean res = false;
         if (TaskSink.FIRE.equals(taskMsgDTO.getTaskType())) {
             logger.info("receive empOut: " + JSON.toJSONString(taskMsgDTO));
+            LogMessage logMessage = LogMessage.create().setTitle("退工任务单").setContent(JSON.toJSONString(taskMsgDTO));
+            logApiUtil.info(logMessage);
             try {
                 res = iAmEmpTaskService.insertTaskFire(taskMsgDTO, 2);
             } catch (Exception e) {
@@ -72,6 +81,8 @@ public class KafkaReceiver {
         //用工办理
         if (TaskSink.HIRE.equals(taskMsgDTO.getTaskType())) {
             logger.info("receive empIn: " + JSON.toJSONString(taskMsgDTO));
+            LogMessage logMessage = LogMessage.create().setTitle("用工任务单").setContent(JSON.toJSONString(taskMsgDTO));
+            logApiUtil.info(logMessage);
             try {
                 res = insertAmEmpTaskTb(taskMsgDTO, 1);
             } catch (Exception e) {
@@ -84,6 +95,8 @@ public class KafkaReceiver {
 
         if (TaskSink.FIRE.equals(taskMsgDTO.getTaskType())) {
             logger.info("receive empOut: " + JSON.toJSONString(taskMsgDTO));
+            LogMessage logMessage = LogMessage.create().setTitle("退工任务单").setContent(JSON.toJSONString(taskMsgDTO));
+            logApiUtil.info(logMessage);
             try {
                 res = iAmEmpTaskService.insertTaskFire(taskMsgDTO, 2);
             } catch (Exception e) {
@@ -102,6 +115,8 @@ public class KafkaReceiver {
         //用工办理
         if (TaskSink.HIRE.equals(taskMsgDTO.getTaskType())) {
             logger.info("receive empIn: " + JSON.toJSONString(taskMsgDTO));
+            LogMessage logMessage = LogMessage.create().setTitle("用工任务单").setContent(JSON.toJSONString(taskMsgDTO));
+            logApiUtil.info(logMessage);
             try {
                 res = insertAmEmpTaskTb(taskMsgDTO, 1);
             } catch (Exception e) {
@@ -114,6 +129,8 @@ public class KafkaReceiver {
 
         if (TaskSink.FIRE.equals(taskMsgDTO.getTaskType())) {
             logger.info("receive empOut: " + JSON.toJSONString(taskMsgDTO));
+            LogMessage logMessage = LogMessage.create().setTitle("退工任务单").setContent(JSON.toJSONString(taskMsgDTO));
+            logApiUtil.info(logMessage);
             try {
                 res = iAmEmpTaskService.insertTaskFire(taskMsgDTO, 2);
             } catch (Exception e) {
@@ -133,6 +150,8 @@ public class KafkaReceiver {
         //用工办理
         if (TaskSink.HIRE.equals(taskMsgDTO.getTaskType())) {
             logger.info("receive empIn: " + JSON.toJSONString(taskMsgDTO));
+            LogMessage logMessage = LogMessage.create().setTitle("用工任务单").setContent(JSON.toJSONString(taskMsgDTO));
+            logApiUtil.info(logMessage);
             try {
                 res = insertAmEmpTaskTb(taskMsgDTO, 1);
             } catch (Exception e) {
@@ -145,6 +164,8 @@ public class KafkaReceiver {
 
         if (TaskSink.FIRE.equals(taskMsgDTO.getTaskType())) {
             logger.info("receive empOut: " + JSON.toJSONString(taskMsgDTO));
+            LogMessage logMessage = LogMessage.create().setTitle("退工任务单").setContent(JSON.toJSONString(taskMsgDTO));
+            logApiUtil.info(logMessage);
             try {
                 res = iAmEmpTaskService.insertTaskFire(taskMsgDTO, 2);
             } catch (Exception e) {

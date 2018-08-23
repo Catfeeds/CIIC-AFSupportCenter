@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao;
 
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsPaymentDetailBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.SsPaymentDetail;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
@@ -23,5 +24,5 @@ public interface SsPaymentDetailMapper extends BaseMapper<SsPaymentDetail> {
      * @param ssPaymentDetail 客户费用明细ID
      * @return  List<SsPaymentDetail>
      */
-    List<SsPaymentDetail> paymentDetailQuery(SsPaymentDetail ssPaymentDetail);
+    List<SsPaymentDetail> paymentDetailQuery(SsPaymentDetailBO ssPaymentDetail);
 }

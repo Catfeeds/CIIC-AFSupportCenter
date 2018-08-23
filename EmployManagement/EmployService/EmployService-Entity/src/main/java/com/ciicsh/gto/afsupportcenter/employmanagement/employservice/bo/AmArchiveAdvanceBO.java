@@ -1,7 +1,5 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo;
 
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveAdvance;
-
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -15,12 +13,12 @@ public class AmArchiveAdvanceBO{
     private Long archiveAdvanceId;
 
     /**
-     * 预留档案类型 A、Aa、B、Bb......Z、Zz
+     * 档案类型 档案预增固定显示为 Cc
      */
     private String reservedArchiveType;
 
     /**
-     * 预留档案编号
+     * 档案编号
      */
     private Integer reservedArchiveNo;
 
@@ -57,12 +55,17 @@ public class AmArchiveAdvanceBO{
     /**
      * 存档地
      */
-    private String archivalPlace;
+    private String archivePlace;
 
     /**
      * 备注
      */
     private String remark;
+
+    /**
+     * 退出寄出地日期
+     */
+    private LocalDate exitThePlaceDate;
 
     /**
      * 状态0：删除1：未匹配2：已匹配
@@ -95,6 +98,14 @@ public class AmArchiveAdvanceBO{
     private String modifiedBy;
 
     private boolean exist;
+
+    public LocalDate getExitThePlaceDate() {
+        return exitThePlaceDate;
+    }
+
+    public void setExitThePlaceDate(LocalDate exitThePlaceDate) {
+        this.exitThePlaceDate = exitThePlaceDate;
+    }
 
     public Long getArchiveAdvanceId() {
         return archiveAdvanceId;
@@ -168,12 +179,12 @@ public class AmArchiveAdvanceBO{
         this.archiveSource = archiveSource;
     }
 
-    public String getArchivalPlace() {
-        return archivalPlace;
+    public String getArchivePlace() {
+        return archivePlace;
     }
 
-    public void setArchivalPlace(String archivalPlace) {
-        this.archivalPlace = archivalPlace;
+    public void setArchivePlace(String archivePlace) {
+        this.archivePlace = archivePlace;
     }
 
     public Integer getStatus() {

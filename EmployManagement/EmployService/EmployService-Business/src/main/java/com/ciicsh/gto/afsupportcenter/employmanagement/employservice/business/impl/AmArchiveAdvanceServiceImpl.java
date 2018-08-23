@@ -1,6 +1,8 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.impl;
 
+import com.baomidou.mybatisplus.enums.SqlLike;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmArchiveAdvanceService;
@@ -15,6 +17,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,7 +52,14 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
 
         PageRows<AmArchiveAdvanceBO> result = new PageRows<>();
         AmArchiveAdvance pojo = pageInfo.toJavaObject(AmArchiveAdvance.class);
-        PageRows<AmArchiveAdvance> resultPo = PageKit.doSelectPage(pageInfo, () -> baseMapper.selectList(new EntityWrapper<>(pojo)));
+        Wrapper<AmArchiveAdvance> wrapper = new EntityWrapper<>();
+        wrapper.like("employee_idcard_no",pojo.getEmployeeIdcardNo(),SqlLike.DEFAULT);
+        wrapper.like("employee_name",pojo.getEmployeeName(),SqlLike.DEFAULT);
+        if(pojo.getStatus()!=null){
+            wrapper.eq("status",pojo.getStatus());
+        }
+        wrapper.eq("is_active",1);
+        PageRows<AmArchiveAdvance> resultPo = PageKit.doSelectPage(pageInfo, () -> baseMapper.selectList(wrapper));
         result.setTotal(resultPo.getTotal());
         List<AmArchiveAdvanceBO> boList = new ArrayList<>();
         for (AmArchiveAdvance po : resultPo.getRows()) {
@@ -66,28 +76,31 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
         AmArchiveAdvance po = new AmArchiveAdvance();
         BeanUtils.copyProperties(amArchiveAdvanceBO, po);
         po.setStatus(0);
-        po.setModifiedBy(UserContext.getUserName());
+        po.setModifiedBy(UserContext.getUser().getDisplayName());
         po.setModifiedTime(new Date());
         Integer result = baseMapper.updateById(po);
         return result > 0;
     }
 
     @Override
+    @Transactional(
+        rollbackFor = {Exception.class}
+    )
     public boolean saveAmArchiveAdvance(AmArchiveAdvanceBO amArchiveAdvanceBO) {
         AmArchiveAdvance po = new AmArchiveAdvance();
         BeanUtils.copyProperties(amArchiveAdvanceBO, po);
         po.setStatus(1);
         Date nowTime = new Date();
         if(amArchiveAdvanceBO.getArchiveAdvanceId() == null || amArchiveAdvanceBO.getArchiveAdvanceId() == 0){
-            po.setCreatedBy(UserContext.getUserName());
+            po.setCreatedBy(UserContext.getUser().getDisplayName());
             po.setCreatedTime(nowTime);
         }
-        po.setModifiedBy(UserContext.getUserName());
+        po.setModifiedBy(UserContext.getUser().getDisplayName());
         po.setModifiedTime(nowTime);
         //boolean result = this.insertOrUpdate(po);
         po.setIsActive(1);
         po.setCreatedTime(nowTime);
-        po.setCreatedBy(UserContext.getUserName());
+        po.setCreatedBy(UserContext.getUser().getDisplayName());
         boolean result = this.insertOrUpdateAllColumn(po);
         if (result) {
             // 修改预留档案编号 seq
@@ -153,6 +166,7 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
         // 是否有用工 任务单
         AmEmpTaskBO amEmpTaskBO = new AmEmpTaskBO();
         amEmpTaskBO.setParam(param);
+        amEmpTaskBO.setOrderParam(new ArrayList<String>());
         List<AmEmpTaskBO> amEmpTaskBOList = amEmpTaskMapper.queryAmEmpTask(amEmpTaskBO);
         if(amEmpTaskBOList == null || amEmpTaskBOList.size() == 0){
             return null;
@@ -161,10 +175,12 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
         // 是否有退工 任务单
         AmResignBO amResignBO = new AmResignBO();
         amResignBO.setParam(param);
+        amResignBO.setOrderParam(new ArrayList<String>());
         List<AmResignBO> amResignBOList = amResignMapper.queryAmResign(amResignBO);
         if(amResignBOList != null && amResignBOList.size() > 0){
             // 有退工任务单 退工日期是否为null
             if(amResignBOList.get(0).getOutDate() != null){
+                //amResignBOList.get(0).getJobCentreFeedbackDate();
                 return null;
             }
         }
@@ -172,6 +188,7 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
         // 是否有档案
         AmEmploymentBO amEmploymentBO = new AmEmploymentBO();
         amEmploymentBO.setParam(param);
+        amEmploymentBO.setOrderParam(new ArrayList<String>());
         List<AmEmploymentBO> boList = amEmploymentMapper.queryAmArchive(amEmploymentBO);
 
         if(boList != null && boList.size() > 0){
@@ -185,7 +202,7 @@ public class AmArchiveAdvanceServiceImpl extends ServiceImpl<AmArchiveAdvanceMap
         AmArchiveAdvance po = new AmArchiveAdvance();
         BeanUtils.copyProperties(amArchiveAdvanceBO, po);
         po.setStatus(2);
-        po.setModifiedBy(UserContext.getUserName());
+        po.setModifiedBy(UserContext.getUser().getDisplayName());
         po.setModifiedTime(new Date());
         Integer result = baseMapper.updateById(po);
         return result > 0;

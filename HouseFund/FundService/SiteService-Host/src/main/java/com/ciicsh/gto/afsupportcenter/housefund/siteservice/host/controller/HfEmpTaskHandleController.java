@@ -23,9 +23,7 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import com.ciicsh.gto.util.ExpireTime;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -216,8 +214,9 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
 //                            } else {
                             // 如果任务单类型是新开且账户分类是独立户则客户汇缴月=企业末次汇缴月 + 1
                             if ((hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_ADD
-                                 || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_ADD)
-                                && hfEmpTaskHandleBo.getHfAccountType() == HfComAccountConstant.HF_ACCOUNT_TYPE_INDEPENDENT) {
+                                || hfEmpTaskHandleBo.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_ADD)
+                                && hfEmpTaskHandleBo.getHfAccountType() == HfComAccountConstant.HF_ACCOUNT_TYPE_INDEPENDENT
+                                && hfEmpTaskHandleBo.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) {
                                 hfEmpTaskPeriod.setHfMonth(hfMonthDate.plusMonths(1).format(formatter));
                             } else {
                                 // 否则客户汇缴月=企业末次汇缴月
@@ -284,29 +283,29 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
             }
             hfEmpTaskHandleBo.setEmpTaskPeriods(hfEmpTaskPeriods);
 
-            // 查询当前雇员除该任务单之外的所有任务单信息
-            EntityWrapper<HfEmpTask> wrapper = new EntityWrapper<>();
-            wrapper.where("company_id={0} AND employee_id={1} AND emp_task_id != {2} AND task_category != 8 AND is_active = 1",
-                hfEmpTaskHandleBo.getCompanyId(), hfEmpTaskHandleBo.getEmployeeId(), hfEmpTaskHandleBo.getEmpTaskId());
-            wrapper.orderBy("created_time", false);
-            List<HfEmpTask> hfEmpTasks = business.selectList(wrapper);
-            if (CollectionUtils.isNotEmpty(hfEmpTasks)) {
-                List<HfEmpTaskRemarkBo> hfEmpTaskRemarkBos = new ArrayList<>();
-                hfEmpTasks.stream().forEach((e) -> {
-                    HfEmpTaskRemarkBo bo = new HfEmpTaskRemarkBo();
-                    bo.setEmpTaskId(e.getEmpTaskId());
-                    bo.setHfType(e.getHfType());
-                    bo.setTaskCategory(e.getTaskCategory());
-                    bo.setTaskStatus(e.getTaskStatus());
-                    bo.setModifiedBy(e.getModifiedBy());
-                    bo.setModifiedDisplayName(e.getModifiedDisplayName());
-                    bo.setModifiedTime(e.getModifiedTime());
-                    bo.setHandleRemark(e.getHandleRemark());
-                    bo.setRejectionRemark(e.getRejectionRemark());
-                    hfEmpTaskRemarkBos.add(bo);
-                });
-                hfEmpTaskHandleBo.setEmpTaskRemarks(hfEmpTaskRemarkBos);
-            }
+//            // 查询当前雇员除该任务单之外的所有任务单信息
+//            EntityWrapper<HfEmpTask> wrapper = new EntityWrapper<>();
+//            wrapper.where("company_id={0} AND employee_id={1} AND emp_task_id != {2} AND task_status = 1 AND task_category != 8 AND is_active = 1",
+//                hfEmpTaskHandleBo.getCompanyId(), hfEmpTaskHandleBo.getEmployeeId(), hfEmpTaskHandleBo.getEmpTaskId());
+//            wrapper.orderBy("created_time", false);
+//            List<HfEmpTask> hfEmpTasks = business.selectList(wrapper);
+//            if (CollectionUtils.isNotEmpty(hfEmpTasks)) {
+//                List<HfEmpTaskRemarkBo> hfEmpTaskRemarkBos = new ArrayList<>();
+//                hfEmpTasks.stream().forEach((e) -> {
+//                    HfEmpTaskRemarkBo bo = new HfEmpTaskRemarkBo();
+//                    bo.setEmpTaskId(e.getEmpTaskId());
+//                    bo.setHfType(e.getHfType());
+//                    bo.setTaskCategory(e.getTaskCategory());
+//                    bo.setTaskStatus(e.getTaskStatus());
+//                    bo.setModifiedBy(e.getModifiedBy());
+//                    bo.setModifiedDisplayName(e.getModifiedDisplayName());
+//                    bo.setModifiedTime(e.getModifiedTime());
+//                    bo.setHandleRemark(e.getHandleRemark());
+//                    bo.setRejectionRemark(e.getRejectionRemark());
+//                    hfEmpTaskRemarkBos.add(bo);
+//                });
+//                hfEmpTaskHandleBo.setEmpTaskRemarks(hfEmpTaskRemarkBos);
+//            }
 
             return JsonResultKit.of(hfEmpTaskHandleBo);
         } else {
@@ -524,5 +523,19 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         }
 
         return JsonResultKit.ofError("该雇员的转移任务单数据不存在");
+    }
+
+    @PostMapping("/queryHistoryEmpTaskList")
+    public JsonResult<List<HfEmpTaskExportBo>> queryHistoryEmpTaskList(@RequestParam("empTaskId") String empTaskId) {
+        Long taskId = Long.parseLong(empTaskId);
+        List<HfEmpTaskExportBo> hfEmpTaskList = business.queryHistoryEmpTask(false, taskId);
+        return JsonResultKit.of(hfEmpTaskList);
+    }
+
+    @PostMapping("/getOriginEmpTask")
+    public JsonResult<HfEmpTaskExportBo> getOriginEmpTask(@RequestParam("empTaskId") String empTaskId) {
+        Long taskId = Long.parseLong(empTaskId);
+        HfEmpTaskExportBo hfEmpTaskExportBo = business.getOriginEmpTaskById(taskId);
+        return JsonResultKit.of(hfEmpTaskExportBo);
     }
 }

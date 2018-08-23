@@ -13,8 +13,9 @@
         <result column="employee_idcard_no" property="employeeIdcardNo" />
         <result column="entering_date" property="enteringDate" />
         <result column="archive_source" property="archiveSource" />
-        <result column="archival_place" property="archivalPlace" />
+        <result column="archive_place" property="archivePlace" />
         <result column="remark" property="remark" />
+        <result column="exit_the_place_date" property="exitThePlaceDate" />
         <result column="status" property="status" />
         <result column="is_active" property="isActive" />
         <result column="created_time" property="createdTime" />

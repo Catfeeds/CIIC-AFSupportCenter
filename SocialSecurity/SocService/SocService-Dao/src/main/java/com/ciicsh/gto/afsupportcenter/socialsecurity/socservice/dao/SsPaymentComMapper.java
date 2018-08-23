@@ -68,4 +68,5 @@ public interface SsPaymentComMapper extends BaseMapper<SsPaymentCom> {
 
     BigDecimal getExtraAmountByComAccountId(@Param("paymentMonth") String paymentMonth, @Param("comAccountId")Long comAccountId);
 
+    Integer ssCanDeal(@Param("paymentMonth")String paymentMonth,@Param("ssAccountType")Integer ssAccountType);
 }

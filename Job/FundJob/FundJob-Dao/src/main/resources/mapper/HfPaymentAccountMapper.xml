@@ -22,13 +22,16 @@
     <!--根据接口返回的数据批量更新客户的支付状态-->
     <update id="updateHfPaymentAcc" parameterType="java.util.HashMap">
         UPDATE hf_payment_account SET
-        payment_status=#{paymentStatus},modified_by=#{modifiedBy},modified_time=sysdate()
+        <if test="paymentStatus != null and paymentStatus != ''">
+            payment_status=#{paymentStatus},
+        </if>
+        modified_by=#{modifiedBy},
+        modified_time=sysdate()
+        <if test="financeRetMsg != null">
+            ,finance_ret_msg=#{financeRetMsg}
+        </if>
         where payment_account_id=#{paymentAccountId} AND payment_month=#{paymentMonth}
     </update>
-
-    <select id="getComAccountClass" resultMap="BaseResultMap">
-
-    </select>
 
     <select id="insertPaymentAccountJob">
         INSERT INTO hf_payment_account (
@@ -36,13 +39,15 @@
             com_account_class_id,
             hf_type,
             payment_month,
-            payment_status
+            payment_status,
+            created_by
         ) SELECT
             ca.com_account_id,
             cac.com_account_class_id,
             cac.hf_type,
             cac.com_hf_month,
-        IF (ca.payment_way = 1, 2, 1)
+        IF (ca.payment_way = 1, 2, 1),
+            'system'
         FROM
             hf_com_account_class cac
         INNER JOIN hf_com_account ca ON ca.com_account_id = cac.com_account_id

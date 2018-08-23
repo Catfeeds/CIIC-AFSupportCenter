@@ -31,6 +31,7 @@
         <result column="yuliu_doc_num" property="yuliuDocNum"/>
         <result column="doc_type" property="docType"/>
         <result column="doc_num" property="docNum"/>
+        <result column="gender" property="gender"/>
         <result column="resign_handle_date" property="resignHandleDate"/>
         <result column="return_doc_date" property="returnDocDate"/>
         <result column="resign_feedback1" property="resignFeedback1"/>
@@ -51,6 +52,8 @@
         <result column="job_centre_feedback_date" property="jobCentreFeedbackDate"/>
         <result column="out_reason" property="outReason"/>
         <result column="out_date" property="outDate"/>
+        <result column="end_type" property="endType"/>
+
 
     </resultMap>
 
@@ -92,7 +95,8 @@
         w.out_date,
         w.emp_task_id as empTaskResignId,
         a.emp_task_id,
-        a.change,
+        a.change_company,
+        a.job,
         b.employment_id,
         b.employee_id,
         b.company_id,
@@ -112,6 +116,7 @@
         d.id_num,/*证件号 */
         d.id_card_type,
         d.employee_name,
+        d.gender,
         b.employ_date,
         /**退工日期*/
         f.resign_date,
@@ -123,9 +128,12 @@
         /**退工送办日期*/
         f.resign_handle_date,
         f.job_centre_feedback_date,
+        f.end_type,
         h.title,
         h.service_center,/*服务中心 */
         h.leader_ship_name, /*客服经理*/
+        cs.employ_special,
+        cs.refuse_special,
         cs.archive_special
         FROM
         am_employment b
@@ -147,9 +155,13 @@
             and a.task_category = ${taskCategory}
         </if>
         <foreach collection="param" item="plid" open="" close="" separator="">
-            and ${plid}
+            and  ${plid}
         </foreach>
-        order by b.created_time desc
+        order by
+        <foreach collection="orderParam" item="plid" open="" close="" separator="">
+            ${plid},
+        </foreach>
+        a.created_time desc
     </select>
     <select id="queryAmArchiveResign" resultMap="BaseResultMapDTO">
         SELECT
@@ -158,6 +170,8 @@
         w.out_date,
         w.emp_task_id as empTaskResignId,
         a.emp_task_id,
+        a.change_company,
+        a.job,
         b.employment_id,
         b.employee_id,
         b.company_id,
@@ -191,6 +205,8 @@
         h.title,
         h.service_center,/*服务中心 */
         h.leader_ship_name, /*客服经理*/
+        cs.employ_special,
+        cs.refuse_special,
         cs.archive_special
         FROM
         am_employment b
@@ -274,7 +290,7 @@
         w.out_date,
         w.emp_task_id as empTaskResignId,
         a.emp_task_id,
-        a.change,
+        a.change_company,
         b.employment_id,
         b.employee_id,
         b.company_id,
@@ -329,9 +345,22 @@
     </select>
 
     <select id="queryAmEmploymentBatch" resultMap="BaseResultMapDTO">
-        SELECT  employment_id,emp_task_id,company_id,employee_id  FROM  am_employment
+        SELECT
+        a.employment_id,
+        a.emp_task_id,
+        a.company_id,
+        a.employee_id,
+        c.archive_place,
+        c.archive_source as doc_from,
+        c.reserved_archive_type as doc_type,
+        c.reserved_archive_no as doc_num,
+        c.archive_advance_id
+        FROM
+        am_employment a
+        LEFT JOIN am_emp_employee b ON a.emp_task_id = b.emp_task_id
+        LEFT JOIN am_archive_advance c on c.employee_idcard_no = b.id_num and c.employee_name= b.employee_name and  c.status = 1
         <where>
-            <foreach collection="empTaskIds" item="item" open="emp_task_id IN (" separator="," close=")">
+            <foreach collection="empTaskIds" item="item" open="a.emp_task_id IN (" separator="," close=")">
                 #{item}
             </foreach>
         </where>

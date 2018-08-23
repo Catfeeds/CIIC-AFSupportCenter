@@ -57,6 +57,10 @@
         AND ca.ss_account=#{ssAccount}
         AND eba.comemp_diff_amount <![CDATA[<]]> 0
         AND eba.is_active=1
+        <if test="companyId!=null and companyId!=''">
+            AND ea.company_id=#{companyId}
+        </if>
+
     </select>
 
 </mapper>

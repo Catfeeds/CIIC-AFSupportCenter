@@ -4,6 +4,8 @@ import com.ciicsh.gto.RedisManager;
 
 import com.ciicsh.gto.afsupportcenter.fundjob.service.HfPaymentService;
 import com.ciicsh.gto.afsupportcenter.util.kafkaMessage.SocReportMessage;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +21,19 @@ import java.util.Date;
 @Component
 public class MessageReceiver {
 
-    private final static Logger logger = LoggerFactory.getLogger(MessageReceiver.class);
+
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-
+    @Autowired
+    private LogApiUtil logApiUtil;
     @Autowired
     private HfPaymentService paymentService;
 
     @StreamListener(TaskSink.HF_REPORT_INPUT)
     public void receive(SocReportMessage message) {
-        logger.info("开始，当前时间：" + dateFormat.format(new Date()));
-        logger.info("received from comAccountId : " + message.getComAccountId() + ", received from ssMonth: " + message.getSsMonth());
+        logApiUtil.info(LogMessage.create().setTitle("MessageReceiver开始").setContent(
+            "received from comAccountId : " + message.getComAccountId() + ", received from ssMonth: " + message.getSsMonth()
+        ));
         String key = "-com-account-" + message.getComAccountId() + "-" + message.getSsMonth() + "-" + message.getGeneralMethod() + "-";
         try {
             switch (message.getGeneralMethod()) {
@@ -44,6 +48,7 @@ public class MessageReceiver {
                 RedisManager.del(key);
             }
         }
-        logger.info("结束，当前时间：" + dateFormat.format(new Date()));
+        logApiUtil.info(LogMessage.create().setTitle("MessageReceiver结束"));
+
     }
 }

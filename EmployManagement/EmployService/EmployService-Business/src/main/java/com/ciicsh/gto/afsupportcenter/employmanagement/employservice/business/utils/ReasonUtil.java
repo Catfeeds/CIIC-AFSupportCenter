@@ -83,6 +83,10 @@ public class ReasonUtil {
     }
 
     public  static  String  getReasonOut(String code){
+        if(StringUtil.isEmpty(code)||!param.containsKey(code))
+        {
+            return  "";
+        }
         return param.get(code);
 
     }
@@ -135,15 +139,6 @@ public class ReasonUtil {
 
         return "";
 
-    }
-
-    public static String removeMark(String str){
-        if (StringUtil.isEmpty(str))
-        {
-           return "";
-        }
-        int last = str.lastIndexOf(",");
-        return  str.substring(0,last);
     }
 
     public  static  String  getCondemnationYears(Date start,Date end)

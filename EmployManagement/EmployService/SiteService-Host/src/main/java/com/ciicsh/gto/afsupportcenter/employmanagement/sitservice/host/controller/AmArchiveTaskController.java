@@ -1,16 +1,17 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmResTaskCountBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.archiveSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmArchiveDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmArchiveReturnPrintDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveUse;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpMaterial;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmInjury;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.archiveSearchExportOpt;
+import com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host.util.WordUtils;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
@@ -19,15 +20,16 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.afsupportcenter.util.web.controller.BasicController;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
+import com.ciicsh.gto.employeecenter.apiservice.api.proxy.EmployeeInfoProxy;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -72,6 +74,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     @Autowired
     private  IAmEmpCustomService amEmpCustomService;
 
+    @Autowired
+    private EmployeeInfoProxy employeeInfoProxy;
+
     @RequestMapping("/queryAmArchive")
     public JsonResult<PageRows> queryAmArchive(PageInfo pageInfo){
         PageRows<AmEmploymentBO> result = business.queryAmArchive(pageInfo);
@@ -97,10 +102,14 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
                 }
             }
 
-            if(!StringUtil.isEmpty(amEmploymentBO.getArchiveSpecial()))
+            StringBuffer buf = new StringBuffer();
+            buf.append(amEmploymentBO.getEmploySpecial()==null?"":amEmploymentBO.getEmploySpecial());
+            buf.append(amEmploymentBO.getRefuseSpecial()==null?"":amEmploymentBO.getRefuseSpecial());
+            buf.append(amEmploymentBO.getArchiveSpecial()==null?"":amEmploymentBO.getArchiveSpecial());
+            if(!StringUtil.isEmpty(buf.toString()))
             {
-                int last = amEmploymentBO.getArchiveSpecial().lastIndexOf(",");
-                amEmploymentBO.setArchiveSpecial(amEmploymentBO.getArchiveSpecial().substring(0,last));
+                int last = buf.lastIndexOf(",");
+                amEmploymentBO.setArchiveSpecial(buf.substring(0,last));
             }
         }
 
@@ -316,15 +325,17 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             resultMap.put("amArchaiveBo",amArchiveBO);
             BeanUtils.copyProperties(amArchiveBO,amArchiveDTO);
 
+        }
+        try {
             AmInjuryBO amInjuryBO = new AmInjuryBO();
-            amInjuryBO.setArchiveId(amArchiveBO.getArchiveId().toString());
-
+            amInjuryBO.setEmpTaskId(amTaskParamBO.getEmpTaskId());
             List<AmInjuryBO>  amInjuryBOList = amInjuryService.queryAmInjury(amInjuryBO);
-
             if(null!=amInjuryBOList&&amInjuryBOList.size()>0)
             {
                 resultMap.put("amInjuryBOList",amInjuryBOList);
             }
+        } catch (Exception e) {
+
         }
 
         resultMap.put("amEmploymentBO",amEmploymentBO);
@@ -343,6 +354,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         //退工归还材料签收
         if(null!=amEmpMaterialBOList&&amEmpMaterialBOList.size()>0){
             resultMap.put("materialList",amEmpMaterialBOList);
+            // 材料流转记录
+            List<AmEmpMaterialOperationLogBO> materialLogList = amEmpMaterialService.queryAmEmpMaterialLogList(amEmpMaterialBO);
+            resultMap.put("materialLogList",materialLogList);
         }
         //退工材料字典
         resultMap.put("resultMaterial",resultMaterial);
@@ -354,40 +368,9 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         return  JsonResultKit.of(resultMap);
     }
 
-    @PostMapping("/saveAmInjury")
-    public JsonResult  saveAmInjury(@RequestBody List<AmInjury> list) {
-        List<AmInjury>  data = new ArrayList<AmInjury>();
-        for(AmInjury bo:list)
-        {
-            LocalDateTime now = LocalDateTime.now();
-            bo.setCreatedTime(now);
-            bo.setModifiedTime(now);
-            bo.setCreatedBy(ReasonUtil.getUserId());
-            bo.setModifiedBy(ReasonUtil.getUserId());
-            if(bo.getInjuryId()==null){
-                data.add(bo);
-            }
-        }
-
-        boolean result = false;
-        try {
-            result = amInjuryService.insertBatch(data);
-        } catch (Exception e) {
-
-        }
-
-        AmInjuryBO amInjuryBO = new AmInjuryBO();
-        amInjuryBO.setArchiveId(list.get(0).getArchiveId());
-
-        List<AmInjuryBO>  amInjuryBOList = amInjuryService.queryAmInjury(amInjuryBO);
-
-        Map<String,Object> map = new HashMap<>();
-        map.put("result",result);
-        map.put("data",amInjuryBOList);
-
-        return JsonResultKit.of(map);
-    }
-
+    @Transactional(
+        rollbackFor = {Exception.class}
+    )
     @PostMapping("/saveAmEmpMaterial")
     public JsonResult  saveAmEmpMaterial(@RequestBody List<AmEmpMaterial> list) {
         String userId = "System";
@@ -404,29 +387,29 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             AmEmpMaterial amEmpMaterial = list.get(0);
             AmEmpMaterialBO amEmpMaterialBO = new AmEmpMaterialBO();
             BeanUtils.copyProperties(amEmpMaterial,amEmpMaterialBO);
-            List<AmEmpMaterialBO> list1 = amEmpMaterialService.queryAmEmpMaterialList(amEmpMaterialBO);
-            for(AmEmpMaterialBO amEmpMaterialBO1:list1){
-                if(!StringUtil.isEmpty(amEmpMaterialBO1.getReceiveName()))
-                {
-                    resultMap.put("data",2);
-                    resultMap.put("result",list1);
-                    return JsonResultKit.of(resultMap);
-                }
-            }
+//            List<AmEmpMaterialBO> list1 = amEmpMaterialService.queryAmEmpMaterialList(amEmpMaterialBO);
+//            for(AmEmpMaterialBO amEmpMaterialBO1:list1){
+//                if(!StringUtil.isEmpty(amEmpMaterialBO1.getReceiveName()))
+//                {
+//                    resultMap.put("data",2);
+//                    resultMap.put("result",list1);
+//                    return JsonResultKit.of(resultMap);
+//                }
+//            }
         }
         List<AmEmpMaterial>  data = new ArrayList<AmEmpMaterial>();
         for(AmEmpMaterial bo:list)
         {
-            if(bo.getReceiveName() != null){
-                return JsonResultKit.of(2);
-            }
+//            if(bo.getReceiveName() != null){
+//                return JsonResultKit.of(2);
+//            }
             bo.setOperateType(2);
             LocalDateTime now = LocalDateTime.now();
             bo.setCreatedTime(now);
             bo.setModifiedTime(now);
             bo.setCreatedBy(userId);
             bo.setModifiedBy(userId);
-            bo.setSubmitterDate(LocalDate.now());
+            bo.setSubmitterDate(now);
             if(bo.getEmpMaterialId()==null){
                 data.add(bo);
             }
@@ -435,6 +418,16 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         boolean result = false;
         try {
             result = amEmpMaterialService.insertOrUpdateBatch(data);
+            // 退工归还材料签收 提交材料操作流水日志
+            if(result){
+                AmEmpMaterialOperationLogBO bo = new AmEmpMaterialOperationLogBO();
+                bo.setEmpTaskId(data.get(0).getEmpTaskId());
+                bo.setOperationTime(LocalDateTime.now());
+                bo.setOperationType(3);
+                bo.setOperationBy(UserContext.getUserId());
+                bo.setOperationName(UserContext.getUser().getDisplayName());
+                amEmpMaterialService.insertAmEmpMaterialOperationLog(bo);
+            }
         } catch (Exception e) {
 
         }
@@ -443,8 +436,11 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         BeanUtils.copyProperties(amEmpMaterial,amEmpMaterialBO);
         List<AmEmpMaterialBO> list1 = amEmpMaterialService.queryAmEmpMaterialList(amEmpMaterialBO);
 
+        List<AmEmpMaterialOperationLogBO> materialLogList = amEmpMaterialService.queryAmEmpMaterialLogList(amEmpMaterialBO);
+
         resultMap.put("data",result?1:0);
         resultMap.put("result",list1);
+        resultMap.put("logList",materialLogList);
         return  JsonResultKit.of(resultMap);
     }
 
@@ -576,6 +572,63 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         }
 
         ExcelUtil.exportExcel(opts,archiveSearchExportOpt.class,fileNme,response);
+    }
+
+    @RequestMapping("/saveAmInjury")
+    public JsonResult  saveAmInjury(AmInjury amInjury){
+        LocalDateTime now = LocalDateTime.now();
+        if(amInjury.getInjuryId()==null){
+            amInjury.setCreatedTime(now);
+            amInjury.setModifiedTime(now);
+            amInjury.setCreatedBy(ReasonUtil.getUserId());
+            amInjury.setModifiedBy(ReasonUtil.getUserId());
+        }else{
+            amInjury.setModifiedTime(now);
+            amInjury.setModifiedBy(ReasonUtil.getUserId());
+        }
+        boolean result = false;
+        try {
+            result = amInjuryService.insertOrUpdate(amInjury);
+        } catch (Exception e) {
+
+        }
+        AmInjuryBO amInjuryBO = new AmInjuryBO();
+        amInjuryBO.setEmpTaskId(amInjury.getEmpTaskId());
+        List<AmInjuryBO> list = amInjuryService.queryAmInjury(amInjuryBO);
+        Map<String,Object> resultMap = new HashMap<>();
+        resultMap.put("result",result);
+        resultMap.put("data",list);
+
+        return JsonResultKit.of(resultMap);
+
+    }
+
+    @RequestMapping("/queryAmInjury")
+    public JsonResult  queryAmInjury(AmInjury amInjury){
+        AmInjury amInjury1 = amInjuryService.selectById(amInjury);
+        return JsonResultKit.of( amInjury1);
+
+    }
+
+    /**
+     * 批量打印退工单
+     * @param response
+     */
+    @RequestMapping("/archiveSearchExportReturnList")
+    public void archiveSearchExportReturnList(HttpServletResponse response, PageInfo pageInfo) {
+
+        List<AmArchiveReturnPrintDTO> list = business.queryAmArchiveForeignerPritDate(pageInfo);
+
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("list",list);
+        try {
+            WordUtils.exportMillCertificateWord(response,map,"外来退工备案登记表","AM_RETURN_TEMP.ftl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 }

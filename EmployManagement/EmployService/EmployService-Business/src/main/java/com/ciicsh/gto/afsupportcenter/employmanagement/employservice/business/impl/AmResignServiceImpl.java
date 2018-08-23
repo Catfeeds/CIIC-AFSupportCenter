@@ -1,9 +1,11 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmploymentBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmResignBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.AmResignLinkService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmpTaskService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmploymentService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmResignService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
@@ -15,6 +17,8 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmRe
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.resignSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -46,22 +50,31 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
     @Autowired
     private CommonApiUtils employeeInfoProxy;
 
+    @Autowired
+    private IAmEmploymentService amEmploymentService;
+
+    @Autowired
+    private LogApiUtil logApiUtil;
+
     public PageRows<AmResignBO> queryAmResign(PageInfo pageInfo){
 
         AmResignBO  amResignBO = pageInfo.toJavaObject(AmResignBO.class);
 
         List<String> param = new ArrayList<String>();
-
+        List<String> orderParam = new ArrayList<String>();
         if(!StringUtil.isEmpty(amResignBO.getParams()))
         {
             String arr[] = amResignBO.getParams().split(",");
             for(int i=0;i<arr.length;i++) {
-                param.add(arr[i]);
+                if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
+                    orderParam.add(arr[i]);
+                }else {
+                    param.add(arr[i]);
+                }
             }
         }
-
         amResignBO.setParam(param);
-
+        amResignBO.setOrderParam(orderParam);
         if(null!=amResignBO.getTaskStatus()&&amResignBO.getTaskStatus()==0){
             amResignBO.setTaskStatus(null);
         }
@@ -192,12 +205,141 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
 
             }
             variables.put("assignee",userName);
-            variables.put("fire_material",true);
+            if(null!=amEmpTask&&!"是".equals(amEmpTask.getChangeCompany()))
+            {
+                variables.put("fire_material",true);
+            }
             variables.put("empTaskId",bo.getEmpTaskId());
-            TaskCommonUtils.completeTask(amEmpTask.getTaskId(),employeeInfoProxy,variables);
+            try {
+                TaskCommonUtils.completeTask(amEmpTask.getTaskId(),employeeInfoProxy,variables);
+            } catch (Exception e) {
+                LogMessage logMessage = LogMessage.create().setTitle("退工办理").setContent(e.getMessage());
+                logApiUtil.info(logMessage);
+            }
         }
 
         return  entity;
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public Map<String, Object> batchSaveResign(AmResignBO bo) {
+        Map<String, Object> result = new HashMap<>();
+        String userId = "sys";
+        try {
+            userId = UserContext.getUserId();
+        } catch (Exception e) {
+
+        }
+        List<AmResignBO> list = baseMapper.queryResignIds(bo);
+
+        Map<String, Object> param = new HashMap<>();
+        LocalDateTime now = LocalDateTime.now();
+        List<AmResign> amResignList = new ArrayList<>();
+        Integer isFinish =0;
+        List<AmEmpTask> amEmpTaskList = new ArrayList<>();
+        for(AmResignBO temp:list)
+        {
+            AmResign entity = new AmResign();
+            BeanUtils.copyProperties(bo,entity);
+            if(temp.getResignId()==null){
+                entity.setCreatedTime(now);
+                entity.setModifiedTime(now);
+                entity.setCreatedBy(userId);
+                entity.setModifiedBy(userId);
+                entity.setActive(true);
+            }else{
+                entity.setResignId(temp.getResignId());
+            }
+            entity.setResignOperateMan(ReasonUtil.getUserName());
+            param.put("employeeId",temp.getEmployeeId());
+            param.put("companyId",temp.getCompanyId());
+            List<AmEmploymentBO> resultEmployList = amEmploymentService.queryAmEmploymentResign(param);
+            if(resultEmployList==null||resultEmployList.size()==0)
+            {
+                result.put("message","用工没有办理");
+                return  result;
+            }
+            //更新状态
+
+            AmEmpTask amEmpTask = null;
+            if(!StringUtil.isEmpty(bo.getResignFeedback()))
+            {
+                amEmpTask = taskService.selectById(temp.getEmpTaskId());
+                if("1".equals(bo.getResignFeedback())&&bo.getJobCentreFeedbackDate()==null)
+                {
+                    /**
+                     * 退工任务单签收 但退工成功日期为空
+                     */
+                    amEmpTask.setTaskStatus(98);
+                }else if("1".equals(bo.getResignFeedback())&&bo.getJobCentreFeedbackDate()!=null){
+                    /**
+                     * 更加v6文档有退工成功返回日期 并且 退工任务单签收 代表退工成功
+                     */
+                    amEmpTask.setTaskStatus(1);
+                    isFinish = 1;
+                }else {
+                    amEmpTask.setTaskStatus(Integer.parseInt(bo.getResignFeedback()));
+                }
+                if(isFinish==0)
+                {
+                    isFinish = this.isResginFinish(bo,amEmpTask);
+                }
+                if(isFinish==1){
+                    amEmpTask.setFinish(true);
+                }
+                taskService.insertOrUpdate(amEmpTask);
+                amEmpTaskList.add(amEmpTask);
+                entity.setIsFinish(isFinish);
+                entity.setEmpTaskId(amEmpTask.getEmpTaskId());
+            }
+            //
+            entity.setEmploymentId(resultEmployList.get(0).getEmploymentId());
+            entity.setEmployeeId(temp.getEmployeeId());
+            entity.setCompanyId(temp.getCompanyId());
+            amResignList.add(entity);
+            bo.setIsFinish(isFinish);
+        }
+
+        Boolean isInsert = super.insertOrUpdateBatch(amResignList);
+        Boolean returnResult = (isFinish==1&&isInsert);
+
+        result.put("result",returnResult);
+        result.put("taskList",amEmpTaskList);
+        return  result;
+    }
+
+    @Override
+    public List<AmResignBO> queryResignIds(AmResignBO amResignBO) {
+        return baseMapper.queryResignIds(amResignBO);
+    }
+
+    @Override
+    public Map<String, Object> batchCheck(AmResignBO amResignBO) {
+        Map<String,Object> resultMap = new HashMap<>();
+        List<AmResignBO>  list =  baseMapper.queryResignIds(amResignBO);
+        Integer empCount=0;
+        Integer resignCount=0;
+        for(AmResignBO temp:list)
+        {
+            if(temp.getIsFinish()==1){
+                empCount++;
+            }
+
+            if(null!=temp.getResignId()){
+                resignCount++;
+            }
+        }
+        if(empCount>0){
+            resultMap.put("empTask",empCount);
+            return  resultMap;
+        }
+        if(resignCount>0){
+            resultMap.put("resignCount",resignCount);
+            return  resultMap;
+        }
+
+        return resultMap;
     }
 
     /**

@@ -27,11 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.UUID;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -178,6 +175,15 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
             int diffCount = 0;
 
             for (HfStatementCompareImpPO impPO : compareImpPOList) {
+                if(Optional.ofNullable(impPO.getEmpAccount()).isPresent()==false){
+                    throw new Exception("导入的个人账号不能为空");
+                }
+                if(Optional.ofNullable(impPO.getEmpName()).isPresent()==false){
+                    throw new Exception("导入的姓名不能为空");
+                }
+                if(Optional.ofNullable(impPO.getEmpCardNum()).isPresent()==false){
+                    throw new Exception("导入的身份证号码不能为空");
+                }
                 HfStatementCompareResultPO resultPO = new HfStatementCompareResultPO();
                 resultPO.setStatementCompareId(statementId);
                 resultPO.setImpAmount(impPO.getMonthlyAmount());
@@ -196,7 +202,7 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
                     resultPO.setSysAmount(BigDecimal.ZERO);
                 }
 
-                BigDecimal diffAmount = resultPO.getSysAmount().subtract(resultPO.getImpAmount());
+                BigDecimal diffAmount = resultPO.getSysAmount().subtract(Optional.ofNullable(resultPO.getImpAmount()).orElse(new BigDecimal(0)));
                 resultPO.setDiffAmount(diffAmount);
                 if(diffAmount.compareTo(BigDecimal.ZERO) != 0) {
                     diffCount ++;
@@ -210,10 +216,9 @@ public class HFStatementCompareServiceImpl implements HFStatementCompareService
             statementPO.setModifiedBy(UserContext.getUserId());
             statementPO.setModifiedTime(LocalDateTime.now());
             baseMapper.updateById(statementPO);
-
         }
         catch (Exception e){
-            throw new Exception("对账异常");
+            throw new Exception(e.getMessage());
         }
 
     }

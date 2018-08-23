@@ -28,9 +28,9 @@ public class SsPaymentDetailController  extends BasicController<SsPaymentDetailS
     @PostMapping("/paymentDetailQuery")
     public JsonResult<List<SsPaymentDetailBO>> statementResultQuery(SsPaymentDetailBO ssPaymentDetailDTO) {
 
-        SsPaymentDetail ssPaymentDetail = CommonTransform.convertToEntity(ssPaymentDetailDTO,SsPaymentDetail.class);
+       // SsPaymentDetail ssPaymentDetail = CommonTransform.convertToEntity(ssPaymentDetailDTO,SsPaymentDetail.class);
 
-        List<SsPaymentDetail> resultList =business.paymentDetailQuery(ssPaymentDetail);
+        List<SsPaymentDetail> resultList =business.paymentDetailQuery(ssPaymentDetailDTO);
         //转换格式
         List<SsPaymentDetailBO> resultDTOList  = CommonTransform.convertToDTOs(resultList,SsPaymentDetailBO.class);
 

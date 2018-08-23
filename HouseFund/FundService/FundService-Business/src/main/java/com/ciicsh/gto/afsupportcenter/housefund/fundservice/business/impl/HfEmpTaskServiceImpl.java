@@ -7,15 +7,20 @@ import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialD
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskCreateTransBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
+import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.enumeration.ProcessCategory;
+import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
@@ -50,6 +55,8 @@ import java.util.stream.Collectors;
 public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask> implements HfEmpTaskService {
     @Autowired
     private LogApiUtil logApiUtil;
+    @Autowired
+    private HfComAccountService hfComAccountService;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
@@ -92,6 +99,9 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                             String str[] = arr[i].split(" ");
                             String regexp = "\'";
                             String status = str[2].replaceAll(regexp, "");
+                            if ("null".equals(status)) {
+                                status = "0";
+                            }
                             hfEmpTaskBo.setHfAccountType(Integer.parseInt(status));
                         }
                         if(arr[i].indexOf("payment_bank")!=-1)
@@ -99,6 +109,9 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                             String str[] = arr[i].split(" ");
                             String regexp = "\'";
                             String status = str[2].replaceAll(regexp, "");
+                            if ("null".equals(status)) {
+                                status = "0";
+                            }
                             hfEmpTaskBo.setPaymentBank(Integer.parseInt(status));
                         }
                         if(arr[i].indexOf("hf_com_account")!=-1)
@@ -106,6 +119,9 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                             String str[] = arr[i].split(" ");
                             String regexp = "\'";
                             String status = str[2].replaceAll(regexp, "");
+                            if ("null".equals(status)) {
+                                status = "0";
+                            }
                             hfEmpTaskBo.setHfComAccount(status);
                         }
 
@@ -151,34 +167,41 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                     if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
                         orderParam.add(arr[i]);
                     }else {
-//                        if(arr[i].indexOf("hf_account_type")!=-1)
-//                        {
-//                            String str[] = arr[i].split(" ");
-//                            String regexp = "\'";
-//                            String status = str[2].replaceAll(regexp, "");
-//                            hfEmpTaskBo.setHfAccountType(Integer.parseInt(status));
-//                        }
-//                        if(arr[i].indexOf("payment_bank")!=-1)
-//                        {
-//                            String str[] = arr[i].split(" ");
-//                            String regexp = "\'";
-//                            String status = str[2].replaceAll(regexp, "");
-//                            hfEmpTaskBo.setPaymentBank(Integer.parseInt(status));
-//                        }
-//                        if(arr[i].indexOf("hf_com_account")!=-1)
-//                        {
-//                            String str[] = arr[i].split(" ");
-//                            String regexp = "\'";
-//                            String status = str[2].replaceAll(regexp, "");
-//                            hfEmpTaskBo.setHfComAccount(status);
-//                        }
+                        if (arr[i].indexOf("desc") > 0 || arr[i].indexOf("asc") > 0) {
+                            orderParam.add(arr[i]);
+                        } else {
+                            if (arr[i].indexOf("hf_account_type") != -1) {
+                                String str[] = arr[i].split(" ");
+                                String regexp = "\'";
+                                String status = str[2].replaceAll(regexp, "");
+                                if ("null".equals(status)) {
+                                    status = "0";
+                                }
+                                hfEmpTaskBo.setHfAccountType(Integer.parseInt(status));
+                            }
+                            if (arr[i].indexOf("payment_bank") != -1) {
+                                String str[] = arr[i].split(" ");
+                                String regexp = "\'";
+                                String status = str[2].replaceAll(regexp, "");
+                                if ("null".equals(status)) {
+                                    status = "0";
+                                }
+                                hfEmpTaskBo.setPaymentBank(Integer.parseInt(status));
+                            }
+                            if (arr[i].indexOf("hf_com_account") != -1) {
+                                String str[] = arr[i].split(" ");
+                                String regexp = "\'";
+                                String status = str[2].replaceAll(regexp, "");
+                                if ("null".equals(status)) {
+                                    status = "0";
+                                }
+                                hfEmpTaskBo.setHfComAccount(status);
+                            }
 
-
-                        param.add(arr[i]);
+                            param.add(arr[i]);
+                        }
                     }
-
                 }
-
             }
         }
 
@@ -326,6 +349,10 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
 
         baseMapper.insert(hfEmpTask);
 
+        if (hfEmpTask.getActive()) {
+            // 转出或封存任务单，同时生成转移任务单
+            createTransferTask(hfEmpTask, null);
+        }
         return true;
     }
 
@@ -461,6 +488,101 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
     @Override
     public Integer getExistHandleRemarkCount(HfEmpTaskBo hfEmpTaskBo) {
         return baseMapper.getExistHandleRemarkCount(hfEmpTaskBo);
+    }
+
+    /**
+     * 转出或封存（翻牌转出或翻牌封存）类型的任务单办理完成自动生成转移任务单
+     *
+     * @param inputHfEmpTask 任务单表数据
+     * @param comAccountId   企业账户ID
+     */
+    @Override
+    public void createTransferTask(HfEmpTask inputHfEmpTask, Long comAccountId) {
+        HfEmpTaskCreateTransBo hfEmpTaskCreateTransBo;
+        ComAccountTransBo comAccountTransBo;
+
+        switch (inputHfEmpTask.getTaskCategory()) {
+            case HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE:
+            case HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT:
+            case HfEmpTaskConstant.TASK_CATEGORY_FLOP_CLOSE:
+            case HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_OUT:
+                hfEmpTaskCreateTransBo = new HfEmpTaskCreateTransBo();
+                hfEmpTaskCreateTransBo.setEmpTaskId(inputHfEmpTask.getEmpTaskId());
+                comAccountTransBo = new ComAccountTransBo();
+                List<ComAccountTransBo> comAccountTransBoList;
+
+                // 如果转出或封存时，转入单位统一为市公积金中心
+//                if (inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
+//                    || inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT) {
+                    String transferInUnit = SocialSecurityConst.FUND_OUT_UNIT_LIST.get(0); //市公积金中心单位名称
+                    hfEmpTaskCreateTransBo.setTransferInUnit(transferInUnit);
+                    String transferInUnitAccount =
+                        (inputHfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) ? SocialSecurityConst.CENTER_BASIC_COM_ACCOUNT
+                            : SocialSecurityConst.CENTER_ADDED_COM_ACCOUNT;
+                    hfEmpTaskCreateTransBo.setTransferInUnitAccount(transferInUnitAccount);
+//                }
+                comAccountTransBo.setHfType(inputHfEmpTask.getHfType());
+                if (comAccountId != null) {
+                    comAccountTransBo.setComAccountId(comAccountId);
+                } else {
+                    comAccountTransBo.setWelfareUnit(inputHfEmpTask.getWelfareUnit());
+                    comAccountTransBo.setCompanyId(inputHfEmpTask.getCompanyId());
+                }
+                comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
+                if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
+                    if (comAccountTransBoList.size() > 1) {
+                        String hfTypeName = (comAccountTransBo.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) ? "基本公积金" : "补充公积金";
+                        throw new BusinessException("转出单位的" + hfTypeName + "账户存在重复数据");
+                    }
+                    hfEmpTaskCreateTransBo.setTransferOutUnit(comAccountTransBoList.get(0).getComAccountName());
+                    hfEmpTaskCreateTransBo.setTransferOutUnitAccount(comAccountTransBoList.get(0).getHfComAccount());
+                }
+                hfEmpTaskCreateTransBo.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_UNHANDLED);
+                hfEmpTaskCreateTransBo.setModifiedBy(inputHfEmpTask.getModifiedBy());
+                hfEmpTaskCreateTransBo.setModifiedDisplayName(inputHfEmpTask.getModifiedDisplayName());
+                baseMapper.createTransEmpTask(hfEmpTaskCreateTransBo);
+                break;
+//            case HfEmpTaskConstant.TASK_CATEGORY_FLOP_OPEN:
+//            case HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_IN:
+//                // 翻牌转入或翻牌启封时
+//                Map<String, Object> condition = new HashMap<>();
+//                hfEmpTaskCreateTransBo = new HfEmpTaskCreateTransBo();
+//                condition.put("employee_id", hfEmpTaskCreateTransBo.getEmployeeId());
+//                condition.put("task_category", HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK);
+//                condition.put("hf_type", hfEmpTaskCreateTransBo.getHfType());
+//                condition.put("task_status", HfEmpTaskConstant.TASK_STATUS_UNHANDLED);
+//                condition.put("business_interface_id", inputHfEmpTask.getBusinessInterfaceId());
+//                condition.put("is_active", 1);
+//                List<HfEmpTask> hfEmpTaskList = selectByMap(condition);
+//
+//                // 判断相应的翻牌转出或翻牌封存办理时，生成的转移任务单是否存在
+//                if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
+//                    int size = hfEmpTaskList.size();
+//                    if (size > 0) {
+//                        HfEmpTask transferTask = hfEmpTaskList.get(size - 1);
+//                        HfEmpTask updateTransferTask = new HfEmpTask();
+//                        comAccountTransBo = new ComAccountTransBo();
+//                        comAccountTransBo.setHfType(inputHfEmpTask.getHfType());
+//                        comAccountTransBo.setComAccountId(comAccountId);
+//                        comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
+//                        if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
+//                            if (comAccountTransBoList.size() > 1) {
+//                                String hfTypeName = (comAccountTransBo.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) ? "基本公积金" : "补充公积金";
+//                                throw new BusinessException("转入单位的" + hfTypeName + "账户存在重复数据");
+//                            }
+//                            updateTransferTask.setTransferInUnit(comAccountTransBoList.get(0).getComAccountName());
+//                            updateTransferTask.setTransferInUnitAccount(comAccountTransBoList.get(0).getHfComAccount());
+//                        }
+//                        updateTransferTask.setEmpTaskId(transferTask.getEmpTaskId());
+//                        updateTransferTask.setModifiedBy(UserContext.getUserId());
+//                        updateTransferTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+//                        updateById(updateTransferTask);
+//                    }
+//                }
+//                break;
+            default:
+                break;
+        }
     }
 
 

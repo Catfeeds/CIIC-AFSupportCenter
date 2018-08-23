@@ -64,7 +64,7 @@ public class HfPaymentAccountServiceImpl extends ServiceImpl<HfPaymentAccountMap
     public JsonResult delHfPayment(String paymentId){
         //判断是否符合删除条件
         Integer paymentState=hfPaymentMapper.selectById(paymentId).getPaymentState();
-        if(paymentState!=1 &&  paymentState!=4 &&  paymentState!=2){
+        if(paymentState!=1 &&  paymentState!=4 &&  paymentState!=2 &&  paymentState!=0){
             return JsonResultKit.ofError("删除操作失败！原因是支付状态不符合删除条件。");
         }
         try{

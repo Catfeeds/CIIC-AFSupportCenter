@@ -20,6 +20,8 @@ public interface AmEmpTaskMapper extends BaseMapper<AmEmpTask> {
 
     List<AmEmpTaskBO> queryAmEmpTask(AmEmpTaskBO amEmpTaskBO);
 
+    List<String> queryAmEmpTaskCompanys(AmEmpTaskBO amEmpTaskBO);
+
     List<AmEmpTaskBO> queryAmEmpTaskOther(AmEmpTaskBO amEmpTaskBO);
 
     List<AmEmpTaskBO>   taskCount(AmEmpTaskBO amEmpTaskBO);
@@ -53,5 +55,11 @@ public interface AmEmpTaskMapper extends BaseMapper<AmEmpTask> {
     EmployeeBO queryArchiveDriection(String id);
 
     List<AmEmpTaskBO> queryIsFinish(EmployeeBatchBO employeeBatchBO);
+
+    List<AmEmpTaskBO> queryChange(EmployeeBatchBO employeeBatchBO);
+
+    List<AmEmpTaskBO> queryIsMaterial(EmployeeBatchBO employeeBatchBO);
+
+    List<AmEmpTaskBO> queryByTaskId(String taskId);
 
 }

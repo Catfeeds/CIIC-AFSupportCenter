@@ -82,8 +82,27 @@ public class SsPaymentDetailBO {
      */
     private String modifiedBy;
 
+    private String ssAccount;
 
-	public Long getPaymentDetailId() {
+    private String companyId;
+
+    public String getSsAccount() {
+        return ssAccount;
+    }
+
+    public void setSsAccount(String ssAccount) {
+        this.ssAccount = ssAccount;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public Long getPaymentDetailId() {
 		return paymentDetailId;
 	}
 

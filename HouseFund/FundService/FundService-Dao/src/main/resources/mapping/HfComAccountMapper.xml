@@ -91,6 +91,7 @@
         <result column="ukey_store" jdbcType="TINYINT" property="ukeyStore"/>
         <result column="close_day" jdbcType="TINYINT" property="closeDay"/>
         <result column="com_start_month" jdbcType="VARCHAR" property="comStartMonth"/>
+        <result column="com_hf_month" jdbcType="VARCHAR" property="comHfMonth"/>
         <result column="remark" jdbcType="VARCHAR" property="remark"/>
         <result column="basic_account_temp_store" jdbcType="TINYINT" property="basicAccountTempStore"/>
         <result column="compensative_account_temp_store" jdbcType="TINYINT" property="compensativeAccountTempStore"/>
@@ -316,9 +317,11 @@
             b.close_day,
             <if test="hfType == 1">
                 a.com_start_month,
+                a.com_hf_month,
             </if>
             <if test="hfType == 2">
                 c.com_start_month,
+                c.com_hf_month,
             </if>
             b.remark,
             IFNULL(a.account_temp_store, 0) basic_account_temp_store,
@@ -359,6 +362,10 @@
         hcac.com_account_class_id,
         hcac.hf_com_account
         FROM hf_com_account hca
+        <if test="welfareUnit != null">
+            INNER JOIN hf_account_com_relation hacr
+            ON hacr.com_account_id = hca.com_account_id AND hacr.is_active = 1
+        </if>
         LEFT JOIN hf_com_account_class hcac
         ON hca.com_account_id = hcac.com_account_id AND hcac.is_active = 1 AND hcac.hf_type = #{hfType}
         <where>
@@ -368,6 +375,23 @@
             </if>
             <if test="comAccountId != null">
                 AND hca.com_account_id = #{comAccountId}
+            </if>
+            <if test="welfareUnit != null">
+                <choose>
+                    <when test="welfareUnit == 3">
+                        AND hca.hf_account_type = 2
+                    </when>
+                    <when test="welfareUnit == 2">
+                        AND hca.hf_account_type = 1
+                    </when>
+                    <otherwise>
+                        AND hca.hf_account_type = 3
+                    </otherwise>
+                </choose>
+
+                <if test="companyId != null">
+                    AND hacr.company_id = #{companyId}
+                </if>
             </if>
         </where>
         ORDER BY hca.com_account_name, hca.com_account_id

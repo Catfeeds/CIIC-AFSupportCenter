@@ -17,7 +17,11 @@ import org.springframework.context.annotation.Import;
  */
 
 @MapperScan("com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao")
-@SpringBootApplication(scanBasePackages = {"com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business","com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host","com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate"})
+@SpringBootApplication(scanBasePackages = {
+    "com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business",
+    "com.ciicsh.gto.afsupportcenter.employmanagement.sitservice.host",
+    "com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate",
+    "com.ciicsh.gto.afsupportcenter.util.logService"})
 @Import({CustomConfiguration.class, MybatisPlusConfig.class})
 @EnableFeignClients({
     "com.ciicsh.gto.sheetservice.api",
@@ -25,7 +29,10 @@ import org.springframework.context.annotation.Import;
     "com.ciicsh.gto.afcompanycenter.queryservice.api",
     "com.ciicsh.gto.salecenter.apiservice.api.proxy",
     "com.ciicsh.gto.afsystemmanagecenter.apiservice.api",
-    "com.ciicsh.gto.identityservice.api"
+    "com.ciicsh.gto.identityservice.api",
+    "com.ciicsh.gto.logservice.api",
+    "com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api",
+    "com.ciicsh.gto.afsupportcenter.housefund.fundservice.api"
 })
 @EnableDiscoveryClient
 public class MainApplication{

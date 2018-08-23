@@ -8,15 +8,9 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afcompanycenter.commandservice.api.dto.employee.AfEmpSocialUpdateDateDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountExtBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountParamExtBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.utils.CommonApiUtils;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpArchiveConstant;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskPeriodConstant;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfMonthChargeConstant;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.TaskSheetRequestDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.*;
@@ -211,30 +205,56 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         inputHfEmpTask.setModifiedTime(LocalDateTime.now());
 
         if (isHandle) {
-            ComAccountParamExtBo comAccountParamExtBo = new ComAccountParamExtBo();
-            comAccountParamExtBo.setCompanyId(hfEmpTask.getCompanyId());
-            comAccountParamExtBo.setHfType(hfEmpTask.getHfType());
-            List<ComAccountExtBo> hfComAccountList = hfComAccountService.getHfComAccountList(comAccountParamExtBo);
-            if (CollectionUtils.isNotEmpty(hfComAccountList)) {
-                if (hfComAccountList.size() > 1) {
-                    return JsonResultKit.ofError("当前雇员任务单所属的企业账户数据有误");
+//            ComAccountParamExtBo comAccountParamExtBo = new ComAccountParamExtBo();
+//            comAccountParamExtBo.setCompanyId(hfEmpTask.getCompanyId());
+//            comAccountParamExtBo.setHfType(hfEmpTask.getHfType());
+//
+//            List<ComAccountExtBo> hfComAccountList = hfComAccountService.getHfComAccountListByAccountType(comAccountParamExtBo);
+//            if (CollectionUtils.isNotEmpty(hfComAccountList)) {
+//                if (hfComAccountList.size() > 1) {
+//                    return JsonResultKit.ofError("当前雇员任务单所属的企业账户数据有误");
+//                }
+//            } else {
+//                return JsonResultKit.ofError("当前雇员任务单所属的企业账户不存在");
+//            }
+//            Map<String, Object> condition = new HashMap<>();
+//            condition.put("is_active", 1);
+//            condition.put("com_account_id", hfComAccountList.get(0).getComAccountId());
+//            condition.put("hf_type", hfEmpTask.getHfType());
+//            condition.put("payment_month", hfComAccountList.get(0).getComHfMonth());
+
+            List<String> inList = new ArrayList<>();
+            if (CollectionUtils.isNotEmpty(operatorListData)) {
+                for (int i = 0; i < operatorListData.size(); i++) {
+                    JSONObject data = operatorListData.getJSONObject(i);
+                    inList.add(data.getString("hfMonth"));
                 }
             } else {
-                return JsonResultKit.ofError("当前雇员任务单所属的企业账户不存在");
+                inList.add(params.getString("hfMonth"));
+            }
+            Wrapper<HfPaymentAccount> hfPaymentAccountWrapper = new EntityWrapper<>();
+            hfPaymentAccountWrapper.where("is_active = 1");
+            hfPaymentAccountWrapper.and("com_account_id = {0}", params.getInteger("comAccountId"));
+            hfPaymentAccountWrapper.and();
+            hfPaymentAccountWrapper.in("payment_month", inList);
+            hfPaymentAccountWrapper.and("hf_type = {0}", hfEmpTask.getHfType());
+
+            List<HfPaymentAccount> hfPaymentAccountList = hfPaymentAccountService.selectList(hfPaymentAccountWrapper);
+
+            if (CollectionUtils.isNotEmpty(hfPaymentAccountList)) {
+                for (HfPaymentAccount hfPaymentAccount : hfPaymentAccountList) {
+                    if (hfPaymentAccount.getPaymentId() != null
+                        && !hfPaymentAccount.getPaymentId().equals(0L)) {
+                        return JsonResultKit.ofError("当前雇员所属的企业账户在当前汇缴月已经开始汇缴支付，不能再办理任务单");
+                    }
+                }
             }
 
-            Map<String, Object> condition = new HashMap<>();
-            condition.put("is_active", 1);
-            condition.put("com_account_id", hfComAccountList.get(0).getComAccountId());
-            condition.put("hf_type", hfEmpTask.getHfType());
-            condition.put("payment_month", hfComAccountList.get(0).getComHfMonth());
-            List<HfPaymentAccount> hfPaymentAccountList = hfPaymentAccountService.selectByMap(condition);
-
-            if (CollectionUtils.isNotEmpty(hfPaymentAccountList)
-                && hfPaymentAccountList.get(0).getPaymentId() != null
-                && !hfPaymentAccountList.get(0).getPaymentId().equals(0L)) {
-                return JsonResultKit.ofError("当前任务单所属的企业账户在当前汇缴月已经开始汇缴支付，不能再办理任务单");
-            }
+//            if (CollectionUtils.isNotEmpty(hfPaymentAccountList)
+//                && hfPaymentAccountList.get(0).getPaymentId() != null
+//                && !hfPaymentAccountList.get(0).getPaymentId().equals(0L)) {
+//                return JsonResultKit.ofError("当前任务单所属的企业账户在当前汇缴月已经开始汇缴支付，不能再办理任务单");
+//            }
 
             if (hfEmpTask.getIsChange() == HfEmpTaskConstant.IS_CHANGE_YES
                 && (hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_ADD
@@ -559,98 +579,10 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 throw new BusinessException("访问客服中心的完成任务接口失败");
             }
 
-            // 生成转移任务单
-            createTransferTask(inputHfEmpTask, params.getLong("comAccountId"));
+//            // 生成转移任务单
+//            createTransferTask(inputHfEmpTask, params.getLong("comAccountId"));
         }
         return JsonResultKit.of();
-    }
-
-    /**
-     * 转出或封存（翻牌转出或翻牌封存）类型的任务单办理完成自动生成转移任务单
-     *
-     * @param inputHfEmpTask 任务单表数据
-     * @param comAccountId   企业账户ID
-     */
-    private void createTransferTask(HfEmpTask inputHfEmpTask, Long comAccountId) {
-        HfEmpTaskCreateTransBo hfEmpTaskCreateTransBo;
-        ComAccountTransBo comAccountTransBo;
-
-        switch (inputHfEmpTask.getTaskCategory()) {
-            case HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE:
-            case HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT:
-            case HfEmpTaskConstant.TASK_CATEGORY_FLOP_CLOSE:
-            case HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_OUT:
-                hfEmpTaskCreateTransBo = new HfEmpTaskCreateTransBo();
-                hfEmpTaskCreateTransBo.setEmpTaskId(inputHfEmpTask.getEmpTaskId());
-                comAccountTransBo = new ComAccountTransBo();
-                List<ComAccountTransBo> comAccountTransBoList;
-
-                // 如果转出或封存时，转入单位统一为市公积金中心
-                if (inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
-                    || inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT) {
-                    String transferInUnit = SocialSecurityConst.FUND_OUT_UNIT_LIST.get(0); //市公积金中心单位名称
-                    hfEmpTaskCreateTransBo.setTransferInUnit(transferInUnit);
-                    String transferInUnitAccount =
-                        (inputHfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) ? SocialSecurityConst.CENTER_BASIC_COM_ACCOUNT
-                            : SocialSecurityConst.CENTER_ADDED_COM_ACCOUNT;
-                    hfEmpTaskCreateTransBo.setTransferInUnitAccount(transferInUnitAccount);
-                }
-                comAccountTransBo.setHfType(inputHfEmpTask.getHfType());
-                comAccountTransBo.setComAccountId(comAccountId);
-                comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
-                if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
-                    if (comAccountTransBoList.size() > 1) {
-                        String hfTypeName = (comAccountTransBo.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) ? "基本公积金" : "补充公积金";
-                        throw new BusinessException("转出单位的" + hfTypeName + "账户存在重复数据");
-                    }
-                    hfEmpTaskCreateTransBo.setTransferOutUnit(comAccountTransBoList.get(0).getComAccountName());
-                    hfEmpTaskCreateTransBo.setTransferOutUnitAccount(comAccountTransBoList.get(0).getHfComAccount());
-                }
-                hfEmpTaskCreateTransBo.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_UNHANDLED);
-                hfEmpTaskCreateTransBo.setModifiedBy(UserContext.getUserId());
-                hfEmpTaskCreateTransBo.setModifiedDisplayName(UserContext.getUser().getDisplayName());
-                createTransEmpTask(hfEmpTaskCreateTransBo);
-            case HfEmpTaskConstant.TASK_CATEGORY_FLOP_OPEN:
-            case HfEmpTaskConstant.TASK_CATEGORY_FLOP_TRANS_IN:
-                // 翻牌转入或翻牌启封时
-                Map<String, Object> condition = new HashMap<>();
-                hfEmpTaskCreateTransBo = new HfEmpTaskCreateTransBo();
-                condition.put("employee_id", hfEmpTaskCreateTransBo.getEmployeeId());
-                condition.put("task_category", HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK);
-                condition.put("hf_type", hfEmpTaskCreateTransBo.getHfType());
-                condition.put("task_status", HfEmpTaskConstant.TASK_STATUS_UNHANDLED);
-                condition.put("business_interface_id", inputHfEmpTask.getBusinessInterfaceId());
-                condition.put("is_active", 1);
-                List<HfEmpTask> hfEmpTaskList = selectByMap(condition);
-
-                // 判断相应的翻牌转出或翻牌封存办理时，生成的转移任务单是否存在
-                if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
-                    int size = hfEmpTaskList.size();
-                    if (size > 0) {
-                        HfEmpTask transferTask = hfEmpTaskList.get(size - 1);
-                        HfEmpTask updateTransferTask = new HfEmpTask();
-                        comAccountTransBo = new ComAccountTransBo();
-                        comAccountTransBo.setHfType(inputHfEmpTask.getHfType());
-                        comAccountTransBo.setComAccountId(comAccountId);
-                        comAccountTransBoList = hfComAccountService.queryComAccountTransBoList(comAccountTransBo);
-                        if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
-                            if (comAccountTransBoList.size() > 1) {
-                                String hfTypeName = (comAccountTransBo.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) ? "基本公积金" : "补充公积金";
-                                throw new BusinessException("转入单位的" + hfTypeName + "账户存在重复数据");
-                            }
-                            updateTransferTask.setTransferInUnit(comAccountTransBoList.get(0).getComAccountName());
-                            updateTransferTask.setTransferInUnitAccount(comAccountTransBoList.get(0).getHfComAccount());
-                        }
-                        updateTransferTask.setEmpTaskId(transferTask.getEmpTaskId());
-                        updateTransferTask.setModifiedBy(UserContext.getUserId());
-                        updateTransferTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
-                        updateById(updateTransferTask);
-                    }
-                }
-                break;
-            default:
-                break;
-        }
     }
 
     /**
@@ -1011,6 +943,26 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         return composedEmpBasePeriodBOList;
     }
 
+    @Override
+    public List<HfEmpTaskExportBo> queryHistoryEmpTask(Boolean isSelf, Long empTaskId) {
+        return baseMapper.queryHistoryEmpTask(isSelf, empTaskId);
+    }
+
+    @Override
+    public List<HfEmpTaskExportBo> getOriginEmpTask(String companyId, String employeeId, Integer hfType) {
+        return baseMapper.getOriginEmpTask(companyId, employeeId, hfType, null);
+    }
+
+    @Override
+    public HfEmpTaskExportBo getOriginEmpTaskById(Long empTaskId) {
+        List<HfEmpTaskExportBo> hfEmpTaskExportBoList = baseMapper.getOriginEmpTask(null, null, null, empTaskId);
+
+        if (CollectionUtils.isNotEmpty(hfEmpTaskExportBoList)) {
+            return hfEmpTaskExportBoList.get(0);
+        }
+        return null;
+    }
+
     /**
      * 补缴任务时雇员档案费用分段表数据处理
      * 分全额补缴及差额补缴
@@ -1042,20 +994,23 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 YearMonth repairStartMonth = YearMonth.parse(e.getStartMonth(), formatter);
                 YearMonth repairEndMonth = YearMonth.parse(e.getEndMonth(), formatter);
 
-                if (HfEmpTaskConstant.WELFARE_UNIT_INDEPENDENT == hfEmpTask.getWelfareUnit()) {
-                    if ((hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_ADD
-                        || hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_ADD)
-                        && repairEndMonth.isAfter(hfMonth.minusMonths(2))) {
-                        throw new BusinessException("补缴任务费用分段中的缴费截止年月必须小于等于汇缴年月的前两月（独立户）");
+                if (hfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC
+                    && (hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_IN_ADD
+                    || hfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_FLOP_ADD)) {
+                    if (HfEmpTaskConstant.WELFARE_UNIT_INDEPENDENT == hfEmpTask.getWelfareUnit()) {
+                        if (repairEndMonth.isAfter(hfMonth.minusMonths(2))) {
+                            throw new BusinessException("补缴任务费用分段中的缴费截止年月必须小于等于汇缴年月的前两月（独立户）");
+                        }
+                    } else {
+                        if (repairEndMonth.isAfter(hfMonth.minusMonths(1))) {
+                            throw new BusinessException("补缴任务费用分段中的缴费截止年月必须小于等于汇缴年月的前月（大库）");
+                        }
                     }
                 } else {
-                    if (repairEndMonth.isAfter(hfMonth.minusMonths(1))) {
-                        throw new BusinessException("补缴任务费用分段中的缴费截止年月必须小于等于汇缴年月的前月（大库）");
+                    if (repairEndMonth.isAfter(hfMonth)) {
+                        throw new BusinessException("补缴任务费用分段中缴费截止年月不能晚于汇缴年月");
                     }
                 }
-//                if (repairEndMonth.equals(hfMonth) || repairEndMonth.isAfter(hfMonth)) {
-//                    throw new BusinessException("补缴任务费用分段中缴费截止年月不能在汇缴年月以后");
-//                }
 
 //                YearMonth permitYearMonth = null;
 //                boolean isMatch = false;

@@ -20,4 +20,6 @@ public interface HfPaymentComService extends IService<HfPaymentCom> {
      * @return 添加结果
      */
     JsonResult createPaymentComById(HfFundPayCreatePaymentAccountPara hfFundPayCreatePaymentAccountPara);
+
+    String getLastPaymentMonth(String companyId, Integer hfType);
 }

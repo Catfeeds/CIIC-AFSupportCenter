@@ -151,7 +151,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
      */
     @RequestMapping("/hfEmpTaskRejectQuery")
     public JsonResult<PageRows> hfEmpTaskRejectQuery(@RequestBody PageInfo pageInfo) {
-        return JsonResultKit.of(business.queryHfEmpTaskInPage(pageInfo, UserContext.getUserId(), StringUtils.join(
+        return JsonResultKit.of(business.queryHfEmpTaskRejectInPage(pageInfo, UserContext.getUserId(), StringUtils.join(
             new Integer[] {
                 HfEmpTaskConstant.TASK_CATEGORY_TRANSFER_TASK
 //                HfEmpTaskConstant.TASK_CATEGORY_SPEC_TASK
@@ -251,7 +251,7 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
                 Set<String> employeeIdSet = new HashSet<>();
                 Wrapper<HfEmpTask> wrapper = new EntityWrapper<>();
                 wrapper.in("emp_task_id", StringUtils.join(objects, ','));
-                wrapper.eq("task_category", 1);
+                wrapper.in("task_category", "1,9");
                 wrapper.eq("is_active", 1);
 
                 List<HfEmpTask> list = business.selectList(wrapper);
@@ -361,8 +361,16 @@ public class HfEmpTaskController extends BasicController<HfEmpTaskService> {
             hfFileImportService.executeExcelImport(hfFileImportService.IMPORT_TYPE_EMP_PRE_INPUT, hfFileImportService.DEFAULT_RELATED_UNIT_ID,
                 null, hfImportEmpPreInputService, successList, failList,
                 importParams, files, UserContext.getUserId());
+
+            if (successList.size() == 0) {
+                if (failList.size() == 0) {
+                    return JsonResultKit.of(222, "上传文件的数据为空", failList);
+                }
+                return JsonResultKit.of(222, "上传文件的数据全部不正确", failList);
+            } else if (failList.size() > 0) {
+                return JsonResultKit.of(222, "上传文件存在不正确数据", failList);
+            }
         } catch (Exception e) {
-            e.printStackTrace();
             LogMessage logMessage = LogMessage.create().setTitle("文件上传")
                 .setContent("上传雇员公积金账号预录入信息：" + e.getMessage());
             logApiUtil.error(logMessage);

@@ -102,7 +102,11 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
         String serial = String.format("%04d", paymentCount);
         String today=LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         hfPayment.setPaymentBatchNum(today+serial);
-        hfPayment.setPaymentState(1);//可付
+        if(params.getPaymentWay()==0){
+            hfPayment.setPaymentState(0);
+        }else {
+            hfPayment.setPaymentState(1);//可付
+        }
         hfPayment.setPaymentMonth(params.getPaymentMonth());
         hfPayment.setCreatePaymentUser(UserContext.getUser().getDisplayName());
         hfPayment.setCreatePaymentDate(new Date());
@@ -185,5 +189,10 @@ public class HfPaymentComServiceImpl extends ServiceImpl<HfPaymentComMapper, HfP
         hfPayment.setModifiedBy(UserContext.getUser().getDisplayName());
         hfPaymentMapper.updateById(hfPayment);
         return JsonResultKit.of();
+    }
+
+    @Override
+    public String getLastPaymentMonth(String companyId, Integer hfType) {
+        return baseMapper.getLastPaymentMonth(companyId, hfType);
     }
 }

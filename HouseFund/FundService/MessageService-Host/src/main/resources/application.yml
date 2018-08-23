@@ -57,6 +57,11 @@ spring:
           group: ${spring.application.name}
           consumer:
             partitioned: true
+        hf_report_output_channel:
+                  destination: af_hf_report_generate # topic name
+                  content-type: application/json
+                  producer:
+                    partitionCount: 1
       instance-count: 2 # The number of deployed instances of an application.
                         # Must be set for partitioning and if using Kafka.
                         # used to partition data across different consumers.
@@ -74,8 +79,7 @@ mybatis-plus:
   mapper-locations: classpath*:/mapping*/*Mapper.xml
   #实体扫描，多个package用逗号或者分号分隔
   typeAliasesPackage: com.ciicsh.gto.afsupportcenter.housefund.fundservice
-  plugins:
-    - catMybatisInterceptor
+
 #  typeEnumsPackage: com.baomidou.springboot.customer.enums
   global-config:
     #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";

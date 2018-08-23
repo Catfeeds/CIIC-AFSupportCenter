@@ -175,6 +175,8 @@
         <result column="end_month" property="endMonth"/>
         <result column="ss_month" property="ssMonth"/>
         <result column="in_date" property="inDate"/>
+        <result column="service_center" property="serviceCenter"/>
+
     </resultMap>
 
     <!--雇员查询导出。这里为何导出要单独查询？原因是查询返回的bean 对象不一样，empSSSearchExportOpt 是带@excle。 最终要合并成一条查询语句  -->
@@ -188,7 +190,7 @@
         LEFT JOIN ss_emp_archive sea on afemp.employee_id=sea.employee_id AND afemp.company_id=sea.company_id AND afemp.in_date=sea.in_date AND sea.is_active = 1
         LEFT JOIN ss_com_account sca ON sca.com_account_id=sea.com_account_id AND sca.is_active = 1
         <where>
-            sea.is_active = 1
+            afemp.is_active = 1
             <include refid="queryEmployee_where"/>
         </where>
     </select>
@@ -324,5 +326,18 @@
             AND ea.company_id = #{companyId}
             AND ea.employee_id = #{employeeId}
             ORDER BY ea.in_date DESC LIMIT 1
+    </select>
+
+    <select id="getSsEmployee" resultMap="BaseResultMapDTO">
+      SELECT
+          ea.employee_id,
+          ea.company_id,
+          ea.com_account_id,
+          ee.id_num
+      FROM ss_emp_archive ea INNER JOIN emp_employee ee ON ea.employee_id = ee.employee_id
+      WHERE ea.is_active = 1 AND ee.is_active = 1
+            AND ea.company_id = #{companyId}
+            AND ea.employee_id = #{employeeId}
+            ORDER BY ea.created_time DESC LIMIT 1
     </select>
 </mapper>

@@ -43,6 +43,16 @@ public class HfEmpInfoBO {
      * 险种明细
      */
 
+    private String archiveStatusName;
+
+    public String getArchiveStatusName() {
+        return archiveStatusName;
+    }
+
+    public void setArchiveStatusName(String archiveStatusName) {
+        this.archiveStatusName = archiveStatusName;
+    }
+
     private List<HfEmpInfoDetailBO> hfEmpInfoDetailBOList;
 
     public String getHfEmpAccount() {

@@ -25,4 +25,6 @@ public interface SsMonthChargeService extends IService<SsMonthCharge> {
     List<SsMonthChargeBO>  selectTotalFromOld(String employeeId, String paymentMonth, Integer costCategory);
 
     List<SsYysReportBO> queryYysReport(SsYysReportParamBO ssYysReportParamBO);
+
+    List<SsMonthCharge> getSocialSecurityChangeInformation(String companyId, String employeeId, String paymentMonth, String year);
 }

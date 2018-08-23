@@ -33,4 +33,10 @@ public interface HfEmpTaskHandleService extends IService<HfEmpTask> {
     int[] getRoundTypeProxy(String policyId, Integer payAccountType, String effectiveMonth, String hfTypeDicItemCode);
 
     List<ComposedEmpBasePeriodBO> composeEmpBasePeriod(List<HfArchiveBasePeriod> existsHfArchiveBasePeriodList);
+
+    List<HfEmpTaskExportBo> queryHistoryEmpTask(Boolean isSelf, Long empTaskId);
+
+    List<HfEmpTaskExportBo> getOriginEmpTask(String companyId, String employeeId, Integer hfType);
+
+    HfEmpTaskExportBo getOriginEmpTaskById(Long empTaskId);
 }

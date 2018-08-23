@@ -29,6 +29,7 @@
 
         <result column="com_account_id" property="comAccountId" />
         <result column="com_account_name" property="comAccountName" />
+        <result column="ss_account" property="ssAccount" />
         <result column="ss_month" property="ssMonth" />
         <result column="imp_file_type" property="impFileType" />
         <result column="imp_file_name" property="impFileName" />
@@ -69,8 +70,9 @@
         s.statement_time,
         s.imp_record_sum,
         s.diff_sum_by_emp,
-        s.diff_sum_by_item         ,
-        ca.com_account_name
+        s.diff_sum_by_item,
+        ca.com_account_name,
+        ca.ss_account
         FROM
         (SELECT DISTINCT ss_month,com_account_id from ss_month_charge where cost_category!= 1 ) mec
         LEFT JOIN ss_statement s ON s.ss_month=mec.ss_month and s.com_account_id=mec.com_account_id and s.imp_file_type='YYS'
@@ -120,19 +122,44 @@
           AND T1.is_active = 1
           AND T1.statement_id = #{statementId,jdbcType=VARCHAR}
     </select>
-    <!--<select id="fetchEmpInfo" resultType="Integer">-->
-        <!--SELECT count(1) FROM ss_emp_archive ea INNER JOIN emp_employee emp ON ea.employee_id=emp.employee_id-->
-        <!--where ea.ss_serial='1' and emp.employee_name ='Z001'-->
-    <!--</select>-->
 
     <select id="statementExportQuery" parameterType="com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.custom.StatementExportArgs" resultMap="StatementExportMap">
-        SELECT
-          <include refid="StatementExport_Columns"/>
+        select
+        ca.com_account_id,
+        ca.com_account_name,
+        mec.ss_month,
+        s.imp_file_name,
+        s.imp_file_type,
+        s.diff_sum_by_emp,
+        s.statement_user_id,
+        s.statement_time
         FROM
-            ss_month_emp_change a
-        INNER JOIN ss_com_account b ON a.com_account_id = b.com_account_id
-        LEFT JOIN ss_statement c ON a.statement_id = c.statement_id
-          <include refid="StatementExport_Where"/>
+        (SELECT DISTINCT ss_month,com_account_id from ss_month_charge where cost_category!= 1 ) mec
+        LEFT JOIN ss_statement s ON s.ss_month=mec.ss_month and s.com_account_id=mec.com_account_id and s.imp_file_type='YYS'
+        LEFT JOIN ss_com_account ca ON ca.com_account_id=mec.com_account_id
+        WHERE
+        1=1
+        <if test = "ssMonth != null and ssMonth != ''">
+            AND mec.ss_month = #{ssMonth}
+        </if>
+        <if test = "comAccountId != null and comAccountId != ''">
+            AND ca.ss_account = #{comAccountId}
+        </if>
+        <if test="minDiffSumByEmp != null and minDiffSumByEmp != '' and minDiffSumByEmp != 0">
+            <![CDATA[
+                    AND s.diff_sum_by_emp >= #{minDiffSumByEmp}
+                ]]>
+        </if>
+        <if test="maxDiffSumByEmp != null and maxDiffSumByEmp != '' and maxDiffSumByEmp != 0">
+            <![CDATA[
+                    AND s.diff_sum_by_emp <= #{maxDiffSumByEmp}
+                ]]>
+        </if>
+        <if test = "companyId != null and companyId != ''">
+            AND EXISTS (SELECT 1 FROM  ss_account_com_relation acr WHERE  acr.com_account_id=ca.com_account_id AND  acr.company_id LIKE CONCAT('%', #{companyId}, '%'))
+        </if>
+        ORDER BY mec.ss_month DESC
+
     </select>
 
     <sql id="StatementExport_Columns">

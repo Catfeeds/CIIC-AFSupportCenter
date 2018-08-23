@@ -14,4 +14,6 @@ public class ComAccountTransBo implements Serializable {
     private Long comAccountClassId;
     private String hfComAccount;
     private Integer hfType;
+    private Integer welfareUnit;
+    private String companyId;
 }

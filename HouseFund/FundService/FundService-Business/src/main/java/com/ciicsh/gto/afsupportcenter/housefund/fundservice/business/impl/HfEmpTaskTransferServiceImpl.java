@@ -122,7 +122,9 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         if(result <= 0){
             return JsonResultKit.ofError("该雇员所在公司没有开户！");
         }
-        Wrapper<HfEmpArchive> wrapper = new EntityWrapper<>();
+        empTaskTransferBo.setHandleUserId(UserContext.getUser().getUserId());
+        empTaskTransferBo.setHandleUserName(UserContext.getUser().getDisplayName());
+       /* Wrapper<HfEmpArchive> wrapper = new EntityWrapper<>();
         wrapper.eq("company_id", empTaskTransferBo.getCompanyId());
         wrapper.eq("employee_id", empTaskTransferBo.getEmployeeId());
         wrapper.eq("hf_type",empTaskTransferBo.getHfType());
@@ -130,8 +132,8 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         List<HfEmpArchive> empArchiveList= hfEmpArchiveMapper.selectList(wrapper);
         if(empArchiveList.size()==0){
             return JsonResultKit.ofError("该雇员没有转入或新开的公积金档案信息！");
-        }
-        empTaskTransferBo.setEmpArchiveId(empArchiveList.get(0).getEmpArchiveId());//设置雇员公积金档案ID
+        }*/
+       // empTaskTransferBo.setEmpArchiveId(empArchiveList.get(0).getEmpArchiveId());//设置雇员公积金档案ID
         BeanUtils.copyProperties(empTaskTransferBo,hfEmpTask);
         saveEmpTask(hfEmpTask);
         return JsonResultKit.of(200,"转移数据保存成功！" ,hfEmpTask.getEmpTaskId());

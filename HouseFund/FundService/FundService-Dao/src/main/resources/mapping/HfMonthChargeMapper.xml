@@ -99,6 +99,19 @@
         <result column="ss_month_belong_end" property="ssMonthBelongEnd" />
     </resultMap>
 
+    <resultMap id="LastPaymentMonthResultMap" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpLastPaymentBO">
+        <result column="company_id" property="companyId" />
+        <result column="employee_id" property="employeeId" />
+        <result column="hf_type" property="hfType" />
+        <result column="amount" property="amount" />
+        <result column="com_amount" property="comAmount" />
+        <result column="emp_amount" property="empAmount" />
+        <result column="base" property="base" />
+        <result column="ratio" property="ratio" />
+        <result column="ratio_com" property="ratioCom" />
+        <result column="ratio_emp" property="ratioEmp" />
+    </resultMap>
+
 	<update id="updateHfMonthCharge">
         UPDATE hf_month_charge
         SET
@@ -423,5 +436,219 @@
                 AND hmc.employee_id = #{employeeId}
             </if>
         </where>
+    </select>
+    <resultMap id="RimittedBookReportRM" type="com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfRimittedBookReportBO">
+        <result column="hf_type" property="hfType"/>
+        <result column="hf_account_type" property="hfAccountType"/>
+        <result column="company_id" property="companyId"/>
+        <result column="com_account_name" property="comAccountName"/>
+        <result column="hf_com_account" property="hfComAccount"/>
+        <result column="payment_month" property="paymentMonth"/>
+        <result column="payment_bank" property="paymentBank"/>
+        <result column="remitted_amount_add" property="remittedAmountAdd"/>
+        <result column="remitted_amount_reduce" property="remittedAmountReduce"/>
+        <result column="remitted_amount" property="remittedAmount"/>
+        <result column="remitted_count_emp_add" property="remittedCountEmpAdd"/>
+        <result column="remitted_count_emp_reduce" property="remittedCountEmpReduce"/>
+        <result column="remitted_count_emp" property="remittedCountEmp"/>
+        <result column="remitted_amount_last" property="remittedAmountLast"/>
+        <result column="remitted_count_emp_last" property="remittedCountEmpLast"/>
+        <result column="repair_amount" property="repairAmount"/>
+        <result column="repair_count_emp" property="repairCountEmp"/>
+
+    </resultMap>
+    <select id="queryHfRimittedBookReport" resultMap="RimittedBookReportRM">
+    SELECT pa.com_account_id,pa.com_account_class_id,pa.hf_type,ca.com_account_name,ca.payment_bank,
+            ca.hf_account_type,pa.hf_com_account,pa.payment_month,lastMonth.remitted_amount_last,lastMonth.remitted_count_emp_last,
+        (select group_concat(acr.company_id) from hf_account_com_relation acr where acr.com_account_id=pa.com_account_id ORDER BY CREATEd_time desc LIMIT 1)company_id,
+		(SELECT SUM(ifnull(amount, 0)) FROM hf_month_charge mc
+        INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+        WHERE mc.is_active = 1
+        AND ea.is_active = 1
+        AND mc.hf_month = pa.payment_month
+        AND mc.hf_type = pa.hf_type
+        AND ea.com_account_class_id = pa.com_account_class_id
+        AND mc.payment_type = 1
+        ) AS amount_standard,
+        (SELECT SUM(ifnull(amount, 0)) FROM hf_month_charge mc
+            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+            WHERE mc.is_active = 1
+            AND ea.is_active = 1
+            AND mc.hf_month = pa.payment_month
+            AND mc.hf_type = pa.hf_type
+            AND ea.com_account_class_id = pa.com_account_class_id
+            AND mc.payment_type IN (2, 3, 4, 5)
+        ) AS remitted_amount_add,
+        (SELECT SUM(ifnull(amount, 0)) FROM hf_month_charge mc
+            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+            WHERE mc.is_active = 1
+            AND ea.is_active = 1
+            AND mc.hf_month = pa.payment_month
+            AND mc.hf_type = pa.hf_type
+            AND ea.com_account_class_id = pa.com_account_class_id
+            AND mc.payment_type IN (7, 8, 9, 10)
+        ) AS remitted_amount_reduce,
+        (SELECT SUM(ifnull(amount, 0))
+            FROM  hf_month_charge mc
+            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+            WHERE mc.is_active = 1
+            AND ea.is_active = 1
+            AND mc.hf_month = pa.payment_month
+            AND mc.hf_type = pa.hf_type
+            AND ea.com_account_class_id = pa.com_account_class_id
+            AND mc.payment_type IN (6, 11)
+        ) AS repair_amount,
+        (SELECT
+            count(DISTINCT mc.employee_id)
+            FROM hf_month_charge mc
+            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+            WHERE mc.is_active = 1
+            AND ea.is_active = 1
+            AND mc.hf_month = pa.payment_month
+            AND mc.hf_type = pa.hf_type
+            AND ea.com_account_class_id = pa.com_account_class_id
+            AND mc.payment_type IN (6, 11)
+        ) AS repair_count_emp,
+        (SELECT
+            count(DISTINCT mc.employee_id)
+            FROM hf_month_charge mc
+            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+            WHERE mc.is_active = 1
+            AND ea.is_active = 1
+            AND mc.hf_month = pa.payment_month
+            AND mc.hf_type = pa.hf_type
+            AND ea.com_account_class_id = pa.com_account_class_id
+            AND mc.payment_type = 1
+        ) AS remitted_emp_count_standard,
+        (SELECT
+            count(DISTINCT mc.employee_id)
+            FROM hf_month_charge mc
+            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+            WHERE mc.is_active = 1
+            AND ea.is_active = 1
+            AND mc.hf_month = pa.payment_month
+            AND mc.hf_type = pa.hf_type
+            AND ea.com_account_class_id = pa.com_account_class_id
+            AND mc.payment_type IN ( 2, 3, 4, 5)
+        ) AS remitted_count_emp_add,
+        (SELECT
+            count(DISTINCT mc.employee_id)
+            FROM hf_month_charge mc
+            INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
+            WHERE mc.is_active = 1
+            AND ea.is_active = 1
+            AND mc.hf_month = pa.payment_month
+            AND mc.hf_type = pa.hf_type
+            AND ea.com_account_class_id = pa.com_account_class_id
+            AND mc.payment_type IN (7, 8, 9, 10)
+        ) AS remitted_count_emp_reduce,
+        (SELECT remitted_emp_count_standard + remitted_count_emp_add ) AS remitted_count_emp,
+        (SELECT ifnull(amount_standard,0) + ifnull(remitted_amount_add,0) ) AS remitted_amount
+        FROM
+        (SELECT #{hfMonth} AS payment_month,cac.* from hf_com_account_class cac WHERE cac.is_active = 1) pa
+        LEFT JOIN hf_com_account ca ON ca.com_account_id = pa.com_account_id
+        LEFT JOIN (
+            SELECT
+                pc.com_account_id,
+                pc.hf_type,
+                sum(remitted_amount) remitted_amount_last,
+                sum(remitted_count_emp) remitted_count_emp_last
+            FROM
+                hf_payment_com pc
+            INNER JOIN hf_payment p ON p.payment_id = pc.payment_id
+            WHERE
+                pc.is_active = 1
+            AND p.payment_month = period_add( #{hfMonth} ,- 1)
+            GROUP BY
+                pc.com_account_id,
+                pc.hf_type
+        ) lastMonth ON lastMonth.com_account_id = pa.com_account_id
+        AND lastMonth.hf_type = pa.hf_type
+
+        <where>
+            pa.is_active = 1
+            <if test="comAccountClassId != null">
+                AND pa.com_account_class_id = #{comAccountClassId}
+            </if>
+            <if test="companyId != null">
+                AND EXISTS (SELECT 1 FROM hf_account_com_relation WHERE com_account_id=pa.com_account_id AND company_id=#{companyId})
+            </if>
+            <if test="companyName != null">
+                AND EXISTS (SELECT 1 FROM hf_account_com_relation acr INNER JOIN sal_company sc ON sc.company_id=acr.company_id
+                WHERE com_account_id=pa.com_account_id AND sc.title LIKE CONCAT('%', #{companyName}, '%'))
+            </if>
+
+            <if test="basicHfEmpAccount != null">
+                AND heab.hf_emp_account = #{basicHfEmpAccount}
+            </if>
+            <if test="hfAccountType != null">
+                AND ca.hf_account_type = #{hfAccountType}
+            </if>
+            <if test="basicHfComAccount != null">
+                AND pa.hf_type = 1
+                AND pa.hf_com_account = #{basicHfComAccount}
+            </if>
+            <if test="addedHfEmpAccount != null">
+                AND pa.hf_type = 2
+                AND pa.hf_emp_account = #{addedHfEmpAccount}
+            </if>
+
+
+        </where>
+
+    </select>
+
+
+    <select id="searchByLastPaymentMonth" resultMap="LastPaymentMonthResultMap">
+        SELECT
+        hmc.company_id,
+        hmc.employee_id,
+        hmc.hf_type,
+        SUM(hmc.amount) amount,
+        SUM(hmc.com_amount) com_amount,
+        SUM(hmc.emp_amount) emp_amount,
+        CASE WHEN hmc.hf_type = 1 THEN tmp.base ELSE tmp2.base END base,
+        CASE WHEN hmc.hf_type = 1 THEN tmp.ratio ELSE tmp2.ratio END ratio,
+        CASE WHEN hmc.hf_type = 1 THEN tmp.ratio_com ELSE tmp2.ratio_com END ratio_com,
+        CASE WHEN hmc.hf_type = 1 THEN tmp.ratio_emp ELSE tmp2.ratio_emp END ratio_emp
+        FROM hf_month_charge hmc
+        LEFT JOIN (
+            SELECT
+          hmc.emp_archive_id,
+          hmc.hf_type,
+          hmc.base,
+          hmc.ratio*100 ratio,
+          hmc.ratio_com*100 ratio_com,
+          hmc.ratio_emp*100 ratio_emp
+          FROM hf_month_charge hmc
+          WHERE hmc.is_active = 1
+            AND hmc.company_id = #{companyId}
+            AND hmc.employee_id = #{employeeId}
+            AND hmc.hf_month = #{hfMonth}
+          AND hmc.hf_type = 1
+          ORDER BY hmc.ss_month_belong DESC LIMIT 1
+        ) tmp ON hmc.emp_archive_id = tmp.emp_archive_id AND hmc.hf_type = tmp.hf_type
+        LEFT JOIN (
+            SELECT
+          hmc.emp_archive_id,
+          hmc.hf_type,
+          hmc.hf_month,
+          hmc.base,
+          hmc.ratio*100 ratio,
+          hmc.ratio_com*100 ratio_com,
+          hmc.ratio_emp*100 ratio_emp
+          FROM hf_month_charge hmc
+          WHERE hmc.is_active = 1
+            AND hmc.company_id = #{companyId}
+            AND hmc.employee_id = #{employeeId}
+            AND hmc.hf_month = #{hfMonth}
+          AND hmc.hf_type = 2
+          ORDER BY hmc.ss_month_belong DESC LIMIT 1
+        ) tmp2 ON hmc.emp_archive_id = tmp2.emp_archive_id AND hmc.hf_type = tmp2.hf_type
+        WHERE hmc.is_active = 1
+        AND hmc.company_id = #{companyId}
+        AND hmc.employee_id = #{employeeId}
+        AND hmc.hf_month = #{hfMonth}
+        GROUP BY hmc.company_id, hmc.employee_id, hmc.hf_month, hmc.hf_type
     </select>
 </mapper>

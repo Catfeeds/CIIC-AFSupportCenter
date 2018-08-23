@@ -10,6 +10,7 @@
 		<result column="material_feedback_date" property="materialFeedbackDate" />
 		<result column="company_id" property="companyId" />
 		<result column="company_name" property="companyName" />
+		<result column="service_center" property="serviceCenter" />
 		<result column="organization_code" property="organizationCode" />
 		<result column="due_date" property="dueDate" />
 		<result column="logout_date" property="logoutDate" />

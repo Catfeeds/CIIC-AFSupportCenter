@@ -77,7 +77,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         HfPayment payment = new HfPayment();
         payment.setPaymentId(Long.parseLong(processParmBO.getPaymentId()));
         payment = hfPaymentMapper.selectOne(payment);
-        if (payment.getPaymentState().equals(1) || payment.getPaymentState().equals(4)) {
+        if (payment.getPaymentState().equals(0) || payment.getPaymentState().equals(1) || payment.getPaymentState().equals(4)) {
             payment.setPaymentState(2);
             payment.setModifiedTime(new Date());
             payment.setModifiedBy(processParmBO.getOperator());
@@ -131,14 +131,14 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             }
         }
     }
-
+    // 出票
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public JsonResult processTicket(PaymentProcessParmBO processParmBO) {
         HfPayment payment = new HfPayment();
         payment.setPaymentId(Long.parseLong(processParmBO.getPaymentId()));
         payment = hfPaymentMapper.selectOne(payment);
-        if (payment.getPaymentState().equals(5)) {
+        if ( payment.getPaymentState().equals(5) || (payment.getPaymentWay().equals(0) &&  payment.getPaymentState().equals(2))) {
             List<HfComAccountClass> comAccountClasses = comAccountClassMapper.getAccountClassByPaymentId(Long.parseLong(processParmBO.getPaymentId()));
 //            //校验月份是否匹配
 //            if (null != comAccountClasses && comAccountClasses.size() > 0) {
@@ -251,13 +251,6 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
         return JsonResultKit.of(retListPrint);
     }
 
-    @Override
-    public JsonResult printRemittedBookByReport(String companyId, String hfMonth, Integer hfType,Integer hfAccountType) {
-        HfRemittedBookParam hfRemittedBookParam = new HfRemittedBookParam();
-
-        baseMapper.printRemittedBookByReport(hfRemittedBookParam);
-        return null;
-    }
 
     private JsonResult isCanPayment(HfPayment payment) {
         if (payment == null) {

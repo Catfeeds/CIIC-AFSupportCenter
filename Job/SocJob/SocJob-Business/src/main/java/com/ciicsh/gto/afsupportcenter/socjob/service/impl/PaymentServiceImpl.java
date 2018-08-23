@@ -7,6 +7,7 @@ import com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsMonthChargeBO;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsPaymentComBO;
 import com.ciicsh.gto.afsupportcenter.socjob.service.PaymentService;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
+import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.EmployeeMonthlyDataProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeMonthlyDataProxyDTO;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +42,9 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
     public void enquireFinanceComAccount(String ssMonth) {
         //1 查询未支付客户
         Map<String, Object> map = new HashMap<>();
+        if("ss".equals(ssMonth)){
+            ssMonth = LocalDate.now().plusMonths(-1).format(DateTimeFormatter.ofPattern("yyyyMM"));
+        }
         map.put("payemntMonth", ssMonth);
         List<SsPaymentComBO> paymentComList = ssPaymentMapper.getPaymentComList(map);
 
@@ -108,11 +114,11 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
             map.put("paymentComId", paymentComId);
             if (cnt == 0) {
                 map.put("paymentState", 3);//  3 =可付
-                map.put("modifiedBy", "sysJob");
+                map.put("modifiedBy", "system");
                 ssPaymentMapper.updateSsPaymentCom(map);
             } else {
                 map.put("paymentState", 1);
-                map.put("modifiedBy", "sysJob");
+                map.put("modifiedBy", "system");
                 ssPaymentMapper.updateSsPaymentCom(map);
             }
         }else {

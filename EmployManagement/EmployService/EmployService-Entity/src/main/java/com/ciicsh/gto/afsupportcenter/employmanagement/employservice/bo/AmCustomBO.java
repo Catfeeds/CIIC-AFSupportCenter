@@ -2,10 +2,12 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo;
 
 
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpCustom;
+import lombok.Data;
 
 /**
  * Created by zhangzhiwen on 2018/3/26.
  */
+@Data
 public class AmCustomBO extends AmEmpCustom {
     /**
      * 客户Id
@@ -20,37 +22,5 @@ public class AmCustomBO extends AmEmpCustom {
 
     private  String cici;
 
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public String getCici() {
-        return cici;
-    }
-
-    public void setCici(String cici) {
-        this.cici = cici;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
-
-
-    public String getEmployeeCenterOperator() {
-        return employeeCenterOperator;
-    }
-
-    public void setEmployeeCenterOperator(String employeeCenterOperator) {
-        this.employeeCenterOperator = employeeCenterOperator;
-    }
 
 }
