@@ -98,8 +98,8 @@
         a.change_company,
         a.job,
         b.employment_id,
-        b.employee_id,
-        b.company_id,
+        a.employee_id,
+        a.company_id,
         /**用工属性*/
         b.employ_property,
         /**用工属性*/
@@ -136,11 +136,11 @@
         cs.refuse_special,
         cs.archive_special
         FROM
-        am_employment b
-        LEFT JOIN am_emp_task a on a.emp_task_id = b.emp_task_id
+        am_emp_task a
+        LEFT JOIN am_employment b on a.emp_task_id = b.emp_task_id
         LEFT JOIN am_archive c ON b.employment_id = c.employment_id
         LEFT JOIN am_resign f ON f.employment_id = b.employment_id
-        LEFT JOIN emp_employee d on b.employee_id = d.employee_id
+        LEFT JOIN emp_employee d on a.employee_id = d.employee_id
         LEFT JOIN am_emp_task w on f.emp_task_id = w.emp_task_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
