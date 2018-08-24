@@ -1719,8 +1719,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
     void by(Object entity) {
         BeanMap bm = new BeanMap(entity);
-        bm.put("createdBy", UserContext.getUserId());
-        bm.put("modifiedBy", UserContext.getUserId());
+
+        if (UserContext.getUser() != null) {
+            bm.put("createdBy", UserContext.getUserId());
+            bm.put("modifiedBy", UserContext.getUserId());
+        } else {
+            bm.put("createdBy", SocialSecurityConst.SYSTEM_USER);
+            bm.put("modifiedBy", SocialSecurityConst.SYSTEM_USER);
+        }
     }
 
     /**
@@ -2014,7 +2020,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                         // 新增类任务单批退，回调任务单完成接口和实际金额回调接口
                         List<Long> ids = new ArrayList<>(1);
                         ids.add(inSsEmpTask.getEmpTaskId());
-                        this.batchRejection(ids, "不做，自动抵消", "IT", "IT");
+                        this.batchRejection(ids, "不做，自动抵消", SocialSecurityConst.SYSTEM_USER, SocialSecurityConst.SYSTEM_USER);
 
                         // 停办类任务单批退，仅回调任务单完成接口
                         SsEmpTask updateSsEmpTask = new SsEmpTask();
@@ -2022,10 +2028,10 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                         updateSsEmpTask.setTaskStatus(TaskStatusConst.REJECTION);
                         updateSsEmpTask.setRejectionRemark("不做，自动抵消");
                         updateSsEmpTask.setRejectionRemarkDate(LocalDate.now());
-                        updateSsEmpTask.setRejectionRemarkMan("IT");
+                        updateSsEmpTask.setRejectionRemarkMan(SocialSecurityConst.SYSTEM_USER);
                         updateSsEmpTask.setModifiedTime(LocalDateTime.now());
-                        updateSsEmpTask.setModifiedBy("IT");
-                        updateSsEmpTask.setModifiedDisplayName("IT");
+                        updateSsEmpTask.setModifiedBy(SocialSecurityConst.SYSTEM_USER);
+                        updateSsEmpTask.setModifiedDisplayName(SocialSecurityConst.SYSTEM_USER);
                         this.updateById(updateSsEmpTask);
 
                         TaskCommonUtils.completeTask(outSsEmpTask.getTaskId(), commonApiUtils, updateSsEmpTask.getModifiedDisplayName());

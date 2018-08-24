@@ -623,8 +623,8 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                     HfEmpTaskBatchRejectBo hfEmpTaskBatchRejectBo = new HfEmpTaskBatchRejectBo();
                     hfEmpTaskBatchRejectBo.setSelectedData(new Long[] { inHfEmpTask.getEmpTaskId() });
                     hfEmpTaskBatchRejectBo.setRejectionRemark("不做，自动抵消");
-                    hfEmpTaskBatchRejectBo.setModifiedBy("IT");
-                    hfEmpTaskBatchRejectBo.setModifiedDisplayName("IT");
+                    hfEmpTaskBatchRejectBo.setModifiedBy(SocialSecurityConst.SYSTEM_USER);
+                    hfEmpTaskBatchRejectBo.setModifiedDisplayName(SocialSecurityConst.SYSTEM_USER);
                     hfEmpTaskHandleService.handleReject(hfEmpTaskBatchRejectBo);
 
                     // 停办类任务单批退，仅回调任务单完成接口
@@ -633,8 +633,8 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                     updateHfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_REJECTED);
                     updateHfEmpTask.setRejectionRemark(hfEmpTaskBatchRejectBo.getRejectionRemark());
                     updateHfEmpTask.setModifiedTime(LocalDateTime.now());
-                    updateHfEmpTask.setModifiedBy("IT");
-                    updateHfEmpTask.setModifiedDisplayName("IT");
+                    updateHfEmpTask.setModifiedBy(SocialSecurityConst.SYSTEM_USER);
+                    updateHfEmpTask.setModifiedDisplayName(SocialSecurityConst.SYSTEM_USER);
                     this.updateById(updateHfEmpTask);
 
                     try {
