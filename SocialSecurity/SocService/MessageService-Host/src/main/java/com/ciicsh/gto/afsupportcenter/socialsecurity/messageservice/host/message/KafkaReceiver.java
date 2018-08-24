@@ -27,6 +27,8 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -509,7 +511,10 @@ public class KafkaReceiver {
                 ssEmpTaskService.autoOffset(afEmployeeCompanyDTO.getCompanyId(), afEmployeeCompanyDTO.getEmployeeId());
             }
         } catch (Exception e) {
-            logApiUtil.error(LogMessage.create().setTitle(LogInfo.SOURCE_MESSAGE.getKey()+"#"+"saveSsEmpTask").setContent(e.getMessage()));
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            logApiUtil.error(LogMessage.create().setTitle(LogInfo.SOURCE_MESSAGE.getKey()+"#"+"saveSsEmpTask").setContent(sw.toString()));
         }
     }
 
