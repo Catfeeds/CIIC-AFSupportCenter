@@ -1980,8 +1980,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     public void autoOffset(String companyId, String employeeId) {
         Wrapper<SsEmpTask> ssEmpTaskWrapper = new EntityWrapper<>();
         ssEmpTaskWrapper.where("is_active = 1");
-        ssEmpTaskWrapper.and("company_id = ", companyId);
-        ssEmpTaskWrapper.and("employee_id = ", employeeId);
+        ssEmpTaskWrapper.and("company_id = {0}", companyId);
+        ssEmpTaskWrapper.and("employee_id = {0}", employeeId);
         ssEmpTaskWrapper.and("task_status = 1");
         ssEmpTaskWrapper.and("task_category = {0}", SocialSecurityConst.TASK_CATEGORY_NO_HANDLE);
         List<SsEmpTask> ssEmpTaskList = this.selectList(ssEmpTaskWrapper);
@@ -1989,8 +1989,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         if (CollectionUtils.isNotEmpty(ssEmpTaskList)) {
             ssEmpTaskWrapper = new EntityWrapper<>();
             ssEmpTaskWrapper.where("is_active = 1");
-            ssEmpTaskWrapper.and("company_id = ", companyId);
-            ssEmpTaskWrapper.and("employee_id = ", employeeId);
+            ssEmpTaskWrapper.and("company_id = {0}", companyId);
+            ssEmpTaskWrapper.and("employee_id = {0}", employeeId);
             ssEmpTaskWrapper.and("task_status = 1");
             ssEmpTaskWrapper.and("task_category in (5, 6, 14, 15)");
 
