@@ -551,7 +551,11 @@ public class KafkaReceiver {
 
                 // 判断是否自动抵消
                 if (rtn && companyDto != null && ArrayUtils.contains(AUTO_OFFSET_TASK_CATEGORIES, taskCategory)) {
-                    hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId());
+                    if (fundCategory.equals(FundCategory.BASICFUND.getCategory())) {
+                        hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_BASIC);
+                    } else {
+                        hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId(), HfEmpTaskConstant.HF_TYPE_ADDED);
+                    }
                 }
                 return rtn;
             }

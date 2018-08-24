@@ -591,11 +591,12 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
 
     @Transactional(rollbackFor = {Exception.class})
     @Override
-    public void autoOffset(String companyId, String employeeId) {
+    public void autoOffset(String companyId, String employeeId, Integer hfType) {
         Wrapper<HfEmpTask> hfEmpTaskWrapper = new EntityWrapper<>();
         hfEmpTaskWrapper.where("is_active = 1");
         hfEmpTaskWrapper.and("company_id = ", companyId);
         hfEmpTaskWrapper.and("employee_id = ", employeeId);
+        hfEmpTaskWrapper.and("hf_type = {0}", hfType);
         hfEmpTaskWrapper.and("task_status = 1");
         hfEmpTaskWrapper.and("task_category = {0}", SocialSecurityConst.TASK_CATEGORY_NO_HANDLE);
         List<HfEmpTask> hfEmpTaskList = this.selectList(hfEmpTaskWrapper);
@@ -605,6 +606,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
             hfEmpTaskWrapper.where("is_active = 1");
             hfEmpTaskWrapper.and("company_id = ", companyId);
             hfEmpTaskWrapper.and("employee_id = ", employeeId);
+            hfEmpTaskWrapper.and("hf_type = {0}", hfType);
             hfEmpTaskWrapper.and("task_status = 1");
             hfEmpTaskWrapper.and("task_category in (4, 5, 12, 13)");
 

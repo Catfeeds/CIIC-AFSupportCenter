@@ -2002,7 +2002,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 SsEmpTask inSsEmpTask = ssEmpTaskList.get(0);
                 SsEmpTask outSsEmpTask = outSsEmpTaskList.get(0);
 
-                if (DateUtil.compareMonth(inSsEmpTask.getStartMonth(), inSsEmpTask.getEndMonth()) > 0) {
+                if (DateUtil.compareMonth(inSsEmpTask.getStartMonth(), outSsEmpTask.getEndMonth()) > 0) {
                     // 新增类任务单批退，回调任务单完成接口和实际金额回调接口
                     List<Long> ids = new ArrayList<>(1);
                     ids.add(inSsEmpTask.getEmpTaskId());
