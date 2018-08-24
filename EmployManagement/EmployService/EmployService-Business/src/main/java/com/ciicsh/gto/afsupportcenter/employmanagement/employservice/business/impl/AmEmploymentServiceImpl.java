@@ -2,8 +2,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.i
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.common.entity.JsonResult;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmploymentBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.EmployeeBatchBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmploymentService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmEmploymentMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmArchiveReturnPrintDTO;
@@ -153,6 +152,56 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
         EmployeeBatchBO employeeBatchBO = new  EmployeeBatchBO();
         employeeBatchBO.setEmpTaskIds(empTaskIds);
         return baseMapper.queryAmEmploymentBatch(employeeBatchBO);
+    }
+
+    @Override
+    public AmEmpTaskCollection queryArchiveTaskCount(AmEmploymentBO amEmploymentBO) {
+        List<String> param = new ArrayList<String>();
+
+        if(!StringUtil.isEmpty(amEmploymentBO.getParams()))
+        {
+            String arr[] = amEmploymentBO.getParams().split(",");
+            for(int i=0;i<arr.length;i++) {
+                param.add(arr[i]);
+            }
+        }
+
+        amEmploymentBO.setParam(param);
+        AmEmpTaskCollection amEmpTaskCollection = new AmEmpTaskCollection();
+        List<AmEmploymentBO> list = baseMapper.queryArchiveTaskCount(amEmploymentBO);
+        AmArchiveStatusBO bo = new AmArchiveStatusBO();
+        Integer handleEnd = 0;
+        Integer noHandleEnd = 0;
+        if(null!=list&&list.size()>0)
+        {
+            for(AmEmploymentBO amEmploymentBO1:list){
+                if(null!=amEmploymentBO1.getLuyongHandleEnd()&&amEmploymentBO1.getLuyongHandleEnd()){
+                    handleEnd = amEmploymentBO1.getCount();
+                }else{
+                    noHandleEnd = noHandleEnd + amEmploymentBO1.getCount();
+                }
+            }
+        }
+        bo.setHandleEnd(handleEnd);
+        bo.setNoHandleEnd(noHandleEnd);
+        amEmpTaskCollection.setAmArchiveStatusBO(bo);
+        AmTaskStatusBO amTaskStatusBO = new AmTaskStatusBO();
+        List<AmEmploymentBO> secondList = baseMapper.queryTaskCount(amEmploymentBO);
+        Integer job = 0;
+        Integer noJob = 0;
+        if(null!=secondList&&secondList.size()>0){
+            for(AmEmploymentBO temp:secondList){
+                if("Y".equals(temp.getJob())){
+                    job = job + temp.getCount();
+                }else{
+                    noJob = noJob + temp.getCount();
+                }
+            }
+        }
+        amTaskStatusBO.setNoJob(noJob);
+        amTaskStatusBO.setJob(job);
+        amEmpTaskCollection.setAmTaskStatusBO(amTaskStatusBO);
+        return amEmpTaskCollection;
     }
 
     @Override

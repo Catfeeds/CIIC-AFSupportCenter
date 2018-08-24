@@ -139,5 +139,6 @@ public class AmEmploymentBO extends AmEmployment {
 
     private String employSpecial;
 
+    private Boolean luyongHandleEnd;
 
 }
