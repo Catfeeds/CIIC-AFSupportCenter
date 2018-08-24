@@ -20,6 +20,7 @@ import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +67,11 @@ public class KafkaReceiver {
                 String taskCategory = paramMap.get("fundType").toString();
                 String fundCategory = TaskSink.FUND_NEW.equals(taskMsgDTO.getTaskType()) ? FundCategory.BASICFUND.getCategory() : FundCategory.ADDFUND.getCategory();
                 Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
-                boolean result = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEENEW.getCategory(),Integer.parseInt(taskCategory), null, cityCodeMap, 0);
+                Integer taskCategoryInt = Integer.parseInt(taskCategory);
+                if (taskCategoryInt > TaskCategory.REOPEN.getCategory()) {
+                    taskCategoryInt = TaskCategory.NOHANDLE.getCategory();
+                }
+                boolean result = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEENEW.getCategory(), taskCategoryInt, null, cityCodeMap, 0);
                 String content = "end fundEmpIn: " + JSON.toJSONString(taskMsgDTO) + "，result：" + (result ? "Success!" : "Fail!");
                 logger.debug(content);
                 log.info(LogMessage.create().setTitle("fundEmpIn").setContent(content));
@@ -138,6 +143,14 @@ public class KafkaReceiver {
         TaskCategory.SEALED
     };
 
+    private final static Integer[] AUTO_OFFSET_TASK_CATEGORIES = {
+        TaskCategory.TURNOUT.getCategory(),
+        TaskCategory.SEALED.getCategory(),
+        TaskCategory.FLOPOUT.getCategory(),
+        TaskCategory.FLOPSEALED.getCategory(),
+        TaskCategory.NOHANDLE.getCategory()
+    };
+
     /**
      * 雇员公积金翻牌任务单
      * @param message
@@ -164,7 +177,12 @@ public class KafkaReceiver {
                     fundType = Integer.parseInt(paramMap.get("fundType").toString());
                     logger.debug("start in fundEmpFlop: " + JSON.toJSONString(taskMsgDTO));
                     Map<String, Object> cityCodeMap = (Map<String, Object>) paramMap.get("cityCode");
-                    boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(), FLOP_IN_TASK_CATEGORIES[fundType - 1].getCategory(), null, cityCodeMap,0);
+                    Integer taskCategory = TaskCategory.NOHANDLE.getCategory();
+                    if (fundType <= FLOP_IN_TASK_CATEGORIES.length) {
+                        taskCategory = FLOP_IN_TASK_CATEGORIES[fundType - 1].getCategory();
+                    }
+
+                    boolean res = saveEmpTask(taskMsgDTO, fundCategory, ProcessCategory.EMPLOYEEFLOP.getCategory(), taskCategory, null, cityCodeMap,0);
                     logger.debug("end in fundEmpFlop:  " + JSON.toJSONString(taskMsgDTO) + "，result：" + (res ? "Success!" : "Fail!"));
                 }
             }
@@ -529,7 +547,13 @@ public class KafkaReceiver {
 
                 AfEmpSocialDTO socialDTO = setEmpAccount(taskMsgDTO, dto, fundCategory);
                 //插入数据到雇员任务单表
-                return hfEmpTaskService.addEmpTask(taskMsgDTO, fundCategory, processCategory,taskCategory, oldAgreementId, isChange, cityCodeMap, dto, socialDTO, afCompanyDetailResponseDTO);
+                boolean rtn = hfEmpTaskService.addEmpTask(taskMsgDTO, fundCategory, processCategory,taskCategory, oldAgreementId, isChange, cityCodeMap, dto, socialDTO, afCompanyDetailResponseDTO);
+
+                // 判断是否自动抵消
+                if (rtn && companyDto != null && ArrayUtils.contains(AUTO_OFFSET_TASK_CATEGORIES, taskCategory)) {
+                    hfEmpTaskService.autoOffset(companyDto.getCompanyId(), companyDto.getEmployeeId());
+                }
+                return rtn;
             }
             else {
                 logger.debug("error:公积金雇员信息获取失败！");

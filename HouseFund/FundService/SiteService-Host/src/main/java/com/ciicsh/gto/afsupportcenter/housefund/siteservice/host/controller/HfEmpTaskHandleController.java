@@ -426,6 +426,8 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
     @RequestMapping("/empTaskHandleReject")
     public JsonResult empTaskHandleReject(@RequestBody HfEmpTaskBatchRejectBo hfEmpTaskBatchRejectBo) {
         try {
+            hfEmpTaskBatchRejectBo.setModifiedBy(UserContext.getUserId());
+            hfEmpTaskBatchRejectBo.setModifiedDisplayName(UserContext.getUser().getDisplayName());
             return business.handleReject(hfEmpTaskBatchRejectBo);
         } catch (BusinessException e) {
             return JsonResultKit.ofError(e.getMessage());

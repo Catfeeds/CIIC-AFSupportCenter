@@ -19,6 +19,7 @@ import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyPayStatusDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
@@ -53,6 +54,14 @@ public class KafkaReceiver {
     @Autowired
     CommonApiUtils commonApiUtils;
 
+    private final static Integer[] AUTO_OFFSET_TASK_CATEGORIES = {
+        Integer.parseInt(SocialSecurityConst.TASK_TYPE_5),
+        Integer.parseInt(SocialSecurityConst.TASK_TYPE_6),
+        Integer.parseInt(SocialSecurityConst.TASK_TYPE_14),
+        Integer.parseInt(SocialSecurityConst.TASK_TYPE_15),
+        SocialSecurityConst.TASK_CATEGORY_NO_HANDLE
+    };
+
     /**
      * 订阅社保新进任务单
      *
@@ -72,9 +81,13 @@ public class KafkaReceiver {
                 if (cityCodeMap != null) {
                     cityCodeMap.put("socialStartAndStop", paramMap.get("social_startAndStop"));
                 }
+                Integer taskCategoryInt = Integer.parseInt(socialType);
+                if (taskCategoryInt > SocialSecurityConst.SOCIAL_TYPE_2) {
+                    taskCategoryInt = SocialSecurityConst.TASK_CATEGORY_NO_HANDLE;
+                }
                 //雇员服务协议ID
 //                String empAgreementId = taskMsgDTO.getMissionId();
-                saveSsEmpTask(taskMsgDTO, Integer.parseInt(socialType), ProcessCategory.AF_EMP_IN.getCategory(), null, cityCodeMap,0);
+                saveSsEmpTask(taskMsgDTO, taskCategoryInt, ProcessCategory.AF_EMP_IN.getCategory(), null, cityCodeMap,0);
             }
         }
     }
@@ -150,12 +163,15 @@ public class KafkaReceiver {
                 if (cityCodeMap != null) {
                     cityCodeMap.put("socialStartAndStop", paramMap.get("social_startAndStop"));
                 }
+
 //                empAgreementId = taskMsgDTO.getMissionId();
                 //新进转入判断，任务单保存时转换成支持中心的翻牌新进&翻牌转入类型
                 if (SocialSecurityConst.SOCIAL_TYPE_1 == socialType) {
                     saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_12), ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), null, cityCodeMap, 0);
                 } else if (SocialSecurityConst.SOCIAL_TYPE_2 == socialType) {
                     saveSsEmpTask(taskMsgDTO, Integer.parseInt(SocialSecurityConst.TASK_TYPE_13), ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), null, cityCodeMap, 0);
+                } else {
+                    saveSsEmpTask(taskMsgDTO, SocialSecurityConst.TASK_CATEGORY_NO_HANDLE, ProcessCategory.AF_EMP_COMPANY_CHANGE.getCategory(), null, cityCodeMap, 0);
                 }
             }
             //翻牌转出
@@ -475,8 +491,9 @@ public class KafkaReceiver {
             AfEmployeeInfoDTO dto = callEmpAgreement(taskMsgDTO, processCategory, oldAgreementId);
             AfCompanyDetailResponseDTO afCompanyDetailResponseDTO = null;
 
+            AfEmployeeCompanyDTO afEmployeeCompanyDTO = null;
             if (dto != null) {
-                AfEmployeeCompanyDTO afEmployeeCompanyDTO = dto.getEmployeeCompany();
+                afEmployeeCompanyDTO = dto.getEmployeeCompany();
 
                 if (afEmployeeCompanyDTO != null) {
                     afCompanyDetailResponseDTO = commonApiUtils.getServiceCenterInfo(afEmployeeCompanyDTO.getCompanyId());
@@ -485,6 +502,11 @@ public class KafkaReceiver {
 
             //保存雇员任务单表数据
             ssEmpTaskFrontService.saveSsEmpTask(taskMsgDTO, socialType, processCategory, isChange, oldAgreementId, dto, afCompanyDetailResponseDTO, cityCodeMap);
+
+            // 判断是否自动抵消
+            if (afEmployeeCompanyDTO != null && ArrayUtils.contains(AUTO_OFFSET_TASK_CATEGORIES, socialType)) {
+                ssEmpTaskService.autoOffset(afEmployeeCompanyDTO.getCompanyId(), afEmployeeCompanyDTO.getEmployeeId());
+            }
         } catch (Exception e) {
             logApiUtil.info(LogMessage.create().setTitle(LogInfo.SOURCE_MESSAGE.getKey()+"#"+"saveSsEmpTask").setContent(e.getMessage()));
         }

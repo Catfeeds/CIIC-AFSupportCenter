@@ -613,8 +613,8 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         inputHfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_REJECTED);
         inputHfEmpTask.setRejectionRemark(hfEmpTaskBatchRejectBo.getRejectionRemark());
         inputHfEmpTask.setModifiedTime(LocalDateTime.now());
-        inputHfEmpTask.setModifiedBy(UserContext.getUserId());
-        inputHfEmpTask.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+        inputHfEmpTask.setModifiedBy(hfEmpTaskBatchRejectBo.getModifiedBy());
+        inputHfEmpTask.setModifiedDisplayName(hfEmpTaskBatchRejectBo.getModifiedDisplayName());
         inputHfEmpTask.setHfType(hfEmpTask.getHfType());
 
         this.updateById(inputHfEmpTask);
@@ -638,7 +638,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
         }
         try {
             Result result = apiCompleteTask(hfEmpTask.getTaskId(),
-                UserContext.getUser().getDisplayName());
+                hfEmpTaskBatchRejectBo.getModifiedDisplayName());
         } catch (Exception e) {
             LogMessage logMessage = LogMessage.create().setTitle("访问接口").
                 setContent("访问客服中心的完成任务接口失败,ExceptionMessage:" + e.getMessage());
@@ -1471,7 +1471,10 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
                 // 如果新开的当月，还存在补缴，那么新开及转出记录需保留
                 if (repairCnt == 0) {
                     hfMonthChargeBo.setPaymentTypes(StringUtils.join(new Integer[]{
-                        HfMonthChargeConstant.PAYMENT_TYPE_NEW
+                        HfMonthChargeConstant.PAYMENT_TYPE_NEW,
+                        HfMonthChargeConstant.PAYMENT_TYPE_TRANS_IN,
+                        HfMonthChargeConstant.PAYMENT_TYPE_OPEN,
+                        HfMonthChargeConstant.PAYMENT_TYPE_ADJUST_OPEN
                     }, ','));
                 } else {
                     hfMonthChargeBo.setPaymentTypes(StringUtils.join(new Integer[]{
@@ -1855,6 +1858,7 @@ public class HfEmpTaskHandleServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfE
      * @return 接口返回结果
      * @throws Exception 接口throws出的Exception
      */
+    @Override
     public Result apiCompleteTask(String taskId, String assignee) throws Exception {
         TaskSheetRequestDTO taskSheetRequestDTO = new TaskSheetRequestDTO();
         taskSheetRequestDTO.setTaskId(taskId);

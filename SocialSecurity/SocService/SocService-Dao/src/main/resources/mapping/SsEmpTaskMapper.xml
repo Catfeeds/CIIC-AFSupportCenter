@@ -119,6 +119,7 @@
         et.emp_task_id,
         et.customer_id,
         et.emp_archive_id,
+        et.process_category,
         et.task_category,
         et.task_category_special,
         et.urgent,

@@ -681,7 +681,7 @@
         het.submit_time,
         het.task_id,
         CASE WHEN (het.task_category = 1 OR het.task_category = 2 OR het.task_category = 3 OR het.task_category = 6
-          OR het.task_category = 7 OR het.task_category = 9 OR het.task_category = 10  OR het.task_category = 11)
+          OR het.task_category = 7 OR het.task_category = 9 OR het.task_category = 10  OR het.task_category = 11 OR het.task_category = 99)
         AND tmp.start_month IS NOT NULL THEN tmp.start_month ELSE het.start_month END start_month,
         CASE WHEN (het.task_category = 4 OR het.task_category = 5 OR het.task_category = 6 OR het.task_category = 12
           OR het.task_category = 13)
@@ -795,7 +795,7 @@
         het.submit_time,
         het.task_id,
         CASE WHEN (het.task_category = 1 OR het.task_category = 2 OR het.task_category = 3 OR het.task_category = 6
-          OR het.task_category = 7 OR het.task_category = 9 OR het.task_category = 10  OR het.task_category = 11)
+          OR het.task_category = 7 OR het.task_category = 9 OR het.task_category = 10  OR het.task_category = 11 OR het.task_category = 99)
         AND tmp.start_month IS NOT NULL THEN tmp.start_month ELSE het.start_month END start_month,
         CASE WHEN (het.task_category = 4 OR het.task_category = 5 OR het.task_category = 6 OR het.task_category = 12
           OR het.task_category = 13)
