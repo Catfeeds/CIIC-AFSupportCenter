@@ -631,4 +631,11 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
 
     }
 
+    @RequestMapping("/taskCountArchive")
+    public  JsonResult<AmEmpTaskCollection>  taskCountArchive(AmEmploymentBO amEmploymentBO){
+        AmEmpTaskCollection amEmpTaskCollection = business.queryArchiveTaskCount(amEmploymentBO);
+
+        return  JsonResultKit.of(amEmpTaskCollection);
+    }
+
 }
