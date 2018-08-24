@@ -8,6 +8,7 @@ import com.ciicsh.gto.afsupportcenter.credentialscommandservice.dao.TaskMapper;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto.TaskDetialDTO;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.Task;
 import com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.po.TaskType;
+import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.billcenter.afmodule.cmd.api.dto.AfDisposableChargeDTO;
 import com.ciicsh.gto.billcenter.afmodule.cmd.api.dto.AfDisposableChargeProductDTO;
@@ -100,14 +101,14 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
                 if (!(taskDetialDTO.getCredentialsType().equals(5)) && taskDetialDTO.getPayType() != null && taskDetialDTO.getPayType() == 1) {
                     boolean b1 = this.saveCommandAfDisposableCharge(taskDetialDTO);
                     if (!b1) {
-                        return 3;
+                        throw new BusinessException("账单生成失败");
                     }
                 }
             } else {
-                return 2;
+                throw new BusinessException("材料收缴信息保存失败");
             }
         } else {
-            return 1;
+            throw new BusinessException("任务单保存失败");
         }
         return 0;
     }
@@ -141,24 +142,26 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         ProductSubjectDTO data = productProxy.getByBasicProductId(taskDetialDTO.getBasicProductId()).getData();
         afDisposableChargeDTO.setSubjectCodeId(Integer.parseInt(data.getSubjectCodeId()));
         afDisposableChargeDTO.setInvoiceType(1);
+        /**收费产品列表*/
         List<AfDisposableChargeProductDTO> productList = new ArrayList<>();
         AfDisposableChargeProductDTO product = new AfDisposableChargeProductDTO();
-        product.setProductId(taskDetialDTO.getBasicProductId());
+        product.setProductId(taskDetialDTO.getProductId());
         TaskType taskType =
             taskTypeService.selectById(StringUtils.isBlank(taskDetialDTO.getCredentialsDealType()) ?
                 taskDetialDTO.getCredentialsType() : taskDetialDTO.getCredentialsDealType());
-        if (!"0".equals(taskType.getPid())) {
+        if (0 != taskType.getPid()) {
             TaskType pTaskType = taskTypeService.selectById(taskType.getPid());
             product.setProductName(pTaskType.getTaskTypeName()+"-"+taskType.getTaskTypeName());
         } else {
             product.setProductName(taskType.getTaskTypeName());
         }
-        product.setChargeAmount(taskDetialDTO.getChargeAmount());
+        BigDecimal amount = taskDetialDTO.getChargeAmount().multiply(new BigDecimal(taskDetialDTO.getPeopleNum()));
+        product.setChargeAmount(amount);
         productList.add(product);
         afDisposableChargeDTO.setProductList(productList);
 
         afDisposableChargeDTO.setActive(true);
-        afDisposableChargeDTO.setCreatedBy("test");
+        afDisposableChargeDTO.setCreatedBy(UserContext.getUser().getDisplayName());
         list.add(afDisposableChargeDTO);
         Result result = commandAfDisposableChargeProxy.saveList(list);
         return result.getStatusCode() == 0 ? true : false;

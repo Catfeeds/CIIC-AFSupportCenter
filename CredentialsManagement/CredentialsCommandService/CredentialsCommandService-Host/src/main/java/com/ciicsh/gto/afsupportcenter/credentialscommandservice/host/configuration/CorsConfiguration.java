@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 /**
  * @Author: guwei
- * @Description:
+ * @Description: 跨域请求
  * @Date: Created in 14:30 2018/1/19
  */
 @Configuration

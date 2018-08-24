@@ -33,6 +33,11 @@ public class TaskType extends Model<TaskType> {
     @TableField("basic_product_id")
     private String basicProductId;
     /**
+     * 产品ID
+     */
+    @TableField("product_id")
+    private String productId;
+    /**
      * 层级
      */
     private Integer level;
@@ -82,6 +87,14 @@ public class TaskType extends Model<TaskType> {
 
     public void setBasicProductId(String basicProductId) {
         this.basicProductId = basicProductId;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
     public Integer getLevel() {
