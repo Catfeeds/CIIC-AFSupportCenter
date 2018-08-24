@@ -1414,6 +1414,7 @@
         <if test="serviceCenterValue != null">
             AND et.service_center_id = #{serviceCenterValue}
         </if>
+        ORDER BY et.created_time DESC
     </select>
     <!--查询雇员档案表以及未办理任务单（未落档案表）的雇员-->
     <select id="queryEmpTaskTransferNewTask" resultMap="EmpTaskTransferRM">

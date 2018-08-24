@@ -9,6 +9,9 @@
 		<result column="company_id" property="companyId" />
 		<result column="credentials_type" property="credentialsType" />
 		<result column="credentials_deal_type" property="credentialsDealType" />
+        <result column="qualification" property="qualification" />
+        <result column="degree" property="degree" />
+        <result column="education_time" property="educationTime" />
 		<result column="education" property="education" />
 		<result column="material_back_time" property="materialBackTime" />
 		<result column="calls_time" property="callsTime" />
@@ -23,7 +26,10 @@
 		<result column="original_back_time" property="originalBackTime" />
 		<result column="original_back_reason" property="originalBackReason" />
 		<result column="integral_bill_print_time" property="integralBillPrintTime" />
+        <result column="integral_bill_call_time" property="integralBillCallTime" />
+        <result column="emp_back_time" property="empBackTime" />
 		<result column="charge_amount" property="chargeAmount" />
+        <result column="people_num" property="peopleNum" />
 		<result column="pay_type" property="payType" />
 		<result column="permit_company_name" property="permitCompanyName" />
 		<result column="telephone" property="telephone" />
@@ -42,6 +48,7 @@
       cm_task
       WHERE
       employee_id = #{empId}
+      ORDER BY created_time DESC
     </select>
 
     <sql id="SEL_ALL_COLUMS">
@@ -50,6 +57,9 @@
         company_id,
         credentials_type,
         credentials_deal_type,
+        qualification,
+        degree,
+        education_time,
         education,
         material_back_time,
         calls_time,
@@ -64,7 +74,10 @@
         original_back_time,
         original_back_reason,
         integral_bill_print_time,
+        integral_bill_call_time,
+        emp_back_time,
         charge_amount,
+        people_num,
         pay_type,
         permit_company_name,
         telephone,
