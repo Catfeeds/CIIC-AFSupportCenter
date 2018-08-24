@@ -197,7 +197,7 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
     /**
      * 用工办理查询
-     * @param employeeId
+     * @param
      * @return
      */
     @Log("用工办理查询")
@@ -296,8 +296,8 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             if(advanceBO != null){
                 amArchiveBO = new AmArchiveBO();
                 amArchiveBO.setFormAdvance(true);
-                amArchiveBO.setDocType(advanceBO.getReservedArchiveType());
-                amArchiveBO.setDocNum(advanceBO.getReservedArchiveNo() == null ? "" : advanceBO.getReservedArchiveNo().toString());
+                amArchiveBO.setYuliuDocType(advanceBO.getReservedArchiveType());
+                amArchiveBO.setYuliuDocNum(advanceBO.getReservedArchiveNo() == null ? "" : advanceBO.getReservedArchiveNo().toString());
                 amArchiveBO.setDocFrom(advanceBO.getArchiveSource());// 档案来源
                 amArchiveBO.setArchivePlace(advanceBO.getArchivePlace());// 存档地
                 resultMap.put("amArchaiveBo",amArchiveBO);
