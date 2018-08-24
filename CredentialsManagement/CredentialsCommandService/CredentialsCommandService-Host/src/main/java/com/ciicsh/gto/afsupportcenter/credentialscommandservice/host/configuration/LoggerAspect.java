@@ -37,7 +37,7 @@ public class LoggerAspect {
     @Before("controllerPointcut()")
     public void doBefore(JoinPoint joinPoint) throws Throwable {
 
-        startTime.set(System.currentTimeMillis());
+          startTime.set(System.currentTimeMillis());
 
         // 接收到请求，记录请求内容
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

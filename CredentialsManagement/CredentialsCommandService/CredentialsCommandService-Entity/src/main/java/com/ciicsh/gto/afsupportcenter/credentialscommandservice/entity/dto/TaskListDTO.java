@@ -1,5 +1,6 @@
 package com.ciicsh.gto.afsupportcenter.credentialscommandservice.entity.dto;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
@@ -42,6 +43,21 @@ public class TaskListDTO implements Serializable {
      */
     private String credentialsDealTypeN;
     private String basicProductId;
+    /**
+     * 学历
+     */
+    private Integer qualification;
+    private String qualificationName;
+    /**
+     * 学位
+     */
+    private Integer degree;
+    private String degreeName;
+    /**
+     * 学历认定时间
+     */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "+8")
+    private Date educationTime;
     /**
      * 学历认定
      */
@@ -109,9 +125,23 @@ public class TaskListDTO implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "+8")
     private Date integralBillPrintTime;
     /**
+     * 积分单通知日期
+     */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "+8")
+    private Date integralBillCallTime;
+    /**
+     * 雇员批复领取时间
+     */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "+8")
+    private Date empBackTime;
+    /**
      * 收费金额
      */
     private BigDecimal chargeAmount;
+    /**
+     * 人数
+     */
+    private String peopleNum;
     /**
      * 付款方式(1：台账、2：现金、3：转账、4：POS机)
      */
@@ -135,7 +165,7 @@ public class TaskListDTO implements Serializable {
     /**
      * 创建时间
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "+8")
+    @JsonFormat( pattern = "yyyy-MM-dd hh:mm:ss", timezone = "+8")
     private Date createdTime;
     /**
      * 创建者登录名
@@ -204,6 +234,22 @@ public class TaskListDTO implements Serializable {
 
     public void setCredentialsDealTypeN(String credentialsDealTypeN) {
         this.credentialsDealTypeN = credentialsDealTypeN;
+    }
+
+    public String getQualificationName() {
+        return qualificationName;
+    }
+
+    public void setQualificationName(String qualificationName) {
+        this.qualificationName = qualificationName;
+    }
+
+    public String getDegreeName() {
+        return degreeName;
+    }
+
+    public void setDegreeName(String degreeName) {
+        this.degreeName = degreeName;
     }
 
     public String getEducation() {
@@ -380,5 +426,53 @@ public class TaskListDTO implements Serializable {
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public Integer getQualification() {
+        return qualification;
+    }
+
+    public void setQualification(Integer qualification) {
+        this.qualification = qualification;
+    }
+
+    public Integer getDegree() {
+        return degree;
+    }
+
+    public void setDegree(Integer degree) {
+        this.degree = degree;
+    }
+
+    public Date getEducationTime() {
+        return educationTime;
+    }
+
+    public void setEducationTime(Date educationTime) {
+        this.educationTime = educationTime;
+    }
+
+    public Date getIntegralBillCallTime() {
+        return integralBillCallTime;
+    }
+
+    public void setIntegralBillCallTime(Date integralBillCallTime) {
+        this.integralBillCallTime = integralBillCallTime;
+    }
+
+    public Date getEmpBackTime() {
+        return empBackTime;
+    }
+
+    public void setEmpBackTime(Date empBackTime) {
+        this.empBackTime = empBackTime;
+    }
+
+    public String getPeopleNum() {
+        return peopleNum;
+    }
+
+    public void setPeopleNum(String peopleNum) {
+        this.peopleNum = peopleNum;
     }
 }

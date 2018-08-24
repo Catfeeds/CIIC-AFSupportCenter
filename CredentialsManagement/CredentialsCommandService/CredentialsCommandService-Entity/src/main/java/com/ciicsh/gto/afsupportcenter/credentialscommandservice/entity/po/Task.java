@@ -46,6 +46,19 @@ public class Task extends Model<Task> {
     @TableField("credentials_deal_type")
     private Integer credentialsDealType;
     /**
+     * 学历
+     */
+    private Integer qualification;
+    /**
+     * 学位
+     */
+    private Integer degree;
+    /**
+     * 学历认定时间
+     */
+    @TableField("education_time")
+    private Date educationTime;
+    /**
      * 学历认定
      */
     private String education;
@@ -115,6 +128,16 @@ public class Task extends Model<Task> {
     @TableField("integral_bill_print_time")
     private Date integralBillPrintTime;
     /**
+     * 积分单通知日期
+     */
+    @TableField("integral_bill_call_time")
+    private Date integralBillCallTime;
+    /**
+     * 雇员批复领取时间
+     */
+    @TableField("emp_back_time")
+    private Date empBackTime;
+    /**
      * 收费金额
      */
     @TableField("charge_amount")
@@ -124,6 +147,11 @@ public class Task extends Model<Task> {
      */
     @TableField("pay_type")
     private Integer payType;
+    /**
+     * 人数
+     */
+    @TableField("people_num")
+    private String peopleNum;
     /**
      * 办证公司名称
      */
@@ -394,6 +422,54 @@ public class Task extends Model<Task> {
 
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
+    }
+
+    public Integer getQualification() {
+        return qualification;
+    }
+
+    public void setQualification(Integer qualification) {
+        this.qualification = qualification;
+    }
+
+    public Integer getDegree() {
+        return degree;
+    }
+
+    public void setDegree(Integer degree) {
+        this.degree = degree;
+    }
+
+    public Date getEducationTime() {
+        return educationTime;
+    }
+
+    public void setEducationTime(Date educationTime) {
+        this.educationTime = educationTime;
+    }
+
+    public Date getIntegralBillCallTime() {
+        return integralBillCallTime;
+    }
+
+    public void setIntegralBillCallTime(Date integralBillCallTime) {
+        this.integralBillCallTime = integralBillCallTime;
+    }
+
+    public Date getEmpBackTime() {
+        return empBackTime;
+    }
+
+    public void setEmpBackTime(Date empBackTime) {
+        this.empBackTime = empBackTime;
+    }
+
+    public String getPeopleNum() {
+        return peopleNum;
+    }
+
+    public void setPeopleNum(String peopleNum) {
+        this.peopleNum = peopleNum;
     }
 
     @Override
