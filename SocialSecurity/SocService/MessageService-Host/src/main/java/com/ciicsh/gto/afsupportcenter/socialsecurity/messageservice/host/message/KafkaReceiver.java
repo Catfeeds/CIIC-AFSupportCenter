@@ -505,10 +505,11 @@ public class KafkaReceiver {
 
             // 判断是否自动抵消
             if (afEmployeeCompanyDTO != null && ArrayUtils.contains(AUTO_OFFSET_TASK_CATEGORIES, socialType)) {
+                logApiUtil.info(LogMessage.create().setTitle(LogInfo.SOURCE_MESSAGE.getKey()+"#"+"saveSsEmpTask").setContent("判断是否自动抵消的类型"));
                 ssEmpTaskService.autoOffset(afEmployeeCompanyDTO.getCompanyId(), afEmployeeCompanyDTO.getEmployeeId());
             }
         } catch (Exception e) {
-            logApiUtil.info(LogMessage.create().setTitle(LogInfo.SOURCE_MESSAGE.getKey()+"#"+"saveSsEmpTask").setContent(e.getMessage()));
+            logApiUtil.error(LogMessage.create().setTitle(LogInfo.SOURCE_MESSAGE.getKey()+"#"+"saveSsEmpTask").setContent(e.getMessage()));
         }
     }
 
