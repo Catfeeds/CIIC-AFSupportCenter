@@ -461,9 +461,12 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
         String key = "-HfEmpTaskHandleController-comAccountQuery-ComAccountTransBo-list-";
         List<ComAccountTransBo> rtnList = null;
         List<ComAccountTransBo> comAccountTransBoList = (List<ComAccountTransBo>) RedisManager.getObj(key);
+        if(comAccountTransBo.getComAccountName()==null){
+            comAccountTransBo.setComAccountName("");
+        }
         if (CollectionUtils.isNotEmpty(comAccountTransBoList)) {
             rtnList = comAccountTransBoList.stream().filter(e ->
-                e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
+                e.getComAccountName().contains( comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
         }
 
         if (CollectionUtils.isEmpty(rtnList)) {
@@ -478,8 +481,6 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
                         e.getComAccountName().contains(comAccountTransBo.getComAccountName())).limit(5).collect(Collectors.toList());
                 }
             }
-
-
         }
 
         return JsonResultKit.of(rtnList);
