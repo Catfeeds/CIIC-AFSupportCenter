@@ -88,6 +88,8 @@ public class AmResignBO extends AmResign {
 
     private Integer taskStatus;
 
+    private Integer taskStatusOther;
+
     private String remarkType;
 
     private Integer idCardType;

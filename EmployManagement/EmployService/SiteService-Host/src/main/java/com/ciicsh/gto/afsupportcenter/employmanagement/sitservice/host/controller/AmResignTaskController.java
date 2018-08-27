@@ -163,15 +163,15 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             amResignBOCount.setJob("Y");
             List<AmResignBO> jobList = business.jobCount(amResignBOCount);
             amTaskStatusBO.setJob(jobList.get(0).getCount());
-            amTaskStatusBO.setNoJob(num-jobList.get(0).getCount());
+            amTaskStatusBO.setNoJob(0);
         }else{
             List<AmResignBO> jobList = business.jobCount(amResignBOCount);
             if("Y".equals(amResignBOCount.getJob()))
             {
                 amTaskStatusBO.setJob(jobList.get(0).getCount());
-                amTaskStatusBO.setNoJob(list.size()-jobList.get(0).getCount());
+                amTaskStatusBO.setNoJob(0);
             }else{
-                amTaskStatusBO.setJob(list.size()-jobList.get(0).getCount());
+                amTaskStatusBO.setJob(0);
                 amTaskStatusBO.setNoJob(jobList.get(0).getCount());
             }
         }
