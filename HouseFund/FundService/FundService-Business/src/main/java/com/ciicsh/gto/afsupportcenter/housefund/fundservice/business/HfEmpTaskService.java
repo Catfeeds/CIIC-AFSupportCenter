@@ -78,4 +78,6 @@ public interface HfEmpTaskService extends IService<HfEmpTask> {
     Integer getExistHandleRemarkCount(HfEmpTaskBo hfEmpTaskBo);
 
     void createTransferTask(HfEmpTask inputHfEmpTask, Long comAccountId);
+
+    void autoOffset(String companyId, String employeeId, Integer hfType);
 }

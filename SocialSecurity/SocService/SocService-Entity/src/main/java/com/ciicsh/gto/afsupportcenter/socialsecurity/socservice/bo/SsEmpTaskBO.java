@@ -32,6 +32,7 @@ public class SsEmpTaskBO implements Serializable {
     private String customerId;
     private Long empArchiveId;
     private Integer isChange;
+    private Integer processCategory;
     private Integer taskCategory;
     @Excel(name = "变更内容", orderNum = "8")
     private String taskCategoryName;

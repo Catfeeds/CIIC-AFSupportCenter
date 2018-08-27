@@ -33,6 +33,9 @@ public interface SocialSecurityConst {
     int DEP_SOCIAL_SECURITY_TEAM_ID = 515;
     int DEP_COMPANY_CENTER_ID = 415;
 
+    Integer TASK_CATEGORY_NO_HANDLE = 99;
+    String SYSTEM_USER = "IT";
+
     //结算区县
     public static final Map<String, String> DISTRICT_MAP = new HashMap<String, String>() {
         {

@@ -139,32 +139,32 @@ public class EmployeeCompanyController {
      */
     @GetMapping("/findTaskType")
     public JsonResult findTaskType(@RequestParam("pid") String pid, @RequestParam("companyId") String companyId) {
-//        List<TaskType> list = taskTypeService.findTaskType(pid);
-//        ArrayList<String> baseProductIds = new ArrayList<>();
-//        baseProductIds.add("CPJSW1800007");
-//        baseProductIds.add("CPJSW1800006");
-//        List<QuotationProductResponseDTO> object = quotationProxy.getQuotationProductsByCompanyId(companyId, baseProductIds).getObject();
-//        List<String> productIds = object.stream().map(dto -> dto.getProductId()).collect(Collectors.toList());
-//        List<TaskTypeDTO> result = list.stream()
-//            .filter(i -> productIds.contains(i.getProductId()))
-//            .map(item -> {
-//            TaskTypeDTO taskTypeDTO = new TaskTypeDTO();
-//            BeanUtils.copyProperties(item, taskTypeDTO);
-//            taskTypeDTO.setTaskTypeId(String.valueOf(item.getTaskTypeId()));
-//            taskTypeDTO.setLevel(String.valueOf(item.getLevel()));
-//            taskTypeDTO.setPid(String.valueOf(item.getPid()));
-//            return taskTypeDTO;
-//        }).collect(Collectors.toList());
         List<TaskType> list = taskTypeService.findTaskType(pid);
+        ArrayList<String> baseProductIds = new ArrayList<>();
+        baseProductIds.add("CPJSW1800007");
+        baseProductIds.add("CPJSW1800006");
+        List<QuotationProductResponseDTO> object = quotationProxy.getQuotationProductsByCompanyId(companyId, baseProductIds).getObject();
+        List<String> productIds = object.stream().map(dto -> dto.getProductId()).collect(Collectors.toList());
         List<TaskTypeDTO> result = list.stream()
+            .filter(i -> productIds.contains(i.getProductId()))
             .map(item -> {
-                TaskTypeDTO taskTypeDTO = new TaskTypeDTO();
-                BeanUtils.copyProperties(item, taskTypeDTO);
-                taskTypeDTO.setTaskTypeId(String.valueOf(item.getTaskTypeId()));
-                taskTypeDTO.setLevel(String.valueOf(item.getLevel()));
-                taskTypeDTO.setPid(String.valueOf(item.getPid()));
-                return taskTypeDTO;
-            }).collect(Collectors.toList());
+            TaskTypeDTO taskTypeDTO = new TaskTypeDTO();
+            BeanUtils.copyProperties(item, taskTypeDTO);
+            taskTypeDTO.setTaskTypeId(String.valueOf(item.getTaskTypeId()));
+            taskTypeDTO.setLevel(String.valueOf(item.getLevel()));
+            taskTypeDTO.setPid(String.valueOf(item.getPid()));
+            return taskTypeDTO;
+        }).collect(Collectors.toList());
+//        List<TaskType> list = taskTypeService.findTaskType(pid);
+//        List<TaskTypeDTO> result = list.stream()
+//            .map(item -> {
+//                TaskTypeDTO taskTypeDTO = new TaskTypeDTO();
+//                BeanUtils.copyProperties(item, taskTypeDTO);
+//                taskTypeDTO.setTaskTypeId(String.valueOf(item.getTaskTypeId()));
+//                taskTypeDTO.setLevel(String.valueOf(item.getLevel()));
+//                taskTypeDTO.setPid(String.valueOf(item.getPid()));
+//                return taskTypeDTO;
+//            }).collect(Collectors.toList());
         return JsonResult.success(result);
     }
 

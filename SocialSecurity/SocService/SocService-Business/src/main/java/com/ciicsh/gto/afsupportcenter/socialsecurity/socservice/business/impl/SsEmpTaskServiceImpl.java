@@ -11,10 +11,13 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.utils.T
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpTaskMapper;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.entity.*;
 import com.ciicsh.gto.afsupportcenter.util.CalculateSocialUtils;
+import com.ciicsh.gto.afsupportcenter.util.DateUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.exception.BusinessException;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
+import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
@@ -77,6 +80,8 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
     SsComAccountService ssComAccountService;
     @Autowired
     SsPaymentService ssPaymentService;
+    @Autowired
+    LogApiUtil logApiUtil;
 
 
     //个人进位方式
@@ -1714,8 +1719,14 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
     void by(Object entity) {
         BeanMap bm = new BeanMap(entity);
-        bm.put("createdBy", UserContext.getUserId());
-        bm.put("modifiedBy", UserContext.getUserId());
+
+        if (UserContext.getUser() != null) {
+            bm.put("createdBy", UserContext.getUserId());
+            bm.put("modifiedBy", UserContext.getUserId());
+        } else {
+            bm.put("createdBy", SocialSecurityConst.SYSTEM_USER);
+            bm.put("modifiedBy", SocialSecurityConst.SYSTEM_USER);
+        }
     }
 
     /**
@@ -1928,7 +1939,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
      * @return
      */
     @Override
-    public Boolean batchRejection(List<Long> ids, String remark) {
+    public Boolean batchRejection(List<Long> ids, String remark, String userId, String userName) {
         int length = ids.size();
         List<String> list = new ArrayList<>(length);
         for (int i = 0; i < length; i++) {
@@ -1965,10 +1976,72 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             ssEmpTask.setRejectionRemark(remark);
             ssEmpTask.setTaskStatus(TaskStatusConst.REJECTION);
             ssEmpTask.setRejectionRemarkDate(LocalDate.now());
-            ssEmpTask.setRejectionRemarkMan(UserContext.getUser().getDisplayName());
+            ssEmpTask.setRejectionRemarkMan(userName);
+            ssEmpTask.setModifiedTime(LocalDateTime.now());
+            ssEmpTask.setModifiedBy(userId);
+            ssEmpTask.setModifiedDisplayName(userName);
             baseMapper.updateById(ssEmpTask);
         } //for
         return true;
+    }
+
+    @Transactional(rollbackFor = {Exception.class})
+    @Override
+    public void autoOffset(String companyId, String employeeId) {
+        logApiUtil.info(LogMessage.create().setTitle("SsEmpTaskServiceImpl#autoOffset").setContent("自动抵消条件判断，companyId=" + companyId + ",employeeId=" + employeeId));
+        try {
+            Wrapper<SsEmpTask> ssEmpTaskWrapper = new EntityWrapper<>();
+            ssEmpTaskWrapper.where("is_active = 1");
+            ssEmpTaskWrapper.and("company_id = {0}", companyId);
+            ssEmpTaskWrapper.and("employee_id = {0}", employeeId);
+            ssEmpTaskWrapper.and("task_status = 1");
+            ssEmpTaskWrapper.and("task_category = {0}", SocialSecurityConst.TASK_CATEGORY_NO_HANDLE);
+            List<SsEmpTask> ssEmpTaskList = this.selectList(ssEmpTaskWrapper);
+
+            if (CollectionUtils.isNotEmpty(ssEmpTaskList)) {
+                ssEmpTaskWrapper = new EntityWrapper<>();
+                ssEmpTaskWrapper.where("is_active = 1");
+                ssEmpTaskWrapper.and("company_id = {0}", companyId);
+                ssEmpTaskWrapper.and("employee_id = {0}", employeeId);
+                ssEmpTaskWrapper.and("task_status = 1");
+                ssEmpTaskWrapper.and("task_category in (5, 6, 14, 15)");
+
+                List<SsEmpTask> outSsEmpTaskList = this.selectList(ssEmpTaskWrapper);
+
+                if (CollectionUtils.isNotEmpty(outSsEmpTaskList)
+                    && ssEmpTaskList.size() == 1 && outSsEmpTaskList.size() == 1
+                    ) {
+                    SsEmpTask inSsEmpTask = ssEmpTaskList.get(0);
+                    SsEmpTask outSsEmpTask = outSsEmpTaskList.get(0);
+
+                    if (DateUtil.compareMonth(inSsEmpTask.getStartMonth(), outSsEmpTask.getEndMonth()) > 0) {
+                        logApiUtil.info(LogMessage.create().setTitle("SsEmpTaskServiceImpl#autoOffset").setContent("自动抵消执行"));
+
+                        // 新增类任务单批退，回调任务单完成接口和实际金额回调接口
+                        List<Long> ids = new ArrayList<>(1);
+                        ids.add(inSsEmpTask.getEmpTaskId());
+                        this.batchRejection(ids, "不做，自动抵消", SocialSecurityConst.SYSTEM_USER, SocialSecurityConst.SYSTEM_USER);
+
+                        // 停办类任务单批退，仅回调任务单完成接口
+                        SsEmpTask updateSsEmpTask = new SsEmpTask();
+                        updateSsEmpTask.setEmpTaskId(outSsEmpTask.getEmpTaskId());
+                        updateSsEmpTask.setTaskStatus(TaskStatusConst.REJECTION);
+                        updateSsEmpTask.setRejectionRemark("不做，自动抵消");
+                        updateSsEmpTask.setRejectionRemarkDate(LocalDate.now());
+                        updateSsEmpTask.setRejectionRemarkMan(SocialSecurityConst.SYSTEM_USER);
+                        updateSsEmpTask.setModifiedTime(LocalDateTime.now());
+                        updateSsEmpTask.setModifiedBy(SocialSecurityConst.SYSTEM_USER);
+                        updateSsEmpTask.setModifiedDisplayName(SocialSecurityConst.SYSTEM_USER);
+                        this.updateById(updateSsEmpTask);
+
+                        TaskCommonUtils.completeTask(outSsEmpTask.getTaskId(), commonApiUtils, updateSsEmpTask.getModifiedDisplayName());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logApiUtil.error(LogMessage.create().setTitle("SsEmpTaskServiceImpl#autoOffset").setContent(e.getMessage()));
+            throw e;
+        }
     }
 
     /**

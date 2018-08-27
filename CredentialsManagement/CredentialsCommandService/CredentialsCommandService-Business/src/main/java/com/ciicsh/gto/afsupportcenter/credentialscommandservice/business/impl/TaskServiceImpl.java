@@ -155,8 +155,12 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         } else {
             product.setProductName(taskType.getTaskTypeName());
         }
-        BigDecimal amount = taskDetialDTO.getChargeAmount().multiply(new BigDecimal(taskDetialDTO.getPeopleNum()));
-        product.setChargeAmount(amount);
+        if (taskDetialDTO.getPeopleNum() != null && taskDetialDTO.getChargeAmount() != null) {
+            BigDecimal amount = taskDetialDTO.getChargeAmount().multiply(new BigDecimal(taskDetialDTO.getPeopleNum()));
+            product.setChargeAmount(amount);
+        } else {
+            product.setChargeAmount(new BigDecimal(1));
+        }
         productList.add(product);
         afDisposableChargeDTO.setProductList(productList);
 

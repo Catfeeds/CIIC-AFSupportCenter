@@ -2,6 +2,8 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.i
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.system.AfUserPermissionDTO;
+import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfUserCompanyRefProxy;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveUkeyBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveUkeyRenewBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.SalCompanyBO;
@@ -12,11 +14,15 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchi
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.SalCompanyMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveUkey;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveUkeyRenew;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.SocApiProxy;
+import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.dto.SsComAccountDTO;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.SMDepartmentProxy;
+import com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.auth.SMDepartmentDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.CompanyTypeDTO;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult;
@@ -50,6 +56,15 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
 
     @Autowired
     private CompanyProxy companyProxy;
+
+    @Autowired
+    private AfUserCompanyRefProxy afUserCompanyRefProxy;
+
+    @Autowired
+    private SMDepartmentProxy SMDepartmentProxy;
+
+    @Autowired
+    private SocApiProxy socApiProxy;
 
     @Override
     public PageRows<AmArchiveUkeyBO> queryAmArchiveUkeyList(PageInfo pageInfo) {
@@ -218,6 +233,23 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
         JsonResult<AfCompanyDetailResponseDTO> detailDto = companyProxy.afDetail(companyId);
         if(detailDto.getObject() != null){
             result.setServiceCenter(detailDto.getObject().getServiceCenter());
+        }
+        // 查询社保登记码
+        com.ciicsh.common.entity.JsonResult<SsComAccountDTO> ssResult = socApiProxy.getSsComAccountByComId(companyId);
+        if(ssResult.getData()!=null){
+            result.setSsAccount(ssResult.getData().getSsAccount());
+        }
+        // 查询客户经理
+        List<AfUserPermissionDTO> list = afUserCompanyRefProxy.getLeaderShipByCompanyId(companyId);
+        if (list != null && list.size() > 0) {
+            com.ciicsh.gto.afsystemmanagecenter.apiservice.api.dto.JsonResult<List<SMDepartmentDTO>> resultDto = SMDepartmentProxy.getDepartmentsOfUser(list.get(0).getLeadershipUserId(), 7);
+            if (resultDto.getData() == null || resultDto.getData().size() == 0) {
+                resultDto = SMDepartmentProxy.getDepartmentsOfUser(list.get(0).getLeadershipUserId(), 6);
+            }
+            List<SMDepartmentDTO> dList = resultDto.getData();
+            if (dList != null && dList.size() > 0) {
+                result.setTeamName(dList.get(0).getDepartmentName());
+            }
         }
         return result;
     }

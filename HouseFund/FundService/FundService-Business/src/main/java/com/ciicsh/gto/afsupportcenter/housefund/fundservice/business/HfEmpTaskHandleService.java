@@ -6,6 +6,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfArchiveBasePeriod;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
+import com.ciicsh.gto.sheetservice.api.dto.Result;
 
 import java.util.List;
 
@@ -39,4 +40,6 @@ public interface HfEmpTaskHandleService extends IService<HfEmpTask> {
     List<HfEmpTaskExportBo> getOriginEmpTask(String companyId, String employeeId, Integer hfType);
 
     HfEmpTaskExportBo getOriginEmpTaskById(Long empTaskId);
+
+    Result apiCompleteTask(String taskId, String assignee) throws Exception;
 }
