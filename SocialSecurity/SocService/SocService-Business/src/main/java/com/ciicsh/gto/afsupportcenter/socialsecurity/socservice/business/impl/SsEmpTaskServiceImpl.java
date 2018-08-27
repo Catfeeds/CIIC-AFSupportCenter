@@ -221,6 +221,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         bo.setHandleRemarkDate(now);
         bo.setRejectionRemarkDate(now);
         bo.setModifiedTime(LocalDateTime.now());
+        if (StringUtils.isNotEmpty(bo.getHandleRemark())) {
+            bo.setHandleRemarkMan(UserContext.getUser().getDisplayName());
+        }
+        if (StringUtils.isNotEmpty(bo.getRejectionRemark())) {
+            bo.setRejectionRemarkMan(UserContext.getUser().getDisplayName());
+        }
 
         // 处理中，正式把数据写入到 ss_emp_base_period and ss_emp_base_detail(雇员社)
         if (TaskStatusConst.PROCESSING == taskStatus || TaskStatusConst.FINISH == taskStatus) {
