@@ -292,30 +292,26 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
     public void empTaskTransferTxtExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         EmpTaskTransferBo empTaskTransferBo = pageInfo.toJavaObject(EmpTaskTransferBo.class);
         List<EmpTaskTransferBo> empTaskTransferBoList = business.queryEmpTaskTransfer(empTaskTransferBo);
-
         Writer writer = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
         String title = "序号|公积金账号||||";
         String template = "%1$d|%2$s||||";
         List<String> outputList = new ArrayList<>();
-
        // writer.append(title);
         if (CollectionUtils.isNotEmpty(empTaskTransferBoList)) {
             for (int i = 0; i < empTaskTransferBoList.size(); i++) {
                 empTaskTransferBo = empTaskTransferBoList.get(i);
                 outputList.add(String.format(template, i + 1, empTaskTransferBo.getHfEmpAccount()));
             }
-
             for (String output : outputList) {
                 writer.append("\r\n");
                 writer.append(output);
             }
         }
         String fileName = "上海市公积金雇员转移TXT.txt";
-
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "text/plain");
-       // response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
-       ExportResponseUtil.encodeExportFileName(response, fileName);
+        // response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+        ExportResponseUtil.encodeExportFileName(response, fileName);
         writer.close();
     }
 
