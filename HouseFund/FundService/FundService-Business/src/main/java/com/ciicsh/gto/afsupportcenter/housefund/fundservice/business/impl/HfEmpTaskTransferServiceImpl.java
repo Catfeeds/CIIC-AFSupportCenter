@@ -69,13 +69,16 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         if(listAccount1!=null && listAccount1.size()>0){//基本公积金
             ComAccountExtBo comAccountExtBo=listAccount1.get(0);
             hfEmpTaskHandleBo.setBasicHfComAccount(comAccountExtBo.getHfComAccount());
-            hfEmpTaskHandleBo.setBasicComHfMonth(Integer.parseInt(comAccountExtBo.getComHfMonth()));
+            hfEmpTaskHandleBo.setBasicComHfMonth(Integer.parseInt(
+                Optional.ofNullable(comAccountExtBo.getComHfMonth()).orElse("0")));
             BeanUtils.copyProperties(comAccountExtBo,hfEmpTaskHandleBo);
         }
         if(listAccount2!=null && listAccount2.size()>0){//补充公积金
             ComAccountExtBo comAccountExtBo=listAccount2.get(0);
             hfEmpTaskHandleBo.setAddedHfComAccount(comAccountExtBo.getHfComAccount());
-            hfEmpTaskHandleBo.setAddedComHfMonth(Integer.parseInt(comAccountExtBo.getComHfMonth()));
+            hfEmpTaskHandleBo.setAddedComHfMonth(Integer.parseInt(
+                Optional.ofNullable(comAccountExtBo.getComHfMonth()).orElse("0")
+            ));
             BeanUtils.copyProperties(comAccountExtBo,hfEmpTaskHandleBo);
         }
         HfEmpComBO hfEmpComBO = hfEmpArchiveMapper.fetchManager(companyId,employeeId);
