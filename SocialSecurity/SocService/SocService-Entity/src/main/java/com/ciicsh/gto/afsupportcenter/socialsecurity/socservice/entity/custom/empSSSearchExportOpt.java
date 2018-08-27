@@ -33,7 +33,7 @@ public class empSSSearchExportOpt {
     private String leaderShipName;
     //客服中心
     @Excel(name = "客服中心",width = 20, orderNum = "9")
-    private Integer serviceCenterValue;
+    private String serviceCenter;
     @Excel(name = "社保账户类型", orderNum = "10", replace = {"中智大库_1","中智外包_2","独立户_3"})
     private Integer ssAccountType;
     @Excel(name = "结算区县", orderNum = "11")

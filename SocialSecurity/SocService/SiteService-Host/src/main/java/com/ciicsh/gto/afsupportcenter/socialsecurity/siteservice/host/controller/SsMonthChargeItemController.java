@@ -34,8 +34,6 @@ public class SsMonthChargeItemController extends BasicController<SsMonthChargeIt
     @RequestMapping("/queryEmlpyeeMonthFeeDetail")
     @ResponseBody
     public JsonResult<List<SsMonthChargeItemBO>> queryEmlpyeeMonthFeeDetail(SsMonthChargeItemBO ssMonthChargeItemBO){
-        if(StringUtils.isBlank(ssMonthChargeItemBO.getSsMonth()) || null == ssMonthChargeItemBO.getSsAccount())
-            throw new BusinessException("缺少必要的传递参数");
         if( null == ssMonthChargeItemBO.getCompanyId() && null == ssMonthChargeItemBO.getSsAccount())
             throw new BusinessException("企业社保账号和客户编号必选一项");
         ssMonthChargeItemBO.setSsMonth(ssMonthChargeItemBO.getSsMonth().substring(0,6));
