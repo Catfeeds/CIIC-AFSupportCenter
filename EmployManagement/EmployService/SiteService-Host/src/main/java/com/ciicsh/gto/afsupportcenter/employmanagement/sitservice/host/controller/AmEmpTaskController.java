@@ -184,9 +184,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             if("Y".equals(amEmpTaskBOCount.getJob()))
             {
                 amTaskStatusBO.setJob(jobList.get(0).getCount());
-                amTaskStatusBO.setNoJob(list.size()-jobList.get(0).getCount());
+                amTaskStatusBO.setNoJob(0);
             }else{
-                amTaskStatusBO.setJob(list.size()-jobList.get(0).getCount());
+                amTaskStatusBO.setJob(0);
                 amTaskStatusBO.setNoJob(jobList.get(0).getCount());
             }
         }
