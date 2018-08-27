@@ -73,6 +73,9 @@ public class AmResignBO extends AmResign {
      * 实际录用日期
      */
     private LocalDate employDate;
+
+    private String oldResignFeedback;
+
     /**
      * 入库日期
      */

@@ -372,6 +372,7 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         if(amResignBO.getEmploymentId()!=null){
             amResignBO.setMatchEmployIndex(amResignBO.getEmploymentId().toString());
         }
+        amResignBO.setOldResignFeedback(amResignBO.getResignFeedback());
         resultMap.put("resignBO",amResignBO);
 
         UserInfoBO userInfoBO = new UserInfoBO();
