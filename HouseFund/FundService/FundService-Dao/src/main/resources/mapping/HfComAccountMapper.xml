@@ -439,8 +439,8 @@
             hca.modified_by
         FROM
         hf_com_account hca
+        INNER JOIN hf_account_com_relation hacr ON hca.com_account_id = hacr.com_account_id AND hacr.is_active = 1
         <if test="companyId != null or companyName != null">
-            INNER JOIN hf_account_com_relation hacr ON hca.com_account_id = hacr.com_account_id AND hacr.is_active = 1
             INNER JOIN sal_company sc ON hacr.company_id = sc.company_id AND sc.is_active = 1
             <!--<if test="userId != null">-->
                 <!--INNER JOIN hf_dataauth_company hdc ON sc.company_id = hdc.company_id AND hdc.user_id = #{userId}-->
@@ -490,5 +490,7 @@
                 </foreach>
             </if>
         </where>
+        GROUP BY hca.com_account_id
+        ORDER BY MIN(hacr.company_id)
     </select>
 </mapper>

@@ -221,6 +221,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
         bo.setHandleRemarkDate(now);
         bo.setRejectionRemarkDate(now);
         bo.setModifiedTime(LocalDateTime.now());
+        if (StringUtils.isNotEmpty(bo.getHandleRemark())) {
+            bo.setHandleRemarkMan(UserContext.getUser().getDisplayName());
+        }
+        if (StringUtils.isNotEmpty(bo.getRejectionRemark())) {
+            bo.setRejectionRemarkMan(UserContext.getUser().getDisplayName());
+        }
 
         // 处理中，正式把数据写入到 ss_emp_base_period and ss_emp_base_detail(雇员社)
         if (TaskStatusConst.PROCESSING == taskStatus || TaskStatusConst.FINISH == taskStatus) {
@@ -1972,6 +1978,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             bo.setCompanyConfirmAmount(new BigDecimal(0));
             bo.setPersonalConfirmAmount(new BigDecimal(0));
             bo.setTaskStatus(TaskStatusConst.REJECTION);
+            bo.setModifiedDisplayName(userName);
             taskCompletCallBack(bo);
             ssEmpTask.setRejectionRemark(remark);
             ssEmpTask.setTaskStatus(TaskStatusConst.REJECTION);
@@ -2529,7 +2536,11 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             TaskCommonUtils.updateConfirmDate(commonApiUtils, bo);
         }
         //任务单完成接口调用
-        TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, UserContext.getUser().getDisplayName());
+        if (bo.getModifiedDisplayName() != null) {
+            TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, bo.getModifiedDisplayName());
+        } else {
+            TaskCommonUtils.completeTask(bo.getTaskId(), commonApiUtils, UserContext.getUser().getDisplayName());
+        }
     }
 
     /**
