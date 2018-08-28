@@ -413,6 +413,7 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
             ssPayment.setPaymentState(6);
             ssPayment.setModifiedBy("system");
             ssPayment.setModifiedTime(LocalDateTime.now());
+
             ssPaymentMapper.updateById(ssPayment);
 
             //将批次下的客户费用明细的状态也改为已申请到财务部

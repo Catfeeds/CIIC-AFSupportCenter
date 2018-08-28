@@ -254,6 +254,7 @@ public class SsPaymentController extends BasicController<SsPaymentService> {
         JsonResult<String> json = business.doReviewdePass(ssPayment);
         //如果返回失败 不更新
         if (json.getCode() == 0) {
+            ssPayment.setPayApplyCode(json.getData());
             ssPaymentComService.saveReviewdePassResult(ssPayment);
         }
         return json;
