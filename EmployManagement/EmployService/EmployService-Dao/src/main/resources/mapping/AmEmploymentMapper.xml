@@ -146,13 +146,10 @@
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
         where 1= 1
         <if test="taskStatus!=null">
-            and a.task_status = ${taskStatus}
+            and c.luyong_handle_end = ${taskStatus}
         </if>
-        <if test="taskStatusOther!=null">
-            and a.task_status not in ('1','2','3','4','5')
-        </if>
-        <if test="taskCategory!=null">
-            and a.task_category = ${taskCategory}
+        <if test="job!=null">
+            and a.job = #{job}
         </if>
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}

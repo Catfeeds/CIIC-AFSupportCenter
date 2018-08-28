@@ -217,4 +217,6 @@ public class AmEmpTaskBO extends AmEmpTask {
 
     private List<String> param;
 
+    private Integer taskStatusOther;
+
 }

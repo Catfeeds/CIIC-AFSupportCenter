@@ -22,8 +22,6 @@ public interface AmEmpTaskMapper extends BaseMapper<AmEmpTask> {
 
     List<String> queryAmEmpTaskCompanys(AmEmpTaskBO amEmpTaskBO);
 
-    List<AmEmpTaskBO> queryAmEmpTaskOther(AmEmpTaskBO amEmpTaskBO);
-
     List<AmEmpTaskBO>   taskCount(AmEmpTaskBO amEmpTaskBO);
 
     List<AmEmpTaskBO>  queryAmEmploymentById(Map<String, Object> param);
