@@ -29,10 +29,10 @@ public class SsPaymentDetailController  extends BasicController<SsPaymentDetailS
      */
     @PostMapping("/paymentDetailQuery")
     public JsonResult<List<SsPaymentDetailBO>> statementResultQuery(SsPaymentDetailBO ssPaymentDetailDTO) {
-        if(StringUtils.isBlank(ssPaymentDetailDTO.getPaymentMonth()) || null == ssPaymentDetailDTO.getSsAccount())
-            throw new BusinessException("缺少必要的传递参数");
-        if( null == ssPaymentDetailDTO.getCompanyId() && null == ssPaymentDetailDTO.getSsAccount())
-            throw new BusinessException("企业社保账号和客户编号必选一项");
+//        if(StringUtils.isBlank(ssPaymentDetailDTO.getPaymentMonth()) || null == ssPaymentDetailDTO.getSsAccount())
+//            throw new BusinessException("缺少必要的传递参数");
+//        if( null == ssPaymentDetailDTO.getCompanyId() && null == ssPaymentDetailDTO.getSsAccount())
+//            throw new BusinessException("企业社保账号和客户编号必选一项");
        // SsPaymentDetail ssPaymentDetail = CommonTransform.convertToEntity(ssPaymentDetailDTO,SsPaymentDetail.class);
 
         List<SsPaymentDetail> resultList =business.paymentDetailQuery(ssPaymentDetailDTO);

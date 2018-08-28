@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * <p>
@@ -92,9 +93,18 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
      * @return
      */
     @Override
-    public SsComAccountDTO getAccountById(String ssAccount) {
+    public SsComAccountDTO getAccountById(String ssAccount,String companyId) {
         Map<String, Object> condition = new HashMap<>();
+        Long comAccountId =0L;
+
+        if(ssAccount==null || ssAccount=="" ){
+            condition.put("company_id",companyId);
+            SsAccountComRelation ssAccountComRelation= ssAccountComRelationMapper.selectByMap(condition).get(0);
+            comAccountId = ssAccountComRelation.getComAccountId();
+        }
+        condition=new HashMap<>();
         condition.put("ss_account",ssAccount);
+        condition.put("com_account_id",comAccountId);
         SsComAccount ssComAccount= baseMapper.selectByMap(condition).get(0);
 
         SsComAccountDTO ssComAccountDTO=new SsComAccountDTO();
@@ -106,8 +116,13 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
         for(SsAccountComRelation ssAccountComRelation :list){
             comId +=ssAccountComRelation.getCompanyId()+",";
         }
-        comId.substring(0,comId.length()-2);
-        ssComAccountDTO.setCompanyId(comId);
+        comId = comId.substring(0,comId.length()-1);
+        if(companyId!=null && companyId!=""){
+            ssComAccountDTO.setCompanyId(comId);
+        }else {
+            ssComAccountDTO.setCompanyId(companyId);
+        }
+
         return ssComAccountDTO;
     }
 
