@@ -387,11 +387,12 @@
         <result column="end_month" property="endMonth"/>
         <result column="ratio" property="ratio"/>
         <result column="amount" property="amount"/>
+        <result column="taskEndMonth" property="taskEndMonth"/>
     </resultMap>
     <!--雇员公积金查询==>列出雇员所有公积金任务单的汇缴段-->
     <select id="listEmpTaskPeriod" resultMap="listEmpTaskPeriodResultMap">
         SELECT et.task_category,et.is_change,etp.base_amount,etp.start_month,etp.end_month,
-        (etp.ratio_com+etp.ratio_emp) as 'ratio',etp.amount
+        (etp.ratio_com+etp.ratio_emp) as 'ratio',etp.amount,et.end_month as 'taskEndMonth'
         FROM hf_emp_task_period etp
         INNER JOIN hf_emp_task et ON et.emp_task_id = etp.emp_task_id
         INNER JOIN hf_emp_archive ea ON ea.company_id = et.company_id and ea.employee_id=et.employee_id
