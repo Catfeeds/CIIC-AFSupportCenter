@@ -608,6 +608,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
             hfEmpTaskWrapper.and("employee_id = {0}", employeeId);
             hfEmpTaskWrapper.and("hf_type = {0}", hfType);
             hfEmpTaskWrapper.and("task_status = 1");
+            hfEmpTaskWrapper.and("modified_time = created_time");
             hfEmpTaskWrapper.and("task_category in (4, 5, 12, 13)");
 
             List<HfEmpTask> outHfEmpTaskList = this.selectList(hfEmpTaskWrapper);

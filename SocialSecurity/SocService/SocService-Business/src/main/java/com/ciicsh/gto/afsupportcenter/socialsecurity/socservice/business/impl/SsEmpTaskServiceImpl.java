@@ -2011,6 +2011,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
                 ssEmpTaskWrapper.and("company_id = {0}", companyId);
                 ssEmpTaskWrapper.and("employee_id = {0}", employeeId);
                 ssEmpTaskWrapper.and("task_status = 1");
+                ssEmpTaskWrapper.and("modified_time = created_time");
                 ssEmpTaskWrapper.and("task_category in (5, 6, 14, 15)");
 
                 List<SsEmpTask> outSsEmpTaskList = this.selectList(ssEmpTaskWrapper);

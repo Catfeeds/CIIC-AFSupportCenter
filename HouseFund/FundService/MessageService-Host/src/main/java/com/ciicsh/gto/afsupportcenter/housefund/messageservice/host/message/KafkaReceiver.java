@@ -30,6 +30,8 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -564,7 +566,10 @@ public class KafkaReceiver {
                 return false;
             }
         } catch (Exception e) {
-            log.error(LogMessage.create().setTitle("saveEmpTask").setContent("saveEmpTask exception: " + e.getMessage()));
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            log.error(LogMessage.create().setTitle("KafkaReceiver#saveEmpTask").setContent("Fund:saveEmpTask exception: " + sw.toString()));
             logger.debug("exception:" + e.getMessage(), e);
             return false;
         }
