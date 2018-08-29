@@ -540,6 +540,7 @@ public class KafkaReceiver {
             // 如果转外地，则取旧雇员协议
             if (oldAgreementId != null && cityCodeMap != null) {
                 if (cityCodeMap.get("newFundCityCode") != null && !SocialSecurityConst.SHANGHAI_CITY_CODE.equals(cityCodeMap.get("newFundCityCode"))) {
+                    cityCodeMap.put("oldAgreementId", oldAgreementId);
                     oldAgreementId = null;
                 }
             }

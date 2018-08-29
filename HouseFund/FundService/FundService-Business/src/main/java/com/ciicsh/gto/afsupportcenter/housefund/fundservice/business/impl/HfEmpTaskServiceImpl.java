@@ -241,7 +241,12 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         AfEmpAgreementDTO afEmpAgreementDTO = dto.getNowAgreement();
         HfEmpTask hfEmpTask = new HfEmpTask();
         hfEmpTask.setTaskId(taskMsgDTO.getTaskId());
-        hfEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
+
+        if (cityCodeMap.get("oldAgreementId") != null) {
+            hfEmpTask.setBusinessInterfaceId(cityCodeMap.get("oldAgreementId").toString());
+        } else {
+            hfEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
+        }
 
         // 调整通道或更正通道过来的任务单，都需要加上oldAgreementId，回调前道接口时需使用
         if (oldAgreementId != null) {
@@ -627,6 +632,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                     hfEmpTaskWrapper.where("is_active = 1");
                     hfEmpTaskWrapper.and("company_id = {0}", companyId);
                     hfEmpTaskWrapper.and("employee_id = {0}", employeeId);
+                    hfEmpTaskWrapper.and("hf_type = {0}", hfType);
                     hfEmpTaskWrapper.and("task_status = 1");
                     hfEmpTaskWrapper.and("task_category in (6, 7)");
                     int otherCnt = this.selectCount(hfEmpTaskWrapper);
