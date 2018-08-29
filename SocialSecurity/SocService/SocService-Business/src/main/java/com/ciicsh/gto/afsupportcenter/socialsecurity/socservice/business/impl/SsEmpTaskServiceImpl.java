@@ -105,6 +105,18 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             for (int i = 0; i < arr.length; i++) {
                 if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
                     orderParam.add(arr[i]);
+                } else if(arr[i].indexOf("taskStatus")!=-1) {
+                    String str[] = arr[i].split(" ");
+                    if(!StringUtil.isEmpty(str[2]))
+                    {
+                        String content = str[2].replaceAll("\'","");
+                        // 0 代表不需处理之外的其它状态
+                        if("0".equals(content)){
+                            dto.setTaskStatus(null);
+                        }else{
+                            dto.setTaskStatus(Integer.parseInt(content));
+                        }
+                    }
                 }else {
                     param.add(arr[i]);
                 }
@@ -2005,6 +2017,7 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             ssEmpTaskWrapper.and("task_category = {0}", SocialSecurityConst.TASK_CATEGORY_NO_HANDLE);
             List<SsEmpTask> ssEmpTaskList = this.selectList(ssEmpTaskWrapper);
 
+            // 收到不做类型任务单
             if (CollectionUtils.isNotEmpty(ssEmpTaskList)) {
                 ssEmpTaskWrapper = new EntityWrapper<>();
                 ssEmpTaskWrapper.where("is_active = 1");
@@ -2016,33 +2029,46 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
                 List<SsEmpTask> outSsEmpTaskList = this.selectList(ssEmpTaskWrapper);
 
+                // 且收到停办类任务单
                 if (CollectionUtils.isNotEmpty(outSsEmpTaskList)
                     && ssEmpTaskList.size() == 1 && outSsEmpTaskList.size() == 1
                     ) {
                     SsEmpTask inSsEmpTask = ssEmpTaskList.get(0);
                     SsEmpTask outSsEmpTask = outSsEmpTaskList.get(0);
 
+                    // 停办年月小于新增年月
                     if (DateUtil.compareMonth(inSsEmpTask.getStartMonth(), outSsEmpTask.getEndMonth()) > 0) {
-                        logApiUtil.info(LogMessage.create().setTitle("SsEmpTaskServiceImpl#autoOffset").setContent("自动抵消执行"));
+                        ssEmpTaskWrapper = new EntityWrapper<>();
+                        ssEmpTaskWrapper.where("is_active = 1");
+                        ssEmpTaskWrapper.and("company_id = {0}", companyId);
+                        ssEmpTaskWrapper.and("employee_id = {0}", employeeId);
+                        ssEmpTaskWrapper.and("task_status = 1");
+                        ssEmpTaskWrapper.and("task_category in (3, 4, 7)");
+                        int otherCnt = this.selectCount(ssEmpTaskWrapper);
 
-                        // 新增类任务单批退，回调任务单完成接口和实际金额回调接口
-                        List<Long> ids = new ArrayList<>(1);
-                        ids.add(inSsEmpTask.getEmpTaskId());
-                        this.batchRejection(ids, "不做，自动抵消", SocialSecurityConst.SYSTEM_USER, SocialSecurityConst.SYSTEM_USER);
+                        // 且不存在其他类型任务单（批退，或不需处理除外）
+                        if (otherCnt == 0) {
+                            logApiUtil.info(LogMessage.create().setTitle("SsEmpTaskServiceImpl#autoOffset").setContent("自动抵消执行"));
 
-                        // 停办类任务单批退，仅回调任务单完成接口
-                        SsEmpTask updateSsEmpTask = new SsEmpTask();
-                        updateSsEmpTask.setEmpTaskId(outSsEmpTask.getEmpTaskId());
-                        updateSsEmpTask.setTaskStatus(TaskStatusConst.REJECTION);
-                        updateSsEmpTask.setRejectionRemark("不做，自动抵消");
-                        updateSsEmpTask.setRejectionRemarkDate(LocalDate.now());
-                        updateSsEmpTask.setRejectionRemarkMan(SocialSecurityConst.SYSTEM_USER);
-                        updateSsEmpTask.setModifiedTime(LocalDateTime.now());
-                        updateSsEmpTask.setModifiedBy(SocialSecurityConst.SYSTEM_USER);
-                        updateSsEmpTask.setModifiedDisplayName(SocialSecurityConst.SYSTEM_USER);
-                        this.updateById(updateSsEmpTask);
+                            // 新增类任务单批退，回调任务单完成接口和实际金额回调接口
+                            List<Long> ids = new ArrayList<>(1);
+                            ids.add(inSsEmpTask.getEmpTaskId());
+                            this.batchRejection(ids, "不做，自动抵消", SocialSecurityConst.SYSTEM_USER, SocialSecurityConst.SYSTEM_USER);
 
-                        TaskCommonUtils.completeTask(outSsEmpTask.getTaskId(), commonApiUtils, updateSsEmpTask.getModifiedDisplayName());
+                            // 停办类任务单批退，仅回调任务单完成接口
+                            SsEmpTask updateSsEmpTask = new SsEmpTask();
+                            updateSsEmpTask.setEmpTaskId(outSsEmpTask.getEmpTaskId());
+                            updateSsEmpTask.setTaskStatus(TaskStatusConst.REJECTION);
+                            updateSsEmpTask.setRejectionRemark("不做，自动抵消");
+                            updateSsEmpTask.setRejectionRemarkDate(LocalDate.now());
+                            updateSsEmpTask.setRejectionRemarkMan(SocialSecurityConst.SYSTEM_USER);
+                            updateSsEmpTask.setModifiedTime(LocalDateTime.now());
+                            updateSsEmpTask.setModifiedBy(SocialSecurityConst.SYSTEM_USER);
+                            updateSsEmpTask.setModifiedDisplayName(SocialSecurityConst.SYSTEM_USER);
+                            this.updateById(updateSsEmpTask);
+
+                            TaskCommonUtils.completeTask(outSsEmpTask.getTaskId(), commonApiUtils, updateSsEmpTask.getModifiedDisplayName());
+                        }
                     }
                 }
             }
