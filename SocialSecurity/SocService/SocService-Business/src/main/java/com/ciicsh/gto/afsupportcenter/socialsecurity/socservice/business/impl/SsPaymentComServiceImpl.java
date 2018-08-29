@@ -403,7 +403,7 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
     @Transactional(
         rollbackFor = {Exception.class}
     )
-    public void saveReviewdePassResult(SsPayment ssPayment) {
+    public void saveReviewdePassResult(SsPayment ssPayment,String payApplyCode) {
         //根据ID获取到记录
         ssPayment = ssPaymentMapper.selectOne(ssPayment);
 
@@ -411,6 +411,7 @@ public class SsPaymentComServiceImpl extends ServiceImpl<SsPaymentComMapper, SsP
             //执行业务
             //将批次状态改为已申请到财务部
             ssPayment.setPaymentState(6);
+            ssPayment.setPayApplyCode(payApplyCode);
             ssPayment.setModifiedBy("system");
             ssPayment.setModifiedTime(LocalDateTime.now());
 
