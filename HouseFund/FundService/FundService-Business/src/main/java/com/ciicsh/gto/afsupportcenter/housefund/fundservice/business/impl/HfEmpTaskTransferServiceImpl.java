@@ -207,7 +207,7 @@ public class HfEmpTaskTransferServiceImpl extends ServiceImpl<HfEmpTaskMapper, H
         mapP.put("inComAccount", mapPrint.get("transfer_in_unit_account"));
         mapP.put("outComAccount", mapPrint.get("transfer_out_unit_account"));
         mapP.put("transCount", mapPrint.get(""));
-        mapP.put("paymentBank", mapPrint.get("payment_bank"));
+        mapP.put("paymentBank", mapPrint.get("payment_bank")==null?"":mapPrint.get("payment_bank"));
         listP.add(mapP);
         return listP;
     }
