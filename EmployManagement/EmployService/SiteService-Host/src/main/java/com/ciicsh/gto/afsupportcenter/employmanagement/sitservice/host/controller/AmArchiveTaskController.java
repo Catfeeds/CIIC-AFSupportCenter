@@ -7,6 +7,7 @@ import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.ut
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.archiveSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmArchiveDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmArchiveReturnPrintDTO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpArchiveAdvanceXsl;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveUse;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpMaterial;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
@@ -638,4 +640,24 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         return  JsonResultKit.of(amEmpTaskCollection);
     }
 
+    @RequestMapping("/impTemplateFile")
+    public void impTemplateFile(HttpServletResponse response) {
+        String fileNme = "档案配对导入模板.xls";
+        List<AmEmpArchiveAdvanceXsl> opts = new ArrayList();
+        ExcelUtil.exportExcel(opts,AmEmpArchiveAdvanceXsl.class,fileNme,response);
+    }
+
+    /**
+     * 档案配对导入
+     * @param file
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/xlsImportEmpAdvance",consumes = {"multipart/form-data"})
+    public JsonResult xlsImportEmpAdvance(MultipartFile file) throws Exception {
+        List<AmEmpArchiveAdvanceXsl> optList = ExcelUtil.importExcel(file,0,1,AmEmpArchiveAdvanceXsl.class,false);
+        JsonResult result = business.xlsImportAmEmpAdvance(optList,file.getOriginalFilename());
+        return  result;
+
+    }
 }
