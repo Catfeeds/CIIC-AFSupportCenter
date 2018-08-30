@@ -49,6 +49,16 @@ public class AmArchiveUkeyBO {
     private String organizationCode;
 
     /**
+     * 公司社保登记码
+     */
+    private String ssAccount;
+
+    /**
+     * 客服经理
+     */
+    private String teamName;
+
+    /**
      * 到期日期
      */
     private LocalDate dueDate;
@@ -128,6 +138,22 @@ public class AmArchiveUkeyBO {
     private LocalDate renewDueDate;
 
     private boolean flag = false;
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+    public String getSsAccount() {
+        return ssAccount;
+    }
+
+    public void setSsAccount(String ssAccount) {
+        this.ssAccount = ssAccount;
+    }
 
     public String getServiceCenter() {
         return serviceCenter;

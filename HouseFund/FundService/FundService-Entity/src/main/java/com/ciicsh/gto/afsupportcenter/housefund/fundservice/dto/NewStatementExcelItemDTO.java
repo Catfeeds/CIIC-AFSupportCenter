@@ -9,9 +9,9 @@ import java.math.BigDecimal;
 public class NewStatementExcelItemDTO {
     @Excel(name = "个人账号", orderNum = "1")
     private String personalAccount;
-    @Excel(name = "姓名", orderNum = "2")
+    @Excel(name = "雇员姓名", orderNum = "2")
     private String empName;
-    @Excel(name = "身份证号码",orderNum = "3")
+    @Excel(name = "身份证号",orderNum = "3")
     private String idNum;
     @Excel(name = "月缴额",orderNum = "4")
     private BigDecimal monthlyAmount;

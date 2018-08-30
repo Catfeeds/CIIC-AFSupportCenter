@@ -18,7 +18,7 @@ public class LoggerAspect {
     @Autowired
     LogApiUtil logApiUtil;
 
-    @Pointcut("execution (* com.ciicsh.gto.afsupportcenter.socialsecurity.messageservice.host.message..*.*(..))")
+    @Pointcut("execution (* com.ciicsh.gto.afsupportcenter.employmanagement.messageservice.host.message..*.*(..))")
     public void messagePointcut() {
     }
 

@@ -8,12 +8,10 @@ import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpAgreeme
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmpSocialDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeCompanyDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.employee.AfEmployeeInfoDTO;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskCreateTransBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskExportBo;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfEmpTaskRejectExportBo;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.*;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.customer.ComAccountTransBo;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
+import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskHandleService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfEmpTaskService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.constant.HfEmpTaskConstant;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dao.HfEmpTaskMapper;
@@ -30,6 +28,7 @@ import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageRows;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
+import com.ciicsh.gto.sheetservice.api.dto.Result;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -60,6 +59,8 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
     private LogApiUtil logApiUtil;
     @Autowired
     private HfComAccountService hfComAccountService;
+    @Autowired
+    private HfEmpTaskHandleService hfEmpTaskHandleService;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
@@ -240,7 +241,12 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         AfEmpAgreementDTO afEmpAgreementDTO = dto.getNowAgreement();
         HfEmpTask hfEmpTask = new HfEmpTask();
         hfEmpTask.setTaskId(taskMsgDTO.getTaskId());
-        hfEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
+
+        if (cityCodeMap.get("oldAgreementId") != null) {
+            hfEmpTask.setBusinessInterfaceId(cityCodeMap.get("oldAgreementId").toString());
+        } else {
+            hfEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
+        }
 
         // 调整通道或更正通道过来的任务单，都需要加上oldAgreementId，回调前道接口时需使用
         if (oldAgreementId != null) {
@@ -588,52 +594,83 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         }
     }
 
-//    @Override
-//    public void autoOffset(String companyId, String employeeId) {
-//        Wrapper<HfEmpTask> hfEmpTaskWrapper = new EntityWrapper<>();
-//        hfEmpTaskWrapper.where("is_active = 1");
-//        hfEmpTaskWrapper.and("company_id = ", companyId);
-//        hfEmpTaskWrapper.and("employee_id = ", employeeId);
-//        hfEmpTaskWrapper.and("task_status = 1");
-//        hfEmpTaskWrapper.and("task_category = -1");
-//        List<HfEmpTask> hfEmpTaskList = this.selectList(hfEmpTaskWrapper);
-//
-//        if (com.baomidou.mybatisplus.toolkit.CollectionUtils.isNotEmpty(hfEmpTaskList)) {
-//            hfEmpTaskWrapper = new EntityWrapper<>();
-//            hfEmpTaskWrapper.where("is_active = 1");
-//            hfEmpTaskWrapper.and("company_id = ", companyId);
-//            hfEmpTaskWrapper.and("employee_id = ", employeeId);
-//            hfEmpTaskWrapper.and("task_status = 1");
-//            hfEmpTaskWrapper.and("task_category in (1, 2, 3, 9, 10, 11)");
-//
-//            List<HfEmpTask> inHfEmpTaskList = this.selectList(hfEmpTaskWrapper);
-//
-//            hfEmpTaskWrapper = new EntityWrapper<>();
-//            hfEmpTaskWrapper.where("is_active = 1");
-//            hfEmpTaskWrapper.and("company_id = ", companyId);
-//            hfEmpTaskWrapper.and("employee_id = ", employeeId);
-//            hfEmpTaskWrapper.and("task_status = 1");
-//            hfEmpTaskWrapper.and("task_category in (4, 5, 12, 13)");
-//
-//            List<HfEmpTask> outHfEmpTaskList = this.selectList(hfEmpTaskWrapper);
-//
-//            if (com.baomidou.mybatisplus.toolkit.CollectionUtils.isNotEmpty(inHfEmpTaskList)
-//                && com.baomidou.mybatisplus.toolkit.CollectionUtils.isNotEmpty(outHfEmpTaskList)
-//                && inHfEmpTaskList.size() == 1 && outHfEmpTaskList.size() == 1
-//                ) {
-//                HfEmpTask inHfEmpTask = inHfEmpTaskList.get(0);
-//                HfEmpTask outHfEmpTask = outHfEmpTaskList.get(0);
-//
-//                if (DateUtil.compareMonth(inHfEmpTask.getStartMonth(), outHfEmpTask.getEndMonth()) > 0) {
-//                    // 新增类任务单批退，回调任务单完成接口和实际金额回调接口
-//
-//                    // 停办类任务单批退，仅回调任务单完成接口
-//
-//                    // 不做任务单，逻辑删除
-//                }
-//            }
-//        }
-//    }
+    @Transactional(rollbackFor = {Exception.class})
+    @Override
+    public void autoOffset(String companyId, String employeeId, Integer hfType) {
+        Wrapper<HfEmpTask> hfEmpTaskWrapper = new EntityWrapper<>();
+        hfEmpTaskWrapper.where("is_active = 1");
+        hfEmpTaskWrapper.and("company_id = {0}", companyId);
+        hfEmpTaskWrapper.and("employee_id = {0}", employeeId);
+        hfEmpTaskWrapper.and("hf_type = {0}", hfType);
+        hfEmpTaskWrapper.and("task_status = 1");
+        hfEmpTaskWrapper.and("task_category = {0}", SocialSecurityConst.TASK_CATEGORY_NO_HANDLE);
+        List<HfEmpTask> hfEmpTaskList = this.selectList(hfEmpTaskWrapper);
+
+        // 收到不做类型任务单
+        if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
+            hfEmpTaskWrapper = new EntityWrapper<>();
+            hfEmpTaskWrapper.where("is_active = 1");
+            hfEmpTaskWrapper.and("company_id = {0}", companyId);
+            hfEmpTaskWrapper.and("employee_id = {0}", employeeId);
+            hfEmpTaskWrapper.and("hf_type = {0}", hfType);
+            hfEmpTaskWrapper.and("task_status = 1");
+            hfEmpTaskWrapper.and("modified_time = created_time");
+            hfEmpTaskWrapper.and("task_category in (4, 5, 12, 13)");
+
+            List<HfEmpTask> outHfEmpTaskList = this.selectList(hfEmpTaskWrapper);
+
+            // 且收到停办类任务单
+            if (CollectionUtils.isNotEmpty(outHfEmpTaskList)
+                && hfEmpTaskList.size() == 1 && outHfEmpTaskList.size() == 1
+                ) {
+                HfEmpTask inHfEmpTask = hfEmpTaskList.get(0);
+                HfEmpTask outHfEmpTask = outHfEmpTaskList.get(0);
+
+                // 停办年月小于新增年月
+                if (DateUtil.compareMonth(inHfEmpTask.getStartMonth(), outHfEmpTask.getEndMonth()) > 0) {
+                    hfEmpTaskWrapper = new EntityWrapper<>();
+                    hfEmpTaskWrapper.where("is_active = 1");
+                    hfEmpTaskWrapper.and("company_id = {0}", companyId);
+                    hfEmpTaskWrapper.and("employee_id = {0}", employeeId);
+                    hfEmpTaskWrapper.and("hf_type = {0}", hfType);
+                    hfEmpTaskWrapper.and("task_status = 1");
+                    hfEmpTaskWrapper.and("task_category in (6, 7)");
+                    int otherCnt = this.selectCount(hfEmpTaskWrapper);
+
+                    // 且不存在其他类型任务单（批退，或不需处理除外）
+                    if (otherCnt == 0) {
+                        // 新增类任务单批退，回调任务单完成接口和实际金额回调接口
+                        HfEmpTaskBatchRejectBo hfEmpTaskBatchRejectBo = new HfEmpTaskBatchRejectBo();
+                        hfEmpTaskBatchRejectBo.setSelectedData(new Long[]{inHfEmpTask.getEmpTaskId()});
+                        hfEmpTaskBatchRejectBo.setRejectionRemark("不做，自动抵消");
+                        hfEmpTaskBatchRejectBo.setModifiedBy(SocialSecurityConst.SYSTEM_USER);
+                        hfEmpTaskBatchRejectBo.setModifiedDisplayName(SocialSecurityConst.SYSTEM_USER);
+                        hfEmpTaskHandleService.handleReject(hfEmpTaskBatchRejectBo);
+
+                        // 停办类任务单批退，仅回调任务单完成接口
+                        HfEmpTask updateHfEmpTask = new HfEmpTask();
+                        updateHfEmpTask.setEmpTaskId(outHfEmpTask.getEmpTaskId());
+                        updateHfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_REJECTED);
+                        updateHfEmpTask.setRejectionRemark(hfEmpTaskBatchRejectBo.getRejectionRemark());
+                        updateHfEmpTask.setModifiedTime(LocalDateTime.now());
+                        updateHfEmpTask.setModifiedBy(SocialSecurityConst.SYSTEM_USER);
+                        updateHfEmpTask.setModifiedDisplayName(SocialSecurityConst.SYSTEM_USER);
+                        this.updateById(updateHfEmpTask);
+
+                        try {
+                            Result result = hfEmpTaskHandleService.apiCompleteTask(outHfEmpTask.getTaskId(),
+                                hfEmpTaskBatchRejectBo.getModifiedDisplayName());
+                        } catch (Exception e) {
+                            LogMessage logMessage = LogMessage.create().setTitle("访问接口").
+                                setContent("访问客服中心的完成任务接口失败,ExceptionMessage:" + e.getMessage());
+                            logApiUtil.error(logMessage);
+                            throw new BusinessException("访问客服中心的完成任务接口失败");
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * 转出单位(来源地)

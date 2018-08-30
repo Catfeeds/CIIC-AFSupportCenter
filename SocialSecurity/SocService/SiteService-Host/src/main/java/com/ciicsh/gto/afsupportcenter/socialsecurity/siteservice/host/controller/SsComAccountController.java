@@ -124,8 +124,9 @@ public class SsComAccountController extends BasicController<SsComAccountService>
      * @return 返回信息
      */
     @RequestMapping("/getAccountByAccountId")
-    public JsonResult<SsComAccountDTO> getAccountByAccountId(@RequestParam("ssAccount") String ssAccount) {
-        SsComAccountDTO comAccount = business.getAccountById(ssAccount);
+    public JsonResult<SsComAccountDTO> getAccountByAccountId(@RequestParam("ssAccount") String ssAccount,
+                                                             @RequestParam("companyId") String companyId) {
+        SsComAccountDTO comAccount = business.getAccountById(ssAccount,companyId);
 
         return JsonResultKit.of(comAccount);
     }

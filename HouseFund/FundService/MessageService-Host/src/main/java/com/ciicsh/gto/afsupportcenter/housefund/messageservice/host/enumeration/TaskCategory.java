@@ -16,7 +16,8 @@ public enum TaskCategory {
     FLOPINTO(10, "翻牌转入"),
     FLOPREOPEN(11, "翻牌启封"),
     FLOPOUT(12, "翻牌转出"),
-    FLOPSEALED(13, "翻牌封存");
+    FLOPSEALED(13, "翻牌封存"),
+    NOHANDLE(99, "不做");
 
     TaskCategory(Integer category, String categoryName){
         this.category = category;
