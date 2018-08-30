@@ -24,6 +24,7 @@
         <result column="modified_time" property="modifiedTime" />
         <result column="created_by" property="createdBy" />
         <result column="modified_by" property="modifiedBy" />
+        <result column="team" property="team" />
 	</resultMap>
 
 

@@ -4,14 +4,17 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.dto.system.AfUserPermissionDTO;
 import com.ciicsh.gto.afcompanycenter.queryservice.api.proxy.AfUserCompanyRefProxy;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveDocSeqBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveUkeyBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmArchiveUkeyRenewBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.SalCompanyBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmArchiveUkeyService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.ukeySearchExportOpt;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveDocSeqMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveUkeyMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveUkeyRenewMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.SalCompanyMapper;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveDocSeq;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveUkey;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchiveUkeyRenew;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.api.SocApiProxy;
@@ -65,6 +68,9 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
 
     @Autowired
     private SocApiProxy socApiProxy;
+
+    @Autowired
+    private AmArchiveDocSeqMapper amArchiveDocSeqMapper;
 
     @Override
     public PageRows<AmArchiveUkeyBO> queryAmArchiveUkeyList(PageInfo pageInfo) {
@@ -120,6 +126,14 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
     }
 
     @Override
+    public boolean delAmArchiveUkeyRenew(Long id) {
+        if(id == null){
+            return false;
+        }
+        return amArchiveUkeyRenewMapper.deleteById(id)>0;
+    }
+
+    @Override
     public AmArchiveUkeyBO queryAmArchiveUkey(String organizationCode) {
         AmArchiveUkeyBO result = new AmArchiveUkeyBO();
         AmArchiveUkey ukey = new AmArchiveUkey();
@@ -158,6 +172,20 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
         po.setCreatedBy(UserContext.getUserName());
         po.setCreatedTime(nowTime);
         boolean result = this.insertOrUpdateAllColumn(po);
+        if(result){
+            // 修改 seq
+            if(po.getKeyType() != null && po.getKeyCode() != null){
+                AmArchiveDocSeq seq = new AmArchiveDocSeq();
+                seq.setType(3);
+                seq.setDocType(po.getKeyType());
+                seq.setDocSeq(Integer.parseInt( po.getKeyCode()));
+                List<AmArchiveDocSeqBO> list = amArchiveDocSeqMapper.queryCountHaveAbove(seq);
+                // 比原有的seq要大
+                if(list.size() == 0){
+                    amArchiveDocSeqMapper.updateByTypeAndDocType(seq);
+                }
+            }
+        }
         return result;
     }
 
@@ -181,6 +209,7 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
 
         AmArchiveUkey ukey = new AmArchiveUkey();
         ukey.setId(amArchiveUkeyBO.getId());
+        ukey.setKeySeq(amArchiveUkeyBO.getKeySeq());
         ukey.setDueDate(amArchiveUkeyBO.getRenewDueDate());
         ukey.setDueDate(amArchiveUkeyBO.getRenewDueDate());
         ukey.setModifiedBy(UserContext.getUserName());
@@ -248,7 +277,7 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
             }
             List<SMDepartmentDTO> dList = resultDto.getData();
             if (dList != null && dList.size() > 0) {
-                result.setTeamName(dList.get(0).getDepartmentName());
+                result.setTeam(dList.get(0).getDepartmentName());
             }
         }
         return result;
