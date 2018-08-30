@@ -144,7 +144,7 @@
         LEFT JOIN am_emp_task w on f.emp_task_id = w.emp_task_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
-        where 1= 1
+        where  a.task_category = '1'
         <if test="taskStatus!=null">
             and c.luyong_handle_end = ${taskStatus}
         </if>
@@ -247,7 +247,7 @@
         LEFT JOIN am_emp_task w on f.emp_task_id = w.emp_task_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
         WHERE
-        a.task_category = 1
+        a.task_category = '1'
         <foreach collection="param" item="plid" open="" close="" separator="">
             AND ${ plid }
         </foreach>
@@ -364,8 +364,56 @@
     </select>
     <select id="queryArchiveTaskCount" resultMap="BaseResultMapDTO">
         SELECT
+        t.luyong_handle_end,COUNT(*) as count
+        from
+        (
+        SELECT
+        a.employ_code,
+        w.out_reason,
+        w.out_date,
+        w.emp_task_id as empTaskResignId,
+        a.emp_task_id,
+        a.change_company,
+        a.job,
+        b.employment_id,
+        a.employee_id,
+        a.company_id,
+        /**用工属性*/
+        b.employ_property,
+        /**用工属性*/
+        b.employ_way,
+        b.handle_type,
+        c.doc_type,
+        c.doc_num,
+        c.yuliu_doc_type,
+        c.yuliu_doc_num,
+        c.archive_place,
+        /**出库日期*/
+        c.storage_out_date,
+        c.archive_id,
         c.luyong_handle_end,
-        COUNT(*) as count
+        d.id_num,/*证件号 */
+        d.id_card_type,
+        d.employee_name,
+        d.gender,
+        b.employ_date,
+        /**退工日期*/
+        f.resign_date,
+        /**用工反馈*/
+        c.employ_feedback,
+        f.resign_feedback,
+        /**退档日期*/
+        f.return_doc_date,
+        /**退工送办日期*/
+        f.resign_handle_date,
+        f.job_centre_feedback_date,
+        f.end_type,
+        h.title,
+        h.service_center,/*服务中心 */
+        h.leader_ship_name, /*客服经理*/
+        cs.employ_special,
+        cs.refuse_special,
+        cs.archive_special
         FROM
         am_emp_task a
         LEFT JOIN am_employment b on a.emp_task_id = b.emp_task_id
@@ -375,16 +423,70 @@
         LEFT JOIN am_emp_task w on f.emp_task_id = w.emp_task_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
-        where 1= 1
+        where  a.task_category = '1'
+        <if test="job!=null">
+            and a.job = #{job}
+        </if>
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
         </foreach>
+        ) t  GROUP BY t.luyong_handle_end
+
     </select>
 
     <select id="queryTaskCount" resultMap="BaseResultMapDTO">
         SELECT
-        a.job,
+        t.job,
         COUNT(*) as count
+        from
+        (
+        select
+        a.employ_code,
+        w.out_reason,
+        w.out_date,
+        w.emp_task_id as empTaskResignId,
+        a.emp_task_id,
+        a.change_company,
+        a.job,
+        b.employment_id,
+        a.employee_id,
+        a.company_id,
+        /**用工属性*/
+        b.employ_property,
+        /**用工属性*/
+        b.employ_way,
+        b.handle_type,
+        c.doc_type,
+        c.doc_num,
+        c.yuliu_doc_type,
+        c.yuliu_doc_num,
+        c.archive_place,
+        /**出库日期*/
+        c.storage_out_date,
+        c.archive_id,
+        c.luyong_handle_end,
+        d.id_num,/*证件号 */
+        d.id_card_type,
+        d.employee_name,
+        d.gender,
+        b.employ_date,
+        /**退工日期*/
+        f.resign_date,
+        /**用工反馈*/
+        c.employ_feedback,
+        f.resign_feedback,
+        /**退档日期*/
+        f.return_doc_date,
+        /**退工送办日期*/
+        f.resign_handle_date,
+        f.job_centre_feedback_date,
+        f.end_type,
+        h.title,
+        h.service_center,/*服务中心 */
+        h.leader_ship_name, /*客服经理*/
+        cs.employ_special,
+        cs.refuse_special,
+        cs.archive_special
         FROM
         am_emp_task a
         LEFT JOIN am_employment b on a.emp_task_id = b.emp_task_id
@@ -394,10 +496,12 @@
         LEFT JOIN am_emp_task w on f.emp_task_id = w.emp_task_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
-        where 1= 1
+        where  a.task_category = '1'
         <foreach collection="param" item="plid" open="" close="" separator="">
             and  ${plid}
         </foreach>
+        ) t
+        group by t.job
     </select>
 
 </mapper>
