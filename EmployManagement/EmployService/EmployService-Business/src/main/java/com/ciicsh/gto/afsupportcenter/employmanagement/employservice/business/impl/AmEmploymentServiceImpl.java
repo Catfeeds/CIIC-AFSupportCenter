@@ -180,8 +180,12 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
 
         StringBuffer retStr = new StringBuffer();
 
-        for (AmEmpArchiveAdvanceXsl xsl:opts) {
-            System.out.println(xsl);
+        for (int i=0;i< opts.size();i++){
+            AmEmpArchiveAdvanceXsl xsl = opts.get(i);
+            if(xsl.getIdNum()==null||xsl.getEmploymentName()==null||xsl.getMatchEmployIndex()==null){
+                retStr.append("第 " + (i+2) + " 行这个雇员信息不完整无法匹配！ ");
+                continue;
+            }
             Wrapper<AmEmpEmployee> wrapper = new EntityWrapper<>();
             wrapper.eq("employee_name",xsl.getEmploymentName());
             wrapper.eq("id_num",xsl.getIdNum());
@@ -208,12 +212,12 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
             List<AmArchive> archives = amArchiveMapper.selectList(wrapper3);
             if(archives!=null && archives.size()>0){
                 AmArchive amArchive = archives.get(0);
-                amArchive.setDocType(xsl.getDocType());
-                amArchive.setDocNum(xsl.getDocNum());
-                amArchive.setDocFrom(xsl.getDocFrom());
-                amArchive.setArchivePlace(xsl.getArchivePlace());
+                amArchive.setDocType(xsl.getDocType()==null?"":xsl.getDocType().trim());
+                amArchive.setDocNum(xsl.getDocNum()==null?"":xsl.getDocNum().trim());
+                amArchive.setDocFrom(xsl.getDocFrom()==null?"":xsl.getDocFrom().trim());
+                amArchive.setArchivePlace(xsl.getArchivePlace()==null?"":xsl.getArchivePlace().trim());
                 amArchive.setStorageDate(DateUtil.dateToLocaleDate(xsl.getCreatedDate()));
-                amArchive.setLuyongHandleEnd(xsl.getEmployHandleEnd());
+                amArchive.setLuyongHandleEnd(xsl.getEmployHandleEnd()==null?false:xsl.getEmployHandleEnd());
                 amArchive.setModifiedBy(UserContext.getUser().getDisplayName());
                 amArchive.setModifiedTime(LocalDateTime.now());
                 amArchiveMapper.updateById(amArchive);
@@ -222,10 +226,10 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
                 amArchive.setCompanyId(employee.getCompanyId());
                 amArchive.setEmployeeId(xsl.getEmployeeId());
                 amArchive.setEmploymentId(xsl.getMatchEmployIndex());
-                amArchive.setDocType(xsl.getDocType());
-                amArchive.setDocNum(xsl.getDocNum());
-                amArchive.setDocFrom(xsl.getDocFrom());
-                amArchive.setArchivePlace(xsl.getArchivePlace());
+                amArchive.setDocType(xsl.getDocType()==null?"":xsl.getDocType().trim());
+                amArchive.setDocNum(xsl.getDocNum()==null?"":xsl.getDocNum().trim());
+                amArchive.setDocFrom(xsl.getDocFrom()==null?"":xsl.getDocFrom().trim());
+                amArchive.setArchivePlace(xsl.getArchivePlace()==null?"":xsl.getArchivePlace().trim());
                 amArchive.setStorageDate(DateUtil.dateToLocaleDate(xsl.getCreatedDate()));
                 amArchive.setLuyongHandleEnd(xsl.getEmployHandleEnd());
                 amArchive.setCreatedBy(UserContext.getUser().getDisplayName());
@@ -247,7 +251,7 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
             amRemark.setActive(true);
             amRemarkService.insert(amRemark);
         }
-        if (retStr.toString()=="") {
+        if (retStr.toString().equals("")) {
             return JsonResultKit.of(0, "导入成功！");
         } else {
             return JsonResultKit.of(1, "部分导入失败!原因： \n" + retStr.toString());

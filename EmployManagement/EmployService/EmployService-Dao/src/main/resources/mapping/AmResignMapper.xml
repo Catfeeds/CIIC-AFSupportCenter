@@ -29,6 +29,7 @@
 		<result column="ukey_borrow_date" property="ukeyBorrowDate" />
 		<result column="ukey_return_date" property="ukeyReturnDate" />
 		<result column="if_network" property="ifNetwork" />
+		<result column="if_send" property="ifSend" />
         <result column="is_finish" property="isFinish" />
 		<result column="job_centre_feedback_date" property="jobCentreFeedbackDate" />
 		<result column="resign_material_delivery_date" property="resignMaterialDeliveryDate" />
