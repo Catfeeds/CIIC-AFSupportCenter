@@ -39,6 +39,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URLEncoder;
@@ -288,7 +289,7 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
      * @param pageInfo
      * @throws Exception
      */
-    @RequestMapping("/empTaskTransferTxtExport")
+    /*@RequestMapping("/empTaskTransferTxtExport")
     public void empTaskTransferTxtExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         EmpTaskTransferBo empTaskTransferBo = pageInfo.toJavaObject(EmpTaskTransferBo.class);
         List<EmpTaskTransferBo> empTaskTransferBoList = business.queryEmpTaskTransfer(empTaskTransferBo);
@@ -313,6 +314,37 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
         // response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
         ExportResponseUtil.encodeExportFileName(response, fileName);
         writer.close();
+    }*/
+
+    @RequestMapping("/empTaskTransferTxtExport")
+    public void empTaskTransferTxtExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
+        EmpTaskTransferBo empTaskTransferBo = pageInfo.toJavaObject(EmpTaskTransferBo.class);
+        List<EmpTaskTransferBo> empTaskTransferBoList = business.queryEmpTaskTransfer(empTaskTransferBo);
+        //Writer writer = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
+        OutputStream outputStream = response.getOutputStream();//获取OutputStream输出流
+        String title = "序号|公积金账号||||";
+        String template = "%1$d|%2$s||||";
+        //List<String> outputList = new ArrayList<>();
+
+        StringBuilder sb = new StringBuilder();
+
+        if (CollectionUtils.isNotEmpty(empTaskTransferBoList)) {
+            for (int i = 0; i < empTaskTransferBoList.size(); i++) {
+                empTaskTransferBo = empTaskTransferBoList.get(i);
+                sb.append("\r\n");
+                sb.append(String.format(template, i + 1, empTaskTransferBo.getHfEmpAccount()));
+            }
+        }
+
+        byte[] dataByteArr = sb.toString().getBytes("UTF-8");
+        String fileName = "上海市公积金雇员转移TXT.txt";
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader("content-Type", "text/plain");
+        // response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+        ExportResponseUtil.encodeExportFileName(response, fileName);
+        outputStream.write(dataByteArr);
+        outputStream.flush();
+        outputStream.close();
     }
 
     @RequestMapping(value = "/feedbackDateUpload", consumes = "multipart/form-data")

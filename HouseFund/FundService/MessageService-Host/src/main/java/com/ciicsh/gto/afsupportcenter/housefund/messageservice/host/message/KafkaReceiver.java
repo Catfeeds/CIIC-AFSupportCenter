@@ -15,6 +15,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.HfEmpTask;
 import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.FundCategory;
 import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.ProcessCategory;
 import com.ciicsh.gto.afsupportcenter.housefund.messageservice.host.enumeration.TaskCategory;
+import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogApiUtil;
 import com.ciicsh.gto.afsupportcenter.util.logService.LogMessage;
 import com.ciicsh.gto.salecenter.apiservice.api.dto.company.AfCompanyDetailResponseDTO;
@@ -30,6 +31,8 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -534,7 +537,15 @@ public class KafkaReceiver {
      */
     private boolean saveEmpTask(TaskCreateMsgDTO taskMsgDTO, String fundCategory, Integer processCategory,Integer taskCategory, String oldAgreementId, Map<String, Object> cityCodeMap, Integer isChange) {
         try {
-            //调用当前雇员信息获取接口
+            // 如果转外地，则取旧雇员协议
+            if (oldAgreementId != null && cityCodeMap != null) {
+                if (cityCodeMap.get("newFundCityCode") != null && !SocialSecurityConst.SHANGHAI_CITY_CODE.equals(cityCodeMap.get("newFundCityCode"))) {
+                    cityCodeMap.put("oldAgreementId", oldAgreementId);
+                    oldAgreementId = null;
+                }
+            }
+
+            // 调用当前雇员信息获取接口
             AfEmployeeInfoDTO dto = getEmpInfo(taskMsgDTO,processCategory,taskCategory, oldAgreementId, isChange);
 
             if (dto != null) {
@@ -564,7 +575,10 @@ public class KafkaReceiver {
                 return false;
             }
         } catch (Exception e) {
-            log.error(LogMessage.create().setTitle("saveEmpTask").setContent("saveEmpTask exception: " + e.getMessage()));
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            log.error(LogMessage.create().setTitle("KafkaReceiver#saveEmpTask").setContent("Fund:saveEmpTask exception: " + sw.toString()));
             logger.debug("exception:" + e.getMessage(), e);
             return false;
         }

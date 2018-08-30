@@ -92,7 +92,7 @@ public interface SsPaymentComService extends IService<SsPaymentCom> {
      * @param ssPayment 社保支付批次
      * @return  SsPaymentComBO
      */
-    void saveReviewdePassResult(SsPayment ssPayment);
+    void saveReviewdePassResult(SsPayment ssPayment,String payApplyCode);
 
     /**
      * <p>Description:付款申请拒绝返回更新支付状态</p>

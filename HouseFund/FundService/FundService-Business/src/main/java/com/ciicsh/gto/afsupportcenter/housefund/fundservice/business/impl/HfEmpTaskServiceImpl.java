@@ -241,7 +241,12 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         AfEmpAgreementDTO afEmpAgreementDTO = dto.getNowAgreement();
         HfEmpTask hfEmpTask = new HfEmpTask();
         hfEmpTask.setTaskId(taskMsgDTO.getTaskId());
-        hfEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
+
+        if (cityCodeMap.get("oldAgreementId") != null) {
+            hfEmpTask.setBusinessInterfaceId(cityCodeMap.get("oldAgreementId").toString());
+        } else {
+            hfEmpTask.setBusinessInterfaceId(taskMsgDTO.getMissionId());
+        }
 
         // 调整通道或更正通道过来的任务单，都需要加上oldAgreementId，回调前道接口时需使用
         if (oldAgreementId != null) {
@@ -601,6 +606,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
         hfEmpTaskWrapper.and("task_category = {0}", SocialSecurityConst.TASK_CATEGORY_NO_HANDLE);
         List<HfEmpTask> hfEmpTaskList = this.selectList(hfEmpTaskWrapper);
 
+        // 收到不做类型任务单
         if (CollectionUtils.isNotEmpty(hfEmpTaskList)) {
             hfEmpTaskWrapper = new EntityWrapper<>();
             hfEmpTaskWrapper.where("is_active = 1");
@@ -608,43 +614,58 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
             hfEmpTaskWrapper.and("employee_id = {0}", employeeId);
             hfEmpTaskWrapper.and("hf_type = {0}", hfType);
             hfEmpTaskWrapper.and("task_status = 1");
+            hfEmpTaskWrapper.and("modified_time = created_time");
             hfEmpTaskWrapper.and("task_category in (4, 5, 12, 13)");
 
             List<HfEmpTask> outHfEmpTaskList = this.selectList(hfEmpTaskWrapper);
 
+            // 且收到停办类任务单
             if (CollectionUtils.isNotEmpty(outHfEmpTaskList)
                 && hfEmpTaskList.size() == 1 && outHfEmpTaskList.size() == 1
                 ) {
                 HfEmpTask inHfEmpTask = hfEmpTaskList.get(0);
                 HfEmpTask outHfEmpTask = outHfEmpTaskList.get(0);
 
+                // 停办年月小于新增年月
                 if (DateUtil.compareMonth(inHfEmpTask.getStartMonth(), outHfEmpTask.getEndMonth()) > 0) {
-                    // 新增类任务单批退，回调任务单完成接口和实际金额回调接口
-                    HfEmpTaskBatchRejectBo hfEmpTaskBatchRejectBo = new HfEmpTaskBatchRejectBo();
-                    hfEmpTaskBatchRejectBo.setSelectedData(new Long[] { inHfEmpTask.getEmpTaskId() });
-                    hfEmpTaskBatchRejectBo.setRejectionRemark("不做，自动抵消");
-                    hfEmpTaskBatchRejectBo.setModifiedBy(SocialSecurityConst.SYSTEM_USER);
-                    hfEmpTaskBatchRejectBo.setModifiedDisplayName(SocialSecurityConst.SYSTEM_USER);
-                    hfEmpTaskHandleService.handleReject(hfEmpTaskBatchRejectBo);
+                    hfEmpTaskWrapper = new EntityWrapper<>();
+                    hfEmpTaskWrapper.where("is_active = 1");
+                    hfEmpTaskWrapper.and("company_id = {0}", companyId);
+                    hfEmpTaskWrapper.and("employee_id = {0}", employeeId);
+                    hfEmpTaskWrapper.and("hf_type = {0}", hfType);
+                    hfEmpTaskWrapper.and("task_status = 1");
+                    hfEmpTaskWrapper.and("task_category in (6, 7)");
+                    int otherCnt = this.selectCount(hfEmpTaskWrapper);
 
-                    // 停办类任务单批退，仅回调任务单完成接口
-                    HfEmpTask updateHfEmpTask = new HfEmpTask();
-                    updateHfEmpTask.setEmpTaskId(outHfEmpTask.getEmpTaskId());
-                    updateHfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_REJECTED);
-                    updateHfEmpTask.setRejectionRemark(hfEmpTaskBatchRejectBo.getRejectionRemark());
-                    updateHfEmpTask.setModifiedTime(LocalDateTime.now());
-                    updateHfEmpTask.setModifiedBy(SocialSecurityConst.SYSTEM_USER);
-                    updateHfEmpTask.setModifiedDisplayName(SocialSecurityConst.SYSTEM_USER);
-                    this.updateById(updateHfEmpTask);
+                    // 且不存在其他类型任务单（批退，或不需处理除外）
+                    if (otherCnt == 0) {
+                        // 新增类任务单批退，回调任务单完成接口和实际金额回调接口
+                        HfEmpTaskBatchRejectBo hfEmpTaskBatchRejectBo = new HfEmpTaskBatchRejectBo();
+                        hfEmpTaskBatchRejectBo.setSelectedData(new Long[]{inHfEmpTask.getEmpTaskId()});
+                        hfEmpTaskBatchRejectBo.setRejectionRemark("不做，自动抵消");
+                        hfEmpTaskBatchRejectBo.setModifiedBy(SocialSecurityConst.SYSTEM_USER);
+                        hfEmpTaskBatchRejectBo.setModifiedDisplayName(SocialSecurityConst.SYSTEM_USER);
+                        hfEmpTaskHandleService.handleReject(hfEmpTaskBatchRejectBo);
 
-                    try {
-                        Result result = hfEmpTaskHandleService.apiCompleteTask(outHfEmpTask.getTaskId(),
-                            hfEmpTaskBatchRejectBo.getModifiedDisplayName());
-                    } catch (Exception e) {
-                        LogMessage logMessage = LogMessage.create().setTitle("访问接口").
-                            setContent("访问客服中心的完成任务接口失败,ExceptionMessage:" + e.getMessage());
-                        logApiUtil.error(logMessage);
-                        throw new BusinessException("访问客服中心的完成任务接口失败");
+                        // 停办类任务单批退，仅回调任务单完成接口
+                        HfEmpTask updateHfEmpTask = new HfEmpTask();
+                        updateHfEmpTask.setEmpTaskId(outHfEmpTask.getEmpTaskId());
+                        updateHfEmpTask.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_REJECTED);
+                        updateHfEmpTask.setRejectionRemark(hfEmpTaskBatchRejectBo.getRejectionRemark());
+                        updateHfEmpTask.setModifiedTime(LocalDateTime.now());
+                        updateHfEmpTask.setModifiedBy(SocialSecurityConst.SYSTEM_USER);
+                        updateHfEmpTask.setModifiedDisplayName(SocialSecurityConst.SYSTEM_USER);
+                        this.updateById(updateHfEmpTask);
+
+                        try {
+                            Result result = hfEmpTaskHandleService.apiCompleteTask(outHfEmpTask.getTaskId(),
+                                hfEmpTaskBatchRejectBo.getModifiedDisplayName());
+                        } catch (Exception e) {
+                            LogMessage logMessage = LogMessage.create().setTitle("访问接口").
+                                setContent("访问客服中心的完成任务接口失败,ExceptionMessage:" + e.getMessage());
+                            logApiUtil.error(logMessage);
+                            throw new BusinessException("访问客服中心的完成任务接口失败");
+                        }
                     }
                 }
             }

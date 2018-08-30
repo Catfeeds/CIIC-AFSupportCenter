@@ -60,7 +60,7 @@ public interface SsComAccountService extends IService<SsComAccount> {
      * @param ssAccount
      * @return
      */
-    SsComAccountDTO getAccountById(String ssAccount);
+    SsComAccountDTO getAccountById(String ssAccount,String companyId);
 
 
     /**

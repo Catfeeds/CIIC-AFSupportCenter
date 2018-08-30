@@ -490,6 +490,15 @@ public class KafkaReceiver {
      */
     private void saveSsEmpTask(TaskCreateMsgDTO taskMsgDTO, Integer socialType, Integer processCategory, String oldAgreementId, Map<String, Object> cityCodeMap, Integer isChange) {
         try {
+            // 如果转外地，则取旧雇员协议
+            if (oldAgreementId != null && cityCodeMap != null) {
+                if (cityCodeMap.get("newSocialCityCode") != null && !SocialSecurityConst.SHANGHAI_CITY_CODE.equals(cityCodeMap.get("newSocialCityCode"))) {
+                    cityCodeMap.put("oldAgreementId", oldAgreementId);
+                    oldAgreementId = null;
+                }
+            }
+
+            // 调用当前雇员信息获取接口
             AfEmployeeInfoDTO dto = callEmpAgreement(taskMsgDTO, processCategory, oldAgreementId);
             AfCompanyDetailResponseDTO afCompanyDetailResponseDTO = null;
 
