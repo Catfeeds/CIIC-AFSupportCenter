@@ -25,6 +25,8 @@ public interface IAmArchiveUkeyService extends IService<AmArchiveUkey> {
 
     List<AmArchiveUkeyRenewBO> queryAmArchiveUkeyRenew(Long id);
 
+    boolean delAmArchiveUkeyRenew(Long id);
+
     AmArchiveUkeyBO queryAmArchiveUkey(String organizationCode);
 
     boolean deleteAmArchiveUkey(Long id);

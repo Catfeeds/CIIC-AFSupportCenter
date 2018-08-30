@@ -219,6 +219,14 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         return JsonResultKit.of(map);
     }
 
+    @RequestMapping("/queryDocSeqList")
+    public JsonResult queryDocSeqList(AmArchiveDocSeqBO bo){
+        List<AmArchiveDocSeqBO> boList = amArchiveService.queryAmArchiveDocTypeByType(bo.getType());
+        Map<String, Object> map = new HashMap<>();
+        map.put("docList", boList);
+        return JsonResultKit.of(map);
+    }
+
     @RequestMapping("/archiveDetailInfoQuery")
     public JsonResult archiveDetailInfoQuery(AmTaskParamBO amTaskParamBO){
 

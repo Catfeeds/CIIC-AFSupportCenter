@@ -99,12 +99,15 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
 
         if(ssAccount==null || ssAccount=="" ){
             condition.put("company_id",companyId);
-            SsAccountComRelation ssAccountComRelation= ssAccountComRelationMapper.selectByMap(condition).get(0);
+            SsAccountComRelation ssAccountComRelation = ssAccountComRelationMapper.selectByMap(condition).get(0);
             comAccountId = ssAccountComRelation.getComAccountId();
+            condition.put("com_account_id",comAccountId);
+            SsComAccount ssComAccount= baseMapper.selectByMap(condition).get(0);
+            ssAccount=ssComAccount.getSsAccount();
         }
         condition=new HashMap<>();
         condition.put("ss_account",ssAccount);
-        condition.put("com_account_id",comAccountId);
+       // condition.put("com_account_id",comAccountId);
         SsComAccount ssComAccount= baseMapper.selectByMap(condition).get(0);
 
         SsComAccountDTO ssComAccountDTO=new SsComAccountDTO();
@@ -118,9 +121,9 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
         }
         comId = comId.substring(0,comId.length()-1);
         if(companyId!=null && companyId!=""){
-            ssComAccountDTO.setCompanyId(comId);
-        }else {
             ssComAccountDTO.setCompanyId(companyId);
+        }else {
+            ssComAccountDTO.setCompanyId(comId);
         }
 
         return ssComAccountDTO;

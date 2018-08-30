@@ -54,11 +54,6 @@ public class AmArchiveUkeyBO {
     private String ssAccount;
 
     /**
-     * 客服经理
-     */
-    private String teamName;
-
-    /**
      * 到期日期
      */
     private LocalDate dueDate;
@@ -118,6 +113,11 @@ public class AmArchiveUkeyBO {
      */
     private String modifiedBy;
 
+    /**
+     * team
+     */
+    private String team;
+
     private String params;
 
     private List<String> param;
@@ -138,14 +138,6 @@ public class AmArchiveUkeyBO {
     private LocalDate renewDueDate;
 
     private boolean flag = false;
-
-    public String getTeamName() {
-        return teamName;
-    }
-
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
-    }
 
     public String getSsAccount() {
         return ssAccount;
@@ -277,6 +269,14 @@ public class AmArchiveUkeyBO {
 
     public LocalDate getLogoutDate() {
         return logoutDate;
+    }
+
+    public String getTeam() {
+        return team;
+    }
+
+    public void setTeam(String team) {
+        this.team = team;
     }
 
     public void setLogoutDate(LocalDate logoutDate) {
