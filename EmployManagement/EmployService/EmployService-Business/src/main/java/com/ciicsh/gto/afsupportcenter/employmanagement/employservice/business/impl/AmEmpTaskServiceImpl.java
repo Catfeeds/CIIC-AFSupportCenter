@@ -480,6 +480,19 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             }
 
             try {
+                if(taskMsgDTO.getVariables().containsKey("empCompanyId"))
+                {
+                    if(taskMsgDTO.getVariables().get("empCompanyId")!=null)
+                    {
+                        amEmpTask.setEmpCompanyId(taskMsgDTO.getVariables().get("empCompanyId").toString());
+                    }
+                }
+            } catch (Exception e) {
+                LogMessage logMessage = LogMessage.create().setTitle("退工任务单").setContent(e.getMessage());
+                logApiUtil.error(logMessage);
+            }
+
+            try {
                 //更新离职原因
                 AmEmpTaskBO amEmpTaskBO = new AmEmpTaskBO();
                 amEmpTaskBO.setEmployeeId(amEmpTask.getEmployeeId());

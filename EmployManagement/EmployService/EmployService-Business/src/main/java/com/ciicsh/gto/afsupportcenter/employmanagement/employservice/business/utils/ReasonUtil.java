@@ -87,8 +87,12 @@ public class ReasonUtil {
         {
             return  "";
         }
-        return param.get(code);
+        try {
+          return param.get(code);
+        } catch (Exception e) {
 
+        }
+        return  "";
     }
 
     /**
