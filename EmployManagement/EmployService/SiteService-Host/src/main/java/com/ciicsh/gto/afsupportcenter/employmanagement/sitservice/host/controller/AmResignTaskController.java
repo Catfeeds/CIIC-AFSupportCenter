@@ -163,16 +163,22 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
             amResignBOCount.setJob("Y");
             List<AmResignBO> jobList = business.jobCount(amResignBOCount);
             amTaskStatusBO.setJob(jobList.get(0).getCount());
-            amTaskStatusBO.setNoJob(0);
+            amResignBOCount.setJob("N");
+            List<AmResignBO> jobListOther = business.jobCount(amResignBOCount);
+            amTaskStatusBO.setNoJob(jobListOther.get(0).getCount());
         }else{
             List<AmResignBO> jobList = business.jobCount(amResignBOCount);
             if("Y".equals(amResignBOCount.getJob()))
             {
                 amTaskStatusBO.setJob(jobList.get(0).getCount());
-                amTaskStatusBO.setNoJob(0);
+                amResignBOCount.setJob("N");
+                List<AmResignBO> jobListOther = business.jobCount(amResignBOCount);
+                amTaskStatusBO.setNoJob(jobListOther.get(0).getCount());
             }else{
-                amTaskStatusBO.setJob(0);
                 amTaskStatusBO.setNoJob(jobList.get(0).getCount());
+                amResignBOCount.setJob("Y");
+                List<AmResignBO> jobListOther = business.jobCount(amResignBOCount);
+                amTaskStatusBO.setJob(jobListOther.get(0).getCount());
             }
         }
         amResignCollection.setAmTaskStatusBO(amTaskStatusBO);
@@ -281,7 +287,6 @@ public class AmResignTaskController extends BasicController<IAmResignService> {
         if(null!=amEmpEmployeeBO){
             resultMap.put("amEmpTaskBO",amEmpEmployeeBO);
         }
-
 
         //退工备注
         if(null!=amRemarkBOList&&amRemarkBOList.size()>0)
