@@ -50,12 +50,16 @@ public class EmployeeCompanyController {
 
     @Autowired
     private EmployeeCompanyService employeeCompanyService;
+
     @Autowired
     private EmployeeService employeeService;
+
     @Autowired
     private EmployeeOtherService employeeOtherService;
+
     @Autowired
     private TaskTypeService taskTypeService;
+
     @Autowired
     private EntityIdServiceProxy entityIdServiceProxy;
 
@@ -155,16 +159,6 @@ public class EmployeeCompanyController {
             taskTypeDTO.setPid(String.valueOf(item.getPid()));
             return taskTypeDTO;
         }).collect(Collectors.toList());
-//        List<TaskType> list = taskTypeService.findTaskType(pid);
-//        List<TaskTypeDTO> result = list.stream()
-//            .map(item -> {
-//                TaskTypeDTO taskTypeDTO = new TaskTypeDTO();
-//                BeanUtils.copyProperties(item, taskTypeDTO);
-//                taskTypeDTO.setTaskTypeId(String.valueOf(item.getTaskTypeId()));
-//                taskTypeDTO.setLevel(String.valueOf(item.getLevel()));
-//                taskTypeDTO.setPid(String.valueOf(item.getPid()));
-//                return taskTypeDTO;
-//            }).collect(Collectors.toList());
         return JsonResult.success(result);
     }
 
