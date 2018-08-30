@@ -25,6 +25,7 @@ import com.ciicsh.gto.afsupportcenter.util.web.response.ExportResponseUtil;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult;
 import com.ciicsh.gto.afsupportcenter.util.web.response.JsonResultKit;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -189,18 +190,21 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
     @RequestMapping("/multiEmpTaskTransferExport")
     public void multiEmpTaskTransferExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         EmpTaskTransferBo empTaskTransferBo = pageInfo.toJavaObject(EmpTaskTransferBo.class);
-        empTaskTransferBo.setTransferInUnit(SocialSecurityConst.FUND_OUT_UNIT_LIST.get(0));
+        empTaskTransferBo.setTransferInUnit(SocialSecurityConst.FUND_OUT_UNIT_LIST.get(1));
         List<EmpTaskTransferBo> empTaskTransferBoList = business.queryEmpTaskTransfer(empTaskTransferBo);
 
         Map<Integer, Map<String, Object>> alMap = new HashMap<>();
         String[] transferOutUnitAccounts = {"", ""};
         String[] transferInUnitAccounts = {"", ""};
+        String[] companyIdsArr = {"", ""};
+        String[] paymentBanks = {"", ""};
 
         for (int i = 0; i < 2; i++) {
             Map<String, Object> map = new HashMap<>();
             List<Map<String, Object>> mapList = new ArrayList<>();
             final int m = i;
             List<EmpTaskTransferBo> list = empTaskTransferBoList.stream().filter(e -> e.getHfType() == m + 1).collect(Collectors.toList());
+            HashSet<String> companyIdSet = new HashSet<>();
 
             if (CollectionUtils.isNotEmpty(list)) {
                 String account = list.get(0).getTransferOutUnitAccount();
@@ -231,6 +235,14 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
                     lm.put("employeeName", list.get(j).getEmployeeName());
                     lm.put("rowNo", j + 1);
                     mapList.add(lm);
+
+                    companyIdSet.add(list.get(j).getCompanyId());
+                }
+                companyIdsArr[i] = StringUtils.join(companyIdSet.stream().sorted().toArray(), ' ');
+
+                String paymentBankName = list.get(0).getPaymentBankName();
+                if (StringUtils.isNotEmpty(paymentBankName)) {
+                    paymentBanks[i] = paymentBankName;
                 }
             }
             map.put("maplist", mapList);
@@ -261,6 +273,10 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
             left = left.replace("{{transferInUnitAccount}}", transferInUnitAccounts[i]);
             sheet.getHeader().setLeft(left);
 
+            String right = sheet.getHeader().getRight();
+            right = right.replace("{{companyId}}", companyIdsArr[i]);
+            right = right.replace("{{paymentBankName}}", paymentBanks[i]);
+            sheet.getHeader().setRight(right);
 
             String center = sheet.getFooter().getCenter();
             center = center.replace("{{createdBy}}", currentUser);
