@@ -237,6 +237,11 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
     }
 
     @Override
+    public List<AmEmploymentBO> queryAmEmploymentCount(EmployeeBatchBO employeeBatchBO) {
+        return baseMapper.queryAmEmploymentCount(employeeBatchBO);
+    }
+
+    @Override
     public List<AmEmploymentBO> queryAmEmploymentBatch(List<Long> empTaskIds) {
         EmployeeBatchBO employeeBatchBO = new  EmployeeBatchBO();
         employeeBatchBO.setEmpTaskIds(empTaskIds);

@@ -76,4 +76,8 @@ public interface IAmEmpTaskService extends IService<AmEmpTask> {
 
     List<AmEmpTaskBO>  jobCount(AmEmpTaskBO amEmpTaskBO);
 
+    Map<String,Object> batchCheckArchive(EmployeeBatchBO employeeBatchBO);
+
+   Map<String,Object> batchSaveArchive(AmArchiveBO amArchiveBO);
+
 }

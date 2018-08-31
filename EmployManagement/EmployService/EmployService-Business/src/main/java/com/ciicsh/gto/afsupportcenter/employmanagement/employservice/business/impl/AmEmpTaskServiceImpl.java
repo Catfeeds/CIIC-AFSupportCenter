@@ -802,6 +802,28 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 }
             }
         }
+        try {
+            if(!StringUtil.isEmpty(amArchiveBO.getRemark())){
+                List<AmRemark> amRemarkList = new ArrayList<>();
+                Long[] longs = amArchiveBO.getEmpTaskIds();
+                for(int i=0;i<longs.length;i++)
+                {
+                    AmRemark amRemark = new AmRemark();
+                    amRemark.setEmpTaskId(longs[i]);
+                    amRemark.setRemarkContent(amArchiveBO.getRemark());
+                    amRemark.setRemarkType(2);
+                    amRemark.setCreatedTime(now);
+                    amRemark.setModifiedTime(now);
+                    amRemark.setCreatedBy(ReasonUtil.getUserId());
+                    amRemark.setModifiedBy(ReasonUtil.getUserId());
+                    amRemark.setRemarkDate(LocalDate.now());
+                    amRemarkList.add(amRemark);
+                }
+                amRemarkService.insertBatch(amRemarkList);
+            }
+        } catch (Exception e) {
+
+        }
         map.put("result",result);
         map.put("taskIdList",taskIdList);
         return map;
@@ -1697,6 +1719,70 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     @Override
     public List<AmEmpTaskBO> jobCount(AmEmpTaskBO amEmpTaskBO) {
         return  baseMapper.jobCount(amEmpTaskBO);
+    }
+
+    @Override
+    public Map<String, Object> batchCheckArchive(EmployeeBatchBO employeeBatchBO) {
+        Map<String,Object> resultMap = new HashMap<>();
+        List<AmEmpTaskBO> amEmpTaskBOList = baseMapper.queryIsFinish(employeeBatchBO);
+        if(null!=amEmpTaskBOList&&amEmpTaskBOList.size()>0)
+        {
+            resultMap.put("empTask",amEmpTaskBOList.size());
+            return  resultMap;
+        }
+        List<AmEmploymentBO> amEmploymentBOList = amEmploymentService.queryAmEmploymentCount(employeeBatchBO);
+        if(null!=amEmploymentBOList)
+        {
+           if(amEmploymentBOList.size()<employeeBatchBO.getEmpTaskIds().size())
+           {
+               Integer num = employeeBatchBO.getEmpTaskIds().size()-amEmploymentBOList.size();
+               resultMap.put("employmentCount",num);
+               return  resultMap;
+           }
+        }
+        return resultMap;
+    }
+
+    @Override
+    public Map<String, Object> batchSaveArchive(AmArchiveBO amArchiveBO) {
+        Map<String,Object> map = new HashMap<>();
+        LocalDateTime now = LocalDateTime.now();
+        boolean result = false;
+        Map<String,Object> param = new HashMap<>();
+        List<AmEmploymentBO> amEmploymentBOList = amEmploymentService.queryAmEmploymentBatch(Arrays.asList(amArchiveBO.getEmpTaskIds()));
+        if(amEmploymentBOList==null||amEmploymentBOList.size()==0){
+            map.put("size",false);
+            return  map;
+        }
+        List<AmArchive> amArchiveList = new ArrayList<>();
+        for(AmEmploymentBO temp:amEmploymentBOList)
+        {
+            param.put("employmentId",temp.getEmploymentId());
+            List<AmArchiveBO> amArchiveBOList = amArchiveService.queryAmArchiveList(param);
+            AmArchive entity = new AmArchive();
+            BeanUtils.copyProperties(amArchiveBO,entity);
+            if(null!=amArchiveBOList&&amArchiveBOList.size()>0)
+            {
+                AmArchiveBO amArchiveBO1 = amArchiveBOList.get(0);
+                entity.setArchiveId(amArchiveBO1.getArchiveId());
+                entity.setCreatedTime(amArchiveBO1.getCreatedTime());
+                entity.setCreatedBy(amArchiveBO1.getCreatedBy());
+            }else{
+                entity.setCreatedTime(now);
+                entity.setCreatedBy(ReasonUtil.getUserId());
+            }
+            entity.setEmploymentId(temp.getEmploymentId());
+            entity.setEmployeeId(temp.getEmployeeId());
+            entity.setCompanyId(temp.getCompanyId());
+            entity.setModifiedTime(now);
+            entity.setModifiedBy(ReasonUtil.getUserId());
+            entity.setIsActive(1);
+
+            amArchiveList.add(entity);
+        }
+        result =  amArchiveService.insertOrUpdateBatch(amArchiveList);
+        map.put("result",result);
+        return map;
     }
 
 

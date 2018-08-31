@@ -3,6 +3,7 @@ package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business;
 import com.baomidou.mybatisplus.service.IService;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmpTaskCollection;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmploymentBO;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.EmployeeBatchBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.custom.archiveSearchExportOpt;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmArchiveReturnPrintDTO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dto.AmEmpArchiveAdvanceXsl;
@@ -40,5 +41,7 @@ public interface IAmEmploymentService extends IService<AmEmployment> {
     AmEmpTaskCollection queryArchiveTaskCount(AmEmploymentBO amEmploymentBO);
 
     JsonResult xlsImportAmEmpAdvance(List<AmEmpArchiveAdvanceXsl> opts, String fileName);
+
+    List<AmEmploymentBO>  queryAmEmploymentCount(EmployeeBatchBO employeeBatchBO);
 
 }
