@@ -806,10 +806,10 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             if(!StringUtil.isEmpty(amArchiveBO.getRemark())){
                 List<AmRemark> amRemarkList = new ArrayList<>();
                 Long[] longs = amArchiveBO.getEmpTaskIds();
-                for(int i=0;i<longs.length;i++)
+                for(int m=0;i<longs.length;m++)
                 {
                     AmRemark amRemark = new AmRemark();
-                    amRemark.setEmpTaskId(longs[i]);
+                    amRemark.setEmpTaskId(longs[m]);
                     amRemark.setRemarkContent(amArchiveBO.getRemark());
                     amRemark.setRemarkType(2);
                     amRemark.setCreatedTime(now);
