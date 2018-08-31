@@ -82,6 +82,30 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     @RequestMapping("/queryAmArchive")
     public JsonResult<PageRows> queryAmArchive(PageInfo pageInfo){
         PageRows<AmEmploymentBO> result = business.queryAmArchive(pageInfo);
+        /*AmEmploymentBO param = pageInfo.toJavaObject(AmEmploymentBO.class);
+        if(param.getLuyongHandleEnd()!=null)
+        {
+            List<AmEmploymentBO> temp = result.getRows();
+            if(param.getLuyongHandleEnd())
+            {
+                for(AmEmploymentBO amEmploymentBO:temp)
+                {
+                    if(amEmploymentBO.getLuyongHandleEnd()==null||amEmploymentBO.getLuyongHandleEnd()==false){
+                        temp.remove(amEmploymentBO);
+                    }
+                }
+            }else{
+                for(AmEmploymentBO amEmploymentBO:temp)
+                {
+                    if(null!=amEmploymentBO.getLuyongHandleEnd()&&amEmploymentBO.getLuyongHandleEnd())
+                    {
+                        temp.remove(amEmploymentBO);
+                    }
+                }
+            }
+            result.setRows(temp);
+        }*/
+
         List<AmEmploymentBO> data = result.getRows();
         for(AmEmploymentBO amEmploymentBO:data)
         {
@@ -110,8 +134,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             buf.append(amEmploymentBO.getArchiveSpecial()==null?"":amEmploymentBO.getArchiveSpecial());
             if(!StringUtil.isEmpty(buf.toString()))
             {
-                int last = buf.lastIndexOf(",");
-                amEmploymentBO.setArchiveSpecial(buf.substring(0,last));
+                amEmploymentBO.setArchiveSpecial("有");
             }
         }
 

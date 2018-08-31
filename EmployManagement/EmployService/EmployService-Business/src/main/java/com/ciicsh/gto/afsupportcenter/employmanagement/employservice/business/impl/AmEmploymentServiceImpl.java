@@ -76,17 +76,6 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
     public PageRows<AmEmploymentBO> queryAmArchive(PageInfo pageInfo) {
         AmEmploymentBO amEmploymentBO = pageInfo.toJavaObject(AmEmploymentBO.class);
 
-        if(null!=amEmploymentBO.getTaskStatus()&&amEmploymentBO.getTaskStatus()==6)
-        {
-            amEmploymentBO.setTaskStatus(null);
-            amEmploymentBO.setTaskStatusOther(0);
-        }
-
-        if(null!=amEmploymentBO.getTaskResignStatus()&&amEmploymentBO.getTaskResignStatus()==6){
-            amEmploymentBO.setTaskResignStatus(null);
-            amEmploymentBO.setTaskResignStatusOther(0);
-        }
-
         List<String> param = new ArrayList<String>();
         List<String> orderParam = new ArrayList<String>();
         if(!StringUtil.isEmpty(amEmploymentBO.getParams()))
@@ -107,22 +96,8 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
 
         amEmploymentBO.setParam(param);
         amEmploymentBO.setOrderParam(orderParam);
-        //如果是查询用工总的数量就不需要状态了
-        if(null!=amEmploymentBO.getTaskStatus()&&amEmploymentBO.getTaskStatus()==0){
-            amEmploymentBO.setTaskStatus(null);
-        }
-        //如果是查询退工总的数量就不需要状态了
-        if(null!=amEmploymentBO.getTaskResignStatus()&&amEmploymentBO.getTaskResignStatus()==0){
-            amEmploymentBO.setTaskResignStatus(null);
-        }
 
-        if(amEmploymentBO.getTaskCategory()!=null&&amEmploymentBO.getTaskCategory()==2)
-        {
-            return PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmArchiveResign(amEmploymentBO));
-        }else {
-            return PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmArchive(amEmploymentBO));
-        }
-
+        return PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmArchive(amEmploymentBO));
 
     }
 
