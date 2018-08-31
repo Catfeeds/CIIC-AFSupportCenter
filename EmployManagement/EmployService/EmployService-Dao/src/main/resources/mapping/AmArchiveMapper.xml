@@ -63,6 +63,8 @@
 		<result column="created_by" property="createdBy" />
 		<result column="modified_by" property="modifiedBy" />
         <result column="manual_storage_man" property="manualStorageMan" />
+        <result column="post" property="post" />
+        <result column="post_way" property="postWay" />
 
 	</resultMap>
 

@@ -516,4 +516,17 @@
         group by t.job
     </select>
 
+    <select id="queryAmEmploymentCount" resultMap="BaseResultMapDTO">
+        SELECT
+        a.employment_id,
+        a.emp_task_id
+        FROM
+        am_employment a
+        <where>
+            <foreach collection="empTaskIds" item="item" open="a.emp_task_id IN (" separator="," close=")">
+                #{item}
+            </foreach>
+        </where>
+    </select>
+
 </mapper>
