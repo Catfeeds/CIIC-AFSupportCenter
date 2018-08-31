@@ -134,9 +134,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
             if(1==status){
                 amEmpTaskCountBO.setNoSign(amEmpTaskBO.getCount());
                 num = num + amEmpTaskBO.getCount();
-            }else if(10==status){
-                amEmpTaskCountBO.setNoRecord(amEmpTaskBO.getCount());
-                num = num + amEmpTaskBO.getCount();
             }else if(11==status){
                 amEmpTaskCountBO.setBorrowKey(amEmpTaskBO.getCount());
                 num = num + amEmpTaskBO.getCount();

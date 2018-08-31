@@ -175,7 +175,7 @@
             and a.task_status = ${taskStatus}
         </if>
         <if test="taskStatusOther!=null">
-            and a.task_status not in ('1','3','10','4','5','11')
+            and a.task_status not in ('1','3','4','5','11')
         </if>
         <if test="job!=null">
             and a.job = #{job}
