@@ -686,6 +686,12 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
      */
     @RequestMapping(value = "/xlsImportEmpAdvance",consumes = {"multipart/form-data"})
     public JsonResult xlsImportEmpAdvance(MultipartFile file) throws Exception {
+        if(file.getOriginalFilename().endsWith(".xlsx") == false && file.getOriginalFilename().endsWith(".xls") == false){
+            JsonResult error = new JsonResult();
+            error.setCode(1);
+            error.setMessage("档案配对上传文件格式仅支持.xlsx 和.xls");
+            return error;
+        }
         List<AmEmpArchiveAdvanceXsl> optList = ExcelUtil.importExcel(file,0,1,AmEmpArchiveAdvanceXsl.class,false);
         JsonResult result = business.xlsImportAmEmpAdvance(optList,file.getOriginalFilename());
         return  result;
