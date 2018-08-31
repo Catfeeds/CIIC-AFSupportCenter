@@ -190,7 +190,9 @@ public class HfEmpTaskTransferController extends BasicController<HfEmpTaskTransf
     @RequestMapping("/multiEmpTaskTransferExport")
     public void multiEmpTaskTransferExport(HttpServletResponse response, PageInfo pageInfo) throws Exception {
         EmpTaskTransferBo empTaskTransferBo = pageInfo.toJavaObject(EmpTaskTransferBo.class);
-        empTaskTransferBo.setTransferInUnit(SocialSecurityConst.FUND_OUT_UNIT_LIST.get(1));
+        if (StringUtils.isEmpty(empTaskTransferBo.getTransferInUnit())) {
+            empTaskTransferBo.setTransferInUnit(SocialSecurityConst.FUND_OUT_UNIT_LIST.get(1));
+        }
         List<EmpTaskTransferBo> empTaskTransferBoList = business.queryEmpTaskTransfer(empTaskTransferBo);
 
         Map<Integer, Map<String, Object>> alMap = new HashMap<>();
