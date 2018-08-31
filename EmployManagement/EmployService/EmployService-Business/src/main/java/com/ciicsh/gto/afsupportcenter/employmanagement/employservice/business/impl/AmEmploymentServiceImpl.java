@@ -154,6 +154,9 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
     public com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult xlsImportAmEmpAdvance(List<AmEmpArchiveAdvanceXsl> opts, String fileName) {
 
         StringBuffer retStr = new StringBuffer();
+        if(opts==null||opts.size()==0){
+            retStr.append("导入失败，没有录入数据.");
+        }
 
         for (int i=0;i< opts.size();i++){
             AmEmpArchiveAdvanceXsl xsl = opts.get(i);
@@ -167,7 +170,7 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
             // 是否有雇员
             List<AmEmpEmployee> empEmployeeList = amEmpEmployeeService.selectList(wrapper);
             if(empEmployeeList == null || empEmployeeList.size() == 0) {
-                retStr.append(xsl.getEmploymentName() + xsl.getIdNum() + "这个雇员在系统中不存在！ ");
+                retStr.append("第 " + (i+2) +  " 行这个雇员在系统中不存在！ ");
                 continue;
             }
             AmEmpEmployee employee = empEmployeeList.get(0);
@@ -176,7 +179,7 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
             wrapper2.eq("employee_id",employee.getEmployeeId());
             List<AmEmployment> empList = amEmploymentMapper.selectList(wrapper2);
             if(empList == null || empList.size() == 0) {
-                retStr.append(xsl.getEmploymentName() +" "+ xsl.getIdNum() + "这个雇员对应的用工序号 " + xsl.getMatchEmployIndex() + " 不匹配系统的用工序号！ ");
+                retStr.append("第 " + (i+2) +  " 行这个雇员对应的用工序号 " + xsl.getMatchEmployIndex() + " 不匹配系统的用工序号！ ");
                 continue;
             }
             AmEmployment amEmployment = empList.get(0);
