@@ -1,13 +1,12 @@
 package com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.transfer;
 
-import com.baomidou.mybatisplus.annotations.TableField;
 import com.ciicsh.gto.afsupportcenter.util.DateUtil;
+import com.ciicsh.gto.afsupportcenter.util.constant.DictUtil;
+import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import lombok.Data;
 
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 public class EmpTaskTransferBo {
@@ -46,6 +45,7 @@ public class EmpTaskTransferBo {
     private Integer serviceCenterValue;
     private String handleUserId;
     private String handleUserName;
+    private String paymentBankName;
 
     public String getTransferDateFormat() {
         if (this.transferDate != null) {
@@ -53,5 +53,12 @@ public class EmpTaskTransferBo {
             return sdf.format(DateUtil.localDateToDate(this.transferDate));
         }
         return transferDateFormat;
+    }
+
+    public String getPaymentBankName() {
+        if (this.paymentBank != null) {
+            return DictUtil.getInstance().getTextByItemValueAndTypeValue(String.valueOf(this.paymentBank), SocialSecurityConst.PAY_BANK_KEY, false);
+        }
+        return null;
     }
 }

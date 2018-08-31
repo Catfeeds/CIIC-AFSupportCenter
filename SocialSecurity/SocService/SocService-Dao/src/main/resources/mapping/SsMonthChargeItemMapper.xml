@@ -98,7 +98,7 @@
         <if test="companyId!=null and companyId!=''">
           AND ea.company_id=#{companyId}
         </if>
-        ORDER  BY mc.cost_category,ea.ss_serial
+        ORDER  BY mc.cost_category,ea.ss_serial+0
  </select>
 
     <select id="searchYysDetailByComAccountIdAndSsMonth" resultMap="DtoResultMap">

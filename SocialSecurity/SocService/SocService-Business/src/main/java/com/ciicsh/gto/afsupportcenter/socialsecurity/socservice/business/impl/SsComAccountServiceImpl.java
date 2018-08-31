@@ -99,8 +99,12 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
 
         if(ssAccount==null || ssAccount=="" ){
             condition.put("company_id",companyId);
-            SsAccountComRelation ssAccountComRelation= ssAccountComRelationMapper.selectByMap(condition).get(0);
+            SsAccountComRelation ssAccountComRelation = ssAccountComRelationMapper.selectByMap(condition).get(0);
             comAccountId = ssAccountComRelation.getComAccountId();
+            condition=new HashMap<>();
+            condition.put("com_account_id",comAccountId);
+            SsComAccount ssComAccount= baseMapper.selectByMap(condition).get(0);
+            ssAccount=ssComAccount.getSsAccount();
         }
         condition=new HashMap<>();
         condition.put("ss_account",ssAccount);

@@ -91,6 +91,21 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMM");
 
+    private final static String[] ORDER_BY_TASK_CATEGORIES = {
+        SocialSecurityConst.TASK_TYPE_5,
+        SocialSecurityConst.TASK_TYPE_6,
+        SocialSecurityConst.TASK_TYPE_14,
+        SocialSecurityConst.TASK_TYPE_15,
+        SocialSecurityConst.TASK_TYPE_1,
+        SocialSecurityConst.TASK_TYPE_2,
+        SocialSecurityConst.TASK_TYPE_12,
+        SocialSecurityConst.TASK_TYPE_13,
+        SocialSecurityConst.TASK_TYPE_4,
+        SocialSecurityConst.TASK_TYPE_3,
+        String.valueOf(SocialSecurityConst.TASK_CATEGORY_NO_HANDLE),
+        SocialSecurityConst.TASK_TYPE_7,
+    };
+
     @Override
     public PageRows<SsEmpTaskBO> employeeOperatorQuery(PageInfo pageInfo, String userId) {
         SsEmpTaskBO dto = pageInfo.toJavaObject(SsEmpTaskBO.class);
@@ -104,7 +119,12 @@ public class SsEmpTaskServiceImpl extends ServiceImpl<SsEmpTaskMapper, SsEmpTask
             String arr[] = dto.getParams().split(";");
             for (int i = 0; i < arr.length; i++) {
                 if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
-                    orderParam.add(arr[i]);
+                    if (arr[i].indexOf("et.task_category")!=-1) {
+                        orderParam.add(arr[i].replaceFirst("et.task_category",
+                            "FIELD(et.task_category," + String.join(",", ORDER_BY_TASK_CATEGORIES) + ")"));
+                    } else {
+                        orderParam.add(arr[i]);
+                    }
                 } else if(arr[i].indexOf("taskStatus")!=-1) {
                     String str[] = arr[i].split(" ");
                     if(!StringUtil.isEmpty(str[2]))
