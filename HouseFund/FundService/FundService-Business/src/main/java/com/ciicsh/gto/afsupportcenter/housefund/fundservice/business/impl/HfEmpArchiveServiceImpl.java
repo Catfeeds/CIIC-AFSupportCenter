@@ -56,13 +56,16 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
             List<HfEmpTaskPeriodBo> listEmpTaskPeriodBo = baseMapper.listEmpTaskPeriod(empArchiveId, "1");//基本
             List<HfEmpTaskPeriodBo> listEmpTaskPeriodAddBo = baseMapper.listEmpTaskPeriod(empArchiveId, "2");//补充
             listEmpTransferBo = baseMapper.listEmpTransfer(employeeId);
-            List<HfEmpTaskPeriodBo> taskEndMonth=listEmpTaskPeriodBo.stream().filter(HfEmpTaskPeriodBo->HfEmpTaskPeriodBo.getTaskCategory().equals("4")).collect(Collectors.toList());
+            /*
+            viewEmpPeriodBo.setEndMonth("");
+            List<HfEmpTaskPeriodBo> taskEndMonth=listEmpTaskPeriodBo.stream().filter(HfEmpTaskPeriodBo->HfEmpTaskPeriodBo.getTaskCategory().).limit(1).collect(Collectors.toList());
             if(!taskEndMonth.isEmpty()){
                 if (viewEmpPeriodBo == null){
                     viewEmpPeriodBo = new HfArchiveBasePeriodBo();
                 }
                 viewEmpPeriodBo.setEndMonth(taskEndMonth.get(0).getTaskEndMonth());
             }
+            viewEmpPeriodAddBo.setEndMonth("");
             List<HfEmpTaskPeriodBo> taskEndMonthAdd=listEmpTaskPeriodBo.stream().filter(HfEmpTaskPeriodBo->HfEmpTaskPeriodBo.getTaskCategory().equals("4")).limit(1).collect(Collectors.toList());
             if(!taskEndMonthAdd.isEmpty()){
                 if (viewEmpPeriodAddBo == null){
@@ -70,7 +73,7 @@ public class HfEmpArchiveServiceImpl extends ServiceImpl<HfEmpArchiveMapper, HfE
                 }
                 viewEmpPeriodAddBo.setEndMonth(taskEndMonthAdd.get(0).getTaskEndMonth());
             }
-
+*/
             resultMap.put("viewEmpPeriod", viewEmpPeriodBo);
             resultMap.put("viewEmpPeriodAdd", viewEmpPeriodAddBo);
             resultMap.put("listEmpTaskPeriod", listEmpTaskPeriodBo);

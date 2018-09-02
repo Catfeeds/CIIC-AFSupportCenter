@@ -55,6 +55,16 @@ public class AccountInfoBO {
 
     private Integer paymentBank;
 
+    private String paymentBankValue;
+
+    public String getPaymentBankValue() {
+        return paymentBankValue;
+    }
+
+    public void setPaymentBankValue(String paymentBankValue) {
+        this.paymentBankValue = paymentBankValue;
+    }
+
     public Integer getPaymentBank() {
         return paymentBank;
     }
