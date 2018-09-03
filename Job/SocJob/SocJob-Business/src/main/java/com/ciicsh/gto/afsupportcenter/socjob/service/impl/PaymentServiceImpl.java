@@ -63,7 +63,7 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
      * @param ssMonth 支付年月
      */
     private void enquireFinanceComAccount(String ssMonth, Long paymentComId, Long comAccountId) {
-        //查询雇员级信息
+      /*  //查询雇员级信息
         Map<String, Object> qMap = new HashMap<>();
         qMap.put("paymentComId", paymentComId);
         qMap.put("ssMonth", ssMonth);
@@ -123,7 +123,7 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
             }
         }else {
             System.out.println("结算中心反馈:"+res.getMsg());
-        }
+        }*/
     }
 
 }
