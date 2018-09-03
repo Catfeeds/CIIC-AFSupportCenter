@@ -120,55 +120,59 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
      */
     @Override
     public boolean saveCommandAfDisposableCharge(TaskDetialDTO taskDetialDTO) {
-        List<AfDisposableChargeDTO> list = new ArrayList<>();
-        AfDisposableChargeDTO afDisposableChargeDTO = new AfDisposableChargeDTO();
-        Date now = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
-        String date = sdf.format(now);
-        afDisposableChargeDTO.setBillMonth(Integer.parseInt(date));
-        afDisposableChargeDTO.setActualChargeMonth(Integer.parseInt(date));
-        afDisposableChargeDTO.setChargeObject(2);
-        if (taskDetialDTO.getChargeAmount() != null) {
-            int i = taskDetialDTO.getChargeAmount().compareTo(BigDecimal.ZERO);
-            afDisposableChargeDTO.setApprovalStatus( i==-1 ? 1 : 2);
-        }
-        afDisposableChargeDTO.setCompanyId(taskDetialDTO.getCompanyId());
-        afDisposableChargeDTO.setCompanyName(this.getcompInfo(taskDetialDTO.getCompanyId()).getCompanyName());
-        afDisposableChargeDTO.setEmployeeId(taskDetialDTO.getEmployeeId());
-        EmployeeInfoForCredentialsDTO empInfo = this.getempInfo(taskDetialDTO.getCompanyId(), taskDetialDTO.getEmployeeId());
-        afDisposableChargeDTO.setEmployeeName(empInfo.getEmployeeName());
-        String templateType = taskDetialDTO.getTemplateType();
-        afDisposableChargeDTO.setEmployeeType(StringUtils.isBlank(templateType) ? 2 : Integer.parseInt(templateType));
-        ProductSubjectDTO data = productProxy.getByBasicProductId(taskDetialDTO.getBasicProductId()).getData();
-        afDisposableChargeDTO.setSubjectCodeId(Integer.parseInt(data.getSubjectCodeId()));
-        afDisposableChargeDTO.setInvoiceType(1);
-        /**收费产品列表*/
-        List<AfDisposableChargeProductDTO> productList = new ArrayList<>();
-        AfDisposableChargeProductDTO product = new AfDisposableChargeProductDTO();
-        product.setProductId(taskDetialDTO.getProductId());
-        TaskType taskType =
-            taskTypeService.selectById(StringUtils.isBlank(taskDetialDTO.getCredentialsDealType()) ?
-                taskDetialDTO.getCredentialsType() : taskDetialDTO.getCredentialsDealType());
-        if (0 != taskType.getPid()) {
-            TaskType pTaskType = taskTypeService.selectById(taskType.getPid());
-            product.setProductName(pTaskType.getTaskTypeName()+"-"+taskType.getTaskTypeName());
-        } else {
-            product.setProductName(taskType.getTaskTypeName());
-        }
-        if (taskDetialDTO.getPeopleNum() != null && taskDetialDTO.getChargeAmount() != null) {
-            BigDecimal amount = taskDetialDTO.getChargeAmount().multiply(new BigDecimal(taskDetialDTO.getPeopleNum()));
-            product.setChargeAmount(amount);
-        } else {
-            product.setChargeAmount(new BigDecimal(1));
-        }
-        productList.add(product);
-        afDisposableChargeDTO.setProductList(productList);
+        try {
+            List<AfDisposableChargeDTO> list = new ArrayList<>();
+            AfDisposableChargeDTO afDisposableChargeDTO = new AfDisposableChargeDTO();
+            Date now = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+            String date = sdf.format(now);
+            afDisposableChargeDTO.setBillMonth(Integer.parseInt(date));
+            afDisposableChargeDTO.setActualChargeMonth(Integer.parseInt(date));
+            afDisposableChargeDTO.setChargeObject(2);
+            if (taskDetialDTO.getChargeAmount() != null) {
+                int i = taskDetialDTO.getChargeAmount().compareTo(BigDecimal.ZERO);
+                afDisposableChargeDTO.setApprovalStatus( i==-1 ? 1 : 2);
+            }
+            afDisposableChargeDTO.setCompanyId(taskDetialDTO.getCompanyId());
+            afDisposableChargeDTO.setCompanyName(this.getcompInfo(taskDetialDTO.getCompanyId()).getCompanyName());
+            afDisposableChargeDTO.setEmployeeId(taskDetialDTO.getEmployeeId());
+            EmployeeInfoForCredentialsDTO empInfo = this.getempInfo(taskDetialDTO.getCompanyId(), taskDetialDTO.getEmployeeId());
+            afDisposableChargeDTO.setEmployeeName(empInfo.getEmployeeName());
+            String templateType = taskDetialDTO.getTemplateType();
+            afDisposableChargeDTO.setEmployeeType(StringUtils.isBlank(templateType) ? 2 : Integer.parseInt(templateType));
+            ProductSubjectDTO data = productProxy.getByBasicProductId(taskDetialDTO.getBasicProductId()).getData();
+            afDisposableChargeDTO.setSubjectCodeId(Integer.parseInt(data.getSubjectCodeId()));
+            afDisposableChargeDTO.setInvoiceType(1);
+            /**收费产品列表*/
+            List<AfDisposableChargeProductDTO> productList = new ArrayList<>();
+            AfDisposableChargeProductDTO product = new AfDisposableChargeProductDTO();
+            product.setProductId(taskDetialDTO.getProductId());
+            TaskType taskType =
+                taskTypeService.selectById(StringUtils.isBlank(taskDetialDTO.getCredentialsDealType()) ?
+                    taskDetialDTO.getCredentialsType() : taskDetialDTO.getCredentialsDealType());
+            if (0 != taskType.getPid()) {
+                TaskType pTaskType = taskTypeService.selectById(taskType.getPid());
+                product.setProductName(pTaskType.getTaskTypeName()+"-"+taskType.getTaskTypeName());
+            } else {
+                product.setProductName(taskType.getTaskTypeName());
+            }
+            if (taskDetialDTO.getPeopleNum() != null && taskDetialDTO.getChargeAmount() != null) {
+                BigDecimal amount = taskDetialDTO.getChargeAmount().multiply(new BigDecimal(taskDetialDTO.getPeopleNum()));
+                product.setChargeAmount(amount);
+            } else {
+                product.setChargeAmount(new BigDecimal(1));
+            }
+            productList.add(product);
+            afDisposableChargeDTO.setProductList(productList);
 
-        afDisposableChargeDTO.setActive(true);
-        afDisposableChargeDTO.setCreatedBy(UserContext.getUser().getDisplayName());
-        list.add(afDisposableChargeDTO);
-        Result result = commandAfDisposableChargeProxy.saveList(list);
-        return result.getStatusCode() == 0 ? true : false;
+            afDisposableChargeDTO.setActive(true);
+            afDisposableChargeDTO.setCreatedBy(UserContext.getUser().getDisplayName());
+            list.add(afDisposableChargeDTO);
+            Result result = commandAfDisposableChargeProxy.saveList(list);
+            return result.getStatusCode() == 0 ? true : false;
+        } catch (Exception e) {
+            throw new BusinessException("账单生成异常");
+        }
     }
 
     /**
