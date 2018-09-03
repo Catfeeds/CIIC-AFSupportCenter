@@ -127,7 +127,8 @@
         hft.strart_handle_date,
         hft.send_check_date,
         hft.finish_date ,
-        hca.remark as comAccountRemark
+        hca.remark as comAccountRemark,
+        hft.remark as taskRemark
         FROM hf_com_task hft
         LEFT JOIN hf_com_account hca ON hft.com_account_id = hca.com_account_id
         LEFT JOIN hf_com_account_class hcac ON hft.com_account_class_id = hcac.com_account_class_id
