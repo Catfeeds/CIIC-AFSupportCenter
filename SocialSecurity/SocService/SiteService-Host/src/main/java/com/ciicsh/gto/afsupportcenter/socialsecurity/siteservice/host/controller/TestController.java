@@ -6,6 +6,7 @@ import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.bo.SsEmpTaskBO;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.business.SsEmpTaskFrontService;
 import com.ciicsh.gto.afsupportcenter.socialsecurity.socservice.dao.SsEmpTaskMapper;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.EmployeeMonthlyDataProxy;
+//import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeMonthlyDataProxyDTO;
 import com.ciicsh.gto.sheetservice.api.dto.TaskCreateMsgDTO;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,5 +79,17 @@ SsEmpTaskFrontService ssEmpTaskFrontService;
 
     @Autowired
     com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy PayapplyServiceProxy;
+/*
+
+    @RequestMapping(value = "/mytest")
+    public  void mytest() {
+//        PayApplyProxyDTO aaa = new PayApplyProxyDTO();
+//        Object aaaaaa = PayapplyServiceProxy.addShSocialInsurancePayApply(aaa);
+
+        EmployeeMonthlyDataProxyDTO a = new EmployeeMonthlyDataProxyDTO();
+        Object o = employeeMonthlyDataProxy.employeeCanPay(a);
+     System.out.println("=============");
+    }
+*/
 
 }
