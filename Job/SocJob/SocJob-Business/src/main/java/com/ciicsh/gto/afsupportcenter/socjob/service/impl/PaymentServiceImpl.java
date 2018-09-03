@@ -10,7 +10,6 @@ import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.EmployeeMonthlyDataProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeMonthlyDataProxyDTO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeProxyDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,7 +62,7 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
      * @param ssMonth 支付年月
      */
     private void enquireFinanceComAccount(String ssMonth, Long paymentComId, Long comAccountId) {
-        //查询雇员级信息
+      /*  //查询雇员级信息
         Map<String, Object> qMap = new HashMap<>();
         qMap.put("paymentComId", paymentComId);
         qMap.put("ssMonth", ssMonth);
@@ -123,7 +122,7 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
             }
         }else {
             System.out.println("结算中心反馈:"+res.getMsg());
-        }
+        }*/
     }
 
 }

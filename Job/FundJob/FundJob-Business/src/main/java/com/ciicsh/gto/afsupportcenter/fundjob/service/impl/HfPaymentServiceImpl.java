@@ -11,7 +11,6 @@ import com.ciicsh.gto.afsupportcenter.fundjob.entity.HfPayment;
 import com.ciicsh.gto.afsupportcenter.fundjob.service.HfPaymentService;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.EmployeeMonthlyDataProxy;
-import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeMonthlyDataProxyDTO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeProxyDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,7 +65,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
     @Transactional(rollbackFor = RuntimeException.class)
     public void enquireFinanceComAccount(String paymentMonth, Long comAccountId, Long paymentAccountId) {
         //查询雇员级信息
-        Map<String, Object> qMap = new HashMap<>();
+      /*  Map<String, Object> qMap = new HashMap<>();
         qMap.put("paymentAccountId", paymentAccountId);
         qMap.put("paymentMonth", paymentMonth);
         List<HfMonthChargeBO> paymentEmpList = hfEmpMonthChargeMapper.getPaymentEmpListEnquireFinance(qMap);
@@ -96,7 +95,6 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
                     //4 财务接口返回的结果更新ss_month_charge
                     //isAdvance: 0:不可付;1:来款可付;2:垫付可付
                     for (Map<String, Object> ele : resDto) {
-                        //map.put("monthChargeId", ele.get("objId"));
                         map.put("empPaymentStatus", ele.get("isAdvance"));
                         map.put("companyId", ele.get("companyId"));
                         map.put("employeeId", ele.get("employeeId"));
@@ -135,7 +133,7 @@ public class HfPaymentServiceImpl extends ServiceImpl<HfPaymentMapper, HfPayment
             map.put("financeRetMsg",e.getMessage());
             map.put("modifiedBy", "system");
             hfPaymentAccountMapper.updateHfPaymentAcc(map);
-        }
+        }*/
     }
 
     @Override
