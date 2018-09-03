@@ -2,7 +2,7 @@ package com.ciicsh.gto.afsupportcenter.housefund.siteservice.host.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.ciicsh.gto.afsupportcenter.housefund.fundservice.bo.HfComTaskBo;
+import com.baomidou.mybatisplus.toolkit.CollectionUtils;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.business.HfComAccountService;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountCompanyDTO;
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.dto.ComFundAccountDTO;
@@ -17,6 +17,7 @@ import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccoun
 import com.ciicsh.gto.afsupportcenter.housefund.fundservice.entity.ComFundAccountPO;
 import com.ciicsh.gto.afsupportcenter.util.ExcelUtil;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
+import com.ciicsh.gto.afsupportcenter.util.constant.SocialSecurityConst;
 import com.ciicsh.gto.afsupportcenter.util.kit.JsonKit;
 import com.ciicsh.gto.afsupportcenter.util.page.PageInfo;
 import com.ciicsh.gto.afsupportcenter.util.page.PageKit;
@@ -160,4 +161,42 @@ public class CompanyFundAccountController extends BasicController<HfComAccountSe
         return business.submitCompanyFundAccount(comFundAccountDetailDTO);
     }
 
+    @PostMapping("/checkTransferUnitIsOnly")
+    public JsonResult<Integer> checkTransferUnitIsOnly(@RequestBody PageInfo pageInfo) {
+        //企业公积金账户名称
+        String transferOutUnit = pageInfo.getParams().getString("transferOutUnit").trim();
+        String transferInUnit = pageInfo.getParams().getString("transferInUnit").trim();
+        //企业公积金账号
+        String hfComAccount = "";
+        PageRows<ComFundAccountClassNamePO> transferOutUnitList = PageKit.doSelectPage(pageInfo,()->business.getComFundAccountClassNameList(transferOutUnit,hfComAccount));
+        List<ComFundAccountClassNameDTO> transferOutUnitDTOList = JsonKit.castToList(transferOutUnitList.getRows(), ComFundAccountClassNameDTO.class);
+        PageRows<ComFundAccountClassNamePO> transferInUnitList = PageKit.doSelectPage(pageInfo,()->business.getComFundAccountClassNameList(transferInUnit,hfComAccount));
+        List<ComFundAccountClassNameDTO> transferInUnitDTOList = JsonKit.castToList(transferInUnitList.getRows(), ComFundAccountClassNameDTO.class);
+        Integer rtn = 0;
+
+
+        if (CollectionUtils.isEmpty(transferOutUnitDTOList)) {
+            rtn = 1;
+        } else if (transferOutUnitDTOList.size() > 1) {
+            rtn = 4;
+        } else if (SocialSecurityConst.FUND_OUT_UNIT_LIST.get(1).equals(transferOutUnitDTOList.get(0).getComAccountName())) {
+            rtn = 16;
+        }
+
+        if (CollectionUtils.isEmpty(transferInUnitDTOList)) {
+            rtn += 2;
+        } else if (transferInUnitDTOList.size() > 1) {
+            rtn += 8;
+        } else if (SocialSecurityConst.FUND_OUT_UNIT_LIST.get(1).equals(transferInUnitDTOList.get(0).getComAccountName())) {
+            rtn += 32;
+        }
+
+        if (rtn == 0
+            && transferOutUnitDTOList.get(0).getComAccountName().equals(transferInUnitDTOList.get(0).getComAccountName())
+            ) {
+            rtn = 5;
+        }
+
+        return JsonResultKit.of(rtn);
+    }
 }
