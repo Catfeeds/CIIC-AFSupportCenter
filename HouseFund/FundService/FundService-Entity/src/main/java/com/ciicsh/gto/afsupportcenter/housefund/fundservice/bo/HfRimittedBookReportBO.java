@@ -26,16 +26,16 @@ public class HfRimittedBookReportBO implements Serializable {
     @Excel(name = "缴费月份", orderNum = "4", width = 12)
     private String paymentMonth;
 
-    @Excel(name = "上月汇缴金额", orderNum = "5", width = 12,type=10)
+    @Excel(name = "上月汇缴金额", orderNum = "5", width = 12)
     private BigDecimal remittedAmountLast;//上月汇缴金额
-    @Excel(name = "本月增加汇缴金额", orderNum = "6", width = 12,type=10)
+    @Excel(name = "本月增加汇缴金额", orderNum = "6", width = 12)
     private BigDecimal remittedAmountAdd;//本月增加金额
-    @Excel(name = "本月减少汇缴金额", orderNum = "7", width = 12,type=10)
+    @Excel(name = "本月减少汇缴金额", orderNum = "7", width = 12)
     private BigDecimal remittedAmountReduce;//本月减少金额
     private String paymentBank;
-    @Excel(name = "本月汇缴金额", orderNum = "8", width = 12,type=10)
+    @Excel(name = "本月汇缴金额", orderNum = "8", width = 12)
     private BigDecimal remittedAmount;//本月汇缴金额
-    @Excel(name = "补缴金额", orderNum = "9", width = 12,type=10)
+    @Excel(name = "补缴金额", orderNum = "9", width = 12)
     private BigDecimal repairAmount;//补缴金额
     private String curdate;
     private Integer curYear;
@@ -43,18 +43,18 @@ public class HfRimittedBookReportBO implements Serializable {
     private Integer curDay;
     private String bankName;
 
-    @Excel(name = "上月汇缴人数", orderNum = "10", width = 12,type=10)
+    @Excel(name = "上月汇缴人数", orderNum = "10", width = 12)
     private BigDecimal remittedCountEmpLast;//上月汇缴人数
 
     private String remittedAmountArrange;//本月汇缴金额矩阵
-    @Excel(name = "本月增加人数", orderNum = "11", width = 12,type=10)
+    @Excel(name = "本月增加人数", orderNum = "11", width = 12)
     private BigDecimal remittedCountEmpAdd;//本月增加人数
-    @Excel(name = "本月减少人数", orderNum = "12", width = 12,type=10)
+    @Excel(name = "本月减少人数", orderNum = "12", width = 12)
     private BigDecimal remittedCountEmpReduce;//本月减少人数
-    @Excel(name = "本月汇缴人数", orderNum = "13", width = 12,type=10)
+    @Excel(name = "本月汇缴人数", orderNum = "13", width = 12)
     private Integer remittedCountEmp;//本月汇缴人数
 
-    @Excel(name = "补缴人数", orderNum = "14", width = 12,type=10)
+    @Excel(name = "补缴人数", orderNum = "14", width = 12)
     private Integer repairCountEmp;//补缴人数
 
     @Excel(name = "企业公积金账号", orderNum = "15", width = 12)

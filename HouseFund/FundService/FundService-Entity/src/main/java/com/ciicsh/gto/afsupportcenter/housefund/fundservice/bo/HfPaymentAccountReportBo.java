@@ -31,13 +31,13 @@ public class HfPaymentAccountReportBo implements Serializable {
     @Excel(name = "汇缴银行", orderNum = "5",  width = 40)
     private String paymentBankValue;
 
-    @Excel(name = "汇缴金额", orderNum = "6",  width = 12,type=10)
+    @Excel(name = "汇缴金额", orderNum = "6",  width = 12 )
     private BigDecimal remittedAmount;
 
-    @Excel(name = "补缴金额", orderNum = "7",  width = 12,type=10)
+    @Excel(name = "补缴金额", orderNum = "7",  width = 12 )
     private BigDecimal repairAmount;
 
-    @Excel(name = "汇缴人数", orderNum = "8",  width = 12,type=10)
+    @Excel(name = "汇缴人数", orderNum = "8",  width = 12 )
     private int remittedCountEmp;
 
 }
