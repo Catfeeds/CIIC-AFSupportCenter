@@ -7,7 +7,6 @@ import com.ciicsh.gto.afsupportcenter.socjob.util.CommonUtils;
 import com.ciicsh.gto.afsupportcenter.util.interceptor.authenticate.UserContext;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.EmployeeMonthlyDataProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.PayapplyServiceProxy;
-//import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeMonthlyDataProxyDTO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.PayApplyProxyDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
