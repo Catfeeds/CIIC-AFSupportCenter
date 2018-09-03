@@ -45,12 +45,12 @@ public class TaskListDTO implements Serializable {
     /**
      * 学历
      */
-    private Integer qualification;
+    private String qualification;
     private String qualificationName;
     /**
      * 学位
      */
-    private Integer degree;
+    private String degree;
     private String degreeName;
     /**
      * 学历认定时间
@@ -427,19 +427,19 @@ public class TaskListDTO implements Serializable {
         this.createdBy = createdBy;
     }
 
-    public Integer getQualification() {
+    public String getQualification() {
         return qualification;
     }
 
-    public void setQualification(Integer qualification) {
+    public void setQualification(String qualification) {
         this.qualification = qualification;
     }
 
-    public Integer getDegree() {
+    public String getDegree() {
         return degree;
     }
 
-    public void setDegree(Integer degree) {
+    public void setDegree(String degree) {
         this.degree = degree;
     }
 

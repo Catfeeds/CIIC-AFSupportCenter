@@ -112,6 +112,8 @@ public class EmpCredentialsDealController {
         tasks.stream().forEach((Task i) -> {
             TaskListDTO taskListDTO = new TaskListDTO();
             BeanUtils.copyProperties(i,taskListDTO);
+            taskListDTO.setDegree(i.getDegree() == null ? "" : i.getDegree().toString());
+            taskListDTO.setQualification(i.getQualification() == null ? "" : i.getQualification().toString());
             if (i.getCredentialsType() != null){
                 taskListDTO.setCredentialsTypeN(SelectionUtils.credentials(i.getCredentialsType()));
             }
