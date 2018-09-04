@@ -293,7 +293,7 @@
                 </foreach>
             </if>
         </where>
-        ORDER BY hmc.company_id
+        ORDER BY hmc.company_id, hmc.employee_id, hmc.ss_month_belong
     </select>
 
     <select id="queryNetBankData" resultMap="NetBankExportBO">

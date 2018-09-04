@@ -832,10 +832,14 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                         repairPeriodEnd(hfMonthChargeRepairDetailBO, hfMonthChargeReportBO, repairReason, ratio, hfMonthChargeRepairDetailBOList);
                     }
                 } else {
-                    if (StringUtils.isNotEmpty(hfMonthChargeReportBO.getCompanyId())) {
-                        companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
-                    }
+//                    if (StringUtils.isNotEmpty(hfMonthChargeReportBO.getCompanyId())) {
+//                        companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
+//                    }
                     repairPeriodEnd(hfMonthChargeRepairDetailBO, hfMonthChargeReportBO, repairReason, ratio, hfMonthChargeRepairDetailBOList);
+                }
+
+                if (StringUtils.isNotEmpty(hfMonthChargeReportBO.getCompanyId())) {
+                    companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
                 }
             }
 
