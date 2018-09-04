@@ -22,33 +22,33 @@ public class YysExportOpt {
     private String employeeName;
     @Excel(name = "变更类型", orderNum = "3")
     private String changeTypeName;
-    @Excel(name = "个人月缴纳基数",width = 20, orderNum = "4",type=10)
+    @Excel(name = "个人月缴纳基数",width = 20, orderNum = "4")
     private BigDecimal baseAmount;
-    @Excel(name = "养老单位缴费额",width = 20, orderNum = "5",type=10)
+    @Excel(name = "养老单位缴费额",width = 20, orderNum = "5")
     private BigDecimal pensionComAmount;
-    @Excel(name = "养老个人缴费额",width = 20, orderNum = "6",type=10)
+    @Excel(name = "养老个人缴费额",width = 20, orderNum = "6")
     private BigDecimal pensionEmpAmount;
-    @Excel(name = "养老单位补缴", width = 20,orderNum = "7",type=10)
+    @Excel(name = "养老单位补缴", width = 20,orderNum = "7")
     private BigDecimal pensionComRepayAmount;
-    @Excel(name = "养老个人补缴", width = 20,orderNum = "8",type=10)
+    @Excel(name = "养老个人补缴", width = 20,orderNum = "8")
     private BigDecimal pensionEmpRepayAmount;
-    @Excel(name = "养老一次性支付", width = 20,orderNum = "9",type=10)
+    @Excel(name = "养老一次性支付", width = 20,orderNum = "9")
     private BigDecimal pensionOnePayment;
-    @Excel(name = "医疗单位缴费额", width = 20,orderNum = "10",type=10)
+    @Excel(name = "医疗单位缴费额", width = 20,orderNum = "10")
     private BigDecimal medicalComAmount;
-    @Excel(name = "医疗个人缴费额", width = 20,orderNum = "11",type=10)
+    @Excel(name = "医疗个人缴费额", width = 20,orderNum = "11")
     private BigDecimal medicalEmpAmount;
-    @Excel(name = "医疗单位补缴", width = 20,orderNum = "12",type=10)
+    @Excel(name = "医疗单位补缴", width = 20,orderNum = "12")
     private BigDecimal medicalComRepayAmount;
-    @Excel(name = "医疗个人补缴", width = 20,orderNum = "13",type=10)
+    @Excel(name = "医疗个人补缴", width = 20,orderNum = "13")
     private BigDecimal medicalEmpRepayAmount;
-    @Excel(name = "失业单位缴费额", width = 20,orderNum = "14",type=10)
+    @Excel(name = "失业单位缴费额", width = 20,orderNum = "14")
     private BigDecimal unemploymentComAmount;
-    @Excel(name = "失业个人缴费额", width = 20,orderNum = "15",type=10)
+    @Excel(name = "失业个人缴费额", width = 20,orderNum = "15")
     private BigDecimal unemploymentEmpAmount;
-    @Excel(name = "失业单位补缴", width = 20,orderNum = "16",type=10)
+    @Excel(name = "失业单位补缴", width = 20,orderNum = "16")
     private BigDecimal unemploymentComRepayAmount;
-    @Excel(name = "失业个人补缴", width = 20,orderNum = "17",type=10)
+    @Excel(name = "失业个人补缴", width = 20,orderNum = "17")
     private BigDecimal unemploymentEmpRepayAmount;
     private Long monthEmpChangeId;
     private String ssMonth;
