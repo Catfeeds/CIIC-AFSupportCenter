@@ -160,13 +160,14 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
 
         for (int i=0;i< opts.size();i++){
             AmEmpArchiveAdvanceXsl xsl = opts.get(i);
-            if(xsl.getIdNum()==null||xsl.getEmploymentName()==null||xsl.getMatchEmployIndex()==null){
+            if(xsl.getIdNum()==null||xsl.getEmploymentName()==null||xsl.getMatchEmployIndex()==null||xsl.getEmployeeId()==null){
                 retStr.append("第 " + (i+2) + " 行这个雇员信息不完整无法匹配！ ");
                 continue;
             }
             Wrapper<AmEmpEmployee> wrapper = new EntityWrapper<>();
             wrapper.eq("employee_name",xsl.getEmploymentName());
             wrapper.eq("id_num",xsl.getIdNum());
+            wrapper.eq("employee_id", xsl.getEmployeeId());
             // 是否有雇员
             List<AmEmpEmployee> empEmployeeList = amEmpEmployeeService.selectList(wrapper);
             if(empEmployeeList == null || empEmployeeList.size() == 0) {
@@ -195,7 +196,15 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
                 amArchive.setDocFrom(xsl.getDocFrom()==null?"":xsl.getDocFrom().trim());
                 amArchive.setArchivePlace(xsl.getArchivePlace()==null?"":xsl.getArchivePlace().trim());
                 amArchive.setStorageDate(DateUtil.dateToLocaleDate(xsl.getCreatedDate()));
-                amArchive.setLuyongHandleEnd(xsl.getEmployHandleEnd()==null?false:xsl.getEmployHandleEnd());
+                if(xsl.getEmployHandleEnd() == null){
+                    amArchive.setLuyongHandleEnd(false);
+                }else{
+                    if(xsl.getEmployHandleEnd().indexOf("true")!=-1||xsl.getEmployHandleEnd().indexOf("TRUE")!=-1){
+                        amArchive.setLuyongHandleEnd(true);
+                    }
+                }
+                xsl.getEmployHandleEnd().trim().indexOf("true");
+
                 amArchive.setModifiedBy(UserContext.getUser().getDisplayName());
                 amArchive.setModifiedTime(LocalDateTime.now());
                 amArchiveMapper.updateById(amArchive);
@@ -203,13 +212,19 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
                 AmArchive amArchive = new AmArchive();
                 amArchive.setCompanyId(employee.getCompanyId());
                 amArchive.setEmployeeId(xsl.getEmployeeId());
-                amArchive.setEmploymentId(xsl.getMatchEmployIndex());
+                amArchive.setEmploymentId(Long.parseLong(xsl.getMatchEmployIndex()));
                 amArchive.setDocType(xsl.getDocType()==null?"":xsl.getDocType().trim());
                 amArchive.setDocNum(xsl.getDocNum()==null?"":xsl.getDocNum().trim());
                 amArchive.setDocFrom(xsl.getDocFrom()==null?"":xsl.getDocFrom().trim());
                 amArchive.setArchivePlace(xsl.getArchivePlace()==null?"":xsl.getArchivePlace().trim());
                 amArchive.setStorageDate(DateUtil.dateToLocaleDate(xsl.getCreatedDate()));
-                amArchive.setLuyongHandleEnd(xsl.getEmployHandleEnd());
+                if(xsl.getEmployHandleEnd() == null){
+                    amArchive.setLuyongHandleEnd(false);
+                }else{
+                    if(xsl.getEmployHandleEnd().indexOf("true")!=-1||xsl.getEmployHandleEnd().indexOf("TRUE")!=-1){
+                        amArchive.setLuyongHandleEnd(true);
+                    }
+                }
                 amArchive.setCreatedBy(UserContext.getUser().getDisplayName());
                 amArchive.setModifiedBy(UserContext.getUser().getDisplayName());
                 amArchive.setCreatedTime(LocalDateTime.now());
