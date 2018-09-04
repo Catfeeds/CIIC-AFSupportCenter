@@ -594,9 +594,9 @@
                 AND pa.hf_type = 1
                 AND pa.hf_com_account = #{basicHfComAccount}
             </if>
-            <if test="addedHfEmpAccount != null">
+            <if test="addedHfComAccount != null">
                 AND pa.hf_type = 2
-                AND pa.hf_emp_account = #{addedHfEmpAccount}
+                AND pa.hf_com_account = #{addedHfComAccount}
             </if>
 
 
