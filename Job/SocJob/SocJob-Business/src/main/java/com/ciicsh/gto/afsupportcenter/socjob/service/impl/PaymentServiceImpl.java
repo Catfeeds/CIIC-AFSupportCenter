@@ -5,11 +5,15 @@ import com.ciicsh.gto.afsupportcenter.socjob.dao.SsPaymentComMapper;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.SsPaymentCom;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsMonthChargeBO;
 import com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsPaymentComBO;
+import com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsPaymentComProxyBO;
 import com.ciicsh.gto.afsupportcenter.socjob.service.PaymentService;
 import com.ciicsh.gto.afsupportcenter.util.CommonTransform;
 import com.ciicsh.gto.afsupportcenter.util.StringUtil;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.EmployeeMonthlyDataProxy;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.common.JsonResult;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.EmployeeMonthlyDataProxy;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.CompanyMonthlyDataProxyDTO;
+import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.CompanyProxyDTO;
 import com.ciicsh.gto.settlementcenter.payment.cmdapi.dto.EmployeeProxyDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +32,8 @@ import java.util.Map;
 public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymentCom> implements PaymentService {
     @Autowired
     public SsPaymentComMapper ssPaymentMapper;
-
+    @Autowired
+    private SsPaymentComMapper ssPaymentComMapper;
     @Autowired
     private EmployeeMonthlyDataProxy employeeMonthlyDataProxy;
 
@@ -44,25 +49,53 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
         if("ss".equals(ssMonth)){
             ssMonth = LocalDate.now().plusMonths(-1).format(DateTimeFormatter.ofPattern("yyyyMM"));
         }
-        map.put("payemntMonth", ssMonth);
-        List<SsPaymentComBO> paymentComList = ssPaymentMapper.getPaymentComList(map);
+        map.put("paymentMonth", ssMonth);
 
+        /* //雇员级询问结算中心是否可付
+        List<SsPaymentComBO> paymentComList = ssPaymentMapper.getPaymentComList(map);
         for (SsPaymentComBO ele : paymentComList) {
             if (ele.getComAccountId() != null) {
                 enquireFinanceComAccount(ssMonth, ele.getPaymentComId(), ele.getComAccountId());
             }
+        }*/
+
+        List<SsPaymentComProxyBO> paymentComList = ssPaymentMapper.getPaymentComList2(map);
+        List<CompanyProxyDTO> proxyDTOList = CommonTransform.convertToDTOs(paymentComList, CompanyProxyDTO.class);
+        CompanyMonthlyDataProxyDTO proxyDTO = new CompanyMonthlyDataProxyDTO();
+        proxyDTO.setBusinessType("1");//上海社保
+        proxyDTO.setBatchMonth(ssMonth);
+        proxyDTO.setPayMonth(ssMonth);
+        proxyDTO.setCompanyList(proxyDTOList);
+
+        com.ciicsh.common.entity.JsonResult<CompanyMonthlyDataProxyDTO> res = employeeMonthlyDataProxy.getCompanyAdvance(proxyDTO);
+        List<CompanyProxyDTO> comList =null;
+        if(res.getData()!=null){
+            comList =res.getData().getCompanyList();
         }
+        for (CompanyProxyDTO companyProxyDTO : comList) {
+            SsPaymentCom ssPaymentCom = new SsPaymentCom();
+           // ssPaymentCom.setCompanyId(companyProxyDTO.getCompanyId());
+            ssPaymentCom.setPaymentComId(companyProxyDTO.getObjId().longValue());
+            ssPaymentCom.setComPaymentStatus(companyProxyDTO.getIsAdvance());
+            if(companyProxyDTO.getIsAdvance().equals("1") || companyProxyDTO.getIsAdvance().equals("2")){
+                ssPaymentCom.setPaymentState(3); //可付
+            }
+            ssPaymentComMapper.updateById(ssPaymentCom);
+        }
+
     }
 
     public void enquireFinanceComAccountTest(String ssMonth, Long paymentComId, Long comAccountId) {
-        enquireFinanceComAccount(ssMonth, paymentComId , comAccountId);
+       // enquireFinanceComAccount(ssMonth, paymentComId , comAccountId);
     }
     /**
      * 更新雇员的垫付状态
      * @param ssMonth 支付年月
      */
-    private void enquireFinanceComAccount(String ssMonth, Long paymentComId, Long comAccountId) {
-      /*  //查询雇员级信息
+   /*
+   //雇员级询问结算中心是否可付，早期结算中心的调用方案，暂时不用
+   private void enquireFinanceComAccount(String ssMonth, Long paymentComId, Long comAccountId) {
+        //查询雇员级信息
         Map<String, Object> qMap = new HashMap<>();
         qMap.put("paymentComId", paymentComId);
         qMap.put("ssMonth", ssMonth);
@@ -73,17 +106,14 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
             SsMonthChargeBO.setIsCompanyEnjoyAdvance(isComEnjoyAdvance);
         });
         List<EmployeeProxyDTO> proxyDTOList = CommonTransform.convertToDTOs(paymentEmpList, EmployeeProxyDTO.class);
-
         //2 按照财务服务契约提供雇员级信息 并调用财务接口
         EmployeeMonthlyDataProxyDTO proxyDTO = new EmployeeMonthlyDataProxyDTO();
         //上海社保
         proxyDTO.setBusinessType("1");
         proxyDTO.setBatchMonth(ssMonth);
         proxyDTO.setEmployeeList(proxyDTOList);
-
         //判断雇员是否垫付、是否可付接口，返回雇员的垫付状态
         JsonResult<EmployeeMonthlyDataProxyDTO> res = employeeMonthlyDataProxy.employeeCanPay(proxyDTO);
-
         if ("0".equals(res.getCode())) {
             Map<String, Object> map = new HashMap<>();
             if (res.getData() != null) {
@@ -122,7 +152,6 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
             }
         }else {
             System.out.println("结算中心反馈:"+res.getMsg());
-        }*/
-    }
-
+        }
+    }*/
 }

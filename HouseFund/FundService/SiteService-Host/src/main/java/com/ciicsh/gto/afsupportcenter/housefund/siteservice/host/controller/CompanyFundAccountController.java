@@ -63,6 +63,9 @@ public class CompanyFundAccountController extends BasicController<HfComAccountSe
         request.setHfType(params.getByte("hfType"));
         request.setComHfMonth(params.getString("comHfMonth"));
         request.setAccountNumber(params.getString("accountNumber"));
+        request.setLeaderShipName(params.getString("leaderShipName"));
+        request.setPayBankValue(params.getString("payBankValue"));
+        request.setServiceCenterValue(params.getString("serviceCenterValue"));
         PageRows<ComFundAccountPO> lst = PageKit.doSelectPage(pageInfo,()->business.getComFundAccountList(request));
         List<ComFundAccountDTO> dtos = JsonKit.castToList(lst.getRows(), ComFundAccountDTO.class);
 
