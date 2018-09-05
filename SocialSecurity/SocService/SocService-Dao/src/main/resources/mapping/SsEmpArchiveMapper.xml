@@ -159,6 +159,10 @@
             afemp.is_active = 1
             <include refid="queryEmployee_where"/>
         </where>
+        <if test="orderParam != null">
+          ORDER BY
+            ${orderParam}
+        </if>
     </select>
 
     <!-- 雇员查询导出结果 -->

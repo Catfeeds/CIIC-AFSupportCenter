@@ -212,6 +212,17 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                                 }
                                 hfEmpTaskBo.setHfComAccount(status);
                             }
+                            if (arr[i].indexOf("af_ec.employee_id")!=-1) {
+                                String str[] = arr[i].split(" ");
+                                String regexp = "\'";
+                                String status = str[2].replaceAll(regexp, "");
+                                if ("0".equals(status)) {
+                                    status = " is null";
+                                } else if ("1".equals(status)) {
+                                    status = " is not null";
+                                }
+                                arr[i] = str[0] + status;
+                            }
 
                             param.add(arr[i]);
                         }
