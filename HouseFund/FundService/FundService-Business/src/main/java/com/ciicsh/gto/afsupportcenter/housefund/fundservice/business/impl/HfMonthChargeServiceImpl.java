@@ -800,6 +800,10 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             hfMonthChargeRepairDetailBO.setRowNo(1);
             hfMonthChargeRepairDetailBOList.add(hfMonthChargeRepairDetailBO);
 
+            if (StringUtils.isNotEmpty(hfMonthChargeReportBO.getCompanyId())) {
+                companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
+            }
+
             for (int i = 1; i < hfMonthChargeReportBOList.size(); i++) {
                 hfMonthChargeRepairDetailBO = hfMonthChargeRepairDetailBOList.get(hfMonthChargeRepairDetailBOList.size() - 1);
                 YearMonth detailEndMonth = YearMonth.parse(hfMonthChargeRepairDetailBO.getEndMonth(), formatter);
