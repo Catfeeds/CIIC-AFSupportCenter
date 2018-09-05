@@ -31,6 +31,33 @@ public class GetComFundAccountListRequestDTO
      * 公积金账户编号
      */
     private String accountNumber;
+    private String leaderShipName;
+    private String payBankValue;
+    private String serviceCenterValue;
+
+    public String getLeaderShipName() {
+        return leaderShipName;
+    }
+
+    public void setLeaderShipName(String leaderShipName) {
+        this.leaderShipName = leaderShipName;
+    }
+
+    public String getPayBankValue() {
+        return payBankValue;
+    }
+
+    public void setPayBankValue(String payBankValue) {
+        this.payBankValue = payBankValue;
+    }
+
+    public String getServiceCenterValue() {
+        return serviceCenterValue;
+    }
+
+    public void setServiceCenterValue(String serviceCenterValue) {
+        this.serviceCenterValue = serviceCenterValue;
+    }
 
     public String getCompanyId() {
         return companyId;

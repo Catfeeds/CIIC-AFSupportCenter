@@ -54,7 +54,7 @@
         <result column="payment_com_id" property="objId"/>
         <result column="company_id" property="companyId"/>
         <result column="isCompanyEnjoyAdvance" property="isCompanyEnjoyAdvance"/>
-        <result column="payMonth" property="payMonth"/>
+        <result column="payment_month" property="payMonth"/>
         <result column="total_pay_amount" property="payAmount"/>
     </resultMap>
 
