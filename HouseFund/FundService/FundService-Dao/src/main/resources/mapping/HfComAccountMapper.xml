@@ -82,6 +82,9 @@
         <result column="pay_end_month" jdbcType="VARCHAR" property="payEndMonth"/>
         <result column="com_hf_month" jdbcType="VARCHAR" property="comHfMonth"/>
         <result column="account_temp_store" jdbcType="TINYINT" property="accountTempStore"/>
+        <result column="companyIds" jdbcType="VARCHAR" property="companyIds"/>
+        <result column="orgCode" jdbcType="VARCHAR" property="orgCode"/>
+        <result column="kf" jdbcType="VARCHAR" property="kf"/>
     </resultMap>
 
     <resultMap id="ComFundAccountDetailMap"
@@ -244,7 +247,12 @@
         a.com_start_month pay_start_month,
         a.end_month pay_end_month,
         a.account_temp_store,
-        a.com_hf_month
+        a.com_hf_month,
+        (select GROUP_CONCAT(company_id) from hf_account_com_relation where com_account_id =b.com_account_id) as companyIds,
+        (select GROUP_CONCAT(com.organization_code) from hf_account_com_relation acr INNER JOIN sal_company com on com.company_id=acr.company_id
+        where acr.com_account_id =b.com_account_id) as orgCode,
+        (select GROUP_CONCAT(com.leader_name) from hf_account_com_relation acr INNER JOIN sal_af_company com on com.company_id=acr.company_id
+        where acr.com_account_id =b.com_account_id) kf
         FROM
         hf_com_account_class a
         INNER JOIN hf_com_account b ON a.com_account_id = b.com_account_id
@@ -267,6 +275,16 @@
         <if test="accountNumber != null and accountNumber != ''">
             AND a.hf_com_account = #{accountNumber}
         </if>
+        <if test="leaderShipName != null and leaderShipName != ''">
+            AND EXISTS (select 1 FROM sal_af_company com INNER JOIN  hf_account_com_relation acr ON acr.company_id=com.company_id and acr.is_active=1 WHERE acr.com_account_id= b.com_account_id and com.leader_Ship_Name LIKE CONCAT('%',#{leaderShipName},'%'))
+        </if>
+        <if test="payBankValue != null and payBankValue != ''">
+            AND b.payment_bank = #{payBankValue}
+        </if>
+        <if test="serviceCenterValue != null and serviceCenterValue != ''">
+            AND EXISTS (select 1 FROM sal_af_company com INNER JOIN  hf_account_com_relation acr ON acr.company_id=com.company_id and acr.is_active=1 WHERE acr.com_account_id= b.com_account_id AND service_center_id = #{serviceCenterValue})
+        </if>
+
     </select>
 
     <select id="getComFundAccountClassNameList" resultMap="AccountClassNameMap">

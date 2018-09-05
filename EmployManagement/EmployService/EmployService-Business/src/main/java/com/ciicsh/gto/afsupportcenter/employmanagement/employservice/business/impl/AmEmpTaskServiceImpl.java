@@ -109,8 +109,6 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     private SocApiProxy socApiProxy;
 
 
-
-
     @Override
     public PageRows<AmEmpTaskBO> queryAmEmpTask(PageInfo pageInfo) {
 
@@ -373,7 +371,6 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                 logApiUtil.error(logMessage);
             }
         }
-
 
         return true;
     }
@@ -760,7 +757,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             amArchiveAdvanceService.updateBatchById(amArchiveAdvancesList);
         }
         this.insertOrUpdateBatch(amEmpTaskList);
-        result =  amArchiveService.insertOrUpdateAllColumnBatch(amArchiveList);
+        result =  amArchiveService.insertOrUpdateBatch(amArchiveList);
         if(result)
         {
             // 修改预留档案编号 seq
@@ -806,7 +803,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             if(!StringUtil.isEmpty(amArchiveBO.getRemark())){
                 List<AmRemark> amRemarkList = new ArrayList<>();
                 Long[] longs = amArchiveBO.getEmpTaskIds();
-                for(int m=0;i<longs.length;m++)
+                for(int m=0;m<longs.length;m++)
                 {
                     AmRemark amRemark = new AmRemark();
                     amRemark.setEmpTaskId(longs[m]);
@@ -817,6 +814,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
                     amRemark.setCreatedBy(ReasonUtil.getUserId());
                     amRemark.setModifiedBy(ReasonUtil.getUserId());
                     amRemark.setRemarkDate(LocalDate.now());
+                    amRemark.setRemarkMan(ReasonUtil.getUserName());
                     amRemarkList.add(amRemark);
                 }
                 amRemarkService.insertBatch(amRemarkList);
@@ -1154,12 +1152,12 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
         employeeHireInfoQueryDTO.setEmployeeId(bo.getEmployeeId());
         JsonResult<EmployeeHireInfoDTO> employeeHireInfo = null;//雇佣雇佣信息接口
         com.ciicsh.gto.salecenter.apiservice.api.dto.core.JsonResult<CompanyTypeDTO> comDto = null;
+        AmEmpEmployee  amEmpEmployee = new AmEmpEmployee();
         try {
             employeeHireInfo = employeeInfoProxy.getEmployeeHireInfo(employeeHireInfoQueryDTO);
 
             EmployeeHireInfoDTO employeeHireInfoDTO = employeeHireInfo.getData();
 
-            AmEmpEmployee  amEmpEmployee = new AmEmpEmployee();
             amEmpEmployee.setEmployeeId(bo.getEmployeeId());
             amEmpEmployee.setCompanyId(bo.getCompanyId());
             amEmpEmployee.setEmpTaskId(empTaskId);
@@ -1247,7 +1245,28 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             logger.error(e.getMessage(),e);
         }
 
+        try {
+            AmArchiveAdvanceBO advanceBO = amArchiveAdvanceService.queryAmArchiveAdvanceByNameIdcard(amEmpEmployee.getEmployeeName(),amEmpEmployee.getIdNum(),1);
+            if(null!=advanceBO)
+            {
+                AmEmployment amEmployment = new AmEmployment();
+                amEmployment.setEmpTaskId(bo.getEmpTaskId());
+                amEmploymentService.insert(amEmployment);
 
+                AmArchive amArchive = new AmArchive();
+                amArchive.setEmploymentId(amEmployment.getEmploymentId());
+                amArchive.setYuliuDocType(advanceBO.getReservedArchiveType());
+                amArchive.setYuliuDocNum(advanceBO.getReservedArchiveNo() == null ? "" : advanceBO.getReservedArchiveNo().toString());
+                amArchive.setDocFrom(advanceBO.getArchiveSource());// 档案来源
+                amArchive.setArchivePlace(advanceBO.getArchivePlace());// 存档地
+
+                amArchiveService.insert(amArchive);
+
+                amArchiveAdvanceService.updateAmArchiveAdvance(advanceBO);
+            }
+        } catch (Exception e) {
+            logApiUtil.error(LogMessage.create().setTitle("预增档案").setContent(e.getMessage()));
+        }
 
     }
 

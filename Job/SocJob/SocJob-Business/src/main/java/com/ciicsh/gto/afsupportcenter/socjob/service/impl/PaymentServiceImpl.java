@@ -64,6 +64,7 @@ public class PaymentServiceImpl extends ServiceImpl<SsPaymentComMapper, SsPaymen
         CompanyMonthlyDataProxyDTO proxyDTO = new CompanyMonthlyDataProxyDTO();
         proxyDTO.setBusinessType("1");//上海社保
         proxyDTO.setBatchMonth(ssMonth);
+        proxyDTO.setPayMonth(ssMonth);
         proxyDTO.setCompanyList(proxyDTOList);
 
         com.ciicsh.common.entity.JsonResult<CompanyMonthlyDataProxyDTO> res = employeeMonthlyDataProxy.getCompanyAdvance(proxyDTO);
