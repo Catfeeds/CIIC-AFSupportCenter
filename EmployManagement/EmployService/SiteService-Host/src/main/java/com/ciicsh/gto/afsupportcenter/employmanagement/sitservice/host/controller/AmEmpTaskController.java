@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -293,18 +292,6 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
 
         if(null!=amArchiveBO){
             resultMap.put("amArchaiveBo",amArchiveBO);
-        }else{
-            // 是否能在档案预增中匹配
-            AmArchiveAdvanceBO advanceBO = amArchiveAdvanceService.queryAmArchiveAdvanceByNameIdcard(amEmpEmployeeBO.getEmployeeName(),amEmpEmployeeBO.getIdNum(),1);
-            if(advanceBO != null){
-                amArchiveBO = new AmArchiveBO();
-                amArchiveBO.setFormAdvance(true);
-                amArchiveBO.setYuliuDocType(advanceBO.getReservedArchiveType());
-                amArchiveBO.setYuliuDocNum(advanceBO.getReservedArchiveNo() == null ? "" : advanceBO.getReservedArchiveNo().toString());
-                amArchiveBO.setDocFrom(advanceBO.getArchiveSource());// 档案来源
-                amArchiveBO.setArchivePlace(advanceBO.getArchivePlace());// 存档地
-                resultMap.put("amArchaiveBo",amArchiveBO);
-            }
         }
 
         // 预留档案类别
@@ -511,8 +498,9 @@ public class AmEmpTaskController extends BasicController<IAmEmpTaskService> {
         String message = iAmEmpMaterialService.receiveMaterial(amEmpTask.getHireTaskId(),1,null);
         Map<String,Object> map = new HashMap<>();
         if("签收成功".equals(message)){
-            amEmpTask.setTaskStatus(2);
-            business.insertOrUpdate(amEmpTask);
+            //材料签收成功状态不变
+//            amEmpTask.setTaskStatus(2);
+//            business.insertOrUpdate(amEmpTask);
             boolean result =  iAmEmpMaterialService.updateBatchById(list);
             List<AmEmpMaterialOperationLogBO> logList = iAmEmpMaterialService.queryAmEmpMaterialOperationLogList(list.get(0).getEmpTaskId());
             map.put("logList",logList);
