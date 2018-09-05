@@ -115,7 +115,7 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
     public List<AmArchiveUkeyRenewBO> queryAmArchiveUkeyRenew(Long id) {
         AmArchiveUkeyRenew renew = new AmArchiveUkeyRenew();
         renew.setKeyId(id);
-        List<AmArchiveUkeyRenew> renews = amArchiveUkeyRenewMapper.selectList(new EntityWrapper<>(renew));
+        List<AmArchiveUkeyRenew> renews = amArchiveUkeyRenewMapper.selectList(new EntityWrapper<>(renew).orderBy("created_by",false));
         List<AmArchiveUkeyRenewBO> boList = new ArrayList<>();
         for (AmArchiveUkeyRenew r:renews) {
             AmArchiveUkeyRenewBO bo = new AmArchiveUkeyRenewBO();
@@ -205,8 +205,12 @@ public class AmArchiveUkeyServiceImpl extends ServiceImpl<AmArchiveUkeyMapper, A
         renew.setCreatedTime(nowDate);
         renew.setModifiedBy(UserContext.getUserName());
         renew.setModifiedTime(nowDate);
-        amArchiveUkeyRenewMapper.insert(renew);
-
+        if(amArchiveUkeyBO.getRenewId()!=null&&amArchiveUkeyBO.getRenewId()!=0){
+            renew.setId(amArchiveUkeyBO.getRenewId());
+            amArchiveUkeyRenewMapper.updateById(renew);
+        }else{
+            amArchiveUkeyRenewMapper.insert(renew);
+        }
         AmArchiveUkey ukey = new AmArchiveUkey();
         ukey.setId(amArchiveUkeyBO.getId());
         ukey.setKeySeq(amArchiveUkeyBO.getKeySeq());

@@ -13,7 +13,7 @@ import java.util.Date;
 public class AmEmpArchiveAdvanceXsl {
 
         @Excel(name = "用工序号", orderNum = "1")
-        private Long matchEmployIndex;
+        private String matchEmployIndex;
 
         @Excel(name = "雇员姓名",orderNum = "2")
         private String employmentName;
@@ -43,7 +43,7 @@ public class AmEmpArchiveAdvanceXsl {
         private String docRemark;
 
         @Excel(name = "录用处理结束",orderNum = "11")
-        private Boolean employHandleEnd;
+        private String employHandleEnd;
 
     }
 

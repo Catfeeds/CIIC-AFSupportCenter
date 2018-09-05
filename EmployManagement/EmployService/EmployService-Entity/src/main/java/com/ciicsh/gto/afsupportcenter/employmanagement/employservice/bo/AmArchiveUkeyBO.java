@@ -118,6 +118,11 @@ public class AmArchiveUkeyBO {
      */
     private String team;
 
+    /**
+     * 续签记录ID
+     */
+    private Long renewId;
+
     private String params;
 
     private List<String> param;
@@ -138,6 +143,14 @@ public class AmArchiveUkeyBO {
     private LocalDate renewDueDate;
 
     private boolean flag = false;
+
+    public Long getRenewId() {
+        return renewId;
+    }
+
+    public void setRenewId(Long renewId) {
+        this.renewId = renewId;
+    }
 
     public String getSsAccount() {
         return ssAccount;
