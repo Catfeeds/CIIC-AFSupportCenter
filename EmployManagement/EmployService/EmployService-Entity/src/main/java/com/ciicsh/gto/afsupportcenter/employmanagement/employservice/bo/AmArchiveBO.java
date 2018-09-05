@@ -24,4 +24,6 @@ public class AmArchiveBO extends AmArchive {
 
     private List<Long> employmentIds;
 
+    private  String remarkContent;
+
 }

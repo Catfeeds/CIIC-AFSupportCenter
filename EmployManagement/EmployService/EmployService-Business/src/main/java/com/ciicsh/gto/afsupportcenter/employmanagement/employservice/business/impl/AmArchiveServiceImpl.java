@@ -133,14 +133,14 @@ public class AmArchiveServiceImpl extends ServiceImpl<AmArchiveMapper, AmArchive
 
         boolean result = this.insertOrUpdateAllColumn(entity);
         // 如果是匹配到的预增档案信息  修改为已匹配
-        if(result){
+       /* if(result){
             if(amArchiveBO.getFormAdvance()){
                 AmArchiveAdvanceBO bo = amArchiveAdvanceService.queryAmArchiveAdvanceByNameIdcard(amArchiveBO.getEmployeeName(),amArchiveBO.getIdNum(),1);
                 if(bo != null){
                     amArchiveAdvanceService.updateAmArchiveAdvance(bo);
                 }
             }
-        }
+        }*/
         map.put("result",new Boolean(result));
         map.put("entity",entity);
 

@@ -72,6 +72,8 @@ public class SsEmpArchiveBO extends SsEmpArchive {
 
     private Integer hasOut;
 
+    private String orderParam;
+
     public Integer getHasOut() {
         return hasOut;
     }
@@ -322,5 +324,13 @@ public class SsEmpArchiveBO extends SsEmpArchive {
 
     public void setIdCardType(Integer idCardType) {
         this.idCardType = idCardType;
+    }
+
+    public String getOrderParam() {
+        return orderParam;
+    }
+
+    public void setOrderParam(String orderParam) {
+        this.orderParam = orderParam;
     }
 }
