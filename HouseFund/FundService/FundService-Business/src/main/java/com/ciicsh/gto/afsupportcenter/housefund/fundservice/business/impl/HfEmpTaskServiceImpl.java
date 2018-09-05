@@ -88,11 +88,11 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                     String regexp = "\'";
                     String status = str[2].replaceAll(regexp, "");
                     hfEmpTaskBo.setProcessStatus(Integer.parseInt(status));
-                }else if(arr[i].indexOf("preInput")!=-1){
-                        String str[] = arr[i].split(" ");
-                        String regexp = "\'";
-                        String preInput = str[2].replaceAll(regexp, "");
-                        hfEmpTaskBo.setPreInput(Integer.parseInt(preInput));
+                }else if(arr[i].indexOf("preInput")!=-1) {
+                    String str[] = arr[i].split(" ");
+                    String regexp = "\'";
+                    String preInput = str[2].replaceAll(regexp, "");
+                    hfEmpTaskBo.setPreInput(Integer.parseInt(preInput));
                 }else{
 
                     if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
@@ -127,6 +127,17 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                                 status = "0";
                             }
                             hfEmpTaskBo.setHfComAccount(status);
+                        }
+                        if (arr[i].indexOf("af_ec.employee_id")!=-1) {
+                            String str[] = arr[i].split(" ");
+                            String regexp = "\'";
+                            String status = str[2].replaceAll(regexp, "");
+                            if ("0".equals(status)) {
+                                status = " is null";
+                            } else if ("1".equals(status)) {
+                                status = " is not null";
+                            }
+                            arr[i] = str[0] + status;
                         }
 
                         param.add(arr[i]);
