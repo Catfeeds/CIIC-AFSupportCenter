@@ -396,6 +396,7 @@ public class HfComTaskServiceImpl extends ServiceImpl<HfComTaskMapper, HfComTask
     public boolean rejection(Map<String, String> map) {
         HfComTask hfComTask = new HfComTask();
         hfComTask.setComTaskId(Long.valueOf(map.get("comTaskId")));
+        hfComTask.setRemark(map.get("remark"));
         hfComTask.setTaskStatus(HF_COM_TASK_TASK_STATUS_4);
         hfComTaskMapper.updateById(hfComTask);
         return false;

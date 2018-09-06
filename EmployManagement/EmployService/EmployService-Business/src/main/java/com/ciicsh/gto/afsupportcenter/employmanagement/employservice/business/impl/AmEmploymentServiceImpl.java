@@ -76,17 +76,6 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
     public PageRows<AmEmploymentBO> queryAmArchive(PageInfo pageInfo) {
         AmEmploymentBO amEmploymentBO = pageInfo.toJavaObject(AmEmploymentBO.class);
 
-        if(null!=amEmploymentBO.getTaskStatus()&&amEmploymentBO.getTaskStatus()==6)
-        {
-            amEmploymentBO.setTaskStatus(null);
-            amEmploymentBO.setTaskStatusOther(0);
-        }
-
-        if(null!=amEmploymentBO.getTaskResignStatus()&&amEmploymentBO.getTaskResignStatus()==6){
-            amEmploymentBO.setTaskResignStatus(null);
-            amEmploymentBO.setTaskResignStatusOther(0);
-        }
-
         List<String> param = new ArrayList<String>();
         List<String> orderParam = new ArrayList<String>();
         if(!StringUtil.isEmpty(amEmploymentBO.getParams()))
@@ -107,22 +96,8 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
 
         amEmploymentBO.setParam(param);
         amEmploymentBO.setOrderParam(orderParam);
-        //如果是查询用工总的数量就不需要状态了
-        if(null!=amEmploymentBO.getTaskStatus()&&amEmploymentBO.getTaskStatus()==0){
-            amEmploymentBO.setTaskStatus(null);
-        }
-        //如果是查询退工总的数量就不需要状态了
-        if(null!=amEmploymentBO.getTaskResignStatus()&&amEmploymentBO.getTaskResignStatus()==0){
-            amEmploymentBO.setTaskResignStatus(null);
-        }
 
-        if(amEmploymentBO.getTaskCategory()!=null&&amEmploymentBO.getTaskCategory()==2)
-        {
-            return PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmArchiveResign(amEmploymentBO));
-        }else {
-            return PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmArchive(amEmploymentBO));
-        }
-
+        return PageKit.doSelectPage(pageInfo,() -> baseMapper.queryAmArchive(amEmploymentBO));
 
     }
 
@@ -179,16 +154,24 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
     public com.ciicsh.gto.afsupportcenter.util.web.response.JsonResult xlsImportAmEmpAdvance(List<AmEmpArchiveAdvanceXsl> opts, String fileName) {
 
         StringBuffer retStr = new StringBuffer();
+        if(opts==null||opts.size()==0){
+            retStr.append("导入失败，没有录入数据.");
+        }
 
-        for (AmEmpArchiveAdvanceXsl xsl:opts) {
-            System.out.println(xsl);
+        for (int i=0;i< opts.size();i++){
+            AmEmpArchiveAdvanceXsl xsl = opts.get(i);
+            if(xsl.getIdNum()==null||xsl.getEmploymentName()==null||xsl.getMatchEmployIndex()==null||xsl.getEmployeeId()==null){
+                retStr.append("第 " + (i+2) + " 行这个雇员信息不完整无法匹配！ ");
+                continue;
+            }
             Wrapper<AmEmpEmployee> wrapper = new EntityWrapper<>();
             wrapper.eq("employee_name",xsl.getEmploymentName());
             wrapper.eq("id_num",xsl.getIdNum());
+            wrapper.eq("employee_id", xsl.getEmployeeId());
             // 是否有雇员
             List<AmEmpEmployee> empEmployeeList = amEmpEmployeeService.selectList(wrapper);
             if(empEmployeeList == null || empEmployeeList.size() == 0) {
-                retStr.append(xsl.getEmploymentName() + xsl.getIdNum() + "这个雇员在系统中不存在！ ");
+                retStr.append("第 " + (i+2) +  " 行这个雇员在系统中不存在！ ");
                 continue;
             }
             AmEmpEmployee employee = empEmployeeList.get(0);
@@ -197,7 +180,7 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
             wrapper2.eq("employee_id",employee.getEmployeeId());
             List<AmEmployment> empList = amEmploymentMapper.selectList(wrapper2);
             if(empList == null || empList.size() == 0) {
-                retStr.append(xsl.getEmploymentName() +" "+ xsl.getIdNum() + "这个雇员对应的用工序号 " + xsl.getMatchEmployIndex() + " 不匹配系统的用工序号！ ");
+                retStr.append("第 " + (i+2) +  " 行这个雇员对应的用工序号 " + xsl.getMatchEmployIndex() + " 不匹配系统的用工序号！ ");
                 continue;
             }
             AmEmployment amEmployment = empList.get(0);
@@ -208,12 +191,20 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
             List<AmArchive> archives = amArchiveMapper.selectList(wrapper3);
             if(archives!=null && archives.size()>0){
                 AmArchive amArchive = archives.get(0);
-                amArchive.setDocType(xsl.getDocType());
-                amArchive.setDocNum(xsl.getDocNum());
-                amArchive.setDocFrom(xsl.getDocFrom());
-                amArchive.setArchivePlace(xsl.getArchivePlace());
+                amArchive.setDocType(xsl.getDocType()==null?"":xsl.getDocType().trim());
+                amArchive.setDocNum(xsl.getDocNum()==null?"":xsl.getDocNum().trim());
+                amArchive.setDocFrom(xsl.getDocFrom()==null?"":xsl.getDocFrom().trim());
+                amArchive.setArchivePlace(xsl.getArchivePlace()==null?"":xsl.getArchivePlace().trim());
                 amArchive.setStorageDate(DateUtil.dateToLocaleDate(xsl.getCreatedDate()));
-                amArchive.setLuyongHandleEnd(xsl.getEmployHandleEnd());
+                if(xsl.getEmployHandleEnd() == null){
+                    amArchive.setLuyongHandleEnd(false);
+                }else{
+                    if(xsl.getEmployHandleEnd().indexOf("true")!=-1||xsl.getEmployHandleEnd().indexOf("TRUE")!=-1){
+                        amArchive.setLuyongHandleEnd(true);
+                    }
+                }
+                xsl.getEmployHandleEnd().trim().indexOf("true");
+
                 amArchive.setModifiedBy(UserContext.getUser().getDisplayName());
                 amArchive.setModifiedTime(LocalDateTime.now());
                 amArchiveMapper.updateById(amArchive);
@@ -221,13 +212,19 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
                 AmArchive amArchive = new AmArchive();
                 amArchive.setCompanyId(employee.getCompanyId());
                 amArchive.setEmployeeId(xsl.getEmployeeId());
-                amArchive.setEmploymentId(xsl.getMatchEmployIndex());
-                amArchive.setDocType(xsl.getDocType());
-                amArchive.setDocNum(xsl.getDocNum());
-                amArchive.setDocFrom(xsl.getDocFrom());
-                amArchive.setArchivePlace(xsl.getArchivePlace());
+                amArchive.setEmploymentId(Long.parseLong(xsl.getMatchEmployIndex()));
+                amArchive.setDocType(xsl.getDocType()==null?"":xsl.getDocType().trim());
+                amArchive.setDocNum(xsl.getDocNum()==null?"":xsl.getDocNum().trim());
+                amArchive.setDocFrom(xsl.getDocFrom()==null?"":xsl.getDocFrom().trim());
+                amArchive.setArchivePlace(xsl.getArchivePlace()==null?"":xsl.getArchivePlace().trim());
                 amArchive.setStorageDate(DateUtil.dateToLocaleDate(xsl.getCreatedDate()));
-                amArchive.setLuyongHandleEnd(xsl.getEmployHandleEnd());
+                if(xsl.getEmployHandleEnd() == null){
+                    amArchive.setLuyongHandleEnd(false);
+                }else{
+                    if(xsl.getEmployHandleEnd().indexOf("true")!=-1||xsl.getEmployHandleEnd().indexOf("TRUE")!=-1){
+                        amArchive.setLuyongHandleEnd(true);
+                    }
+                }
                 amArchive.setCreatedBy(UserContext.getUser().getDisplayName());
                 amArchive.setModifiedBy(UserContext.getUser().getDisplayName());
                 amArchive.setCreatedTime(LocalDateTime.now());
@@ -247,11 +244,16 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
             amRemark.setActive(true);
             amRemarkService.insert(amRemark);
         }
-        if (retStr.toString()=="") {
+        if (retStr.toString().equals("")) {
             return JsonResultKit.of(0, "导入成功！");
         } else {
             return JsonResultKit.of(1, "部分导入失败!原因： \n" + retStr.toString());
         }
+    }
+
+    @Override
+    public List<AmEmploymentBO> queryAmEmploymentCount(EmployeeBatchBO employeeBatchBO) {
+        return baseMapper.queryAmEmploymentCount(employeeBatchBO);
     }
 
     @Override

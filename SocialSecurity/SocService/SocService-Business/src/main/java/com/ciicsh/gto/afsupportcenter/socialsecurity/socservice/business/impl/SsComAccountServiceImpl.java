@@ -96,18 +96,27 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
     public SsComAccountDTO getAccountById(String ssAccount,String companyId) {
         Map<String, Object> condition = new HashMap<>();
         Long comAccountId =0L;
-
+        SsComAccountDTO ssComAccountDTO=new SsComAccountDTO();
         if(ssAccount==null || ssAccount=="" ){
             condition.put("company_id",companyId);
-            SsAccountComRelation ssAccountComRelation= ssAccountComRelationMapper.selectByMap(condition).get(0);
-            comAccountId = ssAccountComRelation.getComAccountId();
+            List<SsAccountComRelation> accountComRelationsList =ssAccountComRelationMapper.selectByMap(condition);
+            if(accountComRelationsList.size()>0){
+                SsAccountComRelation ssAccountComRelation = accountComRelationsList.get(0);
+                comAccountId = ssAccountComRelation.getComAccountId();
+                condition=new HashMap<>();
+                condition.put("com_account_id",comAccountId);
+                SsComAccount ssComAccount= baseMapper.selectByMap(condition).get(0);
+                ssAccount=ssComAccount.getSsAccount();
+            }
+
+        }
+        if(ssAccount==null || ssAccount.equals("")){
+            ssComAccountDTO.setCompanyId(companyId);
+            return ssComAccountDTO;
         }
         condition=new HashMap<>();
         condition.put("ss_account",ssAccount);
-       // condition.put("com_account_id",comAccountId);
         SsComAccount ssComAccount= baseMapper.selectByMap(condition).get(0);
-
-        SsComAccountDTO ssComAccountDTO=new SsComAccountDTO();
         BeanUtils.copyProperties(ssComAccount,ssComAccountDTO);
         Map<String, Object>  wr = new HashMap<>();
         wr.put("com_account_id",ssComAccount.getComAccountId());
@@ -117,12 +126,11 @@ public class SsComAccountServiceImpl extends ServiceImpl<SsComAccountMapper, SsC
             comId +=ssAccountComRelation.getCompanyId()+",";
         }
         comId = comId.substring(0,comId.length()-1);
-        if(companyId!=null && companyId!=""){
-            ssComAccountDTO.setCompanyId(companyId);
-        }else {
+        if(comId!=null && comId!=""){
             ssComAccountDTO.setCompanyId(comId);
+        }else {
+            ssComAccountDTO.setCompanyId(companyId);
         }
-
         return ssComAccountDTO;
     }
 

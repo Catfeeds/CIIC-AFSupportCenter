@@ -142,6 +142,20 @@ public class AmArchiveUkey implements Serializable {
     @TableField("modified_by")
     private String modifiedBy;
 
+    /**
+     * team 客服经理
+     */
+    @TableField("team")
+    private String team;
+
+    public String getTeam() {
+        return team;
+    }
+
+    public void setTeam(String team) {
+        this.team = team;
+    }
+
     public String getServiceCenter() {
         return serviceCenter;
     }

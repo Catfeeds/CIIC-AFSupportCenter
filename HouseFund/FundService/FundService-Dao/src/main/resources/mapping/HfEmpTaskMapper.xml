@@ -707,7 +707,7 @@
         het.rejection_remark,
         3 AS hf_account_type,
         het.handle_remark,
-        CASE WHEN hetl.employee_id IS NULL THEN 0 ELSE 1 END AS has_out
+        CASE WHEN af_ec.modified_time IS NULL THEN 0 ELSE 1 END AS has_out
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
@@ -734,8 +734,13 @@
         </if>
         LEFT JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
         AND hea.is_active = 1 AND hea.hf_type = het.hf_type
-        LEFT JOIN hf_emp_task hetl ON het.company_id = hetl.company_id AND het.employee_id = hetl.employee_id
-        AND hetl.is_active = 1 AND het.hf_type = hetl.hf_type AND hetl.task_category IN (4, 5, 12, 13)
+        LEFT JOIN (
+            SELECT eaec.modified_time, eaec.company_id, eaec.employee_id
+            FROM emp_af_emp_company eaec
+            WHERE eaec.is_active = 1
+            AND eaec.status = 3
+            GROUP BY eaec.company_id, eaec.employee_id HAVING eaec.modified_time = MAX(eaec.modified_time)
+        ) af_ec ON af_ec.company_id = het.company_id AND af_ec.employee_id = het.employee_id
         LEFT JOIN (
             SELECT MIN(start_month) start_month, MAX(end_month) end_month, hetp.emp_task_id
             FROM hf_emp_task_period hetp
@@ -821,7 +826,7 @@
         het.rejection_remark,
         CASE WHEN het.welfare_unit = 2 THEN 1 ELSE 2 END AS hf_account_type,
         het.handle_remark,
-        CASE WHEN hetl.employee_id IS NULL THEN 0 ELSE 1 END AS has_out
+        CASE WHEN af_ec.modified_time IS NULL THEN 0 ELSE 1 END AS has_out
         FROM hf_emp_task het
         INNER JOIN emp_employee ee ON het.employee_id = ee.employee_id
         INNER JOIN sal_company sc ON het.company_id = sc.company_id AND sc.is_active = 1
@@ -848,8 +853,13 @@
         </if>
         LEFT JOIN hf_emp_archive hea ON het.company_id = hea.company_id AND het.employee_id = hea.employee_id
         AND hea.is_active = 1 AND hea.hf_type = het.hf_type
-        LEFT JOIN hf_emp_task hetl ON het.company_id = hetl.company_id AND het.employee_id = hetl.employee_id
-        AND hetl.is_active = 1 AND het.hf_type = hetl.hf_type AND hetl.task_category IN (4, 5, 12, 13)
+        LEFT JOIN (
+            SELECT eaec.modified_time, eaec.company_id, eaec.employee_id
+            FROM emp_af_emp_company eaec
+            WHERE eaec.is_active = 1
+            AND eaec.status = 3
+            GROUP BY eaec.company_id, eaec.employee_id HAVING eaec.modified_time = MAX(eaec.modified_time)
+        ) af_ec ON af_ec.company_id = het.company_id AND af_ec.employee_id = het.employee_id
         LEFT JOIN (
             SELECT MIN(start_month) start_month, MAX(end_month) end_month, hetp.emp_task_id
             FROM hf_emp_task_period hetp
@@ -1337,13 +1347,14 @@
         <result column="created_display_name" property="createdDisplayName"/>
         <result column="feedback_date" property="feedbackDate"/>
         <result column="handle_user_name" property="handleUserName" />
+        <result column="payment_bank" property="paymentBank" />
     </resultMap>
 
     <select id="queryEmpTaskTransfer" resultMap="EmpTaskTransferRM">
         SELECT
         et.emp_task_id,et.hf_type,com.company_id,com.title,emp.employee_id,emp.employee_name,emp.id_num,eoop.`status`,ea.archive_status,eoop.in_date,et.submit_time,et.submitter_id,
         et.transfer_in_unit,et.transfer_in_unit_account,et.transfer_out_unit,et.transfer_out_unit_account,ea.com_account_id,ca.hf_account_type,ea.hf_emp_account,ea.emp_archive_id,
-        et.created_display_name,et.feedback_date,et.handle_user_name
+        et.created_display_name,et.feedback_date,et.handle_user_name,ca.payment_bank
         FROM hf_emp_task et
         LEFT JOIN hf_emp_archive ea  ON ea.employee_id=et.employee_id AND ea.hf_type=et.hf_type
         AND ea.company_id=et.company_id AND ea.is_active=1

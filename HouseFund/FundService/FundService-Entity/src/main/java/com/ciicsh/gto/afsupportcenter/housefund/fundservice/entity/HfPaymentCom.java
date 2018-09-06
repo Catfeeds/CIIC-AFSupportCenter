@@ -145,6 +145,16 @@ public class HfPaymentCom implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+	private String comPaymentStatus;
+
+    public String getComPaymentStatus() {
+        return comPaymentStatus;
+    }
+
+    public void setComPaymentStatus(String comPaymentStatus) {
+        this.comPaymentStatus = comPaymentStatus;
+    }
+
     public Long getPaymentId() {
         return paymentId;
     }

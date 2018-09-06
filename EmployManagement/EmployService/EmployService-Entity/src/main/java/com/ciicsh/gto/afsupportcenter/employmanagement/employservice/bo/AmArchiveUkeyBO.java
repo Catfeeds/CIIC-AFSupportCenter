@@ -54,11 +54,6 @@ public class AmArchiveUkeyBO {
     private String ssAccount;
 
     /**
-     * 客服经理
-     */
-    private String teamName;
-
-    /**
      * 到期日期
      */
     private LocalDate dueDate;
@@ -118,6 +113,16 @@ public class AmArchiveUkeyBO {
      */
     private String modifiedBy;
 
+    /**
+     * team
+     */
+    private String team;
+
+    /**
+     * 续签记录ID
+     */
+    private Long renewId;
+
     private String params;
 
     private List<String> param;
@@ -139,12 +144,12 @@ public class AmArchiveUkeyBO {
 
     private boolean flag = false;
 
-    public String getTeamName() {
-        return teamName;
+    public Long getRenewId() {
+        return renewId;
     }
 
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
+    public void setRenewId(Long renewId) {
+        this.renewId = renewId;
     }
 
     public String getSsAccount() {
@@ -277,6 +282,14 @@ public class AmArchiveUkeyBO {
 
     public LocalDate getLogoutDate() {
         return logoutDate;
+    }
+
+    public String getTeam() {
+        return team;
+    }
+
+    public void setTeam(String team) {
+        this.team = team;
     }
 
     public void setLogoutDate(LocalDate logoutDate) {

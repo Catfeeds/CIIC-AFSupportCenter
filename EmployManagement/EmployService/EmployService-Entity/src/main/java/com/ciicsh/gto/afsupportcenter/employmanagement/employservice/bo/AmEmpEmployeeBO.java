@@ -85,4 +85,6 @@ public class AmEmpEmployeeBO extends AmEmpEmployee {
      */
     private String phone;
 
+    private boolean show;
+
 }

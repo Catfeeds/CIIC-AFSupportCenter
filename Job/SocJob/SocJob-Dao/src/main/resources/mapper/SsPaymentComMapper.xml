@@ -49,7 +49,25 @@
         AND pc.payment_month=#{payemntMonth}
         AND pc.payment_state=1
     </select>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMapExt2" type="com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsPaymentComProxyBO">
+        <result column="payment_com_id" property="objId"/>
+        <result column="company_id" property="companyId"/>
+        <result column="isCompanyEnjoyAdvance" property="isCompanyEnjoyAdvance"/>
+        <result column="payment_month" property="payMonth"/>
+        <result column="total_pay_amount" property="payAmount"/>
+    </resultMap>
 
+    <!--查询未支付客户询问财务是否可付-->
+    <select id="getPaymentComList2" resultMap="BaseResultMapExt2">
+        SELECT pc.company_id,pc.payment_com_id,ca.bank_account,pc.payment_month,pc.total_pay_amount,
+        CASE ca.payment_way WHEN 3 THEN  1 ELSE  0 END  AS 'isCompanyEnjoyAdvance'
+        FROM ss_payment_com pc
+        INNER JOIN ss_com_account ca ON ca.com_account_id = pc.com_account_id
+        WHERE pc.is_active = 1
+        AND pc.payment_month=#{paymentMonth}
+        AND pc.payment_state=1
+    </select>
     <!--按照财务服务契约（每日按雇员询问财务是否可付）提供雇员级名单。is_company_enjoy_advance=1 就是垫付  -->
     <!--财务中心要求同一个雇员同一个月份的金额相加（正数+负数金额）大于零的雇员-->
     <select id="getSsPaymentEmpList" resultType="com.ciicsh.gto.afsupportcenter.socjob.entity.bo.SsMonthChargeBO">

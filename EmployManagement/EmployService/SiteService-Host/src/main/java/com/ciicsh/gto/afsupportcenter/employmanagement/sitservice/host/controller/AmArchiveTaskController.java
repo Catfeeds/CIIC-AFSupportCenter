@@ -82,6 +82,30 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
     @RequestMapping("/queryAmArchive")
     public JsonResult<PageRows> queryAmArchive(PageInfo pageInfo){
         PageRows<AmEmploymentBO> result = business.queryAmArchive(pageInfo);
+        /*AmEmploymentBO param = pageInfo.toJavaObject(AmEmploymentBO.class);
+        if(param.getLuyongHandleEnd()!=null)
+        {
+            List<AmEmploymentBO> temp = result.getRows();
+            if(param.getLuyongHandleEnd())
+            {
+                for(AmEmploymentBO amEmploymentBO:temp)
+                {
+                    if(amEmploymentBO.getLuyongHandleEnd()==null||amEmploymentBO.getLuyongHandleEnd()==false){
+                        temp.remove(amEmploymentBO);
+                    }
+                }
+            }else{
+                for(AmEmploymentBO amEmploymentBO:temp)
+                {
+                    if(null!=amEmploymentBO.getLuyongHandleEnd()&&amEmploymentBO.getLuyongHandleEnd())
+                    {
+                        temp.remove(amEmploymentBO);
+                    }
+                }
+            }
+            result.setRows(temp);
+        }*/
+
         List<AmEmploymentBO> data = result.getRows();
         for(AmEmploymentBO amEmploymentBO:data)
         {
@@ -110,8 +134,7 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
             buf.append(amEmploymentBO.getArchiveSpecial()==null?"":amEmploymentBO.getArchiveSpecial());
             if(!StringUtil.isEmpty(buf.toString()))
             {
-                int last = buf.lastIndexOf(",");
-                amEmploymentBO.setArchiveSpecial(buf.substring(0,last));
+                amEmploymentBO.setArchiveSpecial("有");
             }
         }
 
@@ -216,6 +239,14 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         AmArchiveDocSeqBO result = amArchiveService.queryAmArchiveDocTypeByTypeAndDocType(bo.getType(),bo.getDocType());
         Map<String, Object> map = new HashMap<>();
         map.put("docBo", result);
+        return JsonResultKit.of(map);
+    }
+
+    @RequestMapping("/queryDocSeqList")
+    public JsonResult queryDocSeqList(AmArchiveDocSeqBO bo){
+        List<AmArchiveDocSeqBO> boList = amArchiveService.queryAmArchiveDocTypeByType(bo.getType());
+        Map<String, Object> map = new HashMap<>();
+        map.put("docList", boList);
         return JsonResultKit.of(map);
     }
 
@@ -594,12 +625,10 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
         } catch (Exception e) {
 
         }
-        AmInjuryBO amInjuryBO = new AmInjuryBO();
-        amInjuryBO.setEmpTaskId(amInjury.getEmpTaskId());
-        List<AmInjuryBO> list = amInjuryService.queryAmInjury(amInjuryBO);
+
         Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("result",result);
-        resultMap.put("data",list);
+        resultMap.put("data",amInjury);
 
         return JsonResultKit.of(resultMap);
 
@@ -655,6 +684,12 @@ public class AmArchiveTaskController extends BasicController<IAmEmploymentServic
      */
     @RequestMapping(value = "/xlsImportEmpAdvance",consumes = {"multipart/form-data"})
     public JsonResult xlsImportEmpAdvance(MultipartFile file) throws Exception {
+        if(file.getOriginalFilename().endsWith(".xlsx") == false && file.getOriginalFilename().endsWith(".xls") == false){
+            JsonResult error = new JsonResult();
+            error.setCode(1);
+            error.setMessage("档案配对上传文件格式仅支持.xlsx 和.xls");
+            return error;
+        }
         List<AmEmpArchiveAdvanceXsl> optList = ExcelUtil.importExcel(file,0,1,AmEmpArchiveAdvanceXsl.class,false);
         JsonResult result = business.xlsImportAmEmpAdvance(optList,file.getOriginalFilename());
         return  result;

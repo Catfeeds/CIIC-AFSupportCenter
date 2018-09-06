@@ -293,7 +293,7 @@
                 </foreach>
             </if>
         </where>
-        ORDER BY hmc.company_id
+        ORDER BY hmc.company_id, hmc.employee_id, hmc.ss_month_belong
     </select>
 
     <select id="queryNetBankData" resultMap="NetBankExportBO">
@@ -456,13 +456,17 @@
         <result column="remitted_count_emp_last" property="remittedCountEmpLast"/>
         <result column="repair_amount" property="repairAmount"/>
         <result column="repair_count_emp" property="repairCountEmp"/>
+        <result column="bank_name" property="bankName"/>
+
+
 
     </resultMap>
     <select id="queryHfRimittedBookReport" resultMap="RimittedBookReportRM">
-    SELECT pa.com_account_id,pa.com_account_class_id,pa.hf_type,ca.com_account_name,ca.payment_bank,
+    SELECT pa.com_account_id,pa.com_account_class_id,pa.hf_type,ca.com_account_name,ca.payment_bank,sba.bank_name,
             ca.hf_account_type,pa.hf_com_account,pa.payment_month,lastMonth.remitted_amount_last,lastMonth.remitted_count_emp_last,
         (select group_concat(acr.company_id) from hf_account_com_relation acr where acr.is_active=1 AND acr.com_account_id=pa.com_account_id  AND acr.major_com=1 LIMIT 5)company_id,
-		(SELECT SUM(ifnull(amount, 0)) FROM hf_month_charge mc
+		(SELECT SUM(ifnull(amount, 0))
+        FROM hf_month_charge mc
         INNER JOIN hf_emp_archive ea ON ea.emp_archive_id = mc.emp_archive_id
         WHERE mc.is_active = 1
         AND ea.is_active = 1
@@ -548,6 +552,7 @@
         FROM
         (SELECT #{hfMonth} AS payment_month,cac.* from hf_com_account_class cac WHERE cac.is_active = 1) pa
         LEFT JOIN hf_com_account ca ON ca.com_account_id = pa.com_account_id
+        LEFT JOIN stm_bank_account sba ON sba.bank_account_id=ca.payment_bank
         LEFT JOIN (
             SELECT
                 pc.com_account_id,
@@ -589,9 +594,9 @@
                 AND pa.hf_type = 1
                 AND pa.hf_com_account = #{basicHfComAccount}
             </if>
-            <if test="addedHfEmpAccount != null">
+            <if test="addedHfComAccount != null">
                 AND pa.hf_type = 2
-                AND pa.hf_emp_account = #{addedHfEmpAccount}
+                AND pa.hf_com_account = #{addedHfComAccount}
             </if>
 
 

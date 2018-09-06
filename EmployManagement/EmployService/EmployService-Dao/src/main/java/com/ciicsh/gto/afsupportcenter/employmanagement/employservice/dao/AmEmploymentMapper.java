@@ -36,4 +36,6 @@ public interface AmEmploymentMapper extends BaseMapper<AmEmployment> {
 
     List<AmEmploymentBO>   queryTaskCount(AmEmploymentBO amEmploymentBO);
 
+    List<AmEmploymentBO>  queryAmEmploymentCount(EmployeeBatchBO employeeBatchBO);
+
 }

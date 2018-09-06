@@ -524,6 +524,8 @@ public class HfEmpTaskHandleController extends BasicController<HfEmpTaskHandleSe
             hfEmpTaskCreateTransBo.setTaskStatus(HfEmpTaskConstant.TASK_STATUS_COMPLETED);
             hfEmpTaskCreateTransBo.setModifiedBy(UserContext.getUserId());
             hfEmpTaskCreateTransBo.setModifiedDisplayName(UserContext.getUser().getDisplayName());
+            hfEmpTaskCreateTransBo.setHandleUserId(UserContext.getUserId());
+            hfEmpTaskCreateTransBo.setHandleUserName(UserContext.getUser().getDisplayName());
             int rtn = business.createTransEmpTask(hfEmpTaskCreateTransBo);
             if (rtn == 1) {
                 hfEmpTaskList = business.selectByMap(condition);

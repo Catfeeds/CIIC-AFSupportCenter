@@ -29,6 +29,7 @@
 		<result column="ukey_borrow_date" property="ukeyBorrowDate" />
 		<result column="ukey_return_date" property="ukeyReturnDate" />
 		<result column="if_network" property="ifNetwork" />
+		<result column="if_send" property="ifSend" />
         <result column="is_finish" property="isFinish" />
 		<result column="job_centre_feedback_date" property="jobCentreFeedbackDate" />
 		<result column="resign_material_delivery_date" property="resignMaterialDeliveryDate" />
@@ -99,7 +100,7 @@
         a.change_company,
         a.employ_code,
         f.employment_id,
-        b.employ_property,
+        a.employ_property,
         b.employ_date,
         b.handle_type,
         f.resign_date,
@@ -123,8 +124,9 @@
         cs.refuse_special
         FROM
         am_emp_task a
+        LEFT JOIN am_emp_task  l on l.emp_company_id = a.emp_company_id
+        LEFT JOIN am_employment b  ON  l.emp_task_id = b.emp_task_id
         LEFT JOIN am_resign f  ON f.emp_task_id = a.emp_task_id
-        LEFT JOIN am_employment b  ON  b.employment_id = f.employment_id
         LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
         LEFT JOIN am_archive c ON c.employment_id = b.employment_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = b.emp_task_id
@@ -262,12 +264,12 @@
         a.employee_id is not null
         and
         a.company_id  is not null
-        <if test="taskStatus!=null and taskStatusOther == null">
-            and a.task_status = ${taskStatus}
-        </if>
-        <if test="taskStatusOther!=null">
-            and a.task_status not in ('99','98','1','2','3','4','5')
-        </if>
+        <!--<if test="taskStatus!=null and taskStatusOther == null">-->
+            <!--and a.task_status = ${taskStatus}-->
+        <!--</if>-->
+        <!--<if test="taskStatusOther!=null">-->
+            <!--and a.task_status not in ('99','98','1','2','3','4','5')-->
+        <!--</if>-->
         <if test="job!=null">
             and a.job = #{job}
         </if>

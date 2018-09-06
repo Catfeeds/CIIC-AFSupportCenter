@@ -88,11 +88,11 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                     String regexp = "\'";
                     String status = str[2].replaceAll(regexp, "");
                     hfEmpTaskBo.setProcessStatus(Integer.parseInt(status));
-                }else if(arr[i].indexOf("preInput")!=-1){
-                        String str[] = arr[i].split(" ");
-                        String regexp = "\'";
-                        String preInput = str[2].replaceAll(regexp, "");
-                        hfEmpTaskBo.setPreInput(Integer.parseInt(preInput));
+                }else if(arr[i].indexOf("preInput")!=-1) {
+                    String str[] = arr[i].split(" ");
+                    String regexp = "\'";
+                    String preInput = str[2].replaceAll(regexp, "");
+                    hfEmpTaskBo.setPreInput(Integer.parseInt(preInput));
                 }else{
 
                     if(arr[i].indexOf("desc")>0||arr[i].indexOf("asc")>0){
@@ -127,6 +127,17 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                                 status = "0";
                             }
                             hfEmpTaskBo.setHfComAccount(status);
+                        }
+                        if (arr[i].indexOf("af_ec.employee_id")!=-1) {
+                            String str[] = arr[i].split(" ");
+                            String regexp = "\'";
+                            String status = str[2].replaceAll(regexp, "");
+                            if ("0".equals(status)) {
+                                status = " is null";
+                            } else if ("1".equals(status)) {
+                                status = " is not null";
+                            }
+                            arr[i] = str[0] + status;
                         }
 
                         param.add(arr[i]);
@@ -200,6 +211,17 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                                     status = "0";
                                 }
                                 hfEmpTaskBo.setHfComAccount(status);
+                            }
+                            if (arr[i].indexOf("af_ec.employee_id")!=-1) {
+                                String str[] = arr[i].split(" ");
+                                String regexp = "\'";
+                                String status = str[2].replaceAll(regexp, "");
+                                if ("0".equals(status)) {
+                                    status = " is null";
+                                } else if ("1".equals(status)) {
+                                    status = " is not null";
+                                }
+                                arr[i] = str[0] + status;
                             }
 
                             param.add(arr[i]);
@@ -523,7 +545,7 @@ public class HfEmpTaskServiceImpl extends ServiceImpl<HfEmpTaskMapper, HfEmpTask
                 // 如果转出或封存时，转入单位统一为市公积金中心
                 if (inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_CLOSE
                     || inputHfEmpTask.getTaskCategory() == HfEmpTaskConstant.TASK_CATEGORY_OUT_TRANS_OUT) {
-                    String transferInUnit = SocialSecurityConst.FUND_OUT_UNIT_LIST.get(0); //市公积金中心单位名称
+                    String transferInUnit = SocialSecurityConst.FUND_OUT_UNIT_LIST.get(1); //市公积金中心单位名称
                     hfEmpTaskCreateTransBo.setTransferInUnit(transferInUnit);
                     String transferInUnitAccount =
                         (inputHfEmpTask.getHfType() == HfEmpTaskConstant.HF_TYPE_BASIC) ? SocialSecurityConst.CENTER_BASIC_COM_ACCOUNT

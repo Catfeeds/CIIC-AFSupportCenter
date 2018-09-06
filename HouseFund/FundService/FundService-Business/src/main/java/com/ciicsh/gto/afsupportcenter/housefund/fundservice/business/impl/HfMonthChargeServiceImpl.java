@@ -800,6 +800,10 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             hfMonthChargeRepairDetailBO.setRowNo(1);
             hfMonthChargeRepairDetailBOList.add(hfMonthChargeRepairDetailBO);
 
+            if (StringUtils.isNotEmpty(hfMonthChargeReportBO.getCompanyId())) {
+                companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
+            }
+
             for (int i = 1; i < hfMonthChargeReportBOList.size(); i++) {
                 hfMonthChargeRepairDetailBO = hfMonthChargeRepairDetailBOList.get(hfMonthChargeRepairDetailBOList.size() - 1);
                 YearMonth detailEndMonth = YearMonth.parse(hfMonthChargeRepairDetailBO.getEndMonth(), formatter);
@@ -832,10 +836,14 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
                         repairPeriodEnd(hfMonthChargeRepairDetailBO, hfMonthChargeReportBO, repairReason, ratio, hfMonthChargeRepairDetailBOList);
                     }
                 } else {
-                    if (StringUtils.isNotEmpty(hfMonthChargeReportBO.getCompanyId())) {
-                        companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
-                    }
+//                    if (StringUtils.isNotEmpty(hfMonthChargeReportBO.getCompanyId())) {
+//                        companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
+//                    }
                     repairPeriodEnd(hfMonthChargeRepairDetailBO, hfMonthChargeReportBO, repairReason, ratio, hfMonthChargeRepairDetailBOList);
+                }
+
+                if (StringUtils.isNotEmpty(hfMonthChargeReportBO.getCompanyId())) {
+                    companyIdSet.add(hfMonthChargeReportBO.getCompanyId());
                 }
             }
 
@@ -987,7 +995,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
         HfRimittedBookReportBO in = list.get(0);
             HfPrintRemittedBookBO out = new HfPrintRemittedBookBO();
             BeanUtils.copyProperties(in, out);
-            out.setBankName(HouseFundConst.BANK_MAP.get(in.getPaymentBank()));
+            //out.setBankName(HouseFundConst.BANK_MAP.get(in.getPaymentBank()));
             out.setMoneyCN(MoneyToCN.number2CNMontrayUnit(in.getRemittedAmount()));
             out.setRemittedAmountArrange("¥"+in.getRemittedAmount().toString().replace(".",""));
             out.setCurYear(LocalDate.now().getYear());
@@ -1006,7 +1014,7 @@ public class HfMonthChargeServiceImpl extends ServiceImpl<HfMonthChargeMapper, H
             if (in.getRepairAmount()!=null &&  in.getRepairAmount().compareTo(BigDecimal.ZERO) > 0) { //存在补缴
                 out = new HfPrintRemittedBookBO();
                 BeanUtils.copyProperties(in, out);
-                out.setBankName(HouseFundConst.BANK_MAP.get(in.getPaymentBank()));
+               // out.setBankName(HouseFundConst.BANK_MAP.get(in.getPaymentBank()));
                 out.setCurYear(LocalDate.now().getYear());
                 out.setCurMonth(LocalDate.now().getMonth().getValue());
                 out.setCurDay(LocalDate.now().getDayOfMonth());

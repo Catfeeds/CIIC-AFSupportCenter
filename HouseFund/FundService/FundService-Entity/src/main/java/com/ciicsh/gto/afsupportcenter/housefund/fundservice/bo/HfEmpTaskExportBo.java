@@ -60,9 +60,9 @@ public class HfEmpTaskExportBo implements Serializable{
     private String startMonth;
     @Excel(name = "截止年月", orderNum = "22")
     private String endMonth;
-    @Excel(name = "缴费金额", orderNum = "8", width = 15)
+    @Excel(name = "缴费金额", orderNum = "8", width = 15 )
     private BigDecimal amount;
-    @Excel(name = "基数", orderNum = "9", width = 18)
+    @Excel(name = "基数", orderNum = "9", width = 18 )
     private BigDecimal empBase;
     @Excel(name = "个人比例", orderNum = "10")
     private BigDecimal ratioEmp;

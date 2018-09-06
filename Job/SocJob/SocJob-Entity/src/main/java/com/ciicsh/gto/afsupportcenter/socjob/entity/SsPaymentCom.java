@@ -141,8 +141,18 @@ public class SsPaymentCom implements Serializable {
 	@TableField("modified_by")
 	private String modifiedBy;
 
+    @TableField("com_payment_status")
+    private String comPaymentStatus;
 
-	public Long getPaymentComId() {
+    public String getComPaymentStatus() {
+        return comPaymentStatus;
+    }
+
+    public void setComPaymentStatus(String comPaymentStatus) {
+        this.comPaymentStatus = comPaymentStatus;
+    }
+
+    public Long getPaymentComId() {
 		return paymentComId;
 	}
 
