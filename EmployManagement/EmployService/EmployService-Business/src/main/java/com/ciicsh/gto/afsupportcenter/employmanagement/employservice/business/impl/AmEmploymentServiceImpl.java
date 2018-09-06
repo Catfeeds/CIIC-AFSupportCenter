@@ -199,7 +199,7 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
                 if(xsl.getEmployHandleEnd() == null){
                     amArchive.setLuyongHandleEnd(false);
                 }else{
-                    if(xsl.getEmployHandleEnd().indexOf("true")!=-1||xsl.getEmployHandleEnd().indexOf("TRUE")!=-1){
+                    if(xsl.getEmployHandleEnd().toLowerCase().indexOf("true")!=-1){
                         amArchive.setLuyongHandleEnd(true);
                     }
                 }
@@ -221,7 +221,7 @@ public class AmEmploymentServiceImpl extends ServiceImpl<AmEmploymentMapper, AmE
                 if(xsl.getEmployHandleEnd() == null){
                     amArchive.setLuyongHandleEnd(false);
                 }else{
-                    if(xsl.getEmployHandleEnd().indexOf("true")!=-1||xsl.getEmployHandleEnd().indexOf("TRUE")!=-1){
+                    if(xsl.getEmployHandleEnd().toLowerCase().indexOf("true")!=-1){
                         amArchive.setLuyongHandleEnd(true);
                     }
                 }
