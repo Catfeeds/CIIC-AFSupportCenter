@@ -42,6 +42,8 @@ public class TaskListDTO implements Serializable {
      */
     private String credentialsDealTypeN;
     private String basicProductId;
+    private String productId;
+    private BigDecimal money;
     /**
      * 学历
      */
@@ -433,6 +435,22 @@ public class TaskListDTO implements Serializable {
 
     public void setQualification(String qualification) {
         this.qualification = qualification;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+    public BigDecimal getMoney() {
+        return money;
+    }
+
+    public void setMoney(BigDecimal money) {
+        this.money = money;
     }
 
     public String getDegree() {

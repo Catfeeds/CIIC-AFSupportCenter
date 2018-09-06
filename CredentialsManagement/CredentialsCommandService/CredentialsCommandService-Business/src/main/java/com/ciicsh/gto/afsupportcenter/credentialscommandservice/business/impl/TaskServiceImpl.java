@@ -127,7 +127,11 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
             String date = sdf.format(now);
             afDisposableChargeDTO.setBillMonth(Integer.parseInt(date));
-            afDisposableChargeDTO.setActualChargeMonth(Integer.parseInt(date));
+            if (taskDetialDTO.getChargeTime() != null) {
+                afDisposableChargeDTO.setActualChargeMonth(Integer.parseInt(sdf.format(taskDetialDTO.getChargeTime())));
+            } else {
+                afDisposableChargeDTO.setActualChargeMonth(Integer.parseInt(date));
+            }
             afDisposableChargeDTO.setChargeObject(2);
             if (taskDetialDTO.getChargeAmount() != null) {
                 int i = taskDetialDTO.getChargeAmount().compareTo(BigDecimal.ZERO);

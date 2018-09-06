@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -52,10 +53,13 @@ public class EmpCredentialsDealController {
 
     @Autowired
     private TaskFollowService taskFollowService;
+
     @Autowired
     private TaskService taskService;
+
     @Autowired
     private CompanyExtService companyExtService;
+
     @Autowired
     private TaskTypeService taskTypeService;
 
@@ -64,6 +68,9 @@ public class EmpCredentialsDealController {
 
     @Autowired
     private SocApiProxy socApiProxy;
+
+    @Autowired
+    private QuotationProxy quotationProxy;
 
     /**
      * 查询任务单跟进记录
@@ -142,9 +149,34 @@ public class EmpCredentialsDealController {
             if (StringUtils.isNotBlank(taskTypeInfo.getBasicProductId())) {
                 taskListDTO.setBasicProductId(taskTypeInfo.getBasicProductId());
             }
+            if (StringUtils.isNotBlank(taskTypeInfo.getProductId())) {
+                taskListDTO.setProductId(taskTypeInfo.getProductId());
+            }
+            List<QuotationProductResponseDTO> products = quotationProxy.queryProductsByIdAndCompanyId(taskListDTO.getCompanyId(), taskListDTO.getProductId()).getObject();
+            if (products != null && !products.isEmpty()) {
+                taskListDTO.setMoney(new BigDecimal(products.get(0).getPrice()));
+            }
             taskListDTOs.add(taskListDTO);
         });
         return JsonResult.success(taskListDTOs);
+    }
+
+    @GetMapping("/getProductPrice")
+    public JsonResult getProductPrice(String companyId, String taskType, String taskDealType) {
+        TaskListDTO taskListDTO = new TaskListDTO();
+        taskListDTO.setCompanyId(companyId);
+        TaskType taskTypeInfo = taskTypeService.selectById("null".equals(taskDealType) ? taskType : taskDealType);
+        if (StringUtils.isNotBlank(taskTypeInfo.getBasicProductId())) {
+            taskListDTO.setBasicProductId(taskTypeInfo.getBasicProductId());
+        }
+        if (StringUtils.isNotBlank(taskTypeInfo.getProductId())) {
+            taskListDTO.setProductId(taskTypeInfo.getProductId());
+        }
+        List<QuotationProductResponseDTO> products = quotationProxy.queryProductsByIdAndCompanyId(taskListDTO.getCompanyId(), taskListDTO.getProductId()).getObject();
+        if (products != null && !products.isEmpty()) {
+            taskListDTO.setMoney(new BigDecimal(products.get(0).getPrice()));
+        }
+        return JsonResult.success(taskListDTO);
     }
 
     /**
