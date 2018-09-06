@@ -800,7 +800,7 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             }
         }
         try {
-            if(!StringUtil.isEmpty(amArchiveBO.getRemark())){
+            if(!StringUtil.isEmpty(amArchiveBO.getRemarkContent())){
                 List<AmRemark> amRemarkList = new ArrayList<>();
                 Long[] longs = amArchiveBO.getEmpTaskIds();
                 for(int m=0;m<longs.length;m++)
@@ -1743,12 +1743,12 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
     @Override
     public Map<String, Object> batchCheckArchive(EmployeeBatchBO employeeBatchBO) {
         Map<String,Object> resultMap = new HashMap<>();
-        List<AmEmpTaskBO> amEmpTaskBOList = baseMapper.queryIsFinish(employeeBatchBO);
-        if(null!=amEmpTaskBOList&&amEmpTaskBOList.size()>0)
-        {
-            resultMap.put("empTask",amEmpTaskBOList.size());
-            return  resultMap;
-        }
+//        List<AmEmpTaskBO> amEmpTaskBOList = baseMapper.queryIsFinish(employeeBatchBO);
+//        if(null!=amEmpTaskBOList&&amEmpTaskBOList.size()>0)
+//        {
+//            resultMap.put("empTask",amEmpTaskBOList.size());
+//            return  resultMap;
+//        }
         List<AmEmploymentBO> amEmploymentBOList = amEmploymentService.queryAmEmploymentCount(employeeBatchBO);
         if(null!=amEmploymentBOList)
         {
