@@ -3,7 +3,6 @@ package com.ciicsh.gto.afsupportcenter.fundjob.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.ciicsh.gto.afsupportcenter.fundjob.bo.HfPaymentAccountBO;
 import com.ciicsh.gto.afsupportcenter.fundjob.bo.HfPaymentComBO;
-import com.ciicsh.gto.afsupportcenter.fundjob.bo.HfPaymentComProxyBO;
 import com.ciicsh.gto.afsupportcenter.fundjob.entity.HfPaymentCom;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
@@ -23,5 +22,4 @@ public interface HfPaymentComMapper extends BaseMapper<HfPaymentCom> {
     //查询未支付客户
     List<HfPaymentAccountBO> getPaymentAccountList(Map map);
 
-    List<HfPaymentComProxyBO> getPaymentAccountComList(Map map);
 }

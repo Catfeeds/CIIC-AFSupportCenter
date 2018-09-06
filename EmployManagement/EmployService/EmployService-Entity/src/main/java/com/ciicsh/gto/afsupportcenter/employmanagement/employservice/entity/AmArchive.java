@@ -312,7 +312,7 @@ public class AmArchive implements Serializable {
     private  String  manualStorageMan;
 
     @TableField("post")
-    private  Boolean  post;
+    private  Integer  post;
 
     @TableField("post_way")
     private  String  postWay;
@@ -789,11 +789,11 @@ public class AmArchive implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-    public Boolean getPost() {
+    public Integer getPost() {
         return post;
     }
 
-    public void setPost(Boolean post) {
+    public void setPost(Integer post) {
         this.post = post;
     }
 

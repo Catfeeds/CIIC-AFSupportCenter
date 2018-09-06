@@ -72,7 +72,7 @@ public class ComFundAccountPO {
     /**
      * 账户备注说明
      */
-    @Excel(name = "备注说明", orderNum = "7")
+    @Excel(name = "备注说明", orderNum = "10")
     private String remark;
 
     /**
@@ -98,9 +98,11 @@ public class ComFundAccountPO {
      * 1-临时保管状态 0-非临时保管状态
      */
     private Byte accountTempStore;
-
+    @Excel(name = "客户编号", orderNum = "7")
     private String companyIds;
+    @Excel(name = "组织机构代码", orderNum = "8")
     private String orgCode;
+    @Excel(name = "客服", orderNum = "9")
     private String kf;
 
     public ComFundAccountPO()
@@ -121,6 +123,9 @@ public class ComFundAccountPO {
         remark = "";
         ukeyStore = 0;
         comHfMonth="";
+        companyIds="";
+        kf="";
+        orgCode="";
     }
 
     public String getCompanyIds() {

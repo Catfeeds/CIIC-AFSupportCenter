@@ -92,7 +92,9 @@ public class ComFundAccountDTO {
      *
      * */
     private Byte accountTempStore;
-
+    private String companyIds;
+    private String orgCode;
+    private String kf;
     public ComFundAccountDTO()
     {
         comAccountClassId = 0;
@@ -111,6 +113,30 @@ public class ComFundAccountDTO {
         remark = "";
         ukeyStore = 0;
         comHfMonth="";
+    }
+
+    public String getCompanyIds() {
+        return companyIds;
+    }
+
+    public void setCompanyIds(String companyIds) {
+        this.companyIds = companyIds;
+    }
+
+    public String getOrgCode() {
+        return orgCode;
+    }
+
+    public void setOrgCode(String orgCode) {
+        this.orgCode = orgCode;
+    }
+
+    public String getKf() {
+        return kf;
+    }
+
+    public void setKf(String kf) {
+        this.kf = kf;
     }
 
     public String getComHfMonth() {

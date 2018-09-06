@@ -124,7 +124,11 @@ public class SsEmpArchiveServiceImpl extends ServiceImpl<SsEmpArchiveMapper, SsE
     public PageRows<SsEmpArchiveBO> queryEmployee(PageInfo pageInfo) {
         //将json对象转 BO对象
         SsEmpArchiveBO ssEmpArchiveBO = pageInfo.toJavaObject(SsEmpArchiveBO.class);
-
+        String orderParam = ssEmpArchiveBO.getOrderParam();
+        if (StringUtils.isNotEmpty(orderParam)) {
+            ssEmpArchiveBO.setOrderParam(orderParam.replace("emp.employee_name",
+                "CONVERT(emp.employee_name USING gbk)"));
+        }
         return PageKit.doSelectPage(pageInfo, () -> baseMapper.queryEmployee(ssEmpArchiveBO));
     }
 
