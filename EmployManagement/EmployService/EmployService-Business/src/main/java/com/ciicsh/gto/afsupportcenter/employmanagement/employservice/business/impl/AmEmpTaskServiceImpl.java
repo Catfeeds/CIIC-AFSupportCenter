@@ -1251,14 +1251,30 @@ public class AmEmpTaskServiceImpl extends ServiceImpl<AmEmpTaskMapper, AmEmpTask
             {
                 AmEmployment amEmployment = new AmEmployment();
                 amEmployment.setEmpTaskId(bo.getEmpTaskId());
+                amEmployment.setEmployeeId(bo.getEmployeeId());
+                amEmployment.setCompanyId(bo.getCompanyId());
+                LocalDateTime now = LocalDateTime.now();
+                amEmployment.setCreatedTime(now);
+                amEmployment.setModifiedTime(now);
+                amEmployment.setIsActive(1);
+                amEmployment.setCreatedBy(bo.getCreatedBy());
+                amEmployment.setModifiedBy(bo.getCreatedBy());
                 amEmploymentService.insert(amEmployment);
 
                 AmArchive amArchive = new AmArchive();
                 amArchive.setEmploymentId(amEmployment.getEmploymentId());
+                amArchive.setEmployeeId(bo.getEmployeeId());
+                amArchive.setCompanyId(bo.getCompanyId());
                 amArchive.setYuliuDocType(advanceBO.getReservedArchiveType());
                 amArchive.setYuliuDocNum(advanceBO.getReservedArchiveNo() == null ? "" : advanceBO.getReservedArchiveNo().toString());
                 amArchive.setDocFrom(advanceBO.getArchiveSource());// 档案来源
                 amArchive.setArchivePlace(advanceBO.getArchivePlace());// 存档地
+
+                amArchive.setCreatedTime(now);
+                amArchive.setModifiedTime(now);
+                amArchive.setIsActive(1);
+                amArchive.setCreatedBy(bo.getCreatedBy());
+                amArchive.setModifiedBy(bo.getCreatedBy());
 
                 amArchiveService.insert(amArchive);
 
