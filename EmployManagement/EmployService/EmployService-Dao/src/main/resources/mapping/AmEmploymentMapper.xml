@@ -134,7 +134,7 @@
         f.resign_handle_date,
         f.job_centre_feedback_date,
         f.end_type,
-        h.title,
+        sal.title,
         h.service_center,/*服务中心 */
         h.leader_ship_name, /*客服经理*/
         cs.employ_special,
@@ -146,6 +146,7 @@
         LEFT JOIN am_archive c ON b.employment_id = c.employment_id
         LEFT JOIN am_resign f ON f.employment_id = b.employment_id
         LEFT JOIN emp_employee d on a.employee_id = d.employee_id
+        LEFT JOIN sal_company sal ON a.company_id = sal.company_id
         LEFT JOIN am_emp_task w on f.emp_task_id = w.emp_task_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
@@ -420,7 +421,7 @@
         f.resign_handle_date,
         f.job_centre_feedback_date,
         f.end_type,
-        h.title,
+        sal.title,
         h.service_center,/*服务中心 */
         h.leader_ship_name, /*客服经理*/
         cs.employ_special,
@@ -432,6 +433,7 @@
         LEFT JOIN am_archive c ON b.employment_id = c.employment_id
         LEFT JOIN am_resign f ON f.employment_id = b.employment_id
         LEFT JOIN emp_employee d on a.employee_id = d.employee_id
+        LEFT JOIN sal_company sal ON a.company_id = sal.company_id
         LEFT JOIN am_emp_task w on f.emp_task_id = w.emp_task_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
@@ -493,7 +495,7 @@
         f.resign_handle_date,
         f.job_centre_feedback_date,
         f.end_type,
-        h.title,
+        sal.title,
         h.service_center,/*服务中心 */
         h.leader_ship_name, /*客服经理*/
         cs.employ_special,
@@ -505,6 +507,7 @@
         LEFT JOIN am_archive c ON b.employment_id = c.employment_id
         LEFT JOIN am_resign f ON f.employment_id = b.employment_id
         LEFT JOIN emp_employee d on a.employee_id = d.employee_id
+        LEFT JOIN sal_company sal ON a.company_id = sal.company_id
         LEFT JOIN am_emp_task w on f.emp_task_id = w.emp_task_id
         LEFT JOIN am_emp_custom h on h.emp_task_id = a.emp_task_id
         LEFT JOIN am_company_set cs on cs.company_id = a.company_id
