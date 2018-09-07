@@ -159,6 +159,24 @@ public class EmployeeCompanyController {
             taskTypeDTO.setPid(String.valueOf(item.getPid()));
             return taskTypeDTO;
         }).collect(Collectors.toList());
+        if ("0".equals(pid)) {
+            if (taskTypeService.findTaskType("2").stream().anyMatch(i -> productIds.contains(i.getProductId()))) {
+                TaskType taskType = list.get(1);
+                TaskTypeDTO taskTypeDTO = CommonTransform.convertToDTO(taskType, TaskTypeDTO.class);
+                taskTypeDTO.setTaskTypeId(String.valueOf(taskType.getTaskTypeId()));
+                taskTypeDTO.setLevel(String.valueOf(taskType.getLevel()));
+                taskTypeDTO.setPid(String.valueOf(taskType.getPid()));
+                result.add(0,taskTypeDTO);
+            }
+            if (taskTypeService.findTaskType("1").stream().anyMatch(i -> productIds.contains(i.getProductId()))) {
+                TaskType taskType = list.get(0);
+                TaskTypeDTO taskTypeDTO = CommonTransform.convertToDTO(taskType, TaskTypeDTO.class);
+                taskTypeDTO.setTaskTypeId(String.valueOf(taskType.getTaskTypeId()));
+                taskTypeDTO.setLevel(String.valueOf(taskType.getLevel()));
+                taskTypeDTO.setPid(String.valueOf(taskType.getPid()));
+                result.add(0,taskTypeDTO);
+            }
+        }
         return JsonResult.success(result);
     }
 

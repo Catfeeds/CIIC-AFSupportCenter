@@ -1,16 +1,17 @@
 package com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmEmploymentBO;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.bo.AmResignBO;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.AmResignLinkService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmpTaskService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmEmploymentService;
-import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.IAmResignService;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.*;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.CommonApiUtils;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.ReasonUtil;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.business.utils.TaskCommonUtils;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmArchiveMapper;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.dao.AmResignMapper;
+import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmArchive;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmEmpTask;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmResign;
 import com.ciicsh.gto.afsupportcenter.employmanagement.employservice.entity.AmResignLink;
@@ -55,6 +56,12 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
 
     @Autowired
     private LogApiUtil logApiUtil;
+
+    @Autowired
+    private AmArchiveMapper amArchiveMapper;
+
+    @Autowired
+    private IAmArchiveService amArchiveService;
 
     public PageRows<AmResignBO> queryAmResign(PageInfo pageInfo){
 
@@ -225,6 +232,15 @@ public class AmResignServiceImpl extends ServiceImpl<AmResignMapper, AmResign> i
         }
 
         return  entity;
+    }
+
+    @Override
+    public Boolean saveAmSend(Long employmentId,Integer post) {
+        AmArchive archive = new AmArchive();
+        archive.setPost(post);
+        Wrapper<AmArchive> wrapper = new EntityWrapper<>();
+        wrapper.eq("employment_id",employmentId);
+        return amArchiveMapper.update(archive,wrapper)>0;
     }
 
     @Override

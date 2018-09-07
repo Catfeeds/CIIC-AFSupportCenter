@@ -29,7 +29,6 @@
 		<result column="ukey_borrow_date" property="ukeyBorrowDate" />
 		<result column="ukey_return_date" property="ukeyReturnDate" />
 		<result column="if_network" property="ifNetwork" />
-		<result column="if_send" property="ifSend" />
         <result column="is_finish" property="isFinish" />
 		<result column="job_centre_feedback_date" property="jobCentreFeedbackDate" />
 		<result column="resign_material_delivery_date" property="resignMaterialDeliveryDate" />
@@ -124,7 +123,7 @@
         cs.refuse_special
         FROM
         am_emp_task a
-        LEFT JOIN am_emp_task  l on l.emp_company_id = a.emp_company_id
+        LEFT JOIN am_emp_task  l on l.emp_company_id = a.emp_company_id and l.task_category = '1'
         LEFT JOIN am_employment b  ON  l.emp_task_id = b.emp_task_id
         LEFT JOIN am_resign f  ON f.emp_task_id = a.emp_task_id
         LEFT JOIN emp_employee d ON a.employee_id = d.employee_id
